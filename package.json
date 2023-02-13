@@ -1,0 +1,20 @@
+{
+  "name": "project-bettername",
+  "version": "0.0.1",
+  "description": "secure landing zone gui but the name is different",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jennifer Valle",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.7",
+    "lazy-z": "^1.8.3",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "regex-but-with-words": "^1.5.1",
+    "sinon": "^15.0.1",
+    "tfxjs": "^1.2.2"
+  }
+}
