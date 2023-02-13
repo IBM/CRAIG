@@ -27,6 +27,9 @@ goals.md
 .circleci
 .yarnrc
 .old
+compatibility-tests/templates/*/override.json
+tfxjs.tfvars
+
 
 #production
 /build

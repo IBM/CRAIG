@@ -4,7 +4,15 @@
   "description": "secure landing zone gui but the name is different",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha unit-tests/",
+    "coverage": "npx nyc npm run test",
+    "build": "npm i && cd client && npm i && react-scripts build && cp -r build ../",
+    "client": "npm run build && open http://localhost:3000",
+    "start": "NODE_ENV=production && npm run build && node server.js",
+    "md": "node lib/docs-as-markdown",
+    "changelog": "node lib/changelog-as-markdown",
+    "deploy": "./deploy.sh",
+    "compatibility-tests": "./compatibility.sh"
   },
   "author": "Jennifer Valle",
   "license": "ISC",
