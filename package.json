@@ -4,7 +4,7 @@
   "description": "secure landing zone gui but the name is different",
   "main": "index.js",
   "scripts": {
-    "test": "mocha unit-tests/",
+    "test": "mocha unit-tests/ --recursive",
     "coverage": "npx nyc npm run test",
     "build": "npm i && cd client && npm i && react-scripts build && cp -r build ../",
     "client": "npm run build && open http://localhost:3000",
