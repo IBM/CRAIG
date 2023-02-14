@@ -3,7 +3,7 @@ const {
   formatFlowLogs,
   formatFlowLogsPolicy,
   flowLogsTf,
-} = require("../../lib/json-to-iac/flow-logs");
+} = require("../../client/src/lib/json-to-iac/flow-logs");
 const slzNetwork = require("../data-files/slz-network.json");
 describe("flow logs", () => {
   describe("formatFlowLogs", () => {

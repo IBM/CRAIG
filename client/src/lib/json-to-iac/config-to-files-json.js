@@ -52,7 +52,6 @@ variable "${snakeCase(key.name)}_public_key" {
     "vpc.tf": vpcTf(config) + "\n",
     "key_management.tf": kmsTf(config) + "\n",
     "object_storage.tf": cosTf(config) + "\n",
-
     "atracker.tf": atrackerTf(config),
     "resource_groups.tf": resourceGroupTf(config),
     "flow_logs.tf": flowLogsTf(config),

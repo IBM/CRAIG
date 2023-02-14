@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { formatTgw, formatTgwConnection, tgwTf } = require("../../lib/json-to-iac/transit-gateway");
+const { formatTgw, formatTgwConnection, tgwTf } = require("../../client/src/lib/json-to-iac/transit-gateway");
 const slzNetwork = require("../data-files/slz-network.json");
 
 describe("transit gateway", () => {

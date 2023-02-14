@@ -5,7 +5,7 @@ const {
   f5TemplateLocals,
   f5TemplateUserData,
   formatF5Vsi,
-} = require("../../lib/json-to-iac/f5");
+} = require("../../client/src/lib/json-to-iac/f5");
 const slzNetwork = require("../data-files/f5-nw.json");
 
 describe("f5 big ip", () => {

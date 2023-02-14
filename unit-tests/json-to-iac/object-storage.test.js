@@ -6,7 +6,7 @@ const {
   formatCosKey,
   cosInstanceTf,
   cosTf,
-} = require("../../lib/json-to-iac/object-storage");
+} = require("../../client/src/lib/json-to-iac/object-storage");
 
 // add object-storage
 

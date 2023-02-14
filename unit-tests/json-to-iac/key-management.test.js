@@ -7,7 +7,7 @@ const {
   formatKmsKeyPolicy,
   kmsInstanceTf,
   kmsTf,
-} = require("../../lib/json-to-iac/key-management");
+} = require("../../client/src/lib/json-to-iac/key-management");
 
 // remove prefix when data
 // ring add ring

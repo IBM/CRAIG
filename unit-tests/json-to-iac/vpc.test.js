@@ -7,7 +7,7 @@ const {
   formatAclRule,
   formatPgw,
   vpcTf,
-} = require("../../lib/json-to-iac/vpc");
+} = require("../../client/src/lib/json-to-iac/vpc");
 
 describe("vpc", () => {
   describe("formatVpc", () => {

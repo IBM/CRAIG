@@ -3,7 +3,7 @@ const {
   formatSecretsManagerToKmsAuth,
   formatSecretsManagerInstance,
   secretsManagerTf,
-} = require("../../lib/json-to-iac/secrets-manager");
+} = require("../../client/src/lib/json-to-iac/secrets-manager");
 
 describe("secrets manager", () => {
   describe("formatSecretsManagerToKmsAuth", () => {

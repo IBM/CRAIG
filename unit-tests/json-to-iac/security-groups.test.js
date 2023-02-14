@@ -3,7 +3,7 @@ const {
   formatSecurityGroup,
   formatSgRule,
   sgTf,
-} = require("../../lib/json-to-iac/security-groups");
+} = require("../../client/src/lib/json-to-iac/security-groups");
 const slzNetwork = require("../data-files/slz-network.json");
 
 describe("security groups", () => {

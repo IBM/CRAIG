@@ -3,7 +3,7 @@ const {
   formatAtrackerTarget,
   formatAtrackerRoute,
   atrackerTf,
-} = require("../../lib/json-to-iac/atracker");
+} = require("../../client/src/lib/json-to-iac/atracker");
 
 describe("atracker", () => {
   describe("formatAtrackerTarget", () => {

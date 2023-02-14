@@ -3,7 +3,7 @@ const {
   formatCluster,
   formatWorkerPool,
   clusterTf,
-} = require("../../lib/json-to-iac/clusters");
+} = require("../../client/src/lib/json-to-iac/clusters");
 const slzNetwork = require("../data-files/slz-network.json");
 
 describe("clusters", () => {

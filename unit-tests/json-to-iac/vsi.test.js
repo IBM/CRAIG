@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { formatVsi, formatVsiImage, vsiTf } = require("../../lib/json-to-iac/vsi");
+const { formatVsi, formatVsiImage, vsiTf } = require("../../client/src/lib/json-to-iac/vsi");
 const slzNetwork = require("../data-files/slz-network.json");
 
 describe("virtual server", () => {

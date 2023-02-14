@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { formatVpn, vpnTf } = require("../../lib/json-to-iac/vpn");
+const { formatVpn, vpnTf } = require("../../client/src/lib/json-to-iac/vpn");
 const slzNetwork = require("../data-files/slz-network.json");
 
 describe("vpn gateways", () => {

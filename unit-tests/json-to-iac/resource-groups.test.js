@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const resourceGroupTf = require("../../lib/json-to-iac/resource-groups");
+const resourceGroupTf = require("../../client/src/lib/json-to-iac/resource-groups");
 
 // append rg, prefix - added only when not use data
 describe("resource groups", () => {

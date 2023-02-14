@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { formatSshKey, sshKeyTf } = require("../../lib/json-to-iac/ssh-keys");
+const { formatSshKey, sshKeyTf } = require("../../client/src/lib/json-to-iac/ssh-keys");
 const slzNetwork = require("../data-files/slz-network.json");
 
 // ssh-key at end

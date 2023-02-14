@@ -4,7 +4,7 @@ const {
   fortmatVpeGateway,
   fortmatVpeGatewayIp,
   vpeTf,
-} = require("../../lib/json-to-iac/vpe");
+} = require("../../client/src/lib/json-to-iac/vpe");
 const slzNetwork = require("../data-files/slz-network.json");
 
 describe("virtual private endpoints", () => {

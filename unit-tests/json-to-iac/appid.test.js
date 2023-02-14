@@ -4,7 +4,7 @@ const {
   formatAppId,
   formatAppIdRedirectUrls,
   appidTf,
-} = require("../../lib/json-to-iac/appid");
+} = require("../../client/src/lib/json-to-iac/appid.js");
 
 describe("appid", () => {
   describe("formatAppIdKey", () => {

@@ -3,7 +3,7 @@ const {
   formatPostureCredential,
   formatScc,
   sccTf,
-} = require("../../lib/json-to-iac/scc");
+} = require("../../client/src/lib/json-to-iac/scc");
 
 describe("security compliance center resources", () => {
   describe("formatPostureCredential", () => {
