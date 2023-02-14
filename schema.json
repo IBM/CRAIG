@@ -1,0 +1,326 @@
+{
+  "_options": {
+    "prefix": "string",
+    "region": "string",
+    "tags": "Array<string>"
+  },
+  "resource_groups": {
+    "Array": {
+      "use_prefix": "boolean",
+      "use_data": "boolean",
+      "name": "string"
+    }
+  },
+  "key_manangement": {
+    "Array": {
+      "name": "string",
+      "use_data": "boolean",
+      "use_hs_crypto": "boolean",
+      "authorize_vpc_reader_role": "boolean",
+      "resource_group": "string",
+      "has_secrets_manager_auth": "boolean",
+      "keys": {
+        "Array": {
+          "name": "string",
+          "root_key": "boolean",
+          "key_ring": "string",
+          "force_delete": "boolean",
+          "endpoint": "string",
+          "rotation": "number",
+          "dual_auth_delete": "boolean"
+        }
+      }
+    }
+  },
+  "object_storage": {
+    "Array": {
+      "name": "string",
+      "plan": "string",
+      "resource_group": "string",
+      "use_random_suffix": "boolean",
+      "use_data": "boolean",
+      "kms": "string",
+      "buckets": {
+        "Array": {
+          "name": "string",
+          "storage_class": "string",
+          "endpoint": "string",
+          "force_delete": "boolean",
+          "kms_key": "string"
+        }
+      },
+      "keys": {
+        "Array": {
+          "name": "string",
+          "enable_hmac": "boolean",
+          "role": "string"
+        }
+      }
+    }
+  },
+  "atracker": {
+    "enabled": "boolean",
+    "name": "string",
+    "type": "string",
+    "target_name": "string",
+    "bucket": "string",
+    "cos_key": "string",
+    "add_route": "boolean",
+    "locations": "Array<string>"
+  },
+  "vpcs": {
+    "Array": {
+      "cos": "string",
+      "bucket": "string",
+      "name": "string",
+      "resource_group": "string",
+      "classic_access": "boolean",
+      "manual_address_prefix_management": "boolean",
+      "default_network_acl_name": "string",
+      "default_security_group_name": "string",
+      "default_routing_table_name": "string",
+      "address_prefixes": {
+        "Array": {
+          "vpc": "string",
+          "zone": "number",
+          "cidr": "string",
+          "name": "string"
+        }
+      },
+      "subnets": {
+        "Array": {
+          "vpc": "string",
+          "name": "string",
+          "zone": "number",
+          "resource_group": "string",
+          "cidr": "string",
+          "network_acl": "string",
+          "public_gateway": "boolean",
+          "has_prefix": "boolean"
+        }
+      },
+      "acls": {
+        "Array": {
+          "name": "string",
+          "resource_group": "string",
+          "vpc": "string",
+          "rules": {
+            "Array": {
+              "acl": "string",
+              "vpc": "string",
+              "action": "string",
+              "destination": "string",
+              "direction": "string",
+              "name": "string",
+              "source": "string",
+              "icmp": {
+                "type": "number",
+                "code": "number"
+              },
+              "tcp": {
+                "port_min": "number",
+                "port_max": "number",
+                "source_port_min": "number",
+                "source_port_max": "number"
+              },
+              "udp": {
+                "port_min": "number",
+                "port_max": "number",
+                "source_port_min": "number",
+                "source_port_max": "number"
+              }
+            }
+          }
+        }
+      },
+      "public_gateways": {
+        "Array": {
+          "override_name": "string",
+          "vpc": "string",
+          "resource_group": "string",
+          "zone": "number"
+        }
+      }
+    }
+  },
+  "virtual_private_endpoints": {
+    "Array": {
+      "vpc": "string",
+      "service": "string",
+      "resource_group": "string",
+      "security_groups": "Array<string>",
+      "subnets": "Array<string>"
+    }
+  },
+  "security_groups": {
+    "Array": {
+      "vpc": "string",
+      "name": "string",
+      "resource_group": "string",
+      "rules": {
+        "Array": {
+          "sg": "string",
+          "vpc": "string",
+          "source": "string",
+          "direction": "string",
+          "name": "string",
+          "icmp": {
+            "type": "number",
+            "code": "number"
+          },
+          "tcp": {
+            "port_min": "number",
+            "port_max": "number"
+          },
+          "udp": {
+            "port_min": "number",
+            "port_max": "number"
+          }
+        }
+      }
+    }
+  },
+  "vpn_gateways": {
+    "Array": {
+      "name": "string",
+      "resource_group": "string",
+      "subnet": "string",
+      "vpc": "string"
+    }
+  },
+  "ssh_keys": {
+    "Array": {
+      "name": "string",
+      "public_key": "string",
+      "resource_group": "string",
+      "use_data": "boolean"
+    }
+  },
+  "transit_gateways": {
+    "Array": {
+      "name": "string",
+      "global": "boolean",
+      "resource_group": "string",
+      "connections": {
+        "Array": {
+          "tgw": "string",
+          "vpc": "string"
+        }
+      }
+    }
+  },
+  "clusters": {
+    "Array": {
+      "kms": "string",
+      "cos": "string",
+      "entitlement": "string",
+      "type": "string",
+      "kube_version": "string",
+      "flavor": "string",
+      "name": "string",
+      "resource_group": "string",
+      "encryption_key": "string",
+      "subnets": "Array<string>",
+      "update_all_workers": "boolean",
+      "vpc": "string",
+      "worker_pools": [
+        {
+          "entitlement": "string",
+          "cluster": "string",
+          "flavor": "string",
+          "name": "string",
+          "resource_group": "string",
+          "subnets": "Array<string>",
+          "vpc": "string",
+          "workers_per_subnet": "number"
+        }
+      ],
+      "workers_per_subnet": "number",
+      "private_endpoint": "boolean"
+    }
+  },
+  "vsi": {
+    "Array": {
+      "kms": "string",
+      "encryption_key": "string",
+      "image": "string",
+      "profile": "string",
+      "name": "string",
+      "security_groups": "Array<string>",
+      "ssh_keys": "Array<string>",
+      "subnets": "Array<string>",
+      "vpc": "string",
+      "vsi_per_subnet": "number",
+      "resource_group": "string",
+      "override_vsi_name": "string",
+      "user_data" : "string",
+      "network_interfaces" : {
+        "Array" : {
+          "subnet":"string",
+          "security_groups":"Array<string>"
+        }
+      }
+    }
+  },
+  "appid": {
+    "Array": {
+      "use_data": "boolean",
+      "resource_group": "string",
+      "keys": {
+        "Array": {
+          "appid": "string",
+          "name": "string"
+        }
+      }
+    }
+  },
+  "teleport_vsi": {
+    "Array": {
+      "appid": "string",
+      "kms": "string",
+      "encryption_key": "string",
+      "image": "string",
+      "profile": "string",
+      "name": "string",
+      "security_groups": "Array<string>",
+      "ssh_keys": "Array<string>",
+      "subnet": "string",
+      "vpc": "string",
+      "vsi_per_subnet": "number",
+      "resource_group": "string",
+      "template": {
+        "deployment": "string",
+        "license": "string",
+        "https_cert": "string",
+        "https_key": "string",
+        "hostname": "string",
+        "domain": "string",
+        "bucket": "string",
+        "bucket_endpoint": "string",
+        "hmac_key_id": "string",
+        "hmac_secret_key_id": "string",
+        "appid": "string",
+        "appid_secret": "string",
+        "appid_url": "string",
+        "message_of_the_day": "string",
+        "version": "string",
+        "claim_to_roles": {
+          "Array": {
+            "email": "string",
+            "roles": "Array<string>"
+          }
+        }
+      }
+    }
+  },
+  "scc": {
+    "credential_description": "string",
+    "id": "string",
+    "passphrase": "string",
+    "name": "string",
+    "location": "string",
+    "collector_description": "string",
+    "is_public": "boolean",
+    "scope_description": "string"
+  }
+}
