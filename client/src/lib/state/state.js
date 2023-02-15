@@ -10,7 +10,13 @@ const {
 const state = function() {
   let store = new lazyZstate({
     _defaults: {
-      json: {}
+      json: {
+        _options: {
+          prefix: "iac",
+          region: "us-south",
+          tags: ["hello", "world"]
+        }
+      }
     },
     _no_default: []
   });
