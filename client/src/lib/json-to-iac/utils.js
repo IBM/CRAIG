@@ -5,6 +5,7 @@ const {
   kebabCase,
   contains,
   eachKey,
+  isString
 } = require("lazy-z");
 const constants = require("./constants");
 
@@ -87,7 +88,7 @@ function getKmsInstanceData(kmsName, config) {
   return {
     name: baseName + "name",
     guid: baseName + "guid",
-    type: kmsInstance.use_hs_crypto ? "hs-crypto" : "kms",
+    type: kmsInstance.use_hs_crypto ? "hs-crypto" : "kms"
   };
 }
 
@@ -223,7 +224,7 @@ function encryptionKeyRef(kms, key, value) {
  */
 function fillTemplate(template, values) {
   let newValues = template;
-  eachKey(values, (key) => {
+  eachKey(values, key => {
     newValues = newValues.replace(
       new RegExp(`\\$${key.toUpperCase()}`, "g"),
       values[key]
@@ -260,7 +261,7 @@ function composedZone(config, zone) {
  */
 function longestKeyLength(obj) {
   let longestKey = 0;
-  eachKey(obj, (key) => {
+  eachKey(obj, key => {
     if (key.length > longestKey && key.indexOf("_") !== 0) {
       longestKey =
         key.indexOf("*") === 0 || key.indexOf("-") === 0
@@ -306,14 +307,14 @@ function jsonToTf(type, name, values, config, useData) {
     if (offset) longest = longestKeyLength(obj); // longest key
     let offsetSpace = matchLength("", offset || 0); // offset for recursion
     // for each field in the terraform object
-    eachKey(obj, (key) => {
+    eachKey(obj, key => {
       // keys that start with * are used for multiline arrays
       if (key.indexOf("*") === 0) {
         tf += `\n${offsetSpace.length === 0 ? "\n" : ""}  ${
           offsetSpace + key.replace(/\*/i, "") // replace start
         } = [`;
         // add item with comma
-        obj[key].forEach((item) => {
+        obj[key].forEach(item => {
           tf += `\n    ${offsetSpace + item},`;
         });
         // replace last comma and close
@@ -323,10 +324,10 @@ function jsonToTf(type, name, values, config, useData) {
         // keys that start with - are used to indicate multiple blocks of the same kind
         // ex. `network_interfaces` for vsi
         obj[key].forEach(item => {
-          tf+= `\n\n  ${key.replace(/^-/i, "")} {`
-          eachTfKey(item, 2)
-          tf+= `\n  }`
-        })
+          tf += `\n\n  ${key.replace(/^-/i, "")} {`;
+          eachTfKey(item, 2);
+          tf += `\n  }`;
+        });
       } else if (key.indexOf("_") !== 0) {
         // all other keys formatted here
         let keyValue =
@@ -367,7 +368,22 @@ function dataResourceName(resource, config, appendText) {
   }${appendText ? appendText : ""}"`;
 }
 
+/**
+ * transpose an object where each string value has quotes around it
+ * @param {Object} source
+ * @returns {Object}
+ */
+function stringifyTranspose(source) {
+  let newObj = {};
+  eachKey(source, key => {
+    if (isString(source[key])) newObj[key] = `"${source[key]}"`;
+    else if(typeof source[key] !== "object") newObj[key] = source[key];
+  });
+  return newObj;
+}
+
 module.exports = {
+  stringifyTranspose,
   dataResourceName,
   jsonToTf,
   composedZone,
@@ -388,5 +404,5 @@ module.exports = {
   cosRef,
   encryptionKeyRef,
   bucketRef,
-  tfArrRef,
+  tfArrRef
 };
