@@ -3,7 +3,7 @@ const { state } = require("../../client/src/lib/state");
 
 /**
  * initialize store
- * @returns {slzStore} slz state store
+ * @returns {lazyZState} state store
  */
 function newState() {
   let store = new state();
