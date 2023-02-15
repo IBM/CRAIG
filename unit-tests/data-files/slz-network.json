@@ -6,17 +6,17 @@
   },
   "resource_groups": [
     {
-      "use_prefix": false,
+      "use_prefix": true,
       "name": "slz-service-rg",
       "use_data": false
     },
     {
-      "use_prefix": false,
+      "use_prefix": true,
       "name": "slz-management-rg",
       "use_data": false
     },
     {
-      "use_prefix": false,
+      "use_prefix": true,
       "name": "slz-workload-rg",
       "use_data": false
     }

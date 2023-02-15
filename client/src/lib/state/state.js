@@ -10,7 +10,7 @@ const {
 const state = function() {
   let store = new lazyZstate({
     _defaults: {
-      configDotJson: {}
+      json: {}
     },
     _no_default: []
   });
