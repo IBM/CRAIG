@@ -18,17 +18,17 @@ describe("resource_groups", () => {
       let expectedData = [
         {
           use_prefix: true,
-          name: "slz-service-rg",
+          name: "service-rg",
           use_data: false,
         },
         {
           use_prefix: true,
-          name: "slz-management-rg",
+          name: "management-rg",
           use_data: false,
         },
         {
           use_prefix: true,
-          name: "slz-workload-rg",
+          name: "workload-rg",
           use_data: false,
         },
       ];
@@ -47,18 +47,18 @@ describe("resource_groups", () => {
     it("should add and update a non-duplicate group", () => {
       rgState.resource_groups.create({ name: "default" });
       assert.deepEqual(rgState.store.resourceGroups, [
-        "slz-service-rg",
-        "slz-management-rg",
-        "slz-workload-rg",
+        "service-rg",
+        "management-rg",
+        "workload-rg",
         "default",
       ]);
     });
     it("should add and update a non-duplicate group using prefix", () => {
       rgState.resource_groups.create({ name: "default", use_prefix: true });
       assert.deepEqual(rgState.store.resourceGroups, [
-        "slz-service-rg",
-        "slz-management-rg",
-        "slz-workload-rg",
+        "service-rg",
+        "management-rg",
+        "workload-rg",
         "default",
       ]);
     });
@@ -69,21 +69,18 @@ describe("resource_groups", () => {
       rgState = new newState();
     });
     it("should delete a group and update names", () => {
-      rgState.resource_groups.delete({}, { data: { name: "slz-service-rg" } });
+      rgState.resource_groups.delete({}, { data: { name: "service-rg" } });
       assert.deepEqual(
         rgState.store.resourceGroups,
-        ["slz-management-rg", "slz-workload-rg"],
+        ["management-rg", "workload-rg"],
         "it should set resource groups"
       );
     });
     it("should delete a vpc resource group and update vpc to use the first resource group", () => {
-      rgState.resource_groups.delete(
-        {},
-        { data: { name: "slz-management-rg" } }
-      );
+      rgState.resource_groups.delete({}, { data: { name: "management-rg" } });
       assert.deepEqual(
         rgState.store.resourceGroups,
-        ["slz-service-rg", "slz-workload-rg"],
+        ["service-rg", "workload-rg"],
         "it should set resource groups"
       );
     });
@@ -94,7 +91,7 @@ describe("resource_groups", () => {
       rgState = new newState();
     });
     it("should change the name of a resource group in place", () => {
-      let expectedData = ["slz-service-rg", "frog-rg", "slz-workload-rg"];
+      let expectedData = ["service-rg", "frog-rg", "workload-rg"];
       rgState.resource_groups.save(
         {
           name: "frog-rg",
@@ -102,7 +99,7 @@ describe("resource_groups", () => {
         },
         {
           data: {
-            name: "slz-management-rg",
+            name: "management-rg",
           },
         }
       );
@@ -118,7 +115,7 @@ describe("resource_groups", () => {
         { name: "frog-rg" },
         {
           data: {
-            name: "slz-management-rg",
+            name: "management-rg",
           },
         }
       );

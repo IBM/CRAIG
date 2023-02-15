@@ -11,17 +11,17 @@ function resourceGroupInit(config) {
   config.store.json.resource_groups = [
     {
       use_prefix: true,
-      name: "slz-service-rg",
+      name: "service-rg",
       use_data: false
     },
     {
       use_prefix: true,
-      name: "slz-management-rg",
+      name: "management-rg",
       use_data: false
     },
     {
       use_prefix: true,
-      name: "slz-workload-rg",
+      name: "workload-rg",
       use_data: false
     }
   ];
