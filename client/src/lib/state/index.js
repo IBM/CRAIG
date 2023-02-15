@@ -5,7 +5,7 @@ const {
   resourceGroupSave,
   resourceGroupDelete
 } = require("./resource-groups");
-const state = require("./store");
+const state = require("./state");
 const { pushAndUpdate, carveChild, updateChild } = require("./store.utils");
 
 module.exports = {
