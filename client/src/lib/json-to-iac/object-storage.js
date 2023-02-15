@@ -1,4 +1,5 @@
-const { snakeCase, splat } = require("lazy-z");
+const { snakeCase, splat, isString } = require("lazy-z");
+const { eachKey, containsKeys } = require("regex-but-with-words/lib/utils");
 const { endComment, cosRandomSuffix } = require("./constants");
 const {
   rgIdRef,
@@ -127,25 +128,75 @@ function formatCosToKmsAuth(cos, config) {
  */
 
 function formatCosBucket(bucket, cos, config) {
+  let bucketValues = {
+    bucket_name: kebabName(
+      config,
+      [cos.name, bucket.name],
+      randomSuffix(cos)
+    ),
+    resource_instance_id: cosRef(cos.name, "id", cos.use_data),
+    storage_class: `"${bucket.storage_class}"`,
+    endpoint_type: `"${bucket.endpoint}"`,
+    force_delete: bucket.force_delete,
+    region_location: "region",
+    key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn"),
+    depends_on: `[ibm_iam_authorization_policy.${snakeCase(
+      cos.name + " cos to " + cos.kms + " kms policy"
+    )}]`,
+  }
+  if(bucket.allowed_ip) {
+    bucketValues.allowed_ip = JSON.stringify(bucket.allowed_ip)
+  }
+  if(bucket.atracker) {
+    bucketValues._activity_tracking = {
+      read_data_events: bucket.read_data_events,
+      write_data_events: bucket.write_data_events,
+      activity_tracker_crn: `"${bucket.atracker}"`, // need logic to implement atracker, probably from data?
+    }
+  }
+  if(bucket.metrics_monitoring) {
+    bucketValues._metrics_monitoring = {
+      metrics_monitoring_crn: `"${bucket.metrics_monitoring}"`, // need logic to implement crn ref
+      usage_metrics_enabled: bucket.usage_metrics_enabled,
+      request_metrics_enabled: bucket.request_metrics_enabled
+    }
+  }
+  if(containsKeys(bucket, "object_versioning")) {
+    bucketValues._object_versioning = {
+      enable: bucket.object_versioning
+    }
+  }
+  if(bucket.archive_rules) {
+    bucketValues["-archive_rule"] = [];
+    bucket.archive_rules.forEach(rule => {
+      let stringifiedRule = {};
+      eachKey(rule, key => {
+        if(key === "days" || key === "enable") {
+          stringifiedRule[key] = rule[key]
+        } else {
+          stringifiedRule[key] = `"${rule[key]}"`
+        }
+      })
+      bucketValues["-archive_rule"].push(stringifiedRule)
+    })
+  }
+  if(bucket.expire_rule) {
+    bucketValues._expire_rule = {};
+    eachKey(bucket.expire_rule, key => {
+      if(isString(bucket.expire_rule[key])) {
+        bucketValues._expire_rule[key] = `"${bucket.expire_rule[key]}"`
+      } else {
+        bucketValues._expire_rule[key] = bucket.expire_rule[key]
+      }
+    })
+  }
+  if(bucket.retention_rule) {
+    bucketValues._retention_rule = bucket.retention_rule
+  }
   return jsonToTf(
     "ibm_cos_bucket",
     cos.name + "-object-storage-" + bucket.name + "-bucket",
-    {
-      bucket_name: kebabName(
-        config,
-        [cos.name, bucket.name],
-        randomSuffix(cos)
-      ),
-      resource_instance_id: cosRef(cos.name, "id", cos.use_data),
-      storage_class: `"${bucket.storage_class}"`,
-      endpoint_type: `"${bucket.endpoint}"`,
-      force_delete: bucket.force_delete,
-      region_location: "region",
-      key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn"),
-      depends_on: `[ibm_iam_authorization_policy.${snakeCase(
-        cos.name + " cos to " + cos.kms + " kms policy"
-      )}]`,
-    },
+    bucketValues,
     config
   );
 }

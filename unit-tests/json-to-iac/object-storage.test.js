@@ -501,6 +501,566 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
         "it should return cos bucket tf"
       );
     });
+    it("should create cos bucket terraform code from data source with random suffix and object versioning", () => {
+      let actualData = formatCosBucket(
+        {
+          endpoint: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          object_versioning: true,
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = "us-south"
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  object_versioning {
+    enable = true
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and archive rule", () => {
+      let actualData = formatCosBucket(
+        {
+          endpoint: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          archive_rules: [
+            {
+              days: 30,
+              enable: true,
+              rule_id: "my-archive-rule",
+              type: "GLACIER",
+            },
+          ],
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = "us-south"
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  archive_rule {
+    days    = 30
+    enable  = true
+    rule_id = "my-archive-rule"
+    type    = "GLACIER"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and expire rule", () => {
+      let actualData = formatCosBucket(
+        {
+          endpoint: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          expire_rule: {
+            days: 30,
+            date: "2023-5-18",
+            rule_id: "my-expire-rule",
+            prefix: "logs/",
+            expired_object_delete_marker: true,
+            enable: true,
+          },
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = "us-south"
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  expire_rule {
+    days                         = 30
+    date                         = "2023-5-18"
+    rule_id                      = "my-expire-rule"
+    prefix                       = "logs/"
+    expired_object_delete_marker = true
+    enable                       = true
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and retention rule", () => {
+      let actualData = formatCosBucket(
+        {
+          endpoint: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          retention_rule: {
+            default: 1,
+            minimum: 1,
+            maximum: 1,
+            permanent: false
+          },
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = "us-south"
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  retention_rule {
+    default   = 1
+    minimum   = 1
+    maximum   = 1
+    permanent = false
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and allowed ip", () => {
+      let actualData = formatCosBucket(
+        {
+          endpoint: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          allowed_ip: ["1.2.3.4", "5.6.7.8"],
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = "us-south"
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+  allowed_ip           = ["1.2.3.4","5.6.7.8"]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and metrics monitoring", () => {
+      let actualData = formatCosBucket(
+        {
+          endpoint: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          metrics_monitoring: "metrics_monitoring",
+          usage_metrics_enabled: true,
+          request_metrics_enabled: true,
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = "us-south"
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  metrics_monitoring {
+    metrics_monitoring_crn  = "metrics_monitoring"
+    usage_metrics_enabled   = true
+    request_metrics_enabled = true
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and activity tracking", () => {
+      let actualData = formatCosBucket(
+        {
+          endpoint: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          atracker: "atracker",
+          read_data_events: true,
+          write_data_events: true,
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = "us-south"
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  activity_tracking {
+    read_data_events     = true
+    write_data_events    = true
+    activity_tracker_crn = "atracker"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
   });
   describe("formatCosKey", () => {
     it("should create cos bucket terraform code with no hmac", () => {

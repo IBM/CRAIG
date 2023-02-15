@@ -221,7 +221,7 @@ function encryptionKeyRef(kms, key, value) {
  * @param {Object} config
  * @returns {string} formatted values
  */
-function fillTemplate(template, values, config) {
+function fillTemplate(template, values) {
   let newValues = template;
   eachKey(values, (key) => {
     newValues = newValues.replace(
@@ -299,29 +299,36 @@ function jsonToTf(type, name, values, config, useData) {
   )}" {`;
   let longest = longestKeyLength(values);
   /**
-   * run function for each key
+   * run function for each key and
    * @param {Object} obj
    */
   function eachTfKey(obj, offset) {
-    if (offset) longest = longestKeyLength(obj);
-    let offsetSpace = matchLength("", offset || 0);
+    if (offset) longest = longestKeyLength(obj); // longest key
+    let offsetSpace = matchLength("", offset || 0); // offset for recursion
+    // for each field in the terraform object
     eachKey(obj, (key) => {
+      // keys that start with * are used for multiline arrays
       if (key.indexOf("*") === 0) {
         tf += `\n${offsetSpace.length === 0 ? "\n" : ""}  ${
-          offsetSpace + key.replace(/\*/i, "")
+          offsetSpace + key.replace(/\*/i, "") // replace start
         } = [`;
+        // add item with comma
         obj[key].forEach((item) => {
           tf += `\n    ${offsetSpace + item},`;
         });
+        // replace last comma and close
         tf = tf.replace(/,(?=$)/i, "");
         tf += `\n${offsetSpace}  ]`;
       } else if (key.indexOf("-") === 0) {
+        // keys that start with - are used to indicate multiple blocks of the same kind
+        // ex. `network_interfaces` for vsi
         obj[key].forEach(item => {
           tf+= `\n\n  ${key.replace(/^-/i, "")} {`
           eachTfKey(item, 2)
           tf+= `\n  }`
         })
       } else if (key.indexOf("_") !== 0) {
+        // all other keys formatted here
         let keyValue =
           key === "tags" // if tags
             ? getTags(config) // get tags
