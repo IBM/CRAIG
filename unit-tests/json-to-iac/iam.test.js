@@ -88,7 +88,7 @@ resource "ibm_iam_access_group" "frog_access_group" {
     });
   });
   describe("formatAccessGroupPolicy", () => {
-    it("should return correct access group id", () => {
+    it("should return correct access group policy", () => {
       let actualData = formatAccessGroupPolicy({
         group: "frog",
         name: "frogs-only",
@@ -118,8 +118,101 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       vpcId = "*"
     }
   }
-}`
-      console.log(actualData)
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct access group policy with no attributes", () => {
+      let actualData = formatAccessGroupPolicy({
+        group: "frog",
+        name: "frogs-only",
+        roles: ["Reader"],
+        resources: {
+          resource_instance_id: "1234",
+          region: "us-south",
+          service: "cloud-object-storage",
+          resource_type: "resource-group",
+        },
+      });
+      let expectedData = `
+resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
+  access_group_id = ibm_iam_access_group.frogaccess_group.id
+  roles           = ["Reader"]
+
+  resources {
+    resource_instance_id = "1234"
+    region               = "us-south"
+    service              = "cloud-object-storage"
+    resource_type        = "resource-group"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct access group policy with resource attributes", () => {
+      let actualData = formatAccessGroupPolicy({
+        group: "frog",
+        name: "frogs-only",
+        roles: ["Reader"],
+        resource_attributes: [
+          {
+            name: "serviceName",
+            value: "iac-*",
+            operator: "stringEquals",
+          },
+        ],
+      });
+      let expectedData = `
+resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
+  access_group_id     = ibm_iam_access_group.frogaccess_group.id
+  roles               = ["Reader"]
+
+  resource_attributes {
+    name     = "serviceName"
+    value    = "iac-*"
+    operator = "stringEquals"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct access group policy with resource tags", () => {
+      let actualData = formatAccessGroupPolicy({
+        group: "frog",
+        name: "frogs-only",
+        roles: ["Reader"],
+        resource_tags: [
+          {
+            name: "serviceName",
+            value: "iac-*",
+            operator: "stringEquals",
+          },
+        ],
+      });
+      let expectedData = `
+resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
+  access_group_id = ibm_iam_access_group.frogaccess_group.id
+  roles           = ["Reader"]
+
+  resource_tags {
+    name     = "serviceName"
+    value    = "iac-*"
+    operator = "stringEquals"
+  }
+}
+`;
       assert.deepEqual(
         actualData,
         expectedData,

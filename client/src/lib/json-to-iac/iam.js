@@ -8,23 +8,15 @@ const { jsonToTf, tfRef, stringifyTranspose } = require("./utils");
  * @returns {string} terraform formatted code
  */
 function formatIamAccountSettings(iamSettings) {
-  let iamValues = {};
-  eachKey(iamSettings, key => {
-    if (key !== null && key !== "enable") {
-      if (isString(iamSettings[key])) {
-        iamValues[key] = `"${iamSettings[key]}"`;
-      } else {
-        iamValues[key] = iamSettings[key];
-      }
-    }
-  });
-  if (iamSettings.enable)
+  let iamValues = stringifyTranspose(iamSettings);
+  if (iamSettings.enable) {
+    delete iamValues.enable;
     return jsonToTf(
       "ibm_iam_account_settings",
       "iam_account_settings",
       iamValues
     );
-  else return "";
+  } else return "";
 }
 
 /**
@@ -47,6 +39,18 @@ function formatAccessGroup(group, config) {
   );
 }
 
+/**
+ * format access group policy
+ * @param {Object} policy
+ * @param {string} policy.name
+ * @param {string} policy.group
+ * @param {Array<string>} policy.roles
+ * @param {Object=} policy.resources
+ * @param {Object=} policy.resources.attributes
+ * @param {Array<Object>=} policy.resource_attributes
+ * @param {Array<Object>=} policy.resource_tags
+ * @returns {string} terraform string
+ */
 function formatAccessGroupPolicy(policy) {
   let policyValues = {
     access_group_id: tfRef(
@@ -62,6 +66,18 @@ function formatAccessGroupPolicy(policy) {
         policy.resources.attributes
       );
     }
+  }
+  if (policy.resource_attributes) {
+    policyValues["-resource_attributes"] = [];
+    policy.resource_attributes.forEach(attr => {
+      policyValues["-resource_attributes"].push(stringifyTranspose(attr));
+    });
+  }
+  if (policy.resource_tags) {
+    policyValues["-resource_tags"] = [];
+    policy.resource_tags.forEach(attr => {
+      policyValues["-resource_tags"].push(stringifyTranspose(attr));
+    });
   }
   return jsonToTf(
     "ibm_iam_access_group_policy",

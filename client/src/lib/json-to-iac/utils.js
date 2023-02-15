@@ -3,7 +3,6 @@ const {
   snakeCase,
   titleCase,
   kebabCase,
-  contains,
   eachKey,
   isString
 } = require("lazy-z");
@@ -325,7 +324,7 @@ function jsonToTf(type, name, values, config, useData) {
         // ex. `network_interfaces` for vsi
         obj[key].forEach(item => {
           tf += `\n\n  ${key.replace(/^-/i, "")} {`;
-          eachTfKey(item, 2);
+          eachTfKey(item, 2 +  (offset || 0));
           tf += `\n  }`;
         });
       } else if (key.indexOf("_") !== 0) {
@@ -339,9 +338,9 @@ function jsonToTf(type, name, values, config, useData) {
         tf += `\n  ${offsetSpace + matchLength(key, longest)} = ${keyValue}`;
       } else if (key !== "_new") {
         // for keys that aren't new create a sub block
-        tf += `\n\n  ${key.replace(/^_/i, "")} {`;
-        eachTfKey(obj[key], 2);
-        tf += `\n  }`;
+        tf += `\n\n  ${offsetSpace}${key.replace(/^_/i, "")} {`;
+        eachTfKey(obj[key], 2 + (offset || 0));
+        tf += `\n  ${offsetSpace}}`;
       }
     });
   }
