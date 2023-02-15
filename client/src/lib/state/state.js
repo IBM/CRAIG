@@ -1,4 +1,5 @@
 const { lazyZstate } = require("lazy-z/lib/store");
+const { optionsInit, optionsSave } = require("./options");
 const {
   resourceGroupInit,
   resourceGroupOnStoreUpdate,
@@ -10,15 +11,14 @@ const {
 const state = function() {
   let store = new lazyZstate({
     _defaults: {
-      json: {
-        _options: {
-          prefix: "iac",
-          region: "us-south",
-          tags: ["hello", "world"]
-        }
-      }
+      json: {}
     },
     _no_default: []
+  });
+
+  store.newField("options", {
+    init: optionsInit,
+    save: optionsSave
   });
 
   store.newField("resource_groups", {

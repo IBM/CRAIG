@@ -5,6 +5,7 @@ const {
   resourceGroupSave,
   resourceGroupDelete
 } = require("./resource-groups");
+const { optionsInit, optionsSave } = require("./options");
 const state = require("./state");
 const { pushAndUpdate, carveChild, updateChild } = require("./store.utils");
 
@@ -17,5 +18,7 @@ module.exports = {
   state,
   pushAndUpdate,
   carveChild,
-  updateChild
+  updateChild,
+  optionsInit,
+  optionsSave
 };
