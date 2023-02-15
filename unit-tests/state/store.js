@@ -89,13 +89,13 @@ describe("resource_groups", () => {
     });
   });
   describe("resource_groups.save", () => {
-    let crgState;
+    let rgState;
     beforeEach(() => {
-      crgState = new newState();
+      rgState = new newState();
     });
     it("should change the name of a resource group in place", () => {
       let expectedData = ["slz-service-rg", "frog-rg", "slz-workload-rg"];
-      crgState.resource_groups.save(
+      rgState.resource_groups.save(
         {
           name: "frog-rg",
           use_prefix: true,
@@ -107,14 +107,14 @@ describe("resource_groups", () => {
         }
       );
       assert.deepEqual(
-        crgState.store.resourceGroups,
+        rgState.store.resourceGroups,
         expectedData,
         "it should change the name"
       );
     });
     it("should change the name of a resource group in place and update vpcs when not use prefix", () => {
-      crgState.store.configDotJson.resource_groups[1].use_prefix = false;
-      crgState.resource_groups.save(
+      rgState.store.configDotJson.resource_groups[1].use_prefix = false;
+      rgState.resource_groups.save(
         { name: "frog-rg" },
         {
           data: {
@@ -123,7 +123,7 @@ describe("resource_groups", () => {
         }
       );
       assert.deepEqual(
-        crgState.store.configDotJson.resource_groups[1].name,
+        rgState.store.configDotJson.resource_groups[1].name,
         "frog-rg"
       );
     });
