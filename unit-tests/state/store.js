@@ -133,7 +133,7 @@ describe("store", () => {
           tags: ["hello", "world"],
         };
         assert.deepEqual(
-          state.store.json["_options"],
+          state.store.json._options,
           expectedData,
           "it should have options initialized"
         );
@@ -146,14 +146,14 @@ describe("store", () => {
       });
       it("should change the prefix when saved", () => {
         oState.options.save({ prefix: "test" }, { data: { prefix: "iac" } });
-        assert.deepEqual(oState.store.json["_options"].prefix, "test");
+        assert.deepEqual(oState.store.json._options.prefix, "test");
       });
       it("should update tags when saved", () => {
         oState.options.save(
           { tags: ["new", "tags", "here"] },
           { data: { tags: ["hello", "world"] } }
         );
-        assert.deepEqual(oState.store.json["_options"].tags, [
+        assert.deepEqual(oState.store.json._options.tags, [
           "new",
           "tags",
           "here",

@@ -7,7 +7,7 @@ const { updateChild } = require("./store.utils");
  * @param {object} config.store.json configuration JSON
  */
 function optionsInit(config) {
-  config.store.json["_options"] = {
+  config.store.json._options = {
     prefix: "iac",
     region: "us-south",
     tags: ["hello", "world"]
