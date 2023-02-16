@@ -1,4 +1,4 @@
-const { revision, carve } = require("lazy-z");
+const { revision, carve, contains } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 
 /**
@@ -40,8 +40,32 @@ function carveChild(config, field, componentProps) {
   carve(config.store.json[field], "name", componentProps.data.name);
 }
 
+/**
+ * set unfound data from store to null
+ * @param {string} storeField name of field in store
+ * @param {lazyZstate} state store
+ * @param {object} obj arbitrary object
+ * @param {string} objectField name of the field within object to check
+ */
+function setUnfound(storeField, config, obj, objectField) {
+  if (!contains(config.store[storeField], obj[objectField])) {
+    obj[objectField] = null;
+  }
+}
+
+/**
+ * set unfound resource group to null
+ * @param {lazyZstate} state store
+ * @param {object} obj arbitrary object
+ */
+function setUnfoundResourceGroup(config, obj) {
+  setUnfound("resourceGroups", config, obj, "resource_group");
+}
+
 module.exports = {
   pushAndUpdate,
   updateChild,
-  carveChild
+  carveChild,
+  setUnfound,
+  setUnfoundResourceGroup
 };

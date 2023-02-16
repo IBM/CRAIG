@@ -11,16 +11,6 @@ const {
   keyManagementDelete
 } = require("./key-management");
 const {
-  keyManagementInit,
-  keyManagementOnStoreUpdate,
-  keyManagementSave,
-  kmsKeyCreate,
-  kmsKeyDelete,
-  kmsKeySave,
-  keyManagementCreate,
-  keyManagementDelete
-} = require("./key-management");
-const {
   resourceGroupInit,
   resourceGroupOnStoreUpdate,
   resourceGroupCreate,

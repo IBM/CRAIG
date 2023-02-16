@@ -11,7 +11,7 @@ const { transpose } = require("lazy-z");
  * @param {string} keyParams.endpoint endpoint value
  * @param {string} keyParams.iv_value iv_value value
  * @param {string} keyParams.encrypted_nonce encrypted_nonce value
- * @param {number} keyParams.interval_month interval month for policy
+ * @param {number} keyParams.rotation interval month for policy
  * @returns {Object} encryption key object
  */
 function buildNewEncryptionKey(keyParams) {
@@ -25,15 +25,12 @@ function buildNewEncryptionKey(keyParams) {
     endpoint: null,
     iv_value: null,
     encrypted_nonce: null,
-    policies: {
-      rotation: {
-        interval_month: 12
-      }
-    }
+    rotation: 12,
+    dual_auth_delete: false
   };
-  if (params?.interval_month) {
-    newKey.policies.rotation.interval_month = params.interval_month;
-    delete params.interval_month;
+  if (params?.rotation) {
+    newKey.rotation = params.rotation;
+    delete params.rotation;
   }
   transpose(params, newKey);
   return newKey;

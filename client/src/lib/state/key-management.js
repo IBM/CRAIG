@@ -5,28 +5,13 @@ const { newDefaultKms } = require("./defaults");
 const { setUnfoundResourceGroup, carveChild } = require("./store.utils");
 
 /**
- * set encryption keys for slz store
- * @param {lazyZstate} config
- * @param {object} config.store
- * @param {object} config.store.json
- * @param {object} config.store.json.key_management
- * @param {Array<object>} config.store.key_management.keys
- */
-function setEncryptionKeys(config) {
-  config.store.encryptionKeys = splat(
-    config.store.json.key_management[0].keys,
-    "name"
-  );
-}
-
-/**
  * initialize key management in slz store
  * @param {lazyZstate} config
  * @param {object} config.store
  * @param {object} config.store.json
  */
 function keyManagementInit(config) {
-  config.store.json.key_management = newDefaultKms(); // is key management supposed to be list?
+  config.store.json.key_management = newDefaultKms();
   // push roks key
   config.store.json.key_management[0].keys.push({
     key_ring: "slz-slz-ring",
@@ -37,27 +22,8 @@ function keyManagementInit(config) {
     endpoint: null,
     iv_value: null,
     encrypted_nonce: null,
-    policies: {
-      rotation: {
-        interval_month: 12
-      }
-    }
-  });
-  // push vsi key
-  config.store.json.key_management[0].keys.push({
-    key_ring: "slz-slz-ring",
-    name: "slz-vsi-volume-key",
-    root_key: true,
-    payload: null,
-    force_delete: null,
-    endpoint: null,
-    iv_value: null,
-    encrypted_nonce: null,
-    policies: {
-      rotation: {
-        interval_month: 12
-      }
-    }
+    rotation: 12,
+    dual_auth_delete: false
   });
   setEncryptionKeys(config);
 }
@@ -71,7 +37,9 @@ function keyManagementInit(config) {
  */
 function keyManagementOnStoreUpdate(config) {
   setEncryptionKeys(config);
-  // setUnfoundResourceGroup(config, config.store.json.key_management); TODO add
+  config.store.json.key_management.forEach(kms => {
+    setUnfoundResourceGroup(config, kms);
+  });
 }
 
 /**
@@ -89,10 +57,11 @@ function keyManagementOnStoreUpdate(config) {
 function keyManagementSave(slz, stateData) {
   let keyManagementData = {
     // set to true if use hs crypto
-    use_data: stateData.use_hs_crypto ? true : stateData.use_data || false,
-    use_hs_crypto: stateData.use_hs_crypto || false,
     name: stateData.name,
-    resource_group: stateData.resource_group
+    resource_group: stateData.resource_group,
+    use_hs_crypto: stateData.use_hs_crypto || false,
+    authorize_vpc_reader_role: stateData.authorize_vpc_reader_role,
+    use_data: stateData.use_hs_crypto ? true : stateData.use_data || false
   };
   new revision(config.store.json.key_management).update(keyManagementData);
 }
@@ -114,6 +83,21 @@ function keyManagementCreate(config, stateData) {
  */
 function keyManagementDelete(config, stateData, componentProps) {
   carveChild(config, "key_management", componentProps);
+}
+
+/**
+ * set encryption keys for slz store
+ * @param {lazyZstate} config
+ * @param {object} config.store
+ * @param {object} config.store.json
+ * @param {object} config.store.json.key_management
+ * @param {Array<object>} config.store.key_management.keys
+ */
+function setEncryptionKeys(config) {
+  config.store.encryptionKeys = splat(
+    config.store.json.key_management[0].keys,
+    "name"
+  );
 }
 
 /**
@@ -143,10 +127,6 @@ function kmsKeyCreate(slz, stateData) {
  * @param {string} componentProps.data.name original name
  */
 function kmsKeySave(config, stateData, componentProps) {
-  stateData["policies"] = {
-    rotation: { interval_month: stateData.interval_month }
-  };
-  delete stateData.interval_month;
   new revision(config.store.json.key_management).updateChild(
     "keys",
     componentProps.data.name,

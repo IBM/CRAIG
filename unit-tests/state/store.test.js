@@ -10,6 +10,7 @@ function newState() {
   store.setUpdateCallback(() => {});
   return store;
 }
+
 describe("store", () => {
   describe("resource_groups", () => {
     describe("resource_groups.init", () => {
@@ -158,6 +159,83 @@ describe("store", () => {
           "tags",
           "here",
         ]);
+      });
+    });
+  });
+  describe("key_management", () => {
+    describe("key_management.init", () => {
+      it("should initialize key_management as a list", () => {
+        let state = new newState();
+        let expectedData = [
+          {
+            name: "kms",
+            resource_group: "service-rg",
+            use_hs_crypto: false,
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            keys: [
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-slz-key",
+                root_key: true,
+                force_delete: true,
+                endpoint: "public",
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-atracker-key",
+                root_key: true,
+                force_delete: true,
+                endpoint: "public",
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-vsi-volume-key",
+                root_key: true,
+                force_delete: true,
+                endpoint: "public",
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-roks-key",
+                root_key: true,
+                payload: null,
+                force_delete: null,
+                endpoint: null,
+                iv_value: null,
+                encrypted_nonce: null,
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+            ],
+          },
+        ];
+        assert.deepEqual(
+          state.store.json.key_management,
+          expectedData,
+          "it should have key_management initialized as a list"
+        );
+      });
+    });
+    describe("key_management.onStoreUpdate", () => {
+      it("should set parent keys", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.store.encryptionKeys,
+          [
+            "slz-slz-key",
+            "slz-atracker-key",
+            "slz-vsi-volume-key",
+            "slz-roks-key",
+          ],
+          "it should be set to keys"
+        );
       });
     });
   });
