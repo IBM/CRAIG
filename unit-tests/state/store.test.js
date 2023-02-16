@@ -238,5 +238,141 @@ describe("store", () => {
         );
       });
     });
+    describe("key_management.save", () => {
+      it("should change the properties of the key management instance", () => {
+        let state = new newState();
+        state.key_management.save(
+          {
+            name: "todd",
+            resource_group: null,
+            use_hs_crypto: true,
+            authorize_vpc_reader_role: true,
+          },
+          { data: { name: "kms" } }
+        );
+        state.store.json.key_management[0].keys = [];
+        let expectedData = [
+          {
+            name: "todd",
+            resource_group: null,
+            use_hs_crypto: true,
+            use_data: true,
+            authorize_vpc_reader_role: true,
+            keys: [],
+          },
+        ];
+        assert.deepEqual(
+          state.store.json.key_management,
+          expectedData,
+          "it should update everything"
+        );
+      });
+      it("should change the properties of the key management instance with no hs crypto", () => {
+        let state = new newState();
+        state.key_management.save(
+          {
+            name: "todd",
+            resource_group: null,
+            authorize_vpc_reader_role: false,
+          },
+          { data: { name: "kms" } }
+        );
+        state.store.json.key_management[0].keys = [];
+        let expectedData = [
+          {
+            name: "todd",
+            resource_group: null,
+            use_hs_crypto: false,
+            use_data: false,
+            authorize_vpc_reader_role: false,
+            keys: [],
+          },
+        ];
+        assert.deepEqual(
+          state.store.json.key_management,
+          expectedData,
+          "it should update everything"
+        );
+      });
+    });
+    describe("key_management.create", () => {
+      it("should add a new key management system", () => {
+        let state = new newState();
+        let expectedData = [
+          {
+            name: "kms",
+            resource_group: "service-rg",
+            use_hs_crypto: false,
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            keys: [
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-slz-key",
+                root_key: true,
+                force_delete: true,
+                endpoint: "public",
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-atracker-key",
+                root_key: true,
+                force_delete: true,
+                endpoint: "public",
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-vsi-volume-key",
+                root_key: true,
+                force_delete: true,
+                endpoint: "public",
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+              {
+                key_ring: "slz-slz-ring",
+                name: "slz-roks-key",
+                root_key: true,
+                payload: null,
+                force_delete: null,
+                endpoint: null,
+                iv_value: null,
+                encrypted_nonce: null,
+                rotation: 12,
+                dual_auth_delete: false,
+              },
+            ],
+          },
+          {
+            name: "todd",
+            resource_group: null,
+            use_hs_crypto: false,
+            use_data: false,
+            authorize_vpc_reader_role: false,
+            keys: [],
+          },
+        ];
+        state.key_management.create({
+          name: "todd",
+          resource_group: null,
+          use_hs_crypto: false,
+          use_data: false,
+          authorize_vpc_reader_role: false,
+          keys: [],
+        });
+        assert.deepEqual(state.store.json.key_management, expectedData);
+      });
+    });
+    describe("key_management.delete", () => {
+      it("should delete a key_management system", () => {
+        let state = new newState();
+        state.key_management.delete({}, { data: { name: "kms" } });
+        assert.deepEqual(state.store.json.key_management, []);
+      });
+    });
   });
 });

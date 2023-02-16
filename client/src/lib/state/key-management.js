@@ -2,7 +2,12 @@ const { splat, revision, carve } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { buildNewEncryptionKey } = require("../builders");
 const { newDefaultKms } = require("./defaults");
-const { setUnfoundResourceGroup, carveChild } = require("./store.utils");
+const {
+  setUnfoundResourceGroup,
+  carveChild,
+  updateChild,
+  pushAndUpdate
+} = require("./store.utils");
 
 /**
  * initialize key management in slz store
@@ -54,7 +59,7 @@ function keyManagementOnStoreUpdate(config) {
  * @param {string} stateData.name
  * @param {string} stateData.resource_group
  */
-function keyManagementSave(slz, stateData) {
+function keyManagementSave(config, stateData, componentProps) {
   let keyManagementData = {
     // set to true if use hs crypto
     name: stateData.name,
@@ -63,7 +68,7 @@ function keyManagementSave(slz, stateData) {
     authorize_vpc_reader_role: stateData.authorize_vpc_reader_role,
     use_data: stateData.use_hs_crypto ? true : stateData.use_data || false
   };
-  new revision(config.store.json.key_management).update(keyManagementData);
+  updateChild(config, "key_management", keyManagementData, componentProps);
 }
 
 /**
@@ -94,10 +99,14 @@ function keyManagementDelete(config, stateData, componentProps) {
  * @param {Array<object>} config.store.key_management.keys
  */
 function setEncryptionKeys(config) {
-  config.store.encryptionKeys = splat(
-    config.store.json.key_management[0].keys,
-    "name"
-  );
+  if (config.store.json.key_management.length > 0) {
+    config.store.encryptionKeys = splat(
+      config.store.json.key_management[0].keys,
+      "name"
+    );
+  } else {
+    config.store.encryptionKeys = [];
+  }
 }
 
 /**
