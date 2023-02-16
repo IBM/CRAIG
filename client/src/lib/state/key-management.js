@@ -103,10 +103,13 @@ function keyManagementDelete(config, stateData, componentProps) {
  */
 function setEncryptionKeys(config) {
   if (config.store.json.key_management.length > 0) {
-    config.store.encryptionKeys = splat(
-      config.store.json.key_management[0].keys,
-      "name"
-    );
+    // if there is a kms service
+    config.store.encryptionKeys = [];
+    config.store.json.key_management.forEach(kms => {
+      config.store.encryptionKeys = config.store.encryptionKeys.concat(
+        splat(kms.keys, "name")
+      );
+    });
   } else {
     config.store.encryptionKeys = [];
   }
