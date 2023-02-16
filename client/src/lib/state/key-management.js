@@ -25,11 +25,8 @@ function keyManagementInit(config) {
     key_ring: "slz-slz-ring",
     name: "slz-roks-key",
     root_key: true,
-    payload: null,
     force_delete: null,
     endpoint: null,
-    iv_value: null,
-    encrypted_nonce: null,
     rotation: 12,
     dual_auth_delete: false
   });
