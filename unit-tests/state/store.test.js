@@ -175,8 +175,8 @@ describe("store", () => {
             use_data: false,
             keys: [
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-slz-key",
+                key_ring: "ring",
+                name: "key",
                 root_key: true,
                 force_delete: true,
                 endpoint: "public",
@@ -184,8 +184,8 @@ describe("store", () => {
                 dual_auth_delete: false,
               },
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-atracker-key",
+                key_ring: "ring",
+                name: "atracker-key",
                 root_key: true,
                 force_delete: true,
                 endpoint: "public",
@@ -193,8 +193,8 @@ describe("store", () => {
                 dual_auth_delete: false,
               },
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-vsi-volume-key",
+                key_ring: "ring",
+                name: "vsi-volume-key",
                 root_key: true,
                 force_delete: true,
                 endpoint: "public",
@@ -202,8 +202,8 @@ describe("store", () => {
                 dual_auth_delete: false,
               },
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-roks-key",
+                key_ring: "ring",
+                name: "roks-key",
                 root_key: true,
                 force_delete: null,
                 endpoint: null,
@@ -225,12 +225,7 @@ describe("store", () => {
         let state = new newState();
         assert.deepEqual(
           state.store.encryptionKeys,
-          [
-            "slz-slz-key",
-            "slz-atracker-key",
-            "slz-vsi-volume-key",
-            "slz-roks-key",
-          ],
+          ["key", "atracker-key", "vsi-volume-key", "roks-key"],
           "it should be set to keys"
         );
       });
@@ -304,8 +299,8 @@ describe("store", () => {
             use_data: false,
             keys: [
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-slz-key",
+                key_ring: "ring",
+                name: "key",
                 root_key: true,
                 force_delete: true,
                 endpoint: "public",
@@ -313,8 +308,8 @@ describe("store", () => {
                 dual_auth_delete: false,
               },
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-atracker-key",
+                key_ring: "ring",
+                name: "atracker-key",
                 root_key: true,
                 force_delete: true,
                 endpoint: "public",
@@ -322,8 +317,8 @@ describe("store", () => {
                 dual_auth_delete: false,
               },
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-vsi-volume-key",
+                key_ring: "ring",
+                name: "vsi-volume-key",
                 root_key: true,
                 force_delete: true,
                 endpoint: "public",
@@ -331,8 +326,8 @@ describe("store", () => {
                 dual_auth_delete: false,
               },
               {
-                key_ring: "slz-slz-ring",
-                name: "slz-roks-key",
+                key_ring: "ring",
+                name: "roks-key",
                 root_key: true,
                 force_delete: null,
                 endpoint: null,
@@ -378,7 +373,7 @@ describe("store", () => {
               root_key: true,
               key_ring: "all-new-ring",
             },
-            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+            { arrayParentName: "kms", data: { name: "key" } }
           );
           let expectedData = {
             name: "all-new-key",
@@ -406,7 +401,7 @@ describe("store", () => {
               key_ring: "all-new-ring",
               rotation: 12,
             },
-            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+            { arrayParentName: "kms", data: { name: "key" } }
           );
           let expectedData = {
             name: "all-new-key",
@@ -427,15 +422,15 @@ describe("store", () => {
           let state = new newState();
           state.key_management.keys.save(
             {
-              name: "slz-slz-key",
+              name: "key",
               root_key: true,
               key_ring: "all-new-ring",
               rotation: 3,
             },
-            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+            { arrayParentName: "kms", data: { name: "key" } }
           );
           let expectedData = {
-            name: "slz-slz-key",
+            name: "key",
             root_key: true,
             key_ring: "all-new-ring",
             force_delete: true,
@@ -455,11 +450,11 @@ describe("store", () => {
           let state = new newState();
           state.key_management.keys.delete(
             {},
-            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+            { arrayParentName: "kms", data: { name: "key" } }
           );
           assert.deepEqual(
             state.store.encryptionKeys,
-            ["slz-atracker-key", "slz-vsi-volume-key", "slz-roks-key"],
+            ["atracker-key", "vsi-volume-key", "roks-key"],
             "it should update key"
           );
         });

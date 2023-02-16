@@ -22,8 +22,8 @@ function keyManagementInit(config) {
   config.store.json.key_management = newDefaultKms();
   // push roks key
   config.store.json.key_management[0].keys.push({
-    key_ring: "slz-slz-ring",
-    name: "slz-roks-key",
+    key_ring: "ring",
+    name: "roks-key",
     root_key: true,
     force_delete: null,
     endpoint: null,

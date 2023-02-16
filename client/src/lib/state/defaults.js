@@ -8,8 +8,8 @@ function newDefaultKms() {
       use_data: false,
       keys: [
         {
-          key_ring: "slz-slz-ring",
-          name: "slz-slz-key",
+          key_ring: "ring",
+          name: "key",
           root_key: true,
           force_delete: true,
           endpoint: "public",
@@ -17,8 +17,8 @@ function newDefaultKms() {
           dual_auth_delete: false
         },
         {
-          key_ring: "slz-slz-ring",
-          name: "slz-atracker-key",
+          key_ring: "ring",
+          name: "atracker-key",
           root_key: true,
           force_delete: true,
           endpoint: "public",
@@ -26,8 +26,8 @@ function newDefaultKms() {
           dual_auth_delete: false
         },
         {
-          key_ring: "slz-slz-ring",
-          name: "slz-vsi-volume-key",
+          key_ring: "ring",
+          name: "vsi-volume-key",
           root_key: true,
           force_delete: true,
           endpoint: "public",
