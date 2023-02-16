@@ -39,4 +39,61 @@ function newDefaultKms() {
   ];
 }
 
-module.exports = { newDefaultKms };
+/**
+ * create new default cos object
+ */
+function newDefaultCos() {
+  return [
+    {
+      buckets: [
+        {
+          endpoint_type: "public",
+          force_delete: true,
+          kms_key: "atracker-key",
+          name: "atracker-bucket",
+          storage_class: "standard"
+        }
+      ],
+      keys: [
+        {
+          name: "cos-bind-key",
+          role: "Writer",
+          enable_HMAC: false
+        }
+      ],
+      name: "atracker-cos",
+      plan: "standard",
+      resource_group: "service-rg",
+      use_data: false,
+      random_suffix: true,
+      kms: "kms"
+    },
+    {
+      buckets: [
+        {
+          endpoint_type: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "management-bucket",
+          storage_class: "standard"
+        },
+        {
+          endpoint_type: "public",
+          force_delete: true,
+          kms_key: "key",
+          name: "workload-bucket",
+          storage_class: "standard"
+        }
+      ],
+      random_suffix: true,
+      keys: [],
+      name: "cos",
+      plan: "standard",
+      resource_group: "service-rg",
+      use_data: false,
+      kms: "kms"
+    }
+  ];
+}
+
+module.exports = { newDefaultKms, newDefaultCos };

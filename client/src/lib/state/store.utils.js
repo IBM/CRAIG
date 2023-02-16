@@ -63,6 +63,16 @@ function setUnfoundResourceGroup(config, obj) {
 }
 
 /**
+ * set unfound encryption key to null
+ * @param {lazyZstate} state store
+ * @param {object} obj arbitrary object
+ * @param {string=} overrideField use key other than "kms_key"
+ */
+function setUnfoundEncryptionKey(config, obj, overrideField) {
+  setUnfound("encryptionKeys", config, obj, overrideField || "kms_key");
+}
+
+/**
  * update an object within an array of objects in an array of objects
  * @param {lazyZstate} config state store
  * @param {string} field top level field name (ex. vpcs)
@@ -79,15 +89,15 @@ function updateSubChild(
   field,
   subField,
   stateData,
-  componentProps
-  //callback -- commenting out callback until a callback is needed for unit test purposes
+  componentProps,
+  callback
 ) {
   new revision(config.store.json)
     .child(field, componentProps.arrayParentName)
-    .updateChild(subField, componentProps.data.name, stateData);
-  // .then(() => {
-  //   if (callback) callback(config);
-  // });
+    .updateChild(subField, componentProps.data.name, stateData)
+    .then(() => {
+      if (callback) callback(config);
+    });
 }
 
 /**
@@ -128,6 +138,7 @@ module.exports = {
   carveChild,
   setUnfound,
   setUnfoundResourceGroup,
+  setUnfoundEncryptionKey,
   updateSubChild,
   pushToChildField,
   deleteSubChild

@@ -17,11 +17,26 @@ const {
   resourceGroupSave,
   resourceGroupDelete
 } = require("./resource-groups");
+const {
+  cosInit,
+  cosOnStoreUpdate,
+  cosCreate,
+  cosSave,
+  cosDelete,
+  cosBucketCreate,
+  cosBucketSave,
+  cosBucketDelete,
+  cosKeyCreate,
+  cosKeySave,
+  cosKeyDelete
+} = require("./cos");
 
 const state = function() {
   let store = new lazyZstate({
     _defaults: {
-      json: {}
+      json: {},
+      cosBuckets: [],
+      cosKeys: []
     },
     _no_default: []
   });
@@ -51,6 +66,27 @@ const state = function() {
         create: kmsKeyCreate,
         delete: kmsKeyDelete,
         save: kmsKeySave
+      }
+    }
+  });
+
+  // next, update cos
+  store.newField("cos", {
+    init: cosInit,
+    onStoreUpdate: cosOnStoreUpdate,
+    create: cosCreate,
+    save: cosSave,
+    delete: cosDelete,
+    subComponents: {
+      buckets: {
+        create: cosBucketCreate,
+        save: cosBucketSave,
+        delete: cosBucketDelete
+      },
+      keys: {
+        create: cosKeyCreate,
+        save: cosKeySave,
+        delete: cosKeyDelete
       }
     }
   });
