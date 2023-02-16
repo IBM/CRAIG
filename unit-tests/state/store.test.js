@@ -374,5 +374,105 @@ describe("store", () => {
         assert.deepEqual(state.store.json.key_management, []);
       });
     });
+    describe("key_management.keys", () => {
+      describe("key_management.keys.create", () => {
+        it("should create a new key", () => {
+          let state = new newState();
+          state.key_management.keys.create(
+            {
+              name: "all-new-key",
+              root_key: true,
+              key_ring: "all-new-ring",
+            },
+            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+          );
+          let expectedData = {
+            name: "all-new-key",
+            root_key: true,
+            key_ring: "all-new-ring",
+            payload: null,
+            force_delete: null,
+            endpoint: null,
+            iv_value: null,
+            encrypted_nonce: null,
+            rotation: 12,
+            dual_auth_delete: false,
+          };
+          assert.deepEqual(
+            state.store.json.key_management[0].keys[4],
+            expectedData,
+            "it should add key"
+          );
+        });
+      });
+      describe("key_management.keys.save", () => {
+        it("should update an encryption key in place", () => {
+          let state = new newState();
+          state.key_management.keys.save(
+            {
+              name: "all-new-key",
+              root_key: true,
+              key_ring: "all-new-ring",
+              rotation: 12,
+            },
+            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+          );
+          let expectedData = {
+            name: "all-new-key",
+            root_key: true,
+            key_ring: "all-new-ring",
+            force_delete: true,
+            endpoint: "public",
+            rotation: 12,
+            dual_auth_delete: false,
+          };
+          assert.deepEqual(
+            state.store.json.key_management[0].keys[0],
+            expectedData,
+            "it should update key"
+          );
+        });
+        it("should update an encryption key in place with same name", () => {
+          let state = new newState();
+          state.key_management.keys.save(
+            {
+              name: "slz-slz-key",
+              root_key: true,
+              key_ring: "all-new-ring",
+              rotation: 3,
+            },
+            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+          );
+          let expectedData = {
+            name: "slz-slz-key",
+            root_key: true,
+            key_ring: "all-new-ring",
+            force_delete: true,
+            endpoint: "public",
+            rotation: 3,
+            dual_auth_delete: false,
+          };
+          assert.deepEqual(
+            state.store.json.key_management[0].keys[0],
+            expectedData,
+            "it should update key"
+          );
+        });
+      });
+      describe("key_management.keys.delete", () => {
+        it("should delete an encryption key", () => {
+          let state = new newState();
+          state.key_management.keys.delete(
+            {},
+            { arrayParentName: "kms", data: { name: "slz-slz-key" } }
+          );
+          assert.deepEqual(
+            state.store.encryptionKeys,
+            ["slz-atracker-key", "slz-vsi-volume-key", "slz-roks-key"],
+            "it should update key"
+          );
+        });
+      });
+    });
   });
 });

@@ -6,7 +6,10 @@ const {
   setUnfoundResourceGroup,
   carveChild,
   updateChild,
-  pushAndUpdate
+  pushAndUpdate,
+  updateSubChild,
+  pushToChildField,
+  deleteSubChild
 } = require("./store.utils");
 
 /**
@@ -118,9 +121,10 @@ function setEncryptionKeys(config) {
  * @param {Array<string>} config.store.json.key_management.keys
  * @param {object} stateData component state data
  */
-function kmsKeyCreate(slz, stateData) {
+function kmsKeyCreate(config, stateData, componentProps) {
   let newKey = buildNewEncryptionKey(stateData);
-  config.store.json.key_management.keys.push(newKey);
+  // this needs to know which key management instance - in array
+  pushToChildField(config, "key_management", "keys", newKey, componentProps);
 }
 
 /**
@@ -136,11 +140,7 @@ function kmsKeyCreate(slz, stateData) {
  * @param {string} componentProps.data.name original name
  */
 function kmsKeySave(config, stateData, componentProps) {
-  new revision(config.store.json.key_management).updateChild(
-    "keys",
-    componentProps.data.name,
-    stateData
-  );
+  updateSubChild(config, "key_management", "keys", stateData, componentProps);
 }
 
 /**
@@ -155,11 +155,7 @@ function kmsKeySave(config, stateData, componentProps) {
  * @param {string} componentProps.data.name original name
  */
 function kmsKeyDelete(config, stateData, componentProps) {
-  carve(
-    config.store.json.key_management.keys,
-    "name",
-    componentProps.data.name
-  );
+  deleteSubChild(config, "key_management", "keys", componentProps);
 }
 
 module.exports = {
