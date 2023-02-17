@@ -1,4 +1,5 @@
 const { lazyZstate } = require("lazy-z/lib/store");
+const { contains } = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,
@@ -30,6 +31,11 @@ const {
   cosKeySave,
   cosKeyDelete
 } = require("./cos");
+const {
+  atrackerInit,
+  atrackerOnStoreUpdate,
+  atrackerSave
+} = require("./atracker");
 
 const state = function() {
   let store = new lazyZstate({
@@ -40,6 +46,18 @@ const state = function() {
     },
     _no_default: []
   });
+
+  /**
+   * update unfound value from store
+   * @param {string} listName name of the list within the store
+   * @param {Object} obj arbitrary object
+   * @param {string} field name of the field on the object to update
+   */
+  store.updateUnfound = function(listName, obj, field) {
+    if (!contains(store.store[listName], obj[field])) {
+      obj[field] = null;
+    }
+  };
 
   store.newField("options", {
     init: optionsInit,
@@ -89,6 +107,12 @@ const state = function() {
         delete: cosKeyDelete
       }
     }
+  });
+
+  store.newField("atracker", {
+    init: atrackerInit,
+    onStoreUpdate: atrackerOnStoreUpdate,
+    save: atrackerSave
   });
 
   return store;

@@ -160,7 +160,6 @@ function cosKeyCreate(config, stateData, componentProps) {
  * save a cos key
  * @param {lazyZstate} config state store
  * @param {object} config.store
- * @param {string} config.store.atrackerKey atracker key name
  * @param {object} stateData component state data
  * @param {object} componentProps props from component form
  * @param {object} componentProps.data original object data
@@ -168,8 +167,8 @@ function cosKeyCreate(config, stateData, componentProps) {
  */
 function cosKeySave(config, stateData, componentProps) {
   updateSubChild(config, "cos", "keys", stateData, componentProps, config => {
-    if (config.store.atrackerKey === componentProps.data.name) {
-      config.store.atrackerKey = stateData.name;
+    if (config.store.json.atracker.cos_key === componentProps.data.name) {
+      config.store.json.atracker.cos_key = stateData.name;
     }
   });
 }
