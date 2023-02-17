@@ -37,7 +37,7 @@ function formatSshKey(key, config) {
  * @returns {string} terraform code
  */
 function sshKeyTf(config) {
-  let tf = buildTitleComment("ssh", "keys").replace(/Ssh/g, "SSH");
+  let tf = buildTitleComment("ssh", "keys");
   config.ssh_keys.forEach((key) => (tf += formatSshKey(key, config)));
   return tf + endComment + "\n";
 }

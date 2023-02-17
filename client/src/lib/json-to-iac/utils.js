@@ -6,8 +6,9 @@ const {
   eachKey,
   isString
 } = require("lazy-z");
+const { RegexButWithWords } = require("regex-but-with-words");
+const { lastCommaExp } = require("../constants");
 const constants = require("./constants");
-
 /**
  * get a resource group id using name
  * @param {string} groupName name of resource group
@@ -58,18 +59,21 @@ function buildTitleComment(type, name) {
   return (
     constants.titleComment
       .replace("TITLE", titleCase(`${type} ${name}`))
-      .replace("F 5", "F5") + "\n"
+      .replace(
+        new RegexButWithWords()
+          .literal("F")
+          .whitespace()
+          .literal("5")
+          .done("g"),
+        "F5"
+      )
+      .replace(/And/i, "and")
+      .replace(/Iam/g, "IAM")
+      .replace(/Vpe/g, "VPE")
+      .replace(/Ssh(?=\s)/g, "SSH")
+      .replace(/Vpc(?=\s)/g, "VPC")
+      .replace(/Vpn(?=\s)/g, "VPN") + "\n"
   );
-}
-
-/**
- * build kms instance crn
- * @param {string} kmsName
- * @param {string} keyName
- * @returns {string} key reference
- */
-function getKmsKeyCrn(kmsName, keyName) {
-  return `ibm_kms_key.${snakeCase(kmsName + "-" + keyName + "-key")}.crn`;
 }
 
 /**
@@ -238,7 +242,14 @@ function fillTemplate(template, values) {
  * @returns {number} 1, 2, or 3
  */
 function subnetZone(subnet) {
-  return subnet.replace(/[^]+(?=\d$)/g, "");
+  return subnet.replace(
+    new RegexButWithWords()
+      .any()
+      .oneOrMore()
+      .look.ahead(exp => exp.digit().stringEnd())
+      .done("g"),
+    ""
+  );
 }
 
 /**
@@ -307,47 +318,45 @@ function jsonToTf(type, name, values, config, useData) {
     let offsetSpace = matchLength("", offset || 0); // offset for recursion
     // for each field in the terraform object
     eachKey(obj, key => {
+      let keyName = key.replace(/^(-|_|\*)/g, "");
+      let nextOffset = offset || 0;
       // keys that start with * are used for multiline arrays
       if (key.indexOf("*") === 0) {
-        tf += `\n${offsetSpace.length === 0 ? "\n" : ""}  ${
-          offsetSpace + key.replace(/\*/i, "") // replace start
-        } = [`;
+        tf += `\n${offsetSpace.length === 0 ? "\n" : ""}  ${offsetSpace +
+          keyName} = [`;
         // add item with comma
         obj[key].forEach(item => {
           tf += `\n    ${offsetSpace + item},`;
         });
         // replace last comma and close
-        tf = tf.replace(/,(?=$)/i, "");
+        tf = tf.replace(lastCommaExp, "");
         tf += `\n${offsetSpace}  ]`;
       } else if (key.indexOf("-") === 0) {
         // keys that start with - are used to indicate multiple blocks of the same kind
         // ex. `network_interfaces` for vsi
         obj[key].forEach(item => {
-          tf += `\n\n  ${key.replace(/^-/i, "")} {`;
-          eachTfKey(item, 2 +  (offset || 0));
+          tf += `\n\n  ${keyName} {`;
+          eachTfKey(item, 2 + nextOffset);
           tf += `\n  }`;
         });
-      } else if (key.indexOf("_") !== 0) {
+      } else if (key.indexOf("_") === 0) {
+        // for keys that aren't new create a sub block
+        tf += `\n\n  ${offsetSpace}${keyName} {`;
+        eachTfKey(obj[key], 2 + nextOffset);
+        tf += `\n  ${offsetSpace}}`;
+      } else {
         // all other keys formatted here
         let keyValue =
           key === "tags" // if tags
             ? getTags(config) // get tags
-            : obj[key] === "region" // if value is region
+            : obj[key] === "$region" // if value is region
             ? `"${config._options.region}"` // add region
             : obj[key]; // otherwise value
         tf += `\n  ${offsetSpace + matchLength(key, longest)} = ${keyValue}`;
-      } else if (key !== "_new") {
-        // for keys that aren't new create a sub block
-        tf += `\n\n  ${offsetSpace}${key.replace(/^_/i, "")} {`;
-        eachTfKey(obj[key], 2 + (offset || 0));
-        tf += `\n  ${offsetSpace}}`;
       }
     });
   }
   eachTfKey(values);
-  if (values._new && !useData) {
-    eachTfKey(values._new);
-  }
   tf += "\n}\n";
   return tf;
 }
@@ -376,7 +385,7 @@ function stringifyTranspose(source) {
   let newObj = {};
   eachKey(source, key => {
     if (isString(source[key])) newObj[key] = `"${source[key]}"`;
-    else if(typeof source[key] !== "object") newObj[key] = source[key];
+    else if (typeof source[key] !== "object") newObj[key] = source[key];
   });
   return newObj;
 }
@@ -394,7 +403,6 @@ module.exports = {
   getTags,
   getCosId,
   buildTitleComment,
-  getKmsKeyCrn,
   getKmsInstanceData,
   vpcRef,
   kebabName,

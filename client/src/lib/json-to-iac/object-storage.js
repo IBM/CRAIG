@@ -138,7 +138,7 @@ function formatCosBucket(bucket, cos, config) {
     storage_class: `"${bucket.storage_class}"`,
     endpoint_type: `"${bucket.endpoint}"`,
     force_delete: bucket.force_delete,
-    region_location: "region",
+    region_location: "$region",
     key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn"),
     depends_on: `[ibm_iam_authorization_policy.${snakeCase(
       cos.name + " cos to " + cos.kms + " kms policy"

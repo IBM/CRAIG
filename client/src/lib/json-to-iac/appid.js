@@ -7,7 +7,7 @@ const {
   useData,
   resourceRef,
   jsonToTf,
-  dataResourceName,
+  dataResourceName
 } = require("./utils");
 
 /**
@@ -32,7 +32,7 @@ function formatAppIdKey(key, config) {
         getObjectFromArray(config.appid, "name", key.appid).use_data
       ),
       role: '"Writer"',
-      tags: true,
+      tags: true
     },
     config
   );
@@ -51,19 +51,20 @@ function formatAppIdKey(key, config) {
  * @returns {string} terraform formatted code
  */
 function formatAppId(instance, config) {
+  let appIdValues = {
+    name: dataResourceName(instance, config),
+    resource_group_id: rgIdRef(instance.resource_group, config)
+  };
+  if (!instance.use_data) {
+    appIdValues.tags = true;
+    appIdValues.service = '"appid"';
+    appIdValues.plan = '"graduated-tier"';
+    appIdValues.location = "$region";
+  }
   return jsonToTf(
     "ibm_resource_instance",
     instance.name,
-    {
-      name: dataResourceName(instance, config),
-      resource_group_id: rgIdRef(instance.resource_group, config),
-      _new: {
-        tags: true,
-        service: '"appid"',
-        plan: '"graduated-tier"',
-        location: "region",
-      },
-    },
+    appIdValues,
     config,
     instance.use_data
   );
@@ -82,7 +83,7 @@ function formatAppIdRedirectUrls(appid, urls, resourceName) {
     resourceName ? resourceName : `${appid.name} urls`,
     {
       tenant_id: resourceRef(appid.name, "guid", useData(appid.use_data)),
-      urls: JSON.stringify(urls),
+      urls: JSON.stringify(urls)
     }
   );
 }
@@ -95,10 +96,10 @@ function formatAppIdRedirectUrls(appid, urls, resourceName) {
  */
 function appidTf(config) {
   let tf = "";
-  config.appid.forEach((instance) => {
+  config.appid.forEach(instance => {
     tf += buildTitleComment(instance.name, "Resources");
     tf += formatAppId(instance, config);
-    instance.keys.forEach((key) => {
+    instance.keys.forEach(key => {
       tf += formatAppIdKey(key, config);
     });
     tf += endComment + "\n";
@@ -110,5 +111,5 @@ module.exports = {
   formatAppIdKey,
   formatAppId,
   formatAppIdRedirectUrls,
-  appidTf,
+  appidTf
 };

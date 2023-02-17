@@ -3,7 +3,7 @@ const {
   getObjectFromArray,
   distinct,
   splat,
-  transpose,
+  transpose
 } = require("lazy-z");
 const { endComment } = require("./constants");
 const {
@@ -14,7 +14,7 @@ const {
   vpcRef,
   composedZone,
   encryptionKeyRef,
-  subnetRef,
+  subnetRef
 } = require("./utils");
 
 /**
@@ -49,13 +49,13 @@ function formatVsi(vsi, config) {
     networkInterfaces = [];
   // add nework interfaces
   if (vsi.network_interfaces)
-    vsi.network_interfaces.forEach((interface) => {
+    vsi.network_interfaces.forEach(interface => {
       let nwInterface = {
         subnet: subnetRef(vsi.vpc, interface.subnet),
         allow_ip_spoofing: true,
-        "*security_groups": [],
+        "*security_groups": []
       };
-      interface.security_groups.forEach((group) => {
+      interface.security_groups.forEach(group => {
         nwInterface["*security_groups"].push(
           tfRef(`ibm_is_security_group`, `${vsi.vpc} vpc ${group} sg`)
         );
@@ -63,11 +63,11 @@ function formatVsi(vsi, config) {
       networkInterfaces.push(nwInterface);
     });
   // add security groups
-  vsi.security_groups.forEach((group) => {
+  vsi.security_groups.forEach(group => {
     allSgIds.push(tfRef(`ibm_is_security_group`, `${vsi.vpc} vpc ${group} sg`));
   });
   // add ssh keys
-  vsi.ssh_keys.forEach((key) => {
+  vsi.ssh_keys.forEach(key => {
     allSshKeyIds.push(
       tfRef(
         `ibm_is_ssh_key`,
@@ -84,7 +84,7 @@ function formatVsi(vsi, config) {
     resource_group: rgIdRef(vsi.resource_group, config),
     vpc: vpcRef(vsi.vpc),
     zone: composedZone(config, zone),
-    tags: true,
+    tags: true
   };
   if (vsi.user_data) {
     vsiValues.user_data = vsi.user_data;
@@ -92,13 +92,13 @@ function formatVsi(vsi, config) {
   vsiValues["*keys"] = allSshKeyIds;
   vsiValues._primary_network_interface = {
     subnet: subnetRef(vsi.vpc, vsi.subnet),
-    "*security_groups": allSgIds,
+    "*security_groups": allSgIds
   };
   if (networkInterfaces.length > 0) {
     vsiValues["-network_interfaces"] = networkInterfaces;
   }
   vsiValues._boot_volume = {
-    encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key),
+    encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key)
   };
 
   return jsonToTf(
@@ -137,16 +137,16 @@ function formatVsiImage(imageName) {
 function vsiTf(config) {
   let tf = buildTitleComment("image data", "sources");
   let allImagesNames = distinct(splat(config.vsi, "image"));
-  allImagesNames.forEach((name) => {
+  allImagesNames.forEach(name => {
     tf += formatVsiImage(name);
   });
   tf += endComment + "\n\n";
-  config.vsi.forEach((deployment) => {
+  config.vsi.forEach(deployment => {
     tf += buildTitleComment(
       `${deployment.vpc} vpc`,
       `${deployment.name} deployment`
-    ).replace(/Vpc/g, "VPC");
-    deployment.subnets.forEach((subnet) => {
+    );
+    deployment.subnets.forEach(subnet => {
       for (let i = 0; i < deployment.vsi_per_subnet; i++) {
         let instance = {};
         transpose(deployment, instance);
@@ -163,5 +163,5 @@ function vsiTf(config) {
 module.exports = {
   formatVsi,
   formatVsiImage,
-  vsiTf,
+  vsiTf
 };

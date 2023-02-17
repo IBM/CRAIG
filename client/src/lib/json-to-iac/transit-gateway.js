@@ -27,7 +27,7 @@ function formatTgw(tgw, config) {
     tgw.name,
     {
       name: kebabName(config, [tgw.name]),
-      location: "region",
+      location: "$region",
       global: tgw.global,
       resource_group: rgIdRef(tgw.resource_group, config),
       _timeouts: {

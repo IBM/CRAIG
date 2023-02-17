@@ -95,10 +95,7 @@ function formatSgRule(rule) {
 function sgTf(config) {
   let tf = "";
   config.security_groups.forEach((group) => {
-    tf += buildTitleComment("Secuirty Group", group.name).replace(
-      /Vpe/g,
-      "VPE"
-    );
+    tf += buildTitleComment("Security Group", group.name);
     tf += formatSecurityGroup(group, config);
     group.rules.forEach((rule) => (tf += formatSgRule(rule)));
     tf += endComment + "\n\n";

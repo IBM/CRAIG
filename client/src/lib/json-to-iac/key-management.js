@@ -28,7 +28,7 @@ function formatKmsInstance(kms, config) {
   };
   if (!kms.use_data) {
     instance.plan = '"tiered-pricing"';
-    instance.location = "region";
+    instance.location = "$region";
     instance.tags = true;
   }
   return jsonToTf(

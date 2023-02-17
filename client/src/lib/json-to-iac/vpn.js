@@ -4,7 +4,7 @@ const {
   buildTitleComment,
   jsonToTf,
   kebabName,
-  subnetRef,
+  subnetRef
 } = require("./utils");
 
 /**
@@ -29,8 +29,8 @@ function formatVpn(gw, config) {
       resource_group: rgIdRef(gw.resource_group, config),
       tags: true,
       _timeouts: {
-        delete: '"1h"',
-      },
+        delete: '"1h"'
+      }
     },
     config
   );
@@ -43,12 +43,12 @@ function formatVpn(gw, config) {
  * @returns {string} terraform formatted gw code
  */
 function vpnTf(config) {
-  let tf = buildTitleComment("Vpn", "gateways").replace(/Vpn/g, "VPN");
-  config.vpn_gateways.forEach((gw) => (tf += formatVpn(gw, config)));
+  let tf = buildTitleComment("Vpn", "gateways");
+  config.vpn_gateways.forEach(gw => (tf += formatVpn(gw, config)));
   return tf + endComment + "\n";
 }
 
 module.exports = {
   formatVpn,
-  vpnTf,
+  vpnTf
 };

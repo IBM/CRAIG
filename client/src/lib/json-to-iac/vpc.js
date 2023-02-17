@@ -240,7 +240,7 @@ function vpcTf(config) {
   let vpcNames = splat(config.vpcs, "name");
   config.vpcs.forEach((vpc) => {
     tf +=
-      buildTitleComment(vpc.name, "vpc").replace(/Vpc/g, "VPC") +
+      buildTitleComment(vpc.name, "vpc") +
       formatVpc(vpc, config);
     vpc.address_prefixes.forEach((prefix) => {
       tf += formatAddressPrefix(prefix, config);

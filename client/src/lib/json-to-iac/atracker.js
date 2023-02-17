@@ -27,7 +27,7 @@ function formatAtrackerTarget(config) {
   let targetValues = {
     name: kebabName(config, [config.atracker.name, config.atracker.type]),
     target_type: '"cloud_object_storage"',
-    region: "region",
+    region: "$region",
   };
   // if (config.atracker.type === "cos")
   targetValues._cos_endpoint = {

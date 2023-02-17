@@ -35,7 +35,7 @@ function formatPostureCredential(scc) {
 }
 
 /**
- * create scc terraform
+ * create scc terraforms
  * @param {Object} scc
  * @param {string} scc.location
  * @param {string} scc.collector_description
@@ -47,10 +47,7 @@ function formatPostureCredential(scc) {
  * @returns {string} terraform code
  */
 function formatScc(scc, config) {
-  let tf = buildTitleComment("Security and Compliance", "Center").replace(
-    /And/i,
-    "and"
-  );
+  let tf = buildTitleComment("Security and Compliance", "Center");
   tf += jsonToTf(
     "ibm_scc_account_settings",
     "ibm_scc_account_settings_instance",

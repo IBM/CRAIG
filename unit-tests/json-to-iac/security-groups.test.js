@@ -356,7 +356,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
     it("should create correct security group terraform", () => {
       let actualData = sgTf(slzNetwork);
       let expectedData = `##############################################################################
-# Secuirty Group Management VPE Sg
+# Security Group Management VPE Sg
 ##############################################################################
 
 resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
@@ -420,7 +420,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
 ##############################################################################
 
 ##############################################################################
-# Secuirty Group Workload VPE Sg
+# Security Group Workload VPE Sg
 ##############################################################################
 
 resource "ibm_is_security_group" "workload_vpc_workload_vpe_sg_sg" {

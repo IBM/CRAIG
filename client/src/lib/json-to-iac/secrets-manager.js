@@ -7,6 +7,7 @@ const {
   buildTitleComment,
   kebabName,
   jsonToTf,
+  encryptionKeyRef
 } = require("./utils");
 
 /**
@@ -27,7 +28,7 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
       roles: '["Reader"]',
       description: '"Allow Secets Manager instance to read from KMS instance"',
       target_service_name: kmsInstance.name,
-      target_resource_instance_id: kmsInstance.guid,
+      target_resource_instance_id: kmsInstance.guid
     }
   );
 }
@@ -52,17 +53,21 @@ function formatSecretsManagerInstance(secretsManager, config) {
   );
   let instance = {
     name: kebabName(config, [secretsManager.name]),
-    location: "region",
+    location: "$region",
     plan: '"standard"',
     service: '"secrets-manager"',
     resource_group_id: rgIdRef(secretsManager.resource_group, config),
     "_parameters =": {
-      kms_key: getKmsKeyCrn(secretsManager.kms, secretsManager.kms_key),
+      kms_key: encryptionKeyRef(
+        secretsManager.kms,
+        secretsManager.kms_key,
+        "crn"
+      )
     },
     _timeouts: {
       create: '"1h"',
-      delete: '"1h"',
-    },
+      delete: '"1h"'
+    }
   };
   if (kmsInstance.has_secrets_manager_auth !== true) {
     instance[
@@ -92,7 +97,7 @@ function secretsManagerTf(config) {
   let allKmsServices = splat(config.secrets_manager, "kms");
   let kmstf = buildTitleComment("Key Management", "Authorizations");
   let totalKmsInstances = 0;
-  allKmsServices.forEach((service) => {
+  allKmsServices.forEach(service => {
     if (
       // if service doesn't already have auth
       (getObjectFromArray(config.key_management, "name", service)
@@ -107,7 +112,7 @@ function secretsManagerTf(config) {
     tf += kmstf + "\n\n";
   }
   tf += buildTitleComment("Secrets", "Manager Instances");
-  config.secrets_manager.forEach((instance) => {
+  config.secrets_manager.forEach(instance => {
     tf += formatSecretsManagerInstance(instance, config);
   });
   tf += endComment;
@@ -117,5 +122,5 @@ function secretsManagerTf(config) {
 module.exports = {
   formatSecretsManagerToKmsAuth,
   formatSecretsManagerInstance,
-  secretsManagerTf,
+  secretsManagerTf
 };

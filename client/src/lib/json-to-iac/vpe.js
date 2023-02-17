@@ -109,7 +109,7 @@ function fortmatVpeGatewayIp(vpe, subnetName) {
 function vpeTf(config) {
   let tf = "";
   config.virtual_private_endpoints.forEach((vpe) => {
-    tf += buildTitleComment(vpe.vpc, "vpe Resources").replace(/Vpe/g, "VPE");
+    tf += buildTitleComment(vpe.vpc, "vpe Resources");
     vpe.subnets.forEach((subnet) => (tf += formatReservedIp(vpe.vpc, subnet)));
     tf += fortmatVpeGateway(vpe, config);
     vpe.subnets.forEach((subnet) => (tf += fortmatVpeGatewayIp(vpe, subnet)));
