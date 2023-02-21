@@ -4,7 +4,8 @@ const {
   titleCase,
   kebabCase,
   eachKey,
-  isString
+  isString,
+  parseIntFromZone
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { lastCommaExp } = require("../constants");
@@ -242,14 +243,7 @@ function fillTemplate(template, values) {
  * @returns {number} 1, 2, or 3
  */
 function subnetZone(subnet) {
-  return subnet.replace(
-    new RegexButWithWords()
-      .any()
-      .oneOrMore()
-      .look.ahead(exp => exp.digit().stringEnd())
-      .done("g"),
-    ""
-  );
+  return parseIntFromZone(subnet);
 }
 
 /**

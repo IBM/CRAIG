@@ -55,6 +55,7 @@ function formatAppId(instance, config) {
     name: dataResourceName(instance, config),
     resource_group_id: rgIdRef(instance.resource_group, config)
   };
+  // add needed values when new instance is created
   if (!instance.use_data) {
     appIdValues.tags = true;
     appIdValues.service = '"appid"';
