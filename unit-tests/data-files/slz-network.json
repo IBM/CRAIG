@@ -872,5 +872,7 @@
   "teleport_vsi": [],
   "scc": {
     "name": ""
-  }
+  },
+  "event_streams":[],
+  "load_balancers":[]
 }

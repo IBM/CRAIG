@@ -42,7 +42,7 @@ function formatReservedIp(vpcName, subnetName) {
  * @param {Object} config._options
  * @param {string} config._options.region
  * @param {string} config._options.prefix
- * @returns
+ * @returns {string} terraform gateway string
  */
 function fortmatVpeGateway(vpe, config) {
   let allSgIds = [];

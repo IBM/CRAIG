@@ -3,6 +3,7 @@ const { appidTf } = require("./appid");
 const { atrackerTf } = require("./atracker");
 const { clusterTf } = require("./clusters");
 const { versionsTf, mainTf, variablesTf } = require("./constants");
+const { eventStreamsTf } = require("./event-streams");
 const { flowLogsTf } = require("./flow-logs");
 const { kmsTf } = require("./key-management");
 const { cosTf } = require("./object-storage");
@@ -16,7 +17,7 @@ const { tgwTf } = require("./transit-gateway");
 const { vpcTf } = require("./vpc");
 const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
-const { vsiTf } = require("./vsi");
+const { vsiTf, lbTf } = require("./vsi");
 
 /**
  * create a json document with file names as keys and text as value
@@ -28,12 +29,12 @@ const { vsiTf } = require("./vsi");
 function configToFilesJson(config) {
   let additionalVariables = "";
   if (config.ssh_keys.length > 0) {
-    config.ssh_keys.forEach((key) => {
+    config.ssh_keys.forEach(key => {
       additionalVariables += `
 variable "${snakeCase(key.name)}_public_key" {
   description = "Public SSH Key Value for ${titleCase(key.name).replace(
     /Ssh/g,
-    "SSH"
+    "SSH" 
   )}"
   type        = string
   sensitive   = true
@@ -65,12 +66,16 @@ variable "${snakeCase(key.name)}_public_key" {
     "secrets_manager.tf":
       config.secrets_manager.length > 0 ? secretsManagerTf(config) : null,
     "appid.tf": config.appid.length > 0 ? appidTf(config) : null,
-    "teleport_vsi.tf": config.teleport_vsi.length > 0 ? teleportTf(config) : null,
-    "scc.tf": config.scc.name === "" ? null : sccTf(config)
+    "teleport_vsi.tf":
+      config.teleport_vsi.length > 0 ? teleportTf(config) : null,
+    "scc.tf": config.scc.name === "" ? null : sccTf(config),
+    "event_streams.tf":
+      config.event_streams.length > 0 ? eventStreamsTf(config) : null,
+    "load_balancers.tf": config.load_balancers.length > 0 ? lbTf(config) : null
   };
   return files;
 }
 
 module.exports = {
-  configToFilesJson,
+  configToFilesJson
 };

@@ -934,7 +934,7 @@
       }
     }
   ],
-  "scc" : {
+  "scc": {
     "credential_description": "scc posture credential description",
     "id": "scc_group_id",
     "passphrase": "scc_group_passphrase",
@@ -943,5 +943,41 @@
     "collector_description": "scc collector",
     "is_public": true,
     "scope_description": "scc scope"
-  }
+  },
+  "event_streams": [
+    {
+      "name": "event-streams",
+      "plan": "enterprise-3nodes-2tb",
+      "resource_group": "slz-service-rg",
+      "endpoints": "private",
+      "private_ip_allowlist": ["10.0.0.0/32", "10.0.0.1/32"],
+      "throughput": "150",
+      "storage_size": "2048"
+    }
+  ],
+  "load_balancers": [
+    {
+      "name": "lb-1",
+      "vpc": "management",
+      "type": "public",
+      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "vsi_per_subnet": 2,
+      "security_groups": ["management-vpe-sg"],
+      "resource_group": "slz-management-rg",
+      "algorithm": "round_robin",
+      "protocol": "tcp",
+      "health_delay": 60,
+      "health_retries": 5,
+      "health_timeout": 30,
+      "health_type": "https",
+      "proxy_protocol": "v1",
+      "session_persistence_type": "app_cookie",
+      "session_persistence_app_cookie_name": "cookie1",
+      "port": 80,
+      "target_vsi": ["management-server"],
+      "listener_port": 443,
+      "listener_protocol": "https",
+      "connection_limit": 2
+    }
+  ]
 }
