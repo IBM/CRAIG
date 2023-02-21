@@ -36,6 +36,7 @@ const {
   atrackerOnStoreUpdate,
   atrackerSave
 } = require("./atracker");
+const { appidCreate, appidOnStoreUpdate, appidSave, appidDelete } = require("./appid");
 
 const state = function() {
   let store = new lazyZstate({
@@ -113,6 +114,16 @@ const state = function() {
     init: atrackerInit,
     onStoreUpdate: atrackerOnStoreUpdate,
     save: atrackerSave
+  });
+
+  store.newField("appid", {
+    init: config => {
+      config.store.json.appid = [];
+    },
+    onStoreUpdate: appidOnStoreUpdate,
+    create: appidCreate,
+    save: appidSave,
+    delete: appidDelete
   });
 
   return store;
