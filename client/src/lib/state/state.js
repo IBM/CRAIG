@@ -36,7 +36,31 @@ const {
   atrackerOnStoreUpdate,
   atrackerSave
 } = require("./atracker");
-const { appidCreate, appidOnStoreUpdate, appidSave, appidDelete } = require("./appid");
+const {
+  appidCreate,
+  appidOnStoreUpdate,
+  appidSave,
+  appidDelete
+} = require("./appid");
+const {
+  vpcCreate,
+  vpcDelete,
+  vpcInit,
+  vpcOnStoreUpdate,
+  vpcSave,
+  subnetCreate,
+  subnetSave,
+  subnetDelete,
+  subnetTierCreate,
+  subnetTierSave,
+  subnetTierDelete,
+  naclCreate,
+  naclSave,
+  naclDelete,
+  naclRuleCreate,
+  naclRuleSave,
+  naclRuleDelete
+} = require("./vpc");
 
 const state = function() {
   let store = new lazyZstate({
@@ -106,6 +130,38 @@ const state = function() {
         create: cosKeyCreate,
         save: cosKeySave,
         delete: cosKeyDelete
+      }
+    }
+  });
+
+  store.newField("vpcs", {
+    init: vpcInit,
+    onStoreUpdate: vpcOnStoreUpdate,
+    create: vpcCreate,
+    save: vpcSave,
+    delete: vpcDelete,
+    subComponents: {
+      acls: {
+        create: naclCreate,
+        save: naclSave,
+        delete: naclDelete,
+        subComponents: {
+          rules: {
+            create: naclRuleCreate,
+            save: naclRuleSave,
+            delete: naclRuleDelete
+          }
+        }
+      },
+      subnets: {
+        create: subnetCreate,
+        save: subnetSave,
+        delete: subnetDelete
+      },
+      subnetTiers: {
+        create: subnetTierCreate,
+        save: subnetTierSave,
+        delete: subnetTierDelete
       }
     }
   });

@@ -4,5 +4,29 @@ module.exports = {
   lastCommaExp: new RegexButWithWords()
     .literal(",")
     .look.ahead(exp => exp.stringEnd())
-    .done("i")
+    .done("i"),
+  reservedSubnetNameExp: new RegexButWithWords()
+    .stringBegin()
+    .group(exp => {
+      exp
+        .literal("f5-external")
+        .or()
+        .literal("f5-workload")
+        .or()
+        .literal("f5-management")
+        .or()
+        .literal("f5-bastion")
+        .or()
+        .literal("vpn-1")
+        .or()
+        .literal("vpn-2")
+        .or()
+        .any()
+        .anyNumber()
+        .literal("zone")
+        .any()
+        .anyNumber();
+    })
+    .stringEnd()
+    .done("g")
 };

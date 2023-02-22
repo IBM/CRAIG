@@ -96,4 +96,637 @@ function newDefaultCos() {
   ];
 }
 
-module.exports = { newDefaultKms, newDefaultCos };
+function newDefaultVpcs() {
+  return [
+    {
+      cos: "cos",
+      bucket: "management-bucket",
+      name: "management",
+      resource_group: "management-rg",
+      classic_access: false,
+      manual_address_prefix_management: true,
+      default_network_acl_name: null,
+      default_security_group_name: null,
+      default_routing_table_name: null,
+      address_prefixes: [
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.10.0/24",
+          name: "vsi-zone-1"
+        },
+        {
+          vpc: "management",
+          zone: 2,
+          cidr: "10.10.20.0/24",
+          name: "vsi-zone-2"
+        },
+        {
+          vpc: "management",
+          zone: 3,
+          cidr: "10.10.30.0/24",
+          name: "vsi-zone-3"
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.20.10.0/24",
+          name: "vpe-zone-1"
+        },
+        {
+          vpc: "management",
+          zone: 2,
+          cidr: "10.20.20.0/24",
+          name: "vpe-zone-2"
+        },
+        {
+          vpc: "management",
+          zone: 3,
+          cidr: "10.20.30.0/24",
+          name: "vpe-zone-3"
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.30.10.0/24",
+          name: "vpn-zone-1"
+        }
+      ],
+      subnets: [
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.10.0/24",
+          name: "vsi-zone-1",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.30.0/24",
+          name: "vpn-zone-1",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "management",
+          zone: 2,
+          cidr: "10.10.20.0/24",
+          name: "vsi-zone-2",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "management",
+          zone: 3,
+          cidr: "10.10.30.0/24",
+          name: "vsi-zone-3",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.20.10.0/24",
+          name: "vpe-zone-1",
+          resource_group: "management-rg",
+          network_acl: "management",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "management",
+          zone: 2,
+          cidr: "10.20.20.0/24",
+          name: "vpe-zone-2",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "management",
+          zone: 3,
+          cidr: "10.20.30.0/24",
+          name: "vpe-zone-3",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true
+        }
+      ],
+      public_gateways: [],
+      acls: [
+        {
+          resource_group: "management-rg",
+          name: "management",
+          vpc: "management",
+          rules: [
+            {
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound",
+              source: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
+              icmp: {
+                type: null,
+                code: null
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              }
+            },
+            {
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-all-network-inbound",
+              source: "10.0.0.0/8",
+              acl: "management",
+              vpc: "management",
+              icmp: {
+                type: null,
+                code: null
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              }
+            },
+            {
+              action: "allow",
+              destination: "0.0.0.0/0",
+              direction: "outbound",
+              name: "allow-all-outbound",
+              source: "0.0.0.0/0",
+              acl: "management",
+              vpc: "management",
+              icmp: {
+                type: null,
+                code: null
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      cos: "cos",
+      bucket: "management-bucket",
+      name: "workload",
+      resource_group: "workload-rg",
+      classic_access: false,
+      manual_address_prefix_management: true,
+      default_network_acl_name: null,
+      default_security_group_name: null,
+      default_routing_table_name: null,
+      address_prefixes: [
+        {
+          vpc: "workload",
+          zone: 1,
+          cidr: "10.40.10.0/24",
+          name: "vsi-zone-1"
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          cidr: "10.50.10.0/24",
+          name: "vsi-zone-2"
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          cidr: "10.60.10.0/24",
+          name: "vsi-zone-3"
+        },
+        {
+          vpc: "workload",
+          zone: 1,
+          cidr: "10.40.20.0/24",
+          name: "vpe-zone-1"
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          cidr: "10.50.20.0/24",
+          name: "vpe-zone-2"
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          cidr: "10.60.20.0/24",
+          name: "vpe-zone-3"
+        }
+      ],
+      subnets: [
+        {
+          vpc: "workload",
+          zone: 1,
+          cidr: "10.40.10.0/24",
+          name: "vsi-zone-1",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          cidr: "10.50.20.0/24",
+          name: "vsi-zone-2",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          cidr: "10.60.30.0/24",
+          name: "vsi-zone-3",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "workload",
+          zone: 1,
+          cidr: "10.20.10.0/24",
+          name: "vpe-zone-1",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          cidr: "10.20.20.0/24",
+          name: "vpe-zone-2",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: true
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          cidr: "10.20.30.0/24",
+          name: "vpe-zone-3",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: true
+        }
+      ],
+      public_gateways: [],
+      acls: [
+        {
+          resource_group: "workload-rg",
+          name: "workload",
+          vpc: "workload",
+          rules: [
+            {
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound",
+              source: "161.26.0.0/16",
+              acl: "workload",
+              vpc: "workload",
+              icmp: {
+                type: null,
+                code: null
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              }
+            },
+            {
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-all-network-inbound",
+              source: "10.0.0.0/8",
+              acl: "workload",
+              vpc: "workload",
+              icmp: {
+                type: null,
+                code: null
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              }
+            },
+            {
+              action: "allow",
+              destination: "0.0.0.0/0",
+              direction: "outbound",
+              name: "allow-all-outbound",
+              source: "0.0.0.0/0",
+              acl: "workload",
+              vpc: "workload",
+              icmp: {
+                type: null,
+                code: null
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ];
+}
+
+function newVpc() {
+  return {
+    cos: null,
+    bucket: null,
+    name: null,
+    resource_group: null,
+    classic_access: false,
+    manual_address_prefix_management: false,
+    default_network_acl_name: null,
+    default_security_group_name: null,
+    default_routing_table_name: null,
+    address_prefixes: [
+      {
+        vpc: null,
+        zone: 1,
+        cidr: "10.10.10.0/24",
+        name: "vsi-zone-1"
+      },
+      {
+        vpc: null,
+        zone: 2,
+        cidr: "10.10.20.0/24",
+        name: "vsi-zone-2"
+      },
+      {
+        vpc: null,
+        zone: 3,
+        cidr: "10.10.30.0/24",
+        name: "vsi-zone-3"
+      },
+      {
+        vpc: null,
+        zone: 1,
+        cidr: "10.20.10.0/24",
+        name: "vpe-zone-1"
+      },
+      {
+        vpc: null,
+        zone: 2,
+        cidr: "10.20.20.0/24",
+        name: "vpe-zone-2"
+      },
+      {
+        vpc: null,
+        zone: 3,
+        cidr: "10.20.30.0/24",
+        name: "vpe-zone-3"
+      },
+      {
+        vpc: null,
+        zone: 1,
+        cidr: "10.30.10.0/24",
+        name: "vpn-zone-1"
+      }
+    ],
+    subnets: [
+      {
+        vpc: null,
+        zone: 1,
+        cidr: "10.10.10.0/24",
+        name: "vsi-zone-1",
+        network_acl: null,
+        resource_group: "management-rg",
+        public_gateway: false,
+        has_prefix: true
+      },
+      {
+        vpc: null,
+        zone: 1,
+        cidr: "10.10.30.0/24",
+        name: "vpn-zone-1",
+        network_acl: null,
+        resource_group: "management-rg",
+        public_gateway: false,
+        has_prefix: true
+      },
+      {
+        vpc: null,
+        zone: 2,
+        cidr: "10.10.20.0/24",
+        name: "vsi-zone-2",
+        network_acl: null,
+        resource_group: "management-rg",
+        public_gateway: false,
+        has_prefix: true
+      },
+      {
+        vpc: null,
+        zone: 3,
+        cidr: "10.10.30.0/24",
+        name: "vsi-zone-3",
+        network_acl: null,
+        resource_group: "management-rg",
+        public_gateway: false,
+        has_prefix: true
+      },
+      {
+        vpc: null,
+        zone: 1,
+        cidr: "10.20.10.0/24",
+        name: "vpe-zone-1",
+        resource_group: "management-rg",
+        network_acl: null,
+        public_gateway: false,
+        has_prefix: true
+      },
+      {
+        vpc: null,
+        zone: 2,
+        cidr: "10.20.20.0/24",
+        name: "vpe-zone-2",
+        network_acl: null,
+        resource_group: "management-rg",
+        public_gateway: false,
+        has_prefix: true
+      },
+      {
+        vpc: null,
+        zone: 3,
+        cidr: "10.20.30.0/24",
+        name: "vpe-zone-3",
+        network_acl: null,
+        resource_group: "management-rg",
+        public_gateway: false,
+        has_prefix: true
+      }
+    ],
+    public_gateways: [],
+    acls: [
+      {
+        resource_group: "management-rg",
+        name: null,
+        vpc: null,
+        rules: [
+          {
+            action: "allow",
+            destination: "10.0.0.0/8",
+            direction: "inbound",
+            name: "allow-ibm-inbound",
+            source: "161.26.0.0/16",
+            acl: null,
+            vpc: null,
+            icmp: {
+              type: null,
+              code: null
+            },
+            tcp: {
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null
+            },
+            udp: {
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null
+            }
+          },
+          {
+            action: "allow",
+            destination: "10.0.0.0/8",
+            direction: "inbound",
+            name: "allow-all-network-inbound",
+            source: "10.0.0.0/8",
+            acl: null,
+            vpc: null,
+            icmp: {
+              type: null,
+              code: null
+            },
+            tcp: {
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null
+            },
+            udp: {
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null
+            }
+          },
+          {
+            action: "allow",
+            destination: "0.0.0.0/0",
+            direction: "outbound",
+            name: "allow-all-outbound",
+            source: "0.0.0.0/0",
+            acl: null,
+            vpc: null,
+            icmp: {
+              type: null,
+              code: null
+            },
+            tcp: {
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null
+            },
+            udp: {
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null
+            }
+          }
+        ]
+      }
+    ]
+  };
+}
+
+module.exports = {
+  newDefaultKms,
+  newDefaultCos,
+  newDefaultVpcs,
+  newVpc
+};
