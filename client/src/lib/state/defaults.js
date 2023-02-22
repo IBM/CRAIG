@@ -312,7 +312,7 @@ function newDefaultVpcs() {
     },
     {
       cos: "cos",
-      bucket: "management-bucket",
+      bucket: "workload-bucket",
       name: "workload",
       resource_group: "workload-rg",
       classic_access: false,
@@ -724,9 +724,257 @@ function newVpc() {
   };
 }
 
+function newDefaultVpeSecurityGroups() {
+  return [
+    {
+      vpc: "management",
+      name: "management-vpe",
+      resource_group: "management-rg",
+      rules: [
+        {
+          vpc: "management",
+          sg: "management-vpe",
+          direction: "inbound",
+          name: "allow-ibm-inbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: null,
+            port_min: null
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "management",
+          sg: "management-vpe",
+          direction: "inbound",
+          name: "allow-vpc-inbound",
+          source: "10.0.0.0/8",
+          tcp: {
+            port_max: null,
+            port_min: null
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "management",
+          sg: "management-vpe",
+          direction: "outbound",
+          name: "allow-vpc-outbound",
+          source: "10.0.0.0/8",
+          tcp: {
+            port_max: null,
+            port_min: null
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "management",
+          sg: "management-vpe",
+          direction: "outbound",
+          name: "allow-ibm-tcp-53-outbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: 53,
+            port_min: 53
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "management",
+          sg: "management-vpe",
+          direction: "outbound",
+          name: "allow-ibm-tcp-80-outbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: 80,
+            port_min: 80
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "management",
+          sg: "management-vpe",
+          direction: "outbound",
+          name: "allow-ibm-tcp-443-outbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: 443,
+            port_min: 443
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        }
+      ]
+    },
+    {
+      vpc: "workload",
+      name: "workload-vpe",
+      resource_group: "workload-rg",
+      rules: [
+        {
+          vpc: "workload",
+          sg: "workload-vpe",
+          direction: "inbound",
+          name: "allow-ibm-inbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: null,
+            port_min: null
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "workload",
+          sg: "workload-vpe",
+          direction: "inbound",
+          name: "allow-vpc-inbound",
+          source: "10.0.0.0/8",
+          tcp: {
+            port_max: null,
+            port_min: null
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "workload",
+          sg: "workload-vpe",
+          direction: "outbound",
+          name: "allow-vpc-outbound",
+          source: "10.0.0.0/8",
+          tcp: {
+            port_max: null,
+            port_min: null
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "workload",
+          sg: "workload-vpe",
+          direction: "outbound",
+          name: "allow-ibm-tcp-53-outbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: 53,
+            port_min: 53
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "workload",
+          sg: "workload-vpe",
+          direction: "outbound",
+          name: "allow-ibm-tcp-80-outbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: 80,
+            port_min: 80
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        },
+        {
+          vpc: "workload",
+          sg: "workload-vpe",
+          direction: "outbound",
+          name: "allow-ibm-tcp-443-outbound",
+          source: "161.26.0.0/16",
+          tcp: {
+            port_max: 443,
+            port_min: 443
+          },
+          udp: {
+            port_max: null,
+            port_min: null
+          },
+          icmp: {
+            type: null,
+            code: null
+          }
+        }
+      ]
+    }
+  ];
+}
+
 module.exports = {
   newDefaultKms,
   newDefaultCos,
   newDefaultVpcs,
-  newVpc
+  newVpc,
+  newDefaultVpeSecurityGroups
 };

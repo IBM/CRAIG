@@ -61,6 +61,16 @@ const {
   naclRuleSave,
   naclRuleDelete
 } = require("./vpc");
+const {
+  securityGroupInit,
+  securityGroupOnStoreUpdate,
+  securityGroupCreate,
+  securityGroupSave,
+  securityGroupDelete,
+  securityGroupRulesCreate,
+  securityGroupRulesSave,
+  securityGroupRulesDelete
+} = require("./security-groups");
 
 const state = function() {
   let store = new lazyZstate({
@@ -180,6 +190,21 @@ const state = function() {
     create: appidCreate,
     save: appidSave,
     delete: appidDelete
+  });
+
+  store.newField("security_groups", {
+    init: securityGroupInit,
+    onStoreUpdate: securityGroupOnStoreUpdate,
+    create: securityGroupCreate,
+    save: securityGroupSave,
+    delete: securityGroupDelete,
+    subComponents: {
+      rules: {
+        create: securityGroupRulesCreate,
+        save: securityGroupRulesSave,
+        delete: securityGroupRulesDelete
+      }
+    }
   });
 
   return store;

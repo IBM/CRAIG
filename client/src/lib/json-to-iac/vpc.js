@@ -1,5 +1,5 @@
 const { kebabCase, snakeCase, allFieldsNull, splat } = require("lazy-z");
-const { endComment,} = require("./constants");
+const { endComment} = require("./constants");
 const {
   rgIdRef,
   vpcRef,
