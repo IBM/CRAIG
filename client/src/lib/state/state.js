@@ -61,6 +61,7 @@ const {
   naclRuleSave,
   naclRuleDelete
 } = require("./vpc");
+const { sccInit, sccSave } = require("./scc");
 const {
   securityGroupInit,
   securityGroupOnStoreUpdate,
@@ -190,6 +191,11 @@ const state = function() {
     create: appidCreate,
     save: appidSave,
     delete: appidDelete
+  });
+
+  store.newField("security_compliance_center", {
+    init: sccInit,
+    save: sccSave
   });
 
   store.newField("security_groups", {
