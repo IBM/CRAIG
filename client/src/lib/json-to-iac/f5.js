@@ -1,6 +1,7 @@
 const { snakeCase } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
-const { composedZone, vpcRef } = require("./utils");
+const { endComment } = require("./constants");
+const { composedZone, vpcRef, buildTitleComment } = require("./utils");
 const { formatVsi } = require("./vsi");
 
 /**
@@ -263,10 +264,30 @@ function formatF5Vsi(vsi, config) {
   return tf;
 }
 
+/**
+ * create f5 template data
+ * @param {Object} config 
+ * @param {Array<Object>} config.f5_vsi
+ * @param {string} config.f5_vsi.name
+ * @param {Object} config.f5_vsi.template
+ * @returns {string} terraform string data
+ */
+function f5Tf(config) {
+  let tf = f5ImageLocals() + "\n" + f5TemplateLocals({});
+  config.f5_vsi.forEach(instance => {
+    tf += "\n" + buildTitleComment(instance.name, "Vsi").replace("Vsi", "VSI");
+    tf += f5TemplateUserData(instance.template, config);
+    tf += formatF5Vsi(instance, config);
+    tf += endComment + "\n";
+  });
+  return tf;
+}
+
 module.exports = {
   f5ImageLocals,
   f5CloudInitYaml,
   f5TemplateLocals,
   f5TemplateUserData,
   formatF5Vsi,
+  f5Tf
 };

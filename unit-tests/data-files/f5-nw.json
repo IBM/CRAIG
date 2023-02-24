@@ -1823,5 +1823,49 @@
   "teleport_vsi": [],
   "scc": {
     "name": ""
-  }
+  },
+  "f5_vsi": [
+    {
+      "kms": "slz-kms",
+      "subnet": "f5-management-zone-1",
+      "vpc": "edge",
+      "resource_group": "slz-edge-rg",
+      "ssh_keys": ["slz-ssh-key"],
+      "security_groups": ["f5-management-sg"],
+      "encryption_key": "slz-vsi-volume-key",
+      "profile": "cx2-4x8",
+      "name": "f5-ve-01-zone-1",
+      "image": "f5-bigip-16-1-2-2-0-0-28-all-1slot",
+      "network_interfaces": [
+        {
+          "subnet": "f5-bastion-zone-1",
+          "security_groups": ["f5-bastion-sg"]
+        },
+        {
+          "subnet": "f5-external-zone-1",
+          "security_groups": ["f5-external-sg"]
+        },
+        {
+          "subnet": "f5-workload-zone-1",
+          "security_groups": ["f5-workload-sg"]
+        }
+      ],
+      "template": {
+        "hostname": "f5-ve-01",
+        "domain": "local",
+        "default_route_gateway_cidr": "10.10.10.10/24",
+        "zone": 1,
+        "vpc": "edge",
+        "do_declaration_url": "hi",
+        "as3_declaration_url": "hi",
+        "ts_declaration_url": "hi",
+        "phone_home_url": "hi",
+        "tgactive_url": "hi",
+        "tgstandby_url": "hi",
+        "tgrefresh_url": "hi",
+        "template_version": "hi",
+        "app_id": "hi"
+      }
+    }
+  ]
 }
