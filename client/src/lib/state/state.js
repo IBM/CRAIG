@@ -63,6 +63,13 @@ const {
 } = require("./vpc");
 const { sccInit, sccSave } = require("./scc");
 const {
+  sshKeyCreate,
+  sshKeyDelete,
+  sshKeySave,
+  sshKeyInit,
+  sshKeyOnStoreUpdate
+} = require("./ssh-keys.js");
+const {
   securityGroupInit,
   securityGroupOnStoreUpdate,
   securityGroupCreate,
@@ -203,6 +210,14 @@ const state = function() {
   store.newField("security_compliance_center", {
     init: sccInit,
     save: sccSave
+  });
+
+  store.newField("ssh_keys", {
+    init: sshKeyInit,
+    onStoreUpdate: sshKeyOnStoreUpdate,
+    create: sshKeyCreate,
+    save: sshKeySave,
+    delete: sshKeyDelete
   });
 
   store.newField("security_groups", {
