@@ -72,6 +72,13 @@ const {
   securityGroupRulesSave,
   securityGroupRulesDelete
 } = require("./security-groups");
+const {
+  transitGatewayInit,
+  transitGatewayOnStoreUpdate,
+  transitGatewayCreate,
+  transitGatewayDelete,
+  transitGatewaySave
+} = require("./transit-gateways");
 
 const state = function() {
   let store = new lazyZstate({
@@ -211,6 +218,14 @@ const state = function() {
         delete: securityGroupRulesDelete
       }
     }
+  });
+
+  store.newField("transit_gateways", {
+    init: transitGatewayInit,
+    onStoreUpdate: transitGatewayOnStoreUpdate,
+    create: transitGatewayCreate,
+    save: transitGatewaySave,
+    delete: transitGatewayDelete
   });
 
   return store;

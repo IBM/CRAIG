@@ -971,10 +971,29 @@ function newDefaultVpeSecurityGroups() {
   ];
 }
 
+function newDefaultTg() {
+  return {
+    name: "transit-gateway",
+    resource_group: "service-rg",
+    global: false,
+    connections: [
+      {
+        tgw: "transit-gateway",
+        vpc: "management"
+      },
+      {
+        tgw: "transit-gateway",
+        vpc: "workload"
+      }
+    ]
+  };
+}
+
 module.exports = {
   newDefaultKms,
   newDefaultCos,
   newDefaultVpcs,
   newVpc,
-  newDefaultVpeSecurityGroups
+  newDefaultVpeSecurityGroups,
+  newDefaultTg
 };
