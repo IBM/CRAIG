@@ -86,6 +86,13 @@ const {
   transitGatewayDelete,
   transitGatewaySave
 } = require("./transit-gateways");
+const {
+  vpnInit,
+  vpnCreate,
+  vpnDelete,
+  vpnSave,
+  vpnOnStoreUpdate
+} = require("./vpn");
 
 const state = function() {
   let store = new lazyZstate({
@@ -241,6 +248,14 @@ const state = function() {
     create: transitGatewayCreate,
     save: transitGatewaySave,
     delete: transitGatewayDelete
+  });
+
+  store.newField("vpn_gateways", {
+    init: vpnInit,
+    onStoreUpdate: vpnOnStoreUpdate,
+    create: vpnCreate,
+    save: vpnSave,
+    delete: vpnDelete
   });
 
   return store;

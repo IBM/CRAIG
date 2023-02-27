@@ -82,7 +82,7 @@ function setUnfoundEncryptionKey(config, obj, overrideField) {
  * @param {string} componentProps.arrayParentName name of the parent object where child is stored
  * @param {object} componentProps.data object data before update
  * @param {string} componentProps.data.name name of object
- * @param {Function=} callback callback for slz data to run after object update
+ * @param {Function=} callback callback for config data to run after object update
  */
 function updateSubChild(
   config,
@@ -102,7 +102,7 @@ function updateSubChild(
 
 /**
  * push to an array of objects within an array of objects
- * @param {lazyZstate} confistate store
+ * @param {lazyZstate} config state store
  * @param {string} field top level field name (ex. vpcs)
  * @param {string} subField name of the field within the parent object
  * @param {object} stateData component state data
@@ -132,6 +132,19 @@ function deleteSubChild(config, field, subField, componentProps) {
     .deleteArrChild(componentProps.data.name);
 }
 
+/**
+ * check if a component has an unfound vpc
+ * @param {lazyZState} config state store
+ * @param {object} config.store
+ * @param {Array<string>} config.store.vpcList list of vpcs
+ * @param {object} obj arbitrary object
+ * @param {string} obj.vpc name of vpc
+ * @returns {boolean} true if not found
+ */
+function hasUnfoundVpc(config, obj) {
+  return contains(config.store.vpcList, obj.vpc) === false;
+}
+
 module.exports = {
   pushAndUpdate,
   updateChild,
@@ -141,5 +154,6 @@ module.exports = {
   setUnfoundEncryptionKey,
   updateSubChild,
   pushToChildField,
-  deleteSubChild
+  deleteSubChild,
+  hasUnfoundVpc
 };
