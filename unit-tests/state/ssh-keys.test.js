@@ -79,7 +79,6 @@ describe("ssh_keys", () => {
       let state = new newState();
       // for vsi test, dummy vsi
       state.store.json.vsi = [{ ssh_keys: ["ssh-key"] }];
-      console.log("in first test");
       state.ssh_keys.save({ name: "frog" }, { data: { name: "ssh-key" } });
       assert.deepEqual(
         state.store.json.vsi[0].ssh_keys,

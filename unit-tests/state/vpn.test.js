@@ -67,7 +67,6 @@ describe("vpn_gateways", () => {
           },
         }
       );
-      console.log("deleted");
       assert.deepEqual(
         state.store.json.vpn_gateways,
         expectedData,

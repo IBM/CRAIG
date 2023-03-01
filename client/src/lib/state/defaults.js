@@ -989,11 +989,43 @@ function newDefaultTg() {
   };
 }
 
+function newDefaultWorkloadCluster() {
+  return {
+    kms: "slz-kms",
+    cos: "cos",
+    entitlement: "cloud_pak",
+    type: "openshift",
+    kube_version: "default",
+    flavor: "bx2.16x64",
+    name: "workload-cluster",
+    resource_group: "workload-rg",
+    encryption_key: "roks-key",
+    subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+    update_all_workers: false,
+    vpc: "workload",
+    worker_pools: [
+      {
+        entitlement: "cloud_pak",
+        cluster: "workload-cluster",
+        flavor: "bx2.16x64",
+        name: "logging-worker-pool",
+        resource_group: "workload-rg",
+        subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+        vpc: "workload",
+        workers_per_subnet: 2
+      }
+    ],
+    workers_per_subnet: 2,
+    private_endpoint: true
+  };
+}
+
 module.exports = {
   newDefaultKms,
   newDefaultCos,
   newDefaultVpcs,
   newVpc,
   newDefaultVpeSecurityGroups,
-  newDefaultTg
+  newDefaultTg,
+  newDefaultWorkloadCluster
 };

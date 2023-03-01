@@ -94,6 +94,17 @@ const {
   vpnOnStoreUpdate
 } = require("./vpn");
 
+const {
+  clusterInit,
+  clusterCreate,
+  clusterDelete,
+  clusterOnStoreUpdate,
+  clusterSave,
+  clusterWorkerPoolCreate,
+  clusterWorkerPoolDelete,
+  clusterWorkerPoolSave
+} = require("./clusters");
+
 const state = function() {
   let store = new lazyZstate({
     _defaults: {
@@ -256,6 +267,21 @@ const state = function() {
     create: vpnCreate,
     save: vpnSave,
     delete: vpnDelete
+  });
+
+  store.newField("clusters", {
+    init: clusterInit,
+    onStoreUpdate: clusterOnStoreUpdate,
+    create: clusterCreate,
+    save: clusterSave,
+    delete: clusterDelete,
+    subComponents: {
+      worker_pools: {
+        create: clusterWorkerPoolCreate,
+        save: clusterWorkerPoolSave,
+        delete: clusterWorkerPoolDelete
+      }
+    }
   });
 
   return store;
