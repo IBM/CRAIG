@@ -93,7 +93,6 @@ const {
   vpnSave,
   vpnOnStoreUpdate
 } = require("./vpn");
-
 const {
   clusterInit,
   clusterCreate,
@@ -111,6 +110,13 @@ const {
   vsiOnStoreUpdate,
   vsiSave
 } = require("./vsi");
+const {
+  vpeInit,
+  vpeCreate,
+  vpeDelete,
+  vpeSave,
+  vpeOnStoreUpdate
+} = require("./vpe");
 
 const state = function() {
   let store = new lazyZstate({
@@ -132,6 +138,16 @@ const state = function() {
     if (!contains(store.store[listName], obj[field])) {
       obj[field] = null;
     }
+  };
+
+  /**
+   * update the resourceGroup field for an object
+   * @param {Object} obj arbitrary object
+   * @param {string=} field name of the field to update default to `resource_group`
+   */
+  store.updateUnfoundResourceGroup = function(obj, field) {
+    let rgField = field || "resource_group";
+    store.updateUnfound("resourceGroups", obj, rgField);
   };
 
   store.newField("options", {
@@ -297,6 +313,14 @@ const state = function() {
     create: vsiCreate,
     save: vsiSave,
     delete: vsiDelete
+  });
+
+  store.newField("virtual_private_endpoints", {
+    init: vpeInit,
+    onStoreUpdate: vpeOnStoreUpdate,
+    create: vpeCreate,
+    save: vpeSave,
+    delete: vpeDelete
   });
 
   return store;

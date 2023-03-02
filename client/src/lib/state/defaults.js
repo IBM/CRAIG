@@ -1039,6 +1039,27 @@ function newDefaultManagementServer() {
   };
 }
 
+function newDefaultVpe() {
+  return [
+    {
+      name: "management-cos",
+      service: "cos",
+      vpc: "management",
+      resource_group: "management-rg",
+      security_groups: ["management-vpe"],
+      subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+    },
+    {
+      name: "workload-cos",
+      service: "cos",
+      vpc: "workload",
+      resource_group: "workload-rg",
+      security_groups: ["workload-vpe"],
+      subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+    }
+  ];
+}
+
 module.exports = {
   newDefaultKms,
   newDefaultCos,
@@ -1047,5 +1068,6 @@ module.exports = {
   newDefaultVpeSecurityGroups,
   newDefaultTg,
   newDefaultWorkloadCluster,
+  newDefaultVpe,
   newDefaultManagementServer
 };

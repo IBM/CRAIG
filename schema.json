@@ -145,6 +145,7 @@
   },
   "virtual_private_endpoints": {
     "Array": {
+      "name": "string",
       "vpc": "string",
       "service": "string",
       "resource_group": "string",
