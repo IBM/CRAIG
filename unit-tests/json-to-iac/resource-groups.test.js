@@ -43,7 +43,8 @@ data "ibm_resource_group" "slz_workload_rg" {
   name = "slz-workload-rg"
 }
 
-##############################################################################`;
+##############################################################################
+`;
 
     let actualData = resourceGroupTf(testData);
     assert.deepEqual(

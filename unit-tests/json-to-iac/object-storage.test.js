@@ -352,7 +352,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -422,7 +425,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -492,7 +498,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -563,11 +572,14 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
 
   object_versioning {
     enable = true
   }
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -645,7 +657,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
 
   archive_rule {
     days    = 30
@@ -653,6 +664,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     rule_id = "my-archive-rule"
     type    = "GLACIER"
   }
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -730,7 +745,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
 
   expire_rule {
     days                         = 30
@@ -740,6 +754,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     expired_object_delete_marker = true
     enable                       = true
   }
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -815,7 +833,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
 
   retention_rule {
     default   = 1
@@ -823,6 +840,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     maximum   = 1
     permanent = false
   }
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -893,8 +914,11 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
   allowed_ip           = ["1.2.3.4","5.6.7.8"]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -967,13 +991,16 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
 
   metrics_monitoring {
     metrics_monitoring_crn  = "metrics_monitoring"
     usage_metrics_enabled   = true
     request_metrics_enabled = true
   }
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -1046,13 +1073,16 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
 
   activity_tracking {
     read_data_events     = true
     write_data_events    = true
     activity_tracker_crn = "atracker"
   }
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -1294,7 +1324,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
@@ -1308,7 +1341,8 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(actualData, expectedData, "it should create correct tf");
     });
   });
@@ -1410,7 +1444,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
@@ -1424,7 +1461,8 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(actualData, expectedData, "it should create correct tf");
     });
     it("should return terraform for cos instances from config", () => {
@@ -1549,7 +1587,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
@@ -1593,7 +1634,10 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  depends_on           = [ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {

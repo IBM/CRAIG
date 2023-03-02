@@ -1,12 +1,12 @@
 const { snakeCase } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   rgIdRef,
-  buildTitleComment,
   kebabName,
   jsonToTf,
   tfRef,
   vpcRef,
+  tfBlock,
+  tfDone
 } = require("./utils");
 
 /**
@@ -30,10 +30,10 @@ function formatTgw(tgw, config) {
       location: "$region",
       global: tgw.global,
       resource_group: rgIdRef(tgw.resource_group, config),
-      _timeouts: {
-        create: '"30m"',
-        delete: '"30m"',
-      },
+      timeouts: {
+        create: "30m",
+        delete: "30m"
+      }
     },
     config
   );
@@ -59,13 +59,13 @@ function formatTgwConnection(connection, config) {
       name: kebabName(config, [
         connection.tgw,
         connection.vpc,
-        "hub-connection",
+        "hub-connection"
       ]),
       network_id: vpcRef(connection.vpc, "crn"),
-      _timeouts: {
-        create: '"30m"',
-        delete: '"30m"',
-      },
+      timeouts: {
+        create: "30m",
+        delete: "30m"
+      }
     }
   );
 }
@@ -78,19 +78,18 @@ function formatTgwConnection(connection, config) {
  */
 function tgwTf(config) {
   let tf = "";
-  config.transit_gateways.forEach((gw) => {
-    tf += buildTitleComment("Transit Gateway", gw.name);
-    tf += formatTgw(gw, config);
+  config.transit_gateways.forEach(gw => {
+    let blockData = formatTgw(gw, config);
     gw.connections.forEach(
-      (connection) => (tf += formatTgwConnection(connection, config))
+      connection => (blockData += formatTgwConnection(connection, config))
     );
-    tf += endComment + "\n\n";
+    tf += tfBlock(gw.name + " Transit Gateway", blockData);
   });
-  return tf.replace(/\n\n$/g, "\n");
+  return tfDone(tf);
 }
 
 module.exports = {
   formatTgw,
   formatTgwConnection,
-  tgwTf,
+  tgwTf
 };

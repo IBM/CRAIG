@@ -1,5 +1,9 @@
-const { endComment } = require("./constants");
-const { jsonToTf, kebabName, rgIdRef, buildTitleComment } = require("./utils");
+const {
+  jsonToTf,
+  kebabName,
+  rgIdRef,
+  tfBlock
+} = require("./utils");
 
 /**
  * create event streams terraform
@@ -17,29 +21,27 @@ const { jsonToTf, kebabName, rgIdRef, buildTitleComment } = require("./utils");
 function formatEventStreams(eventStreams, config) {
   let eventStreamsValues = {
     name: kebabName(config, [eventStreams.name]),
-    service: '"messagehub"',
+    service: "^messagehub",
     plan: `"${eventStreams.plan}"`,
     location: "$region",
     resource_group_id: rgIdRef(eventStreams.resource_group, config),
-    "_parameters =": {
+    "^parameters": {
       "service-endpoints": `"${eventStreams.endpoints}"`
     },
-    _timeouts: {
-      create: '"3h"',
-      update: '"1h"',
-      delete: '"1h"'
+    timeouts: {
+      create: "3h",
+      update: "1h",
+      delete: "1h"
     }
   };
   if (eventStreams.private_ip_allowlist) {
-    eventStreamsValues[
-      "_parameters ="
-    ].private_ip_allowlist = `"${JSON.stringify(
+    eventStreamsValues["^parameters"].private_ip_allowlist = `"${JSON.stringify(
       eventStreams.private_ip_allowlist
     ).replace(/\"/g, "")}"`; // remove quotes to match intended params
   }
   ["throughput", "storage_size"].forEach(field => {
     if (eventStreams[field]) {
-      eventStreamsValues["_parameters ="][field] = `"${eventStreams[field]}"`;
+      eventStreamsValues["^parameters"][field] = `"${eventStreams[field]}"`;
     }
   });
   return jsonToTf(
@@ -56,11 +58,11 @@ function formatEventStreams(eventStreams, config) {
  * @returns {string} terraform
  */
 function eventStreamsTf(config) {
-  let tf = buildTitleComment("event", "streams");
+  let blockData = "";
   config.event_streams.forEach(instance => {
-    tf += formatEventStreams(instance, config);
+    blockData += formatEventStreams(instance, config);
   });
-  return tf + endComment + "\n";
+  return tfBlock("Event Streams", blockData);
 }
 
 module.exports = {

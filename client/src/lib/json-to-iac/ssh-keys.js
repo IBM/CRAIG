@@ -1,10 +1,9 @@
 const { snakeCase } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   rgIdRef,
-  buildTitleComment,
   jsonToTf,
   dataResourceName,
+  tfBlock,
 } = require("./utils");
 
 /**
@@ -37,9 +36,9 @@ function formatSshKey(key, config) {
  * @returns {string} terraform code
  */
 function sshKeyTf(config) {
-  let tf = buildTitleComment("ssh", "keys");
+  let tf = "";
   config.ssh_keys.forEach((key) => (tf += formatSshKey(key, config)));
-  return tf + endComment + "\n";
+  return tfBlock("ssh keys", tf);
 }
 
 module.exports = {

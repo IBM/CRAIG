@@ -721,7 +721,8 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
   public_gateway  = ibm_is_public_gateway.management_gateway_zone_1.id
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,
@@ -998,7 +999,8 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
   public_gateway  = ibm_is_public_gateway.management_gateway_zone_1.id
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,

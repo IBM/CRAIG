@@ -1,12 +1,11 @@
-const { endComment } = require("./constants");
 const {
-  buildTitleComment,
   kebabName,
   tfRef,
   cosRef,
   bucketRef,
   jsonToTf,
   tfArrRef,
+  tfBlock
 } = require("./utils");
 
 /**
@@ -26,12 +25,14 @@ const {
 function formatAtrackerTarget(config) {
   let targetValues = {
     name: kebabName(config, [config.atracker.name, config.atracker.type]),
-    target_type: '"cloud_object_storage"',
-    region: "$region",
+    target_type: "^cloud_object_storage",
+    region: "$region"
   };
   // if (config.atracker.type === "cos")
   targetValues._cos_endpoint = {
-    endpoint: `"s3.private.${config._options.region}.cloud-object-storage.appdomain.cloud"`,
+    endpoint: `^s3.private.${
+      config._options.region
+    }.cloud-object-storage.appdomain.cloud`,
     target_crn: cosRef(config.atracker.target_name),
     bucket: bucketRef(config.atracker.target_name, config.atracker.bucket),
     api_key: tfRef(
@@ -40,7 +41,7 @@ function formatAtrackerTarget(config) {
         config.atracker.cos_key
       }`,
       "credentials.apikey"
-    ),
+    )
   };
   return jsonToTf(
     "ibm_atracker_target",
@@ -69,15 +70,15 @@ function formatAtrackerRoute(config) {
       name: kebabName(config, [
         config.atracker.name,
         config.atracker.type,
-        "route",
+        "route"
       ]),
       _rules: {
         target_ids: tfArrRef(
           "ibm_atracker_target",
           `${config.atracker.name} ${config.atracker.type} target`
         ),
-        locations: JSON.stringify(config.atracker.locations),
-      },
+        locations: JSON.stringify(config.atracker.locations)
+      }
     }
   );
 }
@@ -94,16 +95,15 @@ function formatAtrackerRoute(config) {
  * @returns {string} terraform atracker
  */
 function atrackerTf(config) {
-  let tf = buildTitleComment("Atracker", "Resources");
-  tf += formatAtrackerTarget(config);
+  let str = formatAtrackerTarget(config);
   if (config.atracker.add_route) {
-    tf += formatAtrackerRoute(config);
+    str += formatAtrackerRoute(config);
   }
-  return tf + endComment;
+  return tfBlock("Atracker Resources", str);
 }
 
 module.exports = {
   formatAtrackerTarget,
   formatAtrackerRoute,
-  atrackerTf,
+  atrackerTf
 };

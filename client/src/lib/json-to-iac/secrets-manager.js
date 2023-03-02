@@ -1,13 +1,11 @@
 const { snakeCase, splat, getObjectFromArray } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   rgIdRef,
-  getKmsKeyCrn,
   getKmsInstanceData,
-  buildTitleComment,
   kebabName,
   jsonToTf,
-  encryptionKeyRef
+  encryptionKeyRef,
+  tfBlock
 } = require("./utils");
 
 /**
@@ -24,9 +22,9 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
     "ibm_iam_authorization_policy",
     `secrets manager to ${kmsName} kms policy`,
     {
-      source_service_name: '"secrets-manager"',
+      source_service_name: "^secrets-manager",
       roles: '["Reader"]',
-      description: '"Allow Secets Manager instance to read from KMS instance"',
+      description: "^Allow Secets Manager instance to read from KMS instance",
       target_service_name: kmsInstance.name,
       target_resource_instance_id: kmsInstance.guid
     }
@@ -54,27 +52,27 @@ function formatSecretsManagerInstance(secretsManager, config) {
   let instance = {
     name: kebabName(config, [secretsManager.name]),
     location: "$region",
-    plan: '"standard"',
-    service: '"secrets-manager"',
+    plan: "^standard",
+    service: "^secrets-manager",
     resource_group_id: rgIdRef(secretsManager.resource_group, config),
-    "_parameters =": {
+    "^parameters": {
       kms_key: encryptionKeyRef(
         secretsManager.kms,
         secretsManager.kms_key,
         "crn"
       )
     },
-    _timeouts: {
-      create: '"1h"',
-      delete: '"1h"'
+    timeouts: {
+      create: "1h",
+      delete: "1h"
     }
   };
   if (kmsInstance.has_secrets_manager_auth !== true) {
-    instance[
-      "\n  depends_on"
-    ] = `[ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
-      secretsManager.kms
-    )}_kms_policy]`;
+    instance.depends_on = [
+      `ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
+        secretsManager.kms
+      )}_kms_policy`
+    ];
   }
   return jsonToTf(
     "ibm_resource_instance",
@@ -95,7 +93,7 @@ function formatSecretsManagerInstance(secretsManager, config) {
 function secretsManagerTf(config) {
   let tf = ``;
   let allKmsServices = splat(config.secrets_manager, "kms");
-  let kmstf = buildTitleComment("Key Management", "Authorizations");
+  let kmstf = "";
   let totalKmsInstances = 0;
   allKmsServices.forEach(service => {
     if (
@@ -107,15 +105,14 @@ function secretsManagerTf(config) {
       totalKmsInstances++;
     }
   });
-  kmstf += endComment;
   if (totalKmsInstances !== 0) {
-    tf += kmstf + "\n\n";
+    tf += tfBlock("Key Management Authorizations", kmstf) + "\n";
   }
-  tf += buildTitleComment("Secrets", "Manager Instances");
+  let secretsManagerData = "";
   config.secrets_manager.forEach(instance => {
-    tf += formatSecretsManagerInstance(instance, config);
+    secretsManagerData += formatSecretsManagerInstance(instance, config);
   });
-  tf += endComment;
+  tf += tfBlock("Secrets Manager Instances", secretsManagerData);
   return tf;
 }
 

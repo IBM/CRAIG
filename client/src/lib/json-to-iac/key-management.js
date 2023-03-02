@@ -1,14 +1,14 @@
 const { snakeCase, splat, distinct } = require("lazy-z");
-const { endComment, kmsKeyDependsOn } = require("./constants");
+const { kmsKeyDependsOn } = require("./constants");
 const {
   rgIdRef,
-  buildTitleComment,
   fillTemplate,
   kebabName,
   tfRef,
   encryptionKeyRef,
   jsonToTf,
   dataResourceName,
+  tfBlock
 } = require("./utils");
 
 /**
@@ -24,10 +24,10 @@ function formatKmsInstance(kms, config) {
   let instance = {
     name: dataResourceName(kms, config),
     resource_group_id: rgIdRef(kms.resource_group, config),
-    service: `"${kms.use_hs_crypto ? "hs-crypto" : "kms"}"`,
+    service: `^${kms.use_hs_crypto ? "hs-crypto" : "kms"}`
   };
   if (!kms.use_data) {
-    instance.plan = '"tiered-pricing"';
+    instance.plan = "^tiered-pricing";
     instance.location = "$region";
     instance.tags = true;
   }
@@ -59,16 +59,13 @@ function composedKmsId(kms) {
  * @returns {string} string formatted terraform code
  */
 function formatKmsAuthPolicy(kms, isBlockStorage) {
-  let resourceType = isBlockStorage
-    ? `\n  source_resource_type        = "share"`
-    : "";
   let resource = {
-    source_service_name: `"${isBlockStorage ? "is" : "server-protect"}"`,
-    target_service_name: `"${kms.use_hs_crypto ? "hs-crypto" : "kms"}"`,
+    source_service_name: `^${isBlockStorage ? "is" : "server-protect"}`,
+    target_service_name: `^${kms.use_hs_crypto ? "hs-crypto" : "kms"}`,
     target_resource_instance_id: composedKmsId(kms),
     roles: `["Reader"${isBlockStorage ? `, "Authorization Delegator"` : ""}]`,
     description:
-      '"Allow block storage volumes to be encrypted by Key Management instance."',
+      "^Allow block storage volumes to be encrypted by Key Management instance."
   };
   if (isBlockStorage) {
     resource.source_resource_type = '"share"';
@@ -94,7 +91,7 @@ function formatKmsAuthPolicy(kms, isBlockStorage) {
 function formatKeyRing(name, kms, config) {
   return jsonToTf(`ibm_kms_key_rings`, `${kms.name} ${name} ring`, {
     key_ring_id: kebabName(config, [kms.name, name]),
-    instance_id: composedKmsId(kms),
+    instance_id: composedKmsId(kms)
   });
 }
 
@@ -124,13 +121,15 @@ function formatKmsKey(key, kms, config) {
       "key_ring_id"
     ),
     force_delete: key.force_delete,
-    endpoint_type: `"${key.endpoint}"`,
+    endpoint_type: `"${key.endpoint}"`
   };
 
   if (kms.authorize_vpc_reader_role)
-    keyValues["\n  depends_on"] = fillTemplate(kmsKeyDependsOn, {
-      kms_name: snakeCase(kms.name),
-    });
+    keyValues.depends_on = JSON.parse(
+      fillTemplate(kmsKeyDependsOn, {
+        kms_name: snakeCase(kms.name)
+      })
+    );
   return jsonToTf("ibm_kms_key", `${kms.name}-${key.name}-key`, keyValues);
 }
 
@@ -154,11 +153,11 @@ function formatKmsKeyPolicy(key, kms) {
       endpoint_type: `"${key.endpoint}"`,
       key_id: encryptionKeyRef(kms.name, key.name),
       _rotation: {
-        interval_month: key.rotation,
+        interval_month: key.rotation
       },
       _dual_auth_delete: {
-        enabled: key.dual_auth_delete,
-      },
+        enabled: key.dual_auth_delete
+      }
     }
   );
 }
@@ -174,20 +173,18 @@ function formatKmsKeyPolicy(key, kms) {
  * @returns {string} terraform string
  */
 function kmsInstanceTf(kms, config) {
-  let instanceTf =
-    buildTitleComment("Key Management Instance", kms.name) +
-    formatKmsInstance(kms, config);
+  let instanceTf = formatKmsInstance(kms, config);
   let keyRings = distinct(splat(kms.keys, "key_ring"));
   if (kms.authorize_vpc_reader_role) {
     instanceTf += formatKmsAuthPolicy(kms) + formatKmsAuthPolicy(kms, true);
   }
-  keyRings.forEach((ring) => {
+  keyRings.forEach(ring => {
     instanceTf += formatKeyRing(ring, kms, config);
   });
-  kms.keys.forEach((key) => {
+  kms.keys.forEach(key => {
     instanceTf += formatKmsKey(key, kms, config) + formatKmsKeyPolicy(key, kms);
   });
-  return instanceTf + endComment;
+  return tfBlock("Key Management Instance " + kms.name, instanceTf);
 }
 
 /**
@@ -200,10 +197,10 @@ function kmsInstanceTf(kms, config) {
 function kmsTf(config) {
   let kmsTerraform = "";
   let names = splat(config.key_management, "name");
-  config.key_management.forEach((instance) => {
+  config.key_management.forEach(instance => {
     kmsTerraform += kmsInstanceTf(instance, config, config);
     if (names.length > 1 && names.indexOf(instance.name) !== names.length - 1) {
-      kmsTerraform += "\n\n";
+      kmsTerraform += "\n";
     }
   });
   return kmsTerraform;
@@ -216,5 +213,5 @@ module.exports = {
   formatKmsKey,
   formatKmsKeyPolicy,
   kmsInstanceTf,
-  kmsTf,
+  kmsTf
 };

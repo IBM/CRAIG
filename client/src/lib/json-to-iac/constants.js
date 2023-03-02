@@ -257,11 +257,9 @@ runcmd:
       done
       /root/install.sh
     ) &`,
-  clusterSubnetZones:
-    `\n\n  zones {\n    name      = $NAME` + `\n    subnet_id = $SUBNET\n  }`,
   kmsKeyDependsOn: `[
-    ibm_iam_authorization_policy.$KMS_NAME_server_protect_policy,
-    ibm_iam_authorization_policy.$KMS_NAME_block_storage_policy
+    "ibm_iam_authorization_policy.$KMS_NAME_server_protect_policy",
+    "ibm_iam_authorization_policy.$KMS_NAME_block_storage_policy"
   ]`,
   cosRandomSuffix:
     `\nresource "random_string" "$COS_NAME_random_suffix" {\n` +

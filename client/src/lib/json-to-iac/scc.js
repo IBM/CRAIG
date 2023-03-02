@@ -1,5 +1,4 @@
-const { endComment } = require("./constants");
-const { buildTitleComment, jsonToTf } = require("./utils");
+const { jsonToTf, tfBlock } = require("./utils");
 
 /**
  * create scc posture credential block
@@ -10,27 +9,22 @@ const { buildTitleComment, jsonToTf } = require("./utils");
  * @returns {string} terraform formatted code
  */
 function formatPostureCredential(scc) {
-  return (
-    buildTitleComment("Security and Compliance Center", "Credentials").replace(
-      /And/i,
-      "and"
-    ) +
+  return tfBlock(
+    "Security and Compliance Center Credentials",
     jsonToTf("ibm_scc_posture_credential", "scc_credentials", {
-      description: '"scc posture credential description"',
+      description: "^scc posture credential description",
       enabled: true,
-      name: `"${scc.name}"`,
-      type: '"ibm_cloud"',
-      purpose: '"discovery_fact_collection_remediation"',
+      name: `^${scc.name}`,
+      type: "^ibm_cloud",
+      purpose: "^discovery_fact_collection_remediation",
       _display_fields: {
-        ibm_api_key: "var.ibmcloud_api_key",
+        ibm_api_key: "var.ibmcloud_api_key"
       },
       _group: {
-        id: `"${scc.id}"`,
-        passphrase: `"${scc.passphrase}"`,
-      },
-    }) +
-    endComment +
-    "\n"
+        id: `^${scc.id}`,
+        passphrase: `^${scc.passphrase}`
+      }
+    })
   );
 }
 
@@ -47,14 +41,14 @@ function formatPostureCredential(scc) {
  * @returns {string} terraform code
  */
 function formatScc(scc, config) {
-  let tf = buildTitleComment("Security and Compliance", "Center");
+  let tf = "";
   tf += jsonToTf(
     "ibm_scc_account_settings",
     "ibm_scc_account_settings_instance",
     {
       _location: {
-        location_id: `"${scc.location}"`,
-      },
+        location_id: `"${scc.location}"`
+      }
     }
   ).replace(/\n(?=\s\slocation)/i, "");
   tf += jsonToTf(
@@ -63,8 +57,8 @@ function formatScc(scc, config) {
     {
       description: `"${scc.collector_description}"`,
       is_public: scc.is_public,
-      managed_by: '"ibm"',
-      name: `"${config._options.prefix}-scc-collector"`,
+      managed_by: "^ibm",
+      name: `"${config._options.prefix}-scc-collector"`
     },
     config
   );
@@ -74,13 +68,13 @@ function formatScc(scc, config) {
     {
       collector_ids: `[ibm_scc_posture_collector.collector.id]`,
       credential_id: `ibm_scc_posture_credential.scc_credentials.id`,
-      credential_type: `"ibm"`,
-      description: `"${scc.scope_description}"`,
-      name: `"${config._options.prefix}-scc-scope"`,
+      credential_type: `^ibm`,
+      description: `^${scc.scope_description}`,
+      name: `^${config._options.prefix}-scc-scope`
     },
     config
   );
-  return tf + endComment + "\n";
+  return tfBlock("Security and Compliance Center", tf);
 }
 
 /**
@@ -98,5 +92,5 @@ function sccTf(config) {
 module.exports = {
   formatPostureCredential,
   formatScc,
-  sccTf,
+  sccTf
 };

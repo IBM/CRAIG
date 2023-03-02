@@ -1,11 +1,10 @@
 const { kebabCase } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   jsonToTf,
   tfRef,
   stringifyTranspose,
-  buildTitleComment,
-  kebabName
+  kebabName,
+  tfBlock
 } = require("./utils");
 
 /**
@@ -69,7 +68,7 @@ function formatAccessGroupPolicy(policy) {
   if (policy.resources) {
     policyValues._resources = stringifyTranspose(policy.resources);
     if (policy.resources.attributes) {
-      policyValues._resources["_attributes ="] = stringifyTranspose(
+      policyValues._resources["^attributes"] = stringifyTranspose(
         policy.resources.attributes
       );
     }
@@ -142,23 +141,23 @@ function iamTf(config) {
   let tf = "";
   if (config.iam_account_settings.enable) {
     tf +=
-      buildTitleComment("Iam Account", "settings") +
-      formatIamAccountSettings(config.iam_account_settings) +
-      endComment +
-      "\n\n";
+      tfBlock(
+        "Iam Account Settings",
+        formatIamAccountSettings(config.iam_account_settings)
+      ) + "\n";
   }
   config.access_groups.forEach(group => {
-    tf +=
-      buildTitleComment(group.name, "access group") +
-      formatAccessGroup(group, config);
-    group.policies.forEach(policy => (tf += formatAccessGroupPolicy(policy)));
-    group.dynamic_policies.forEach(
-      policy => (tf += formatAccessGroupDynamicRule(policy))
+    let blockData = formatAccessGroup(group, config);
+    group.policies.forEach(
+      policy => (blockData += formatAccessGroupPolicy(policy))
     );
-    if (group.has_invites) tf += formatGroupMembers(group.invites);
-    tf += endComment + "\n\n";
+    group.dynamic_policies.forEach(
+      policy => (blockData += formatAccessGroupDynamicRule(policy))
+    );
+    if (group.has_invites) blockData += formatGroupMembers(group.invites);
+    tf += tfBlock(`${group.name} access group`, blockData);
   });
-  return tf.replace(/\n$/i, "");
+  return tf;
 }
 
 module.exports = {

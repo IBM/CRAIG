@@ -174,8 +174,10 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
     create = "1h"
     delete = "1h"
   }
-  
-  depends_on = [ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
+  ]
 }
 `;
       assert.deepEqual(
@@ -321,8 +323,10 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
     create = "1h"
     delete = "1h"
   }
-  
-  depends_on = [ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
+  ]
 }
 
 resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
@@ -340,8 +344,10 @@ resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
     create = "1h"
     delete = "1h"
   }
-  
-  depends_on = [ibm_iam_authorization_policy.secrets_manager_to_kms2_kms_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.secrets_manager_to_kms2_kms_policy
+  ]
 }
 
 resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
@@ -361,7 +367,8 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,
@@ -519,7 +526,8 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,

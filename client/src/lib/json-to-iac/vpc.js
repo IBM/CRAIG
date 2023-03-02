@@ -1,13 +1,13 @@
 const { kebabCase, snakeCase, allFieldsNull, splat } = require("lazy-z");
-const { endComment} = require("./constants");
 const {
   rgIdRef,
   vpcRef,
-  buildTitleComment,
+  tfDone,
   kebabName,
   composedZone,
   jsonToTf,
   tfRef,
+  tfBlock
 } = require("./utils");
 
 /**
@@ -32,13 +32,13 @@ function formatVpc(vpc, config) {
     default_network_acl_name: vpc.default_network_acl_name,
     default_security_group_name: vpc.default_security_group_name,
     default_routing_table_name: vpc.default_routing_table_name,
-    tags: true,
+    tags: true
   };
   if (vpc.classic_access) {
     vpcValues.classic_access = true;
   }
   if (vpc.manual_address_prefix_management) {
-    vpcValues.address_prefix_management = '"manual"';
+    vpcValues.address_prefix_management = "^manual";
   }
   return jsonToTf("ibm_is_vpc", `${vpc.name}-vpc`, vpcValues, config);
 }
@@ -64,7 +64,7 @@ function formatAddressPrefix(address, config) {
       name: kebabName(config, [address.vpc, address.name]),
       vpc: vpcRef(address.vpc),
       zone: composedZone(config, address.zone),
-      cidr: `"${address.cidr}"`,
+      cidr: `^${address.cidr}`
     },
     config
   );
@@ -100,7 +100,7 @@ function formatSubnet(subnet, config) {
     ),
     ipv4_cidr_block: subnet.has_prefix
       ? `ibm_is_vpc_address_prefix.${snakeCase(subnetName)}_prefix.cidr`
-      : `"${subnet.cidr}"`,
+      : `^${subnet.cidr}`
   };
   if (subnet.public_gateway) {
     subnetValues.public_gateway = tfRef(
@@ -129,7 +129,7 @@ function formatAcl(acl, config) {
       name: kebabName(config, [acl.vpc, acl.name, "acl"]),
       vpc: vpcRef(acl.vpc),
       resource_group: rgIdRef(acl.resource_group, config),
-      tags: true,
+      tags: true
     },
     config
   );
@@ -164,26 +164,26 @@ function formatAclRule(rule) {
   let aclAddress = `${rule.vpc} ${rule.acl} acl`;
   let ruleValues = {
     network_acl: tfRef("ibm_is_network_acl", `${rule.vpc} ${rule.acl} acl`),
-    action: `"${rule.action}"`,
-    destination: `"${rule.destination}"`,
-    direction: `"${rule.direction}"`,
-    name: `"${rule.name}"`,
-    source: `"${rule.source}"`,
+    action: `^${rule.action}`,
+    destination: `^${rule.destination}`,
+    direction: `^${rule.direction}`,
+    name: `^${rule.name}`,
+    source: `^${rule.source}`
   };
 
-  ["icmp", "tcp", "udp"].forEach((protocol) => {
+  ["icmp", "tcp", "udp"].forEach(protocol => {
     let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
     if (ruleHasProtocolData && protocol === "icmp") {
       ruleValues._icmp = {
         type: rule.icmp.type,
-        code: rule.icmp.code,
+        code: rule.icmp.code
       };
     } else if (ruleHasProtocolData) {
       ruleValues[`_${protocol}`] = {
         port_min: rule[protocol].port_min,
         port_max: rule[protocol].port_max,
         source_port_min: rule[protocol].source_port_min,
-        source_port_max: rule[protocol].source_port_max,
+        source_port_max: rule[protocol].source_port_max
       };
     }
   });
@@ -238,35 +238,26 @@ function formatPgw(pgw, config) {
 function vpcTf(config) {
   let tf = "";
   let vpcNames = splat(config.vpcs, "name");
-  config.vpcs.forEach((vpc) => {
-    tf +=
-      buildTitleComment(vpc.name, "vpc") +
-      formatVpc(vpc, config);
-    vpc.address_prefixes.forEach((prefix) => {
-      tf += formatAddressPrefix(prefix, config);
+  config.vpcs.forEach(vpc => {
+    let blockData = formatVpc(vpc, config);
+    vpc.address_prefixes.forEach(prefix => {
+      blockData += formatAddressPrefix(prefix, config);
     });
-    vpc.acls.forEach((acl) => {
-      tf += formatAcl(acl, config);
-      acl.rules.forEach((rule) => {
-        tf += formatAclRule(rule);
+    vpc.acls.forEach(acl => {
+      blockData += formatAcl(acl, config);
+      acl.rules.forEach(rule => {
+        blockData += formatAclRule(rule);
       });
     });
-    vpc.public_gateways.forEach((gateway) => {
-      tf += formatPgw(gateway, config);
+    vpc.public_gateways.forEach(gateway => {
+      blockData += formatPgw(gateway, config);
     });
-    vpc.subnets.forEach((subnet) => {
-      tf += formatSubnet(subnet, config);
+    vpc.subnets.forEach(subnet => {
+      blockData += formatSubnet(subnet, config);
     });
-    tf += endComment;
-    if (
-      // add newlines when multiple vpcs and is not last
-      vpcNames.length > 1 &&
-      vpcNames.indexOf(vpc.name) !== vpcNames.length - 1
-    ) {
-      tf += "\n\n";
-    }
+    tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
   });
-  return tf;
+  return tfDone(tf);
 }
 
 module.exports = {
@@ -276,5 +267,5 @@ module.exports = {
   formatAcl,
   formatAclRule,
   formatPgw,
-  vpcTf,
+  vpcTf
 };

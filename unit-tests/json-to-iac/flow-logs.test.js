@@ -253,7 +253,10 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_management_rg.id
   tags           = ["hello","world"]
-  depends_on     = [ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy
+  ]
 }
 `;
 
@@ -380,7 +383,10 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_management_rg.id
   tags           = ["slz","landing-zone"]
-  depends_on     = [ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy
+  ]
 }
 
 resource "ibm_is_flow_log" "workload_flow_log_collector" {
@@ -390,10 +396,14 @@ resource "ibm_is_flow_log" "workload_flow_log_collector" {
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_workload_rg.id
   tags           = ["slz","landing-zone"]
-  depends_on     = [ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy]
+
+  depends_on = [
+    ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy
+  ]
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,

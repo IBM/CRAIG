@@ -1,8 +1,7 @@
-const { endComment } = require("./constants");
 const {
-  buildTitleComment,
   jsonToTf,
   dataResourceName,
+  tfBlock,
 } = require("./utils");
 
 /**
@@ -35,11 +34,11 @@ function formatResourceGroup(group, config) {
  * @returns {string} string formatted terraform code
  */
 function resourceGroupTf(config) {
-  let text = buildTitleComment("Resource", "Groups");
+  let text = "";
   config.resource_groups.forEach((group) => {
     text += formatResourceGroup(group, config);
   });
-  return text + endComment;
+  return tfBlock("Resource Groups", text)
 }
 
 module.exports = resourceGroupTf;

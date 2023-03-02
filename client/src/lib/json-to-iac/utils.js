@@ -5,10 +5,12 @@ const {
   kebabCase,
   eachKey,
   isString,
-  parseIntFromZone
+  parseIntFromZone,
+  contains
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { lastCommaExp } = require("../constants");
+const { endComment } = require("./constants");
 const constants = require("./constants");
 /**
  * get a resource group id using name
@@ -52,14 +54,13 @@ function getCosId(cos) {
 
 /**
  * create a header for terraform
- * @param {string} type type of resource
- * @param {string} name name of resource
+ * @param {string} name name of resource block
  * @returns {string} title comment block
  */
-function buildTitleComment(type, name) {
+function buildTitleComment(name) {
   return (
     constants.titleComment
-      .replace("TITLE", titleCase(`${type} ${name}`))
+      .replace("TITLE", titleCase(name))
       .replace(
         new RegexButWithWords()
           .literal("F")
@@ -73,6 +74,7 @@ function buildTitleComment(type, name) {
       .replace(/Vpe/g, "VPE")
       .replace(/Ssh(?=\s)/g, "SSH")
       .replace(/Vpc(?=\s)/g, "VPC")
+      .replace(/Vsi(?=\s)/g, "VSI")
       .replace(/Vpn(?=\s)/g, "VPN") + "\n"
   );
 }
@@ -266,7 +268,11 @@ function composedZone(config, zone) {
 function longestKeyLength(obj) {
   let longestKey = 0;
   eachKey(obj, key => {
-    if (key.length > longestKey && key.indexOf("_") !== 0) {
+    if (
+      key.length > longestKey && // if key is longer
+      key.indexOf("_") !== 0 && // is not decorated with _
+      !contains(["depends_on", "timeouts"], key) // and isn't reserved
+    ) {
       longestKey =
         key.indexOf("*") === 0 || key.indexOf("-") === 0
           ? key.length - 1
@@ -298,6 +304,7 @@ function matchLength(str, length) {
  * @param {boolean} useData use data
  * @returns {string} terraform formatted code
  */
+
 function jsonToTf(type, name, values, config, useData) {
   let tf = `\n${useData ? "data" : "resource"} "${type}" "${snakeCase(
     name
@@ -312,19 +319,21 @@ function jsonToTf(type, name, values, config, useData) {
     let offsetSpace = matchLength("", offset || 0); // offset for recursion
     // for each field in the terraform object
     eachKey(obj, key => {
-      let keyName = key.replace(/^(-|_|\*)/g, "");
+      let keyName = key.replace(/^(-|_|\*|\^)/g, ""); // key with indicator chars removed
       let nextOffset = offset || 0;
+      let valueIsObject =
+        key.indexOf("_") === 0 || key.indexOf("^") === 0 || key === "timeouts";
+      let objectIndent = `\n\n  ${offsetSpace}${keyName}`; // indent for objects
+      let arrClose = `\n  ${offsetSpace}]`; // close for arrays
       // keys that start with * are used for multiline arrays
       if (key.indexOf("*") === 0) {
         tf += `\n${offsetSpace.length === 0 ? "\n" : ""}  ${offsetSpace +
           keyName} = [`;
-        // add item with comma
         obj[key].forEach(item => {
           tf += `\n    ${offsetSpace + item},`;
         });
-        // replace last comma and close
         tf = tf.replace(lastCommaExp, "");
-        tf += `\n${offsetSpace}  ]`;
+        tf += arrClose;
       } else if (key.indexOf("-") === 0) {
         // keys that start with - are used to indicate multiple blocks of the same kind
         // ex. `network_interfaces` for vsi
@@ -333,9 +342,22 @@ function jsonToTf(type, name, values, config, useData) {
           eachTfKey(item, 2 + nextOffset);
           tf += `\n  }`;
         });
-      } else if (key.indexOf("_") === 0) {
+      } else if (key === "depends_on") {
+        // handle depends on arg
+        tf += `${objectIndent} = [`;
+        obj[key].forEach(dependency => {
+          tf += `\n ${matchLength(offsetSpace, 2)} ${dependency},`;
+        });
+        tf = tf.replace(lastCommaExp, "");
+        tf += arrClose;
+      } else if (valueIsObject) {
         // for keys that aren't new create a sub block
-        tf += `\n\n  ${offsetSpace}${keyName} {`;
+        tf += `${objectIndent} ${
+          key.indexOf("^") === 0 ? "= " : "" // keys with ^ use an = for block assignment
+        }{`;
+        if (key === "timeouts") {
+          obj[key] = stringifyTranspose(obj[key]);
+        }
         eachTfKey(obj[key], 2 + nextOffset);
         tf += `\n  ${offsetSpace}}`;
       } else {
@@ -346,6 +368,13 @@ function jsonToTf(type, name, values, config, useData) {
             : obj[key] === "$region" // if value is region
             ? `"${config._options.region}"` // add region
             : obj[key]; // otherwise value
+        if (isString(keyValue)) {
+          // if value is string and ^ is first character
+          // add string and replace first ^ with empty string
+          if (keyValue.indexOf("^") === 0) {
+            keyValue = `"${keyValue.replace(/^\^/g, "")}"`;
+          }
+        }
         tf += `\n  ${offsetSpace + matchLength(key, longest)} = ${keyValue}`;
       }
     });
@@ -353,6 +382,19 @@ function jsonToTf(type, name, values, config, useData) {
   eachTfKey(values);
   tf += "\n}\n";
   return tf;
+}
+
+function tfBlock(title, blockData) {
+  return buildTitleComment(title) + blockData + endComment + "\n";
+}
+
+/**
+ * replace trailing newline
+ * @param {string} tf terraform sta
+ * @returns {string} terraform data with additional newlines removed
+ */
+function tfDone(tf) {
+  return tf.replace(/\n\n$/g, "\n");
 }
 
 /**
@@ -405,5 +447,7 @@ module.exports = {
   cosRef,
   encryptionKeyRef,
   bucketRef,
-  tfArrRef
+  tfArrRef,
+  tfBlock,
+  tfDone
 };

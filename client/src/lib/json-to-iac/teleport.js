@@ -1,12 +1,8 @@
 const { snakeCase, transpose, getObjectFromArray } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { formatAppIdRedirectUrls } = require("./appid");
-const {
-  endComment,
-  teleportCloudInitText,
-  teleportConfigData,
-} = require("./constants");
-const { buildTitleComment, fillTemplate } = require("./utils");
+const { teleportCloudInitText, teleportConfigData } = require("./constants");
+const { fillTemplate, tfBlock } = require("./utils");
 const { formatVsi } = require("./vsi");
 
 function teleportCloudInit() {
@@ -38,7 +34,7 @@ function teleportCloudInit() {
  */
 function formatTemplateCloudInit(template) {
   let claimToRoles = `[`;
-  template.claim_to_roles.forEach((claim) => {
+  template.claim_to_roles.forEach(claim => {
     claimToRoles +=
       `\n        {` +
       `\n          email = "${claim.email}"` +
@@ -62,7 +58,7 @@ function formatTemplateCloudInit(template) {
     appid_secret: template.appid_secret,
     version: template.version,
     message_of_the_day: template.message_of_the_day,
-    claim_to_roles: claimToRoles.replace(/,$/g, ""),
+    claim_to_roles: claimToRoles.replace(/,$/g, "")
   });
 }
 
@@ -79,24 +75,31 @@ function formatTeleportInstance(instance, config) {
   let nameRegex = new RegexButWithWords()
     .negatedSet('"')
     .oneOrMore()
-    .look.ahead((exp) => {
-      exp.literal('"\n').whitespace().whitespace().literal("image");
+    .look.ahead(exp => {
+      exp
+        .literal('"\n')
+        .whitespace()
+        .whitespace()
+        .literal("image");
     })
     .done("g");
   let addressRegex = new RegexButWithWords()
     .nonCapturingGroup('"')
     .negatedSet('"{')
     .oneOrMore()
-    .look.ahead((exp) => {
-      exp.literal('"').whitespace().literal("{");
+    .look.ahead(exp => {
+      exp
+        .literal('"')
+        .whitespace()
+        .literal("{");
     })
     .done("g");
-  let tf = buildTitleComment(instance.name, "teleport instance");
+  let tf = "";
   transpose(
     {
       user_data: `data.template_cloudinit_config.${snakeCase(
         instance.name
-      )}_cloud_init.rendered`,
+      )}_cloud_init.rendered`
     },
     instance
   );
@@ -106,7 +109,7 @@ function formatTeleportInstance(instance, config) {
       nameRegex,
       `${config._options.prefix}-${instance.name}-teleport-vsi`
     );
-  return tf + endComment + "\n";
+  return tfBlock(instance.name + " Teleport Instance", tf);
 }
 
 /**
@@ -118,20 +121,21 @@ function formatTeleportInstance(instance, config) {
  */
 function teleportTf(config) {
   let tf = "";
-  config.teleport_vsi.forEach((instance) => {
+  config.teleport_vsi.forEach(instance => {
     tf += formatTemplateCloudInit(instance.template) + "\n";
     tf += formatTeleportInstance(instance, config) + "\n";
-    tf +=
-      buildTitleComment("Redirect", "Urls") +
+    tf += tfBlock(
+      "Redirect urls",
       formatAppIdRedirectUrls(
         getObjectFromArray(config.appid, "name", instance.appid),
         [
-          `https://${config._options.prefix}-${instance.name}-teleport-vsi.DOMAIN:3080/v1/webapi/oidc/callback`,
+          `https://${config._options.prefix}-${
+            instance.name
+          }-teleport-vsi.DOMAIN:3080/v1/webapi/oidc/callback`
         ],
         instance.name + "_appid_urls"
-      ) +
-      endComment +
-      "\n";
+      )
+    );
   });
   return tf;
 }
@@ -140,5 +144,5 @@ module.exports = {
   teleportCloudInit,
   formatTemplateCloudInit,
   formatTeleportInstance,
-  teleportTf,
+  teleportTf
 };

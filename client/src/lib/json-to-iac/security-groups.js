@@ -1,12 +1,12 @@
 const { snakeCase, allFieldsNull } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   rgIdRef,
-  buildTitleComment,
   kebabName,
   vpcRef,
   jsonToTf,
   tfRef,
+  tfBlock,
+  tfDone
 } = require("./utils");
 
 /**
@@ -28,7 +28,7 @@ function formatSecurityGroup(sg, config) {
       name: kebabName(config, [sg.vpc, sg.name, "sg"]),
       vpc: vpcRef(sg.vpc),
       resource_group: rgIdRef(sg.resource_group, config),
-      tags: true,
+      tags: true
     },
     config
   );
@@ -61,20 +61,20 @@ function formatSgRule(rule) {
   let sgAddress = `${rule.vpc} vpc ${rule.sg} sg`;
   let sgRule = {
     group: tfRef("ibm_is_security_group", snakeCase(sgAddress), "id"),
-    remote: `"${rule.source}"`,
-    direction: `"${rule.direction}"`,
+    remote: `^${rule.source}`,
+    direction: `^${rule.direction}`
   };
-  ["icmp", "tcp", "udp"].forEach((protocol) => {
+  ["icmp", "tcp", "udp"].forEach(protocol => {
     let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
     if (ruleHasProtocolData && protocol === "icmp") {
       sgRule._icmp = {
         type: rule.icmp.type,
-        code: rule.icmp.code,
+        code: rule.icmp.code
       };
     } else if (ruleHasProtocolData) {
       sgRule[`_${protocol}`] = {
         port_min: rule[protocol].port_min,
-        port_max: rule[protocol].port_max,
+        port_max: rule[protocol].port_max
       };
     }
   });
@@ -94,17 +94,16 @@ function formatSgRule(rule) {
  */
 function sgTf(config) {
   let tf = "";
-  config.security_groups.forEach((group) => {
-    tf += buildTitleComment("Security Group", group.name);
-    tf += formatSecurityGroup(group, config);
-    group.rules.forEach((rule) => (tf += formatSgRule(rule)));
-    tf += endComment + "\n\n";
+  config.security_groups.forEach(group => {
+    let blockData = formatSecurityGroup(group, config);
+    group.rules.forEach(rule => (blockData += formatSgRule(rule)));
+    tf += tfBlock("Security Group " + group.name, blockData) + "\n";
   });
-  return tf.replace(/\n\n$/g, "\n");
+  return tfDone(tf);
 }
 
 module.exports = {
   formatSecurityGroup,
   formatSgRule,
-  sgTf,
+  sgTf
 };

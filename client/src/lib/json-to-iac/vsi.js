@@ -6,17 +6,17 @@ const {
   transpose,
   parseIntFromZone
 } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   rgIdRef,
-  buildTitleComment,
   jsonToTf,
   tfRef,
   vpcRef,
   composedZone,
   encryptionKeyRef,
   subnetRef,
-  kebabName
+  kebabName,
+  tfBlock,
+  tfDone
 } = require("./utils");
 
 /**
@@ -293,29 +293,30 @@ function formatLoadBalancer(deployment, config) {
  * @returns {string} terraform string
  */
 function vsiTf(config) {
-  let tf = buildTitleComment("image data", "sources");
+  let tf = "",
+    imageTf = "";
   let allImagesNames = distinct(splat(config.vsi, "image"));
   allImagesNames.forEach(name => {
-    tf += formatVsiImage(name);
+    imageTf += formatVsiImage(name);
   });
-  tf += endComment + "\n\n";
+  tf += tfBlock("image data sources", imageTf) + "\n";
   config.vsi.forEach(deployment => {
-    tf += buildTitleComment(
-      `${deployment.vpc} vpc`,
-      `${deployment.name} deployment`
-    );
+    let blockData = "";
     deployment.subnets.forEach(subnet => {
       for (let i = 0; i < deployment.vsi_per_subnet; i++) {
         let instance = {};
         transpose(deployment, instance);
         instance.subnet = subnet;
         instance.index = i + 1;
-        tf += formatVsi(instance, config);
+        blockData += formatVsi(instance, config);
       }
     });
-    tf += endComment + "\n\n";
+    tf += tfBlock(
+      `${deployment.vpc} vpc ${deployment.name} deployment`,
+      blockData
+    );
   });
-  return tf.replace(/\n\n$/g, "\n");
+  return tfDone(tf);
 }
 
 /**
@@ -327,11 +328,7 @@ function vsiTf(config) {
 function lbTf(config) {
   let tf = "";
   config.load_balancers.forEach(lb => {
-    tf +=
-      buildTitleComment(lb.name, "load balancer") +
-      formatLoadBalancer(lb, config) +
-      endComment +
-      "\n";
+    tf += tfBlock(lb.name + " load balancer", formatLoadBalancer(lb, config));
   });
   return tf;
 }

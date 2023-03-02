@@ -200,7 +200,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     it("should return cluster terraform", () => {
       let actualData = clusterTf(slzNetwork);
       let expectedData = `##############################################################################
-# Cluster Workload
+# Workload Cluster
 ##############################################################################
 
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {

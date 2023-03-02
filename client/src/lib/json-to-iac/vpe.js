@@ -1,19 +1,23 @@
-const { endComment } = require("./constants");
 const {
   rgIdRef,
-  buildTitleComment,
   jsonToTf,
   subnetRef,
   kebabName,
   vpcRef,
   tfRef,
+  tfBlock,
+  tfDone
 } = require("./utils");
 
 const serviceToEndpointMap = {
-  kms: "crn:v1:bluemix:public:kms:$REGION:::endpoint:${var.service_endpoints}.$REGION.kms.cloud.ibm.com",
-  hpcs: "crn:v1:bluemix:public:hs-crypto:$REGION:::endpoint:api.${var.service_endpoints}.$REGION.hs-crypto.cloud.ibm.com",
-  cos: "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.$REGION.cloud-object-storage.appdomain.cloud",
-  icr: "crn:v1:bluemix:public:container-registry:$REGION:::endpoint:vpe.$REGION.container-registry.cloud.ibm.com",
+  kms:
+    "crn:v1:bluemix:public:kms:$REGION:::endpoint:${var.service_endpoints}.$REGION.kms.cloud.ibm.com",
+  hpcs:
+    "crn:v1:bluemix:public:hs-crypto:$REGION:::endpoint:api.${var.service_endpoints}.$REGION.hs-crypto.cloud.ibm.com",
+  cos:
+    "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.$REGION.cloud-object-storage.appdomain.cloud",
+  icr:
+    "crn:v1:bluemix:public:container-registry:$REGION:::endpoint:vpe.$REGION.container-registry.cloud.ibm.com"
 };
 
 /**
@@ -27,7 +31,7 @@ function formatReservedIp(vpcName, subnetName) {
     "ibm_is_subnet_reserved_ip",
     `${vpcName} vpc ${subnetName} subnet vpe ip`,
     {
-      subnet: subnetRef(vpcName, subnetName),
+      subnet: subnetRef(vpcName, subnetName)
     }
   );
 }
@@ -46,7 +50,7 @@ function formatReservedIp(vpcName, subnetName) {
  */
 function fortmatVpeGateway(vpe, config) {
   let allSgIds = [];
-  vpe.security_groups.forEach((group) => {
+  vpe.security_groups.forEach(group => {
     allSgIds.push(tfRef(`ibm_is_security_group`, `${vpe.vpc} vpc ${group} sg`));
   });
   return jsonToTf(
@@ -67,8 +71,8 @@ function fortmatVpeGateway(vpe, config) {
           config._options.region
         )}"`,
 
-        resource_type: '"provider_cloud_service"',
-      },
+        resource_type: '"provider_cloud_service"'
+      }
     },
     config
   );
@@ -96,7 +100,7 @@ function fortmatVpeGatewayIp(vpe, subnetName) {
         "ibm_is_subnet_reserved_ip",
         `${vpe.vpc} vpc ${subnetName} subnet vpe ip`,
         "reserved_ip"
-      ),
+      )
     }
   );
 }
@@ -108,20 +112,23 @@ function fortmatVpeGatewayIp(vpe, subnetName) {
  */
 function vpeTf(config) {
   let tf = "";
-  config.virtual_private_endpoints.forEach((vpe) => {
-    tf += buildTitleComment(vpe.vpc, "vpe Resources");
-    vpe.subnets.forEach((subnet) => (tf += formatReservedIp(vpe.vpc, subnet)));
-    tf += fortmatVpeGateway(vpe, config);
-    vpe.subnets.forEach((subnet) => (tf += fortmatVpeGatewayIp(vpe, subnet)));
-    tf += endComment;
-    tf += "\n\n";
+  config.virtual_private_endpoints.forEach(vpe => {
+    let blockData = "";
+    vpe.subnets.forEach(
+      subnet => (blockData += formatReservedIp(vpe.vpc, subnet))
+    );
+    blockData += fortmatVpeGateway(vpe, config);
+    vpe.subnets.forEach(
+      subnet => (blockData += fortmatVpeGatewayIp(vpe, subnet))
+    );
+    tf += tfBlock(vpe.vpc + " vpe resources", blockData) + "\n";
   });
-  return tf.replace(/\n\n$/g, "\n");
+  return tfDone(tf);
 }
 
 module.exports = {
   formatReservedIp,
   fortmatVpeGateway,
   fortmatVpeGatewayIp,
-  vpeTf,
+  vpeTf
 };

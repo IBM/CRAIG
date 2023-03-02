@@ -353,7 +353,7 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-  
+
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -485,7 +485,7 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-  
+
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -506,7 +506,8 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,
@@ -589,7 +590,8 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,
@@ -675,7 +677,7 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-  
+
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -696,7 +698,8 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,
@@ -799,7 +802,7 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-  
+
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -864,7 +867,7 @@ resource "ibm_kms_key" "kms2_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms2_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-  
+
   depends_on = [
     ibm_iam_authorization_policy.kms2_server_protect_policy,
     ibm_iam_authorization_policy.kms2_block_storage_policy
@@ -885,7 +888,8 @@ resource "ibm_kms_key_policies" "kms2_key_key_policy" {
   }
 }
 
-##############################################################################`;
+##############################################################################
+`;
       assert.deepEqual(
         actualData,
         expectedData,

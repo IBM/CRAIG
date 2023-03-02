@@ -1,13 +1,13 @@
 const { getObjectFromArray } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   rgIdRef,
-  buildTitleComment,
   kebabName,
   useData,
   resourceRef,
   jsonToTf,
-  dataResourceName
+  dataResourceName,
+  tfBlock,
+  tfDone
 } = require("./utils");
 
 /**
@@ -31,7 +31,7 @@ function formatAppIdKey(key, config) {
         "id",
         getObjectFromArray(config.appid, "name", key.appid).use_data
       ),
-      role: '"Writer"',
+      role: "^Writer",
       tags: true
     },
     config
@@ -58,8 +58,8 @@ function formatAppId(instance, config) {
   // add needed values when new instance is created
   if (!instance.use_data) {
     appIdValues.tags = true;
-    appIdValues.service = '"appid"';
-    appIdValues.plan = '"graduated-tier"';
+    appIdValues.service = "^appid";
+    appIdValues.plan = "^graduated-tier";
     appIdValues.location = "$region";
   }
   return jsonToTf(
@@ -98,14 +98,13 @@ function formatAppIdRedirectUrls(appid, urls, resourceName) {
 function appidTf(config) {
   let tf = "";
   config.appid.forEach(instance => {
-    tf += buildTitleComment(instance.name, "Resources");
-    tf += formatAppId(instance, config);
+    let str = formatAppId(instance, config);
     instance.keys.forEach(key => {
-      tf += formatAppIdKey(key, config);
+      str += formatAppIdKey(key, config);
     });
-    tf += endComment + "\n";
+    tf += tfBlock(`${instance.name} Resources`, str);
   });
-  return tf.replace(/\n\n$/g, "\n");
+  return tfDone(tf);
 }
 
 module.exports = {

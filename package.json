@@ -1,7 +1,7 @@
 {
-  "name": "project-bettername",
+  "name": "craig",
   "version": "0.0.1",
-  "description": "secure landing zone gui but the name is different",
+  "description": "gui for generating ibm cloud infrastructure resources",
   "main": "index.js",
   "scripts": {
     "test": "mocha unit-tests/ --recursive",
