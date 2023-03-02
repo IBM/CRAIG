@@ -1,0 +1,270 @@
+const { revision, contains, transpose } = require("lazy-z");
+const { newDefaultManagementServer } = require("./defaults");
+const {
+  setUnfoundEncryptionKey,
+  setUnfoundResourceGroup,
+  hasUnfoundVpc,
+  pushAndUpdate,
+  updateChild,
+  carveChild
+} = require("./store.utils");
+
+/**
+ * initialize vsi
+ * @param {lazyZState} config state store
+ * @param {object} config.store state store
+ * @param {object} config.store.json configuration JSON
+ */
+function vsiInit(config) {
+  config.store.json.vsi = [newDefaultManagementServer()];
+  config.store.json.security_groups.push({
+    vpc: "management",
+    name: "management-vsi",
+    resource_group: "management-rg",
+    rules: [
+      {
+        vpc: "management",
+        sg: "management-vsi",
+        direction: "inbound",
+        name: "allow-ibm-inbound",
+        source: "161.26.0.0/16",
+        tcp: {
+          port_max: null,
+          port_min: null
+        },
+        udp: {
+          port_max: null,
+          port_min: null
+        },
+        icmp: {
+          type: null,
+          code: null
+        }
+      },
+      {
+        vpc: "management",
+        sg: "management-vsi",
+        direction: "inbound",
+        name: "allow-vpc-inbound",
+        source: "10.0.0.0/8",
+        tcp: {
+          port_max: null,
+          port_min: null
+        },
+        udp: {
+          port_max: null,
+          port_min: null
+        },
+        icmp: {
+          type: null,
+          code: null
+        }
+      },
+      {
+        vpc: "management",
+        sg: "management-vsi",
+        direction: "outbound",
+        name: "allow-vpc-outbound",
+        source: "10.0.0.0/8",
+        tcp: {
+          port_max: null,
+          port_min: null
+        },
+        udp: {
+          port_max: null,
+          port_min: null
+        },
+        icmp: {
+          type: null,
+          code: null
+        }
+      },
+      {
+        vpc: "management",
+        sg: "management-vsi",
+        direction: "outbound",
+        name: "allow-ibm-tcp-53-outbound",
+        source: "161.26.0.0/16",
+        tcp: {
+          port_max: 53,
+          port_min: 53
+        },
+        udp: {
+          port_max: null,
+          port_min: null
+        },
+        icmp: {
+          type: null,
+          code: null
+        }
+      },
+      {
+        vpc: "management",
+        sg: "management-vsi",
+        direction: "outbound",
+        name: "allow-ibm-tcp-80-outbound",
+        source: "161.26.0.0/16",
+        tcp: {
+          port_max: 80,
+          port_min: 80
+        },
+        udp: {
+          port_max: null,
+          port_min: null
+        },
+        icmp: {
+          type: null,
+          code: null
+        }
+      },
+      {
+        vpc: "management",
+        sg: "management-vsi",
+        direction: "outbound",
+        name: "allow-ibm-tcp-443-outbound",
+        source: "161.26.0.0/16",
+        tcp: {
+          port_max: 443,
+          port_min: 443
+        },
+        udp: {
+          port_max: null,
+          port_min: null
+        },
+        icmp: {
+          type: null,
+          code: null
+        }
+      }
+    ]
+  });
+  config.store.json.teleport_vsi = [];
+}
+
+/**
+ * update vsi based on key
+ * @param {lazyZState} config state store
+ * @param {object} config.store state store
+ * @param {object} config.store.json configuration JSON
+ * @param {object} config.store.subnets map of subnets
+ * @param {string} key field to lookup
+ */
+function updateVsi(config, key) {
+  // get data based on key
+  new revision(config.store.json).child(key).then(data => {
+    // for each deployment
+    data.forEach(deployment => {
+      let validVpc = hasUnfoundVpc(config, deployment) === false;
+      setUnfoundEncryptionKey(config, deployment, "encryption_key");
+      setUnfoundResourceGroup(config, deployment);
+      // if teleport vsi and vpc is valid
+      if (validVpc && key === "teleport_vsi") {
+        if (
+          !contains(config.store.subnets[deployment.vpc], deployment.subnet)
+        ) {
+          deployment.subnet = null;
+        }
+      } else if (!validVpc) {
+        deployment.vpc = null;
+        if (key === "teleport_vsi") deployment.subnet = null;
+        else deployment.subnets = [];
+      }
+    });
+  });
+}
+
+/**
+ * vsi on store update
+ * @param {object} config.store state store
+ **/
+function vsiOnStoreUpdate(config) {
+  ["teleport_vsi", "vsi"].forEach(key => {
+    updateVsi(config, key);
+  });
+}
+
+/**
+ * create a new vsi deployment
+ * @param {lazyZState} config state store
+ * @param {object} stateData component state data
+ * @param {Array<string>} stateData.ssh_keys
+ * @param {string} stateData.vpc
+ * @param {object} componentProps props from component form
+ * @param {boolean} componentProps.isTeleport
+ */
+function vsiCreate(config, stateData, componentProps) {
+  // default vsi values
+  let defaultVsi = {
+    kms: null,
+    encryption_key: null,
+    image: null,
+    profile: null,
+    name: null,
+    security_groups: [],
+    ssh_keys: stateData.ssh_keys || [], // or is placeholder, no vsi should be created without ssh key,
+    vpc: stateData.vpc,
+    vsi_per_subnet: null,
+    resource_group: null,
+    override_vsi_name: null,
+    user_data: null,
+    network_interfaces: []
+  };
+  // if overriding key
+  if (componentProps.isTeleport) {
+    defaultVsi.subnet = null; // set subnet name to null for teleport / f5
+    // delete vsi only fields and set security group name
+    delete stateData.user_data;
+    delete stateData.override_vsi_name;
+    delete stateData.network_interfaces;
+  } else {
+    defaultVsi.subnets = [];
+  }
+  transpose(stateData, defaultVsi);
+  if (componentProps.isTeleport) delete defaultVsi.hideSecurityGroup;
+  pushAndUpdate(
+    config,
+    componentProps.isTeleport ? "teleport_vsi" : "vsi",
+    defaultVsi
+  );
+}
+
+/**
+ * save vsi deployment
+ * @param {lazyZState} config state store
+ * @param {object} stateData component state data
+ * @param {boolean} stateData.hideSecurityGroup
+ * @param {object} componentProps props from component form
+ * @param {boolean} componentProps.isTeleport
+ */
+function vsiSave(config, stateData, componentProps) {
+  delete stateData.hideSecurityGroup;
+  updateChild(
+    config,
+    componentProps.isTeleport ? "teleport_vsi" : "vsi",
+    stateData,
+    componentProps
+  );
+}
+
+/**
+ * delete vsi deployment
+ * @param {lazyZState} config state store
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ * @param {boolean} componentProps.isTeleport
+ */
+function vsiDelete(config, stateData, componentProps) {
+  carveChild(
+    config,
+    componentProps.isTeleport ? "teleport_vsi" : "vsi",
+    componentProps
+  );
+}
+
+module.exports = {
+  vsiOnStoreUpdate,
+  vsiSave,
+  vsiDelete,
+  vsiCreate,
+  vsiInit
+};

@@ -104,6 +104,13 @@ const {
   clusterWorkerPoolDelete,
   clusterWorkerPoolSave
 } = require("./clusters");
+const {
+  vsiCreate,
+  vsiInit,
+  vsiDelete,
+  vsiOnStoreUpdate,
+  vsiSave
+} = require("./vsi");
 
 const state = function() {
   let store = new lazyZstate({
@@ -282,6 +289,14 @@ const state = function() {
         delete: clusterWorkerPoolDelete
       }
     }
+  });
+
+  store.newField("vsi", {
+    init: vsiInit,
+    onStoreUpdate: vsiOnStoreUpdate,
+    create: vsiCreate,
+    save: vsiSave,
+    delete: vsiDelete
   });
 
   return store;

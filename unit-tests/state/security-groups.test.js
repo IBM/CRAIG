@@ -269,6 +269,127 @@ describe("security groups", () => {
             },
           ],
         },
+        {
+          vpc: "management",
+          name: "management-vsi",
+          resource_group: "management-rg",
+          rules: [
+            {
+              vpc: "management",
+              sg: "management-vsi",
+              direction: "inbound",
+              name: "allow-ibm-inbound",
+              source: "161.26.0.0/16",
+              tcp: {
+                port_max: null,
+                port_min: null,
+              },
+              udp: {
+                port_max: null,
+                port_min: null,
+              },
+              icmp: {
+                type: null,
+                code: null,
+              },
+            },
+            {
+              vpc: "management",
+              sg: "management-vsi",
+              direction: "inbound",
+              name: "allow-vpc-inbound",
+              source: "10.0.0.0/8",
+              tcp: {
+                port_max: null,
+                port_min: null,
+              },
+              udp: {
+                port_max: null,
+                port_min: null,
+              },
+              icmp: {
+                type: null,
+                code: null,
+              },
+            },
+            {
+              vpc: "management",
+              sg: "management-vsi",
+              direction: "outbound",
+              name: "allow-vpc-outbound",
+              source: "10.0.0.0/8",
+              tcp: {
+                port_max: null,
+                port_min: null,
+              },
+              udp: {
+                port_max: null,
+                port_min: null,
+              },
+              icmp: {
+                type: null,
+                code: null,
+              },
+            },
+            {
+              vpc: "management",
+              sg: "management-vsi",
+              direction: "outbound",
+              name: "allow-ibm-tcp-53-outbound",
+              source: "161.26.0.0/16",
+              tcp: {
+                port_max: 53,
+                port_min: 53,
+              },
+              udp: {
+                port_max: null,
+                port_min: null,
+              },
+              icmp: {
+                type: null,
+                code: null,
+              },
+            },
+            {
+              vpc: "management",
+              sg: "management-vsi",
+              direction: "outbound",
+              name: "allow-ibm-tcp-80-outbound",
+              source: "161.26.0.0/16",
+              tcp: {
+                port_max: 80,
+                port_min: 80,
+              },
+              udp: {
+                port_max: null,
+                port_min: null,
+              },
+              icmp: {
+                type: null,
+                code: null,
+              },
+            },
+            {
+              vpc: "management",
+              sg: "management-vsi",
+              direction: "outbound",
+              name: "allow-ibm-tcp-443-outbound",
+              source: "161.26.0.0/16",
+              tcp: {
+                port_max: 443,
+                port_min: 443,
+              },
+              udp: {
+                port_max: null,
+                port_min: null,
+              },
+              icmp: {
+                type: null,
+                code: null,
+              },
+            },
+          ],
+        },
       ];
       assert.deepEqual(
         store.store.json.security_groups,
@@ -283,7 +404,7 @@ describe("security groups", () => {
       slz.update();
       assert.deepEqual(
         {
-          management: ["management-vpe"],
+          management: ["management-vpe", "management-vsi"],
           workload: ["workload-vpe"],
         },
         slz.store.securityGroups,
@@ -328,7 +449,7 @@ describe("security groups", () => {
         rules: [],
       });
       assert.deepEqual(
-        slz.store.json.security_groups[2],
+        slz.store.json.security_groups[3],
         {
           name: "frog",
           vpc: "management",
@@ -353,17 +474,17 @@ describe("security groups", () => {
       );
     });
     it("should update a security group with same name", () => {
-        let slz = new newState();
-        slz.security_groups.save(
-          { name: "management-vpe" },
-          { data: { name: "management-vpe", rules: [] } }
-        );
-        assert.deepEqual(
-          slz.store.json.security_groups[0].name,
-          "management-vpe",
-          "it should update the group"
-        );
-      });
+      let slz = new newState();
+      slz.security_groups.save(
+        { name: "management-vpe" },
+        { data: { name: "management-vpe", rules: [] } }
+      );
+      assert.deepEqual(
+        slz.store.json.security_groups[0].name,
+        "management-vpe",
+        "it should update the group"
+      );
+    });
     it("should update a security group with a new vpc and sg name", () => {
       let slz = new newState();
       slz.security_groups.save(
@@ -395,7 +516,7 @@ describe("security groups", () => {
       slz.security_groups.delete({}, { data: { name: "management-vpe" } });
       assert.deepEqual(
         slz.store.json.security_groups.length,
-        1,
+        2,
         "it should delete the group"
       );
     });
@@ -414,7 +535,7 @@ describe("security groups", () => {
           { parent_name: "frog" }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[2].rules,
+          slz.store.json.security_groups[3].rules,
           [
             {
               sg: "frog",
@@ -454,7 +575,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[2].rules,
+          slz.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -499,7 +620,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[2].rules,
+          slz.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -551,7 +672,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[2].rules,
+          slz.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -590,7 +711,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[2].rules,
+          slz.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -628,7 +749,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[2].rules,
+          slz.store.json.security_groups[3].rules,
           [],
           "it should delete rule"
         );

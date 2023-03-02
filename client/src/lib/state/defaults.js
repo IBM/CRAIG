@@ -1020,6 +1020,25 @@ function newDefaultWorkloadCluster() {
   };
 }
 
+function newDefaultManagementServer() {
+  return {
+    kms: "kms",
+    encryption_key: "vsi-volume-key",
+    image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+    profile: "cx2-4x8",
+    name: "management-server",
+    security_groups: ["management-vsi"],
+    ssh_keys: ["ssh-key"],
+    subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+    vpc: "management",
+    vsi_per_subnet: 2,
+    resource_group: "management-rg",
+    override_vsi_name: null,
+    user_data: "",
+    network_interfaces: []
+  };
+}
+
 module.exports = {
   newDefaultKms,
   newDefaultCos,
@@ -1027,5 +1046,6 @@ module.exports = {
   newVpc,
   newDefaultVpeSecurityGroups,
   newDefaultTg,
-  newDefaultWorkloadCluster
+  newDefaultWorkloadCluster,
+  newDefaultManagementServer
 };
