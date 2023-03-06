@@ -1,9 +1,7 @@
 const { getObjectFromArray } = require("lazy-z");
-const { endComment } = require("./constants");
 const {
   rgIdRef,
   getKmsInstanceData,
-  buildTitleComment,
   subnetZone,
   composedZone,
   subnetRef,

@@ -264,7 +264,7 @@ runcmd:
 
 locals {
   test_deployment_user_data = templatefile(
-    "\${path.module}/test-deployment-cloud-init.tpl",
+    "\${path.module}/cloud-init.tpl",
     {
       TELEPORT_LICENSE          = base64encode(tostring("TELEPORT_LICENSE"))
       HTTPS_CERT                = base64encode(tostring("HTTPS_CERT"))
@@ -498,7 +498,7 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
 
 locals {
   test_deployment_user_data = templatefile(
-    "\${path.module}/test-deployment-cloud-init.tpl",
+    "\${path.module}/cloud-init.tpl",
     {
       TELEPORT_LICENSE          = base64encode(tostring("TELEPORT_LICENSE"))
       HTTPS_CERT                = base64encode(tostring("HTTPS_CERT"))

@@ -4,6 +4,7 @@ const { atrackerTf } = require("./atracker");
 const { clusterTf } = require("./clusters");
 const { versionsTf, mainTf, variablesTf } = require("./constants");
 const { eventStreamsTf } = require("./event-streams");
+const { f5Tf, f5CloudInitYaml } = require("./f5");
 const { flowLogsTf } = require("./flow-logs");
 const { kmsTf } = require("./key-management");
 const { cosTf } = require("./object-storage");
@@ -12,7 +13,7 @@ const { sccTf } = require("./scc");
 const { secretsManagerTf } = require("./secrets-manager");
 const { sgTf } = require("./security-groups");
 const { sshKeyTf } = require("./ssh-keys");
-const { teleportTf } = require("./teleport");
+const { teleportTf, teleportCloudInit } = require("./teleport");
 const { tgwTf } = require("./transit-gateway");
 const { vpcTf } = require("./vpc");
 const { vpeTf } = require("./vpe");
@@ -34,7 +35,7 @@ function configToFilesJson(config) {
 variable "${snakeCase(key.name)}_public_key" {
   description = "Public SSH Key Value for ${titleCase(key.name).replace(
     /Ssh/g,
-    "SSH" 
+    "SSH"
   )}"
   type        = string
   sensitive   = true
@@ -43,6 +44,8 @@ variable "${snakeCase(key.name)}_public_key" {
 `;
     });
   }
+  let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
+  let useTeleport = config.teleport_vsi.length > 0;
   let files = {
     "versions.tf": versionsTf,
     "main.tf": mainTf.replace("$REGION", `"${config._options.region}"`),
@@ -66,12 +69,19 @@ variable "${snakeCase(key.name)}_public_key" {
     "secrets_manager.tf":
       config.secrets_manager.length > 0 ? secretsManagerTf(config) : null,
     "appid.tf": config.appid.length > 0 ? appidTf(config) : null,
-    "teleport_vsi.tf":
-      config.teleport_vsi.length > 0 ? teleportTf(config) : null,
+    "teleport_vsi.tf": useTeleport ? teleportTf(config) : null,
+    "cloud-init.tpl": useTeleport ? teleportCloudInit() : null,
     "scc.tf": config.scc.name === "" ? null : sccTf(config),
     "event_streams.tf":
-      config.event_streams.length > 0 ? eventStreamsTf(config) : null,
-    "load_balancers.tf": config.load_balancers.length > 0 ? lbTf(config) : null
+      config.event_streams && config.event_streams.length > 0
+        ? eventStreamsTf(config)
+        : null,
+    "load_balancers.tf":
+      config.load_balancers && config.load_balancers.length > 0
+        ? lbTf(config)
+        : null,
+    "f5_big_ip.tf": useF5 ? f5Tf(config) : null,
+    "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null
   };
   return files;
 }

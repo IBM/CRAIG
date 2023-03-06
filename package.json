@@ -12,7 +12,8 @@
     "md": "node lib/docs-as-markdown",
     "changelog": "node lib/changelog-as-markdown",
     "deploy": "./deploy.sh",
-    "compatibility-tests": "./compatibility.sh"
+    "compatibility-tests": "./compatibility.sh",
+    "tf": "node lib/build-tf.js"
   },
   "author": "Jennifer Valle",
   "license": "ISC",

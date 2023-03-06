@@ -42,7 +42,6 @@ function formatTemplateCloudInit(template) {
       `\n        },`;
   });
   return fillTemplate(teleportConfigData, {
-    deployment: template.deployment,
     snake_deployment: snakeCase(template.deployment),
     license: template.license,
     https_cert: template.https_cert,

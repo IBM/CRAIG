@@ -178,6 +178,7 @@ EOD
   do_dec1              = var.license_type == "byol" ? chomp(local.do_byol_license) : "null"
   do_dec2              = var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1
   do_local_declaration = var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2
+}
 
 ##############################################################################
 `;
@@ -243,6 +244,7 @@ EOD
   do_dec1              = var.license_type == "byol" ? chomp(local.do_byol_license) : "null"
   do_dec2              = var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1
   do_local_declaration = var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2
+}
 
 ##############################################################################
 `;
@@ -561,6 +563,7 @@ EOD
   do_dec1              = var.license_type == "byol" ? chomp(local.do_byol_license) : "null"
   do_dec2              = var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1
   do_local_declaration = var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2
+}
 
 ##############################################################################
 

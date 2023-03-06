@@ -8,7 +8,8 @@ const {
   encryptionKeyRef,
   jsonToTf,
   dataResourceName,
-  tfBlock
+  tfBlock,
+  tfDone
 } = require("./utils");
 
 /**
@@ -203,7 +204,7 @@ function kmsTf(config) {
       kmsTerraform += "\n";
     }
   });
-  return kmsTerraform;
+  return tfDone(kmsTerraform);
 }
 
 module.exports = {

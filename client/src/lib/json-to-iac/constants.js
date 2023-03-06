@@ -271,7 +271,7 @@ runcmd:
 
 locals {
   $SNAKE_DEPLOYMENT_user_data = templatefile(
-    "\${path.module}/$DEPLOYMENT-cloud-init.tpl",
+    "\${path.module}/cloud-init.tpl",
     {
       TELEPORT_LICENSE          = base64encode(tostring("$LICENSE"))
       HTTPS_CERT                = base64encode(tostring("$HTTPS_CERT"))
