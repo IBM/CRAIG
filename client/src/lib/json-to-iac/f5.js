@@ -148,10 +148,10 @@ EOD
       poolLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
+        bigIqHost: ${template.license_host || '"null"'}
+        bigIqUsername: ${template.license_username || '"null"'}
+        bigIqPassword: ${template.license_password || '"null"'}
+        licensePool: ${template.license_pool || '"null"'}
         reachable: false
         hypervisor: kvm
 EOD
@@ -165,20 +165,38 @@ EOD
       utilityLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
-        skuKeyword1: \${var.license_sku_keyword_1}
-        skuKeyword2: \${var.license_sku_keyword_2}
+        bigIqHost: ${template.license_host || '"null"'}
+        bigIqUsername: ${template.license_username || '"null"'}
+        bigIqPassword: ${template.license_password || '"null"'}
+        licensePool: ${template.license_pool || '"null"'}
+        skuKeyword1: ${template.license_sku_keyword_1 || '"null"'}
+        skuKeyword2: ${template.license_sku_keyword_2 || '"null"'}
         unitOfMeasure: ${template.license_unit_of_measure || null}
         reachable: false
         hypervisor: kvm
 EOD
   template_file        = file("\${path.module}/f5_user_data.yaml")
-  do_dec1              = var.license_type == "byol" ? chomp(local.do_byol_license) : "null"
-  do_dec2              = var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1
-  do_local_declaration = var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2
+  do_dec1              = ${
+    !template.license_type
+      ? `var.license_type == "byol" ? chomp(local.do_byol_license) : "null"`
+      : template.license_type === "byol"
+      ? "chomp(local.do_byol_license)"
+      : '"null"'
+  }
+  do_dec2              = ${
+    !template.license_type
+      ? 'var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1'
+      : template.license_type === "regkeypool"
+      ? "chomp(local.do_regekypool)"
+      : "local.do_dec1"
+  }
+  do_local_declaration = ${
+    !template.license_type
+      ? `var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2`
+      : template.license_type === "utilitypool"
+      ? "chomp(local.do_utilitypool)"
+      : "local.do_dec2"
+  }
 }
 
 ##############################################################################
@@ -259,7 +277,7 @@ function formatF5Vsi(vsi, config) {
       .oneOrMore()
       .look.ahead("\n")
       .done("g"),
-    `local.public_image_id["${vsi.image}"]["${config._options.region}"]`
+    `local.public_image_map["${vsi.image}"]["${config._options.region}"]`
   );
   return tf;
 }
@@ -273,7 +291,8 @@ function formatF5Vsi(vsi, config) {
  * @returns {string} terraform string data
  */
 function f5Tf(config) {
-  let tf = f5ImageLocals() + "\n" + f5TemplateLocals({}) + "\n";
+  let tf =
+    f5ImageLocals() + "\n" + f5TemplateLocals(config.f5_vsi[0].template) + "\n";
   config.f5_vsi.forEach(instance => {
     let blockData =
       f5TemplateUserData(instance.template, config) +

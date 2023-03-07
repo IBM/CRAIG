@@ -147,10 +147,10 @@ EOD
       poolLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
+        bigIqHost: "null"
+        bigIqUsername: "null"
+        bigIqPassword: "null"
+        licensePool: "null"
         reachable: false
         hypervisor: kvm
 EOD
@@ -164,12 +164,12 @@ EOD
       utilityLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
-        skuKeyword1: \${var.license_sku_keyword_1}
-        skuKeyword2: \${var.license_sku_keyword_2}
+        bigIqHost: "null"
+        bigIqUsername: "null"
+        bigIqPassword: "null"
+        licensePool: "null"
+        skuKeyword1: "null"
+        skuKeyword2: "null"
         unitOfMeasure: null
         reachable: false
         hypervisor: kvm
@@ -185,7 +185,7 @@ EOD
       let actualData = f5TemplateLocals({});
       assert.deepEqual(actualData, expectedData, "it should create data");
     });
-    it("should return with actual values", () => {
+    it("should return with actual values with utilitypool", () => {
       let expectedData = `##############################################################################
 # Template Data
 ##############################################################################
@@ -213,10 +213,10 @@ EOD
       poolLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
         reachable: false
         hypervisor: kvm
 EOD
@@ -230,20 +230,20 @@ EOD
       utilityLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
-        skuKeyword1: \${var.license_sku_keyword_1}
-        skuKeyword2: \${var.license_sku_keyword_2}
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
+        skuKeyword1: key
+        skuKeyword2: word
         unitOfMeasure: test
         reachable: false
         hypervisor: kvm
 EOD
   template_file        = file("\${path.module}/f5_user_data.yaml")
-  do_dec1              = var.license_type == "byol" ? chomp(local.do_byol_license) : "null"
-  do_dec2              = var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1
-  do_local_declaration = var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2
+  do_dec1              = "null"
+  do_dec2              = local.do_dec1
+  do_local_declaration = chomp(local.do_utilitypool)
 }
 
 ##############################################################################
@@ -251,6 +251,165 @@ EOD
       let actualData = f5TemplateLocals({
         license_unit_of_measure: "test",
         byol_license_basekey: "test",
+        license_type: "utilitypool",
+        license_host: "host",
+        license_username: "username",
+        license_password: "f5bigip",
+        license_pool: "pool",
+        license_sku_keyword_1: "key",
+        license_sku_keyword_2: "word",
+      });
+      assert.deepEqual(actualData, expectedData, "it should create data");
+    });
+    it("should return with actual values with regkeypool", () => {
+      let expectedData = `##############################################################################
+# Template Data
+##############################################################################
+
+locals {
+  do_byol_license      = <<EOD
+    schemaVersion: 1.0.0
+    class: Device
+    async: true
+    label: Cloudinit Onboarding
+    Common:
+      class: Tenant
+      byoLicense:
+        class: License
+        licenseType: regKey
+        regKey: test
+EOD
+  do_regekypool        = <<EOD
+    schemaVersion: 1.0.0
+    class: Device
+    async: true
+    label: Cloudinit Onboarding
+    Common:
+      class: Tenant
+      poolLicense:
+        class: License
+        licenseType: licensePool
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
+        reachable: false
+        hypervisor: kvm
+EOD
+  do_utilitypool       = <<EOD
+    schemaVersion: 1.0.0
+    class: Device
+    async: true
+    label: Cloudinit Onboarding
+    Common:
+      class: Tenant
+      utilityLicense:
+        class: License
+        licenseType: licensePool
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
+        skuKeyword1: key
+        skuKeyword2: word
+        unitOfMeasure: test
+        reachable: false
+        hypervisor: kvm
+EOD
+  template_file        = file("\${path.module}/f5_user_data.yaml")
+  do_dec1              = "null"
+  do_dec2              = chomp(local.do_regekypool)
+  do_local_declaration = local.do_dec2
+}
+
+##############################################################################
+`;
+      let actualData = f5TemplateLocals({
+        license_unit_of_measure: "test",
+        byol_license_basekey: "test",
+        license_type: "regkeypool",
+        license_host: "host",
+        license_username: "username",
+        license_password: "f5bigip",
+        license_pool: "pool",
+        license_sku_keyword_1: "key",
+        license_sku_keyword_2: "word",
+      });
+      assert.deepEqual(actualData, expectedData, "it should create data");
+    });
+    it("should return with actual values with byol", () => {
+      let expectedData = `##############################################################################
+# Template Data
+##############################################################################
+
+locals {
+  do_byol_license      = <<EOD
+    schemaVersion: 1.0.0
+    class: Device
+    async: true
+    label: Cloudinit Onboarding
+    Common:
+      class: Tenant
+      byoLicense:
+        class: License
+        licenseType: regKey
+        regKey: test
+EOD
+  do_regekypool        = <<EOD
+    schemaVersion: 1.0.0
+    class: Device
+    async: true
+    label: Cloudinit Onboarding
+    Common:
+      class: Tenant
+      poolLicense:
+        class: License
+        licenseType: licensePool
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
+        reachable: false
+        hypervisor: kvm
+EOD
+  do_utilitypool       = <<EOD
+    schemaVersion: 1.0.0
+    class: Device
+    async: true
+    label: Cloudinit Onboarding
+    Common:
+      class: Tenant
+      utilityLicense:
+        class: License
+        licenseType: licensePool
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
+        skuKeyword1: key
+        skuKeyword2: word
+        unitOfMeasure: test
+        reachable: false
+        hypervisor: kvm
+EOD
+  template_file        = file("\${path.module}/f5_user_data.yaml")
+  do_dec1              = chomp(local.do_byol_license)
+  do_dec2              = local.do_dec1
+  do_local_declaration = local.do_dec2
+}
+
+##############################################################################
+`;
+      let actualData = f5TemplateLocals({
+        license_unit_of_measure: "test",
+        byol_license_basekey: "test",
+        license_type: "byol",
+        license_host: "host",
+        license_username: "username",
+        license_password: "f5bigip",
+        license_pool: "pool",
+        license_sku_keyword_1: "key",
+        license_sku_keyword_2: "word",
       });
       assert.deepEqual(actualData, expectedData, "it should create data");
     });
@@ -394,7 +553,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     let expectedData = `
 resource "ibm_is_instance" "f5_ve_01_zone_1" {
   name               = "f5-ve-01-zone-1"
-  image              = local.public_image_id["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
+  image              = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
   profile            = "cx2-4x8"
   resource_group     = ibm_resource_group.slz_edge_rg.id
   vpc                = ibm_is_vpc.edge_vpc.id
@@ -532,10 +691,10 @@ EOD
       poolLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
         reachable: false
         hypervisor: kvm
 EOD
@@ -549,20 +708,20 @@ EOD
       utilityLicense:
         class: License
         licenseType: licensePool
-        bigIqHost: \${var.license_host}
-        bigIqUsername: \${var.license_username}
-        bigIqPassword: \${var.license_password}
-        licensePool: \${var.license_pool}
-        skuKeyword1: \${var.license_sku_keyword_1}
-        skuKeyword2: \${var.license_sku_keyword_2}
+        bigIqHost: host
+        bigIqUsername: username
+        bigIqPassword: f5bigip
+        licensePool: pool
+        skuKeyword1: key
+        skuKeyword2: word
         unitOfMeasure: null
         reachable: false
         hypervisor: kvm
 EOD
   template_file        = file("\${path.module}/f5_user_data.yaml")
-  do_dec1              = var.license_type == "byol" ? chomp(local.do_byol_license) : "null"
-  do_dec2              = var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1
-  do_local_declaration = var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2
+  do_dec1              = chomp(local.do_byol_license)
+  do_dec2              = local.do_dec1
+  do_local_declaration = local.do_dec2
 }
 
 ##############################################################################
@@ -598,7 +757,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
 
 resource "ibm_is_instance" "f5_ve_01_zone_1" {
   name               = "f5-ve-01-zone-1"
-  image              = local.public_image_id["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
+  image              = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
   profile            = "cx2-4x8"
   resource_group     = ibm_resource_group.slz_edge_rg.id
   vpc                = ibm_is_vpc.edge_vpc.id

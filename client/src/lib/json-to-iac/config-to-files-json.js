@@ -29,6 +29,7 @@ const { vsiTf, lbTf } = require("./vsi");
  */
 function configToFilesJson(config) {
   let additionalVariables = "";
+  let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
   if (config.ssh_keys.length > 0) {
     config.ssh_keys.forEach(key => {
       additionalVariables += `
@@ -43,8 +44,18 @@ variable "${snakeCase(key.name)}_public_key" {
 }
 `;
     });
+    if (useF5) {
+      additionalVariables += `
+variable "tmos_admin_password" {
+  description = "F5 TMOS Admin Password"
+  type        = string
+  sensitive   = true
+  default     = "${config.f5_vsi[0].template.tmos_admin_password}"
+}
+`;
+    }
   }
-  let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
+
   let useTeleport = config.teleport_vsi.length > 0;
   let files = {
     "versions.tf": versionsTf,

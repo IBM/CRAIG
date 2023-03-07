@@ -316,8 +316,6 @@ variable "ibmcloud_api_key" {
   });
   describe("f5-nw", () => {
     let actualData = configToFilesJson(f5Network);
-    const fs = require("fs");
-    fs.writeFileSync("test.json", JSON.stringify(actualData, null, 2));
     it("should return correct f5_big_ip.tf", () => {
       assert.deepEqual(
         actualData["f5_big_ip.tf"],
@@ -329,6 +327,39 @@ variable "ibmcloud_api_key" {
       assert.deepEqual(
         actualData["f5_user_data.yaml"],
         f5NetworkFiles["f5_user_data.yaml"],
+        "it should create file"
+      );
+    });
+    it("should add tmos admin password variable", () => {
+      let variables = `##############################################################################
+# Variables
+##############################################################################
+
+variable "ibmcloud_api_key" {
+  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
+  type        = string
+  sensitive   = true
+}
+
+variable "slz_ssh_key_public_key" {
+  description = "Public SSH Key Value for Slz SSH Key"
+  type        = string
+  sensitive   = true
+  default     = "public-key"
+}
+
+variable "tmos_admin_password" {
+  description = "F5 TMOS Admin Password"
+  type        = string
+  sensitive   = true
+  default     = "Goodpassword1234!"
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData["variables.tf"],
+        variables,
         "it should create file"
       );
     });

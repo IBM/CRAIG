@@ -234,7 +234,6 @@
           "name": "vpn-2-zone-1",
           "public_gateway": false
         },
-
         {
           "zone": 2,
           "vpc": "edge",
@@ -1864,7 +1863,15 @@
         "tgstandby_url": "hi",
         "tgrefresh_url": "hi",
         "template_version": "hi",
-        "app_id": "hi"
+        "app_id": "hi",
+        "license_type": "byol",
+        "license_host": "host",
+        "license_username": "username",
+        "license_password": "f5bigip",
+        "license_pool": "pool",
+        "license_sku_keyword_1": "key",
+        "license_sku_keyword_2": "word",
+        "tmos_admin_password": "Goodpassword1234!"
       }
     }
   ]
