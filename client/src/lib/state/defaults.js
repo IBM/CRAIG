@@ -1035,7 +1035,8 @@ function newDefaultManagementServer() {
     resource_group: "management-rg",
     override_vsi_name: null,
     user_data: "",
-    network_interfaces: []
+    network_interfaces: [],
+    volumes: []
   };
 }
 

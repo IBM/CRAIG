@@ -41,12 +41,21 @@ describe("vsi", () => {
           override_vsi_name: null,
           user_data: null,
           network_interfaces: [],
+          volumes: [],
         },
         "it should return correct server"
+      );
+      assert.deepEqual(
+        state.store.vsiList,
+        ["management-server", "test-vsi"],
+        "it should set vsiList"
       );
     });
     it("should return the correct teleport vsi deployment", () => {
       let state = new newState();
+      state.appid.create({
+        name: "test-appid",
+      });
       state.vsi.create(
         {
           appid: "test-appid",
@@ -87,6 +96,7 @@ describe("vsi", () => {
               },
             ],
           },
+          volumes: [],
         },
         {
           isTeleport: true,
@@ -94,6 +104,93 @@ describe("vsi", () => {
       );
       assert.deepEqual(
         state.store.json.teleport_vsi[0],
+        {
+          appid: "test-appid",
+          name: "test-deployment",
+          kms: "slz-kms",
+          encryption_key: null,
+          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          profile: "cx2-4x8",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          volumes: [],
+          resource_group: null,
+          template: {
+            deployment: "test-deployment",
+            license: "TELEPORT_LICENSE",
+            https_cert: "HTTPS_CERT",
+            https_key: "HTTPS_KEY",
+            hostname: "HOSTNAME",
+            domain: "DOMAIN",
+            bucket: "COS_BUCKET",
+            bucket_endpoint: "COS_BUCKET_ENDPOINT",
+            hmac_key_id: "HMAC_ACCESS_KEY_ID",
+            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
+            appid: "APPID_CLIENT_ID",
+            appid_secret: "APPID_CLIENT_SECRET",
+            appid_url: "APPID_ISSUER_URL",
+            message_of_the_day: "MESSAGE_OF_THE_DAY",
+            version: "TELEPORT_VERSION",
+            claim_to_roles: [
+              {
+                email: "email@email.email",
+                roles: ["role1", "role2"],
+              },
+              {
+                email: "email2@email.email",
+                roles: ["role1", "role2"],
+              },
+            ],
+          },
+        },
+        "it should return correct server"
+      );
+      assert.deepEqual(
+        state.store.teleportVsiList,
+        ["test-deployment"],
+        "it should set teleportVsiList"
+      );
+    });
+  });
+  describe("vsi.save", () => {
+    it("should update in place with new name", () => {
+      let state = new newState();
+      state.vsi.create(
+        { name: "todd", vpc: "management" },
+        { isTeleport: false }
+      );
+      let expectedData = {
+        kms: null,
+        encryption_key: null,
+        image: null,
+        profile: null,
+        name: "test-vsi",
+        security_groups: [],
+        ssh_keys: [],
+        subnets: [],
+        vpc: "management",
+        vsi_per_subnet: null,
+        resource_group: null,
+        override_vsi_name: null,
+        user_data: null,
+        network_interfaces: [],
+        volumes: [],
+      };
+      state.vsi.save(
+        { name: "test-vsi" },
+        { data: { name: "todd" }, isTeleport: false }
+      );
+      assert.deepEqual(
+        state.store.json.vsi[1],
+        expectedData,
+        "it should update in place"
+      );
+    });
+    it("should update teleport vsi in place with new name", () => {
+      let state = new newState();
+      state.vsi.create(
         {
           appid: "test-appid",
           name: "test-deployment",
@@ -134,39 +231,95 @@ describe("vsi", () => {
             ],
           },
         },
-        "it should return correct server"
-      );
-    });
-  });
-  describe("vsi.save", () => {
-    it("should update in place with new name", () => {
-      let state = new newState();
-      state.vsi.create(
-        { name: "todd", vpc: "management" },
-        { isTeleport: false }
+        { isTeleport: true }
       );
       let expectedData = {
-        kms: null,
+        appid: null,
+        name: "todd",
+        kms: "slz-kms",
         encryption_key: null,
-        image: null,
-        profile: null,
-        name: "test-vsi",
-        security_groups: [],
-        ssh_keys: [],
-        subnets: [],
+        image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+        profile: "cx2-4x8",
+        security_groups: ["management-vpe-sg"],
+        ssh_keys: ["slz-ssh-key"],
+        subnet: "vsi-zone-1",
         vpc: "management",
-        vsi_per_subnet: null,
+        volumes: [],
         resource_group: null,
-        override_vsi_name: null,
-        user_data: null,
-        network_interfaces: [],
+        template: {
+          deployment: "todd",
+          license: "TELEPORT_LICENSE",
+          https_cert: "HTTPS_CERT",
+          https_key: "HTTPS_KEY",
+          hostname: "HOSTNAME",
+          domain: "DOMAIN",
+          bucket: "COS_BUCKET",
+          bucket_endpoint: "COS_BUCKET_ENDPOINT",
+          hmac_key_id: "HMAC_ACCESS_KEY_ID",
+          hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
+          appid: "APPID_CLIENT_ID",
+          appid_secret: "APPID_CLIENT_SECRET",
+          appid_url: "APPID_ISSUER_URL",
+          message_of_the_day: "MESSAGE_OF_THE_DAY",
+          version: "TELEPORT_VERSION",
+          claim_to_roles: [
+            {
+              email: "email@email.email",
+              roles: ["role1", "role2"],
+            },
+            {
+              email: "email2@email.email",
+              roles: ["role1", "role2"],
+            },
+          ],
+        },
       };
       state.vsi.save(
-        { name: "test-vsi" },
-        { data: { name: "todd" }, isTeleport: false }
+        {
+          appid: "test-appid",
+          name: "todd",
+          kms: "slz-kms",
+          encryption_key: null,
+          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          profile: "cx2-4x8",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          volumes: [],
+          resource_group: null,
+          template: {
+            deployment: "test-deployment",
+            license: "TELEPORT_LICENSE",
+            https_cert: "HTTPS_CERT",
+            https_key: "HTTPS_KEY",
+            hostname: "HOSTNAME",
+            domain: "DOMAIN",
+            bucket: "COS_BUCKET",
+            bucket_endpoint: "COS_BUCKET_ENDPOINT",
+            hmac_key_id: "HMAC_ACCESS_KEY_ID",
+            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
+            appid: "APPID_CLIENT_ID",
+            appid_secret: "APPID_CLIENT_SECRET",
+            appid_url: "APPID_ISSUER_URL",
+            message_of_the_day: "MESSAGE_OF_THE_DAY",
+            version: "TELEPORT_VERSION",
+            claim_to_roles: [
+              {
+                email: "email@email.email",
+                roles: ["role1", "role2"],
+              },
+              {
+                email: "email2@email.email",
+                roles: ["role1", "role2"],
+              },
+            ],
+          },
+        },
+        { data: { name: "test-deployment" }, isTeleport: true }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
+        state.store.json.teleport_vsi[0],
         expectedData,
         "it should update in place"
       );
@@ -196,6 +349,7 @@ describe("vsi", () => {
         override_vsi_name: null,
         user_data: null,
         network_interfaces: [],
+        volumes: [],
       };
       state.vsi.save(
         { name: "todd", vpc: "workload", security_groups: ["workload-vsi-sg"] },
@@ -240,6 +394,7 @@ describe("vsi", () => {
             security_groups: ["f5-external-sg"],
           },
         ],
+        volumes: [],
       };
       state.vsi.save(
         {
@@ -255,6 +410,7 @@ describe("vsi", () => {
               security_groups: ["f5-external-sg"],
             },
           ],
+          volumes: [],
         },
         { data: { name: "todd" }, isTeleport: false }
       );
@@ -262,25 +418,6 @@ describe("vsi", () => {
         state.store.json.vsi[1],
         expectedData,
         "it should update in place"
-      );
-    });
-    it("should save a teleport vsi", () => {
-      let state = new newState();
-      state.vsi.create(
-        {
-          name: "todd",
-          vpc: "management",
-        },
-        { isTeleport: true }
-      );
-      state.vsi.save(
-        { subnet: "vsi-zone-1" },
-        { isTeleport: true, data: { name: "todd" } }
-      );
-      assert.deepEqual(
-        state.store.json.teleport_vsi[0].subnet,
-        "vsi-zone-1",
-        "it should have subnet set"
       );
     });
   });
@@ -379,6 +516,120 @@ describe("vsi", () => {
         null,
         "it should be null"
       );
+    });
+  });
+  describe("volumes", () => {
+    describe("volumes.create", () => {
+      it("should create a new vsi volume", () => {
+        let state = new newState();
+        state.vsi.volumes.create(
+          {
+            name: "block-storage-1",
+            profile: "custom",
+            capacity: 200,
+            iops: 1000,
+            encryption_key: "slz-vsi-volume-key",
+          },
+          {
+            arrayParentName: "management-server",
+          }
+        );
+        assert.deepEqual(
+          state.store.json.vsi[0].volumes,
+          [
+            {
+              name: "block-storage-1",
+              profile: "custom",
+              capacity: 200,
+              iops: 1000,
+              encryption_key: "slz-vsi-volume-key",
+            },
+          ],
+          "it should be null"
+        );
+      });
+    });
+    describe("volumes.save", () => {
+      it("should save a vsi volume", () => {
+        let state = new newState();
+        state.vsi.volumes.create(
+          {
+            name: "block-storage-1",
+            profile: "custom",
+            capacity: 200,
+            iops: 1000,
+            encryption_key: "slz-vsi-volume-key",
+          },
+          {
+            data: {
+              name: "block-storage-1",
+            },
+            arrayParentName: "management-server",
+          }
+        );
+        state.vsi.volumes.save(
+          {
+            name: "frog",
+            profile: "custom",
+            capacity: 200,
+            iops: 1000,
+            encryption_key: "slz-vsi-volume-key",
+          },
+          {
+            data: {
+              name: "block-storage-1",
+            },
+            arrayParentName: "management-server",
+          }
+        );
+        assert.deepEqual(
+          state.store.json.vsi[0].volumes,
+          [
+            {
+              name: "frog",
+              profile: "custom",
+              capacity: 200,
+              iops: 1000,
+              encryption_key: "slz-vsi-volume-key",
+            },
+          ],
+          "it should be null"
+        );
+      });
+    });
+    describe("volumes.delete", () => {
+      let state = new newState();
+      state.vsi.volumes.create(
+        {
+          name: "block-storage-1",
+          profile: "custom",
+          capacity: 200,
+          iops: 1000,
+          encryption_key: "slz-vsi-volume-key",
+        },
+        {
+          data: {
+            name: "block-storage-1",
+          },
+          arrayParentName: "management-server",
+        }
+      );
+      it("should delete a vsi volume", () => {
+        state.vsi.volumes.delete(
+          {},
+          {
+            data: {
+              name: "block-storage-1",
+            },
+            arrayParentName: "management-server",
+          }
+        );
+        assert.deepEqual(
+          state.store.json.vsi[0].volumes,
+          [],
+          "it should be null"
+        );
+      });
     });
   });
 });

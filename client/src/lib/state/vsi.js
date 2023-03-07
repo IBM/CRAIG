@@ -1,4 +1,11 @@
-const { revision, contains, transpose } = require("lazy-z");
+const {
+  revision,
+  contains,
+  transpose,
+  camelCase,
+  splat,
+  splatContains
+} = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
   setUnfoundEncryptionKey,
@@ -6,7 +13,10 @@ const {
   hasUnfoundVpc,
   pushAndUpdate,
   updateChild,
-  carveChild
+  carveChild,
+  updateSubChild,
+  deleteSubChild,
+  pushToChildField
 } = require("./store.utils");
 
 /**
@@ -169,7 +179,13 @@ function updateVsi(config, key) {
         if (key === "teleport_vsi") deployment.subnet = null;
         else deployment.subnets = [];
       }
+
+      if (key === "teleport_vsi") {
+        if (!splatContains(config.store.json.appid, "name", deployment.appid))
+          deployment.appid = null;
+      }
     });
+    config.store[camelCase(key + " List")] = splat(data, "name");
   });
 }
 
@@ -208,7 +224,8 @@ function vsiCreate(config, stateData, componentProps) {
     override_vsi_name: null,
     user_data: null,
     network_interfaces: [],
-    subnets: stateData.subnets || []
+    subnets: stateData.subnets || [],
+    volumes: []
   };
   transpose(stateData, defaultVsi);
   // if overriding key
@@ -238,7 +255,12 @@ function vsiCreate(config, stateData, componentProps) {
  * @param {boolean} componentProps.isTeleport
  */
 function vsiSave(config, stateData, componentProps) {
-  delete stateData.hideSecurityGroup;
+  if (
+    componentProps.isTeleport &&
+    stateData.name !== componentProps.data.name
+  ) {
+    stateData.template.deployment = stateData.name;
+  }
   updateChild(
     config,
     componentProps.isTeleport ? "teleport_vsi" : "vsi",
@@ -262,10 +284,54 @@ function vsiDelete(config, stateData, componentProps) {
   );
 }
 
+/**
+ * create new vsi volume
+ * @param {lazyZstate} config
+ * @param {object} config.store
+ * @param {object} config.store.json
+ * @param {object} config.store.json.vsi
+ * @param {Array<Object>} config.store.json.vsi.volumes
+ * @param {object} stateData component state data
+ */
+function vsiVolumeCreate(config, stateData, componentProps) {
+  pushToChildField(config, "vsi", "volumes", stateData, componentProps);
+}
+
+/**
+ * update vsi volume
+ * @param {lazyZstate} config
+ * @param {object} config.store
+ * @param {object} config.store.json
+ * @param {object} config.store.json.vsi
+ * @param {Array<Object>} config.store.json.vsi.volumes
+ * @param {object} stateData component state data
+ */
+function vsiVolumeSave(config, stateData, componentProps) {
+  updateSubChild(config, "vsi", "volumes", stateData, componentProps);
+}
+
+/**
+ * delete a vsi volume
+ * @param {lazyZstate} config
+ * @param {object} config.store
+ * @param {object} config.store.json
+ * @param {object} config.store.json.vsi
+ * @param {Array<Object>} config.store.json.vsi.volumes
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ * @param {string} componentProps.data.name original name
+ */
+function vsiVolumeDelete(config, stateData, componentProps) {
+  deleteSubChild(config, "vsi", "volumes", componentProps);
+}
+
 module.exports = {
   vsiOnStoreUpdate,
   vsiSave,
   vsiDelete,
   vsiCreate,
-  vsiInit
+  vsiInit,
+  vsiVolumeCreate,
+  vsiVolumeSave,
+  vsiVolumeDelete
 };

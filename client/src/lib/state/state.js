@@ -108,7 +108,10 @@ const {
   vsiInit,
   vsiDelete,
   vsiOnStoreUpdate,
-  vsiSave
+  vsiSave,
+  vsiVolumeCreate,
+  vsiVolumeDelete,
+  vsiVolumeSave
 } = require("./vsi");
 const {
   vpeInit,
@@ -117,6 +120,19 @@ const {
   vpeSave,
   vpeOnStoreUpdate
 } = require("./vpe");
+const {
+  loadBalancerInit,
+  loadBalancerOnStoreUpdate,
+  loadBalancerCreate,
+  loadBalancerSave,
+  loadBalancerDelete
+} = require("./load-balancers");
+const {
+  eventStreamsOnStoreUpdate,
+  eventStreamsCreate,
+  eventStreamsSave,
+  eventStreamsDelete
+} = require("./event-streams");
 
 const state = function() {
   let store = new lazyZstate({
@@ -312,7 +328,14 @@ const state = function() {
     onStoreUpdate: vsiOnStoreUpdate,
     create: vsiCreate,
     save: vsiSave,
-    delete: vsiDelete
+    delete: vsiDelete,
+    subComponents: {
+      volumes: {
+        create: vsiVolumeCreate,
+        save: vsiVolumeSave,
+        delete: vsiVolumeDelete
+      }
+    }
   });
 
   store.newField("virtual_private_endpoints", {
@@ -321,6 +344,24 @@ const state = function() {
     create: vpeCreate,
     save: vpeSave,
     delete: vpeDelete
+  });
+
+  store.newField("load_balancers", {
+    init: loadBalancerInit,
+    onStoreUpdate: loadBalancerOnStoreUpdate,
+    create: loadBalancerCreate,
+    save: loadBalancerSave,
+    delete: loadBalancerDelete
+  });
+
+  store.newField("event_streams", {
+    init: config => {
+      config.store.json.event_streams = [];
+    },
+    onStoreUpdate: eventStreamsOnStoreUpdate,
+    create: eventStreamsCreate,
+    save: eventStreamsSave,
+    delete: eventStreamsDelete
   });
 
   return store;

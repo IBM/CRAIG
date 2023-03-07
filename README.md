@@ -57,8 +57,10 @@ All files                 |     100 |      100 |     100 |     100 | 🏆
   clusters.js             |     100 |      100 |     100 |     100 | 🏆
   cos.js                  |     100 |      100 |     100 |     100 | 🏆
   defaults.js             |     100 |      100 |     100 |     100 | 🏆
+  event-streams.js        |     100 |      100 |     100 |     100 | 🏆
   index.js                |     100 |      100 |     100 |     100 | 🏆
   key-management.js       |     100 |      100 |     100 |     100 | 🏆
+  load-balancers.js       |     100 |      100 |     100 |     100 | 🏆
   options.js              |     100 |      100 |     100 |     100 | 🏆
   resource-groups.js      |     100 |      100 |     100 |     100 | 🏆
   scc.js                  |     100 |      100 |     100 |     100 | 🏆
