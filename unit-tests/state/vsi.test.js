@@ -45,6 +45,98 @@ describe("vsi", () => {
         "it should return correct server"
       );
     });
+    it("should return the correct teleport vsi deployment", () => {
+      let state = new newState();
+      state.vsi.create(
+        {
+          appid: "test-appid",
+          name: "test-deployment",
+          kms: "slz-kms",
+          encryption_key: "slz-vsi-volume-key",
+          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          profile: "cx2-4x8",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          resource_group: "slz-management-rg",
+          template: {
+            deployment: "test-deployment",
+            license: "TELEPORT_LICENSE",
+            https_cert: "HTTPS_CERT",
+            https_key: "HTTPS_KEY",
+            hostname: "HOSTNAME",
+            domain: "DOMAIN",
+            bucket: "COS_BUCKET",
+            bucket_endpoint: "COS_BUCKET_ENDPOINT",
+            hmac_key_id: "HMAC_ACCESS_KEY_ID",
+            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
+            appid: "APPID_CLIENT_ID",
+            appid_secret: "APPID_CLIENT_SECRET",
+            appid_url: "APPID_ISSUER_URL",
+            message_of_the_day: "MESSAGE_OF_THE_DAY",
+            version: "TELEPORT_VERSION",
+            claim_to_roles: [
+              {
+                email: "email@email.email",
+                roles: ["role1", "role2"],
+              },
+              {
+                email: "email2@email.email",
+                roles: ["role1", "role2"],
+              },
+            ],
+          },
+        },
+        {
+          isTeleport: true,
+        }
+      );
+      assert.deepEqual(
+        state.store.json.teleport_vsi[0],
+        {
+          appid: "test-appid",
+          name: "test-deployment",
+          kms: "slz-kms",
+          encryption_key: null,
+          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          profile: "cx2-4x8",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          resource_group: null,
+          template: {
+            deployment: "test-deployment",
+            license: "TELEPORT_LICENSE",
+            https_cert: "HTTPS_CERT",
+            https_key: "HTTPS_KEY",
+            hostname: "HOSTNAME",
+            domain: "DOMAIN",
+            bucket: "COS_BUCKET",
+            bucket_endpoint: "COS_BUCKET_ENDPOINT",
+            hmac_key_id: "HMAC_ACCESS_KEY_ID",
+            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
+            appid: "APPID_CLIENT_ID",
+            appid_secret: "APPID_CLIENT_SECRET",
+            appid_url: "APPID_ISSUER_URL",
+            message_of_the_day: "MESSAGE_OF_THE_DAY",
+            version: "TELEPORT_VERSION",
+            claim_to_roles: [
+              {
+                email: "email@email.email",
+                roles: ["role1", "role2"],
+              },
+              {
+                email: "email2@email.email",
+                roles: ["role1", "role2"],
+              },
+            ],
+          },
+        },
+        "it should return correct server"
+      );
+    });
   });
   describe("vsi.save", () => {
     it("should update in place with new name", () => {

@@ -207,20 +207,21 @@ function vsiCreate(config, stateData, componentProps) {
     resource_group: null,
     override_vsi_name: null,
     user_data: null,
-    network_interfaces: []
+    network_interfaces: [],
+    subnets: stateData.subnets || []
   };
+  transpose(stateData, defaultVsi);
   // if overriding key
   if (componentProps.isTeleport) {
-    defaultVsi.subnet = null; // set subnet name to null for teleport / f5
+    defaultVsi.subnet = stateData.subnet; // set subnet name to null for teleport / f5
     // delete vsi only fields and set security group name
-    delete stateData.user_data;
-    delete stateData.override_vsi_name;
-    delete stateData.network_interfaces;
-  } else {
-    defaultVsi.subnets = [];
+    delete defaultVsi.user_data;
+    delete defaultVsi.override_vsi_name;
+    delete defaultVsi.network_interfaces;
+    delete defaultVsi.vsi_per_subnet;
+    delete defaultVsi.subnets;
   }
-  transpose(stateData, defaultVsi);
-  if (componentProps.isTeleport) delete defaultVsi.hideSecurityGroup;
+
   pushAndUpdate(
     config,
     componentProps.isTeleport ? "teleport_vsi" : "vsi",
