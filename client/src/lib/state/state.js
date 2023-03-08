@@ -59,7 +59,8 @@ const {
   naclDelete,
   naclRuleCreate,
   naclRuleSave,
-  naclRuleDelete
+  naclRuleDelete,
+  createEdgeVpc
 } = require("./vpc");
 const { sccInit, sccSave } = require("./scc");
 const {
@@ -120,6 +121,14 @@ const {
   vpeSave,
   vpeOnStoreUpdate
 } = require("./vpe");
+const {
+  f5Init,
+  f5VsiSave,
+  f5InstanceSave,
+  f5TemplateSave,
+  f5VsiCreate,
+  f5OnStoreUpdate
+} = require("./f5");
 const {
   loadBalancerInit,
   loadBalancerOnStoreUpdate,
@@ -186,6 +195,10 @@ const state = function() {
   store.updateUnfoundResourceGroup = function(obj, field) {
     let rgField = field || "resource_group";
     store.updateUnfound("resourceGroups", obj, rgField);
+  };
+
+  store.createEdgeVpc = function(pattern, managementVpc) {
+    createEdgeVpc(store, pattern, managementVpc);
   };
 
   store.newField("options", {
@@ -366,6 +379,20 @@ const state = function() {
     create: vpeCreate,
     save: vpeSave,
     delete: vpeDelete
+  });
+
+  store.newField("f5", {
+    init: f5Init,
+    onStoreUpdate: f5OnStoreUpdate,
+    subComponents: {
+      instance: {
+        save: f5InstanceSave
+      },
+      vsi: {
+        create: f5VsiCreate,
+        save: f5VsiSave
+      }
+    }
   });
 
   store.newField("load_balancers", {

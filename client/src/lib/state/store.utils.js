@@ -145,7 +145,24 @@ function hasUnfoundVpc(config, obj) {
   return contains(config.store.vpcList, obj.vpc) === false;
 }
 
+/**
+ * set object ssh keys value to remove all invalid keys
+ * @param {lazyZstate} config  state store
+ * @param {object} config.store
+ * @param {Array<string>} config.store.sshKeys list of ssh keys
+ * @param {object} obj arbitrary object
+ * @param {Array<string>} obj.ssh_keys list of ssh keys
+ */
+function setValidSshKeys(config, obj) {
+  let sshKeys = [];
+  obj.ssh_keys.forEach(key => {
+    if (contains(config.store.sshKeys, key)) sshKeys.push(key);
+  });
+  obj.ssh_keys = sshKeys;
+}
+
 module.exports = {
+  setValidSshKeys,
   pushAndUpdate,
   updateChild,
   carveChild,

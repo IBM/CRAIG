@@ -9,10 +9,23 @@ const {
   numberToZoneList,
   parseIntFromZone,
   formatCidrBlock,
-  buildNetworkingRule
+  buildNetworkingRule,
+  eachZone
 } = require("lazy-z");
+const {
+  newDefaultEdgeAcl,
+  newDefaultF5ExternalAcl,
+  newF5VpeSg,
+  newDefaultVpcs,
+  newF5ManagementSg,
+  newF5ExternalSg,
+  newF5WorkloadSg,
+  newF5BastionSg,
+  firewallTiers,
+  newVpc,
+  newDefaultF5ExternalAclManagement
+} = require("./defaults");
 const { lazyZstate } = require("lazy-z/lib/store");
-const { newDefaultVpcs, newVpc } = require("./defaults");
 const { pushAndUpdate, setUnfoundResourceGroup } = require("./store.utils");
 const { buildSubnet } = require("../builders");
 const { reservedSubnetNameExp } = require("../constants");
@@ -596,6 +609,170 @@ function naclRuleDelete(config, stateData, componentProps) {
     .deleteArrChild(componentProps.data.name); // delete rule
 }
 
+/**
+ * get cidr order for edge tier
+ */
+function getCidrOrder() {
+  return [
+    "vpn-1",
+    "vpn-2",
+    "f5-management",
+    "f5-external",
+    "f5-workload",
+    "f5-bastion",
+    "vpe"
+  ];
+}
+
+/**
+ * create an edge vpc
+ * @param {lazyZState} config state store
+ * @param {object} config.store state store
+ * @param {object} config.store.json configuration JSON
+ * @param {Array<object>} config.store.json.vpcs
+ * @param {string} pattern name of pattern can be vpn-and-waf, waf, or full-tunnel
+ * @param {boolean=} useManagementVpc create edge data on management vpc
+ */
+function createEdgeVpc(config, pattern, useManagementVpc) {
+  // edge vpc requires address prefixes, to ensure terraform can compile to list
+  // address prefixes are added here
+  config.store.json.vpcs.forEach(network => {
+    network.address_prefixes = [];
+  });
+  config.store.edge_vpc_name = "edge";
+  config.store.edge_pattern = pattern;
+  config.store.f5_on_management = useManagementVpc || false;
+  let edgeTiers = firewallTiers[pattern]();
+  let cidrOrder = getCidrOrder();
+  let newSecurityGroups = [newF5ManagementSg(), newF5ExternalSg()];
+
+  // add security groups and edit cidr order based on pattern
+  if (pattern === "full-tunnel") {
+    // delete workload subnet for full-tunnel
+    cidrOrder.splice(4, 1);
+    // add bastion sg
+    newSecurityGroups.push(newF5BastionSg());
+  } else if (pattern === "waf") {
+    // delete vpn and bastion for waf
+    cidrOrder.splice(5, 1);
+    cidrOrder.shift();
+    cidrOrder.shift();
+    // add workload sg
+    newSecurityGroups.push(newF5WorkloadSg());
+  } else {
+    // add workload and bastion
+    newSecurityGroups.push(newF5WorkloadSg());
+    newSecurityGroups.push(newF5BastionSg());
+  }
+  // add f5 vpe group
+  newSecurityGroups.push(newF5VpeSg());
+
+  // create edge network object
+  let newEdgeNetwork = useManagementVpc
+    ? config.store.json.vpcs[0]
+    : {
+        cos: null,
+        bucket: null,
+        name: "edge",
+        resource_group: `edge-rg`,
+        classic_access: false,
+        manual_address_prefix_management: true,
+        default_network_acl_name: null,
+        default_routing_table_name: null,
+        default_security_group_name: null,
+        address_prefixes: [],
+        acls: [newDefaultEdgeAcl(), newDefaultF5ExternalAcl()],
+        subnets: [],
+        public_gateways: []
+      };
+
+  // set address prefixes
+  newEdgeNetwork.address_prefixes = useManagementVpc
+    ? [
+        { vpc: "management", zone: 1, cidr: "10.5.0.0/16" },
+        { vpc: "management", zone: 1, cidr: "10.10.10.0/16" },
+        { vpc: "management", zone: 2, cidr: "10.6.0.0/16" },
+        { vpc: "management", zone: 2, cidr: "10.20.10.0/16" },
+        { vpc: "management", zone: 3, cidr: "10.7.0.0/16" },
+        { vpc: "management", zone: 3, cidr: "10.30.10.0/16" }
+      ]
+    : [
+        { vpc: "edge", zone: 1, cidr: "10.5.0.0/16" },
+        { vpc: "edge", zone: 2, cidr: "10.6.0.0/16" },
+        { vpc: "edge", zone: 3, cidr: "10.7.0.0/16" }
+      ];
+
+  // add edge to vpc
+  if (!useManagementVpc) edgeTiers.push("vpe");
+  else newEdgeNetwork.acls.push(newDefaultF5ExternalAclManagement());
+  // if not waf, add vpn subnets
+  if (pattern !== "waf") {
+    edgeTiers.push("vpn-1");
+    edgeTiers.push("vpn-2");
+  }
+  // for each tier
+  edgeTiers.forEach(tier => {
+    // for each zone
+    eachZone(3, zone => {
+      // add a new subnet
+      newEdgeNetwork.subnets.push({
+        vpc: `${useManagementVpc ? "management" : "edge"}`,
+        name: `${tier}-${zone}`, // name
+        zone: parseIntFromZone(zone),
+        resource_group: `${useManagementVpc ? "management" : "edge"}-rg`, // rg
+        cidr: `10.${parseIntFromZone(zone) + 4}.${cidrOrder.indexOf(tier) +
+          1}0.0/24`, // dynamic CIDR block creation
+        network_acl:
+          tier === "f5-external"
+            ? "f5-external-acl"
+            : `${useManagementVpc ? "management" : "edge-acl"}`, // acl
+        public_gateway: false,
+        has_prefix: true
+      });
+    });
+  });
+
+  let edgeTiersWithZones = [];
+  edgeTiers.forEach(tier => {
+    edgeTiersWithZones.push({ name: tier, zones: 3 });
+  });
+
+  // if management vpc
+  if (useManagementVpc) {
+    // overwrite with new data
+    config.store.json.vpcs[0] = newEdgeNetwork;
+    config.store.edge_vpc_name = config.store.json.vpcs[0].name;
+    // for each security group
+    newSecurityGroups.forEach(group => {
+      // match vpc name and rg
+      group.vpc = newEdgeNetwork.name;
+      group.resource_group = newEdgeNetwork.resource_group;
+    });
+    let managementVpcTiers = // management tiers
+      config.store.subnetTiers[config.store.json.vpcs[0].name];
+    // add edge tiers to management tiers
+    config.store.subnetTiers[
+      config.store.json.vpcs[0].name
+    ] = edgeTiersWithZones.concat(managementVpcTiers);
+  } else {
+    // add edge rg
+    config.store.json.resource_groups.push({
+      create: true,
+      use_prefix: true,
+      name: "edge-rg"
+    });
+
+    // add to front
+    config.store.json.vpcs.unshift(newEdgeNetwork);
+    config.store.vpcList.push("edge");
+    config.store.subnetTiers.edge = edgeTiersWithZones;
+  }
+  // set security groups to new list and then add existing to end
+  config.store.json.security_groups = newSecurityGroups.concat(
+    config.store.json.security_groups
+  );
+}
+
 module.exports = {
   vpcInit,
   vpcCreate,
@@ -613,5 +790,6 @@ module.exports = {
   naclDelete,
   naclRuleCreate,
   naclRuleSave,
-  naclRuleDelete
+  naclRuleDelete,
+  createEdgeVpc
 };
