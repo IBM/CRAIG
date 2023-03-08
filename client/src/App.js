@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Craig from "./Craig";
+import { UnderConstruction } from "icse-react-assets";
 
 const Red = props => {
   return (
@@ -102,7 +103,7 @@ class App extends Component {
             path="/blue"
             element={<Blue craigRouter={this.craigRouter} />}
           />
-          <Route path="*" element={<h1>uh oh</h1>} />
+          <Route path="*" element={<UnderConstruction />} />
         </Routes>
       </BrowserRouter>
     );
