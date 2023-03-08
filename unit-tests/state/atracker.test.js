@@ -35,7 +35,7 @@ describe("atracker", () => {
   describe("atracker.onStoreUpdate", () => {
     it("should set cos_key to null if deleted", () => {
       let state = new newState();
-      state.cos.keys.delete(
+      state.object_storage.keys.delete(
         {},
         { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } }
       );
@@ -50,7 +50,7 @@ describe("atracker", () => {
     it("should update atracker info", () => {
       let state = new newState();
       // create key
-      state.cos.keys.create(
+      state.object_storage.keys.create(
         {
           name: "frog",
         },

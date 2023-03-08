@@ -26,7 +26,7 @@ function clusterInit(config) {
  * @param {lazyZState} config state store
  * @param {object} config.store state store
  * @param {object} config.store.json configuration JSON
- * @param {Array<object>} config.store.json.cos object storage instances
+ * @param {Array<object>} config.store.json.object_storage object storage instances
  * @param {Array<object>} config.store.json.clusters clusters
  * @param {string} config.store.json.clusters.cos name of instance for openshift clusters
  * @param {string} config.store.json.clusters.kms_key name of the encryption key
@@ -39,7 +39,7 @@ function clusterInit(config) {
  */
 function clusterOnStoreUpdate(config) {
   config.store.json.clusters.forEach(cluster => {
-    let allCosInstances = splat(config.store.json.cos, "name");
+    let allCosInstances = splat(config.store.json.object_storage, "name");
     if (cluster.cos && !contains(allCosInstances, cluster.cos)) {
       cluster.cos = null;
     }

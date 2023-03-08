@@ -269,7 +269,7 @@ describe("clusters", () => {
     it("should set cos to null if deleted", () => {
       let state = new newState();
       state.clusters.create({ cluster: newDefaultWorkloadCluster() });
-      state.cos.delete({}, { data: { name: "cos" } });
+      state.object_storage.delete({}, { data: { name: "cos" } });
       assert.deepEqual(
         state.store.json.clusters[0].cos,
         null,

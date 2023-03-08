@@ -935,6 +935,7 @@
     }
   ],
   "scc": {
+    "enable": true,
     "credential_description": "scc posture credential description",
     "id": "scc_group_id",
     "passphrase": "scc_group_passphrase",

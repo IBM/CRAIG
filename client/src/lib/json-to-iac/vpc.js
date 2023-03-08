@@ -237,7 +237,6 @@ function formatPgw(pgw, config) {
  */
 function vpcTf(config) {
   let tf = "";
-  let vpcNames = splat(config.vpcs, "name");
   config.vpcs.forEach(vpc => {
     let blockData = formatVpc(vpc, config);
     vpc.address_prefixes.forEach(prefix => {

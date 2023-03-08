@@ -291,15 +291,21 @@ function formatF5Vsi(vsi, config) {
  * @returns {string} terraform string data
  */
 function f5Tf(config) {
-  let tf =
-    f5ImageLocals() + "\n" + f5TemplateLocals(config.f5_vsi[0].template) + "\n";
-  config.f5_vsi.forEach(instance => {
-    let blockData =
-      f5TemplateUserData(instance.template, config) +
-      formatF5Vsi(instance, config);
-    tf += tfBlock(`${instance.name} Vsi`, blockData);
-  });
-  return tf;
+  if (config.f5_vsi.length === 0) return "";
+  else {
+    let tf =
+      f5ImageLocals() +
+      "\n" +
+      f5TemplateLocals(config.f5_vsi[0].template) +
+      "\n";
+    config.f5_vsi.forEach(instance => {
+      let blockData =
+        f5TemplateUserData(instance.template, config) +
+        formatF5Vsi(instance, config);
+      tf += tfBlock(`${instance.name} Vsi`, blockData);
+    });
+    return tf;
+  }
 }
 
 module.exports = {

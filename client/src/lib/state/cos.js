@@ -21,7 +21,7 @@ const {
  * @param {Function} instanceCallback callback after setting splat
  */
 function cosSetStoreBucketsAndKeys(config, instanceCallback) {
-  config.store.json.cos.forEach(instance => {
+  config.store.json.object_storage.forEach(instance => {
     // add all bucket names from instance to buckets
     config.store.cosBuckets = config.store.cosBuckets.concat(
       splat(instance.buckets, "name")
@@ -44,7 +44,7 @@ function cosSetStoreBucketsAndKeys(config, instanceCallback) {
  * @param {object} config.store.json
  */
 function cosInit(config) {
-  config.store.json.cos = newDefaultCos();
+  config.store.json.object_storage = newDefaultCos();
   cosSetStoreBucketsAndKeys(config);
 }
 
@@ -53,12 +53,12 @@ function cosInit(config) {
  * @param {lazyZstate} config state store
  * @param {object} config.store
  * @param {object} config.store.json
- * @param {Array<object>} config.store.json.cos
- * @param {Array<object>} config.store.json.cos.buckets
- * @param {string} config.store.json.cos.buckets.kms_key
+ * @param {Array<object>} config.store.json.object_storage
+ * @param {Array<object>} config.store.json.object_storage.buckets
+ * @param {string} config.store.json.object_storage.buckets.kms_key
  */
 function cosOnStoreUpdate(config) {
-  config.store.cosInstances = splat(config.store.json.cos, "name");
+  config.store.cosInstances = splat(config.store.json.object_storage, "name");
   config.store.cosBuckets = [];
   config.store.cosKeys = [];
   cosSetStoreBucketsAndKeys(config, instance => {
@@ -78,7 +78,7 @@ function cosOnStoreUpdate(config) {
 function cosCreate(config, stateData) {
   stateData.buckets = [];
   stateData.keys = [];
-  pushAndUpdate(config, "cos", stateData);
+  pushAndUpdate(config, "object_storage", stateData);
 }
 
 /**
@@ -89,7 +89,7 @@ function cosCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function cosDelete(config, stateData, componentProps) {
-  carveChild(config, "cos", componentProps);
+  carveChild(config, "object_storage", componentProps);
 }
 
 /**
@@ -99,7 +99,7 @@ function cosDelete(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cosSave(config, stateData, componentProps) {
-  updateChild(config, "cos", stateData, componentProps);
+  updateChild(config, "object_storage", stateData, componentProps);
 }
 
 /**
@@ -111,7 +111,7 @@ function cosSave(config, stateData, componentProps) {
  */
 function cosBucketCreate(config, stateData, componentProps) {
   delete stateData.showBucket;
-  pushToChildField(config, "cos", "buckets", stateData, componentProps);
+  pushToChildField(config, "object_storage", "buckets", stateData, componentProps);
 }
 
 /**
@@ -127,7 +127,7 @@ function cosBucketCreate(config, stateData, componentProps) {
  * @param {string} componentProps.data.name
  */
 function cosBucketSave(config, stateData, componentProps) {
-  updateSubChild(config, "cos", "buckets", stateData, componentProps, slz => {
+  updateSubChild(config, "object_storage", "buckets", stateData, componentProps, slz => {
     if (
       config.store.json.atracker.collector_bucket_name ===
       componentProps.data.name
@@ -143,7 +143,7 @@ function cosBucketSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cosBucketDelete(config, stateData, componentProps) {
-  deleteSubChild(config, "cos", "buckets", componentProps);
+  deleteSubChild(config, "object_storage", "buckets", componentProps);
 }
 
 /**
@@ -153,7 +153,7 @@ function cosBucketDelete(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cosKeyCreate(config, stateData, componentProps) {
-  pushToChildField(config, "cos", "keys", stateData, componentProps);
+  pushToChildField(config, "object_storage", "keys", stateData, componentProps);
 }
 
 /**
@@ -166,11 +166,18 @@ function cosKeyCreate(config, stateData, componentProps) {
  * @param {string} componentProps.data.name key name before update
  */
 function cosKeySave(config, stateData, componentProps) {
-  updateSubChild(config, "cos", "keys", stateData, componentProps, config => {
-    if (config.store.json.atracker.cos_key === componentProps.data.name) {
-      config.store.json.atracker.cos_key = stateData.name;
+  updateSubChild(
+    config,
+    "object_storage",
+    "keys",
+    stateData,
+    componentProps,
+    config => {
+      if (config.store.json.atracker.cos_key === componentProps.data.name) {
+        config.store.json.atracker.cos_key = stateData.name;
+      }
     }
-  });
+  );
 }
 
 /**
@@ -180,7 +187,7 @@ function cosKeySave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cosKeyDelete(config, stateData, componentProps) {
-  deleteSubChild(config, "cos", "keys", componentProps);
+  deleteSubChild(config, "object_storage", "keys", componentProps);
 }
 
 module.exports = {

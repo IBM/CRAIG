@@ -84,9 +84,11 @@ function formatScc(scc, config) {
  * @returns {string} terraform string
  */
 function sccTf(config) {
-  return (
-    formatPostureCredential(config.scc) + "\n" + formatScc(config.scc, config)
-  );
+  if (config.scc.enable)
+    return (
+      formatPostureCredential(config.scc) + "\n" + formatScc(config.scc, config)
+    );
+  else return "";
 }
 
 module.exports = {

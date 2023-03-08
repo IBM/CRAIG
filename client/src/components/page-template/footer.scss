@@ -1,0 +1,88 @@
+/* CSS for footer and back/next buttons */
+.footerButton {
+  left: 3.5rem;
+  right: 1.5rem;
+  width: calc(100vw - 4.5rem);
+  position: sticky;
+  bottom: 0;
+}
+
+.footer {
+  background-color: #ffffff;
+  height: 2.75rem;
+  border-top: 2px solid #0f62fe;
+}
+
+.buttonRight {
+  display: flex;
+  justify-content: right;
+  position: sticky;
+}
+
+.backButton {
+  padding: .5rem 0 .5rem .5rem;
+  display: flex;
+  align-items: center;
+  width: 50%;
+  float: left;
+  height: 100%;
+}
+
+.nextButton {
+  padding: .5rem .5rem .5rem 0;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  width: 50%;
+  float: right;
+  height: 100%;
+}
+
+.highlight {
+  background-color: #f4f4f4;
+}
+
+.smallerTextFooter {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.caretMargin {
+  margin: 4px;
+}
+
+.smallerTextFooter {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.footerPopover {
+  right: 450% !important; // important to override auto align
+}
+
+.popover-text {
+  font-size: 80%;
+}
+
+// applied to divs with transparent parts to allow them to be clicked through
+.pointerEventsNone {
+  pointer-events: none;
+}
+
+// applied to children of transparent divs so they can be clicked
+.pointerEventsAuto {
+  pointer-events: auto;
+}
+
+.forceTertiaryButtonStyles {
+  padding-right: 0.4375rem !important;
+  padding-left: 0.4375rem !important;
+}
+
+.leftTextAlign {
+  text-align: left;
+}
+
+.rightTextAlign {
+  text-align: right;
+}

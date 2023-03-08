@@ -1,8 +1,8 @@
 const { snakeCase, titleCase } = require("lazy-z");
 const { appidTf } = require("./appid");
+const { versionsTf, mainTf, variablesTf } = require("./constants");
 const { atrackerTf } = require("./atracker");
 const { clusterTf } = require("./clusters");
-const { versionsTf, mainTf, variablesTf } = require("./constants");
 const { eventStreamsTf } = require("./event-streams");
 const { f5Tf, f5CloudInitYaml } = require("./f5");
 const { flowLogsTf } = require("./flow-logs");

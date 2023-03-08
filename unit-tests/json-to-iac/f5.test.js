@@ -813,5 +813,14 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
         "it should return correct data"
       );
     });
+    it("should return empty string when no f5 vsi", () => {
+      assert.deepEqual(
+        f5Tf({
+          f5_vsi: [],
+        }),
+        "",
+        "it should return correct data"
+      );
+    });
   });
 });

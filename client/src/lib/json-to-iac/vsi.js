@@ -51,13 +51,13 @@ function formatVsi(vsi, config) {
     networkInterfaces = [];
   // add nework interfaces
   if (vsi.network_interfaces)
-    vsi.network_interfaces.forEach(interface => {
+    vsi.network_interfaces.forEach(intf => {
       let nwInterface = {
-        subnet: subnetRef(vsi.vpc, interface.subnet),
+        subnet: subnetRef(vsi.vpc, intf.subnet),
         allow_ip_spoofing: true,
         "*security_groups": []
       };
-      interface.security_groups.forEach(group => {
+      intf.security_groups.forEach(group => {
         nwInterface["*security_groups"].push(
           tfRef(`ibm_is_security_group`, `${vsi.vpc} vpc ${group} sg`)
         );
@@ -102,7 +102,7 @@ function formatVsi(vsi, config) {
   vsiValues._boot_volume = {
     encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key)
   };
-
+  vsiValues["*volumes"] = [];
   let storageVolumes = "";
   if (vsi.volumes) {
     vsi.volumes.forEach(volume => {
@@ -121,22 +121,18 @@ function formatVsi(vsi, config) {
         volumeData,
         config
       );
-      if (vsiValues["*volumes"]) {
-        vsiValues["*volumes"].push(
-          tfRef(
-            "ibm_is_volume",
-            `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${vsi.index} ${volume.name}`
-          )
-        );
-      } else {
-        vsiValues["*volumes"] = [
-          tfRef(
-            "ibm_is_volume",
-            `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${vsi.index} ${volume.name}`
-          )
-        ];
-      }
+
+      vsiValues["*volumes"] = [
+        tfRef(
+          "ibm_is_volume",
+          `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${vsi.index} ${volume.name}`
+        )
+      ];
     });
+  }
+
+  if (vsiValues["*volumes"].length === 0) {
+    delete vsiValues["*volumes"];
   }
 
   return (

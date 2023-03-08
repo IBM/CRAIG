@@ -11,8 +11,8 @@ function newState() {
   return store;
 }
 
-describe("cos", () => {
-  describe("cos.init", () => {
+describe("object_storage", () => {
+  describe("object_storage.init", () => {
     it("should initialize the object storage instances", () => {
       let state = new newState();
       let expectedData = [
@@ -67,16 +67,16 @@ describe("cos", () => {
         },
       ];
       assert.deepEqual(
-        state.store.json.cos,
+        state.store.json.object_storage,
         expectedData,
         "it should have cos"
       );
     });
   });
-  describe("cos.create", () => {
+  describe("object_storage.create", () => {
     it("should create a new cos instance", () => {
       let state = new newState();
-      state.cos.create({
+      state.object_storage.create({
         name: "todd",
         use_data: false,
         resource_group: "default",
@@ -93,44 +93,44 @@ describe("cos", () => {
         buckets: [],
       };
       assert.deepEqual(
-        state.store.json.cos[2],
+        state.store.json.object_storage[2],
         expectedData,
         "it should create new cos"
       );
     });
   });
-  describe("cos.save", () => {
+  describe("object_storage.save", () => {
     it("should update a cos instance in place", () => {
       let state = new newState();
-      state.cos.save({ name: "todd" }, { data: { name: "cos" } });
+      state.object_storage.save({ name: "todd" }, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.cos[1].name,
+        state.store.json.object_storage[1].name,
         "todd",
         "it should create new cos"
       );
     });
     it("should update a cos instance in place with same name", () => {
       let state = new newState();
-      state.cos.save({ name: "cos" }, { data: { name: "cos" } });
+      state.object_storage.save({ name: "cos" }, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.cos[1].name,
+        state.store.json.object_storage[1].name,
         "cos",
         "it should create new cos"
       );
     });
   });
-  describe("cos.delete", () => {
+  describe("object_storage.delete", () => {
     it("should delete a cos instance", () => {
       let state = new newState();
-      state.cos.delete({}, { data: { name: "cos" } });
+      state.object_storage.delete({}, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.cos.length,
+        state.store.json.object_storage.length,
         1,
         "it should create new cos"
       );
     });
   });
-  describe("cos.onStoreUpdate", () => {
+  describe("object_storage.onStoreUpdate", () => {
     it("should create a list of storage buckets", () => {
       let state = new newState();
       assert.deepEqual(
@@ -155,18 +155,18 @@ describe("cos", () => {
       );
       state.update();
       assert.deepEqual(
-        state.store.json.cos[0].buckets[0].kms_key,
+        state.store.json.object_storage[0].buckets[0].kms_key,
         null,
         "it should have all the keys"
       );
     });
   });
-  describe("cos.buckets", () => {
-    describe("cos.buckets.create", () => {
+  describe("object_storage.buckets", () => {
+    describe("object_storage.buckets.create", () => {
       it("should create a bucket in a specified instance", () => {
         let state = new newState();
 
-        state.cos.buckets.create(
+        state.object_storage.buckets.create(
           {
             endpoint_type: "public",
             force_delete: true,
@@ -187,20 +187,20 @@ describe("cos", () => {
           storage_class: "standard",
         };
         assert.deepEqual(
-          state.store.json.cos[0].buckets[1],
+          state.store.json.object_storage[0].buckets[1],
           expectedData,
           "it should make new bucket"
         );
       });
     });
 
-    describe("cos.buckets.save", () => {
+    describe("object_storage.buckets.save", () => {
       it("should update a bucket in a specified instance", () => {
         let state = new newState();
         state.store.json.atracker = {
           collector_bucket_name: "atracker-bucket",
         };
-        state.cos.buckets.save(
+        state.object_storage.buckets.save(
           {
             endpoint_type: "public",
             force_delete: true,
@@ -221,7 +221,7 @@ describe("cos", () => {
           storage_class: "standard",
         };
         assert.deepEqual(
-          state.store.json.cos[1].buckets[0],
+          state.store.json.object_storage[1].buckets[0],
           expectedData,
           "it should make new bucket"
         );
@@ -231,7 +231,7 @@ describe("cos", () => {
         state.store.json.atracker = {
           collector_bucket_name: "atracker-bucket",
         };
-        state.cos.buckets.save(
+        state.object_storage.buckets.save(
           {
             endpoint_type: "public",
             force_delete: true,
@@ -255,7 +255,7 @@ describe("cos", () => {
         state.store.json.atracker = {
           collector_bucket_name: "atracker-key",
         };
-        state.cos.buckets.save(
+        state.object_storage.buckets.save(
           {
             endpoint_type: "public",
             force_delete: true,
@@ -276,32 +276,32 @@ describe("cos", () => {
           storage_class: "standard",
         };
         assert.deepEqual(
-          state.store.json.cos[1].buckets[0],
+          state.store.json.object_storage[1].buckets[0],
           expectedData,
           "it should make new bucket"
         );
       });
     });
-    describe("cos.buckets.delete", () => {
+    describe("object_storage.buckets.delete", () => {
       it("should delete bucket", () => {
         let state = new newState();
-        state.cos.buckets.delete(
+        state.object_storage.buckets.delete(
           {},
           { arrayParentName: "cos", data: { name: "management-bucket" } }
         );
         assert.deepEqual(
-          state.store.json.cos[1].buckets.length,
+          state.store.json.object_storage[1].buckets.length,
           1,
           "should delete bucket"
         );
       });
     });
   });
-  describe("cos.keys", () => {
-    describe("cos.keys.create", () => {
+  describe("object_storage.keys", () => {
+    describe("object_storage.keys.create", () => {
       it("should create a new cos key in a specified instance", () => {
         let state = new newState();
-        state.cos.keys.create(
+        state.object_storage.keys.create(
           {
             name: "todd",
             role: "Writer",
@@ -311,7 +311,7 @@ describe("cos", () => {
             arrayParentName: "cos",
           }
         );
-        assert.deepEqual(state.store.json.cos[1].keys, [
+        assert.deepEqual(state.store.json.object_storage[1].keys, [
           {
             name: "todd",
             role: "Writer",
@@ -321,18 +321,18 @@ describe("cos", () => {
       });
     });
 
-    describe("cos.keys.save", () => {
+    describe("object_storage.keys.save", () => {
       it("should update a cos key in a specified instance", () => {
         let state = new newState();
         state.store.json.atracker = {
           collector_bucket_name: "atracker-bucket",
         };
         state.store.json.atracker.cos_key = "cos-bind-key";
-        state.cos.keys.save(
+        state.object_storage.keys.save(
           { name: "todd" },
           { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" }
         );
-        assert.deepEqual(state.store.json.cos[0].keys, [
+        assert.deepEqual(state.store.json.object_storage[0].keys, [
           {
             name: "todd",
             role: "Writer",
@@ -348,7 +348,7 @@ describe("cos", () => {
       it("should update a cos key not atracker", () => {
         let state = new newState();
 
-        state.cos.keys.create(
+        state.object_storage.keys.create(
           {
             name: "boo",
             role: "Writer",
@@ -356,11 +356,11 @@ describe("cos", () => {
           },
           { arrayParentName: "cos" }
         );
-        state.cos.keys.save(
+        state.object_storage.keys.save(
           { name: "todd" },
           { data: { name: "boo" }, arrayParentName: "cos" }
         );
-        assert.deepEqual(state.store.json.cos[1].keys, [
+        assert.deepEqual(state.store.json.object_storage[1].keys, [
           {
             name: "todd",
             role: "Writer",
@@ -371,13 +371,13 @@ describe("cos", () => {
       it("should update cos key in a specified instance with same name", () => {
         let state = new newState();
 
-        state.cos.keys.save(
+        state.object_storage.keys.save(
           {
             name: "cos-bind-key",
           },
           { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" }
         );
-        assert.deepEqual(state.store.json.cos[0].keys, [
+        assert.deepEqual(state.store.json.object_storage[0].keys, [
           {
             name: "cos-bind-key",
             role: "Writer",
@@ -386,14 +386,14 @@ describe("cos", () => {
         ]);
       });
     });
-    describe("cos.keys.delete", () => {
+    describe("object_storage.keys.delete", () => {
       it("should delete a cos key in a specified instance", () => {
         let state = new newState();
-        state.cos.keys.delete(
+        state.object_storage.keys.delete(
           {},
           { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } }
         );
-        assert.deepEqual(state.store.json.cos[0].keys, []);
+        assert.deepEqual(state.store.json.object_storage[0].keys, []);
       });
     });
   });

@@ -11,12 +11,12 @@ function newState() {
   return store;
 }
 
-describe("security_compliance_center", () => {
-  describe("security_compliance_center.init", () => {
+describe("scc", () => {
+  describe("scc.init", () => {
     it("should initialize scc", () => {
       let state = new newState();
       assert.deepEqual(
-        state.store.json.security_compliance_center,
+        state.store.json.scc,
         {
           credential_description: null,
           id: null,
@@ -31,10 +31,10 @@ describe("security_compliance_center", () => {
       );
     });
   });
-  describe("security_compliance_center.save", () => {
+  describe("scc.save", () => {
     it("should update", () => {
       let state = new newState();
-      state.security_compliance_center.save({
+      state.scc.save({
         credential_description: "test",
         id: "frog",
         name: "todd",
@@ -51,7 +51,7 @@ describe("security_compliance_center", () => {
         scope_description: null,
       };
       assert.deepEqual(
-        state.store.json.security_compliance_center,
+        state.store.json.scc,
         expectedData,
         "it should update values"
       );

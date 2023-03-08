@@ -7,7 +7,7 @@ const { transpose } = require("lazy-z");
  * @param {object} config.store.json
  */
 function sccInit(config) {
-  config.store.json.security_compliance_center = {
+  config.store.json.scc = {
     credential_description: null,
     id: null,
     passphrase: null,
@@ -24,11 +24,11 @@ function sccInit(config) {
  * @param {lazyZState} config state store
  * @param {object} config.store
  * @param {object} config.store.json
- * @param {object} config.store.json.security_compliance_center
+ * @param {object} config.store.json.scc
  * @param {object} stateData component state data
  */
 function sccSave(config, stateData) {
-  transpose(stateData, config.store.json.security_compliance_center);
+  transpose(stateData, config.store.json.scc);
 }
 
 module.exports = {

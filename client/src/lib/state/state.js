@@ -1,5 +1,5 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const { contains } = require("lazy-z");
+const { contains, typeCheck } = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,
@@ -137,12 +137,34 @@ const {
 const state = function() {
   let store = new lazyZstate({
     _defaults: {
-      json: {},
+      json: {
+        iam_account_settings: {
+          enable: false
+        },
+        access_groups: [],
+        secrets_manager: [],
+        f5_vsi: []
+      },
       cosBuckets: [],
-      cosKeys: []
+      cosKeys: [],
+      hideCodeMirror: false,
+      hideFooter: false
     },
     _no_default: []
   });
+
+  /**
+   * toggle a state store value
+   * @param {string} value name of the boolean value to toggle
+   */
+  store.toggleStoreValue = function(value) {
+    typeCheck(
+      `store.toggleStoreValue - store.${value}`,
+      "boolean",
+      store.store[value]
+    );
+    store.store[value] = !store.store[value];
+  };
 
   /**
    * update unfound value from store
@@ -196,7 +218,7 @@ const state = function() {
   });
 
   // next, update cos
-  store.newField("cos", {
+  store.newField("object_storage", {
     init: cosInit,
     onStoreUpdate: cosOnStoreUpdate,
     create: cosCreate,
@@ -264,7 +286,7 @@ const state = function() {
     delete: appidDelete
   });
 
-  store.newField("security_compliance_center", {
+  store.newField("scc", {
     init: sccInit,
     save: sccSave
   });

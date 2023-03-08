@@ -104,6 +104,7 @@ resource "ibm_scc_posture_scope" "scc_scope" {
           prefix: "iac",
         },
         scc: {
+          enable: true,
           credential_description: "scc posture credential description",
           id: "scc_group_id",
           passphrase: "scc_group_passphrase",
@@ -164,6 +165,30 @@ resource "ibm_scc_posture_scope" "scc_scope" {
 
 ##############################################################################
 `;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should create correct terraform"
+      );
+    });
+    it("should return empty string when not enabled", () => {
+      let actualData = sccTf({
+        _options: {
+          prefix: "iac",
+        },
+        scc: {
+          enable: false,
+          credential_description: "scc posture credential description",
+          id: "scc_group_id",
+          passphrase: "scc_group_passphrase",
+          name: "scc-posture-credential",
+          location: "us",
+          collector_description: "scc collector",
+          is_public: true,
+          scope_description: "scc scope",
+        },
+      });
+      let expectedData = ``;
       assert.deepEqual(
         actualData,
         expectedData,

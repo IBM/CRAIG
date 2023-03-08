@@ -1,0 +1,126 @@
+.cds--side-nav--ux .cds--side-nav__items {
+  width: fit-content;
+  text-align: left;
+  padding-bottom: 6rem; // ensure scrollable
+}
+
+.cds--side-nav.expanded {
+  width: 16rem;
+}
+
+.cds--side-nav.rail {
+  width: 3rem;
+  overflow: visible;
+}
+
+.popover-box {
+  padding: 5px;
+  position: relative;
+  top: 20px;
+  z-index: 9001;
+  /* navbar is 9000 */
+  font-size: 80%;
+}
+
+// hide scrollbar for chrome, other webkit browsers (safari, opera)
+.cds--side-nav__items::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.cds--side-nav__items {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.nav-popover-obj {
+  // make the container wide enough for text
+  width: 25rem;
+}
+
+.cds--side-nav__overlay-active {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(22, 22, 22, 0.5);
+  background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1), background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
+}
+
+a.cds--side-nav__link {
+  outline: none !important;
+  border: none !important;
+}
+
+// make navigation wide enough, hide scroll bar
+.cds--side-nav--ux .cds--side-nav__items {
+  width: fit-content;
+}
+
+.cds--side-nav.expanded {
+  width: 16rem;
+}
+
+.cds--side-nav.rail {
+  width: 3rem;
+}
+
+.cds--side-nav__overlay-active {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(22, 22, 22, 0.5);
+  background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1), background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
+}
+
+a.cds--side-nav__link {
+  outline: none !important;
+  border: none !important;
+}
+
+.blueTileRail {
+  background-color: #0f62fe !important; // necessary to override default hovering
+  width: 3rem;
+}
+
+.blueTileExpanded {
+  background-color: #0f62fe !important; // necessary to override default hovering
+  width: 16rem;
+}
+
+// Target direct div beneath the link and then the svg
+.cds--side-nav__link.whiteFill>div>svg {
+  fill: white;
+}
+
+// Target spans beneath to set color of text to white
+.cds--side-nav__link.whiteFill span {
+  color: white !important; // necessary to override default hovering
+}
+
+.cds--side-nav__divider.railDivider {
+  width: 3rem;
+  margin: 0;
+}
+
+.cds--side-nav__divider.expandedDivider {
+  margin: 0;
+}
+
+.navPopoverAlign {
+  left: 75% !important; // overwrite 
+}
+
+// crazy popover hover fix
+.cds--side-nav__link.rail {
+  width: 3rem;
+  margin-right: 1.5rem;
+}
+
+// links take up whole sidenav
+.cds--side-nav__link.expanded {
+  width: 16rem; // full width
+}

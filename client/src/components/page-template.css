@@ -1,0 +1,23 @@
+.leftPanelWidth {
+  width: 62%;
+  margin-right: 2rem;
+  max-width: 62vw;
+}
+
+/* Alignment */
+.displayFlex {
+  display: flex;
+}
+
+/* Margin and padding */
+.navBarAlign {
+  margin: 3.5rem 1rem 0rem 3.5rem;
+}
+
+.boxShadow {
+  box-shadow: -1px 1px 9px 2px #d5d2d2;
+}
+
+.fieldPadding {
+  padding: 1.5rem 0.5rem 2rem 1rem;
+}

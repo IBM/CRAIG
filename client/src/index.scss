@@ -1,0 +1,8 @@
+@use '@carbon/react';
+@use '@carbon/styles/scss/grid';
+@include grid.flex-grid();
+
+.minHeight {
+    // height of the screen - footer size
+    min-height: calc(100vh - 3rem);
+}
