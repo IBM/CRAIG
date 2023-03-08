@@ -46,10 +46,10 @@ function f5OnStoreUpdate(config) {
         instance.subnet = null;
       }
       // check network interfaces
-      instance.network_interfaces.forEach(interface => {
-        if (!contains(config.store.subnets[instance.vpc], interface.subnet)) {
+      instance.network_interfaces.forEach(intf => {
+        if (!contains(config.store.subnets[instance.vpc], intf.subnet)) {
           // subnet does not exist
-          interface.subnet = null;
+          intf.subnet = null;
         }
       });
     }
