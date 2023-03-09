@@ -92,7 +92,10 @@ describe("f5", () => {
         let state = new newState();
         state.createEdgeVpc("vpn-and-waf");
         state.f5.vsi.create(false, 2);
-        state.f5.instance.save({ template: { tmos_admin_password: "" } });
+        state.f5.instance.save(
+          { template: { tmos_admin_password: "" } },
+          { data: { name: "f5-zone-1" } }
+        );
         assert.deepEqual(
           state.store.json.f5_vsi[0].template.tmos_admin_password,
           null,
@@ -103,18 +106,35 @@ describe("f5", () => {
         let state = new newState();
         state.createEdgeVpc("vpn-and-waf");
         state.f5.vsi.create(false, 2);
-        state.f5.instance.save({
-          template: {
-            do_declaration_url: "",
-            as3_declaration_url: "",
-            ts_declaration_url: "",
-            phone_home_url: "",
-            tgactive_url: "",
-            tgstandby_url: "",
-            tgrefresh_url: "",
-            app_id: "",
+        state.f5.instance.save(
+          {
+            template: {
+              tmos_admin_password: null,
+              license_type: "none",
+              default_route_gateway_cidr: "10.10.10.10/24",
+              license_host: "",
+              domain: "local",
+              hostname: "f5-ve-01",
+              license_password: "",
+              license_pool: "",
+              license_sku_keyword_1: "",
+              license_sku_keyword_2: "",
+              license_username: "",
+              template_version: "20210201",
+              app_id: "",
+              phone_home_url: "",
+              do_declaration_url: "",
+              as3_declaration_url: "",
+              ts_declaration_url: "",
+              tgstandby_url: "",
+              tgrefresh_url: "",
+              tgactive_url: "",
+              vpc: "edge",
+              zone: 1,
+            },
           },
-        });
+          { data: { name: "f5-zone-1" } }
+        );
         assert.deepEqual(
           state.store.json.f5_vsi[0].template,
           {
@@ -145,71 +165,160 @@ describe("f5", () => {
         );
       });
     });
-    describe("f5.instance.save", () => {
-      it("should set the resource group and encryption key for an f5 vsi", () => {
-        let state = new newState();
-        state.createEdgeVpc("vpn-and-waf");
-        state.f5.vsi.create({ useManagement: false, zones: 2 });
-        state.f5.instance.save({
+    it("should set the resource group and encryption key for an f5 vsi", () => {
+      let state = new newState();
+      state.createEdgeVpc("vpn-and-waf");
+      state.f5.vsi.create({ useManagement: false, zones: 2 });
+      state.f5.instance.save(
+        {
           name: "f5-zone-1",
           resource_group: "frog",
           encryption_key: "todd",
-        });
-        assert.deepEqual(
-          state.store.json.f5_vsi[0],
-          {
-            kms: "kms",
-            image: "f5-bigip-16-1-2-2-0-0-28-all-1slot",
-            encryption_key: null,
-            profile: "cx2-4x8",
-            name: "f5-zone-1",
-            subnet: "f5-management-zone-1",
-            resource_group: null,
-            security_groups: ["f5-management-sg"],
-            ssh_keys: ["ssh-key"],
-            vpc: "edge",
-            network_interfaces: [
-              {
-                security_groups: ["f5-bastion-sg"],
-                subnet: "f5-bastion-zone-1",
-              },
-              {
-                security_groups: ["f5-external-sg"],
-                subnet: "f5-external-zone-1",
-              },
-              {
-                security_groups: ["f5-workload-sg"],
-                subnet: "f5-workload-zone-1",
-              },
-            ],
-            template: {
-              app_id: "null",
-              as3_declaration_url: "null",
-              default_route_gateway_cidr: "10.10.10.10/24",
-              do_declaration_url: "null",
-              domain: "local",
-              hostname: "f5-ve-01",
-              license_host: "null",
-              license_password: "null",
-              license_pool: "null",
-              license_sku_keyword_1: "null",
-              license_sku_keyword_2: "null",
-              license_type: "none",
-              license_username: "null",
-              phone_home_url: "null",
-              template_version: "20210201",
-              tgactive_url: "null",
-              tgrefresh_url: "null",
-              tgstandby_url: "null",
-              tmos_admin_password: null,
-              ts_declaration_url: "null",
-              vpc: "edge",
-              zone: 1,
+        },
+        { data: { name: "f5-zone-1" } }
+      );
+      assert.deepEqual(
+        state.store.json.f5_vsi[0],
+        {
+          kms: "kms",
+          image: "f5-bigip-16-1-2-2-0-0-28-all-1slot",
+          encryption_key: null,
+          profile: "cx2-4x8",
+          name: "f5-zone-1",
+          subnet: "f5-management-zone-1",
+          resource_group: null,
+          security_groups: ["f5-management-sg"],
+          ssh_keys: ["ssh-key"],
+          vpc: "edge",
+          network_interfaces: [
+            {
+              security_groups: ["f5-bastion-sg"],
+              subnet: "f5-bastion-zone-1",
             },
+            {
+              security_groups: ["f5-external-sg"],
+              subnet: "f5-external-zone-1",
+            },
+            {
+              security_groups: ["f5-workload-sg"],
+              subnet: "f5-workload-zone-1",
+            },
+          ],
+          template: {
+            app_id: "null",
+            as3_declaration_url: "null",
+            default_route_gateway_cidr: "10.10.10.10/24",
+            do_declaration_url: "null",
+            domain: "local",
+            hostname: "f5-ve-01",
+            license_host: "null",
+            license_password: "null",
+            license_pool: "null",
+            license_sku_keyword_1: "null",
+            license_sku_keyword_2: "null",
+            license_type: "none",
+            license_username: "null",
+            phone_home_url: "null",
+            template_version: "20210201",
+            tgactive_url: "null",
+            tgrefresh_url: "null",
+            tgstandby_url: "null",
+            tmos_admin_password: null,
+            ts_declaration_url: "null",
+            vpc: "edge",
+            zone: 1,
           },
-          "it should set data"
-        );
-      });
+        },
+        "it should set data"
+      );
+    });
+    it("should save template for an f5 vsi", () => {
+      let state = new newState();
+      state.createEdgeVpc("vpn-and-waf");
+      state.f5.vsi.create({ useManagement: false, zones: 2 });
+      state.f5.instance.save(
+        {
+          template: {
+            app_id: "hi",
+            as3_declaration_url: "null",
+            default_route_gateway_cidr: "10.10.10.10/24",
+            do_declaration_url: "null",
+            domain: "local",
+            hostname: "f5-ve-01",
+            license_host: "null",
+            license_password: "null",
+            license_pool: "null",
+            license_sku_keyword_1: "null",
+            license_sku_keyword_2: "null",
+            license_type: "none",
+            license_username: "todd",
+            phone_home_url: "null",
+            template_version: "20210201",
+            tgactive_url: "null",
+            tgrefresh_url: "null",
+            tgstandby_url: "null",
+            tmos_admin_password: null,
+            ts_declaration_url: "null",
+            vpc: "edge",
+            zone: 1,
+          },
+        },
+        { data: { name: "f5-zone-1" } }
+      );
+      assert.deepEqual(
+        state.store.json.f5_vsi[0],
+        {
+          kms: "kms",
+          image: "f5-bigip-16-1-2-2-0-0-28-all-1slot",
+          encryption_key: "vsi-volume-key",
+          profile: "cx2-4x8",
+          name: "f5-zone-1",
+          subnet: "f5-management-zone-1",
+          resource_group: "edge-rg",
+          security_groups: ["f5-management-sg"],
+          ssh_keys: ["ssh-key"],
+          vpc: "edge",
+          network_interfaces: [
+            {
+              security_groups: ["f5-bastion-sg"],
+              subnet: "f5-bastion-zone-1",
+            },
+            {
+              security_groups: ["f5-external-sg"],
+              subnet: "f5-external-zone-1",
+            },
+            {
+              security_groups: ["f5-workload-sg"],
+              subnet: "f5-workload-zone-1",
+            },
+          ],
+          template: {
+            app_id: "hi",
+            as3_declaration_url: "null",
+            default_route_gateway_cidr: "10.10.10.10/24",
+            do_declaration_url: "null",
+            domain: "local",
+            hostname: "f5-ve-01",
+            license_host: "null",
+            license_password: "null",
+            license_pool: "null",
+            license_sku_keyword_1: "null",
+            license_sku_keyword_2: "null",
+            license_type: "none",
+            license_username: "todd",
+            phone_home_url: "null",
+            template_version: "20210201",
+            tgactive_url: "null",
+            tgrefresh_url: "null",
+            tgstandby_url: "null",
+            tmos_admin_password: null,
+            ts_declaration_url: "null",
+            vpc: "edge",
+            zone: 1,
+          },
+        },
+        "it should set data"
+      );
     });
   });
   describe("f5.vsi", () => {

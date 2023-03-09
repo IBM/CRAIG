@@ -11,7 +11,8 @@ const {
   hasUnfoundVpc,
   setValidSshKeys,
   setUnfoundEncryptionKey,
-  setUnfoundResourceGroup
+  setUnfoundResourceGroup,
+  updateChild
 } = require("./store.utils");
 
 /**
@@ -131,23 +132,20 @@ function f5VsiSave(config, stateData) {
  * @param {string} stateData.resource_group
  * @param {string} stateData.boot_volume_encryption_key_name
  */
-function f5InstanceSave(config, stateData) {
-  new revision(config.store.json).child("f5_vsi", stateData.name).then(data => {
-    data.resource_group = stateData.resource_group;
-    data.encryption_key = stateData.encryption_Key;
-    if (stateData.template) {
-      eachKey(stateData.template, key => {
-        if (
-          key === "tmos_admin_password" &&
-          stateData.tmos_admin_password === ""
-        ) {
-          stateData.tmos_admin_password = null;
-        } else if (stateData[key] === "") {
-          stateData[key] = "null";
-        }
-      });
-    }
-  });
+function f5InstanceSave(config, stateData, componentProps) {
+  if (stateData.template) {
+    eachKey(stateData.template, key => {
+      if (
+        key === "tmos_admin_password" &&
+        stateData.template.tmos_admin_password === ""
+      ) {
+        stateData.template.tmos_admin_password = null;
+      } else if (stateData.template[key] === "") {
+        stateData.template[key] = "null";
+      }
+    });
+  }
+  updateChild(config, "f5_vsi", stateData, componentProps);
 }
 
 module.exports = {
