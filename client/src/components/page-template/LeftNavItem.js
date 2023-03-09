@@ -50,17 +50,22 @@ class LeftNavItem extends React.Component {
             key={this.props.item.title}
             onMouseOver={this.toggleHover}
             onMouseOut={this.toggleHover}
-            className={getClassName(this.props.item.path, this.props.expanded)}
+            className={
+              (this.props.item.required && this.props.expanded
+                ? "sideNavLinkRequired "
+                : "") + getClassName(this.props.item.path, this.props.expanded)
+            }
           >
             {this.props.expanded ? this.props.item.title : ""}
           </SideNavLink>
           <PopoverContent
-            className="popover-box navPopoverAlign"
+            className={
+              "popover-box navPopoverAlign " +
+              (this.props.item.required ? " sideNavLinkRequired" : "")
+            }
             key={"popover-content-" + this.props.item.title}
           >
-            {`${this.props.item.optional ? "(Optional) " : ""} ${
-              this.props.item.title
-            }`}
+            {this.props.item.title}
           </PopoverContent>
         </Popover>
       </div>
@@ -73,7 +78,8 @@ LeftNavItem.propTypes = {
     title: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
     // icon can be stateless component or import from carbon
-    icon: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired
+    icon: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+    required: PropTypes.bool
   }).isRequired,
   expanded: PropTypes.bool.isRequired
 };

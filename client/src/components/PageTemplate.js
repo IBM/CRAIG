@@ -60,6 +60,7 @@ import {
   formatAclRule,
   formatPgw
 } from "../lib/json-to-iac";
+
 function F5Icon() {
   return <img src={f5} />;
 }
@@ -72,20 +73,19 @@ const navCategories = [
         title: "Resource Groups",
         path: "/form/resourceGroups",
         icon: GroupResource,
-        toTf: resourceGroupTf
+        toTf: resourceGroupTf,
+        required: true
       },
       {
         title: "Access Groups",
         path: "/form/accessGroups",
         icon: GroupAccess,
-        optional: true,
         toTf: iamTf
       },
       {
         title: "IAM Account Settings",
         path: "/form/iamAccountSettings",
         icon: IdManagement,
-        optional: true,
         toTf: formatIamAccountSettings
       }
     ]
@@ -98,14 +98,16 @@ const navCategories = [
         path: "/form/keyManagement",
         icon: IbmCloudKeyProtect,
         field: "key_management",
-        toTf: kmsTf
+        toTf: kmsTf,
+        required: true
       },
       {
         title: "Object Storage",
         path: "/form/objectStorage",
         icon: ObjectStorage,
         field: "cos",
-        toTf: cosTf
+        toTf: cosTf,
+        required: true
       },
       {
         title: "Secrets Manager",
@@ -119,13 +121,13 @@ const navCategories = [
         path: "/form/activityTracker",
         icon: CloudAuditing,
         field: "atracker",
-        toTf: atrackerTf
+        toTf: atrackerTf,
+        required: true
       },
       {
         title: "Event Streams",
         path: "/form/eventStreams",
         icon: IbmCloudEventStreams,
-        optional: true,
         field: "event_streams",
         toTf: config => {
           if (config.event_streams.length > 0) return eventStreamsTf(config);
@@ -136,14 +138,12 @@ const navCategories = [
         title: "App ID",
         path: "/form/appID",
         icon: CloudApp,
-        optional: true,
         toTf: appidTf
       },
       {
         title: "Security Compliance Center",
         path: "/form/securityComplianceCenter",
         icon: IbmCloudSecurityComplianceCenter,
-        optional: true,
         toTf: sccTf
       }
     ]
@@ -165,7 +165,8 @@ const navCategories = [
             tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
           });
           return tfDone(tf);
-        }
+        },
+        required: true
       },
       {
         title: "VPC Access Control",
@@ -184,7 +185,8 @@ const navCategories = [
             tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
           });
           return tfDone(tf);
-        }
+        },
+        required: true
       },
       {
         title: "VPC Subnets",
@@ -200,7 +202,8 @@ const navCategories = [
             tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
           });
           return tfDone(tf);
-        }
+        },
+        required: true
       },
       {
         title: "Transit Gateways",
@@ -212,13 +215,15 @@ const navCategories = [
         title: "Security Groups",
         path: "/form/securityGroups",
         icon: Security,
-        toTf: sgTf
+        toTf: sgTf,
+        required: true
       },
       {
         title: "Virtual Private Endpoints",
         path: "/form/vpe",
         icon: IbmCloudVpcEndpoints,
-        toTf: vpeTf
+        toTf: vpeTf,
+        required: true
       },
       {
         title: "VPN Gateways",
@@ -235,7 +240,8 @@ const navCategories = [
         title: "Clusters",
         path: "/form/clusters",
         icon: IbmCloudKubernetesService,
-        toTf: clusterTf
+        toTf: clusterTf,
+        required: true
       }
     ]
   },
@@ -266,7 +272,12 @@ const navCategories = [
         icon: BastionHost,
         toTf: teleportTf
       },
-      { title: "F5 Big IP", path: "/form/f5BigIP", icon: F5Icon, toTf: f5Tf }
+      {
+        title: "F5 Big IP",
+        path: "/form/f5BigIP",
+        icon: F5Icon,
+        toTf: f5Tf
+      }
     ]
   },
   {
@@ -287,6 +298,7 @@ let pageOrder = [
     path: "/"
   }
 ];
+
 // for each nav category
 navCategories.forEach(category => {
   // for each link
@@ -295,6 +307,7 @@ navCategories.forEach(category => {
     pageOrder.push(link);
   });
 });
+
 pageOrder.push({
   title: "Summary",
   path: "/summary"

@@ -4,11 +4,7 @@ import {
   SideNavItems,
   SideNavLink
 } from "@carbon/react";
-import {
-  Home,
-  Help,
-  Bullhorn,
-} from "@carbon/icons-react";
+import { Home, Help, Bullhorn } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
 import LeftNavItem from "./LeftNavItem";
@@ -57,7 +53,6 @@ const LeftNav = props => {
             {category.links.map(item => (
               <LeftNavItem
                 item={item}
-                optional
                 key={item.title}
                 expanded={props.expanded}
               />
@@ -76,7 +71,7 @@ LeftNav.defaultProps = {
 LeftNav.propTypes = {
   expanded: PropTypes.bool.isRequired,
   onOverlayClick: PropTypes.func.isRequired,
-  navCategories: PropTypes.array.isRequired,
+  navCategories: PropTypes.array.isRequired
 };
 
 export default LeftNav;
