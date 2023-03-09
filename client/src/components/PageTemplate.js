@@ -352,6 +352,7 @@ const PageTemplate = props => {
         hideCodeMirror={props.hideCodeMirror}
         onJsonToggle={() => props.toggleHide("hideCodeMirror")}
         navCategories={navCategories}
+        json={props.json}
       />
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div className={props.hideCodeMirror ? "" : "leftPanelWidth"}>

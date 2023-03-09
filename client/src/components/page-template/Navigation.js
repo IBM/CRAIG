@@ -11,7 +11,7 @@ import {
 import { Reset, Download, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
-
+import { downloadContent } from "../DownloadConfig";
 class Navigation extends React.Component {
   constructor(props) {
     super(props);
@@ -72,7 +72,7 @@ class Navigation extends React.Component {
             <HeaderGlobalAction
               aria-label="Download Environment Terraform"
               isActive
-              onClick={() => alert("Download goes here")}
+              onClick={() => downloadContent(this.props.json)}
               tooltipAlignment="end"
             >
               <Download />
