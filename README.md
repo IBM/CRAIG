@@ -28,6 +28,11 @@ All files                 |     100 |      100 |     100 |     100 | 🏆
  lib                      |     100 |      100 |     100 |     100 | 🏆
   builders.js             |     100 |      100 |     100 |     100 | 🏆
   constants.js            |     100 |      100 |     100 |     100 | 🏆
+ lib/forms                |     100 |      100 |     100 |     100 | 🏆
+  duplicate-name.js       |     100 |      100 |     100 |     100 | 🏆
+  index.js                |     100 |      100 |     100 |     100 | 🏆
+  invalid-callbacks.js    |     100 |      100 |     100 |     100 | 🏆
+  text-callbacks.js       |     100 |      100 |     100 |     100 | 🏆
  lib/json-to-iac          |     100 |      100 |     100 |     100 | 🏆
   appid.js                |     100 |      100 |     100 |     100 | 🏆
   atracker.js             |     100 |      100 |     100 |     100 | 🏆

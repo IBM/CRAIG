@@ -60,6 +60,8 @@ import {
   formatAclRule,
   formatPgw
 } from "../lib/json-to-iac";
+import { IcseFormTemplate, ResourceGroupForm } from "icse-react-assets";
+
 
 function F5Icon() {
   return <img src={f5} />;
@@ -74,6 +76,7 @@ const navCategories = [
         path: "/form/resourceGroups",
         icon: GroupResource,
         toTf: resourceGroupTf,
+        jsonField: "resource_groups",
         required: true
       },
       {
@@ -344,16 +347,18 @@ const PageTemplate = props => {
         };
   }
 
+  let pageObj = props.form
+    ? getObjectFromArray(pageOrder, "path", `/form/${props.form}`)
+    : { toTf: false };
+
   /**
    * get code mirror display
    * @param {string} form name of form
    * @param {Object} json craig config json
    * @returns {string} code to display
    */
-  function getCodeMirrorDisplay(form, json) {
+  function getCodeMirrorDisplay(json) {
     let prettyCraigJson = prettyJSON(json);
-    if (!form) return prettyCraigJson;
-    let pageObj = getObjectFromArray(pageOrder, "path", `/form/${form}`);
     if (pageObj.toTf) {
       return pageObj.toTf(json);
     } else return prettyCraigJson;
@@ -373,7 +378,7 @@ const PageTemplate = props => {
         </div>
         <CraigCodeMirror
           hideCodeMirror={props.hideCodeMirror}
-          code={getCodeMirrorDisplay(props.form, props.json)}
+          code={getCodeMirrorDisplay(props.json)}
         />
       </div>
       <Footer

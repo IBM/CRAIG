@@ -364,4 +364,11 @@ variable "tmos_admin_password" {
       );
     });
   });
+  it("should throw when error", () => {
+    let task = () => configToFilesJson();
+    assert.throws(
+      task,
+      "TypeError: Cannot read properties of undefined (reading 'f5_vsi'"
+    );
+  });
 });

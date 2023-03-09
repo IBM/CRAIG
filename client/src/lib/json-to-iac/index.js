@@ -26,6 +26,7 @@ const {
 const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
 const { vsiTf, lbTf } = require("./vsi");
+const { configToFilesJson } = require("./config-to-files-json");
 
 module.exports = {
   formatPgw,
@@ -58,5 +59,6 @@ module.exports = {
   vpcTf,
   vpeTf,
   vpnTf,
-  vsiTf
+  vsiTf,
+  configToFilesJson
 };

@@ -28,5 +28,17 @@ module.exports = {
         .anyNumber();
     })
     .stringEnd()
-    .done("g")
+    .done("g"),
+  newResourceNameExp: new RegexButWithWords()
+    .stringBegin()
+    .set("A-z")
+    .group(exp => {
+      exp
+        .set("a-z0-9-")
+        .anyNumber()
+        .set("a-z0-9");
+    })
+    .anyNumber()
+    .stringEnd()
+    .done("s")
 };

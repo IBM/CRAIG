@@ -11,7 +11,8 @@ import {
 import { Reset, Download, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
-import { downloadContent } from "../DownloadConfig";
+import { downloadContent } from "./DownloadConfig";
+
 class Navigation extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +28,8 @@ class Navigation extends React.Component {
   }
   // Reset state and redirect to home page
   resetState() {
-    alert("reset state");
+    window.localStorage.removeItem("craigStore");
+    window.localStorage.removeItem("craigDevStore");
     window.location.href = "/";
   }
 
@@ -116,13 +118,13 @@ class Navigation extends React.Component {
 }
 
 Navigation.defaultProps = {
-  hideCodeMirror: false
+  hideCodeMirror: false,
 };
 
 Navigation.propTypes = {
   onJsonToggle: PropTypes.func.isRequired,
   hideCodeMirror: PropTypes.bool.isRequired,
-  navCategories: PropTypes.array.isRequired
+  navCategories: PropTypes.array.isRequired,
 };
 
 export default Navigation;
