@@ -15,7 +15,7 @@ describe("flow logs", () => {
           name: "management",
           resource_group: "slz-management-rg",
           classic_access: false,
-          mandual_address_prefix_management: true,
+          manual_address_prefix_management: true,
           default_network_acl_name: null,
           default_security_group_name: null,
           default_routing_table_name: null,

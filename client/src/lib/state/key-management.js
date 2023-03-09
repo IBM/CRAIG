@@ -1,4 +1,4 @@
-const { splat, revision, carve } = require("lazy-z");
+const { splat } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { buildNewEncryptionKey } = require("../builders");
 const { newDefaultKms } = require("./defaults");

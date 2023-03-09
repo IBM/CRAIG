@@ -64,6 +64,7 @@ All files                 |     100 |      100 |     100 |     100 | 🏆
   options.js              |     100 |      100 |     100 |     100 | 🏆
   resource-groups.js      |     100 |      100 |     100 |     100 | 🏆
   scc.js                  |     100 |      100 |     100 |     100 | 🏆
+  secrets-manager.js      |     100 |      100 |     100 |     100 | 🏆
   security-groups.js      |     100 |      100 |     100 |     100 | 🏆
   ssh-keys.js             |     100 |      100 |     100 |     100 | 🏆
   state.js                |     100 |      100 |     100 |     100 | 🏆

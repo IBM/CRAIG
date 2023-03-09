@@ -142,6 +142,27 @@ const {
   eventStreamsSave,
   eventStreamsDelete
 } = require("./event-streams");
+const {
+  secretsManagerOnStoreUpdate,
+  secretsManagerCreate,
+  secretsManagerSave,
+  secretsManagerDelete
+} = require("./secrets-manager");
+const {
+  iamInit,
+  iamSave,
+  accessGroupInit,
+  accessGroupOnStoreUpdate,
+  accessGroupCreate,
+  accessGroupSave,
+  accessGroupDelete,
+  accessGroupPolicyCreate,
+  accessGroupPolicySave,
+  accessGroupPolicyDelete,
+  accessGroupDynamicPolicyCreate,
+  accessGroupDynamicPolicySave,
+  accessGroupDynamicPolicyDelete
+} = require("./iam");
 
 const state = function() {
   let store = new lazyZstate({
@@ -411,6 +432,41 @@ const state = function() {
     create: eventStreamsCreate,
     save: eventStreamsSave,
     delete: eventStreamsDelete
+  });
+
+  store.newField("secrets_manager", {
+    init: config => {
+      config.store.json.secrets_manager = [];
+    },
+    onStoreUpdate: secretsManagerOnStoreUpdate,
+    create: secretsManagerCreate,
+    save: secretsManagerSave,
+    delete: secretsManagerDelete
+  });
+
+  store.newField("iam_account_settings", {
+    init: iamInit,
+    save: iamSave
+  });
+
+  store.newField("access_groups", {
+    init: accessGroupInit,
+    onStoreUpdate: accessGroupOnStoreUpdate,
+    create: accessGroupCreate,
+    save: accessGroupSave,
+    delete: accessGroupDelete,
+    subComponents: {
+      policies: {
+        create: accessGroupPolicyCreate,
+        save: accessGroupPolicySave,
+        delete: accessGroupPolicyDelete
+      },
+      dynamic_policies: {
+        create: accessGroupDynamicPolicyCreate,
+        save: accessGroupDynamicPolicySave,
+        delete: accessGroupDynamicPolicyDelete
+      }
+    }
   });
 
   return store;
