@@ -47,45 +47,49 @@ function newDefaultCos() {
     {
       buckets: [
         {
-          endpoint_type: "public",
+          endpoint: "public",
           force_delete: true,
           kms_key: "atracker-key",
           name: "atracker-bucket",
-          storage_class: "standard"
+          storage_class: "standard",
+          use_random_suffix: true
         }
       ],
       keys: [
         {
           name: "cos-bind-key",
           role: "Writer",
-          enable_HMAC: false
+          enable_hmac: false,
+          use_random_suffix: true
         }
       ],
       name: "atracker-cos",
       plan: "standard",
       resource_group: "service-rg",
       use_data: false,
-      random_suffix: true,
+      use_random_suffix: true,
       kms: "kms"
     },
     {
       buckets: [
         {
-          endpoint_type: "public",
+          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "management-bucket",
-          storage_class: "standard"
+          storage_class: "standard",
+          use_random_suffix: true
         },
         {
-          endpoint_type: "public",
+          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "workload-bucket",
-          storage_class: "standard"
+          storage_class: "standard",
+          use_random_suffix: true
         }
       ],
-      random_suffix: true,
+      use_random_suffix: true,
       keys: [],
       name: "cos",
       plan: "standard",

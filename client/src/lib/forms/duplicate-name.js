@@ -19,6 +19,12 @@ function hasDuplicateName(field, stateData, componentProps) {
     componentProps.craig.store.json.key_management.forEach(instance => {
       allOtherNames = allOtherNames.concat(splat(instance.keys, "name"));
     });
+  } else if (field === "buckets" || field === "cos_keys") {
+    componentProps.craig.store.json.object_storage.forEach(instance => {
+      allOtherNames = allOtherNames.concat(
+        splat(instance[field === "cos_keys" ? "keys" : "buckets"], "name")
+      );
+    });
   } else allOtherNames = splat(componentProps.craig.store.json[field], "name");
   if (contains(allOtherNames, componentProps.data.name))
     allOtherNames.splice(allOtherNames.indexOf(componentProps.data.name), 1);

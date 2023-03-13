@@ -5,11 +5,11 @@ const {
   pushAndUpdate,
   updateChild,
   carveChild,
-  pushToChildField,
   updateSubChild,
   deleteSubChild,
   setUnfoundResourceGroup,
-  setUnfoundEncryptionKey
+  setUnfoundEncryptionKey,
+  pushToChildFieldModal
 } = require("./store.utils");
 
 /**
@@ -22,6 +22,12 @@ const {
  */
 function cosSetStoreBucketsAndKeys(config, instanceCallback) {
   config.store.json.object_storage.forEach(instance => {
+    instance.buckets.forEach(bucket => {
+      bucket.use_random_suffix = instance.use_random_suffix;
+    });
+    instance.keys.forEach(key => {
+      key.use_random_suffix = instance.use_random_suffix;
+    });
     // add all bucket names from instance to buckets
     config.store.cosBuckets = config.store.cosBuckets.concat(
       splat(instance.buckets, "name")
@@ -111,7 +117,13 @@ function cosSave(config, stateData, componentProps) {
  */
 function cosBucketCreate(config, stateData, componentProps) {
   delete stateData.showBucket;
-  pushToChildField(config, "object_storage", "buckets", stateData, componentProps);
+  pushToChildFieldModal(
+    config,
+    "object_storage",
+    "buckets",
+    stateData,
+    componentProps
+  );
 }
 
 /**
@@ -127,13 +139,20 @@ function cosBucketCreate(config, stateData, componentProps) {
  * @param {string} componentProps.data.name
  */
 function cosBucketSave(config, stateData, componentProps) {
-  updateSubChild(config, "object_storage", "buckets", stateData, componentProps, slz => {
-    if (
-      config.store.json.atracker.collector_bucket_name ===
-      componentProps.data.name
-    )
-      config.store.json.atracker.collector_bucket_name = stateData.name;
-  });
+  updateSubChild(
+    config,
+    "object_storage",
+    "buckets",
+    stateData,
+    componentProps,
+    config => {
+      if (
+        config.store.json.atracker.collector_bucket_name ===
+        componentProps.data.name
+      )
+        config.store.json.atracker.collector_bucket_name = stateData.name;
+    }
+  );
 }
 
 /**
@@ -153,7 +172,13 @@ function cosBucketDelete(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cosKeyCreate(config, stateData, componentProps) {
-  pushToChildField(config, "object_storage", "keys", stateData, componentProps);
+  pushToChildFieldModal(
+    config,
+    "object_storage",
+    "keys",
+    stateData,
+    componentProps
+  );
 }
 
 /**

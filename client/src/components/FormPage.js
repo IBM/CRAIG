@@ -2,7 +2,8 @@ import React from "react";
 import {
   IcseFormTemplate,
   ResourceGroupForm,
-  KeyManagementForm
+  KeyManagementForm,
+  ObjectStorageForm
 } from "icse-react-assets";
 import {
   resourceGroupHelperTextCallback,
@@ -10,7 +11,8 @@ import {
   propsMatchState,
   disableSave,
   invalidName,
-  invalidEncryptionKeyRing
+  invalidEncryptionKeyRing,
+  cosResourceHelperTextCallback
 } from "../lib/forms";
 import PropTypes from "prop-types";
 import { splat } from "lazy-z";
@@ -21,7 +23,7 @@ import { splat } from "lazy-z";
  * @returns {Object} form template props
  */
 function formTemplateProps(form, craig) {
-  if (form === "resourceGroups")
+  if (form === "resourceGroups") {
     return {
       name: "Resource Groups",
       addText: "Create a Resource Group",
@@ -49,7 +51,7 @@ function formTemplateProps(form, craig) {
         submissionFieldName: "resource_groups"
       }
     };
-  if (form === "keyManagement")
+  } else if (form === "keyManagement") {
     return {
       name: "Key Management",
       addText: "Create a Key Management Service",
@@ -59,13 +61,13 @@ function formTemplateProps(form, craig) {
       onDelete: craig.key_management.delete,
       onSave: craig.key_management.save,
       onSubmit: craig.key_management.create,
-      resourceGroups: splat(craig.store.json.resource_groups, "name"),
       propsMatchState: propsMatchState,
       deleteDisabled: () => {
         return craig.store.json.key_management.length === 1;
       },
       deleteDisabledMessage: "Cannot delete only Key Management instance",
       innerFormProps: {
+        resourceGroups: splat(craig.store.json.resource_groups, "name"),
         craig: craig,
         disableSave: invalidName("key_management"),
         invalidCallback: invalidName("key_management"),
@@ -89,6 +91,54 @@ function formTemplateProps(form, craig) {
         submissionFieldName: "key_management"
       }
     };
+  } else if (form === "objectStorage") {
+    return {
+      name: "Object Storage",
+      addText: "Create an Object Storage Service",
+      arrayData: craig.store.json.object_storage,
+      innerForm: ObjectStorageForm,
+      disableSave: disableSave,
+      onDelete: craig.object_storage.delete,
+      onSave: craig.object_storage.save,
+      onSubmit: craig.object_storage.create,
+      propsMatchState: propsMatchState,
+      innerFormProps: {
+        craig: craig,
+        composedNameCallback: cosResourceHelperTextCallback,
+        resourceGroups: splat(craig.store.json.resource_groups, "name"),
+        kmsList: splat(craig.store.json.key_management, "name"),
+        disableSave: invalidName("object_storage"),
+        invalidCallback: invalidName("object_storage"),
+        invalidTextCallback: invalidNameText("object_storage"),
+        invalidKeyCallback: invalidName("cos_keys"),
+        invalidKeyTextCallback: invalidNameText("cos_keys"),
+        propsMatchState: propsMatchState,
+        invalidBucketCallback: invalidName("buckets"),
+        invalidBucketTextCallback: invalidNameText("buckets"),
+        propsMatchState: propsMatchState,
+        keyProps: {
+          onSave: craig.object_storage.keys.save,
+          onDelete: craig.object_storage.keys.delete,
+          onSubmit: craig.object_storage.keys.create,
+          disableSave: disableSave,
+          craig: craig
+        },
+        bucketProps: {
+          onSave: craig.object_storage.buckets.save,
+          onDelete: craig.object_storage.buckets.delete,
+          onSubmit: craig.object_storage.buckets.create,
+          disableSave: disableSave,
+          craig: craig,
+          encryptionKeys: craig.store.encryptionKeys
+        }
+      },
+      toggleFormProps: {
+        hideName: true,
+        submissionFieldName: "object_storage",
+        hide: false
+      }
+    };
+  }
 }
 
 export const FormPage = props => {

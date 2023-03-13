@@ -2,7 +2,8 @@ const { assert } = require("chai");
 const {
   resourceGroupHelperTextCallback,
   genericNameCallback,
-  invalidNameText
+  invalidNameText,
+  cosResourceHelperTextCallback,
 } = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {
@@ -118,6 +119,55 @@ describe("text callbacks", () => {
         actualData,
         "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
         "it should return correct message"
+      );
+    });
+  });
+  describe("cosResourceHelperTextCallback", () => {
+    it("should return text if using data", () => {
+      assert.deepEqual(
+        cosResourceHelperTextCallback({ use_data: true, name: "test" }),
+        "test",
+        "it should display data"
+      );
+    });
+    it("should return text if not using data and with random suffix", () => {
+      assert.deepEqual(
+        cosResourceHelperTextCallback(
+          { use_data: false, use_random_suffix: true, name: "test" },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "test",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "test-test-<random-suffix>",
+        "it should display data"
+      );
+    });
+    it("should return text if not using data and without random suffix", () => {
+      assert.deepEqual(
+        cosResourceHelperTextCallback(
+          { use_data: false, use_random_suffix: false, name: "test" },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "test",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "test-test",
+        "it should display data"
       );
     });
   });

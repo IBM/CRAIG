@@ -8,7 +8,14 @@ import {
   Modal,
   Theme
 } from "@carbon/react";
-import { Reset, Download, Code, CodeHide } from "@carbon/icons-react";
+import {
+  Reset,
+  Download,
+  Code,
+  CodeHide,
+  Script,
+  Json
+} from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "./DownloadConfig";
@@ -71,6 +78,20 @@ class Navigation extends React.Component {
             >
               {this.props.hideCodeMirror ? <Code /> : <CodeHide />}
             </HeaderGlobalAction>
+            {this.props.hideCodeMirror === false && (
+              <HeaderGlobalAction
+                aria-label={
+                  this.props.jsonInCodeMirror
+                    ? "Show Terraform Code"
+                    : "Show JSON Configuration"
+                }
+                isActive
+                onClick={() => this.props.onTypeToggle()}
+                tooltipAlignment="end"
+              >
+                {this.props.jsonInCodeMirror ? <Script /> : <Json />}
+              </HeaderGlobalAction>
+            )}
             <HeaderGlobalAction
               aria-label="Download Environment Terraform"
               isActive
@@ -118,13 +139,13 @@ class Navigation extends React.Component {
 }
 
 Navigation.defaultProps = {
-  hideCodeMirror: false,
+  hideCodeMirror: false
 };
 
 Navigation.propTypes = {
   onJsonToggle: PropTypes.func.isRequired,
   hideCodeMirror: PropTypes.bool.isRequired,
-  navCategories: PropTypes.array.isRequired,
+  navCategories: PropTypes.array.isRequired
 };
 
 export default Navigation;

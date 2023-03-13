@@ -12,7 +12,20 @@ const {
  * @returns {boolean} true if match
  */
 function disableSave(field, stateData, componentProps) {
-  if (field === "encryption_keys") {
+  if (field === "object_storage") {
+    return (
+      invalidName("object_storage")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.kms) ||
+      isNullOrEmptyString(stateData.resource_group)
+    );
+  } else if (field === "buckets") {
+    return (
+      invalidName("buckets")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.kms_key)
+    );
+  } else if (field === "cos_keys") {
+    return invalidName("cos_keys")(stateData, componentProps);
+  } else if (field === "encryption_keys") {
     return (
       invalidName("encryption_keys")(stateData, componentProps) ||
       invalidEncryptionKeyRing(stateData)

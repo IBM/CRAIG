@@ -178,7 +178,8 @@ const state = function() {
       cosBuckets: [],
       cosKeys: [],
       hideCodeMirror: false,
-      hideFooter: false
+      hideFooter: false,
+      jsonInCodeMirror: false
     },
     _no_default: []
   });

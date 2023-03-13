@@ -1,7 +1,8 @@
 const {
   resourceGroupHelperTextCallback,
   genericNameCallback,
-  invalidNameText
+  invalidNameText,
+  cosResourceHelperTextCallback
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -17,5 +18,6 @@ module.exports = {
   propsMatchState,
   disableSave,
   invalidNameText,
-  invalidEncryptionKeyRing
+  invalidEncryptionKeyRing,
+  cosResourceHelperTextCallback
 };

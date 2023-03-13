@@ -58,9 +58,23 @@ function invalidNameText(field) {
   };
 }
 
+/**
+ * get cos resource helper text
+ * @param {*} stateData
+ * @returns {string} composed helper text
+ */
+function cosResourceHelperTextCallback(stateData, componentProps) {
+  return `${
+    stateData.use_data
+      ? ""
+      : componentProps.craig.store.json._options.prefix + "-"
+  }${stateData.name}${stateData.use_random_suffix ? "-<random-suffix>" : ""}`;
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
   duplicateNameCallback,
   invalidNameText,
+  cosResourceHelperTextCallback
 };

@@ -55,7 +55,7 @@ describe("atracker", () => {
           name: "frog",
         },
         {
-          arrayParentName: "cos",
+          arrayParentName: "cos",arrayData: state.store.json.object_storage[0].keys 
         }
       );
       // save with different key

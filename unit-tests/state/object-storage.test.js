@@ -19,45 +19,49 @@ describe("object_storage", () => {
         {
           buckets: [
             {
-              endpoint_type: "public",
+              endpoint: "public",
               force_delete: true,
               kms_key: "atracker-key",
               name: "atracker-bucket",
               storage_class: "standard",
+              use_random_suffix: true,
             },
           ],
           keys: [
             {
               name: "cos-bind-key",
               role: "Writer",
-              enable_HMAC: false,
+              enable_hmac: false,
+              use_random_suffix: true,
             },
           ],
           name: "atracker-cos",
           plan: "standard",
           resource_group: "service-rg",
           use_data: false,
-          random_suffix: true,
+          use_random_suffix: true,
           kms: "kms",
         },
         {
           buckets: [
             {
-              endpoint_type: "public",
+              endpoint: "public",
               force_delete: true,
               kms_key: "key",
               name: "management-bucket",
               storage_class: "standard",
+              use_random_suffix: true,
             },
             {
-              endpoint_type: "public",
+              endpoint: "public",
               force_delete: true,
               kms_key: "key",
               name: "workload-bucket",
               storage_class: "standard",
+              use_random_suffix: true,
             },
           ],
-          random_suffix: true,
+          use_random_suffix: true,
           keys: [],
           name: "cos",
           plan: "standard",
@@ -81,14 +85,14 @@ describe("object_storage", () => {
         use_data: false,
         resource_group: "default",
         plan: "standard",
-        random_suffix: true,
+        use_random_suffix: true,
       });
       let expectedData = {
         name: "todd",
         use_data: false,
         resource_group: null,
         plan: "standard",
-        random_suffix: true,
+        use_random_suffix: true,
         keys: [],
         buckets: [],
       };
@@ -168,7 +172,7 @@ describe("object_storage", () => {
 
         state.object_storage.buckets.create(
           {
-            endpoint_type: "public",
+            endpoint: "public",
             force_delete: true,
             kms_key: "atracker-key",
             name: "todd",
@@ -177,14 +181,16 @@ describe("object_storage", () => {
           },
           {
             arrayParentName: "atracker-cos",
+            arrayData: state.store.json.object_storage[0].buckets,
           }
         );
         let expectedData = {
-          endpoint_type: "public",
+          endpoint: "public",
           force_delete: true,
           kms_key: "atracker-key",
           name: "todd",
           storage_class: "standard",
+          use_random_suffix: true,
         };
         assert.deepEqual(
           state.store.json.object_storage[0].buckets[1],
@@ -202,7 +208,7 @@ describe("object_storage", () => {
         };
         state.object_storage.buckets.save(
           {
-            endpoint_type: "public",
+            endpoint: "public",
             force_delete: true,
             kms_key: "atracker-key",
             name: "todd",
@@ -214,11 +220,12 @@ describe("object_storage", () => {
           }
         );
         let expectedData = {
-          endpoint_type: "public",
+          endpoint: "public",
           force_delete: true,
           kms_key: "atracker-key",
           name: "todd",
           storage_class: "standard",
+          use_random_suffix: true,
         };
         assert.deepEqual(
           state.store.json.object_storage[1].buckets[0],
@@ -233,7 +240,7 @@ describe("object_storage", () => {
         };
         state.object_storage.buckets.save(
           {
-            endpoint_type: "public",
+            endpoint: "public",
             force_delete: true,
             kms_key: "atracker-key",
             name: "todd",
@@ -257,7 +264,7 @@ describe("object_storage", () => {
         };
         state.object_storage.buckets.save(
           {
-            endpoint_type: "public",
+            endpoint: "public",
             force_delete: true,
             kms_key: "atracker-key",
             name: "management-bucket",
@@ -269,11 +276,12 @@ describe("object_storage", () => {
           }
         );
         let expectedData = {
-          endpoint_type: "public",
+          endpoint: "public",
           force_delete: true,
           kms_key: "atracker-key",
           name: "management-bucket",
           storage_class: "standard",
+          use_random_suffix: true,
         };
         assert.deepEqual(
           state.store.json.object_storage[1].buckets[0],
@@ -305,17 +313,19 @@ describe("object_storage", () => {
           {
             name: "todd",
             role: "Writer",
-            enable_HMAC: false,
+            enable_hmac: false,
           },
           {
             arrayParentName: "cos",
+            arrayData: state.store.json.object_storage[1].keys,
           }
         );
         assert.deepEqual(state.store.json.object_storage[1].keys, [
           {
             name: "todd",
             role: "Writer",
-            enable_HMAC: false,
+            enable_hmac: false,
+            use_random_suffix: true,
           },
         ]);
       });
@@ -336,7 +346,8 @@ describe("object_storage", () => {
           {
             name: "todd",
             role: "Writer",
-            enable_HMAC: false,
+            enable_hmac: false,
+            use_random_suffix: true,
           },
         ]);
         assert.deepEqual(
@@ -352,9 +363,12 @@ describe("object_storage", () => {
           {
             name: "boo",
             role: "Writer",
-            enable_HMAC: false,
+            enable_hmac: false,
           },
-          { arrayParentName: "cos" }
+          {
+            arrayParentName: "cos",
+            arrayData: state.store.json.object_storage[1].keys,
+          }
         );
         state.object_storage.keys.save(
           { name: "todd" },
@@ -364,7 +378,8 @@ describe("object_storage", () => {
           {
             name: "todd",
             role: "Writer",
-            enable_HMAC: false,
+            enable_hmac: false,
+            use_random_suffix: true,
           },
         ]);
       });
@@ -381,7 +396,8 @@ describe("object_storage", () => {
           {
             name: "cos-bind-key",
             role: "Writer",
-            enable_HMAC: false,
+            enable_hmac: false,
+            use_random_suffix: true,
           },
         ]);
       });

@@ -1,4 +1,4 @@
-const { revision, carve, contains } = require("lazy-z");
+const { revision, carve, contains, deepEqual, splat } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 
 /**
@@ -116,6 +116,36 @@ function pushToChildField(config, field, subField, stateData, componentProps) {
 }
 
 /**
+ * push to an array of objects within an array of objects
+ * @param {lazyZstate} config state store
+ * @param {string} field top level field name (ex. vpcs)
+ * @param {string} subField name of the field within the parent object
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ * @param {string} componentProps.arrayParentName name of the parent object where child will be stored
+ */
+function pushToChildFieldModal(
+  config,
+  field,
+  subField,
+  stateData,
+  componentProps
+) {
+  config.store.json[field].forEach(instance => {
+    if (
+      deepEqual(
+        splat(instance[subField], "name"),
+        splat(componentProps.arrayData, "name")
+      )
+    ) {
+      pushToChildField(config, field, subField, stateData, {
+        arrayParentName: instance.name
+      });
+    }
+  });
+}
+
+/**
  * delete an object from an array of objects within an array of objects
  * @param {lazyZstate} config state store
  * @param {string} field top level field name (ex. vpcs)
@@ -172,5 +202,6 @@ module.exports = {
   updateSubChild,
   pushToChildField,
   deleteSubChild,
-  hasUnfoundVpc
+  hasUnfoundVpc,
+  pushToChildFieldModal
 };

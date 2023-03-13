@@ -60,8 +60,6 @@ import {
   formatAclRule,
   formatPgw
 } from "../lib/json-to-iac";
-import { IcseFormTemplate, ResourceGroupForm } from "icse-react-assets";
-
 
 function F5Icon() {
   return <img src={f5} />;
@@ -102,7 +100,8 @@ const navCategories = [
         icon: IbmCloudKeyProtect,
         field: "key_management",
         toTf: kmsTf,
-        required: true
+        required: true,
+        jsonField: "key_management"
       },
       {
         title: "Object Storage",
@@ -110,7 +109,8 @@ const navCategories = [
         icon: ObjectStorage,
         field: "cos",
         toTf: cosTf,
-        required: true
+        required: true,
+        jsonField: "object_storage"
       },
       {
         title: "Secrets Manager",
@@ -353,15 +353,16 @@ const PageTemplate = props => {
 
   /**
    * get code mirror display
-   * @param {string} form name of form
    * @param {Object} json craig config json
+   * @param {boolean} jsonInCodeMirror true if displaying json in code mirror
    * @returns {string} code to display
    */
-  function getCodeMirrorDisplay(json) {
-    let prettyCraigJson = prettyJSON(json);
-    if (pageObj.toTf) {
+  function getCodeMirrorDisplay(json, jsonInCodeMirror) {
+    if (jsonInCodeMirror) {
+      return prettyJSON(json[pageObj.jsonField]);
+    } else if (pageObj.toTf) {
       return pageObj.toTf(json);
-    } else return prettyCraigJson;
+    } else return  prettyJSON(json);
   }
 
   return (
@@ -369,8 +370,10 @@ const PageTemplate = props => {
       <Navigation
         hideCodeMirror={props.hideCodeMirror}
         onJsonToggle={() => props.toggleHide("hideCodeMirror")}
+        onTypeToggle={() => props.toggleHide("jsonInCodeMirror")}
         navCategories={navCategories}
         json={props.json}
+        jsonInCodeMirror={props.jsonInCodeMirror}
       />
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div className={props.hideCodeMirror ? "" : "leftPanelWidth"}>
@@ -378,7 +381,7 @@ const PageTemplate = props => {
         </div>
         <CraigCodeMirror
           hideCodeMirror={props.hideCodeMirror}
-          code={getCodeMirrorDisplay(props.json)}
+          code={getCodeMirrorDisplay(props.json, props.jsonInCodeMirror)}
         />
       </div>
       <Footer
@@ -392,14 +395,16 @@ const PageTemplate = props => {
 
 PageTemplate.defaultProps = {
   hideFooter: false,
-  hideCodeMirror: false
+  hideCodeMirror: false,
+  jsonInCodeMirror: false
 };
 
 PageTemplate.propTypes = {
   code: PropTypes.string, // can be null or undefined
   hideCodeMirror: PropTypes.bool.isRequired,
   hideFooter: PropTypes.bool.isRequired,
-  toggleHide: PropTypes.func.isRequired
+  toggleHide: PropTypes.func.isRequired,
+  jsonInCodeMirror: PropTypes.bool.isRequired
 };
 
 export default PageTemplate;

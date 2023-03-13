@@ -29,6 +29,7 @@ class Craig extends React.Component {
       this.state = {
         hideCodeMirror: craig.store.hideCodeMirror,
         hideFooter: craig.store.hideFooter,
+        jsonInCodeMirror: craig.store.jsonInCodeMirror,
         notifcations: [],
         storeName: storeName,
         store: craig.store
@@ -92,11 +93,12 @@ class Craig extends React.Component {
           nav={this.props.craigRouter.nav}
           form={this.props.params.form}
           storeName={this.state.storeName}
+          jsonInCodeMirror={this.state.jsonInCodeMirror}
         >
           {!this.props.params.form ? (
             <h1>hi i'm craig</h1>
           ) : contains(
-              ["resourceGroups", "keyManagement"],
+              ["resourceGroups", "keyManagement", "objectStorage"],
               this.props.params.form
             ) ? (
             <FormPage craig={craig} form={this.props.params.form} />
