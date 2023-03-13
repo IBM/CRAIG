@@ -1,17 +1,21 @@
 const {
   resourceGroupHelperTextCallback,
   genericNameCallback,
-  resourceGroupInvalidTextCallback
+  invalidNameText
 } = require("./text-callbacks");
-const { invalidResourceGroupNameCallback } = require("./invalid-callbacks");
+const {
+  invalidName,
+  invalidEncryptionKeyRing
+} = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const { disableSave } = require("./disable-save");
 
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
-  invalidResourceGroupNameCallback,
-  resourceGroupInvalidTextCallback,
+  invalidName,
   propsMatchState,
-  disableSave
+  disableSave,
+  invalidNameText,
+  invalidEncryptionKeyRing
 };

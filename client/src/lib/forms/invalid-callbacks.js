@@ -11,21 +11,42 @@ function validNewResourceName(str) {
 }
 
 /**
- * create invalid bool for resource group
- * @param {Object} stateData
- * @param {boolean} stateData.use_data
- * @param {string} stateData.name
- * @param {Object} componentProps
- * @returns {boolean} text should be invalid
+ * create invalid bool for resource
+ * @param {string} field json field name
+ * @returns {Function} text should be invalid function
  */
-function invalidResourceGroupNameCallback(stateData, componentProps) {
+function invalidName(field) {
+  /**
+   * create invalid for resource
+   * @param {Object} stateData
+   * @param {boolean} stateData.use_prefix
+   * @param {Object} componentProps
+   * @returns {string} invalid text
+   */
+  return function(stateData, componentProps) {
+    return (
+      hasDuplicateName(field, stateData, componentProps) ||
+      stateData.name === "" ||
+      (stateData.use_data === false && validNewResourceName(stateData.name))
+    );
+  };
+}
+
+/**
+ * invalid encryption key ring name
+ * @param {Object} stateData
+ * @param {string} stateData.key_ring
+ * @return {boolean} true if invalid
+ */
+function invalidEncryptionKeyRing(stateData) {
   return (
-    hasDuplicateName("resource_groups", stateData, componentProps) ||
-    stateData.name === "" ||
-    (stateData.use_data === false && validNewResourceName(stateData.name))
+    stateData.key_ring !== "" &&
+    validNewResourceName(stateData.key_ring)
   );
 }
 
 module.exports = {
-  invalidResourceGroupNameCallback
+  invalidName,
+  validNewResourceName,
+  invalidEncryptionKeyRing
 };

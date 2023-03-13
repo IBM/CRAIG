@@ -2,7 +2,7 @@ const { assert } = require("chai");
 const {
   resourceGroupHelperTextCallback,
   genericNameCallback,
-  resourceGroupInvalidTextCallback,
+  invalidNameText
 } = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {
@@ -57,9 +57,9 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("resourceGroupInvalidTextCallback", () => {
+  describe("invalidNameText", () => {
     it("should return the correct text when a duplicate name is passed", () => {
-      let actualData = resourceGroupInvalidTextCallback(
+      let actualData = invalidNameText("resource_groups")(
         {
           name: "test",
         },
@@ -90,7 +90,7 @@ describe("text callbacks", () => {
       );
     });
     it("should return the correct text when an otherwise invalid name is passed", () => {
-      let actualData = resourceGroupInvalidTextCallback(
+      let actualData = invalidNameText("resource_groups")(
         {
           name: "AAAAAA",
         },

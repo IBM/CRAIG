@@ -20,6 +20,9 @@ const constants = require("./constants");
  * @returns {string} composed resource group
  */
 function rgIdRef(groupName, config) {
+  if (groupName === null) {
+    return "ERROR: Unfound Ref";
+  }
   let rg = getObjectFromArray(config.resource_groups, "name", groupName);
   let rgId = `ibm_resource_group.${snakeCase(groupName)}.id`;
   if (rg.use_data) {

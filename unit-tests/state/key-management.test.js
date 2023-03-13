@@ -216,13 +216,17 @@ describe("key_management", () => {
     describe("key_management.keys.create", () => {
       it("should create a new key", () => {
         let state = new newState();
+        state.store.json.key_management.push({
+          name: "frog",
+          keys: []
+        })
         state.key_management.keys.create(
           {
             name: "all-new-key",
             root_key: true,
             key_ring: "all-new-ring",
           },
-          { arrayParentName: "kms", data: { name: "key" } }
+          { arrayParentName: "kms", arrayData: state.store.json.key_management[0].keys }
         );
         let expectedData = {
           name: "all-new-key",

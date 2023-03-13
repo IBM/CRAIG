@@ -39,21 +39,28 @@ function duplicateNameCallback(name) {
 }
 
 /**
- * create invalid text for resource group name
- * @param {Object} stateData
- * @param {boolean} stateData.use_prefix
- * @param {Object} componentProps
- * @returns {string} invalid text
+ * create invalid text
+ * @param {string} field json field name
+ * @returns {Function} text should be invalid function
  */
-function resourceGroupInvalidTextCallback(stateData, componentProps) {
-  if (hasDuplicateName("resource_groups", stateData, componentProps)) {
-    return duplicateNameCallback(stateData.name);
-  } else return genericNameCallback();
+function invalidNameText(field) {
+  /**
+   * create invalid text for name
+   * @param {Object} stateData
+   * @param {boolean} stateData.use_prefix
+   * @param {Object} componentProps
+   * @returns {string} invalid text
+   */
+  return function(stateData, componentProps) {
+    if (hasDuplicateName(field, stateData, componentProps)) {
+      return duplicateNameCallback(stateData.name);
+    } else return genericNameCallback();
+  };
 }
 
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
   duplicateNameCallback,
-  resourceGroupInvalidTextCallback
+  invalidNameText,
 };

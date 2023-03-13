@@ -1,4 +1,4 @@
-const { splat } = require("lazy-z");
+const { splat, deepEqual } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { buildNewEncryptionKey } = require("../builders");
 const { newDefaultKms } = require("./defaults");
@@ -123,8 +123,18 @@ function setEncryptionKeys(config) {
  */
 function kmsKeyCreate(config, stateData, componentProps) {
   let newKey = buildNewEncryptionKey(stateData);
-  // this needs to know which key management instance - in array
-  pushToChildField(config, "key_management", "keys", newKey, componentProps);
+  config.store.json.key_management.forEach(instance => {
+    if (
+      deepEqual(
+        splat(instance.keys, "name"),
+        splat(componentProps.arrayData, "name")
+      )
+    ) {
+      pushToChildField(config, "key_management", "keys", newKey, {
+        arrayParentName: instance.name
+      });
+    }
+  });
 }
 
 /**

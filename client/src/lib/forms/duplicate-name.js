@@ -14,8 +14,14 @@ const { splat, contains } = require("lazy-z");
  * @returns {boolean} true if has duplicate name
  */
 function hasDuplicateName(field, stateData, componentProps) {
-  let allOtherNames = splat(componentProps.craig.store.json[field], "name");
-  allOtherNames.splice(allOtherNames.indexOf(componentProps.data.name), 1);
+  let allOtherNames = [];
+  if (field === "encryption_keys") {
+    componentProps.craig.store.json.key_management.forEach(instance => {
+      allOtherNames = allOtherNames.concat(splat(instance.keys, "name"));
+    });
+  } else allOtherNames = splat(componentProps.craig.store.json[field], "name");
+  if (contains(allOtherNames, componentProps.data.name))
+    allOtherNames.splice(allOtherNames.indexOf(componentProps.data.name), 1);
   return contains(allOtherNames, stateData.name);
 }
 

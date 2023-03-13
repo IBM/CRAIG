@@ -1,12 +1,12 @@
 const { assert } = require("chai");
 const {
-  invalidResourceGroupNameCallback,
+  invalidName,
 } = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
-  describe("invalidResourceGroupNameCallback", () => {
+  describe("invalidName", () => {
     it("should return true if resource group has a duplicate name", () => {
-      let actualData = invalidResourceGroupNameCallback(
+      let actualData = invalidName("resource_groups")(
         {
           name: "test",
         },
@@ -33,7 +33,7 @@ describe("invalid callbacks", () => {
       assert.isTrue(actualData, "it should be true");
     });
     it("should return true if resource group has empty string as name", () => {
-      let actualData = invalidResourceGroupNameCallback(
+      let actualData = invalidName("resource_groups")(
         {
           name: "",
         },
@@ -60,7 +60,7 @@ describe("invalid callbacks", () => {
       assert.isTrue(actualData, "it should be true");
     });
     it("should return true if resource group is not using data and name invalid", () => {
-      let actualData = invalidResourceGroupNameCallback(
+      let actualData = invalidName("resource_groups")(
         {
           name: "AAA",
           use_data: false,
