@@ -1,7 +1,11 @@
 .leftPanelWidth {
   width: 62%;
+  max-width: 62%; /* do not expand any larger or allow overflow above 62% */
   margin-right: 2rem;
-  max-width: 62vw;
+}
+
+.widthOneHundredPercent {
+  width: 100%;
 }
 
 /* Alignment */

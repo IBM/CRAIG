@@ -362,7 +362,7 @@ const PageTemplate = props => {
       return prettyJSON(json[pageObj.jsonField]);
     } else if (pageObj.toTf) {
       return pageObj.toTf(json);
-    } else return  prettyJSON(json);
+    } else return prettyJSON(json);
   }
 
   return (
@@ -376,7 +376,11 @@ const PageTemplate = props => {
         jsonInCodeMirror={props.jsonInCodeMirror}
       />
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
-        <div className={props.hideCodeMirror ? "" : "leftPanelWidth"}>
+        <div
+          className={
+            props.hideCodeMirror ? "widthOneHundredPercent" : "leftPanelWidth"
+          }
+        >
           {props.children}
         </div>
         <CraigCodeMirror

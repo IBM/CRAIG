@@ -1,5 +1,5 @@
 .rightPanelWidth {
-  min-width: 35%;
+  width: 38%;
+  min-width: 38%; /* do not resize when json code mirror can be smaller */
   text-align: left;
-  max-width: 50%;
 }

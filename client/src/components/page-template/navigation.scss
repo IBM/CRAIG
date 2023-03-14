@@ -46,16 +46,6 @@
   color: red;
 }
 
-.cds--side-nav__overlay-active {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(22, 22, 22, 0.5);
-  background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
-  opacity: 1;
-  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1),
-    background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
-}
-
 a.cds--side-nav__link {
   outline: none !important;
   border: none !important;
@@ -72,16 +62,6 @@ a.cds--side-nav__link {
 
 .cds--side-nav.rail {
   width: 3rem;
-}
-
-.cds--side-nav__overlay-active {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(22, 22, 22, 0.5);
-  background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
-  opacity: 1;
-  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1),
-    background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
 }
 
 a.cds--side-nav__link {
@@ -131,4 +111,13 @@ a.cds--side-nav__link {
 // links take up whole sidenav
 .cds--side-nav__link.expanded {
   width: 16rem; // full width
+}
+
+div .cds--side-nav__overlay-active { /* specify application to div to raise class priority */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(22, 22, 22, 0.5);
+  background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1), background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
 }
