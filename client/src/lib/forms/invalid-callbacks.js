@@ -27,7 +27,7 @@ function invalidName(field) {
     return (
       hasDuplicateName(field, stateData, componentProps) ||
       stateData.name === "" ||
-      (stateData.use_data === false && validNewResourceName(stateData.name))
+      (!stateData.use_data && validNewResourceName(stateData.name))
     );
   };
 }
@@ -39,10 +39,7 @@ function invalidName(field) {
  * @return {boolean} true if invalid
  */
 function invalidEncryptionKeyRing(stateData) {
-  return (
-    stateData.key_ring !== "" &&
-    validNewResourceName(stateData.key_ring)
-  );
+  return stateData.key_ring !== "" && validNewResourceName(stateData.key_ring);
 }
 
 module.exports = {

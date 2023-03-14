@@ -872,7 +872,7 @@
       "name": "secrets-manager",
       "resource_group": "slz-service-rg",
       "kms": "slz-kms",
-      "kms_key": "slz-slz-key"
+      "encryption_key": "slz-slz-key"
     }
   ],
   "appid": [

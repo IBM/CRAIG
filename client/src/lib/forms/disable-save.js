@@ -35,6 +35,12 @@ function disableSave(field, stateData, componentProps) {
       invalidName("key_management")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.resource_group)
     );
+  } else if (field === "secrets_manager") {
+    return (
+      invalidName("secrets_manager")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.resource_group) ||
+      isNullOrEmptyString(stateData.encryption_key)
+    );
   } else if (field === "resource_groups") {
     return invalidName("resource_groups")(stateData, componentProps);
   } else return false;

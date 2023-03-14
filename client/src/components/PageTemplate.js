@@ -27,7 +27,7 @@ import {
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import Navigation from "./page-template/Navigation";
-import { arraySplatIndex, getObjectFromArray, prettyJSON } from "lazy-z";
+import { arraySplatIndex, getObjectFromArray, isArray, prettyJSON } from "lazy-z";
 import { CraigCodeMirror } from "./page-template/CodeMirror";
 import PropTypes from "prop-types";
 import "./page-template.css";
@@ -116,7 +116,7 @@ const navCategories = [
         title: "Secrets Manager",
         path: "/form/secretsManager",
         icon: IbmCloudSecretsManager,
-        field: "secrets_manager",
+        jsonField: "secrets_manager",
         toTf: secretsManagerTf
       },
       {

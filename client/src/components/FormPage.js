@@ -3,7 +3,8 @@ import {
   IcseFormTemplate,
   ResourceGroupForm,
   KeyManagementForm,
-  ObjectStorageForm
+  ObjectStorageForm,
+  SecretsManagerForm
 } from "icse-react-assets";
 import {
   resourceGroupHelperTextCallback,
@@ -51,7 +52,33 @@ function formTemplateProps(form, craig) {
         submissionFieldName: "resource_groups"
       }
     };
-  } else if (form === "keyManagement") {
+  } else if (form === "secretsManager") {
+    return {
+      name: "Secrets Manager",
+      addText: "Create a Secrets Manager Instance",
+      arrayData: craig.store.json.secrets_manager,
+      innerForm: SecretsManagerForm,
+      disableSave: disableSave,
+      onDelete: craig.secrets_manager.delete,
+      onSave: craig.secrets_manager.save,
+      onSubmit: craig.secrets_manager.create,
+      propsMatchState: propsMatchState,
+      innerFormProps: {
+        craig: craig,
+        resourceGroups: splat(craig.store.json.resource_groups, "name"),
+        disableSave: invalidName("secrets_manager"),
+        invalidCallback: invalidName("secrets_manager"),
+        invalidTextCallback: invalidNameText("secrets_manager"),
+        helperTextCallback: resourceGroupHelperTextCallback,
+        encryptionKeys: craig.store.encryptionKeys
+      },
+      toggleFormProps: {
+        disableSave: disableSave,
+        hideName: true,
+        submissionFieldName: "secrets_manager"
+      }
+    };
+  }  else if (form === "keyManagement") {
     return {
       name: "Key Management",
       addText: "Create a Key Management Service",
@@ -115,7 +142,6 @@ function formTemplateProps(form, craig) {
         propsMatchState: propsMatchState,
         invalidBucketCallback: invalidName("buckets"),
         invalidBucketTextCallback: invalidNameText("buckets"),
-        propsMatchState: propsMatchState,
         keyProps: {
           onSave: craig.object_storage.keys.save,
           onDelete: craig.object_storage.keys.delete,
@@ -135,7 +161,6 @@ function formTemplateProps(form, craig) {
       toggleFormProps: {
         hideName: true,
         submissionFieldName: "object_storage",
-        hide: false
       }
     };
   }

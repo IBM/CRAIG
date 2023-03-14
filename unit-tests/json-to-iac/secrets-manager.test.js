@@ -8,43 +8,40 @@ const {
 describe("secrets manager", () => {
   describe("formatSecretsManagerToKmsAuth", () => {
     it("should return correct data for secrets manager", () => {
-      let actualData = formatSecretsManagerToKmsAuth(
-        "kms",
-        {
-          _options: {
-            region: "us-south",
-            tags: ["hello", "world"],
-            prefix: "iac",
+      let actualData = formatSecretsManagerToKmsAuth("kms", {
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
           },
-          resource_groups: [
-            {
-              use_data: false,
-              name: "slz-service-rg",
-            },
-          ],
-          key_management: [
-            {
-              name: "kms",
-              service: "kms",
-              resource_group: "slz-service-rg",
-              authorize_vpc_reader_role: true,
-              use_data: false,
-              use_hs_crypto: false,
-              keys: [
-                {
-                  name: "key",
-                  root_key: true,
-                  key_ring: "test",
-                  force_delete: true,
-                  endpoint: "private",
-                  rotation: 12,
-                  dual_auth_delete: true,
-                },
-              ],
-            },
-          ],
-        }
-      );
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+      });
       let expectedData = `
 resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
@@ -61,43 +58,40 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
       );
     });
     it("should return correct data for secrets manager with kms from data", () => {
-      let actualData = formatSecretsManagerToKmsAuth(
-        "kms",
-        {
-          _options: {
-            region: "us-south",
-            tags: ["hello", "world"],
-            prefix: "iac",
+      let actualData = formatSecretsManagerToKmsAuth("kms", {
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
           },
-          resource_groups: [
-            {
-              use_data: false,
-              name: "slz-service-rg",
-            },
-          ],
-          key_management: [
-            {
-              name: "kms",
-              service: "kms",
-              resource_group: "slz-service-rg",
-              authorize_vpc_reader_role: true,
-              use_data: true,
-              use_hs_crypto: false,
-              keys: [
-                {
-                  name: "key",
-                  root_key: true,
-                  key_ring: "test",
-                  force_delete: true,
-                  endpoint: "private",
-                  rotation: 12,
-                  dual_auth_delete: true,
-                },
-              ],
-            },
-          ],
-        }
-      );
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: true,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+      });
       let expectedData = `
 resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
@@ -121,7 +115,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
           name: "secrets-manager",
           resource_group: "slz-service-rg",
           kms: "kms",
-          kms_key: "key",
+          encryption_key: "key",
         },
         {
           _options: {
@@ -178,6 +172,73 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
   depends_on = [
     ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
   ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return auth policy tf"
+      );
+    });
+    it("should return correct data for secrets manager with invalid encryption key", () => {
+      let actualData = formatSecretsManagerInstance(
+        {
+          name: "secrets-manager",
+          resource_group: "slz-service-rg",
+          kms: null,
+          encryption_key: null,
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: false,
+              use_hs_crypto: false,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
+  name              = "iac-secrets-manager"
+  location          = "us-south"
+  plan              = "standard"
+  service           = "secrets-manager"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+
+  parameters = {
+    kms_key = ERROR: Unfound Reference
+  }
+
+  timeouts {
+    create = "1h"
+    delete = "1h"
+  }
 }
 `;
       assert.deepEqual(
@@ -266,19 +327,19 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
             name: "secrets-manager",
             resource_group: "slz-service-rg",
             kms: "kms",
-            kms_key: "key",
+            encryption_key: "key",
           },
           {
             name: "secrets-manager2",
             resource_group: "slz-service-rg",
             kms: "kms2",
-            kms_key: "key",
+            encryption_key: "key",
           },
           {
             name: "secrets-manager3",
             resource_group: "slz-service-rg",
             kms: "kms3",
-            kms_key: "key",
+            encryption_key: "key",
           },
         ],
       });
@@ -375,7 +436,200 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
         "it should have the correct terraform code"
       );
     });
-        it("should create the correct terraform code when all kms have secrets auth", () => {
+    it("should create the correct terraform code when invalid kms ref", () => {
+      let actualData = secretsManagerTf({
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
+          },
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+          {
+            name: "kms2",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+          {
+            name: "kms3",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            has_secrets_manager_auth: true,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+        secrets_manager: [
+          {
+            name: "secrets-manager",
+            resource_group: "slz-service-rg",
+            kms: null,
+            encryption_key: null,
+          },
+        ],
+      });
+      let expectedData = `##############################################################################
+# Secrets Manager Instances
+##############################################################################
+
+resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
+  name              = "iac-secrets-manager"
+  location          = "us-south"
+  plan              = "standard"
+  service           = "secrets-manager"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+
+  parameters = {
+    kms_key = ERROR: Unfound Reference
+  }
+
+  timeouts {
+    create = "1h"
+    delete = "1h"
+  }
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should have the correct terraform code"
+      );
+    });
+    it("should create the correct terraform code with no secrets manager instances", () => {
+      let actualData = secretsManagerTf({
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
+          },
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+          {
+            name: "kms2",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+          {
+            name: "kms3",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            has_secrets_manager_auth: true,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+        secrets_manager: [],
+      });
+      let expectedData = ``;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should have the correct terraform code"
+      );
+    });
+    it("should create the correct terraform code when all kms have secrets auth", () => {
       let actualData = secretsManagerTf({
         _options: {
           region: "us-south",
@@ -455,19 +709,19 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
             name: "secrets-manager",
             resource_group: "slz-service-rg",
             kms: "kms",
-            kms_key: "key",
+            encryption_key: "key",
           },
           {
             name: "secrets-manager2",
             resource_group: "slz-service-rg",
             kms: "kms2",
-            kms_key: "key",
+            encryption_key: "key",
           },
           {
             name: "secrets-manager3",
             resource_group: "slz-service-rg",
             kms: "kms3",
-            kms_key: "key",
+            encryption_key: "key",
           },
         ],
       });

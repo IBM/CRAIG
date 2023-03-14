@@ -36,7 +36,7 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
  * @param {Object} secretsManager
  * @param {string} secretsManager.name
  * @param {string} secretsManager.kms
- * @param {string} secretsManager.kms_key
+ * @param {string} secretsManager.encryption_key
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.prefix
@@ -44,11 +44,9 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
  * @returns {string} terraform string
  */
 function formatSecretsManagerInstance(secretsManager, config) {
-  let kmsInstance = getObjectFromArray(
-    config.key_management,
-    "name",
-    secretsManager.kms
-  );
+  let kmsInstance = secretsManager.kms
+    ? getObjectFromArray(config.key_management, "name", secretsManager.kms)
+    : null;
   let instance = {
     name: kebabName(config, [secretsManager.name]),
     location: "$region",
@@ -56,18 +54,20 @@ function formatSecretsManagerInstance(secretsManager, config) {
     service: "^secrets-manager",
     resource_group_id: rgIdRef(secretsManager.resource_group, config),
     "^parameters": {
-      kms_key: encryptionKeyRef(
-        secretsManager.kms,
-        secretsManager.kms_key,
-        "crn"
-      )
+      kms_key: !kmsInstance
+        ? "ERROR: Unfound Reference"
+        : encryptionKeyRef(
+            secretsManager.kms,
+            secretsManager.encryption_key,
+            "crn"
+          )
     },
     timeouts: {
       create: "1h",
       delete: "1h"
     }
   };
-  if (kmsInstance.has_secrets_manager_auth !== true) {
+  if (kmsInstance && kmsInstance.has_secrets_manager_auth !== true) {
     instance.depends_on = [
       `ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
         secretsManager.kms
@@ -96,13 +96,15 @@ function secretsManagerTf(config) {
   let kmstf = "";
   let totalKmsInstances = 0;
   allKmsServices.forEach(service => {
-    if (
-      // if service doesn't already have auth
-      (getObjectFromArray(config.key_management, "name", service)
-        .has_secrets_manager_auth || false) !== true
-    ) {
-      kmstf += formatSecretsManagerToKmsAuth(service, config);
-      totalKmsInstances++;
+    if (service) {
+      if (
+        // if service doesn't already have auth
+        (getObjectFromArray(config.key_management, "name", service)
+          .has_secrets_manager_auth || false) !== true
+      ) {
+        kmstf += formatSecretsManagerToKmsAuth(service, config);
+        totalKmsInstances++;
+      }
     }
   });
   if (totalKmsInstances !== 0) {
@@ -112,7 +114,8 @@ function secretsManagerTf(config) {
   config.secrets_manager.forEach(instance => {
     secretsManagerData += formatSecretsManagerInstance(instance, config);
   });
-  tf += tfBlock("Secrets Manager Instances", secretsManagerData);
+  if (secretsManagerData.length > 0)
+    tf += tfBlock("Secrets Manager Instances", secretsManagerData);
   return tf;
 }
 

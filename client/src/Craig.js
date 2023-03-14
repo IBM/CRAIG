@@ -98,7 +98,12 @@ class Craig extends React.Component {
           {!this.props.params.form ? (
             <h1>hi i'm craig</h1>
           ) : contains(
-              ["resourceGroups", "keyManagement", "objectStorage"],
+              [
+                "resourceGroups",
+                "keyManagement",
+                "objectStorage",
+                "secretsManager"
+              ],
               this.props.params.form
             ) ? (
             <FormPage craig={craig} form={this.props.params.form} />
