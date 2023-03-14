@@ -121,8 +121,8 @@ describe("disableSave", () => {
                     name: "frog",
                   },
                   {
-                    name: "toad"
-                  }
+                    name: "toad",
+                  },
                 ],
               },
             },
@@ -395,6 +395,50 @@ describe("disableSave", () => {
         }
       ),
       "it should be false"
+    );
+  });
+  it("should return true if atracker does not have bucket", () => {
+    assert.isTrue(
+      disableSave("atracker", {
+        bucket: null,
+      }),
+      "it should be true"
+    );
+  });
+  it("should return true if atracker does not have cos key", () => {
+    assert.isTrue(
+      disableSave("atracker", {
+        bucket: "bucket",
+        cos_key: null,
+      }),
+      "it should be true"
+    );
+  });
+  it("should return true if atracker does not have any locations", () => {
+    assert.isTrue(
+      disableSave("atracker", {
+        bucket: "bucket",
+        cos_key: "key",
+        locations: [],
+      }),
+      "it should be true"
+    );
+  });
+  it("should return true if scc collector description invalid", () => {
+    assert.isTrue(
+      disableSave("scc", {
+        collector_description: "",
+      }),
+      "it should be true"
+    );
+  });
+  it("should return true if scc scope description invalid", () => {
+    assert.isTrue(
+      disableSave("scc", {
+        collector_description: "words",
+        scope_description: "",
+      }),
+      "it should be true"
     );
   });
   it("should otherwise return false", () => {

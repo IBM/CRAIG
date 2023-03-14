@@ -20,6 +20,7 @@ import { splat } from "lazy-z";
 
 /**
  * create form template props for form page
+ * @param {string} form form name
  * @param {lazyZstate} craig
  * @returns {Object} form template props
  */
@@ -78,7 +79,7 @@ function formTemplateProps(form, craig) {
         submissionFieldName: "secrets_manager"
       }
     };
-  }  else if (form === "keyManagement") {
+  } else if (form === "keyManagement") {
     return {
       name: "Key Management",
       addText: "Create a Key Management Service",

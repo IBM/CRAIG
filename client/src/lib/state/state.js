@@ -62,7 +62,7 @@ const {
   naclRuleDelete,
   createEdgeVpc
 } = require("./vpc");
-const { sccInit, sccSave } = require("./scc");
+const { sccInit, sccSave, sccDelete } = require("./scc");
 const {
   sshKeyCreate,
   sshKeyDelete,
@@ -323,7 +323,8 @@ const state = function() {
 
   store.newField("scc", {
     init: sccInit,
-    save: sccSave
+    save: sccSave,
+    delete: sccDelete
   });
 
   store.newField("ssh_keys", {

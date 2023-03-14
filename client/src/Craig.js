@@ -7,6 +7,7 @@ import PageTemplate from "./components/PageTemplate";
 import { FormPage } from "./components/FormPage";
 import { titleCase } from "lazy-z";
 import { contains } from "regex-but-with-words/lib/utils";
+import { ToggleFormPage } from "./components/ToggleFormPage";
 
 const withRouter = Page => props => {
   const params = useParams();
@@ -107,6 +108,8 @@ class Craig extends React.Component {
               this.props.params.form
             ) ? (
             <FormPage craig={craig} form={this.props.params.form} />
+          ) : contains(["activityTracker", "securityComplianceCenter"], this.props.params.form) ? (
+            <ToggleFormPage craig={craig} form={this.props.params.form} />
           ) : (
             titleCase(this.props.params.form)
           )}

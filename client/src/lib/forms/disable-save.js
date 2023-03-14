@@ -1,4 +1,4 @@
-const { isNullOrEmptyString } = require("lazy-z");
+const { isNullOrEmptyString, isEmpty } = require("lazy-z");
 const {
   invalidName,
   invalidEncryptionKeyRing
@@ -12,7 +12,19 @@ const {
  * @returns {boolean} true if match
  */
 function disableSave(field, stateData, componentProps) {
-  if (field === "object_storage") {
+  if (field === "scc") {
+    return (
+      stateData.collector_description.match(/^[A-z][a-zA-Z0-9-\._,\s]*$/i) ===
+        null ||
+      stateData.scope_description.match(/^[A-z][a-zA-Z0-9-\._,\s]*$/i) === null
+    );
+  } else if (field === "atracker") {
+    return (
+      isNullOrEmptyString(stateData.bucket) ||
+      isNullOrEmptyString(stateData.cos_key) ||
+      isEmpty(stateData.locations)
+    );
+  } else if (field === "object_storage") {
     return (
       invalidName("object_storage")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.kms) ||

@@ -123,7 +123,7 @@ const navCategories = [
         title: "Activity Tracker",
         path: "/form/activityTracker",
         icon: CloudAuditing,
-        field: "atracker",
+        jsonField: "atracker",
         toTf: atrackerTf,
         required: true
       },
@@ -147,7 +147,8 @@ const navCategories = [
         title: "Security Compliance Center",
         path: "/form/securityComplianceCenter",
         icon: IbmCloudSecurityComplianceCenter,
-        toTf: sccTf
+        toTf: sccTf,
+        jsonField: "scc"
       }
     ]
   },
