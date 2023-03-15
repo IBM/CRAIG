@@ -1,0 +1,89 @@
+strong {
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+p {
+  font-size: 1.25em;
+  line-height: 2.5rem;
+}
+
+li {
+  font-size: 14px;
+}
+
+.about {
+  background-color: #f4f4f4;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.verticalAlign {
+  height: calc(100vh - 7.5em);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.infoPadding {
+  padding: 2rem;
+}
+
+.section {
+  height: calc(100vh - 5em);
+  width: 100%;
+  overflow: scroll;
+}
+
+.half {
+  width: 50%;
+}
+
+
+ul.bullets {
+  list-style-type: circle;
+}
+  
+ul.indent {
+  margin-left: 2rem;
+}
+
+// do not allow the accordion title to go over the footer
+.cds--accordion__title {
+  z-index: 0;
+}
+
+.stackedAcronym {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.verticalLine {
+  border-right: 2px solid black;
+}
+
+.third {
+  width: 33%;
+}
+
+.twoThirds {
+  width: 67%;
+}
+
+.verticalFlex {
+  flex-direction: column;
+}
+
+.center {
+  justify-content: center;
+}
