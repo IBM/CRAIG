@@ -1,3 +1,5 @@
+const { isNullOrEmptyString } = require("lazy-z");
+const { containsKeys } = require("regex-but-with-words/lib/utils");
 const { newResourceNameExp } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -23,13 +25,43 @@ function invalidName(field) {
    * @param {Object} componentProps
    * @returns {string} invalid text
    */
-  return function(stateData, componentProps) {
-    return (
-      hasDuplicateName(field, stateData, componentProps) ||
-      stateData.name === "" ||
-      (!stateData.use_data && validNewResourceName(stateData.name))
-    );
-  };
+  function nameCheck(stateData, componentProps, overrideField) {
+    let stateField = overrideField || "name";
+    if (containsKeys(stateData, "scope_description")) {
+      // easiest way to get scc
+      return (
+        stateData[stateField] === "" ||
+        validNewResourceName(stateData[stateField])
+      );
+    } else
+      return (
+        hasDuplicateName(field, stateData, componentProps, overrideField) ||
+        stateData[stateField] === "" ||
+        (!stateData.use_data && validNewResourceName(stateData[stateField]))
+      );
+  }
+
+  if (field === "vpcs") {
+    /**
+     * invalid vpc field check
+     * @param {string} field name
+     * @param {Object} stateData
+     * @param {Object} componentProps
+     */
+    return function(field, stateData, componentProps) {
+      if (field === "name") {
+        return invalidName("vpc_name")(stateData, componentProps);
+      } else if (isNullOrEmptyString(stateData[field])) {
+        return false;
+      } else if (field === "default_network_acl_name") {
+        return invalidName("acls")(stateData, componentProps, field);
+      } else if (field === "default_security_group_name") {
+        return invalidName("security_groups")(stateData, componentProps, field);
+      } else {
+        return invalidName("routing_tables")(stateData, componentProps, field);
+      }
+    };
+  } else return nameCheck;
 }
 
 /**

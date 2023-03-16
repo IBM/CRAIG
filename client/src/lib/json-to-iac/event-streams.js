@@ -1,5 +1,5 @@
 const {
-  jsonToTf,
+  jsonToIac,
   kebabName,
   rgIdRef,
   tfBlock
@@ -44,7 +44,7 @@ function formatEventStreams(eventStreams, config) {
       eventStreamsValues["^parameters"][field] = `"${eventStreams[field]}"`;
     }
   });
-  return jsonToTf(
+  return jsonToIac(
     "ibm_resource_instance",
     `${eventStreams.name} es`,
     eventStreamsValues,

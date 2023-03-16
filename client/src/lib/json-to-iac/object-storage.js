@@ -9,11 +9,12 @@ const {
   kebabName,
   encryptionKeyRef,
   cosRef,
-  jsonToTf,
+  jsonToIac,
   resourceRef,
   dataResourceName,
   tfBlock,
-  tfDone
+  tfDone,
+  getTags
 } = require("./utils");
 
 /**
@@ -59,11 +60,11 @@ function formatCosInstance(cos, config) {
   };
   if (!cos.use_data) {
     cosInstance.plan = `^${cos.plan}`;
-    cosInstance.tags = true;
+    cosInstance.tags = getTags(config);
   }
   return (
     randomSuffixResource +
-    jsonToTf(
+    jsonToIac(
       "ibm_resource_instance",
       `${cos.name} object storage`,
       cosInstance,
@@ -92,7 +93,7 @@ function formatCosToKmsAuth(cos, config) {
     "id",
     cos.use_data
   );
-  return jsonToTf(
+  return jsonToIac(
     "ibm_iam_authorization_policy",
     `${cos.name} cos to ${cos.kms} kms policy`,
     {
@@ -192,7 +193,7 @@ function formatCosBucket(bucket, cos, config) {
       cos.name + " cos to " + cos.kms + " kms policy"
     )}`
   ];
-  return jsonToTf(
+  return jsonToIac(
     "ibm_cos_bucket",
     cos.name + "-object-storage-" + bucket.name + "-bucket",
     bucketValues,
@@ -218,14 +219,14 @@ function formatCosKey(key, cos, config) {
     name: kebabName(config, [cos.name, "key", key.name], randomSuffix(cos)),
     resource_instance_id: getCosId(cos),
     role: "^Writer",
-    tags: true
+    tags: getTags(config)
   };
   if (key.enable_hmac) {
     keyValues["^parameters"] = {
       HMAC: true
     };
   }
-  return jsonToTf(
+  return jsonToIac(
     "ibm_resource_key",
     `${snakeCase(cos.name + "-object-storage-key-" + key.name)}`,
     keyValues,

@@ -1,9 +1,15 @@
 import React from "react";
 import { AtrackerForm, ToggleForm, SccForm } from "icse-react-assets";
 import PropTypes from "prop-types";
-import { disableSave, propsMatchState } from "../lib/forms";
+import {
+  disableSave,
+  genericNameCallback,
+  invalidName,
+  propsMatchState
+} from "../lib/forms";
 import { splat } from "lazy-z";
 import { eachKey } from "regex-but-with-words/lib/utils";
+import { RenderDocs } from "./RenderDocs";
 
 function toggleFormProps(form, craig) {
   if (form === "activityTracker") {
@@ -12,6 +18,7 @@ function toggleFormProps(form, craig) {
       onSave: craig.atracker.save,
       noDeleteButton: true,
       submissionFieldName: "atracker",
+      about: RenderDocs("atracker")(),
       propsMatchState: propsMatchState,
       disableSave: disableSave,
       innerForm: AtrackerForm,
@@ -41,9 +48,9 @@ function toggleFormProps(form, craig) {
       onSave: craig.scc.save,
       onDelete: craig.scc.delete,
       submissionFieldName: "scc",
+      about: RenderDocs("security_compliance_center")(),
       useAddButton: craig.store.json.scc.enable === false,
       noDeleteButton: craig.store.json.scc.enable === false,
-      hide: craig.store.json.scc.enable === true,
       onShowToggle: () => {},
       propsMatchState: propsMatchState,
       disableSave: disableSave,
@@ -53,7 +60,11 @@ function toggleFormProps(form, craig) {
         name: "Security and Compliance Center"
       },
       innerFormProps: {
-        data: sccData
+        data: sccData,
+        invalidCallback: invalidName("scc"),
+        invalidTextCallback: () => {
+          return genericNameCallback();
+        }
       }
     };
   }

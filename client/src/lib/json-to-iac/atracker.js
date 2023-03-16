@@ -3,7 +3,7 @@ const {
   tfRef,
   cosRef,
   bucketRef,
-  jsonToTf,
+  jsonToIac,
   tfArrRef,
   tfBlock
 } = require("./utils");
@@ -43,7 +43,7 @@ function formatAtrackerTarget(config) {
       "credentials.apikey"
     )
   };
-  return jsonToTf(
+  return jsonToIac(
     "ibm_atracker_target",
     `${config.atracker.name} ${config.atracker.type} target`,
     targetValues,
@@ -63,7 +63,7 @@ function formatAtrackerTarget(config) {
  * @returns {string} terraform atracker target
  */
 function formatAtrackerRoute(config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_atracker_route",
     `${config.atracker.name} ${config.atracker.type} route`,
     {

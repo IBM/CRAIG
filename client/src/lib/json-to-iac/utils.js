@@ -9,9 +9,9 @@ const {
   contains
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
-const { lastCommaExp } = require("../constants");
 const { endComment } = require("./constants");
 const constants = require("./constants");
+const jsonToTf = require("json-to-tf");
 /**
  * get a resource group id using name
  * @param {string} groupName name of resource group
@@ -264,41 +264,6 @@ function composedZone(config, zone) {
 }
 
 /**
- * get the longest key from an object
- * @param {Object} obj
- * @returns {number} length of longest key
- */
-function longestKeyLength(obj) {
-  let longestKey = 0;
-  eachKey(obj, key => {
-    if (
-      key.length > longestKey && // if key is longer
-      key.indexOf("_") !== 0 && // is not decorated with _
-      !contains(["depends_on", "timeouts"], key) // and isn't reserved
-    ) {
-      longestKey =
-        key.indexOf("*") === 0 || key.indexOf("-") === 0
-          ? key.length - 1
-          : key.length;
-    }
-  });
-  return longestKey;
-}
-
-/**
- * match length with spaces
- * @param {string} str
- * @param {number} length
- * @returns {string} string with additional spaces
- */
-function matchLength(str, length) {
-  while (str.length < length) {
-    str += " ";
-  }
-  return str;
-}
-
-/**
  * json to tf
  * @param {string} type resource type
  * @param {string} name resource name
@@ -308,83 +273,14 @@ function matchLength(str, length) {
  * @returns {string} terraform formatted code
  */
 
-function jsonToTf(type, name, values, config, useData) {
-  let tf = `\n${useData ? "data" : "resource"} "${type}" "${snakeCase(
-    name
-  )}" {`;
-  let longest = longestKeyLength(values);
-  /**
-   * run function for each key and
-   * @param {Object} obj
-   */
-  function eachTfKey(obj, offset) {
-    if (offset) longest = longestKeyLength(obj); // longest key
-    let offsetSpace = matchLength("", offset || 0); // offset for recursion
-    // for each field in the terraform object
-    eachKey(obj, key => {
-      let keyName = key.replace(/^(-|_|\*|\^)/g, ""); // key with indicator chars removed
-      let nextOffset = offset || 0;
-      let valueIsObject =
-        key.indexOf("_") === 0 || key.indexOf("^") === 0 || key === "timeouts";
-      let objectIndent = `\n\n  ${offsetSpace}${keyName}`; // indent for objects
-      let arrClose = `\n  ${offsetSpace}]`; // close for arrays
-      // keys that start with * are used for multiline arrays
-      if (key.indexOf("*") === 0) {
-        tf += `\n${offsetSpace.length === 0 ? "\n" : ""}  ${offsetSpace +
-          keyName} = [`;
-        obj[key].forEach(item => {
-          tf += `\n    ${offsetSpace + item},`;
-        });
-        tf = tf.replace(lastCommaExp, "");
-        tf += arrClose;
-      } else if (key.indexOf("-") === 0) {
-        // keys that start with - are used to indicate multiple blocks of the same kind
-        // ex. `network_interfaces` for vsi
-        obj[key].forEach(item => {
-          tf += `\n\n  ${keyName} {`;
-          eachTfKey(item, 2 + nextOffset);
-          tf += `\n  }`;
-        });
-      } else if (key === "depends_on") {
-        // handle depends on arg
-        tf += `${objectIndent} = [`;
-        obj[key].forEach(dependency => {
-          tf += `\n ${matchLength(offsetSpace, 2)} ${dependency},`;
-        });
-        tf = tf.replace(lastCommaExp, "");
-        tf += arrClose;
-      } else if (valueIsObject) {
-        // for keys that aren't new create a sub block
-        tf += `${objectIndent} ${
-          key.indexOf("^") === 0 ? "= " : "" // keys with ^ use an = for block assignment
-        }{`;
-        if (key === "timeouts") {
-          obj[key] = stringifyTranspose(obj[key]);
-        }
-        eachTfKey(obj[key], 2 + nextOffset);
-        tf += `\n  ${offsetSpace}}`;
-      } else {
-        // all other keys formatted here
-        let keyValue =
-          key === "tags" // if tags
-            ? getTags(config) // get tags
-            : obj[key] === "$region" // if value is region
-            ? `"${config._options.region}"` // add region
-            : obj[key]; // otherwise value
-        if (isString(keyValue)) {
-          // if value is string and ^ is first character
-          // add string and replace first ^ with empty string
-          if (keyValue.indexOf("^") === 0) {
-            keyValue = `"${keyValue.replace(/^\^/g, "")}"`;
-          }
-        }
-        tf += `\n  ${offsetSpace + matchLength(key, longest)} = ${keyValue}`;
-      }
-    });
-  }
-  eachTfKey(values);
-  tf += "\n}\n";
-  return tf;
+function jsonToIac(type, name, values, config, useData) {
+  return (
+    "\n" +
+    jsonToTf(type, name, values, useData).replace(
+      /\$region/g,
+      config?._options ? `"${config._options.region}"` : ""
+    )
+  );
 }
 
 function tfBlock(title, blockData) {
@@ -432,7 +328,7 @@ function stringifyTranspose(source) {
 module.exports = {
   stringifyTranspose,
   dataResourceName,
-  jsonToTf,
+  jsonToIac,
   composedZone,
   subnetZone,
   fillTemplate,

@@ -4,10 +4,11 @@ const {
   kebabName,
   useData,
   resourceRef,
-  jsonToTf,
+  jsonToIac,
   dataResourceName,
   tfBlock,
-  tfDone
+  tfDone,
+  getTags
 } = require("./utils");
 
 /**
@@ -21,7 +22,7 @@ const {
  * @returns {string} terraform formatted code
  */
 function formatAppIdKey(key, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_resource_key",
     `${key.appid} key ${key.name}`,
     {
@@ -32,7 +33,7 @@ function formatAppIdKey(key, config) {
         getObjectFromArray(config.appid, "name", key.appid).use_data
       ),
       role: "^Writer",
-      tags: true
+      tags: getTags(config)
     },
     config
   );
@@ -57,12 +58,12 @@ function formatAppId(instance, config) {
   };
   // add needed values when new instance is created
   if (!instance.use_data) {
-    appIdValues.tags = true;
+    appIdValues.tags = getTags(config);
     appIdValues.service = "^appid";
     appIdValues.plan = "^graduated-tier";
     appIdValues.location = "$region";
   }
-  return jsonToTf(
+  return jsonToIac(
     "ibm_resource_instance",
     instance.name,
     appIdValues,
@@ -79,7 +80,7 @@ function formatAppId(instance, config) {
  * @returns {string} terraform appid redirect urls
  */
 function formatAppIdRedirectUrls(appid, urls, resourceName) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_appid_redirect_urls",
     resourceName ? resourceName : `${appid.name} urls`,
     {

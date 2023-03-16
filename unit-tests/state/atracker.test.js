@@ -55,7 +55,9 @@ describe("atracker", () => {
           name: "frog",
         },
         {
-          arrayParentName: "cos",arrayData: state.store.json.object_storage[0].keys 
+          innerFormProps: {
+            arrayParentName: "cos",arrayData: state.store.json.object_storage[0].keys 
+          }
         }
       );
       // save with different key

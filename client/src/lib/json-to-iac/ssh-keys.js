@@ -1,9 +1,10 @@
 const { snakeCase } = require("lazy-z");
 const {
   rgIdRef,
-  jsonToTf,
+  jsonToIac,
   dataResourceName,
   tfBlock,
+  getTags,
 } = require("./utils");
 
 /**
@@ -24,9 +25,9 @@ function formatSshKey(key, config) {
   if (!key.use_data) {
     sshKey.public_key = `var.${snakeCase(key.name)}_public_key`;
     sshKey.resource_group = rgIdRef(key.resource_group, config);
-    sshKey.tags = true;
+    sshKey.tags = getTags(config);
   }
-  return jsonToTf(`ibm_is_ssh_key`, key.name, sshKey, config, key.use_data);
+  return jsonToIac(`ibm_is_ssh_key`, key.name, sshKey, config, key.use_data);
 }
 
 /**

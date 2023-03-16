@@ -1,0 +1,9 @@
+[
+  {
+    "version": "0.1.0",
+    "features": [
+      "Added state store and JSON to IaC Capabilities",
+      "Added navbar and page template"
+    ]
+  }
+]

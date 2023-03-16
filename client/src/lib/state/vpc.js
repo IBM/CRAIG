@@ -62,6 +62,23 @@ function vpcInit(config) {
 }
 
 /**
+ * add public gateways to vpc
+ * @param {Object} vpc
+ */
+function pgwNumberToZone(vpc) {
+  if (vpc.publicGateways) {
+    vpc.public_gateways = [];
+    vpc.publicGateways.forEach(gw => {
+      vpc.public_gateways.push({
+        vpc: vpc.name,
+        zone: gw,
+        resource_group: vpc.resource_group
+      });
+    });
+  }
+}
+
+/**
  * create a new vpc
  * @param {lazyZState} config state store
  * @param {object} config.store
@@ -71,6 +88,7 @@ function vpcInit(config) {
 function vpcCreate(config, stateData) {
   let vpc = newVpc();
   transpose(stateData, vpc);
+  pgwNumberToZone(vpc);
   config.store.subnetTiers[vpc.name] = [];
   pushAndUpdate(config, "vpcs", vpc);
 }
@@ -119,6 +137,7 @@ function vpcOnStoreUpdate(config) {
     config.store.subnets[network.name] = subnetList;
     // set acls object to the list of acls
     setUnfoundResourceGroup(config, network);
+    network.publicGateways = splat(network.public_gateways, "zone");
   });
   config.store.vpcList = splat(config.store.json.vpcs, "name");
 }
@@ -149,6 +168,7 @@ function vpcSave(config, stateData, componentProps) {
       vpc[field] = null;
     }
   });
+  pgwNumberToZone(vpc);
   if (vpc.name !== oldName) {
     // add to empty array to prevent reference to original object
     config.store.subnetTiers[stateData.name] = [];

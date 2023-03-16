@@ -601,6 +601,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
   }
 }
 `;
+
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
   describe("f5Tf", () => {

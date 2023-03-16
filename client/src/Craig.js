@@ -89,7 +89,7 @@ class Craig extends React.Component {
       <>
         <PageTemplate
           hideCodeMirror={
-            this.props.isAboutPage ? true : this.state.hideCodeMirror
+            this.props.params.doc ? true : this.state.hideCodeMirror
           } // always hide if about
           hideFooter={this.state.hideFooter}
           toggleHide={this.toggleHide}
@@ -99,7 +99,7 @@ class Craig extends React.Component {
           storeName={this.state.storeName}
           jsonInCodeMirror={this.state.jsonInCodeMirror}
         >
-          {this.props.isAboutPage ? (
+          {this.props.params.doc ? (
             <About />
           ) : !this.props.params.form ? (
             <h1>hi i'm craig</h1>
@@ -108,7 +108,9 @@ class Craig extends React.Component {
                 "resourceGroups",
                 "keyManagement",
                 "objectStorage",
-                "secretsManager"
+                "secretsManager",
+                "appID",
+                "vpcs"
               ],
               this.props.params.form
             ) ? (

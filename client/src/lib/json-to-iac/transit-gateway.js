@@ -2,7 +2,7 @@ const { snakeCase } = require("lazy-z");
 const {
   rgIdRef,
   kebabName,
-  jsonToTf,
+  jsonToIac,
   tfRef,
   vpcRef,
   tfBlock,
@@ -22,7 +22,7 @@ const {
  * @returns {string} terraform string
  */
 function formatTgw(tgw, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_tg_gateway",
     tgw.name,
     {
@@ -50,7 +50,7 @@ function formatTgw(tgw, config) {
  * @returns {string} terraform string
  */
 function formatTgwConnection(connection, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_tg_connection",
     `${connection.tgw} to ${connection.vpc} connection`,
     {

@@ -5,9 +5,10 @@ const {
   tfDone,
   kebabName,
   composedZone,
-  jsonToTf,
+  jsonToIac,
   tfRef,
-  tfBlock
+  tfBlock,
+  getTags
 } = require("./utils");
 
 /**
@@ -29,10 +30,16 @@ function formatVpc(vpc, config) {
   let vpcValues = {
     name: kebabName(config, [vpc.name, "vpc"]),
     resource_group: rgIdRef(vpc.resource_group, config),
-    default_network_acl_name: vpc.default_network_acl_name,
-    default_security_group_name: vpc.default_security_group_name,
-    default_routing_table_name: vpc.default_routing_table_name,
-    tags: true
+    default_network_acl_name: vpc.default_network_acl_name
+      ? `"${vpc.default_network_acl_name}"`
+      : null,
+    default_security_group_name: vpc.default_security_group_name
+      ? `"${vpc.default_security_group_name}"`
+      : null,
+    default_routing_table_name: vpc.default_routing_table_name
+      ? `"${vpc.default_routing_table_name}"`
+      : null,
+    tags: getTags(config)
   };
   if (vpc.classic_access) {
     vpcValues.classic_access = true;
@@ -40,7 +47,7 @@ function formatVpc(vpc, config) {
   if (vpc.manual_address_prefix_management) {
     vpcValues.address_prefix_management = "^manual";
   }
-  return jsonToTf("ibm_is_vpc", `${vpc.name}-vpc`, vpcValues, config);
+  return jsonToIac("ibm_is_vpc", `${vpc.name}-vpc`, vpcValues, config);
 }
 
 /**
@@ -57,7 +64,7 @@ function formatVpc(vpc, config) {
  * @returns {string} terraform code
  */
 function formatAddressPrefix(address, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_vpc_address_prefix",
     `${address.vpc}-${address.name}-prefix`,
     {
@@ -93,7 +100,7 @@ function formatSubnet(subnet, config) {
     name: kebabName(config, [subnetName]),
     zone: composedZone(config, subnet.zone),
     resource_group: rgIdRef(subnet.resource_group, config),
-    tags: true,
+    tags: getTags(config),
     network_acl: tfRef(
       "ibm_is_network_acl",
       snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`)
@@ -108,7 +115,7 @@ function formatSubnet(subnet, config) {
       `${subnet.vpc} gateway zone ${subnet.zone}`
     );
   }
-  return jsonToTf("ibm_is_subnet", subnetName, subnetValues, config);
+  return jsonToIac("ibm_is_subnet", subnetName, subnetValues, config);
 }
 
 /**
@@ -122,14 +129,14 @@ function formatSubnet(subnet, config) {
  * @returns {string} terraform code
  */
 function formatAcl(acl, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_network_acl",
     `${acl.vpc} ${acl.name} acl`,
     {
       name: kebabName(config, [acl.vpc, acl.name, "acl"]),
       vpc: vpcRef(acl.vpc),
       resource_group: rgIdRef(acl.resource_group, config),
-      tags: true
+      tags: getTags(config)
     },
     config
   );
@@ -187,7 +194,7 @@ function formatAclRule(rule) {
       };
     }
   });
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_network_acl_rule",
     `${aclAddress} rule ${rule.name}`,
     ruleValues
@@ -210,7 +217,7 @@ function formatPgw(pgw, config) {
   let pgwName = pgw.override_name
     ? `${pgw.vpc}-${pgw.override_name}`
     : `${pgw.vpc}-gateway-zone-${pgw.zone}`;
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_public_gateway",
     pgwName,
     {
@@ -218,7 +225,7 @@ function formatPgw(pgw, config) {
       vpc: vpcRef(pgw.vpc),
       resource_group: rgIdRef(pgw.resource_group, config),
       zone: composedZone(config, pgw.zone),
-      tags: true
+      tags: getTags(config)
     },
     config
   );

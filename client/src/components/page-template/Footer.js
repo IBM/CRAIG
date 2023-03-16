@@ -1,5 +1,6 @@
 import { CaretLeft, CaretRight, Close, ChevronUp } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
+import { PopoverWrapper } from "icse-react-assets";
 import React from "react";
 import PropTypes from "prop-types";
 import "./footer.scss";
@@ -60,30 +61,28 @@ const Footer = props => {
   return (
     <div className="footerButton pointerEventsNone">
       <div className="buttonRight">
-        {/* 
-        popover wrapper commented out until react assets published
         <PopoverWrapper
           hoverText={
             props.hideFooter ? "Show Navigation Bar" : "Dismiss Navigation Bar"
           }
           contentClassName="footerPopover"
           align="left"
-        > */}
-        <Button
-          kind="primary"
-          size="sm"
-          id="footer-open-close"
-          onClick={() => {
-            props.toggleFooter();
-          }}
-          className={
-            "forceTertiaryButtonStyles pointerEventsAuto" +
-            (!props.hideFooter ? " buttonCollapsed" : "")
-          }
         >
-          {props.hideFooter ? <ChevronUp /> : <Close />}
-        </Button>
-        {/* </PopoverWrapper> */}
+          <Button
+            kind="primary"
+            size="sm"
+            id="footer-open-close"
+            onClick={() => {
+              props.toggleFooter();
+            }}
+            className={
+              "forceTertiaryButtonStyles pointerEventsAuto" +
+              (!props.hideFooter ? " buttonCollapsed" : "")
+            }
+          >
+            {props.hideFooter ? <ChevronUp /> : <Close />}
+          </Button>
+        </PopoverWrapper>
       </div>
       {props.hideFooter === false && (
         <div className="footer pointerEventsAuto">

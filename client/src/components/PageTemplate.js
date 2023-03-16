@@ -141,7 +141,8 @@ const navCategories = [
         title: "App ID",
         path: "/form/appID",
         icon: CloudApp,
-        toTf: appidTf
+        toTf: appidTf,
+        jsonField: "appid"
       },
       {
         title: "Security Compliance Center",
@@ -170,6 +171,7 @@ const navCategories = [
           });
           return tfDone(tf);
         },
+        jsonField: "vpcs",
         required: true
       },
       {

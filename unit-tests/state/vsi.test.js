@@ -55,6 +55,7 @@ describe("vsi", () => {
       let state = new newState();
       state.appid.create({
         name: "test-appid",
+        keys: []
       });
       state.vsi.create(
         {

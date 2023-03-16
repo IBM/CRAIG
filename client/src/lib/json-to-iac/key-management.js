@@ -6,10 +6,11 @@ const {
   kebabName,
   tfRef,
   encryptionKeyRef,
-  jsonToTf,
+  jsonToIac,
   dataResourceName,
   tfBlock,
-  tfDone
+  tfDone,
+  getTags
 } = require("./utils");
 
 /**
@@ -30,9 +31,9 @@ function formatKmsInstance(kms, config) {
   if (!kms.use_data) {
     instance.plan = "^tiered-pricing";
     instance.location = "$region";
-    instance.tags = true;
+    instance.tags = getTags(config);
   }
-  return jsonToTf(
+  return jsonToIac(
     "ibm_resource_instance",
     kms.name,
     instance,
@@ -71,7 +72,7 @@ function formatKmsAuthPolicy(kms, isBlockStorage) {
   if (isBlockStorage) {
     resource.source_resource_type = '"share"';
   }
-  return jsonToTf(
+  return jsonToIac(
     "ibm_iam_authorization_policy",
     kms.name +
       (isBlockStorage ? " block_storage_policy" : " server protect policy"),
@@ -90,7 +91,7 @@ function formatKmsAuthPolicy(kms, isBlockStorage) {
  * @returns {string} key ring terraform
  */
 function formatKeyRing(name, kms, config) {
-  return jsonToTf(`ibm_kms_key_rings`, `${kms.name} ${name} ring`, {
+  return jsonToIac(`ibm_kms_key_rings`, `${kms.name} ${name} ring`, {
     key_ring_id: kebabName(config, [kms.name, name]),
     instance_id: composedKmsId(kms)
   });
@@ -131,7 +132,7 @@ function formatKmsKey(key, kms, config) {
         kms_name: snakeCase(kms.name)
       })
     );
-  return jsonToTf("ibm_kms_key", `${kms.name}-${key.name}-key`, keyValues);
+  return jsonToIac("ibm_kms_key", `${kms.name}-${key.name}-key`, keyValues);
 }
 
 /**
@@ -146,7 +147,7 @@ function formatKmsKey(key, kms, config) {
  * @returns {string} key policy terraform
  */
 function formatKmsKeyPolicy(key, kms) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_kms_key_policies",
     `${kms.name}-${key.name}-key-policy`,
     {

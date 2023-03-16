@@ -218,15 +218,18 @@ describe("key_management", () => {
         let state = new newState();
         state.store.json.key_management.push({
           name: "frog",
-          keys: []
-        })
+          keys: [],
+        });
         state.key_management.keys.create(
           {
             name: "all-new-key",
             root_key: true,
             key_ring: "all-new-ring",
           },
-          { arrayParentName: "kms", arrayData: state.store.json.key_management[0].keys }
+          {
+            innerFormProps: { arrayParentName: "kms" },
+            arrayData: state.store.json.key_management[0].keys,
+          }
         );
         let expectedData = {
           name: "all-new-key",

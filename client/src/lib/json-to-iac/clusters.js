@@ -10,9 +10,10 @@ const {
   resourceRef,
   encryptionKeyRef,
   tfRef,
-  jsonToTf,
+  jsonToIac,
   tfDone,
-  tfBlock
+  tfBlock,
+  getTags
 } = require("./utils");
 
 /**
@@ -47,7 +48,7 @@ function formatCluster(cluster, config) {
     worker_count: cluster.workers_per_subnet,
     kube_version: `"${cluster.kube_version}"`,
     update_all_workers: cluster.update_all_workers || null,
-    tags: true,
+    tags: getTags(config),
     wait_till: `^${cluster.wait_till || "IngressReady"}`,
     disable_public_service_endpoint: cluster.private_endpoint || false
   };
@@ -76,7 +77,7 @@ function formatCluster(cluster, config) {
     update: "3h"
   };
 
-  return jsonToTf(
+  return jsonToIac(
     "ibm_container_vpc_cluster",
     `${cluster.vpc} vpc ${cluster.name} cluster`,
     clusterValues,
@@ -125,7 +126,7 @@ function formatWorkerPool(pool, config) {
       subnet_id: subnetRef(pool.vpc, subnet)
     });
   });
-  return jsonToTf(
+  return jsonToIac(
     "ibm_container_vpc_worker_pool",
     `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`,
     workerPool,

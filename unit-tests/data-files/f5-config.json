@@ -1660,6 +1660,7 @@
             "public_gateway": false
           }
       ],
-      "public_gateways": []
+      "public_gateways": [],
+      "publicGateways": []
     }
   }

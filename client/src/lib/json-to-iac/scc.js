@@ -1,4 +1,4 @@
-const { jsonToTf, tfBlock } = require("./utils");
+const { jsonToIac, tfBlock } = require("./utils");
 
 /**
  * create scc posture credential block
@@ -11,7 +11,7 @@ const { jsonToTf, tfBlock } = require("./utils");
 function formatPostureCredential(scc) {
   return tfBlock(
     "Security and Compliance Center Credentials",
-    jsonToTf("ibm_scc_posture_credential", "scc_credentials", {
+    jsonToIac("ibm_scc_posture_credential", "scc_credentials", {
       description: "^scc posture credential description",
       enabled: true,
       name: `^${scc.name}`,
@@ -42,7 +42,7 @@ function formatPostureCredential(scc) {
  */
 function formatScc(scc, config) {
   let tf = "";
-  tf += jsonToTf(
+  tf += jsonToIac(
     "ibm_scc_account_settings",
     "ibm_scc_account_settings_instance",
     {
@@ -51,7 +51,7 @@ function formatScc(scc, config) {
       }
     }
   ).replace(/\n(?=\s\slocation)/i, "");
-  tf += jsonToTf(
+  tf += jsonToIac(
     "ibm_scc_posture_collector",
     "collector",
     {
@@ -62,7 +62,7 @@ function formatScc(scc, config) {
     },
     config
   );
-  tf += jsonToTf(
+  tf += jsonToIac(
     "ibm_scc_posture_scope",
     "scc_scope",
     {

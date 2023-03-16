@@ -1,3 +1,4 @@
+const { isNullOrEmptyString } = require("lazy-z");
 const { newResourceNameExp } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -51,11 +52,40 @@ function invalidNameText(field) {
    * @param {Object} componentProps
    * @returns {string} invalid text
    */
-  return function(stateData, componentProps) {
-    if (hasDuplicateName(field, stateData, componentProps)) {
-      return duplicateNameCallback(stateData.name);
+  function nameText(stateData, componentProps, overrideField) {
+    if (hasDuplicateName(field, stateData, componentProps, overrideField)) {
+      return duplicateNameCallback(stateData[overrideField || "name"]);
     } else return genericNameCallback();
-  };
+  }
+  if (field === "vpcs") {
+    /**
+     * invalid vpc field check
+     * @param {string} field name
+     * @param {Object} stateData
+     * @param {Object} componentProps
+     */
+    return function(field, stateData, componentProps) {
+      if (field === "name") {
+        return invalidNameText("vpc_name")(stateData, componentProps);
+      } else if (isNullOrEmptyString(stateData[field])) {
+        return "";
+      } else if (field === "default_network_acl_name") {
+        return invalidNameText("acls")(stateData, componentProps, field);
+      } else if (field === "default_security_group_name") {
+        return invalidNameText("security_groups")(
+          stateData,
+          componentProps,
+          field
+        );
+      } else {
+        return invalidNameText("routing_tables")(
+          stateData,
+          componentProps,
+          field
+        );
+      }
+    };
+  } else return nameText;
 }
 
 /**

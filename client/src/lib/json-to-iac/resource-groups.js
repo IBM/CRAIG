@@ -1,7 +1,8 @@
 const {
-  jsonToTf,
+  jsonToIac,
   dataResourceName,
   tfBlock,
+  getTags,
 } = require("./utils");
 
 /**
@@ -18,8 +19,8 @@ function formatResourceGroup(group, config) {
   let rgValues = {
     name: dataResourceName(group, config),
   };
-  if (!group.use_data) rgValues.tags = true;
-  return jsonToTf(
+  if (!group.use_data) rgValues.tags = getTags(config);
+  return jsonToIac(
     "ibm_resource_group",
     group.name,
     rgValues,

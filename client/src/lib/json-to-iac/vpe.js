@@ -1,12 +1,13 @@
 const {
   rgIdRef,
-  jsonToTf,
+  jsonToIac,
   subnetRef,
   kebabName,
   vpcRef,
   tfRef,
   tfBlock,
-  tfDone
+  tfDone,
+  getTags
 } = require("./utils");
 
 const serviceToEndpointMap = {
@@ -27,7 +28,7 @@ const serviceToEndpointMap = {
  * @returns {string} terraform formatted code
  */
 function formatReservedIp(vpcName, subnetName) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_subnet_reserved_ip",
     `${vpcName} vpc ${subnetName} subnet vpe ip`,
     {
@@ -53,14 +54,14 @@ function fortmatVpeGateway(vpe, config) {
   vpe.security_groups.forEach(group => {
     allSgIds.push(tfRef(`ibm_is_security_group`, `${vpe.vpc} vpc ${group} sg`));
   });
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_virtual_endpoint_gateway",
     `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
     {
       name: kebabName(config, [vpe.vpc, vpe.service, "vpe-gw"]),
       vpc: vpcRef(vpe.vpc),
       resource_group: rgIdRef(vpe.resource_group, config),
-      tags: true,
+      tags: getTags(config),
       security_groups:
         vpe.security_groups.length === 0
           ? `[]`
@@ -88,7 +89,7 @@ function fortmatVpeGateway(vpe, config) {
  * @returns {string} terraform formatted gateway ip
  */
 function fortmatVpeGatewayIp(vpe, subnetName) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_virtual_endpoint_gateway_ip",
     `${vpe.vpc} vpc ${vpe.service} gw ${subnetName} gateway ip`,
     {

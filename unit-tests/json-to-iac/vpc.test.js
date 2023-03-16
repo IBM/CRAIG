@@ -52,6 +52,47 @@ resource "ibm_is_vpc" "management_vpc" {
         "it should return correct data"
       );
     });
+    it("should create vpc terraform with optional fields not null", () => {
+      let actualData = formatVpc(
+        {
+          name: "management",
+          resource_group: "slz-management-rg",
+          classic_access: false,
+          manual_address_prefix_management: false,
+          default_network_acl_name: "null",
+          default_security_group_name: "null",
+          default_routing_table_name: "null",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-management-rg",
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_is_vpc" "management_vpc" {
+  name                        = "iac-management-vpc"
+  resource_group              = ibm_resource_group.slz_management_rg.id
+  default_network_acl_name    = "null"
+  default_security_group_name = "null"
+  default_routing_table_name  = "null"
+  tags                        = ["hello","world"]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should create vpc terraform with classic access and manual prefixes", () => {
       let actualData = formatVpc(
         {

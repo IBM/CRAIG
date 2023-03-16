@@ -44,6 +44,36 @@ describe("vpcs", () => {
         "it should update subnet tiers"
       );
     });
+    it("should add a pgw to a vpc", () => {
+      let state = new newState();
+      state.vpcs.save(
+        { name: "todd", default_network_acl_name: "", publicGateways: [1] },
+        { data: { name: "management" } }
+      );
+      assert.isTrue(
+        contains(state.store.vpcList, "todd"),
+        "todd should be there"
+      );
+      assert.isNull(
+        state.store.json.vpcs[0].default_network_acl_name,
+        "it should be null"
+      );
+      assert.deepEqual(
+        state.store.subnetTiers,
+        {
+          todd: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+            { name: "vpn", zones: 1 },
+          ],
+          workload: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+          ],
+        },
+        "it should update subnet tiers"
+      );
+    });
     it("should change edge vpc name when updating edge vpc", () => {
       let state = new newState();
       state.store.edge_vpc_name = "management";
@@ -247,6 +277,7 @@ describe("vpcs", () => {
           },
         ],
         public_gateways: [],
+        publicGateways: [],
         acls: [
           {
             resource_group: "management-rg",
@@ -452,6 +483,7 @@ describe("vpcs", () => {
             },
           ],
           public_gateways: [],
+          publicGateways: [],
           acls: [
             {
               resource_group: "workload-rg",

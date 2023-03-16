@@ -121,6 +121,242 @@ describe("text callbacks", () => {
         "it should return correct message"
       );
     });
+    it("should return true if vpc has a duplicate name", () => {
+      let actualData = invalidNameText("vpcs")(
+        "name",
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "test" already in use',
+        "it should be true"
+      );
+    });
+    it("should return true if vpc acl has a duplicate name", () => {
+      let actualData = invalidNameText("vpcs")(
+        "default_network_acl_name",
+        {
+          name: "test2",
+          default_network_acl_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                  },
+                  {
+                    name: "frog",
+                    default_network_acl_name: "frog",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
+    it("should return true if vpc acl has a duplicate name with existing acl", () => {
+      let actualData = invalidNameText("vpcs")(
+        "default_network_acl_name",
+        {
+          name: "test2",
+          default_network_acl_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    default_network_acl_name: "egg",
+                    acls: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                  {
+                    name: "frog",
+                    default_network_acl_name: null,
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
+    it("should return false if vpc routing table name is empty string", () => {
+      let actualData = invalidNameText("vpcs")("default_routing_table_name", {
+        default_routing_table_name: "",
+      });
+      assert.deepEqual(actualData, "", "it should be false");
+    });
+    it("should return true if vpc routing table has a duplicate name", () => {
+      let actualData = invalidNameText("vpcs")(
+        "default_routing_table_name",
+        {
+          name: "test2",
+          default_routing_table_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                    default_routing_table_name: null,
+                  },
+                  {
+                    name: "frog",
+                    default_routing_table_name: "frog",
+                    acls: [],
+                  },
+                ],
+                security_groups: [],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
+    it("should return true if vpc security group has a duplicate name", () => {
+      let actualData = invalidNameText("vpcs")(
+        "default_security_group_name",
+        {
+          name: "test2",
+          default_security_group_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                  },
+                  {
+                    name: "frog",
+                    default_security_group_name: "frog",
+                    acls: [],
+                  },
+                ],
+                security_groups: [],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
+    it("should return true if vpc acl has a duplicate name with existing sg", () => {
+      let actualData = invalidNameText("vpcs")(
+        "default_security_group_name",
+        {
+          name: "test2",
+          default_security_group_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    default_security_group_name: "egg",
+                    acls: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                  {
+                    name: "frog",
+                    default_security_group_name: null,
+                    acls: [],
+                  },
+                ],
+                security_groups: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
   });
   describe("cosResourceHelperTextCallback", () => {
     it("should return text if using data", () => {

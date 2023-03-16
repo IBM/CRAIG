@@ -40,7 +40,10 @@ const {
   appidCreate,
   appidOnStoreUpdate,
   appidSave,
-  appidDelete
+  appidDelete,
+  appidKeyCreate,
+  appidKeySave,
+  appidKeyDelete
 } = require("./appid");
 const {
   vpcCreate,
@@ -318,7 +321,14 @@ const state = function() {
     onStoreUpdate: appidOnStoreUpdate,
     create: appidCreate,
     save: appidSave,
-    delete: appidDelete
+    delete: appidDelete,
+    subComponents: {
+      keys: {
+        create: appidKeyCreate,
+        save: appidKeySave,
+        delete: appidKeyDelete
+      }
+    }
   });
 
   store.newField("scc", {

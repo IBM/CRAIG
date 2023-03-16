@@ -8,7 +8,7 @@ const {
 } = require("lazy-z");
 const {
   rgIdRef,
-  jsonToTf,
+  jsonToIac,
   tfRef,
   vpcRef,
   composedZone,
@@ -16,7 +16,8 @@ const {
   subnetRef,
   kebabName,
   tfBlock,
-  tfDone
+  tfDone,
+  getTags
 } = require("./utils");
 
 /**
@@ -86,7 +87,7 @@ function formatVsi(vsi, config) {
     resource_group: rgIdRef(vsi.resource_group, config),
     vpc: vpcRef(vsi.vpc),
     zone: composedZone(config, zone),
-    tags: true
+    tags: getTags(config)
   };
   if (vsi.user_data) {
     vsiValues.user_data = vsi.user_data;
@@ -113,9 +114,9 @@ function formatVsi(vsi, config) {
         iops: volume.iops,
         capacity: volume.capacity,
         encryption_key: encryptionKeyRef(vsi.kms, volume.encryption_key),
-        tags: true
+        tags: getTags(config)
       };
-      storageVolumes += jsonToTf(
+      storageVolumes += jsonToIac(
         "ibm_is_volume",
         `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${vsi.index} ${volume.name}`,
         volumeData,
@@ -136,7 +137,7 @@ function formatVsi(vsi, config) {
   }
 
   return (
-    jsonToTf(
+    jsonToIac(
       "ibm_is_instance",
       vsi.index
         ? `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${vsi.index}`
@@ -153,7 +154,7 @@ function formatVsi(vsi, config) {
  * @returns {string} terraform formatted code
  */
 function formatVsiImage(imageName) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_image",
     imageName,
     {
@@ -194,7 +195,7 @@ function formatLoadBalancer(deployment, config) {
       name: kebabName(config, [deployment.name, "lb"]),
       type: `"${deployment.type}"`,
       resource_group: rgIdRef(deployment.resource_group, config),
-      tags: true
+      tags: getTags(config)
     },
     poolValues = {
       lb: tfRef("ibm_is_lb", lbName),
@@ -243,7 +244,7 @@ function formatLoadBalancer(deployment, config) {
         } ${vsiAddress} pool member`;
         // save ref to add dependencies to listener
         poolMemberRefs.push(tfRef("ibm_is_lb_pool_member", poolMemberAddress));
-        poolTf += jsonToTf("ibm_is_lb_pool_member", poolMemberAddress, {
+        poolTf += jsonToIac("ibm_is_lb_pool_member", poolMemberAddress, {
           port: deployment.port,
           lb: tfRef("ibm_is_lb", lbName),
           pool: `element(split("/", ${tfRef(
@@ -261,14 +262,14 @@ function formatLoadBalancer(deployment, config) {
   });
 
   return (
-    jsonToTf("ibm_is_lb", lbName, lbValues, config) +
-    jsonToTf(
+    jsonToIac("ibm_is_lb", lbName, lbValues, config) +
+    jsonToIac(
       "ibm_is_lb_pool",
       `${deployment.name} load balancer pool`,
       poolValues
     ) +
     poolTf +
-    jsonToTf("ibm_is_lb_listener", `${deployment.name} listener`, {
+    jsonToIac("ibm_is_lb_listener", `${deployment.name} listener`, {
       lb: tfRef("ibm_is_lb", lbName),
       default_pool: tfRef(
         "ibm_is_lb_pool",

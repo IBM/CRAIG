@@ -3,10 +3,11 @@ const {
   rgIdRef,
   kebabName,
   vpcRef,
-  jsonToTf,
+  jsonToIac,
   tfRef,
   tfBlock,
-  tfDone
+  tfDone,
+  getTags
 } = require("./utils");
 
 /**
@@ -21,14 +22,14 @@ const {
  * @returns {string} terraform string
  */
 function formatSecurityGroup(sg, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_security_group",
     `${sg.vpc} vpc ${sg.name} sg`,
     {
       name: kebabName(config, [sg.vpc, sg.name, "sg"]),
       vpc: vpcRef(sg.vpc),
       resource_group: rgIdRef(sg.resource_group, config),
-      tags: true
+      tags: getTags(config)
     },
     config
   );
@@ -78,7 +79,7 @@ function formatSgRule(rule) {
       };
     }
   });
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_security_group_rule",
     `${sgAddress} rule ${rule.name}`,
     sgRule

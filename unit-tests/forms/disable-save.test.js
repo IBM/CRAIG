@@ -160,6 +160,94 @@ describe("disableSave", () => {
       "it should be false"
     );
   });
+  it("should return true if an appid instance has an invalid name", () => {
+    assert.isTrue(
+      disableSave(
+        "appid",
+        {
+          name: "@@@",
+          resource_group: "managment-rg",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                appid: [
+                  {
+                    name: "frog",
+                  },
+                  {
+                    name: "toad",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if an appid instance has an invalid resource group", () => {
+    assert.isTrue(
+      disableSave(
+        "appid",
+        { name: "frog", resource_group: null, use_data: false },
+        {
+          craig: {
+            store: {
+              json: {
+                appid: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if an appid key has an invalid name", () => {
+    assert.isTrue(
+      disableSave(
+        "appid_key",
+        {
+          name: "@@@",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                appid: [
+                  {
+                    name: "frog",
+                    keys: [],
+                  },
+                  {
+                    name: "toad",
+                    keys: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
   it("should return true if a secrets manager instance has an invalid encryption key", () => {
     assert.isTrue(
       disableSave(
@@ -438,6 +526,165 @@ describe("disableSave", () => {
         collector_description: "words",
         scope_description: "",
       }),
+      "it should be true"
+    );
+  });
+  it("should return true if vpc does not have bucket", () => {
+    assert.isTrue(
+      disableSave("vpcs", {
+        bucket: null,
+      }),
+      "it should be true"
+    );
+  });
+  it("should return true if vpc does not have resource group", () => {
+    assert.isTrue(
+      disableSave("vpcs", {
+        bucket: "bucket",
+        resource_group: null,
+      }),
+      "it should be true"
+    );
+  });
+  it("should return true if a vpc has an invalid name", () => {
+    assert.isTrue(
+      disableSave(
+        "vpcs",
+        {
+          name: "@@@",
+          resource_group: "managment-rg",
+          bucket: "bucket",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "frog",
+                  },
+                  {
+                    name: "toad",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a vpc has an invalid default network acl name", () => {
+    assert.isTrue(
+      disableSave(
+        "vpcs",
+        {
+          name: "aaa",
+          default_network_acl_name: "@@@",
+          resource_group: "managment-rg",
+          bucket: "bucket",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a vpc has an invalid default security group name", () => {
+    assert.isTrue(
+      disableSave(
+        "vpcs",
+        {
+          name: "aaa",
+          default_network_acl_name: "aaa",
+          default_security_group_name: "@@@",
+          resource_group: "managment-rg",
+          bucket: "bucket",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+                security_groups: []
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a vpc has an invalid default routing table name", () => {
+    assert.isTrue(
+      disableSave(
+        "vpcs",
+        {
+          name: "aaa",
+          default_network_acl_name: "aaa",
+          default_security_group_name: "aaa",
+          default_routing_table_name: "@@@",
+          resource_group: "managment-rg",
+          bucket: "bucket",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+                security_groups: []
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
       "it should be true"
     );
   });

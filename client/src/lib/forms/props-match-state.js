@@ -1,4 +1,4 @@
-const { deepEqual } = require("lazy-z");
+const { deepEqual, isNullOrEmptyString } = require("lazy-z");
 
 /**
  * props match state placeholder
@@ -8,6 +8,17 @@ const { deepEqual } = require("lazy-z");
  * @returns {boolean} true if match
  */
 function propsMatchState(field, stateData, componentProps) {
+  if (field === "vpcs") {
+    [
+      "default_network_acl_name",
+      "default_routing_table_name",
+      "default_security_group_name"
+    ].forEach(field => {
+      if (isNullOrEmptyString(stateData[field])) {
+        stateData[field] = null;
+      }
+    });
+  } 
   return deepEqual(stateData, componentProps.data);
 }
 

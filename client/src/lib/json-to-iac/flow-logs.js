@@ -5,8 +5,9 @@ const {
   bucketRef,
   kebabName,
   vpcRef,
-  jsonToTf,
-  tfBlock
+  jsonToIac,
+  tfBlock,
+  getTags
 } = require("./utils");
 
 /**
@@ -22,7 +23,7 @@ const {
  * @returns {string} terraform string
  */
 function formatFlowLogs(vpc, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_flow_log",
     `${vpc.name}-flow-log-collector`,
     {
@@ -31,7 +32,7 @@ function formatFlowLogs(vpc, config) {
       active: true,
       storage_bucket: bucketRef(vpc.cos, vpc.bucket),
       resource_group: rgIdRef(vpc.resource_group, config),
-      tags: true,
+      tags: getTags(config),
       depends_on: [
         `ibm_iam_authorization_policy.flow_logs_to_${snakeCase(
           vpc.cos
@@ -54,7 +55,7 @@ function formatFlowLogs(vpc, config) {
  */
 
 function formatFlowLogsPolicy(cosName, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_iam_authorization_policy",
     `flow_logs_to_${snakeCase(cosName)}_object_storage_policy`,
     {

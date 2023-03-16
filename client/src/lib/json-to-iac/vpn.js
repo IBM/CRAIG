@@ -1,9 +1,10 @@
 const {
   rgIdRef,
-  jsonToTf,
+  jsonToIac,
   kebabName,
   subnetRef,
-  tfBlock
+  tfBlock,
+  getTags
 } = require("./utils");
 
 /**
@@ -19,14 +20,14 @@ const {
  * @returns {string} terrafirn formatted string
  */
 function formatVpn(gw, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_is_vpn_gateway",
     `${gw.vpc} ${gw.name} vpn gw`,
     {
       name: kebabName(config, [gw.vpc, gw.name, "vpn-gw"]),
       subnet: subnetRef(gw.vpc, gw.subnet),
       resource_group: rgIdRef(gw.resource_group, config),
-      tags: true,
+      tags: getTags(config),
       timeouts: {
         delete: "1h"
       }

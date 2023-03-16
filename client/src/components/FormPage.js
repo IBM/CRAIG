@@ -4,7 +4,9 @@ import {
   ResourceGroupForm,
   KeyManagementForm,
   ObjectStorageForm,
-  SecretsManagerForm
+  SecretsManagerForm,
+  AppIdForm,
+  VpcForm
 } from "icse-react-assets";
 import {
   resourceGroupHelperTextCallback,
@@ -17,6 +19,7 @@ import {
 } from "../lib/forms";
 import PropTypes from "prop-types";
 import { splat } from "lazy-z";
+import { RenderDocs } from "./RenderDocs";
 
 /**
  * create form template props for form page
@@ -36,6 +39,7 @@ function formTemplateProps(form, craig) {
       onSave: craig.resource_groups.save,
       onSubmit: craig.resource_groups.create,
       propsMatchState: propsMatchState,
+      docs: RenderDocs("resource_groups"),
       deleteDisabled: () => {
         return craig.store.json.resource_groups.length === 1;
       },
@@ -57,6 +61,7 @@ function formTemplateProps(form, craig) {
     return {
       name: "Secrets Manager",
       addText: "Create a Secrets Manager Instance",
+      docs: RenderDocs("secrets_manager"),
       arrayData: craig.store.json.secrets_manager,
       innerForm: SecretsManagerForm,
       disableSave: disableSave,
@@ -83,6 +88,7 @@ function formTemplateProps(form, craig) {
     return {
       name: "Key Management",
       addText: "Create a Key Management Service",
+      docs: RenderDocs("key_management"),
       arrayData: craig.store.json.key_management,
       innerForm: KeyManagementForm,
       disableSave: disableSave,
@@ -130,6 +136,7 @@ function formTemplateProps(form, craig) {
       onSave: craig.object_storage.save,
       onSubmit: craig.object_storage.create,
       propsMatchState: propsMatchState,
+      docs: RenderDocs("object_storage"),
       innerFormProps: {
         craig: craig,
         composedNameCallback: cosResourceHelperTextCallback,
@@ -161,7 +168,68 @@ function formTemplateProps(form, craig) {
       },
       toggleFormProps: {
         hideName: true,
-        submissionFieldName: "object_storage",
+        submissionFieldName: "object_storage"
+      }
+    };
+  } else if (form === "appID") {
+    return {
+      name: "AppID",
+      addText: "Create an AppID Service",
+      docs: RenderDocs("appid"),
+      arrayData: craig.store.json.appid,
+      innerForm: AppIdForm,
+      disableSave: disableSave,
+      onDelete: craig.appid.delete,
+      onSave: craig.appid.save,
+      onSubmit: craig.appid.create,
+      propsMatchState: propsMatchState,
+      innerFormProps: {
+        resourceGroups: splat(craig.store.json.resource_groups, "name"),
+        craig: craig,
+        disableSave: invalidName("appid"),
+        invalidCallback: invalidName("appid"),
+        invalidTextCallback: invalidNameText("appid"),
+        invalidKeyCallback: invalidName("appid_keys"),
+        invalidKeyTextCallback: invalidNameText("appid_keys"),
+        propsMatchState: propsMatchState,
+        keyProps: {
+          disableSave: disableSave,
+          onSave: craig.appid.keys.save,
+          onDelete: craig.appid.keys.delete,
+          onSubmit: craig.appid.keys.create,
+          craig: craig
+        }
+      },
+      toggleFormProps: {
+        hideName: true,
+        submissionFieldName: "appid"
+      }
+    };
+  } else if (form === "vpcs") {
+    return {
+      name: "Virtual Private Clouds",
+      addText: "Create a VPC",
+      arrayData: craig.store.json.vpcs,
+      innerForm: VpcForm,
+      disableSave: disableSave,
+      onDelete: craig.vpcs.delete,
+      onSave: craig.vpcs.save,
+      onSubmit: craig.vpcs.create,
+      propsMatchState: propsMatchState,
+      docs: RenderDocs("vpcs"),
+      innerFormProps: {
+        craig: craig,
+        disableSave: disableSave,
+        invalidCallback: invalidName("vpcs"),
+        invalidTextCallback: invalidNameText("vpcs"),
+        cosBuckets: craig.store.cosBuckets,
+        resourceGroups: splat(craig.store.json.resource_groups, "name")
+      },
+      toggleFormProps: {
+        disableSave: disableSave,
+        hideName: true,
+        submissionFieldName: "vpcs",
+        hide: false
       }
     };
   }

@@ -131,17 +131,9 @@ function pushToChildFieldModal(
   stateData,
   componentProps
 ) {
-  config.store.json[field].forEach(instance => {
-    if (
-      deepEqual(
-        splat(instance[subField], "name"),
-        splat(componentProps.arrayData, "name")
-      )
-    ) {
-      pushToChildField(config, field, subField, stateData, {
-        arrayParentName: instance.name
-      });
-    }
+  let parentName = componentProps.innerFormProps.arrayParentName;
+  pushToChildField(config, field, subField, stateData, {
+    arrayParentName: parentName
   });
 }
 

@@ -30,6 +30,13 @@ function disableSave(field, stateData, componentProps) {
       isNullOrEmptyString(stateData.kms) ||
       isNullOrEmptyString(stateData.resource_group)
     );
+  } else if (field === "appid") {
+    return (
+      invalidName("appid")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.resource_group)
+    );
+  } else if (field === "appid_key") {
+    return invalidName("appid_keys")(stateData, componentProps);
   } else if (field === "buckets") {
     return (
       invalidName("buckets")(stateData, componentProps) ||
@@ -55,6 +62,27 @@ function disableSave(field, stateData, componentProps) {
     );
   } else if (field === "resource_groups") {
     return invalidName("resource_groups")(stateData, componentProps);
+  } else if (field === "vpcs") {
+    return (
+      isNullOrEmptyString(stateData.resource_group) ||
+      isNullOrEmptyString(stateData.bucket) ||
+      invalidName("vpcs")("name", stateData, componentProps) ||
+      invalidName("vpcs")(
+        "default_network_acl_name",
+        stateData,
+        componentProps
+      ) ||
+      invalidName("vpcs")(
+        "default_security_group_name",
+        stateData,
+        componentProps
+      ) ||
+      invalidName("vpcs")(
+        "default_routing_table_name",
+        stateData,
+        componentProps
+      )
+    );
   } else return false;
 }
 

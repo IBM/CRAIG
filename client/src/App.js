@@ -100,8 +100,8 @@ class App extends Component {
             element={<Craig craigRouter={this.craigRouter} />}
           />
           <Route
-            path="/docs/about"
-            element={<Craig craigRouter={this.craigRouter} isAboutPage />}
+            path="/docs/:doc"
+            element={<Craig craigRouter={this.craigRouter} />}
           />
           <Route path="/red" element={<Red craigRouter={this.craigRouter} />} />
           <Route

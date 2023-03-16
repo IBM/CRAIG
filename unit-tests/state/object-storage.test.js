@@ -180,7 +180,7 @@ describe("object_storage", () => {
             showBucket: true,
           },
           {
-            arrayParentName: "atracker-cos",
+            innerFormProps: { arrayParentName: "atracker-cos" },
             arrayData: state.store.json.object_storage[0].buckets,
           }
         );
@@ -316,7 +316,7 @@ describe("object_storage", () => {
             enable_hmac: false,
           },
           {
-            arrayParentName: "cos",
+            innerFormProps: { arrayParentName: "cos" },
             arrayData: state.store.json.object_storage[1].keys,
           }
         );
@@ -366,7 +366,7 @@ describe("object_storage", () => {
             enable_hmac: false,
           },
           {
-            arrayParentName: "cos",
+            innerFormProps: { arrayParentName: "cos" },
             arrayData: state.store.json.object_storage[1].keys,
           }
         );

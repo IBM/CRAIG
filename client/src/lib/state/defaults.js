@@ -112,6 +112,7 @@ function newDefaultVpcs() {
       default_network_acl_name: null,
       default_security_group_name: null,
       default_routing_table_name: null,
+      publicGateways: [],
       address_prefixes: [
         {
           vpc: "management",
@@ -324,6 +325,7 @@ function newDefaultVpcs() {
       default_network_acl_name: null,
       default_security_group_name: null,
       default_routing_table_name: null,
+      publicGateways: [],
       address_prefixes: [
         {
           vpc: "workload",

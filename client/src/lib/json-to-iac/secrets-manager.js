@@ -3,7 +3,7 @@ const {
   rgIdRef,
   getKmsInstanceData,
   kebabName,
-  jsonToTf,
+  jsonToIac,
   encryptionKeyRef,
   tfBlock
 } = require("./utils");
@@ -18,7 +18,7 @@ const {
  */
 function formatSecretsManagerToKmsAuth(kmsName, config) {
   let kmsInstance = getKmsInstanceData(kmsName, config);
-  return jsonToTf(
+  return jsonToIac(
     "ibm_iam_authorization_policy",
     `secrets manager to ${kmsName} kms policy`,
     {
@@ -74,7 +74,7 @@ function formatSecretsManagerInstance(secretsManager, config) {
       )}_kms_policy`
     ];
   }
-  return jsonToTf(
+  return jsonToIac(
     "ibm_resource_instance",
     secretsManager.name + "-secrets-manager",
     instance,

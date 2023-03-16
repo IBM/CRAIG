@@ -1,10 +1,11 @@
 const { kebabCase } = require("lazy-z");
 const {
-  jsonToTf,
+  jsonToIac,
   tfRef,
   stringifyTranspose,
   kebabName,
-  tfBlock
+  tfBlock,
+  getTags
 } = require("./utils");
 
 /**
@@ -17,7 +18,7 @@ function formatIamAccountSettings(iamSettings) {
   let iamValues = stringifyTranspose(iamSettings);
   if (iamSettings.enable) {
     delete iamValues.enable;
-    return jsonToTf(
+    return jsonToIac(
       "ibm_iam_account_settings",
       "iam_account_settings",
       iamValues
@@ -33,13 +34,13 @@ function formatIamAccountSettings(iamSettings) {
  * @param {string} terraform string
  */
 function formatAccessGroup(group, config) {
-  return jsonToTf(
+  return jsonToIac(
     "ibm_iam_access_group",
     `${group.name}_access_group`,
     {
       name: kebabName(config, [group.name, "ag"]),
       description: `"${group.description}"`,
-      tags: true
+      tags: getTags(config)
     },
     config
   );
@@ -85,7 +86,7 @@ function formatAccessGroupPolicy(policy) {
       policyValues["-resource_tags"].push(stringifyTranspose(attr));
     });
   }
-  return jsonToTf(
+  return jsonToIac(
     "ibm_iam_access_group_policy",
     `${policy.group} ${policy.name} policy`,
     policyValues
@@ -113,7 +114,7 @@ function formatAccessGroupDynamicRule(policy) {
     identity_provider: `"${policy.identity_provider}"`,
     _conditions: stringifyTranspose(policy.conditions)
   };
-  return jsonToTf(
+  return jsonToIac(
     "ibm_iam_access_group_dynamic_rule",
     `${policy.group} ${policy.name} dynamic rule`,
     policyValues
@@ -128,7 +129,7 @@ function formatAccessGroupDynamicRule(policy) {
  * @returns {string} terraform formatted string
  */
 function formatGroupMembers(invite) {
-  return jsonToTf("ibm_iam_access_group_members", `${invite.group} invites`, {
+  return jsonToIac("ibm_iam_access_group_members", `${invite.group} invites`, {
     access_group_id: tfRef(
       "ibm_iam_access_group",
       invite.group + " access group"

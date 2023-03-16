@@ -17,7 +17,7 @@ const About = () => {
                 <strong>A</strong>nd
               </h1>
               <h1>
-                <strong>I</strong>nfrastructure-as-Code
+                <strong>I</strong>aC
               </h1>
               <h1>
                 <strong>G</strong>enerator
