@@ -6,7 +6,9 @@ const {
 } = require("./text-callbacks");
 const {
   invalidName,
-  invalidEncryptionKeyRing
+  invalidEncryptionKeyRing,
+  invalidSshPublicKey,
+  validSshKey
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const { disableSave } = require("./disable-save");
@@ -19,5 +21,7 @@ module.exports = {
   disableSave,
   invalidNameText,
   invalidEncryptionKeyRing,
-  cosResourceHelperTextCallback
+  cosResourceHelperTextCallback,
+  invalidSshPublicKey,
+  validSshKey
 };

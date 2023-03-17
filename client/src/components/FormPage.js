@@ -5,6 +5,7 @@ import {
   KeyManagementForm,
   ObjectStorageForm,
   SecretsManagerForm,
+  SshKeyForm,
   AppIdForm,
   VpcForm
 } from "icse-react-assets";
@@ -15,7 +16,8 @@ import {
   disableSave,
   invalidName,
   invalidEncryptionKeyRing,
-  cosResourceHelperTextCallback
+  cosResourceHelperTextCallback,
+  invalidSshPublicKey
 } from "../lib/forms";
 import PropTypes from "prop-types";
 import { splat } from "lazy-z";
@@ -230,6 +232,31 @@ function formTemplateProps(form, craig) {
         hideName: true,
         submissionFieldName: "vpcs",
         hide: false
+      }
+    };
+  } else if (form === "sshKeys") {
+    return {
+      name: "SSH Keys",
+      addText: "Create an SSH Key",
+      arrayData: craig.store.json.ssh_keys,
+      innerForm: SshKeyForm,
+      disableSave: disableSave,
+      onDelete: craig.ssh_keys.delete,
+      onSave: craig.ssh_keys.save,
+      onSubmit: craig.ssh_keys.create,
+      propsMatchState: propsMatchState,
+      innerFormProps: {
+        craig: craig,
+        resourceGroups: splat(craig.store.json.resource_groups, "name"),
+        disableSave: disableSave,
+        invalidCallback: invalidName("ssh_keys"),
+        invalidTextCallback: invalidNameText("ssh_keys"),
+        invalidKeyCallback: invalidSshPublicKey,
+        propsMatchState: propsMatchState
+      },
+      toggleFormProps: {
+        hideName: true,
+        submissionFieldName: "ssh_keys"
       }
     };
   }

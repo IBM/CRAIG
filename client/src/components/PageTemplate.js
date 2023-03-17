@@ -27,7 +27,12 @@ import {
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import Navigation from "./page-template/Navigation";
-import { arraySplatIndex, getObjectFromArray, isArray, prettyJSON } from "lazy-z";
+import {
+  arraySplatIndex,
+  getObjectFromArray,
+  isArray,
+  prettyJSON
+} from "lazy-z";
 import { CraigCodeMirror } from "./page-template/CodeMirror";
 import PropTypes from "prop-types";
 import "./page-template.css";
@@ -60,6 +65,13 @@ import {
   formatAclRule,
   formatPgw
 } from "../lib/json-to-iac";
+import {
+  maskFieldsExpStep1ReplacePublicKey,
+  maskFieldsExpStep2ReplaceTmosAdminPassword,
+  maskFieldsExpStep3ReplaceLicensePassword,
+  maskFieldsExpStep4HideValue,
+  maskFieldsExpStep5CleanUp
+} from "../lib/constants";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -258,7 +270,8 @@ const navCategories = [
         title: "SSH Keys",
         path: "/form/sshKeys",
         icon: Password,
-        toTf: sshKeyTf
+        toTf: sshKeyTf,
+        jsonField: "ssh_keys"
       },
       {
         title: "Virtual Server Instances",
@@ -363,7 +376,25 @@ const PageTemplate = props => {
    */
   function getCodeMirrorDisplay(json, jsonInCodeMirror) {
     if (jsonInCodeMirror) {
-      return prettyJSON(json[pageObj.jsonField]);
+      return prettyJSON(json[pageObj.jsonField] || json) // if pageObj.jsonField is undefined - aka, home page
+        .replace(maskFieldsExpStep1ReplacePublicKey, "public_key%%%%")
+        .replace(
+          maskFieldsExpStep2ReplaceTmosAdminPassword,
+          json.f5_vsi.tmos_admin_password
+            ? "tmos_admin_password%%%%"
+            : "tmos_admin_password"
+        )
+        .replace(
+          maskFieldsExpStep3ReplaceLicensePassword,
+          json.f5_vsi.license_password !== "null"
+            ? "license_password%%%%"
+            : "license_password"
+        )
+        .replace(
+          maskFieldsExpStep4HideValue,
+          '": "****************************'
+        )
+        .replace(maskFieldsExpStep5CleanUp, "public_key"); // remove any extraneous %%%% from setting fields to null
     } else if (pageObj.toTf) {
       return pageObj.toTf(json);
     } else return prettyJSON(json);

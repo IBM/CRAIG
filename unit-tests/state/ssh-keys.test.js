@@ -87,6 +87,24 @@ describe("ssh_keys", () => {
       );
     });
   });
+  it("should set public key to null when using data", () => {
+    let state = new newState();
+    let expectedData = {
+      name: "todd",
+      use_data: true,
+      resource_group: "management-rg",
+      public_key: null,
+    };
+    state.ssh_keys.save(
+      { name: "todd", use_data: true, public_key: "honk" },
+      { data: { name: "ssh-key" } }
+    );
+    assert.deepEqual(
+      state.store.json.ssh_keys[0],
+      expectedData,
+      "it should have a new name and public key null"
+    );
+  });
   describe("ssh_keys.create", () => {
     it("should create a new ssh key", () => {
       let state = new newState();

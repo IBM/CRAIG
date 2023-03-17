@@ -40,5 +40,54 @@ module.exports = {
     })
     .anyNumber()
     .stringEnd()
-    .done("s")
+    .done("s"),
+  sshKeyValidationExp: new RegexButWithWords()
+    .stringBegin()
+    .literal("ssh-rsa AAAA")
+    .set("0-9A-Za-z+/")
+    .oneOrMore()
+    .group(exp => {
+      exp.set("=", 0, 3).group(exp => {
+        exp
+          .negatedSet("@")
+          .oneOrMore()
+          .literal("@")
+          .negatedSet("@")
+          .oneOrMore();
+      });
+    })
+    .lazy()
+    .stringEnd()
+    .done("g"),
+  maskFieldsExpStep1ReplacePublicKey: new RegexButWithWords()
+    .literal("public_key")
+    .done("g"),
+  maskFieldsExpStep2ReplaceTmosAdminPassword: new RegexButWithWords()
+    .literal("tmos_admin_password")
+    .done("g"),
+  maskFieldsExpStep3ReplaceLicensePassword: new RegexButWithWords()
+    .literal("license_password")
+    .done("g"),
+  maskFieldsExpStep4HideValue: new RegexButWithWords()
+    .literal('%%%%":')
+    .negativeLook.ahead(exp => exp.whitespace().literal("null"))
+    .whitespace()
+    .group(exp => {
+      exp
+        .group(exp =>
+          exp
+            .literal('"')
+            .negatedSet('"')
+            .oneOrMore()
+            .look.ahead('"')
+        )
+        .or()
+        .literal("null")
+        .or()
+        .literal('""');
+    })
+    .done("g"),
+  maskFieldsExpStep5CleanUp: new RegexButWithWords()
+    .literal("public_key%%%%")
+    .done("g")
 };

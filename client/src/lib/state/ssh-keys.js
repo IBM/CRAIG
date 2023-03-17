@@ -73,6 +73,10 @@ function sshKeyCreate(config, stateData) {
  */
 function sshKeySave(config, stateData, componentProps) {
   delete stateData.show;
+  if (stateData.use_data) {
+    // if using data, public key null
+    stateData.public_key = null;
+  }
   // if ssh key has new name
   if (stateData.name !== componentProps.data.name) {
     // for each vsi

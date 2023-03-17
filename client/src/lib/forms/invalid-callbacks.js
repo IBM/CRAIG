@@ -1,6 +1,11 @@
-const { isNullOrEmptyString } = require("lazy-z");
-const { containsKeys } = require("regex-but-with-words/lib/utils");
-const { newResourceNameExp } = require("../constants");
+const {
+  splat,
+  getObjectFromArray,
+  isNullOrEmptyString,
+  contains,
+  containsKeys
+} = require("lazy-z");
+const { newResourceNameExp, sshKeyValidationExp } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
 /**
@@ -74,8 +79,60 @@ function invalidEncryptionKeyRing(stateData) {
   return stateData.key_ring !== "" && validNewResourceName(stateData.key_ring);
 }
 
+/**
+ * validate sshKey
+ * @param {string} str
+ * @returns {boolean} true if it is a valid sshKey
+ */
+function validSshKey(str) {
+  if (str === null) {
+    return false;
+  } else {
+    return str.match(sshKeyValidationExp) !== null;
+  }
+}
+
+/**
+ * check if ssh key is invalid
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Object} invalid boolean invalidText string
+ */
+function invalidSshPublicKey(stateData, componentProps) {
+  let invalid = {
+    invalid: false,
+    invalidText:
+      "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region"
+  };
+  if (!validSshKey(stateData.public_key)) {
+    invalid.invalid = true;
+  } else if (
+    // if public key already used
+    contains(
+      splat(componentProps.craig.store.json.ssh_keys, "public_key"),
+      stateData.public_key
+    )
+  ) {
+    let key = getObjectFromArray(
+      componentProps.craig.store.json.ssh_keys,
+      "public_key",
+      stateData.public_key
+    );
+    if (componentProps.data.name === key.name) {
+      return invalid; // This is the current key, escape
+    } else {
+      // duplicate key
+      invalid.invalid = true;
+      invalid.invalidText = "SSH Public Key in use";
+    }
+  }
+  return invalid;
+}
+
 module.exports = {
   invalidName,
   validNewResourceName,
-  invalidEncryptionKeyRing
+  invalidEncryptionKeyRing,
+  invalidSshPublicKey,
+  validSshKey
 };

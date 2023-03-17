@@ -110,7 +110,8 @@ class Craig extends React.Component {
                 "objectStorage",
                 "secretsManager",
                 "appID",
-                "vpcs"
+                "vpcs",
+                "sshKeys"
               ],
               this.props.params.form
             ) ? (

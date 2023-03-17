@@ -1,7 +1,9 @@
 const { isNullOrEmptyString, isEmpty } = require("lazy-z");
 const {
   invalidName,
-  invalidEncryptionKeyRing
+  invalidEncryptionKeyRing,
+  validSshKey,
+  invalidSshPublicKey
 } = require("./invalid-callbacks");
 
 /**
@@ -82,6 +84,14 @@ function disableSave(field, stateData, componentProps) {
         stateData,
         componentProps
       )
+    );
+  } else if (field === "ssh_keys") {
+    return (
+      invalidName("ssh_keys")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.resource_group) ||
+      (stateData.use_data
+        ? false // do not check invalid public key if using data, return false
+        : invalidSshPublicKey(stateData, componentProps).invalid)
     );
   } else return false;
 }

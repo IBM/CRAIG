@@ -1,5 +1,8 @@
 const { assert } = require("chai");
-const { invalidName } = require("../../client/src/lib/forms");
+const {
+  invalidName,
+  invalidSshPublicKey,
+} = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
   describe("invalidName", () => {
@@ -309,6 +312,238 @@ describe("invalid callbacks", () => {
         }
       );
       assert.isTrue(actualData, "it should be true");
+    });
+  });
+  describe("invalidSshKey", () => {
+    it("should return false when updating name", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          name: "new-name",
+          resource_group: "management-rg",
+          public_key:
+            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [
+                  {
+                    name: "ssh-key",
+                    resource_group: "management-rg",
+                    public_key:
+                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "ssh-key",
+          },
+        }
+      ).invalid;
+      assert.isFalse(actualData);
+    });
+  });
+  it("should return true when adding duplicate public key", () => {
+    let actualData = invalidSshPublicKey(
+      {
+        name: "hi",
+        public_key:
+          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+      },
+      {
+        craig: {
+          store: {
+            json: {
+              ssh_keys: [
+                {
+                  name: "ssh-key",
+                  resource_group: "management-rg",
+                  public_key:
+                    "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "hi",
+        },
+      }
+    ).invalid;
+    assert.isTrue(actualData);
+  });
+  it("should return true when key invalid", () => {
+    let actualData = invalidSshPublicKey(
+      {
+        name: "hi",
+        public_key: "honk",
+      },
+      {
+        craig: {
+          store: {
+            json: {
+              ssh_keys: [],
+            },
+          },
+        },
+        data: {
+          name: "hi",
+        },
+      }
+    ).invalid;
+    assert.isTrue(actualData);
+  });
+  it("should return false when adding valid key", () => {
+    let actualData = invalidSshPublicKey(
+      {
+        name: "hi",
+        resource_group: "management-rg",
+        public_key:
+          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+      },
+      {
+        craig: {
+          store: {
+            json: {
+              ssh_keys: [],
+            },
+          },
+        },
+        data: {
+          name: "hi",
+        },
+      }
+    ).invalid;
+    assert.isFalse(actualData);
+  });
+  describe("invalidSshKey", () => {
+    it("should return false when updating name", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          name: "new-name",
+          resource_group: "management-rg",
+          public_key:
+            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [
+                  {
+                    name: "ssh-key",
+                    resource_group: "management-rg",
+                    public_key:
+                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "ssh-key",
+          },
+        }
+      ).invalid;
+      assert.isFalse(actualData);
+    });
+    it("should return true when adding duplicate public key", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          name: "hi",
+          public_key:
+            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [
+                  {
+                    name: "ssh-key",
+                    resource_group: "management-rg",
+                    public_key:
+                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "hi",
+          },
+        }
+      ).invalid;
+      assert.isTrue(actualData);
+    });
+    it("should return true when key invalid", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          name: "hi",
+          public_key: "honk",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [],
+              },
+            },
+          },
+          data: {
+            name: "hi",
+          },
+        }
+      ).invalid;
+      assert.isTrue(actualData);
+    });
+    it("should return false when adding valid key", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          name: "hi",
+          resource_group: "management-rg",
+          public_key:
+            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [],
+              },
+            },
+          },
+          data: {
+            name: "hi",
+          },
+        }
+      ).invalid;
+      assert.isFalse(actualData);
+    });
+    it("should return true when ssh key is null", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          name: "hi",
+          resource_group: "management-rg",
+          public_key: null,
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [],
+              },
+            },
+          },
+          data: {
+            name: "hi",
+          },
+        }
+      ).invalid;
+      assert.isTrue(actualData);
     });
   });
 });
