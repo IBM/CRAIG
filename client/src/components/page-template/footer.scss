@@ -56,8 +56,12 @@
   font-weight: 400;
 }
 
-.footerPopover {
+.footerPopoverDismiss {
   right: 450% !important; // important to override auto align
+}
+
+ .footerPopoverShow {
+  right: 412.5% !important; // important to override auto align
 }
 
 .popover-text {

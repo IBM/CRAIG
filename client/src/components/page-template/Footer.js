@@ -65,7 +65,9 @@ const Footer = props => {
           hoverText={
             props.hideFooter ? "Show Navigation Bar" : "Dismiss Navigation Bar"
           }
-          contentClassName="footerPopover"
+          contentClassName={
+            props.hideFooter ? "footerPopoverShow" : "footerPopoverDismiss"
+          }
           align="left"
         >
           <Button
