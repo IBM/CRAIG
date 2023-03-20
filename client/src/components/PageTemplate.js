@@ -227,7 +227,8 @@ const navCategories = [
         title: "Transit Gateways",
         path: "/form/transitGateways",
         icon: IbmCloudTransitGateway,
-        toTf: tgwTf
+        toTf: tgwTf,
+        jsonField: "transit_gateways"
       },
       {
         title: "Security Groups",

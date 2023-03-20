@@ -93,6 +93,12 @@ function disableSave(field, stateData, componentProps) {
         ? false // do not check invalid public key if using data, return false
         : invalidSshPublicKey(stateData, componentProps).invalid)
     );
+  } else if (field === "transit_gateways") {
+    return (
+      invalidName("transit_gateways")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.resource_group) ||
+      isEmpty(stateData.connections)
+    );
   } else return false;
 }
 

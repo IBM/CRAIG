@@ -638,7 +638,7 @@ describe("disableSave", () => {
                     acls: [],
                   },
                 ],
-                security_groups: []
+                security_groups: [],
               },
             },
           },
@@ -676,7 +676,7 @@ describe("disableSave", () => {
                     acls: [],
                   },
                 ],
-                security_groups: []
+                security_groups: [],
               },
             },
           },
@@ -687,9 +687,6 @@ describe("disableSave", () => {
       ),
       "it should be true"
     );
-  });
-  it("should otherwise return false", () => {
-    assert.isFalse(disableSave("pretend_field", {}, {}), "it should be false");
   });
   it("should return true when the ssh key name already exists", () => {
     assert.isTrue(
@@ -810,5 +807,88 @@ describe("disableSave", () => {
       ),
       "it should be enabled"
     );
+  });
+  it("should return true if tgw has invalid name", () => {
+    assert.isTrue(
+      disableSave(
+        "transit_gateways",
+        {
+          name: "@@@",
+          resource_group: "what",
+          connections: [{ tgw: "@@@", vpc: "management" }],
+        },
+        {
+          craig: {
+            store: {
+              resourceGroups: ["what"],
+              vpcs: ["management"],
+              json: {
+                transit_gateways: [],
+              },
+            },
+          },
+          data: {
+            name: "hi",
+          },
+        }
+      ),
+      "it should be disabled"
+    );
+  });
+  it("should return true if tgw with no rg", () => {
+    assert.isTrue(
+      disableSave(
+        "transit_gateways",
+        {
+          name: "hi",
+          resource_group: "",
+          connections: [{ tgw: "hi", vpc: "management" }],
+        },
+        {
+          craig: {
+            store: {
+              resourceGroups: ["what"],
+              vpcs: ["management"],
+              json: {
+                transit_gateways: [],
+              },
+            },
+          },
+          data: {
+            name: "hi",
+          },
+        }
+      ),
+      "it should be disabled"
+    );
+  });
+  it("should return true if tgw enabled with no vpcs", () => {
+    assert.isTrue(
+      disableSave(
+        "transit_gateways",
+        {
+          name: "hi",
+          resource_group: "what",
+          connections: [],
+        },
+        {
+          craig: {
+            store: {
+              resourceGroups: ["what"],
+              json: {
+                transit_gateways: [],
+              },
+            },
+          },
+          data: {
+            name: "hi",
+          },
+        }
+      ),
+      "it should be disabled"
+    );
+  });
+  it("should otherwise return false", () => {
+    assert.isFalse(disableSave("pretend_field", {}, {}), "it should be false");
   });
 });

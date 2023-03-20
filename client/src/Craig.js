@@ -111,7 +111,8 @@ class Craig extends React.Component {
                 "secretsManager",
                 "appID",
                 "vpcs",
-                "sshKeys"
+                "sshKeys",
+                "transitGateways"
               ],
               this.props.params.form
             ) ? (

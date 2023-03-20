@@ -7,7 +7,8 @@ import {
   SecretsManagerForm,
   SshKeyForm,
   AppIdForm,
-  VpcForm
+  VpcForm,
+  TransitGatewayForm
 } from "icse-react-assets";
 import {
   resourceGroupHelperTextCallback,
@@ -239,6 +240,7 @@ function formTemplateProps(form, craig) {
       name: "SSH Keys",
       addText: "Create an SSH Key",
       arrayData: craig.store.json.ssh_keys,
+      docs: RenderDocs("ssh_keys"),
       innerForm: SshKeyForm,
       disableSave: disableSave,
       onDelete: craig.ssh_keys.delete,
@@ -257,6 +259,33 @@ function formTemplateProps(form, craig) {
       toggleFormProps: {
         hideName: true,
         submissionFieldName: "ssh_keys"
+      }
+    };
+  } else if (form === "transitGateways") {
+    return {
+      name: "Transit Gateways",
+      addText: "Create a Transit Gateway",
+      arrayData: craig.store.json.transit_gateways,
+      docs: RenderDocs("transit_gateway"),
+      innerForm: TransitGatewayForm,
+      disableSave: disableSave,
+      onDelete: craig.transit_gateways.delete,
+      onSave: craig.transit_gateways.save,
+      onSubmit: craig.transit_gateways.create,
+      propsMatchState: propsMatchState,
+      innerFormProps: {
+        craig: craig,
+        resourceGroups: splat(craig.store.json.resource_groups, "name"),
+        vpcList: craig.store.vpcList,
+        disableSave: disableSave,
+        invalidCallback: invalidName("transit_gateways"),
+        invalidTextCallback: invalidNameText("transit_gateways"),
+        propsMatchState: propsMatchState,
+        readOnlyName: false
+      },
+      toggleFormProps: {
+        hideName: true,
+        submissionFieldName: "transit_gateways"
       }
     };
   }
