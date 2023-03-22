@@ -6,7 +6,6 @@ const {
   eachKey,
   isString,
   parseIntFromZone,
-  contains
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { endComment } = require("./constants");
@@ -193,6 +192,7 @@ function cosRef(name, value, data) {
  * @returns {string}
  */
 function bucketRef(cos, bucket, value, data) {
+  if (!cos || !bucket) return `ERROR: Unfound ref`;
   return tfRef(
     "ibm_cos_bucket",
     cos + " object storage " + bucket + " bucket",

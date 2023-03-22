@@ -23,22 +23,26 @@ const {
  * @returns {string} terraform string
  */
 function formatFlowLogs(vpc, config) {
+  let flowLogsData = {
+    name: kebabName(config, [vpc.name, "vpc-logs"]),
+    target: vpcRef(vpc.name),
+    active: true,
+    storage_bucket: bucketRef(vpc.cos, vpc.bucket),
+    resource_group: rgIdRef(vpc.resource_group, config),
+    tags: getTags(config),
+    depends_on: [
+      `ibm_iam_authorization_policy.flow_logs_to_${snakeCase(
+        vpc.cos
+      )}_object_storage_policy`
+    ]
+  }
+  if(!vpc.cos || !vpc.bucket) {
+    delete flowLogsData.depends_on;
+  }
   return jsonToIac(
     "ibm_is_flow_log",
     `${vpc.name}-flow-log-collector`,
-    {
-      name: kebabName(config, [vpc.name, "vpc-logs"]),
-      target: vpcRef(vpc.name),
-      active: true,
-      storage_bucket: bucketRef(vpc.cos, vpc.bucket),
-      resource_group: rgIdRef(vpc.resource_group, config),
-      tags: getTags(config),
-      depends_on: [
-        `ibm_iam_authorization_policy.flow_logs_to_${snakeCase(
-          vpc.cos
-        )}_object_storage_policy`
-      ]
-    },
+    flowLogsData,
     config
   );
 }

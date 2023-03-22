@@ -7,7 +7,7 @@ import PageTemplate from "./components/PageTemplate";
 import { FormPage } from "./components/FormPage";
 import { titleCase } from "lazy-z";
 import { contains } from "regex-but-with-words/lib/utils";
-import About from "./components/About";
+import About from "./components/pages/About";
 import { ToggleFormPage } from "./components/ToggleFormPage";
 
 const withRouter = Page => props => {
@@ -112,7 +112,8 @@ class Craig extends React.Component {
                 "appID",
                 "vpcs",
                 "sshKeys",
-                "transitGateways"
+                "transitGateways",
+                "nacls"
               ],
               this.props.params.form
             ) ? (

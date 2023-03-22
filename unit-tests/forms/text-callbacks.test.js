@@ -4,6 +4,7 @@ const {
   genericNameCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
+  aclHelperTextCallback,
 } = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {
@@ -404,6 +405,29 @@ describe("text callbacks", () => {
         ),
         "test-test",
         "it should display data"
+      );
+    });
+  });
+  describe("aclHelperTextCallback", () => {
+    it("should return correct text", () => {
+      assert.deepEqual(
+        aclHelperTextCallback(
+          { name: "test" },
+          {
+            vpc_name: "vpc",
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "iac-vpc-test-acl",
+        "it should return correct text"
       );
     });
   });

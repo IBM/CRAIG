@@ -1,6 +1,6 @@
 {
-  "name": "project-bettername-gui",
-  "version": "0.8.0",
+  "name": "craig",
+  "version": "0.1.0",
   "private": true,
   "repository": "git@github.com:carbon-design-system/carbon-tutorial.git",
   "bugs": "https://github.com/carbon-design-system/carbon-tutorial/issues",
@@ -25,7 +25,7 @@
     "@uiw/react-codemirror": "^4.12.2",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
-    "icse-react-assets": "^0.1.48",
+    "icse-react-assets": "^0.2.2",
     "json-to-tf": "^0.1.0",
     "jszip": "^3.10.1",
     "lazy-z": "^1.8.2",

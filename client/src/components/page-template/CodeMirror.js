@@ -38,7 +38,7 @@ const carbonDesignCodemirrorTheme = createTheme({
 export const CraigCodeMirror = props => {
   return (
     props.hideCodeMirror !== true && (
-      <div className="rightPanelWidth">
+      <div className={props.className || "rightPanelWidth"}>
         <CodeMirror
           className="label"
           readOnly={true}

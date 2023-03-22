@@ -10,7 +10,8 @@ const {
   parseIntFromZone,
   formatCidrBlock,
   buildNetworkingRule,
-  eachZone
+  eachZone,
+  splatContains
 } = require("lazy-z");
 const {
   newDefaultEdgeAcl,
@@ -79,6 +80,22 @@ function pgwNumberToZone(vpc) {
 }
 
 /**
+ * get cos for vpc based on bucket name
+ * @param {lazyZState} config state store
+ * @param {string} bucket
+ * @returns {string} name of instance for tf ref
+ */
+function getVpcCosName(config, bucket) {
+  let cosName = null;
+  config.store.json.object_storage.forEach(instance => {
+    if (splatContains(instance.buckets, "name", bucket)) {
+      cosName = instance.name;
+    }
+  });
+  return cosName;
+}
+
+/**
  * create a new vpc
  * @param {lazyZState} config state store
  * @param {object} config.store
@@ -86,10 +103,23 @@ function pgwNumberToZone(vpc) {
  * @param {object} stateData component state data
  */
 function vpcCreate(config, stateData) {
-  let vpc = newVpc();
+  let vpc = {
+    name: null,
+    resource_group: null,
+    classic_access: false,
+    manual_address_prefix_management: false,
+    default_network_acl_name: null,
+    default_security_group_name: null,
+    default_routing_table_name: null,
+    address_prefixes: [],
+    subnets: [],
+    public_gateways: [],
+    acls: []
+  };
   transpose(stateData, vpc);
   pgwNumberToZone(vpc);
   config.store.subnetTiers[vpc.name] = [];
+  vpc.cos = getVpcCosName(config, stateData.bucket);
   pushAndUpdate(config, "vpcs", vpc);
 }
 
@@ -121,6 +151,10 @@ function vpcDelete(config, stateData, componentProps) {
 function vpcOnStoreUpdate(config) {
   // for each network
   config.store.json.vpcs.forEach(network => {
+    network.cos = getVpcCosName(config, network.bucket);
+    if (network.cos === null) {
+      network.bucket = null;
+    }
     config.store.networkAcls[network.name] = splat(network.acls, "name");
     let subnetList = []; // create a new list
     // for each zone
@@ -177,6 +211,7 @@ function vpcSave(config, stateData, componentProps) {
     });
     delete config.store.subnetTiers[oldName];
   }
+  vpc.cos = getVpcCosName(config, stateData.bucket);
 
   new revision(config.store.json)
     .child("vpcs", oldName, "name")
@@ -521,7 +556,7 @@ function naclCreate(config, stateData, componentProps) {
 function naclDelete(config, stateData, componentProps) {
   // new revision
   new revision(config.store.json)
-    .child("vpcs", componentProps.arrayParentName, "name") // get vpc
+    .child("vpcs", componentProps.vpc_name, "name") // get vpc
     .child("acls") // get network acl
     .deleteArrChild(componentProps.data.name); // delete acl
 }
@@ -542,7 +577,7 @@ function naclDelete(config, stateData, componentProps) {
 
 function naclSave(config, stateData, componentProps) {
   new revision(config.store.json)
-    .child("vpcs", componentProps.arrayParentName, "name")
+    .child("vpcs", componentProps.vpc_name, "name")
     .child("acls", componentProps.data.name)
     .update(stateData);
 }
@@ -592,10 +627,16 @@ function naclRuleCreate(config, stateData, componentProps) {
  */
 function naclRuleSave(config, stateData, componentProps) {
   let networkRule = stateData;
+  let vpcName;
   formatNetworkingRule(config, networkRule, componentProps);
+  config.store.json.vpcs.forEach(vpc => {
+    if (splatContains(vpc.acls, "name", componentProps.parent_name)) {
+      vpcName = vpc.name;
+    }
+  });
   // new revision
   new revision(config.store.json)
-    .child("vpcs", componentProps.vpc_name, "name") // get vpc
+    .child("vpcs", vpcName, "name") // get vpc
     .child("acls", componentProps.parent_name) // get acls
     .child("rules", componentProps.data.name) // get rule
     .then(data => {
@@ -621,12 +662,19 @@ function naclRuleSave(config, stateData, componentProps) {
  */
 
 function naclRuleDelete(config, stateData, componentProps) {
+  let vpcName;
+  config.store.json.vpcs.forEach(vpc => {
+    if (splatContains(vpc.acls, "name", componentProps.parent_name)) {
+      vpcName = vpc.name;
+    }
+  });
   // new revision
   new revision(config.store.json)
-    .child("vpcs", componentProps.vpc_name, "name") // get vpc name
+    .child("vpcs", vpcName, "name") // get vpc name
     .child("acls", componentProps.parent_name) // get network acls
     .child("rules") // get rules
     .deleteArrChild(componentProps.data.name); // delete rule
+  config.update();
 }
 
 /**

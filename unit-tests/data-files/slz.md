@@ -141,15 +141,15 @@ workload   | vpe         | 10.50.10.0/24 | 10.50.20.0/24 | 10.50.30.0/24
 
 -----
 
-## Transit Gateway
+## Transit Gateways
 
-A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other.
+A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other. By default, a single transit gateway is created connecting the management and workload VPCs.
 
 The default configuration includes:
 
 Service Name        | Description
 --------------------|-----------------------------------------------------------------------------------------------------------
-slz-transit-gateway | A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs.
+iac-transit-gateway | A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs.
 
 ### Related Links
 

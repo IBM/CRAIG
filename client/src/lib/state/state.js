@@ -1,5 +1,12 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const { contains, typeCheck } = require("lazy-z");
+const {
+  contains,
+  typeCheck,
+  getObjectFromArray,
+  splatContains,
+  transpose,
+  revision
+} = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,
@@ -166,6 +173,7 @@ const {
   accessGroupDynamicPolicySave,
   accessGroupDynamicPolicyDelete
 } = require("./iam");
+const { clusterRules } = require("../constants");
 
 const state = function() {
   let store = new lazyZstate({
@@ -480,6 +488,76 @@ const state = function() {
       }
     }
   });
+
+  /**
+   * add cluster rules and update
+   * @param {string} vpcName
+   * @param {string} aclName
+   */
+  store.addClusterRules = function(vpcName, aclName) {
+    let acl = new revision(store.store.json)
+      .child("vpcs", vpcName, "name")
+      .child("acls", aclName, "name").data;
+    clusterRules.forEach(rule => {
+      if (!splatContains(acl.rules, "name", rule.name)) {
+        let newRule = {
+          vpc: vpcName,
+          acl: aclName
+        };
+        transpose(rule, newRule);
+        acl.rules.push(newRule);
+      }
+    });
+    store.update();
+  };
+
+  /**
+   * copy network acl from one vpc to another and update
+   * @param {string} sourceVpc source vpc
+   * @param {string} aclName name of acl to copy
+   * @param {string} destinationVpc copy destination
+   */
+  store.copyNetworkAcl = function(sourceVpc, aclName, destinationVpc) {
+    let oldAcl = new revision(store.store.json)
+      .child("vpcs", sourceVpc, "name")
+      .child("acls", aclName, "name").data;
+    let acl = {};
+    transpose(oldAcl, acl);
+    acl.vpc = destinationVpc;
+    acl.name += "-copy";
+    acl.rules.forEach(rule => {
+      rule.vpc = acl.vpc;
+      rule.acl = acl.name;
+    });
+    getObjectFromArray(store.store.json.vpcs, "name", destinationVpc).acls.push(
+      acl
+    );
+    store.update();
+  };
+
+  /**
+   * copy acl rule to list and update
+   * @param {string} sourceVpc
+   * @param {string} aclName
+   * @param {string} ruleName
+   * @param {string} destinationAcl
+   */
+  store.copyRule = function(sourceVpc, aclName, ruleName, destinationAcl) {
+    let oldRule = new revision(store.store.json)
+      .child("vpcs", sourceVpc, "name")
+      .child("acls", aclName, "name")
+      .child("rules", ruleName, "name").data;
+    let rule = {};
+    transpose(oldRule, rule);
+    store.store.json.vpcs.forEach(vpc => {
+      if (splatContains(vpc.acls, "name", destinationAcl)) {
+        rule.vpc = vpc.name;
+        rule.acl = destinationAcl;
+        getObjectFromArray(vpc.acls, "name", destinationAcl).rules.push(rule);
+      }
+    });
+    store.update();
+  };
 
   return store;
 };

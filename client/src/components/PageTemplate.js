@@ -27,12 +27,7 @@ import {
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import Navigation from "./page-template/Navigation";
-import {
-  arraySplatIndex,
-  getObjectFromArray,
-  isArray,
-  prettyJSON
-} from "lazy-z";
+import { arraySplatIndex, getObjectFromArray, prettyJSON } from "lazy-z";
 import { CraigCodeMirror } from "./page-template/CodeMirror";
 import PropTypes from "prop-types";
 import "./page-template.css";
@@ -72,6 +67,7 @@ import {
   maskFieldsExpStep4HideValue,
   maskFieldsExpStep5CleanUp
 } from "../lib/constants";
+import { formatFlowLogs } from "../lib/json-to-iac/flow-logs";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -179,7 +175,11 @@ const navCategories = [
             vpc.public_gateways.forEach(gateway => {
               blockData += formatPgw(gateway, config);
             });
-            tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
+            tf +=
+              tfBlock(vpc.name + " vpc", blockData) +
+              "\n" +
+              tfBlock(vpc.name + " flow logs", formatFlowLogs(vpc, config)) +
+              "\n";
           });
           return tfDone(tf);
         },
@@ -377,6 +377,13 @@ const PageTemplate = props => {
    */
   function getCodeMirrorDisplay(json, jsonInCodeMirror) {
     if (jsonInCodeMirror) {
+      if (pageObj.path === "/form/nacls") {
+        let allAcls = [];
+        json.vpcs.forEach(nw => {
+          allAcls = allAcls.concat(nw.acls);
+        });
+        return prettyJSON(allAcls);
+      }
       return prettyJSON(json[pageObj.jsonField] || json) // if pageObj.jsonField is undefined - aka, home page
         .replace(maskFieldsExpStep1ReplacePublicKey, "public_key%%%%")
         .replace(

@@ -34,7 +34,13 @@ module.exports = {
     .set("A-z")
     .group(exp => {
       exp
-        .set("a-z0-9-")
+        .group(exp =>
+          exp
+            .set("a-z0-9-")
+            .or()
+            .literal("\\")
+            .any()
+        )
         .anyNumber()
         .set("a-z0-9");
     })
@@ -89,5 +95,167 @@ module.exports = {
     .done("g"),
   maskFieldsExpStep5CleanUp: new RegexButWithWords()
     .literal("public_key%%%%")
-    .done("g")
+    .done("g"),
+  clusterRules: [
+    {
+      name: "roks-create-worker-nodes-inbound",
+      action: "allow",
+      source: "161.26.0.0/16",
+      destination: "0.0.0.0/0",
+      direction: "inbound",
+      tcp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    },
+    {
+      name: "roks-create-worker-nodes-outbound",
+      action: "allow",
+      destination: "161.26.0.0/16",
+      source: "0.0.0.0/0",
+      direction: "outbound",
+      tcp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    },
+    {
+      name: "roks-nodes-to-service-inbound",
+      action: "allow",
+      source: "166.8.0.0/14",
+      destination: "0.0.0.0/0",
+      direction: "inbound",
+      tcp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    },
+    {
+      name: "roks-nodes-to-service-outbound",
+      action: "allow",
+      destination: "166.8.0.0/14",
+      source: "0.0.0.0/0",
+      direction: "outbound",
+      tcp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    },
+    {
+      name: "allow-app-incoming-traffic-requests",
+      action: "allow",
+      source: "0.0.0.0/0",
+      destination: "0.0.0.0/0",
+      direction: "inbound",
+      tcp: {
+        source_port_min: 30000,
+        source_port_max: 32767,
+        port_min: null,
+        port_max: null
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    },
+    {
+      name: "allow-app-outgoing-traffic-requests",
+      action: "allow",
+      source: "0.0.0.0/0",
+      destination: "0.0.0.0/0",
+      direction: "outbound",
+      tcp: {
+        source_port_min: null,
+        source_port_max: null,
+        port_min: 30000,
+        port_max: 32767
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    },
+    {
+      name: "allow-lb-incoming-traffic-requests",
+      action: "allow",
+      source: "0.0.0.0/0",
+      destination: "0.0.0.0/0",
+      direction: "inbound",
+      tcp: {
+        source_port_min: null,
+        source_port_max: null,
+        port_min: 443,
+        port_max: 443
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    },
+    {
+      name: "allow-lb-outgoing-traffic-requests",
+      action: "allow",
+      source: "0.0.0.0/0",
+      destination: "0.0.0.0/0",
+      direction: "outbound",
+      tcp: {
+        source_port_min: 443,
+        source_port_max: 443,
+        port_min: null,
+        port_max: null
+      },
+      udp: {
+        port_min: null,
+        port_max: null,
+        source_port_min: null,
+        source_port_max: null
+      },
+      icmp: { code: null, type: null }
+    }
+  ]
 };

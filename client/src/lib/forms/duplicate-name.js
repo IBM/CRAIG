@@ -31,12 +31,16 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       );
     });
   } else if (field === "acls") {
-    componentProps.craig.store.json.vpcs.forEach(network => {
-      allOtherNames = allOtherNames.concat(splat(network.acls, "name"));
-      if (!isNullOrEmptyString(network.default_network_acl_name)) {
-        allOtherNames.push(network.default_network_acl_name);
-      }
-    });
+    // all of the extra ifs and elses here are to prevent order card from
+    // triggering disable save when it has no props
+    if (!componentProps.id && !componentProps.parent_name) {
+      componentProps.craig.store.json.vpcs.forEach(network => {
+        allOtherNames = allOtherNames.concat(splat(network.acls, "name"));
+        if (!isNullOrEmptyString(network.default_network_acl_name)) {
+          allOtherNames.push(network.default_network_acl_name);
+        }
+      });
+    }
   } else if (field === "security_groups") {
     allOtherNames = splat(
       componentProps.craig.store.json.security_groups,
@@ -53,18 +57,31 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         allOtherNames.push(network.default_routing_table_name);
       }
     });
-  } else {
+  } else if (field === "acl_rules") {
+    let craigRef = componentProps.isModal
+      ? componentProps.craig
+      : componentProps.innerFormProps.craig;
+    craigRef.store.json.vpcs.forEach(network => {
+      network.acls.forEach(acl => {
+        if (acl.name === componentProps.parent_name) {
+          allOtherNames = splat(acl.rules, "name");
+        }
+      });
+    });
+  } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],
       "name"
     );
   }
-  if (contains(allOtherNames, componentProps.data[stateField]))
-    allOtherNames.splice(
-      allOtherNames.indexOf(componentProps.data[stateField]),
-      1
-    );
-  return contains(allOtherNames, stateData[stateField]);
+  if (stateData && componentProps) {
+    if (contains(allOtherNames, componentProps.data[stateField]))
+      allOtherNames.splice(
+        allOtherNames.indexOf(componentProps.data[stateField]),
+        1
+      );
+    return contains(allOtherNames, stateData[stateField]);
+  } else return false; // prevent order card from crashing
 }
 
 module.exports = {

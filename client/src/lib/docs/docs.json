@@ -175,7 +175,7 @@
     ],
     "relatedLinks": [["https://www.ibm.com/cloud/learn/vpc"]]
   },
-  "network_acls": {
+  "acls": {
     "content": [
       {
         "text": "An Access Control List (ACL) is a built-in, virtual firewall. An ACL can be leveraged to control all incoming and outgoing traffic on a VPC.",
@@ -329,10 +329,10 @@
       ]
     ]
   },
-  "transit_gateway": {
+  "transit_gateways": {
     "content": [
       {
-        "text": "A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other."
+        "text": "A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other. By default, a single transit gateway is created connecting the management and workload VPCs."
       },
       {
         "text": "_default_includes"
@@ -341,7 +341,7 @@
         "table": [
           ["_headers", "Service Name", "Description"],
           [
-            "slz-transit-gateway",
+            "iac-transit-gateway",
             "A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs."
           ]
         ]

@@ -95,7 +95,7 @@ function allDocs() {
         ? "Cloud Object Storage"
         : heading === "vpcs"
         ? "VPCs"
-        : heading === "network_acls"
+        : heading === "acls"
         ? "Network Access Control Lists"
         : heading === "vsi"
         ? "Virtual Server Instance Deployments"

@@ -360,42 +360,42 @@ resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_manageme
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_listener" "lb_1_listener" {
@@ -406,12 +406,12 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
   connection_limit = 2
 
   depends_on = [
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member.id
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member
   ]
 }
 `;
@@ -524,42 +524,42 @@ resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_manageme
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_listener" "lb_1_listener" {
@@ -570,12 +570,12 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
   connection_limit = 2
 
   depends_on = [
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member.id
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member
   ]
 }
 `;
@@ -694,42 +694,42 @@ resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_manageme
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member" {
   port           = 80
   lb             = ibm_is_lb.lb_1_load_balancer.id
   pool           = element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)
-  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ipv4_address
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ip.0.address
 }
 
 resource "ibm_is_lb_listener" "lb_1_listener" {
@@ -740,12 +740,12 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
   connection_limit = 2
 
   depends_on = [
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member.id,
-    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member.id
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member
   ]
 }
 

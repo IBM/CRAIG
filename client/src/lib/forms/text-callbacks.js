@@ -27,7 +27,7 @@ function resourceGroupHelperTextCallback(stateData, componentProps) {
  * @return {string} invalid message
  */
 function genericNameCallback() {
-  return `Name must follow the regex pattern: ${newResourceNameExp}`;
+  return `Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s`;
 }
 
 /**
@@ -101,10 +101,28 @@ function cosResourceHelperTextCallback(stateData, componentProps) {
   }${stateData.name}${stateData.use_random_suffix ? "-<random-suffix>" : ""}`;
 }
 
+/**
+ * get helper text for network acl
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} composed acl name
+ */
+function aclHelperTextCallback(stateData, componentProps) {
+  return (
+    componentProps.craig.store.json._options.prefix +
+    "-" +
+    componentProps.vpc_name +
+    "-" +
+    stateData.name +
+    "-acl"
+  );
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
   duplicateNameCallback,
   invalidNameText,
-  cosResourceHelperTextCallback
+  cosResourceHelperTextCallback,
+  aclHelperTextCallback
 };

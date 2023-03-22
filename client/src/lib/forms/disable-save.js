@@ -1,4 +1,10 @@
-const { isNullOrEmptyString, isEmpty } = require("lazy-z");
+const {
+  isNullOrEmptyString,
+  isEmpty,
+  isIpv4CidrOrAddress,
+  containsKeys,
+  validPortRange
+} = require("lazy-z");
 const {
   invalidName,
   invalidEncryptionKeyRing,
@@ -7,12 +13,43 @@ const {
 } = require("./invalid-callbacks");
 
 /**
+ * check if a field is null or empty string, reduce unit test writing
+ * @param {string} field
+ * @param {Object} stateData
+ * @returns {boolean} true if null or empty string
+ */
+function badField(field, stateData) {
+  return isNullOrEmptyString(stateData[field]);
+}
+
+/**
+ * test if a rule has an invalid port
+ * @param {*} rule
+ * @returns {boolean} true if port is invalid
+ */
+function invalidPort(rule) {
+  let hasInvalidPort = false;
+  if (rule.ruleProtocol !== "all") {
+    (rule.ruleProtocol === "icmp"
+      ? ["type", "code"]
+      : ["port_min", "port_max", "source_port_min", "source_port_max"]
+    ).forEach(type => {
+      if (rule.rule[type] && !hasInvalidPort) {
+        hasInvalidPort = !validPortRange(type, rule.rule[type]);
+      }
+    });
+  }
+  return hasInvalidPort;
+}
+
+/**
  * disable save
  * @param {string} field field name
  * @param {Object} stateData
  * @param {Object} componentProps
  * @returns {boolean} true if match
  */
+
 function disableSave(field, stateData, componentProps) {
   if (field === "scc") {
     return (
@@ -22,27 +59,27 @@ function disableSave(field, stateData, componentProps) {
     );
   } else if (field === "atracker") {
     return (
-      isNullOrEmptyString(stateData.bucket) ||
-      isNullOrEmptyString(stateData.cos_key) ||
+      badField("bucket", stateData) ||
+      badField("cos_key", stateData) ||
       isEmpty(stateData.locations)
     );
   } else if (field === "object_storage") {
     return (
       invalidName("object_storage")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.kms) ||
-      isNullOrEmptyString(stateData.resource_group)
+      badField("kms", stateData) ||
+      badField("resource_group", stateData)
     );
   } else if (field === "appid") {
     return (
       invalidName("appid")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group)
+      badField("resource_group", stateData)
     );
   } else if (field === "appid_key") {
     return invalidName("appid_keys")(stateData, componentProps);
   } else if (field === "buckets") {
     return (
       invalidName("buckets")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.kms_key)
+      badField("kms_key", stateData)
     );
   } else if (field === "cos_keys") {
     return invalidName("cos_keys")(stateData, componentProps);
@@ -54,20 +91,20 @@ function disableSave(field, stateData, componentProps) {
   } else if (field === "key_management") {
     return (
       invalidName("key_management")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group)
+      badField("resource_group", stateData)
     );
   } else if (field === "secrets_manager") {
     return (
       invalidName("secrets_manager")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group) ||
-      isNullOrEmptyString(stateData.encryption_key)
+      badField("resource_group", stateData) ||
+      badField("encryption_key", stateData)
     );
   } else if (field === "resource_groups") {
     return invalidName("resource_groups")(stateData, componentProps);
   } else if (field === "vpcs") {
     return (
-      isNullOrEmptyString(stateData.resource_group) ||
-      isNullOrEmptyString(stateData.bucket) ||
+      badField("resource_group", stateData) ||
+      badField("bucket", stateData) ||
       invalidName("vpcs")("name", stateData, componentProps) ||
       invalidName("vpcs")(
         "default_network_acl_name",
@@ -98,8 +135,21 @@ function disableSave(field, stateData, componentProps) {
       invalidName("transit_gateways")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.resource_group) ||
       isEmpty(stateData.connections)
+    )
+  } else if (field === "acls") {
+    return (
+      !containsKeys(stateData, "resource_group") ||
+      badField("resource_group", stateData) ||
+      invalidName("acls")(stateData, componentProps)
+    );
+  } else if (field === "acl_rules") {
+    return (
+      invalidName("acl_rules")(stateData, componentProps) ||
+      !isIpv4CidrOrAddress(stateData.source) ||
+      !isIpv4CidrOrAddress(stateData.destination) ||
+      invalidPort(stateData)
     );
   } else return false;
 }
 
-module.exports = { disableSave };
+module.exports = { disableSave, invalidPort };

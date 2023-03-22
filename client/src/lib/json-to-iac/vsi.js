@@ -243,7 +243,9 @@ function formatLoadBalancer(deployment, config) {
           vsiDeployment.name
         } ${vsiAddress} pool member`;
         // save ref to add dependencies to listener
-        poolMemberRefs.push(tfRef("ibm_is_lb_pool_member", poolMemberAddress));
+        poolMemberRefs.push(
+          "ibm_is_lb_pool_member." + snakeCase(poolMemberAddress)
+        );
         poolTf += jsonToIac("ibm_is_lb_pool_member", poolMemberAddress, {
           port: deployment.port,
           lb: tfRef("ibm_is_lb", lbName),
@@ -254,7 +256,7 @@ function formatLoadBalancer(deployment, config) {
           target_address: tfRef(
             "ibm_is_instance",
             vsiAddress,
-            "primary_network_interface.0.primary_ipv4_address"
+            "primary_network_interface.0.primary_ip.0.address"
           )
         });
       }

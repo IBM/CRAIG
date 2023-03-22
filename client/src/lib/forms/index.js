@@ -2,7 +2,8 @@ const {
   resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidNameText,
-  cosResourceHelperTextCallback
+  cosResourceHelperTextCallback,
+  aclHelperTextCallback
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -11,9 +12,11 @@ const {
   validSshKey
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
-const { disableSave } = require("./disable-save");
+const { disableSave, invalidPort } = require("./disable-save");
+const { hasDuplicateName } = require("./duplicate-name");
 
 module.exports = {
+  hasDuplicateName,
   resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidName,
@@ -23,5 +26,7 @@ module.exports = {
   invalidEncryptionKeyRing,
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
-  validSshKey
+  validSshKey,
+  invalidPort,
+  aclHelperTextCallback
 };
