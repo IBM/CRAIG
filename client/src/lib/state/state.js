@@ -511,6 +511,14 @@ const state = function() {
     store.update();
   };
 
+  store.getAllSubnets = function() {
+    let subnetList = [];
+    store.store.json.vpcs.forEach(vpc => {
+      vpc.subnets.forEach(subnet => subnetList.push(subnet));
+    });
+    return subnetList;
+  };
+
   /**
    * copy network acl from one vpc to another and update
    * @param {string} sourceVpc source vpc

@@ -16,7 +16,8 @@ import {
   AppIdForm,
   VpcForm,
   SshKeyForm,
-  TransitGatewayForm
+  TransitGatewayForm,
+  VpnGatewayForm
 } from "icse-react-assets";
 import { RenderDocs } from "./RenderDocs";
 import { splat, contains, transpose } from "lazy-z";
@@ -70,9 +71,14 @@ const pathToFormMap = {
     name: "Transit Gateways",
     addText: "Create a Transit Gateway",
     innerForm: TransitGatewayForm
+  },
+  vpn: {
+    jsonField: "vpn_gateways",
+    name: "VPN Gateways",
+    addText: "Create a VPN Gateway",
+    innerForm: VpnGatewayForm
   }
 };
-
 /**
  * create form template props for form page
  * @param {string} form form name
@@ -104,7 +110,7 @@ function formProps(form, craig) {
         submissionFieldName: "network_acls",
         disableSave: none,
         propsMatchState: none,
-        nullRef: true,
+        nullRef: true
       }
     };
   }
@@ -144,7 +150,8 @@ function formProps(form, craig) {
         "appID",
         "vpcs",
         "ssh_keys",
-        "transitGateways"
+        "transitGateways",
+        "vpn"
       ],
       form
     )
@@ -255,6 +262,9 @@ function formProps(form, craig) {
   } else if (form === "transitGateways") {
     formTemplate.innerFormProps.vpcList = craig.store.vpcList;
     formTemplate.innerFormProps.readOnlyName = false;
+  } else if (form === "vpn") {
+    formTemplate.innerFormProps.vpcList = craig.store.vpcList;
+    formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
   }
   return formTemplate;
 }

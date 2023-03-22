@@ -135,7 +135,7 @@ function disableSave(field, stateData, componentProps) {
       invalidName("transit_gateways")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.resource_group) ||
       isEmpty(stateData.connections)
-    )
+    );
   } else if (field === "acls") {
     return (
       !containsKeys(stateData, "resource_group") ||
@@ -148,6 +148,13 @@ function disableSave(field, stateData, componentProps) {
       !isIpv4CidrOrAddress(stateData.source) ||
       !isIpv4CidrOrAddress(stateData.destination) ||
       invalidPort(stateData)
+    );
+  } else if (field === "vpn_gateways") {
+    return (
+      invalidName("vpn_gateways")(stateData, componentProps) ||
+      badField("resource_group", stateData) ||
+      badField("vpc", stateData) ||
+      badField("subnet", stateData)
     );
   } else return false;
 }

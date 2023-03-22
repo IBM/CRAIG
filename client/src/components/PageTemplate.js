@@ -248,7 +248,8 @@ const navCategories = [
         title: "VPN Gateways",
         path: "/form/vpn",
         icon: GatewayVpn,
-        toTf: vpnTf
+        toTf: vpnTf,
+        jsonField: "vpn_gateways"
       }
     ]
   },
