@@ -5,6 +5,8 @@ const {
   invalidNameText,
   cosResourceHelperTextCallback,
   aclHelperTextCallback,
+  invalidSubnetTierName,
+  invalidSubnetTierText,
 } = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {
@@ -428,6 +430,60 @@ describe("text callbacks", () => {
         ),
         "iac-vpc-test-acl",
         "it should return correct text"
+      );
+    });
+  });
+  describe("invalidSubnetTierText", () => {
+    it("should return true when name invalid", () => {
+      let actualData = invalidSubnetTierText(
+        { name: "@@@" },
+        {
+          vpc_name: "test",
+          craig: {
+            store: {
+              subnetTiers: {
+                test: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+        }
+      );
+      let expectedData =
+        "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s";
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return true when name duplicate", () => {
+      let actualData = invalidSubnetTierText(
+        { name: "frog" },
+        {
+          vpc_name: "test",
+          craig: {
+            store: {
+              subnetTiers: {
+                test: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+        }
+      );
+      let expectedData =
+        'Name "frog" already in use';
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
       );
     });
   });

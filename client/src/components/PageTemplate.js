@@ -384,6 +384,12 @@ const PageTemplate = props => {
           allAcls = allAcls.concat(nw.acls);
         });
         return prettyJSON(allAcls);
+      } else if (pageObj.path === "/form/subnets") {
+        let allSubnets = [];
+        json.vpcs.forEach(nw => {
+          allSubnets = allSubnets.concat(nw.subnets);
+        });
+        return prettyJSON(allSubnets);
       }
       return prettyJSON(json[pageObj.jsonField] || json) // if pageObj.jsonField is undefined - aka, home page
         .replace(maskFieldsExpStep1ReplacePublicKey, "public_key%%%%")

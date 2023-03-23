@@ -160,10 +160,8 @@ describe("vpcs", () => {
         default_network_acl_name: null,
         default_security_group_name: null,
         default_routing_table_name: null,
-        address_prefixes: [
-        ],
-        subnets: [
-        ],
+        address_prefixes: [],
+        subnets: [],
         public_gateways: [],
         publicGateways: [],
         acls: [],
@@ -239,7 +237,7 @@ describe("vpcs", () => {
             {
               vpc: "workload",
               zone: 2,
-              cidr: "10.50.20.0/24",
+              cidr: "10.50.10.0/24",
               name: "vsi-zone-2",
               network_acl: "workload",
               resource_group: "workload-rg",
@@ -249,7 +247,7 @@ describe("vpcs", () => {
             {
               vpc: "workload",
               zone: 3,
-              cidr: "10.60.30.0/24",
+              cidr: "10.60.10.0/24",
               name: "vsi-zone-3",
               network_acl: "workload",
               resource_group: "workload-rg",
@@ -259,7 +257,7 @@ describe("vpcs", () => {
             {
               vpc: "workload",
               zone: 1,
-              cidr: "10.20.10.0/24",
+              cidr: "10.40.20.0/24",
               name: "vpe-zone-1",
               network_acl: "workload",
               resource_group: "workload-rg",
@@ -269,7 +267,7 @@ describe("vpcs", () => {
             {
               vpc: "workload",
               zone: 2,
-              cidr: "10.20.20.0/24",
+              cidr: "10.50.20.0/24",
               name: "vpe-zone-2",
               network_acl: "workload",
               resource_group: "workload-rg",
@@ -279,7 +277,7 @@ describe("vpcs", () => {
             {
               vpc: "workload",
               zone: 3,
-              cidr: "10.20.30.0/24",
+              cidr: "10.60.20.0/24",
               name: "vpe-zone-3",
               network_acl: "workload",
               resource_group: "workload-rg",
@@ -467,7 +465,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -477,7 +475,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -487,7 +485,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -507,7 +505,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -570,7 +568,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "frog-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -580,7 +578,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -600,7 +598,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -615,12 +613,93 @@ describe("vpcs", () => {
           },
           {
             vpc_name: "management",
-            tier: { name: "vsi" },
+            data: { name: "vsi" },
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "management",
+                      publicGateways: [],
+                    },
+                  ],
+                },
+              },
+            },
           }
         );
 
         assert.deepEqual(
           vpcState.store.json.vpcs[0].subnets,
+          expectedData,
+          "it should change subnets"
+        );
+      });
+      it("should update a subnet tier in place and update address prefixes", () => {
+        let vpcState = newState();
+        let expectedData = [
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.10.0/24",
+            name: "frog-zone-1",
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.10.0/24",
+            name: "frog-zone-2",
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.20.0/24",
+            name: "vpe-zone-1",
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.20.0/24",
+            name: "vpe-zone-2",
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            cidr: "10.30.20.0/24",
+            name: "vpe-zone-3",
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.30.0/24",
+            name: "vpn-zone-1",
+          },
+        ];
+        vpcState.vpcs.subnetTiers.save(
+          {
+            name: "frog",
+            zones: 2,
+          },
+          {
+            vpc_name: "management",
+            data: { name: "vsi" },
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "management",
+                      publicGateways: [],
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        );
+
+        assert.deepEqual(
+          vpcState.store.json.vpcs[0].address_prefixes,
           expectedData,
           "it should change subnets"
         );
@@ -652,7 +731,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "frog-zone-2",
             network_acl: "todd",
             resource_group: "management-rg",
@@ -662,7 +741,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -682,7 +761,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -699,13 +778,14 @@ describe("vpcs", () => {
           },
           {
             vpc_name: "management",
-            tier: { name: "vsi" },
-            config: {
+            data: { name: "vsi" },
+            craig: {
               store: {
                 json: {
                   vpcs: [
                     {
                       name: "management",
+                      publicGateways: [1, 2],
                       public_gateways: [
                         {
                           vpc: "management",
@@ -760,7 +840,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "frog-zone-2",
             network_acl: "todd",
             resource_group: "management-rg",
@@ -770,7 +850,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -790,7 +870,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -807,13 +887,14 @@ describe("vpcs", () => {
           },
           {
             vpc_name: "management",
-            tier: { name: "vsi" },
-            config: {
+            data: { name: "vsi" },
+            craig: {
               store: {
                 json: {
                   vpcs: [
                     {
                       name: "management",
+                      publicGateways: [1],
                       public_gateways: [
                         {
                           vpc: "management",
@@ -859,7 +940,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -869,7 +950,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -879,7 +960,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -899,7 +980,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -925,11 +1006,104 @@ describe("vpcs", () => {
           },
           {
             vpc_name: "management",
-            tier: { name: "vpn" },
+            data: { name: "vpn" },
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "management",
+                      publicGateways: [],
+                    },
+                  ],
+                },
+              },
+            },
           }
         );
         assert.deepEqual(
           vpcState.store.json.vpcs[0].subnets,
+          expectedData,
+          "it should change subnets"
+        );
+      });
+      it("should update a subnet tier address prefixes in place with additional zones and with no acl", () => {
+        let vpcState = newState();
+        let expectedData = [
+          {
+            vpc: 'management',
+            zone: 1,
+            cidr: '10.10.10.0/24',
+            name: 'vsi-zone-1'
+          },
+          {
+            vpc: 'management',
+            zone: 2,
+            cidr: '10.20.10.0/24',
+            name: 'vsi-zone-2'
+          },
+          {
+            vpc: 'management',
+            zone: 3,
+            cidr: '10.30.10.0/24',
+            name: 'vsi-zone-3'
+          },
+          {
+            vpc: 'management',
+            zone: 1,
+            cidr: '10.10.20.0/24',
+            name: 'vpe-zone-1'
+          },
+          {
+            vpc: 'management',
+            zone: 2,
+            cidr: '10.20.20.0/24',
+            name: 'vpe-zone-2'
+          },
+          {
+            vpc: 'management',
+            zone: 3,
+            cidr: '10.30.20.0/24',
+            name: 'vpe-zone-3'
+          },
+          {
+            vpc: 'management',
+            zone: 1,
+            cidr: '10.10.30.0/24',
+            name: 'vpn-zone-1'
+          },
+          {
+            vpc: 'management',
+            zone: 2,
+            cidr: '10.20.30.0/24',
+            name: 'vpn-zone-2'
+          }
+        ];
+        vpcState.vpcs.subnetTiers.save(
+          {
+            name: "vpn",
+            zones: 2,
+            networkAcl: "",
+          },
+          {
+            vpc_name: "management",
+            data: { name: "vpn" },
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "management",
+                      publicGateways: [],
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        );
+        assert.deepEqual(
+          vpcState.store.json.vpcs[0].address_prefixes,
           expectedData,
           "it should change subnets"
         );
@@ -960,7 +1134,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -970,7 +1144,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -980,7 +1154,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1000,7 +1174,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1027,13 +1201,14 @@ describe("vpcs", () => {
           },
           {
             vpc_name: "management",
-            tier: { name: "vpn" },
-            config: {
+            data: { name: "vpn" },
+            craig: {
               store: {
                 json: {
                   vpcs: [
                     {
                       name: "management",
+                      publicGateways: [1],
                       public_gateways: [
                         {
                           vpc: "management",
@@ -1079,7 +1254,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1089,7 +1264,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1099,7 +1274,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1119,7 +1294,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1146,13 +1321,14 @@ describe("vpcs", () => {
           },
           {
             vpc_name: "management",
-            tier: { name: "vpn" },
-            config: {
+            data: { name: "vpn" },
+            craig: {
               store: {
                 json: {
                   vpcs: [
                     {
                       name: "management",
+                      publicGateways: [1, 2],
                       public_gateways: [
                         {
                           vpc: "management",
@@ -1202,7 +1378,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1212,7 +1388,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1222,7 +1398,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1242,7 +1418,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1292,13 +1468,14 @@ describe("vpcs", () => {
           },
           {
             vpc_name: "management",
-            tier: { name: "f5-bastion" },
-            config: {
+            data: { name: "f5-bastion" },
+            craig: {
               store: {
                 json: {
                   vpcs: [
                     {
                       name: "management",
+                      publicGateways: [1, 2],
                       public_gateways: [
                         {
                           vpc: "management",
@@ -1358,7 +1535,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1368,7 +1545,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1378,7 +1555,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1398,7 +1575,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1477,7 +1654,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1487,7 +1664,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1497,7 +1674,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1517,7 +1694,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1594,7 +1771,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.10.20.0/24",
+            cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1604,7 +1781,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.10.30.0/24",
+            cidr: "10.30.10.0/24",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1614,7 +1791,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.20.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1634,7 +1811,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.20.30.0/24",
+            cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1686,7 +1863,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpn-zone-1",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1696,7 +1873,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.20.0/24",
+            cidr: "10.10.10.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1706,7 +1883,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.20.30.0/24",
+            cidr: "10.20.10.0/24",
             name: "vpe-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1716,7 +1893,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.30.40.0/24",
+            cidr: "10.30.10.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1726,10 +1903,48 @@ describe("vpcs", () => {
         ];
         vpcState.vpcs.subnetTiers.delete(
           {},
-          { vpc_name: "management", tier: { name: "vsi" } }
+          { vpc_name: "management", data: { name: "vsi" } }
         );
         assert.deepEqual(
           vpcState.store.json.vpcs[0].subnets,
+          expectedData,
+          "it should change subnets"
+        );
+      });
+      it("should delete a subnet tier and update address prefixes", () => {
+        let vpcState = new newState();
+        let expectedData = [
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.10.0/24",
+            name: "vpe-zone-1",
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.10.0/24",
+            name: "vpe-zone-2",
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            cidr: "10.30.10.0/24",
+            name: "vpe-zone-3",
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.20.0/24",
+            name: "vpn-zone-1",
+          },
+        ];
+        vpcState.vpcs.subnetTiers.delete(
+          {},
+          { vpc_name: "management", data: { name: "vsi" } }
+        );
+        assert.deepEqual(
+          vpcState.store.json.vpcs[0].address_prefixes,
           expectedData,
           "it should change subnets"
         );
@@ -1771,7 +1986,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.10.0/24",
+            cidr: "10.10.20.0/24",
             name: "vpn-zone-1",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1781,7 +1996,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.20.0/24",
+            cidr: "10.10.10.0/24",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
@@ -1791,7 +2006,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.20.30.0/24",
+            cidr: "10.20.10.0/24",
             name: "vpe-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1801,7 +2016,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.30.40.0/24",
+            cidr: "10.30.10.0/24",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -1841,7 +2056,7 @@ describe("vpcs", () => {
         ];
         vpcState.vpcs.subnetTiers.delete(
           { name: "vsi", zones: 3 },
-          { vpc_name: "management", tier: { name: "vsi", zones: 3 } }
+          { vpc_name: "management", data: { name: "vsi", zones: 3 } }
         );
         assert.deepEqual(
           vpcState.store.json.vpcs[0].subnets,
@@ -1921,7 +2136,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 2,
-              cidr: "10.10.20.0/24",
+              cidr: "10.20.10.0/24",
               name: "vsi-zone-2",
               network_acl: null,
               resource_group: "management-rg",
@@ -1931,7 +2146,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 3,
-              cidr: "10.10.30.0/24",
+              cidr: "10.30.10.0/24",
               name: "vsi-zone-3",
               network_acl: null,
               resource_group: "management-rg",
@@ -1941,7 +2156,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 1,
-              cidr: "10.20.10.0/24",
+              cidr: "10.10.20.0/24",
               name: "vpe-zone-1",
               resource_group: "management-rg",
               network_acl: null,
@@ -1961,7 +2176,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 3,
-              cidr: "10.20.30.0/24",
+              cidr: "10.30.20.0/24",
               name: "vpe-zone-3",
               network_acl: null,
               resource_group: "management-rg",

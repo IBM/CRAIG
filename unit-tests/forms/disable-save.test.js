@@ -1375,6 +1375,64 @@ describe("disableSave", () => {
       "it should be true"
     );
   });
+  it("should return true if subnet tier has invalid name", () => {
+    assert.isTrue(
+      disableSave(
+        "subnetTier",
+        { name: "frog" },
+        {
+          vpc_name: "test",
+          data: {
+            name: "todd",
+          },
+          craig: {
+            store: {
+              subnetTiers: {
+                test: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+        }
+      ),
+      "it should be disabled"
+    );
+  });
+  it("should return false if subnet tier has same name as props", () => {
+    assert.isFalse(
+      disableSave(
+        "subnetTier",
+        { name: "todd" },
+        {
+          vpc_name: "test",
+          data: {
+            name: "todd",
+          },
+          craig: {
+            store: {
+              subnetTiers: {
+                test: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+        }
+      ),
+      "it should be disabled"
+    );
+  });
+  it("should return true if subnet has invalid network acl", () => {
+    assert.isTrue(
+      disableSave("subnet", { network_acl: null }),
+      "it should be true"
+    );
+  });
   it("should otherwise return false", () => {
     assert.isFalse(disableSave("pretend_field", {}, {}), "it should be false");
   });

@@ -3,7 +3,8 @@ const {
   getObjectFromArray,
   isNullOrEmptyString,
   contains,
-  containsKeys
+  containsKeys,
+  splatContains
 } = require("lazy-z");
 const { newResourceNameExp, sshKeyValidationExp } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
@@ -129,10 +130,29 @@ function invalidSshPublicKey(stateData, componentProps) {
   return invalid;
 }
 
+/**
+ * check if subnet tier name is invalid
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidSubnetTierName(stateData, componentProps) {
+  return (
+    (splatContains(
+      componentProps.craig.store.subnetTiers[componentProps.vpc_name],
+      "name",
+      stateData.name
+    ) &&
+      stateData.name !== componentProps.data.name) ||
+    validNewResourceName(stateData.name)
+  );
+}
+
 module.exports = {
   invalidName,
   validNewResourceName,
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
-  validSshKey
+  validSshKey,
+  invalidSubnetTierName
 };

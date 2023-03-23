@@ -3,17 +3,20 @@ const {
   genericNameCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
-  aclHelperTextCallback
+  aclHelperTextCallback,
+  invalidSubnetTierText
 } = require("./text-callbacks");
 const {
   invalidName,
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
-  validSshKey
+  validSshKey,
+  invalidSubnetTierName
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const { disableSave, invalidPort } = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
+const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
 
 module.exports = {
   hasDuplicateName,
@@ -28,5 +31,9 @@ module.exports = {
   invalidSshPublicKey,
   validSshKey,
   invalidPort,
-  aclHelperTextCallback
+  aclHelperTextCallback,
+  invalidSubnetTierName,
+  invalidSubnetTierText,
+  getSubnetTierStateData,
+  getTierSubnets
 };

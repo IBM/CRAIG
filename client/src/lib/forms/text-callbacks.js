@@ -1,5 +1,4 @@
-const { isNullOrEmptyString } = require("lazy-z");
-const { newResourceNameExp } = require("../constants");
+const { isNullOrEmptyString, splatContains } = require("lazy-z");
 const { hasDuplicateName } = require("./duplicate-name");
 
 /**
@@ -37,6 +36,24 @@ function genericNameCallback() {
  */
 function duplicateNameCallback(name) {
   return `Name "${name}" already in use`;
+}
+
+/**
+ * get invalid subnet tier text
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} invalid text
+ */
+function invalidSubnetTierText(stateData, componentProps) {
+  if (
+    splatContains(
+      componentProps.craig.store.subnetTiers[componentProps.vpc_name],
+      "name",
+      stateData.name
+    )
+  )
+    return duplicateNameCallback(stateData.name);
+  else return genericNameCallback();
 }
 
 /**
@@ -124,5 +141,6 @@ module.exports = {
   duplicateNameCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
-  aclHelperTextCallback
+  aclHelperTextCallback,
+  invalidSubnetTierText
 };

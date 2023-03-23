@@ -22,6 +22,7 @@ import {
 import { RenderDocs } from "./RenderDocs";
 import { splat, contains, transpose } from "lazy-z";
 import NaclForm from "./forms/NaclForm";
+import SubnetForm from "./forms/SubnetForm";
 
 const pathToFormMap = {
   resourceGroups: {
@@ -88,12 +89,12 @@ const pathToFormMap = {
 function formProps(form, craig) {
   function none() {}
 
-  if (form === "nacls") {
+  if (form === "nacls" || form === "subnets") {
     return {
-      name: "Network Access Control Lists",
-      innerForm: NaclForm,
+      name: form === "nacls" ? "Network Access Control Lists" : "VPC Subnets",
+      innerForm: form === "nacls" ? NaclForm : SubnetForm,
       arrayData: craig.store.json.vpcs,
-      docs: RenderDocs("acls"),
+      docs: RenderDocs("subnets"),
       onSubmit: none,
       onDelete: none,
       onSave: none,
@@ -107,10 +108,10 @@ function formProps(form, craig) {
         noDeleteButton: true,
         noSaveButton: true,
         hideName: true,
-        submissionFieldName: "network_acls",
+        submissionFieldName: form === "nacls" ? "network_acls" : "subnetTiers",
         disableSave: none,
         propsMatchState: none,
-        nullRef: true
+        nullRef: true,
       }
     };
   }

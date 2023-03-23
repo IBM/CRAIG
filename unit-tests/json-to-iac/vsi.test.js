@@ -175,7 +175,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_1_block_storage
   zone           = "us-south-1"
   iops           = 1000
   capacity       = 200
-  encryption_key = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+  encryption_key = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   tags           = ["slz","landing-zone"]
 }
 `;

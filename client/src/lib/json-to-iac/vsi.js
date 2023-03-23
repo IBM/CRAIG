@@ -113,7 +113,7 @@ function formatVsi(vsi, config) {
         zone: composedZone(config, zone),
         iops: volume.iops,
         capacity: volume.capacity,
-        encryption_key: encryptionKeyRef(vsi.kms, volume.encryption_key),
+        encryption_key: encryptionKeyRef(vsi.kms, volume.encryption_key, "crn"),
         tags: getTags(config)
       };
       storageVolumes += jsonToIac(

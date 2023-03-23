@@ -1434,7 +1434,7 @@
           "zone": 2,
           "network_acl": "management",
           "resource_group": "management-rg",
-          "cidr": "10.10.20.0/24",
+          "cidr": "10.20.10.0/24",
           "name": "vsi-zone-2",
           "public_gateway": false,
           "has_prefix": true
@@ -1444,7 +1444,7 @@
           "zone": 3,
           "network_acl": "management",
           "resource_group": "management-rg",
-          "cidr": "10.10.30.0/24",
+          "cidr": "10.30.10.0/24",
           "name": "vsi-zone-3",
           "public_gateway": false,
           "has_prefix": true
@@ -1454,7 +1454,7 @@
           "zone": 1,
           "network_acl": "management",
           "resource_group": "management-rg",
-          "cidr": "10.20.10.0/24",
+          "cidr": "10.10.20.0/24",
           "name": "vpe-zone-1",
           "public_gateway": false,
           "has_prefix": true
@@ -1474,7 +1474,7 @@
           "zone": 3,
           "network_acl": "management",
           "resource_group": "management-rg",
-          "cidr": "10.20.30.0/24",
+          "cidr": "10.30.20.0/24",
           "name": "vpe-zone-3",
           "public_gateway": false,
           "has_prefix": true

@@ -9,7 +9,8 @@ const {
   invalidName,
   invalidEncryptionKeyRing,
   validSshKey,
-  invalidSshPublicKey
+  invalidSshPublicKey,
+  invalidSubnetTierName
 } = require("./invalid-callbacks");
 
 /**
@@ -155,8 +156,15 @@ function disableSave(field, stateData, componentProps) {
       badField("resource_group", stateData) ||
       badField("vpc", stateData) ||
       badField("subnet", stateData)
+    )
+  } else if (field === "subnetTier") {
+    return (
+      invalidSubnetTierName(stateData, componentProps) ||
+      badField("networkAcl", stateData)
     );
-  } else return false;
+  }  else if (field === "subnet") {
+    return badField("network_acl", stateData)
+   }else return false;
 }
 
 module.exports = { disableSave, invalidPort };

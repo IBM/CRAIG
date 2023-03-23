@@ -25,7 +25,7 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
       source_service_name: "^secrets-manager",
       roles: '["Reader"]',
       description: "^Allow Secets Manager instance to read from KMS instance",
-      target_service_name: kmsInstance.name,
+      target_service_name: "^" + kmsInstance.type,
       target_resource_instance_id: kmsInstance.guid
     }
   );

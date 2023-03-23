@@ -47,7 +47,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
   roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
-  target_service_name         = ibm_resource_instance.kms.name
+  target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
 }
 `;
@@ -97,7 +97,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
   roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
-  target_service_name         = data.ibm_resource_instance.kms.name
+  target_service_name         = "kms"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
 }
 `;
@@ -288,7 +288,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
             resource_group: "slz-service-rg",
             authorize_vpc_reader_role: true,
             use_data: false,
-            use_hs_crypto: false,
+            use_hs_crypto: true,
             keys: [
               {
                 name: "key",
@@ -351,7 +351,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
   roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
-  target_service_name         = ibm_resource_instance.kms.name
+  target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
 }
 
@@ -359,7 +359,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms2_kms_policy" {
   source_service_name         = "secrets-manager"
   roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
-  target_service_name         = ibm_resource_instance.kms2.name
+  target_service_name         = "hs-crypto"
   target_resource_instance_id = ibm_resource_instance.kms2.guid
 }
 

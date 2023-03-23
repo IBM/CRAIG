@@ -114,7 +114,8 @@ class Craig extends React.Component {
                 "sshKeys",
                 "transitGateways",
                 "nacls",
-                "vpn"
+                "vpn",
+                "subnets"
               ],
               this.props.params.form
             ) ? (
