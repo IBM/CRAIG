@@ -128,9 +128,7 @@ function teleportTf(config) {
       formatAppIdRedirectUrls(
         getObjectFromArray(config.appid, "name", instance.appid),
         [
-          `https://${config._options.prefix}-${
-            instance.name
-          }-teleport-vsi.DOMAIN:3080/v1/webapi/oidc/callback`
+          `https://${config._options.prefix}-${instance.name}-teleport-vsi.${instance.template.domain}:3080/v1/webapi/oidc/callback`
         ],
         instance.name + "_appid_urls"
       )

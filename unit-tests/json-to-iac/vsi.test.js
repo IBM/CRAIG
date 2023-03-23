@@ -49,7 +49,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 `;
@@ -100,7 +100,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 `;
@@ -161,7 +161,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 
   volumes = [
@@ -230,7 +230,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 `;
@@ -652,7 +652,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
           },
         ],
       });
-let expectedData =
+      let expectedData =
         `##############################################################################
 # Lb 1 Load Balancer
 ##############################################################################
@@ -797,7 +797,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 
@@ -822,7 +822,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 
@@ -847,7 +847,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 
@@ -872,7 +872,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 
@@ -897,7 +897,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 
@@ -922,7 +922,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 

@@ -102,7 +102,7 @@ write_files:
           audit_sessions_uri: "s3://\${COS_BUCKET}?endpoint=\${COS_BUCKET_ENDPOINT}&region=ibm"
 
       auth_service:
-        enabled: "yes"
+        enabled: true
         listen_addr: 0.0.0.0:3025
         authentication:
           type: oidc
@@ -111,7 +111,7 @@ write_files:
         message_of_the_day: \${MESSAGE_OF_THE_DAY}
 
       ssh_service:
-        enabled: "yes"
+        enabled: true
         commands:
         - name: hostname
           command: [hostname]
@@ -121,7 +121,7 @@ write_files:
           period: 1h0m0s
 
       proxy_service:
-        enabled: "yes"
+        enabled: true
         listen_addr: 0.0.0.0:3023
         web_listen_addr: 0.0.0.0:3080
         tunnel_listen_addr: 0.0.0.0:3024
@@ -386,7 +386,7 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 
@@ -565,7 +565,7 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 

@@ -101,7 +101,7 @@ function formatVsi(vsi, config) {
     vsiValues["-network_interfaces"] = networkInterfaces;
   }
   vsiValues._boot_volume = {
-    encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key)
+    encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key, "crn")
   };
   vsiValues["*volumes"] = [];
   let storageVolumes = "";
@@ -208,9 +208,7 @@ function formatLoadBalancer(deployment, config) {
       health_type: `"${deployment.health_type}"`,
       proxy_protocol: `"${deployment.proxy_protocol}"`,
       session_persistence_type: `"${deployment.session_persistence_type}"`,
-      session_persistence_app_cookie_name: `"${
-        deployment.session_persistence_app_cookie_name
-      }"`
+      session_persistence_app_cookie_name: `"${deployment.session_persistence_app_cookie_name}"`
     },
     allSgIds = [];
   if (deployment.session_persistence_type !== "app_cookie") {
@@ -239,9 +237,7 @@ function formatLoadBalancer(deployment, config) {
         let vsiAddress = `${deployment.vpc} vpc ${
           vsiDeployment.name
         } vsi ${parseIntFromZone(vsiDeployment.subnets[subnet])} ${count + 1}`;
-        let poolMemberAddress = `${deployment.name} ${
-          vsiDeployment.name
-        } ${vsiAddress} pool member`;
+        let poolMemberAddress = `${deployment.name} ${vsiDeployment.name} ${vsiAddress} pool member`;
         // save ref to add dependencies to listener
         poolMemberRefs.push(
           "ibm_is_lb_pool_member." + snakeCase(poolMemberAddress)

@@ -597,7 +597,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 `;
@@ -802,7 +802,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
   }
 
   boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
 }
 

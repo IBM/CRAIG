@@ -5,7 +5,7 @@ const {
   kebabCase,
   eachKey,
   isString,
-  parseIntFromZone,
+  parseIntFromZone
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { endComment } = require("./constants");
