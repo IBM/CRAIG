@@ -5,8 +5,8 @@ const {
   invalidNameText,
   cosResourceHelperTextCallback,
   aclHelperTextCallback,
-  invalidSubnetTierName,
   invalidSubnetTierText,
+  iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
 } = require("../../client/src/lib/forms");
 
@@ -484,6 +484,19 @@ describe("text callbacks", () => {
         actualData,
         expectedData,
         "it should return correct data"
+      );
+    });
+  });
+  describe("iamAccountSettingInvalidText", () => {
+    it("should return correct text when max_sessions_per_identity is invalid", () => {
+      let actualData = iamAccountSettingInvalidText(
+        "max_sessions_per_identity"
+      );
+      let expectedData = "Value must be in range [1-10]";
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct text"
       );
     });
   });

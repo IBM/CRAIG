@@ -96,7 +96,9 @@ const navCategories = [
         title: "IAM Account Settings",
         path: "/form/iamAccountSettings",
         icon: IdManagement,
-        toTf: formatIamAccountSettings,
+        toTf: json => {
+          return formatIamAccountSettings(json.iam_account_settings);
+        },
         jsonField: "iam_account_settings"
       }
     ]

@@ -5,6 +5,7 @@ const {
   cosResourceHelperTextCallback,
   aclHelperTextCallback,
   invalidSubnetTierText,
+  iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText
 } = require("./text-callbacks");
 const {
@@ -12,6 +13,7 @@ const {
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
   validSshKey,
+  invalidIamAccountSettings,
   invalidTagList,
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
@@ -41,6 +43,8 @@ module.exports = {
   invalidSubnetTierText,
   getSubnetTierStateData,
   getTierSubnets,
+  iamAccountSettingInvalidText,
+  invalidIamAccountSettings,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   invalidNewResourceName

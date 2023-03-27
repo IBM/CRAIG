@@ -154,6 +154,17 @@ function aclHelperTextCallback(stateData, componentProps) {
   );
 }
 
+/**
+ * get invalid text for iam account setting
+ * @param {string} field
+ * @returns {string} invalid text
+ */
+function iamAccountSettingInvalidText(field) {
+  return field === "max_sessions_per_identity"
+    ? "Value must be in range [1-10]"
+    : "Invalid";
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
@@ -162,5 +173,6 @@ module.exports = {
   cosResourceHelperTextCallback,
   aclHelperTextCallback,
   invalidSubnetTierText,
+  iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText
 };

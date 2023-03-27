@@ -1,5 +1,10 @@
 import React from "react";
-import { AtrackerForm, ToggleForm, SccForm } from "icse-react-assets";
+import {
+  AtrackerForm,
+  ToggleForm,
+  SccForm,
+  IamAccountSettingsForm
+} from "icse-react-assets";
 import PropTypes from "prop-types";
 import {
   disableSave,
@@ -10,6 +15,8 @@ import {
 import { splat } from "lazy-z";
 import { eachKey } from "regex-but-with-words/lib/utils";
 import { RenderDocs } from "./RenderDocs";
+import { invalidIamAccountSettings } from "../lib/forms/invalid-callbacks";
+import { iamAccountSettingInvalidText } from "../lib/forms/text-callbacks";
 
 function toggleFormProps(form, craig) {
   if (form === "activityTracker") {
@@ -65,6 +72,30 @@ function toggleFormProps(form, craig) {
         invalidTextCallback: () => {
           return genericNameCallback();
         }
+      }
+    };
+  } else if (form === "iamAccountSettings") {
+    let data = { ...craig.store.json.iam_account_settings };
+
+    return {
+      name: "(Optional) Configure IAM Account Settings",
+      onSave: craig.iam_account_settings.save,
+      submissionFieldName: "iam_account_settings",
+      about: RenderDocs("iam_account_settings")(),
+      useAddButton: craig.store.json.iam_account_settings.enable === false,
+      noDeleteButton: true,
+      onShowToggle: () => {},
+      propsMatchState: propsMatchState,
+      disableSave: disableSave,
+      innerForm: IamAccountSettingsForm,
+      hideName: true,
+      tabPanel: {
+        name: "IAM Account Settings"
+      },
+      innerFormProps: {
+        data: data,
+        invalidCallback: invalidIamAccountSettings,
+        invalidTextCallback: iamAccountSettingInvalidText
       }
     };
   }

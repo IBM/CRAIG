@@ -173,6 +173,13 @@ function disableSave(field, stateData, componentProps) {
     );
   } else if (field === "subnet") {
     return badField("network_acl", stateData);
+  } else if (field === "iam_account_settings") {
+    return (
+      badField("mfa", stateData) ||
+      badField("restrict_create_platform_apikey", stateData) ||
+      badField("restrict_create_service_id", stateData) ||
+      badField("max_sessions_per_identity", stateData)
+    );
   } else if (field === "security_groups") {
     return (
       invalidName("security_groups")(stateData, componentProps) ||

@@ -144,7 +144,11 @@ class Craig extends React.Component {
             ) ? (
             <FormPage craig={craig} form={this.props.params.form} />
           ) : contains(
-              ["activityTracker", "securityComplianceCenter"],
+              [
+                "activityTracker",
+                "securityComplianceCenter",
+                "iamAccountSettings"
+              ],
               this.props.params.form
             ) ? (
             <ToggleFormPage craig={craig} form={this.props.params.form} />

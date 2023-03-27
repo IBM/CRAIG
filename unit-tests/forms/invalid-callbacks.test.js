@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const {
   invalidName,
   invalidSshPublicKey,
+  invalidIamAccountSettings,
   invalidTagList,
 } = require("../../client/src/lib/forms");
 
@@ -545,6 +546,38 @@ describe("invalid callbacks", () => {
         ).invalid;
         assert.isTrue(actualData);
       });
+    });
+  });
+  describe("invalidIamAccountSettings", () => {
+    it("should return true when max_sessions_per_identity is invalid", () => {
+      let actualData = invalidIamAccountSettings("max_sessions_per_identity", {
+        enable: false,
+        mfa: null,
+        allowed_ip_addresses: null,
+        include_history: false,
+        if_match: null,
+        max_sessions_per_identity: 100,
+        restrict_create_service_id: null,
+        restrict_create_platform_apikey: null,
+        session_expiration_in_seconds: null,
+        session_invalidation_in_seconds: null,
+      });
+      assert.isTrue(actualData);
+    });
+    it("should return false when max_sessions_per_identity is valid", () => {
+      let actualData = invalidIamAccountSettings("max_sessions_per_identity", {
+        enable: false,
+        mfa: null,
+        allowed_ip_addresses: null,
+        include_history: false,
+        if_match: null,
+        max_sessions_per_identity: 5,
+        restrict_create_service_id: null,
+        restrict_create_platform_apikey: null,
+        session_expiration_in_seconds: null,
+        session_invalidation_in_seconds: null,
+      });
+      assert.isFalse(actualData);
     });
   });
 });

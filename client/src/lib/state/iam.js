@@ -20,7 +20,7 @@ function iamInit(config) {
     enable: false,
     mfa: null, // must be one of ["NONE", "TOTP", "TOTP4ALL", "LEVEL1", "LEVEL2", "LEVEL3", "null"]
     allowed_ip_addresses: null, // must be comma separated list of ips on submit
-    include_history: null,
+    include_history: false,
     if_match: null, // must be NOT_SET or integer > 0
     max_sessions_per_identity: null, // must be NOT_SET or integer > 0
     restrict_create_service_id: null, // must be one of ["NOT_SET", "RESTRICTED", "NOT_RESTRICTED"]
@@ -40,11 +40,10 @@ function iamInit(config) {
  * @param {boolean} stateData.enable
  */
 function iamSave(config, stateData) {
-  if (stateData.enable === false)
+  if (stateData.enable === false) {
     [
       "mfa",
       "allowed_ip_addresses",
-      "include_history",
       "if_match",
       "max_sessions_per_identity",
       "restrict_create_service_id",
@@ -54,6 +53,8 @@ function iamSave(config, stateData) {
     ].forEach(field => {
       stateData[field] = null;
     });
+    stateData["include_history"] = false;
+  }
   config.store.json.iam_account_settings = stateData;
 }
 

@@ -167,6 +167,20 @@ function invalidSubnetTierName(stateData, componentProps) {
 }
 
 /**
+ * check if iam account setting is invalid
+ * @param {string} field
+ * @param {Object} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidIamAccountSettings(field, stateData) {
+  return (
+    field === "max_sessions_per_identity" &&
+    (stateData.max_sessions_per_identity < 1 ||
+      stateData.max_sessions_per_identity > 10)
+  );
+}
+
+/**
  * check if security group rule name is invalid
  * @param {*} stateData
  * @param {*} componentProps
@@ -188,8 +202,9 @@ module.exports = {
   invalidNewResourceName,
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
-  invalidSubnetTierName,
   invalidTagList,
   validSshKey,
+  invalidSubnetTierName,
+  invalidIamAccountSettings,
   invalidSecurityGroupRuleName
 };

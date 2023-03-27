@@ -22,7 +22,7 @@ describe("iam", () => {
             enable: false,
             mfa: null,
             allowed_ip_addresses: null,
-            include_history: null,
+            include_history: false,
             if_match: null,
             max_sessions_per_identity: null,
             restrict_create_service_id: null,
@@ -35,7 +35,7 @@ describe("iam", () => {
       });
     });
     describe("iam_account_settings.save", () => {
-      it("should set other params except is_public to null when enable is changed from true to false", () => {
+      it("should set other params except include_history to null when enable is changed from true to false", () => {
         let store = new newState();
         store.store.json.iam_account_settings.enable = true;
         store.iam_account_settings.save({
@@ -44,8 +44,8 @@ describe("iam", () => {
         });
         assert.deepEqual(
           store.store.json.iam_account_settings.include_history,
-          null,
-          "it should set value to null"
+          false,
+          "it should set value to false"
         );
       });
       it("should update", () => {
@@ -54,7 +54,7 @@ describe("iam", () => {
         assert.deepEqual(
           store.store.json.iam_account_settings.enable,
           true,
-          "it should set value to null"
+          "it should set value to true"
         );
       });
     });
