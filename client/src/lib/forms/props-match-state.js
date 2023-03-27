@@ -18,7 +18,7 @@ function propsMatchState(field, stateData, componentProps) {
         stateData[field] = null;
       }
     });
-  } 
+  }
   return deepEqual(stateData, componentProps.data);
 }
 

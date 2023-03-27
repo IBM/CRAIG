@@ -10,8 +10,9 @@ const {
   invalidName,
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
-  validSshKey,
-  invalidSubnetTierName
+  invalidSubnetTierName,
+  invalidTagList,
+  validSshKey
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const { disableSave, invalidPort } = require("./disable-save");
@@ -31,6 +32,7 @@ module.exports = {
   invalidSshPublicKey,
   validSshKey,
   invalidPort,
+  invalidTagList,
   aclHelperTextCallback,
   invalidSubnetTierName,
   invalidSubnetTierText,

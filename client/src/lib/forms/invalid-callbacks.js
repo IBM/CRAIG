@@ -14,8 +14,24 @@ const { hasDuplicateName } = require("./duplicate-name");
  * @param {string} str name
  * @returns {boolean} true if name is invalid
  */
-function validNewResourceName(str) {
+function invalidNewResourceName(str) {
   return str.match(newResourceNameExp) === null;
+}
+
+/**
+ * invalid tags
+ * @param {string[]} tags
+ * @returns {boolean} true if any tags in list are invalid
+ */
+function invalidTagList(tags) {
+  if (tags.length === 0) return false;
+  let invalid = false;
+  tags.forEach(tag => {
+    if (tag.match(newResourceNameExp) === null || tag.length > 128) {
+      invalid = true;
+    }
+  });
+  return invalid;
 }
 
 /**
@@ -37,13 +53,13 @@ function invalidName(field) {
       // easiest way to get scc
       return (
         stateData[stateField] === "" ||
-        validNewResourceName(stateData[stateField])
+        invalidNewResourceName(stateData[stateField])
       );
     } else
       return (
         hasDuplicateName(field, stateData, componentProps, overrideField) ||
         stateData[stateField] === "" ||
-        (!stateData.use_data && validNewResourceName(stateData[stateField]))
+        (!stateData.use_data && invalidNewResourceName(stateData[stateField]))
       );
   }
 
@@ -77,7 +93,9 @@ function invalidName(field) {
  * @return {boolean} true if invalid
  */
 function invalidEncryptionKeyRing(stateData) {
-  return stateData.key_ring !== "" && validNewResourceName(stateData.key_ring);
+  return (
+    stateData.key_ring !== "" && invalidNewResourceName(stateData.key_ring)
+  );
 }
 
 /**
@@ -144,15 +162,16 @@ function invalidSubnetTierName(stateData, componentProps) {
       stateData.name
     ) &&
       stateData.name !== componentProps.data.name) ||
-    validNewResourceName(stateData.name)
+    invalidNewResourceName(stateData.name)
   );
 }
 
 module.exports = {
   invalidName,
-  validNewResourceName,
+  invalidNewResourceName,
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
-  validSshKey,
-  invalidSubnetTierName
+  invalidSubnetTierName,
+  invalidTagList,
+  validSshKey
 };

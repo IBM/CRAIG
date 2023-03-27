@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const {
   invalidName,
   invalidSshPublicKey,
+  invalidTagList,
 } = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
@@ -345,111 +346,6 @@ describe("invalid callbacks", () => {
       ).invalid;
       assert.isFalse(actualData);
     });
-  });
-  it("should return true when adding duplicate public key", () => {
-    let actualData = invalidSshPublicKey(
-      {
-        name: "hi",
-        public_key:
-          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-      },
-      {
-        craig: {
-          store: {
-            json: {
-              ssh_keys: [
-                {
-                  name: "ssh-key",
-                  resource_group: "management-rg",
-                  public_key:
-                    "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                },
-              ],
-            },
-          },
-        },
-        data: {
-          name: "hi",
-        },
-      }
-    ).invalid;
-    assert.isTrue(actualData);
-  });
-  it("should return true when key invalid", () => {
-    let actualData = invalidSshPublicKey(
-      {
-        name: "hi",
-        public_key: "honk",
-      },
-      {
-        craig: {
-          store: {
-            json: {
-              ssh_keys: [],
-            },
-          },
-        },
-        data: {
-          name: "hi",
-        },
-      }
-    ).invalid;
-    assert.isTrue(actualData);
-  });
-  it("should return false when adding valid key", () => {
-    let actualData = invalidSshPublicKey(
-      {
-        name: "hi",
-        resource_group: "management-rg",
-        public_key:
-          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-      },
-      {
-        craig: {
-          store: {
-            json: {
-              ssh_keys: [],
-            },
-          },
-        },
-        data: {
-          name: "hi",
-        },
-      }
-    ).invalid;
-    assert.isFalse(actualData);
-  });
-  describe("invalidSshKey", () => {
-    it("should return false when updating name", () => {
-      let actualData = invalidSshPublicKey(
-        {
-          name: "new-name",
-          resource_group: "management-rg",
-          public_key:
-            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                ssh_keys: [
-                  {
-                    name: "ssh-key",
-                    resource_group: "management-rg",
-                    public_key:
-                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                  },
-                ],
-              },
-            },
-          },
-          data: {
-            name: "ssh-key",
-          },
-        }
-      ).invalid;
-      assert.isFalse(actualData);
-    });
     it("should return true when adding duplicate public key", () => {
       let actualData = invalidSshPublicKey(
         {
@@ -523,27 +419,140 @@ describe("invalid callbacks", () => {
       ).invalid;
       assert.isFalse(actualData);
     });
-    it("should return true when ssh key is null", () => {
-      let actualData = invalidSshPublicKey(
-        {
-          name: "hi",
-          resource_group: "management-rg",
-          public_key: null,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                ssh_keys: [],
+    describe("invalidSshKey", () => {
+      it("should return false when updating name", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "new-name",
+            resource_group: "management-rg",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [
+                    {
+                      name: "ssh-key",
+                      resource_group: "management-rg",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
+            data: {
+              name: "ssh-key",
+            },
+          }
+        ).invalid;
+        assert.isFalse(actualData);
+      });
+      it("should return true when adding duplicate public key", () => {
+        let actualData = invalidSshPublicKey(
+          {
             name: "hi",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
           },
-        }
-      ).invalid;
-      assert.isTrue(actualData);
+          {
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [
+                    {
+                      name: "ssh-key",
+                      resource_group: "management-rg",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isTrue(actualData);
+      });
+      it("should return true when key invalid", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "hi",
+            public_key: "honk",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isTrue(actualData);
+      });
+      it("should return false when adding valid key", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "hi",
+            resource_group: "management-rg",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isFalse(actualData);
+      });
+      it("should return true when ssh key is null", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "hi",
+            resource_group: "management-rg",
+            public_key: null,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isTrue(actualData);
+      });
     });
+  });
+});
+describe("invalidTagList", () => {
+  it("should return true when invalid tag list", () => {
+    assert.isTrue(invalidTagList(["hi", "2@@@2"]));
+  });
+  it("should return false when no tags", () => {
+    assert.isFalse(invalidTagList([]));
   });
 });

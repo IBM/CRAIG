@@ -9,6 +9,7 @@ import { titleCase } from "lazy-z";
 import { contains } from "regex-but-with-words/lib/utils";
 import About from "./components/pages/About";
 import { ToggleFormPage } from "./components/ToggleFormPage";
+import { Home } from "./components/pages/Home";
 
 const withRouter = Page => props => {
   const params = useParams();
@@ -122,8 +123,8 @@ class Craig extends React.Component {
         >
           {this.props.params.doc ? (
             <About />
-          ) : !this.props.params.form ? (
-            <h1>hi i'm craig</h1>
+          ) : window.location.pathname === "/" ? (
+            <Home craig={craig} form="options" />
           ) : contains(
               [
                 "resourceGroups",
@@ -147,6 +148,7 @@ class Craig extends React.Component {
             ) ? (
             <ToggleFormPage craig={craig} form={this.props.params.form} />
           ) : (
+            // if no form yet, render name
             titleCase(this.props.params.form)
           )}
         </PageTemplate>
