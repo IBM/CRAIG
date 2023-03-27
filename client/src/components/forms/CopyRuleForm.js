@@ -14,8 +14,9 @@ import {
   AddClusterRules,
   AddClusterRulesModalContent,
   CopyAclModalContent,
-  CopyAcl,
-  CopyAclRule
+  CopyRuleObject,
+  CopyRule,
+  CopySgModalContent
 } from "./duplicate-rules";
 
 class CopyRuleForm extends React.Component {
@@ -23,23 +24,24 @@ class CopyRuleForm extends React.Component {
     super(props);
     this.state = {
       hideToggleForm: true,
-      sourceAcl: null,
+      source: null,
       destinationVpc: null,
       addClusterRuleAcl: null,
-      ruleSourceAcl: null,
+      ruleSource: null,
       ruleCopyName: null,
-      ruleDestintionAcl: null,
+      ruleDestination: null,
       destinationRuleNames: [],
       showModal: false,
       modalStyle: null
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.getAllRuleNames = this.getAllRuleNames.bind(this);
-    this.getAllOtherAcls = this.getAllOtherAcls.bind(this);
+    this.getAllOtherGroups = this.getAllOtherGroups.bind(this);
     this.openModal = this.openModal.bind(this);
     this.hasRuleName = this.hasRuleName.bind(this);
     this.onModalSubmit = this.onModalSubmit.bind(this);
     this.duplicateCopyAclName = this.duplicateCopyAclName.bind(this);
+    this.copyIsDuplicate = this.copyIsDuplicate.bind(this);
   }
 
   /**
@@ -60,9 +62,9 @@ class CopyRuleForm extends React.Component {
   handleSelect(event) {
     let { name, value } = event.target;
     let nextState = { [name]: value };
-    if (name === "ruleSourceAcl") {
+    if (name === "ruleSource") {
       nextState.ruleCopyName = null;
-    } else if (name === "ruleDestintionAcl") {
+    } else if (name === "ruleDestination" && this.props.isAclForm) {
       nextState.destinationRuleNames = [];
       // for each vpc
       this.props.craig.store.json.vpcs.forEach(vpc => {
@@ -75,6 +77,15 @@ class CopyRuleForm extends React.Component {
           nextState.destinationRuleVpc = vpc.name;
         }
       });
+    } else if (name === "ruleDestination") {
+      nextState.destinationRuleNames = splat(
+        new revision(this.props.craig.store.json).child(
+          "security_groups",
+          value,
+          "name"
+        ).data.rules,
+        "name"
+      );
     }
     this.setState(nextState);
   }
@@ -84,11 +95,20 @@ class CopyRuleForm extends React.Component {
    * @returns {Array<string>} list of rule names
    */
   getAllRuleNames() {
-    return this.state.ruleSourceAcl
+    return this.state.ruleSource && this.props.isAclForm
       ? splat(
           new revision(this.props.craig.store.json)
             .child("vpcs", this.props.data.name, "name")
-            .child("acls", this.state.ruleSourceAcl, "name").data.rules,
+            .child("acls", this.state.ruleSource, "name").data.rules,
+          "name"
+        )
+      : this.state.ruleSource
+      ? splat(
+          new revision(this.props.craig.store.json).child(
+            "security_groups",
+            this.state.ruleSource,
+            "name"
+          ).data.rules,
           "name"
         )
       : [];
@@ -98,17 +118,23 @@ class CopyRuleForm extends React.Component {
    * get all acls other than selected one for rule copy
    * @returns {Array<string>} list of acl names
    */
-  getAllOtherAcls() {
-    if (isNullOrEmptyString(this.state.ruleSourceAcl)) {
+  getAllOtherGroups() {
+    if (isNullOrEmptyString(this.state.ruleSource)) {
       return [];
-    } else {
+    } else if (this.props.isAclForm) {
       let aclNames = [];
       this.props.craig.store.json.vpcs.forEach(vpc => {
         vpc.acls.forEach(acl => {
-          if (acl.name !== this.state.ruleSourceAcl) aclNames.push(acl.name);
+          if (acl.name !== this.state.ruleSource) aclNames.push(acl.name);
         });
       });
       return aclNames;
+    } else {
+      return splat(this.props.craig.store.json.security_groups, "name").filter(
+        name => {
+          if (name !== this.state.ruleSource) return name;
+        }
+      );
     }
   }
 
@@ -131,28 +157,57 @@ class CopyRuleForm extends React.Component {
       : "✔";
   }
 
-  duplicateCopyAclName() {
+  copyIsDuplicate() {
+    let isDuplicate = false;
     try {
-      if (
-        splatContains(
-          getObjectFromArray(
-            this.props.craig.store.json.vpcs,
+      isDuplicate = this.props.isAclForm
+        ? splatContains(
+            getObjectFromArray(
+              this.props.craig.store.json.vpcs,
+              "name",
+              this.state.destinationVpc
+            ).acls,
             "name",
-            this.state.destinationVpc
-          ).acls,
-          "name",
-          this.state.sourceAcl + "-copy"
-        )
-      )
-        return `Duplicate ACL name "${this.state.sourceAcl + "-copy"}"`;
-      else return "Copy Access Control List";
-    } catch {
-      return "Copy Access Control List";
+            this.state.source + "-copy"
+          )
+        : splatContains(
+            this.props.craig.store.json.security_groups,
+            "name",
+            this.state.source + "-copy"
+          );
+      return isDuplicate;
+    } catch (err) {
+      return false;
     }
   }
 
+  duplicateCopyAclName() {
+    if (this.copyIsDuplicate())
+      return `Duplicate ${
+        this.props.isAclForm ? "ACL" : "Security Group"
+      } name "${this.state.source + "-copy"}"`;
+    else
+      return `Copy ${
+        this.props.isAclForm ? "Access Control List" : "Security Group"
+      }`;
+  }
+
   onModalSubmit() {
-    if (this.state.modalStyle === "addClusterRules") {
+    if (
+      this.props.isAclForm === false &&
+      this.state.modalStyle === "copyRule"
+    ) {
+      this.props.craig.copySgRule(
+        this.state.ruleSource,
+        this.state.ruleCopyName,
+        this.state.ruleDestination
+      )
+    } else if (this.props.isAclForm === false) {
+      this.props.craig.copySecurityGroup(
+        this.state.source,
+        this.state.destinationVpc
+      );
+    } else if (this.state.modalStyle === "addClusterRules") {
       this.props.craig.addClusterRules(
         this.props.data.name,
         this.state.addClusterRuleAcl
@@ -160,24 +215,24 @@ class CopyRuleForm extends React.Component {
     } else if (this.state.modalStyle === "copyRule") {
       this.props.craig.copyRule(
         this.props.data.name,
-        this.state.ruleSourceAcl,
+        this.state.ruleSource,
         this.state.ruleCopyName,
-        this.state.ruleDestintionAcl
+        this.state.ruleDestination
       );
     } else {
       this.props.craig.copyNetworkAcl(
         this.props.data.name,
-        this.state.sourceAcl,
+        this.state.source,
         this.state.destinationVpc
       );
     }
     this.setState({
-      sourceAcl: null,
+      source: null,
       destinationVpc: null,
       addClusterRuleAcl: null,
-      ruleSourceAcl: null,
+      ruleSource: null,
       ruleCopyName: null,
-      ruleDestintionAcl: null,
+      ruleDestination: null,
       destinationRuleNames: [],
       showModal: false,
       modalStyle: null
@@ -186,22 +241,32 @@ class CopyRuleForm extends React.Component {
 
   render() {
     return (
-      <div className="formInSubForm positionRelative">
+      <div
+        className={
+          (this.props.isAclForm
+            ? "formInSubForm "
+            : "subForm sgFormTopMargin ") + "positionRelative"
+        }
+      >
         <IcseModal
           open={this.state.showModal}
           heading={
             this.state.modalStyle === "copyRule"
-              ? "Copy ACL Rule"
+              ? "Copy Rule"
               : this.state.modalStyle === "addClusterRules"
               ? "Add Cluster Rules to ACL"
-              : "Copy Network ACL"
+              : this.props.isAclForm
+              ? "Copy Network ACL"
+              : "Copy Security Group"
           }
           primaryButtonText={
             this.state.modalStyle === "copyRule"
               ? "Copy Rule"
               : this.state.modalStyle === "addClusterRules"
               ? "Add Cluster Rules"
-              : "Copy Network ACL"
+              : this.props.isAclForm
+              ? "Copy Network ACL"
+              : "Copy Security Group"
           }
           onRequestSubmit={this.onModalSubmit}
           onRequestClose={() => {
@@ -210,77 +275,103 @@ class CopyRuleForm extends React.Component {
           danger
         >
           {/* && syntax used here to prevent rendering when no data */}
-          {this.state.modalStyle === "addClusterRules" && (
-            <AddClusterRulesModalContent
-              addClusterRuleAcl={this.state.addClusterRuleAcl}
-              hasRuleName={this.hasRuleName}
-            />
-          )}
+          {this.state.modalStyle === "addClusterRules" &&
+            this.props.isAclForm && (
+              <AddClusterRulesModalContent
+                addClusterRuleAcl={this.state.addClusterRuleAcl}
+                hasRuleName={this.hasRuleName}
+              />
+            )}
           {this.state.modalStyle === "copyRule" && (
             <>
               <p className="marginBottomSmall">
-                Copy rule <strong>{this.state.ruleCopyName}</strong> to ACL{" "}
-                <strong>{this.state.ruleDestintionAcl}</strong>?
+                Copy rule <strong>{this.state.ruleCopyName}</strong> to{" "}
+                {this.props.isAclForm ? "ACL" : "Security Group"}{" "}
+                <strong>{this.state.ruleDestination}</strong>?
               </p>
               <CraigCodeMirror
                 className="regular"
                 code={prettyJSON(
-                  new revision(this.props.craig.store.json)
-                    .child("vpcs", this.props.data.name, "name")
-                    .child("acls", this.state.ruleSourceAcl, "name")
-                    .child("rules", this.state.ruleCopyName, "name").data
-                ).replace(/"(vpc|acl)"[^,\n]+(,\s+)?/g, "")}
+                  this.props.isAclForm
+                    ? new revision(this.props.craig.store.json)
+                        .child("vpcs", this.props.data.name, "name")
+                        .child("acls", this.state.ruleSource, "name")
+                        .child("rules", this.state.ruleCopyName, "name").data
+                    : new revision(this.props.craig.store.json)
+                        .child("security_groups", this.state.ruleSource, "name")
+                        .child("rules", this.state.ruleCopyName).data
+                )
+                  .replace(/"(vpc|acl|sg)"[^,\n]+(,\s+)?/g, "")
+                  .replace(/\,[^\w"]+(?=\n\}$)/g, "")}
               />
             </>
           )}
-          {this.state.modalStyle === "copyAcl" && (
+          {this.state.modalStyle === "copyAcl" && this.props.isAclForm ? (
             <CopyAclModalContent
-              sourceAcl={this.state.sourceAcl}
+              source={this.state.source}
               destinationVpc={this.state.destinationVpc}
               craig={this.props.craig}
               data={this.props.data}
             />
+          ) : (
+            this.state.modalStyle === "copyAcl" && (
+              <CopySgModalContent
+                source={this.state.source}
+                destinationVpc={this.state.destinationVpc}
+                craig={this.props.craig}
+              />
+            )
           )}
         </IcseModal>
         <StatelessToggleForm
           name="Duplicate Lists & Rules"
-          subHeading
+          subHeading={this.props.isAclForm}
           onIconClick={() => {
             this.setState({ hideToggleForm: !this.state.hideToggleForm });
           }}
           hide={this.state.hideToggleForm}
           iconType="add"
         >
-          <AddClusterRules
+          {this.props.isAclForm && (
+            <AddClusterRules
+              data={this.props.data}
+              addClusterRuleAcl={this.state.addClusterRuleAcl}
+              handleSelect={this.handleSelect}
+              openModal={this.openModal}
+            />
+          )}
+
+          <CopyRuleObject
             data={this.props.data}
-            addClusterRuleAcl={this.state.addClusterRuleAcl}
-            handleSelect={this.handleSelect}
-            openModal={this.openModal}
-          />
-          <CopyAcl
-            data={this.props.data}
-            sourceAcl={this.state.sourceAcl}
+            source={this.state.source}
             destinationVpc={this.state.destinationVpc}
             handleSelect={this.handleSelect}
             openModal={this.openModal}
             craig={this.props.craig}
             hoverText={this.duplicateCopyAclName()}
+            isSecurityGroup={this.props.isAclForm === false}
           />
-          <CopyAclRule
+          <CopyRule
             data={this.props.data}
-            ruleSourceAcl={this.state.ruleSourceAcl}
+            ruleSource={this.state.ruleSource}
             ruleCopyName={this.state.ruleCopyName}
             handleSelect={this.handleSelect}
             allRuleNames={this.getAllRuleNames()}
             destinationRuleNames={this.state.destinationRuleNames}
-            ruleDestintionAcl={this.state.ruleDestintionAcl}
-            allOtherAcls={this.getAllOtherAcls()}
+            ruleDestination={this.state.ruleDestination}
+            allOtherAcls={this.getAllOtherGroups()}
             openModal={this.openModal}
+            craig={this.props.craig}
+            isSecurityGroup={this.props.isAclForm === false}
           />
         </StatelessToggleForm>
       </div>
     );
   }
 }
+
+CopyRuleForm.defaultProps = {
+  isAclForm: true
+};
 
 export default CopyRuleForm;

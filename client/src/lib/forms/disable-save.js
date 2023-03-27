@@ -8,9 +8,9 @@ const {
 const {
   invalidName,
   invalidEncryptionKeyRing,
-  validSshKey,
   invalidSshPublicKey,
-  invalidSubnetTierName
+  invalidSubnetTierName,
+  invalidSecurityGroupRuleName
 } = require("./invalid-callbacks");
 
 /**
@@ -26,13 +26,16 @@ function badField(field, stateData) {
 /**
  * test if a rule has an invalid port
  * @param {*} rule
+ * @param {boolean=} isSecurityGroup
  * @returns {boolean} true if port is invalid
  */
-function invalidPort(rule) {
+function invalidPort(rule, isSecurityGroup) {
   let hasInvalidPort = false;
   if (rule.ruleProtocol !== "all") {
     (rule.ruleProtocol === "icmp"
       ? ["type", "code"]
+      : isSecurityGroup
+      ? ["port_min", "port_max"]
       : ["port_min", "port_max", "source_port_min", "source_port_max"]
     ).forEach(type => {
       if (rule.rule[type] && !hasInvalidPort) {
@@ -150,21 +153,33 @@ function disableSave(field, stateData, componentProps) {
       !isIpv4CidrOrAddress(stateData.destination) ||
       invalidPort(stateData)
     );
+  } else if (field === "sg_rules") {
+    return (
+      invalidSecurityGroupRuleName(stateData, componentProps) ||
+      !isIpv4CidrOrAddress(stateData.source) ||
+      invalidPort(stateData)
+    );
   } else if (field === "vpn_gateways") {
     return (
       invalidName("vpn_gateways")(stateData, componentProps) ||
       badField("resource_group", stateData) ||
       badField("vpc", stateData) ||
       badField("subnet", stateData)
-    )
+    );
   } else if (field === "subnetTier") {
     return (
       invalidSubnetTierName(stateData, componentProps) ||
       badField("networkAcl", stateData)
     );
-  }  else if (field === "subnet") {
-    return badField("network_acl", stateData)
-   }else return false;
+  } else if (field === "subnet") {
+    return badField("network_acl", stateData);
+  } else if (field === "security_groups") {
+    return (
+      invalidName("security_groups")(stateData, componentProps) ||
+      badField("resource_group", stateData) ||
+      badField("vpc", stateData)
+    );
+  } else return false;
 }
 
 module.exports = { disableSave, invalidPort };

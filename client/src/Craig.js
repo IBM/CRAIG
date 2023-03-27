@@ -137,7 +137,8 @@ class Craig extends React.Component {
                 "transitGateways",
                 "nacls",
                 "vpn",
-                "subnets"
+                "subnets",
+                "securityGroups"
               ],
               this.props.params.form
             ) ? (

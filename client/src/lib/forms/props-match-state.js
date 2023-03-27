@@ -19,6 +19,13 @@ function propsMatchState(field, stateData, componentProps) {
       }
     });
   }
+  if (field === "subnetTier") {
+    componentProps.data.hide = stateData.hide;
+    componentProps.data.showUnsavedChangesModal =
+      stateData.showUnsavedChangesModal;
+  } else if (field === "security_groups") {
+    componentProps.data.show = stateData.show;
+  }
   return deepEqual(stateData, componentProps.data);
 }
 

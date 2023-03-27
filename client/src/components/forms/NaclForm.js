@@ -93,7 +93,6 @@ class NaclForm extends React.Component {
         />
 
         <IcseFormTemplate
-          key={JSON.stringify(this.props.data.acls)}
           arrayData={this.props.data.acls}
           onSubmit={none} // no modal
           onDelete={this.props.craig.vpcs.acls.delete}

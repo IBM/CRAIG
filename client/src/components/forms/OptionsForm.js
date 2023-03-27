@@ -12,14 +12,14 @@ import { deepEqual } from "lazy-z";
 import {
   invalidNewResourceName,
   invalidTagList
-} from "../../lib/forms/invalid-callbacks";
+} from "../../lib/forms";
 
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
 class OptionsForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ...props.data };
+    this.state = { ...this.props.data };
     this.handleChange = this.handleChange.bind(this);
     this.handleTags = this.handleTags.bind(this);
     buildFormFunctions(this);

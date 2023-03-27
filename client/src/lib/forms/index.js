@@ -4,15 +4,18 @@ const {
   invalidNameText,
   cosResourceHelperTextCallback,
   aclHelperTextCallback,
-  invalidSubnetTierText
+  invalidSubnetTierText,
+  invalidSecurityGroupRuleText
 } = require("./text-callbacks");
 const {
   invalidName,
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
-  invalidSubnetTierName,
+  validSshKey,
   invalidTagList,
-  validSshKey
+  invalidSubnetTierName,
+  invalidSecurityGroupRuleName,
+  invalidNewResourceName
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const { disableSave, invalidPort } = require("./disable-save");
@@ -37,5 +40,8 @@ module.exports = {
   invalidSubnetTierName,
   invalidSubnetTierText,
   getSubnetTierStateData,
-  getTierSubnets
+  getTierSubnets,
+  invalidSecurityGroupRuleName,
+  invalidSecurityGroupRuleText,
+  invalidNewResourceName
 };

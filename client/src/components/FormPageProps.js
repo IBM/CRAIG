@@ -6,7 +6,9 @@ import {
   invalidName,
   invalidEncryptionKeyRing,
   cosResourceHelperTextCallback,
-  invalidSshPublicKey
+  invalidSshPublicKey,
+  invalidSecurityGroupRuleName,
+  invalidSecurityGroupRuleText
 } from "../lib/forms";
 import {
   ResourceGroupForm,
@@ -17,7 +19,8 @@ import {
   VpcForm,
   SshKeyForm,
   TransitGatewayForm,
-  VpnGatewayForm
+  VpnGatewayForm,
+  SecurityGroupForm
 } from "icse-react-assets";
 import { RenderDocs } from "./RenderDocs";
 import { splat, contains, transpose } from "lazy-z";
@@ -78,6 +81,12 @@ const pathToFormMap = {
     name: "VPN Gateways",
     addText: "Create a VPN Gateway",
     innerForm: VpnGatewayForm
+  },
+  securityGroups: {
+    jsonField: "security_groups",
+    name: "Security Groups",
+    addText: "Create a Security Group",
+    innerForm: SecurityGroupForm
   }
 };
 /**
@@ -152,7 +161,8 @@ function formProps(form, craig) {
         "vpcs",
         "ssh_keys",
         "transitGateways",
-        "vpn"
+        "vpn",
+        "securityGroups"
       ],
       form
     )
@@ -162,6 +172,11 @@ function formProps(form, craig) {
       "name"
     );
   }
+
+  if (contains(["transitGateways", "vpn", "securityGroups"], form)) {
+    formTemplate.innerFormProps.vpcList = craig.store.vpcList;
+  }
+
   // add encryption keys
   if (contains(["secretsManager"], form)) {
     formTemplate.innerFormProps.encryptionKeys = craig.store.encryptionKeys;
@@ -261,11 +276,28 @@ function formProps(form, craig) {
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
   } else if (form === "transitGateways") {
-    formTemplate.innerFormProps.vpcList = craig.store.vpcList;
     formTemplate.innerFormProps.readOnlyName = false;
   } else if (form === "vpn") {
-    formTemplate.innerFormProps.vpcList = craig.store.vpcList;
     formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
+  } else if (form === "securityGroups") {
+    let sgInnerFormProps = {
+      onSubmitCallback: craig.security_groups.rules.create,
+      onRuleSave: craig.security_groups.rules.save,
+      onRuleDelete: craig.security_groups.rules.delete,
+      disableModalSubmitCallback: none,
+      disableSaveCallback: function(stateData, componentProps) {
+        return (
+          propsMatchState("sg_rules", stateData, componentProps) ||
+          disableSave("sg_rules", stateData, componentProps)
+        );
+      },
+      invalidCallback: invalidName("security_groups"),
+      invalidRuleText: invalidSecurityGroupRuleName,
+      invalidTextCallback: invalidNameText("security_groups"),
+      invalidRuleTextCallback: invalidSecurityGroupRuleText,
+    };
+    formTemplate.isSecurityGroup = true;
+    transpose(sgInnerFormProps, formTemplate.innerFormProps);
   }
   return formTemplate;
 }

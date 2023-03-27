@@ -14,37 +14,62 @@ import {
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 
-const CopyAcl = props => {
+const CopyRuleObject = props => {
   return (
     <>
-      <IcseHeading type="subHeading" name="Copy ACL to VPC" />
+      <IcseHeading
+        type="subHeading"
+        name={
+          props.isSecurityGroup
+            ? "Copy Security Group to VPC"
+            : "Copy ACL to VPC"
+        }
+      />
       <IcseFormGroup className="align-row">
         <IcseSelect
-          formName={"copy-acl-source-" + props.data.name}
-          labelText="Source ACL"
-          groups={(props.sourceAcl ? [""] : []).concat(
-            splat(props.data.acls, "name")
+          formName={
+            props.isSecurityGroup
+              ? "copy-security-group-source"
+              : "copy-acl-source-" + props.data.name
+          }
+          labelText={
+            props.isSecurityGroup ? "Source Security Group" : "Source ACL"
+          }
+          groups={(props.source ? [""] : []).concat(
+            props.isSecurityGroup
+              ? splat(props.craig.store.json.security_groups, "name")
+              : splat(props.data.acls, "name")
           )}
-          value={props.sourceAcl}
+          value={props.source}
           handleInputChange={props.handleSelect}
-          name="sourceAcl"
+          name="source"
           className="fieldWidthSmaller"
           disableInvalid={isNullOrEmptyString(props.destinationVpc)}
-          invalidText="Select a source ACL"
+          invalidText={
+            props.isSecurityGroup
+              ? "Select a source Security Group"
+              : "Select a source ACL"
+          }
         />
         <IcseSelect
-          formName={"copy-acl-destination-" + props.data.name}
+          formName={
+            props.isSecurityGroup
+              ? "copy-security-group-destination"
+              : "copy-acl-destination-" + props.data.name
+          }
           labelText="Destination VPC"
           groups={(props.destinationVpc ? [""] : []).concat(
-            splat(props.craig.store.json.vpcs, "name").filter(vpc => {
-              if (vpc !== props.data.name) return vpc;
-            })
+            props.isSecurityGroup
+              ? splat(props.craig.store.json.vpcs, "name")
+              : splat(props.craig.store.json.vpcs, "name").filter(vpc => {
+                  if (vpc !== props.data.name) return vpc;
+                })
           )}
           value={props.destinationVpc}
           handleInputChange={props.handleSelect}
           name="destinationVpc"
           className="fieldWidthSmaller"
-          disableInvalid={isNullOrEmptyString(props.sourceAcl)}
+          disableInvalid={isNullOrEmptyString(props.source)}
           invalidText="Select a destination VPC"
         />
         <div className="align-row">
@@ -55,17 +80,9 @@ const CopyAcl = props => {
               props.openModal("copyAcl");
             }}
             disabled={
-              isNullOrEmptyString(props.sourceAcl) ||
+              isNullOrEmptyString(props.source) ||
               isNullOrEmptyString(props.destinationVpc) ||
-              splatContains(
-                getObjectFromArray(
-                  props.craig.store.json.vpcs,
-                  "name",
-                  props.destinationVpc
-                ).acls,
-                "name",
-                props.sourceAcl + "-copy"
-              )
+              props.hoverText.indexOf("Duplicate") === 0
             }
             hoverText={props.hoverText}
           />
@@ -75,7 +92,7 @@ const CopyAcl = props => {
   );
 };
 
-CopyAcl.propTypes = {
+CopyRuleObject.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string.isRequired,
     acls: PropTypes.arrayOf(PropTypes.shape({})).isRequired
@@ -89,9 +106,9 @@ CopyAcl.propTypes = {
   }).isRequired,
   handleSelect: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
-  sourceAcl: PropTypes.string,
+  source: PropTypes.string,
   destinationVpc: PropTypes.string,
   hoverText: PropTypes.string.isRequired
 };
 
-export default CopyAcl;
+export default CopyRuleObject;

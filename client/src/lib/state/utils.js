@@ -1,13 +1,11 @@
-const { eachKey, transpose, contains } = require("lazy-z");
-const { lazyZstate } = require("lazy-z/lib/store");
+const { eachKey, transpose, contains, allFieldsNull } = require("lazy-z");
 
 /**
  * validate rule
- * @param {lazyZstate} config
  * @param {Object} networkRule
  * @param {Object} componentProps
  */
-function formatNetworkingRule(config, networkRule, componentProps) {
+function formatNetworkingRule(networkRule, componentProps, isSecurityGroup) {
   if (networkRule.showDeleteModal !== undefined)
     delete networkRule.showDeleteModal;
   if (networkRule.ruleProtocol) {
@@ -22,6 +20,11 @@ function formatNetworkingRule(config, networkRule, componentProps) {
       delete networkRule.rule.source_port_max;
       delete networkRule.rule.source_port_min;
     }
+  }
+  if (isSecurityGroup) {
+    delete networkRule.action;
+    delete networkRule.show;
+    delete networkRule.destination;
   }
 }
 
@@ -81,11 +84,24 @@ function updateNetworkingRule(isAcl, rule, params) {
       // if key is rule protocol, transpose rule
       transpose(defaultRuleStyle, rule);
       transpose(params.rule, rule[params.ruleProtocol]);
+      let allTargetFieldsNull = allFieldsNull(rule[params.ruleProtocol]);
       eachKey(rule[params.ruleProtocol], key => {
         if (rule[params.ruleProtocol][key] !== null) {
           rule[params.ruleProtocol][key] = parseInt(
             rule[params.ruleProtocol][key]
           );
+        } else if (allTargetFieldsNull && params.ruleProtocol === "icmp") {
+          rule[params.ruleProtocol][key] = 0;
+        } else if (
+          allTargetFieldsNull &&
+          contains(["port_min", "source_port_min"], key)
+        ) {
+          rule[params.ruleProtocol][key] = 1;
+        } else if (
+          allTargetFieldsNull &&
+          contains(["source_port_max", "port_max"], key)
+        ) {
+          rule[params.ruleProtocol][key] = 65535;
         }
       });
     } else if (key !== "rule") {

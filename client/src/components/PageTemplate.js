@@ -96,7 +96,8 @@ const navCategories = [
         title: "IAM Account Settings",
         path: "/form/iamAccountSettings",
         icon: IdManagement,
-        toTf: formatIamAccountSettings
+        toTf: formatIamAccountSettings,
+        jsonField: "iam_account_settings"
       }
     ]
   },
@@ -236,7 +237,8 @@ const navCategories = [
         path: "/form/securityGroups",
         icon: Security,
         toTf: sgTf,
-        required: true
+        required: true,
+        jsonField: "security_groups"
       },
       {
         title: "Virtual Private Endpoints",

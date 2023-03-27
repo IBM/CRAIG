@@ -72,6 +72,7 @@ class SubnetForm extends React.Component {
             }}
             craig={this.props.craig}
             disableSubnetSaveCallback={none}
+            propsMatchState={none}
             shouldDisableSave={none}
             shouldDisableSubmit={(stateData, componentProps) => {
               return disableSave("subnetTier", stateData, componentProps);
@@ -112,11 +113,13 @@ class SubnetForm extends React.Component {
                 );
               }}
               shouldDisableSave={(stateData, componentProps) => {
-                componentProps.data.hide = false;
                 return (
                   propsMatchState("subnetTier", stateData, componentProps) ||
                   disableSave("subnetTier", stateData, componentProps)
                 );
+              }}
+              propsMatchState={(stateData, componentProps) => {
+                return propsMatchState("subnetTier", stateData, componentProps)
               }}
               shouldDisableSubmit={none}
               invalidTextCallback={invalidSubnetTierText}

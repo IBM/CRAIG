@@ -663,7 +663,7 @@ function naclRuleCreate(config, stateData, componentProps) {
 function naclRuleSave(config, stateData, componentProps) {
   let networkRule = stateData;
   let vpcName;
-  formatNetworkingRule(config, networkRule, componentProps);
+  formatNetworkingRule(networkRule, componentProps);
   config.store.json.vpcs.forEach(vpc => {
     if (splatContains(vpc.acls, "name", componentProps.parent_name)) {
       vpcName = vpc.name;

@@ -20,7 +20,7 @@ function invalidNewResourceName(str) {
 
 /**
  * invalid tags
- * @param {string[]} tags
+ * @param {Array<string>} tags
  * @returns {boolean} true if any tags in list are invalid
  */
 function invalidTagList(tags) {
@@ -166,6 +166,23 @@ function invalidSubnetTierName(stateData, componentProps) {
   );
 }
 
+/**
+ * check if security group rule name is invalid
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidSecurityGroupRuleName(stateData, componentProps) {
+  let duplicateRuleName = false;
+  let ruleRef = componentProps.isModal
+    ? componentProps.rules
+    : componentProps.innerFormProps.rules;
+  if (stateData.name !== componentProps.data.name) {
+    duplicateRuleName = splatContains(ruleRef, "name", stateData.name);
+  }
+  return duplicateRuleName || invalidNewResourceName(stateData.name);
+}
+
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -173,5 +190,6 @@ module.exports = {
   invalidSshPublicKey,
   invalidSubnetTierName,
   invalidTagList,
-  validSshKey
+  validSshKey,
+  invalidSecurityGroupRuleName
 };

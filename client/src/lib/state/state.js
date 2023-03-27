@@ -544,6 +544,29 @@ const state = function() {
   };
 
   /**
+   * copy security group from one vpc to another and update
+   * @param {string} sourceSecurityGroup name of acl to copy
+   * @param {string} destinationVpc copy destination
+   */
+  store.copySecurityGroup = function(sourceSecurityGroup, destinationVpc) {
+    let oldSg = new revision(store.store.json).child(
+      "security_groups",
+      sourceSecurityGroup,
+      "name"
+    ).data;
+    let sg = {};
+    transpose(oldSg, sg);
+    sg.name += "-copy";
+    sg.vpc = destinationVpc;
+    sg.rules.forEach(rule => {
+      rule.vpc = sg.vpc;
+      rule.sg = sg.name;
+    });
+    store.store.json.security_groups.push(sg);
+    store.update();
+  };
+
+  /**
    * copy acl rule to list and update
    * @param {string} sourceVpc
    * @param {string} aclName
@@ -564,6 +587,29 @@ const state = function() {
         getObjectFromArray(vpc.acls, "name", destinationAcl).rules.push(rule);
       }
     });
+    store.update();
+  };
+
+  /**
+   * copy sg rule to list and update
+   * @param {string} sgName
+   * @param {string} ruleName
+   * @param {string} destinationSg
+   */
+  store.copySgRule = function(sgName, ruleName, destinationSg) {
+    let oldRule = new revision(store.store.json)
+      .child("security_groups", sgName, "name")
+      .child("rules", ruleName, "name").data;
+    let rule = {};
+    transpose(oldRule, rule);
+    rule.sg = destinationSg;
+    new revision(store.store.json)
+      .child("security_groups", destinationSg, "name")
+      .then(data => {
+        rule.vpc = data.vpc;
+        delete data.show;
+        data.rules.push(rule);
+      });
     store.update();
   };
 

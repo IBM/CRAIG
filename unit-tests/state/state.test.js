@@ -46,6 +46,18 @@ describe("state util functions", () => {
       );
     });
   });
+  describe("copySecurityGroup", () => {
+    it("should copy acl from one vpc to another", () => {
+      let state = newState();
+      state.store.json.vpcs[1].acls = [];
+      state.copySecurityGroup("management-vpe", "workload");
+      assert.deepEqual(
+        splat(state.store.json.security_groups, "name")[3],
+        "management-vpe-copy",
+        "it should copy"
+      );
+    });
+  });
   describe("copyNetworkAcl", () => {
     it("should copy acl from one vpc to another", () => {
       let state = newState();
@@ -71,6 +83,22 @@ describe("state util functions", () => {
       assert.deepEqual(
         splat(state.store.json.vpcs[1].acls[0].rules, "name"),
         ["allow-all-outbound"],
+        "it should copy"
+      );
+    });
+  });
+  describe("copySgRule", () => {
+    it("should copy one rule from sg to another", () => {
+      let state = newState();
+      state.store.json.security_groups[0].rules = [];
+      state.copySgRule(
+        "workload-vpe",
+        "allow-vpc-outbound",
+        "management-vpe"
+      );
+      assert.deepEqual(
+        splat(state.store.json.security_groups[0].rules, "name"),
+        ["allow-vpc-outbound"],
         "it should copy"
       );
     });

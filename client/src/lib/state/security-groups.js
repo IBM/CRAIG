@@ -134,7 +134,7 @@ function securityGroupRulesCreate(config, stateData, componentProps) {
  */
 function securityGroupRulesSave(config, stateData, componentProps) {
   let networkRule = stateData;
-  formatNetworkingRule(config, networkRule, componentProps);
+  formatNetworkingRule(networkRule, componentProps, true);
   new revision(config.store.json)
     .child("security_groups", componentProps.parent_name) // get security group
     .child("rules", componentProps.data.name) // get rule

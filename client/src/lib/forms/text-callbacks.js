@@ -1,5 +1,9 @@
 const { isNullOrEmptyString, splatContains } = require("lazy-z");
 const { hasDuplicateName } = require("./duplicate-name");
+const {
+  invalidNewResourceName,
+  invalidSecurityGroupRuleName
+} = require("./invalid-callbacks");
 
 /**
  * create helper text for resource group name
@@ -54,6 +58,21 @@ function invalidSubnetTierText(stateData, componentProps) {
   )
     return duplicateNameCallback(stateData.name);
   else return genericNameCallback();
+}
+
+/**
+ * get invalid sg rule text
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} invalid text
+ */
+function invalidSecurityGroupRuleText(stateData, componentProps) {
+  if (
+    invalidSecurityGroupRuleName(stateData, componentProps) &&
+    !invalidNewResourceName(stateData.name)
+  ) {
+    return duplicateNameCallback(stateData.name);
+  } else return genericNameCallback();
 }
 
 /**
@@ -142,5 +161,6 @@ module.exports = {
   invalidNameText,
   cosResourceHelperTextCallback,
   aclHelperTextCallback,
-  invalidSubnetTierText
+  invalidSubnetTierText,
+  invalidSecurityGroupRuleText
 };
