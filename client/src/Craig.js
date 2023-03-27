@@ -32,7 +32,7 @@ class Craig extends React.Component {
         hideCodeMirror: craig.store.hideCodeMirror,
         hideFooter: craig.store.hideFooter,
         jsonInCodeMirror: craig.store.jsonInCodeMirror,
-        notifcations: [],
+        notifications: [],
         storeName: storeName,
         store: craig.store
       };
@@ -42,6 +42,7 @@ class Craig extends React.Component {
     this.toggleHide = this.toggleHide.bind(this);
     this.updateComponents = this.updateComponents.bind(this);
     this.setItem = this.setItem.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   // when react component mounts, set update callback for store
@@ -51,6 +52,9 @@ class Craig extends React.Component {
       craig.setUpdateCallback(() => {
         this.updateComponents();
       });
+      craig.setErrorCallback(() => {
+        this.onError();
+      });
     }
   }
 
@@ -59,14 +63,30 @@ class Craig extends React.Component {
     // Save state to local storage
     this.setItem(this.state.storeName, craig.store);
     // Show a notification when state is updated successfully
-    // let notification = {
-    //   title: "Success",
-    //   text: "Successfully updated!",
-    //   timeout: 3000
-    // };
+    let updatedForm = titleCase(
+      window.location.pathname.replace(/\/[A-z]+\//, "")
+    );
+    let notification = {
+      title: "Success",
+      kind: "success",
+      text: `Successfully updated ${updatedForm}`,
+      timeout: 3000
+    };
     this.setState(prevState => ({
-      store: craig.store
-      //notifications: [...prevState.notifications, notification]
+      store: craig.store,
+      notifications: [...prevState.notifications, notification]
+    }));
+  }
+
+  onError() {
+    let notification = {
+      title: "Error",
+      kind: "error",
+      text: "An unexpected error has occurred.",
+      timeout: "3000"
+    };
+    this.setState(prevState => ({
+      notifications: [...prevState.notifications, notification]
     }));
   }
 
@@ -98,6 +118,7 @@ class Craig extends React.Component {
           form={this.props.params.form}
           storeName={this.state.storeName}
           jsonInCodeMirror={this.state.jsonInCodeMirror}
+          notifications={this.state.notifications}
         >
           {this.props.params.doc ? (
             <About />

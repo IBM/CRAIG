@@ -68,6 +68,7 @@ import {
   maskFieldsExpStep5CleanUp
 } from "../lib/constants";
 import { formatFlowLogs } from "../lib/json-to-iac/flow-logs";
+import { Notification } from "./Notification";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -431,6 +432,16 @@ const PageTemplate = props => {
             props.hideCodeMirror ? "widthOneHundredPercent" : "leftPanelWidth"
           }
         >
+          {props.notifications.map((notification, index) => (
+            <li className="notification-list" key={index}>
+              <Notification
+                kind={notification.kind}
+                text={notification.text}
+                title={notification.title}
+                timeout={notification.timeout}
+              />
+            </li>
+          ))}
           {props.children}
         </div>
         <CraigCodeMirror

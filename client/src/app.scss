@@ -5,3 +5,15 @@
 .widthOneHundredPercent {
   width: 100%;
 }
+
+.notification-list {
+  z-index: 10000;
+  position: fixed;
+  list-style: none;
+  top: 1rem;
+  right: 1rem;
+}
+
+.notification-item {
+  margin-bottom: 1rem;
+}

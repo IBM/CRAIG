@@ -27,7 +27,7 @@ import SubnetForm from "./forms/SubnetForm";
 const pathToFormMap = {
   resourceGroups: {
     jsonField: "resource_groups",
-    name: "ResourceGroups",
+    name: "Resource Groups",
     addText: "Create a Resource Group",
     innerForm: ResourceGroupForm
   },
@@ -111,7 +111,7 @@ function formProps(form, craig) {
         submissionFieldName: form === "nacls" ? "network_acls" : "subnetTiers",
         disableSave: none,
         propsMatchState: none,
-        nullRef: true,
+        nullRef: true
       }
     };
   }
