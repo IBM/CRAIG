@@ -6,7 +6,8 @@ const {
   aclHelperTextCallback,
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
-  invalidSecurityGroupRuleText
+  invalidSecurityGroupRuleText,
+  clusterHelperTestCallback
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -31,6 +32,7 @@ module.exports = {
   invalidName,
   propsMatchState,
   disableSave,
+  clusterHelperTestCallback,
   invalidNameText,
   invalidEncryptionKeyRing,
   cosResourceHelperTextCallback,

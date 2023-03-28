@@ -111,21 +111,8 @@ function updateNetworkingRule(isAcl, rule, params) {
   });
 }
 
-/**
- * delete items missing from store
- * @param {Array<string>} controlItems list of all items
- * @param {Array<string>} arrayItems list of items to check if they exist
- */
-function deleteUnfoundArrayItems(controlItems, arrayItems) {
-  let newArray = [];
-  arrayItems.forEach(item => {
-    if (contains(controlItems, item)) newArray.push(item);
-  });
-  return newArray;
-}
 
 module.exports = {
   formatNetworkingRule,
   updateNetworkingRule,
-  deleteUnfoundArrayItems
 };

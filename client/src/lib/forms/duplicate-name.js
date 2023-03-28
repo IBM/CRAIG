@@ -1,4 +1,4 @@
-const { splat, contains, isNullOrEmptyString } = require("lazy-z");
+const { splat, contains, isNullOrEmptyString, nestedSplat } = require("lazy-z");
 
 /**
  * check for duplicate name
@@ -17,19 +17,29 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
   let allOtherNames = [];
   let stateField = overrideField || "name";
   if (field === "appid_keys") {
-    componentProps.craig.store.json.appid.forEach(instance => {
-      allOtherNames = allOtherNames.concat(splat(instance.keys, "name"));
-    });
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.appid,
+      "keys",
+      "name"
+    );
   } else if (field === "encryption_keys") {
-    componentProps.craig.store.json.key_management.forEach(instance => {
-      allOtherNames = allOtherNames.concat(splat(instance.keys, "name"));
-    });
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.key_management,
+      "keys",
+      "name"
+    );
+  } else if (field === "worker_pools") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.clusters,
+      "worker_pools",
+      "name"
+    );
   } else if (field === "buckets" || field === "cos_keys") {
-    componentProps.craig.store.json.object_storage.forEach(instance => {
-      allOtherNames = allOtherNames.concat(
-        splat(instance[field === "cos_keys" ? "keys" : "buckets"], "name")
-      );
-    });
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.object_storage,
+      field === "cos_keys" ? "keys" : "buckets",
+      "name"
+    );
   } else if (field === "acls") {
     // all of the extra ifs and elses here are to prevent order card from
     // triggering disable save when it has no props
@@ -80,6 +90,7 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         allOtherNames.indexOf(componentProps.data[stateField]),
         1
       );
+
     return contains(allOtherNames, stateData[stateField]);
   } else return false; // prevent order card from crashing
 }

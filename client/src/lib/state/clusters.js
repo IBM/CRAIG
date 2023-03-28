@@ -1,4 +1,11 @@
-const { revision, contains, splat, transpose } = require("lazy-z");
+const {
+  revision,
+  contains,
+  splat,
+  transpose,
+  deleteUnfoundArrayItems,
+  splatContains
+} = require("lazy-z");
 const { newDefaultWorkloadCluster } = require("./defaults");
 const {
   pushAndUpdate,
@@ -6,19 +13,18 @@ const {
   setUnfoundEncryptionKey,
   updateChild,
   carveChild,
-  pushToChildField,
+  pushToChildFieldModal,
   updateSubChild,
   deleteSubChild,
   hasUnfoundVpc
 } = require("./store.utils");
-const { deleteUnfoundArrayItems } = require("./utils");
 
 /**
  * initialize cluster
  * @param {lazyZState} config state store
  */
 function clusterInit(config) {
-  config.store.json.clusters = [];
+  config.store.json.clusters = [newDefaultWorkloadCluster()];
 }
 
 /**
@@ -45,6 +51,16 @@ function clusterOnStoreUpdate(config) {
     }
     setUnfoundEncryptionKey(config, cluster, "encryption_key");
     setUnfoundResourceGroup(config, cluster);
+    cluster.kms = null;
+    config.store.json.key_management.forEach(instance => {
+      if (splatContains(instance.keys, "name", cluster.encryption_key)) {
+        cluster.kms = instance.name;
+      }
+    });
+    if (!cluster.kms) {
+      cluster.kms = null;
+      cluster.encryption_key = null;
+    }
     // update vpc
     if (hasUnfoundVpc(config, cluster)) {
       cluster.vpc = null;
@@ -60,6 +76,7 @@ function clusterOnStoreUpdate(config) {
       cluster.subnets = deleteUnfoundArrayItems(vpcSubnets, cluster.subnets);
       // delete worker pool subnets
       cluster.worker_pools.forEach(pool => {
+        pool.cluster = cluster.name;
         pool.subnets = deleteUnfoundArrayItems(vpcSubnets, pool.subnets);
       });
     }
@@ -73,7 +90,7 @@ function clusterOnStoreUpdate(config) {
  * @param {object} stateData.cluster cluster object
  */
 function clusterCreate(config, stateData) {
-  pushAndUpdate(config, "clusters", stateData.cluster);
+  pushAndUpdate(config, "clusters", stateData);
 }
 
 /**
@@ -91,13 +108,13 @@ function clusterCreate(config, stateData) {
 function clusterSave(config, stateData, componentProps) {
   // if changing vpc name, set cluster pools to new vpc name and
   // remove pool subnet names
-  if (stateData.cluster.vpc !== componentProps.data.vpc) {
-    stateData.cluster.worker_pools.forEach(pool => {
-      pool.vpc = stateData.cluster.vpc;
+  if (stateData.vpc !== componentProps.data.vpc) {
+    stateData.worker_pools.forEach(pool => {
+      pool.vpc = stateData.vpc;
       pool.subnets = [];
     });
   }
-  updateChild(config, "clusters", stateData.cluster, componentProps);
+  updateChild(config, "clusters", stateData, componentProps);
 }
 
 /**
@@ -117,15 +134,17 @@ function clusterDelete(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function clusterWorkerPoolCreate(config, stateData, componentProps) {
+  
   let newPool = { subnets: [] };
   new revision(config.store.json)
-    .child("clusters", componentProps.arrayParentName) // get config cluster
+    .child("clusters", componentProps.innerFormProps.arrayParentName, "name") // get config cluster
     .then(data => {
       // set vpc name and flavor from parent cluster
       newPool.vpc = data.vpc;
       newPool.flavor = data.flavor;
-      transpose(stateData.pool, newPool);
-      pushToChildField(
+      newPool.resource_group = data.resource_group;
+      transpose(stateData, newPool);
+      pushToChildFieldModal(
         config,
         "clusters",
         "worker_pools",
@@ -142,13 +161,7 @@ function clusterWorkerPoolCreate(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function clusterWorkerPoolSave(config, stateData, componentProps) {
-  updateSubChild(
-    config,
-    "clusters",
-    "worker_pools",
-    stateData.pool,
-    componentProps
-  );
+  updateSubChild(config, "clusters", "worker_pools", stateData, componentProps);
 }
 
 /**

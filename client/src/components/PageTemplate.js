@@ -266,7 +266,8 @@ const navCategories = [
         path: "/form/clusters",
         icon: IbmCloudKubernetesService,
         toTf: clusterTf,
-        required: true
+        required: true,
+        jsonField: "clusters"
       }
     ]
   },

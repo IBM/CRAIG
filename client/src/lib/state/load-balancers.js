@@ -3,10 +3,10 @@ const {
   revision,
   carve,
   distinct,
-  getObjectFromArray
+  getObjectFromArray,
+  deleteUnfoundArrayItems
 } = require("lazy-z");
 const { pushAndUpdate } = require("./store.utils");
-const { deleteUnfoundArrayItems } = require("./utils");
 
 /**
  * initialize loadBalancer

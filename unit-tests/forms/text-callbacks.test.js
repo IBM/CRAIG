@@ -8,6 +8,7 @@ const {
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
+  clusterHelperTestCallback
 } = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {
@@ -434,6 +435,29 @@ describe("text callbacks", () => {
       );
     });
   });
+  describe("clusterHelperTestCallback", () => {
+    it("should return correct text", () => {
+      assert.deepEqual(
+        clusterHelperTestCallback(
+          { name: "test" },
+          {
+            vpc_name: "vpc",
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "iac-test-cluster",
+        "it should return correct text"
+      );
+    });
+  });
   describe("invalidSubnetTierText", () => {
     it("should return true when name invalid", () => {
       let actualData = invalidSubnetTierText(
@@ -493,6 +517,15 @@ describe("text callbacks", () => {
         "max_sessions_per_identity"
       );
       let expectedData = "Value must be in range [1-10]";
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct text"
+      );
+    });
+    it("should return correct text when any other field is invalid", () => {
+      let actualData = iamAccountSettingInvalidText("frog");
+      let expectedData = "Invalid";
       assert.deepEqual(
         actualData,
         expectedData,

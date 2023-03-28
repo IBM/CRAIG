@@ -155,6 +155,21 @@ function aclHelperTextCallback(stateData, componentProps) {
 }
 
 /**
+ * get helper text for cluster
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} composed acl name
+ */
+function clusterHelperTestCallback(stateData, componentProps) {
+  return (
+    componentProps.craig.store.json._options.prefix +
+    "-" +
+    stateData.name +
+    "-cluster"
+  );
+}
+
+/**
  * get invalid text for iam account setting
  * @param {string} field
  * @returns {string} invalid text
@@ -174,5 +189,6 @@ module.exports = {
   aclHelperTextCallback,
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
-  invalidSecurityGroupRuleText
+  invalidSecurityGroupRuleText,
+  clusterHelperTestCallback
 };

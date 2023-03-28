@@ -782,10 +782,10 @@ function newDefaultTg() {
 
 function newDefaultWorkloadCluster() {
   return {
-    kms: "slz-kms",
+    kms: "kms",
     cos: "cos",
     entitlement: "cloud_pak",
-    type: "openshift",
+    kube_type: "openshift",
     kube_version: "default",
     flavor: "bx2.16x64",
     name: "workload-cluster",

@@ -24,6 +24,22 @@ function badField(field, stateData) {
 }
 
 /**
+ * reduct unit test writing check if any fields from list are null or empty string
+ * @param {*} fields
+ * @param {*} stateData
+ * @returns {boolean} true if any null or empty string
+ */
+function fieldsAreBad(fields, stateData) {
+  let hasBadFields = false;
+  fields.forEach(field => {
+    if (badField(field, stateData)) {
+      hasBadFields = true;
+    }
+  });
+  return hasBadFields;
+}
+
+/**
  * test if a rule has an invalid port
  * @param {*} rule
  * @param {boolean=} isSecurityGroup
@@ -63,15 +79,13 @@ function disableSave(field, stateData, componentProps) {
     );
   } else if (field === "atracker") {
     return (
-      badField("bucket", stateData) ||
-      badField("cos_key", stateData) ||
+      fieldsAreBad(["bucket", "cos_key"], stateData) ||
       isEmpty(stateData.locations)
     );
   } else if (field === "object_storage") {
     return (
       invalidName("object_storage")(stateData, componentProps) ||
-      badField("kms", stateData) ||
-      badField("resource_group", stateData)
+      fieldsAreBad(["kms", "resource_group"], stateData)
     );
   } else if (field === "appid") {
     return (
@@ -100,15 +114,13 @@ function disableSave(field, stateData, componentProps) {
   } else if (field === "secrets_manager") {
     return (
       invalidName("secrets_manager")(stateData, componentProps) ||
-      badField("resource_group", stateData) ||
-      badField("encryption_key", stateData)
+      fieldsAreBad(["encryption_key", "resource_group"], stateData)
     );
   } else if (field === "resource_groups") {
     return invalidName("resource_groups")(stateData, componentProps);
   } else if (field === "vpcs") {
     return (
-      badField("resource_group", stateData) ||
-      badField("bucket", stateData) ||
+      fieldsAreBad(["bucket", "resource_group"], stateData) ||
       invalidName("vpcs")("name", stateData, componentProps) ||
       invalidName("vpcs")(
         "default_network_acl_name",
@@ -162,9 +174,7 @@ function disableSave(field, stateData, componentProps) {
   } else if (field === "vpn_gateways") {
     return (
       invalidName("vpn_gateways")(stateData, componentProps) ||
-      badField("resource_group", stateData) ||
-      badField("vpc", stateData) ||
-      badField("subnet", stateData)
+      fieldsAreBad(["resource_group", "vpc", "subnet"], stateData)
     );
   } else if (field === "subnetTier") {
     return (
@@ -174,17 +184,49 @@ function disableSave(field, stateData, componentProps) {
   } else if (field === "subnet") {
     return badField("network_acl", stateData);
   } else if (field === "iam_account_settings") {
-    return (
-      badField("mfa", stateData) ||
-      badField("restrict_create_platform_apikey", stateData) ||
-      badField("restrict_create_service_id", stateData) ||
-      badField("max_sessions_per_identity", stateData)
+    return fieldsAreBad(
+      [
+        "mfa",
+        "restrict_create_platform_apikey",
+        "restrict_create_service_id",
+        "max_sessions_per_identity"
+      ],
+      stateData
     );
   } else if (field === "security_groups") {
     return (
       invalidName("security_groups")(stateData, componentProps) ||
-      badField("resource_group", stateData) ||
-      badField("vpc", stateData)
+      fieldsAreBad(["resource_group", "vpc"], stateData)
+    );
+  } else if (field === "clusters") {
+    if (stateData.kube_type === "openshift") {
+      if (
+        fieldsAreBad(["cos"], stateData) ||
+        stateData.subnets.length * stateData.workers_per_subnet < 2
+      )
+        return true;
+    }
+    return (
+      invalidName("clusters")(stateData, componentProps) ||
+      fieldsAreBad(
+        [
+          "resource_group",
+          "vpc",
+          "subnets",
+          "encryption_key",
+          "flavor",
+          "kube_version"
+        ],
+        stateData
+      ) ||
+      isEmpty(stateData.subnets)
+    );
+  } else if (field === "worker_pools") {
+    return (
+      invalidName("worker_pools")(stateData, componentProps) ||
+      fieldsAreBad(["flavor"], stateData) ||
+      !stateData.subnets ||
+      isEmpty(stateData.subnets)
     );
   } else return false;
 }

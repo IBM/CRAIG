@@ -55,12 +55,13 @@ function invalidName(field) {
         stateData[stateField] === "" ||
         invalidNewResourceName(stateData[stateField])
       );
-    } else
+    } else {
       return (
         hasDuplicateName(field, stateData, componentProps, overrideField) ||
         stateData[stateField] === "" ||
         (!stateData.use_data && invalidNewResourceName(stateData[stateField]))
       );
+    }
   }
 
   if (field === "vpcs") {

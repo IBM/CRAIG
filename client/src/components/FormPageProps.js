@@ -8,7 +8,8 @@ import {
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
   invalidSecurityGroupRuleName,
-  invalidSecurityGroupRuleText
+  invalidSecurityGroupRuleText,
+  clusterHelperTestCallback
 } from "../lib/forms";
 import {
   ResourceGroupForm,
@@ -20,7 +21,8 @@ import {
   SshKeyForm,
   TransitGatewayForm,
   VpnGatewayForm,
-  SecurityGroupForm
+  SecurityGroupForm,
+  ClusterForm
 } from "icse-react-assets";
 import { RenderDocs } from "./RenderDocs";
 import { splat, contains, transpose } from "lazy-z";
@@ -87,6 +89,12 @@ const pathToFormMap = {
     name: "Security Groups",
     addText: "Create a Security Group",
     innerForm: SecurityGroupForm
+  },
+  clusters: {
+    jsonField: "clusters",
+    name: "Clusters",
+    addText: "Create a Cluster",
+    innerForm: ClusterForm
   }
 };
 /**
@@ -162,7 +170,8 @@ function formProps(form, craig) {
         "ssh_keys",
         "transitGateways",
         "vpn",
-        "securityGroups"
+        "securityGroups",
+        "clusters"
       ],
       form
     )
@@ -173,13 +182,19 @@ function formProps(form, craig) {
     );
   }
 
-  if (contains(["transitGateways", "vpn", "securityGroups"], form)) {
+  if (
+    contains(["transitGateways", "vpn", "securityGroups", "clusters"], form)
+  ) {
     formTemplate.innerFormProps.vpcList = craig.store.vpcList;
   }
 
   // add encryption keys
-  if (contains(["secretsManager"], form)) {
+  if (contains(["secretsManager", "clusters"], form)) {
     formTemplate.innerFormProps.encryptionKeys = craig.store.encryptionKeys;
+  }
+
+  if (contains(["clusters", "vpn"], form)) {
+    formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
   }
 
   if (form === "resourceGroups") {
@@ -277,8 +292,6 @@ function formProps(form, craig) {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
   } else if (form === "transitGateways") {
     formTemplate.innerFormProps.readOnlyName = false;
-  } else if (form === "vpn") {
-    formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
   } else if (form === "securityGroups") {
     let sgInnerFormProps = {
       onSubmitCallback: craig.security_groups.rules.create,
@@ -294,10 +307,35 @@ function formProps(form, craig) {
       invalidCallback: invalidName("security_groups"),
       invalidRuleText: invalidSecurityGroupRuleName,
       invalidTextCallback: invalidNameText("security_groups"),
-      invalidRuleTextCallback: invalidSecurityGroupRuleText,
+      invalidRuleTextCallback: invalidSecurityGroupRuleText
     };
     formTemplate.isSecurityGroup = true;
     transpose(sgInnerFormProps, formTemplate.innerFormProps);
+  } else if (form === "clusters") {
+    let clusterInnerFormProps = {
+      kubeVersionApiEndpoint: "/api/cluster/versions",
+      flavorApiEndpoint: "/api/cluster/flavors",
+      workerPoolProps: {
+        onSave: craig.clusters.worker_pools.save,
+        onDelete: craig.clusters.worker_pools.delete,
+        onSubmit: craig.clusters.worker_pools.create,
+        disableSave: function(field, stateData, componentProps) {
+          // field is clusters, inject worker pools
+          return disableSave("worker_pools", stateData, componentProps);
+        },
+        invalidCallback: invalidName("worker_pools"),
+        invalidTextCallback: invalidNameText("worker_pools"),
+        craig: craig,
+        flavorApiEndpoint: "/api/cluster/flavors",
+      },
+      invalidCallback: invalidName("clusters"),
+      invalidTextCallback: invalidNameText("clusters"),
+      helperTextCallback: clusterHelperTestCallback,
+      propsMatchState: propsMatchState,
+      cosNames: splat(craig.store.json.object_storage, "name")
+    };
+    transpose(clusterInnerFormProps, formTemplate.innerFormProps);
+    formTemplate.toggleFormProps.hide = false;
   }
   return formTemplate;
 }

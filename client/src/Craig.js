@@ -84,7 +84,7 @@ class Craig extends React.Component {
       title: "Error",
       kind: "error",
       text: "An unexpected error has occurred.",
-      timeout: "3000"
+      timeout: 3000
     };
     this.setState(prevState => ({
       notifications: [...prevState.notifications, notification]
@@ -138,7 +138,8 @@ class Craig extends React.Component {
                 "nacls",
                 "vpn",
                 "subnets",
-                "securityGroups"
+                "securityGroups",
+                "clusters"
               ],
               this.props.params.form
             ) ? (

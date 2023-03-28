@@ -148,7 +148,7 @@ function clusterTf(config) {
     cluster.worker_pools.forEach(pool => {
       blockData += formatWorkerPool(pool, config);
     });
-    tf += tfBlock(cluster.name + " Cluster", blockData);
+    tf += tfBlock(cluster.name + " Cluster", blockData) + "\n";
   });
   return tfDone(tf);
 }

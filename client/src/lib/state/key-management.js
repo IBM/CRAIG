@@ -1,4 +1,4 @@
-const { splat } = require("lazy-z");
+const { splat, nestedSplat } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { buildNewEncryptionKey } = require("../builders");
 const { newDefaultKms } = require("./defaults");
@@ -101,12 +101,11 @@ function keyManagementDelete(config, stateData, componentProps) {
 function setEncryptionKeys(config) {
   if (config.store.json.key_management.length > 0) {
     // if there is a kms service
-    config.store.encryptionKeys = [];
-    config.store.json.key_management.forEach(kms => {
-      config.store.encryptionKeys = config.store.encryptionKeys.concat(
-        splat(kms.keys, "name")
-      );
-    });
+    config.store.encryptionKeys = nestedSplat(
+      config.store.json.key_management,
+      "keys",
+      "name"
+    );
   } else {
     config.store.encryptionKeys = [];
   }

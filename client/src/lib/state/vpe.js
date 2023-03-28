@@ -1,7 +1,11 @@
 const { newDefaultVpe } = require("./defaults");
-const { splatContains, revision, carve } = require("lazy-z");
+const {
+  splatContains,
+  revision,
+  carve,
+  deleteUnfoundArrayItems
+} = require("lazy-z");
 const { pushAndUpdate } = require("./store.utils");
-const { deleteUnfoundArrayItems } = require("./utils");
 
 /**
  * initialize vpe

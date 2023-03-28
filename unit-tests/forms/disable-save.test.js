@@ -1494,7 +1494,7 @@ describe("disableSave", () => {
         "security_groups",
         {
           name: "aaa",
-          resource_group: null
+          resource_group: null,
         },
         {
           craig: {
@@ -1551,7 +1551,7 @@ describe("disableSave", () => {
         {
           name: "aaa",
           resource_group: "null",
-          vpc: null
+          vpc: null,
         },
         {
           craig: {
@@ -1631,7 +1631,7 @@ describe("disableSave", () => {
           ruleProtocol: "udp",
           rule: {
             port_min: -1,
-            port_max: null
+            port_max: null,
           },
         },
         { innerFormProps: { rules: [{ name: "ff" }] }, data: { name: "aa" } }
@@ -1645,6 +1645,490 @@ describe("disableSave", () => {
         { name: "@@@" },
         { rules: [], data: { name: "" }, isModal: true }
       )
+    );
+  });
+  it("should return true if iam_account_settings mfa invalid", () => {
+    assert.isTrue(
+      disableSave(
+        "iam_account_settings",
+        { mfa: null },
+        { rules: [], data: { name: "" }, isModal: true }
+      )
+    );
+  });
+  it("should return true if iam_account_settings restrict_create_platform_apikey invalid", () => {
+    assert.isTrue(
+      disableSave(
+        "iam_account_settings",
+        { mfa: "1", restrict_create_platform_apikey: null },
+        { rules: [], data: { name: "" }, isModal: true }
+      )
+    );
+  });
+  it("should return true if iam_account_settings restrict_create_service_id invalid", () => {
+    assert.isTrue(
+      disableSave(
+        "iam_account_settings",
+        {
+          mfa: "1",
+          restrict_create_platform_apikey: "null",
+          restrict_create_service_id: null,
+        },
+        { rules: [], data: { name: "" }, isModal: true }
+      )
+    );
+  });
+  it("should return true if iam_account_settings max_sessions_per_identity invalid", () => {
+    assert.isTrue(
+      disableSave(
+        "iam_account_settings",
+        {
+          mfa: "1",
+          restrict_create_platform_apikey: "null",
+          restrict_create_service_id: "null",
+          max_sessions_per_identity: null,
+        },
+        { rules: [], data: { name: "" }, isModal: true }
+      )
+    );
+  });
+  it("should return true if a cluster has an invalid name", () => {
+    assert.isTrue(
+      disableSave(
+        "clusters",
+        {
+          name: "@@@",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                  },
+                  {
+                    name: "toad",
+                  },
+                ],
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [
+                      {
+                        name: "frog",
+                        rules: [
+                          {
+                            name: "frog",
+                          },
+                          {
+                            name: "mmm",
+                          },
+                        ],
+                      },
+                      {
+                        name: "aaa",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a cluster has an invalid duplicate name", () => {
+    assert.isTrue(
+      disableSave(
+        "clusters",
+        {
+          name: "toad",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                  },
+                  {
+                    name: "toad",
+                  },
+                ],
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [
+                      {
+                        name: "frog",
+                        rules: [
+                          {
+                            name: "frog",
+                          },
+                          {
+                            name: "mmm",
+                          },
+                        ],
+                      },
+                      {
+                        name: "aaa",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "mm",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a cluster is openshift and has no cos", () => {
+    assert.isTrue(
+      disableSave(
+        "clusters",
+        {
+          name: "toad2",
+          kube_type: "openshift",
+          cos: null,
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                  },
+                  {
+                    name: "toad",
+                  },
+                ],
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [
+                      {
+                        name: "frog",
+                        rules: [
+                          {
+                            name: "frog",
+                          },
+                          {
+                            name: "mmm",
+                          },
+                        ],
+                      },
+                      {
+                        name: "aaa",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "mm",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a cluster is openshift and has cos but invalid subnets", () => {
+    assert.isTrue(
+      disableSave(
+        "clusters",
+        {
+          name: "toad2",
+          kube_type: "openshift",
+          cos: "cos",
+          wokrers_per_subnet: 1,
+          subnets: [],
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                  },
+                  {
+                    name: "toad",
+                  },
+                ],
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [
+                      {
+                        name: "frog",
+                        rules: [
+                          {
+                            name: "frog",
+                          },
+                          {
+                            name: "mmm",
+                          },
+                        ],
+                      },
+                      {
+                        name: "aaa",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "mm",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a cluster worker pool has an invalid duplicate name", () => {
+    assert.isTrue(
+      disableSave(
+        "worker_pools",
+        {
+          name: "a",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                    worker_pools: [
+                      {
+                        name: "a",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    worker_pools: [
+                      {
+                        name: "a",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "mm",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a cluster worker pool has no flavor", () => {
+    assert.isTrue(
+      disableSave(
+        "worker_pools",
+        {
+          name: "aaaa",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                    worker_pools: [
+                      {
+                        name: "toad",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    worker_pools: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "aaaa",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a cluster worker pool has no subnets", () => {
+    assert.isTrue(
+      disableSave(
+        "worker_pools",
+        {
+          name: "toad",
+          flavor: "spicy",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                    worker_pools: [
+                      {
+                        name: "toad",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    worker_pools: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [
+                      {
+                        name: "frog",
+                        rules: [
+                          {
+                            name: "frog",
+                          },
+                          {
+                            name: "mmm",
+                          },
+                        ],
+                      },
+                      {
+                        name: "aaa",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "mm",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a cluster worker pool has empty subnets", () => {
+    assert.isTrue(
+      disableSave(
+        "worker_pools",
+        {
+          name: "aaa",
+          flavor: "spicy",
+          subnets: [],
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    name: "frog",
+                    worker_pools: [
+                      {
+                        name: "toad",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    worker_pools: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+                vpcs: [
+                  {
+                    name: "frog",
+                    acls: [
+                      {
+                        name: "frog",
+                        rules: [
+                          {
+                            name: "frog",
+                          },
+                          {
+                            name: "mmm",
+                          },
+                        ],
+                      },
+                      {
+                        name: "aaa",
+                      },
+                    ],
+                  },
+                  {
+                    name: "toad",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "mm",
+          },
+        }
+      ),
+      "it should be true"
     );
   });
   it("should otherwise return false", () => {
