@@ -5,6 +5,7 @@ import { eachKey, isNullOrEmptyString } from "lazy-z";
 
 /**
  * Download configuration object
+ * @returns (Object|undefined) error
  */
 export const downloadContent = json => {
   const zip = new JSZip();
@@ -19,7 +20,9 @@ export const downloadContent = json => {
       // generate zip file
       saveAs(content, "craig.zip"); // Save zip file
     });
+    return null;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return error;
   }
 };

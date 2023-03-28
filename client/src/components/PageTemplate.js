@@ -430,6 +430,7 @@ const PageTemplate = props => {
         navCategories={navCategories}
         json={props.json}
         jsonInCodeMirror={props.jsonInCodeMirror}
+        notify={props.notify}
       />
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div

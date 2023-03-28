@@ -32,6 +32,7 @@ class Navigation extends React.Component {
     this.onModalClose = this.onModalClose.bind(this);
     this.onModalShow = this.onModalShow.bind(this);
     this.onHamburgerClick = this.onHamburgerClick.bind(this);
+    this.onDownloadClick = this.onDownloadClick.bind(this);
   }
   // Reset state and redirect to home page
   resetState() {
@@ -50,6 +51,27 @@ class Navigation extends React.Component {
 
   onHamburgerClick() {
     this.setState({ expanded: !this.state.expanded });
+  }
+
+  onDownloadClick() {
+    let notification = {
+      title: "Success",
+      kind: "success",
+      text: `Successfully downloaded configuration.`,
+      timeout: 3000
+    };
+
+    let error = downloadContent(this.props.json);
+    if (error) {
+      notification = {
+        title: "Error",
+        kind: "error",
+        text: `Unable to download configuration.\n${error.message}`,
+        timeout: 3000
+      };
+    }
+
+    this.props.notify(notification);
   }
 
   render() {
@@ -95,7 +117,7 @@ class Navigation extends React.Component {
             <HeaderGlobalAction
               aria-label="Download Environment Terraform"
               isActive
-              onClick={() => downloadContent(this.props.json)}
+              onClick={this.onDownloadClick}
               tooltipAlignment="end"
             >
               <Download />

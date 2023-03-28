@@ -44,6 +44,7 @@ class Craig extends React.Component {
     this.updateComponents = this.updateComponents.bind(this);
     this.setItem = this.setItem.bind(this);
     this.onError = this.onError.bind(this);
+    this.notify = this.notify.bind(this);
   }
 
   // when react component mounts, set update callback for store
@@ -73,10 +74,14 @@ class Craig extends React.Component {
       text: `Successfully updated ${updatedForm}`,
       timeout: 3000
     };
-    this.setState(prevState => ({
-      store: craig.store,
-      notifications: [...prevState.notifications, notification]
-    }));
+    this.setState(
+      {
+        store: craig.store
+      },
+      () => {
+        this.notify(notification);
+      }
+    );
   }
 
   onError() {
@@ -86,9 +91,7 @@ class Craig extends React.Component {
       text: "An unexpected error has occurred.",
       timeout: 3000
     };
-    this.setState(prevState => ({
-      notifications: [...prevState.notifications, notification]
-    }));
+    this.notify(notification);
   }
 
   /**
@@ -103,6 +106,12 @@ class Craig extends React.Component {
   toggleHide(value) {
     craig.toggleStoreValue(value);
     this.setState({ [value]: craig.store[value] });
+  }
+
+  notify(notification) {
+    this.setState(prevState => ({
+      notifications: [...prevState.notifications, notification]
+    }));
   }
 
   render() {
@@ -120,6 +129,7 @@ class Craig extends React.Component {
           storeName={this.state.storeName}
           jsonInCodeMirror={this.state.jsonInCodeMirror}
           notifications={this.state.notifications}
+          notify={this.notify}
         >
           {this.props.params.doc ? (
             <About />
