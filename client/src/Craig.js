@@ -8,6 +8,7 @@ import { FormPage } from "./components/FormPage";
 import { titleCase } from "lazy-z";
 import { contains } from "regex-but-with-words/lib/utils";
 import About from "./components/pages/About";
+import ReleaseNotes from "./components/pages/ReleaseNotes";
 import { ToggleFormPage } from "./components/ToggleFormPage";
 import { Home } from "./components/pages/Home";
 
@@ -132,7 +133,11 @@ class Craig extends React.Component {
           notify={this.notify}
         >
           {this.props.params.doc ? (
-            <About />
+            this.props.params.doc === "about" ? (
+              <About />
+            ) : (
+              <ReleaseNotes />
+            )
           ) : window.location.pathname === "/" ? (
             <Home craig={craig} form="options" />
           ) : contains(

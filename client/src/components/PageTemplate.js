@@ -321,6 +321,7 @@ const navCategories = [
 
 let pageOrder = [
   { title: "About", path: "/docs/about" },
+  { title: "Release Notes", path: "/docs/releaseNotes" },
   {
     title: "Options",
     path: "/"
