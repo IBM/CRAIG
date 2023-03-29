@@ -11,6 +11,7 @@ import About from "./components/pages/About";
 import ReleaseNotes from "./components/pages/ReleaseNotes";
 import { ToggleFormPage } from "./components/ToggleFormPage";
 import { Home } from "./components/pages/Home";
+import constants from "./lib/constants";
 
 const withRouter = Page => props => {
   const params = useParams();
@@ -51,14 +52,12 @@ class Craig extends React.Component {
   // when react component mounts, set update callback for store
   // to update components
   componentDidMount() {
-    if (window.location.pathname !== "resetState") {
-      craig.setUpdateCallback(() => {
-        this.updateComponents();
-      });
-      craig.setErrorCallback(() => {
-        this.onError();
-      });
-    }
+    craig.setUpdateCallback(() => {
+      this.updateComponents();
+    });
+    craig.setErrorCallback(() => {
+      this.onError();
+    });
   }
 
   // update components
@@ -104,11 +103,19 @@ class Craig extends React.Component {
     window.localStorage.setItem(storeName, JSON.stringify(store));
   }
 
+  /**
+   * toggle hide/show ui element
+   * @param {string} value name of element store value
+   */
   toggleHide(value) {
     craig.toggleStoreValue(value);
     this.setState({ [value]: craig.store[value] });
   }
 
+  /**
+   * show notifications
+   * @param {*} notification 
+   */
   notify(notification) {
     this.setState(prevState => ({
       notifications: [...prevState.notifications, notification]
@@ -139,34 +146,10 @@ class Craig extends React.Component {
               <ReleaseNotes />
             )
           ) : window.location.pathname === "/" ? (
-            <Home craig={craig} form="options" />
-          ) : contains(
-              [
-                "resourceGroups",
-                "keyManagement",
-                "objectStorage",
-                "secretsManager",
-                "appID",
-                "vpcs",
-                "sshKeys",
-                "transitGateways",
-                "nacls",
-                "vpn",
-                "subnets",
-                "securityGroups",
-                "clusters"
-              ],
-              this.props.params.form
-            ) ? (
+            <Home craig={craig} />
+          ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />
-          ) : contains(
-              [
-                "activityTracker",
-                "securityComplianceCenter",
-                "iamAccountSettings"
-              ],
-              this.props.params.form
-            ) ? (
+          ) : contains(constants.toggleFormPages, this.props.params.form) ? (
             <ToggleFormPage craig={craig} form={this.props.params.form} />
           ) : (
             // if no form yet, render name

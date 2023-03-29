@@ -3,42 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Craig from "./Craig";
 import { UnderConstruction } from "icse-react-assets";
 import "./app.scss";
-
-const Red = props => {
-  return (
-    <h1
-      onClick={() => {
-        props.craigRouter.nav("/blue");
-      }}
-    >
-      Red
-    </h1>
-  );
-};
-
-class Blue extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    // only stateful components will be able to utilize this functionality
-    // calling function before component has mounted will result in application
-    // crashing. It is, however unlikely that statless components will be checking
-    // for unsaved changes.
-    this.props.craigRouter.unsavedChangesCallback(true);
-  }
-  render() {
-    return (
-      <h1
-        onClick={() => {
-          this.props.craigRouter.nav("/red");
-        }}
-      >
-        Blue
-      </h1>
-    );
-  }
-}
+import ResetState from "./components/pages/ResetState";
 
 class App extends Component {
   constructor(props) {
@@ -94,6 +59,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Routes>
+          <Route path="/resetState" element={<ResetState />} />
           <Route path="/" element={<Craig craigRouter={this.craigRouter} />} />
           <Route
             path="/form/:form"
@@ -102,11 +68,6 @@ class App extends Component {
           <Route
             path="/docs/:doc"
             element={<Craig craigRouter={this.craigRouter} />}
-          />
-          <Route path="/red" element={<Red craigRouter={this.craigRouter} />} />
-          <Route
-            path="/blue"
-            element={<Blue craigRouter={this.craigRouter} />}
           />
           <Route path="*" element={<UnderConstruction />} />
         </Routes>

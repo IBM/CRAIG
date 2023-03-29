@@ -28,14 +28,14 @@ class Navigation extends React.Component {
       showModal: false,
       expanded: false
     };
-    this.resetState = this.resetState.bind(this);
+    this.isResetState = this.isResetState.bind(this);
     this.onModalClose = this.onModalClose.bind(this);
     this.onModalShow = this.onModalShow.bind(this);
     this.onHamburgerClick = this.onHamburgerClick.bind(this);
     this.onDownloadClick = this.onDownloadClick.bind(this);
   }
   // Reset state and redirect to home page
-  resetState() {
+  isResetState() {
     window.localStorage.removeItem("craigStore");
     window.localStorage.removeItem("craigDevStore");
     window.location.href = "/";
@@ -88,18 +88,20 @@ class Navigation extends React.Component {
             CRAIG
           </HeaderName>
           <HeaderGlobalBar>
-            <HeaderGlobalAction
-              aria-label={
-                this.props.hideCodeMirror
-                  ? "Show Code Mirror Pane"
-                  : "Hide Code Mirror Pane"
-              }
-              isActive
-              onClick={() => this.props.onJsonToggle()}
-              tooltipAlignment="end"
-            >
-              {this.props.hideCodeMirror ? <Code /> : <CodeHide />}
-            </HeaderGlobalAction>
+            {this.props.isResetState === false && (
+              <HeaderGlobalAction
+                aria-label={
+                  this.props.hideCodeMirror
+                    ? "Show Code Mirror Pane"
+                    : "Hide Code Mirror Pane"
+                }
+                isActive
+                onClick={() => this.props.onJsonToggle()}
+                tooltipAlignment="end"
+              >
+                {this.props.hideCodeMirror ? <Code /> : <CodeHide />}
+              </HeaderGlobalAction>
+            )}
             {this.props.hideCodeMirror === false && (
               <HeaderGlobalAction
                 aria-label={
@@ -114,14 +116,16 @@ class Navigation extends React.Component {
                 {this.props.jsonInCodeMirror ? <Script /> : <Json />}
               </HeaderGlobalAction>
             )}
-            <HeaderGlobalAction
-              aria-label="Download Environment Terraform"
-              isActive
-              onClick={this.onDownloadClick}
-              tooltipAlignment="end"
-            >
-              <Download />
-            </HeaderGlobalAction>
+            {this.props.isResetState === false && (
+              <HeaderGlobalAction
+                aria-label="Download Environment Terraform"
+                isActive
+                onClick={this.onDownloadClick}
+                tooltipAlignment="end"
+              >
+                <Download />
+              </HeaderGlobalAction>
+            )}
             <HeaderGlobalAction
               aria-label="Reset State"
               isActive
@@ -140,7 +144,7 @@ class Navigation extends React.Component {
             <Modal
               modalHeading="Reset state"
               open={this.state.showModal}
-              onRequestSubmit={this.resetState}
+              onRequestSubmit={this.isResetState}
               onRequestClose={this.onModalClose}
               primaryButtonText="Reset"
               secondaryButtonText="Cancel"
@@ -161,13 +165,15 @@ class Navigation extends React.Component {
 }
 
 Navigation.defaultProps = {
-  hideCodeMirror: false
+  hideCodeMirror: false,
+  isResetState: false
 };
 
 Navigation.propTypes = {
   onJsonToggle: PropTypes.func.isRequired,
   hideCodeMirror: PropTypes.bool.isRequired,
-  navCategories: PropTypes.array.isRequired
+  navCategories: PropTypes.array.isRequired,
+  isResetState: PropTypes.bool.isRequired
 };
 
 export default Navigation;

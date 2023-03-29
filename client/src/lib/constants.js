@@ -257,5 +257,25 @@ module.exports = {
       },
       icmp: { code: null, type: null }
     }
+  ],
+  arrayFormPages: [
+    "resourceGroups",
+    "keyManagement",
+    "objectStorage",
+    "secretsManager",
+    "appID",
+    "vpcs",
+    "sshKeys",
+    "transitGateways",
+    "nacls",
+    "vpn",
+    "subnets",
+    "securityGroups",
+    "clusters"
+  ],
+  toggleFormPages: [
+    "activityTracker",
+    "securityComplianceCenter",
+    "iamAccountSettings"
   ]
 };

@@ -343,6 +343,7 @@ pageOrder.push({
 });
 
 const PageTemplate = props => {
+  let isResetState = window.location.pathname === "/resetState";
   /**
    * Footer navigation function
    * @param {boolean} isBackward goes back
@@ -361,7 +362,11 @@ const PageTemplate = props => {
       props.nav(pageOrder[nextPathIndex].path);
     }
 
-    return nextPathIndex === pageOrder.length || nextPathIndex === -1
+    return isResetState
+      ? {
+          title: "Reset State"
+        }
+      : nextPathIndex === pageOrder.length || nextPathIndex === -1
       ? {
           // if next index is out of bounds of array, send empty string
           // and no onclick function
@@ -432,6 +437,7 @@ const PageTemplate = props => {
         json={props.json}
         jsonInCodeMirror={props.jsonInCodeMirror}
         notify={props.notify}
+        isResetState={isResetState}
       />
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
@@ -456,11 +462,13 @@ const PageTemplate = props => {
           code={getCodeMirrorDisplay(props.json, props.jsonInCodeMirror)}
         />
       </div>
-      <Footer
-        toggleFooter={() => props.toggleHide("hideFooter")}
-        hideFooter={props.hideFooter}
-        navigate={navigate}
-      />
+      {isResetState !== true && (
+        <Footer
+          toggleFooter={() => props.toggleHide("hideFooter")}
+          hideFooter={props.hideFooter}
+          navigate={navigate}
+        />
+      )}
     </>
   );
 };
@@ -475,7 +483,7 @@ PageTemplate.propTypes = {
   code: PropTypes.string, // can be null or undefined
   hideCodeMirror: PropTypes.bool.isRequired,
   hideFooter: PropTypes.bool.isRequired,
-  toggleHide: PropTypes.func.isRequired,
+  toggleHide: PropTypes.func,
   jsonInCodeMirror: PropTypes.bool.isRequired
 };
 
