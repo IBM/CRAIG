@@ -1,4 +1,10 @@
-const { kebabCase, snakeCase, allFieldsNull, splat } = require("lazy-z");
+const {
+  kebabCase,
+  snakeCase,
+  allFieldsNull,
+  splat,
+  getObjectFromArray
+} = require("lazy-z");
 const {
   rgIdRef,
   vpcRef,
@@ -114,6 +120,16 @@ function formatSubnet(subnet, config) {
       "ibm_is_public_gateway",
       `${subnet.vpc} gateway zone ${subnet.zone}`
     );
+  }
+  if (!subnet.has_prefix) {
+    let addressPrefixes = getObjectFromArray(config.vpcs, "name", subnet.vpc)
+      .address_prefixes;
+    subnetValues.depends_on = [];
+    addressPrefixes.forEach(prefix => {
+      subnetValues.depends_on.push(
+        `ibm_is_vpc_address_prefix.${snakeCase(`${subnet.vpc} ${prefix.name}`)}_prefix`
+      );
+    });
   }
   return jsonToIac("ibm_is_subnet", subnetName, subnetValues, config);
 }

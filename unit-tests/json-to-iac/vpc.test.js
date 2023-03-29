@@ -8,6 +8,7 @@ const {
   formatPgw,
   vpcTf,
 } = require("../../client/src/lib/json-to-iac/vpc");
+const f5Nw = require("../data-files/f5-nw.json");
 
 describe("vpc", () => {
   describe("formatVpc", () => {
@@ -214,41 +215,35 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
         "it should return correct data"
       );
     });
-    it("should create subnet with a string value prefix and no pgw", () => {
+    it("should create subnet with a depends_on when no address_prefix is created", () => {
       let actualData = formatSubnet(
         {
-          vpc: "management",
-          name: "vsi-subnet-1",
-          resource_group: "slz-management-rg",
-          cidr: "1.2.3.4/5",
-          network_acl: "management",
-          public_gateway: false,
-          has_prefix: false,
-          zone: 1,
+          "zone": 1,
+          "vpc": "edge",
+          "has_prefix": false,
+          "resource_group": "slz-edge-rg",
+          "network_acl": "edge-acl",
+          "cidr": "10.5.60.0/24",
+          "name": "f5-bastion-zone-1",
+          "public_gateway": false
         },
-        {
-          _options: {
-            region: "us-south",
-            prefix: "iac",
-            tags: ["hello", "world"],
-          },
-          resource_groups: [
-            {
-              use_data: false,
-              name: "slz-management-rg",
-            },
-          ],
-        }
+        f5Nw
       );
       let expectedData = `
-resource "ibm_is_subnet" "management_vsi_subnet_1" {
-  vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-subnet-1"
+resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "slz-edge-f5-bastion-zone-1"
   zone            = "us-south-1"
-  resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
-  network_acl     = ibm_is_network_acl.management_management_acl.id
-  ipv4_cidr_block = "1.2.3.4/5"
+  resource_group  = ibm_resource_group.slz_edge_rg.id
+  tags            = ["slz","landing-zone"]
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.5.60.0/24"
+
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_f5_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_f5_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_f5_zone_3_prefix
+  ]
 }
 `;
       assert.deepEqual(
