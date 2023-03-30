@@ -27,7 +27,7 @@ import {
   VpeForm
 } from "icse-react-assets";
 import { RenderDocs } from "./RenderDocs";
-import { splat, contains, transpose } from "lazy-z";
+import { splat, contains, transpose, getObjectFromArray } from "lazy-z";
 import NaclForm from "./forms/NaclForm";
 import SubnetForm from "./forms/SubnetForm";
 
@@ -279,7 +279,23 @@ function formProps(form, craig) {
           onSubmit: craig.object_storage.buckets.create,
           disableSave: disableSave,
           craig: craig,
-          encryptionKeys: craig.store.encryptionKeys
+          encryptionKeys: craig.store.encryptionKeys,
+          encryptionKeyFilter: function(_, componentProps) {
+            let cosName = componentProps.isModal
+              ? componentProps.parent_name
+              : componentProps.arrayParentName;
+            let { kms } = getObjectFromArray(
+              craig.store.json.object_storage,
+              "name",
+              cosName
+            );
+            let { keys } = getObjectFromArray(
+              craig.store.json.key_management,
+              "name",
+              kms
+            );
+            return splat(keys, "name");
+          }
         }
       },
       formTemplate.innerFormProps
