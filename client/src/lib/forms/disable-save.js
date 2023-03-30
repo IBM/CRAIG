@@ -247,6 +247,22 @@ function disableSave(field, stateData, componentProps) {
         invalidIpCommaList(stateData.private_ip_allowlist)
       );
     }
+  } else if (field === "virtual_private_endpoints") {
+    return (
+      invalidName("virtual_private_endpoints")(stateData, componentProps) ||
+      fieldsAreBad(
+        [
+          "resource_group",
+          "security_groups",
+          "service",
+          "subnets",
+          "vpc"
+        ],
+        stateData
+      ) ||
+      isEmpty(stateData.security_groups) ||
+      isEmpty(stateData.subnets)
+    ); 
   } else return false;
 }
 

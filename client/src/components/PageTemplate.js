@@ -247,6 +247,7 @@ const navCategories = [
         path: "/form/vpe",
         icon: IbmCloudVpcEndpoints,
         toTf: vpeTf,
+        jsonField: "virtual_private_endpoints",
         required: true
       },
       {

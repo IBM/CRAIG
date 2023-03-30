@@ -22,8 +22,9 @@ import {
   TransitGatewayForm,
   VpnGatewayForm,
   SecurityGroupForm,
+  ClusterForm,
   EventStreamsForm,
-  ClusterForm
+  VpeForm
 } from "icse-react-assets";
 import { RenderDocs } from "./RenderDocs";
 import { splat, contains, transpose } from "lazy-z";
@@ -102,6 +103,12 @@ const pathToFormMap = {
     name: "Clusters",
     addText: "Create a Cluster",
     innerForm: ClusterForm
+  },
+  vpe: {
+    jsonField: "virtual_private_endpoints",
+    name: "Virtual Private Endpoints",
+    addText: "Create a VPE",
+    innerForm: VpeForm
   }
 };
 /**
@@ -178,8 +185,10 @@ function formProps(form, craig) {
         "transitGateways",
         "vpn",
         "securityGroups",
+        "clusters",
         "eventStreams",
-        "clusters"
+        "clusters",
+        "vpe"
       ],
       form
     )
@@ -191,7 +200,10 @@ function formProps(form, craig) {
   }
 
   if (
-    contains(["transitGateways", "vpn", "securityGroups", "clusters"], form)
+    contains(
+      ["transitGateways", "vpn", "securityGroups", "clusters", "vpe"],
+      form
+    )
   ) {
     formTemplate.innerFormProps.vpcList = craig.store.vpcList;
   }
@@ -201,7 +213,7 @@ function formProps(form, craig) {
     formTemplate.innerFormProps.encryptionKeys = craig.store.encryptionKeys;
   }
 
-  if (contains(["clusters", "vpn"], form)) {
+  if (contains(["clusters", "vpn", "vpe"], form)) {
     formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
   }
 
@@ -350,6 +362,9 @@ function formProps(form, craig) {
     };
     transpose(clusterInnerFormProps, formTemplate.innerFormProps);
     formTemplate.toggleFormProps.hide = false;
+  } else if (form === "vpe") {
+    formTemplate.innerFormProps.securityGroups =
+      craig.store.json.security_groups;
   }
   return formTemplate;
 }

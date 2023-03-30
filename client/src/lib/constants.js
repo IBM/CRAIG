@@ -381,7 +381,8 @@ module.exports = {
     "subnets",
     "securityGroups",
     "clusters",
-    "eventStreams"
+    "eventStreams",
+    "vpe"
   ],
   toggleFormPages: [
     "activityTracker",
