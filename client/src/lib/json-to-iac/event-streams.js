@@ -29,22 +29,26 @@ function formatEventStreams(eventStreams, config) {
       delete: "1h"
     }
   };
-  if (eventStreams.private_ip_allowlist) {
-    eventStreamsValues["^parameters"].private_ip_allowlist = `"${JSON.stringify(
-      eventStreams.private_ip_allowlist
-    ).replace(/\"/g, "")}"`; // remove quotes to match intended params
-  }
-  ["throughput", "storage_size"].forEach(field => {
-    if (eventStreams[field]) {
-      field === "throughput"
-        ? (eventStreamsValues["^parameters"][field] = `"${eventStreams[
-            field
-          ].slice(0, -4)}"`)
-        : (eventStreamsValues["^parameters"][field] = `"${Number(
-            eventStreams[field].slice(0, -2)
-          ) * 1024}"`);
+  if (eventStreams.plan === "enterprise") {
+    if (eventStreams.private_ip_allowlist) {
+      eventStreamsValues[
+        "^parameters"
+      ].private_ip_allowlist = `"${JSON.stringify(
+        eventStreams.private_ip_allowlist
+      ).replace(/\"/g, "")}"`; // remove quotes to match intended params
     }
-  });
+    ["throughput", "storage_size"].forEach(field => {
+      if (eventStreams[field]) {
+        field === "throughput"
+          ? (eventStreamsValues["^parameters"][field] = `"${eventStreams[
+              field
+            ].slice(0, -4)}"`)
+          : (eventStreamsValues["^parameters"][field] = `"${Number(
+              eventStreams[field].slice(0, -2)
+            ) * 1024}"`);
+      }
+    });
+  } else delete eventStreamsValues["^parameters"];
   return jsonToIac(
     "ibm_resource_instance",
     `${eventStreams.name} es`,
