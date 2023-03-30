@@ -18,7 +18,8 @@ const {
   invalidTagList,
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
-  invalidNewResourceName
+  invalidNewResourceName,
+  invalidIpCommaList
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const { disableSave, invalidPort } = require("./disable-save");
@@ -49,5 +50,6 @@ module.exports = {
   invalidIamAccountSettings,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
-  invalidNewResourceName
+  invalidNewResourceName,
+  invalidIpCommaList
 };

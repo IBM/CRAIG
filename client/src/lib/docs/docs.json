@@ -995,5 +995,19 @@
         "https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started"
       ]
     ]
+  },
+  "event_streams": {
+    "content": [
+      {
+        "text": "IBM Cloud Event Streams is an event-streaming platform that helps you build smart apps that can react to events as they happen.",
+        "className": "marginBottomSmall"
+      },
+      {
+       "text": "By default, IBM Event Streams instances are not created but can be if desired."
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started", "Docs"]
+    ]
   }
 }

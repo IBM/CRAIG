@@ -22,6 +22,7 @@ import {
   TransitGatewayForm,
   VpnGatewayForm,
   SecurityGroupForm,
+  EventStreamsForm,
   ClusterForm
 } from "icse-react-assets";
 import { RenderDocs } from "./RenderDocs";
@@ -89,6 +90,12 @@ const pathToFormMap = {
     name: "Security Groups",
     addText: "Create a Security Group",
     innerForm: SecurityGroupForm
+  },
+  eventStreams: {
+    jsonField: "event_streams",
+    name: "Event Streams",
+    addText: "Create an Event Streams Service",
+    innerForm: EventStreamsForm
   },
   clusters: {
     jsonField: "clusters",
@@ -171,6 +178,7 @@ function formProps(form, craig) {
         "transitGateways",
         "vpn",
         "securityGroups",
+        "eventStreams",
         "clusters"
       ],
       form
@@ -311,6 +319,12 @@ function formProps(form, craig) {
     };
     formTemplate.isSecurityGroup = true;
     transpose(sgInnerFormProps, formTemplate.innerFormProps);
+  } else if (form === "eventStreams") {
+    let esInnerFormProps = {
+      invalidCallback: invalidName("event_streams"),
+      invalidTextCallback: invalidNameText("event_streams")
+    };
+    transpose(esInnerFormProps, formTemplate.innerFormProps);
   } else if (form === "clusters") {
     let clusterInnerFormProps = {
       kubeVersionApiEndpoint: "/api/cluster/versions",
@@ -326,7 +340,7 @@ function formProps(form, craig) {
         invalidCallback: invalidName("worker_pools"),
         invalidTextCallback: invalidNameText("worker_pools"),
         craig: craig,
-        flavorApiEndpoint: "/api/cluster/flavors",
+        flavorApiEndpoint: "/api/cluster/flavors"
       },
       invalidCallback: invalidName("clusters"),
       invalidTextCallback: invalidNameText("clusters"),

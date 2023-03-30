@@ -10,12 +10,12 @@ describe("event streams", () => {
       let actualData = formatEventStreams(
         {
           name: "event-streams",
-          plan: "enterprise-3nodes-2tb",
+          plan: "eneterprise",
           resource_group: "slz-service-rg",
           endpoints: "private",
           private_ip_allowlist: ["10.0.0.0/32", "10.0.0.1/32"],
-          throughput: "150",
-          storage_size: "2048",
+          throughput: "150MB/s",
+          storage_size: "2TB",
         },
         {
           _options: {
@@ -46,7 +46,7 @@ describe("event streams", () => {
 resource "ibm_resource_instance" "event_streams_es" {
   name              = "iac-event-streams"
   service           = "messagehub"
-  plan              = "enterprise-3nodes-2tb"
+  plan              = "eneterprise"
   location          = "us-south"
   resource_group_id = ibm_resource_group.slz_service_rg.id
 
@@ -74,7 +74,7 @@ resource "ibm_resource_instance" "event_streams_es" {
       let actualData = formatEventStreams(
         {
           name: "event-streams",
-          plan: "enterprise-3nodes-2tb",
+          plan: "eneterprise",
           resource_group: "slz-service-rg",
           endpoints: "private",
         },
@@ -107,7 +107,7 @@ resource "ibm_resource_instance" "event_streams_es" {
 resource "ibm_resource_instance" "event_streams_es" {
   name              = "iac-event-streams"
   service           = "messagehub"
-  plan              = "enterprise-3nodes-2tb"
+  plan              = "eneterprise"
   location          = "us-south"
   resource_group_id = ibm_resource_group.slz_service_rg.id
 
@@ -157,12 +157,12 @@ resource "ibm_resource_instance" "event_streams_es" {
         event_streams: [
           {
             name: "event-streams",
-            plan: "enterprise-3nodes-2tb",
+            plan: "eneterprise",
             resource_group: "slz-service-rg",
             endpoints: "private",
             private_ip_allowlist: ["10.0.0.0/32", "10.0.0.1/32"],
-            throughput: "150",
-            storage_size: "2048",
+            throughput: "150MB/s",
+            storage_size: "2TB",
           },
         ],
       });
@@ -173,7 +173,7 @@ resource "ibm_resource_instance" "event_streams_es" {
 resource "ibm_resource_instance" "event_streams_es" {
   name              = "iac-event-streams"
   service           = "messagehub"
-  plan              = "enterprise-3nodes-2tb"
+  plan              = "eneterprise"
   location          = "us-south"
   resource_group_id = ibm_resource_group.slz_service_rg.id
 

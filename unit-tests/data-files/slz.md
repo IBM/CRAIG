@@ -504,3 +504,15 @@ By default, IBM Cloud Security and Compliance Center is not enabled but can be e
 - [Docs](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started)
 
 -----
+
+## Event Streams
+
+IBM Cloud Event Streams is an event-streaming platform that helps you build smart apps that can react to events as they happen.
+
+By default, IBM Event Streams instances are not created but can be if desired.
+
+### Related Links
+
+- [Docs](https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started)
+
+-----

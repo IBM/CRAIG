@@ -6,7 +6,11 @@ const {
   containsKeys,
   splatContains
 } = require("lazy-z");
-const { newResourceNameExp, sshKeyValidationExp } = require("../constants");
+const {
+  newResourceNameExp,
+  sshKeyValidationExp,
+  commaSeparatedIpListExp
+} = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
 /**
@@ -198,6 +202,18 @@ function invalidSecurityGroupRuleName(stateData, componentProps) {
   return duplicateRuleName || invalidNewResourceName(stateData.name);
 }
 
+/**
+ * check if string of comma separated ips is invalid
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidIpCommaList(ipList) {
+  if (isNullOrEmptyString(ipList)) {
+    return false;
+  } else return ipList.match(commaSeparatedIpListExp) === null;
+}
+
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -207,5 +223,6 @@ module.exports = {
   validSshKey,
   invalidSubnetTierName,
   invalidIamAccountSettings,
-  invalidSecurityGroupRuleName
+  invalidSecurityGroupRuleName,
+  invalidIpCommaList
 };

@@ -96,6 +96,115 @@ module.exports = {
   maskFieldsExpStep5CleanUp: new RegexButWithWords()
     .literal("public_key%%%%")
     .done("g"),
+  commaSeparatedIpListExp: new RegexButWithWords()
+    .stringBegin()
+    .group(exp => {
+      exp.group(exp => {
+        exp
+          .wordBoundary()
+          .group(exp => {
+            exp
+              .group(exp => {
+                exp
+                  .literal("25")
+                  .set("0-5")
+                  .or()
+                  .literal("2")
+                  .set("0-4")
+                  .digit()
+                  .or()
+                  .set("01")
+                  .lazy()
+                  .digit(1, 2);
+              })
+              .literal(".");
+          }, 3)
+          .group(exp => {
+            exp
+              .literal("25")
+              .set("0-5")
+              .or()
+              .literal("2")
+              .set("0-4")
+              .digit()
+              .or()
+              .set("01")
+              .lazy()
+              .digit(1, 2);
+          })
+          .wordBoundary()
+          .group(exp => {
+            exp.group(exp => {
+              exp.literal("/").group(exp => {
+                exp
+                  .literal("3")
+                  .set("0-2")
+                  .or()
+                  .set("012")
+                  .lazy()
+                  .digit();
+              });
+            });
+          })
+          .lazy();
+      });
+    })
+    .anyNumber()
+    .group(exp => {
+      exp
+        .literal(",")
+        .whitespace()
+        .anyNumber()
+        .wordBoundary()
+        .group(exp => {
+          exp
+            .group(exp => {
+              exp
+                .literal("25")
+                .set("0-5")
+                .or()
+                .literal("2")
+                .set("0-4")
+                .digit()
+                .or()
+                .set("01")
+                .lazy()
+                .digit(1, 2);
+            })
+            .literal(".");
+        }, 3)
+        .group(exp => {
+          exp
+            .literal("25")
+            .set("0-5")
+            .or()
+            .literal("2")
+            .set("0-4")
+            .digit()
+            .or()
+            .set("01")
+            .lazy()
+            .digit(1, 2);
+        })
+        .wordBoundary()
+        .group(exp => {
+          exp.group(exp => {
+            exp.literal("/").group(exp => {
+              exp
+                .literal("3")
+                .set("0-2")
+                .or()
+                .set("012")
+                .lazy()
+                .digit();
+            });
+          });
+        })
+        .lazy();
+    })
+    .anyNumber()
+    .stringEnd()
+    .done("gm"),
   clusterRules: [
     {
       name: "roks-create-worker-nodes-inbound",
@@ -271,7 +380,8 @@ module.exports = {
     "vpn",
     "subnets",
     "securityGroups",
-    "clusters"
+    "clusters",
+    "eventStreams"
   ],
   toggleFormPages: [
     "activityTracker",

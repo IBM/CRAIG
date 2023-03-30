@@ -1,9 +1,4 @@
-const {
-  jsonToIac,
-  kebabName,
-  rgIdRef,
-  tfBlock
-} = require("./utils");
+const { jsonToIac, kebabName, rgIdRef, tfBlock } = require("./utils");
 
 /**
  * create event streams terraform
@@ -41,7 +36,13 @@ function formatEventStreams(eventStreams, config) {
   }
   ["throughput", "storage_size"].forEach(field => {
     if (eventStreams[field]) {
-      eventStreamsValues["^parameters"][field] = `"${eventStreams[field]}"`;
+      field === "throughput"
+        ? (eventStreamsValues["^parameters"][field] = `"${eventStreams[
+            field
+          ].slice(0, -4)}"`)
+        : (eventStreamsValues["^parameters"][field] = `"${Number(
+            eventStreams[field].slice(0, -2)
+          ) * 1024}"`);
     }
   });
   return jsonToIac(

@@ -8,7 +8,7 @@ const {
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback
+  clusterHelperTestCallback,
 } = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {

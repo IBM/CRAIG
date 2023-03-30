@@ -4,6 +4,7 @@ const {
   invalidSshPublicKey,
   invalidIamAccountSettings,
   invalidTagList,
+  invalidIpCommaList,
 } = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
@@ -580,12 +581,23 @@ describe("invalid callbacks", () => {
       assert.isFalse(actualData);
     });
   });
-});
-describe("invalidTagList", () => {
-  it("should return true when invalid tag list", () => {
-    assert.isTrue(invalidTagList(["hi", "2@@@2"]));
+  describe("invalidTagList", () => {
+    it("should return true when invalid tag list", () => {
+      assert.isTrue(invalidTagList(["hi", "2@@@2"]));
+    });
+    it("should return false when no tags", () => {
+      assert.isFalse(invalidTagList([]));
+    });
   });
-  it("should return false when no tags", () => {
-    assert.isFalse(invalidTagList([]));
+  describe("invalidIpCommaList", () => {
+    it("should return false when invalid comma separated ip list is provided", () => {
+      assert.isFalse(invalidIpCommaList("1.1.1.1/10, 2.2.2.2"));
+    });
+    it("should return true when valid comma separated ip list is provided", () => {
+      assert.isTrue(invalidIpCommaList("1.1.1.-2,2.2.2.2,124.2/2"));
+    });
+    it("should return false when null is provided", () => {
+      assert.isFalse(invalidIpCommaList(null));
+    });
   });
 });

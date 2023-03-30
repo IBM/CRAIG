@@ -10,7 +10,8 @@ const {
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
   invalidSubnetTierName,
-  invalidSecurityGroupRuleName
+  invalidSecurityGroupRuleName,
+  invalidIpCommaList
 } = require("./invalid-callbacks");
 
 /**
@@ -184,14 +185,16 @@ function disableSave(field, stateData, componentProps) {
   } else if (field === "subnet") {
     return badField("network_acl", stateData);
   } else if (field === "iam_account_settings") {
-    return fieldsAreBad(
-      [
-        "mfa",
-        "restrict_create_platform_apikey",
-        "restrict_create_service_id",
-        "max_sessions_per_identity"
-      ],
-      stateData
+    return (
+      fieldsAreBad(
+        [
+          "mfa",
+          "restrict_create_platform_apikey",
+          "restrict_create_service_id",
+          "max_sessions_per_identity"
+        ],
+        stateData
+      ) || invalidIpCommaList(stateData.allowed_ip_addresses)
     );
   } else if (field === "security_groups") {
     return (
@@ -228,6 +231,22 @@ function disableSave(field, stateData, componentProps) {
       !stateData.subnets ||
       isEmpty(stateData.subnets)
     );
+  } else if (field === "event_streams") {
+    if (stateData.plan !== "enterprise") {
+      return (
+        invalidName("event_streams")(stateData, componentProps) ||
+        badField("resource_group", stateData)
+      );
+    } else {
+      return (
+        invalidName("event_streams")(stateData, componentProps) ||
+        fieldsAreBad(
+          ["resource_group", "endpoints", "throughput", "storage_size"],
+          stateData
+        ) ||
+        invalidIpCommaList(stateData.private_ip_allowlist)
+      );
+    }
   } else return false;
 }
 

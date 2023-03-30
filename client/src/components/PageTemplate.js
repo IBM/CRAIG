@@ -143,7 +143,7 @@ const navCategories = [
         title: "Event Streams",
         path: "/form/eventStreams",
         icon: IbmCloudEventStreams,
-        field: "event_streams",
+        jsonField: "event_streams",
         toTf: config => {
           if (config.event_streams.length > 0) return eventStreamsTf(config);
           return "";

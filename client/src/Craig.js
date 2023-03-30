@@ -114,7 +114,7 @@ class Craig extends React.Component {
 
   /**
    * show notifications
-   * @param {*} notification 
+   * @param {*} notification
    */
   notify(notification) {
     this.setState(prevState => ({

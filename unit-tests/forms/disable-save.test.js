@@ -2180,4 +2180,155 @@ describe("disableSave", () => {
       );
     });
   });
+  it("should return true if iam account settings page has bad mfa field", () => {
+    assert.isTrue(
+      disableSave("iam_account_settings", {
+        mfa: null,
+        allowed_ip_addresses: "1.1.1.1",
+        max_sessions_per_identity: 1,
+        restrict_create_service_id: "NOT_SET",
+        restrict_create_platform_apikey: "NOT_SET",
+      })
+    );
+  });
+  it("should return true if iam account settings page has bad allowed_ip_addresses field", () => {
+    assert.isTrue(
+      disableSave("iam_account_settings", {
+        mfa: "NONE",
+        allowed_ip_addresses: "1.1.1.-sda,1.1.1.1",
+        max_sessions_per_identity: 1,
+        restrict_create_service_id: "NOT_SET",
+        restrict_create_platform_apikey: "NOT_SET",
+      })
+    );
+  });
+  it("should return true if iam account settings page has bad max_sessions_per_identity field", () => {
+    assert.isTrue(
+      disableSave("iam_account_settings", {
+        mfa: "NONE",
+        allowed_ip_addresses: "1.1.1.1",
+        max_sessions_per_identity: null,
+        restrict_create_service_id: "NOT_SET",
+        restrict_create_platform_apikey: "NOT_SET",
+      })
+    );
+  });
+  it("should return true if iam account settings page has bad restrict_create_service_id field", () => {
+    assert.isTrue(
+      disableSave("iam_account_settings", {
+        mfa: "NONE",
+        allowed_ip_addresses: "1.1.1.1",
+        max_sessions_per_identity: 1,
+        restrict_create_service_id: null,
+        restrict_create_platform_apikey: "NOT_SET",
+      })
+    );
+  });
+  it("should return true if iam account settings form has bad restrict_create_platform_apikey field", () => {
+    assert.isTrue(
+      disableSave("iam_account_settings", {
+        mfa: "NONE",
+        allowed_ip_addresses: "1.1.1.1",
+        max_sessions_per_identity: 1,
+        restrict_create_service_id: "NOT_SET",
+        restrict_create_platform_apikey: null,
+      })
+    );
+  });
+  it("should return true if event streams plan is not enterprise and form has invalid name", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "lite",
+        name: "-bad-name",
+        resource_group: "rg",
+      })
+    );
+  });
+  it("should return true if event streams plan is not enterprise and form has invalid resource_group", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "lite",
+        name: "foo-name",
+        resource_group: null,
+      })
+    );
+  });
+  it("should return true if event streams plan is enterprise and form has invalid name", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "enterprise",
+        name: "-bad-name",
+        resource_group: "rg",
+        endpoints: "private",
+        throughput: "150",
+        storage_size: "2048",
+        private_ip_allowlist: "1.1.1.1",
+      })
+    );
+  });
+  it("should return true if event streams plan is enterprise and form has invalid resource_group", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "enterprise",
+        name: "foo-name",
+        resource_group: null,
+        endpoints: "private",
+        throughput: "150",
+        storage_size: "2048",
+        private_ip_allowlist: "1.1.1.1",
+      })
+    );
+  });
+  it("should return true if event streams plan is enterprise and form has invalid endpoints", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "enterprise",
+        name: "foo-name",
+        resource_group: "rg",
+        endpoints: null,
+        throughput: "150",
+        storage_size: "2048",
+        private_ip_allowlist: "1.1.1.1",
+      })
+    );
+  });
+  it("should return true if event streams plan is enterprise and form has invalid throughput", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "enterprise",
+        name: "foo-name",
+        resource_group: "rg",
+        endpoints: "private",
+        throughput: null,
+        storage_size: "2048",
+        private_ip_allowlist: "1.1.1.1",
+      })
+    );
+  });
+  it("should return true if event streams plan is enterprise and form has invalid storage_size", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "enterprise",
+        name: "foo-name",
+        resource_group: "rg",
+        endpoints: "private",
+        throughput: "150",
+        storage_size: null,
+        private_ip_allowlist: "1.1.1.1",
+      })
+    );
+  });
+  it("should return true if event streams plan is enterprise and form has invalid private_ip_allowlist", () => {
+    assert.isTrue(
+      disableSave("event_streams", {
+        plan: "enterprise",
+        name: "foo-name",
+        resource_group: "rg",
+        endpoints: "private",
+        throughput: "150",
+        storage_size: "2048",
+        private_ip_allowlist: "1.1.1.-sda,1.1.1.1",
+      })
+    );
+  });
 });
