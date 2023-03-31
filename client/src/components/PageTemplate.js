@@ -48,17 +48,13 @@ import {
   sshKeyTf,
   teleportTf,
   tgwTf,
-  formatSubnet,
   vpeTf,
   vpnTf,
   vsiTf,
   iamTf,
-  tfBlock,
-  formatVpc,
-  tfDone,
-  formatAcl,
-  formatAclRule,
-  formatPgw
+  codeMirrorVpcTf,
+  codeMirrorAclTf,
+  codeMirrorSubnetsTf
 } from "../lib/json-to-iac";
 import {
   maskFieldsExpStep1ReplacePublicKey,
@@ -67,7 +63,6 @@ import {
   maskFieldsExpStep4HideValue,
   maskFieldsExpStep5CleanUp
 } from "../lib/constants";
-import { formatFlowLogs } from "../lib/json-to-iac/flow-logs";
 import { Notification } from "./Notification";
 
 function F5Icon() {
@@ -172,21 +167,7 @@ const navCategories = [
         title: "Virtual Private Clouds",
         path: "/form/vpcs",
         icon: VirtualPrivateCloud,
-        toTf: config => {
-          let tf = "";
-          config.vpcs.forEach(vpc => {
-            let blockData = formatVpc(vpc, config);
-            vpc.public_gateways.forEach(gateway => {
-              blockData += formatPgw(gateway, config);
-            });
-            tf +=
-              tfBlock(vpc.name + " vpc", blockData) +
-              "\n" +
-              tfBlock(vpc.name + " flow logs", formatFlowLogs(vpc, config)) +
-              "\n";
-          });
-          return tfDone(tf);
-        },
+        toTf: codeMirrorVpcTf,
         jsonField: "vpcs",
         required: true
       },
@@ -194,37 +175,14 @@ const navCategories = [
         title: "VPC Access Control",
         path: "/form/nacls",
         icon: SubnetAclRules,
-        toTf: config => {
-          let tf = "";
-          config.vpcs.forEach(vpc => {
-            let blockData = "";
-            vpc.acls.forEach(acl => {
-              blockData += formatAcl(acl, config);
-              acl.rules.forEach(rule => {
-                blockData += formatAclRule(rule);
-              });
-            });
-            tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
-          });
-          return tfDone(tf);
-        },
+        toTf: codeMirrorAclTf,
         required: true
       },
       {
         title: "VPC Subnets",
         path: "/form/subnets",
         icon: IbmCloudSubnets,
-        toTf: config => {
-          let tf = "";
-          config.vpcs.forEach(vpc => {
-            let blockData = "";
-            vpc.subnets.forEach(subnet => {
-              blockData += formatSubnet(subnet, config);
-            });
-            tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
-          });
-          return tfDone(tf);
-        },
+        toTf: codeMirrorSubnetsTf,
         required: true
       },
       {

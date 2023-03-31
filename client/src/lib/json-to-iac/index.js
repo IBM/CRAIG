@@ -27,6 +27,11 @@ const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
 const { vsiTf, lbTf } = require("./vsi");
 const { configToFilesJson } = require("./config-to-files-json");
+const {
+  codeMirrorVpcTf,
+  codeMirrorAclTf,
+  codeMirrorSubnetsTf
+} = require("./page-template");
 
 module.exports = {
   formatPgw,
@@ -60,5 +65,8 @@ module.exports = {
   vpeTf,
   vpnTf,
   vsiTf,
-  configToFilesJson
+  configToFilesJson,
+  codeMirrorVpcTf,
+  codeMirrorAclTf,
+  codeMirrorSubnetsTf
 };
