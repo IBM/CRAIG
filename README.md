@@ -30,6 +30,7 @@ All files                 |     100 |      100 |     100 |     100 | 🏆
   constants.js            |     100 |      100 |     100 |     100 | 🏆
  lib/forms                |     100 |      100 |     100 |     100 | 🏆
   duplicate-name.js       |     100 |      100 |     100 |     100 | 🏆
+  format-json.js          |     100 |      100 |     100 |     100 | 🏆
   index.js                |     100 |      100 |     100 |     100 | 🏆
   invalid-callbacks.js    |     100 |      100 |     100 |     100 | 🏆
   text-callbacks.js       |     100 |      100 |     100 |     100 | 🏆

@@ -9,6 +9,7 @@ import { titleCase } from "lazy-z";
 import { contains } from "regex-but-with-words/lib/utils";
 import About from "./components/pages/About";
 import ReleaseNotes from "./components/pages/ReleaseNotes";
+import Summary from "./components/pages/Summary";
 import { ToggleFormPage } from "./components/ToggleFormPage";
 import { Home } from "./components/pages/Home";
 import constants from "./lib/constants";
@@ -131,7 +132,9 @@ class Craig extends React.Component {
       <>
         <PageTemplate
           hideCodeMirror={
-            this.props.params.doc ? true : this.state.hideCodeMirror
+            this.props.params.doc || window.location.pathname === "/summary"
+              ? true
+              : this.state.hideCodeMirror
           } // always hide if about
           hideFooter={this.state.hideFooter}
           toggleHide={this.toggleHide}
@@ -151,6 +154,8 @@ class Craig extends React.Component {
             )
           ) : window.location.pathname === "/" ? (
             <Home craig={craig} />
+          ) : window.location.pathname === "/summary" ? (
+            <Summary craig={craig} />
           ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />
           ) : contains(constants.toggleFormPages, this.props.params.form) ? (
