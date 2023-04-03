@@ -1,4 +1,11 @@
-const { eachKey, transpose, contains, allFieldsNull } = require("lazy-z");
+const {
+  eachKey,
+  transpose,
+  contains,
+  allFieldsNull,
+  splatContains,
+  arraySplatIndex
+} = require("lazy-z");
 
 /**
  * validate rule
@@ -111,8 +118,62 @@ function updateNetworkingRule(isAcl, rule, params) {
   });
 }
 
+/**
+ * shortcut for ["icmp", "tcp", "udp"].forEach
+ * @param {eachProtocolCallback} eachProtocolCallback
+ */
+function eachRuleProtocol(eachProtocolCallback) {
+  ["icmp", "tcp", "udp"].forEach(protocol => {
+    eachProtocolCallback(protocol);
+  });
+}
+
+/**
+ * build subnet tiers for a vpc
+ * @param {*} vpcObject vpc object
+ * @returns {Array<Object>} list of subnet tiers in that vpc
+ */
+function buildSubnetTiers(vpcObject) {
+  let subnetTiers = []; // list of tiers to return
+  let smallestZoneCidr = 0; // smallest zone cidr used to order tiers
+
+  // for each subnet
+  vpcObject.subnets.forEach(subnet => {
+    let tierName = subnet.name.replace(/-zone-\d/g, ""); // get tier name by replacing zone
+    let arrayMethod = "push";
+    // in order to make sure that subnet tiers are translated to be in
+    // the correct order, array method is set to add new tiers. `push` is used to add to the end
+    // and `unshift` is used to add to the beginning
+    let subnetOrderCidr = parseInt(
+      // replace everything that is not the zone determined portion of the CIDR
+      // and convert to number
+      subnet.cidr.replace(/\.\d+\/\d+/g, "").replace(/10\.\d+\./g, "")
+    );
+    if (smallestZoneCidr === 0) {
+      // if just initialized, set to subnet order cidr
+      smallestZoneCidr = subnetOrderCidr;
+    } else if (subnetOrderCidr < smallestZoneCidr) {
+      // if the cidr block is less than the previous one, set array method to unshift
+      arrayMethod = "unshift";
+    }
+    if (!splatContains(subnetTiers, "name", tierName)) {
+      // if the subnet tier does not exist in the list, add to list
+      subnetTiers[arrayMethod]({
+        name: tierName,
+        zones: 1
+      });
+    } else {
+      // otherwise, increase number of zones
+      let tierIndex = arraySplatIndex(subnetTiers, "name", tierName);
+      subnetTiers[tierIndex].zones++;
+    }
+  });
+  return subnetTiers;
+}
 
 module.exports = {
   formatNetworkingRule,
   updateNetworkingRule,
+  eachRuleProtocol,
+  buildSubnetTiers
 };

@@ -51,8 +51,7 @@ function newDefaultCos() {
           force_delete: true,
           kms_key: "atracker-key",
           name: "atracker-bucket",
-          storage_class: "standard",
-          use_random_suffix: true
+          storage_class: "standard"
         }
       ],
       keys: [

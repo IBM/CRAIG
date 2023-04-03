@@ -12,6 +12,7 @@ import ReleaseNotes from "./components/pages/ReleaseNotes";
 import { ToggleFormPage } from "./components/ToggleFormPage";
 import { Home } from "./components/pages/Home";
 import constants from "./lib/constants";
+import { buildTitleComment } from "./lib/json-to-iac/utils";
 
 const withRouter = Page => props => {
   const params = useParams();
@@ -65,9 +66,12 @@ class Craig extends React.Component {
     // Save state to local storage
     this.setItem(this.state.storeName, craig.store);
     // Show a notification when state is updated successfully
-    let updatedForm = titleCase(
-      window.location.pathname.replace(/\/[A-z]+\//, "")
-    );
+    let updatedForm =
+      window.location.pathname === "/"
+        ? "" // options and import json notification should be just successfully updated
+        : buildTitleComment(
+            titleCase(window.location.pathname.replace(/\/[A-z]+\//, ""))
+          ).replaceAll("#", "");
     let notification = {
       title: "Success",
       kind: "success",

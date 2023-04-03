@@ -1,6 +1,7 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
 const { splat } = require("lazy-z");
+const json = require("../data-files/craig-json.json");
 
 /**
  * initialize store
@@ -91,11 +92,7 @@ describe("state util functions", () => {
     it("should copy one rule from sg to another", () => {
       let state = newState();
       state.store.json.security_groups[0].rules = [];
-      state.copySgRule(
-        "workload-vpe",
-        "allow-vpc-outbound",
-        "management-vpe"
-      );
+      state.copySgRule("workload-vpe", "allow-vpc-outbound", "management-vpe");
       assert.deepEqual(
         splat(state.store.json.security_groups[0].rules, "name"),
         ["allow-vpc-outbound"],
@@ -243,6 +240,30 @@ describe("state util functions", () => {
         actualData,
         expectedData,
         "it should return correct data"
+      );
+    });
+  });
+  describe("hardSetJson", () => {
+    it("should set JSON data if valid", () => {
+      let state = newState();
+      state.setUpdateCallback(() => {});
+      delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
+      state.hardSetJson(json);
+      assert.deepEqual(state.store.json, json, "it should set the store");
+      assert.deepEqual(
+        state.store.subnetTiers,
+        {
+          management: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+            { name: "vpn", zones: 1 },
+          ],
+          workload: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+          ],
+        },
+        "it should set subnet tiers"
       );
     });
   });

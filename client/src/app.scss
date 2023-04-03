@@ -1,3 +1,16 @@
+:root {
+  --background: #ffffff;
+  --subForm: #f4f4f4;
+  --formInSubForm: #fffdfd;
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-field: #f4f4f4;
+  --cds-border-strong: #8d8d8d;
+  --blue: #0f62fe;
+  --red: #da1e28;
+  --white: #ffffff;
+}
+
 .cds--popover-content.cds--tooltip-content {
   position: absolute !important;
 }
@@ -21,4 +34,29 @@
 .cds--list-box__menu {
   width: fit-content !important;
   text-align: left;
+}
+
+/* text area font for import json */
+.cds--form-item.codeFont div.cds--text-area__wrapper {
+  font-family: monospace, monospace; // workaround for some browsers with how they handle monospace
+}
+
+.smallerText {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.marginBottom {
+  margin-bottom: 2rem;
+}
+
+.marginBottomSmall {
+  margin-bottom: 1rem;
+}
+
+.subForm {
+  background: var(--subForm);
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }

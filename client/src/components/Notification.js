@@ -17,7 +17,7 @@ export const Notification = props => {
 Notification.defaultProps = {
   kind: "error",
   title: "An error occurred",
-  timeout: 0
+  timeout: 3000
 };
 
 Notification.propTypes = {

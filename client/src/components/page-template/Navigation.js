@@ -19,6 +19,7 @@ import {
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "./DownloadConfig";
+import validate from "../../lib/validate";
 
 class Navigation extends React.Component {
   constructor(props) {
@@ -60,17 +61,29 @@ class Navigation extends React.Component {
       text: `Successfully downloaded configuration.`,
       timeout: 3000
     };
-
-    let error = downloadContent(this.props.json);
-    if (error) {
+    let validated = false;
+    try {
+      validate(this.props.json);
+      validated = true; // if we are here, successfully validated
+    } catch (err) {
+      console.error(err);
       notification = {
         title: "Error",
         kind: "error",
-        text: `Unable to download configuration.\n${error.message}`,
-        timeout: 3000
+        text: `Invalid configuration.\n${err.message}`
       };
     }
-
+    if (validated) {
+      let error = downloadContent(this.props.json);
+      if (error) {
+        console.error(error);
+        notification = {
+          title: "Error",
+          kind: "error",
+          text: `Unable to download configuration.\n${error.message}`
+        };
+      }
+    }
     this.props.notify(notification);
   }
 

@@ -123,6 +123,7 @@
   ],
   "secrets_manager": [],
   "atracker": {
+    "resource_group": "slz-service-rg",
     "enabled": true,
     "type": "cos",
     "name": "slz-atracker",

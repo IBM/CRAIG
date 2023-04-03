@@ -181,7 +181,7 @@ function formProps(form, craig) {
         "objectStorage",
         "appID",
         "vpcs",
-        "ssh_keys",
+        "sshKeys",
         "transitGateways",
         "vpn",
         "securityGroups",

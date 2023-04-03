@@ -1,11 +1,9 @@
 import React from "react";
 import { Tabs, TabList, Tab, TabPanel, TabPanels } from "@carbon/react";
 import { Sprout } from "@carbon/icons-react";
-import {
-  UnderConstruction
-} from "icse-react-assets";
 import OptionsForm from "../forms/OptionsForm";
 import "./home.scss";
+import CustomJson from "./CustomJson";
 
 export function Home(props) {
   return (
@@ -18,7 +16,7 @@ export function Home(props) {
           Create, deploy and manage scalable infrastructure on IBM Cloud with
           CRAIG.
           <br />
-          Configure environment options or get started by uploading a JSON
+          Configure environment options or get started by importing a JSON
           configuration.
         </div>
       </div>
@@ -40,7 +38,7 @@ export function Home(props) {
           <TabPanel>
             {/* Import/Export JSON page */}
             <div className="tab-panel">
-              <UnderConstruction />
+              <CustomJson craig={props.craig} />
             </div>
           </TabPanel>
         </TabPanels>

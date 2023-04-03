@@ -174,6 +174,8 @@ const {
   accessGroupDynamicPolicyDelete
 } = require("./iam");
 const { clusterRules } = require("../constants");
+const validate = require("../validate");
+const { buildSubnetTiers } = require("./utils");
 
 const state = function() {
   let store = new lazyZstate({
@@ -520,6 +522,29 @@ const state = function() {
   };
 
   /**
+   * copy security group from one vpc to another and update
+   * @param {string} sourceSecurityGroup name of acl to copy
+   * @param {string} destinationVpc copy destination
+   */
+  store.copySecurityGroup = function(sourceSecurityGroup, destinationVpc) {
+    let oldSg = new revision(store.store.json).child(
+      "security_groups",
+      sourceSecurityGroup,
+      "name"
+    ).data;
+    let sg = {};
+    transpose(oldSg, sg);
+    sg.name += "-copy";
+    sg.vpc = destinationVpc;
+    sg.rules.forEach(rule => {
+      rule.vpc = sg.vpc;
+      rule.sg = sg.name;
+    });
+    store.store.json.security_groups.push(sg);
+    store.update();
+  };
+
+  /**
    * copy network acl from one vpc to another and update
    * @param {string} sourceVpc source vpc
    * @param {string} aclName name of acl to copy
@@ -540,29 +565,6 @@ const state = function() {
     getObjectFromArray(store.store.json.vpcs, "name", destinationVpc).acls.push(
       acl
     );
-    store.update();
-  };
-
-  /**
-   * copy security group from one vpc to another and update
-   * @param {string} sourceSecurityGroup name of acl to copy
-   * @param {string} destinationVpc copy destination
-   */
-  store.copySecurityGroup = function(sourceSecurityGroup, destinationVpc) {
-    let oldSg = new revision(store.store.json).child(
-      "security_groups",
-      sourceSecurityGroup,
-      "name"
-    ).data;
-    let sg = {};
-    transpose(oldSg, sg);
-    sg.name += "-copy";
-    sg.vpc = destinationVpc;
-    sg.rules.forEach(rule => {
-      rule.vpc = sg.vpc;
-      rule.sg = sg.name;
-    });
-    store.store.json.security_groups.push(sg);
     store.update();
   };
 
@@ -610,6 +612,21 @@ const state = function() {
         delete data.show;
         data.rules.push(rule);
       });
+    store.update();
+  };
+
+  /**
+   * hard set config dot json in state store
+   * @param {Object} json craig json configuration object
+   */
+  store.hardSetJson = json => {
+    validate(json);
+    let subnetTiers = {};
+    store.store.json = json;
+    store.store.json.vpcs.forEach(network => {
+      subnetTiers[network.name] = buildSubnetTiers(network);
+    });
+    store.store.subnetTiers = subnetTiers;
     store.update();
   };
 

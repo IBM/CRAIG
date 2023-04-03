@@ -388,5 +388,103 @@ module.exports = {
     "activityTracker",
     "securityComplianceCenter",
     "iamAccountSettings"
-  ]
+  ],
+  // required fields for json objects
+  // these are used to add null values for optional fields on objects that are passed in
+  // from a raw json document to ensure that all values are present on all objects in a list
+  // to ensure that terraform will be able to compile the values
+  requiredOptionalFields: {
+    // first level array components
+    shallowComponents: {
+      key_management: {
+        setToFalse: ["use_data", "authorize_vpc_reader_role", "use_hs_crypto"]
+      },
+      // empty cos object to enable nested search inside existing search
+      object_storage: {
+        setToFalse: ["use_random_suffix", "use_data"]
+      },
+      // clusters
+      clusters: {
+        setToNull: ["kube_version", "entitlement", "cos", "update_all_workers"],
+        setToEmptyList: ["worker_pools"],
+        setToValue: {
+          encryption_key: null,
+          private_endpoint: true
+        }
+      },
+      // resource groups
+      resource_groups: {
+        setToFalse: ["use_prefix", "use_data"]
+      },
+      // security groups
+      security_groups: {
+        setToNull: ["resource_group"]
+      },
+      // ssh keys
+      ssh_keys: {
+        setToNull: ["resource_group", "public_key"],
+        setToFalse: ["use_data"]
+      },
+      // appid
+      appid: {
+        setToFalse: ["use_data"]
+      },
+      //vpe
+      virtual_private_endpoints: {
+        setToNull: ["resource_group", "vpc", "service"],
+        setToEmptyList: ["security_groups", "subnets"]
+      },
+      //vpn
+      vpn_gateways: {
+        setToNull: ["resource_group", "subnet", "vpc"]
+      },
+      // vsi
+      vsi: {
+        setToNull: ["user_data", "resource_group", "encryption_key"],
+        setToEmptyList: ["security_groups"]
+      },
+      // vpc
+      vpcs: {
+        setToNull: [
+          "default_network_acl_name",
+          "default_routing_table_name",
+          "default_security_group_name"
+        ],
+        setToFalse: ["classic_access"],
+        setToEmptyList: ["address_prefixes", "public_gateways"]
+      }
+    },
+    // nested components
+    nestedComponents: {
+      key_management: {
+        keys: {
+          setToFalse: ["force_delete", "dual_auth_delete", "root_key"]
+        }
+      },
+      // first key is parent
+      object_storage: {
+        // child arrays
+        keys: {
+          setToFalse: ["enable_hmac"],
+          setToNull: ["role"]
+        },
+        buckets: {
+          setToFalse: ["force_delete"],
+          setToNull: ["kms_key", "storage_class", "endpoint"]
+        }
+      },
+      vpcs: {
+        subnets: {
+          setToFalse: ["public_gateway", "has_prefix"],
+          setToNull: ["cidr"]
+        }
+      },
+      // clusters
+      clusters: {
+        worker_pools: {
+          setToNull: ["flavor", "entitlement", "workers_per_subnet"]
+        }
+      }
+    }
+  }
 };
