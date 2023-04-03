@@ -88,34 +88,36 @@ class Navigation extends React.Component {
             CRAIG
           </HeaderName>
           <HeaderGlobalBar>
-            {this.props.isResetState === false && (
-              <HeaderGlobalAction
-                aria-label={
-                  this.props.hideCodeMirror
-                    ? "Show Code Mirror Pane"
-                    : "Hide Code Mirror Pane"
-                }
-                isActive
-                onClick={() => this.props.onJsonToggle()}
-                tooltipAlignment="end"
-              >
-                {this.props.hideCodeMirror ? <Code /> : <CodeHide />}
-              </HeaderGlobalAction>
-            )}
-            {this.props.hideCodeMirror === false && (
-              <HeaderGlobalAction
-                aria-label={
-                  this.props.jsonInCodeMirror
-                    ? "Show Terraform Code"
-                    : "Show JSON Configuration"
-                }
-                isActive
-                onClick={() => this.props.onTypeToggle()}
-                tooltipAlignment="end"
-              >
-                {this.props.jsonInCodeMirror ? <Script /> : <Json />}
-              </HeaderGlobalAction>
-            )}
+            {this.props.hideCodeMirror === false &&
+              this.props.formPathNotPresent === false && (
+                <HeaderGlobalAction
+                  aria-label={
+                    this.props.jsonInCodeMirror
+                      ? "Show Terraform Code"
+                      : "Show JSON Configuration"
+                  }
+                  isActive
+                  onClick={() => this.props.onTypeToggle()}
+                  tooltipAlignment="end"
+                >
+                  {this.props.jsonInCodeMirror ? <Script /> : <Json />}
+                </HeaderGlobalAction>
+              )}
+            {this.props.isResetState === false &&
+              this.props.formPathNotPresent === false && (
+                <HeaderGlobalAction
+                  aria-label={
+                    this.props.hideCodeMirror
+                      ? "Show Code Mirror Pane"
+                      : "Hide Code Mirror Pane"
+                  }
+                  isActive
+                  onClick={() => this.props.onJsonToggle()}
+                  tooltipAlignment="end"
+                >
+                  {this.props.hideCodeMirror ? <Code /> : <CodeHide />}
+                </HeaderGlobalAction>
+              )}
             {this.props.isResetState === false && (
               <HeaderGlobalAction
                 aria-label="Download Environment Terraform"

@@ -27,7 +27,12 @@ import {
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import Navigation from "./page-template/Navigation";
-import { arraySplatIndex, getObjectFromArray, prettyJSON } from "lazy-z";
+import {
+  arraySplatIndex,
+  contains,
+  getObjectFromArray,
+  prettyJSON
+} from "lazy-z";
 import { CraigCodeMirror } from "./page-template/CodeMirror";
 import PropTypes from "prop-types";
 import "./page-template.css";
@@ -336,7 +341,6 @@ const PageTemplate = props => {
           onClick: onClick
         };
   }
-
   let pageObj = props.form
     ? getObjectFromArray(pageOrder, "path", `/form/${props.form}`)
     : { toTf: false };
@@ -385,7 +389,9 @@ const PageTemplate = props => {
       return pageObj.toTf(json);
     } else return prettyJSON(json);
   }
-
+  // if path is undefined or "form" is not present in path then hide the code mirror
+  let formPathNotPresent =
+    pageObj.path === undefined ? true : !contains(pageObj.path, "form");
   return (
     <>
       <Navigation
@@ -397,11 +403,14 @@ const PageTemplate = props => {
         jsonInCodeMirror={props.jsonInCodeMirror}
         notify={props.notify}
         isResetState={isResetState}
+        formPathNotPresent={formPathNotPresent}
       />
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
           className={
-            props.hideCodeMirror ? "widthOneHundredPercent" : "leftPanelWidth"
+            props.hideCodeMirror || formPathNotPresent
+              ? "widthOneHundredPercent"
+              : "leftPanelWidth"
           }
         >
           {props.notifications.map((notification, index) => (
@@ -417,7 +426,7 @@ const PageTemplate = props => {
           {props.children}
         </div>
         <CraigCodeMirror
-          hideCodeMirror={props.hideCodeMirror}
+          hideCodeMirror={formPathNotPresent === true || props.hideCodeMirror}
           code={getCodeMirrorDisplay(props.json, props.jsonInCodeMirror)}
         />
       </div>
