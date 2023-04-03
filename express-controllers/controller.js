@@ -3,7 +3,7 @@ const region = process.env.REGION || "us-south";
 const apiCalls = {
   getBearerToken: {
     method: "post",
-    url: `https://iam.cloud.ibm.com/identity/token?grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${process.env.SLZ_GUI_API_KEY}`,
+    url: `https://iam.cloud.ibm.com/identity/token?grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${process.env.API_KEY}`,
     headers: {
       Accept: "application/json",
     },
@@ -133,6 +133,7 @@ function controller(axios) {
         })
         .then((response) => {
           // iterate through the response object and collect the instance profile names
+          // format: plaintext name (id)
           let instanceProfiles = [];
           response.data.profiles.forEach((element) => {
             instanceProfiles.push(element.name);
@@ -165,11 +166,9 @@ function controller(axios) {
           // iterate through the response object and collect image names
           let images = [];
           response.data.images.forEach((element) => {
-            images.push({
-              display_name:
-                element.operating_system.display_name + ` (${element.name})`,
-              name: element.name,
-            });
+            images.push(
+              element.operating_system.display_name + ` [${element.name}]`
+            );
           });
           this.images = images;
           res.send(images);

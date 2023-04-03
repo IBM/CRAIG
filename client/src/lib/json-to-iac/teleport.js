@@ -2,7 +2,7 @@ const { snakeCase, transpose, getObjectFromArray } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { formatAppIdRedirectUrls } = require("./appid");
 const { teleportCloudInitText, teleportConfigData } = require("./constants");
-const { fillTemplate, tfBlock } = require("./utils");
+const { fillTemplate, tfBlock, tfRef, bucketRef } = require("./utils");
 const { formatVsi } = require("./vsi");
 
 function teleportCloudInit() {
@@ -46,15 +46,39 @@ function formatTemplateCloudInit(template) {
     license: template.license,
     https_cert: template.https_cert,
     https_key: template.https_key,
-    bucket: template.bucket,
-    bucket_endpoint: template.bucket_endpoint,
-    hmac_key_id: template.hmac_key_id,
-    hmac_secret_key_id: template.hmac_secret_key_id,
+    bucket_name: bucketRef(template.cos, template.bucket, "bucket_name"),
+    bucket_endpoint: bucketRef(
+      template.cos,
+      template.bucket,
+      "s3_endpoint_public"
+    ),
+    hmac_key_id: tfRef(
+      "ibm_resource_key",
+      `${template.cos} object storage key ${template.cos_key}`,
+      'credentials["cos_hmac_keys.access_key_id"]'
+    ),
+    hmac_secret_key_id: tfRef(
+      "ibm_resource_key",
+      `${template.cos} object storage key ${template.cos_key}`,
+      'credentials["cos_hmac_keys.secret_access_key"]'
+    ),
     hostname: template.hostname,
     domain: template.domain,
-    appid_instance: template.appid,
-    appid_url: template.appid_url,
-    appid_secret: template.appid_secret,
+    appid_instance: tfRef(
+      "ibm_resource_key",
+      `${template.appid}-${template.appid_key}-key`,
+      'credentials["clientId"]'
+    ),
+    appid_url: tfRef(
+      "ibm_resource_key",
+      `${template.appid}-${template.appid_key}-key`,
+      'credentials["oauthServerUrl"]'
+    ),
+    appid_secret: tfRef(
+      "ibm_resource_key",
+      `${template.appid}-${template.appid_key}-key`,
+      'credentials["secret"]'
+    ),
     version: template.version,
     message_of_the_day: template.message_of_the_day,
     claim_to_roles: claimToRoles.replace(/,$/g, "")
@@ -128,7 +152,9 @@ function teleportTf(config) {
       formatAppIdRedirectUrls(
         getObjectFromArray(config.appid, "name", instance.appid),
         [
-          `https://${config._options.prefix}-${instance.name}-teleport-vsi.${instance.template.domain}:3080/v1/webapi/oidc/callback`
+          `https://${config._options.prefix}-${instance.name}-teleport-vsi.${
+            instance.template.domain
+          }:3080/v1/webapi/oidc/callback`
         ],
         instance.name + "_appid_urls"
       )

@@ -278,13 +278,13 @@ locals {
       HTTPS_KEY                 = base64encode(tostring("$HTTPS_KEY"))
       HOSTNAME                  = tostring("$HOSTNAME")
       DOMAIN                    = tostring("$DOMAIN")
-      COS_BUCKET                = tostring("$BUCKET")
-      COS_BUCKET_ENDPOINT       = tostring("$BUCKET_ENDPOINT")
-      HMAC_ACCESS_KEY_ID        = tostring("$HMAC_KEY_ID")
-      HMAC_SECRET_ACCESS_KEY_ID = tostring("$HMAC_SECRET_KEY_ID")
-      APPID_CLIENT_ID           = tostring("$APPID_INSTANCE")
-      APPID_CLIENT_SECRET       = tostring("$APPID_SECRET")
-      APPID_ISSUER_URL          = tostring("$APPID_URL")
+      COS_BUCKET                = $BUCKET_NAME
+      COS_BUCKET_ENDPOINT       = $BUCKET_ENDPOINT
+      HMAC_ACCESS_KEY_ID        = $HMAC_KEY_ID
+      HMAC_SECRET_ACCESS_KEY_ID = $HMAC_SECRET_KEY_ID
+      APPID_CLIENT_ID           = $APPID_INSTANCE
+      APPID_CLIENT_SECRET       = $APPID_SECRET
+      APPID_ISSUER_URL          = $APPID_URL
       TELEPORT_VERSION          = tostring("$VERSION")
       MESSAGE_OF_THE_DAY        = tostring("$MESSAGE_OF_THE_DAY")
 

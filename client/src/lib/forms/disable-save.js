@@ -251,18 +251,12 @@ function disableSave(field, stateData, componentProps) {
     return (
       invalidName("virtual_private_endpoints")(stateData, componentProps) ||
       fieldsAreBad(
-        [
-          "resource_group",
-          "security_groups",
-          "service",
-          "subnets",
-          "vpc"
-        ],
+        ["resource_group", "security_groups", "service", "subnets", "vpc"],
         stateData
       ) ||
       isEmpty(stateData.security_groups) ||
       isEmpty(stateData.subnets)
-    ); 
+    );
   } else return false;
 }
 

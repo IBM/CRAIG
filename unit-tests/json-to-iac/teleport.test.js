@@ -238,15 +238,13 @@ runcmd:
         https_key: "HTTPS_KEY",
         hostname: "HOSTNAME",
         domain: "DOMAIN",
-        bucket: "COS_BUCKET",
-        bucket_endpoint: "COS_BUCKET_ENDPOINT",
-        hmac_key_id: "HMAC_ACCESS_KEY_ID",
-        hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
-        appid: "APPID_CLIENT_ID",
-        appid_secret: "APPID_CLIENT_SECRET",
-        appid_url: "APPID_ISSUER_URL",
+        bucket: "atracker-bucket",
+        appid: "appid",
+        appid_key: "b",
         message_of_the_day: "MESSAGE_OF_THE_DAY",
         version: "TELEPORT_VERSION",
+        cos_key: "cos-bind-key",
+        cos: "cos",
         claim_to_roles: [
           {
             email: "email@email.email",
@@ -271,13 +269,13 @@ locals {
       HTTPS_KEY                 = base64encode(tostring("HTTPS_KEY"))
       HOSTNAME                  = tostring("HOSTNAME")
       DOMAIN                    = tostring("DOMAIN")
-      COS_BUCKET                = tostring("COS_BUCKET")
-      COS_BUCKET_ENDPOINT       = tostring("COS_BUCKET_ENDPOINT")
-      HMAC_ACCESS_KEY_ID        = tostring("HMAC_ACCESS_KEY_ID")
-      HMAC_SECRET_ACCESS_KEY_ID = tostring("HMAC_SECRET_ACCESS_KEY_ID")
-      APPID_CLIENT_ID           = tostring("APPID_CLIENT_ID")
-      APPID_CLIENT_SECRET       = tostring("APPID_CLIENT_SECRET")
-      APPID_ISSUER_URL          = tostring("APPID_ISSUER_URL")
+      COS_BUCKET                = ibm_cos_bucket.cos_object_storage_atracker_bucket_bucket.bucket_name
+      COS_BUCKET_ENDPOINT       = ibm_cos_bucket.cos_object_storage_atracker_bucket_bucket.s3_endpoint_public
+      HMAC_ACCESS_KEY_ID        = ibm_resource_key.cos_object_storage_key_cos_bind_key.credentials["cos_hmac_keys.access_key_id"]
+      HMAC_SECRET_ACCESS_KEY_ID = ibm_resource_key.cos_object_storage_key_cos_bind_key.credentials["cos_hmac_keys.secret_access_key"]
+      APPID_CLIENT_ID           = ibm_resource_key.appid_b_key.credentials["clientId"]
+      APPID_CLIENT_SECRET       = ibm_resource_key.appid_b_key.credentials["secret"]
+      APPID_ISSUER_URL          = ibm_resource_key.appid_b_key.credentials["oauthServerUrl"]
       TELEPORT_VERSION          = tostring("TELEPORT_VERSION")
       MESSAGE_OF_THE_DAY        = tostring("MESSAGE_OF_THE_DAY")
 
@@ -469,13 +467,11 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
               https_key: "HTTPS_KEY",
               hostname: "HOSTNAME",
               domain: "DOMAIN",
-              bucket: "COS_BUCKET",
-              bucket_endpoint: "COS_BUCKET_ENDPOINT",
-              hmac_key_id: "HMAC_ACCESS_KEY_ID",
-              hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
+              cos: "cos",
+              bucket: "bucket",
+              cos_key: "cos_key",
               appid: "APPID_CLIENT_ID",
-              appid_secret: "APPID_CLIENT_SECRET",
-              appid_url: "APPID_ISSUER_URL",
+              appid_key: "test",
               message_of_the_day: "MESSAGE_OF_THE_DAY",
               version: "TELEPORT_VERSION",
               claim_to_roles: [
@@ -505,13 +501,13 @@ locals {
       HTTPS_KEY                 = base64encode(tostring("HTTPS_KEY"))
       HOSTNAME                  = tostring("HOSTNAME")
       DOMAIN                    = tostring("DOMAIN")
-      COS_BUCKET                = tostring("COS_BUCKET")
-      COS_BUCKET_ENDPOINT       = tostring("COS_BUCKET_ENDPOINT")
-      HMAC_ACCESS_KEY_ID        = tostring("HMAC_ACCESS_KEY_ID")
-      HMAC_SECRET_ACCESS_KEY_ID = tostring("HMAC_SECRET_ACCESS_KEY_ID")
-      APPID_CLIENT_ID           = tostring("APPID_CLIENT_ID")
-      APPID_CLIENT_SECRET       = tostring("APPID_CLIENT_SECRET")
-      APPID_ISSUER_URL          = tostring("APPID_ISSUER_URL")
+      COS_BUCKET                = ibm_cos_bucket.cos_object_storage_bucket_bucket.bucket_name
+      COS_BUCKET_ENDPOINT       = ibm_cos_bucket.cos_object_storage_bucket_bucket.s3_endpoint_public
+      HMAC_ACCESS_KEY_ID        = ibm_resource_key.cos_object_storage_key_cos_key.credentials["cos_hmac_keys.access_key_id"]
+      HMAC_SECRET_ACCESS_KEY_ID = ibm_resource_key.cos_object_storage_key_cos_key.credentials["cos_hmac_keys.secret_access_key"]
+      APPID_CLIENT_ID           = ibm_resource_key.appid_client_id_test_key.credentials["clientId"]
+      APPID_CLIENT_SECRET       = ibm_resource_key.appid_client_id_test_key.credentials["secret"]
+      APPID_ISSUER_URL          = ibm_resource_key.appid_client_id_test_key.credentials["oauthServerUrl"]
       TELEPORT_VERSION          = tostring("TELEPORT_VERSION")
       MESSAGE_OF_THE_DAY        = tostring("MESSAGE_OF_THE_DAY")
 

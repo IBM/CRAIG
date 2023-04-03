@@ -249,7 +249,8 @@ const navCategories = [
         title: "Virtual Server Instances",
         path: "/form/vsi",
         icon: BareMetalServer_02,
-        toTf: vsiTf
+        toTf: vsiTf,
+        jsonField: "vsi"
       },
       {
         title: "Load Balancers",
