@@ -1,4 +1,4 @@
-const { snakeCase, titleCase } = require("lazy-z");
+const { snakeCase, titleCase, prettyJSON } = require("lazy-z");
 const { appidTf } = require("./appid");
 const { versionsTf, mainTf, variablesTf } = require("./constants");
 const { atrackerTf } = require("./atracker");
@@ -56,9 +56,9 @@ variable "tmos_admin_password" {
 `;
       }
     }
-
     let useTeleport = config.teleport_vsi.length > 0;
     let files = {
+      "craig.json": prettyJSON(config),
       "versions.tf": versionsTf,
       "main.tf": mainTf.replace("$REGION", `"${config._options.region}"`),
       "variables.tf": variablesTf.replace(
