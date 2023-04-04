@@ -5,17 +5,19 @@
  */
 function changelogToMarkdown(changelogJson) {
   let mdString = `# Changelog\n\nAll notable changes to this project will be documented in this file.\n`;
-  changelogJson.forEach((entry) => {
+  changelogJson.forEach(entry => {
     mdString += `\n## ${entry.version}`;
     mdString += `\n\n### Features\n`;
-    entry.features.forEach((feature) => {
+    entry.features.forEach(feature => {
       mdString += "\n- " + feature;
     });
-    mdString += `\n\n### Fixes\n`;
-    entry.fixes.forEach((fix) => {
-      mdString += "\n- " + fix;
-    });
-    mdString += "\n"
+    if (entry.fixes) {
+      mdString += `\n\n### Fixes\n`;
+      entry.fixes.forEach(fix => {
+        mdString += "\n- " + fix;
+      });
+    }
+    mdString += "\n";
   });
   return mdString;
 }

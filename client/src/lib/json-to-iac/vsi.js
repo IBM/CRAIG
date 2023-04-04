@@ -76,7 +76,7 @@ function formatVsi(vsi, config) {
         `ibm_is_ssh_key`,
         key,
         "id",
-        getObjectFromArray(config.ssh_keys, "name", key).use_data
+        getObjectFromArray(config.ssh_keys, "name", key)?.use_data
       )
     );
   });

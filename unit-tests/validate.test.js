@@ -1256,15 +1256,6 @@ describe("validate", () => {
         "SSH Keys requires a resource group, resource_group missing from JSON."
       );
     });
-    it("should throw an error when no ssh keys", () => {
-      let testData = minimumValidJson();
-      testData.ssh_keys = [];
-      let task = () => validate(testData);
-      assert.throws(
-        task,
-        "Invalid JSON Configuration: There is likely a field pointing to a resource that does not exist."
-      );
-    });
     it("should throw an error when not using data and invalid public key", () => {
       let testData = minimumValidJson();
       testData.ssh_keys[0].public_key = "hi";
@@ -1933,19 +1924,6 @@ describe("validate", () => {
       assert.throws(
         task,
         "Cannot read properties of undefined (reading 'forEach')"
-      );
-    });
-    it("should throw an error if misconfigured json", () => {
-      let cluster = defaultCluster();
-      cluster.resource_group = "kms"; // wrong rg
-      let testData = minimumValidJson({ clusters: [cluster] });
-      let task = () => {
-        validate(testData);
-      };
-      // this test will throw an error in the console - wanted
-      assert.throws(
-        task,
-        "Invalid JSON Configuration: There is likely a field pointing to a resource that does not exist."
       );
     });
   });

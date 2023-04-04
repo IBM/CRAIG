@@ -1,6 +1,6 @@
-const { snakeCase } = require("lazy-z");
+const { snakeCase, getObjectFromArray } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
-const { composedZone, vpcRef, tfBlock } = require("./utils");
+const { composedZone, vpcRef, tfBlock, subnetRef } = require("./utils");
 const { formatVsi } = require("./vsi");
 
 /**
@@ -226,7 +226,12 @@ EOD
  * @returns {string} terraform formatted template file
  */
 function f5TemplateUserData(template, config) {
-  let gatewayCidr = template.default_route_gateway_cidr.split("/");
+  let edgeVpc = getObjectFromArray(config.vpcs, "name", "edge");
+  let workloadSubnet = getObjectFromArray(
+    edgeVpc.subnets,
+    "name",
+    `f5-workload-zone-${template.zone}`
+  ).name;
   return `
 data "template_file" "user_data_${snakeCase(
     `${template.hostname} zone ${template.zone}`
@@ -238,7 +243,11 @@ data "template_file" "user_data_${snakeCase(
     hostname                = "${template.hostname}"
     domain                  = "${template.domain}"
     default_route_interface = "1.1"
-    default_route_gateway   = "${gatewayCidr[0].replace(/\d$/i, "1")}"
+    default_route_gateway   = cidrhost(${subnetRef(
+      "edge",
+      workloadSubnet,
+      "cidr"
+    )}, 1)
     do_local_declaration    = local.do_local_declaration
     do_declaration_url      = "${template.do_declaration_url || "null"}"
     as3_declaration_url     = "${template.as3_declaration_url || "null"}"

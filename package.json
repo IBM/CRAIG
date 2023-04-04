@@ -1,6 +1,6 @@
 {
   "name": "craig",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "gui for generating ibm cloud infrastructure resources",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,16 @@
     "compatibility-tests": "./compatibility.sh",
     "tf": "node lib/build-tf.js"
   },
-  "author": "Jennifer Valle",
+  "authors": [
+    "Jennifer Valle",
+    "Isaac Eichelberger",
+    "Christopher Springstead",
+    "Evelyn Pirnia",
+    "Alexandra Isaly",
+    "Jiawe He",
+    "Ayman Naji",
+    "Wesley Ip"
+  ],
   "license": "ISC",
   "dependencies": {
     "axios": "^1.2.0",

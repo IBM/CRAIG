@@ -37,4 +37,29 @@ All notable changes to this project will be documented in this file.
     ]);
     assert.deepEqual(actualData, expectedData, "it should create changelog");
   });
+  it("should create a version subheading from release notes array when no fixes", () => {
+    let expectedData = `# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## 0.9.0
+
+### Features
+
+- Added development cheat code to allow developers to enter form debug mode easier
+- Added a button to the f5 password input that generates a password for the user
+- Added release notes page
+`;
+    let actualData = changelogToMarkdown([
+      {
+        version: "0.9.0",
+        features: [
+          "Added development cheat code to allow developers to enter form debug mode easier",
+          "Added a button to the f5 password input that generates a password for the user",
+          "Added release notes page",
+        ],
+      },
+    ]);
+    assert.deepEqual(actualData, expectedData, "it should create changelog");
+  });
 });

@@ -24,7 +24,7 @@ function rgIdRef(groupName, config) {
   }
   let rg = getObjectFromArray(config.resource_groups, "name", groupName);
   let rgId = `ibm_resource_group.${snakeCase(groupName)}.id`;
-  if (rg.use_data) {
+  if (rg?.use_data) {
     rgId = "data." + rgId;
   }
   return rgId;

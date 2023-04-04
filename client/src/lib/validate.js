@@ -606,18 +606,6 @@ const validate = function(json) {
     });
   });
 
-  try {
-    configToFilesJson(json);
-  } catch (err) {
-    //console.log(err);
-    // this error will generally occur when trying to read "use_data"
-    // on a field that is not present in the json
-    // usually a resource typed without its prefix or vice versa
-    throw new Error(
-      "Invalid JSON Configuration: There is likely a field pointing to a resource that does not exist."
-    );
-  } // if this returns an error, something wrong
-
   return json;
 };
 

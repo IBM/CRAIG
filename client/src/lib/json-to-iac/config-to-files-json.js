@@ -97,6 +97,7 @@ variable "tmos_admin_password" {
     };
     return files;
   } catch (err) {
+    console.log(err)
     throw new Error(err);
   }
 }
