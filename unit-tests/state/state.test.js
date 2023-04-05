@@ -266,5 +266,26 @@ describe("state util functions", () => {
         "it should set subnet tiers"
       );
     });
+    it("should set JSON data if not valid but slz", () => {
+      let state = newState();
+      state.setUpdateCallback(() => {});
+      delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
+      state.hardSetJson({}, true);
+      assert.deepEqual(
+        state.store.subnetTiers,
+        {
+          management: [
+            { name: "vsi", zones: 3 },
+            { name: "vpn", zones: 1 },
+            { name: "vpe", zones: 3 },
+          ],
+          workload: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+          ],
+        },
+        "it should set subnet tiers"
+      );
+    });
   });
 });

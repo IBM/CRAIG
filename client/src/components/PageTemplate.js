@@ -26,14 +26,13 @@ import {
   Report
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
-import Navigation from "./page-template/Navigation";
 import {
   arraySplatIndex,
   contains,
   getObjectFromArray,
   prettyJSON
 } from "lazy-z";
-import { CraigCodeMirror } from "./page-template/CodeMirror";
+import { CraigCodeMirror, Navigation } from "./page-template";
 import PropTypes from "prop-types";
 import "./page-template.css";
 import {

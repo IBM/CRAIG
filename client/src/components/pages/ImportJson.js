@@ -2,10 +2,14 @@ import React from "react";
 import { Button, TextArea, Modal } from "@carbon/react";
 import { CheckmarkFilled, Misuse } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { IcseFormGroup, IcseHeading } from "icse-react-assets";
+import { IcseFormGroup, IcseHeading, IcseTextInput } from "icse-react-assets";
 import validate from "../../lib/validate";
+import { isInRange } from "lazy-z";
+import { slzToCraig } from "../../lib";
+import { newResourceNameExp } from "../../lib/constants";
+import "./import-json.css";
 
-class CustomJson extends React.Component {
+class ImportJson extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,11 +17,14 @@ class CustomJson extends React.Component {
       errorList: "",
       isValid: false,
       showModal: false,
-      validJson: null
+      validJson: null,
+      prefix: "",
+      hasInvalidPrefix: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.handlePrefix = this.handlePrefix.bind(this);
   }
 
   /**
@@ -34,7 +41,11 @@ class CustomJson extends React.Component {
     try {
       // validation adds optional fields to needed components to ensure that
       // it is compatible with terraform. data will be stored here
-      validatedConfigJson = validate(JSON.parse(data));
+      if (this.props.slz) {
+        validatedConfigJson = slzToCraig(JSON.parse(data), this.state.prefix);
+      } else {
+        validatedConfigJson = validate(JSON.parse(data));
+      }
       errorText = "JSON Successfully Validated.";
       isValid = true;
     } catch (err) {
@@ -57,27 +68,66 @@ class CustomJson extends React.Component {
   }
 
   handleSubmit() {
-    this.props.craig.hardSetJson(this.state.validJson);
+    this.props.craig.hardSetJson(this.state.validJson, this.props.slz);
     this.toggleModal();
-    window.location.pathname = "/form/resourceGroups";
+    window.location.pathname = this.props.slz ? "/" : "/form/resourceGroups";
+  }
+
+  handlePrefix(event) {
+    let { value } = event.target;
+    let nextState = { ...this.state };
+    nextState.prefix = value;
+    nextState.hasInvalidPrefix =
+      this.state.prefix.match(newResourceNameExp) === null;
+    this.setState(nextState);
   }
 
   render() {
     return (
       <div>
-        <IcseHeading name="Import existing CRAIG.json data for terraform deployment." />
+        <IcseHeading
+          name={
+            this.props.slz
+              ? "Import resource configuration from SLZ override.json file."
+              : "Import existing CRAIG.json data for terraform deployment."
+          }
+        />
         <div className="subForm">
+          {this.props.slz && (
+            <IcseFormGroup>
+              <IcseTextInput
+                id="slz-prefix"
+                labelText="Secure Landing Zone Prefix"
+                field="prefix"
+                value={this.state.prefix}
+                invalid={
+                  isInRange(this.state.prefix.length, 2, 16) === false ||
+                  this.state.prefix.match(newResourceNameExp) === null
+                }
+                invalidText="Invalid prefix. Must match the regular expression: /[a-z][a-z0-9-]*[a-z0-9]/"
+                onChange={this.handlePrefix}
+              />
+            </IcseFormGroup>
+          )}
           <IcseFormGroup>
             <TextArea
-              labelText="Custom CRAIG Data"
+              labelText={
+                this.props.slz ? "Override JSON data" : "Custom CRAIG Data"
+              }
+              key={this.state.hasInvalidPrefix}
               rows={20}
               cols={75}
               value={this.state.textData}
               placeholder="Paste your override JSON here"
               onChange={this.handleChange}
               invalid={!this.state.isValid}
-              invalidText={this.state.errorList}
+              invalidText={
+                this.props.slz && this.state.hasInvalidPrefix
+                  ? "Enter a valid prefix to edit"
+                  : this.state.errorList
+              }
               className="codeFont"
+              disabled={this.props.slz && this.state.hasInvalidPrefix === true}
             />
           </IcseFormGroup>
           <IcseFormGroup noMarginBottom>
@@ -100,12 +150,18 @@ class CustomJson extends React.Component {
         </div>
         <div className="marginBottomSmall">
           <a
-            href="/docs/json"
+            href={
+              this.props.slz
+                ? "https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone"
+                : "/docs/json"
+            }
             target="_blank"
             className="smallerText"
             rel="noreferrer"
           >
-            CRAIG JSON Documentation
+            {this.props.slz
+              ? "Secure Landing Zone Documentation"
+              : "CRAIG JSON Documentation"}
           </a>
         </div>
         {this.state.showModal && (
@@ -123,6 +179,11 @@ class CustomJson extends React.Component {
               Importing custom data will overwrite any changes, these actions
               cannot be undone.
             </p>
+            <br />
+            <strong className="slz-warn">
+              Imported SLZ data may not return a valid configuration immediately
+              and may require editing.
+            </strong>
           </Modal>
         )}
       </div>
@@ -130,10 +191,15 @@ class CustomJson extends React.Component {
   }
 }
 
-CustomJson.propTypes = {
-  craig: PropTypes.shape({
-    hardSetJson: PropTypes.func.isRequired
-  }).isRequired
+ImportJson.defaultProps = {
+  slz: false
 };
 
-export default CustomJson;
+ImportJson.propTypes = {
+  craig: PropTypes.shape({
+    hardSetJson: PropTypes.func.isRequired
+  }).isRequired,
+  slz: PropTypes.bool.isRequired
+};
+
+export default ImportJson;

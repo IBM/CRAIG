@@ -3,7 +3,7 @@ import { Tabs, TabList, Tab, TabPanel, TabPanels } from "@carbon/react";
 import { Sprout } from "@carbon/icons-react";
 import OptionsForm from "../forms/OptionsForm";
 import "./home.scss";
-import CustomJson from "./CustomJson";
+import ImportJson from "./ImportJson";
 
 export function Home(props) {
   return (
@@ -24,6 +24,7 @@ export function Home(props) {
         <TabList aria-label="home-options">
           <Tab>Options</Tab>
           <Tab>Import JSON</Tab>
+          <Tab>Import SLZ JSON</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -38,7 +39,13 @@ export function Home(props) {
           <TabPanel>
             {/* Import/Export JSON page */}
             <div className="tab-panel">
-              <CustomJson craig={props.craig} />
+              <ImportJson craig={props.craig} />
+            </div>
+          </TabPanel>
+          <TabPanel>
+            {/* Import/Export SLZ JSON page */}
+            <div className="tab-panel">
+              <ImportJson craig={props.craig} slz />
             </div>
           </TabPanel>
         </TabPanels>

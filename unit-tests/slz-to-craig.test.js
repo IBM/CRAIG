@@ -2,6 +2,8 @@ const { assert } = require("chai");
 const { slzToCraig } = require("../client/src/lib/slz-to-craig");
 const { transpose } = require("lazy-z");
 const slz = require("./data-files/slz-convert.json");
+const slzMin = require("./data-files/slz-minimum-valid-json.json")
+const craigFromMin = require("./data-files/craig-from-slz-minimum-json.json");
 let slzDupe = {}; // use duplicate here to prevent editing slz during run for edge cases
 transpose(slz, slzDupe);
 
@@ -2185,4 +2187,46 @@ describe("slzToCraig", () => {
       "it should return correct options"
     );
   });
+  it("should correctly return json for minimum valid slz json", () => {
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz").vpcs,
+      craigFromMin.vpcs,
+      "it should return correct options"
+    );
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz").virtual_private_endpoints,
+      craigFromMin.virtual_private_endpoints,
+      "it should return correct options"
+    );
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz").security_groups,
+      craigFromMin.security_groups,
+      "it should return correct options"
+    );
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz").vpn_gateways,
+      craigFromMin.vpn_gateways,
+      "it should return correct options"
+    );
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz").ssh_keys,
+      craigFromMin.ssh_keys,
+      "it should return correct options"
+    );
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz").transit_gateways,
+      craigFromMin.transit_gateways,
+      "it should return correct options"
+    );
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz").vsi,
+      craigFromMin.vsi,
+      "it should return correct options"
+    );
+    assert.deepEqual(
+      slzToCraig(slzMin, "slz"),
+      craigFromMin,
+      "it should return correct options"
+    );
+  })
 });

@@ -56,7 +56,7 @@ function slzToCraig(slz, prefix) {
     craig.resource_groups.push({
       name: group.name,
       use_data: group.create === false,
-      use_prefix: group.use_prefix
+      use_prefix: group.use_prefix === true
     });
   });
 
@@ -73,7 +73,7 @@ function slzToCraig(slz, prefix) {
       force_delete: key.force_delete || false,
       root_key: key.root_key,
       key_ring: noPrefix(key.key_ring),
-      rotation: key.policies.rotation.interval_month
+      rotation: !key.policies ? 12 : key.policies.rotation.interval_month
     });
   });
 
@@ -84,7 +84,7 @@ function slzToCraig(slz, prefix) {
       authorize_vpc_reader_role: true,
       name: kms,
       resource_group: slz.key_management.resource_group,
-      use_data: slz.key_management.use_data,
+      use_data: slz.key_management.use_data === true,
       use_hs_crypto: slz.key_management.use_hs_crypto
     },
     craig.key_management[0]
@@ -97,7 +97,7 @@ function slzToCraig(slz, prefix) {
       name: instance.name,
       plan: instance.plan,
       resource_group: instance.resource_group,
-      use_random_suffix: instance.random_suffix,
+      use_random_suffix: instance.random_suffix === true,
       use_data: instance.use_data,
       buckets: [],
       keys: []
@@ -124,7 +124,7 @@ function slzToCraig(slz, prefix) {
   });
 
   // handle secrets manager
-  if (slz.secrets_manager.use_secrets_manager) {
+  if (slz.secrets_manager?.use_secrets_manager) {
     let secretsManager = {
       kms: kms,
       resource_group: slz.secrets_manager.resource_group,
@@ -171,7 +171,6 @@ function slzToCraig(slz, prefix) {
     let craigVpc = {
       name: vpc.prefix,
       public_gateways: [],
-      subnets: [],
       acls: [],
       subnets: [],
       address_prefixes: [],
@@ -187,19 +186,24 @@ function slzToCraig(slz, prefix) {
       "default_security_group_name",
       "resource_group"
     ].forEach(field => {
-      craigVpc[field] = vpc[field];
+      craigVpc[field] = vpc[field]
+        ? vpc[field]
+        : field === "classic_access"
+        ? false
+        : null;
     });
     // for each zone
     eachZone(3, zone => {
       // if address prefixes are added to slz object they are for f5
-      vpc.address_prefixes[zone].forEach(prefix => {
-        craigVpc.address_prefixes.push({
-          vpc: vpc.prefix,
-          zone: parseIntFromZone(zone),
-          cidr: prefix,
-          name: `f5-${zone}`
+      if (vpc.address_prefixes)
+        vpc.address_prefixes[zone].forEach(prefix => {
+          craigVpc.address_prefixes.push({
+            vpc: vpc.prefix,
+            zone: parseIntFromZone(zone),
+            cidr: prefix,
+            name: `f5-${zone}`
+          });
         });
-      });
       // get subnets
       vpc.subnets[zone].forEach(subnet => {
         let isF5 = splatContains(
@@ -256,7 +260,9 @@ function slzToCraig(slz, prefix) {
         vpc: vpc.name + "-cos",
         subnets: vpc.subnets,
         service: "cos",
-        security_groups: [vpc.security_group_name.replace(/-sg$/g, "")], // slz only allows one sg for vpe
+        security_groups: vpc.security_group_name
+          ? [vpc.security_group_name.replace(/-sg$/g, "")]
+          : [], // slz only allows one sg for vpe
         resource_group: vpe.resource_group
       };
       craig.virtual_private_endpoints.push(craigVpe);
@@ -282,79 +288,83 @@ function slzToCraig(slz, prefix) {
 
   // handle vsi
   ["vsi", "teleport_vsi"].forEach(vsi => {
-    slz[vsi].forEach(instance => {
-      // add vsi sg to craig sg list
-      let craigSg = {
-        vpc: instance.vpc_name.replace(/-sg$/g, ""),
-        name: instance.security_group.name + "-vsi",
-        resource_group: instance.resource_group,
-        rules: []
-      };
-      instance.security_group.rules.forEach(rule => {
-        rule.sg = craigSg.name;
-        rule.vpc = craigSg.vpc;
-        craigSg.rules.push(rule);
-      });
-      craig.security_groups.push(craigSg);
-      if (vsi === "vsi") {
-        // handle add bsi
-        let craigVsi = {
-          kms: kms,
-          encryption_key: noPrefix(instance.boot_volume_encryption_key_name),
-          image: instance.image_name,
-          profile: instance.machine_type,
-          name: instance.name,
-          resource_group: instance.resource_group,
-          security_groups: [instance.security_group.name + "-vsi"],
-          ssh_keys: [],
-          subnets: instance.subnet_names,
-          vpc: instance.vpc_name,
-          vsi_per_subnet: instance.vsi_per_subnet
+    if (slz[vsi])
+      slz[vsi].forEach(instance => {
+        // add vsi sg to craig sg list
+        let craigSg = {
+          vpc: instance.vpc_name.replace(/-sg$/g, ""),
+          name: instance.security_group.name + "-vsi",
+          resource_group: instance.resource_group || null,
+          rules: []
         };
-        instance.security_groups.forEach(group => {
-          craigVsi.security_groups.push(group.replace(/-sg$/g, ""));
+        instance.security_group.rules.forEach(rule => {
+          rule.sg = craigSg.name;
+          rule.vpc = craigSg.vpc;
+          craigSg.rules.push(rule);
         });
-        instance.ssh_keys.forEach(key => craigVsi.ssh_keys.push(noPrefix(key)));
-        craig.vsi.push(craigVsi);
-      } else {
-        let craigTeleportVsi = {
-          appid: slz.appid.name,
-          encryption_key: noPrefix(instance.boot_volume_encryption_key_name),
-          image: instance.image_name,
-          profile: instance.machine_type,
-          resource_group: instance.resource_group,
-          security_groups: [instance.security_group.name + "-vsi"],
-          vpc: instance.vpc_name,
-          ssh_keys: [],
-          kms: kms,
-          name: instance.name,
-          subnet: instance.subnet_name,
-          template: {
+        craig.security_groups.push(craigSg);
+        if (vsi === "vsi") {
+          // handle add bsi
+          let craigVsi = {
+            kms: kms,
+            encryption_key: noPrefix(instance.boot_volume_encryption_key_name),
+            image: instance.image_name,
+            profile: instance.machine_type,
+            name: instance.name,
+            resource_group: instance.resource_group || null,
+            security_groups: [instance.security_group.name + "-vsi"],
+            ssh_keys: [],
+            subnets: instance.subnet_names,
+            vpc: instance.vpc_name,
+            vsi_per_subnet: instance.vsi_per_subnet
+          };
+          if (instance.security_groups)
+            instance.security_groups.forEach(group => {
+              craigVsi.security_groups.push(group.replace(/-sg$/g, ""));
+            });
+          instance.ssh_keys.forEach(key =>
+            craigVsi.ssh_keys.push(noPrefix(key))
+          );
+          craig.vsi.push(craigVsi);
+        } else {
+          let craigTeleportVsi = {
             appid: slz.appid.name,
-            appid_key: slz.teleport_config.app_id_key_name,
-            cos: bucketToInstanceMap[slz.teleport_config.cos_bucket_name],
-            bucket: slz.teleport_config.cos_bucket_name,
-            cos_key: slz.teleport_config.cos_key_name,
-            deployment: instance.name,
-            domain: slz.teleport_config.domain,
-            hostname: slz.teleport_config.hostname,
-            message_of_the_day: slz.teleport_config.message_of_the_day,
-            version: slz.teleport_config.teleport_version,
-            https_key: slz.teleport_config.https_key,
-            https_cert: slz.teleport_config.https_cert,
-            license: slz.teleport_config.teleport_license,
-            claim_to_roles: slz.teleport_config.claims_to_roles
-          }
-        };
-        instance.security_groups.forEach(group => {
-          craigTeleportVsi.security_groups.push(group.replace(/-sg$/g, ""));
-        });
-        instance.ssh_keys.forEach(key =>
-          craigTeleportVsi.ssh_keys.push(noPrefix(key))
-        );
-        craig.teleport_vsi.push(craigTeleportVsi);
-      }
-    });
+            encryption_key: noPrefix(instance.boot_volume_encryption_key_name),
+            image: instance.image_name,
+            profile: instance.machine_type,
+            resource_group: instance.resource_group,
+            security_groups: [instance.security_group.name + "-vsi"],
+            vpc: instance.vpc_name,
+            ssh_keys: [],
+            kms: kms,
+            name: instance.name,
+            subnet: instance.subnet_name,
+            template: {
+              appid: slz.appid.name,
+              appid_key: slz.teleport_config.app_id_key_name,
+              cos: bucketToInstanceMap[slz.teleport_config.cos_bucket_name],
+              bucket: slz.teleport_config.cos_bucket_name,
+              cos_key: slz.teleport_config.cos_key_name,
+              deployment: instance.name,
+              domain: slz.teleport_config.domain,
+              hostname: slz.teleport_config.hostname,
+              message_of_the_day: slz.teleport_config.message_of_the_day,
+              version: slz.teleport_config.teleport_version,
+              https_key: slz.teleport_config.https_key,
+              https_cert: slz.teleport_config.https_cert,
+              license: slz.teleport_config.teleport_license,
+              claim_to_roles: slz.teleport_config.claims_to_roles
+            }
+          };
+          instance.security_groups.forEach(group => {
+            craigTeleportVsi.security_groups.push(group.replace(/-sg$/g, ""));
+          });
+          instance.ssh_keys.forEach(key =>
+            craigTeleportVsi.ssh_keys.push(noPrefix(key))
+          );
+          craig.teleport_vsi.push(craigTeleportVsi);
+        }
+      });
   });
 
   // handle vpn gateways
@@ -372,7 +382,7 @@ function slzToCraig(slz, prefix) {
     craig.ssh_keys.push({
       name: noPrefix(key.name),
       use_data: false,
-      resource_group: key.resource_group,
+      resource_group: key.resource_group || null,
       public_key: key.public_key
     });
   });
@@ -429,7 +439,7 @@ function slzToCraig(slz, prefix) {
     craig.clusters.push(craigCluster);
   });
 
-  if (slz.appid.use_appid) {
+  if (slz.appid?.use_appid) {
     let craigAppId = {
       name: slz.appid.name,
       resource_group: slz.appid.resource_group,
@@ -455,42 +465,43 @@ function slzToCraig(slz, prefix) {
     craig.scc.scope_description = scc.scope_description;
   }
 
-  slz.f5_vsi.forEach(instance => {
-    let craigF5 = {
-      encryption_key: noPrefix(instance.boot_volume_encryption_key_name),
-      image: instance.f5_image_name,
-      kms: kms,
-      name: instance.name,
-      network_interfaces: [],
-      profile: instance.machine_type,
-      resource_group: instance.resource_group,
-      security_groups: [],
-      ssh_keys: [],
-      subnet: instance.primary_subnet_name,
-      vpc: instance.vpc_name,
-      template: {
+  if (slz.f5_vsi)
+    slz.f5_vsi.forEach(instance => {
+      let craigF5 = {
+        encryption_key: noPrefix(instance.boot_volume_encryption_key_name),
+        image: instance.f5_image_name,
+        kms: kms,
+        name: instance.name,
+        network_interfaces: [],
+        profile: instance.machine_type,
+        resource_group: instance.resource_group,
+        security_groups: [],
+        ssh_keys: [],
+        subnet: instance.primary_subnet_name,
         vpc: instance.vpc_name,
-        zone: parseInt(instance.name.replace(/(f5)|\D/g, "")),
-        hostname: instance.hostname,
-        domain: instance.domain
-      }
-    };
-    transpose(slz.f5_template_data, craigF5.template);
-    instance.security_groups.forEach(group => {
-      craigF5.security_groups.push(group.replace(/-sg$/g, ""));
-    });
-    instance.ssh_keys.forEach(key => craigF5.ssh_keys.push(noPrefix(key)));
-    // handle additional network interfaces
-    instance.secondary_subnet_security_group_names.forEach(inf => {
-      craigF5.network_interfaces.push({
-        security_groups: [inf.group_name.replace(/-sg/g, "")],
-        subnet: noPrefix(
-          inf.interface_name.replace(instance.vpc_name + "-", "")
-        )
+        template: {
+          vpc: instance.vpc_name,
+          zone: parseInt(instance.name.replace(/(f5)|\D/g, "")),
+          hostname: instance.hostname,
+          domain: instance.domain
+        }
+      };
+      transpose(slz.f5_template_data, craigF5.template);
+      instance.security_groups.forEach(group => {
+        craigF5.security_groups.push(group.replace(/-sg$/g, ""));
       });
+      instance.ssh_keys.forEach(key => craigF5.ssh_keys.push(noPrefix(key)));
+      // handle additional network interfaces
+      instance.secondary_subnet_security_group_names.forEach(inf => {
+        craigF5.network_interfaces.push({
+          security_groups: [inf.group_name.replace(/-sg/g, "")],
+          subnet: noPrefix(
+            inf.interface_name.replace(instance.vpc_name + "-", "")
+          )
+        });
+      });
+      craig.f5_vsi.push(craigF5);
     });
-    craig.f5_vsi.push(craigF5);
-  });
 
   return craig;
 }

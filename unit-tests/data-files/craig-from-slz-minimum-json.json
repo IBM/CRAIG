@@ -1,0 +1,649 @@
+{
+  "_options": {
+    "prefix": "slz",
+    "region": "",
+    "tags": ["slz", "landing-zone"]
+  },
+  "resource_groups": [
+    {
+      "name": "slz-service-rg",
+      "use_data": false,
+      "use_prefix": false
+    },
+    {
+      "name": "slz-management-rg",
+      "use_data": false,
+      "use_prefix": false
+    },
+    {
+      "name": "slz-workload-rg",
+      "use_data": false,
+      "use_prefix": false
+    }
+  ],
+  "key_management": [
+    {
+      "keys": [
+        {
+          "dual_auth_delete": false,
+          "name": "slz-key",
+          "endpoint": "private",
+          "force_delete": false,
+          "root_key": true,
+          "key_ring": "slz-ring",
+          "rotation": 12
+        },
+        {
+          "dual_auth_delete": false,
+          "name": "atracker-key",
+          "endpoint": "private",
+          "force_delete": false,
+          "root_key": true,
+          "key_ring": "slz-ring",
+          "rotation": 12
+        },
+        {
+          "dual_auth_delete": false,
+          "name": "vsi-volume-key",
+          "endpoint": "private",
+          "force_delete": false,
+          "root_key": true,
+          "key_ring": "slz-ring",
+          "rotation": 12
+        }
+      ],
+      "authorize_vpc_reader_role": true,
+      "name": "slz-kms",
+      "resource_group": "slz-service-rg",
+      "use_hs_crypto": false,
+      "use_data": false
+    }
+  ],
+  "object_storage": [
+    {
+      "kms": "slz-kms",
+      "name": "atracker-cos",
+      "plan": "standard",
+      "resource_group": "slz-service-rg",
+      "use_data": false,
+      "use_random_suffix": false,
+      "buckets": [
+        {
+          "endpoint": "public",
+          "force_delete": true,
+          "kms_key": "atracker-key",
+          "name": "atracker-bucket",
+          "storage_class": "standard"
+        }
+      ],
+      "keys": [
+        {
+          "name": "cos-bind-key",
+          "role": "Writer",
+          "enable_hmac": false
+        }
+      ]
+    },
+    {
+      "kms": "slz-kms",
+      "name": "cos",
+      "plan": "standard",
+      "resource_group": "slz-service-rg",
+      "use_data": false,
+      "use_random_suffix": false,
+      "buckets": [
+        {
+          "endpoint": "public",
+          "force_delete": true,
+          "kms_key": "slz-key",
+          "name": "management-bucket",
+          "storage_class": "standard"
+        },
+        {
+          "endpoint": "public",
+          "force_delete": true,
+          "kms_key": "slz-key",
+          "name": "workload-bucket",
+          "storage_class": "standard"
+        }
+      ],
+      "keys": []
+    }
+  ],
+  "secrets_manager": [],
+  "vpcs": [
+    {
+      "name": "management",
+      "public_gateways": [],
+      "classic_access": false,
+      "default_network_acl_name" : null,
+      "default_security_group_name" :null,
+      "default_routing_table_name" : null,
+      "acls": [
+        {
+          "resource_group": "slz-management-rg",
+          "name": "management",
+          "vpc": "management",
+          "rules": [
+            {
+              "action": "allow",
+              "destination": "10.0.0.0/8",
+              "direction": "inbound",
+              "name": "allow-ibm-inbound",
+              "source": "161.26.0.0/16",
+              "vpc": "management",
+              "acl": "management"
+            },
+            {
+              "action": "allow",
+              "destination": "10.0.0.0/8",
+              "direction": "inbound",
+              "name": "allow-all-network-inbound",
+              "source": "10.0.0.0/8",
+              "vpc": "management",
+              "acl": "management"
+            },
+            {
+              "action": "allow",
+              "destination": "0.0.0.0/0",
+              "direction": "outbound",
+              "name": "allow-all-outbound",
+              "source": "0.0.0.0/0",
+              "vpc": "management",
+              "acl": "management"
+            }
+          ]
+        }
+      ],
+      "subnets": [
+        {
+          "name": "vsi-zone-1",
+          "network_acl": "management",
+          "cidr": "10.10.10.0/24",
+          "has_prefix": true,
+          "vpc": "management",
+          "zone": 1,
+          "public_gateway": false,
+          "resource_group": "slz-management-rg"
+        },
+        {
+          "name": "vpe-zone-1",
+          "network_acl": "management",
+          "cidr": "10.10.20.0/24",
+          "has_prefix": true,
+          "vpc": "management",
+          "zone": 1,
+          "public_gateway": false,
+          "resource_group": "slz-management-rg"
+        },
+        {
+          "name": "vpn-zone-1",
+          "network_acl": "management",
+          "cidr": "10.10.30.0/24",
+          "has_prefix": true,
+          "vpc": "management",
+          "zone": 1,
+          "public_gateway": false,
+          "resource_group": "slz-management-rg"
+        },
+        {
+          "name": "vsi-zone-2",
+          "network_acl": "management",
+          "cidr": "10.20.10.0/24",
+          "has_prefix": true,
+          "vpc": "management",
+          "zone": 2,
+          "public_gateway": false,
+          "resource_group": "slz-management-rg"
+        },
+        {
+          "name": "vpe-zone-2",
+          "network_acl": "management",
+          "cidr": "10.20.20.0/24",
+          "has_prefix": true,
+          "vpc": "management",
+          "zone": 2,
+          "public_gateway": false,
+          "resource_group": "slz-management-rg"
+        },
+        {
+          "name": "vsi-zone-3",
+          "network_acl": "management",
+          "cidr": "10.30.10.0/24",
+          "has_prefix": true,
+          "vpc": "management",
+          "zone": 3,
+          "public_gateway": false,
+          "resource_group": "slz-management-rg"
+        },
+        {
+          "name": "vpe-zone-3",
+          "network_acl": "management",
+          "cidr": "10.30.20.0/24",
+          "has_prefix": true,
+          "vpc": "management",
+          "zone": 3,
+          "public_gateway": false,
+          "resource_group": "slz-management-rg"
+        }
+      ],
+      "address_prefixes": [
+        {
+          "name": "vsi-zone-1",
+          "cidr": "10.10.10.0/24",
+          "zone": 1,
+          "vpc": "management"
+        },
+        {
+          "name": "vpe-zone-1",
+          "cidr": "10.10.20.0/24",
+          "zone": 1,
+          "vpc": "management"
+        },
+        {
+          "name": "vpn-zone-1",
+          "cidr": "10.10.30.0/24",
+          "zone": 1,
+          "vpc": "management"
+        },
+        {
+          "name": "vsi-zone-2",
+          "cidr": "10.20.10.0/24",
+          "zone": 2,
+          "vpc": "management"
+        },
+        {
+          "name": "vpe-zone-2",
+          "cidr": "10.20.20.0/24",
+          "zone": 2,
+          "vpc": "management"
+        },
+        {
+          "name": "vsi-zone-3",
+          "cidr": "10.30.10.0/24",
+          "zone": 3,
+          "vpc": "management"
+        },
+        {
+          "name": "vpe-zone-3",
+          "cidr": "10.30.20.0/24",
+          "zone": 3,
+          "vpc": "management"
+        }
+      ],
+      "bucket": "management-bucket",
+      "manual_address_prefix_management": true,
+      "cos": "cos",
+      "resource_group": "slz-management-rg"
+    },
+    {
+      "name": "workload",
+      "public_gateways": [],
+      "classic_access": false,
+      "default_network_acl_name" : null,
+      "default_security_group_name" :null,
+      "default_routing_table_name" : null,
+      "acls": [
+        {
+          "resource_group": "slz-workload-rg",
+          "name": "workload",
+          "vpc": "workload",
+          "rules": [
+            {
+              "action": "allow",
+              "destination": "10.0.0.0/8",
+              "direction": "inbound",
+              "name": "allow-ibm-inbound",
+              "source": "161.26.0.0/16",
+              "vpc": "workload",
+              "acl": "workload"
+            },
+            {
+              "action": "allow",
+              "destination": "10.0.0.0/8",
+              "direction": "inbound",
+              "name": "allow-all-network-inbound",
+              "source": "10.0.0.0/8",
+              "vpc": "workload",
+              "acl": "workload"
+            },
+            {
+              "action": "allow",
+              "destination": "0.0.0.0/0",
+              "direction": "outbound",
+              "name": "allow-all-outbound",
+              "source": "0.0.0.0/0",
+              "vpc": "workload",
+              "acl": "workload"
+            }
+          ]
+        }
+      ],
+      "subnets": [
+        {
+          "name": "vsi-zone-1",
+          "network_acl": "workload",
+          "cidr": "10.40.10.0/24",
+          "has_prefix": true,
+          "vpc": "workload",
+          "zone": 1,
+          "public_gateway": false,
+          "resource_group": "slz-workload-rg"
+        },
+        {
+          "name": "vpe-zone-1",
+          "network_acl": "workload",
+          "cidr": "10.40.20.0/24",
+          "has_prefix": true,
+          "vpc": "workload",
+          "zone": 1,
+          "public_gateway": false,
+          "resource_group": "slz-workload-rg"
+        },
+        {
+          "name": "vsi-zone-2",
+          "network_acl": "workload",
+          "cidr": "10.50.10.0/24",
+          "has_prefix": true,
+          "vpc": "workload",
+          "zone": 2,
+          "public_gateway": false,
+          "resource_group": "slz-workload-rg"
+        },
+        {
+          "name": "vpe-zone-2",
+          "network_acl": "workload",
+          "cidr": "10.50.20.0/24",
+          "has_prefix": true,
+          "vpc": "workload",
+          "zone": 2,
+          "public_gateway": false,
+          "resource_group": "slz-workload-rg"
+        },
+        {
+          "name": "vsi-zone-3",
+          "network_acl": "workload",
+          "cidr": "10.60.10.0/24",
+          "has_prefix": true,
+          "vpc": "workload",
+          "zone": 3,
+          "public_gateway": false,
+          "resource_group": "slz-workload-rg"
+        },
+        {
+          "name": "vpe-zone-3",
+          "network_acl": "workload",
+          "cidr": "10.60.20.0/24",
+          "has_prefix": true,
+          "vpc": "workload",
+          "zone": 3,
+          "public_gateway": false,
+          "resource_group": "slz-workload-rg"
+        }
+      ],
+      "address_prefixes": [
+        {
+          "name": "vsi-zone-1",
+          "cidr": "10.40.10.0/24",
+          "zone": 1,
+          "vpc": "workload"
+        },
+        {
+          "name": "vpe-zone-1",
+          "cidr": "10.40.20.0/24",
+          "zone": 1,
+          "vpc": "workload"
+        },
+        {
+          "name": "vsi-zone-2",
+          "cidr": "10.50.10.0/24",
+          "zone": 2,
+          "vpc": "workload"
+        },
+        {
+          "name": "vpe-zone-2",
+          "cidr": "10.50.20.0/24",
+          "zone": 2,
+          "vpc": "workload"
+        },
+        {
+          "name": "vsi-zone-3",
+          "cidr": "10.60.10.0/24",
+          "zone": 3,
+          "vpc": "workload"
+        },
+        {
+          "name": "vpe-zone-3",
+          "cidr": "10.60.20.0/24",
+          "zone": 3,
+          "vpc": "workload"
+        }
+      ],
+      "bucket": "workload-bucket",
+      "manual_address_prefix_management": true,
+      "cos": "cos",
+      "resource_group": "slz-workload-rg"
+    }
+  ],
+  "virtual_private_endpoints": [
+    {
+      "vpc": "management-cos",
+      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "service": "cos",
+      "security_groups": [],
+      "resource_group": "slz-service-rg"
+    },
+    {
+      "vpc": "workload-cos",
+      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "service": "cos",
+      "security_groups": [],
+      "resource_group": "slz-service-rg"
+    }
+  ],
+  "security_groups": [
+    {
+      "vpc": "management",
+      "name": "management-vsi",
+      "resource_group": null,
+      "rules": [
+        {
+          "direction": "inbound",
+          "name": "allow-ibm-inbound",
+          "source": "161.26.0.0/16",
+          "sg": "management-vsi",
+          "vpc": "management"
+        },
+        {
+          "direction": "inbound",
+          "name": "allow-vpc-inbound",
+          "source": "10.0.0.0/8",
+          "sg": "management-vsi",
+          "vpc": "management"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-vpc-outbound",
+          "source": "10.0.0.0/8",
+          "sg": "management-vsi",
+          "vpc": "management"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-53-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 53,
+            "port_min": 53
+          },
+          "sg": "management-vsi",
+          "vpc": "management"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-80-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 80,
+            "port_min": 80
+          },
+          "sg": "management-vsi",
+          "vpc": "management"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-443-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 443,
+            "port_min": 443
+          },
+          "sg": "management-vsi",
+          "vpc": "management"
+        }
+      ]
+    },
+    {
+      "vpc": "workload",
+      "name": "workload-vsi",
+      "resource_group": null,
+      "rules": [
+        {
+          "direction": "inbound",
+          "name": "allow-ibm-inbound",
+          "source": "161.26.0.0/16",
+          "sg": "workload-vsi",
+          "vpc": "workload"
+        },
+        {
+          "direction": "inbound",
+          "name": "allow-vpc-inbound",
+          "source": "10.0.0.0/8",
+          "sg": "workload-vsi",
+          "vpc": "workload"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-vpc-outbound",
+          "source": "10.0.0.0/8",
+          "sg": "workload-vsi",
+          "vpc": "workload"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-53-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 53,
+            "port_min": 53
+          },
+          "sg": "workload-vsi",
+          "vpc": "workload"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-80-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 80,
+            "port_min": 80
+          },
+          "sg": "workload-vsi",
+          "vpc": "workload"
+        },
+        {
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-443-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 443,
+            "port_min": 443
+          },
+          "sg": "workload-vsi",
+          "vpc": "workload"
+        }
+      ]
+    }
+  ],
+  "vpn_gateways": [
+    {
+      "name": "management-gateway",
+      "resource_group": "slz-management-rg",
+      "subnet": "vpn-zone-1",
+      "vpc": "management"
+    }
+  ],
+  "ssh_keys": [
+    {
+      "name": "ssh-key",
+      "use_data": false,
+      "public_key": "<user ssh key value>",
+      "resource_group": null
+    }
+  ],
+  "transit_gateways": [
+    {
+      "global": false,
+      "name": "transit-gateway",
+      "resource_group": "slz-service-rg",
+      "connections": [
+        {
+          "tgw": "transit-gateway",
+          "vpc": "management"
+        },
+        {
+          "tgw": "transit-gateway",
+          "vpc": "workload"
+        }
+      ]
+    }
+  ],
+  "clusters": [],
+  "vsi": [
+    {
+      "kms": "slz-kms",
+      "resource_group" : null,
+      "encryption_key": "vsi-volume-key",
+      "image": "ibm-ubuntu-18-04-6-minimal-amd64-2",
+      "profile": "cx2-4x8",
+      "name": "management-server",
+      "security_groups": ["management-vsi"],
+      "ssh_keys": ["ssh-key"],
+      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "vpc": "management",
+      "vsi_per_subnet": 1
+    },
+    {
+      "kms": "slz-kms",
+      "resource_group" : null,
+      "encryption_key": "vsi-volume-key",
+      "image": "ibm-ubuntu-18-04-6-minimal-amd64-2",
+      "profile": "cx2-4x8",
+      "name": "workload-server",
+      "security_groups": ["workload-vsi"],
+      "ssh_keys": ["ssh-key"],
+      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "vpc": "workload",
+      "vsi_per_subnet": 1
+    }
+  ],
+  "appid": [],
+  "teleport_vsi": [],
+  "scc": {
+    "enable": false,
+    "id": null,
+    "name": null,
+    "credential_description": null
+  },
+  "f5_vsi": [],
+  "atracker": {
+    "add_route": true,
+    "bucket": "atracker-bucket",
+    "locations": ["global"],
+    "enabled": true,
+    "type": "cos",
+    "name": "atracker",
+    "cos_key": "cos-bind-key",
+    "target_name": "atracker-cos"
+  }
+}

@@ -618,11 +618,12 @@ const state = function() {
   /**
    * hard set config dot json in state store
    * @param {Object} json craig json configuration object
+   * @param {boolean=} slz skip validation step when slz
    */
-  store.hardSetJson = json => {
-    validate(json);
+  store.hardSetJson = (json, slz) => {
+    if (!slz) validate(json);
     let subnetTiers = {};
-    store.store.json = json;
+    transpose(json, store.store.json);
     store.store.json.vpcs.forEach(network => {
       subnetTiers[network.name] = buildSubnetTiers(network);
     });
