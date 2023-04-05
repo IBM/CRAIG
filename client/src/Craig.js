@@ -4,15 +4,17 @@ import React from "react";
 import { state } from "./lib/state";
 import { useParams } from "react-router-dom";
 import PageTemplate from "./components/PageTemplate";
-import { FormPage } from "./components/FormPage";
 import { titleCase, contains } from "lazy-z";
-import About from "./components/pages/About";
 import ReleaseNotes from "./components/pages/ReleaseNotes";
-import Summary from "./components/pages/Summary";
-import { ToggleFormPage } from "./components/ToggleFormPage";
-import { Home } from "./components/pages/Home";
 import constants from "./lib/constants";
 import { buildTitleComment } from "./lib/json-to-iac/utils";
+import {
+  ToggleFormPage,
+  FormPage,
+  Home,
+  Summary,
+  About
+} from "./components/pages";
 import NavigationRedirectModal from "./components/modals/NavigationRedirectModal";
 
 const withRouter = Page => props => {

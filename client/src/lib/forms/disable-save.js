@@ -74,9 +74,8 @@ function invalidPort(rule, isSecurityGroup) {
 function disableSave(field, stateData, componentProps) {
   if (field === "scc") {
     return (
-      stateData.collector_description.match(/^[A-z][a-zA-Z0-9-\._,\s]*$/i) ===
-        null ||
-      stateData.scope_description.match(/^[A-z][a-zA-Z0-9-\._,\s]*$/i) === null
+      !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.collector_description) ||
+      !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.scope_description)
     );
   } else if (field === "atracker") {
     return (

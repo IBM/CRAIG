@@ -10,7 +10,7 @@ import {
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback
-} from "../lib/forms";
+} from "../../lib/forms";
 import {
   ResourceGroupForm,
   KeyManagementForm,
@@ -26,10 +26,10 @@ import {
   EventStreamsForm,
   VpeForm
 } from "icse-react-assets";
-import { RenderDocs } from "./RenderDocs";
+import { RenderDocs } from "./SimplePages";
 import { splat, contains, transpose, getObjectFromArray } from "lazy-z";
-import NaclForm from "./forms/NaclForm";
-import SubnetForm from "./forms/SubnetForm";
+import NaclForm from "../forms/NaclForm";
+import SubnetForm from "../forms/SubnetForm";
 
 const pathToFormMap = {
   resourceGroups: {

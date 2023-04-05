@@ -5,7 +5,7 @@ import OptionsForm from "../forms/OptionsForm";
 import "./home.scss";
 import ImportJson from "./ImportJson";
 
-export function Home(props) {
+function Home(props) {
   return (
     <>
       <div className="banner">
@@ -53,3 +53,5 @@ export function Home(props) {
     </>
   );
 }
+
+export default Home;
