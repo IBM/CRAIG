@@ -9,10 +9,7 @@ import {
 } from "icse-react-assets";
 import { Tag, TextArea } from "@carbon/react";
 import { deepEqual } from "lazy-z";
-import {
-  invalidNewResourceName,
-  invalidTagList
-} from "../../lib/forms";
+import { invalidNewResourceName, invalidTagList } from "../../lib/forms";
 
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 

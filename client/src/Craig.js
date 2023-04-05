@@ -13,6 +13,7 @@ import { ToggleFormPage } from "./components/ToggleFormPage";
 import { Home } from "./components/pages/Home";
 import constants from "./lib/constants";
 import { buildTitleComment } from "./lib/json-to-iac/utils";
+import NavigationRedirectModal from "./components/modals/NavigationRedirectModal";
 
 const withRouter = Page => props => {
   const params = useParams();
@@ -129,6 +130,7 @@ class Craig extends React.Component {
   render() {
     return (
       <>
+        <NavigationRedirectModal craig={craig} />
         <PageTemplate
           hideCodeMirror={
             this.props.params.doc || window.location.pathname === "/summary"

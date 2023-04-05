@@ -1,0 +1,9 @@
+/* select only the modal content and override its margin-bottom */
+.navigationRedirectModal div div.cds--modal-content {
+  margin-bottom: 1rem;
+}
+
+.cds--btn--primary.navigationRedirectModal {
+  min-width: 100%;
+  padding-left: 40%;
+}
