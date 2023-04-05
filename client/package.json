@@ -6,15 +6,15 @@
   "bugs": "https://github.com/carbon-design-system/carbon-tutorial/issues",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "react-scripts build",
+    "build": "craco build",
     "ci-check": "npm run format:diff",
     "clean": "yarn cache clean && yarn install",
-    "eject": "react-scripts eject",
+    "eject": "craco eject",
     "format": "prettier --write \"**/*.{js,md,scss}\"",
     "format:diff": "prettier --list-different \"**/*.{js,md,scss}\"",
     "format:staged": "prettier --write",
-    "start": "NODE_ENV=development PORT=3000 react-scripts start",
-    "test": "react-scripts test"
+    "start": "NODE_ENV=development PORT=3000 craco start",
+    "test": "craco test"
   },
   "dependencies": {
     "@apollo/client": "^3.4.10",
@@ -23,17 +23,19 @@
     "@codemirror/lang-javascript": "^6.0.2",
     "@uiw/codemirror-themes": "^4.12.2",
     "@uiw/react-codemirror": "^4.12.2",
+    "craco": "^0.0.3",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
     "icse-react-assets": "^0.3.16",
-    "json-to-tf": "^0.1.0",
+    "json-to-tf": "^0.2.0",
     "jszip": "^3.10.1",
     "lazy-z": "^1.9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.3.0",
     "regex-but-with-words": "^1.5.0",
-    "sass": "1.51.0"
+    "sass": "1.51.0",
+    "stream-browserify": "^3.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",

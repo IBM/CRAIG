@@ -10,7 +10,7 @@ const {
 const { RegexButWithWords } = require("regex-but-with-words");
 const { endComment } = require("./constants");
 const constants = require("./constants");
-const jsonToTf = require("json-to-tf");
+const { jsonToTfLegacy } = require("json-to-tf");
 /**
  * get a resource group id using name
  * @param {string} groupName name of resource group
@@ -276,7 +276,7 @@ function composedZone(config, zone) {
 function jsonToIac(type, name, values, config, useData) {
   return (
     "\n" +
-    jsonToTf(type, name, values, useData).replace(
+    jsonToTfLegacy(type, name, values, useData).replace(
       /\$region/g,
       config?._options ? `"${config._options.region}"` : ""
     )
