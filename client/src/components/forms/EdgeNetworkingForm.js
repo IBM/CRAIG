@@ -223,14 +223,21 @@ class EdgeNetworkingForm extends React.Component {
               </div>
             </div>
             <div className="edgeTileMargin">
-              <Tile className="edgeTile borderGray">
-                <h4>Edge Network</h4>
-                <img
-                  alt="Edge Networking Image"
-                  src={edgeNetwork}
-                  className="imageMargin edgeTileImage magnifier"
-                />
-              </Tile>
+              <a
+                href={edgeNetwork}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="tile"
+              >
+                <Tile className="edgeTile borderGray">
+                  <h4>Edge Network</h4>
+                  <img
+                    alt="Edge Networking Image"
+                    src={edgeNetwork}
+                    className="imageMargin edgeTileImage magnifier"
+                  />
+                </Tile>
+              </a>
             </div>
           </IcseFormGroup>
         </StatelessToggleForm>
