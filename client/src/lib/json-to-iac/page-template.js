@@ -7,6 +7,8 @@ const {
   formatPgw
 } = require("./vpc");
 const { formatFlowLogs } = require("./flow-logs");
+const { eventStreamsTf } = require("./event-streams");
+const { formatIamAccountSettings } = require("./iam");
 
 /**
  * code mirror display function for vpc
@@ -68,8 +70,29 @@ function codeMirrorSubnetsTf(config) {
   return tfDone(tf);
 }
 
+/**
+ * format event streams tf
+ * @param {Object} config
+ * @returns event streams terraform data
+ */
+function codeMirrorEventStreamsTf(config) {
+  if (config.event_streams.length > 0) return eventStreamsTf(config);
+  return "";
+}
+
+/**
+ * format iam account settings tf
+ * @param {JSON} config
+ * @returns iam account settings terraform data
+ */
+function codeMirrorFormatIamAccountSettingsTf(config) {
+  return formatIamAccountSettings(config.iam_account_settings);
+}
+
 module.exports = {
   codeMirrorVpcTf,
   codeMirrorAclTf,
-  codeMirrorSubnetsTf
+  codeMirrorSubnetsTf,
+  codeMirrorEventStreamsTf,
+  codeMirrorFormatIamAccountSettingsTf
 };

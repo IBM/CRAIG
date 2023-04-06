@@ -30,7 +30,9 @@ const { configToFilesJson } = require("./config-to-files-json");
 const {
   codeMirrorVpcTf,
   codeMirrorAclTf,
-  codeMirrorSubnetsTf
+  codeMirrorSubnetsTf,
+  codeMirrorEventStreamsTf,
+  codeMirrorFormatIamAccountSettingsTf
 } = require("./page-template");
 
 module.exports = {
@@ -68,5 +70,7 @@ module.exports = {
   configToFilesJson,
   codeMirrorVpcTf,
   codeMirrorAclTf,
-  codeMirrorSubnetsTf
+  codeMirrorSubnetsTf,
+  codeMirrorEventStreamsTf,
+  codeMirrorFormatIamAccountSettingsTf
 };

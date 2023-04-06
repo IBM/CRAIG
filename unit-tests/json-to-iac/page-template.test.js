@@ -3,6 +3,8 @@ const {
   codeMirrorVpcTf,
   codeMirrorAclTf,
   codeMirrorSubnetsTf,
+  codeMirrorEventStreamsTf,
+  codeMirrorFormatIamAccountSettingsTf,
 } = require("../../client/src/lib/json-to-iac/page-template");
 
 describe("page template", () => {
@@ -505,6 +507,122 @@ resource "ibm_is_subnet" "management_vpe_zone_3" {
           "it should return correct terraform"
         );
       });
+    });
+  });
+  describe("codeMirrorEventStreamsTf", () => {
+    it("should return empty string when event streams length is 0", () => {
+      let testData = { event_streams: [] };
+      let expectedData = ``;
+      assert.deepEqual(
+        codeMirrorEventStreamsTf(testData),
+        expectedData,
+        "it should return an empty string"
+      );
+    });
+    it("should return event streams tf", () => {
+      let testData = {
+        _options: {
+          tags: ["hello", "world"],
+          prefix: "iac",
+          region: "us-south",
+        },
+        resource_groups: [
+          {
+            use_prefix: true,
+            name: "slz-service-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: true,
+            name: "slz-management-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: true,
+            name: "slz-workload-rg",
+            use_data: false,
+          },
+        ],
+        event_streams: [
+          {
+            name: "event-streams",
+            plan: "enterprise",
+            resource_group: "slz-service-rg",
+            endpoints: "private",
+            private_ip_allowlist: ["10.0.0.0/32", "10.0.0.1/32"],
+            throughput: "150MB/s",
+            storage_size: "2TB",
+          },
+        ],
+      };
+      let expectedData = `##############################################################################
+# Event Streams
+##############################################################################
+
+resource "ibm_resource_instance" "event_streams_es" {
+  name              = "iac-event-streams"
+  service           = "messagehub"
+  plan              = "enterprise"
+  location          = "us-south"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+
+  parameters = {
+    service-endpoints    = "private"
+    private_ip_allowlist = "[10.0.0.0/32,10.0.0.1/32]"
+    throughput           = "150"
+    storage_size         = "2048"
+  }
+
+  timeouts {
+    create = "3h"
+    update = "1h"
+    delete = "1h"
+  }
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        codeMirrorEventStreamsTf(testData),
+        expectedData,
+        "it should return correct data"
+      );
+    });
+  });
+  describe("codeMirrorFormatIamAccountSettingsTf", () => {
+    it("should return correct terraform", () => {
+      let testData = {
+        iam_account_settings: {
+          enable: true,
+          mfa: "NONE",
+          allowed_ip_addresses: "1.2.3.4,5.6.7.8",
+          include_history: true,
+          if_match: 2,
+          max_sessions_per_identity: 2,
+          restrict_create_service_id: "RESTRICTED",
+          restrict_create_platform_apikey: "RESTRICTED",
+          session_expiration_in_seconds: 900,
+          session_invalidation_in_seconds: 900,
+        }
+      };
+      let expectedData = `
+resource "ibm_iam_account_settings" "iam_account_settings" {
+  mfa                             = "NONE"
+  allowed_ip_addresses            = "1.2.3.4,5.6.7.8"
+  include_history                 = true
+  if_match                        = 2
+  max_sessions_per_identity       = 2
+  restrict_create_service_id      = "RESTRICTED"
+  restrict_create_platform_apikey = "RESTRICTED"
+  session_expiration_in_seconds   = 900
+  session_invalidation_in_seconds = 900
+}
+`;
+      assert.deepEqual(
+        codeMirrorFormatIamAccountSettingsTf(testData),
+        expectedData,
+        "should return iam account settings terraform"
+      );
     });
   });
 });

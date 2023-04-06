@@ -40,9 +40,7 @@ import {
   atrackerTf,
   clusterTf,
   cosTf,
-  eventStreamsTf,
   f5Tf,
-  formatIamAccountSettings,
   kmsTf,
   lbTf,
   resourceGroupTf,
@@ -58,7 +56,9 @@ import {
   iamTf,
   codeMirrorVpcTf,
   codeMirrorAclTf,
-  codeMirrorSubnetsTf
+  codeMirrorSubnetsTf,
+  codeMirrorEventStreamsTf,
+  codeMirrorFormatIamAccountSettingsTf
 } from "../lib/json-to-iac";
 import {
   maskFieldsExpStep1ReplacePublicKey,
@@ -95,9 +95,7 @@ const navCategories = [
         title: "IAM Account Settings",
         path: "/form/iamAccountSettings",
         icon: IdManagement,
-        toTf: json => {
-          return formatIamAccountSettings(json.iam_account_settings);
-        },
+        toTf: json => codeMirrorFormatIamAccountSettingsTf(json),
         jsonField: "iam_account_settings"
       }
     ]
@@ -143,10 +141,7 @@ const navCategories = [
         path: "/form/eventStreams",
         icon: IbmCloudEventStreams,
         jsonField: "event_streams",
-        toTf: config => {
-          if (config.event_streams.length > 0) return eventStreamsTf(config);
-          return "";
-        }
+        toTf: codeMirrorEventStreamsTf
       },
       {
         title: "App ID",
