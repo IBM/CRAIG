@@ -735,75 +735,83 @@ function getCidrOrder() {
  * @param {Array<object>} config.store.json.vpcs
  * @param {string} pattern name of pattern can be vpn-and-waf, waf, or full-tunnel
  * @param {boolean=} useManagementVpc create edge data on management vpc
+ * @param {number} zones number of deployment zones
  */
-function createEdgeVpc(config, pattern, useManagementVpc) {
-  // edge vpc requires address prefixes, to ensure terraform can compile to list
-  // address prefixes are added here
-  config.store.json.vpcs.forEach(network => {
-    network.address_prefixes = [];
-  });
-  config.store.edge_vpc_name = "edge";
-  config.store.edge_pattern = pattern;
-  config.store.f5_on_management = useManagementVpc || false;
+function createEdgeVpc(config, pattern, useManagementVpc, zones) {
   let edgeTiers = firewallTiers[pattern]();
+  let edgeTiersExist = config.store.edge_pattern !== undefined;
   let cidrOrder = getCidrOrder();
   let newSecurityGroups = [newF5ManagementSg(), newF5ExternalSg()];
-
-  // add security groups and edit cidr order based on pattern
-  if (pattern === "full-tunnel") {
-    // delete workload subnet for full-tunnel
-    cidrOrder.splice(4, 1);
-    // add bastion sg
-    newSecurityGroups.push(newF5BastionSg());
-  } else if (pattern === "waf") {
-    // delete vpn and bastion for waf
-    cidrOrder.splice(5, 1);
-    cidrOrder.shift();
-    cidrOrder.shift();
-    // add workload sg
-    newSecurityGroups.push(newF5WorkloadSg());
-  } else {
-    // add workload and bastion
-    newSecurityGroups.push(newF5WorkloadSg());
-    newSecurityGroups.push(newF5BastionSg());
+  if (!edgeTiersExist) {
+    config.store.edge_vpc_name = "edge";
+    config.store.edge_pattern = pattern;
+    config.store.edge_zones = zones;
+    config.store.f5_on_management = useManagementVpc || false;
+    // add security groups and edit cidr order based on pattern
+    if (pattern === "full-tunnel") {
+      // delete workload subnet for full-tunnel
+      cidrOrder.splice(4, 1);
+      // add bastion sg
+      newSecurityGroups.push(newF5BastionSg());
+    } else if (pattern === "waf") {
+      // delete vpn and bastion for waf
+      cidrOrder.splice(5, 1);
+      cidrOrder.shift();
+      cidrOrder.shift();
+      // add workload sg
+      newSecurityGroups.push(newF5WorkloadSg());
+    } else {
+      // add workload and bastion
+      newSecurityGroups.push(newF5WorkloadSg());
+      newSecurityGroups.push(newF5BastionSg());
+    }
+    // add f5 vpe group
+    newSecurityGroups.push(newF5VpeSg());
   }
-  // add f5 vpe group
-  newSecurityGroups.push(newF5VpeSg());
 
   // create edge network object
-  let newEdgeNetwork = useManagementVpc
-    ? config.store.json.vpcs[0]
-    : {
-        cos: null,
-        bucket: null,
-        name: "edge",
-        resource_group: `edge-rg`,
-        classic_access: false,
-        manual_address_prefix_management: true,
-        default_network_acl_name: null,
-        default_routing_table_name: null,
-        default_security_group_name: null,
-        address_prefixes: [],
-        acls: [newDefaultEdgeAcl(), newDefaultF5ExternalAcl()],
-        subnets: [],
-        public_gateways: []
-      };
+  let newEdgeNetwork =
+    useManagementVpc || edgeTiersExist
+      ? config.store.json.vpcs[0]
+      : {
+          cos: null,
+          bucket: null,
+          name: "edge",
+          resource_group: `edge-rg`,
+          classic_access: false,
+          manual_address_prefix_management: true,
+          default_network_acl_name: null,
+          default_routing_table_name: null,
+          default_security_group_name: null,
+          address_prefixes: [],
+          acls: [newDefaultEdgeAcl(), newDefaultF5ExternalAcl()],
+          subnets: [],
+          public_gateways: []
+        };
+
+  let managementPrefixes = [
+      { vpc: "management", zone: 1, cidr: "10.5.0.0/16" },
+      { vpc: "management", zone: 1, cidr: "10.10.10.0/16" },
+      { vpc: "management", zone: 2, cidr: "10.6.0.0/16" },
+      { vpc: "management", zone: 2, cidr: "10.20.10.0/16" },
+      { vpc: "management", zone: 3, cidr: "10.7.0.0/16" },
+      { vpc: "management", zone: 3, cidr: "10.30.10.0/16" }
+    ],
+    edgePrefixes = [
+      { vpc: "edge", zone: 1, cidr: "10.5.0.0/16" },
+      { vpc: "edge", zone: 2, cidr: "10.6.0.0/16" },
+      { vpc: "edge", zone: 3, cidr: "10.7.0.0/16" }
+    ];
 
   // set address prefixes
-  newEdgeNetwork.address_prefixes = useManagementVpc
-    ? [
-        { vpc: "management", zone: 1, cidr: "10.5.0.0/16" },
-        { vpc: "management", zone: 1, cidr: "10.10.10.0/16" },
-        { vpc: "management", zone: 2, cidr: "10.6.0.0/16" },
-        { vpc: "management", zone: 2, cidr: "10.20.10.0/16" },
-        { vpc: "management", zone: 3, cidr: "10.7.0.0/16" },
-        { vpc: "management", zone: 3, cidr: "10.30.10.0/16" }
-      ]
-    : [
-        { vpc: "edge", zone: 1, cidr: "10.5.0.0/16" },
-        { vpc: "edge", zone: 2, cidr: "10.6.0.0/16" },
-        { vpc: "edge", zone: 3, cidr: "10.7.0.0/16" }
-      ];
+  newEdgeNetwork.address_prefixes = [];
+
+  // add prefixes based on number of zones
+  (useManagementVpc ? managementPrefixes : edgePrefixes).forEach(prefix => {
+    if (prefix.zone <= zones) {
+      newEdgeNetwork.address_prefixes.push(prefix);
+    }
+  });
 
   // add edge to vpc
   if (!useManagementVpc) edgeTiers.push("vpe");
@@ -816,32 +824,42 @@ function createEdgeVpc(config, pattern, useManagementVpc) {
   // for each tier
   edgeTiers.forEach(tier => {
     // for each zone
-    eachZone(3, zone => {
-      // add a new subnet
-      newEdgeNetwork.subnets.push({
-        vpc: `${useManagementVpc ? "management" : "edge"}`,
-        name: `${tier}-${zone}`, // name
-        zone: parseIntFromZone(zone),
-        resource_group: `${useManagementVpc ? "management" : "edge"}-rg`, // rg
-        cidr: `10.${parseIntFromZone(zone) + 4}.${cidrOrder.indexOf(tier) +
-          1}0.0/24`, // dynamic CIDR block creation
-        network_acl:
-          tier === "f5-external"
-            ? "f5-external-acl"
-            : `${useManagementVpc ? "management" : "edge-acl"}`, // acl
-        public_gateway: false,
-        has_prefix: true
-      });
+    eachZone(zones, zone => {
+      // add only unfound subnets
+      if (!splatContains(newEdgeNetwork.subnets, "name", `${tier}-${zone}`))
+        newEdgeNetwork.subnets.push({
+          vpc: `${useManagementVpc ? "management" : "edge"}`,
+          name: `${tier}-${zone}`, // name
+          zone: parseIntFromZone(zone),
+          resource_group: `${useManagementVpc ? "management" : "edge"}-rg`, // rg
+          cidr: `10.${parseIntFromZone(zone) + 4}.${cidrOrder.indexOf(tier) +
+            1}0.0/24`, // dynamic CIDR block creation
+          network_acl:
+            tier === "f5-external"
+              ? "f5-external-acl"
+              : `${useManagementVpc ? "management" : "edge-acl"}`, // acl
+          public_gateway: false,
+          has_prefix: true
+        });
     });
   });
 
   let edgeTiersWithZones = [];
   edgeTiers.forEach(tier => {
-    edgeTiersWithZones.push({ name: tier, zones: 3 });
+    edgeTiersWithZones.push({ name: tier, zones: zones });
   });
 
-  // if management vpc
-  if (useManagementVpc) {
+  if (edgeTiersExist) {
+    // get existing subnets
+    let newSubnets = [];
+    newEdgeNetwork.subnets.forEach(subnet => {
+      if (subnet.zone <= zones) {
+        newSubnets.push(subnet);
+      }
+    });
+    newEdgeNetwork.subnets = newSubnets;
+  } else if (useManagementVpc) {
+    // if management vpc
     // overwrite with new data
     config.store.json.vpcs[0] = newEdgeNetwork;
     config.store.edge_vpc_name = config.store.json.vpcs[0].name;
@@ -871,9 +889,12 @@ function createEdgeVpc(config, pattern, useManagementVpc) {
     config.store.subnetTiers.edge = edgeTiersWithZones;
   }
   // set security groups to new list and then add existing to end
-  config.store.json.security_groups = newSecurityGroups.concat(
-    config.store.json.security_groups
-  );
+  if (!edgeTiersExist)
+    config.store.json.security_groups = newSecurityGroups.concat(
+      config.store.json.security_groups
+    );
+
+  config.update();
 }
 
 module.exports = {

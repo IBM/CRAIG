@@ -10,7 +10,8 @@ function optionsInit(config) {
   config.store.json._options = {
     prefix: "iac",
     region: "us-south",
-    tags: ["hello", "world"]
+    tags: ["hello", "world"],
+    zones: 3
   };
 }
 

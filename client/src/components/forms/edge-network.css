@@ -1,0 +1,27 @@
+.edgeTileImage {
+  height: 375px;
+}
+
+.edgeTileMargin {
+  margin-top: 0rem;
+}
+
+.edgeTile {
+  background-color: #fcfcfc;
+  width: 25rem;
+  text-align: center;
+  position: relative;
+}
+
+.magnifier {
+  cursor: zoom-in;
+}
+
+.imageMargin {
+  margin: 0.5rem 0 0 -0.5rem;
+}
+
+.borderGray {
+  border: 0.1px solid #d5d2d2;
+  box-shadow: 0 0.2px 0.2px 0 #d5d2d2;
+}

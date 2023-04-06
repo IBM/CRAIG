@@ -19,6 +19,7 @@ describe("options", () => {
         prefix: "iac",
         region: "us-south",
         tags: ["hello", "world"],
+        zones: 3
       };
       assert.deepEqual(
         state.store.json._options,

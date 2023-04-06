@@ -25,7 +25,7 @@ describe("f5", () => {
   describe("f5.onStoreUpdate", () => {
     it("should set all dependent fields to string or empty array when unfound vpc", () => {
       let state = new newState();
-      state.createEdgeVpc("vpn-and-waf");
+      state.createEdgeVpc("vpn-and-waf", false, 3);
       state.f5.vsi.create({ useManagement: false, zones: 2 });
       state.store.json.f5_vsi[0].vpc = null;
       state.update();
@@ -73,7 +73,7 @@ describe("f5", () => {
     });
     it("should update vsi with unfound ssh keys, unfound primary subnet names, and unfound network int. subnet", () => {
       let state = new newState();
-      state.createEdgeVpc("vpn-and-waf");
+      state.createEdgeVpc("vpn-and-waf", false, 3);
       state.f5.vsi.create(false, 2);
       state.store.json.f5_vsi[0].subnet = "bad";
       state.store.json.f5_vsi[0].ssh_keys = ["bad-key"];
@@ -90,7 +90,7 @@ describe("f5", () => {
     describe("f5.instance.save", () => {
       it("should set tmos_admin_password to null when state data is empty string", () => {
         let state = new newState();
-        state.createEdgeVpc("vpn-and-waf");
+        state.createEdgeVpc("vpn-and-waf", false, 3);
         state.f5.vsi.create(false, 2);
         state.f5.instance.save(
           { template: { tmos_admin_password: "" } },
@@ -104,7 +104,7 @@ describe("f5", () => {
       });
       it("should stringify certain empty params", () => {
         let state = new newState();
-        state.createEdgeVpc("vpn-and-waf");
+        state.createEdgeVpc("vpn-and-waf", false, 3);
         state.f5.vsi.create(false, 2);
         state.f5.instance.save(
           {
@@ -167,7 +167,7 @@ describe("f5", () => {
     });
     it("should set the resource group and encryption key for an f5 vsi", () => {
       let state = new newState();
-      state.createEdgeVpc("vpn-and-waf");
+      state.createEdgeVpc("vpn-and-waf", false, 3);
       state.f5.vsi.create({ useManagement: false, zones: 2 });
       state.f5.instance.save(
         {
@@ -234,7 +234,7 @@ describe("f5", () => {
     });
     it("should save template for an f5 vsi", () => {
       let state = new newState();
-      state.createEdgeVpc("vpn-and-waf");
+      state.createEdgeVpc("vpn-and-waf", false, 3);
       state.f5.vsi.create({ useManagement: false, zones: 2 });
       state.f5.instance.save(
         {
@@ -325,7 +325,7 @@ describe("f5", () => {
     describe("f5.vsi.save", () => {
       it("should create new instances on change", () => {
         let state = new newState();
-        state.createEdgeVpc("vpn-and-waf");
+        state.createEdgeVpc("vpn-and-waf", false, 3);
         state.f5.vsi.create({ useManagement: false, zones: 2 });
         state.f5.vsi.save({
           zones: 1,
@@ -395,7 +395,7 @@ describe("f5", () => {
     describe("f5.vsi.create", () => {
       it("should create a new ssh key if one is not found", () => {
         let state = new newState();
-        state.createEdgeVpc("vpn-and-waf");
+        state.createEdgeVpc("vpn-and-waf", false, 3);
         state.store.json.ssh_keys = [];
         state.f5.vsi.create({ useManagement: false, zones: 2 });
         assert.deepEqual(
@@ -412,7 +412,7 @@ describe("f5", () => {
       });
       it("should create a new encryption key for vsi if one is not found", () => {
         let state = new newState();
-        state.createEdgeVpc("vpn-and-waf");
+        state.createEdgeVpc("vpn-and-waf", false, 3);
         state.store.encryptionKeys = [];
         state.store.json.key_management[0].keys = [];
         state.f5.vsi.create({ useManagement: false, zones: 2 });
@@ -424,7 +424,7 @@ describe("f5", () => {
       });
       it("should create an f5 vsi on management", () => {
         let state = new newState();
-        state.createEdgeVpc("vpn-and-waf");
+        state.createEdgeVpc("vpn-and-waf", false, 3);
         state.f5.vsi.create({ useManagement: true, zones: 1 });
         assert.deepEqual(state.store.json.f5_vsi, [
           {

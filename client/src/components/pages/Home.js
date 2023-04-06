@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, TabList, Tab, TabPanel, TabPanels } from "@carbon/react";
 import { Sprout } from "@carbon/icons-react";
-import OptionsForm from "../forms/OptionsForm";
+import { OptionsForm, EdgeNetworkingForm } from "../forms";
 import "./home.scss";
 import ImportJson from "./ImportJson";
 
@@ -29,12 +29,12 @@ function Home(props) {
         <TabPanels>
           <TabPanel>
             {/* Options Form */}
-            <div className="tab-panel subForm">
-              <OptionsForm
-                craig={props.craig}
-                data={props.craig.store.json._options}
-              />
-            </div>
+
+            <OptionsForm
+              craig={props.craig}
+              data={props.craig.store.json._options}
+            />
+            <EdgeNetworkingForm craig={props.craig} />
           </TabPanel>
           <TabPanel>
             {/* Import/Export JSON page */}

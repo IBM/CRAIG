@@ -135,7 +135,6 @@ const {
   f5Init,
   f5VsiSave,
   f5InstanceSave,
-  f5TemplateSave,
   f5VsiCreate,
   f5OnStoreUpdate
 } = require("./f5");
@@ -232,8 +231,8 @@ const state = function() {
     store.updateUnfound("resourceGroups", obj, rgField);
   };
 
-  store.createEdgeVpc = function(pattern, managementVpc) {
-    createEdgeVpc(store, pattern, managementVpc);
+  store.createEdgeVpc = function(pattern, managementVpc, zones) {
+    createEdgeVpc(store, pattern, managementVpc, zones);
   };
 
   store.newField("options", {

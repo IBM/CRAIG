@@ -1,9 +1,7 @@
 const {
-  revision,
   contains,
   eachKey,
   isEmpty,
-  transpose,
   eachZone
 } = require("lazy-z");
 const { addVsiEncryptionKey, newF5Vsi } = require("../builders");
