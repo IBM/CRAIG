@@ -30,6 +30,7 @@ import { RenderDocs } from "./SimplePages";
 import { splat, contains, transpose, getObjectFromArray } from "lazy-z";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
+import { forceShowForm } from "../../lib/forms/force-show-form";
 
 const pathToFormMap = {
   resourceGroups: {
@@ -131,11 +132,13 @@ function formProps(form, craig) {
       onSave: none,
       disableSave: none,
       propsMatchState: none,
+      forceOpen: forceShowForm,
       hideFormTitleButton: true,
       innerFormProps: {
         craig: craig
       },
       toggleFormProps: {
+        craig: craig,
         noDeleteButton: true,
         noSaveButton: true,
         hideName: true,
@@ -150,6 +153,7 @@ function formProps(form, craig) {
   let formFields = pathToFormMap[form];
   let jsonField = pathToFormMap[form].jsonField;
   let formTemplate = {
+    craig: craig,
     name: formFields.name,
     addText: formFields.addText,
     innerForm: formFields.innerForm,
@@ -160,6 +164,7 @@ function formProps(form, craig) {
     onSave: craig[jsonField].save,
     onSubmit: craig[jsonField].create,
     docs: RenderDocs(jsonField),
+    forceOpen: forceShowForm,
     innerFormProps: {
       craig: craig,
       disableSave: disableSave,
@@ -167,6 +172,7 @@ function formProps(form, craig) {
       invalidTextCallback: invalidNameText(jsonField)
     },
     toggleFormProps: {
+      craig: craig,
       disableSave: disableSave,
       hideName: true,
       submissionFieldName: jsonField
@@ -377,7 +383,6 @@ function formProps(form, craig) {
       cosNames: splat(craig.store.json.object_storage, "name")
     };
     transpose(clusterInnerFormProps, formTemplate.innerFormProps);
-    formTemplate.toggleFormProps.hide = false;
   } else if (form === "vpe") {
     formTemplate.innerFormProps.securityGroups =
       craig.store.json.security_groups;

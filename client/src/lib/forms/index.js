@@ -26,6 +26,7 @@ const { disableSave, invalidPort } = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
 const { formatConfig } = require("./format-json");
+const { forceShowForm } = require("./force-show-form");
 
 module.exports = {
   hasDuplicateName,
@@ -53,5 +54,6 @@ module.exports = {
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   invalidNewResourceName,
-  invalidIpCommaList
+  invalidIpCommaList,
+  forceShowForm
 };

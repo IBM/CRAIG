@@ -14,6 +14,7 @@ import {
   SccForm,
   IamAccountSettingsForm
 } from "icse-react-assets";
+import { forceShowForm } from "../../lib/forms/force-show-form";
 
 const pathToFormMap = {
   activityTracker: {
@@ -42,6 +43,7 @@ function toggleFormProps(form, craig) {
   let jsonField = pathToFormMap[form].jsonField;
   let docsField = pathToFormMap[form].docsField;
   let formTemplate = {
+    craig: craig,
     name: formFields.name,
     onSave: craig[jsonField].save,
     submissionFieldName: jsonField,
@@ -55,7 +57,10 @@ function toggleFormProps(form, craig) {
       name: formFields.name
     },
     hide: true,
-    innerFormProps: {}
+    innerFormProps: {
+      craig: craig
+    },
+    forceOpen: forceShowForm
   };
 
   if (form === "activityTracker") {
