@@ -22,11 +22,16 @@ const {
   invalidIpCommaList
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
-const { disableSave, invalidPort } = require("./disable-save");
+const { disableSave, invalidPort, forceShowForm } = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
-const { formatConfig } = require("./format-json");
-const { forceShowForm } = require("./force-show-form");
+const {
+  formatConfig,
+  copyAclModalContent,
+  copyRuleCodeMirrorData,
+  copySgModalContent
+} = require("./format-json");
+
 
 module.exports = {
   hasDuplicateName,
@@ -55,5 +60,8 @@ module.exports = {
   invalidSecurityGroupRuleText,
   invalidNewResourceName,
   invalidIpCommaList,
+  copyAclModalContent,
+  copyRuleCodeMirrorData,
+  copySgModalContent,
   forceShowForm
 };

@@ -10,20 +10,26 @@ import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 
 const CopyRule = props => {
-  let ruleType = (props.isSecurityGroup ? "Security Group" : "ACL");
+  let ruleType = props.isSecurityGroup ? "Security Group" : "ACL";
+
+  /**
+   * get form name for icse props
+   * @param {string} field name of field
+   * @returns {string} form name string
+   */
+  function getFormName(field) {
+    return `copy-rule-${props.isSecurityGroup ? "sg" : "acl"}-${field}${
+      props.isSecurityGroup ? "" : "-" + props.data.name
+    }`;
+  }
+
   return (
     <>
       <IcseHeading type="subHeading" name={"Copy Rule to " + ruleType} />
       <IcseFormGroup noMarginBottom className="align-row">
         <IcseSelect
-          formName={
-            props.isSecurityGroup
-              ? "copy-rule-sg-source"
-              : "copy-rule-acl-source-" + props.data.name
-          }
-          labelText={
-            "Rule Source " + ruleType
-          }
+          formName={getFormName("source")}
+          labelText={"Rule Source " + ruleType}
           groups={
             props.isSecurityGroup
               ? splat(props.craig.store.json.security_groups, "name")
@@ -36,11 +42,7 @@ const CopyRule = props => {
           disableInvalid
         />
         <IcseSelect
-          formName={
-            props.isSecurityGroup
-              ? "copy-rule-sg-rule"
-              : "copy-rule-rule-" + props.data.name
-          }
+          formName={getFormName("rule")}
           labelText="Rule to Copy"
           groups={
             isNullOrEmptyString(props.ruleSource) ? [] : props.allRuleNames
@@ -56,21 +58,13 @@ const CopyRule = props => {
           invalid={contains(props.destinationRuleNames, props.ruleCopyName)}
           invalidText={
             contains(props.destinationRuleNames, props.ruleCopyName)
-              ? `Duplicate rule name "${props.ruleCopyName}" in destination "${
-                  props.ruleDestination
-                }"`
+              ? `Duplicate rule name "${props.ruleCopyName}" in destination "${props.ruleDestination}"`
               : "Select a rule"
           }
         />
         <IcseSelect
-          formName={
-            props.isSecurityGroup
-              ? "copy-rule-sg-rule-desitination"
-              : "copy-rule-acl-destination-" + props.data.name
-          }
-          labelText={
-            "Destination " + ruleType
-          }
+          formName={getFormName("destination")}
+          labelText={"Destination " + ruleType}
           groups={props.allOtherAcls}
           value={props.ruleDestination}
           handleInputChange={props.handleSelect}

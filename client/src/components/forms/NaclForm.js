@@ -12,7 +12,7 @@ import {
   disableSave,
   invalidName,
   aclHelperTextCallback
-} from "../../lib/forms";
+} from "../../lib";
 import { splat } from "lazy-z";
 import CopyRuleForm from "./CopyRuleForm";
 

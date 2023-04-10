@@ -1,7 +1,7 @@
 import { Accordion, AccordionItem } from "@carbon/react";
 import "./releasenotes.scss";
 
-const releaseNotes = require("../../lib/docs/release-notes.json");
+const { releaseNotes } = require("../../lib");
 
 const ReleaseNote = props => {
   return (

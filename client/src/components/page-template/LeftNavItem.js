@@ -3,6 +3,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./navigation.scss";
 
+/**
+ * get classname for nac item
+ * @param {string} path 
+ * @param {boolean=} expanded 
+ * @returns {string} composed class name
+ */
 const getClassName = (path, expanded) => {
   let className = "";
   // if our current page is what is in the navbar

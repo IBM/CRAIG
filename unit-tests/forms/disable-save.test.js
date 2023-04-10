@@ -1,5 +1,9 @@
 const { assert } = require("chai");
-const { disableSave, invalidPort } = require("../../client/src/lib/forms");
+const {
+  disableSave,
+  invalidPort,
+  forceShowForm,
+} = require("../../client/src/lib/forms");
 
 describe("disableSave", () => {
   it("should return true if a resource group has an invalid name", () => {
@@ -2648,5 +2652,24 @@ describe("disableSave", () => {
       ),
       "it should be true"
     );
+  });
+  describe("forceShowForm", () => {
+    it("should force forms open if save is disabled", () => {
+      assert.isTrue(
+        forceShowForm(
+          {},
+          {
+            submissionFieldName: "vpcs",
+            innerFormProps: {
+              data: {
+                name: "management",
+                bucket: null,
+              },
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
   });
 });

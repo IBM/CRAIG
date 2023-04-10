@@ -11,30 +11,24 @@ import {
   invalidSubnetTierName,
   invalidSubnetTierText,
   getTierSubnets,
-  getSubnetTierStateData
-} from "../../lib/forms";
+  getSubnetTierStateData,
+  buildSubnet
+} from "../../lib";
 import { splat } from "lazy-z";
-import { buildSubnet } from "../../lib/builders";
 
 function none() {}
 
 class SubnetForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
     this.onModalSubmit = this.onModalSubmit.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
   }
+  
   onModalSubmit(data) {
     this.props.craig.vpcs.subnetTiers.create(data, {
       vpc_name: this.props.data.name
     });
     this.props.handleModalToggle();
-  }
-
-  handleSelect(event) {
-    let { name, value } = event.target;
-    this.setState({ [name]: value });
   }
 
   render() {
@@ -104,7 +98,7 @@ class SubnetForm extends React.Component {
               networkAcls={splat(this.props.data.acls, "name")}
               enabledPublicGateways={this.props.data.publicGateways}
               vpc_name={this.props.data.name}
-              subnetListCallback={getTierSubnets(tier, {...this.props.data})}
+              subnetListCallback={getTierSubnets(tier, { ...this.props.data })}
               craig={this.props.craig}
               disableSubnetSaveCallback={(stateData, componentProps) => {
                 return (
@@ -119,7 +113,7 @@ class SubnetForm extends React.Component {
                 );
               }}
               propsMatchState={(stateData, componentProps) => {
-                return propsMatchState("subnetTier", stateData, componentProps)
+                return propsMatchState("subnetTier", stateData, componentProps);
               }}
               shouldDisableSubmit={none}
               invalidTextCallback={invalidSubnetTierText}

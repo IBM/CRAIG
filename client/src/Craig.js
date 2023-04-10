@@ -1,21 +1,20 @@
 /* this file is the main application page */
 
 import React from "react";
-import { state } from "./lib/state";
+import { state, buildTitleComment } from "./lib";
 import { useParams } from "react-router-dom";
-import PageTemplate from "./components/PageTemplate";
 import { titleCase, contains } from "lazy-z";
-import ReleaseNotes from "./components/pages/ReleaseNotes";
 import constants from "./lib/constants";
-import { buildTitleComment } from "./lib/json-to-iac/utils";
 import {
   ToggleFormPage,
   FormPage,
   Home,
   Summary,
-  About
-} from "./components/pages";
-import NavigationRedirectModal from "./components/modals/NavigationRedirectModal";
+  About,
+  NavigationRedirectModal,
+  PageTemplate,
+  ReleaseNotes
+} from "./components";
 
 const withRouter = Page => props => {
   const params = useParams();

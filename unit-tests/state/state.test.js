@@ -288,4 +288,73 @@ describe("state util functions", () => {
       );
     });
   });
+  describe("getAllRuleNames", () => {
+    it("should return empty array if no params", () => {
+      let state = newState();
+      let actualData = state.getAllRuleNames();
+      assert.deepEqual(actualData, [], "it should return an empty array");
+    });
+    it("should return the names of all rules in a security group when no source acl name", () => {
+      let state = newState();
+      let actualData = state.getAllRuleNames("management-vpe");
+      let expectedData = [
+        "allow-ibm-inbound",
+        "allow-vpc-inbound",
+        "allow-vpc-outbound",
+        "allow-ibm-tcp-53-outbound",
+        "allow-ibm-tcp-80-outbound",
+        "allow-ibm-tcp-443-outbound",
+      ];
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct rule names"
+      );
+    });
+    it("should return the names of all rules in an acl when two params are passed", () => {
+      let state = newState();
+      let actualData = state.getAllRuleNames("management", "management");
+      let expectedData = [
+        "allow-ibm-inbound",
+        "allow-all-network-inbound",
+        "allow-all-outbound",
+      ];
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct rule names"
+      );
+    });
+  });
+  describe("getAllOtherGroups", () => {
+    it("should return empty array if rule source is null or empty string", () => {
+      let state = newState();
+      let actualData = state.getAllOtherGroups({ ruleSource: "" });
+      assert.deepEqual(actualData, [], "it should return empty array");
+    });
+    it("should return all other acl names if rule source and isAclForm", () => {
+      let state = newState();
+      let actualData = state.getAllOtherGroups(
+        { ruleSource: "management" },
+        { isAclForm: true }
+      );
+      assert.deepEqual(
+        actualData,
+        ["workload"],
+        "it should return empty array"
+      );
+    });
+    it("should return all other security groups if rule source and not isAclForm", () => {
+      let state = newState();
+      let actualData = state.getAllOtherGroups(
+        { ruleSource: "management-vpe" },
+        { isAclForm: false }
+      );
+      assert.deepEqual(
+        actualData,
+        ["workload-vpe", "management-vsi"],
+        "it should return empty array"
+      );
+    });
+  });
 });

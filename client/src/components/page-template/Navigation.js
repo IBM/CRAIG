@@ -19,7 +19,7 @@ import {
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "./DownloadConfig";
-import validate from "../../lib/validate";
+import { validate } from "../../lib";
 
 class Navigation extends React.Component {
   constructor(props) {

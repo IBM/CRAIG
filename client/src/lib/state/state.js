@@ -1,12 +1,5 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const {
-  contains,
-  typeCheck,
-  getObjectFromArray,
-  splatContains,
-  transpose,
-  revision
-} = require("lazy-z");
+const { contains, typeCheck, transpose } = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,
@@ -172,9 +165,18 @@ const {
   accessGroupDynamicPolicySave,
   accessGroupDynamicPolicyDelete
 } = require("./iam");
-const { clusterRules } = require("../constants");
+
 const validate = require("../validate");
 const { buildSubnetTiers } = require("./utils");
+const {
+  addClusterRules,
+  copySecurityGroup,
+  copyNetworkAcl,
+  copyRule,
+  copySgRule,
+  getAllOtherGroups,
+  getAllRuleNames
+} = require("./copy-rules");
 
 const state = function() {
   let store = new lazyZstate({
@@ -491,130 +493,6 @@ const state = function() {
   });
 
   /**
-   * add cluster rules and update
-   * @param {string} vpcName
-   * @param {string} aclName
-   */
-  store.addClusterRules = function(vpcName, aclName) {
-    let acl = new revision(store.store.json)
-      .child("vpcs", vpcName, "name")
-      .child("acls", aclName, "name").data;
-    clusterRules.forEach(rule => {
-      if (!splatContains(acl.rules, "name", rule.name)) {
-        let newRule = {
-          vpc: vpcName,
-          acl: aclName
-        };
-        transpose(rule, newRule);
-        acl.rules.push(newRule);
-      }
-    });
-    store.update();
-  };
-
-  store.getAllSubnets = function() {
-    let subnetList = [];
-    store.store.json.vpcs.forEach(vpc => {
-      vpc.subnets.forEach(subnet => subnetList.push(subnet));
-    });
-    return subnetList;
-  };
-
-  /**
-   * copy security group from one vpc to another and update
-   * @param {string} sourceSecurityGroup name of acl to copy
-   * @param {string} destinationVpc copy destination
-   */
-  store.copySecurityGroup = function(sourceSecurityGroup, destinationVpc) {
-    let oldSg = new revision(store.store.json).child(
-      "security_groups",
-      sourceSecurityGroup,
-      "name"
-    ).data;
-    let sg = {};
-    transpose(oldSg, sg);
-    sg.name += "-copy";
-    sg.vpc = destinationVpc;
-    sg.rules.forEach(rule => {
-      rule.vpc = sg.vpc;
-      rule.sg = sg.name;
-    });
-    store.store.json.security_groups.push(sg);
-    store.update();
-  };
-
-  /**
-   * copy network acl from one vpc to another and update
-   * @param {string} sourceVpc source vpc
-   * @param {string} aclName name of acl to copy
-   * @param {string} destinationVpc copy destination
-   */
-  store.copyNetworkAcl = function(sourceVpc, aclName, destinationVpc) {
-    let oldAcl = new revision(store.store.json)
-      .child("vpcs", sourceVpc, "name")
-      .child("acls", aclName, "name").data;
-    let acl = {};
-    transpose(oldAcl, acl);
-    acl.vpc = destinationVpc;
-    acl.name += "-copy";
-    acl.rules.forEach(rule => {
-      rule.vpc = acl.vpc;
-      rule.acl = acl.name;
-    });
-    getObjectFromArray(store.store.json.vpcs, "name", destinationVpc).acls.push(
-      acl
-    );
-    store.update();
-  };
-
-  /**
-   * copy acl rule to list and update
-   * @param {string} sourceVpc
-   * @param {string} aclName
-   * @param {string} ruleName
-   * @param {string} destinationAcl
-   */
-  store.copyRule = function(sourceVpc, aclName, ruleName, destinationAcl) {
-    let oldRule = new revision(store.store.json)
-      .child("vpcs", sourceVpc, "name")
-      .child("acls", aclName, "name")
-      .child("rules", ruleName, "name").data;
-    let rule = {};
-    transpose(oldRule, rule);
-    store.store.json.vpcs.forEach(vpc => {
-      if (splatContains(vpc.acls, "name", destinationAcl)) {
-        rule.vpc = vpc.name;
-        rule.acl = destinationAcl;
-        getObjectFromArray(vpc.acls, "name", destinationAcl).rules.push(rule);
-      }
-    });
-    store.update();
-  };
-
-  /**
-   * copy sg rule to list and update
-   * @param {string} sgName
-   * @param {string} ruleName
-   * @param {string} destinationSg
-   */
-  store.copySgRule = function(sgName, ruleName, destinationSg) {
-    let oldRule = new revision(store.store.json)
-      .child("security_groups", sgName, "name")
-      .child("rules", ruleName, "name").data;
-    let rule = {};
-    transpose(oldRule, rule);
-    rule.sg = destinationSg;
-    new revision(store.store.json)
-      .child("security_groups", destinationSg, "name")
-      .then(data => {
-        rule.vpc = data.vpc;
-        delete data.show;
-        data.rules.push(rule);
-      });
-    store.update();
-  };
-
-  /**
    * hard set config dot json in state store
    * @param {Object} json craig json configuration object
    * @param {boolean=} slz skip validation step when slz
@@ -628,6 +506,86 @@ const state = function() {
     });
     store.store.subnetTiers = subnetTiers;
     store.update();
+  };
+
+  /**
+   * get all subnets
+   * @returns {Array<object>} all subnet objects
+   */
+  store.getAllSubnets = function() {
+    let subnetList = [];
+    store.store.json.vpcs.forEach(vpc => {
+      vpc.subnets.forEach(subnet => subnetList.push(subnet));
+    });
+    return subnetList;
+  };
+
+  /**
+   * add cluster rules and update
+   * @param {string} vpcName
+   * @param {string} aclName
+   */
+  store.addClusterRules = function(vpcName, aclName) {
+    addClusterRules(store, vpcName, aclName);
+  };
+
+  /**
+   * copy security group from one vpc to another and update
+   * @param {string} sourceSecurityGroup name of acl to copy
+   * @param {string} destinationVpc copy destination
+   */
+  store.copySecurityGroup = function(sourceSecurityGroup, destinationVpc) {
+    copySecurityGroup(store, sourceSecurityGroup, destinationVpc);
+  };
+
+  /**
+   * copy network acl from one vpc to another and update
+   * @param {string} sourceVpc source vpc
+   * @param {string} aclName name of acl to copy
+   * @param {string} destinationVpc copy destination
+   */
+  store.copyNetworkAcl = function(sourceVpc, aclName, destinationVpc) {
+    copyNetworkAcl(store, sourceVpc, aclName, destinationVpc);
+  };
+
+  /**
+   * copy acl rule to list and update
+   * @param {string} sourceVpc
+   * @param {string} aclName
+   * @param {string} ruleName
+   * @param {string} destinationAcl
+   */
+  store.copyRule = function(sourceVpc, aclName, ruleName, destinationAcl) {
+    copyRule(store, sourceVpc, aclName, ruleName, destinationAcl);
+  };
+
+  /**
+   * copy sg rule to list and update
+   * @param {string} sgName
+   * @param {string} ruleName
+   * @param {string} destinationSg
+   */
+  store.copySgRule = function(sgName, ruleName, destinationSg) {
+    copySgRule(store, sgName, ruleName, destinationSg);
+  };
+
+  /**
+   * get all rule names
+   * @param {string} ruleSource rule source
+   * @param {string=} sourceName vpc acl source name, used only for acls
+   */
+  store.getAllRuleNames = function(ruleSource, sourceName) {
+    return getAllRuleNames(store, ruleSource, sourceName);
+  };
+
+  /**
+   * get all acls or security groups other than selected one for rule copy
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @returns {Array<string>} list of acl names
+   */
+  store.getAllOtherGroups = function(stateData, componentProps) {
+    return getAllOtherGroups(store, stateData, componentProps);
   };
 
   return store;

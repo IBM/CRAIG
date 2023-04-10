@@ -10,7 +10,7 @@ import {
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback
-} from "../../lib/forms";
+} from "../../lib";
 import {
   ResourceGroupForm,
   KeyManagementForm,
@@ -30,7 +30,7 @@ import { RenderDocs } from "./SimplePages";
 import { splat, contains, transpose, getObjectFromArray } from "lazy-z";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
-import { forceShowForm } from "../../lib/forms/force-show-form";
+import { forceShowForm } from "../../lib";
 
 const pathToFormMap = {
   resourceGroups: {

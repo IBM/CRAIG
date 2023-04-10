@@ -2,10 +2,8 @@ import React from "react";
 import { StatelessToggleForm, IcseModal } from "icse-react-assets";
 import {
   getObjectFromArray,
-  isNullOrEmptyString,
   splat,
   splatContains,
-  prettyJSON,
   revision
 } from "lazy-z";
 import "./copy-rule-form-page.css";
@@ -18,6 +16,7 @@ import {
   CopyRule,
   CopySgModalContent
 } from "./duplicate-rules";
+import { copyRuleCodeMirrorData } from "../../lib";
 
 class CopyRuleForm extends React.Component {
   constructor(props) {
@@ -95,23 +94,10 @@ class CopyRuleForm extends React.Component {
    * @returns {Array<string>} list of rule names
    */
   getAllRuleNames() {
-    return this.state.ruleSource && this.props.isAclForm
-      ? splat(
-          new revision(this.props.craig.store.json)
-            .child("vpcs", this.props.data.name, "name")
-            .child("acls", this.state.ruleSource, "name").data.rules,
-          "name"
-        )
-      : this.state.ruleSource
-      ? splat(
-          new revision(this.props.craig.store.json).child(
-            "security_groups",
-            this.state.ruleSource,
-            "name"
-          ).data.rules,
-          "name"
-        )
-      : [];
+    return this.props.craig.getAllRuleNames(
+      this.state.ruleSource,
+      this.props.isAclForm ? this.props.data.name : null
+    );
   }
 
   /**
@@ -119,23 +105,7 @@ class CopyRuleForm extends React.Component {
    * @returns {Array<string>} list of acl names
    */
   getAllOtherGroups() {
-    if (isNullOrEmptyString(this.state.ruleSource)) {
-      return [];
-    } else if (this.props.isAclForm) {
-      let aclNames = [];
-      this.props.craig.store.json.vpcs.forEach(vpc => {
-        vpc.acls.forEach(acl => {
-          if (acl.name !== this.state.ruleSource) aclNames.push(acl.name);
-        });
-      });
-      return aclNames;
-    } else {
-      return splat(this.props.craig.store.json.security_groups, "name").filter(
-        name => {
-          if (name !== this.state.ruleSource) return name;
-        }
-      );
-    }
+    return this.props.craig.getAllOtherGroups(this.state, this.props);
   }
 
   /**
@@ -201,7 +171,7 @@ class CopyRuleForm extends React.Component {
         this.state.ruleSource,
         this.state.ruleCopyName,
         this.state.ruleDestination
-      )
+      );
     } else if (this.props.isAclForm === false) {
       this.props.craig.copySecurityGroup(
         this.state.source,
@@ -291,18 +261,7 @@ class CopyRuleForm extends React.Component {
               </p>
               <CraigCodeMirror
                 className="regular"
-                code={prettyJSON(
-                  this.props.isAclForm
-                    ? new revision(this.props.craig.store.json)
-                        .child("vpcs", this.props.data.name, "name")
-                        .child("acls", this.state.ruleSource, "name")
-                        .child("rules", this.state.ruleCopyName, "name").data
-                    : new revision(this.props.craig.store.json)
-                        .child("security_groups", this.state.ruleSource, "name")
-                        .child("rules", this.state.ruleCopyName).data
-                )
-                  .replace(/"(vpc|acl|sg)"[^,\n]+(,\s+)?/g, "")
-                  .replace(/\,[^\w"]+(?=\n\}$)/g, "")}
+                code={copyRuleCodeMirrorData(this.state, this.props)}
               />
             </>
           )}

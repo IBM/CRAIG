@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Craig from "./Craig";
 import { UnderConstruction } from "icse-react-assets";
 import "./app.scss";
-import ResetState from "./components/pages/ResetState";
+import { ResetState } from "./components";
 
 class App extends Component {
   constructor(props) {

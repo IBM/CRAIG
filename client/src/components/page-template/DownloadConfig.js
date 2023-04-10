@@ -1,7 +1,7 @@
-const { configToFilesJson } = require("../../lib/json-to-iac");
-const JSZip = require("jszip");
 import { saveAs } from "file-saver";
 import { eachKey, isNullOrEmptyString } from "lazy-z";
+const { configToFilesJson } = require("../../lib");
+const JSZip = require("jszip");
 
 /**
  * Download configuration object

@@ -5,16 +5,21 @@ import {
   IcseSelect,
   IcseHeading
 } from "icse-react-assets";
-import {
-  getObjectFromArray,
-  isNullOrEmptyString,
-  splat,
-  splatContains
-} from "lazy-z";
+import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 
 const CopyRuleObject = props => {
+  /**
+   * get form name for icse props
+   * @param {string} field name of field
+   * @returns {string} form name string
+   */
+  function getFormName(field) {
+    return `copy-rule-${props.isSecurityGroup ? "sg" : "acl"}-${field}${
+      props.isSecurityGroup ? "" : "-" + props.data.name
+    }`;
+  }
   return (
     <>
       <IcseHeading
@@ -27,11 +32,7 @@ const CopyRuleObject = props => {
       />
       <IcseFormGroup className="align-row">
         <IcseSelect
-          formName={
-            props.isSecurityGroup
-              ? "copy-security-group-source"
-              : "copy-acl-source-" + props.data.name
-          }
+          formName={getFormName("source")}
           labelText={
             props.isSecurityGroup ? "Source Security Group" : "Source ACL"
           }
@@ -52,18 +53,14 @@ const CopyRuleObject = props => {
           }
         />
         <IcseSelect
-          formName={
-            props.isSecurityGroup
-              ? "copy-security-group-destination"
-              : "copy-acl-destination-" + props.data.name
-          }
+          formName={getFormName("destination")}
           labelText="Destination VPC"
           groups={(props.destinationVpc ? [""] : []).concat(
-            props.isSecurityGroup
-              ? splat(props.craig.store.json.vpcs, "name")
-              : splat(props.craig.store.json.vpcs, "name").filter(vpc => {
-                  if (vpc !== props.data.name) return vpc;
-                })
+            splat(props.craig.store.json.vpcs, "name").filter(vpc => {
+              if (props.isSecurityGroup) {
+                return vpc;
+              } else if (vpc !== props.data.name) return vpc;
+            })
           )}
           value={props.destinationVpc}
           handleInputChange={props.handleSelect}

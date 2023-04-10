@@ -3,9 +3,8 @@ import { Button, TextArea, Modal } from "@carbon/react";
 import { CheckmarkFilled, Misuse } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { IcseFormGroup, IcseHeading, IcseTextInput } from "icse-react-assets";
-import validate from "../../lib/validate";
 import { isInRange } from "lazy-z";
-import { slzToCraig } from "../../lib";
+import { slzToCraig, validate } from "../../lib";
 import { newResourceNameExp } from "../../lib/constants";
 import "./import-json.css";
 

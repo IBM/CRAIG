@@ -3,9 +3,9 @@ import { ToggleForm, IcseFormTemplate } from "icse-react-assets";
 import PropTypes from "prop-types";
 import toggleFormProps from "./ToggleFormPageProps";
 import formProps from "./FormPageProps";
-import CopyRuleForm from "../forms/CopyRuleForm";
+import { CopyRuleForm } from "../forms";
 import { Docs } from "icse-react-assets";
-const docs = require("../../lib/docs/docs.json");
+const { docs } = require("../../lib");
 
 export const ToggleFormPage = props => {
   return <ToggleForm {...toggleFormProps(props.form, props.craig)} />;

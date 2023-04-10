@@ -1,10 +1,9 @@
 import React from "react";
 import { CheckmarkFilled, ErrorFilled } from "@carbon/icons-react";
 import { Tile, Button, TextArea } from "@carbon/react";
-import validate from "../../lib/validate";
 import { IcseToggle } from "icse-react-assets";
-import { downloadContent } from "../page-template/DownloadConfig";
-import { formatConfig } from "../../lib/forms/format-json";
+import { downloadContent } from "../page-template";
+import { formatConfig, validate } from "../../lib";
 import "./summary.css";
 
 class Summary extends React.Component {
@@ -13,7 +12,7 @@ class Summary extends React.Component {
     this.state = {
       usePrettyJson: true,
       error: "",
-      fileDownloadUrl: "",
+      fileDownloadUrl: ""
     };
     try {
       validate(this.props.craig.store.json);

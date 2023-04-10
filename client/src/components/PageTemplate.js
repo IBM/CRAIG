@@ -1,5 +1,4 @@
 import React from "react";
-import Footer from "./page-template/Footer";
 import {
   IbmCloudKeyProtect,
   ObjectStorage,
@@ -32,7 +31,7 @@ import {
   getObjectFromArray,
   prettyJSON
 } from "lazy-z";
-import { CraigCodeMirror, Navigation } from "./page-template";
+import { CraigCodeMirror, Navigation, Footer } from "./page-template";
 import PropTypes from "prop-types";
 import "./page-template.css";
 import {
@@ -59,7 +58,7 @@ import {
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf
-} from "../lib/json-to-iac";
+} from "../lib";
 import {
   maskFieldsExpStep1ReplacePublicKey,
   maskFieldsExpStep2ReplaceTmosAdminPassword,

@@ -34,8 +34,9 @@ const {
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf
 } = require("./page-template");
-
+const {buildTitleComment} = require("./utils")
 module.exports = {
+  buildTitleComment,
   formatPgw,
   formatSubnet,
   formatAcl,

@@ -1,20 +1,19 @@
+import { splat, transpose, eachKey } from "lazy-z";
+import { RenderDocs } from "./SimplePages";
 import {
+  invalidIamAccountSettings,
+  iamAccountSettingInvalidText,
   disableSave,
   genericNameCallback,
   invalidName,
   propsMatchState
-} from "../../lib/forms";
-import { splat, transpose } from "lazy-z";
-import { eachKey } from "regex-but-with-words/lib/utils";
-import { RenderDocs } from "./SimplePages";
-import { invalidIamAccountSettings } from "../../lib/forms/invalid-callbacks";
-import { iamAccountSettingInvalidText } from "../../lib/forms/text-callbacks";
+} from "../../lib";
 import {
   AtrackerForm,
   SccForm,
   IamAccountSettingsForm
 } from "icse-react-assets";
-import { forceShowForm } from "../../lib/forms/force-show-form";
+import { forceShowForm } from "../../lib";
 
 const pathToFormMap = {
   activityTracker: {
