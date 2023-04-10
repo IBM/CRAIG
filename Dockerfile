@@ -1,0 +1,18 @@
+# Docker commands:
+#   docker build . --build-arg region=us-south --build-arg api_key=$API_KEY -t craig
+#   docker run -it craig
+# pull base image
+FROM node:alpine
+
+# allow for env vars to be passed at build time
+ARG region="" api_key=""
+ENV REGION=$region API_KEY=$api_key
+
+# set working directory 
+WORKDIR /app
+COPY client express-controllers express-routes lib server.js ./
+
+RUN npm install react-scripts sass -g
+
+# start application
+cmd ["npm", "start"]

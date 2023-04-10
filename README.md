@@ -17,6 +17,50 @@ mkdir tf-test
 ```shell
 npm run tf -- <json file path>
 ```
+---
+## Building Container Image
+To build CRAIG locally the following Docker command can be used. The Dockerfile takes in two possible build arguments region and api_key.
+```
+docker build . --build-arg region=us-south --build-arg api_key=$API_KEY -t craig
+```
+to run the container
+```
+docker run -it craig
+```
+---
+## Deploying to Code Engine with `deploy.sh`
+
+Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. At a minimum an IBM Cloud API key will be needed that has sufficient permissions to provision a Code Engine project, application, and secrets. In addition, this API key must be able to create a IBM Container Registry namespace. See below for a simple use case using the default parameters.
+
+```bash
+npm run deploy -- -a <API_KEY>
+```
+
+This script can also delete the resources when the delete flag `-d` is passed
+
+```bash
+npm run deploy -- -d -a <API_KEY>
+```
+
+Below is the full list of parameters and their default values
+
+```
+Syntax: $ deploy.sh [-h] [-d] [-a API KEY] [-r REGION] [-g RESOURCE GROUP] [-p PROJECT NAME] [-n ICR NAMESPACE]
+Options:
+  a     IBM Cloud Platform API Key (REQUIRED).
+  d     Delete resources.
+  g     Resource group to deploy resources in. Default value = 'default'
+  h     Print help.
+  n     IBM Cloud Container Registry namespace. Default value = 'slz-gui-namespace'
+  p     Name of Code Engine project. Default value = 'slz-gui'
+  r     Region to deploy resources in. Default value = 'us-south'
+```
+
+or run
+
+```bash
+npm run deploy -- -h
+```
 
 ---
 
