@@ -30,6 +30,7 @@ describe("vsi", () => {
           kms: null,
           encryption_key: null,
           image: null,
+          image_name: null,
           profile: null,
           name: "test-vsi",
           security_groups: [],
@@ -55,7 +56,7 @@ describe("vsi", () => {
       let state = new newState();
       state.appid.create({
         name: "test-appid",
-        keys: []
+        keys: [],
       });
       state.vsi.create(
         {
@@ -64,6 +65,7 @@ describe("vsi", () => {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
           image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
           profile: "cx2-4x8",
           security_groups: ["management-vpe-sg"],
           ssh_keys: ["slz-ssh-key"],
@@ -111,6 +113,7 @@ describe("vsi", () => {
           kms: "slz-kms",
           encryption_key: null,
           image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
           profile: "cx2-4x8",
           security_groups: ["management-vpe-sg"],
           ssh_keys: ["slz-ssh-key"],
@@ -166,6 +169,7 @@ describe("vsi", () => {
         kms: null,
         encryption_key: null,
         image: null,
+        image_name: null,
         profile: null,
         name: "test-vsi",
         security_groups: [],
@@ -198,6 +202,7 @@ describe("vsi", () => {
           kms: "slz-kms",
           encryption_key: null,
           image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
           profile: "cx2-4x8",
           security_groups: ["management-vpe-sg"],
           ssh_keys: ["slz-ssh-key"],
@@ -240,6 +245,7 @@ describe("vsi", () => {
         kms: "slz-kms",
         encryption_key: null,
         image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+        image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
         profile: "cx2-4x8",
         security_groups: ["management-vpe-sg"],
         ssh_keys: ["slz-ssh-key"],
@@ -339,6 +345,7 @@ describe("vsi", () => {
         kms: null,
         encryption_key: null,
         image: null,
+        image_name: null,
         profile: null,
         name: "todd",
         security_groups: ["workload-vsi-sg"],
@@ -375,6 +382,7 @@ describe("vsi", () => {
         kms: null,
         encryption_key: null,
         image: null,
+        image_name: null,
         profile: null,
         name: "todd",
         security_groups: [],
@@ -412,6 +420,47 @@ describe("vsi", () => {
             },
           ],
           volumes: [],
+        },
+        { data: { name: "todd" }, isTeleport: false }
+      );
+      assert.deepEqual(
+        state.store.json.vsi[1],
+        expectedData,
+        "it should update in place"
+      );
+    });
+    it("should update in place with image given image_name", () => {
+      let state = new newState();
+      state.vsi.create(
+        {
+          name: "todd",
+          vpc: "management",
+        },
+        { isTeleport: false }
+      );
+      let expectedData = {
+        kms: null,
+        encryption_key: null,
+        image: "id",
+        image_name: "Description name [id]",
+        profile: null,
+        name: "todd",
+        security_groups: [],
+        ssh_keys: [],
+        subnets: [],
+        vpc: "management",
+        vsi_per_subnet: null,
+        resource_group: null,
+        override_vsi_name: null,
+        user_data: null,
+        network_interfaces: [],
+        volumes: [],
+      };
+      state.vsi.save(
+        {
+          name: "todd",
+          vpc: "management",
+          image_name: "Description name [id]",
         },
         { data: { name: "todd" }, isTeleport: false }
       );

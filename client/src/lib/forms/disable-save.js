@@ -256,6 +256,19 @@ function disableSave(field, stateData, componentProps) {
       isEmpty(stateData.security_groups) ||
       isEmpty(stateData.subnets)
     );
+  } else if (field === "vsi") {
+    return (
+      invalidName(field)(stateData, componentProps) ||
+      fieldsAreBad(
+        ["resource_group", "vpc", "image_name", "profile", "encryption_key"],
+        stateData
+      ) ||
+      stateData.vsi_per_subnet > 10 ||
+      stateData.vsi_per_subnet < 1 ||
+      isEmpty(stateData.security_groups) ||
+      isEmpty(stateData.subnets) ||
+      isEmpty(stateData.ssh_keys)
+    );
   } else return false;
 }
 

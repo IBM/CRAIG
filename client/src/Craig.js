@@ -1,20 +1,20 @@
 /* this file is the main application page */
 
 import React from "react";
-import { state, buildTitleComment } from "./lib";
+import { contains, titleCase } from "lazy-z";
 import { useParams } from "react-router-dom";
-import { titleCase, contains } from "lazy-z";
-import constants from "./lib/constants";
 import {
-  ToggleFormPage,
+  About,
   FormPage,
   Home,
-  Summary,
-  About,
   NavigationRedirectModal,
   PageTemplate,
-  ReleaseNotes
+  ReleaseNotes,
+  Summary,
+  ToggleFormPage
 } from "./components";
+import { buildTitleComment, state } from "./lib";
+import { default as constants } from "./lib/constants";
 
 const withRouter = Page => props => {
   const params = useParams();

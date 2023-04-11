@@ -1,36 +1,37 @@
 import {
-  resourceGroupHelperTextCallback,
-  invalidNameText,
-  propsMatchState,
-  disableSave,
-  invalidName,
-  invalidEncryptionKeyRing,
-  cosResourceHelperTextCallback,
-  invalidSshPublicKey,
-  invalidSecurityGroupRuleName,
-  invalidSecurityGroupRuleText,
-  clusterHelperTestCallback
-} from "../../lib";
-import {
-  ResourceGroupForm,
-  KeyManagementForm,
-  ObjectStorageForm,
-  SecretsManagerForm,
   AppIdForm,
-  VpcForm,
-  SshKeyForm,
-  TransitGatewayForm,
-  VpnGatewayForm,
-  SecurityGroupForm,
   ClusterForm,
   EventStreamsForm,
-  VpeForm
+  KeyManagementForm,
+  ObjectStorageForm,
+  ResourceGroupForm,
+  SecretsManagerForm,
+  SecurityGroupForm,
+  SshKeyForm,
+  TransitGatewayForm,
+  VpcForm,
+  VpeForm,
+  VpnGatewayForm,
+  VsiForm
 } from "icse-react-assets";
-import { RenderDocs } from "./SimplePages";
-import { splat, contains, transpose, getObjectFromArray } from "lazy-z";
+import { contains, getObjectFromArray, splat, transpose } from "lazy-z";
+import {
+  clusterHelperTestCallback,
+  cosResourceHelperTextCallback,
+  disableSave,
+  forceShowForm,
+  invalidEncryptionKeyRing,
+  invalidName,
+  invalidNameText,
+  invalidSecurityGroupRuleName,
+  invalidSecurityGroupRuleText,
+  invalidSshPublicKey,
+  propsMatchState,
+  resourceGroupHelperTextCallback
+} from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
-import { forceShowForm } from "../../lib";
+import { RenderDocs } from "./SimplePages";
 
 const pathToFormMap = {
   resourceGroups: {
@@ -68,6 +69,12 @@ const pathToFormMap = {
     name: "Virtual Private Clouds",
     addText: "Create a VPC",
     innerForm: VpcForm
+  },
+  vsi: {
+    jsonField: "vsi",
+    name: "Virtual Server Instances",
+    addText: "Create a VSI",
+    innerForm: VsiForm
   },
   sshKeys: {
     jsonField: "ssh_keys",
@@ -182,19 +189,19 @@ function formProps(form, craig) {
   if (
     contains(
       [
-        "secretsManager",
-        "keyManagement",
-        "objectStorage",
         "appID",
-        "vpcs",
-        "sshKeys",
-        "transitGateways",
-        "vpn",
-        "securityGroups",
         "clusters",
         "eventStreams",
-        "clusters",
-        "vpe"
+        "keyManagement",
+        "objectStorage",
+        "secretsManager",
+        "securityGroups",
+        "sshKeys",
+        "transitGateways",
+        "vpcs",
+        "vpe",
+        "vpn",
+        "vsi"
       ],
       form
     )
@@ -204,10 +211,10 @@ function formProps(form, craig) {
       "name"
     );
   }
-
+  // add vpc list
   if (
     contains(
-      ["transitGateways", "vpn", "securityGroups", "clusters", "vpe"],
+      ["transitGateways", "vpn", "securityGroups", "clusters", "vpe", "vsi"],
       form
     )
   ) {
@@ -215,12 +222,19 @@ function formProps(form, craig) {
   }
 
   // add encryption keys
-  if (contains(["secretsManager", "clusters"], form)) {
+  if (contains(["secretsManager", "clusters", "vsi"], form)) {
     formTemplate.innerFormProps.encryptionKeys = craig.store.encryptionKeys;
   }
 
-  if (contains(["clusters", "vpn", "vpe"], form)) {
+  // add subnets
+  if (contains(["clusters", "vpn", "vpe", "vsi"], form)) {
     formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
+  }
+
+  // add security groups
+  if (contains(["vpe", "vsi"], form)) {
+    formTemplate.innerFormProps.securityGroups =
+      craig.store.json.security_groups;
   }
 
   if (form === "resourceGroups") {
@@ -353,6 +367,11 @@ function formProps(form, craig) {
     };
     formTemplate.isSecurityGroup = true;
     transpose(sgInnerFormProps, formTemplate.innerFormProps);
+  } else if (form === "vsi") {
+    formTemplate.innerFormProps.sshKeys = craig.store.sshKeys;
+    formTemplate.innerFormProps.apiEndpointImages = "/api/vsi/images";
+    formTemplate.innerFormProps.apiEndpointInstanceProfiles =
+      "/api/vsi/instanceProfiles";
   } else if (form === "eventStreams") {
     let esInnerFormProps = {
       invalidCallback: invalidName("event_streams"),

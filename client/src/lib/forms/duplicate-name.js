@@ -78,6 +78,8 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         }
       });
     });
+  } else if (field === "vsi") {
+    allOtherNames = splat(componentProps.craig.store.json.vsi, "name");
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],

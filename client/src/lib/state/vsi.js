@@ -214,6 +214,7 @@ function vsiCreate(config, stateData, componentProps) {
     kms: null,
     encryption_key: null,
     image: null,
+    image_name: null,
     profile: null,
     name: null,
     security_groups: [],
@@ -227,7 +228,12 @@ function vsiCreate(config, stateData, componentProps) {
     subnets: stateData.subnets || [],
     volumes: []
   };
+  if (stateData.image_name)
+    stateData.image = stateData.image_name
+      .replace(/[^\[]+\[/g, "")
+      .replace(/]/g, "");
   transpose(stateData, defaultVsi);
+
   // if overriding key
   if (componentProps.isTeleport) {
     defaultVsi.subnet = stateData.subnet; // set subnet name to null for teleport / f5
@@ -261,6 +267,10 @@ function vsiSave(config, stateData, componentProps) {
   ) {
     stateData.template.deployment = stateData.name;
   }
+  if (stateData.image_name)
+    stateData.image = stateData.image_name
+      .replace(/[^\[]+\[/g, "")
+      .replace(/]/g, "");
   updateChild(
     config,
     componentProps.isTeleport ? "teleport_vsi" : "vsi",

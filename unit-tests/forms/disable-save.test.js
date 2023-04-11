@@ -2653,6 +2653,139 @@ describe("disableSave", () => {
       "it should be true"
     );
   });
+  describe("vsi", () => {
+    const example_vsi = {
+      kms: null,
+      encryption_key: "key",
+      image: "ibm-centos-stream-8-amd64-1",
+      profile: "bx2-2x8",
+      name: "testing",
+      security_groups: ["management-vpe"],
+      ssh_keys: ["ssh-key"],
+      vpc: "management",
+      vsi_per_subnet: 1,
+      resource_group: "service-rg",
+      override_vsi_name: null,
+      user_data: null,
+      network_interfaces: [],
+      subnets: ["vpe-zone-1"],
+      volumes: [],
+      subnet: "",
+      image_name:
+        "CentOS Stream 8 - Minimal Install (amd64) [ibm-centos-stream-8-amd64-1]",
+      enable_floating_ip: false,
+    };
+    it("should return true if vsi has invalid name", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.name = "";
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty resource group", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.resource_group = null;
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty vpc", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.vpc = null;
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty image name", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.image_name = null;
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty profile", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.profile = null;
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty encryption key", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.encryption_key = null;
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has invalid vsis per subnet", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.vsi_per_subnet = 0;
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has invalid vsis per subnet", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.vsi_per_subnet = 11;
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty security groups", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.security_groups = [];
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty subnets", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.subnets = [];
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+    it("should return true if vsi has empty ssh keys", () => {
+      let vsi = Object.assign({}, example_vsi);
+      vsi.ssh_keys = [];
+      assert.isTrue(
+        disableSave("vsi", vsi, {
+          craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+          data: { name: "vsi" },
+        })
+      );
+    });
+  });
   describe("forceShowForm", () => {
     it("should force forms open if save is disabled", () => {
       assert.isTrue(
