@@ -5,7 +5,8 @@ import {
   IcseTextInput,
   buildFormFunctions,
   IcseHeading,
-  SaveAddButton
+  SaveAddButton,
+  IcseNumberSelect
 } from "icse-react-assets";
 import { Tag, TextArea } from "@carbon/react";
 import { deepEqual } from "lazy-z";
@@ -66,14 +67,6 @@ class OptionsForm extends React.Component {
             className="marginBottomSmall"
           />
           <IcseFormGroup>
-            <IcseSelect
-              formName="options"
-              name="region"
-              labelText={"Region"}
-              value={this.state.region}
-              groups={["us-south", "us-east", "eu-db", "eu-gb"]}
-              handleInputChange={this.handleChange}
-            />
             <IcseTextInput
               id="prefix"
               field="prefix"
@@ -82,6 +75,23 @@ class OptionsForm extends React.Component {
               invalidText="Invalid prefix"
               onChange={this.handleChange}
               maxLength={16}
+            />
+            <IcseSelect
+              formName="options"
+              name="region"
+              labelText={"Region"}
+              value={this.state.region}
+              groups={["us-south", "us-east", "eu-db", "eu-gb"]}
+              handleInputChange={this.handleChange}
+            />
+            <IcseNumberSelect
+              max={3}
+              formName="options"
+              name="zones"
+              labelText="Zones"
+              value={this.state.zones}
+              handleInputChange={this.handleChange}
+              className="fieldWidth"
             />
           </IcseFormGroup>
           <IcseFormGroup>

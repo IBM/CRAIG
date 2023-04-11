@@ -19,7 +19,7 @@ describe("options", () => {
         prefix: "iac",
         region: "us-south",
         tags: ["hello", "world"],
-        zones: 3
+        zones: 3,
       };
       assert.deepEqual(
         state.store.json._options,
@@ -47,6 +47,76 @@ describe("options", () => {
         "tags",
         "here",
       ]);
+    });
+    it("should update subnetTier zones when saved", () => {
+      oState.options.save({ zones: 2 }, { data: { prefix: "iac" } });
+      let expectedData = {
+        management: [
+          {
+            name: "vsi",
+            zones: 2,
+          },
+          {
+            name: "vpe",
+            zones: 2,
+          },
+          {
+            name: "vpn",
+            zones: 2,
+          },
+        ],
+        workload: [
+          {
+            name: "vsi",
+            zones: 2,
+          },
+          {
+            name: "vpe",
+            zones: 2,
+          },
+        ],
+      };
+      assert.deepEqual(
+        expectedData,
+        oState.store.subnetTiers,
+        "all zones should be 2"
+      );
+    });
+    it("should update subnets when saved", () => {
+      oState.options.save({ zones: 1 }, { data: { prefix: "iac" } });
+      let expectedData = [
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.10.0/24",
+          name: "vsi-zone-1",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true,
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.30.0/24",
+          name: "vpn-zone-1",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: true,
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.20.0/24",
+          name: "vpe-zone-1",
+          resource_group: "management-rg",
+          network_acl: "management",
+          public_gateway: false,
+          has_prefix: true,
+        },
+      ];
+      assert.deepEqual(oState.store.json.vpcs[0].subnets, expectedData);
     });
   });
 });
