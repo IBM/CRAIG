@@ -381,7 +381,7 @@ function formProps(form, craig) {
   } else if (form === "clusters") {
     let clusterInnerFormProps = {
       kubeVersionApiEndpoint: "/api/cluster/versions",
-      flavorApiEndpoint: "/api/cluster/flavors",
+      flavorApiEndpoint: `/api/cluster/${craig.store.json._options.region}/flavors`,
       workerPoolProps: {
         onSave: craig.clusters.worker_pools.save,
         onDelete: craig.clusters.worker_pools.delete,
@@ -393,7 +393,7 @@ function formProps(form, craig) {
         invalidCallback: invalidName("worker_pools"),
         invalidTextCallback: invalidNameText("worker_pools"),
         craig: craig,
-        flavorApiEndpoint: "/api/cluster/flavors"
+        flavorApiEndpoint: `/api/cluster/${craig.store.json._options.region}/flavors`
       },
       invalidCallback: invalidName("clusters"),
       invalidTextCallback: invalidNameText("clusters"),

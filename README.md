@@ -19,9 +19,9 @@ npm run tf -- <json file path>
 ```
 ---
 ## Building Container Image
-To build CRAIG locally the following Docker command can be used. The Dockerfile takes in two possible build arguments region and api_key.
+To build CRAIG locally the following Docker command can be used. The Dockerfile accepts `api_key` as a build argument.
 ```
-docker build . --build-arg region=us-south --build-arg api_key=$API_KEY -t craig
+docker build . --build-arg api_key=$API_KEY -t craig
 ```
 to run the container
 ```

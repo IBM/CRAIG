@@ -1,0 +1,129 @@
+{
+  "first": {
+    "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles?limit=3"
+  },
+  "limit": 3,
+  "profiles": [
+    {
+      "bandwidth": {
+        "type": "fixed",
+        "value": 4000
+      },
+      "disks": [],
+      "family": "balanced",
+      "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bx2-2x8",
+      "memory": {
+        "type": "fixed",
+        "value": 8
+      },
+      "name": "bx2-2x8",
+      "os_architecture": {
+        "default": "amd64",
+        "type": "enum",
+        "values": [
+          "amd64"
+        ]
+      },
+      "port_speed": {
+        "type": "fixed",
+        "value": 16000
+      },
+      "total_volume_bandwidth": {
+        "default": 1000,
+        "max": 3500,
+        "min": 250,
+        "step": 1,
+        "type": "range"
+      },
+      "vcpu_architecture": {
+        "type": "fixed",
+        "value": "amd64"
+      },
+      "vcpu_count": {
+        "type": "fixed",
+        "value": 2
+      }
+    },
+    {
+      "bandwidth": {
+        "type": "fixed",
+        "value": 8000
+      },
+      "disks": [],
+      "family": "balanced",
+      "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bx2-4x16",
+      "memory": {
+        "type": "fixed",
+        "value": 16
+      },
+      "name": "bx2-4x16",
+      "os_architecture": {
+        "default": "amd64",
+        "type": "enum",
+        "values": [
+          "amd64"
+        ]
+      },
+      "port_speed": {
+        "type": "fixed",
+        "value": 16000
+      },
+      "total_volume_bandwidth": {
+        "default": 2000,
+        "max": 7500,
+        "min": 250,
+        "step": 1,
+        "type": "range"
+      },
+      "vcpu_architecture": {
+        "type": "fixed",
+        "value": "amd64"
+      },
+      "vcpu_count": {
+        "type": "fixed",
+        "value": 4
+      }
+    },
+    {
+      "bandwidth": {
+        "type": "fixed",
+        "value": 16000
+      },
+      "disks": [],
+      "family": "balanced",
+      "href": "https://us-south.iaas.cloud.ibm.com/v1/instance/profiles/bx2-8x32",
+      "memory": {
+        "type": "fixed",
+        "value": 32
+      },
+      "name": "bx2-8x32",
+      "os_architecture": {
+        "default": "amd64",
+        "type": "enum",
+        "values": [
+          "amd64"
+        ]
+      },
+      "port_speed": {
+        "type": "fixed",
+        "value": 16000
+      },
+      "total_volume_bandwidth": {
+        "default": 4000,
+        "max": 15500,
+        "min": 250,
+        "step": 1,
+        "type": "range"
+      },
+      "vcpu_architecture": {
+        "type": "fixed",
+        "value": "amd64"
+      },
+      "vcpu_count": {
+        "type": "fixed",
+        "value": 8
+      }
+    }
+  ],
+  "total_count": 3
+}

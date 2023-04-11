@@ -1,43 +1,3 @@
-const region = process.env.REGION || "us-south";
-
-const apiCalls = {
-  getBearerToken: {
-    method: "post",
-    url: `https://iam.cloud.ibm.com/identity/token?grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${process.env.API_KEY}`,
-    headers: {
-      Accept: "application/json",
-    },
-  },
-  clusterFlavors: {
-    method: "get",
-    url: `http://containers.cloud.ibm.com/global/v2/getFlavors?zone=${region}-1&provider=vpc-gen2`,
-    headers: {
-      Accept: "application/json",
-    },
-  },
-  clusterVersions: {
-    method: "get",
-    url: "http://containers.cloud.ibm.com/global/v1/versions",
-    headers: {
-      Accept: "application/json",
-    },
-  },
-  vsiImages: {
-    method: "get",
-    url: `http://${region}.iaas.cloud.ibm.com/v1/images?version=2022-11-15&generation=2`,
-    headers: {
-      "Accept-Encoding": "application/json",
-    },
-  },
-  vsiInstanceProfiles: {
-    method: "get",
-    url: `http://${region}.iaas.cloud.ibm.com/v1/instance/profiles?version=2022-11-15&generation=2`,
-    headers: {
-      "Accept-Encoding": "application/json",
-    },
-  },
-};
-
 /**
  * controller constructor
  * @param {*} axios initialized axios package
@@ -99,7 +59,14 @@ function controller(axios) {
     return new Promise((resolve, reject) => {
       if (this.tokenIsExpired()) {
         // send request to IBM Cloud IAM endpoint to get access token if no token present or if expired
-        axios(apiCalls.getBearerToken)
+        let requestConfig = {
+          method: "post",
+          url: `https://iam.cloud.ibm.com/identity/token?grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${process.env.API_KEY}`,
+          headers: {
+            Accept: "application/json",
+          },
+        };
+        axios(requestConfig)
           .then((response) => {
             this.token = response.data.access_token;
             this.expiration = response.data.expiration;
@@ -127,7 +94,14 @@ function controller(axios) {
     return this.sendDataOnTokenValid(res, "instanceProfiles", () => {
       return this.getBearerToken()
         .then(() => {
-          let requestConfig = apiCalls.vsiInstanceProfiles;
+          let region = req.params["region"];
+          let requestConfig = {
+            method: "get",
+            url: `http://${region}.iaas.cloud.ibm.com/v1/instance/profiles?version=2022-11-15&generation=2`,
+            headers: {
+              "Accept-Encoding": "application/json",
+            },
+          };
           requestConfig.headers.Authorization = `Bearer ${this.token}`;
           return axios(requestConfig);
         })
@@ -158,7 +132,14 @@ function controller(axios) {
       // get token and use to get vsi images
       return this.getBearerToken()
         .then(() => {
-          let requestConfig = apiCalls.vsiImages;
+          let region = req.params["region"];
+          let requestConfig = {
+            method: "get",
+            url: `http://${region}.iaas.cloud.ibm.com/v1/images?version=2022-11-15&generation=2`,
+            headers: {
+              "Accept-Encoding": "application/json",
+            },
+          };
           requestConfig.headers.Authorization = `Bearer ${this.token}`;
           return axios(requestConfig);
         })
@@ -187,7 +168,15 @@ function controller(axios) {
   this.clusterFlavors = (req, res) => {
     // inherit context with anonymous function
     return this.sendDataOnTokenValid(res, "flavors", () => {
-      return axios(apiCalls.clusterFlavors)
+      let region = req.params["region"];
+      let requestConfig = {
+        method: "get",
+        url: `http://containers.cloud.ibm.com/global/v2/getFlavors?zone=${region}-1&provider=vpc-gen2`,
+        headers: {
+          Accept: "application/json",
+        },
+      };
+      return axios(requestConfig)
         .then((response) => {
           // inherit context with anonymous function
           // iterate through response object and collect cluster flavors
@@ -212,7 +201,14 @@ function controller(axios) {
   this.clusterVersions = (req, res) => {
     return this.sendDataOnTokenValid(res, "versions", () => {
       // send request
-      return axios(apiCalls.clusterVersions)
+      let requestConfig = {
+        method: "get",
+        url: "http://containers.cloud.ibm.com/global/v1/versions",
+        headers: {
+          Accept: "application/json",
+        },
+      };
+      return axios(requestConfig)
         .then((response) => {
           // use anonymous function here to inherit constructor context
           let versions = [];
