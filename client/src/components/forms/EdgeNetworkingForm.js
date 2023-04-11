@@ -32,7 +32,7 @@ const edgeNetworks = [
   },
   {
     id: "management",
-    name: "Use exisiting Management VPC"
+    name: "Use existing Management VPC"
   }
 ];
 

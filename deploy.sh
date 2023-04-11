@@ -119,7 +119,7 @@ else
   # create/check for Code Engine application
   if ibmcloud ce app get -n "craig" | grep Age; then
     # app with name found update existing
-    echo "Exisiting 'craig' application found, updating..."
+    echo "Existing 'craig' application found, updating..."
     ibmcloud ce app update -n "craig" \
       -i us.icr.io/craig-namespace/craig \
       --rs ibm-cr \
