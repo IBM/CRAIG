@@ -57,14 +57,16 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip" {
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
-  name            = "iac-management-cos-vpe-gw"
-  vpc             = ibm_is_vpc.management_vpc.id
-  resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
+  name           = "iac-management-cos-vpe-gw"
+  vpc            = ibm_is_vpc.management_vpc.id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
   security_groups = [
     ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   ]
-
   target {
     crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
     resource_type = "provider_cloud_service"
@@ -110,12 +112,14 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
-  name            = "iac-management-cos-vpe-gw"
-  vpc             = ibm_is_vpc.management_vpc.id
-  resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
+  name           = "iac-management-cos-vpe-gw"
+  vpc            = ibm_is_vpc.management_vpc.id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
   security_groups = []
-
   target {
     crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
     resource_type = "provider_cloud_service"
@@ -168,14 +172,16 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_3_subnet_vpe_ip" {
 }
 
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
-  name            = "slz-management-cos-vpe-gw"
-  vpc             = ibm_is_vpc.management_vpc.id
-  resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["slz","landing-zone"]
+  name           = "slz-management-cos-vpe-gw"
+  vpc            = ibm_is_vpc.management_vpc.id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   security_groups = [
     ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   ]
-
   target {
     crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
     resource_type = "provider_cloud_service"
@@ -216,14 +222,16 @@ resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_3_subnet_vpe_ip" {
 }
 
 resource "ibm_is_virtual_endpoint_gateway" "workload_vpc_cos_vpe_gateway" {
-  name            = "slz-workload-cos-vpe-gw"
-  vpc             = ibm_is_vpc.workload_vpc.id
-  resource_group  = ibm_resource_group.slz_workload_rg.id
-  tags            = ["slz","landing-zone"]
+  name           = "slz-workload-cos-vpe-gw"
+  vpc            = ibm_is_vpc.workload_vpc.id
+  resource_group = ibm_resource_group.slz_workload_rg.id
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   security_groups = [
     ibm_is_security_group.workload_vpc_workload_vpe_sg_sg.id
   ]
-
   target {
     crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
     resource_type = "provider_cloud_service"

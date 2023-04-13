@@ -22,7 +22,10 @@ resource "ibm_resource_instance" "kms" {
   service           = "kms"
   plan              = "tiered-pricing"
   location          = "us-south"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       let actualData = formatKmsInstance(
@@ -59,7 +62,10 @@ resource "ibm_resource_instance" "kms" {
   service           = "kms"
   plan              = "tiered-pricing"
   location          = "us-south"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       let actualData = formatKmsInstance(
@@ -167,8 +173,10 @@ resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
   source_service_name         = "server-protect"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
+  roles = [
+    "Reader"
+  ]
 }
 `;
       let actualData = formatKmsAuthPolicy({
@@ -189,8 +197,10 @@ resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
   source_service_name         = "server-protect"
   target_service_name         = "kms"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
-  roles                       = ["Reader"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
+  roles = [
+    "Reader"
+  ]
 }
 `;
       let actualData = formatKmsAuthPolicy({
@@ -212,8 +222,10 @@ resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
   source_service_name         = "server-protect"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
-  roles                       = ["Reader"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
+  roles = [
+    "Reader"
+  ]
 }
 `;
       let actualData = formatKmsAuthPolicy({
@@ -236,9 +248,12 @@ resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
   source_service_name         = "is"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader", "Authorization Delegator"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
   source_resource_type        = "share"
+  roles = [
+    "Reader",
+    "Authorization Delegator"
+  ]
 }
 `;
       let actualData = formatKmsAuthPolicy(
@@ -353,7 +368,6 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -390,11 +404,9 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   instance_id   = ibm_resource_instance.kms.guid
   endpoint_type = "private"
   key_id        = ibm_kms_key.kms_key_key.key_id
-
   rotation {
     interval_month = 12
   }
-
   dual_auth_delete {
     enabled = true
   }
@@ -453,24 +465,32 @@ resource "ibm_resource_instance" "kms" {
   service           = "kms"
   plan              = "tiered-pricing"
   location          = "us-south"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
   source_service_name         = "server-protect"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
   source_service_name         = "is"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader", "Authorization Delegator"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
   source_resource_type        = "share"
+  roles = [
+    "Reader",
+    "Authorization Delegator"
+  ]
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
@@ -485,7 +505,6 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -496,11 +515,9 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   instance_id   = ibm_resource_instance.kms.guid
   endpoint_type = "private"
   key_id        = ibm_kms_key.kms_key_key.key_id
-
   rotation {
     interval_month = 12
   }
-
   dual_auth_delete {
     enabled = true
   }
@@ -559,7 +576,10 @@ resource "ibm_resource_instance" "kms" {
   service           = "kms"
   plan              = "tiered-pricing"
   location          = "us-south"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
@@ -580,11 +600,9 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   instance_id   = ibm_resource_instance.kms.guid
   endpoint_type = "private"
   key_id        = ibm_kms_key.kms_key_key.key_id
-
   rotation {
     interval_month = 12
   }
-
   dual_auth_delete {
     enabled = true
   }
@@ -645,24 +663,32 @@ resource "ibm_resource_instance" "kms" {
   service           = "kms"
   plan              = "tiered-pricing"
   location          = "us-south"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
   source_service_name         = "server-protect"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
   source_service_name         = "is"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader", "Authorization Delegator"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
   source_resource_type        = "share"
+  roles = [
+    "Reader",
+    "Authorization Delegator"
+  ]
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
@@ -677,7 +703,6 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -688,11 +713,9 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   instance_id   = ibm_resource_instance.kms.guid
   endpoint_type = "private"
   key_id        = ibm_kms_key.kms_key_key.key_id
-
   rotation {
     interval_month = 12
   }
-
   dual_auth_delete {
     enabled = true
   }
@@ -770,24 +793,32 @@ resource "ibm_resource_instance" "kms" {
   service           = "kms"
   plan              = "tiered-pricing"
   location          = "us-south"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
   source_service_name         = "server-protect"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
   source_service_name         = "is"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
-  roles                       = ["Reader", "Authorization Delegator"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
   source_resource_type        = "share"
+  roles = [
+    "Reader",
+    "Authorization Delegator"
+  ]
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
@@ -802,7 +833,6 @@ resource "ibm_kms_key" "kms_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-
   depends_on = [
     ibm_iam_authorization_policy.kms_server_protect_policy,
     ibm_iam_authorization_policy.kms_block_storage_policy
@@ -813,11 +843,9 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
   instance_id   = ibm_resource_instance.kms.guid
   endpoint_type = "private"
   key_id        = ibm_kms_key.kms_key_key.key_id
-
   rotation {
     interval_month = 12
   }
-
   dual_auth_delete {
     enabled = true
   }
@@ -835,24 +863,32 @@ resource "ibm_resource_instance" "kms2" {
   service           = "kms"
   plan              = "tiered-pricing"
   location          = "us-south"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms2_server_protect_policy" {
   source_service_name         = "server-protect"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms2.guid
-  roles                       = ["Reader"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "kms2_block_storage_policy" {
   source_service_name         = "is"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms2.guid
-  roles                       = ["Reader", "Authorization Delegator"]
   description                 = "Allow block storage volumes to be encrypted by Key Management instance."
   source_resource_type        = "share"
+  roles = [
+    "Reader",
+    "Authorization Delegator"
+  ]
 }
 
 resource "ibm_kms_key_rings" "kms2_test_ring" {
@@ -867,7 +903,6 @@ resource "ibm_kms_key" "kms2_key_key" {
   key_ring_id   = ibm_kms_key_rings.kms2_test_ring.key_ring_id
   force_delete  = true
   endpoint_type = "private"
-
   depends_on = [
     ibm_iam_authorization_policy.kms2_server_protect_policy,
     ibm_iam_authorization_policy.kms2_block_storage_policy
@@ -878,11 +913,9 @@ resource "ibm_kms_key_policies" "kms2_key_key_policy" {
   instance_id   = ibm_resource_instance.kms2.guid
   endpoint_type = "private"
   key_id        = ibm_kms_key.kms2_key_key.key_id
-
   rotation {
     interval_month = 12
   }
-
   dual_auth_delete {
     enabled = true
   }

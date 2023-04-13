@@ -45,10 +45,12 @@ describe("secrets manager", () => {
       let expectedData = `
 resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
-  roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 `;
       assert.deepEqual(
@@ -95,10 +97,12 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
       let expectedData = `
 resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
-  roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
   target_service_name         = "kms"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 `;
       assert.deepEqual(
@@ -159,16 +163,17 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     kms_key = ibm_kms_key.kms_key_key.crn
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
-
+  tags = [
+    "hello",
+    "world"
+  ]
   depends_on = [
     ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
   ]
@@ -230,15 +235,17 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
-    kms_key = ERROR: Unfound Reference
+    kms_key = "ERROR: Unfound Reference"
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -349,18 +356,22 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
 
 resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
   source_service_name         = "secrets-manager"
-  roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "secrets_manager_to_kms2_kms_policy" {
   source_service_name         = "secrets-manager"
-  roles                       = ["Reader"]
   description                 = "Allow Secets Manager instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = ibm_resource_instance.kms2.guid
+  roles = [
+    "Reader"
+  ]
 }
 
 ##############################################################################
@@ -375,16 +386,17 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     kms_key = ibm_kms_key.kms_key_key.crn
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
-
+  tags = [
+    "hello",
+    "world"
+  ]
   depends_on = [
     ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
   ]
@@ -396,16 +408,17 @@ resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     kms_key = ibm_kms_key.kms2_key_key.crn
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
-
+  tags = [
+    "hello",
+    "world"
+  ]
   depends_on = [
     ibm_iam_authorization_policy.secrets_manager_to_kms2_kms_policy
   ]
@@ -417,15 +430,17 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     kms_key = ibm_kms_key.kms3_key_key.crn
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################
@@ -528,15 +543,17 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
-    kms_key = ERROR: Unfound Reference
+    kms_key = "ERROR: Unfound Reference"
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################
@@ -735,15 +752,17 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     kms_key = ibm_kms_key.kms_key_key.crn
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
@@ -752,15 +771,17 @@ resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     kms_key = ibm_kms_key.kms2_key_key.crn
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
@@ -769,15 +790,17 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
   plan              = "standard"
   service           = "secrets-manager"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     kms_key = ibm_kms_key.kms3_key_key.crn
   }
-
   timeouts {
     create = "1h"
     delete = "1h"
   }
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################

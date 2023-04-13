@@ -31,12 +31,18 @@ describe("resource groups", () => {
 
 resource "ibm_resource_group" "slz_service_rg" {
   name = "ut-slz-service-rg"
-  tags = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_resource_group" "slz_management_rg" {
   name = "ut-slz-management-rg"
-  tags = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 data "ibm_resource_group" "slz_workload_rg" {

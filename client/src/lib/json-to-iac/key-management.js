@@ -1,17 +1,45 @@
 const { snakeCase, splat, distinct } = require("lazy-z");
-const { kmsKeyDependsOn } = require("./constants");
 const {
   rgIdRef,
-  fillTemplate,
   kebabName,
   tfRef,
   encryptionKeyRef,
-  jsonToIac,
   dataResourceName,
   tfBlock,
   tfDone,
-  getTags
+  getTags,
+  composedKmsId,
+  jsonToTfPrint,
+  cdktfRef,
+  getResourceOrData
 } = require("./utils");
+
+/**
+ * format a key management resource terraform code
+ * @param {Object} kms key management instance Object
+ * @param {Object} config json data template
+ * @param {Array<Object>} config.resource_groups
+ * @param {Object} config._options
+ * @param {string} config._options.prefix
+ * @returns {object}
+ */
+
+function ibmResourceInstanceKms(kms, config) {
+  let instance = {
+    name: dataResourceName(kms, config),
+    resource_group_id: rgIdRef(kms.resource_group, config),
+    service: kms.use_hs_crypto ? "hs-crypto" : "kms"
+  };
+  if (!kms.use_data) {
+    instance.plan = "tiered-pricing";
+    instance.location = config._options.region;
+    instance.tags = getTags(config);
+  }
+  return {
+    name: kms.name,
+    data: instance
+  };
+}
 
 /**
  * format a key management resource terraform code
@@ -23,61 +51,76 @@ const {
  * @returns {string} string formatted terraform code
  */
 function formatKmsInstance(kms, config) {
-  let instance = {
-    name: dataResourceName(kms, config),
-    resource_group_id: rgIdRef(kms.resource_group, config),
-    service: `^${kms.use_hs_crypto ? "hs-crypto" : "kms"}`
-  };
-  if (!kms.use_data) {
-    instance.plan = "^tiered-pricing";
-    instance.location = "$region";
-    instance.tags = getTags(config);
-  }
-  return jsonToIac(
+  let instance = ibmResourceInstanceKms(kms, config);
+  return jsonToTfPrint(
+    getResourceOrData(kms),
     "ibm_resource_instance",
-    kms.name,
-    instance,
-    config,
-    kms.use_data
+    instance.name,
+    instance.data
   );
 }
 
 /**
- * create string value for kms id reference
- * @param {Object} kms key management instance
- * @param {boolean} kms.use_data use data
- * @param {string} kms.name name of instance
- * @returns {string} composed kms string
+ * format kms auth policy
+ * @param {Object} kms key management instance Object
+ * @returns {object} terraform
  */
-function composedKmsId(kms) {
-  return `${kms.use_data ? "data." : ""}ibm_resource_instance.${snakeCase(
-    kms.name
-  )}.guid`;
+
+function ibmIamAuthorizationPolicyKms(kms, isBlockStorage) {
+  let data = {
+    source_service_name: isBlockStorage ? "is" : "server-protect",
+    target_service_name: kms.use_hs_crypto ? "hs-crypto" : "kms",
+    target_resource_instance_id: composedKmsId(kms),
+    roles: ["Reader"],
+    description:
+      "Allow block storage volumes to be encrypted by Key Management instance."
+  };
+  if (isBlockStorage) {
+    data.roles.push("Authorization Delegator");
+    data.source_resource_type = "share";
+  }
+  return {
+    data: data,
+    name:
+      kms.name +
+      (isBlockStorage ? " block_storage_policy" : " server protect policy")
+  };
 }
 
 /**
- * format a resource group terraform code
+ * format kms auth policy
  * @param {Object} kms key management instance Object
  * @returns {string} string formatted terraform code
  */
 function formatKmsAuthPolicy(kms, isBlockStorage) {
-  let resource = {
-    source_service_name: `^${isBlockStorage ? "is" : "server-protect"}`,
-    target_service_name: `^${kms.use_hs_crypto ? "hs-crypto" : "kms"}`,
-    target_resource_instance_id: composedKmsId(kms),
-    roles: `["Reader"${isBlockStorage ? `, "Authorization Delegator"` : ""}]`,
-    description:
-      "^Allow block storage volumes to be encrypted by Key Management instance."
-  };
-  if (isBlockStorage) {
-    resource.source_resource_type = '"share"';
-  }
-  return jsonToIac(
+  let auth = ibmIamAuthorizationPolicyKms(kms, isBlockStorage);
+  return jsonToTfPrint(
+    "resource",
     "ibm_iam_authorization_policy",
-    kms.name +
-      (isBlockStorage ? " block_storage_policy" : " server protect policy"),
-    resource
+    auth.name,
+    auth.data
   );
+}
+
+/**
+ * create a key ring
+ * @param {string} name ring name
+ * @param {Object} kms key management instance
+ * @param {string} kms.name name of instance
+ * @param {Object} config options
+ * @param {Object} config._options
+ * @param {string} config._options.prefix
+ * @returns {object} key ring terraform
+ */
+
+function ibmKmsKeyRings(name, kms, config) {
+  return {
+    name: `${kms.name} ${name} ring`,
+    data: {
+      key_ring_id: kebabName(config, [kms.name, name]),
+      instance_id: composedKmsId(kms)
+    }
+  };
 }
 
 /**
@@ -91,10 +134,56 @@ function formatKmsAuthPolicy(kms, isBlockStorage) {
  * @returns {string} key ring terraform
  */
 function formatKeyRing(name, kms, config) {
-  return jsonToIac(`ibm_kms_key_rings`, `${kms.name} ${name} ring`, {
-    key_ring_id: kebabName(config, [kms.name, name]),
-    instance_id: composedKmsId(kms)
-  });
+  let ring = ibmKmsKeyRings(name, kms, config);
+  return jsonToTfPrint("resource", "ibm_kms_key_rings", ring.name, ring.data);
+}
+
+/**
+ * format a terraform block for an encryption key
+ * @param {Object} key encryption key Object
+ * @param {string} key.name
+ * @param {boolean} key.root_key
+ * @param {string} key.key_ring
+ * @param {boolean} key.force_delete
+ * @param {string} key.endpoint can be public or private
+ * @param {Object} kms key management instance
+ * @param {string} kms.name name of instance
+ * @param {Object} config options
+ * @param {Object} config._options
+ * @param {string} config._options.prefix
+ * @param {boolean} cdktf
+ * @returns {object} key terraform code
+ */
+
+function ibmKmsKey(key, kms, config, cdktf) {
+  let keyValues = {
+    instance_id: composedKmsId(kms),
+    key_name: kebabName(config, [kms.name, key.name]),
+    standard_key: !key.root_key,
+    key_ring_id: tfRef(
+      "ibm_kms_key_rings",
+      `${kms.name} ${key.key_ring} ring`,
+      "key_ring_id"
+    ),
+    force_delete: key.force_delete,
+    endpoint_type: key.endpoint
+  };
+
+  if (kms.authorize_vpc_reader_role) {
+    keyValues.depends_on = [];
+    [
+      `ibm_iam_authorization_policy.${snakeCase(
+        kms.name
+      )}_server_protect_policy`,
+      `ibm_iam_authorization_policy.${snakeCase(kms.name)}_block_storage_policy`
+    ].forEach(ref => {
+      keyValues.depends_on.push(cdktf ? ref : cdktfRef(ref));
+    });
+  }
+  return {
+    name: `${kms.name}-${key.name}-key`,
+    data: keyValues
+  };
 }
 
 /**
@@ -113,26 +202,40 @@ function formatKeyRing(name, kms, config) {
  * @returns {string} key terraform code
  */
 function formatKmsKey(key, kms, config) {
-  let keyValues = {
-    instance_id: composedKmsId(kms),
-    key_name: kebabName(config, [kms.name, key.name]),
-    standard_key: !key.root_key,
-    key_ring_id: tfRef(
-      "ibm_kms_key_rings",
-      `${kms.name} ${key.key_ring} ring`,
-      "key_ring_id"
-    ),
-    force_delete: key.force_delete,
-    endpoint_type: `"${key.endpoint}"`
-  };
+  let tf = ibmKmsKey(key, kms, config);
+  return jsonToTfPrint("resource", "ibm_kms_key", tf.name, tf.data);
+}
 
-  if (kms.authorize_vpc_reader_role)
-    keyValues.depends_on = JSON.parse(
-      fillTemplate(kmsKeyDependsOn, {
-        kms_name: snakeCase(kms.name)
-      })
-    );
-  return jsonToIac("ibm_kms_key", `${kms.name}-${key.name}-key`, keyValues);
+/**
+ * create a key policy
+ * @param {Object} key encryption key Object
+ * @param {string} key.name
+ * @param {string} key.endpoint can be public or private
+ * @param {number} key.rotation rotation interval can be 1-12
+ * @param {boolean} key.dual_auth_delete
+ * @param {Object} kms key management instance
+ * @param {string} kms.name name of instance
+ * @returns {string} key policy terraform
+ */
+function ibmKmsKeyPolicy(key, kms) {
+  return {
+    name: `${kms.name}-${key.name}-key-policy`,
+    data: {
+      instance_id: composedKmsId(kms),
+      endpoint_type: key.endpoint,
+      key_id: encryptionKeyRef(kms.name, key.name),
+      rotation: [
+        {
+          interval_month: key.rotation
+        }
+      ],
+      dual_auth_delete: [
+        {
+          enabled: key.dual_auth_delete
+        }
+      ]
+    }
+  };
 }
 
 /**
@@ -147,20 +250,12 @@ function formatKmsKey(key, kms, config) {
  * @returns {string} key policy terraform
  */
 function formatKmsKeyPolicy(key, kms) {
-  return jsonToIac(
+  let policy = ibmKmsKeyPolicy(key, kms);
+  return jsonToTfPrint(
+    "resource",
     "ibm_kms_key_policies",
-    `${kms.name}-${key.name}-key-policy`,
-    {
-      instance_id: composedKmsId(kms),
-      endpoint_type: `"${key.endpoint}"`,
-      key_id: encryptionKeyRef(kms.name, key.name),
-      _rotation: {
-        interval_month: key.rotation
-      },
-      _dual_auth_delete: {
-        enabled: key.dual_auth_delete
-      }
-    }
+    policy.name,
+    policy.data
   );
 }
 
@@ -215,5 +310,10 @@ module.exports = {
   formatKmsKey,
   formatKmsKeyPolicy,
   kmsInstanceTf,
-  kmsTf
+  kmsTf,
+  ibmResourceInstanceKms,
+  ibmKmsKeyPolicy,
+  ibmKmsKey,
+  ibmKmsKeyRings,
+  ibmIamAuthorizationPolicyKms
 };

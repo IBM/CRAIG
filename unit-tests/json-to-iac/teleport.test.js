@@ -278,8 +278,7 @@ locals {
       APPID_ISSUER_URL          = ibm_resource_key.appid_b_key.credentials["oauthServerUrl"]
       TELEPORT_VERSION          = tostring("TELEPORT_VERSION")
       MESSAGE_OF_THE_DAY        = tostring("MESSAGE_OF_THE_DAY")
-
-      CLAIM_TO_ROLES = [
+      CLAIM_TO_ROLES            = [
         {
           email = "email@email.email"
           roles = ["role1","role2"]
@@ -369,23 +368,23 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["hello","world"]
   user_data      = data.template_cloudinit_config.test_deployment_cloud_init.rendered
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "hello",
+    "world"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 ##############################################################################
@@ -510,8 +509,7 @@ locals {
       APPID_ISSUER_URL          = ibm_resource_key.appid_client_id_test_key.credentials["oauthServerUrl"]
       TELEPORT_VERSION          = tostring("TELEPORT_VERSION")
       MESSAGE_OF_THE_DAY        = tostring("MESSAGE_OF_THE_DAY")
-
-      CLAIM_TO_ROLES = [
+      CLAIM_TO_ROLES            = [
         {
           email = "email@email.email"
           roles = ["role1","role2"]
@@ -546,23 +544,23 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["hello","world"]
   user_data      = data.template_cloudinit_config.test_deployment_cloud_init.rendered
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "hello",
+    "world"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 ##############################################################################
@@ -573,7 +571,9 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
 
 resource "ibm_appid_redirect_urls" "test_deployment_appid_urls" {
   tenant_id = ibm_resource_instance.test_appid.guid
-  urls      = ["https://iac-test-deployment-teleport-vsi.DOMAIN:3080/v1/webapi/oidc/callback"]
+  urls = [
+    "https://iac-test-deployment-teleport-vsi.DOMAIN:3080/v1/webapi/oidc/callback"
+  ]
 }
 
 ##############################################################################

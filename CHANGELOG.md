@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.0
+
+### Features
+
+- Backed API calls now support multiple regions
+- Users can now create an edge network from the home page
+- Users can now scale the number of availability zones from the home page
+- Forms with invalid fields will be open by default when navigating to the component page
+- Users can no longer navigate to a form page when no prefix or region is selected
+- Users can now easily containerize and deploy application
+- Users can now import environments from SLZ using override.json on the home page
+- Added functionality to allow for CRAIG JSON to be converted into CDKTF JSON
+- Users can now create, update, and delete VSI deployments from the GUI
+
+### Fixes
+
+- Removed unneeded props from secrets manager JSON
+- Fixed vulnerabilities in `/client` pagage-lock.json
+- Better file exports and imports
+- Now uses jsonToTf instead of depricated jsonToTfLegacy
+- F5 Default Route Gateway now has correct CIDR
+- Removed unused event streams parameters when not an enterprise plan
+
 ## 0.2.0
 
 ### Features

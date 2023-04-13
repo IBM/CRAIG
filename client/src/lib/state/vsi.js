@@ -16,7 +16,7 @@ const {
   carveChild,
   updateSubChild,
   deleteSubChild,
-  pushToChildField
+  pushToChildFieldModal
 } = require("./store.utils");
 
 /**
@@ -304,7 +304,7 @@ function vsiDelete(config, stateData, componentProps) {
  * @param {object} stateData component state data
  */
 function vsiVolumeCreate(config, stateData, componentProps) {
-  pushToChildField(config, "vsi", "volumes", stateData, componentProps);
+  pushToChildFieldModal(config, "vsi", "volumes", stateData, componentProps);
 }
 
 /**

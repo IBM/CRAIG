@@ -113,7 +113,10 @@ resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
   name           = "iac-management-management-vpe-sg-sg"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(actualData, expectedData, "it should return correct tf");
@@ -220,7 +223,6 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
   group     = ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "inbound"
-
   tcp {
     port_min = 8080
     port_max = null
@@ -279,7 +281,6 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
   group     = ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "inbound"
-
   udp {
     port_min = 8080
     port_max = null
@@ -338,7 +339,6 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
   group     = ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "inbound"
-
   icmp {
     type = 1
     code = 2
@@ -363,7 +363,10 @@ resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
   name           = "slz-management-management-vpe-sg-sg"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["slz","landing-zone"]
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
 }
 
 resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound" {
@@ -388,7 +391,6 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
   group     = ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "outbound"
-
   tcp {
     port_min = 53
     port_max = 53
@@ -399,7 +401,6 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
   group     = ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "outbound"
-
   tcp {
     port_min = 80
     port_max = 80
@@ -410,7 +411,6 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
   group     = ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "outbound"
-
   tcp {
     port_min = 443
     port_max = 443
@@ -427,7 +427,10 @@ resource "ibm_is_security_group" "workload_vpc_workload_vpe_sg_sg" {
   name           = "slz-workload-workload-vpe-sg-sg"
   vpc            = ibm_is_vpc.workload_vpc.id
   resource_group = ibm_resource_group.slz_workload_rg.id
-  tags           = ["slz","landing-zone"]
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
 }
 
 resource "ibm_is_security_group_rule" "workload_vpc_workload_vpe_sg_sg_rule_allow_ibm_inbound" {
@@ -452,7 +455,6 @@ resource "ibm_is_security_group_rule" "workload_vpc_workload_vpe_sg_sg_rule_allo
   group     = ibm_is_security_group.workload_vpc_workload_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "outbound"
-
   tcp {
     port_min = 53
     port_max = 53
@@ -463,7 +465,6 @@ resource "ibm_is_security_group_rule" "workload_vpc_workload_vpe_sg_sg_rule_allo
   group     = ibm_is_security_group.workload_vpc_workload_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "outbound"
-
   tcp {
     port_min = 80
     port_max = 80
@@ -474,7 +475,6 @@ resource "ibm_is_security_group_rule" "workload_vpc_workload_vpe_sg_sg_rule_allo
   group     = ibm_is_security_group.workload_vpc_workload_vpe_sg_sg.id
   remote    = "161.26.0.0/16"
   direction = "outbound"
-
   tcp {
     port_min = 443
     port_max = 443

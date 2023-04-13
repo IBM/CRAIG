@@ -3,10 +3,19 @@ const {
   tfRef,
   cosRef,
   bucketRef,
-  jsonToIac,
-  tfArrRef,
-  tfBlock
+  tfBlock,
+  jsonToTfPrint
 } = require("./utils");
+
+/**
+ * format atracker target
+ * @param {Object} config
+ * @returns {string} terraform atracker target
+ */
+function formatAtrackerTarget(config) {
+  let data = ibmAtrackerTarget(config);
+  return jsonToTfPrint("resource", "ibm_atracker_target", data.name, data.data);
+}
 
 /**
  * format atracker target
@@ -20,35 +29,34 @@ const {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
- * @returns {string} terraform atracker target
+ * @returns {Object} terraform atracker target
  */
-function formatAtrackerTarget(config) {
-  let targetValues = {
-    name: kebabName(config, [config.atracker.name, config.atracker.type]),
-    target_type: "^cloud_object_storage",
-    region: "$region"
+function ibmAtrackerTarget(config) {
+  return {
+    name: `${config.atracker.name} ${config.atracker.type} target`,
+    data: {
+      name: kebabName(config, [config.atracker.name, config.atracker.type]),
+      cos_endpoint: [
+        {
+          endpoint: `s3.private.${config._options.region}.cloud-object-storage.appdomain.cloud`,
+          target_crn: cosRef(config.atracker.target_name),
+          bucket: bucketRef(
+            config.atracker.target_name,
+            config.atracker.bucket
+          ),
+          api_key: tfRef(
+            "ibm_resource_key",
+            `${config.atracker.target_name + " object storage"} key ${
+              config.atracker.cos_key
+            }`,
+            "credentials.apikey"
+          )
+        }
+      ],
+      region: config._options.region,
+      target_type: "cloud_object_storage"
+    }
   };
-  // if (config.atracker.type === "cos")
-  targetValues._cos_endpoint = {
-    endpoint: `^s3.private.${
-      config._options.region
-    }.cloud-object-storage.appdomain.cloud`,
-    target_crn: cosRef(config.atracker.target_name),
-    bucket: bucketRef(config.atracker.target_name, config.atracker.bucket),
-    api_key: tfRef(
-      "ibm_resource_key",
-      `${config.atracker.target_name + " object storage"} key ${
-        config.atracker.cos_key
-      }`,
-      "credentials.apikey"
-    )
-  };
-  return jsonToIac(
-    "ibm_atracker_target",
-    `${config.atracker.name} ${config.atracker.type} target`,
-    targetValues,
-    config
-  );
 }
 
 /**
@@ -60,26 +68,44 @@ function formatAtrackerTarget(config) {
  * @param {Array<string>} config.atracker.locations
  * @param {Object} config._options
  * @param {string} config._options.prefix
- * @returns {string} terraform atracker target
+ * @returns {Object} terraform atracker target
  */
-function formatAtrackerRoute(config) {
-  return jsonToIac(
-    "ibm_atracker_route",
-    `${config.atracker.name} ${config.atracker.type} route`,
-    {
+function ibmAtrackerRoute(config) {
+  return {
+    name: `${config.atracker.name} ${config.atracker.type} route`,
+    data: {
       name: kebabName(config, [
         config.atracker.name,
         config.atracker.type,
         "route"
       ]),
-      _rules: {
-        target_ids: tfArrRef(
-          "ibm_atracker_target",
-          `${config.atracker.name} ${config.atracker.type} target`
-        ),
-        locations: JSON.stringify(config.atracker.locations)
-      }
+      rules: [
+        {
+          locations: config.atracker.locations,
+          target_ids: [
+            tfRef(
+              "ibm_atracker_target",
+              `${config.atracker.name} ${config.atracker.type} target`
+            )
+          ]
+        }
+      ]
     }
+  };
+}
+
+/**
+ * format atracker route
+ * @param {Object} config
+ * @returns {string} terraform atracker target
+ */
+function formatAtrackerRoute(config) {
+  let route = ibmAtrackerRoute(config);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_atracker_route",
+    route.name,
+    route.data
   );
 }
 
@@ -105,5 +131,7 @@ function atrackerTf(config) {
 module.exports = {
   formatAtrackerTarget,
   formatAtrackerRoute,
-  atrackerTf
+  atrackerTf,
+  ibmAtrackerRoute,
+  ibmAtrackerTarget
 };

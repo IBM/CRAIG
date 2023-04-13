@@ -81,7 +81,9 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
 resource "ibm_iam_access_group" "frog_access_group" {
   name        = "iac-frog-ag"
   description = "an access group for frogs"
-  tags        = ["frog"]
+  tags = [
+    "frog"
+  ]
 }
 `;
       assert.deepEqual(
@@ -110,14 +112,14 @@ resource "ibm_iam_access_group" "frog_access_group" {
       let expectedData = `
 resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   access_group_id = ibm_iam_access_group.frog_access_group.id
-  roles           = ["Reader"]
-
+  roles = [
+    "Reader"
+  ]
   resources {
     resource_instance_id = "1234"
     region               = "us-south"
     service              = "cloud-object-storage"
     resource_type        = "resource-group"
-
     attributes = {
       vpcId = "*"
     }
@@ -145,8 +147,9 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       let expectedData = `
 resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   access_group_id = ibm_iam_access_group.frog_access_group.id
-  roles           = ["Reader"]
-
+  roles = [
+    "Reader"
+  ]
   resources {
     resource_instance_id = "1234"
     region               = "us-south"
@@ -176,9 +179,10 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       });
       let expectedData = `
 resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
-  access_group_id     = ibm_iam_access_group.frog_access_group.id
-  roles               = ["Reader"]
-
+  access_group_id = ibm_iam_access_group.frog_access_group.id
+  roles = [
+    "Reader"
+  ]
   resource_attributes {
     name     = "serviceName"
     value    = "iac-*"
@@ -208,8 +212,9 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       let expectedData = `
 resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   access_group_id = ibm_iam_access_group.frog_access_group.id
-  roles           = ["Reader"]
-
+  roles = [
+    "Reader"
+  ]
   resource_tags {
     name     = "serviceName"
     value    = "iac-*"
@@ -243,7 +248,6 @@ resource "ibm_iam_access_group_dynamic_rule" "frog_frogs_only_dynamic_rule" {
   access_group_id   = ibm_iam_access_group.frog_access_group.id
   expiration        = 4
   identity_provider = "test-idp.com"
-
   conditions {
     claim    = "blueGroups"
     operator = "CONTAINS"
@@ -267,7 +271,9 @@ resource "ibm_iam_access_group_dynamic_rule" "frog_frogs_only_dynamic_rule" {
       let expectedData = `
 resource "ibm_iam_access_group_members" "frog_invites" {
   access_group_id = ibm_iam_access_group.frog_access_group.id
-  ibm_ids         = ["Jennifer.Valle@ibm.com"]
+  ibm_ids = [
+    "Jennifer.Valle@ibm.com"
+  ]
 }
 `;
       assert.deepEqual(
@@ -362,19 +368,21 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
 resource "ibm_iam_access_group" "frog_access_group" {
   name        = "iac-frog-ag"
   description = "an access group for frogs"
-  tags        = ["frog"]
+  tags = [
+    "frog"
+  ]
 }
 
 resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   access_group_id = ibm_iam_access_group.frog_access_group.id
-  roles           = ["Reader"]
-
+  roles = [
+    "Reader"
+  ]
   resources {
     resource_instance_id = "1234"
     region               = "us-south"
     service              = "cloud-object-storage"
     resource_type        = "resource-group"
-
     attributes = {
       vpcId = "*"
     }
@@ -386,7 +394,6 @@ resource "ibm_iam_access_group_dynamic_rule" "frog_frogs_only_dynamic_rule" {
   access_group_id   = ibm_iam_access_group.frog_access_group.id
   expiration        = 4
   identity_provider = "test-idp.com"
-
   conditions {
     claim    = "blueGroups"
     operator = "CONTAINS"
@@ -396,7 +403,9 @@ resource "ibm_iam_access_group_dynamic_rule" "frog_frogs_only_dynamic_rule" {
 
 resource "ibm_iam_access_group_members" "frog_invites" {
   access_group_id = ibm_iam_access_group.frog_access_group.id
-  ibm_ids         = ["Jennifer.Valle@ibm.com"]
+  ibm_ids = [
+    "Jennifer.Valle@ibm.com"
+  ]
 }
 
 ##############################################################################
@@ -473,19 +482,21 @@ resource "ibm_iam_access_group_members" "frog_invites" {
 resource "ibm_iam_access_group" "frog_access_group" {
   name        = "iac-frog-ag"
   description = "an access group for frogs"
-  tags        = ["frog"]
+  tags = [
+    "frog"
+  ]
 }
 
 resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   access_group_id = ibm_iam_access_group.frog_access_group.id
-  roles           = ["Reader"]
-
+  roles = [
+    "Reader"
+  ]
   resources {
     resource_instance_id = "1234"
     region               = "us-south"
     service              = "cloud-object-storage"
     resource_type        = "resource-group"
-
     attributes = {
       vpcId = "*"
     }
@@ -497,7 +508,6 @@ resource "ibm_iam_access_group_dynamic_rule" "frog_frogs_only_dynamic_rule" {
   access_group_id   = ibm_iam_access_group.frog_access_group.id
   expiration        = 4
   identity_provider = "test-idp.com"
-
   conditions {
     claim    = "blueGroups"
     operator = "CONTAINS"

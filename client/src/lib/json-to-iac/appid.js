@@ -4,11 +4,11 @@ const {
   kebabName,
   useData,
   resourceRef,
-  jsonToIac,
   dataResourceName,
   tfBlock,
   tfDone,
-  getTags
+  jsonToTfPrint,
+  getResourceOrData
 } = require("./utils");
 
 /**
@@ -19,24 +19,32 @@ const {
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.prefix
- * @returns {string} terraform formatted code
+ * @returns {object} terraform formatted code
  */
-function formatAppIdKey(key, config) {
-  return jsonToIac(
-    "ibm_resource_key",
-    `${key.appid} key ${key.name}`,
-    {
+function ibmResourceKeyAppId(key, config) {
+  return {
+    name: `${key.appid} key ${key.name}`,
+    data: {
       name: kebabName(config, [key.appid, key.name]),
       resource_instance_id: resourceRef(
         key.appid,
         "id",
         getObjectFromArray(config.appid, "name", key.appid).use_data
       ),
-      role: "^Writer",
-      tags: getTags(config)
-    },
-    config
-  );
+      role: "Writer",
+      tags: config._options.tags
+    }
+  };
+}
+
+/**
+ * create terraform for appid key
+ * @param {Object} key
+ * @returns {string} terraform formatted code
+ */
+function formatAppIdKey(key, config) {
+  let data = ibmResourceKeyAppId(key, config);
+  return jsonToTfPrint("resource", "ibm_resource_key", data.name, data.data);
 }
 
 /**
@@ -49,27 +57,58 @@ function formatAppIdKey(key, config) {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
- * @returns {string} terraform formatted code
+ * @returns {Object} terraform formatted code
  */
-function formatAppId(instance, config) {
+function ibmResourceInstanceAppId(instance, config) {
   let appIdValues = {
     name: dataResourceName(instance, config),
     resource_group_id: rgIdRef(instance.resource_group, config)
   };
   // add needed values when new instance is created
   if (!instance.use_data) {
-    appIdValues.tags = getTags(config);
-    appIdValues.service = "^appid";
-    appIdValues.plan = "^graduated-tier";
-    appIdValues.location = "$region";
+    appIdValues.tags = config._options.tags;
+    appIdValues.service = "appid";
+    appIdValues.plan = "graduated-tier";
+    appIdValues.location = config._options.region;
   }
-  return jsonToIac(
+  return {
+    name: instance.name,
+    data: appIdValues
+  };
+}
+
+/**
+ * create terraform for appid
+ * @param {Object} instance
+ * @param {Object} config
+ * @returns {string} terraform formatted code
+ */
+function formatAppId(instance, config) {
+  let appid = ibmResourceInstanceAppId(instance, config);
+  return jsonToTfPrint(
+    getResourceOrData(instance),
     "ibm_resource_instance",
-    instance.name,
-    appIdValues,
-    config,
-    instance.use_data
+    appid.name,
+    appid.data
   );
+}
+
+/**
+ * create terraform for appid urls
+ * @param {Object} appid
+ * @param {Array<string>} urls
+ * @param {string} resourceName name if not appid name
+ * @returns {object} terraform appid redirect urls
+ */
+
+function ibmAppIdRedirectUrls(appid, urls, resourceName) {
+  return {
+    name: resourceName ? resourceName : `${appid.name} urls`,
+    data: {
+      tenant_id: resourceRef(appid.name, "guid", useData(appid.use_data)),
+      urls: urls
+    }
+  };
 }
 
 /**
@@ -80,14 +119,8 @@ function formatAppId(instance, config) {
  * @returns {string} terraform appid redirect urls
  */
 function formatAppIdRedirectUrls(appid, urls, resourceName) {
-  return jsonToIac(
-    "ibm_appid_redirect_urls",
-    resourceName ? resourceName : `${appid.name} urls`,
-    {
-      tenant_id: resourceRef(appid.name, "guid", useData(appid.use_data)),
-      urls: JSON.stringify(urls)
-    }
-  );
+  let tf = ibmAppIdRedirectUrls(appid, urls, resourceName);
+  return jsonToTfPrint("resource", "ibm_appid_redirect_urls", tf.name, tf.data);
 }
 
 /**
@@ -112,5 +145,8 @@ module.exports = {
   formatAppIdKey,
   formatAppId,
   formatAppIdRedirectUrls,
-  appidTf
+  appidTf,
+  ibmResourceKeyAppId,
+  ibmResourceInstanceAppId,
+  ibmAppIdRedirectUrls
 };

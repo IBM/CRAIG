@@ -3,7 +3,8 @@ const {
   isEmpty,
   isIpv4CidrOrAddress,
   containsKeys,
-  validPortRange
+  validPortRange,
+  isInRange
 } = require("lazy-z");
 const {
   invalidName,
@@ -105,6 +106,12 @@ function disableSave(field, stateData, componentProps) {
     return (
       invalidName("encryption_keys")(stateData, componentProps) ||
       invalidEncryptionKeyRing(stateData)
+    );
+  } else if (field === "volumes") {
+    return (
+      invalidName("volume")(stateData, componentProps) ||
+      fieldsAreBad(["encryption_key", "capacity"], stateData) ||
+      !isInRange(Number(stateData.capacity), 10, 16000)
     );
   } else if (field === "key_management") {
     return (

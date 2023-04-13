@@ -3,6 +3,8 @@ const {
   dataResourceName,
   tfBlock,
   getTags,
+  jsonToTfPrint,
+  getResourceOrData
 } = require("./utils");
 
 /**
@@ -17,15 +19,14 @@ const {
  */
 function formatResourceGroup(group, config) {
   let rgValues = {
-    name: dataResourceName(group, config),
+    name: dataResourceName(group, config)
   };
   if (!group.use_data) rgValues.tags = getTags(config);
-  return jsonToIac(
+  return jsonToTfPrint(
+    getResourceOrData(group),
     "ibm_resource_group",
     group.name,
-    rgValues,
-    config,
-    group.use_data
+    rgValues
   );
 }
 
@@ -36,10 +37,10 @@ function formatResourceGroup(group, config) {
  */
 function resourceGroupTf(config) {
   let text = "";
-  config.resource_groups.forEach((group) => {
+  config.resource_groups.forEach(group => {
     text += formatResourceGroup(group, config);
   });
-  return tfBlock("Resource Groups", text)
+  return tfBlock("Resource Groups", text);
 }
 
 module.exports = resourceGroupTf;

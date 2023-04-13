@@ -256,52 +256,5 @@ runcmd:
         sleep 10
       done
       /root/install.sh
-    ) &`,
-  kmsKeyDependsOn: `[
-    "ibm_iam_authorization_policy.$KMS_NAME_server_protect_policy",
-    "ibm_iam_authorization_policy.$KMS_NAME_block_storage_policy"
-  ]`,
-  cosRandomSuffix:
-    `\nresource "random_string" "$COS_NAME_random_suffix" {\n` +
-    `  length  = 8\n  special = false\n  upper   = false\n}\n`,
-  icmpValues: `\n\n  icmp {\n    type = $TYPE\n    code = $CODE\n  }`,
-  teleportConfigData: `##############################################################################
-# Test Deployment Cloud Init
-##############################################################################
-
-locals {
-  $SNAKE_DEPLOYMENT_user_data = templatefile(
-    "\${path.module}/cloud-init.tpl",
-    {
-      TELEPORT_LICENSE          = base64encode(tostring("$LICENSE"))
-      HTTPS_CERT                = base64encode(tostring("$HTTPS_CERT"))
-      HTTPS_KEY                 = base64encode(tostring("$HTTPS_KEY"))
-      HOSTNAME                  = tostring("$HOSTNAME")
-      DOMAIN                    = tostring("$DOMAIN")
-      COS_BUCKET                = $BUCKET_NAME
-      COS_BUCKET_ENDPOINT       = $BUCKET_ENDPOINT
-      HMAC_ACCESS_KEY_ID        = $HMAC_KEY_ID
-      HMAC_SECRET_ACCESS_KEY_ID = $HMAC_SECRET_KEY_ID
-      APPID_CLIENT_ID           = $APPID_INSTANCE
-      APPID_CLIENT_SECRET       = $APPID_SECRET
-      APPID_ISSUER_URL          = $APPID_URL
-      TELEPORT_VERSION          = tostring("$VERSION")
-      MESSAGE_OF_THE_DAY        = tostring("$MESSAGE_OF_THE_DAY")
-
-      CLAIM_TO_ROLES = $CLAIM_TO_ROLES
-      ]
-    }
-  )
-}
-
-data "template_cloudinit_config" "$SNAKE_DEPLOYMENT_cloud_init" {
-  base64_encode = false
-  gzip          = false
-  part {
-    content = local.$SNAKE_DEPLOYMENT_user_data
-  }
-}
-
-##############################################################################
-`
+    ) &`
 };

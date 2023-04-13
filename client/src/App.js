@@ -4,6 +4,8 @@ import Craig from "./Craig";
 import { UnderConstruction } from "icse-react-assets";
 import "./app.scss";
 import { ResetState } from "./components";
+import { Buffer } from "buffer";
+window.Buffer = Buffer;
 
 class App extends Component {
   constructor(props) {

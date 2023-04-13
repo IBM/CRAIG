@@ -1,10 +1,10 @@
 const {
   rgIdRef,
-  jsonToIac,
   kebabName,
   subnetRef,
   tfBlock,
-  getTags
+  timeouts,
+  jsonToTfPrint
 } = require("./utils");
 
 /**
@@ -17,23 +17,36 @@ const {
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.prefix
- * @returns {string} terrafirn formatted string
+ * @returns {object} terrafirn formatted string
  */
-function formatVpn(gw, config) {
-  return jsonToIac(
-    "ibm_is_vpn_gateway",
-    `${gw.vpc} ${gw.name} vpn gw`,
-    {
+
+function ibmIsVpnGateway(gw, config) {
+  return {
+    name: `${gw.vpc} ${gw.name} vpn gw`,
+    data: {
       name: kebabName(config, [gw.vpc, gw.name, "vpn-gw"]),
       subnet: subnetRef(gw.vpc, gw.subnet),
       resource_group: rgIdRef(gw.resource_group, config),
-      tags: getTags(config),
-      timeouts: {
-        delete: "1h"
-      }
-    },
-    config
-  );
+      tags: config._options.tags,
+      timeouts: timeouts("", "", "1h")
+    }
+  }
+}
+
+/**
+ * format vpn gateway terraform
+ * @param {Object} gw
+ * @param {Object} config
+ * @returns {string} terrafirn formatted string
+ */
+function formatVpn(gw, config) {
+  let vpn = ibmIsVpnGateway(gw, config);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_is_vpn_gateway",
+    vpn.name,
+    vpn.data
+  )
 }
 
 /**
@@ -50,5 +63,6 @@ function vpnTf(config) {
 
 module.exports = {
   formatVpn,
-  vpnTf
+  vpnTf,
+  ibmIsVpnGateway
 };

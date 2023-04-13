@@ -916,7 +916,7 @@
         "cos": "atracker-cos",
         "cos_key": "cos-bind-key",
         "appid": "test-appid",
-        "appid_key":"test-key",
+        "appid_key": "test-key",
         "message_of_the_day": "MESSAGE_OF_THE_DAY",
         "version": "TELEPORT_VERSION",
         "claim_to_roles": [

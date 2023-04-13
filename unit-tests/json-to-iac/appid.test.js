@@ -32,7 +32,10 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
   name                 = "iac-test-appid-test-key"
   resource_instance_id = ibm_resource_instance.test_appid.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -65,7 +68,10 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
   name                 = "iac-test-appid-test-key"
   resource_instance_id = data.ibm_resource_instance.test_appid.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -112,10 +118,13 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
 resource "ibm_resource_instance" "test_appid" {
   name              = "iac-test-appid"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-  tags              = ["hello","world"]
   service           = "appid"
   plan              = "graduated-tier"
   location          = "us-south"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -182,7 +191,11 @@ data "ibm_resource_instance" "test_appid" {
       let expectedData = `
 resource "ibm_appid_redirect_urls" "test_appid_urls" {
   tenant_id = ibm_resource_instance.test_appid.guid
-  urls      = ["test.com","test2.com","test3.com"]
+  urls = [
+    "test.com",
+    "test2.com",
+    "test3.com"
+  ]
 }
 `;
       assert.deepEqual(
@@ -203,7 +216,11 @@ resource "ibm_appid_redirect_urls" "test_appid_urls" {
       let expectedData = `
 resource "ibm_appid_redirect_urls" "test_appid_urls" {
   tenant_id = data.ibm_resource_instance.test_appid.guid
-  urls      = ["test.com","test2.com","test3.com"]
+  urls = [
+    "test.com",
+    "test2.com",
+    "test3.com"
+  ]
 }
 `;
       assert.deepEqual(
@@ -263,24 +280,33 @@ resource "ibm_appid_redirect_urls" "test_appid_urls" {
 resource "ibm_resource_instance" "test_appid" {
   name              = "iac-test-appid"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-  tags              = ["hello","world"]
   service           = "appid"
   plan              = "graduated-tier"
   location          = "us-south"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_resource_key" "test_appid_key_test_key" {
   name                 = "iac-test-appid-test-key"
   resource_instance_id = ibm_resource_instance.test_appid.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_resource_key" "test_appid_key_test_key_2" {
   name                 = "iac-test-appid-test-key-2"
   resource_instance_id = ibm_resource_instance.test_appid.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################

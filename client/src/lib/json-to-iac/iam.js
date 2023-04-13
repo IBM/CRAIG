@@ -1,12 +1,26 @@
 const { kebabCase } = require("lazy-z");
 const {
-  jsonToIac,
   tfRef,
-  stringifyTranspose,
   kebabName,
   tfBlock,
-  getTags
+  getTags,
+  jsonToTfPrint
 } = require("./utils");
+
+/**
+ * format iam account settings terraform
+ * @param {Object} iamSettings
+ * @param {boolean} iamSettings.enable
+ * @returns {object} terraform formatted code
+ */
+
+function ibmIamAccountSettings(iamSettings) {
+  delete iamSettings.enable;
+  return {
+    name: "iam_account_settings",
+    data: iamSettings
+  };
+}
 
 /**
  * format iam account settings terraform
@@ -15,13 +29,12 @@ const {
  * @returns {string} terraform formatted code
  */
 function formatIamAccountSettings(iamSettings) {
-  let iamValues = stringifyTranspose(iamSettings);
   if (iamSettings.enable) {
-    delete iamValues.enable;
-    return jsonToIac(
+    return jsonToTfPrint(
+      "resource",
       "ibm_iam_account_settings",
       "iam_account_settings",
-      iamValues
+      ibmIamAccountSettings(iamSettings).data
     );
   } else return "";
 }
@@ -31,19 +44,69 @@ function formatIamAccountSettings(iamSettings) {
  * @param {Object} group
  * @param {string} group.name
  * @param {Object} config
- * @param {string} terraform string
+ * @returns {object} terraform string
+ */
+
+function ibmIamAccessGroup(group, config) {
+  return {
+    name: `${group.name}_access_group`,
+    data: {
+      name: kebabName(config, [group.name, "ag"]),
+      description: group.description,
+      tags: getTags(config)
+    }
+  };
+}
+
+/**
+ * create access group terraform
+ * @param {Object} group
+ * @param {string} group.name
+ * @param {Object} config
+ * @returns {string} terraform string
  */
 function formatAccessGroup(group, config) {
-  return jsonToIac(
+  return jsonToTfPrint(
+    "resource",
     "ibm_iam_access_group",
     `${group.name}_access_group`,
-    {
-      name: kebabName(config, [group.name, "ag"]),
-      description: `"${group.description}"`,
-      tags: getTags(config)
-    },
-    config
+    ibmIamAccessGroup(group, config).data
   );
+}
+
+/**
+ * format access group policy
+ * @param {Object} policy
+ * @param {string} policy.name
+ * @param {string} policy.group
+ * @param {Array<string>} policy.roles
+ * @param {Object=} policy.resources
+ * @param {Object=} policy.resources.attributes
+ * @param {Array<Object>=} policy.resource_attributes
+ * @param {Array<Object>=} policy.resource_tags
+ * @returns {object} terraform
+ */
+function ibmIamAccessGroupPolicy(policy) {
+  let policyValues = {
+    access_group_id: tfRef(
+      "ibm_iam_access_group",
+      policy.group + " access group"
+    ),
+    roles: policy.roles
+  };
+  if (policy.resources) {
+    policyValues.resources = [policy.resources];
+  }
+  if (policy.resource_attributes) {
+    policyValues.resource_attributes = [policy.resource_attributes];
+  }
+  if (policy.resource_tags) {
+    policyValues.resource_tags = [policy.resource_tags];
+  }
+  return {
+    name: `${policy.group} ${policy.name} policy`,
+    data: policyValues
+  };
 }
 
 /**
@@ -59,37 +122,11 @@ function formatAccessGroup(group, config) {
  * @returns {string} terraform string
  */
 function formatAccessGroupPolicy(policy) {
-  let policyValues = {
-    access_group_id: tfRef(
-      "ibm_iam_access_group",
-      policy.group + " access group"
-    ),
-    roles: JSON.stringify(policy.roles)
-  };
-  if (policy.resources) {
-    policyValues._resources = stringifyTranspose(policy.resources);
-    if (policy.resources.attributes) {
-      policyValues._resources["^attributes"] = stringifyTranspose(
-        policy.resources.attributes
-      );
-    }
-  }
-  if (policy.resource_attributes) {
-    policyValues["-resource_attributes"] = [];
-    policy.resource_attributes.forEach(attr => {
-      policyValues["-resource_attributes"].push(stringifyTranspose(attr));
-    });
-  }
-  if (policy.resource_tags) {
-    policyValues["-resource_tags"] = [];
-    policy.resource_tags.forEach(attr => {
-      policyValues["-resource_tags"].push(stringifyTranspose(attr));
-    });
-  }
-  return jsonToIac(
+  return jsonToTfPrint(
+    "resource",
     "ibm_iam_access_group_policy",
     `${policy.group} ${policy.name} policy`,
-    policyValues
+    ibmIamAccessGroupPolicy(policy).data
   );
 }
 
@@ -103,22 +140,60 @@ function formatAccessGroupPolicy(policy) {
  * @param {Object} policy.conditions
  * @returns {string} terraform
  */
-function formatAccessGroupDynamicRule(policy) {
-  let policyValues = {
-    name: kebabCase(`"${policy.group} ${policy.name} dynamic rule"`),
-    access_group_id: tfRef(
-      "ibm_iam_access_group",
-      policy.group + " access group"
-    ),
-    expiration: policy.expiration,
-    identity_provider: `"${policy.identity_provider}"`,
-    _conditions: stringifyTranspose(policy.conditions)
+
+function ibmIamAccessGroupDynamicRule(policy) {
+  return {
+    name: `${policy.group} ${policy.name} dynamic rule`,
+    data: {
+      name: kebabCase(`${policy.group} ${policy.name} dynamic rule`),
+      access_group_id: tfRef(
+        "ibm_iam_access_group",
+        policy.group + " access group"
+      ),
+      expiration: policy.expiration,
+      identity_provider: policy.identity_provider,
+      conditions: [policy.conditions]
+    }
   };
-  return jsonToIac(
+}
+
+/**
+ * format access group dynamic policy
+ * @param {Object} policy
+ * @param {string} policy.group
+ * @param {string} policy.name
+ * @param {number} policy.expiration
+ * @param {string} policy.identity_provider,
+ * @param {Object} policy.conditions
+ * @returns {string} terraform
+ */
+function formatAccessGroupDynamicRule(policy) {
+  return jsonToTfPrint(
+    "resource",
     "ibm_iam_access_group_dynamic_rule",
     `${policy.group} ${policy.name} dynamic rule`,
-    policyValues
+    ibmIamAccessGroupDynamicRule(policy).data
   );
+}
+
+/**
+ * invite access group members terraform
+ * @param {Object} invite
+ * @param {string} invite.group
+ * @param {Array<string>} invite.ibm_ids
+ * @returns {Object} terraform
+ */
+function ibmIamAccessGroupMemebers(invite) {
+  return {
+    name: `${invite.group} invites`,
+    data: {
+      access_group_id: tfRef(
+        "ibm_iam_access_group",
+        invite.group + " access group"
+      ),
+      ibm_ids: invite.ibm_ids
+    }
+  };
 }
 
 /**
@@ -129,13 +204,12 @@ function formatAccessGroupDynamicRule(policy) {
  * @returns {string} terraform formatted string
  */
 function formatGroupMembers(invite) {
-  return jsonToIac("ibm_iam_access_group_members", `${invite.group} invites`, {
-    access_group_id: tfRef(
-      "ibm_iam_access_group",
-      invite.group + " access group"
-    ),
-    ibm_ids: JSON.stringify(invite.ibm_ids)
-  });
+  return jsonToTfPrint(
+    "resource",
+    "ibm_iam_access_group_members",
+    `${invite.group} invites`,
+    ibmIamAccessGroupMemebers(invite).data
+  );
 }
 
 function iamTf(config) {
@@ -167,5 +241,10 @@ module.exports = {
   formatAccessGroupPolicy,
   formatAccessGroupDynamicRule,
   formatGroupMembers,
-  iamTf
+  iamTf,
+  ibmIamAccountSettings,
+  ibmIamAccessGroup,
+  ibmIamAccessGroupDynamicRule,
+  ibmIamAccessGroupPolicy,
+  ibmIamAccessGroupMemebers
 };

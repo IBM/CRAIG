@@ -7,8 +7,33 @@ const {
   tfRef,
   tfBlock,
   tfDone,
-  getTags
+  getTags,
+  jsonToTfPrint
 } = require("./utils");
+
+/**
+ * format tf for security group
+ * @param {Object} sg security group
+ * @param {string} sg.vpc
+ * @param {string} sg.resource_group
+ * @param {string} sg.name
+ * @param {Object} config
+ * @param {Object} config._options
+ * @param {string} config._options.prefix
+ * @returns {object} terraform string
+ */
+
+function ibmIsSecurityGroup(sg, config) {
+  return {
+    name: `${sg.vpc} vpc ${sg.name} sg`,
+    data: {
+      name: kebabName(config, [sg.vpc, sg.name, "sg"]),
+      vpc: vpcRef(sg.vpc),
+      resource_group: rgIdRef(sg.resource_group, config),
+      tags: getTags(config)
+    }
+  };
+}
 
 /**
  * format tf for security group
@@ -22,21 +47,16 @@ const {
  * @returns {string} terraform string
  */
 function formatSecurityGroup(sg, config) {
-  return jsonToIac(
+  let group = ibmIsSecurityGroup(sg, config);
+  return jsonToTfPrint(
+    "resource",
     "ibm_is_security_group",
-    `${sg.vpc} vpc ${sg.name} sg`,
-    {
-      name: kebabName(config, [sg.vpc, sg.name, "sg"]),
-      vpc: vpcRef(sg.vpc),
-      resource_group: rgIdRef(sg.resource_group, config),
-      tags: getTags(config)
-    },
-    config
+    group.name,
+    group.data
   );
 }
 
-/**
- * create network acl rule
+/** create sg rule
  * @param {Object} rule
  * @param {string} rule.acl
  * @param {string} rule.vpc
@@ -56,33 +76,52 @@ function formatSecurityGroup(sg, config) {
  * @param {number} rule.udp.port_max
  * @param {number} rule.udp.source_port_min
  * @param {number} rule.udp.source_port_max
- * @returns {string} terraform formatted acl rule
+ * @returns {object} terraform formatted sg rule
  */
-function formatSgRule(rule) {
+
+function ibmIsSecurityGroupRule(rule) {
   let sgAddress = `${rule.vpc} vpc ${rule.sg} sg`;
   let sgRule = {
     group: tfRef("ibm_is_security_group", snakeCase(sgAddress), "id"),
-    remote: `^${rule.source}`,
-    direction: `^${rule.direction}`
+    remote: rule.source,
+    direction: rule.direction
   };
   ["icmp", "tcp", "udp"].forEach(protocol => {
     let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
     if (ruleHasProtocolData && protocol === "icmp") {
-      sgRule._icmp = {
-        type: rule.icmp.type,
-        code: rule.icmp.code
-      };
+      sgRule.icmp = [
+        {
+          type: rule.icmp.type,
+          code: rule.icmp.code
+        }
+      ];
     } else if (ruleHasProtocolData) {
-      sgRule[`_${protocol}`] = {
-        port_min: rule[protocol].port_min,
-        port_max: rule[protocol].port_max
-      };
+      sgRule[protocol] = [
+        {
+          port_min: rule[protocol].port_min,
+          port_max: rule[protocol].port_max
+        }
+      ];
     }
   });
-  return jsonToIac(
+  return {
+    name: `${sgAddress} rule ${rule.name}`,
+    data: sgRule
+  };
+}
+
+/**
+ * create network sg rule
+ * @param {Object} rule
+ * @returns {string} terraform formatted sg rule
+ */
+function formatSgRule(rule) {
+  let data = ibmIsSecurityGroupRule(rule);
+  return jsonToTfPrint(
+    "resource",
     "ibm_is_security_group_rule",
-    `${sgAddress} rule ${rule.name}`,
-    sgRule
+    data.name,
+    data.data
   );
 }
 
@@ -106,5 +145,7 @@ function sgTf(config) {
 module.exports = {
   formatSecurityGroup,
   formatSgRule,
-  sgTf
+  sgTf,
+  ibmIsSecurityGroupRule,
+  ibmIsSecurityGroup
 };

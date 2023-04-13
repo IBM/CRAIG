@@ -1,5 +1,91 @@
 # Cloud Resource and Infrastructure-as-code Generator (CRAIG)
 
+## What is CRAIG? 
+
+Cloud Resource and Infrastructure-as-Code Generator (or **CRAIG**) allows users to generate Infrastructure-as-Code (IaC) to create a fully customizable environment on IBM Cloud.
+
+CRAIG simplifies the process of creating IaC through its GUI, which manages and updates interconnected resources as they are created.
+
+CRAIG configures infrastructure using JSON to create full VPC networks, manage security and networking with VSI deployments, and create services, clusters, and manage IAM for an IBM Cloud Account. This JSON configuration can be imported to quick start environments, and can be downloaded as Terraform code directly from the GUI.
+
+## Prerequisites
+
+- NodeJS 18.11 or higher
+- NPM version 8.19.2 or higher
+- Terraform 1.3 or higher
+
+## Running the CRAIG App
+
+CRAIG is a flexible application that can be used directly from your local environment or containerized an deployed to your platform of choice. 
+
+To run CRAIG locally, follow these steps:
+
+
+### 1. Set envionment variables
+
+Add you IBM Cloud platform API key to the environment. This API key is used by the back end API server to retrieve Cluster flavors, Cluster versions, VSI instance profiles, and VSI images.
+
+```
+export API_KEY="<your ibm cloud platform API key>"
+```
+
+### 2. Start the application
+
+Building the application, installing dependencies, and starting the server can be done with one easy command. From your directory, run:
+
+```
+npm run start
+```
+
+### 3. Open the Application
+
+Congratulations! Your application is now available at localhost:8080!
+
+### Other deployment methods
+
+For more information on deploying, see [Building Container Image](#building-container-image) and [Deploying to Code Engine](#deploying-to-code-engine-with-deploysh).
+
+## Running the Terraform Files
+
+After creating a deployment using the GUI, users can download a file called `craig.zip`. Included in this file are all the Terraform files needed to create you environment. In addition, your environment configuration is saved as `craig.json` and can easily be imported into the GUI for further customization.
+
+### Prerequisites
+
+- Terraform v1.3 or higher
+- Terraform CLI
+- IBM Cloud Platform API Key
+
+### 1. Intializing the Directory
+
+After unzipping craig.zip, enter the containing folder from your terminal. In your directory, run the following command to install needed providers and to initialize the directory:
+```
+terraform init
+```
+
+### 2. Adding Environment Variables
+
+Once your environment has been initialized, add your IBM Cloud Platform API key to the environment. This can be done by exporting your API key as an environment variable. Once that's complete, run the following command to plan your terraform directory.
+
+```
+terraform plan
+```
+
+### 3. Creating Resources
+
+Resources can be created from the directory by running the Terraform Apply command after a successful plan
+
+```
+terraform apply
+```
+
+### 4. Destroying Resources
+
+To destroy you resources, use the following command. This will **delete all resources** provisioned by the template.
+
+```
+terraform destroy
+```
+
 ## Building Example Terraform Files
 
 Run the following commands to build a terraform environment for testing:

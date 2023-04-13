@@ -1,12 +1,114 @@
-const { snakeCase, transpose, getObjectFromArray } = require("lazy-z");
+const { jsonToTf } = require("json-to-tf");
+const {
+  snakeCase,
+  transpose,
+  getObjectFromArray,
+  hclEncode
+} = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { formatAppIdRedirectUrls } = require("./appid");
-const { teleportCloudInitText, teleportConfigData } = require("./constants");
-const { fillTemplate, tfBlock, tfRef, bucketRef } = require("./utils");
+const { teleportCloudInitText } = require("./constants");
+const {
+  tfBlock,
+  tfRef,
+  bucketRef,
+  cdktfRef,
+  jsonToTfPrint
+} = require("./utils");
 const { formatVsi } = require("./vsi");
 
 function teleportCloudInit() {
   return teleportCloudInitText;
+}
+
+/**
+ * get cloud init for teleport template
+ * @param {*} template
+ * @returns {object} terraform object
+ */
+function templateCloudinitConfig(template) {
+  return {
+    data: {
+      base64_encode: false,
+      gzip: false,
+      part: [
+        {
+          content: `\${local.${snakeCase(template.deployment)}_user_data}`
+        }
+      ]
+    },
+    name: `${template.deployment} cloud init`
+  };
+}
+
+/**
+ * get local data for template
+ * @param {*} template
+ * @return {object} tf object
+ */
+function localTemplateUserData(template) {
+  let templateData = hclEncode(
+    {
+      TELEPORT_LICENSE: `\${base64encode(tostring("${template.license}"))}`,
+      HTTPS_CERT: `\${base64encode(tostring("${template.https_cert}"))}`,
+      HTTPS_KEY: `\${base64encode(tostring("${template.https_key}"))}`,
+      HOSTNAME: `\${tostring("${template.hostname}")}`,
+      DOMAIN: `\${tostring("${template.domain}")}`,
+      COS_BUCKET: `\${${bucketRef(
+        template.cos,
+        template.bucket,
+        "bucket_name"
+      ).replace(/\{|}|\$/g, "")}}`,
+      COS_BUCKET_ENDPOINT: `\${${bucketRef(
+        template.cos,
+        template.bucket,
+        "s3_endpoint_public"
+      ).replace(/\{|}|\$/g, "")}}`,
+      HMAC_ACCESS_KEY_ID: `\${${tfRef(
+        "ibm_resource_key",
+        `${template.cos} object storage key ${template.cos_key}`,
+        'credentials["cos_hmac_keys.access_key_id"]'
+      ).replace(/\{|}|\$/g, "")}}`,
+      HMAC_SECRET_ACCESS_KEY_ID: `\${${tfRef(
+        "ibm_resource_key",
+        `${template.cos} object storage key ${template.cos_key}`,
+        'credentials["cos_hmac_keys.secret_access_key"]'
+      ).replace(/\{|}|\$/g, "")}}`,
+      APPID_CLIENT_ID: `\${${tfRef(
+        "ibm_resource_key",
+        `${template.appid}-${template.appid_key}-key`,
+        'credentials["clientId"]'
+      ).replace(/\{|}|\$/g, "")}}`,
+      APPID_CLIENT_SECRET: `\${${tfRef(
+        "ibm_resource_key",
+        `${template.appid}-${template.appid_key}-key`,
+        'credentials["secret"]'
+      ).replace(/\{|}|\$/g, "")}}`,
+      APPID_ISSUER_URL: `\${${tfRef(
+        "ibm_resource_key",
+        `${template.appid}-${template.appid_key}-key`,
+        'credentials["oauthServerUrl"]'
+      ).replace(/\{|}|\$/g, "")}}`,
+      TELEPORT_VERSION: `\${tostring("${template.version}")}`,
+      MESSAGE_OF_THE_DAY: `\${tostring("${template.message_of_the_day}")}`,
+      CLAIM_TO_ROLES: template.claim_to_roles
+    },
+    true
+  ).replace(/\}(?=\s+\{)/g, "},");
+  let spacedTemplateData = [];
+  templateData.split(/\n/g).forEach(line => {
+    spacedTemplateData.push(`    ` + line.replace(/("\${)|(}")/g, ""));
+  });
+  let localData = {
+    locals: {}
+  };
+  localData.locals[
+    snakeCase(template.deployment) + "_user_data"
+  ] = `templatefile(
+    "\${path.module}/cloud-init.tpl",
+${spacedTemplateData.join("\n")}
+  )`;
+  return localData;
 }
 
 /**
@@ -33,56 +135,20 @@ function teleportCloudInit() {
  * @returns {string} terraform formatted code
  */
 function formatTemplateCloudInit(template) {
-  let claimToRoles = `[`;
-  template.claim_to_roles.forEach(claim => {
-    claimToRoles +=
-      `\n        {` +
-      `\n          email = "${claim.email}"` +
-      `\n          roles = ${JSON.stringify(claim.roles)}` +
-      `\n        },`;
-  });
-  return fillTemplate(teleportConfigData, {
-    snake_deployment: snakeCase(template.deployment),
-    license: template.license,
-    https_cert: template.https_cert,
-    https_key: template.https_key,
-    bucket_name: bucketRef(template.cos, template.bucket, "bucket_name"),
-    bucket_endpoint: bucketRef(
-      template.cos,
-      template.bucket,
-      "s3_endpoint_public"
-    ),
-    hmac_key_id: tfRef(
-      "ibm_resource_key",
-      `${template.cos} object storage key ${template.cos_key}`,
-      'credentials["cos_hmac_keys.access_key_id"]'
-    ),
-    hmac_secret_key_id: tfRef(
-      "ibm_resource_key",
-      `${template.cos} object storage key ${template.cos_key}`,
-      'credentials["cos_hmac_keys.secret_access_key"]'
-    ),
-    hostname: template.hostname,
-    domain: template.domain,
-    appid_instance: tfRef(
-      "ibm_resource_key",
-      `${template.appid}-${template.appid_key}-key`,
-      'credentials["clientId"]'
-    ),
-    appid_url: tfRef(
-      "ibm_resource_key",
-      `${template.appid}-${template.appid_key}-key`,
-      'credentials["oauthServerUrl"]'
-    ),
-    appid_secret: tfRef(
-      "ibm_resource_key",
-      `${template.appid}-${template.appid_key}-key`,
-      'credentials["secret"]'
-    ),
-    version: template.version,
-    message_of_the_day: template.message_of_the_day,
-    claim_to_roles: claimToRoles.replace(/,$/g, "")
-  });
+  return tfBlock(
+    "Test Deployment Cloud Init",
+    "\n" +
+      jsonToTf(JSON.stringify(localTemplateUserData(template)))
+        .replace(/"templatefile/g, "templatefile")
+        .replace(/\)"/g, ")") +
+      "\n" +
+      jsonToTfPrint(
+        "data",
+        "template_cloudinit_config",
+        `${template.deployment} cloud init`,
+        templateCloudinitConfig(template).data
+      )
+  );
 }
 
 /**
@@ -120,9 +186,11 @@ function formatTeleportInstance(instance, config) {
   let tf = "";
   transpose(
     {
-      user_data: `data.template_cloudinit_config.${snakeCase(
-        instance.name
-      )}_cloud_init.rendered`
+      user_data: cdktfRef(
+        `data.template_cloudinit_config.${snakeCase(
+          instance.name
+        )}_cloud_init.rendered`
+      )
     },
     instance
   );
@@ -152,9 +220,7 @@ function teleportTf(config) {
       formatAppIdRedirectUrls(
         getObjectFromArray(config.appid, "name", instance.appid),
         [
-          `https://${config._options.prefix}-${instance.name}-teleport-vsi.${
-            instance.template.domain
-          }:3080/v1/webapi/oidc/callback`
+          `https://${config._options.prefix}-${instance.name}-teleport-vsi.${instance.template.domain}:3080/v1/webapi/oidc/callback`
         ],
         instance.name + "_appid_urls"
       )
@@ -167,5 +233,7 @@ module.exports = {
   teleportCloudInit,
   formatTemplateCloudInit,
   formatTeleportInstance,
-  teleportTf
+  teleportTf,
+  templateCloudinitConfig,
+  localTemplateUserData
 };

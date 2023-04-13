@@ -35,22 +35,22 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 `;
       assert.deepEqual(
@@ -85,23 +85,23 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["slz","landing-zone"]
-  user_data      = "test-user-data"
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  user_data      = ""test-user-data""
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 `;
       assert.deepEqual(
@@ -146,24 +146,23 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["slz","landing-zone"]
-  user_data      = "test-user-data"
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  user_data      = ""test-user-data""
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
-
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
   volumes = [
     ibm_is_volume.management_vpc_management_server_vsi_1_1_block_storage_1.id
   ]
@@ -176,7 +175,86 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_1_block_storage
   iops           = 1000
   capacity       = 200
   encryption_key = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
-  tags           = ["slz","landing-zone"]
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should correctly format vsi with user data and storage volume with index", () => {
+      let actualData = formatVsi(
+        {
+          kms: "slz-kms",
+          encryption_key: "slz-vsi-volume-key",
+          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          profile: "cx2-4x8",
+          name: "management-server",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          resource_group: "slz-management-rg",
+          user_data: '"test-user-data"',
+          volumes: [
+            {
+              name: "block-storage-1",
+              zone: 1,
+              profile: "custom",
+              capacity: 200,
+              iops: 1000,
+              encryption_key: "slz-vsi-volume-key",
+            },
+          ],
+        },
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_is_instance" "management_server" {
+  name           = "management-server"
+  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = ibm_is_vpc.management_vpc.id
+  zone           = "us-south-1"
+  user_data      = ""test-user-data""
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    security_groups = [
+      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+  volumes = [
+    ibm_is_volume.management_vpc_management_server_vsi_1_block_storage_1.id
+  ]
+}
+
+resource "ibm_is_volume" "management_vpc_management_server_vsi_1_block_storage_1" {
+  name           = "management-server-block-storage-1"
+  profile        = "custom"
+  zone           = "us-south-1"
+  iops           = 1000
+  capacity       = 200
+  encryption_key = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
 }
 `;
       assert.deepEqual(
@@ -214,24 +292,24 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id,
-    data.ibm_is_ssh_key.slz_ssh_key2.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id,
       ibm_is_security_group.management_vpc_management_vpe_sg2_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id,
+    data.ibm_is_ssh_key.slz_ssh_key2.id
+  ]
 }
 `;
       assert.deepEqual(
@@ -324,15 +402,16 @@ data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
       let expectedData =
         `
 resource "ibm_is_lb" "lb_1_load_balancer" {
-  name            = "iac-lb-1-lb"
-  type            = "public"
-  resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
-
+  name           = "iac-lb-1-lb"
+  type           = "public"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
   security_groups = [
     ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   ]
-
   subnets = [
     ibm_is_subnet.management_vsi_zone_1.id,
     ibm_is_subnet.management_vsi_zone_2.id,
@@ -404,7 +483,6 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
   port             = 443
   protocol         = "https"
   connection_limit = 2
-
   depends_on = [
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,
@@ -489,15 +567,16 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
       let expectedData =
         `
 resource "ibm_is_lb" "lb_1_load_balancer" {
-  name            = "iac-lb-1-lb"
-  type            = "public"
-  resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
-
+  name           = "iac-lb-1-lb"
+  type           = "public"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
   security_groups = [
     ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   ]
-
   subnets = [
     ibm_is_subnet.management_vsi_zone_1.id,
     ibm_is_subnet.management_vsi_zone_2.id,
@@ -568,7 +647,6 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
   port             = 443
   protocol         = "https"
   connection_limit = 2
-
   depends_on = [
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,
@@ -658,15 +736,16 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
 ##############################################################################
 
 resource "ibm_is_lb" "lb_1_load_balancer" {
-  name            = "iac-lb-1-lb"
-  type            = "public"
-  resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
-
+  name           = "iac-lb-1-lb"
+  type           = "public"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
   security_groups = [
     ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
   ]
-
   subnets = [
     ibm_is_subnet.management_vsi_zone_1.id,
     ibm_is_subnet.management_vsi_zone_2.id,
@@ -738,7 +817,6 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
   port             = 443
   protocol         = "https"
   connection_limit = 2
-
   depends_on = [
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,
@@ -783,22 +861,22 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
@@ -808,22 +886,22 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-1"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = ibm_is_subnet.management_vsi_zone_1.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
@@ -833,22 +911,22 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-2"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_2.id
+    subnet = ibm_is_subnet.management_vsi_zone_2.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
@@ -858,22 +936,22 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-2"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_2.id
+    subnet = ibm_is_subnet.management_vsi_zone_2.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
@@ -883,22 +961,22 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-3"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_3.id
+    subnet = ibm_is_subnet.management_vsi_zone_3.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
@@ -908,22 +986,22 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
   zone           = "us-south-3"
-  tags           = ["slz","landing-zone"]
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.management_vsi_zone_3.id
+    subnet = ibm_is_subnet.management_vsi_zone_3.id
     security_groups = [
       ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
     ]
   }
-
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 ##############################################################################

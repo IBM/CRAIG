@@ -252,8 +252,10 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
-
+  tags = [
+    "hello",
+    "world"
+  ]
   depends_on = [
     ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy
   ]
@@ -509,9 +511,12 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "iac-management-vpc-logs"
   target         = ibm_is_vpc.management_vpc.id
   active         = true
-  storage_bucket = ERROR: Unfound ref
+  storage_bucket = "ERROR: Unfound ref"
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
 
@@ -764,9 +769,12 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "iac-management-vpc-logs"
   target         = ibm_is_vpc.management_vpc.id
   active         = true
-  storage_bucket = ERROR: Unfound ref
+  storage_bucket = "ERROR: Unfound ref"
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
 
@@ -857,9 +865,11 @@ resource "ibm_iam_authorization_policy" "flow_logs_to_cos_object_storage_policy"
   source_service_name         = "is"
   source_resource_type        = "flow-log-collector"
   description                 = "Allow flow logs write access cloud object storage instance"
-  roles                       = ["Writer"]
   target_service_name         = "cloud-object-storage"
   target_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  roles = [
+    "Writer"
+  ]
 }
 `;
 
@@ -881,9 +891,11 @@ resource "ibm_iam_authorization_policy" "flow_logs_to_cos_object_storage_policy"
   source_service_name         = "is"
   source_resource_type        = "flow-log-collector"
   description                 = "Allow flow logs write access cloud object storage instance"
-  roles                       = ["Writer"]
   target_service_name         = "cloud-object-storage"
   target_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  roles = [
+    "Writer"
+  ]
 }
 
 resource "ibm_is_flow_log" "management_flow_log_collector" {
@@ -892,8 +904,10 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["slz","landing-zone"]
-
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   depends_on = [
     ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy
   ]
@@ -905,8 +919,10 @@ resource "ibm_is_flow_log" "workload_flow_log_collector" {
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_workload_rg.id
-  tags           = ["slz","landing-zone"]
-
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   depends_on = [
     ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy
   ]

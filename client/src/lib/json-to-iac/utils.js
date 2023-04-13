@@ -5,12 +5,15 @@ const {
   kebabCase,
   eachKey,
   isString,
-  parseIntFromZone
+  parseIntFromZone,
+  isNullOrEmptyString,
+  transpose
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { endComment } = require("./constants");
 const constants = require("./constants");
-const { jsonToTfLegacy } = require("json-to-tf");
+const { jsonToTf } = require("json-to-tf");
+
 /**
  * get a resource group id using name
  * @param {string} groupName name of resource group
@@ -27,7 +30,7 @@ function rgIdRef(groupName, config) {
   if (rg?.use_data) {
     rgId = "data." + rgId;
   }
-  return rgId;
+  return "${" + rgId + "}";
 }
 
 /**
@@ -38,7 +41,7 @@ function rgIdRef(groupName, config) {
  * @returns {string} stringified tags
  */
 function getTags(config) {
-  return JSON.stringify(config._options.tags);
+  return config._options.tags;
 }
 
 /**
@@ -49,9 +52,9 @@ function getTags(config) {
  * @returns {string} composed cos id
  */
 function getCosId(cos) {
-  return `${cos.use_data ? "data." : ""}ibm_resource_instance.${snakeCase(
+  return `\${${cos.use_data ? "data." : ""}ibm_resource_instance.${snakeCase(
     cos.name
-  )}_object_storage.id`;
+  )}_object_storage.id}`;
 }
 
 /**
@@ -107,7 +110,7 @@ function getKmsInstanceData(kmsName, config) {
  * @returns {string} formatted id
  */
 function vpcRef(vpcName, value) {
-  return `ibm_is_vpc.${snakeCase(vpcName)}_vpc.${value || "id"}`;
+  return `\${ibm_is_vpc.${snakeCase(vpcName)}_vpc.${value || "id"}}`;
 }
 
 /**
@@ -121,10 +124,10 @@ function vpcRef(vpcName, value) {
  */
 function kebabName(config, segments, addText) {
   return (
-    '"' +
-    kebabCase(config._options.prefix + "-" + segments.join("-")) +
-    (addText || "") +
-    '"'
+    kebabCase(config._options.prefix + "-" + segments.join("-")).replace(
+      /-$/,
+      ""
+    ) + (addText || "")
   );
 }
 
@@ -146,19 +149,7 @@ function useData(useData) {
  * @returns {string} terraform formatted reference
  */
 function tfRef(type, name, value, data) {
-  return `${useData(data)}${type}.${snakeCase(name)}.${value || "id"}`;
-}
-
-/**
- * create terraform array reference
- * @param {string} type type of resource ex `ibm_resource_instance`
- * @param {string} name name of resource ex `slz-management-rg`
- * @param {string=} value value to get from reference ex `guid`. defaults to `id`
- * @param {boolean=} useData is data reference
- * @returns {string} terraform formatted reference
- */
-function tfArrRef(type, name, value, data) {
-  return `[${useData(data)}${type}.${snakeCase(name)}.${value || "id"}]`;
+  return `\${${useData(data)}${type}.${snakeCase(name)}.${value || "id"}}`;
 }
 
 /**
@@ -224,23 +215,6 @@ function encryptionKeyRef(kms, key, value) {
   return tfRef("ibm_kms_key", `${kms} ${key} key`, value || "key_id");
 }
 
-/**
- * fill template with values
- * @param {string} template string template
- * @param {Object} values key value pais of objects
- * @param {Object} config
- * @returns {string} formatted values
- */
-function fillTemplate(template, values) {
-  let newValues = template;
-  eachKey(values, key => {
-    newValues = newValues.replace(
-      new RegExp(`\\$${key.toUpperCase()}`, "g"),
-      values[key]
-    );
-  });
-  return newValues;
-}
 
 /**
  * get subnet zone number from name
@@ -259,28 +233,9 @@ function subnetZone(subnet) {
  * @param {number} zone
  * @returns {string} composed zone
  */
-function composedZone(config, zone) {
-  return `"${config._options.region}-${zone}"`;
-}
-
-/**
- * json to tf
- * @param {string} type resource type
- * @param {string} name resource name
- * @param {Object} values arbitrary key value pairs
- * @param {Object} config config
- * @param {boolean} useData use data
- * @returns {string} terraform formatted code
- */
-
-function jsonToIac(type, name, values, config, useData) {
-  return (
-    "\n" +
-    jsonToTfLegacy(type, name, values, useData).replace(
-      /\$region/g,
-      config?._options ? `"${config._options.region}"` : ""
-    )
-  );
+function composedZone(config, zone, cdktf) {
+  let zoneName = `${config._options.region}-${zone}`;
+  return cdktf ? zoneName.replace(/"/g, "") : zoneName;
 }
 
 function tfBlock(title, blockData) {
@@ -306,32 +261,117 @@ function tfDone(tf) {
  * @returns {string} data resource name
  */
 function dataResourceName(resource, config, appendText) {
-  return `"${resource.use_data ? "" : config._options.prefix + "-"}${
+  return `${resource.use_data ? "" : config._options.prefix + "-"}${
     resource.name
-  }${appendText ? appendText : ""}"`;
+  }${appendText ? appendText : ""}`;
 }
 
 /**
- * transpose an object where each string value has quotes around it
- * @param {Object} source
- * @returns {Object}
+ * create a reference for within cdktf
+ * @param {*} str
+ * @return {string} formatted string
  */
-function stringifyTranspose(source) {
-  let newObj = {};
-  eachKey(source, key => {
-    if (isString(source[key])) newObj[key] = `"${source[key]}"`;
-    else if (typeof source[key] !== "object") newObj[key] = source[key];
-  });
-  return newObj;
+function cdktfRef(str) {
+  return "${" + str + "}";
+}
+
+/**
+ * create timeouts block for cdktf
+ * @param {string=} create
+ * @param {string=} update
+ * @param {string=} destroy
+ * @returns {Array<object>} timeouts object
+ */
+function timeouts(create, update, destroy) {
+  let block = {};
+  if (!isNullOrEmptyString(create)) {
+    block.create = create;
+  }
+  if (!isNullOrEmptyString(update)) {
+    block.update = update;
+  }
+  if (!isNullOrEmptyString(destroy)) {
+    block.delete = destroy;
+  }
+  return [block];
+}
+
+/**
+ * create string value for kms id reference
+ * @param {Object} kms key management instance
+ * @param {boolean} kms.use_data use data
+ * @param {string} kms.name name of instance
+ * @returns {string} composed kms string
+ */
+function composedKmsId(kms) {
+  return `\${${kms.use_data ? "data." : ""}ibm_resource_instance.${snakeCase(
+    kms.name
+  )}.guid}`;
+}
+
+/**
+ * create ref for random suffix
+ * @param {Object} cos
+ * @param {boolean} cos.use_random_suffix
+ * @returns {string} cos
+ */
+function randomSuffix(cos) {
+  return cos.use_random_suffix
+    ? `-\${random_string.${snakeCase(cos.name)}_random_suffix.result}`
+    : "";
+}
+
+/**
+ * create object for cdktf
+ * @param {Object} obj arbitrary object
+ * @param {string} resource
+ * @param {string} type
+ * @param {string} name
+ * @param {Object} values
+ * @returns {Object} cdktf object
+ */
+function cdktfValues(obj, resource, type, name, values) {
+  let valuesObj = {};
+  transpose(obj, valuesObj);
+  if (!obj[resource]) {
+    obj[resource] = {};
+  }
+  if (!obj[resource][type]) {
+    obj[resource][type] = {};
+  }
+  obj[resource][type][snakeCase(name)] = values;
+  return obj;
+}
+
+/**
+ * create object for cdktf
+ * @param {Object} obj arbitrary object
+ * @param {string} resource
+ * @param {string} type
+ * @param {string} name
+ * @param {Object} values
+ * @returns {string} cdktf object
+ */
+function jsonToTfPrint(resource, type, name, values) {
+  let data = jsonToTf(
+    JSON.stringify(cdktfValues({}, resource, type, name, values))
+  );
+  return "\n" + data + "\n";
+}
+
+/**
+ * get data or resource
+ * @param {*} resource 
+ * @returns {string} data if data, resource otherwise
+ */
+function getResourceOrData(resource) {
+  return resource.use_data ? "data" : "resource"
 }
 
 module.exports = {
-  stringifyTranspose,
   dataResourceName,
-  jsonToIac,
   composedZone,
   subnetZone,
-  fillTemplate,
   tfRef,
   resourceRef,
   rgIdRef,
@@ -346,7 +386,13 @@ module.exports = {
   cosRef,
   encryptionKeyRef,
   bucketRef,
-  tfArrRef,
   tfBlock,
-  tfDone
+  tfDone,
+  cdktfRef,
+  timeouts,
+  composedKmsId,
+  randomSuffix,
+  jsonToTfPrint,
+  cdktfValues,
+  getResourceOrData
 };

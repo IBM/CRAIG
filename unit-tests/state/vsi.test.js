@@ -581,7 +581,9 @@ describe("vsi", () => {
             encryption_key: "slz-vsi-volume-key",
           },
           {
-            arrayParentName: "management-server",
+            innerFormProps: {
+              arrayParentName: "management-server",
+            },
           }
         );
         assert.deepEqual(
@@ -615,6 +617,9 @@ describe("vsi", () => {
               name: "block-storage-1",
             },
             arrayParentName: "management-server",
+            innerFormProps: {
+              arrayParentName: "management-server",
+            },
           }
         );
         state.vsi.volumes.save(
@@ -661,7 +666,9 @@ describe("vsi", () => {
           data: {
             name: "block-storage-1",
           },
-          arrayParentName: "management-server",
+          innerFormProps: {
+            arrayParentName: "management-server",
+          },
         }
       );
       it("should delete a vsi volume", () => {
@@ -672,6 +679,7 @@ describe("vsi", () => {
               name: "block-storage-1",
             },
             arrayParentName: "management-server",
+            innerFormProps: {},
           }
         );
         assert.deepEqual(

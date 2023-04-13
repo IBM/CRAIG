@@ -1,5 +1,8 @@
 const { assert } = require("chai");
-const { formatSshKey, sshKeyTf } = require("../../client/src/lib/json-to-iac/ssh-keys");
+const {
+  formatSshKey,
+  sshKeyTf,
+} = require("../../client/src/lib/json-to-iac/ssh-keys");
 const slzNetwork = require("../data-files/slz-network.json");
 
 // ssh-key at end
@@ -19,7 +22,10 @@ resource "ibm_is_ssh_key" "slz_ssh_key" {
   name           = "slz-slz-ssh-key"
   public_key     = var.slz_ssh_key_public_key
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["slz","landing-zone"]
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
 }
 `;
       assert.deepEqual(
@@ -61,7 +67,10 @@ resource "ibm_is_ssh_key" "slz_ssh_key" {
   name           = "slz-slz-ssh-key"
   public_key     = var.slz_ssh_key_public_key
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["slz","landing-zone"]
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
 }
 
 ##############################################################################

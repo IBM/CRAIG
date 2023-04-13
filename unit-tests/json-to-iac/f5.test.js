@@ -17,9 +17,6 @@ describe("f5 big ip", () => {
 ##############################################################################
 
 locals {
-  # use the public image if the name is found
-  # List of public images found in F5 schematics documentation
-  # (https://github.com/f5devcentral/ibmcloud_schematics_bigip_multinic_public_images)
   public_image_map = {
     f5-bigip-15-1-5-1-0-0-14-all-1slot = {
       "eu-de"    = "r010-b14deae9-43fd-4850-b89d-5d6485d61acb"
@@ -1420,26 +1417,26 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     );
     let expectedData = `
 resource "ibm_is_instance" "f5_ve_01_zone_1" {
-  name               = "f5-ve-01-zone-1"
-  image              = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
-  profile            = "cx2-4x8"
-  resource_group     = ibm_resource_group.slz_edge_rg.id
-  vpc                = ibm_is_vpc.edge_vpc.id
-  zone               = "us-south-1"
-  tags               = ["slz","landing-zone"]
-  user_data          = data.template_file.user_data_f5_ve_01_zone_1.rendered
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  name           = "f5-ve-01-zone-1"
+  image          = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_edge_rg.id
+  vpc            = ibm_is_vpc.edge_vpc.id
+  zone           = "us-south-1"
+  user_data      = data.template_file.user_data_f5_ve_01_zone_1.rendered
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.edge_f5_management_zone_1.id
+    subnet = ibm_is_subnet.edge_f5_management_zone_1.id
     security_groups = [
       ibm_is_security_group.edge_vpc_f5_management_sg_sg.id
     ]
   }
-
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
   network_interfaces {
     subnet            = ibm_is_subnet.edge_f5_bastion_zone_1.id
     allow_ip_spoofing = true
@@ -1447,7 +1444,6 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
       ibm_is_security_group.edge_vpc_f5_bastion_sg_sg.id
     ]
   }
-
   network_interfaces {
     subnet            = ibm_is_subnet.edge_f5_external_zone_1.id
     allow_ip_spoofing = true
@@ -1455,7 +1451,6 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
       ibm_is_security_group.edge_vpc_f5_external_sg_sg.id
     ]
   }
-
   network_interfaces {
     subnet            = ibm_is_subnet.edge_f5_workload_zone_1.id
     allow_ip_spoofing = true
@@ -1463,26 +1458,21 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
       ibm_is_security_group.edge_vpc_f5_workload_sg_sg.id
     ]
   }
-
-  boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
-  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 `;
-
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
   describe("f5Tf", () => {
     it("should return correct f5 vsi terraform", () => {
-      let actualData = f5Tf(slzNetwork);
+      let actualData = f5Tf({...slzNetwork});
       let expectedData = `##############################################################################
 # F5 Image IDs
 ##############################################################################
 
 locals {
-  # use the public image if the name is found
-  # List of public images found in F5 schematics documentation
-  # (https://github.com/f5devcentral/ibmcloud_schematics_bigip_multinic_public_images)
   public_image_map = {
     f5-bigip-15-1-5-1-0-0-14-all-1slot = {
       "eu-de"    = "r010-b14deae9-43fd-4850-b89d-5d6485d61acb"
@@ -1625,26 +1615,26 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
 }
 
 resource "ibm_is_instance" "f5_ve_01_zone_1" {
-  name               = "f5-ve-01-zone-1"
-  image              = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
-  profile            = "cx2-4x8"
-  resource_group     = ibm_resource_group.slz_edge_rg.id
-  vpc                = ibm_is_vpc.edge_vpc.id
-  zone               = "us-south-1"
-  tags               = ["slz","landing-zone"]
-  user_data          = data.template_file.user_data_f5_ve_01_zone_1.rendered
-
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
+  name           = "f5-ve-01-zone-1"
+  image          = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_edge_rg.id
+  vpc            = ibm_is_vpc.edge_vpc.id
+  zone           = "us-south-1"
+  user_data      = data.template_file.user_data_f5_ve_01_zone_1.rendered
+  tags = [
+    "slz",
+    "landing-zone"
   ]
-
   primary_network_interface {
-    subnet          = ibm_is_subnet.edge_f5_management_zone_1.id
+    subnet = ibm_is_subnet.edge_f5_management_zone_1.id
     security_groups = [
       ibm_is_security_group.edge_vpc_f5_management_sg_sg.id
     ]
   }
-
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
   network_interfaces {
     subnet            = ibm_is_subnet.edge_f5_bastion_zone_1.id
     allow_ip_spoofing = true
@@ -1652,7 +1642,6 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
       ibm_is_security_group.edge_vpc_f5_bastion_sg_sg.id
     ]
   }
-
   network_interfaces {
     subnet            = ibm_is_subnet.edge_f5_external_zone_1.id
     allow_ip_spoofing = true
@@ -1660,7 +1649,6 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
       ibm_is_security_group.edge_vpc_f5_external_sg_sg.id
     ]
   }
-
   network_interfaces {
     subnet            = ibm_is_subnet.edge_f5_workload_zone_1.id
     allow_ip_spoofing = true
@@ -1668,10 +1656,9 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
       ibm_is_security_group.edge_vpc_f5_workload_sg_sg.id
     ]
   }
-
-  boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
-  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
 }
 
 ##############################################################################

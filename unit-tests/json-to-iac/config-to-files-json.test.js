@@ -41,6 +41,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct vpc.tf", () => {
       assert.deepEqual(
         actualData["vpc.tf"],
@@ -48,6 +49,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct object_storage.tf", () => {
       assert.deepEqual(
         actualData["object_storage.tf"],
@@ -55,6 +57,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct key_management.tf", () => {
       assert.deepEqual(
         actualData["key_management.tf"],
@@ -62,6 +65,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct resource_groups.tf", () => {
       assert.deepEqual(
         actualData["resource_groups.tf"],
@@ -69,6 +73,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+    
     it("should return correct flow_logs.tf", () => {
       assert.deepEqual(
         actualData["flow_logs.tf"],
@@ -76,6 +81,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct virtual_private_endpoints.tf", () => {
       assert.deepEqual(
         actualData["virtual_private_endpoints.tf"],
@@ -83,6 +89,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct security_groups.tf", () => {
       assert.deepEqual(
         actualData["security_groups.tf"],
@@ -90,6 +97,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct vpn_gateways.tf", () => {
       assert.deepEqual(
         actualData["vpn_gateways.tf"],
@@ -97,6 +105,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+
     it("should return correct ssh_keys.tf", () => {
       assert.deepEqual(
         actualData["ssh_keys.tf"],
@@ -104,6 +113,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+  
     it("should return correct transit_gateways.tf", () => {
       assert.deepEqual(
         actualData["transit_gateways.tf"],
@@ -111,6 +121,7 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+    
     it("should return correct clusters.tf", () => {
       assert.deepEqual(
         actualData["clusters.tf"],
@@ -194,6 +205,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+
     it("should return correct vpc.tf", () => {
       assert.deepEqual(
         actualData["vpc.tf"],
@@ -201,6 +213,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+
     it("should return correct object_storage.tf", () => {
       assert.deepEqual(
         actualData["object_storage.tf"],
@@ -208,6 +221,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct key_management.tf", () => {
       assert.deepEqual(
         actualData["key_management.tf"],
@@ -222,6 +236,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+
     it("should return correct flow_logs.tf", () => {
       assert.deepEqual(
         actualData["flow_logs.tf"],
@@ -229,6 +244,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct virtual_private_endpoints.tf", () => {
       assert.deepEqual(
         actualData["virtual_private_endpoints.tf"],
@@ -236,6 +252,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct security_groups.tf", () => {
       assert.deepEqual(
         actualData["security_groups.tf"],
@@ -257,6 +274,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct transit_gateways.tf", () => {
       assert.deepEqual(
         actualData["transit_gateways.tf"],
@@ -264,6 +282,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct clusters.tf", () => {
       assert.deepEqual(
         actualData["clusters.tf"],
@@ -271,6 +290,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct secrets_manager.tf", () => {
       assert.deepEqual(
         actualData["secrets_manager.tf"],
@@ -278,6 +298,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct appid.tf", () => {
       assert.deepEqual(
         actualData["appid.tf"],
@@ -285,6 +306,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct teleport_vsi.tf", () => {
       assert.deepEqual(
         actualData["teleport_vsi.tf"],
@@ -292,6 +314,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct scc.tf", () => {
       assert.deepEqual(
         actualData["scc.tf"],
@@ -299,6 +322,7 @@ variable "ibmcloud_api_key" {
         "it should create file"
       );
     });
+    
     it("should return correct virtual_servers.tf", () => {
       assert.deepEqual(
         actualData["virtual_servers.tf"],

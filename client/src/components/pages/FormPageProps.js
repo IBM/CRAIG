@@ -182,7 +182,8 @@ function formProps(form, craig) {
       craig: craig,
       disableSave: disableSave,
       hideName: true,
-      submissionFieldName: jsonField
+      submissionFieldName: jsonField,
+      hide: false
     }
   };
   // add resource groups
@@ -368,10 +369,25 @@ function formProps(form, craig) {
     formTemplate.isSecurityGroup = true;
     transpose(sgInnerFormProps, formTemplate.innerFormProps);
   } else if (form === "vsi") {
-    formTemplate.innerFormProps.sshKeys = craig.store.sshKeys;
-    formTemplate.innerFormProps.apiEndpointImages = "/api/vsi/images";
-    formTemplate.innerFormProps.apiEndpointInstanceProfiles =
-      "/api/vsi/instanceProfiles";
+    transpose(
+      {
+        sshKeys: craig.store.sshKeys,
+        apiEndpointImages: `/api/vsi/${craig.store.json._options.region}/images`,
+        apiEndpointInstanceProfiles: `/api/vsi/${craig.store.json._options.region}/instanceProfiles`,
+        invalidVsiVolumeCallback: invalidName("volume"),
+        invalidVsiVolumeTextCallback: invalidNameText("volume"),
+        propsMatchState: propsMatchState,
+        vsiVolumeProps: {
+          onSave: craig.vsi.volumes.save,
+          onDelete: craig.vsi.volumes.delete,
+          onSubmit: craig.vsi.volumes.create,
+          disableSave: disableSave,
+          encryptionKeys: craig.store.encryptionKeys,
+          craig: craig
+        }
+      },
+      formTemplate.innerFormProps
+    );
   } else if (form === "eventStreams") {
     let esInnerFormProps = {
       invalidCallback: invalidName("event_streams"),

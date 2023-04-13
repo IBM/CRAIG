@@ -19,8 +19,10 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
   name           = "slz-management-management-vpn-gw"
   subnet         = ibm_is_subnet.management_vpn_zone_1.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["slz","landing-zone"]
-
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   timeouts {
     delete = "1h"
   }
@@ -47,8 +49,10 @@ resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
   name           = "slz-management-management-gateway-vpn-gw"
   subnet         = ibm_is_subnet.management_vpn_zone_1.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["slz","landing-zone"]
-
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   timeouts {
     delete = "1h"
   }

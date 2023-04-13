@@ -28,6 +28,12 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "keys",
       "name"
     );
+  } else if (field === "volume") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.vsi,
+      "volumes",
+      "name"
+    );
   } else if (field === "worker_pools") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.clusters,

@@ -25,9 +25,8 @@ describe("atracker", () => {
       let expectedData = `
 resource "ibm_atracker_target" "atracker_cos_target" {
   name        = "iac-atracker-cos"
-  target_type = "cloud_object_storage"
   region      = "us-south"
-
+  target_type = "cloud_object_storage"
   cos_endpoint {
     endpoint   = "s3.private.us-south.cloud-object-storage.appdomain.cloud"
     target_crn = ibm_resource_instance.cos_object_storage.id
@@ -65,10 +64,14 @@ resource "ibm_atracker_target" "atracker_cos_target" {
       let expectedData = `
 resource "ibm_atracker_route" "atracker_cos_route" {
   name = "iac-atracker-cos-route"
-
   rules {
-    target_ids = [ibm_atracker_target.atracker_cos_target.id]
-    locations  = ["us-south","global"]
+    locations = [
+      "us-south",
+      "global"
+    ]
+    target_ids = [
+      ibm_atracker_target.atracker_cos_target.id
+    ]
   }
 }
 `;
@@ -104,9 +107,8 @@ resource "ibm_atracker_route" "atracker_cos_route" {
 
 resource "ibm_atracker_target" "atracker_cos_target" {
   name        = "iac-atracker-cos"
-  target_type = "cloud_object_storage"
   region      = "us-south"
-
+  target_type = "cloud_object_storage"
   cos_endpoint {
     endpoint   = "s3.private.us-south.cloud-object-storage.appdomain.cloud"
     target_crn = ibm_resource_instance.cos_object_storage.id
@@ -117,10 +119,14 @@ resource "ibm_atracker_target" "atracker_cos_target" {
 
 resource "ibm_atracker_route" "atracker_cos_route" {
   name = "iac-atracker-cos-route"
-
   rules {
-    target_ids = [ibm_atracker_target.atracker_cos_target.id]
-    locations  = ["us-south","global"]
+    locations = [
+      "us-south",
+      "global"
+    ]
+    target_ids = [
+      ibm_atracker_target.atracker_cos_target.id
+    ]
   }
 }
 
@@ -156,9 +162,8 @@ resource "ibm_atracker_route" "atracker_cos_route" {
 
 resource "ibm_atracker_target" "atracker_cos_target" {
   name        = "iac-atracker-cos"
-  target_type = "cloud_object_storage"
   region      = "us-south"
-
+  target_type = "cloud_object_storage"
   cos_endpoint {
     endpoint   = "s3.private.us-south.cloud-object-storage.appdomain.cloud"
     target_crn = ibm_resource_instance.cos_object_storage.id

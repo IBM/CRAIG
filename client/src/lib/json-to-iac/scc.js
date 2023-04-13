@@ -1,4 +1,37 @@
-const { jsonToIac, tfBlock } = require("./utils");
+const { tfBlock, cdktfRef, jsonToTfPrint } = require("./utils");
+
+/**
+ * create scc posture credential block
+ * @param {Object} scc
+ * @param {string} scc.id
+ * @param {string} scc.passphrase
+ * @param {string} scc.name
+ * @returns {string} terraform formatted code
+ */
+
+function ibmSccPostureCredential(scc) {
+  return {
+    name: "scc credentials",
+    data: {
+      description: "scc posture credential description",
+      enabled: true,
+      name: scc.name,
+      type: "ibm_cloud",
+      purpose: "discovery_fact_collection_remediation",
+      display_fields: [
+        {
+          ibm_api_key: cdktfRef("var.ibmcloud_api_key")
+        }
+      ],
+      group: [
+        {
+          id: scc.id,
+          passphrase: scc.passphrase
+        }
+      ]
+    }
+  };
+}
 
 /**
  * create scc posture credential block
@@ -9,23 +42,71 @@ const { jsonToIac, tfBlock } = require("./utils");
  * @returns {string} terraform formatted code
  */
 function formatPostureCredential(scc) {
+  let cred = ibmSccPostureCredential(scc);
   return tfBlock(
     "Security and Compliance Center Credentials",
-    jsonToIac("ibm_scc_posture_credential", "scc_credentials", {
-      description: "^scc posture credential description",
-      enabled: true,
-      name: `^${scc.name}`,
-      type: "^ibm_cloud",
-      purpose: "^discovery_fact_collection_remediation",
-      _display_fields: {
-        ibm_api_key: "var.ibmcloud_api_key"
-      },
-      _group: {
-        id: `^${scc.id}`,
-        passphrase: `^${scc.passphrase}`
-      }
-    })
+    jsonToTfPrint(
+      "resource",
+      "ibm_scc_posture_credential",
+      cred.name,
+      cred.data
+    )
   );
+}
+
+/**
+ * create account settings
+ * @param {*} scc
+ * @returns {object} terraform object
+ */
+function ibmSccAccountSettings(scc) {
+  return {
+    name: "ibm_scc_account_settings_instance",
+    data: {
+      location: [
+        {
+          location_id: scc.location
+        }
+      ]
+    }
+  };
+}
+
+/**
+ * create posture collector
+ * @param {*} scc
+ * @param {*} config
+ * @returns {object} terraform object
+ */
+function ibmSccPostureCollector(scc, config) {
+  return {
+    name: "collector",
+    data: {
+      description: scc.collector_description,
+      is_public: scc.is_public,
+      managed_by: "ibm",
+      name: `${config._options.prefix}-scc-collector`
+    }
+  };
+}
+
+/**
+ * create scope
+ * @param {*} scc
+ * @param {*} config
+ * @returns {object} terraform object
+ */
+function ibmSccPostureScope(scc, config) {
+  return {
+    name: "scc_scope",
+    data: {
+      collector_ids: [cdktfRef("ibm_scc_posture_collector.collector.id")],
+      credential_id: cdktfRef(`ibm_scc_posture_credential.scc_credentials.id`),
+      credential_type: `ibm`,
+      description: scc.scope_description,
+      name: `${config._options.prefix}-scc-scope`
+    }
+  };
 }
 
 /**
@@ -42,37 +123,24 @@ function formatPostureCredential(scc) {
  */
 function formatScc(scc, config) {
   let tf = "";
-  tf += jsonToIac(
+  let settings = ibmSccAccountSettings(scc);
+  tf += jsonToTfPrint(
+    "resource",
     "ibm_scc_account_settings",
-    "ibm_scc_account_settings_instance",
-    {
-      _location: {
-        location_id: `"${scc.location}"`
-      }
-    }
-  ).replace(/\n(?=\s\slocation)/i, "");
-  tf += jsonToIac(
+    settings.name,
+    settings.data
+  );
+  tf += jsonToTfPrint(
+    "resource",
     "ibm_scc_posture_collector",
     "collector",
-    {
-      description: `"${scc.collector_description}"`,
-      is_public: scc.is_public,
-      managed_by: "^ibm",
-      name: `"${config._options.prefix}-scc-collector"`
-    },
-    config
+    ibmSccPostureCollector(scc, config).data
   );
-  tf += jsonToIac(
+  tf += jsonToTfPrint(
+    "resource",
     "ibm_scc_posture_scope",
     "scc_scope",
-    {
-      collector_ids: `[ibm_scc_posture_collector.collector.id]`,
-      credential_id: `ibm_scc_posture_credential.scc_credentials.id`,
-      credential_type: `^ibm`,
-      description: `^${scc.scope_description}`,
-      name: `^${config._options.prefix}-scc-scope`
-    },
-    config
+    ibmSccPostureScope(scc, config).data
   );
   return tfBlock("Security and Compliance Center", tf);
 }
@@ -94,5 +162,9 @@ function sccTf(config) {
 module.exports = {
   formatPostureCredential,
   formatScc,
-  sccTf
+  sccTf,
+  ibmSccPostureCredential,
+  ibmSccAccountSettings,
+  ibmSccPostureScope,
+  ibmSccPostureCollector
 };

@@ -2653,6 +2653,71 @@ describe("disableSave", () => {
       "it should be true"
     );
   });
+  it("should return true if a vsi volume has an invalid name", () => {
+    assert.isTrue(
+      disableSave(
+        "volumes",
+        {
+          name: "@@@",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vsi: [
+                  {
+                    name: "frog",
+                    volumes: [],
+                  },
+                  {
+                    name: "toad",
+                    volumes: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "aaaa",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a vsi volume has an invalid capacity", () => {
+    assert.isTrue(
+      disableSave(
+        "volumes",
+        {
+          name: "good-name",
+          capacity: "1"
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vsi: [
+                  {
+                    name: "frog",
+                    volumes: [],
+                  },
+                  {
+                    name: "toad",
+                    volumes: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "aaaa",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
   describe("vsi", () => {
     const example_vsi = {
       kms: null,

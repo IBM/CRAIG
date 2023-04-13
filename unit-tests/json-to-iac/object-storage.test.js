@@ -41,7 +41,10 @@ resource "ibm_resource_instance" "cos_object_storage" {
   service           = "cloud-object-storage"
   location          = "global"
   plan              = "standard"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -85,7 +88,10 @@ resource "ibm_resource_instance" "cos_object_storage" {
   service           = "cloud-object-storage"
   location          = "global"
   plan              = "standard"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -224,10 +230,12 @@ data "ibm_resource_instance" "cos_object_storage" {
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
   source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
-  roles                       = ["Reader"]
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 `;
       assert.deepEqual(actualData, expectedData, "it should return cos tf");
@@ -281,10 +289,12 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
   source_resource_instance_id = split(":", data.ibm_resource_instance.cos_object_storage.id)[7]
-  roles                       = ["Reader"]
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 `;
       assert.deepEqual(actualData, expectedData, "it should return cos tf");
@@ -352,7 +362,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -425,7 +434,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -498,7 +506,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -572,11 +579,9 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   object_versioning {
     enable = true
   }
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -657,14 +662,12 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   archive_rule {
     days    = 30
     enable  = true
     rule_id = "my-archive-rule"
     type    = "GLACIER"
   }
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -745,7 +748,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   expire_rule {
     days                         = 30
     date                         = "2023-5-18"
@@ -754,7 +756,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     expired_object_delete_marker = true
     enable                       = true
   }
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -778,7 +779,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             default: 1,
             minimum: 1,
             maximum: 1,
-            permanent: false
+            permanent: false,
           },
         },
         {
@@ -833,14 +834,12 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   retention_rule {
     default   = 1
     minimum   = 1
     maximum   = 1
     permanent = false
   }
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -914,8 +913,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-  allowed_ip           = ["1.2.3.4","5.6.7.8"]
-
+  allowed_ip           = "[\"1.2.3.4\",\"5.6.7.8\"]"
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -991,13 +989,11 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   metrics_monitoring {
     metrics_monitoring_crn  = "metrics_monitoring"
     usage_metrics_enabled   = true
     request_metrics_enabled = true
   }
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -1073,13 +1069,11 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   activity_tracking {
     read_data_events     = true
     write_data_events    = true
     activity_tracker_crn = "atracker"
   }
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -1148,7 +1142,10 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   name                 = "iac-cos-key-cos-key"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -1212,8 +1209,10 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
-
+  tags = [
+    "hello",
+    "world"
+  ]
   parameters = {
     HMAC = true
   }
@@ -1304,16 +1303,21 @@ resource "ibm_resource_instance" "cos_object_storage" {
   service           = "cloud-object-storage"
   location          = "global"
   plan              = "standard"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
   source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
-  roles                       = ["Reader"]
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1324,7 +1328,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -1334,8 +1337,10 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
-
+  tags = [
+    "hello",
+    "world"
+  ]
   parameters = {
     HMAC = true
   }
@@ -1424,16 +1429,21 @@ resource "ibm_resource_instance" "cos_object_storage" {
   service           = "cloud-object-storage"
   location          = "global"
   plan              = "standard"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
   source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
-  roles                       = ["Reader"]
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1444,7 +1454,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -1454,8 +1463,10 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
-
+  tags = [
+    "hello",
+    "world"
+  ]
   parameters = {
     HMAC = true
   }
@@ -1567,16 +1578,21 @@ resource "ibm_resource_instance" "cos_object_storage" {
   service           = "cloud-object-storage"
   location          = "global"
   plan              = "standard"
-  tags              = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
   source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
-  roles                       = ["Reader"]
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1587,7 +1603,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -1597,8 +1612,10 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
-
+  tags = [
+    "hello",
+    "world"
+  ]
   parameters = {
     HMAC = true
   }
@@ -1620,10 +1637,12 @@ data "ibm_resource_instance" "cos_object_storage" {
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
   source_resource_instance_id = split(":", data.ibm_resource_instance.cos_object_storage.id)[7]
-  roles                       = ["Reader"]
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
@@ -1634,7 +1653,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
   force_delete         = true
   region_location      = "us-south"
   key_protect          = ibm_kms_key.kms_key_key.crn
-
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
@@ -1644,8 +1662,10 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
   name                 = "iac-cos-key-cos-key"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
-  tags                 = ["hello","world"]
-
+  tags = [
+    "hello",
+    "world"
+  ]
   parameters = {
     HMAC = true
   }

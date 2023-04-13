@@ -1,6 +1,6 @@
 {
   "name": "craig",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "gui for generating ibm cloud infrastructure resources",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,8 @@
     "changelog": "node lib/changelog-as-markdown",
     "deploy": "./deploy.sh",
     "compatibility-tests": "./compatibility.sh",
-    "tf": "node lib/build-tf.js"
+    "tf": "node lib/build-tf.js",
+    "setup" : "npm i && cd client && npm i"
   },
   "authors": [
     "Jennifer Valle",

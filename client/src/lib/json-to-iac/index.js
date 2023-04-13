@@ -1,19 +1,86 @@
-const { appidTf } = require("./appid");
-const { atrackerTf } = require("./atracker");
-const { clusterTf } = require("./clusters");
-const { eventStreamsTf } = require("./event-streams");
-const { f5Tf, f5CloudInitYaml } = require("./f5");
-const { flowLogsTf } = require("./flow-logs");
-const { formatIamAccountSettings, iamTf } = require("./iam");
-const { kmsTf } = require("./key-management");
-const { cosTf } = require("./object-storage");
+const {
+  appidTf,
+  ibmResourceKeyAppId,
+  ibmResourceInstanceAppId,
+  ibmAppIdRedirectUrls
+} = require("./appid");
+const {
+  atrackerTf,
+  ibmAtrackerRoute,
+  ibmAtrackerTarget
+} = require("./atracker");
+const {
+  clusterTf,
+  ibmContainerVpcCluster,
+  ibmContainerVpcWorkerPool
+} = require("./clusters");
+const {
+  eventStreamsTf,
+  ibmResourceInstanceEventStreams
+} = require("./event-streams");
+const {
+  f5Tf,
+  f5CloudInitYaml,
+  f5TemplateFile,
+  f5Locals,
+  f5ImageLocals,
+  f5Images
+} = require("./f5");
+const {
+  flowLogsTf,
+  ibmIsFlowLog,
+  ibmIamAuthorizationPolicyFlowLogs
+} = require("./flow-logs");
+const {
+  formatIamAccountSettings,
+  iamTf,
+  ibmIamAccountSettings,
+  ibmIamAccessGroup,
+  ibmIamAccessGroupDynamicRule,
+  ibmIamAccessGroupPolicy,
+  ibmIamAccessGroupMemebers
+} = require("./iam");
+const {
+  kmsTf,
+  ibmResourceInstanceKms,
+  ibmKmsKeyPolicy,
+  ibmKmsKey,
+  ibmKmsKeyRings,
+  ibmIamAuthorizationPolicyKms
+} = require("./key-management");
+const {
+  cosTf,
+  ibmResourceInstanceCos,
+  ibmIamAuthorizationPolicyCos,
+  ibmCosBucket,
+  ibmResourceKeyCos
+} = require("./object-storage");
 const resourceGroupTf = require("./resource-groups");
-const { sccTf } = require("./scc");
-const { secretsManagerTf } = require("./secrets-manager");
-const { sgTf } = require("./security-groups");
-const { sshKeyTf } = require("./ssh-keys");
-const { teleportTf, teleportCloudInit } = require("./teleport");
-const { tgwTf } = require("./transit-gateway");
+const {
+  sccTf,
+  ibmSccPostureCredential,
+  ibmSccAccountSettings,
+  ibmSccPostureScope,
+  ibmSccPostureCollector
+} = require("./scc");
+const {
+  secretsManagerTf,
+  ibmResourceInstanceSecretsManager,
+  ibmIamAuthorizationPolicySecretsManager
+} = require("./secrets-manager");
+const {
+  sgTf,
+  ibmIsSecurityGroupRule,
+  ibmIsSecurityGroup
+} = require("./security-groups");
+const { sshKeyTf, ibmIsSshKey } = require("./ssh-keys");
+const {
+  teleportTf,
+  teleportCloudInit,
+  templateCloudinitConfig,
+  localTemplateUserData
+} = require("./teleport");
+const { tgwTf, ibmTgConnection, ibmTgGateway } = require("./transit-gateway");
 const { tfBlock, tfDone } = require("./utils");
 const {
   vpcTf,
@@ -21,11 +88,31 @@ const {
   formatAcl,
   formatAclRule,
   formatPgw,
-  formatSubnet
+  formatSubnet,
+  ibmIsVpc,
+  ibmIsPublicGateway,
+  ibmIsSubnet,
+  ibmIsNetworkAclRule,
+  ibmIsNetworkAcl,
+  ibmIsVpcAddressPrefix
 } = require("./vpc");
-const { vpeTf } = require("./vpe");
-const { vpnTf } = require("./vpn");
-const { vsiTf, lbTf } = require("./vsi");
+const {
+  vpeTf,
+  ibmIsVirtualEndpointGatewayIp,
+  ibmIsVirtualEndpointGateway,
+  ibmIsSubnetReservedIp
+} = require("./vpe");
+const { vpnTf, ibmIsVpnGateway } = require("./vpn");
+const {
+  vsiTf,
+  lbTf,
+  ibmIsLbPoolMembers,
+  ibmIsLbListener,
+  ibmIsLbPool,
+  ibmIsInstance,
+  ibmIsLb,
+  ibmIsVolume
+} = require("./vsi");
 const { configToFilesJson } = require("./config-to-files-json");
 const {
   codeMirrorVpcTf,
@@ -34,7 +121,7 @@ const {
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf
 } = require("./page-template");
-const {buildTitleComment} = require("./utils")
+const { buildTitleComment } = require("./utils");
 module.exports = {
   buildTitleComment,
   formatPgw,
@@ -73,5 +160,62 @@ module.exports = {
   codeMirrorAclTf,
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
-  codeMirrorFormatIamAccountSettingsTf
+  codeMirrorFormatIamAccountSettingsTf,
+  ibmIsLbPoolMembers,
+  ibmIsLbListener,
+  ibmIsLbPool,
+  ibmIsInstance,
+  ibmIsLb,
+  ibmIsVolume,
+  ibmIsVpnGateway,
+  ibmIsVirtualEndpointGatewayIp,
+  ibmIsVirtualEndpointGateway,
+  ibmIsSubnetReservedIp,
+  ibmIsVpc,
+  ibmIsPublicGateway,
+  ibmIsSubnet,
+  ibmIsNetworkAclRule,
+  ibmIsNetworkAcl,
+  ibmIsVpcAddressPrefix,
+  ibmTgConnection,
+  ibmTgGateway,
+  ibmResourceKeyAppId,
+  ibmResourceInstanceAppId,
+  ibmAppIdRedirectUrls,
+  ibmIsSshKey,
+  ibmAtrackerRoute,
+  ibmAtrackerTarget,
+  ibmContainerVpcCluster,
+  ibmContainerVpcWorkerPool,
+  ibmIsSecurityGroupRule,
+  ibmIsSecurityGroup,
+  ibmResourceInstanceSecretsManager,
+  ibmIamAuthorizationPolicySecretsManager,
+  ibmSccPostureCredential,
+  ibmSccAccountSettings,
+  ibmSccPostureScope,
+  ibmSccPostureCollector,
+  ibmResourceInstanceCos,
+  ibmIamAuthorizationPolicyCos,
+  ibmCosBucket,
+  ibmResourceKeyCos,
+  ibmResourceInstanceKms,
+  ibmKmsKeyPolicy,
+  ibmKmsKey,
+  ibmKmsKeyRings,
+  ibmIamAuthorizationPolicyKms,
+  ibmIamAccountSettings,
+  ibmIamAccessGroup,
+  ibmIamAccessGroupDynamicRule,
+  ibmIamAccessGroupPolicy,
+  ibmIamAccessGroupMemebers,
+  ibmIsFlowLog,
+  ibmIamAuthorizationPolicyFlowLogs,
+  templateCloudinitConfig,
+  localTemplateUserData,
+  ibmResourceInstanceEventStreams,
+  f5TemplateFile,
+  f5Locals,
+  f5ImageLocals,
+  f5Images
 };

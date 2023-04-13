@@ -25,13 +25,13 @@ const { propsMatchState } = require("./props-match-state");
 const { disableSave, invalidPort, forceShowForm } = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
+
 const {
   formatConfig,
   copyAclModalContent,
   copyRuleCodeMirrorData,
   copySgModalContent
 } = require("./format-json");
-
 
 module.exports = {
   hasDuplicateName,

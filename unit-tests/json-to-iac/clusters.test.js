@@ -37,38 +37,36 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
   flavor                          = "bx2.16x64"
   worker_count                    = 2
   kube_version                    = "default"
-  update_all_workers              = null
-  tags                            = ["slz","landing-zone"]
   wait_till                       = "IngressReady"
   disable_public_service_endpoint = false
   entitlement                     = "cloud_pak"
   cos_instance_crn                = ibm_resource_instance.cos_object_storage.crn
-
+  update_all_workers              = null
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   zones {
     name      = "us-south-1"
     subnet_id = ibm_is_subnet.workload_vsi_zone_1.id
   }
-
   zones {
     name      = "us-south-2"
     subnet_id = ibm_is_subnet.workload_vsi_zone_2.id
   }
-
   zones {
     name      = "us-south-3"
     subnet_id = ibm_is_subnet.workload_vsi_zone_3.id
   }
-
+  timeouts {
+    create = "3h"
+    update = "3h"
+    delete = "2h"
+  }
   kms_config {
     crk_id           = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
     instance_id      = ibm_resource_instance.slz_kms.guid
     private_endpoint = false
-  }
-
-  timeouts {
-    create = "3h"
-    delete = "2h"
-    update = "3h"
   }
 }
 `;
@@ -108,35 +106,33 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   worker_count                    = 2
   kube_version                    = "default"
   update_all_workers              = true
-  tags                            = ["slz","landing-zone"]
   wait_till                       = "IngressReady"
   disable_public_service_endpoint = true
-
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   zones {
     name      = "us-south-1"
     subnet_id = ibm_is_subnet.workload_vsi_zone_1.id
   }
-
   zones {
     name      = "us-south-2"
     subnet_id = ibm_is_subnet.workload_vsi_zone_2.id
   }
-
   zones {
     name      = "us-south-3"
     subnet_id = ibm_is_subnet.workload_vsi_zone_3.id
   }
-
+  timeouts {
+    create = "3h"
+    update = "3h"
+    delete = "2h"
+  }
   kms_config {
     crk_id           = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
     instance_id      = ibm_resource_instance.slz_kms.guid
     private_endpoint = true
-  }
-
-  timeouts {
-    create = "3h"
-    delete = "2h"
-    update = "3h"
   }
 }
 `;
@@ -172,17 +168,14 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
-
   zones {
     name      = "us-south-1"
     subnet_id = ibm_is_subnet.workload_vsi_zone_1.id
   }
-
   zones {
     name      = "us-south-2"
     subnet_id = ibm_is_subnet.workload_vsi_zone_2.id
   }
-
   zones {
     name      = "us-south-3"
     subnet_id = ibm_is_subnet.workload_vsi_zone_3.id
@@ -210,38 +203,36 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   flavor                          = "bx2.16x64"
   worker_count                    = 2
   kube_version                    = "default"
-  update_all_workers              = null
-  tags                            = ["slz","landing-zone"]
   wait_till                       = "IngressReady"
   disable_public_service_endpoint = false
   entitlement                     = "cloud_pak"
   cos_instance_crn                = ibm_resource_instance.cos_object_storage.crn
-
+  update_all_workers              = null
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   zones {
     name      = "us-south-1"
     subnet_id = ibm_is_subnet.workload_vsi_zone_1.id
   }
-
   zones {
     name      = "us-south-2"
     subnet_id = ibm_is_subnet.workload_vsi_zone_2.id
   }
-
   zones {
     name      = "us-south-3"
     subnet_id = ibm_is_subnet.workload_vsi_zone_3.id
   }
-
+  timeouts {
+    create = "3h"
+    update = "3h"
+    delete = "2h"
+  }
   kms_config {
     crk_id           = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
     instance_id      = ibm_resource_instance.slz_kms.guid
     private_endpoint = false
-  }
-
-  timeouts {
-    create = "3h"
-    delete = "2h"
-    update = "3h"
   }
 }
 
@@ -253,17 +244,14 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
-
   zones {
     name      = "us-south-1"
     subnet_id = ibm_is_subnet.workload_vsi_zone_1.id
   }
-
   zones {
     name      = "us-south-2"
     subnet_id = ibm_is_subnet.workload_vsi_zone_2.id
   }
-
   zones {
     name      = "us-south-3"
     subnet_id = ibm_is_subnet.workload_vsi_zone_3.id
@@ -305,17 +293,14 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
   cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
   flavor            = "bx2.16x64"
   worker_count      = 2
-
   zones {
     name      = "us-south-1"
     subnet_id = ibm_is_subnet.workload_vsi_zone_1.id
   }
-
   zones {
     name      = "us-south-2"
     subnet_id = ibm_is_subnet.workload_vsi_zone_2.id
   }
-
   zones {
     name      = "us-south-3"
     subnet_id = ibm_is_subnet.workload_vsi_zone_3.id

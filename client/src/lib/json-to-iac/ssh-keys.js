@@ -1,10 +1,12 @@
 const { snakeCase } = require("lazy-z");
 const {
   rgIdRef,
-  jsonToIac,
   dataResourceName,
   tfBlock,
   getTags,
+  jsonToTfPrint,
+  cdktfRef,
+  getResourceOrData
 } = require("./utils");
 
 /**
@@ -16,18 +18,38 @@ const {
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.prefix
+ * @returns {object} terraform string
+ */
+
+function ibmIsSshKey(key, config) {
+  let sshKey = {
+    name: key.name,
+    data: {
+      name: dataResourceName(key, config)
+    }
+  };
+  if (!key.use_data) {
+    sshKey.data.public_key = cdktfRef(`var.${snakeCase(key.name)}_public_key`);
+    sshKey.data.resource_group = rgIdRef(key.resource_group, config);
+    sshKey.data.tags = getTags(config);
+  }
+  return sshKey;
+}
+
+/**
+ * create ssh key terraform
+ * @param {Object} key
+ * @param {Object} config
  * @returns {string} terraform string
  */
 function formatSshKey(key, config) {
-  let sshKey = {
-    name: dataResourceName(key, config),
-  };
-  if (!key.use_data) {
-    sshKey.public_key = `var.${snakeCase(key.name)}_public_key`;
-    sshKey.resource_group = rgIdRef(key.resource_group, config);
-    sshKey.tags = getTags(config);
-  }
-  return jsonToIac(`ibm_is_ssh_key`, key.name, sshKey, config, key.use_data);
+  let sshKey = ibmIsSshKey(key, config);
+  return jsonToTfPrint(
+    getResourceOrData(key),
+    "ibm_is_ssh_key",
+    sshKey.name,
+    sshKey.data
+  );
 }
 
 /**
@@ -38,11 +60,12 @@ function formatSshKey(key, config) {
  */
 function sshKeyTf(config) {
   let tf = "";
-  config.ssh_keys.forEach((key) => (tf += formatSshKey(key, config)));
+  config.ssh_keys.forEach(key => (tf += formatSshKey(key, config)));
   return tfBlock("ssh keys", tf);
 }
 
 module.exports = {
   formatSshKey,
   sshKeyTf,
+  ibmIsSshKey
 };

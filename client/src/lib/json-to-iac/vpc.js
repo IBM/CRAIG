@@ -2,7 +2,6 @@ const {
   kebabCase,
   snakeCase,
   allFieldsNull,
-  splat,
   getObjectFromArray
 } = require("lazy-z");
 const {
@@ -11,10 +10,11 @@ const {
   tfDone,
   kebabName,
   composedZone,
-  jsonToIac,
   tfRef,
   tfBlock,
-  getTags
+  getTags,
+  jsonToTfPrint,
+  cdktfRef
 } = require("./utils");
 
 /**
@@ -30,30 +30,45 @@ const {
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.prefix
+ * @returns {object} terraform code
+ */
+
+function ibmIsVpc(vpc, config) {
+  let data = {
+    name: `${vpc.name}-vpc`,
+    data: {
+      name: kebabName(config, [vpc.name, "vpc"]),
+      resource_group: rgIdRef(vpc.resource_group, config),
+      default_network_acl_name: vpc.default_network_acl_name
+        ? vpc.default_network_acl_name
+        : null,
+      default_security_group_name: vpc.default_security_group_name
+        ? vpc.default_security_group_name
+        : null,
+      default_routing_table_name: vpc.default_routing_table_name
+        ? vpc.default_routing_table_name
+        : null,
+      tags: getTags(config)
+    }
+  };
+  if (vpc.classic_access) {
+    data.data.classic_access = true;
+  }
+  if (vpc.manual_address_prefix_management) {
+    data.data.address_prefix_management = "manual";
+  }
+  return data;
+}
+
+/**
+ * format vpc terraform
+ * @param {Object} vpc
+ * @param {Object} config
  * @returns {string} terraform code
  */
 function formatVpc(vpc, config) {
-  let vpcValues = {
-    name: kebabName(config, [vpc.name, "vpc"]),
-    resource_group: rgIdRef(vpc.resource_group, config),
-    default_network_acl_name: vpc.default_network_acl_name
-      ? `"${vpc.default_network_acl_name}"`
-      : null,
-    default_security_group_name: vpc.default_security_group_name
-      ? `"${vpc.default_security_group_name}"`
-      : null,
-    default_routing_table_name: vpc.default_routing_table_name
-      ? `"${vpc.default_routing_table_name}"`
-      : null,
-    tags: getTags(config)
-  };
-  if (vpc.classic_access) {
-    vpcValues.classic_access = true;
-  }
-  if (vpc.manual_address_prefix_management) {
-    vpcValues.address_prefix_management = "^manual";
-  }
-  return jsonToIac("ibm_is_vpc", `${vpc.name}-vpc`, vpcValues, config);
+  let data = ibmIsVpc(vpc, config);
+  return jsonToTfPrint("resource", "ibm_is_vpc", data.name, data.data);
 }
 
 /**
@@ -67,19 +82,34 @@ function formatVpc(vpc, config) {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
- * @returns {string} terraform code
+ * @returns {object} terraform code
  */
-function formatAddressPrefix(address, config) {
-  return jsonToIac(
-    "ibm_is_vpc_address_prefix",
-    `${address.vpc}-${address.name}-prefix`,
-    {
+
+function ibmIsVpcAddressPrefix(address, config) {
+  return {
+    name: `${address.vpc}-${address.name}-prefix`,
+    data: {
       name: kebabName(config, [address.vpc, address.name]),
       vpc: vpcRef(address.vpc),
       zone: composedZone(config, address.zone),
-      cidr: `^${address.cidr}`
-    },
-    config
+      cidr: address.cidr
+    }
+  };
+}
+
+/**
+ * format vpc address prefix
+ * @param {Object} address
+ * @param {Object} config
+ * @returns {string} terraform code
+ */
+function formatAddressPrefix(address, config) {
+  let prefix = ibmIsVpcAddressPrefix(address, config);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_is_vpc_address_prefix",
+    prefix.name,
+    prefix.data
   );
 }
 
@@ -97,26 +127,31 @@ function formatAddressPrefix(address, config) {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
- * @returns {string} terraform code
+ * @returns {object} terraform code
  */
-function formatSubnet(subnet, config) {
+
+function ibmIsSubnet(subnet, config) {
   let subnetName = kebabCase(`${subnet.vpc}-${subnet.name}`);
-  let subnetValues = {
-    vpc: vpcRef(subnet.vpc),
-    name: kebabName(config, [subnetName]),
-    zone: composedZone(config, subnet.zone),
-    resource_group: rgIdRef(subnet.resource_group, config),
-    tags: getTags(config),
-    network_acl: tfRef(
-      "ibm_is_network_acl",
-      snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`)
-    ),
-    ipv4_cidr_block: subnet.has_prefix
-      ? `ibm_is_vpc_address_prefix.${snakeCase(subnetName)}_prefix.cidr`
-      : `^${subnet.cidr}`
+  let data = {
+    name: subnetName,
+    data: {
+      vpc: vpcRef(subnet.vpc),
+      name: kebabName(config, [subnetName]),
+      zone: composedZone(config, subnet.zone),
+      resource_group: rgIdRef(subnet.resource_group, config),
+      tags: getTags(config),
+      network_acl: tfRef(
+        "ibm_is_network_acl",
+        snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`)
+      ),
+      ipv4_cidr_block: subnet.has_prefix
+        ? `\${ibm_is_vpc_address_prefix.${snakeCase(subnetName)}_prefix.cidr}`
+        : subnet.cidr
+    }
   };
+
   if (subnet.public_gateway) {
-    subnetValues.public_gateway = tfRef(
+    data.data.public_gateway = tfRef(
       "ibm_is_public_gateway",
       `${subnet.vpc} gateway zone ${subnet.zone}`
     );
@@ -124,14 +159,29 @@ function formatSubnet(subnet, config) {
   if (!subnet.has_prefix) {
     let addressPrefixes = getObjectFromArray(config.vpcs, "name", subnet.vpc)
       .address_prefixes;
-    subnetValues.depends_on = [];
+    data.data.depends_on = [];
     addressPrefixes.forEach(prefix => {
-      subnetValues.depends_on.push(
-        `ibm_is_vpc_address_prefix.${snakeCase(`${subnet.vpc} ${prefix.name}`)}_prefix`
+      data.data.depends_on.push(
+        cdktfRef(
+          `ibm_is_vpc_address_prefix.${snakeCase(
+            `${subnet.vpc} ${prefix.name}`
+          )}_prefix`
+        )
       );
     });
   }
-  return jsonToIac("ibm_is_subnet", subnetName, subnetValues, config);
+  return data;
+}
+
+/**
+ * format vpc subnet
+ * @param {Object} subnet
+ * @param {Object} config
+ * @returns {string} terraform code
+ */
+function formatSubnet(subnet, config) {
+  let data = ibmIsSubnet(subnet, config);
+  return jsonToTfPrint("resource", "ibm_is_subnet", data.name, data.data);
 }
 
 /**
@@ -142,20 +192,30 @@ function formatSubnet(subnet, config) {
  * @param {string} acl.vpc
  * @param {Object} config._options
  * @param {string} config._options.prefix
- * @returns {string} terraform code
+ * @returns {object} terraform code
  */
-function formatAcl(acl, config) {
-  return jsonToIac(
-    "ibm_is_network_acl",
-    `${acl.vpc} ${acl.name} acl`,
-    {
+
+function ibmIsNetworkAcl(acl, config) {
+  return {
+    name: `${acl.vpc} ${acl.name} acl`,
+    data: {
       name: kebabName(config, [acl.vpc, acl.name, "acl"]),
       vpc: vpcRef(acl.vpc),
       resource_group: rgIdRef(acl.resource_group, config),
       tags: getTags(config)
-    },
-    config
-  );
+    }
+  };
+}
+
+/**
+ * format network acl
+ * @param {Object} acl
+ * @param {Object} config
+ * @returns {string} terraform code
+ */
+function formatAcl(acl, config) {
+  let data = ibmIsNetworkAcl(acl, config);
+  return jsonToTfPrint("resource", "ibm_is_network_acl", data.name, data.data);
 }
 
 /**
@@ -181,39 +241,58 @@ function formatAcl(acl, config) {
  * @param {number} rule.udp.port_max
  * @param {number} rule.udp.source_port_min
  * @param {number} rule.udp.source_port_max
- * @returns {string} terraform formatted acl rule
+ * @returns {object} terraform formatted acl rule
  */
-function formatAclRule(rule) {
+
+function ibmIsNetworkAclRule(rule) {
   let aclAddress = `${rule.vpc} ${rule.acl} acl`;
   let ruleValues = {
     network_acl: tfRef("ibm_is_network_acl", `${rule.vpc} ${rule.acl} acl`),
-    action: `^${rule.action}`,
-    destination: `^${rule.destination}`,
-    direction: `^${rule.direction}`,
-    name: `^${rule.name}`,
-    source: `^${rule.source}`
+    action: rule.action,
+    destination: rule.destination,
+    direction: rule.direction,
+    name: rule.name,
+    source: rule.source
   };
 
   ["icmp", "tcp", "udp"].forEach(protocol => {
     let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
     if (ruleHasProtocolData && protocol === "icmp") {
-      ruleValues._icmp = {
-        type: rule.icmp.type,
-        code: rule.icmp.code
-      };
+      ruleValues.icmp = [
+        {
+          type: rule.icmp.type,
+          code: rule.icmp.code
+        }
+      ];
     } else if (ruleHasProtocolData) {
-      ruleValues[`_${protocol}`] = {
-        port_min: rule[protocol].port_min,
-        port_max: rule[protocol].port_max,
-        source_port_min: rule[protocol].source_port_min,
-        source_port_max: rule[protocol].source_port_max
-      };
+      ruleValues[protocol] = [
+        {
+          port_min: rule[protocol].port_min,
+          port_max: rule[protocol].port_max,
+          source_port_min: rule[protocol].source_port_min,
+          source_port_max: rule[protocol].source_port_max
+        }
+      ];
     }
   });
-  return jsonToIac(
+  return {
+    name: `${aclAddress} rule ${rule.name}`,
+    data: ruleValues
+  };
+}
+
+/**
+ * create network acl rule
+ * @param {Object} rule
+ * @returns {string} terraform formatted acl rule
+ */
+function formatAclRule(rule) {
+  let data = ibmIsNetworkAclRule(rule);
+  return jsonToTfPrint(
+    "resource",
     "ibm_is_network_acl_rule",
-    `${aclAddress} rule ${rule.name}`,
-    ruleValues
+    data.name,
+    data.data
   );
 }
 
@@ -227,23 +306,38 @@ function formatAclRule(rule) {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
- * @returns {string} terraform code
+ * @returns {object} terraform code
  */
-function formatPgw(pgw, config) {
+
+function ibmIsPublicGateway(pgw, config) {
   let pgwName = pgw.override_name
     ? `${pgw.vpc}-${pgw.override_name}`
     : `${pgw.vpc}-gateway-zone-${pgw.zone}`;
-  return jsonToIac(
-    "ibm_is_public_gateway",
-    pgwName,
-    {
+  return {
+    name: pgwName,
+    data: {
       name: kebabName(config, [pgwName]),
       vpc: vpcRef(pgw.vpc),
       resource_group: rgIdRef(pgw.resource_group, config),
       zone: composedZone(config, pgw.zone),
       tags: getTags(config)
-    },
-    config
+    }
+  };
+}
+
+/**
+ * format public gateway
+ * @param {Object} pgw
+ * @param {Object} config
+ * @returns {string} terraform code
+ */
+function formatPgw(pgw, config) {
+  let data = ibmIsPublicGateway(pgw, config);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_is_public_gateway",
+    data.name,
+    data.data
   );
 }
 
@@ -289,5 +383,11 @@ module.exports = {
   formatAcl,
   formatAclRule,
   formatPgw,
-  vpcTf
+  vpcTf,
+  ibmIsVpc,
+  ibmIsPublicGateway,
+  ibmIsSubnet,
+  ibmIsNetworkAclRule,
+  ibmIsNetworkAcl,
+  ibmIsVpcAddressPrefix
 };

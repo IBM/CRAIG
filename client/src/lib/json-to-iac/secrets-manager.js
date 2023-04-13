@@ -3,9 +3,11 @@ const {
   rgIdRef,
   getKmsInstanceData,
   kebabName,
-  jsonToIac,
   encryptionKeyRef,
-  tfBlock
+  tfBlock,
+  timeouts,
+  jsonToTfPrint,
+  cdktfRef
 } = require("./utils");
 
 /**
@@ -16,19 +18,84 @@ const {
  * @param {Object} config configuration
  * @returns {string} terraform code
  */
-function formatSecretsManagerToKmsAuth(kmsName, config) {
+function ibmIamAuthorizationPolicySecretsManager(kmsName, config) {
   let kmsInstance = getKmsInstanceData(kmsName, config);
-  return jsonToIac(
-    "ibm_iam_authorization_policy",
-    `secrets manager to ${kmsName} kms policy`,
-    {
-      source_service_name: "^secrets-manager",
-      roles: '["Reader"]',
-      description: "^Allow Secets Manager instance to read from KMS instance",
-      target_service_name: "^" + kmsInstance.type,
-      target_resource_instance_id: kmsInstance.guid
+  return {
+    name: `secrets manager to ${kmsName} kms policy`,
+    data: {
+      source_service_name: "secrets-manager",
+      roles: ["Reader"],
+      description: "Allow Secets Manager instance to read from KMS instance",
+      target_service_name: kmsInstance.type,
+      target_resource_instance_id: cdktfRef(kmsInstance.guid)
     }
+  };
+}
+
+/**
+ * format auth for secrets manager to kms. secrets manager authorization needs to be
+ * created prior to instance to allow for the secrets manager service to be encrypted
+ * with keys from kms
+ * @param {string} kmsName
+ * @param {Object} config configuration
+ * @returns {string} terraform code
+ */
+function formatSecretsManagerToKmsAuth(kmsName, config) {
+  let auth = ibmIamAuthorizationPolicySecretsManager(kmsName, config);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_iam_authorization_policy",
+    auth.name,
+    auth.data
   );
+}
+/**
+ * create secrets manager instance terraform
+ * @param {Object} secretsManager
+ * @param {string} secretsManager.name
+ * @param {string} secretsManager.kms
+ * @param {string} secretsManager.encryption_key
+ * @param {Object} config
+ * @param {Object} config._options
+ * @param {string} config._options.prefix
+ * @param {string} config._options.region
+ * @returns {object} terraform
+ */
+function ibmResourceInstanceSecretsManager(secretsManager, config) {
+  let kmsInstance = secretsManager.kms
+    ? getObjectFromArray(config.key_management, "name", secretsManager.kms)
+    : null;
+  let instance = {
+    name: kebabName(config, [secretsManager.name]),
+    location: config._options.region,
+    plan: "standard",
+    service: "secrets-manager",
+    resource_group_id: rgIdRef(secretsManager.resource_group, config),
+    parameters: {
+      kms_key: !kmsInstance
+        ? "ERROR: Unfound Reference"
+        : encryptionKeyRef(
+            secretsManager.kms,
+            secretsManager.encryption_key,
+            "crn"
+          )
+    },
+    timeouts: timeouts("1h", "", "1h"),
+    tags: config._options.tags
+  };
+  if (kmsInstance && kmsInstance.has_secrets_manager_auth !== true) {
+    instance.depends_on = [
+      cdktfRef(
+        `ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
+          secretsManager.kms
+        )}_kms_policy`
+      )
+    ];
+  }
+  return {
+    name: secretsManager.name + "-secrets-manager",
+    data: instance
+  };
 }
 
 /**
@@ -44,41 +111,12 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
  * @returns {string} terraform string
  */
 function formatSecretsManagerInstance(secretsManager, config) {
-  let kmsInstance = secretsManager.kms
-    ? getObjectFromArray(config.key_management, "name", secretsManager.kms)
-    : null;
-  let instance = {
-    name: kebabName(config, [secretsManager.name]),
-    location: "$region",
-    plan: "^standard",
-    service: "^secrets-manager",
-    resource_group_id: rgIdRef(secretsManager.resource_group, config),
-    "^parameters": {
-      kms_key: !kmsInstance
-        ? "ERROR: Unfound Reference"
-        : encryptionKeyRef(
-            secretsManager.kms,
-            secretsManager.encryption_key,
-            "crn"
-          )
-    },
-    timeouts: {
-      create: "1h",
-      delete: "1h"
-    }
-  };
-  if (kmsInstance && kmsInstance.has_secrets_manager_auth !== true) {
-    instance.depends_on = [
-      `ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
-        secretsManager.kms
-      )}_kms_policy`
-    ];
-  }
-  return jsonToIac(
+  let instance = ibmResourceInstanceSecretsManager(secretsManager, config);
+  return jsonToTfPrint(
+    "resource",
     "ibm_resource_instance",
-    secretsManager.name + "-secrets-manager",
-    instance,
-    config
+    instance.name,
+    instance.data
   );
 }
 
@@ -122,5 +160,7 @@ function secretsManagerTf(config) {
 module.exports = {
   formatSecretsManagerToKmsAuth,
   formatSecretsManagerInstance,
-  secretsManagerTf
+  secretsManagerTf,
+  ibmResourceInstanceSecretsManager,
+  ibmIamAuthorizationPolicySecretsManager
 };

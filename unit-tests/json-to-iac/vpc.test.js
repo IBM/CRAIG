@@ -44,7 +44,10 @@ resource "ibm_is_vpc" "management_vpc" {
   default_network_acl_name    = null
   default_security_group_name = null
   default_routing_table_name  = null
-  tags                        = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -85,7 +88,10 @@ resource "ibm_is_vpc" "management_vpc" {
   default_network_acl_name    = "null"
   default_security_group_name = "null"
   default_routing_table_name  = "null"
-  tags                        = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -123,12 +129,15 @@ resource "ibm_is_vpc" "management_vpc" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "iac-management-vpc"
   resource_group              = ibm_resource_group.slz_management_rg.id
+  classic_access              = true
+  address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
   default_routing_table_name  = null
-  tags                        = ["hello","world"]
-  classic_access              = true
-  address_prefix_management   = "manual"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -203,10 +212,13 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
   name            = "iac-management-vsi-subnet-1"
   zone            = "us-south-1"
   resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr
   public_gateway  = ibm_is_public_gateway.management_gateway_zone_1.id
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -218,14 +230,14 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
     it("should create subnet with a depends_on when no address_prefix is created", () => {
       let actualData = formatSubnet(
         {
-          "zone": 1,
-          "vpc": "edge",
-          "has_prefix": false,
-          "resource_group": "slz-edge-rg",
-          "network_acl": "edge-acl",
-          "cidr": "10.5.60.0/24",
-          "name": "f5-bastion-zone-1",
-          "public_gateway": false
+          zone: 1,
+          vpc: "edge",
+          has_prefix: false,
+          resource_group: "slz-edge-rg",
+          network_acl: "edge-acl",
+          cidr: "10.5.60.0/24",
+          name: "f5-bastion-zone-1",
+          public_gateway: false,
         },
         f5Nw
       );
@@ -235,10 +247,12 @@ resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
   name            = "slz-edge-f5-bastion-zone-1"
   zone            = "us-south-1"
   resource_group  = ibm_resource_group.slz_edge_rg.id
-  tags            = ["slz","landing-zone"]
   network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
   ipv4_cidr_block = "10.5.60.0/24"
-
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
   depends_on = [
     ibm_is_vpc_address_prefix.edge_f5_zone_1_prefix,
     ibm_is_vpc_address_prefix.edge_f5_zone_2_prefix,
@@ -280,7 +294,10 @@ resource "ibm_is_network_acl" "management_management_acl" {
   name           = "iac-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -334,12 +351,12 @@ resource "ibm_is_network_acl" "management_management_acl" {
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound" {
+  source      = "161.26.0.0/16"
   network_acl = ibm_is_network_acl.management_management_acl.id
   action      = "allow"
   destination = "10.0.0.0/8"
   direction   = "inbound"
   name        = "allow-ibm-inbound"
-  source      = "161.26.0.0/16"
 }
 `;
       assert.deepEqual(
@@ -391,13 +408,12 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
+  source      = "161.26.0.0/16"
   network_acl = ibm_is_network_acl.management_management_acl.id
   action      = "allow"
   destination = "10.0.0.0/8"
   direction   = "inbound"
   name        = "allow-ibm-inbound-8080"
-  source      = "161.26.0.0/16"
-
   tcp {
     port_min        = 8080
     port_max        = null
@@ -455,13 +471,12 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
+  source      = "161.26.0.0/16"
   network_acl = ibm_is_network_acl.management_management_acl.id
   action      = "allow"
   destination = "10.0.0.0/8"
   direction   = "inbound"
   name        = "allow-ibm-inbound-8080"
-  source      = "161.26.0.0/16"
-
   udp {
     port_min        = 8080
     port_max        = null
@@ -519,13 +534,12 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
+  source      = "161.26.0.0/16"
   network_acl = ibm_is_network_acl.management_management_acl.id
   action      = "allow"
   destination = "10.0.0.0/8"
   direction   = "inbound"
   name        = "allow-ibm-inbound-8080"
-  source      = "161.26.0.0/16"
-
   icmp {
     type = 1
     code = 2
@@ -567,7 +581,10 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   zone           = "us-south-1"
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -604,7 +621,10 @@ resource "ibm_is_public_gateway" "management_override_gw" {
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   zone           = "us-south-1"
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 `;
       assert.deepEqual(
@@ -708,11 +728,14 @@ resource "ibm_is_public_gateway" "management_override_gw" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "iac-management-vpc"
   resource_group              = ibm_resource_group.slz_management_rg.id
+  address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
   default_routing_table_name  = null
-  tags                        = ["hello","world"]
-  address_prefix_management   = "manual"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
@@ -726,16 +749,19 @@ resource "ibm_is_network_acl" "management_management_acl" {
   name           = "iac-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound" {
+  source      = "161.26.0.0/16"
   network_acl = ibm_is_network_acl.management_management_acl.id
   action      = "allow"
   destination = "10.0.0.0/8"
   direction   = "inbound"
   name        = "allow-ibm-inbound"
-  source      = "161.26.0.0/16"
 }
 
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
@@ -743,7 +769,10 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   zone           = "us-south-1"
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
@@ -751,10 +780,13 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
   name            = "iac-management-vsi-subnet-1"
   zone            = "us-south-1"
   resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr
   public_gateway  = ibm_is_public_gateway.management_gateway_zone_1.id
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################
@@ -928,11 +960,14 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "iac-management-vpc"
   resource_group              = ibm_resource_group.slz_management_rg.id
+  address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
   default_routing_table_name  = null
-  tags                        = ["hello","world"]
-  address_prefix_management   = "manual"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
@@ -946,16 +981,19 @@ resource "ibm_is_network_acl" "management_management_acl" {
   name           = "iac-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound" {
+  source      = "161.26.0.0/16"
   network_acl = ibm_is_network_acl.management_management_acl.id
   action      = "allow"
   destination = "10.0.0.0/8"
   direction   = "inbound"
   name        = "allow-ibm-inbound"
-  source      = "161.26.0.0/16"
 }
 
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
@@ -963,7 +1001,10 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   zone           = "us-south-1"
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
@@ -971,10 +1012,13 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
   name            = "iac-management-vsi-subnet-1"
   zone            = "us-south-1"
   resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr
   public_gateway  = ibm_is_public_gateway.management_gateway_zone_1.id
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################
@@ -986,11 +1030,14 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 resource "ibm_is_vpc" "workload_vpc" {
   name                        = "iac-workload-vpc"
   resource_group              = ibm_resource_group.slz_management_rg.id
+  address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
   default_routing_table_name  = null
-  tags                        = ["hello","world"]
-  address_prefix_management   = "manual"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
@@ -1004,16 +1051,19 @@ resource "ibm_is_network_acl" "management_management_acl" {
   name           = "iac-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound" {
+  source      = "161.26.0.0/16"
   network_acl = ibm_is_network_acl.management_management_acl.id
   action      = "allow"
   destination = "10.0.0.0/8"
   direction   = "inbound"
   name        = "allow-ibm-inbound"
-  source      = "161.26.0.0/16"
 }
 
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
@@ -1021,7 +1071,10 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   zone           = "us-south-1"
-  tags           = ["hello","world"]
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
@@ -1029,10 +1082,13 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
   name            = "iac-management-vsi-subnet-1"
   zone            = "us-south-1"
   resource_group  = ibm_resource_group.slz_management_rg.id
-  tags            = ["hello","world"]
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr
   public_gateway  = ibm_is_public_gateway.management_gateway_zone_1.id
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################

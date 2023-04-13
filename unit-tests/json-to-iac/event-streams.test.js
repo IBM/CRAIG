@@ -49,14 +49,12 @@ resource "ibm_resource_instance" "event_streams_es" {
   plan              = "enterprise"
   location          = "us-south"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     service-endpoints    = "private"
     private_ip_allowlist = "[10.0.0.0/32,10.0.0.1/32]"
     throughput           = "150"
     storage_size         = "2048"
   }
-
   timeouts {
     create = "3h"
     update = "1h"
@@ -110,11 +108,9 @@ resource "ibm_resource_instance" "event_streams_es" {
   plan              = "enterprise"
   location          = "us-south"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     service-endpoints = "private"
   }
-
   timeouts {
     create = "3h"
     update = "1h"
@@ -176,14 +172,12 @@ resource "ibm_resource_instance" "event_streams_es" {
   plan              = "enterprise"
   location          = "us-south"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   parameters = {
     service-endpoints    = "private"
     private_ip_allowlist = "[10.0.0.0/32,10.0.0.1/32]"
     throughput           = "150"
     storage_size         = "2048"
   }
-
   timeouts {
     create = "3h"
     update = "1h"
@@ -245,7 +239,6 @@ resource "ibm_resource_instance" "event_streams_es" {
   plan              = "standard"
   location          = "us-south"
   resource_group_id = ibm_resource_group.slz_service_rg.id
-
   timeouts {
     create = "3h"
     update = "1h"

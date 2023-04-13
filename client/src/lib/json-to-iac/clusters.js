@@ -10,10 +10,11 @@ const {
   resourceRef,
   encryptionKeyRef,
   tfRef,
-  jsonToIac,
   tfDone,
   tfBlock,
-  getTags
+  jsonToTfPrint,
+  timeouts,
+  cdktfRef
 } = require("./utils");
 
 /**
@@ -37,52 +38,52 @@ const {
  * @param {Object} config._options
  * @param {string} config._options.region
  * @param {string} config._options.prefix
- * @returns {string} cluster terraform code
+ * @returns {Object} cluster terraform code
  */
-function formatCluster(cluster, config) {
-  let clusterValues = {
+function ibmContainerVpcCluster(cluster, config) {
+  let data = {
+    name: `${cluster.vpc} vpc ${cluster.name} cluster`
+  };
+  let clusterData = {
     name: kebabName(config, [cluster.name, "cluster"]),
     vpc_id: vpcRef(cluster.vpc),
     resource_group_id: rgIdRef(cluster.resource_group, config),
-    flavor: `"${cluster.flavor}"`,
+    flavor: cluster.flavor,
     worker_count: cluster.workers_per_subnet,
-    kube_version: `"${cluster.kube_version}"`,
+    kube_version: cluster.kube_version,
     update_all_workers: cluster.update_all_workers || null,
-    tags: getTags(config),
-    wait_till: `^${cluster.wait_till || "IngressReady"}`,
-    disable_public_service_endpoint: cluster.private_endpoint || false
+    tags: config._options.tags,
+    wait_till: cluster.wait_till || "IngressReady",
+    disable_public_service_endpoint: cluster.private_endpoint || false,
+    zones: [],
+    timeouts: timeouts("3h", "3h", "2h"),
+    kms_config: [
+      {
+        crk_id: encryptionKeyRef(cluster.kms, cluster.encryption_key),
+        instance_id: cdktfRef(getKmsInstanceData(cluster.kms, config).guid),
+        private_endpoint: cluster.private_endpoint || false
+      }
+    ]
   };
+  // add subnets
+  cluster.subnets.forEach(subnet => {
+    clusterData.zones.push({
+      name: composedZone(config, subnetZone(subnet), true),
+      subnet_id: subnetRef(cluster.vpc, subnet)
+    });
+  });
+
+  // add entitlement and cos crn if openshift
   if (cluster.type === "openshift") {
-    clusterValues.entitlement = "^cloud_pak";
-    clusterValues.cos_instance_crn = resourceRef(
+    clusterData.entitlement = cluster.entitlement;
+    clusterData.cos_instance_crn = resourceRef(
       cluster.cos + " object storage",
       "crn"
     );
   }
-  clusterValues["-zones"] = [];
-  cluster.subnets.forEach(subnet => {
-    clusterValues["-zones"].push({
-      name: composedZone(config, subnetZone(subnet)),
-      subnet_id: subnetRef(cluster.vpc, subnet)
-    });
-  });
-  clusterValues._kms_config = {
-    crk_id: encryptionKeyRef(cluster.kms, cluster.encryption_key),
-    instance_id: getKmsInstanceData(cluster.kms, config).guid,
-    private_endpoint: cluster.private_endpoint || false
-  };
-  clusterValues.timeouts = {
-    create: "3h",
-    delete: "2h",
-    update: "3h"
-  };
 
-  return jsonToIac(
-    "ibm_container_vpc_cluster",
-    `${cluster.vpc} vpc ${cluster.name} cluster`,
-    clusterValues,
-    config
-  );
+  data.data = clusterData;
+  return data;
 }
 
 /**
@@ -102,35 +103,71 @@ function formatCluster(cluster, config) {
  * @param {string} config._options.region
  * @returns {string} terraform worker pool string
  */
-function formatWorkerPool(pool, config) {
-  let workerPool = {
-    worker_pool_name: kebabName(config, [pool.cluster, "cluster", pool.name]),
+function ibmContainerVpcWorkerPool(pool, config) {
+  let poolCluster = getObjectFromArray(config.clusters, "name", pool.cluster);
+  let data = {
+    name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`
+  };
+  let poolData = {
+    worker_pool_name: kebabName(config, [
+      pool.cluster,
+      "cluster",
+      pool.name
+    ]),
     vpc_id: vpcRef(pool.vpc),
     resource_group_id: rgIdRef(pool.resource_group, config),
     cluster: tfRef(
       "ibm_container_vpc_cluster",
       `${pool.vpc} vpc ${pool.cluster} cluster`
     ),
-    flavor: `"${pool.flavor}"`,
-    worker_count: pool.workers_per_subnet
+    flavor: pool.flavor,
+    worker_count: pool.workers_per_subnet,
+    zones: []
   };
-  if (
-    getObjectFromArray(config.clusters, "name", pool.cluster).type ===
-    "openshift"
-  )
-    workerPool.entitlement = "^cloud_pak";
-  workerPool["-zones"] = [];
+  if (poolCluster.type === "openshift") {
+    poolData.entitlement = poolCluster.entitlement;
+  }
+
+  // add subnets
   pool.subnets.forEach(subnet => {
-    workerPool["-zones"].push({
-      name: composedZone(config, subnetZone(subnet)),
-      subnet_id: subnetRef(pool.vpc, subnet)
+    poolData.zones.push({
+      name: composedZone(config, subnetZone(subnet), true),
+      subnet_id: subnetRef(poolCluster.vpc, subnet)
     });
   });
-  return jsonToIac(
+  data.data = poolData;
+  return data;
+}
+
+/**
+ * create tf for cluster
+ * @param {Object} cluster
+ * @param {Object} config
+ * @returns {string} cluster terraform code
+ */
+function formatCluster(cluster, config) {
+  let data = ibmContainerVpcCluster(cluster, config);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_container_vpc_cluster",
+    data.name,
+    data.data
+  );
+}
+
+/**
+ * format worker pool
+ * @param {Object} pool
+ * @param {Object} config
+ * @returns {string} terraform worker pool string
+ */
+function formatWorkerPool(pool, config) {
+  let data = ibmContainerVpcWorkerPool(pool, config);
+  return jsonToTfPrint(
+    "resource",
     "ibm_container_vpc_worker_pool",
-    `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`,
-    workerPool,
-    config
+    data.name,
+    data.data
   );
 }
 
@@ -156,5 +193,7 @@ function clusterTf(config) {
 module.exports = {
   formatCluster,
   formatWorkerPool,
-  clusterTf
+  clusterTf,
+  ibmContainerVpcCluster,
+  ibmContainerVpcWorkerPool
 };
