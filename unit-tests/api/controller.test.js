@@ -1,11 +1,11 @@
 const { assert } = require("chai");
 const sinon = require("sinon");
-const controller = require("../express-controllers/controller");
-const res = require("./mocks/response.mock");
-const vsiInstanceProfilesRaw = require("./data-files/vsiInstanceProfilesRaw.json");
-const vsiImagesRaw = require("./data-files/vsiImagesRaw.json");
-const clusterFlavorsRaw = require("./data-files/clusterFlavorRaw.json");
-const clusterVersionRaw = require("./data-files/clusterVersionRaw.json");
+const controller = require("../../express-controllers/controller");
+const res = require("../mocks/response.mock");
+const vsiInstanceProfilesRaw = require("../data-files/vsiInstanceProfilesRaw.json");
+const vsiImagesRaw = require("../data-files/vsiImagesRaw.json");
+const clusterFlavorsRaw = require("../data-files/clusterFlavorRaw.json");
+const clusterVersionRaw = require("../data-files/clusterVersionRaw.json");
 const { initMockAxios } = require("lazy-z");
 
 describe("controller", () => {

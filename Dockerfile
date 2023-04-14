@@ -12,7 +12,7 @@ ENV API_KEY=$api_key
 WORKDIR /app
 COPY client express-controllers express-routes lib server.js ./
 
-RUN npm install react-scripts sass -g
+RUN npm install react-scripts sass cdktf cdktf-cli@latest -g
 
 # start application
 cmd ["npm", "start"]

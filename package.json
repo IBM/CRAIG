@@ -14,7 +14,7 @@
     "deploy": "./deploy.sh",
     "compatibility-tests": "./compatibility.sh",
     "tf": "node lib/build-tf.js",
-    "setup" : "npm i && cd client && npm i"
+    "setup": " npm i cdktf mocha -g && npm i && cd client && npm i"
   },
   "authors": [
     "Jennifer Valle",
@@ -29,7 +29,10 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.2.0",
+    "body-parser": "^1.20.2",
+    "cdktf": "^0.15.5",
     "express": "^4.18.1",
+    "json-to-tf": "^0.2.1",
     "lazy-z": "^1.8.4",
     "nyc": "^15.1.0",
     "regex-but-with-words": "^1.5.1"
