@@ -14,7 +14,8 @@
     "deploy": "./deploy.sh",
     "compatibility-tests": "./compatibility.sh",
     "tf": "node lib/build-tf.js",
-    "setup": " npm i cdktf mocha -g && npm i && cd client && npm i"
+    "setup": " npm i cdktf mocha -g && npm i && cd client && npm i",
+    "docker-start": "NODE_ENV=production && npm i && node server.js"
   },
   "authors": [
     "Jennifer Valle",

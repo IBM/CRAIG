@@ -16,7 +16,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // create a GET route
 app.get("/express_backend", (req, res) => {
-  res.send({ express: "YOUR EXPRESS BACKEND IS CONNECTED TO SLZGUI" });
+  res.send({ express: "YOUR EXPRESS BACKEND IS CONNECTED TO CRAIG" });
 });
 
 app.use("/api", routes);
