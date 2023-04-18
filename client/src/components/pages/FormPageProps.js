@@ -183,7 +183,7 @@ function formProps(form, craig) {
       disableSave: disableSave,
       hideName: true,
       submissionFieldName: jsonField,
-      hide: false
+      hide: true
     }
   };
   // add resource groups

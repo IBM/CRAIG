@@ -9,7 +9,11 @@ module.exports = {
           stream: require.resolve("stream-browserify")
         }
       },
-      plugins: [new webpack.ProvidePlugin({})]
+      plugins: [
+        new webpack.ProvidePlugin({
+          Buffer: ["buffer", "Buffer"]
+        })
+      ]
     }
   }
 };

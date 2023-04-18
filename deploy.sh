@@ -121,7 +121,7 @@ else
     # app with name found update existing
     echo "Existing 'craig' application found, updating..."
     ibmcloud ce app update -n "craig" \
-      -i us.icr.io/craig-namespace/craig \
+      -i us.icr.io/$ICR_NAMESPACE/craig \
       --rs ibm-cr \
       -w=false \
       --cpu 2 \
@@ -135,7 +135,7 @@ else
     # no app found create one
     echo "No 'craig' application found, creating one..."
     ibmcloud ce app create -n "craig" \
-      -i us.icr.io/craig-namespace/craig \
+      -i us.icr.io/$ICR_NAMESPACE/craig \
       --rs ibm-cr \
       -w=false \
       --cpu 2 \

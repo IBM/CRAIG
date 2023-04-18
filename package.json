@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha unit-tests/ --recursive",
     "coverage": "npx nyc npm run test",
-    "build": "npm i && cd client && npm i && react-scripts build && cp -r build ../",
+    "build": "npm i && cd client && npm i && npm run build && cp -r build ../",
     "client": "npm run build && open http://localhost:3000",
     "start": "NODE_ENV=production && npm run build && node server.js",
     "md": "node lib/docs-as-markdown",
