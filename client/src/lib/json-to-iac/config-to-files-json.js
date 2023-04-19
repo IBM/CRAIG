@@ -19,6 +19,7 @@ const { vpcTf } = require("./vpc");
 const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
 const { vsiTf, lbTf } = require("./vsi");
+const { formatRoutingTableTf } = require("./routing-tables");
 
 /**
  * create a json document with file names as keys and text as value
@@ -93,11 +94,15 @@ variable "tmos_admin_password" {
           ? lbTf(config)
           : null,
       "f5_big_ip.tf": useF5 ? f5Tf(config) : null,
-      "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null
+      "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null,
+      "routing_tables.tf":
+        config.routing_tables && config.routing_tables.length > 0
+          ? formatRoutingTableTf(config)
+          : null
     };
     return files;
   } catch (err) {
-    console.log(err)
+    console.log(err);
     throw new Error(err);
   }
 }

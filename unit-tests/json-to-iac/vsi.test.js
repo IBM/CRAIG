@@ -24,6 +24,7 @@ describe("virtual server", () => {
           vpc: "management",
           index: 1,
           resource_group: "slz-management-rg",
+          network_interfaces: []
         },
         slzNetwork
       );

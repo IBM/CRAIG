@@ -81,7 +81,12 @@ const {
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
-  buildTitleComment
+  buildTitleComment,
+  formatRoutingTable,
+  ibmIsVpcRoutingTable,
+  ibmIsVpcRoutingTableRoute,
+  formatRoutingTableRoute,
+  formatRoutingTableTf
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
@@ -167,6 +172,11 @@ module.exports = {
   docs,
   releaseNotes,
   forceShowForm,
+  formatRoutingTable,
+  ibmIsVpcRoutingTable,
+  ibmIsVpcRoutingTableRoute,
+  formatRoutingTableRoute,
+  formatRoutingTableTf
   accessGroupPolicyHelperTextCallback,
   invalidIdentityProviderURI
 };

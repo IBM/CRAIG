@@ -49,6 +49,20 @@ describe("transit_gateways", () => {
         "it should only have one connection"
       );
     });
+    it("should not remove crn connections", () => {
+      let state = new newState();
+      state.store.json.transit_gateways[0].connections[0].crn = "crn";
+      delete state.store.json.transit_gateways[0].connections[0].vpc;
+      state.vpcs.delete({}, { data: { name: "management" } });
+      assert.deepEqual(
+        state.store.json.transit_gateways[0].connections,
+        [
+          { tgw: "transit-gateway", crn: "crn" },
+          { tgw: "transit-gateway", vpc: "workload" },
+        ],
+        "it should only have one connection"
+      );
+    });
     it("should set resource group to null if deleted", () => {
       let state = new newState();
       state.resource_groups.delete({}, { data: { name: "service-rg" } });

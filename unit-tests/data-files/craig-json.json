@@ -907,6 +907,7 @@
     ],
     "appid": [],
     "teleport_vsi": [],
+    "routing_tables": [],
     "scc": {
       "name": "scc",
       "enable": true

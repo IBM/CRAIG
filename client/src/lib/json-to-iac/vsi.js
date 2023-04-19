@@ -92,7 +92,8 @@ function ibmIsInstance(vsi, config) {
       });
       networkInterfaces.push(nwInterface);
     });
-    vsiData.network_interfaces = networkInterfaces;
+    if (vsi.network_interfaces.length > 0)
+      vsiData.network_interfaces = networkInterfaces;
   }
   // add security groups
   vsi.security_groups.forEach(group => {

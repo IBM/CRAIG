@@ -22,7 +22,7 @@ function transitGatewayInit(config) {
 function transitGatewayOnStoreUpdate(config) {
   config.store.json.transit_gateways.forEach(gateway => {
     gateway.connections.forEach(connection => {
-      if (!contains(config.store.vpcList, connection.vpc)) {
+      if (connection.vpc && !contains(config.store.vpcList, connection.vpc)) {
         // if vpc not there
         carve(gateway.connections, "vpc", connection.vpc); // remove from list of connections
       }

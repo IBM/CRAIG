@@ -60,17 +60,16 @@ function formatTgw(tgw, config) {
  */
 
 function ibmTgConnection(connection, config) {
+  let vpcName = connection.vpc || connection.crn.replace(/.+vpc:/g, "");
   return {
-    name: `${connection.tgw} to ${connection.vpc} connection`,
+    name: `${connection.tgw} to ${vpcName} connection`,
     data: {
       gateway: tfRef("ibm_tg_gateway", snakeCase(connection.tgw)),
       network_type: "vpc",
-      name: kebabName(config, [
-        connection.tgw,
-        connection.vpc,
-        "hub-connection"
-      ]),
-      network_id: vpcRef(connection.vpc, "crn"),
+      name: kebabName(config, [connection.tgw, vpcName, "hub-connection"]),
+      network_id: connection.vpc
+        ? vpcRef(connection.vpc, "crn")
+        : connection.crn,
       timeouts: timeouts("30m", "", "30m")
     }
   };

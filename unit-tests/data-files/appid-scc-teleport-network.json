@@ -978,5 +978,24 @@
       "listener_protocol": "https",
       "connection_limit": 2
     }
+  ],
+  "routing_tables": [
+    {
+      "vpc": "management",
+      "name": "routing-table",
+      "route_direct_link_ingress": true,
+      "route_transit_gateway_ingress": true,
+      "route_vpc_zone_ingress": true,
+      "routes": [
+        {
+          "vpc": "management",
+          "routing_table": "routing-table",
+          "name": "test-route",
+          "zone": 1,
+          "destination": "1.2.3.4/5",
+          "action": "delegate"
+        }
+      ]
+    }
   ]
 }

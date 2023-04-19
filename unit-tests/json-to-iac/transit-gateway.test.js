@@ -70,6 +70,43 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
         "it should return dorrect data"
       );
     });
+    it("should return correctly formatted transit gateway when connecting a vpc via crn", () => {
+      let actualData = formatTgwConnection(
+        {
+          name: "transit-gateway",
+          resource_group: "slz-service-rg",
+          global: false,
+          connections: [
+            {
+              tgw: "transit-gateway",
+              vpc: "management",
+            },
+            {
+              tgw: "transit-gateway",
+              crn: "crn:v1:bluemix:public:is:us-south:a/aaaaaaa::vpc:aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+            }
+          ],
+        }.connections[1],
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aaaaaaaaaaaa_connection" {
+  gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "vpc"
+  name         = "slz-transit-gateway-aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-hub-connection"
+  network_id   = "crn:v1:bluemix:public:is:us-south:a/aaaaaaa::vpc:aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return dorrect data"
+      );
+    });
   });
   describe("tgwTf", () => {
     it("should return correctly formatted transit gateway", () => {

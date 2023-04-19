@@ -121,6 +121,13 @@ const {
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf
 } = require("./page-template");
+const {
+  formatRoutingTable,
+  ibmIsVpcRoutingTable,
+  ibmIsVpcRoutingTableRoute,
+  formatRoutingTableRoute,
+  formatRoutingTableTf
+} = require("./routing-tables");
 const { buildTitleComment } = require("./utils");
 module.exports = {
   buildTitleComment,
@@ -217,5 +224,10 @@ module.exports = {
   f5TemplateFile,
   f5Locals,
   f5ImageLocals,
-  f5Images
+  f5Images,
+  formatRoutingTable,
+  ibmIsVpcRoutingTable,
+  ibmIsVpcRoutingTableRoute,
+  formatRoutingTableRoute,
+  formatRoutingTableTf
 };

@@ -178,6 +178,16 @@ const {
   getAllOtherGroups,
   getAllRuleNames
 } = require("./copy-rules");
+const {
+  routingTableInit,
+  routingTableOnStoreUpdate,
+  routingTableCreate,
+  routingTableSave,
+  routingTableDelete,
+  routingTableRouteCreate,
+  routingTableRouteSave,
+  routingTableRouteDelete
+} = require("./routing-tables");
 
 const state = function() {
   let store = new lazyZstate({
@@ -474,6 +484,21 @@ const state = function() {
   store.newField("iam_account_settings", {
     init: iamInit,
     save: iamSave
+  });
+
+  store.newField("routing_tables", {
+    init: routingTableInit,
+    onStoreUpdate: routingTableOnStoreUpdate,
+    save: routingTableSave,
+    create: routingTableCreate,
+    delete: routingTableDelete,
+    subComponents: {
+      routes: {
+        create: routingTableRouteCreate,
+        save: routingTableRouteSave,
+        delete: routingTableRouteDelete
+      }
+    }
   });
 
   store.newField("access_groups", {
