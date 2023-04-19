@@ -176,7 +176,7 @@ module.exports = {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  formatRoutingTableTf
+  formatRoutingTableTf,
   accessGroupPolicyHelperTextCallback,
   invalidIdentityProviderURI
 };
