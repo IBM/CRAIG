@@ -4,8 +4,8 @@ const {
   updateChild,
   pushAndUpdate,
   updateSubChild,
-  pushToChildField,
-  deleteSubChild
+  deleteSubChild,
+  pushToChildFieldModal
 } = require("./store.utils");
 
 /**
@@ -126,9 +126,10 @@ function accessGroupDelete(config, stateData, componentProps) {
  * @param {object} stateData component state data
  * @param {object} stateData.resources resource object for access group policy
  * @param {object} componentProps props from component form
+ * @param {string} componentProps.arrayParentName name of the parent object where child will be stored
  */
 function accessGroupPolicyCreate(config, stateData, componentProps) {
-  pushToChildField(
+  pushToChildFieldModal(
     config,
     "access_groups",
     "policies",
@@ -168,9 +169,10 @@ function accessGroupPolicyDelete(config, stateData, componentProps) {
  * @param {lazyZstate} config store
  * @param {object} stateData component state data
  * @param {object} componentProps props from component form
+ * @param {string} componentProps.arrayParentName name of the parent object where child will be stored
  */
 function accessGroupDynamicPolicyCreate(config, stateData, componentProps) {
-  pushToChildField(
+  pushToChildFieldModal(
     config,
     "access_groups",
     "dynamic_policies",

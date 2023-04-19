@@ -233,6 +233,10 @@ function invalidIpCommaList(ipList) {
   } else return ipList.match(commaSeparatedIpListExp) === null;
 }
 
+function invalidIdentityProviderURI(stateData, componentProps) {
+  return !(stateData.identity_provider.length >= 6);
+}
+
 /**
  * url value is valid and not empty
  * @param {str} url
@@ -254,6 +258,7 @@ module.exports = {
   invalidIamAccountSettings,
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
+  invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl
 };

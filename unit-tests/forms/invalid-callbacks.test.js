@@ -5,6 +5,7 @@ const {
   invalidIamAccountSettings,
   invalidTagList,
   invalidIpCommaList,
+  invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl,
 } = require("../../client/src/lib/forms");
@@ -612,6 +613,20 @@ describe("invalid callbacks", () => {
     });
     it("should return false when null is provided", () => {
       assert.isFalse(invalidIpCommaList(null));
+    });
+  });
+  describe("invalidIdentityProviderURI", () => {
+    it("should return true when identity_provider is invalid", () => {
+      let actualData = invalidIdentityProviderURI({
+        identity_provider: "",
+      });
+      assert.isTrue(actualData);
+    });
+    it("should return false when identity_provider is valid", () => {
+      let actualData = invalidIdentityProviderURI({
+        identity_provider: "http://identity",
+      });
+      assert.isFalse(actualData);
     });
   });
   describe("isValidUrl", () => {

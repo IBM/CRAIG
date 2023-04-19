@@ -28,7 +28,9 @@ const {
   copyAclModalContent,
   copyRuleCodeMirrorData,
   copySgModalContent,
-  forceShowForm
+  forceShowForm,
+  accessGroupPolicyHelperTextCallback,
+  invalidIdentityProviderURI
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -164,5 +166,7 @@ module.exports = {
   invalidIpCommaList,
   docs,
   releaseNotes,
-  forceShowForm
+  forceShowForm,
+  accessGroupPolicyHelperTextCallback,
+  invalidIdentityProviderURI
 };

@@ -13,6 +13,7 @@ const {
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
+  invalidIdentityProviderURI,
   isValidUrl
 } = require("./invalid-callbacks");
 
@@ -100,6 +101,19 @@ function disableSave(field, stateData, componentProps) {
     return (
       fieldsAreBad(["bucket", "cos_key"], stateData) ||
       isEmpty(stateData.locations)
+    );
+  } else if (field === "access_groups") {
+    return invalidName("access_groups")(stateData, componentProps);
+  } else if (field === "policies") {
+    return invalidName("policies")(stateData, componentProps);
+  } else if (field === "dynamic_policies") {
+    return (
+      invalidName("dynamic_policies")(stateData, componentProps) ||
+      fieldsAreBad(
+        ["identity_provider", "expiration", "conditions"],
+        stateData
+      ) ||
+      invalidIdentityProviderURI(stateData, componentProps)
     );
   } else if (field === "object_storage") {
     return (

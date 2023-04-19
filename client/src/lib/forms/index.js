@@ -7,7 +7,8 @@ const {
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback
+  clusterHelperTestCallback,
+  accessGroupPolicyHelperTextCallback
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -20,6 +21,7 @@ const {
   invalidSecurityGroupRuleName,
   invalidNewResourceName,
   invalidIpCommaList,
+  invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl
 } = require("./invalid-callbacks");
@@ -66,6 +68,8 @@ module.exports = {
   copyRuleCodeMirrorData,
   copySgModalContent,
   forceShowForm,
+  accessGroupPolicyHelperTextCallback,
+  invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl
 };

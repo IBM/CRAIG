@@ -88,7 +88,8 @@ const navCategories = [
         title: "Access Groups",
         path: "/form/accessGroups",
         icon: GroupAccess,
-        toTf: iamTf
+        toTf: iamTf,
+        jsonField: "access_groups"
       },
       {
         title: "IAM Account Settings",

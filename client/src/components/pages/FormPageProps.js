@@ -1,4 +1,5 @@
 import {
+  AccessGroupForm,
   AppIdForm,
   ClusterForm,
   EventStreamsForm,
@@ -26,14 +27,22 @@ import {
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   invalidSshPublicKey,
+  accessGroupPolicyHelperTextCallback,
   propsMatchState,
-  resourceGroupHelperTextCallback
+  resourceGroupHelperTextCallback,
+  invalidIdentityProviderURI
 } from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
 
 const pathToFormMap = {
+  accessGroups: {
+    jsonField: "access_groups",
+    name: "Access Groups",
+    addText: "Create an Access Group",
+    innerForm: AccessGroupForm
+  },
   resourceGroups: {
     jsonField: "resource_groups",
     name: "Resource Groups",
@@ -274,6 +283,38 @@ function formProps(form, craig) {
       },
       formTemplate.innerFormProps
     );
+  } else if (form === "accessGroups") {
+    /* access groups */
+    transpose(
+      {
+        propsMatchState: propsMatchState,
+        /* policies */
+        invalidPolicyCallback: invalidName("policies"),
+        invalidPolicyTextCallback: invalidNameText("policies"),
+        policyHelperTextCallback: accessGroupPolicyHelperTextCallback,
+        policyProps: {
+          onSave: craig.access_groups.policies.save,
+          onDelete: craig.access_groups.policies.delete,
+          onSubmit: craig.access_groups.policies.create,
+          disableSave: disableSave,
+          craig: craig,
+          resourceGroups: splat(craig.store.json.resource_groups, "name")
+        },
+        /* dynamic policies */
+        invalidDynamicPolicyCallback: invalidName("dynamic_policies"),
+        invalidDynamicPolicyTextCallback: invalidNameText("dynamic_policies"),
+        dynamicPolicyHelperTextCallback: accessGroupPolicyHelperTextCallback,
+        invalidIdentityProviderCallback: invalidIdentityProviderURI,
+        dynamicPolicyProps: {
+          onSave: craig.access_groups.dynamic_policies.save,
+          onDelete: craig.access_groups.dynamic_policies.delete,
+          onSubmit: craig.access_groups.dynamic_policies.create,
+          disableSave: disableSave,
+          craig: craig
+        }
+      },
+      formTemplate.innerFormProps
+    );
   } else if (form === "objectStorage") {
     /**
      * cos
@@ -422,6 +463,7 @@ function formProps(form, craig) {
     formTemplate.innerFormProps.securityGroups =
       craig.store.json.security_groups;
   }
+
   return formTemplate;
 }
 

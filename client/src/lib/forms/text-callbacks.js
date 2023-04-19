@@ -180,6 +180,10 @@ function iamAccountSettingInvalidText(field) {
     : "Invalid";
 }
 
+function accessGroupPolicyHelperTextCallback(stateData, componentProps) {
+  return `${componentProps.craig.store.json._options.prefix}-${stateData.name}-<random-suffix>`;
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
@@ -190,5 +194,6 @@ module.exports = {
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback
+  clusterHelperTestCallback,
+  accessGroupPolicyHelperTextCallback
 };

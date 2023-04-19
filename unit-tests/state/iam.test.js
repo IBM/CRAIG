@@ -88,7 +88,7 @@ describe("iam", () => {
           },
         },
         {
-          arrayParentName: "test",
+          innerFormProps: { arrayParentName: "test" },
         }
       );
     }
@@ -279,7 +279,7 @@ describe("iam", () => {
                 value: "value",
               },
             },
-            { arrayParentName: "test" }
+            { innerFormProps: { arrayParentName: "test" } }
           );
           assert.deepEqual(
             store.store.json.access_groups[0].dynamic_policies[0],
@@ -312,7 +312,7 @@ describe("iam", () => {
                 value: "value",
               },
             },
-            { arrayParentName: "test" }
+            { innerFormProps: { arrayParentName: "test" } }
           );
           store.access_groups.dynamic_policies.save(
             { expiration: 3 },
@@ -349,7 +349,9 @@ describe("iam", () => {
                 value: "value",
               },
             },
-            { arrayParentName: "test" }
+            {
+              innerFormProps: { arrayParentName: "test" },
+            }
           );
           store.access_groups.dynamic_policies.delete(
             {},

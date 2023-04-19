@@ -405,6 +405,7 @@ module.exports = {
     "eventStreams",
     "keyManagement",
     "nacls",
+    "accessGroups",
     "objectStorage",
     "resourceGroups",
     "secretsManager",

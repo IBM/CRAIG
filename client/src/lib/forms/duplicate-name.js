@@ -40,6 +40,14 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "worker_pools",
       "name"
     );
+  } else if (field === "access_groups") {
+    allOtherNames = splat(componentProps.craig.store.json.access_groups, "name")
+  } else if (field === "policies" || field === "dynamic_policies") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.access_groups,
+      field,
+      "name"
+    );
   } else if (field === "buckets" || field === "cos_keys") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.object_storage,

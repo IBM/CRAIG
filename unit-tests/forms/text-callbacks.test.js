@@ -9,6 +9,7 @@ const {
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
+  accessGroupPolicyHelperTextCallback,
 } = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {
@@ -552,6 +553,28 @@ describe("text callbacks", () => {
         ),
         'Name "aaa" already in use',
         "it should return error text"
+      );
+    });
+  });
+  describe("accessGroupPolicyHelperTextCallback", () => {
+    it("should return text with prefix and random suffix", () => {
+      assert.deepEqual(
+        accessGroupPolicyHelperTextCallback(
+          { name: "policy" },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "test",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "test-policy-<random-suffix>",
+        "it should display data"
       );
     });
   });
