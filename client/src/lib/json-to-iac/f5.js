@@ -251,11 +251,11 @@ function f5TemplateLocals(template) {
  * @returns {object} terraform formatted template file
  */
 function f5TemplateFile(template, config) {
-  let edgeVpc = getObjectFromArray(config.vpcs, "name", "edge");
+  let edgeVpc = getObjectFromArray(config.vpcs, "name", template.vpc);
   let workloadSubnet = getObjectFromArray(
     edgeVpc.subnets,
     "name",
-    `f5-workload-zone-${template.zone}`
+    `f5-management-zone-1`
   ).name;
   return {
     data: {

@@ -1023,7 +1023,7 @@ describe("craigToCdktf", () => {
                 domain: "local",
                 default_route_interface: "1.1",
                 default_route_gateway:
-                  "${cidrhost(ibm_is_subnet.edge_f5_workload_zone_1.cidr, 1)}",
+                  "${cidrhost(ibm_is_subnet.edge_f5_management_zone_1.cidr, 1)}",
                 do_local_declaration: "${local.do_local_declaration}",
                 do_declaration_url: "hi",
                 as3_declaration_url: "hi",

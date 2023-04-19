@@ -422,7 +422,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     hostname                = "f5-ve-01"
     domain                  = "local"
     default_route_interface = "1.1"
-    default_route_gateway   = cidrhost(ibm_is_subnet.edge_f5_workload_zone_1.cidr, 1)
+    default_route_gateway   = cidrhost(ibm_is_subnet.edge_f5_management_zone_1.cidr, 1)
     do_local_declaration    = local.do_local_declaration
     do_declaration_url      = "null"
     as3_declaration_url     = "null"
@@ -455,7 +455,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
             {
               cos: null,
               bucket: null,
-              name: "edge",
+              name: "management",
               resource_group: "edge-rg",
               classic_access: false,
               manual_address_prefix_management: true,
@@ -903,7 +903,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     hostname                = "f5-ve-01"
     domain                  = "local"
     default_route_interface = "1.1"
-    default_route_gateway   = cidrhost(ibm_is_subnet.edge_f5_workload_zone_1.cidr, 1)
+    default_route_gateway   = cidrhost(ibm_is_subnet.edge_f5_management_zone_1.cidr, 1)
     do_local_declaration    = local.do_local_declaration
     do_declaration_url      = "hi"
     as3_declaration_url     = "hi"
@@ -945,7 +945,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
             {
               cos: null,
               bucket: null,
-              name: "edge",
+              name: "management",
               resource_group: "edge-rg",
               classic_access: false,
               manual_address_prefix_management: true,
@@ -1467,7 +1467,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
   });
   describe("f5Tf", () => {
     it("should return correct f5 vsi terraform", () => {
-      let actualData = f5Tf({...slzNetwork});
+      let actualData = f5Tf({ ...slzNetwork });
       let expectedData = `##############################################################################
 # F5 Image IDs
 ##############################################################################
@@ -1597,7 +1597,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     hostname                = "f5-ve-01"
     domain                  = "local"
     default_route_interface = "1.1"
-    default_route_gateway   = cidrhost(ibm_is_subnet.edge_f5_workload_zone_1.cidr, 1)
+    default_route_gateway   = cidrhost(ibm_is_subnet.edge_f5_management_zone_1.cidr, 1)
     do_local_declaration    = local.do_local_declaration
     do_declaration_url      = "hi"
     as3_declaration_url     = "hi"

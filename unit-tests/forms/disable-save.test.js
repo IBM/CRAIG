@@ -2691,7 +2691,7 @@ describe("disableSave", () => {
         "volumes",
         {
           name: "good-name",
-          capacity: "1"
+          capacity: "1",
         },
         {
           craig: {
@@ -2849,6 +2849,76 @@ describe("disableSave", () => {
           data: { name: "vsi" },
         })
       );
+    });
+    describe("f5_vsi_template", () => {
+      const example_template = {
+        app_id: "null",
+        as3_declaration_url: "http://www.test.com/",
+        default_route_gateway_cidr: "10.10.10.10/24",
+        do_declaration_url: "http://www.test.com/",
+        domain: "local",
+        hostname: "f5-ve-01",
+        license_host: "null",
+        license_password: "null",
+        license_pool: "null",
+        license_sku_keyword_1: "null",
+        license_sku_keyword_2: "null",
+        license_type: "none",
+        license_username: "null",
+        phone_home_url: "http://www.test.com/",
+        template_version: "20210201",
+        tgactive_url: "http://www.test.com/",
+        tgrefresh_url: "http://www.test.com/",
+        tgstandby_url: "http://www.test.com/",
+        tmos_admin_password: null,
+        ts_declaration_url: "http://www.test.com/",
+        vpc: "edge",
+        zone: 1,
+        template_source: "test",
+      };
+      it("should return true if any fields are empty, based on license_type none", () => {
+        let template = Object.assign({}, example_template);
+        template.template_version = "";
+        template.template_source = "";
+        assert.isTrue(disableSave("f5_vsi_template", template));
+      });
+      it("should return true if any fields are empty, based on license_type byol", () => {
+        let template = Object.assign({}, example_template);
+        template.license_type = "byol";
+        template.byol_license_basekey = "";
+        assert.isTrue(disableSave("f5_vsi_template", template));
+      });
+      it("should return true if any fields are empty, based on license_type regkeypool", () => {
+        let template = Object.assign({}, example_template);
+        template.license_type = "regkeypool";
+        template.license_username = "";
+        template.license_host = "";
+        template.license_pool = "";
+        assert.isTrue(disableSave("f5_vsi_template", template));
+      });
+      it("should return true if any fields are empty, based on license_type utilitypool", () => {
+        let template = Object.assign({}, example_template);
+        template.license_type = "utilitypool";
+        template.license_unit_of_measure = "";
+        assert.isTrue(disableSave("f5_vsi_template", template));
+      });
+      it("should return true if any of the urls are invalid", () => {
+        let template = Object.assign({}, example_template);
+        template.ts_declaration_url = "not a url";
+        assert.isTrue(disableSave("f5_vsi_template", template));
+      });
+      it("should return false if all valid", () => {
+        let template = Object.assign({}, example_template);
+        assert.isFalse(disableSave("f5_vsi_template", template));
+      });
+    });
+  });
+  describe("f5_vsi", () => {
+    it("should return true if ssh keys empty", () => {
+      assert.isTrue(disableSave("f5_vsi", { ssh_keys: [] }));
+    });
+    it("should return true if no ssh keys", () => {
+      assert.isTrue(disableSave("f5_vsi", {}));
     });
   });
   describe("forceShowForm", () => {

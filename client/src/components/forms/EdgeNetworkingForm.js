@@ -120,7 +120,9 @@ class EdgeNetworkingForm extends React.Component {
 
   onChange(event) {
     let { name, value } = event.target;
-    this.setState({ [name]: value });
+    if (name === "zones") {
+      this.setState({ zones: Number(value) });
+    } else this.setState({ [name]: value });
   }
 
   onSubmit() {
@@ -129,6 +131,7 @@ class EdgeNetworkingForm extends React.Component {
       this.state.edgeType === "management",
       Number(this.state.zones)
     );
+    this.props.craig.f5.vsi.create(this.state);
     this.setState({
       hideModal: true,
       hideEdgeForm: true,

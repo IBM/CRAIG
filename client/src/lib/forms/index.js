@@ -19,7 +19,9 @@ const {
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
   invalidNewResourceName,
-  invalidIpCommaList
+  invalidIpCommaList,
+  invalidF5Vsi,
+  isValidUrl
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const { disableSave, invalidPort, forceShowForm } = require("./disable-save");
@@ -63,5 +65,7 @@ module.exports = {
   copyAclModalContent,
   copyRuleCodeMirrorData,
   copySgModalContent,
-  forceShowForm
+  forceShowForm,
+  invalidF5Vsi,
+  isValidUrl
 };

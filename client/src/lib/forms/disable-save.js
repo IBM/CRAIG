@@ -12,7 +12,8 @@ const {
   invalidSshPublicKey,
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
-  invalidIpCommaList
+  invalidIpCommaList,
+  isValidUrl
 } = require("./invalid-callbacks");
 
 /**
@@ -35,6 +36,23 @@ function fieldsAreBad(fields, stateData) {
   let hasBadFields = false;
   fields.forEach(field => {
     if (badField(field, stateData)) {
+      hasBadFields = true;
+    }
+  });
+  return hasBadFields;
+}
+
+/**
+ * check multiple fields against the same regex expression
+ * @param {Array} fields list of fields
+ * @param {Function} check test fields with this
+ * @param {Object} stateData
+ * @returns
+ */
+function fieldCheck(fields, check, stateData) {
+  let hasBadFields = false;
+  fields.forEach(field => {
+    if (!check(stateData[field])) {
       hasBadFields = true;
     }
   });
@@ -276,6 +294,43 @@ function disableSave(field, stateData, componentProps) {
       isEmpty(stateData.subnets) ||
       isEmpty(stateData.ssh_keys)
     );
+  } else if (field === "f5_vsi_template") {
+    let extraFields = {
+      none: [],
+      byol: ["byol_license_basekey"],
+      regkeypool: ["license_username", "license_host", "license_pool"],
+      utilitypool: [
+        "license_username",
+        "license_host",
+        "license_pool",
+        "license_unit_of_measure",
+        "license_sku_keyword_1",
+        "license_sku_keyword_2"
+      ]
+    };
+    return (
+      fieldsAreBad(
+        ["template_version", "template_source"].concat(
+          extraFields[stateData["license_type"]]
+        ),
+        stateData
+      ) ||
+      fieldCheck(
+        [
+          "do_declaration_url",
+          "as3_declaration_url",
+          "ts_declaration_url",
+          "phone_home_url",
+          "tgstandby_url",
+          "tgrefresh_url",
+          "tgactive_url"
+        ],
+        isValidUrl,
+        stateData
+      )
+    );
+  } else if (field === "f5_vsi") {
+    return isEmpty(stateData?.ssh_keys || []);
   } else return false;
 }
 

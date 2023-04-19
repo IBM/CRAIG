@@ -259,8 +259,9 @@ const navCategories = [
       },
       {
         title: "F5 Big IP",
-        path: "/form/f5BigIP",
+        path: "/form/f5",
         icon: F5Icon,
+        jsonField: "f5_vsi",
         toTf: f5Tf
       }
     ]

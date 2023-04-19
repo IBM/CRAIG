@@ -5,6 +5,8 @@ const {
   invalidIamAccountSettings,
   invalidTagList,
   invalidIpCommaList,
+  invalidF5Vsi,
+  isValidUrl,
 } = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
@@ -581,6 +583,18 @@ describe("invalid callbacks", () => {
       assert.isFalse(actualData);
     });
   });
+  describe("invalidF5Vsi", () => {
+    it("should return false if the fields have their own validation or is optional", () => {
+      assert.isFalse(
+        invalidF5Vsi("tmos_admin_password", { tmos_admin_password: "" })
+      );
+      assert.isFalse(invalidF5Vsi("app_id", { app_id: "" }));
+      assert.isFalse(invalidF5Vsi("home_phone_url", { home_phone_url: "" }));
+    });
+    it("should return true if null or empty string for other fields", () => {
+      assert.isTrue(invalidF5Vsi("template_version", { template_version: "" }));
+    });
+  });
   describe("invalidTagList", () => {
     it("should return true when invalid tag list", () => {
       assert.isTrue(invalidTagList(["hi", "2@@@2"]));
@@ -598,6 +612,21 @@ describe("invalid callbacks", () => {
     });
     it("should return false when null is provided", () => {
       assert.isFalse(invalidIpCommaList(null));
+    });
+  });
+  describe("isValidUrl", () => {
+    it("should be true for empty or null string", () => {
+      assert.isTrue(isValidUrl("") && isValidUrl(null) && isValidUrl("null"));
+    });
+    it("should be false for invalid url", () => {
+      assert.isFalse(isValidUrl("invalid.url"));
+    });
+    it("should be true for valid url", () => {
+      assert.isTrue(
+        isValidUrl(
+          "https://declarations.s3.us-east.cloud-object-storage.appdomain.cloud/do_declaration.json"
+        )
+      );
     });
   });
 });

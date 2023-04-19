@@ -9,7 +9,8 @@ const {
 const {
   newResourceNameExp,
   sshKeyValidationExp,
-  commaSeparatedIpListExp
+  commaSeparatedIpListExp,
+  urlValidationExp
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -185,6 +186,24 @@ function invalidIamAccountSettings(field, stateData) {
   );
 }
 
+function invalidF5Vsi(field, stateData, componentProps) {
+  let hasOwnValidation = ["tmos_admin_password"];
+  let optionalFields = [
+    "app_id",
+    "license_password",
+    "license_unit_of_measure"
+  ];
+  if (
+    field.includes("url") || // all url fields have their own validation
+    contains(hasOwnValidation, field) ||
+    contains(optionalFields, field)
+  ) {
+    return false; // ignore these, have their own validation
+  } else {
+    return isNullOrEmptyString(stateData[field]); // just cannot be empty
+  }
+}
+
 /**
  * check if security group rule name is invalid
  * @param {*} stateData
@@ -214,6 +233,16 @@ function invalidIpCommaList(ipList) {
   } else return ipList.match(commaSeparatedIpListExp) === null;
 }
 
+/**
+ * url value is valid and not empty
+ * @param {str} url
+ * @returns {boolean} true when url is valid (ie, null, "null", or a valid url), otherwise false
+ */
+function isValidUrl(url) {
+  if (isNullOrEmptyString(url) || url === "null") return true;
+  return url.match(urlValidationExp) !== null;
+}
+
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -224,5 +253,7 @@ module.exports = {
   invalidSubnetTierName,
   invalidIamAccountSettings,
   invalidSecurityGroupRuleName,
-  invalidIpCommaList
+  invalidIpCommaList,
+  invalidF5Vsi,
+  isValidUrl
 };

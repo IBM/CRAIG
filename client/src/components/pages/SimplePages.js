@@ -1,5 +1,10 @@
 import React from "react";
-import { ToggleForm, IcseFormTemplate } from "icse-react-assets";
+import {
+  ToggleForm,
+  IcseFormTemplate,
+  EmptyResourceTile,
+  StatefulTabPanel
+} from "icse-react-assets";
 import PropTypes from "prop-types";
 import toggleFormProps from "./ToggleFormPageProps";
 import formProps from "./FormPageProps";
@@ -8,7 +13,22 @@ import { Docs } from "icse-react-assets";
 const { docs } = require("../../lib");
 
 export const ToggleFormPage = props => {
-  return <ToggleForm {...toggleFormProps(props.form, props.craig)} />;
+  return props.form === "f5" && props.craig.store.edge_pattern === undefined ? (
+    <StatefulTabPanel
+      name="F5 Big IP"
+      hideFormTitleButton
+      form={
+        <EmptyResourceTile
+          name="Edge Network"
+          instructions="Go back to the Home page to create one."
+          showIfEmpty={[]}
+        />
+      }
+      about={RenderDocs("f5")()}
+    />
+  ) : (
+    <ToggleForm {...toggleFormProps(props.form, props.craig)} />
+  );
 };
 
 ToggleFormPage.propTypes = {

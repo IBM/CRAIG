@@ -2,7 +2,9 @@ const {
   contains,
   eachKey,
   isEmpty,
-  eachZone
+  eachZone,
+  transpose,
+  revision
 } = require("lazy-z");
 const { addVsiEncryptionKey, newF5Vsi } = require("../builders");
 const {
@@ -39,18 +41,6 @@ function f5OnStoreUpdate(config) {
       instance.subnet = null;
       instance.template.vpc = null;
       instance.network_interfaces = [];
-    } else {
-      if (!contains(config.store.subnets[instance.vpc], instance.subnet)) {
-        // if not found set primary name to null
-        instance.subnet = null;
-      }
-      // check network interfaces
-      instance.network_interfaces.forEach(intf => {
-        if (!contains(config.store.subnets[instance.vpc], intf.subnet)) {
-          // subnet does not exist
-          intf.subnet = null;
-        }
-      });
     }
 
     setUnfoundEncryptionKey(config, instance, "encryption_key");
@@ -72,7 +62,7 @@ function f5OnStoreUpdate(config) {
  * @param {number} stateData.zones number of zones
  */
 function f5VsiCreate(config, stateData) {
-  let useManagement = stateData.useManagement;
+  let useManagement = stateData.edgeType === "management";
   let zones = stateData.zones;
   config.store.json.f5_vsi = [];
   config.store.f5_on_management = useManagement;
@@ -89,7 +79,7 @@ function f5VsiCreate(config, stateData) {
   }
   eachZone(zones || 3, zone => {
     config.store.json.f5_vsi.push(
-      newF5Vsi(config.store.edge_pattern, zone, useManagement)
+      newF5Vsi(config.store.edge_pattern, zone, useManagement, stateData)
     );
   });
 }
@@ -130,20 +120,35 @@ function f5VsiSave(config, stateData) {
  * @param {string} stateData.resource_group
  * @param {string} stateData.boot_volume_encryption_key_name
  */
-function f5InstanceSave(config, stateData, componentProps) {
-  if (stateData.template) {
-    eachKey(stateData.template, key => {
-      if (
-        key === "tmos_admin_password" &&
-        stateData.template.tmos_admin_password === ""
-      ) {
-        stateData.template.tmos_admin_password = null;
-      } else if (stateData.template[key] === "") {
-        stateData.template[key] = "null";
-      }
-    });
-  }
-  updateChild(config, "f5_vsi", stateData, componentProps);
+function f5TemplateSave(config, stateData, componentProps) {
+  eachKey(stateData, key => {
+    if (key === "tmos_admin_password" && stateData.tmos_admin_password === "") {
+      stateData.tmos_admin_password = null;
+    } else if (stateData[key] === "") {
+      stateData[key] = "null";
+    }
+  });
+  config.store.json.f5_vsi.forEach(vsi => {
+    transpose(stateData, vsi.template);
+  });
+}
+
+/**
+ * save a single f5 vsi instance
+ * @param {lazyZState} config  store
+ * @param {object} config.store
+ * @param {object} config.store.json
+ * @param {Array<object>} config.store.json.f5_vsi
+ * @param {object} stateData component state data
+ * @param {string} stateData.name
+ * @param {string} stateData.resource_group
+ * @param {string} stateData.encryption_key
+ */
+function f5InstanceSave(config, stateData) {
+  new revision(config.store.json).child("f5_vsi", stateData.name).then(data => {
+    data.resource_group = stateData.resource_group;
+    data.encryption_key = stateData.encryption_key;
+  });
 }
 
 module.exports = {
@@ -151,5 +156,6 @@ module.exports = {
   f5OnStoreUpdate,
   f5VsiCreate,
   f5VsiSave,
-  f5InstanceSave
+  f5InstanceSave,
+  f5TemplateSave
 };

@@ -205,6 +205,38 @@ module.exports = {
     .anyNumber()
     .stringEnd()
     .done("gm"),
+  urlValidationExp: new RegexButWithWords()
+    .group(exp => {
+      exp
+        .literal("ftp")
+        .or()
+        .literal("http")
+        .literal("s")
+        .lazy();
+    })
+    .literal("://")
+    .group("www.")
+    .lazy()
+    .group(exp => {
+      exp
+        .negatedSet('"\\/')
+        .oneOrMore()
+        .literal(".");
+    })
+    .group(exp => {
+      exp
+        .negatedSet('"\\/')
+        .oneOrMore()
+        .literal(".");
+    })
+    .oneOrMore()
+    .negatedSet('"\\/.')
+    .oneOrMore()
+    .literal("/")
+    .negatedSet(' "')
+    .anyNumber()
+    .stringEnd()
+    .done("g"),
   clusterRules: [
     {
       name: "roks-create-worker-nodes-inbound",
@@ -388,7 +420,8 @@ module.exports = {
   toggleFormPages: [
     "activityTracker",
     "securityComplianceCenter",
-    "iamAccountSettings"
+    "iamAccountSettings",
+    "f5"
   ],
   // required fields for json objects
   // these are used to add null values for optional fields on objects that are passed in

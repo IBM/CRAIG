@@ -129,7 +129,8 @@ const {
   f5VsiSave,
   f5InstanceSave,
   f5VsiCreate,
-  f5OnStoreUpdate
+  f5OnStoreUpdate,
+  f5TemplateSave
 } = require("./f5");
 const {
   loadBalancerInit,
@@ -435,6 +436,9 @@ const state = function() {
       vsi: {
         create: f5VsiCreate,
         save: f5VsiSave
+      },
+      template: {
+        save: f5TemplateSave
       }
     }
   });
