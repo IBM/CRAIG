@@ -3,6 +3,7 @@ const {
   disableSave,
   invalidPort,
   forceShowForm,
+  disableSshKeyDelete,
 } = require("../../client/src/lib/forms");
 
 describe("disableSave", () => {
@@ -3109,6 +3110,32 @@ describe("disableSave", () => {
           }
         ),
         "it should be true"
+      );
+    });
+  });
+  describe("disableSshKeyDelete", () => {
+    it("should return true if ssh key is in use", () => {
+      assert.isTrue(
+        disableSshKeyDelete({
+          craig: {
+            store: {
+              json: {
+                vsi: [
+                  {
+                    ssh_keys: ["key"],
+                  },
+                ],
+                teleport_vsi: [],
+                f5_vsi: [],
+              },
+            },
+          },
+          innerFormProps: {
+            data: {
+              name: "key",
+            },
+          },
+        })
       );
     });
   });

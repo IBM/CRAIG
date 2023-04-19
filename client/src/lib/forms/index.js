@@ -26,7 +26,12 @@ const {
   isValidUrl
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
-const { disableSave, invalidPort, forceShowForm } = require("./disable-save");
+const {
+  disableSave,
+  invalidPort,
+  forceShowForm,
+  disableSshKeyDelete
+} = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
 
@@ -71,5 +76,6 @@ module.exports = {
   accessGroupPolicyHelperTextCallback,
   invalidIdentityProviderURI,
   invalidF5Vsi,
-  isValidUrl
+  isValidUrl,
+  disableSshKeyDelete
 };

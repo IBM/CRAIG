@@ -4,7 +4,11 @@ const {
   isIpv4CidrOrAddress,
   containsKeys,
   validPortRange,
-  isInRange
+  isInRange,
+  distinct,
+  contains,
+  flatten,
+  splat
 } = require("lazy-z");
 const {
   invalidName,
@@ -363,4 +367,29 @@ function forceShowForm(stateData, componentProps) {
   );
 }
 
-module.exports = { disableSave, invalidPort, forceShowForm };
+/**
+ * disable ssh key delete
+ * @param {*} componentProps
+ * @param {*} componentProps.innerFormProps
+ * @param {*} componentProps.innerFormProps.data
+ * @param {string} componentProps.innerFormProps.data.name
+ * @returns {boolean} true if should be disabled
+ */
+function disableSshKeyDelete(componentProps) {
+  let allVsiSshKeys = [];
+  ["vsi", "teleport_vsi", "f5_vsi"].forEach(vsi => {
+    allVsiSshKeys = distinct(
+      allVsiSshKeys.concat(
+        flatten(splat(componentProps.craig.store.json[vsi], "ssh_keys"))
+      )
+    );
+  });
+  return contains(allVsiSshKeys, componentProps.innerFormProps.data.name);
+}
+
+module.exports = {
+  disableSave,
+  invalidPort,
+  forceShowForm,
+  disableSshKeyDelete
+};

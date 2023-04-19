@@ -26,7 +26,7 @@
     "craco": "^0.0.3",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
-    "icse-react-assets": "^0.4.17",
+    "icse-react-assets": "^0.4.19",
     "json-to-tf": "^0.2.1",
     "jszip": "^3.10.1",
     "lazy-z": "^1.9.0",

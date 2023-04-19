@@ -15,7 +15,12 @@ import {
   VpnGatewayForm,
   VsiForm
 } from "icse-react-assets";
-import { contains, getObjectFromArray, splat, transpose } from "lazy-z";
+import {
+  contains,
+  getObjectFromArray,
+  splat,
+  transpose,
+} from "lazy-z";
 import {
   clusterHelperTestCallback,
   cosResourceHelperTextCallback,
@@ -30,7 +35,8 @@ import {
   accessGroupPolicyHelperTextCallback,
   propsMatchState,
   resourceGroupHelperTextCallback,
-  invalidIdentityProviderURI
+  invalidIdentityProviderURI,
+  disableSshKeyDelete
 } from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
@@ -388,6 +394,9 @@ function formProps(form, craig) {
     formTemplate.innerFormProps.cosBuckets = craig.store.cosBuckets;
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
+    formTemplate.deleteDisabled = disableSshKeyDelete;
+    formTemplate.deleteDisabledMessage =
+      "Cannot delete SSH Keys in use by Virtual Servers";
   } else if (form === "transitGateways") {
     formTemplate.innerFormProps.readOnlyName = false;
   } else if (form === "securityGroups") {

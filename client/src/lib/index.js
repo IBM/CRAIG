@@ -30,7 +30,8 @@ const {
   copySgModalContent,
   forceShowForm,
   accessGroupPolicyHelperTextCallback,
-  invalidIdentityProviderURI
+  invalidIdentityProviderURI,
+  disableSshKeyDelete
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -178,5 +179,6 @@ module.exports = {
   formatRoutingTableRoute,
   formatRoutingTableTf,
   accessGroupPolicyHelperTextCallback,
-  invalidIdentityProviderURI
+  invalidIdentityProviderURI,
+  disableSshKeyDelete
 };
