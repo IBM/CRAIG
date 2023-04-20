@@ -29,6 +29,11 @@ const CopyRuleObject = props => {
             ? "Copy Security Group to VPC"
             : "Copy ACL to VPC"
         }
+        tooltip={{
+          content: props.isSecurityGroup
+            ? "Copy Security Group from one VPC to another"
+            : "Copy ACL from one VPC to another"
+        }}
       />
       <IcseFormGroup className="align-row">
         <IcseSelect

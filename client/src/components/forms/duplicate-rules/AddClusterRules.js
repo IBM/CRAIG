@@ -12,7 +12,15 @@ import PropTypes from "prop-types";
 const AddClusterRules = props => {
   return (
     <>
-      <IcseHeading type="subHeading" name="Add Cluster Rules" />
+      <IcseHeading
+        type="subHeading"
+        name="Add Cluster Rules"
+        tooltip={{
+          content:
+            "Add rules to allow needed traffic for provisioning Red Hat OpenShift and IBM Kubernetes Service clusters.",
+          link: "https://cloud.ibm.com/docs/openshift?topic=openshift-vpc-acls#acls_ui"
+        }}
+      />
       <IcseFormGroup className="align-row">
         <IcseSelect
           formName={"cluster-rules-acl-source-" + props.data.name}

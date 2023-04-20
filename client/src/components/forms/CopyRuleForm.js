@@ -291,6 +291,7 @@ class CopyRuleForm extends React.Component {
           hide={this.state.hideToggleForm}
           iconType="add"
         >
+
           {this.props.isAclForm && (
             <AddClusterRules
               data={this.props.data}

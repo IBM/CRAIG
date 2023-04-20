@@ -25,7 +25,13 @@ const CopyRule = props => {
 
   return (
     <>
-      <IcseHeading type="subHeading" name={"Copy Rule to " + ruleType} />
+      <IcseHeading
+        type="subHeading"
+        name={"Copy Rule to " + ruleType}
+        tooltip={{
+          content: "Copy a rule from one " + ruleType + " to another"
+        }}
+      />
       <IcseFormGroup noMarginBottom className="align-row">
         <IcseSelect
           formName={getFormName("source")}

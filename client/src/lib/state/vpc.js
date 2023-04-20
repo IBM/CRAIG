@@ -878,7 +878,7 @@ function createEdgeVpc(config, pattern, useManagementVpc, zones) {
   } else {
     // add edge rg
     config.store.json.resource_groups.push({
-      create: true,
+      use_data: false,
       use_prefix: true,
       name: "edge-rg"
     });
