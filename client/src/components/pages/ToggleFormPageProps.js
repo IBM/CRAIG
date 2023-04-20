@@ -152,6 +152,8 @@ function toggleFormProps(form, craig) {
       cosKeys: craig.store.cosKeys
     };
     transpose(atrackerInnerFormProps, formTemplate.innerFormProps);
+    formTemplate.tabPanel.name = "Activity Tracker";
+    formTemplate.name = `${craig.store.json._options.prefix}-atracker`;
   } else if (form === "securityComplianceCenter") {
     // set specific props
     formTemplate.useAddButton = craig.store.json.scc.enable === false;
