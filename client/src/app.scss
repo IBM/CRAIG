@@ -66,3 +66,7 @@ a.tile:is(:link, :visited, :hover, :active) {
   text-decoration: none;
   display: inline-block;
 }
+
+.alignItemsCenter {
+  align-items: center;
+}

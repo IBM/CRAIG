@@ -1,5 +1,68 @@
+:root {
+  --tab-header: #161616;
+  --tab-text: #c6c6c6;
+  --cm-background: #262626;
+}
+
 .rightPanelWidth {
-  width: 38%;
-  min-width: 38%; /* do not resize when json code mirror can be smaller */
+  width: 40%;
+  min-width: 40%; /* do not resize when json code mirror can be smaller */
   text-align: left;
+}
+
+.tabPanel {
+  background-color: var(--tab-header);
+  position: sticky;
+  position: -webkit-sticky; /* safari */
+  top: 3rem; /* beneath navbar */
+  height: 3.5rem;
+  align-items: center;
+  z-index: 201; /* z-index above cm */
+  padding: 0 0.5rem;
+}
+
+.ͼ1.cm-focused {
+  outline: none;
+}
+
+/* override default button styles */
+button {
+  padding: 0;
+  border: 0;
+  background: inherit;
+  font-family: inherit;
+}
+
+button.tabButton {
+  font-weight: 400;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  width: 6rem;
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  color: var(--tab-text);
+}
+
+.tabButton:hover {
+  transition: 200ms cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  border-bottom: 2px solid var(--tab-text);
+}
+
+.tabButton.active {
+  transition: 200ms cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  border-bottom: 2px solid var(--blue);
+}
+
+.copyButton {
+  background: inherit;
+}
+
+.copyButton > svg {
+  fill: var(--tab-text);
+}
+
+.copyButton:hover > svg {
+  fill: black;
 }

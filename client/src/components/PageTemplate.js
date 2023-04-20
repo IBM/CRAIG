@@ -388,15 +388,14 @@ const PageTemplate = props => {
   // if path is undefined or "form" is not present in path then hide the code mirror
   let formPathNotPresent =
     pageObj.path === undefined ? true : !contains(pageObj.path, "form");
+
   return (
     <>
       <Navigation
         hideCodeMirror={props.hideCodeMirror}
         onJsonToggle={() => props.toggleHide("hideCodeMirror")}
-        onTypeToggle={() => props.toggleHide("jsonInCodeMirror")}
         navCategories={navCategories}
         json={props.json}
-        jsonInCodeMirror={props.jsonInCodeMirror}
         notify={props.notify}
         isResetState={isResetState}
         formPathNotPresent={formPathNotPresent}
@@ -424,6 +423,8 @@ const PageTemplate = props => {
         <CraigCodeMirror
           hideCodeMirror={formPathNotPresent === true || props.hideCodeMirror}
           code={getCodeMirrorDisplay(props.json, props.jsonInCodeMirror)}
+          onTabClick={props.onTabClick}
+          jsonInCodeMirror={props.jsonInCodeMirror}
         />
       </div>
       {isResetState !== true && (

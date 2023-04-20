@@ -14,6 +14,13 @@ function newState() {
 }
 
 describe("state util functions", () => {
+  describe("setStoreValue", () => {
+    it("should set a store value", () => {
+      let state = newState();
+      state.setStoreValue("jsonInCodeMirror", true);
+      assert.isTrue(state.store.jsonInCodeMirror, "it should be set");
+    });
+  });
   describe("toggleStoreValue", () => {
     it("should toggle a boolean store value", () => {
       let state = newState();

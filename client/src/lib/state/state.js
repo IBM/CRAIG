@@ -222,6 +222,10 @@ const state = function() {
     store.store[value] = !store.store[value];
   };
 
+  store.setStoreValue = function(field, value) {
+    store.store[field] = value;
+  };
+
   /**
    * update unfound value from store
    * @param {string} listName name of the list within the store

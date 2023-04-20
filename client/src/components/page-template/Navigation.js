@@ -101,21 +101,6 @@ class Navigation extends React.Component {
             CRAIG
           </HeaderName>
           <HeaderGlobalBar>
-            {this.props.hideCodeMirror === false &&
-              this.props.formPathNotPresent === false && (
-                <HeaderGlobalAction
-                  aria-label={
-                    this.props.jsonInCodeMirror
-                      ? "Show Terraform Code"
-                      : "Show JSON Configuration"
-                  }
-                  isActive
-                  onClick={() => this.props.onTypeToggle()}
-                  tooltipAlignment="end"
-                >
-                  {this.props.jsonInCodeMirror ? <Script /> : <Json />}
-                </HeaderGlobalAction>
-              )}
             {this.props.isResetState === false &&
               this.props.formPathNotPresent === false && (
                 <HeaderGlobalAction

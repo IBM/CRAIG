@@ -50,6 +50,7 @@ class Craig extends React.Component {
     this.setItem = this.setItem.bind(this);
     this.onError = this.onError.bind(this);
     this.notify = this.notify.bind(this);
+    this.onTabClick = this.onTabClick.bind(this);
   }
 
   // when react component mounts, set update callback for store
@@ -128,6 +129,12 @@ class Craig extends React.Component {
     }));
   }
 
+  onTabClick(tab) {
+    let value = tab === "Terraform" ? false : true;
+    craig.setStoreValue("jsonInCodeMirror", value);
+    this.setState({ jsonInCodeMirror: value });
+  }
+
   render() {
     return (
       <>
@@ -147,6 +154,7 @@ class Craig extends React.Component {
           jsonInCodeMirror={this.state.jsonInCodeMirror}
           notifications={this.state.notifications}
           notify={this.notify}
+          onTabClick={this.onTabClick}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
