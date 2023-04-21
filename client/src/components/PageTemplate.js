@@ -382,7 +382,7 @@ const PageTemplate = props => {
         )
         .replace(maskFieldsExpStep5CleanUp, "public_key"); // remove any extraneous %%%% from setting fields to null
     } else if (pageObj.toTf) {
-      return pageObj.toTf(json);
+      return pageObj.toTf(json).replace(/\[\n\s*\]/g, "[]");
     } else return prettyJSON(json);
   }
   // if path is undefined or "form" is not present in path then hide the code mirror
