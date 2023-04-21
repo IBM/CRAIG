@@ -2,28 +2,74 @@
   "_options": {
     "prefix": "string",
     "region": "string",
-    "tags": "Array<string>"
+    "tags": "Array<string>",
+    "zones": "number"
   },
   "resource_groups": {
     "Array": {
       "use_prefix": "boolean",
-      "use_data": "boolean",
-      "name": "string"
+      "name": "string",
+      "use_data": "boolean"
     }
+  },
+  "access_groups": {
+    "Array": {
+      "name": "string",
+      "description": "string",
+      "policies": {
+        "Array": {
+          "name": "string",
+          "resources": {
+            "Array": {
+              "resource_group": "string",
+              "resource_type": "string",
+              "resource": "string",
+              "service": "string",
+              "resource_instance_id": "string"
+            }
+          }
+        }
+      },
+      "dynamic_policies": {
+        "Array": {
+          "name": "string",
+          "identity_provider": "string",
+          "expiration": "number",
+          "conditions": {
+            "claim": "string",
+            "operator": "string",
+            "value": "string"
+          }
+        }
+      },
+      "has_invites": "boolean",
+      "invites": { "group": "string", "ibm_ids": "Array<string>" }
+    }
+  },
+  "iam_account_settings": {
+    "enable": "boolean",
+    "mfa": "string",
+    "allowed_ip_addresses": "string",
+    "include_history": "boolean",
+    "if_match": "boolean",
+    "max_sessions_per_identity": "number",
+    "restrict_create_service_id": "boolean",
+    "restrict_create_platform_apikey": "boolean",
+    "session_expiration_in_seconds": "string",
+    "session_invalidation_in_seconds": "string"
   },
   "key_manangement": {
     "Array": {
       "name": "string",
-      "use_data": "boolean",
+      "resource_group": "string",
       "use_hs_crypto": "boolean",
       "authorize_vpc_reader_role": "boolean",
-      "resource_group": "string",
-      "has_secrets_manager_auth": "boolean",
+      "use_data": "boolean",
       "keys": {
         "Array": {
+          "key_ring": "string",
           "name": "string",
           "root_key": "boolean",
-          "key_ring": "string",
           "force_delete": "boolean",
           "endpoint": "string",
           "rotation": "number",
@@ -37,8 +83,8 @@
       "name": "string",
       "plan": "string",
       "resource_group": "string",
-      "use_random_suffix": "boolean",
       "use_data": "boolean",
+      "use_random_suffix": "boolean",
       "kms": "string",
       "buckets": {
         "Array": {
@@ -46,16 +92,26 @@
           "storage_class": "string",
           "endpoint": "string",
           "force_delete": "boolean",
-          "kms_key": "string"
+          "kms_key": "string",
+          "use_random_suffix": "boolean"
         }
       },
       "keys": {
         "Array": {
           "name": "string",
           "enable_hmac": "boolean",
-          "role": "string"
+          "role": "string",
+          "use_random_suffix": "boolean"
         }
       }
+    }
+  },
+  "secrets_manager": {
+    "Array": {
+      "name": "string",
+      "resource_group": "string",
+      "encryption_key": "string",
+      "kms": "string"
     }
   },
   "atracker": {
@@ -68,6 +124,41 @@
     "add_route": "boolean",
     "locations": "Array<string>"
   },
+  "event_streams": {
+    "Array": {
+      "name": "string",
+      "plan": "string",
+      "resource_group": "string",
+      "endpoints": "string",
+      "throughput": "string",
+      "storage_size": "string",
+      "private_ip_allowlist": "string"
+    }
+  },
+  "appid": {
+    "Array": {
+      "name": "string",
+      "resource_group": "string",
+      "use_data": "boolean",
+      "keys": {
+        "Array": {
+          "name": "string",
+          "appid": "string"
+        }
+      }
+    }
+  },
+  "scc": {
+    "credential_description": "string",
+    "id": "string",
+    "passphrase": "string",
+    "name": "string",
+    "location": "string",
+    "collector_description": "string",
+    "is_public": "boolean",
+    "scope_description": "string",
+    "enable": "boolean"
+  },
   "vpcs": {
     "Array": {
       "cos": "string",
@@ -79,6 +170,7 @@
       "default_network_acl_name": "string",
       "default_security_group_name": "string",
       "default_routing_table_name": "string",
+      "publicGateways": "Array<number>",
       "address_prefixes": {
         "Array": {
           "vpc": "string",
@@ -90,11 +182,11 @@
       "subnets": {
         "Array": {
           "vpc": "string",
-          "name": "string",
           "zone": "number",
-          "resource_group": "string",
           "cidr": "string",
+          "name": "string",
           "network_acl": "string",
+          "resource_group": "string",
           "public_gateway": "boolean",
           "has_prefix": "boolean"
         }
@@ -135,7 +227,6 @@
       },
       "public_gateways": {
         "Array": {
-          "override_name": "string",
           "vpc": "string",
           "resource_group": "string",
           "zone": "number"
@@ -143,14 +234,18 @@
       }
     }
   },
-  "virtual_private_endpoints": {
+  "transit_gateways": {
     "Array": {
       "name": "string",
-      "vpc": "string",
-      "service": "string",
+      "global": "boolean",
       "resource_group": "string",
-      "security_groups": "Array<string>",
-      "subnets": "Array<string>"
+      "connections": {
+        "Array": {
+          "tgw": "string",
+          "vpc": "string",
+          "crn": "string"
+        }
+      }
     }
   },
   "security_groups": {
@@ -181,6 +276,16 @@
       }
     }
   },
+  "virtual_private_endpoints": {
+    "Array": {
+      "name": "string",
+      "vpc": "string",
+      "service": "string",
+      "resource_group": "string",
+      "security_groups": "Array<string>",
+      "subnets": "Array<string>"
+    }
+  },
   "vpn_gateways": {
     "Array": {
       "name": "string",
@@ -189,33 +294,12 @@
       "vpc": "string"
     }
   },
-  "ssh_keys": {
-    "Array": {
-      "name": "string",
-      "public_key": "string",
-      "resource_group": "string",
-      "use_data": "boolean"
-    }
-  },
-  "transit_gateways": {
-    "Array": {
-      "name": "string",
-      "global": "boolean",
-      "resource_group": "string",
-      "connections": {
-        "Array": {
-          "tgw": "string",
-          "vpc": "string"
-        }
-      }
-    }
-  },
   "clusters": {
     "Array": {
       "kms": "string",
       "cos": "string",
       "entitlement": "string",
-      "type": "string",
+      "kube_type": "string",
       "kube_version": "string",
       "flavor": "string",
       "name": "string",
@@ -224,8 +308,8 @@
       "subnets": "Array<string>",
       "update_all_workers": "boolean",
       "vpc": "string",
-      "worker_pools": [
-        {
+      "worker_pools": {
+        "Array": {
           "entitlement": "string",
           "cluster": "string",
           "flavor": "string",
@@ -235,9 +319,17 @@
           "vpc": "string",
           "workers_per_subnet": "number"
         }
-      ],
+      },
       "workers_per_subnet": "number",
       "private_endpoint": "boolean"
+    }
+  },
+  "ssh_keys": {
+    "Array": {
+      "name": "string",
+      "public_key": "string",
+      "resource_group": "string",
+      "use_data": "boolean"
     }
   },
   "vsi": {
@@ -254,25 +346,47 @@
       "vsi_per_subnet": "number",
       "resource_group": "string",
       "override_vsi_name": "string",
-      "user_data" : "string",
-      "network_interfaces" : {
-        "Array" : {
-          "subnet":"string",
-          "security_groups":"Array<string>"
+      "user_data": "string",
+      "enable_floating_ip": "boolean",
+      "network_interfaces": {
+        "Array": {
+          "subnet": "string",
+          "security_groups": "Array<string>"
+        }
+      },
+      "volumes": {
+        "Array": {
+          "name": "string",
+          "profile": "string",
+          "encryption_key": "string",
+          "capacity": "string"
         }
       }
     }
   },
-  "appid": {
+  "load_balancers": {
     "Array": {
-      "use_data": "boolean",
+      "name": "string",
+      "vpc": "string",
+      "type": "string",
+      "subnets": "Array<string>",
+      "vsi_per_subnet": "number",
+      "security_groups": "Array<string>",
       "resource_group": "string",
-      "keys": {
-        "Array": {
-          "appid": "string",
-          "name": "string"
-        }
-      }
+      "algorithm": "string",
+      "protocol": "string",
+      "health_delay": "number",
+      "health_retries": "number",
+      "health_timeout": "number",
+      "health_type": "string",
+      "proxy_protocol": "string",
+      "session_persistence_type": "string",
+      "session_persistence_app_cookie_name": "string",
+      "port": "number",
+      "target_vsi": "Array<string>",
+      "listener_port": "number",
+      "listener_protocol": "string",
+      "connection_limit": "number"
     }
   },
   "teleport_vsi": {
@@ -314,14 +428,48 @@
       }
     }
   },
-  "scc": {
-    "credential_description": "string",
-    "id": "string",
-    "passphrase": "string",
-    "name": "string",
-    "location": "string",
-    "collector_description": "string",
-    "is_public": "boolean",
-    "scope_description": "string"
+  "f5_vsi": {
+    "Array": {
+      "kms": "string",
+      "subnet": "string",
+      "vpc": "string",
+      "resource_group": "string",
+      "ssh_keys": "Array<string>",
+      "security_groups": "Array<string>",
+      "encryption_key": "string",
+      "profile": "string",
+      "name": "string",
+      "image": "string",
+      "network_interfaces": {
+        "Array": { "security_groups": "Array<string>", "subnet": "string" }
+      },
+      "template": {
+        "Array": {
+          "hostname": "string",
+          "domain": "string",
+          "default_route_gateway_cidr": "string",
+          "zone": "number",
+          "vpc": "string",
+          "do_declaration_url": "string",
+          "as3_declaration_url": "string",
+          "ts_declaration_url": "string",
+          "phone_home_url": "string",
+          "tgstandby_url": "string",
+          "tgrefresh_url": "string",
+          "tgactive_url": "string",
+          "template_version": "string",
+          "template_source": "string",
+          "app_id": "string",
+          "license_type": "string",
+          "license_host": "string",
+          "license_username": "string",
+          "license_password": "string",
+          "license_pool": "string",
+          "license_sku_keywork_1": "string",
+          "license_sku_keyword_2": "string",
+          "tmos_admin_password": "string"
+        }
+      }
+    }
   }
 }
