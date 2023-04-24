@@ -158,6 +158,7 @@ class EdgeNetworkingForm extends React.Component {
                   className="marginBottomSmall"
                   buttons={
                     <SaveAddButton
+                      name="edge-networking"
                       disabled={
                         this.state.zones === this.state.prevZones
                           ? true
@@ -211,7 +212,7 @@ class EdgeNetworkingForm extends React.Component {
                     }
                     formName="edge-network"
                     name="zones"
-                    value={this.state.zones}
+                    value={this.state.zones.toString()}
                     labelText="Edge Networking Zones"
                     handleInputChange={this.onChange}
                     disabled={this.state.edgeType === ""}

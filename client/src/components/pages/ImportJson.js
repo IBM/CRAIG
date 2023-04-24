@@ -110,9 +110,11 @@ class ImportJson extends React.Component {
           )}
           <IcseFormGroup>
             <TextArea
+              aria-label="import-json"
               labelText={
                 this.props.slz ? "Override JSON data" : "Custom CRAIG Data"
               }
+              id="import-json"
               key={this.state.hasInvalidPrefix}
               rows={20}
               cols={75}
@@ -134,6 +136,7 @@ class ImportJson extends React.Component {
               kind="tertiary"
               disabled={this.state.isValid === false ? true : false}
               onClick={this.toggleModal}
+              aria-label="json-submit"
             >
               {this.state.isValid ? (
                 <CheckmarkFilled className="marginRightSmall" />

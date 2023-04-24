@@ -57,6 +57,7 @@ class OptionsForm extends React.Component {
             name="Environment Options"
             buttons={
               <SaveAddButton
+                name="options"
                 onClick={() =>
                   this.props.craig.options.save(this.state, this.props)
                 }

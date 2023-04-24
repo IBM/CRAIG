@@ -14,7 +14,7 @@
     "format:diff": "prettier --list-different \"**/*.{js,md,scss}\"",
     "format:staged": "prettier --write",
     "start": "NODE_ENV=development PORT=3000 craco start",
-    "test": "craco test"
+    "test": "craco test --verbose a"
   },
   "dependencies": {
     "@apollo/client": "^3.4.10",
@@ -26,12 +26,12 @@
     "craco": "^0.0.3",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
-    "icse-react-assets": "^0.4.22",
+    "icse-react-assets": "^0.4.24",
     "json-to-tf": "^0.2.1",
     "jszip": "^3.10.1",
     "lazy-z": "^1.9.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-router-dom": "^6.3.0",
     "regex-but-with-words": "^1.5.0",
     "sass": "1.51.0",
@@ -40,11 +40,14 @@
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "7.5.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
     "husky": "1.3.1",
     "lint-staged": "^13.0.3",
     "prettier": "^1.17.0",
     "react-scripts": "^5.0.1",
-    "wait-for-expect": "3.0.2"
+    "wait-for-expect": "3.0.2",
+    "@testing-library/user-event": "^14.4.3"
   },
   "browserslist": [
     ">0.2%",
