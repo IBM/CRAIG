@@ -7,6 +7,36 @@ import "./code-mirror.css";
 import PropTypes from "prop-types";
 import { CopyButton } from "@carbon/react";
 
+const carbonDesignCodemirrorTheme = createTheme({
+  theme: "light",
+  settings: {
+    background: "#F4F4F4",
+    foreground: "#161616",
+    caret: "#161616",
+    selection: "#036dd626",
+    selectionMatch: "#036dd626",
+    lineHighlight: "#8a91991a",
+    gutterBackground: "#F4F4F4",
+    gutterForeground: "#161616"
+  },
+  styles: [
+    { tag: t.comment, color: "#161616" },
+    { tag: t.variableName, color: "#161616" },
+    { tag: [t.string, t.special(t.brace)], color: "#161616" },
+    { tag: t.number, color: "#161616" },
+    { tag: t.bool, color: "#161616" },
+    { tag: t.null, color: "#161616" },
+    { tag: t.keyword, color: "#161616" },
+    { tag: t.operator, color: "#161616" },
+    { tag: t.className, color: "#161616" },
+    { tag: t.definition(t.typeName), color: "#161616" },
+    { tag: t.typeName, color: "#161616" },
+    { tag: t.angleBracket, color: "#161616" },
+    { tag: t.tagName, color: "#161616" },
+    { tag: t.attributeName, color: "#161616" }
+  ]
+});
+
 const codeMirrorDark = createTheme({
   theme: "dark",
   settings: {
@@ -78,13 +108,15 @@ export const CraigCodeMirror = props => {
           readOnly={true}
           value={props.code}
           extensions={[javascript({ jsx: true })]}
-          theme={codeMirrorDark}
+          theme={props.light ? carbonDesignCodemirrorTheme : codeMirrorDark}
         >
-          <CodeMirrorHeader
-            jsonInCodeMirror={props.jsonInCodeMirror}
-            onTabClick={props.onTabClick}
-            code={props.code}
-          />
+          {!props.light && (
+            <CodeMirrorHeader
+              jsonInCodeMirror={props.jsonInCodeMirror}
+              onTabClick={props.onTabClick}
+              code={props.code}
+            />
+          )}
         </CodeMirror>
       </div>
     )

@@ -1,11 +1,6 @@
 import React from "react";
 import { StatelessToggleForm, IcseModal } from "icse-react-assets";
-import {
-  getObjectFromArray,
-  splat,
-  splatContains,
-  revision
-} from "lazy-z";
+import { getObjectFromArray, splat, splatContains, revision } from "lazy-z";
 import "./copy-rule-form-page.css";
 import { CraigCodeMirror } from "../page-template/CodeMirror";
 import {
@@ -260,6 +255,7 @@ class CopyRuleForm extends React.Component {
                 <strong>{this.state.ruleDestination}</strong>?
               </p>
               <CraigCodeMirror
+                light
                 className="regular"
                 code={copyRuleCodeMirrorData(this.state, this.props)}
               />
@@ -291,7 +287,6 @@ class CopyRuleForm extends React.Component {
           hide={this.state.hideToggleForm}
           iconType="add"
         >
-
           {this.props.isAclForm && (
             <AddClusterRules
               data={this.props.data}

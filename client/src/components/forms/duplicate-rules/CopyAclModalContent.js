@@ -11,6 +11,7 @@ const CopyAclModalContent = props => {
         <strong>{props.destinationVpc}</strong>?
       </p>
       <CraigCodeMirror
+        light
         className="regular"
         code={copyAclModalContent(props)}
       />
