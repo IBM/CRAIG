@@ -183,7 +183,7 @@ function formatAccessGroupDynamicRule(policy) {
  * @param {Array<string>} invite.ibm_ids
  * @returns {Object} terraform
  */
-function ibmIamAccessGroupMemebers(invite) {
+function ibmIamAccessGroupMembers(invite) {
   return {
     name: `${invite.group} invites`,
     data: {
@@ -208,7 +208,7 @@ function formatGroupMembers(invite) {
     "resource",
     "ibm_iam_access_group_members",
     `${invite.group} invites`,
-    ibmIamAccessGroupMemebers(invite).data
+    ibmIamAccessGroupMembers(invite).data
   );
 }
 
@@ -246,5 +246,5 @@ module.exports = {
   ibmIamAccessGroup,
   ibmIamAccessGroupDynamicRule,
   ibmIamAccessGroupPolicy,
-  ibmIamAccessGroupMemebers
+  ibmIamAccessGroupMembers
 };

@@ -38,7 +38,7 @@ const {
   ibmIamAccessGroup,
   ibmIamAccessGroupDynamicRule,
   ibmIamAccessGroupPolicy,
-  ibmIamAccessGroupMemebers
+  ibmIamAccessGroupMembers
 } = require("./iam");
 const {
   kmsTf,
@@ -215,7 +215,7 @@ module.exports = {
   ibmIamAccessGroup,
   ibmIamAccessGroupDynamicRule,
   ibmIamAccessGroupPolicy,
-  ibmIamAccessGroupMemebers,
+  ibmIamAccessGroupMembers,
   ibmIsFlowLog,
   ibmIamAuthorizationPolicyFlowLogs,
   templateCloudinitConfig,

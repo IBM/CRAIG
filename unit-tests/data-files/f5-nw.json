@@ -1875,5 +1875,90 @@
         "tmos_admin_password": "Goodpassword1234!"
       }
     }
+  ],
+  "iam_account_settings": {
+    "enable": true,
+    "mfa": "NONE",
+    "allowed_ip_addresses": "1.1.1.1/10,10.10.10.10",
+    "include_history": false,
+    "if_match": 1,
+    "max_sessions_per_identity": 1,
+    "restrict_create_service_id": "RESTRICTED",
+    "restrict_create_platform_apikey": "RESTRICTED",
+    "session_expiration_in_seconds": "900",
+    "session_invalidation_in_seconds": "900"
+  },
+  "access_groups":
+  [
+    {
+      "name": "foo-group",
+      "description": "lfadsf",
+      "policies": [
+        {
+          "group": "foo-group",
+          "name": "foo-policy",
+          "resources": {
+            "resource_group": "service-rg",
+            "resource_type": "fake-resource-type",
+            "resource": "frogs",
+            "service": "frog-service",
+            "resource_instance_id": "thisisanid"
+          }
+        }
+      ],
+      "dynamic_policies": [
+        {
+          "group": "foo-group",
+          "name": "foo-dynamic-policy",
+          "identity_provider": "fake-identity-provider",
+          "expiration": 1,
+          "conditions": {
+            "claim": "frogs-claim",
+            "operator": "EQUALS",
+            "value": "green-frogs"
+          }
+        }
+      ],
+      "has_invites": true,
+      "invites": {
+        "group": "foo-group",
+        "ibm_ids": ["test@ibm.com"]
+      }
+    },
+    {
+      "name": "foo-group",
+      "description": "lfadsf",
+      "policies": [
+        {
+          "group": "foo-group",
+          "name": "foo-policy",
+          "resources": {
+            "resource_group": "service-rg",
+            "resource_type": "fake-resource-type",
+            "resource": "frogs",
+            "service": "frog-service",
+            "resource_instance_id": "thisisanid"
+          }
+        }
+      ],
+      "dynamic_policies": [
+        {
+          "group": "foo-group",
+          "name": "foo-dynamic-policy",
+          "identity_provider": "fake-identity-provider",
+          "expiration": 1,
+          "conditions": {
+            "claim": "frogs-claim",
+            "operator": "EQUALS",
+            "value": "green-frogs"
+          }
+        }
+      ],
+      "has_invites": false,
+      "invites": {
+        "group": "foo-group",
+        "ibm_ids": ["test@ibm.com"]
+      }
+    }
   ]
 }

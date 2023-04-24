@@ -997,5 +997,10 @@
         }
       ]
     }
-  ]
+  ],
+  "iam_account_settings":
+  {
+    "enable": true
+  },
+  "access_groups": []
 }

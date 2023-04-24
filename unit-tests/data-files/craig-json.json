@@ -914,5 +914,9 @@
     },
     "event_streams": [],
     "load_balancers": [],
-    "f5_vsi": []
+    "f5_vsi": [],
+    "iam_account_settings": {
+     "enable": true
+    },
+  "access_groups": []
   }

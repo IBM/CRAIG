@@ -287,6 +287,98 @@ describe("craigToCdktf", () => {
     let data = actualData.terraform;
     assert.deepEqual(data, cdktf.terraform, "it should return cdktf data");
   });
+  it("should convert craig data to cdktf ibm_iam_account_settings", () => {
+    let actualData = craigToCdktf(f5nw);
+    let data = actualData.resource.ibm_iam_account_settings;
+    assert.deepEqual(
+      data,
+      {
+        iam_account_settings: {
+          mfa: "NONE",
+          allowed_ip_addresses: "1.1.1.1/10,10.10.10.10",
+          include_history: false,
+          if_match: 1,
+          max_sessions_per_identity: 1,
+          restrict_create_service_id: "RESTRICTED",
+          restrict_create_platform_apikey: "RESTRICTED",
+          session_expiration_in_seconds: "900",
+          session_invalidation_in_seconds: "900",
+        },
+      },
+      "it should return cdktf data"
+    );
+  });
+  it("should convert craig data to cdktf ibm_iam_access_group", () => {
+    let actualData = craigToCdktf(f5nw);
+    let data = actualData.resource.ibm_iam_access_group;
+    assert.deepEqual(
+      data,
+      {
+        foo_group_access_group: {
+          name: "slz-foo-group-ag",
+          description: "lfadsf",
+          tags: ["slz", "landing-zone"],
+        },
+      },
+      "it should return cdktf data"
+    );
+  });
+  it("should convert craig data to cdktf ibm_iam_access_group_policy", () => {
+    let actualData = craigToCdktf(f5nw);
+    let data = actualData.resource.ibm_iam_access_group_policy;
+    assert.deepEqual(
+      data,
+      {
+        foo_group_foo_policy_policy: {
+          access_group_id: "${ibm_iam_access_group.foo_group_access_group.id}",
+          roles: undefined,
+          resources: [
+            {
+              resource_group: "service-rg",
+              resource_type: "fake-resource-type",
+              resource: "frogs",
+              service: "frog-service",
+              resource_instance_id: "thisisanid",
+            },
+          ],
+        },
+      },
+      "it should return cdktf data"
+    );
+  });
+  it("should convert craig data to cdktf ibm_iam_access_group_dynamic_rule", () => {
+    let actualData = craigToCdktf(f5nw);
+    let data = actualData.resource.ibm_iam_access_group_dynamic_rule;
+    assert.deepEqual(
+      data,
+      {
+        foo_group_foo_dynamic_policy_dynamic_rule: {
+          name: "foo-group-foo-dynamic-policy-dynamic-rule",
+          access_group_id: "${ibm_iam_access_group.foo_group_access_group.id}",
+          expiration: 1,
+          identity_provider: "fake-identity-provider",
+          conditions: [
+            { claim: "frogs-claim", operator: "EQUALS", value: "green-frogs" },
+          ],
+        },
+      },
+      "it should return cdktf data"
+    );
+  });
+  it("should convert craig data to cdktf ibm_iam_access_group_members", () => {
+    let actualData = craigToCdktf(f5nw);
+    let data = actualData.resource.ibm_iam_access_group_members;
+    assert.deepEqual(
+      data,
+      {
+        foo_group_invites: {
+          access_group_id: "${ibm_iam_access_group.foo_group_access_group.id}",
+          ibm_ids: ["test@ibm.com"],
+        },
+      },
+      "it should return cdktf data"
+    );
+  });
   describe("edge cases", () => {
     it("should convert craig data to cdktf atracker when disabled", () => {
       let newCraig = { ...craig };

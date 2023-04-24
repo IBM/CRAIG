@@ -60,7 +60,12 @@ const {
   ibmIsLbPool,
   ibmIsLbListener,
   ibmIsPublicGateway,
-  ibmIsVolume
+  ibmIsVolume,
+  ibmIamAccountSettings,
+  ibmIamAccessGroup,
+  ibmIamAccessGroupDynamicRule,
+  ibmIamAccessGroupPolicy,
+  ibmIamAccessGroupMembers
 } = require("./json-to-iac");
 const {
   cdktfValues,
@@ -211,8 +216,8 @@ function craigToCdktf(craig) {
         "ibm_is_public_gateway",
         pgw.name,
         pgw.data
-      )
-    })
+      );
+    });
   });
 
   // resource groups
@@ -350,6 +355,7 @@ function craigToCdktf(craig) {
     });
   });
 
+  // ssh keys
   craig.ssh_keys.forEach(key => {
     let sshKey = ibmIsSshKey(key, craig);
     if (!key.use_data) {
@@ -390,6 +396,7 @@ function craigToCdktf(craig) {
     });
   });
 
+  // vpes
   craig.virtual_private_endpoints.forEach(vpe => {
     vpe.subnets.forEach(subnet => {
       let reservedIp = ibmIsSubnetReservedIp(vpe.vpc, subnet);
@@ -419,6 +426,7 @@ function craigToCdktf(craig) {
     );
   });
 
+  // vsis
   craig.vsi.forEach(deployment => {
     deployment.subnets.forEach(subnet => {
       for (let i = 0; i < deployment.vsi_per_subnet; i++) {
@@ -439,7 +447,7 @@ function craigToCdktf(craig) {
             name: instance.image
           });
         }
-        if(deployment.volumes) {
+        if (deployment.volumes) {
           ibmIsVolume(instance, craig).forEach(volume => {
             cdktfValues(
               cdktfJson,
@@ -447,13 +455,14 @@ function craigToCdktf(craig) {
               "ibm_is_volume",
               volume.name,
               volume.data
-            )
-          })
+            );
+          });
         }
       }
     });
   });
 
+  // vpn gateways
   craig.vpn_gateways.forEach(vpnGw => {
     let vpn = ibmIsVpnGateway(vpnGw, craig);
     cdktfValues(
@@ -465,6 +474,7 @@ function craigToCdktf(craig) {
     );
   });
 
+  // f5
   if (
     (craig.f5_vsi && craig.f5_vsi.length > 0) ||
     craig.teleport_vsi.length > 0
@@ -490,6 +500,7 @@ function craigToCdktf(craig) {
     );
   }
 
+  // teleport vsi
   if (craig.teleport_vsi.length > 0) {
     let locals = localTemplateUserData(craig.teleport_vsi[0].template);
     eachKey(locals.locals, key => {
@@ -538,6 +549,7 @@ function craigToCdktf(craig) {
     });
   }
 
+  // event streams
   if (craig.event_streams)
     craig.event_streams.forEach(instance => {
       let es = ibmResourceInstanceEventStreams(instance, craig);
@@ -550,6 +562,7 @@ function craigToCdktf(craig) {
       );
     });
 
+  // appid
   craig.appid.forEach(instance => {
     let appid = ibmResourceInstanceAppId(instance, craig);
     cdktfValues(
@@ -571,6 +584,7 @@ function craigToCdktf(craig) {
     });
   });
 
+  // secrets manager
   craig.secrets_manager.forEach(instance => {
     let auth = ibmIamAuthorizationPolicySecretsManager(instance.kms, craig);
     let secrets = ibmResourceInstanceSecretsManager(instance, craig);
@@ -590,6 +604,7 @@ function craigToCdktf(craig) {
     );
   });
 
+  // scc
   if (craig.scc.enable) {
     let acct = ibmSccAccountSettings(craig.scc);
     cdktfValues(
@@ -625,6 +640,7 @@ function craigToCdktf(craig) {
     );
   }
 
+  // load balancers
   if (craig.load_balancers)
     craig.load_balancers.forEach(lb => {
       let poolData = ibmIsLbPool(lb, craig);
@@ -656,6 +672,64 @@ function craigToCdktf(craig) {
         listenerData.data
       );
     });
+
+  // iam account settings
+  if (craig.iam_account_settings.enable) {
+    let iam = ibmIamAccountSettings(craig.iam_account_settings);
+    cdktfValues(
+      cdktfJson,
+      "resource",
+      "ibm_iam_account_settings",
+      iam.name,
+      iam.data
+    );
+  }
+
+  // access groups
+  craig.access_groups.forEach(instance => {
+    // access group fields
+    let ag = ibmIamAccessGroup(instance, craig);
+    cdktfValues(
+      cdktfJson,
+      "resource",
+      "ibm_iam_access_group",
+      ag.name,
+      ag.data
+    );
+    // access group policies
+    instance.policies.forEach(policy => {
+      let agPolicy = ibmIamAccessGroupPolicy(policy);
+      cdktfValues(
+        cdktfJson,
+        "resource",
+        "ibm_iam_access_group_policy",
+        agPolicy.name,
+        agPolicy.data
+      );
+    });
+    // access group dynamic policies
+    instance.dynamic_policies.forEach(policy => {
+      let agDynamicPolicy = ibmIamAccessGroupDynamicRule(policy);
+      cdktfValues(
+        cdktfJson,
+        "resource",
+        "ibm_iam_access_group_dynamic_rule",
+        agDynamicPolicy.name,
+        agDynamicPolicy.data
+      );
+    });
+    // access group invites
+    if (instance.has_invites) {
+      let agInvite = ibmIamAccessGroupMembers(instance.invites);
+      cdktfValues(
+        cdktfJson,
+        "resource",
+        "ibm_iam_access_group_members",
+        agInvite.name,
+        agInvite.data
+      );
+    }
+  });
 
   return cdktfJson;
 }
