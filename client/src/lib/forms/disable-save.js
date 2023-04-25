@@ -349,6 +349,18 @@ function disableSave(field, stateData, componentProps) {
     );
   } else if (field === "f5_vsi") {
     return isEmpty(stateData?.ssh_keys || []);
+  } else if (field === "routing_tables") {
+    return (
+      invalidName("routing_tables")(stateData, componentProps) ||
+      fieldsAreBad(["vpc"], stateData)
+    );
+  } else if (field === "routes") {
+    return (
+      invalidName("routes")(stateData, componentProps) ||
+      fieldsAreBad(["zone", "action", "next_hop", "destination"], stateData) ||
+      !isIpv4CidrOrAddress(stateData.destination) ||
+      !isIpv4CidrOrAddress(stateData.next_hop)
+    );
   } else return false;
 }
 

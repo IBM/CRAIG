@@ -87,7 +87,7 @@ const {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  formatRoutingTableTf
+  routingTableTf
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
@@ -177,7 +177,7 @@ module.exports = {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  formatRoutingTableTf,
+  routingTableTf,
   accessGroupPolicyHelperTextCallback,
   invalidIdentityProviderURI,
   disableSshKeyDelete

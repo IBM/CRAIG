@@ -114,7 +114,7 @@ function formatRoutingTableRoute(route, config) {
  * @param {*} config
  * @returns {string} terraform string
  */
-function formatRoutingTableTf(config) {
+function routingTableTf(config) {
   let tf = "";
   config.routing_tables.forEach(table => {
     let blockText = formatRoutingTable(table, config);
@@ -131,5 +131,5 @@ module.exports = {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  formatRoutingTableTf
+  routingTableTf
 };

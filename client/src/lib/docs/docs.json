@@ -1003,11 +1003,21 @@
         "className": "marginBottomSmall"
       },
       {
-       "text": "By default, IBM Event Streams instances are not created but can be if desired."
+        "text": "By default, IBM Event Streams instances are not created but can be if desired."
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started", "Docs"]
+      [
+        "https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started",
+        "Docs"
+      ]
+    ]
+  },
+  "routing_tables": {
+    "content": [
+      {
+        "text": "nyi"
+      }
     ]
   }
 }

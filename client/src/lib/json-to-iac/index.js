@@ -126,7 +126,7 @@ const {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  formatRoutingTableTf
+  routingTableTf
 } = require("./routing-tables");
 const { buildTitleComment } = require("./utils");
 module.exports = {
@@ -229,5 +229,5 @@ module.exports = {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  formatRoutingTableTf
+  routingTableTf
 };

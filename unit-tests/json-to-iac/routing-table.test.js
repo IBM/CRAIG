@@ -2,7 +2,7 @@ const { assert } = require("chai");
 const {
   formatRoutingTable,
   formatRoutingTableRoute,
-  formatRoutingTableTf,
+  routingTableTf,
 } = require("../../client/src/lib");
 
 describe("routing table", () => {
@@ -110,9 +110,9 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
       );
     });
   });
-  describe("formatRoutingTableTf", () => {
+  describe("routingTableTf", () => {
     it("should return correct routing table", () => {
-      let actualData = formatRoutingTableTf({
+      let actualData = routingTableTf({
         _options: {
           prefix: "iac",
           region: "us-south",

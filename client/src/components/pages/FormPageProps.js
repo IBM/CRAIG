@@ -13,7 +13,8 @@ import {
   VpcForm,
   VpeForm,
   VpnGatewayForm,
-  VsiForm
+  VsiForm,
+  RoutingTableForm
 } from "icse-react-assets";
 import { contains, getObjectFromArray, splat, transpose } from "lazy-z";
 import {
@@ -127,6 +128,12 @@ const pathToFormMap = {
     name: "Virtual Private Endpoints",
     addText: "Create a VPE",
     innerForm: VpeForm
+  },
+  routingTables: {
+    jsonField: "routing_tables",
+    name: "Routing Tables",
+    addText: "Create a Routing Table",
+    innerForm: RoutingTableForm
   }
 };
 /**
@@ -225,7 +232,15 @@ function formProps(form, craig) {
   // add vpc list
   if (
     contains(
-      ["transitGateways", "vpn", "securityGroups", "clusters", "vpe", "vsi"],
+      [
+        "transitGateways",
+        "vpn",
+        "securityGroups",
+        "clusters",
+        "vpe",
+        "vsi",
+        "routingTables"
+      ],
       form
     )
   ) {
@@ -466,6 +481,20 @@ function formProps(form, craig) {
   } else if (form === "vpe") {
     formTemplate.innerFormProps.securityGroups =
       craig.store.json.security_groups;
+  } else if (form === "routingTables") {
+    let routeFormProps = {
+      invalidRouteCallback: invalidName("routes"),
+      invalidRouteTextCallback: invalidNameText("routes"),
+      propsMatchState: propsMatchState,
+      routeProps: {
+        disableSave: disableSave,
+        onDelete: craig.routing_tables.routes.delete,
+        onSave: craig.routing_tables.routes.save,
+        onSubmit: craig.routing_tables.routes.create,
+        craig: craig
+      }
+    };
+    transpose(routeFormProps, formTemplate.innerFormProps);
   }
 
   return formTemplate;

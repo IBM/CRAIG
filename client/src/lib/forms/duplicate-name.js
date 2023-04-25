@@ -41,7 +41,10 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "name"
     );
   } else if (field === "access_groups") {
-    allOtherNames = splat(componentProps.craig.store.json.access_groups, "name")
+    allOtherNames = splat(
+      componentProps.craig.store.json.access_groups,
+      "name"
+    );
   } else if (field === "policies" || field === "dynamic_policies") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.access_groups,
@@ -81,6 +84,10 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         allOtherNames.push(network.default_routing_table_name);
       }
     });
+    if (componentProps.craig.store.json.routing_tables)
+      allOtherNames = allOtherNames.concat(
+        splat(componentProps.craig.store.json.routing_tables, "name")
+      );
   } else if (field === "acl_rules") {
     let craigRef = componentProps.isModal
       ? componentProps.craig
@@ -94,6 +101,8 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     });
   } else if (field === "vsi") {
     allOtherNames = splat(componentProps.craig.store.json.vsi, "name");
+  } else if (field === "routes") {
+    allOtherNames = splat(componentProps.route.routes, "name");
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],

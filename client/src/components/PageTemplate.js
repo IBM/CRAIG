@@ -22,7 +22,8 @@ import {
   IbmCloudSecurityComplianceCenter,
   IbmCloudEventStreams,
   LoadBalancerVpc,
-  Report
+  Report,
+  Router
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import {
@@ -56,7 +57,8 @@ import {
   codeMirrorAclTf,
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
-  codeMirrorFormatIamAccountSettingsTf
+  codeMirrorFormatIamAccountSettingsTf,
+  routingTableTf
 } from "../lib";
 import {
   maskFieldsExpStep1ReplacePublicKey,
@@ -183,6 +185,13 @@ const navCategories = [
         icon: IbmCloudSubnets,
         toTf: codeMirrorSubnetsTf,
         required: true
+      },
+      {
+        title: "Routing Tables",
+        path: "/form/routingTables",
+        icon: Router,
+        toTf: routingTableTf,
+        jsonField: "routing_tables",
       },
       {
         title: "Transit Gateways",

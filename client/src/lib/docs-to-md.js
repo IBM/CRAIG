@@ -90,30 +90,33 @@ function docsToMd(docsJson) {
 function allDocs() {
   let doc = "";
   eachKey(docs, heading => {
-    let header =
-      heading === "object_storage"
-        ? "Cloud Object Storage"
-        : heading === "vpcs"
-        ? "VPCs"
-        : heading === "acls"
-        ? "Network Access Control Lists"
-        : heading === "vsi"
-        ? "Virtual Server Instance Deployments"
-        : heading === "appid"
-        ? "App ID"
-        : heading === "teleport"
-        ? "Teleport Bastion Host"
-        : heading === "f5"
-        ? "F5 Big IP"
-        : heading === "atracker"
-        ? "Activity Tracker"
-        : titleCase(heading)
-            .replace(/Ssh/g, "SSH") // capitalize these
-            .replace("Vpn", "VPN")
-            .replace("Iam", "IAM");
-    doc += `\n## ${header}\n`;
-    doc += docsToMd(docs[heading]);
-    doc += "\n-----\n"; // add divider
+    // remove when adding docs
+    if (heading !== "routing_tables") {
+      let header =
+        heading === "object_storage"
+          ? "Cloud Object Storage"
+          : heading === "vpcs"
+          ? "VPCs"
+          : heading === "acls"
+          ? "Network Access Control Lists"
+          : heading === "vsi"
+          ? "Virtual Server Instance Deployments"
+          : heading === "appid"
+          ? "App ID"
+          : heading === "teleport"
+          ? "Teleport Bastion Host"
+          : heading === "f5"
+          ? "F5 Big IP"
+          : heading === "atracker"
+          ? "Activity Tracker"
+          : titleCase(heading)
+              .replace(/Ssh/g, "SSH") // capitalize these
+              .replace("Vpn", "VPN")
+              .replace("Iam", "IAM");
+      doc += `\n## ${header}\n`;
+      doc += docsToMd(docs[heading]);
+      doc += "\n-----\n"; // add divider
+    }
   });
   return doc;
 }

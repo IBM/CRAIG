@@ -408,6 +408,7 @@ module.exports = {
     "accessGroups",
     "objectStorage",
     "resourceGroups",
+    "routingTables",
     "secretsManager",
     "securityGroups",
     "sshKeys",
