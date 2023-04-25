@@ -5,8 +5,8 @@ import "./navigation.scss";
 
 /**
  * get classname for nac item
- * @param {string} path 
- * @param {boolean=} expanded 
+ * @param {string} path
+ * @param {boolean=} expanded
  * @returns {string} composed class name
  */
 const getClassName = (path, expanded) => {
@@ -29,11 +29,11 @@ class LeftNavItem extends React.Component {
       isHovering: false
     };
 
-    this.toggleHover = this.toggleHover.bind(this);
+    this.setHover = this.setHover.bind(this);
   }
 
-  toggleHover() {
-    this.setState({ isHovering: !this.state.isHovering });
+  setHover(bool) {
+    this.setState({ isHovering: bool });
   }
 
   render() {
@@ -54,8 +54,8 @@ class LeftNavItem extends React.Component {
             href={this.props.item.path}
             renderIcon={this.props.item.icon}
             key={this.props.item.title}
-            onMouseOver={this.toggleHover}
-            onMouseOut={this.toggleHover}
+            onMouseOver={() => this.setHover(true)}
+            onMouseOut={() => this.setHover(false)}
             className={
               (this.props.item.required && this.props.expanded
                 ? "sideNavLinkRequired "
