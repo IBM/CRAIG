@@ -229,7 +229,7 @@ data "ibm_resource_instance" "cos_object_storage" {
       let expectedData = `
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
-  source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  source_resource_instance_id = ibm_resource_instance.cos_object_storage.guid
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "kms"
   target_resource_instance_id = ibm_resource_instance.kms.guid
@@ -288,7 +288,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
       let expectedData = `
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
-  source_resource_instance_id = split(":", data.ibm_resource_instance.cos_object_storage.id)[7]
+  source_resource_instance_id = data.ibm_resource_instance.cos_object_storage.guid
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
@@ -1311,7 +1311,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
 
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
-  source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  source_resource_instance_id = ibm_resource_instance.cos_object_storage.guid
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
@@ -1437,7 +1437,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
 
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
-  source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  source_resource_instance_id = ibm_resource_instance.cos_object_storage.guid
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
@@ -1586,7 +1586,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
 
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
-  source_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  source_resource_instance_id = ibm_resource_instance.cos_object_storage.guid
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid
@@ -1636,7 +1636,7 @@ data "ibm_resource_instance" "cos_object_storage" {
 
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
   source_service_name         = "cloud-object-storage"
-  source_resource_instance_id = split(":", data.ibm_resource_instance.cos_object_storage.id)[7]
+  source_resource_instance_id = data.ibm_resource_instance.cos_object_storage.guid
   description                 = "Allow COS instance to read from KMS instance"
   target_service_name         = "hs-crypto"
   target_resource_instance_id = data.ibm_resource_instance.kms.guid

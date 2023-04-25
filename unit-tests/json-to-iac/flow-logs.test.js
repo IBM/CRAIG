@@ -866,7 +866,7 @@ resource "ibm_iam_authorization_policy" "flow_logs_to_cos_object_storage_policy"
   source_resource_type        = "flow-log-collector"
   description                 = "Allow flow logs write access cloud object storage instance"
   target_service_name         = "cloud-object-storage"
-  target_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  target_resource_instance_id = ibm_resource_instance.cos_object_storage.guid
   roles = [
     "Writer"
   ]
@@ -892,7 +892,7 @@ resource "ibm_iam_authorization_policy" "flow_logs_to_cos_object_storage_policy"
   source_resource_type        = "flow-log-collector"
   description                 = "Allow flow logs write access cloud object storage instance"
   target_service_name         = "cloud-object-storage"
-  target_resource_instance_id = split(":", ibm_resource_instance.cos_object_storage.id)[7]
+  target_resource_instance_id = ibm_resource_instance.cos_object_storage.guid
   roles = [
     "Writer"
   ]

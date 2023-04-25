@@ -49,12 +49,13 @@ function getTags(config) {
  * @param {Object} cos
  * @param {boolean} cos.use_data
  * @param {string} cos.name
+ * @param {boolean=} getGuid get guid
  * @returns {string} composed cos id
  */
-function getCosId(cos) {
+function getCosId(cos, getGuid) {
   return `\${${cos.use_data ? "data." : ""}ibm_resource_instance.${snakeCase(
     cos.name
-  )}_object_storage.id}`;
+  )}_object_storage.${getGuid ? "gu" : ""}id}`;
 }
 
 /**

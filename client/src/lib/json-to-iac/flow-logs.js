@@ -88,9 +88,10 @@ function ibmIamAuthorizationPolicyFlowLogs(cosName, config) {
       description: "Allow flow logs write access cloud object storage instance",
       roles: ["Writer"],
       target_service_name: "cloud-object-storage",
-      target_resource_instance_id: `\${split(":", ${getCosId(
-        getObjectFromArray(config.object_storage, "name", cosName)
-      ).replace(/\{|}|\$/g, "")})[7]}`
+      target_resource_instance_id: getCosId(
+        getObjectFromArray(config.object_storage, "name", cosName),
+        true
+      )
     }
   };
 }

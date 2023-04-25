@@ -232,11 +232,10 @@ function ibmIsLbPoolMembers(deployment, config) {
           data: {
             port: deployment.port,
             lb: tfRef("ibm_is_lb", `${deployment.name} load balancer`),
-            pool: cdktfRef(
-              `element(split("/", ${tfRef(
-                "ibm_is_lb_pool",
-                `${deployment.name} load balancer pool`
-              ).replace(/\{|}|\$/g, "")}), 1)`
+            pool: tfRef(
+              "ibm_is_lb_pool",
+              `${deployment.name} load balancer pool`,
+              "pool_id"
             ),
             target_address: tfRef(
               "ibm_is_instance",

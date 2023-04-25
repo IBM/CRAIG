@@ -124,7 +124,8 @@ new ibm.iamAuthorizationPolicy.IamAuthorizationPolicy(
   {
     description: "Allow COS instance to read from KMS instance",
     roles: ["Reader"],
-    source_resource_instance_id: `\${split(":", ${ibmResourceInstanceAtrackerCosObjectStorage.id})[7]}`,
+    source_resource_instance_id:
+      ibmResourceInstanceAtrackerCosObjectStorage.guid,
     source_service_name: "cloud-object-storage",
     target_resource_instance_id: ibmResourceInstanceSlzKms.guid,
     target_service_name: "kms",
@@ -136,7 +137,7 @@ new ibm.iamAuthorizationPolicy.IamAuthorizationPolicy(
   {
     description: "Allow COS instance to read from KMS instance",
     roles: ["Reader"],
-    source_resource_instance_id: `\${split(":", ${ibmResourceInstanceCosObjectStorage.id})[7]}`,
+    source_resource_instance_id: ibmResourceInstanceCosObjectStorage.guid,
     source_service_name: "cloud-object-storage",
     target_resource_instance_id: ibmResourceInstanceSlzKms.guid,
     target_service_name: "kms",
@@ -150,7 +151,7 @@ new ibm.iamAuthorizationPolicy.IamAuthorizationPolicy(
     roles: ["Writer"],
     source_resource_type: "flow-log-collector",
     source_service_name: "is",
-    target_resource_instance_id: `\${split(":", ${ibmResourceInstanceCosObjectStorage.id})[7]}`,
+    target_resource_instance_id: ibmResourceInstanceCosObjectStorage.guid,
     target_service_name: "cloud-object-storage",
   }
 );

@@ -116,17 +116,14 @@ function ibmIamAuthorizationPolicyCos(cos, config) {
   let kmsInstance = getKmsInstanceData(cos.kms, config);
   let cosRef = resourceRef(
     `${snakeCase(cos.name)} object storage`,
-    "id",
+    "guid",
     cos.use_data
   );
   return {
     name: `${cos.name} cos to ${cos.kms} kms policy`,
     data: {
       source_service_name: `cloud-object-storage`,
-      source_resource_instance_id: `\${split(":", ${cosRef.replace(
-        /\{|}|\$/g,
-        ""
-      )})[7]}`,
+      source_resource_instance_id: `\${${cosRef.replace(/\{|}|\$/g, "")}}`,
       roles: ["Reader"],
       description: "Allow COS instance to read from KMS instance",
       target_service_name: kmsInstance.type,

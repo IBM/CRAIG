@@ -131,7 +131,7 @@
         "description": "Allow flow logs write access cloud object storage instance",
         "roles": ["Writer"],
         "target_service_name": "cloud-object-storage",
-        "target_resource_instance_id": "${split(\":\", ibm_resource_instance.cos_object_storage.id)[7]}"
+        "target_resource_instance_id": "${ibm_resource_instance.cos_object_storage.guid}"
       },
       "slz_kms_server_protect_policy": {
         "source_service_name": "server-protect",
@@ -150,7 +150,7 @@
       },
       "atracker_cos_cos_to_slz_kms_kms_policy": {
         "source_service_name": "cloud-object-storage",
-        "source_resource_instance_id": "${split(\":\", ibm_resource_instance.atracker_cos_object_storage.id)[7]}",
+        "source_resource_instance_id": "${ibm_resource_instance.atracker_cos_object_storage.guid}",
         "roles": ["Reader"],
         "description": "Allow COS instance to read from KMS instance",
         "target_service_name": "kms",
@@ -158,7 +158,7 @@
       },
       "cos_cos_to_slz_kms_kms_policy": {
         "source_service_name": "cloud-object-storage",
-        "source_resource_instance_id": "${split(\":\", ibm_resource_instance.cos_object_storage.id)[7]}",
+        "source_resource_instance_id": "${ibm_resource_instance.cos_object_storage.guid}",
         "roles": ["Reader"],
         "description": "Allow COS instance to read from KMS instance",
         "target_service_name": "kms",

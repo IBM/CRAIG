@@ -462,12 +462,12 @@ describe("craigToCdktf", () => {
             roles: ["Writer"],
             target_service_name: "cloud-object-storage",
             target_resource_instance_id:
-              '${split(":", ibm_resource_instance.cos_object_storage.id)[7]}',
+              '${ibm_resource_instance.cos_object_storage.guid}',
           },
           atracker_cos_cos_to_slz_kms_kms_policy: {
             source_service_name: "cloud-object-storage",
             source_resource_instance_id:
-              '${split(":", ibm_resource_instance.atracker_cos_object_storage.id)[7]}',
+              '${ibm_resource_instance.atracker_cos_object_storage.guid}',
             roles: ["Reader"],
             description: "Allow COS instance to read from KMS instance",
             target_service_name: "kms",
@@ -477,7 +477,7 @@ describe("craigToCdktf", () => {
           cos_cos_to_slz_kms_kms_policy: {
             source_service_name: "cloud-object-storage",
             source_resource_instance_id:
-              '${split(":", ibm_resource_instance.cos_object_storage.id)[7]}',
+              '${ibm_resource_instance.cos_object_storage.guid}',
             roles: ["Reader"],
             description: "Allow COS instance to read from KMS instance",
             target_service_name: "kms",
@@ -929,7 +929,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)}',
+                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -937,7 +937,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)}',
+                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -945,7 +945,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)}',
+                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -953,7 +953,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)}',
+                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -961,7 +961,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)}',
+                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -969,7 +969,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${element(split("/", ibm_is_lb_pool.lb_1_load_balancer_pool.id), 1)}',
+                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ip.0.address}",
               },
