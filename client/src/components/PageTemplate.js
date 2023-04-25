@@ -47,7 +47,6 @@ import {
   secretsManagerTf,
   sgTf,
   sshKeyTf,
-  teleportTf,
   tgwTf,
   vpeTf,
   vpnTf,
@@ -67,6 +66,7 @@ import {
   maskFieldsExpStep5CleanUp
 } from "../lib/constants";
 import { Notification } from "./Notification";
+import CBRIcon from "../images/cbr";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -253,10 +253,10 @@ const navCategories = [
         toTf: lbTf
       },
       {
-        title: "Teleport Bastion Host",
-        path: "/form/teleport",
-        icon: BastionHost,
-        toTf: teleportTf
+        title: "Context Based Restrictions",
+        path: "/form/cbr",
+        icon: CBRIcon
+        //toTf:
       },
       {
         title: "F5 Big IP",
