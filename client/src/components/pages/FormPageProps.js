@@ -15,12 +15,7 @@ import {
   VpnGatewayForm,
   VsiForm
 } from "icse-react-assets";
-import {
-  contains,
-  getObjectFromArray,
-  splat,
-  transpose,
-} from "lazy-z";
+import { contains, getObjectFromArray, splat, transpose } from "lazy-z";
 import {
   clusterHelperTestCallback,
   cosResourceHelperTextCallback,
