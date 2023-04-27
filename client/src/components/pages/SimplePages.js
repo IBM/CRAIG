@@ -39,9 +39,10 @@ export const FormPage = props => {
   return (
     <>
       <IcseFormTemplate {...formProps(props.form, props.craig)} />{" "}
-      {props.form === "securityGroups" && (
-        <CopyRuleForm craig={props.craig} isAclForm={false} />
-      )}
+      {props.form === "securityGroups" &&
+        props.craig.store.json.security_groups.length > 0 && (
+          <CopyRuleForm craig={props.craig} isAclForm={false} />
+        )}
     </>
   );
 };
