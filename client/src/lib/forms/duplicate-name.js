@@ -103,6 +103,11 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     allOtherNames = splat(componentProps.craig.store.json.vsi, "name");
   } else if (field === "routes") {
     allOtherNames = splat(componentProps.route.routes, "name");
+  } else if (field === "load_balancers") {
+    allOtherNames = splat(
+      componentProps.craig.store.json.load_balancers,
+      "name"
+    );
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],

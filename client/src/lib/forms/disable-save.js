@@ -8,7 +8,8 @@ const {
   distinct,
   contains,
   flatten,
-  splat
+  splat,
+  isWholeNumber
 } = require("lazy-z");
 const {
   invalidName,
@@ -360,6 +361,59 @@ function disableSave(field, stateData, componentProps) {
       fieldsAreBad(["zone", "action", "next_hop", "destination"], stateData) ||
       !isIpv4CidrOrAddress(stateData.destination) ||
       !isIpv4CidrOrAddress(stateData.next_hop)
+    );
+  } else if (field === "load_balancers") {
+    /**
+     * check a list if fields are whole number
+     * @param {Array<string>} fields list of fields
+     * @returns {boolean} true if any field is not whole number
+     */
+    function areNotWholeNumbers(fields) {
+      let areNotWhole = false;
+      fields.forEach(field => {
+        if (!isWholeNumber(stateData[field])) areNotWhole = true;
+      });
+      return areNotWhole;
+    }
+    return (
+      invalidName("load_balancers")(stateData, componentProps) ||
+      fieldsAreBad(
+        [
+          "resource_group",
+          "type",
+          "vpc",
+          "security_groups",
+          "deployment_vsi",
+          "algorith",
+          "pool_protocol",
+          "pool_health_protocol",
+          "listener_protocol",
+          "listener_port",
+          "health_retries",
+          "health_timeout",
+          "health_delay",
+          "port"
+        ],
+        stateData
+      ) ||
+      areNotWholeNumbers([
+        "listener_port",
+        "health_retries",
+        "health_timeout",
+        "health_delay",
+        "port"
+      ]) ||
+      stateData.health_delay <= stateData.health_timeout ||
+      (!isNullOrEmptyString(stateData.connection_limit) &&
+        (!isWholeNumber(stateData.connection_limit) ||
+          !isInRange(stateData.connection_limit, 1, 15000))) ||
+      !isInRange(stateData.port, 1, 65535) ||
+      !isInRange(stateData.listener_port, 1, 65535) ||
+      !isInRange(stateData.health_timeout, 5, 3000) ||
+      !isInRange(stateData.health_delay, 5, 3000) ||
+      !isInRange(stateData.health_retries, 5, 3000) ||
+      isEmpty(stateData.target_vsi) ||
+      isEmpty(stateData.security_groups)
     );
   } else return false;
 }

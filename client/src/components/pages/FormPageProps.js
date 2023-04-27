@@ -14,7 +14,8 @@ import {
   VpeForm,
   VpnGatewayForm,
   VsiForm,
-  RoutingTableForm
+  RoutingTableForm,
+  VsiLoadBalancerForm
 } from "icse-react-assets";
 import { contains, getObjectFromArray, splat, transpose } from "lazy-z";
 import {
@@ -134,6 +135,12 @@ const pathToFormMap = {
     name: "Routing Tables",
     addText: "Create a Routing Table",
     innerForm: RoutingTableForm
+  },
+  lb: {
+    jsonField: "load_balancers",
+    name: "VPC Load Balancers",
+    addText: "Create a Load Balancer",
+    innerForm: VsiLoadBalancerForm
   }
 };
 /**
@@ -219,7 +226,8 @@ function formProps(form, craig) {
         "vpcs",
         "vpe",
         "vpn",
-        "vsi"
+        "vsi",
+        "lb"
       ],
       form
     )
@@ -239,7 +247,8 @@ function formProps(form, craig) {
         "clusters",
         "vpe",
         "vsi",
-        "routingTables"
+        "routingTables",
+        "lb"
       ],
       form
     )
@@ -258,7 +267,7 @@ function formProps(form, craig) {
   }
 
   // add security groups
-  if (contains(["vpe", "vsi"], form)) {
+  if (contains(["vpe", "vsi", "lb"], form)) {
     formTemplate.innerFormProps.securityGroups =
       craig.store.json.security_groups;
   }
@@ -478,9 +487,6 @@ function formProps(form, craig) {
       cosNames: splat(craig.store.json.object_storage, "name")
     };
     transpose(clusterInnerFormProps, formTemplate.innerFormProps);
-  } else if (form === "vpe") {
-    formTemplate.innerFormProps.securityGroups =
-      craig.store.json.security_groups;
   } else if (form === "routingTables") {
     let routeFormProps = {
       invalidRouteCallback: invalidName("routes"),
@@ -495,6 +501,8 @@ function formProps(form, craig) {
       }
     };
     transpose(routeFormProps, formTemplate.innerFormProps);
+  } else if (form === "lb") {
+    formTemplate.innerFormProps.vsiDeployments = craig.store.json.vsi;
   }
 
   return formTemplate;

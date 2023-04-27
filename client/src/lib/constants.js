@@ -417,7 +417,8 @@ module.exports = {
     "vpcs",
     "vpe",
     "vpn",
-    "vsi"
+    "vsi",
+    "lb"
   ],
   toggleFormPages: [
     "activityTracker",

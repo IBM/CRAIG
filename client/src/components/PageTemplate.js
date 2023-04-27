@@ -257,9 +257,10 @@ const navCategories = [
       },
       {
         title: "Load Balancers",
-        path: "/form/loadBalancers",
+        path: "/form/lb",
         icon: LoadBalancerVpc,
-        toTf: lbTf
+        toTf: lbTf,
+        jsonField: "load_balancers"
       },
       {
         title: "Context Based Restrictions",

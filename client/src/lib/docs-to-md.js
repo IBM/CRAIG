@@ -91,7 +91,7 @@ function allDocs() {
   let doc = "";
   eachKey(docs, heading => {
     // remove when adding docs
-    if (heading !== "routing_tables") {
+    if (heading !== "routing_tables" && heading !== "load_balancers") {
       let header =
         heading === "object_storage"
           ? "Cloud Object Storage"

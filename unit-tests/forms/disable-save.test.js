@@ -2508,550 +2508,1071 @@ describe("disableSave", () => {
       })
     );
   });
-  it("should return true if a routing table has an invalid name", () => {
-    assert.isTrue(
-      disableSave(
-        "routing_tables",
-        {
-          name: "aaa-",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                routing_tables: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+  describe("routing_tables", () => {
+    it("should return true if a routing table has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "routing_tables",
+          {
+            name: "aaa-",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  routing_tables: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a routing table has an invalid vpc", () => {
-    assert.isTrue(
-      disableSave(
-        "routing_tables",
-        {
-          name: "aaa",
-          vpc: "",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                routing_tables: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
+            data: {
+              name: "frog",
             },
-          },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a routing table route has an invalid name", () => {
-    assert.isTrue(
-      disableSave(
-        "routes",
-        {
-          name: "aaa-",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                routing_tables: [
-                  {
-                    name: "frog",
-                    routes: []
-                  },
-                  {
-                    name: "toad",
-                    routes: []
-                  },
-                ],
-              },
-            },
-          },
-          data: {
-            name: "frog",
-          },
-          route: {
-            routes: []
           }
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a routing table route has an invalid zone", () => {
-    assert.isTrue(
-      disableSave(
-        "routes",
-        {
-          name: "aaa",
-          zone: ""
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                routing_tables: [
-                  {
-                    name: "frog",
-                    routes: []
-                  },
-                  {
-                    name: "toad",
-                    routes: []
-                  },
-                ],
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a routing table has an invalid vpc", () => {
+      assert.isTrue(
+        disableSave(
+          "routing_tables",
+          {
+            name: "aaa",
+            vpc: "",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  routing_tables: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-          route: {
-            routes: []
+            data: {
+              name: "frog",
+            },
           }
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a routing table route has an invalid destination", () => {
-    assert.isTrue(
-      disableSave(
-        "routes",
-        {
-          name: "aaa",
-          zone: "1",
-          destination: "aaaa"
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                routing_tables: [
-                  {
-                    name: "frog",
-                    routes: []
-                  },
-                  {
-                    name: "toad",
-                    routes: []
-                  },
-                ],
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a routing table route has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "routes",
+          {
+            name: "aaa-",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  routing_tables: [
+                    {
+                      name: "frog",
+                      routes: [],
+                    },
+                    {
+                      name: "toad",
+                      routes: [],
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-          route: {
-            routes: []
+            data: {
+              name: "frog",
+            },
+            route: {
+              routes: [],
+            },
           }
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a routing table route has an invalid next hop", () => {
-    assert.isTrue(
-      disableSave(
-        "routes",
-        {
-          name: "aaa",
-          zone: "1",
-          destination: "1.2.3.4",
-          next_hop: "aaaa"
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                routing_tables: [
-                  {
-                    name: "frog",
-                    routes: []
-                  },
-                  {
-                    name: "toad",
-                    routes: []
-                  },
-                ],
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a routing table route has an invalid zone", () => {
+      assert.isTrue(
+        disableSave(
+          "routes",
+          {
+            name: "aaa",
+            zone: "",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  routing_tables: [
+                    {
+                      name: "frog",
+                      routes: [],
+                    },
+                    {
+                      name: "toad",
+                      routes: [],
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-          route: {
-            routes: []
+            data: {
+              name: "frog",
+            },
+            route: {
+              routes: [],
+            },
           }
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has an invalid name", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa-",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a routing table route has an invalid destination", () => {
+      assert.isTrue(
+        disableSave(
+          "routes",
+          {
+            name: "aaa",
+            zone: "1",
+            destination: "aaaa",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  routing_tables: [
+                    {
+                      name: "frog",
+                      routes: [],
+                    },
+                    {
+                      name: "toad",
+                      routes: [],
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+            route: {
+              routes: [],
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a routing table route has an invalid next hop", () => {
+      assert.isTrue(
+        disableSave(
+          "routes",
+          {
+            name: "aaa",
+            zone: "1",
+            destination: "1.2.3.4",
+            next_hop: "aaaa",
           },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has an invalid duplicate name", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                  {
-                    name: "aaa",
-                  },
-                ],
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  routing_tables: [
+                    {
+                      name: "frog",
+                      routes: [],
+                    },
+                    {
+                      name: "toad",
+                      routes: [],
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "hi",
-          },
-        }
-      ),
-      "it should be true"
-    );
+            data: {
+              name: "frog",
+            },
+            route: {
+              routes: [],
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
   });
-  it("should return true if a vpe has an invalid service", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-          service: null,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+  describe("load_balancers", () => {
+    it("should return true if a load balancer has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa-",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a listener port that is not a whole number", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: 456,
+            health_timeout: 5,
+            health_delay: 10,
+            health_retries: 5,
+            listener_port: 443.5,
+            subnets: ["subnet-1"],
           },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has an invalid rg", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          service: "debug",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-          resource_group: null,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a health delay equal to health timeout", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: 456,
+            health_timeout: 5,
+            health_delay: 5,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
           },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has an invalid vpc", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          resource_group: "what",
-          service: "debug",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-          vpc: null,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer has no deployment vsi", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["one"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: [],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: 456,
+            health_timeout: 15,
+            health_delay: 16,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
           },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has an invalid security group", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          subnets: ["sub", "net"],
-          security_groups: null,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });    it("should return true if a load balancer has no sg", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: [],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: 456,
+            health_timeout: 15,
+            health_delay: 16,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
           },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has no security group(s) selected", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          subnets: ["sub", "net"],
-          security_groups: [],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a non-whole number connection limit", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: 0.5,
+            port: 456,
+            health_timeout: 5,
+            health_delay: 10,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
           },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has an invalid subnet", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: null,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a connection limit out of range", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: -2,
+            port: 456,
+            health_timeout: 5,
+            health_delay: 10,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
           },
-          data: {
-            name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has no subnets", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: [],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
               },
             },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a port limit out of range", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: -2,
+            health_timeout: 5,
+            health_delay: 10,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
           },
-          data: {
-            name: "frog",
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a health_timeout limit out of range", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: 2,
+            health_timeout: -1,
+            health_delay: 10,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
           },
-        }
-      ),
-      "it should be true"
-    );
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a health_delay limit out of range", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: 2,
+            health_timeout: 2,
+            health_delay: 1,
+            health_retries: 5,
+            listener_port: 443,
+            subnets: ["subnet-1"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a load balancer with a health_retries limit out of range", () => {
+      assert.isTrue(
+        disableSave(
+          "load_balancers",
+          {
+            name: "aaa",
+            vpc: "management",
+            type: "private",
+            security_groups: ["management-vpe", "management-vsi"],
+            algorithm: "round_robin",
+            protocol: "http",
+            proxy_protocol: "",
+            health_type: "http",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["vsi"],
+            listener_protocol: "http",
+            connection_limit: null,
+            port: 456,
+            health_timeout: 5,
+            health_delay: 10,
+            health_retries: 0,
+            listener_port: 443,
+            subnets: ["subnet-1"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  load_balancers: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+  });
+  describe("vpe", () => {
+    it("should return true if a vpe has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa-",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has an invalid duplicate name", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                    {
+                      name: "aaa",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has an invalid service", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            vpc: "capybara",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+            service: null,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has an invalid rg", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            vpc: "capybara",
+            service: "debug",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+            resource_group: null,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has an invalid vpc", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            resource_group: "what",
+            service: "debug",
+            security_groups: ["security", "group"],
+            subnets: ["sub", "net"],
+            vpc: null,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has an invalid security group", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            subnets: ["sub", "net"],
+            security_groups: null,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has no security group(s) selected", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            subnets: ["sub", "net"],
+            security_groups: [],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has an invalid subnet", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: null,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vpe has no subnets", () => {
+      assert.isTrue(
+        disableSave(
+          "virtual_private_endpoints",
+          {
+            name: "aaa",
+            vpc: "capybara",
+            service: "debug",
+            resource_group: "what",
+            security_groups: ["security", "group"],
+            subnets: [],
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  virtual_private_endpoints: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
   });
   it("should return true if a vsi volume has an invalid name", () => {
     assert.isTrue(
