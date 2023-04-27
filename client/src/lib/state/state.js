@@ -188,6 +188,35 @@ const {
   routingTableRouteSave,
   routingTableRouteDelete
 } = require("./routing-tables");
+const {
+  cbrZonesInit,
+  cbrZonesOnStoreUpdate,
+  cbrZoneCreate,
+  cbrZoneSave,
+  cbrZoneDelete,
+  cbrZoneAddressCreate,
+  cbrZoneAddressSave,
+  cbrZoneAddressDelete,
+  cbrZoneExclusionCreate,
+  cbrZoneExclusionSave,
+  cbrZoneExclusionDelete
+} = require("./cbr-zones");
+const {
+  cbrRulesInit,
+  cbrRulesOnStoreUpdate,
+  cbrRuleCreate,
+  cbrRuleSave,
+  cbrRuleDelete,
+  cbrRuleContextCreate,
+  cbrRuleContextSave,
+  cbrRuleContextDelete,
+  cbrRuleAttributeCreate,
+  cbrRuleAttributeSave,
+  cbrRuleAttributeDelete,
+  cbrRuleTagCreate,
+  cbrRuleTagSave,
+  cbrRuleTagDelete
+} = require("./cbr-rules");
 
 const state = function() {
   let store = new lazyZstate({
@@ -521,6 +550,49 @@ const state = function() {
         create: accessGroupDynamicPolicyCreate,
         save: accessGroupDynamicPolicySave,
         delete: accessGroupDynamicPolicyDelete
+      }
+    }
+  });
+
+  store.newField("cbr_zones", {
+    init: cbrZonesInit,
+    create: cbrZoneCreate,
+    save: cbrZoneSave,
+    delete: cbrZoneDelete,
+    subComponents: {
+      addresses: {
+        create: cbrZoneAddressCreate,
+        save: cbrZoneAddressSave,
+        delete: cbrZoneAddressDelete
+      },
+      exclusions: {
+        create: cbrZoneExclusionCreate,
+        save: cbrZoneExclusionSave,
+        delete: cbrZoneExclusionDelete
+      }
+    }
+  });
+
+  store.newField("cbr_rules", {
+    init: cbrRulesInit,
+    create: cbrRuleCreate,
+    save: cbrRuleSave,
+    delete: cbrRuleDelete,
+    subComponents: {
+      contexts: {
+        create: cbrRuleContextCreate,
+        save: cbrRuleContextSave,
+        delete: cbrRuleContextDelete
+      },
+      resource_attributes: {
+        create: cbrRuleAttributeCreate,
+        save: cbrRuleAttributeSave,
+        delete: cbrRuleAttributeDelete
+      },
+      tags: {
+        create: cbrRuleTagCreate,
+        save: cbrRuleTagSave,
+        delete: cbrRuleTagDelete
       }
     }
   });

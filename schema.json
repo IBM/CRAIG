@@ -471,5 +471,61 @@
         }
       }
     }
+  },
+  "cbr_zones": {
+    "Array": {
+      "name": "string",
+      "account_id": "string",
+      "description": "string",
+      "addresses": {
+        "Array": {
+          "name": "string",
+          "account_id": "string",
+          "location": "string",
+          "service_instance": "string",
+          "service_name": "string",
+          "service_type": "string", 
+          "type": "string",
+          "value": "string"
+        }
+      },
+      "exclusions": {
+        "Array": {
+          "name": "string",
+          "account_id": "string",
+          "location": "string",
+          "service_instance": "string",
+          "service_name": "string",
+          "service_type": "string", 
+          "type": "string",
+          "value": "string"
+        }
+      }
+    }
+  },
+  "cbr_rules": {
+    "name": "string",
+    "description": "string",
+    "enforcement_mode": "string",
+    "api_type_id": "string",
+    "contexts": {
+      "Array": {
+        "name": "string",
+        "value": "string"
+      }
+    },
+    "resource_attributes": {
+      "Array": {
+        "name": "string",
+        "value": "string"
+      }
+    },
+    "tags": {
+      "Array": {
+        "name": "string",
+        "operator": "string",
+        "value": "string"
+      }
+    }
   }
 }

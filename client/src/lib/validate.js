@@ -51,7 +51,9 @@ const validate = function(json) {
     "access_groups",
     "event_streams",
     "load_balancers",
-    "appid"
+    "appid",
+    "cbr_rules",
+    "cbr_zones"
   ];
   /**
    * validate something
