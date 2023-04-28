@@ -53,7 +53,8 @@ const validate = function(json) {
     "load_balancers",
     "appid",
     "cbr_rules",
-    "cbr_zones"
+    "cbr_zones",
+    "vpn_servers"
   ];
   /**
    * validate something

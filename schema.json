@@ -527,5 +527,30 @@
         "value": "string"
       }
     }
+  },
+  "vpn_servers": {
+    "Array": {
+      "name": "string",
+      "certificate_crn": "string",
+      "method": "string",
+      "client_ca_crn": "string",
+      "client_ip_pool": "string",
+      "client_dns_server_ips": "string",
+      "client_idle_timeout": "number",
+      "enable_split_tunneling": "boolean",
+      "port": "number",
+      "protocol": "string",
+      "resource_group": "string",
+      "security_groups": "Array<string>",
+      "subnets": "Array<string>",
+      "vpc": "string",
+      "routes": {
+        "Array": {
+          "name": "string", 
+          "action": "string",
+          "destination": "string"
+        }
+      }
+    }
   }
 }

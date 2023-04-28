@@ -217,6 +217,16 @@ const {
   cbrRuleTagSave,
   cbrRuleTagDelete
 } = require("./cbr-rules");
+const {
+  vpnServerInit,
+  vpnServerCreate,
+  vpnServerSave,
+  vpnServerDelete,
+  vpnServerOnStoreUpdate,
+  vpnServerRouteCreate,
+  vpnServerRouteSave,
+  vpnServerRouteDelete
+} = require("./vpn-servers");
 
 const state = function() {
   let store = new lazyZstate({
@@ -593,6 +603,21 @@ const state = function() {
         create: cbrRuleTagCreate,
         save: cbrRuleTagSave,
         delete: cbrRuleTagDelete
+      }
+    }
+  });
+
+  store.newField("vpn_servers", {
+    init: vpnServerInit,
+    onStoreUpdate: vpnServerOnStoreUpdate,
+    create: vpnServerCreate,
+    save: vpnServerSave,
+    delete: vpnServerDelete,
+    subComponents: {
+      routes: {
+        create: vpnServerRouteCreate,
+        save: vpnServerRouteSave,
+        delete: vpnServerRouteDelete
       }
     }
   });
