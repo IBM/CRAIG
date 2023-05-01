@@ -57,7 +57,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
   name         = "slz-transit-gateway-management-hub-connection"
-  network_id   = ibm_is_vpc.management_vpc.crn
+  network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
     delete = "30m"
@@ -130,7 +130,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
   name         = "slz-transit-gateway-management-hub-connection"
-  network_id   = ibm_is_vpc.management_vpc.crn
+  network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
     delete = "30m"
@@ -141,7 +141,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
   name         = "slz-transit-gateway-workload-hub-connection"
-  network_id   = ibm_is_vpc.workload_vpc.crn
+  network_id   = module.workload_vpc.crn
   timeouts {
     create = "30m"
     delete = "30m"

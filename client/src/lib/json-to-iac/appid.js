@@ -97,13 +97,12 @@ function formatAppId(instance, config) {
  * create terraform for appid urls
  * @param {Object} appid
  * @param {Array<string>} urls
- * @param {string} resourceName name if not appid name
  * @returns {object} terraform appid redirect urls
  */
 
-function ibmAppIdRedirectUrls(appid, urls, resourceName) {
+function ibmAppIdRedirectUrls(appid, urls) {
   return {
-    name: resourceName ? resourceName : `${appid.name} urls`,
+    name:`${appid.name} urls`,
     data: {
       tenant_id: resourceRef(appid.name, "guid", useData(appid.use_data)),
       urls: urls

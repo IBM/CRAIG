@@ -5,7 +5,7 @@ const {
   timeouts,
   jsonToTfPrint
 } = require("./utils");
-
+const {contains} = require("lazy-z")
 /**
  * create event streams terraform
  * @param {Object} eventStreams
@@ -32,7 +32,7 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
     },
     timeouts: timeouts("3h", "1h", "1h")
   };
-  if (eventStreams.plan === "enterprise") {
+  if (contains(eventStreams.plan, "enterprise")) {
     if (eventStreams.private_ip_allowlist) {
       eventStreamsValues.parameters.private_ip_allowlist = `${JSON.stringify(
         eventStreams.private_ip_allowlist

@@ -434,7 +434,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     template_source         = "f5devcentral/ibmcloud_schematics_bigip_multinic_declared"
     template_version        = "20210201"
     zone                    = "us-south-1"
-    vpc                     = ibm_is_vpc.management_vpc.id
+    vpc                     = module.management_vpc.id
     app_id                  = "null"
   }
 }
@@ -915,7 +915,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     template_source         = "f5devcentral/ibmcloud_schematics_bigip_multinic_declared"
     template_version        = "hi"
     zone                    = "us-south-1"
-    vpc                     = ibm_is_vpc.management_vpc.id
+    vpc                     = module.management_vpc.id
     app_id                  = "hi"
   }
 }
@@ -1384,87 +1384,6 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
       );
     });
   });
-  describe("formatF5Vsi", () => {
-    let actualData = formatF5Vsi(
-      {
-        kms: "slz-kms",
-        subnet: "f5-management-zone-1",
-        vpc: "edge",
-        resource_group: "slz-edge-rg",
-        ssh_keys: ["slz-ssh-key"],
-        security_groups: ["f5-management-sg"],
-        encryption_key: "slz-vsi-volume-key",
-        profile: "cx2-4x8",
-        zone: 1,
-        name: "f5-ve-01-zone-1",
-        image: "f5-bigip-16-1-2-2-0-0-28-all-1slot",
-        network_interfaces: [
-          {
-            subnet: "f5-bastion-zone-1",
-            security_groups: ["f5-bastion-sg"],
-          },
-          {
-            subnet: "f5-external-zone-1",
-            security_groups: ["f5-external-sg"],
-          },
-          {
-            subnet: "f5-workload-zone-1",
-            security_groups: ["f5-workload-sg"],
-          },
-        ],
-      },
-      slzNetwork
-    );
-    let expectedData = `
-resource "ibm_is_instance" "f5_ve_01_zone_1" {
-  name           = "f5-ve-01-zone-1"
-  image          = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
-  profile        = "cx2-4x8"
-  resource_group = ibm_resource_group.slz_edge_rg.id
-  vpc            = ibm_is_vpc.edge_vpc.id
-  zone           = "us-south-1"
-  user_data      = data.template_file.user_data_f5_ve_01_zone_1.rendered
-  tags = [
-    "slz",
-    "landing-zone"
-  ]
-  primary_network_interface {
-    subnet = ibm_is_subnet.edge_f5_management_zone_1.id
-    security_groups = [
-      ibm_is_security_group.edge_vpc_f5_management_sg_sg.id
-    ]
-  }
-  boot_volume {
-    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
-  }
-  network_interfaces {
-    subnet            = ibm_is_subnet.edge_f5_bastion_zone_1.id
-    allow_ip_spoofing = true
-    security_groups = [
-      ibm_is_security_group.edge_vpc_f5_bastion_sg_sg.id
-    ]
-  }
-  network_interfaces {
-    subnet            = ibm_is_subnet.edge_f5_external_zone_1.id
-    allow_ip_spoofing = true
-    security_groups = [
-      ibm_is_security_group.edge_vpc_f5_external_sg_sg.id
-    ]
-  }
-  network_interfaces {
-    subnet            = ibm_is_subnet.edge_f5_workload_zone_1.id
-    allow_ip_spoofing = true
-    security_groups = [
-      ibm_is_security_group.edge_vpc_f5_workload_sg_sg.id
-    ]
-  }
-  keys = [
-    ibm_is_ssh_key.slz_ssh_key.id
-  ]
-}
-`;
-    assert.deepEqual(actualData, expectedData, "it should return correct data");
-  });
   describe("f5Tf", () => {
     it("should return correct f5 vsi terraform", () => {
       let actualData = f5Tf({ ...slzNetwork });
@@ -1609,7 +1528,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     template_source         = "f5devcentral/ibmcloud_schematics_bigip_multinic_declared"
     template_version        = "hi"
     zone                    = "us-south-1"
-    vpc                     = ibm_is_vpc.edge_vpc.id
+    vpc                     = module.edge_vpc.id
     app_id                  = "hi"
   }
 }
@@ -1619,7 +1538,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
   image          = local.public_image_map["f5-bigip-16-1-2-2-0-0-28-all-1slot"]["us-south"]
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_edge_rg.id
-  vpc            = ibm_is_vpc.edge_vpc.id
+  vpc            = module.edge_vpc.id
   zone           = "us-south-1"
   user_data      = data.template_file.user_data_f5_ve_01_zone_1.rendered
   tags = [
@@ -1627,33 +1546,33 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.edge_f5_management_zone_1.id
+    subnet = module.edge_vpc.f5_management_zone_1_id
     security_groups = [
-      ibm_is_security_group.edge_vpc_f5_management_sg_sg.id
+      module.edge_vpc.f5_management_sg_id
     ]
   }
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
   network_interfaces {
-    subnet            = ibm_is_subnet.edge_f5_bastion_zone_1.id
+    subnet            = module.edge_vpc.f5_bastion_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
-      ibm_is_security_group.edge_vpc_f5_bastion_sg_sg.id
+      module.edge_vpc.f5_bastion_sg_id
     ]
   }
   network_interfaces {
-    subnet            = ibm_is_subnet.edge_f5_external_zone_1.id
+    subnet            = module.edge_vpc.f5_external_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
-      ibm_is_security_group.edge_vpc_f5_external_sg_sg.id
+      module.edge_vpc.f5_external_sg_id
     ]
   }
   network_interfaces {
-    subnet            = ibm_is_subnet.edge_f5_workload_zone_1.id
+    subnet            = module.edge_vpc.f5_workload_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
-      ibm_is_security_group.edge_vpc_f5_workload_sg_sg.id
+      module.edge_vpc.f5_workload_sg_id
     ]
   }
   keys = [

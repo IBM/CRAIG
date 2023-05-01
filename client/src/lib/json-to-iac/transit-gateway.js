@@ -68,7 +68,7 @@ function ibmTgConnection(connection, config) {
       network_type: "vpc",
       name: kebabName(config, [connection.tgw, vpcName, "hub-connection"]),
       network_id: connection.vpc
-        ? vpcRef(connection.vpc, "crn")
+        ? vpcRef(connection.vpc, "crn", true)
         : connection.crn,
       timeouts: timeouts("30m", "", "30m")
     }

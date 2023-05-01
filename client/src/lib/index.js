@@ -56,7 +56,6 @@ const {
   formatIamAccountSettings,
   resourceGroupTf,
   lbTf,
-  teleportCloudInit,
   appidTf,
   atrackerTf,
   clusterTf,
@@ -70,7 +69,6 @@ const {
   secretsManagerTf,
   sgTf,
   sshKeyTf,
-  teleportTf,
   tgwTf,
   vpcTf,
   vpeTf,
@@ -87,7 +85,9 @@ const {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  routingTableTf
+  routingTableTf,
+  vpcModuleJson,
+  vpcModuleOutputs
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
@@ -118,7 +118,6 @@ module.exports = {
   formatIamAccountSettings,
   resourceGroupTf,
   lbTf,
-  teleportCloudInit,
   appidTf,
   atrackerTf,
   clusterTf,
@@ -132,7 +131,6 @@ module.exports = {
   secretsManagerTf,
   sgTf,
   sshKeyTf,
-  teleportTf,
   tgwTf,
   vpcTf,
   vpeTf,
@@ -180,5 +178,7 @@ module.exports = {
   routingTableTf,
   accessGroupPolicyHelperTextCallback,
   invalidIdentityProviderURI,
-  disableSshKeyDelete
+  disableSshKeyDelete,
+  vpcModuleJson,
+  vpcModuleOutputs
 };

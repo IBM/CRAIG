@@ -3,13 +3,19 @@ const craig = require("./data-files/craig-json.json");
 const cdktf = require("./data-files/craig-cdktf.json");
 const f5nw = require("./data-files/f5-nw.json");
 const teleportNw = require("./data-files/appid-scc-teleport-network.json");
-const { craigToCdktf } = require("../client/src/lib/craig-to-cdktf");
+const {
+  craigToCdktf,
+  craigToVpcModuleCdktf,
+} = require("../client/src/lib/craig-to-cdktf");
+const { transpose } = require("lazy-z");
 
 describe("craigToCdktf", () => {
-  // it("should convert craig data to cdktf", () => {
-  //   let actualData = craigToCdktf(craig);
-  //   assert.deepEqual(actualData, cdktf, "it should return cdktf data");
-  // });
+  it("should convert craig data to cdktf", () => {
+    craig.iam_account_settings.enable = false;
+    craig.scc.enable = false;
+    let actualData = craigToCdktf(craig);
+    assert.deepEqual(actualData, cdktf, "it should return cdktf data");
+  });
   it("should convert craig data to cdktf resource groups", () => {
     let actualData = craigToCdktf(craig);
     let data = actualData.resource.ibm_resource_group;
@@ -127,24 +133,6 @@ describe("craigToCdktf", () => {
       "it should return cdktf data"
     );
   });
-  it("should convert craig data to cdktf security groups", () => {
-    let actualData = craigToCdktf(craig);
-    let data = actualData.resource.ibm_is_security_group;
-    assert.deepEqual(
-      data,
-      cdktf.resource.ibm_is_security_group,
-      "it should return cdktf data"
-    );
-  });
-  it("should convert craig data to cdktf security group rules", () => {
-    let actualData = craigToCdktf(craig);
-    let data = actualData.resource.ibm_is_security_group_rule;
-    assert.deepEqual(
-      data,
-      cdktf.resource.ibm_is_security_group_rule,
-      "it should return cdktf data"
-    );
-  });
   it("should convert craig data to cdktf ssh keys", () => {
     let actualData = craigToCdktf(craig);
     let data = actualData.resource.ibm_is_ssh_key;
@@ -210,51 +198,6 @@ describe("craigToCdktf", () => {
     assert.deepEqual(
       data,
       cdktf.resource.ibm_is_instance,
-      "it should return cdktf data"
-    );
-  });
-  it("should convert craig data to cdktf ibm_is_vpc", () => {
-    let actualData = craigToCdktf(craig);
-    let data = actualData.resource.ibm_is_vpc;
-    assert.deepEqual(
-      data,
-      cdktf.resource.ibm_is_vpc,
-      "it should return cdktf data"
-    );
-  });
-  it("should convert craig data to cdktf ibm_is_vpc_address_prefix", () => {
-    let actualData = craigToCdktf(craig);
-    let data = actualData.resource.ibm_is_vpc_address_prefix;
-    assert.deepEqual(
-      data,
-      cdktf.resource.ibm_is_vpc_address_prefix,
-      "it should return cdktf data"
-    );
-  });
-  it("should convert craig data to cdktf ibm_is_network_acl", () => {
-    let actualData = craigToCdktf(craig);
-    let data = actualData.resource.ibm_is_network_acl;
-    assert.deepEqual(
-      data,
-      cdktf.resource.ibm_is_network_acl,
-      "it should return cdktf data"
-    );
-  });
-  it("should convert craig data to cdktf ibm_is_network_acl_rule", () => {
-    let actualData = craigToCdktf(craig);
-    let data = actualData.resource.ibm_is_network_acl_rule;
-    assert.deepEqual(
-      data,
-      cdktf.resource.ibm_is_network_acl_rule,
-      "it should return cdktf data"
-    );
-  });
-  it("should convert craig data to cdktf ibm_is_subnet", () => {
-    let actualData = craigToCdktf(craig);
-    let data = actualData.resource.ibm_is_subnet;
-    assert.deepEqual(
-      data,
-      cdktf.resource.ibm_is_subnet,
       "it should return cdktf data"
     );
   });
@@ -462,12 +405,12 @@ describe("craigToCdktf", () => {
             roles: ["Writer"],
             target_service_name: "cloud-object-storage",
             target_resource_instance_id:
-              '${ibm_resource_instance.cos_object_storage.guid}',
+              "${ibm_resource_instance.cos_object_storage.guid}",
           },
           atracker_cos_cos_to_slz_kms_kms_policy: {
             source_service_name: "cloud-object-storage",
             source_resource_instance_id:
-              '${ibm_resource_instance.atracker_cos_object_storage.guid}',
+              "${ibm_resource_instance.atracker_cos_object_storage.guid}",
             roles: ["Reader"],
             description: "Allow COS instance to read from KMS instance",
             target_service_name: "kms",
@@ -477,7 +420,7 @@ describe("craigToCdktf", () => {
           cos_cos_to_slz_kms_kms_policy: {
             source_service_name: "cloud-object-storage",
             source_resource_instance_id:
-              '${ibm_resource_instance.cos_object_storage.guid}',
+              "${ibm_resource_instance.cos_object_storage.guid}",
             roles: ["Reader"],
             description: "Allow COS instance to read from KMS instance",
             target_service_name: "kms",
@@ -489,227 +432,6 @@ describe("craigToCdktf", () => {
       );
     });
     describe("teleport, appid, etc", () => {
-      it("should return teleport locals", () => {
-        let actualData = craigToCdktf(teleportNw).locals;
-        assert.deepEqual(
-          actualData,
-          {
-            test_deployment_user_data:
-              'templatefile(\n    "${path.module}/cloud-init.tpl",\n    {\n      TELEPORT_LICENSE          = base64encode(tostring("TELEPORT_LICENSE"))\n      HTTPS_CERT                = base64encode(tostring("HTTPS_CERT"))\n      HTTPS_KEY                 = base64encode(tostring("HTTPS_KEY"))\n      HOSTNAME                  = tostring("HOSTNAME")\n      DOMAIN                    = tostring("DOMAIN")\n      COS_BUCKET                = ibm_cos_bucket.atracker_cos_object_storage_atracker_bucket_bucket.bucket_name\n      COS_BUCKET_ENDPOINT       = ibm_cos_bucket.atracker_cos_object_storage_atracker_bucket_bucket.s3_endpoint_public\n      HMAC_ACCESS_KEY_ID        = ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key.credentials["cos_hmac_keys.access_key_id"]\n      HMAC_SECRET_ACCESS_KEY_ID = ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key.credentials["cos_hmac_keys.secret_access_key"]\n      APPID_CLIENT_ID           = ibm_resource_key.test_appid_test_key_key.credentials["clientId"]\n      APPID_CLIENT_SECRET       = ibm_resource_key.test_appid_test_key_key.credentials["secret"]\n      APPID_ISSUER_URL          = ibm_resource_key.test_appid_test_key_key.credentials["oauthServerUrl"]\n      TELEPORT_VERSION          = tostring("TELEPORT_VERSION")\n      MESSAGE_OF_THE_DAY        = tostring("MESSAGE_OF_THE_DAY")\n      CLAIM_TO_ROLES            = [\n        {\n          email = "email@email.email"\n          roles = ["role1","role2"]\n        },\n        {\n          email = "email2@email.email"\n          roles = ["role1","role2"]\n        }\n      ]\n    }\n  )',
-          },
-          "it should return teleport locals"
-        );
-      });
-      it("should return teleport template data", () => {
-        let actualData =
-          craigToCdktf(teleportNw).data.template_cloudinit_config;
-        assert.deepEqual(
-          actualData,
-          {
-            test_deployment_cloud_init: {
-              base64_encode: false,
-              gzip: false,
-              part: [
-                {
-                  content: "${local.test_deployment_user_data}",
-                },
-              ],
-            },
-          },
-          "it should return teleport locals"
-        );
-      });
-      it("should convert craig data to cdktf vsi data when using teleport", () => {
-        let actualData = craigToCdktf(teleportNw);
-        assert.isObject(
-          actualData.resource.ibm_iam_authorization_policy
-            .secrets_manager_to_slz_kms_kms_policy,
-          "it should have auth policy"
-        );
-        assert.deepEqual(
-          actualData.resource.ibm_is_instance,
-          {
-            management_vpc_management_server_vsi_1_1: {
-              name: "slz-management-management-server-vsi-zone-1-1",
-              image:
-                "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
-              profile: "cx2-4x8",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-1",
-              tags: ["slz", "landing-zone"],
-              primary_network_interface: [
-                {
-                  subnet: "${ibm_is_subnet.management_vsi_zone_1.id}",
-                  security_groups: [
-                    "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
-                  ],
-                },
-              ],
-              boot_volume: [
-                {
-                  encryption:
-                    "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}",
-                },
-              ],
-              keys: ["${ibm_is_ssh_key.slz_ssh_key.id}"],
-            },
-            management_vpc_management_server_vsi_1_2: {
-              name: "slz-management-management-server-vsi-zone-1-2",
-              image:
-                "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
-              profile: "cx2-4x8",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-1",
-              tags: ["slz", "landing-zone"],
-              primary_network_interface: [
-                {
-                  subnet: "${ibm_is_subnet.management_vsi_zone_1.id}",
-                  security_groups: [
-                    "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
-                  ],
-                },
-              ],
-              boot_volume: [
-                {
-                  encryption:
-                    "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}",
-                },
-              ],
-              keys: ["${ibm_is_ssh_key.slz_ssh_key.id}"],
-            },
-            management_vpc_management_server_vsi_2_1: {
-              name: "slz-management-management-server-vsi-zone-2-1",
-              image:
-                "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
-              profile: "cx2-4x8",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-2",
-              tags: ["slz", "landing-zone"],
-              primary_network_interface: [
-                {
-                  subnet: "${ibm_is_subnet.management_vsi_zone_2.id}",
-                  security_groups: [
-                    "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
-                  ],
-                },
-              ],
-              boot_volume: [
-                {
-                  encryption:
-                    "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}",
-                },
-              ],
-              keys: ["${ibm_is_ssh_key.slz_ssh_key.id}"],
-            },
-            management_vpc_management_server_vsi_2_2: {
-              name: "slz-management-management-server-vsi-zone-2-2",
-              image:
-                "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
-              profile: "cx2-4x8",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-2",
-              tags: ["slz", "landing-zone"],
-              primary_network_interface: [
-                {
-                  subnet: "${ibm_is_subnet.management_vsi_zone_2.id}",
-                  security_groups: [
-                    "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
-                  ],
-                },
-              ],
-              boot_volume: [
-                {
-                  encryption:
-                    "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}",
-                },
-              ],
-              keys: ["${ibm_is_ssh_key.slz_ssh_key.id}"],
-            },
-            management_vpc_management_server_vsi_3_1: {
-              name: "slz-management-management-server-vsi-zone-3-1",
-              image:
-                "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
-              profile: "cx2-4x8",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-3",
-              tags: ["slz", "landing-zone"],
-              primary_network_interface: [
-                {
-                  subnet: "${ibm_is_subnet.management_vsi_zone_3.id}",
-                  security_groups: [
-                    "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
-                  ],
-                },
-              ],
-              boot_volume: [
-                {
-                  encryption:
-                    "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}",
-                },
-              ],
-              keys: ["${ibm_is_ssh_key.slz_ssh_key.id}"],
-            },
-            management_vpc_management_server_vsi_3_2: {
-              name: "slz-management-management-server-vsi-zone-3-2",
-              image:
-                "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
-              profile: "cx2-4x8",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-3",
-              tags: ["slz", "landing-zone"],
-              primary_network_interface: [
-                {
-                  subnet: "${ibm_is_subnet.management_vsi_zone_3.id}",
-                  security_groups: [
-                    "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
-                  ],
-                },
-              ],
-              boot_volume: [
-                {
-                  encryption:
-                    "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}",
-                },
-              ],
-              keys: ["${ibm_is_ssh_key.slz_ssh_key.id}"],
-            },
-            slz_slz_slz_test_deployment_teleport_vsi: {
-              name: "slz-slz-slz-test-deployment",
-              image:
-                "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
-              profile: "cx2-4x8",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-1",
-              tags: ["slz", "landing-zone"],
-              primary_network_interface: [
-                {
-                  subnet: "${ibm_is_subnet.management_vsi_zone_1.id}",
-                  security_groups: [
-                    "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
-                  ],
-                },
-              ],
-              boot_volume: [
-                {
-                  encryption:
-                    "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}",
-                },
-              ],
-              keys: ["${ibm_is_ssh_key.slz_ssh_key.id}"],
-              user_data:
-                "${data.template_cloudinit_config.test_deployment_cloud_init.rendered}",
-            },
-          },
-          "it should return cdktf data"
-        );
-      });
       it("should convert craig data to cdktf resources with secrets manager and event streams", () => {
         let actualData = craigToCdktf(teleportNw);
         let data = actualData.resource.ibm_resource_instance;
@@ -747,6 +469,12 @@ describe("craigToCdktf", () => {
               location: "us-south",
               resource_group_id: "${ibm_resource_group.slz_service_rg.id}",
               timeouts: [{ create: "3h", update: "1h", delete: "1h" }],
+              parameters: {
+                private_ip_allowlist: "[10.0.0.0/32,10.0.0.1/32]",
+                "service-endpoints": "private",
+                storage_size: "20480",
+                throughput: "",
+              },
             },
             test_appid: {
               name: "slz-test-appid",
@@ -798,22 +526,6 @@ describe("craigToCdktf", () => {
               resource_instance_id: "${ibm_resource_instance.test_appid.id}",
               role: "Writer",
               tags: ["slz", "landing-zone"],
-            },
-          },
-          "it should return data"
-        );
-      });
-      it("should return appid redirect urls", () => {
-        let actualData =
-          craigToCdktf(teleportNw).resource.ibm_appid_redirect_urls;
-        assert.deepEqual(
-          actualData,
-          {
-            slz_slz_slz_slz_slz_slz_test_deployment_appid_urls: {
-              tenant_id: "${ibm_resource_instance.test_appid.guid}",
-              urls: [
-                "https://slz-slz-slz-slz-slz-slz-slz-test-deployment-teleport-vsi.DOMAIN:3080/v1/webapi/oidc/callback",
-              ],
             },
           },
           "it should return data"
@@ -892,12 +604,12 @@ describe("craigToCdktf", () => {
               resource_group: "${ibm_resource_group.slz_management_rg.id}",
               tags: ["slz", "landing-zone"],
               security_groups: [
-                "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+                "${module.management_vpc.management_vpe_sg_id}",
               ],
               subnets: [
-                "${ibm_is_subnet.management_vsi_zone_1.id}",
-                "${ibm_is_subnet.management_vsi_zone_2.id}",
-                "${ibm_is_subnet.management_vsi_zone_3.id}",
+                "${module.management_vpc.vsi_zone_1_id}",
+                "${module.management_vpc.vsi_zone_2_id}",
+                "${module.management_vpc.vsi_zone_3_id}",
               ],
             },
           },
@@ -929,7 +641,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
+                pool: "${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}",
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -937,7 +649,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
+                pool: "${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}",
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -945,7 +657,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
+                pool: "${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}",
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -953,7 +665,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
+                pool: "${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}",
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -961,7 +673,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
+                pool: "${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}",
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -969,7 +681,7 @@ describe("craigToCdktf", () => {
               {
                 port: 80,
                 lb: "${ibm_is_lb.lb_1_load_balancer.id}",
-                pool: '${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}',
+                pool: "${ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id}",
                 target_address:
                   "${ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ip.0.address}",
               },
@@ -998,28 +710,28 @@ describe("craigToCdktf", () => {
           "it should return correct data"
         );
       });
-      it("should return public gateways", () => {
-        teleportNw.vpcs[0].public_gateways.push({
-          vpc: "management",
-          zone: 1,
-          resource_group: "slz-management-rg",
-        });
-        let actualData =
-          craigToCdktf(teleportNw).resource.ibm_is_public_gateway;
-        assert.deepEqual(
-          actualData,
-          {
-            management_gateway_zone_1: {
-              name: "slz-management-gateway-zone-1",
-              vpc: "${ibm_is_vpc.management_vpc.id}",
-              resource_group: "${ibm_resource_group.slz_management_rg.id}",
-              zone: "us-south-1",
-              tags: ["slz", "landing-zone"],
-            },
-          },
-          "it should return teleport locals"
-        );
-      });
+      // it("should return public gateways", () => {
+      //   teleportNw.vpcs[0].public_gateways.push({
+      //     vpc: "management",
+      //     zone: 1,
+      //     resource_group: "slz-management-rg",
+      //   });
+      //   let actualData =
+      //     craigToCdktf(teleportNw).resource.ibm_is_public_gateway;
+      //   assert.deepEqual(
+      //     actualData,
+      //     {
+      //       management_gateway_zone_1: {
+      //         name: "slz-management-gateway-zone-1",
+      //         vpc: "${ibm_is_vpc.management_vpc.id}",
+      //         resource_group: "${var.slz_management_rg_id}",
+      //         zone: "us-south-1",
+      //         tags: ["slz", "landing-zone"],
+      //       },
+      //     },
+      //     "it should return teleport locals"
+      //   );
+      // });
       it("should return storage volumes", () => {
         teleportNw.vsi[0].volumes = [
           {
@@ -1128,12 +840,591 @@ describe("craigToCdktf", () => {
                   "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
                 template_version: "hi",
                 zone: "us-south-1",
-                vpc: "${ibm_is_vpc.edge_vpc.id}",
+                vpc: "${module.edge_vpc.id}",
                 app_id: "hi",
               },
             },
           },
           "it should return template file"
+        );
+      });
+      it("should return correct modules when network acl and vpc when in resource groups not found in subnets", () => {
+        let actualData = craigToCdktf({
+          _options: {
+            prefix: "slz",
+            region: "us-south",
+            tags: ["slz", "landing-zone"],
+          },
+          resource_groups: [
+            {
+              use_prefix: true,
+              name: "slz-service-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: true,
+              name: "slz-management-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: true,
+              name: "slz-workload-rg",
+              use_data: false,
+            },
+          ],
+          key_management: [
+            {
+              name: "slz-kms",
+              resource_group: "slz-service-rg",
+              use_hs_crypto: false,
+              authorize_vpc_reader_role: true,
+              use_data: false,
+              keys: [
+                {
+                  key_ring: "slz-slz-ring",
+                  name: "slz-slz-key",
+                  root_key: true,
+                  force_delete: true,
+                  endpoint: "public",
+                  rotation: 12,
+                  dual_auth_delete: false,
+                },
+                {
+                  key_ring: "slz-slz-ring",
+                  name: "slz-atracker-key",
+                  root_key: true,
+                  force_delete: true,
+                  endpoint: "public",
+                  rotation: 12,
+                  dual_auth_delete: false,
+                },
+                {
+                  key_ring: "slz-slz-ring",
+                  name: "slz-vsi-volume-key",
+                  root_key: true,
+                  force_delete: true,
+                  endpoint: "public",
+                  rotation: 12,
+                  dual_auth_delete: false,
+                },
+              ],
+            },
+          ],
+          object_storage: [
+            {
+              buckets: [
+                {
+                  endpoint: "public",
+                  force_delete: true,
+                  kms_key: "slz-atracker-key",
+                  name: "atracker-bucket",
+                  storage_class: "standard",
+                },
+              ],
+              keys: [
+                {
+                  name: "cos-bind-key",
+                  role: "Writer",
+                  enable_hmac: false,
+                },
+              ],
+              name: "atracker-cos",
+              plan: "standard",
+              resource_group: "slz-service-rg",
+              use_data: false,
+              use_random_suffix: false,
+              kms: "slz-kms",
+            },
+            {
+              buckets: [
+                {
+                  endpoint: "public",
+                  force_delete: true,
+                  kms_key: "slz-slz-key",
+                  name: "management-bucket",
+                  storage_class: "standard",
+                },
+                {
+                  endpoint: "public",
+                  force_delete: true,
+                  kms_key: "slz-slz-key",
+                  name: "workload-bucket",
+                  storage_class: "standard",
+                },
+              ],
+              keys: [],
+              name: "cos",
+              plan: "standard",
+              resource_group: "slz-service-rg",
+              use_random_suffix: false,
+              kms: "slz-kms",
+              use_data: false,
+            },
+          ],
+          secrets_manager: [],
+          atracker: {
+            enabled: true,
+            type: "cos",
+            name: "slz-atracker",
+            target_name: "atracker-cos",
+            bucket: "atracker-bucket",
+            add_route: true,
+            cos_key: "cos-bind-key",
+            locations: ["global", "us-south"],
+          },
+          vpcs: [
+            {
+              cos: "cos",
+              bucket: "management-bucket",
+              name: "management",
+              resource_group: "slz-service-rg",
+              classic_access: false,
+              manual_address_prefix_management: true,
+              default_network_acl_name: null,
+              default_security_group_name: null,
+              default_routing_table_name: null,
+              address_prefixes: [
+                {
+                  vpc: "management",
+                  zone: 1,
+                  cidr: "10.10.10.0/24",
+                  name: "vsi-zone-1",
+                },
+                {
+                  vpc: "management",
+                  zone: 2,
+                  cidr: "10.10.20.0/24",
+                  name: "vsi-zone-2",
+                },
+                {
+                  vpc: "management",
+                  zone: 3,
+                  cidr: "10.10.30.0/24",
+                  name: "vsi-zone-3",
+                },
+                {
+                  vpc: "management",
+                  zone: 1,
+                  cidr: "10.20.10.0/24",
+                  name: "vpe-zone-1",
+                },
+                {
+                  vpc: "management",
+                  zone: 2,
+                  cidr: "10.20.20.0/24",
+                  name: "vpe-zone-2",
+                },
+                {
+                  vpc: "management",
+                  zone: 3,
+                  cidr: "10.20.30.0/24",
+                  name: "vpe-zone-3",
+                },
+                {
+                  vpc: "management",
+                  zone: 1,
+                  cidr: "10.30.10.0/24",
+                  name: "vpn-zone-1",
+                },
+              ],
+              subnets: [
+                {
+                  vpc: "management",
+                  zone: 1,
+                  cidr: "10.10.20.0/24",
+                  name: "vpe-zone-1",
+                  resource_group: "slz-management-rg",
+                  network_acl: "management",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "management",
+                  zone: 2,
+                  cidr: "10.20.20.0/24",
+                  name: "vpe-zone-2",
+                  network_acl: "management",
+                  resource_group: "slz-management-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "management",
+                  zone: 3,
+                  cidr: "10.30.20.0/24",
+                  name: "vpe-zone-3",
+                  network_acl: "management",
+                  resource_group: "slz-management-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "management",
+                  zone: 1,
+                  cidr: "10.10.10.0/24",
+                  name: "vsi-zone-1",
+                  network_acl: "management",
+                  resource_group: "slz-management-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "management",
+                  zone: 2,
+                  cidr: "10.20.10.0/24",
+                  name: "vsi-zone-2",
+                  network_acl: "management",
+                  resource_group: "slz-management-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "management",
+                  zone: 3,
+                  cidr: "10.30.10.0/24",
+                  name: "vsi-zone-3",
+                  network_acl: "management",
+                  resource_group: "slz-management-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "management",
+                  zone: 1,
+                  cidr: "10.10.30.0/24",
+                  name: "vpn-zone-1",
+                  network_acl: "management",
+                  resource_group: "slz-management-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+              ],
+              public_gateways: [],
+              acls: [
+                {
+                  resource_group: "slz-workload-rg",
+                  name: "management",
+                  vpc: "management",
+                  rules: [
+                    {
+                      action: "allow",
+                      destination: "10.0.0.0/8",
+                      direction: "inbound",
+                      name: "allow-ibm-inbound",
+                      source: "161.26.0.0/16",
+                      acl: "management",
+                      vpc: "management",
+                      icmp: {
+                        type: null,
+                        code: null,
+                      },
+                      tcp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                      udp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                    },
+                    {
+                      action: "allow",
+                      destination: "10.0.0.0/8",
+                      direction: "inbound",
+                      name: "allow-all-network-inbound",
+                      source: "10.0.0.0/8",
+                      acl: "management",
+                      vpc: "management",
+                      icmp: {
+                        type: null,
+                        code: null,
+                      },
+                      tcp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                      udp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                    },
+                    {
+                      action: "allow",
+                      destination: "0.0.0.0/0",
+                      direction: "outbound",
+                      name: "allow-all-outbound",
+                      source: "0.0.0.0/0",
+                      acl: "management",
+                      vpc: "management",
+                      icmp: {
+                        type: null,
+                        code: null,
+                      },
+                      tcp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                      udp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              cos: "cos",
+              bucket: "management-bucket",
+              name: "workload",
+              resource_group: "slz-workload-rg",
+              classic_access: false,
+              manual_address_prefix_management: true,
+              default_network_acl_name: null,
+              default_security_group_name: null,
+              default_routing_table_name: null,
+              address_prefixes: [
+                {
+                  vpc: "workload",
+                  zone: 1,
+                  cidr: "10.40.10.0/24",
+                  name: "vsi-zone-1",
+                },
+                {
+                  vpc: "workload",
+                  zone: 2,
+                  cidr: "10.50.10.0/24",
+                  name: "vsi-zone-2",
+                },
+                {
+                  vpc: "workload",
+                  zone: 3,
+                  cidr: "10.60.10.0/24",
+                  name: "vsi-zone-3",
+                },
+                {
+                  vpc: "workload",
+                  zone: 1,
+                  cidr: "10.40.20.0/24",
+                  name: "vpe-zone-1",
+                },
+                {
+                  vpc: "workload",
+                  zone: 2,
+                  cidr: "10.50.20.0/24",
+                  name: "vpe-zone-2",
+                },
+                {
+                  vpc: "workload",
+                  zone: 3,
+                  cidr: "10.60.20.0/24",
+                  name: "vpe-zone-3",
+                },
+              ],
+              subnets: [
+                {
+                  vpc: "workload",
+                  zone: 1,
+                  cidr: "10.40.10.0/24",
+                  name: "vsi-zone-1",
+                  network_acl: "workload",
+                  resource_group: "slz-workload-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "workload",
+                  zone: 2,
+                  cidr: "10.50.10.0/24",
+                  name: "vsi-zone-2",
+                  network_acl: "workload",
+                  resource_group: "slz-workload-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "workload",
+                  zone: 3,
+                  cidr: "10.60.10.0/24",
+                  name: "vsi-zone-3",
+                  network_acl: "workload",
+                  resource_group: "slz-workload-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "workload",
+                  zone: 1,
+                  cidr: "10.40.20.0/24",
+                  name: "vpe-zone-1",
+                  network_acl: "workload",
+                  resource_group: "slz-workload-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "workload",
+                  zone: 2,
+                  cidr: "10.50.20.0/24",
+                  name: "vpe-zone-2",
+                  network_acl: "workload",
+                  resource_group: "slz-workload-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+                {
+                  vpc: "workload",
+                  zone: 3,
+                  cidr: "10.60.20.0/24",
+                  name: "vpe-zone-3",
+                  network_acl: "workload",
+                  resource_group: "slz-workload-rg",
+                  public_gateway: false,
+                  has_prefix: true,
+                },
+              ],
+              public_gateways: [],
+              acls: [
+                {
+                  resource_group: "slz-workload-rg",
+                  name: "workload",
+                  vpc: "workload",
+                  rules: [
+                    {
+                      action: "allow",
+                      destination: "10.0.0.0/8",
+                      direction: "inbound",
+                      name: "allow-ibm-inbound",
+                      source: "161.26.0.0/16",
+                      acl: "workload",
+                      vpc: "workload",
+                      icmp: {
+                        type: null,
+                        code: null,
+                      },
+                      tcp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                      udp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                    },
+                    {
+                      action: "allow",
+                      destination: "10.0.0.0/8",
+                      direction: "inbound",
+                      name: "allow-all-network-inbound",
+                      source: "10.0.0.0/8",
+                      acl: "workload",
+                      vpc: "workload",
+                      icmp: {
+                        type: null,
+                        code: null,
+                      },
+                      tcp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                      udp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                    },
+                    {
+                      action: "allow",
+                      destination: "0.0.0.0/0",
+                      direction: "outbound",
+                      name: "allow-all-outbound",
+                      source: "0.0.0.0/0",
+                      acl: "workload",
+                      vpc: "workload",
+                      icmp: {
+                        type: null,
+                        code: null,
+                      },
+                      tcp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                      udp: {
+                        port_min: null,
+                        port_max: null,
+                        source_port_min: null,
+                        source_port_max: null,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          virtual_private_endpoints: [],
+          security_groups: [],
+          clusters: [],
+          vsi: [],
+          ssh_keys: [],
+          transit_gateways: [],
+          vpn_gateways: [],
+          f5_vsi: [],
+          appid: [],
+          iam_account_settings: {
+            enable: false,
+          },
+          scc: {
+            enable: false,
+          },
+          access_groups: [],
+        });
+        assert.deepEqual(
+          actualData.module,
+          {
+            management_vpc: {
+              "//": {
+                metadata: {
+                  uniqueId: "management_vpc",
+                  path: "./management_vpc",
+                },
+              },
+              source: "./management_vpc",
+              tags: ["slz", "landing-zone"],
+              slz_workload_rg_id: "${ibm_resource_group.slz_service_rg.id}",
+              slz_management_rg_id: "${ibm_resource_group.slz_service_rg.id}",
+              slz_service_rg_id: "${ibm_resource_group.slz_service_rg.id}",
+            },
+            workload_vpc: {
+              "//": {
+                metadata: { uniqueId: "workload_vpc", path: "./workload_vpc" },
+              },
+              source: "./workload_vpc",
+              tags: ["slz", "landing-zone"],
+              slz_workload_rg_id: "${ibm_resource_group.slz_workload_rg.id}",
+            },
+          },
+          "it should return correct module"
         );
       });
       it("should return locals for f5", () => {
@@ -1201,6 +1492,310 @@ describe("craigToCdktf", () => {
           "it should return correct data"
         );
       });
+    });
+  });
+  describe("craigToVpcModuleCdktf", () => {
+    it("should return array of vpc modules", () => {
+      let cloneCraig = {};
+      transpose(craig, cloneCraig);
+      cloneCraig.vpcs[0].public_gateways = [
+        {
+          vpc: "management",
+          zone: 1,
+          resource_group: "management-rg",
+        },
+      ];
+      let actualData = craigToVpcModuleCdktf(cloneCraig);
+      let expectedData = {
+        variable: {
+          tags: { description: "List of tags", type: "${list(string)}" },
+          slz_management_rg_id: {
+            description: "ID for the resource group slz-management-rg",
+            type: "${string}",
+          },
+        },
+        resource: {
+          ibm_is_vpc: {
+            management_vpc: {
+              name: "slz-management-vpc",
+              resource_group: "${var.slz_management_rg_id}",
+              default_network_acl_name: null,
+              default_security_group_name: null,
+              default_routing_table_name: null,
+              tags: ["slz", "landing-zone"],
+              address_prefix_management: "manual",
+            },
+          },
+          ibm_is_vpc_address_prefix: {
+            management_vsi_zone_1_prefix: {
+              name: "slz-management-vsi-zone-1",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-1",
+              cidr: "10.10.10.0/24",
+            },
+            management_vsi_zone_2_prefix: {
+              name: "slz-management-vsi-zone-2",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-2",
+              cidr: "10.10.20.0/24",
+            },
+            management_vsi_zone_3_prefix: {
+              name: "slz-management-vsi-zone-3",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-3",
+              cidr: "10.10.30.0/24",
+            },
+            management_vpe_zone_1_prefix: {
+              name: "slz-management-vpe-zone-1",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-1",
+              cidr: "10.20.10.0/24",
+            },
+            management_vpe_zone_2_prefix: {
+              name: "slz-management-vpe-zone-2",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-2",
+              cidr: "10.20.20.0/24",
+            },
+            management_vpe_zone_3_prefix: {
+              name: "slz-management-vpe-zone-3",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-3",
+              cidr: "10.20.30.0/24",
+            },
+            management_vpn_zone_1_prefix: {
+              name: "slz-management-vpn-zone-1",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-1",
+              cidr: "10.30.10.0/24",
+            },
+          },
+          ibm_is_network_acl: {
+            management_management_acl: {
+              name: "slz-management-management-acl",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+            },
+          },
+          ibm_is_network_acl_rule: {
+            management_management_acl_rule_allow_ibm_inbound: {
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound",
+              source: "161.26.0.0/16",
+            },
+            management_management_acl_rule_allow_all_network_inbound: {
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-all-network-inbound",
+              source: "10.0.0.0/8",
+            },
+            management_management_acl_rule_allow_all_outbound: {
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              action: "allow",
+              destination: "0.0.0.0/0",
+              direction: "outbound",
+              name: "allow-all-outbound",
+              source: "0.0.0.0/0",
+            },
+          },
+          ibm_is_subnet: {
+            management_vpe_zone_1: {
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              name: "slz-management-vpe-zone-1",
+              zone: "us-south-1",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              ipv4_cidr_block:
+                "${ibm_is_vpc_address_prefix.management_vpe_zone_1_prefix.cidr}",
+            },
+            management_vpe_zone_2: {
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              name: "slz-management-vpe-zone-2",
+              zone: "us-south-2",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              ipv4_cidr_block:
+                "${ibm_is_vpc_address_prefix.management_vpe_zone_2_prefix.cidr}",
+            },
+            management_vpe_zone_3: {
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              name: "slz-management-vpe-zone-3",
+              zone: "us-south-3",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              ipv4_cidr_block:
+                "${ibm_is_vpc_address_prefix.management_vpe_zone_3_prefix.cidr}",
+            },
+            management_vsi_zone_1: {
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              name: "slz-management-vsi-zone-1",
+              zone: "us-south-1",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              ipv4_cidr_block:
+                "${ibm_is_vpc_address_prefix.management_vsi_zone_1_prefix.cidr}",
+            },
+            management_vsi_zone_2: {
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              name: "slz-management-vsi-zone-2",
+              zone: "us-south-2",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              ipv4_cidr_block:
+                "${ibm_is_vpc_address_prefix.management_vsi_zone_2_prefix.cidr}",
+            },
+            management_vsi_zone_3: {
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              name: "slz-management-vsi-zone-3",
+              zone: "us-south-3",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              ipv4_cidr_block:
+                "${ibm_is_vpc_address_prefix.management_vsi_zone_3_prefix.cidr}",
+            },
+            management_vpn_zone_1: {
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              name: "slz-management-vpn-zone-1",
+              zone: "us-south-1",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              network_acl: "${ibm_is_network_acl.management_management_acl.id}",
+              ipv4_cidr_block:
+                "${ibm_is_vpc_address_prefix.management_vpn_zone_1_prefix.cidr}",
+            },
+          },
+          ibm_is_public_gateway: {
+            management_gateway_zone_1: {
+              name: "slz-management-gateway-zone-1",
+              resource_group: "${var.management_rg_id}",
+              tags: ["slz", "landing-zone"],
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              zone: "us-south-1",
+            },
+          },
+          ibm_is_security_group: {
+            management_vpc_management_vpe_sg_sg: {
+              name: "slz-management-management-vpe-sg-sg",
+              vpc: "${ibm_is_vpc.management_vpc.id}",
+              resource_group: "${var.slz_management_rg_id}",
+              tags: ["slz", "landing-zone"],
+            },
+          },
+          ibm_is_security_group_rule: {
+            management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound: {
+              group:
+                "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+              remote: "161.26.0.0/16",
+              direction: "inbound",
+            },
+            management_vpc_management_vpe_sg_sg_rule_allow_vpc_inbound: {
+              group:
+                "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+              remote: "10.0.0.0/8",
+              direction: "inbound",
+            },
+            management_vpc_management_vpe_sg_sg_rule_allow_vpc_outbound: {
+              group:
+                "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+              remote: "10.0.0.0/8",
+              direction: "outbound",
+            },
+            management_vpc_management_vpe_sg_sg_rule_allow_ibm_tcp_53_outbound:
+              {
+                group:
+                  "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+                remote: "161.26.0.0/16",
+                direction: "outbound",
+                tcp: [
+                  {
+                    port_min: 53,
+                    port_max: 53,
+                  },
+                ],
+              },
+            management_vpc_management_vpe_sg_sg_rule_allow_ibm_tcp_80_outbound:
+              {
+                group:
+                  "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+                remote: "161.26.0.0/16",
+                direction: "outbound",
+                tcp: [
+                  {
+                    port_min: 80,
+                    port_max: 80,
+                  },
+                ],
+              },
+            management_vpc_management_vpe_sg_sg_rule_allow_ibm_tcp_443_outbound:
+              {
+                group:
+                  "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+                remote: "161.26.0.0/16",
+                direction: "outbound",
+                tcp: [
+                  {
+                    port_min: 443,
+                    port_max: 443,
+                  },
+                ],
+              },
+          },
+        },
+        output: {
+          id: { value: "${ibm_is_vpc.management_vpc.id}" },
+          crn: { value: "${ibm_is_vpc.management_vpc.crn}" },
+          vsi_zone_1_id: {
+            value: "${ibm_is_subnet.management_vsi_zone_1.id}",
+          },
+          vpn_zone_1_id: {
+            value: "${ibm_is_subnet.management_vpn_zone_1.id}",
+          },
+          vsi_zone_2_id: {
+            value: "${ibm_is_subnet.management_vsi_zone_2.id}",
+          },
+          vsi_zone_3_id: {
+            value: "${ibm_is_subnet.management_vsi_zone_3.id}",
+          },
+          vpe_zone_1_id: {
+            value: "${ibm_is_subnet.management_vpe_zone_1.id}",
+          },
+          vpe_zone_2_id: {
+            value: "${ibm_is_subnet.management_vpe_zone_2.id}",
+          },
+          vpe_zone_3_id: {
+            value: "${ibm_is_subnet.management_vpe_zone_3.id}",
+          },
+          management_vpe_sg_id: {
+            value:
+              "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.id}",
+          },
+        },
+        terraform: {
+          required_providers: {
+            ibm: {
+              source: "IBM-Cloud/ibm",
+              version: "1.44.1",
+            },
+          },
+        },
+      };
+      assert.deepEqual(
+        actualData[0],
+        expectedData,
+        "it should return correct data"
+      );
     });
   });
 });

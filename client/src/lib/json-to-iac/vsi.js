@@ -13,7 +13,6 @@ const {
   vpcRef,
   composedZone,
   encryptionKeyRef,
-  subnetRef,
   kebabName,
   tfBlock,
   tfDone,
@@ -64,12 +63,14 @@ function ibmIsInstance(vsi, config) {
       : tfRef("ibm_is_image", vsi.image, "id", true),
     profile: vsi.profile,
     resource_group: rgIdRef(vsi.resource_group, config),
-    vpc: vpcRef(vsi.vpc),
+    vpc: vpcRef(vsi.vpc, "id", true),
     zone: composedZone(config, zone),
     tags: config._options.tags,
     primary_network_interface: [
       {
-        subnet: subnetRef(vsi.vpc, vsi.subnet)
+        subnet: `\${module.${snakeCase(vsi.vpc)}_vpc.${snakeCase(
+          vsi.subnet
+        )}_id}`
       }
     ],
     boot_volume: [
@@ -81,13 +82,13 @@ function ibmIsInstance(vsi, config) {
   if (vsi.network_interfaces) {
     vsi.network_interfaces.forEach(intf => {
       let nwInterface = {
-        subnet: subnetRef(vsi.vpc, intf.subnet),
+        subnet: `\${module.${vsi.vpc}_vpc.${snakeCase(intf.subnet)}_id}`,
         allow_ip_spoofing: true,
         security_groups: []
       };
       intf.security_groups.forEach(group => {
         nwInterface["security_groups"].push(
-          tfRef(`ibm_is_security_group`, `${vsi.vpc} vpc ${group} sg`)
+          `\${module.${vsi.vpc}_vpc.${snakeCase(group)}_id}`
         );
       });
       networkInterfaces.push(nwInterface);
@@ -97,7 +98,7 @@ function ibmIsInstance(vsi, config) {
   }
   // add security groups
   vsi.security_groups.forEach(group => {
-    allSgIds.push(tfRef(`ibm_is_security_group`, `${vsi.vpc} vpc ${group} sg`));
+    allSgIds.push(`\${module.${vsi.vpc}_vpc.${snakeCase(group)}_id}`);
   });
   vsiData.primary_network_interface[0].security_groups = allSgIds;
   // add ssh keys
@@ -348,11 +349,13 @@ function ibmIsLb(deployment, config) {
   };
   deployment.security_groups.forEach(group => {
     data.data.security_groups.push(
-      tfRef(`ibm_is_security_group`, `${deployment.vpc} vpc ${group} sg`)
+      `\${module.${deployment.vpc}_vpc.${snakeCase(group)}_id}`
     );
   });
   deployment.subnets.forEach(subnet => {
-    data.data.subnets.push(subnetRef(deployment.vpc, subnet));
+    data.data.subnets.push(
+      `\${module.${snakeCase(deployment.vpc)}_vpc.${snakeCase(subnet)}_id}`
+    );
   });
   return data;
 }

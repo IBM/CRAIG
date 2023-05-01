@@ -13,7 +13,7 @@ describe("virtual private endpoints", () => {
       let actualData = formatReservedIp("management", "test", 1);
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip" {
-  subnet = ibm_is_subnet.management_test.id
+  subnet = module.management_vpc.test_id
 }
 `;
 
@@ -58,14 +58,14 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip" {
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
   name           = "iac-management-cos-vpe-gw"
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
     "hello",
     "world"
   ]
   security_groups = [
-    ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+    module.management_vpc.management_vpe_sg_id
   ]
   target {
     crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
@@ -113,7 +113,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
   name           = "iac-management-cos-vpe-gw"
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
     "hello",
@@ -160,27 +160,27 @@ resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_1_
 ##############################################################################
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_1_subnet_vpe_ip" {
-  subnet = ibm_is_subnet.management_vpe_zone_1.id
+  subnet = module.management_vpc.vpe_zone_1_id
 }
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_2_subnet_vpe_ip" {
-  subnet = ibm_is_subnet.management_vpe_zone_2.id
+  subnet = module.management_vpc.vpe_zone_2_id
 }
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_3_subnet_vpe_ip" {
-  subnet = ibm_is_subnet.management_vpe_zone_3.id
+  subnet = module.management_vpc.vpe_zone_3_id
 }
 
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
   name           = "slz-management-cos-vpe-gw"
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
     "slz",
     "landing-zone"
   ]
   security_groups = [
-    ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+    module.management_vpc.management_vpe_sg_id
   ]
   target {
     crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
@@ -210,27 +210,27 @@ resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_3_
 ##############################################################################
 
 resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_1_subnet_vpe_ip" {
-  subnet = ibm_is_subnet.workload_vpe_zone_1.id
+  subnet = module.workload_vpc.vpe_zone_1_id
 }
 
 resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_2_subnet_vpe_ip" {
-  subnet = ibm_is_subnet.workload_vpe_zone_2.id
+  subnet = module.workload_vpc.vpe_zone_2_id
 }
 
 resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_3_subnet_vpe_ip" {
-  subnet = ibm_is_subnet.workload_vpe_zone_3.id
+  subnet = module.workload_vpc.vpe_zone_3_id
 }
 
 resource "ibm_is_virtual_endpoint_gateway" "workload_vpc_cos_vpe_gateway" {
   name           = "slz-workload-cos-vpe-gw"
-  vpc            = ibm_is_vpc.workload_vpc.id
+  vpc            = module.workload_vpc.id
   resource_group = ibm_resource_group.slz_workload_rg.id
   tags = [
     "slz",
     "landing-zone"
   ]
   security_groups = [
-    ibm_is_security_group.workload_vpc_workload_vpe_sg_sg.id
+    module.workload_vpc.workload_vpe_sg_id
   ]
   target {
     crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"

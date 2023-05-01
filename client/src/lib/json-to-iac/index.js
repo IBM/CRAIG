@@ -74,12 +74,6 @@ const {
   ibmIsSecurityGroup
 } = require("./security-groups");
 const { sshKeyTf, ibmIsSshKey } = require("./ssh-keys");
-const {
-  teleportTf,
-  teleportCloudInit,
-  templateCloudinitConfig,
-  localTemplateUserData
-} = require("./teleport");
 const { tgwTf, ibmTgConnection, ibmTgGateway } = require("./transit-gateway");
 const { tfBlock, tfDone } = require("./utils");
 const {
@@ -94,7 +88,9 @@ const {
   ibmIsSubnet,
   ibmIsNetworkAclRule,
   ibmIsNetworkAcl,
-  ibmIsVpcAddressPrefix
+  ibmIsVpcAddressPrefix,
+  vpcModuleJson,
+  vpcModuleOutputs
 } = require("./vpc");
 const {
   vpeTf,
@@ -142,7 +138,6 @@ module.exports = {
   formatIamAccountSettings,
   resourceGroupTf,
   lbTf,
-  teleportCloudInit,
   appidTf,
   atrackerTf,
   clusterTf,
@@ -156,7 +151,6 @@ module.exports = {
   secretsManagerTf,
   sgTf,
   sshKeyTf,
-  teleportTf,
   tgwTf,
   vpcTf,
   vpeTf,
@@ -218,8 +212,6 @@ module.exports = {
   ibmIamAccessGroupMembers,
   ibmIsFlowLog,
   ibmIamAuthorizationPolicyFlowLogs,
-  templateCloudinitConfig,
-  localTemplateUserData,
   ibmResourceInstanceEventStreams,
   f5TemplateFile,
   f5Locals,
@@ -229,5 +221,7 @@ module.exports = {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  routingTableTf
+  routingTableTf,
+  vpcModuleJson,
+  vpcModuleOutputs
 };

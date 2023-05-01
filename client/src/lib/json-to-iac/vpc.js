@@ -2,7 +2,8 @@ const {
   kebabCase,
   snakeCase,
   allFieldsNull,
-  getObjectFromArray
+  getObjectFromArray,
+  contains
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -16,6 +17,10 @@ const {
   jsonToTfPrint,
   cdktfRef
 } = require("./utils");
+const { jsonToTf } = require("json-to-tf");
+const { formatSgRule, formatSecurityGroup } = require("./security-groups");
+const { versionsTf } = require("./constants");
+const { routingTableTf } = require("./routing-tables");
 
 /**
  * format vpc terraform
@@ -30,15 +35,16 @@ const {
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.prefix
+ * @param {boolean=} useVarRef use variable reference for tags and rg
  * @returns {object} terraform code
  */
 
-function ibmIsVpc(vpc, config) {
+function ibmIsVpc(vpc, config, useVarRef) {
   let data = {
     name: `${vpc.name}-vpc`,
     data: {
       name: kebabName(config, [vpc.name, "vpc"]),
-      resource_group: rgIdRef(vpc.resource_group, config),
+      resource_group: `\${var.${snakeCase(vpc.resource_group)}_id}`,
       default_network_acl_name: vpc.default_network_acl_name
         ? vpc.default_network_acl_name
         : null,
@@ -48,7 +54,7 @@ function ibmIsVpc(vpc, config) {
       default_routing_table_name: vpc.default_routing_table_name
         ? vpc.default_routing_table_name
         : null,
-      tags: getTags(config)
+      tags: getTags(config, useVarRef)
     }
   };
   if (vpc.classic_access) {
@@ -64,10 +70,11 @@ function ibmIsVpc(vpc, config) {
  * format vpc terraform
  * @param {Object} vpc
  * @param {Object} config
+ * @param {boolean=} useVarRef use variable reference for tags and rg
  * @returns {string} terraform code
  */
-function formatVpc(vpc, config) {
-  let data = ibmIsVpc(vpc, config);
+function formatVpc(vpc, config, useVarRef) {
+  let data = ibmIsVpc(vpc, config, useVarRef);
   return jsonToTfPrint("resource", "ibm_is_vpc", data.name, data.data);
 }
 
@@ -127,10 +134,11 @@ function formatAddressPrefix(address, config) {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
+ * @param {boolean=} useVarRef use variable reference for tags and rg
  * @returns {object} terraform code
  */
 
-function ibmIsSubnet(subnet, config) {
+function ibmIsSubnet(subnet, config, useVarRef) {
   let subnetName = kebabCase(`${subnet.vpc}-${subnet.name}`);
   let data = {
     name: subnetName,
@@ -138,8 +146,8 @@ function ibmIsSubnet(subnet, config) {
       vpc: vpcRef(subnet.vpc),
       name: kebabName(config, [subnetName]),
       zone: composedZone(config, subnet.zone),
-      resource_group: rgIdRef(subnet.resource_group, config),
-      tags: getTags(config),
+      resource_group: `\${var.${snakeCase(subnet.resource_group)}_id}`,
+      tags: getTags(config, useVarRef),
       network_acl: tfRef(
         "ibm_is_network_acl",
         snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`)
@@ -177,10 +185,11 @@ function ibmIsSubnet(subnet, config) {
  * format vpc subnet
  * @param {Object} subnet
  * @param {Object} config
+ * @param {boolean=} useVarRef use variable reference for tags and rg
  * @returns {string} terraform code
  */
-function formatSubnet(subnet, config) {
-  let data = ibmIsSubnet(subnet, config);
+function formatSubnet(subnet, config, useVarRef) {
+  let data = ibmIsSubnet(subnet, config, useVarRef);
   return jsonToTfPrint("resource", "ibm_is_subnet", data.name, data.data);
 }
 
@@ -201,7 +210,7 @@ function ibmIsNetworkAcl(acl, config) {
     data: {
       name: kebabName(config, [acl.vpc, acl.name, "acl"]),
       vpc: vpcRef(acl.vpc),
-      resource_group: rgIdRef(acl.resource_group, config),
+      resource_group: `\${var.${snakeCase(acl.resource_group)}_id}`,
       tags: getTags(config)
     }
   };
@@ -306,10 +315,11 @@ function formatAclRule(rule) {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
+ * @param {boolean=} useVarRef use ref for tags and rg
  * @returns {object} terraform code
  */
 
-function ibmIsPublicGateway(pgw, config) {
+function ibmIsPublicGateway(pgw, config, useVarRef) {
   let pgwName = pgw.override_name
     ? `${pgw.vpc}-${pgw.override_name}`
     : `${pgw.vpc}-gateway-zone-${pgw.zone}`;
@@ -318,9 +328,9 @@ function ibmIsPublicGateway(pgw, config) {
     data: {
       name: kebabName(config, [pgwName]),
       vpc: vpcRef(pgw.vpc),
-      resource_group: rgIdRef(pgw.resource_group, config),
+      resource_group: `\${var.${snakeCase(pgw.resource_group)}_id}`,
       zone: composedZone(config, pgw.zone),
-      tags: getTags(config)
+      tags: getTags(config, useVarRef)
     }
   };
 }
@@ -329,10 +339,11 @@ function ibmIsPublicGateway(pgw, config) {
  * format public gateway
  * @param {Object} pgw
  * @param {Object} config
+ * @param {boolean=} useVarRef use ref for tags and rg
  * @returns {string} terraform code
  */
-function formatPgw(pgw, config) {
-  let data = ibmIsPublicGateway(pgw, config);
+function formatPgw(pgw, config, useVarRef) {
+  let data = ibmIsPublicGateway(pgw, config, useVarRef);
   return jsonToTfPrint(
     "resource",
     "ibm_is_public_gateway",
@@ -376,6 +387,173 @@ function vpcTf(config) {
   return tfDone(tf);
 }
 
+/**
+ * create vpc module
+ * @param {Object} vpc vpc
+ * @param {Array<string>} rgs list of resource groups
+ * @param {*} config
+ * @returns {Object} cdktf module object
+ */
+function vpcModuleJson(vpc, rgs, config) {
+  let vpcModule = vpc.name + "_vpc";
+  let moduleObject = {};
+  moduleObject[vpcModule] = {
+    "//": {
+      metadata: {
+        uniqueId: vpcModule,
+        path: "./" + vpcModule
+      }
+    },
+    source: "./" + vpcModule,
+    tags: config._options.tags
+  };
+  rgs.forEach(rg => {
+    moduleObject[vpcModule][snakeCase(rg) + "_id"] = rgIdRef(
+      vpc.resource_group,
+      config
+    );
+  });
+  return moduleObject;
+}
+
+/**
+ * create vpc module outputs tf
+ * @param {*} vpc vpc object
+ * @param {Array<object>} securityGroups security groups
+ * @returns {Object} terraform module output object
+ */
+function vpcModuleOutputs(vpc, securityGroups) {
+  let outputs = {};
+  ["id", "crn"].forEach(field => {
+    outputs[field] = {
+      value: `\${ibm_is_vpc.${snakeCase(vpc.name + "-vpc")}.${field}}`
+    };
+  });
+  vpc.subnets.forEach(subnet => {
+    outputs[snakeCase(subnet.name) + `_id`] = {
+      value: `\${ibm_is_subnet.${snakeCase(`${subnet.vpc}-${subnet.name}`)}.id}`
+    };
+  });
+  securityGroups.forEach(sg => {
+    if (sg.vpc === vpc.name) {
+      outputs[snakeCase(`${sg.name}_id`)] = {
+        value: `\${ibm_is_security_group.${snakeCase(
+          `${sg.vpc} vpc ${sg.name} sg`
+        )}.id}`
+      };
+    }
+  });
+  return outputs;
+}
+
+/**
+ * create vpc module tf
+ * @param {*} files files object
+ * @param {*} config config object
+ * @returns {Object} terraform module object
+ */
+function vpcModuleTf(files, config) {
+  let cloneConfig = config;
+  cloneConfig.vpcs.forEach(vpc => {
+    let main = formatVpc(vpc, cloneConfig, true);
+    let outputs = {};
+    let variables = {
+      tags: {
+        description: "List of tags",
+        type: "${list(string)}"
+      }
+    };
+    let vpcModule = vpc.name + "_vpc";
+    let allRgs = [vpc.resource_group];
+    vpc.address_prefixes.forEach(prefix => {
+      main += formatAddressPrefix(prefix, cloneConfig);
+    });
+    vpc.public_gateways.forEach(gateway => {
+      main += formatPgw(gateway, cloneConfig, true);
+    });
+    vpc.subnets.forEach(subnet => {
+      main += formatSubnet(subnet, cloneConfig, true);
+      if (!contains(allRgs, subnet.resource_group)) {
+        allRgs.push(subnet.resource_group);
+      }
+    });
+
+    allRgs.forEach(rg => {
+      variables[snakeCase(rg) + "_id"] = {
+        description: "ID for the resource group " + rg,
+        type: "${string}"
+      };
+    });
+
+    files[vpcModule] = {
+      "main.tf": tfBlock(vpc.name + " vpc", main),
+      "versions.tf": versionsTf,
+      "variables.tf": tfBlock(
+        vpc.name + " vpc variables",
+        "\n" + jsonToTf(JSON.stringify({ variable: variables })) + "\n"
+      )
+    };
+
+    vpc.acls.forEach(acl => {
+      let aclData = formatAcl(acl, cloneConfig);
+      acl.rules.forEach(rule => {
+        aclData += formatAclRule(rule);
+      });
+      let data = tfBlock(
+        snakeCase(`${acl.vpc} ${acl.name} acl`),
+        aclData
+      ).replace(/Acl(?=\n)/gs, "ACL");
+      files[vpcModule]["acl_" + snakeCase(`${acl.vpc} ${acl.name}.tf`)] = data;
+    });
+
+    cloneConfig.security_groups.forEach(sg => {
+      if (sg.vpc === vpc.name) {
+        let sgData = formatSecurityGroup(sg, cloneConfig);
+        sg.rules.forEach(rule => (sgData += formatSgRule(rule)));
+        files[vpcModule]["sg_" + snakeCase(`${sg.name}`) + ".tf"] = tfBlock(
+          "Security Group " + sg.name,
+          sgData
+        );
+      }
+    });
+
+    if (cloneConfig.routing_tables) {
+      cloneConfig.routing_tables.forEach(rt => {
+        if (rt.vpc === vpc.name) {
+          files[vpcModule]["rt_" + snakeCase(rt.name) + ".tf"] = routingTableTf(
+            {
+              routing_tables: [rt],
+              vpcs: cloneConfig.vpcs,
+              _options: config._options
+            }
+          );
+        }
+      });
+    }
+
+    files[vpcModule]["outputs.tf"] = tfBlock(
+      vpc.name + " vpc outputs",
+      "\n" +
+        jsonToTf(
+          JSON.stringify({
+            output: vpcModuleOutputs(vpc, cloneConfig.security_groups)
+          })
+        ) +
+        "\n"
+    );
+
+    let moduleData =
+      "\n" +
+      jsonToTf(
+        JSON.stringify({
+          module: vpcModuleJson(vpc, allRgs, config)
+        })
+      ) +
+      "\n";
+    files["main.tf"] += "\n" + tfBlock(`${vpc.name} vpc module`, moduleData);
+  });
+}
+
 module.exports = {
   formatVpc,
   formatAddressPrefix,
@@ -389,5 +567,8 @@ module.exports = {
   ibmIsSubnet,
   ibmIsNetworkAclRule,
   ibmIsNetworkAcl,
-  ibmIsVpcAddressPrefix
+  ibmIsVpcAddressPrefix,
+  vpcModuleTf,
+  vpcModuleJson,
+  vpcModuleOutputs
 };

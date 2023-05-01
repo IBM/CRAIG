@@ -1,6 +1,5 @@
 const { jsonToTf } = require("json-to-tf");
 const { snakeCase, getObjectFromArray, contains } = require("lazy-z");
-const { RegexButWithWords } = require("regex-but-with-words");
 const {
   composedZone,
   vpcRef,
@@ -283,7 +282,7 @@ function f5TemplateFile(template, config) {
           "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
         template_version: template.template_version || "20210201",
         zone: composedZone(config, template.zone),
-        vpc: vpcRef(template.vpc),
+        vpc: vpcRef(template.vpc, "id", true),
         app_id: template.app_id || "null"
       }
     },

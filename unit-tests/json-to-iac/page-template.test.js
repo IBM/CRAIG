@@ -51,7 +51,7 @@ describe("page template", () => {
 
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "iac-management-vpc"
-  resource_group              = ibm_resource_group.management_rg.id
+  resource_group              = var.management_rg_id
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -65,7 +65,7 @@ resource "ibm_is_vpc" "management_vpc" {
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   name           = "iac-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
-  resource_group = ibm_resource_group.management_rg.id
+  resource_group = var.management_rg_id
   zone           = "us-south-1"
   tags = [
     "hello",
@@ -81,7 +81,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 
 resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "iac-management-vpc-logs"
-  target         = ibm_is_vpc.management_vpc.id
+  target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.management_rg.id
@@ -136,7 +136,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
 
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "iac-management-vpc"
-  resource_group              = ibm_resource_group.management_rg.id
+  resource_group              = var.management_rg_id
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -155,7 +155,7 @@ resource "ibm_is_vpc" "management_vpc" {
 
 resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "iac-management-vpc-logs"
-  target         = ibm_is_vpc.management_vpc.id
+  target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.management_rg.id
@@ -297,7 +297,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
 resource "ibm_is_network_acl" "management_management_acl" {
   name           = "iac-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
-  resource_group = ibm_resource_group.management_rg.id
+  resource_group = var.management_rg_id
   tags = [
     "hello",
     "world"
@@ -449,7 +449,7 @@ resource "ibm_is_subnet" "management_vsi_zone_1" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vsi-zone-1"
   zone            = "us-south-1"
-  resource_group  = ibm_resource_group.management_rg.id
+  resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_1_prefix.cidr
   tags = [
@@ -462,7 +462,7 @@ resource "ibm_is_subnet" "management_vpn_zone_1" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vpn-zone-1"
   zone            = "us-south-1"
-  resource_group  = ibm_resource_group.management_rg.id
+  resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpn_zone_1_prefix.cidr
   tags = [
@@ -475,7 +475,7 @@ resource "ibm_is_subnet" "management_vsi_zone_2" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vsi-zone-2"
   zone            = "us-south-2"
-  resource_group  = ibm_resource_group.management_rg.id
+  resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_2_prefix.cidr
   tags = [
@@ -488,7 +488,7 @@ resource "ibm_is_subnet" "management_vsi_zone_3" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vsi-zone-3"
   zone            = "us-south-3"
-  resource_group  = ibm_resource_group.management_rg.id
+  resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_3_prefix.cidr
   tags = [
@@ -501,7 +501,7 @@ resource "ibm_is_subnet" "management_vpe_zone_1" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vpe-zone-1"
   zone            = "us-south-1"
-  resource_group  = ibm_resource_group.management_rg.id
+  resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_1_prefix.cidr
   tags = [
@@ -514,7 +514,7 @@ resource "ibm_is_subnet" "management_vpe_zone_2" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vpe-zone-2"
   zone            = "us-south-2"
-  resource_group  = ibm_resource_group.management_rg.id
+  resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_2_prefix.cidr
   tags = [
@@ -527,7 +527,7 @@ resource "ibm_is_subnet" "management_vpe_zone_3" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vpe-zone-3"
   zone            = "us-south-3"
-  resource_group  = ibm_resource_group.management_rg.id
+  resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_3_prefix.cidr
   tags = [

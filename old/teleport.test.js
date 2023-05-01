@@ -4,7 +4,7 @@ const {
   formatTemplateCloudInit,
   formatTeleportInstance,
   teleportTf,
-} = require("../../client/src/lib/json-to-iac/teleport");
+} = require("./teleport");
 
 describe("teleport", () => {
   describe("teleportCloudInit", () => {

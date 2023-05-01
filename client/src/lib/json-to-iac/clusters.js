@@ -1,4 +1,4 @@
-const { getObjectFromArray } = require("lazy-z");
+const { getObjectFromArray, snakeCase } = require("lazy-z");
 const {
   rgIdRef,
   getKmsInstanceData,
@@ -46,7 +46,7 @@ function ibmContainerVpcCluster(cluster, config) {
   };
   let clusterData = {
     name: kebabName(config, [cluster.name, "cluster"]),
-    vpc_id: vpcRef(cluster.vpc),
+    vpc_id: vpcRef(cluster.vpc, "id", true),
     resource_group_id: rgIdRef(cluster.resource_group, config),
     flavor: cluster.flavor,
     worker_count: cluster.workers_per_subnet,
@@ -69,7 +69,9 @@ function ibmContainerVpcCluster(cluster, config) {
   cluster.subnets.forEach(subnet => {
     clusterData.zones.push({
       name: composedZone(config, subnetZone(subnet), true),
-      subnet_id: subnetRef(cluster.vpc, subnet)
+      subnet_id: `\${module.${snakeCase(cluster.vpc)}_vpc.${snakeCase(
+        subnet
+      )}_id}`
     });
   });
 
@@ -109,12 +111,8 @@ function ibmContainerVpcWorkerPool(pool, config) {
     name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`
   };
   let poolData = {
-    worker_pool_name: kebabName(config, [
-      pool.cluster,
-      "cluster",
-      pool.name
-    ]),
-    vpc_id: vpcRef(pool.vpc),
+    worker_pool_name: kebabName(config, [pool.cluster, "cluster", pool.name]),
+    vpc_id: vpcRef(pool.vpc, "id", true),
     resource_group_id: rgIdRef(pool.resource_group, config),
     cluster: tfRef(
       "ibm_container_vpc_cluster",
@@ -132,7 +130,9 @@ function ibmContainerVpcWorkerPool(pool, config) {
   pool.subnets.forEach(subnet => {
     poolData.zones.push({
       name: composedZone(config, subnetZone(subnet), true),
-      subnet_id: subnetRef(poolCluster.vpc, subnet)
+      subnet_id: `\${module.${snakeCase(poolCluster.vpc)}_vpc.${snakeCase(
+        subnet
+      )}_id}`
     });
   });
   data.data = poolData;

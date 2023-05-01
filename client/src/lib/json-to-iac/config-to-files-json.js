@@ -11,15 +11,12 @@ const { cosTf } = require("./object-storage");
 const resourceGroupTf = require("./resource-groups");
 const { sccTf } = require("./scc");
 const { secretsManagerTf } = require("./secrets-manager");
-const { sgTf } = require("./security-groups");
 const { sshKeyTf } = require("./ssh-keys");
-const { teleportTf, teleportCloudInit } = require("./teleport");
 const { tgwTf } = require("./transit-gateway");
-const { vpcTf } = require("./vpc");
+const { vpcModuleTf } = require("./vpc");
 const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
 const { vsiTf, lbTf } = require("./vsi");
-const { routingTableTf } = require("./routing-tables");
 
 /**
  * create a json document with file names as keys and text as value
@@ -57,33 +54,29 @@ variable "tmos_admin_password" {
 `;
       }
     }
-    let useTeleport = config.teleport_vsi.length > 0;
+
     let files = {
-      "craig.json": prettyJSON(config),
-      "versions.tf": versionsTf,
       "main.tf": mainTf.replace("$REGION", `"${config._options.region}"`),
+      "flow_logs.tf": flowLogsTf(config),
+      "transit_gateways.tf": tgwTf(config),
+      "virtual_private_endpoints.tf": vpeTf(config),
+      "virtual_servers.tf": vsiTf(config),
+      "clusters.tf": clusterTf(config),
+      "vpn_gateways.tf": vpnTf(config),
       "variables.tf": variablesTf.replace(
         "$ADDITIONAL_VALUES",
         additionalVariables
       ),
-      "vpc.tf": vpcTf(config) + "\n",
       "key_management.tf": kmsTf(config) + "\n",
       "object_storage.tf": cosTf(config) + "\n",
-      "atracker.tf": atrackerTf(config),
       "resource_groups.tf": resourceGroupTf(config),
-      "flow_logs.tf": flowLogsTf(config),
-      "virtual_private_endpoints.tf": vpeTf(config),
-      "security_groups.tf": sgTf(config),
-      "vpn_gateways.tf": vpnTf(config),
-      "ssh_keys.tf": sshKeyTf(config),
-      "transit_gateways.tf": tgwTf(config),
-      "clusters.tf": clusterTf(config),
-      "virtual_servers.tf": vsiTf(config),
+      "versions.tf": versionsTf,
       "secrets_manager.tf":
         config.secrets_manager.length > 0 ? secretsManagerTf(config) : null,
+      "ssh_keys.tf": sshKeyTf(config),
+      "atracker.tf": atrackerTf(config),
+      "craig.json": prettyJSON(config),
       "appid.tf": config.appid.length > 0 ? appidTf(config) : null,
-      "teleport_vsi.tf": useTeleport ? teleportTf(config) : null,
-      "cloud-init.tpl": useTeleport ? teleportCloudInit() : null,
       "scc.tf": config.scc.name === "" ? null : sccTf(config),
       "event_streams.tf":
         config.event_streams && config.event_streams.length > 0
@@ -94,12 +87,9 @@ variable "tmos_admin_password" {
           ? lbTf(config)
           : null,
       "f5_big_ip.tf": useF5 ? f5Tf(config) : null,
-      "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null,
-      "routing_tables.tf":
-        config.routing_tables && config.routing_tables.length > 0
-          ? routingTableTf(config)
-          : null
+      "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null
     };
+    vpcModuleTf(files, config);
     return files;
   } catch (err) {
     console.log(err);

@@ -6,9 +6,7 @@ const {
   titleCase,
   transpose,
   eachKey,
-  getObjectFromArray
 } = require("lazy-z");
-const { RegexButWithWords } = require("regex-but-with-words");
 const {
   ibmAtrackerRoute,
   ibmAtrackerTarget,
@@ -43,14 +41,11 @@ const {
   f5Images,
   f5Locals,
   f5TemplateFile,
-  localTemplateUserData,
-  templateCloudinitConfig,
   ibmResourceInstanceSecretsManager,
   ibmIamAuthorizationPolicySecretsManager,
   ibmResourceInstanceEventStreams,
   ibmResourceInstanceAppId,
   ibmResourceKeyAppId,
-  ibmAppIdRedirectUrls,
   ibmSccAccountSettings,
   ibmSccPostureCredential,
   ibmSccPostureCollector,
@@ -65,14 +60,134 @@ const {
   ibmIamAccessGroup,
   ibmIamAccessGroupDynamicRule,
   ibmIamAccessGroupPolicy,
-  ibmIamAccessGroupMembers
+  ibmIamAccessGroupMembers,
+  vpcModuleJson,
+  vpcModuleOutputs
 } = require("./json-to-iac");
-const {
-  cdktfValues,
-  getResourceOrData,
-  cdktfRef
-} = require("./json-to-iac/utils");
+const { cdktfValues, getResourceOrData } = require("./json-to-iac/utils");
 
+/**
+ * create vpc modules from craig
+ * @param {*} craig
+ * @returns {Array<object>} array of cdktf definitions for vpc module
+ */
+function craigToVpcModuleCdktf(craig) {
+  let vpcModules = [];
+  craig.vpcs.forEach(vpc => {
+    let vpcRgs = [];
+    let moduleJson = {
+      resource: {},
+      output: vpcModuleOutputs(vpc, craig.security_groups),
+      terraform: {
+        required_providers: {
+          ibm: {
+            source: "IBM-Cloud/ibm",
+            version: "1.44.1"
+          }
+        }
+      },
+      variable: {
+        tags: {
+          description: "List of tags",
+          type: "${list(string)}"
+        }
+      }
+    };
+    let nw = ibmIsVpc(vpc, craig);
+    cdktfValues(moduleJson, "resource", "ibm_is_vpc", nw.name, nw.data);
+    vpc.address_prefixes.forEach(prefix => {
+      let cidr = ibmIsVpcAddressPrefix(prefix, craig);
+      cdktfValues(
+        moduleJson,
+        "resource",
+        "ibm_is_vpc_address_prefix",
+        cidr.name,
+        cidr.data
+      );
+    });
+    vpc.acls.forEach(nacl => {
+      let acl = ibmIsNetworkAcl(nacl, craig);
+      cdktfValues(
+        moduleJson,
+        "resource",
+        "ibm_is_network_acl",
+        acl.name,
+        acl.data
+      );
+      nacl.rules.forEach(aclRule => {
+        let rule = ibmIsNetworkAclRule(aclRule);
+        cdktfValues(
+          moduleJson,
+          "resource",
+          "ibm_is_network_acl_rule",
+          rule.name,
+          rule.data
+        );
+      });
+        vpcRgs.push(nacl.resource_group);
+      
+    });
+    vpc.subnets.forEach(sub => {
+      let subnet = ibmIsSubnet(sub, craig);
+      cdktfValues(
+        moduleJson,
+        "resource",
+        "ibm_is_subnet",
+        subnet.name,
+        subnet.data
+      );
+        vpcRgs.push(sub.resource_group);
+    });
+
+    vpc.public_gateways.forEach(gw => {
+      let pgw = ibmIsPublicGateway(gw, craig);
+      cdktfValues(
+        moduleJson,
+        "resource",
+        "ibm_is_public_gateway",
+        pgw.name,
+        pgw.data
+      );
+    });
+    
+    craig.security_groups.forEach(sg => {
+      if (sg.vpc === vpc.name) {
+        let group = ibmIsSecurityGroup(sg, craig);
+        cdktfValues(
+          moduleJson,
+          "resource",
+          "ibm_is_security_group",
+          group.name,
+          group.data
+        );
+        sg.rules.forEach(rule => {
+          let data = ibmIsSecurityGroupRule(rule);
+          cdktfValues(
+            moduleJson,
+            "resource",
+            "ibm_is_security_group_rule",
+            data.name,
+            data.data
+          );
+        });
+      }
+    });
+    distinct(vpcRgs).forEach(rg => {
+      moduleJson.variable[snakeCase(rg) + "_id"] = {
+        description: "ID for the resource group " + rg,
+        type: "${string}"
+      };
+    });
+    vpcModules.push(moduleJson);
+  });
+  return vpcModules;
+}
+
+/**
+ * create cdktf object
+ * @param {*} craig
+ * @returns {object} cdktf object
+ */
 function craigToCdktf(craig) {
   let tags = craig._options.tags;
   let prefix = craig._options.prefix;
@@ -85,6 +200,7 @@ function craigToCdktf(craig) {
         }
       ]
     },
+    module: {},
     data: {},
     resource: {},
     variable: {
@@ -165,59 +281,22 @@ function craigToCdktf(craig) {
   // vpcs
   craig.vpcs.forEach(vpc => {
     let logs = ibmIsFlowLog(vpc, craig, true);
-    let nw = ibmIsVpc(vpc, craig);
+    let vpcRgs = [];
     cdktfValues(cdktfJson, "resource", "ibm_is_flow_log", logs.name, logs.data);
-    cdktfValues(cdktfJson, "resource", "ibm_is_vpc", nw.name, nw.data);
-    vpc.address_prefixes.forEach(prefix => {
-      let cidr = ibmIsVpcAddressPrefix(prefix, craig);
-      cdktfValues(
-        cdktfJson,
-        "resource",
-        "ibm_is_vpc_address_prefix",
-        cidr.name,
-        cidr.data
-      );
-    });
     vpc.acls.forEach(nacl => {
-      let acl = ibmIsNetworkAcl(nacl, craig);
-      cdktfValues(
-        cdktfJson,
-        "resource",
-        "ibm_is_network_acl",
-        acl.name,
-        acl.data
-      );
-      nacl.rules.forEach(aclRule => {
-        let rule = ibmIsNetworkAclRule(aclRule);
-        cdktfValues(
-          cdktfJson,
-          "resource",
-          "ibm_is_network_acl_rule",
-          rule.name,
-          rule.data
-        );
-      });
+      if (!contains(vpcRgs, nacl.resource_group)) {
+        vpcRgs.push(nacl.resource_group);
+      }
     });
     vpc.subnets.forEach(sub => {
-      let subnet = ibmIsSubnet(sub, craig);
-      cdktfValues(
-        cdktfJson,
-        "resource",
-        "ibm_is_subnet",
-        subnet.name,
-        subnet.data
-      );
+      if (!contains(vpcRgs, sub.resource_group)) {
+        vpcRgs.push(sub.resource_group);
+      }
     });
-    vpc.public_gateways.forEach(gw => {
-      let pgw = ibmIsPublicGateway(gw, craig);
-      cdktfValues(
-        cdktfJson,
-        "resource",
-        "ibm_is_public_gateway",
-        pgw.name,
-        pgw.data
-      );
-    });
+    if (!contains(vpcRgs, vpc.resource_group)) {
+      vpcRgs.push(vpc.resource_group);
+    }
+    transpose(vpcModuleJson(vpc, vpcRgs, craig), cdktfJson.module);
   });
 
   // resource groups
@@ -334,26 +413,26 @@ function craigToCdktf(craig) {
   });
 
   // security groups
-  craig.security_groups.forEach(sg => {
-    let group = ibmIsSecurityGroup(sg, craig);
-    cdktfValues(
-      cdktfJson,
-      "resource",
-      "ibm_is_security_group",
-      group.name,
-      group.data
-    );
-    sg.rules.forEach(rule => {
-      let data = ibmIsSecurityGroupRule(rule);
-      cdktfValues(
-        cdktfJson,
-        "resource",
-        "ibm_is_security_group_rule",
-        data.name,
-        data.data
-      );
-    });
-  });
+  // craig.security_groups.forEach(sg => {
+  //   let group = ibmIsSecurityGroup(sg, craig);
+  //   cdktfValues(
+  //     cdktfJson,
+  //     "resource",
+  //     "ibm_is_security_group",
+  //     group.name,
+  //     group.data
+  //   );
+  //   sg.rules.forEach(rule => {
+  //     let data = ibmIsSecurityGroupRule(rule);
+  //     cdktfValues(
+  //       cdktfJson,
+  //       "resource",
+  //       "ibm_is_security_group_rule",
+  //       data.name,
+  //       data.data
+  //     );
+  //   });
+  // });
 
   // ssh keys
   craig.ssh_keys.forEach(key => {
@@ -475,11 +554,7 @@ function craigToCdktf(craig) {
   });
 
   // f5
-  if (
-    (craig.f5_vsi && craig.f5_vsi.length > 0) ||
-    craig.teleport_vsi.length > 0
-  )
-    cdktfJson.locals = {};
+  if (craig.f5_vsi && craig.f5_vsi.length > 0) cdktfJson.locals = {};
 
   if (craig.f5_vsi && craig.f5_vsi.length > 0) {
     let images = f5Images();
@@ -498,55 +573,6 @@ function craigToCdktf(craig) {
       template.name,
       template.data
     );
-  }
-
-  // teleport vsi
-  if (craig.teleport_vsi.length > 0) {
-    let locals = localTemplateUserData(craig.teleport_vsi[0].template);
-    eachKey(locals.locals, key => {
-      cdktfJson.locals[key] = locals.locals[key];
-    });
-    let template = templateCloudinitConfig(craig.teleport_vsi[0].template);
-    cdktfValues(
-      cdktfJson,
-      "data",
-      "template_cloudinit_config",
-      template.name,
-      template.data
-    );
-    craig.teleport_vsi.forEach(instance => {
-      instance.user_data = cdktfRef(
-        `data.template_cloudinit_config.${snakeCase(
-          instance.name.replace(
-            new RegexButWithWords().literal(prefix + "-").done("g"),
-            ""
-          )
-        )}_cloud_init.rendered`
-      );
-      instance.name = `${prefix}-${instance.name}`;
-      let vsi = ibmIsInstance(instance, craig);
-      cdktfValues(
-        cdktfJson,
-        "resource",
-        "ibm_is_instance",
-        instance.name + " teleport vsi",
-        vsi.data
-      );
-      let urls = ibmAppIdRedirectUrls(
-        getObjectFromArray(craig.appid, "name", instance.appid),
-        [
-          `https://${prefix}-${instance.name}-teleport-vsi.${instance.template.domain}:3080/v1/webapi/oidc/callback`
-        ],
-        instance.name + "_appid_urls"
-      );
-      cdktfValues(
-        cdktfJson,
-        "resource",
-        "ibm_appid_redirect_urls",
-        instance.name + "_appid_urls",
-        urls.data
-      );
-    });
   }
 
   // event streams
@@ -735,5 +761,6 @@ function craigToCdktf(craig) {
 }
 
 module.exports = {
-  craigToCdktf
+  craigToCdktf,
+  craigToVpcModuleCdktf
 };

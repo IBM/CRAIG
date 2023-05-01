@@ -6,16 +6,16 @@ const {
   hclEncode
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
-const { formatAppIdRedirectUrls } = require("./appid");
-const { teleportCloudInitText } = require("./constants");
+const { formatAppIdRedirectUrls } = require("../client/src/lib/json-to-iac/appid");
+const { teleportCloudInitText } = require("../client/src/lib/json-to-iac/constants");
 const {
   tfBlock,
   tfRef,
   bucketRef,
   cdktfRef,
   jsonToTfPrint
-} = require("./utils");
-const { formatVsi } = require("./vsi");
+} = require("../client/src/lib/json-to-iac/utils");
+const { formatVsi } = require("../client/src/lib/json-to-iac/vsi");
 
 function teleportCloudInit() {
   return teleportCloudInitText;

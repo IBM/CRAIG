@@ -248,7 +248,7 @@ describe("flow logs", () => {
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "iac-management-vpc-logs"
-  target         = ibm_is_vpc.management_vpc.id
+  target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -509,7 +509,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "iac-management-vpc-logs"
-  target         = ibm_is_vpc.management_vpc.id
+  target         = module.management_vpc.id
   active         = true
   storage_bucket = "ERROR: Unfound ref"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -767,7 +767,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "iac-management-vpc-logs"
-  target         = ibm_is_vpc.management_vpc.id
+  target         = module.management_vpc.id
   active         = true
   storage_bucket = "ERROR: Unfound ref"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -900,7 +900,7 @@ resource "ibm_iam_authorization_policy" "flow_logs_to_cos_object_storage_policy"
 
 resource "ibm_is_flow_log" "management_flow_log_collector" {
   name           = "slz-management-vpc-logs"
-  target         = ibm_is_vpc.management_vpc.id
+  target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -915,7 +915,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
 
 resource "ibm_is_flow_log" "workload_flow_log_collector" {
   name           = "slz-workload-vpc-logs"
-  target         = ibm_is_vpc.workload_vpc.id
+  target         = module.workload_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
   resource_group = ibm_resource_group.slz_workload_rg.id

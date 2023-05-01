@@ -29,7 +29,7 @@ function ibmIsSecurityGroup(sg, config) {
     data: {
       name: kebabName(config, [sg.vpc, sg.name, "sg"]),
       vpc: vpcRef(sg.vpc),
-      resource_group: rgIdRef(sg.resource_group, config),
+      resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
       tags: getTags(config)
     }
   };

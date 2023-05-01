@@ -3,8 +3,6 @@ const {
   snakeCase,
   titleCase,
   kebabCase,
-  eachKey,
-  isString,
   parseIntFromZone,
   isNullOrEmptyString,
   transpose
@@ -38,10 +36,11 @@ function rgIdRef(groupName, config) {
  * @param {Object} config
  * @param {Object} config._options
  * @param {Array<string>} config._options.tags
+ * @param {boolean=} useVarRef
  * @returns {string} stringified tags
  */
-function getTags(config) {
-  return config._options.tags;
+function getTags(config, useVarRef) {
+  return useVarRef ? `\${var.tags}` : config._options.tags;
 }
 
 /**
@@ -108,10 +107,13 @@ function getKmsInstanceData(kmsName, config) {
  * format vpc id
  * @param {string} vpcName
  * @param {string=} value value to get defaults to id
+ * @param {string=} useModule get module instead of address
  * @returns {string} formatted id
  */
-function vpcRef(vpcName, value) {
-  return `\${ibm_is_vpc.${snakeCase(vpcName)}_vpc.${value || "id"}}`;
+function vpcRef(vpcName, value, useModule) {
+  return `\${${useModule ? "module" : "ibm_is_vpc"}.${snakeCase(
+    vpcName
+  )}_vpc.${value || "id"}}`;
 }
 
 /**
@@ -215,7 +217,6 @@ function subnetRef(vpc, subnet, value, data) {
 function encryptionKeyRef(kms, key, value) {
   return tfRef("ibm_kms_key", `${kms} ${key} key`, value || "key_id");
 }
-
 
 /**
  * get subnet zone number from name
@@ -362,11 +363,11 @@ function jsonToTfPrint(resource, type, name, values) {
 
 /**
  * get data or resource
- * @param {*} resource 
+ * @param {*} resource
  * @returns {string} data if data, resource otherwise
  */
 function getResourceOrData(resource) {
-  return resource.use_data ? "data" : "resource"
+  return resource.use_data ? "data" : "resource";
 }
 
 module.exports = {

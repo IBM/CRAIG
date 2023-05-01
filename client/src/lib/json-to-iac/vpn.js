@@ -1,11 +1,11 @@
 const {
   rgIdRef,
   kebabName,
-  subnetRef,
   tfBlock,
   timeouts,
   jsonToTfPrint
 } = require("./utils");
+const { snakeCase } = require("lazy-z");
 
 /**
  * format vpn gateway terraform
@@ -25,12 +25,12 @@ function ibmIsVpnGateway(gw, config) {
     name: `${gw.vpc} ${gw.name} vpn gw`,
     data: {
       name: kebabName(config, [gw.vpc, gw.name, "vpn-gw"]),
-      subnet: subnetRef(gw.vpc, gw.subnet),
+      subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(gw.subnet)}_id}`,
       resource_group: rgIdRef(gw.resource_group, config),
       tags: config._options.tags,
       timeouts: timeouts("", "", "1h")
     }
-  }
+  };
 }
 
 /**
@@ -41,12 +41,7 @@ function ibmIsVpnGateway(gw, config) {
  */
 function formatVpn(gw, config) {
   let vpn = ibmIsVpnGateway(gw, config);
-  return jsonToTfPrint(
-    "resource",
-    "ibm_is_vpn_gateway",
-    vpn.name,
-    vpn.data
-  )
+  return jsonToTfPrint("resource", "ibm_is_vpn_gateway", vpn.name, vpn.data);
 }
 
 /**

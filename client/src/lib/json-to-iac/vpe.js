@@ -9,6 +9,7 @@ const {
   getTags,
   jsonToTfPrint
 } = require("./utils");
+const { snakeCase } = require("lazy-z");
 
 const serviceToEndpointMap = {
   kms:
@@ -32,7 +33,7 @@ function ibmIsSubnetReservedIp(vpcName, subnetName) {
   return {
     name: `${vpcName} vpc ${subnetName} subnet vpe ip`,
     data: {
-      subnet: subnetRef(vpcName, subnetName)
+      subnet: `\${module.${snakeCase(vpcName)}_vpc.${snakeCase(subnetName)}_id}`
     }
   };
 }
@@ -71,7 +72,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
     name: `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
     data: {
       name: kebabName(config, [vpe.vpc, vpe.service, "vpe-gw"]),
-      vpc: vpcRef(vpe.vpc),
+      vpc: vpcRef(vpe.vpc, "id", true),
       resource_group: rgIdRef(vpe.resource_group, config),
       tags: getTags(config),
       security_groups: [],
@@ -88,7 +89,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
   };
   vpe.security_groups.forEach(group => {
     data.data.security_groups.push(
-      tfRef(`ibm_is_security_group`, `${vpe.vpc} vpc ${group} sg`)
+      `\${module.${vpe.vpc}_vpc.${snakeCase(group)}_id}`
     );
   });
   return data;

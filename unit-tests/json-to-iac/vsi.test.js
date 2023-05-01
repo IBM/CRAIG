@@ -34,16 +34,16 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-1"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = module.management_vpc.vsi_zone_1_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -84,7 +84,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-1"
   user_data      = ""test-user-data""
   tags = [
@@ -92,9 +92,9 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = module.management_vpc.vsi_zone_1_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -145,7 +145,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-1"
   user_data      = ""test-user-data""
   tags = [
@@ -153,9 +153,9 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = module.management_vpc.vsi_zone_1_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -221,7 +221,7 @@ resource "ibm_is_instance" "management_server" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-1"
   user_data      = ""test-user-data""
   tags = [
@@ -229,9 +229,9 @@ resource "ibm_is_instance" "management_server" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = module.management_vpc.vsi_zone_1_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -291,17 +291,17 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-1"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = module.management_vpc.vsi_zone_1_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id,
-      ibm_is_security_group.management_vpc_management_vpe_sg2_sg.id
+      module.management_vpc.management_vpe_sg_id,
+      module.management_vpc.management_vpe_sg2_id
     ]
   }
   boot_volume {
@@ -411,12 +411,12 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
     "world"
   ]
   security_groups = [
-    ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+    module.management_vpc.management_vpe_sg_id
   ]
   subnets = [
-    ibm_is_subnet.management_vsi_zone_1.id,
-    ibm_is_subnet.management_vsi_zone_2.id,
-    ibm_is_subnet.management_vsi_zone_3.id
+    module.management_vpc.vsi_zone_1_id,
+    module.management_vpc.vsi_zone_2_id,
+    module.management_vpc.vsi_zone_3_id
   ]
 }` +
         `
@@ -576,12 +576,12 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
     "world"
   ]
   security_groups = [
-    ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+    module.management_vpc.management_vpe_sg_id
   ]
   subnets = [
-    ibm_is_subnet.management_vsi_zone_1.id,
-    ibm_is_subnet.management_vsi_zone_2.id,
-    ibm_is_subnet.management_vsi_zone_3.id
+    module.management_vpc.vsi_zone_1_id,
+    module.management_vpc.vsi_zone_2_id,
+    module.management_vpc.vsi_zone_3_id
   ]
 }` +
         `
@@ -745,12 +745,12 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
     "world"
   ]
   security_groups = [
-    ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+    module.management_vpc.management_vpe_sg_id
   ]
   subnets = [
-    ibm_is_subnet.management_vsi_zone_1.id,
-    ibm_is_subnet.management_vsi_zone_2.id,
-    ibm_is_subnet.management_vsi_zone_3.id
+    module.management_vpc.vsi_zone_1_id,
+    module.management_vpc.vsi_zone_2_id,
+    module.management_vpc.vsi_zone_3_id
   ]
 }` +
         `
@@ -860,16 +860,16 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-1"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = module.management_vpc.vsi_zone_1_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -885,16 +885,16 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-1"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_1.id
+    subnet = module.management_vpc.vsi_zone_1_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -910,16 +910,16 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-2"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_2.id
+    subnet = module.management_vpc.vsi_zone_2_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -935,16 +935,16 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-2"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_2.id
+    subnet = module.management_vpc.vsi_zone_2_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -960,16 +960,16 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-3"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_3.id
+    subnet = module.management_vpc.vsi_zone_3_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {
@@ -985,16 +985,16 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = module.management_vpc.id
   zone           = "us-south-3"
   tags = [
     "slz",
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = ibm_is_subnet.management_vsi_zone_3.id
+    subnet = module.management_vpc.vsi_zone_3_id
     security_groups = [
-      ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+      module.management_vpc.management_vpe_sg_id
     ]
   }
   boot_volume {

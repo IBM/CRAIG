@@ -112,7 +112,7 @@ describe("security groups", () => {
 resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
   name           = "iac-management-management-vpe-sg-sg"
   vpc            = ibm_is_vpc.management_vpc.id
-  resource_group = ibm_resource_group.slz_management_rg.id
+  resource_group = var.slz_management_rg_id
   tags = [
     "hello",
     "world"
@@ -362,7 +362,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
 resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
   name           = "slz-management-management-vpe-sg-sg"
   vpc            = ibm_is_vpc.management_vpc.id
-  resource_group = ibm_resource_group.slz_management_rg.id
+  resource_group = var.slz_management_rg_id
   tags = [
     "slz",
     "landing-zone"
@@ -426,7 +426,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
 resource "ibm_is_security_group" "workload_vpc_workload_vpe_sg_sg" {
   name           = "slz-workload-workload-vpe-sg-sg"
   vpc            = ibm_is_vpc.workload_vpc.id
-  resource_group = ibm_resource_group.slz_workload_rg.id
+  resource_group = var.slz_workload_rg_id
   tags = [
     "slz",
     "landing-zone"
