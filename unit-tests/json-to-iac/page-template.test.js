@@ -5,7 +5,11 @@ const {
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
+  codeMirrorGetDisplay,
 } = require("../../client/src/lib/json-to-iac/page-template");
+const resourceGroupTf = require("../../client/src/lib/json-to-iac/resource-groups")
+const { f5Tf } = require("../../client/src/lib");
+
 
 describe("page template", () => {
   describe("vpc", () => {
@@ -660,4 +664,509 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
       );
     });
   });
+  describe("codeMirrorGetDisplay", () => {
+    it("should return correct terraform for home page", () => {
+      let testData = {
+      };
+      let expectedData = `{}`;
+      assert.deepEqual(
+        codeMirrorGetDisplay(testData, false, undefined, undefined, undefined),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+    it("should return correct terraform for nacl when jsonInCodeMirror is true", () => {
+      let testData = {
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "management-rg",
+          },
+        ],
+        vpcs: [
+          {
+            "acls": [
+              {
+                  "resource_group": "management-rg",
+                  "name": "management",
+                  "vpc": "management",
+                  "rules": [
+                      {
+                          "action": "allow",
+                          "destination": "10.0.0.0/8",
+                          "direction": "inbound",
+                          "name": "allow-ibm-inbound",
+                          "source": "161.26.0.0/16",
+                          "acl": "management",
+                          "vpc": "management",
+                          "icmp": {
+                              "type": null,
+                              "code": null
+                          },
+                          "tcp": {
+                              "port_min": null,
+                              "port_max": null,
+                              "source_port_min": null,
+                              "source_port_max": null
+                          },
+                          "udp": {
+                              "port_min": null,
+                              "port_max": null,
+                              "source_port_min": null,
+                              "source_port_max": null
+                          }
+                      },
+                      {
+                          "action": "allow",
+                          "destination": "10.0.0.0/8",
+                          "direction": "inbound",
+                          "name": "allow-all-network-inbound",
+                          "source": "10.0.0.0/8",
+                          "acl": "management",
+                          "vpc": "management",
+                          "icmp": {
+                              "type": null,
+                              "code": null
+                          },
+                          "tcp": {
+                              "port_min": null,
+                              "port_max": null,
+                              "source_port_min": null,
+                              "source_port_max": null
+                          },
+                          "udp": {
+                              "port_min": null,
+                              "port_max": null,
+                              "source_port_min": null,
+                              "source_port_max": null
+                          }
+                      },
+                      {
+                          "action": "allow",
+                          "destination": "0.0.0.0/0",
+                          "direction": "outbound",
+                          "name": "allow-all-outbound",
+                          "source": "0.0.0.0/0",
+                          "acl": "management",
+                          "vpc": "management",
+                          "icmp": {
+                              "type": null,
+                              "code": null
+                          },
+                          "tcp": {
+                              "port_min": null,
+                              "port_max": null,
+                              "source_port_min": null,
+                              "source_port_max": null
+                          },
+                          "udp": {
+                              "port_min": null,
+                              "port_max": null,
+                              "source_port_min": null,
+                              "source_port_max": null
+                          }
+                      }
+                  ]
+              }
+          ]
+          },
+        ],
+      };
+      let expectedData = `[
+  {
+    "resource_group": "management-rg",
+    "name": "management",
+    "vpc": "management",
+    "rules": [
+      {
+        "action": "allow",
+        "destination": "10.0.0.0/8",
+        "direction": "inbound",
+        "name": "allow-ibm-inbound",
+        "source": "161.26.0.0/16",
+        "acl": "management",
+        "vpc": "management",
+        "icmp": {
+          "type": null,
+          "code": null
+        },
+        "tcp": {
+          "port_min": null,
+          "port_max": null,
+          "source_port_min": null,
+          "source_port_max": null
+        },
+        "udp": {
+          "port_min": null,
+          "port_max": null,
+          "source_port_min": null,
+          "source_port_max": null
+        }
+      },
+      {
+        "action": "allow",
+        "destination": "10.0.0.0/8",
+        "direction": "inbound",
+        "name": "allow-all-network-inbound",
+        "source": "10.0.0.0/8",
+        "acl": "management",
+        "vpc": "management",
+        "icmp": {
+          "type": null,
+          "code": null
+        },
+        "tcp": {
+          "port_min": null,
+          "port_max": null,
+          "source_port_min": null,
+          "source_port_max": null
+        },
+        "udp": {
+          "port_min": null,
+          "port_max": null,
+          "source_port_min": null,
+          "source_port_max": null
+        }
+      },
+      {
+        "action": "allow",
+        "destination": "0.0.0.0/0",
+        "direction": "outbound",
+        "name": "allow-all-outbound",
+        "source": "0.0.0.0/0",
+        "acl": "management",
+        "vpc": "management",
+        "icmp": {
+          "type": null,
+          "code": null
+        },
+        "tcp": {
+          "port_min": null,
+          "port_max": null,
+          "source_port_min": null,
+          "source_port_max": null
+        },
+        "udp": {
+          "port_min": null,
+          "port_max": null,
+          "source_port_min": null,
+          "source_port_max": null
+        }
+      }
+    ]
+  }
+]`;
+      assert.deepEqual(
+        codeMirrorGetDisplay(testData, true, "/form/nacls", codeMirrorAclTf, undefined),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+    it("should return correct terraform for subnets when jsonInCodeMirror is true", () => {
+      let testData = {
+        vpcs : [
+          {
+            "subnets": [
+              {
+                  "vpc": "workload",
+                  "zone": 1,
+                  "cidr": "10.40.10.0/24",
+                  "name": "vsi-zone-1",
+                  "network_acl": "workload",
+                  "resource_group": "workload-rg",
+                  "public_gateway": false,
+                  "has_prefix": true
+              },
+              {
+                  "vpc": "workload",
+                  "zone": 2,
+                  "cidr": "10.50.10.0/24",
+                  "name": "vsi-zone-2",
+                  "network_acl": "workload",
+                  "resource_group": "workload-rg",
+                  "public_gateway": false,
+                  "has_prefix": true
+              },
+              {
+                  "vpc": "workload",
+                  "zone": 3,
+                  "cidr": "10.60.10.0/24",
+                  "name": "vsi-zone-3",
+                  "network_acl": "workload",
+                  "resource_group": "workload-rg",
+                  "public_gateway": false,
+                  "has_prefix": true
+              },
+              {
+                  "vpc": "workload",
+                  "zone": 1,
+                  "cidr": "10.40.20.0/24",
+                  "name": "vpe-zone-1",
+                  "network_acl": "workload",
+                  "resource_group": "workload-rg",
+                  "public_gateway": false,
+                  "has_prefix": true
+              },
+              {
+                  "vpc": "workload",
+                  "zone": 2,
+                  "cidr": "10.50.20.0/24",
+                  "name": "vpe-zone-2",
+                  "network_acl": "workload",
+                  "resource_group": "workload-rg",
+                  "public_gateway": false,
+                  "has_prefix": true
+              },
+              {
+                  "vpc": "workload",
+                  "zone": 3,
+                  "cidr": "10.60.20.0/24",
+                  "name": "vpe-zone-3",
+                  "network_acl": "workload",
+                  "resource_group": "workload-rg",
+                  "public_gateway": false,
+                  "has_prefix": true
+              }
+          ]
+          }
+        ]
+      };
+      let expectedData = `[
+  {
+    "vpc": "workload",
+    "zone": 1,
+    "cidr": "10.40.10.0/24",
+    "name": "vsi-zone-1",
+    "network_acl": "workload",
+    "resource_group": "workload-rg",
+    "public_gateway": false,
+    "has_prefix": true
+  },
+  {
+    "vpc": "workload",
+    "zone": 2,
+    "cidr": "10.50.10.0/24",
+    "name": "vsi-zone-2",
+    "network_acl": "workload",
+    "resource_group": "workload-rg",
+    "public_gateway": false,
+    "has_prefix": true
+  },
+  {
+    "vpc": "workload",
+    "zone": 3,
+    "cidr": "10.60.10.0/24",
+    "name": "vsi-zone-3",
+    "network_acl": "workload",
+    "resource_group": "workload-rg",
+    "public_gateway": false,
+    "has_prefix": true
+  },
+  {
+    "vpc": "workload",
+    "zone": 1,
+    "cidr": "10.40.20.0/24",
+    "name": "vpe-zone-1",
+    "network_acl": "workload",
+    "resource_group": "workload-rg",
+    "public_gateway": false,
+    "has_prefix": true
+  },
+  {
+    "vpc": "workload",
+    "zone": 2,
+    "cidr": "10.50.20.0/24",
+    "name": "vpe-zone-2",
+    "network_acl": "workload",
+    "resource_group": "workload-rg",
+    "public_gateway": false,
+    "has_prefix": true
+  },
+  {
+    "vpc": "workload",
+    "zone": 3,
+    "cidr": "10.60.20.0/24",
+    "name": "vpe-zone-3",
+    "network_acl": "workload",
+    "resource_group": "workload-rg",
+    "public_gateway": false,
+    "has_prefix": true
+  }
+]`;
+      assert.deepEqual(
+        codeMirrorGetDisplay(testData, true, "/form/subnets", codeMirrorSubnetsTf, undefined),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+    it("should return correct terraform for resource_groups when jsonInCodeMirror is true", () => {
+      let testData = {
+        "_options": {
+          "prefix": "iac",
+          "region": "us-south",
+          "tags": [
+              "hello",
+              "world"
+          ],
+          "zones": 3
+        },
+        "resource_groups": [
+          {
+              "use_prefix": true,
+              "name": "service-rg",
+              "use_data": false
+          },
+          {
+              "use_prefix": true,
+              "name": "management-rg",
+              "use_data": false
+          },
+          {
+              "use_prefix": true,
+              "name": "workload-rg",
+              "use_data": false
+          }
+      ],
+      "f5_vsi": [
+        {
+        }]
+      };
+      let expectedData = `[
+  {
+    "use_prefix": true,
+    "name": "service-rg",
+    "use_data": false
+  },
+  {
+    "use_prefix": true,
+    "name": "management-rg",
+    "use_data": false
+  },
+  {
+    "use_prefix": true,
+    "name": "workload-rg",
+    "use_data": false
+  }
+]`;
+      assert.deepEqual(
+        codeMirrorGetDisplay(testData, true, "/form/resourceGroups", resourceGroupTf, "resource_groups"),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+    it("should return correct terraform for resource_groups page", () => {
+      let testData = {
+        "_options": {
+          "prefix": "iac",
+          "region": "us-south",
+          "tags": [
+              "hello",
+              "world"
+          ],
+          "zones": 3
+        },
+        "resource_groups": [
+          {
+              "use_prefix": true,
+              "name": "service-rg",
+              "use_data": false
+          },
+          {
+              "use_prefix": true,
+              "name": "management-rg",
+              "use_data": false
+          },
+          {
+              "use_prefix": true,
+              "name": "workload-rg",
+              "use_data": false
+          }
+      ]
+      };
+      let expectedData = `##############################################################################
+# Resource Groups
+##############################################################################
+
+resource "ibm_resource_group" "service_rg" {
+  name = "iac-service-rg"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_resource_group" "management_rg" {
+  name = "iac-management-rg"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_resource_group" "workload_rg" {
+  name = "iac-workload-rg"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        codeMirrorGetDisplay(testData, false, "/form/resourceGroups", resourceGroupTf, "resource_groups"),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+    it("should return correct terraform for f5 when jsonInCodeMirror is true and tmos_admin_password is not undefined", () => {
+      let testData = {
+        f5_vsi : [
+          {
+            "tmos_admin_password": "secretpassword",
+            "license_password": "secretpassword"
+          }
+      ]
+      };
+      let expectedData = `[
+  {
+    "tmos_admin_password": "****************************",
+    "license_password": "****************************"
+  }
+]`;
+      assert.deepEqual(
+        codeMirrorGetDisplay(testData, true, "/form/f5", f5Tf, "f5_vsi"),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+    it("should return correct terraform for f5 when pageObj.jsonField is undefined", () => {
+      let testData = {
+        f5_vsi : [
+          {
+            "tmos_admin_password": "secretpassword",
+            "license_password": "null"
+          }
+        ]
+      };
+      let expectedData = `{
+  "f5_vsi": [
+    {
+      "tmos_admin_password": "****************************",
+      "license_password": "null"
+    }
+  ]
+}`;
+      assert.deepEqual(
+        codeMirrorGetDisplay(testData, true, "/form/f5", f5Tf, undefined),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+  })
 });

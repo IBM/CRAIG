@@ -30,7 +30,6 @@ import {
   arraySplatIndex,
   contains,
   getObjectFromArray,
-  prettyJSON
 } from "lazy-z";
 import { CraigCodeMirror, Navigation, Footer } from "./page-template";
 import PropTypes from "prop-types";
@@ -58,15 +57,9 @@ import {
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
+  codeMirrorGetDisplay,
   routingTableTf
 } from "../lib";
-import {
-  maskFieldsExpStep1ReplacePublicKey,
-  maskFieldsExpStep2ReplaceTmosAdminPassword,
-  maskFieldsExpStep3ReplaceLicensePassword,
-  maskFieldsExpStep4HideValue,
-  maskFieldsExpStep5CleanUp
-} from "../lib/constants";
 import { Notification } from "./Notification";
 import CBRIcon from "../images/cbr";
 
@@ -351,50 +344,6 @@ const PageTemplate = props => {
     ? getObjectFromArray(pageOrder, "path", `/form/${props.form}`)
     : { toTf: false };
 
-  /**
-   * get code mirror display
-   * @param {Object} json craig config json
-   * @param {boolean} jsonInCodeMirror true if displaying json in code mirror
-   * @returns {string} code to display
-   */
-  function getCodeMirrorDisplay(json, jsonInCodeMirror) {
-    if (jsonInCodeMirror) {
-      if (pageObj.path === "/form/nacls") {
-        let allAcls = [];
-        json.vpcs.forEach(nw => {
-          allAcls = allAcls.concat(nw.acls);
-        });
-        return prettyJSON(allAcls);
-      } else if (pageObj.path === "/form/subnets") {
-        let allSubnets = [];
-        json.vpcs.forEach(nw => {
-          allSubnets = allSubnets.concat(nw.subnets);
-        });
-        return prettyJSON(allSubnets);
-      }
-      return prettyJSON(json[pageObj.jsonField] || json) // if pageObj.jsonField is undefined - aka, home page
-        .replace(maskFieldsExpStep1ReplacePublicKey, "public_key%%%%")
-        .replace(
-          maskFieldsExpStep2ReplaceTmosAdminPassword,
-          json.f5_vsi.tmos_admin_password
-            ? "tmos_admin_password%%%%"
-            : "tmos_admin_password"
-        )
-        .replace(
-          maskFieldsExpStep3ReplaceLicensePassword,
-          json.f5_vsi.license_password !== "null"
-            ? "license_password%%%%"
-            : "license_password"
-        )
-        .replace(
-          maskFieldsExpStep4HideValue,
-          '": "****************************'
-        )
-        .replace(maskFieldsExpStep5CleanUp, "public_key"); // remove any extraneous %%%% from setting fields to null
-    } else if (pageObj.toTf) {
-      return pageObj.toTf(json).replace(/\[\n\s*\]/g, "[]");
-    } else return prettyJSON(json);
-  }
   // if path is undefined or "form" is not present in path then hide the code mirror
   let formPathNotPresent =
     pageObj.path === undefined ? true : !contains(pageObj.path, "form");
@@ -432,7 +381,7 @@ const PageTemplate = props => {
         </div>
         <CraigCodeMirror
           hideCodeMirror={formPathNotPresent === true || props.hideCodeMirror}
-          code={getCodeMirrorDisplay(props.json, props.jsonInCodeMirror)}
+          code={codeMirrorGetDisplay(props.json, props.jsonInCodeMirror, pageObj.path, pageObj.toTf, pageObj.jsonField)}
           onTabClick={props.onTabClick}
           jsonInCodeMirror={props.jsonInCodeMirror}
         />

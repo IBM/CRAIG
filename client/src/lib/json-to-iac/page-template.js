@@ -9,6 +9,14 @@ const {
 const { formatFlowLogs } = require("./flow-logs");
 const { eventStreamsTf } = require("./event-streams");
 const { formatIamAccountSettings } = require("./iam");
+const {
+  maskFieldsExpStep1ReplacePublicKey,
+  maskFieldsExpStep2ReplaceTmosAdminPassword,
+  maskFieldsExpStep3ReplaceLicensePassword,
+  maskFieldsExpStep4HideValue,
+  maskFieldsExpStep5CleanUp
+} = require("../constants");
+const { prettyJSON } = require("lazy-z")
 
 /**
  * code mirror display function for vpc
@@ -89,10 +97,59 @@ function codeMirrorFormatIamAccountSettingsTf(config) {
   return formatIamAccountSettings(config.iam_account_settings);
 }
 
+/**
+ * format codeMirror tf
+ * @param {JSON} json
+ * @param {boolean} jsonInCodeMirror
+ * @param {string} path
+ * @param {function} toTf
+ * @param {string} jsonField
+ * @returns codeMirror terraform data
+ */
+function codeMirrorGetDisplay(json, jsonInCodeMirror, path, toTf, jsonField) {
+  if (jsonInCodeMirror) {
+    if (path === "/form/nacls") {
+      let allAcls = [];
+      json.vpcs.forEach(nw => {
+        allAcls = allAcls.concat(nw.acls);
+      });
+      return prettyJSON(allAcls);
+    } else if (path === "/form/subnets") {
+      let allSubnets = [];
+      json.vpcs.forEach(nw => {
+        allSubnets = allSubnets.concat(nw.subnets);
+      });
+      return prettyJSON(allSubnets);
+    }
+    return prettyJSON(json[jsonField] || json) // if pageObj.jsonField is undefined - aka, home page
+      .replace(maskFieldsExpStep1ReplacePublicKey, "public_key%%%%")
+      .replace(
+        maskFieldsExpStep2ReplaceTmosAdminPassword,
+        json.f5_vsi[0]?.tmos_admin_password
+          ? "tmos_admin_password%%%%"
+          : "tmos_admin_password"
+      )
+      .replace(
+        maskFieldsExpStep3ReplaceLicensePassword,
+        json.f5_vsi[0]?.license_password !== "null"
+          ? "license_password%%%%"
+          : "license_password"
+      )
+      .replace(
+        maskFieldsExpStep4HideValue,
+        '": "****************************'
+      )
+      .replace(maskFieldsExpStep5CleanUp, "public_key"); // remove any extraneous %%%% from setting fields to null
+  } else if (toTf) {
+    return toTf(json).replace(/\[\n\s*\]/g, "[]");
+  } else return prettyJSON(json);
+}
+
 module.exports = {
   codeMirrorVpcTf,
   codeMirrorAclTf,
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
-  codeMirrorFormatIamAccountSettingsTf
+  codeMirrorFormatIamAccountSettingsTf,
+  codeMirrorGetDisplay
 };

@@ -115,7 +115,8 @@ const {
   codeMirrorAclTf,
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
-  codeMirrorFormatIamAccountSettingsTf
+  codeMirrorFormatIamAccountSettingsTf,
+  codeMirrorGetDisplay
 } = require("./page-template");
 const {
   formatRoutingTable,
@@ -162,6 +163,7 @@ module.exports = {
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
+  codeMirrorGetDisplay,
   ibmIsLbPoolMembers,
   ibmIsLbListener,
   ibmIsLbPool,
