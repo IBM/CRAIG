@@ -874,5 +874,7 @@
     "name": ""
   },
   "event_streams":[],
-  "load_balancers":[]
+  "load_balancers":[],
+  "cbr_zones": [],
+  "cbr_rules": []
 }

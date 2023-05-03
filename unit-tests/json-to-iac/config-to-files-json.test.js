@@ -251,6 +251,86 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+    it("should return correct cbr.tf", () => {
+      let nw = { ...slzNetwork };
+      nw.cbr_zones = [
+        {
+          name: "foo-cbr-name",
+          account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
+          description: "this is a cbr zone description",
+          addresses: [
+            {
+              account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
+              type: "ipAddress",
+              value: "169.23.56.234",
+              location: "us-south",
+              service_instance: "fake-service-instance",
+              service_name: "frog-service-name",
+              service_type: "frog-service",
+            },
+            {
+              account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
+              type: "ipRange",
+              value: "169.23.22.0-169.23.22.255",
+              location: "us-south",
+              service_instance: "fake-service-instance",
+              service_name: "frog-service-name",
+              service_type: "frog-service",
+            },
+          ],
+          exclusions: [
+            {
+              type: "ipAddress",
+              value: "169.23.22.11",
+            },
+            {
+              type: "ipAddress",
+              value: "169.23.22.10",
+            },
+          ],
+        },
+      ];
+      nw.cbr_rules = [
+        {
+          description: "test cbr rule description",
+          enforcement_mode: "enabled",
+          api_type_id: "api_type_id",
+          contexts: [
+            {
+              name: "networkZoneId",
+              value:
+                "559052eb8f43302824e7ae490c0281eb, bf823d4f45b64ceaa4671bee0479346e",
+            },
+            {
+              name: "endpointType",
+              value: "private",
+            },
+          ],
+          resource_attributes: [
+            {
+              name: "accountId",
+              value: "12ab34cd56ef78ab90cd12ef34ab56cd",
+            },
+            {
+              name: "serviceName",
+              value: "network-policy-enabled",
+            },
+          ],
+          tags: [
+            {
+              name: "tag_name",
+              value: "tag_value",
+            },
+          ],
+        },
+      ];
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(
+        actualData["cbr.tf"],
+        slzNetworkFiles["cbr.tf"],
+        "it should create file"
+      );
+    });
   });
   describe("vpc module", () => {
     it("should return correct management vpc main", () => {
@@ -363,7 +443,7 @@ describe("configToFilesJson", () => {
         let actualData = configToFilesJson({ ...subnetNw });
         assert.deepEqual(
           actualData.management_vpc["variables.tf"],
-          '##############################################################################\n# Management VPC Variables\n##############################################################################\n\nvariable \"tags\" {\n  description = \"List of tags\"\n  type        = list(string)\n}\n\nvariable \"slz_management_rg_id\" {\n  description = \"ID for the resource group slz-management-rg\"\n  type        = string\n}\n\nvariable \"edge_id\" {\n  description = \"ID for the resource group edge\"\n  type        = string\n}\n\n##############################################################################\n',
+          '##############################################################################\n# Management VPC Variables\n##############################################################################\n\nvariable "tags" {\n  description = "List of tags"\n  type        = list(string)\n}\n\nvariable "slz_management_rg_id" {\n  description = "ID for the resource group slz-management-rg"\n  type        = string\n}\n\nvariable "edge_id" {\n  description = "ID for the resource group edge"\n  type        = string\n}\n\n##############################################################################\n',
           "it should return correct data"
         );
       });

@@ -126,6 +126,13 @@ const {
   routingTableTf
 } = require("./routing-tables");
 const { buildTitleComment } = require("./utils");
+const {
+  formatCbrZone,
+  ibmCbrZone,
+  formatCbrRule,
+  ibmCbrRule,
+  cbrTf
+} = require("./cbr");
 module.exports = {
   buildTitleComment,
   formatPgw,
@@ -224,6 +231,11 @@ module.exports = {
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
   routingTableTf,
+  formatCbrZone,
+  ibmCbrZone,
+  formatCbrRule,
+  ibmCbrRule,
+  cbrTf,
   vpcModuleJson,
   vpcModuleOutputs
 };

@@ -1811,7 +1811,7 @@
       "image": "ibm-ubuntu-18-04-6-minimal-amd64-2",
       "profile": "cx2-4x8",
       "name": "management-server",
-      "security_groups": ["management","management-vpe-sg"],
+      "security_groups": ["management", "management-vpe-sg"],
       "ssh_keys": ["ssh-key"],
       "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
       "vpc": "management",
@@ -1888,8 +1888,7 @@
     "session_expiration_in_seconds": "900",
     "session_invalidation_in_seconds": "900"
   },
-  "access_groups":
-  [
+  "access_groups": [
     {
       "name": "foo-group",
       "description": "lfadsf",
@@ -1959,6 +1958,69 @@
         "group": "foo-group",
         "ibm_ids": ["test@ibm.com"]
       }
+    }
+  ],
+  "cbr_zones": [
+    {
+      "name": "foo-zone",
+      "account_id": "12ab34cd56ef78ab90cd12ef34ab56cd",
+      "description": "fake description",
+      "addresses": [
+        {
+          "account_id": "12ab34cd56ef78ab90cd12ef34ab56cd",
+          "type": "ipAddress",
+          "value": "169.23.56.234"
+        },
+        {
+          "account_id": "12ab34cd56ef78ab90cd12ef34ab56cd",
+          "type": "ipRange",
+          "value": "169.23.22.0-169.23.22.255"
+        }
+      ],
+      "exclusions": [
+        {
+          "type": "ipAddress",
+          "value": "169.23.22.11"
+        },
+        {
+          "type": "ipAddress",
+          "value": "169.23.22.10"
+        }
+      ]
+    }
+  ],
+  "cbr_rules": [
+    {
+      "name": "foo-cbr-rule",
+      "description": "test cbr rule description",
+      "enforcement_mode": "enabled",
+      "api_type_id": "api_type_id",
+      "contexts": [
+        {
+          "name": "networkZoneId",
+          "value": "559052eb8f43302824e7ae490c0281eb, bf823d4f45b64ceaa4671bee0479346e"
+        },
+        {
+          "name": "endpointType",
+          "value": "private"
+        }
+      ],
+      "resource_attributes": [
+        {
+          "name": "accountId",
+          "value": "12ab34cd56ef78ab90cd12ef34ab56cd"
+        },
+        {
+          "name": "serviceName",
+          "value": "network-policy-enabled"
+        }
+      ],
+      "tags": [
+        {
+          "name": "tag_name",
+          "value": "tag_value"
+        }
+      ]
     }
   ]
 }

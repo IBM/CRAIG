@@ -20,5 +20,6 @@
   "teleport_vsi.tf": null,
   "scc.tf": null,
   "event_streams.tf": null,
-  "load_balancers.tf": null
+  "load_balancers.tf": null,
+  "cbr.tf": null
 }

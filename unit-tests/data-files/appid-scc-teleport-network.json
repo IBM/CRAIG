@@ -1002,5 +1002,7 @@
   {
     "enable": true
   },
-  "access_groups": []
+  "access_groups": [],
+  "cbr_zones": [],
+  "cbr_rules": []
 }

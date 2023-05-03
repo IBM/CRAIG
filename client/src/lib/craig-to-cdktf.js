@@ -5,7 +5,7 @@ const {
   contains,
   titleCase,
   transpose,
-  eachKey,
+  eachKey
 } = require("lazy-z");
 const {
   ibmAtrackerRoute,
@@ -61,6 +61,8 @@ const {
   ibmIamAccessGroupDynamicRule,
   ibmIamAccessGroupPolicy,
   ibmIamAccessGroupMembers,
+  ibmCbrZone,
+  ibmCbrRule,
   vpcModuleJson,
   vpcModuleOutputs
 } = require("./json-to-iac");
@@ -124,8 +126,7 @@ function craigToVpcModuleCdktf(craig) {
           rule.data
         );
       });
-        vpcRgs.push(nacl.resource_group);
-      
+      vpcRgs.push(nacl.resource_group);
     });
     vpc.subnets.forEach(sub => {
       let subnet = ibmIsSubnet(sub, craig);
@@ -136,7 +137,7 @@ function craigToVpcModuleCdktf(craig) {
         subnet.name,
         subnet.data
       );
-        vpcRgs.push(sub.resource_group);
+      vpcRgs.push(sub.resource_group);
     });
 
     vpc.public_gateways.forEach(gw => {
@@ -149,7 +150,7 @@ function craigToVpcModuleCdktf(craig) {
         pgw.data
       );
     });
-    
+
     craig.security_groups.forEach(sg => {
       if (sg.vpc === vpc.name) {
         let group = ibmIsSecurityGroup(sg, craig);
@@ -755,6 +756,30 @@ function craigToCdktf(craig) {
         agInvite.data
       );
     }
+  });
+
+  // cbr zones
+  craig.cbr_zones.forEach(zone => {
+    let cbrZone = ibmCbrZone(zone, craig);
+    cdktfValues(
+      cdktfJson,
+      "resource",
+      "ibm_cbr_zone",
+      cbrZone.name,
+      cbrZone.data
+    );
+  });
+
+  // cbr rules
+  craig.cbr_rules.forEach(rule => {
+    let cbrRule = ibmCbrRule(rule, craig);
+    cdktfValues(
+      cdktfJson,
+      "resource",
+      "ibm_cbr_rule",
+      cbrRule.name,
+      cbrRule.data
+    );
   });
 
   return cdktfJson;

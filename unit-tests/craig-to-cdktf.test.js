@@ -322,6 +322,101 @@ describe("craigToCdktf", () => {
       "it should return cdktf data"
     );
   });
+  it("should convert craig data to cdktf ibm_cbr_zone", () => {
+    let actualData = craigToCdktf(f5nw);
+    let data = actualData.resource.ibm_cbr_zone;
+    assert.deepEqual(data, {
+      slz_foo_zone_zone: {
+        name: "slz-zone-foo-zone",
+        account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
+        description: "fake description",
+        addresses: [
+          {
+            ref: [
+              {
+                account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
+              },
+            ],
+            type: "ipAddress",
+            value: "169.23.56.234",
+          },
+          {
+            ref: [
+              {
+                account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
+              },
+            ],
+            type: "ipRange",
+            value: "169.23.22.0-169.23.22.255",
+          },
+        ],
+        excluded: [
+          {
+            type: "ipAddress",
+            value: "169.23.22.11",
+          },
+          {
+            type: "ipAddress",
+            value: "169.23.22.10",
+          },
+        ],
+      },
+    });
+  });
+  it("should convert craig data to cdktf ibm_cbr_rule", () => {
+    let actualData = craigToCdktf(f5nw);
+    let data = actualData.resource.ibm_cbr_rule;
+    assert.deepEqual(data, {
+      slz_cbr_rule: {
+        description: "test cbr rule description",
+        enforcement_mode: "enabled",
+        contexts: [
+          {
+            attributes: [
+              {
+                name: "networkZoneId",
+                value:
+                  "559052eb8f43302824e7ae490c0281eb, bf823d4f45b64ceaa4671bee0479346e",
+              },
+              {
+                name: "endpointType",
+                value: "private",
+              },
+            ],
+          },
+        ],
+        resources: [
+          {
+            attributes: [
+              {
+                name: "accountId",
+                value: "12ab34cd56ef78ab90cd12ef34ab56cd",
+              },
+              {
+                name: "serviceName",
+                value: "network-policy-enabled",
+              },
+            ],
+            tags: [
+              {
+                name: "tag_name",
+                value: "tag_value",
+              },
+            ],
+          },
+        ],
+        operations: [
+          {
+            api_types: [
+              {
+                api_type_id: "api_type_id",
+              },
+            ],
+          },
+        ],
+      },
+    });
+  });
   describe("edge cases", () => {
     it("should convert craig data to cdktf atracker when disabled", () => {
       let newCraig = { ...craig };
@@ -1398,6 +1493,8 @@ describe("craigToCdktf", () => {
             enable: false,
           },
           access_groups: [],
+          cbr_zones: [],
+          cbr_rules: [],
         });
         assert.deepEqual(
           actualData.module,

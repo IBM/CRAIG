@@ -94,6 +94,11 @@ const {
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
   routingTableTf,
+  formatCbrZone,
+  ibmCbrZone,
+  formatCbrRule,
+  ibmCbrRule,
+  cbrTf,
   vpcModuleJson,
   vpcModuleOutputs
 } = require("./json-to-iac");
@@ -188,6 +193,11 @@ module.exports = {
   accessGroupPolicyHelperTextCallback,
   invalidIdentityProviderURI,
   disableSshKeyDelete,
+  formatCbrZone,
+  ibmCbrZone,
+  formatCbrRule,
+  ibmCbrRule,
+  cbrTf,
   vpcModuleJson,
   vpcModuleOutputs,
   cidrBlocksOverlap,

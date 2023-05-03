@@ -17,6 +17,8 @@ const { vpcModuleTf } = require("./vpc");
 const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
 const { vsiTf, lbTf } = require("./vsi");
+const { routingTableTf } = require("./routing-tables");
+const { cbrTf } = require("./cbr");
 
 /**
  * create a json document with file names as keys and text as value
@@ -87,7 +89,11 @@ variable "tmos_admin_password" {
           ? lbTf(config)
           : null,
       "f5_big_ip.tf": useF5 ? f5Tf(config) : null,
-      "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null
+      "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null,
+      "cbr.tf":
+        config.cbr_zones.length > 0 && config.cbr_rules.length > 0
+          ? cbrTf(config)
+          : null
     };
     vpcModuleTf(files, config);
     return files;
