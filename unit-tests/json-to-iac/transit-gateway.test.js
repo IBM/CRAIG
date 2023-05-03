@@ -32,7 +32,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return dorrect data"
+        "it should return correct data"
       );
     });
   });
@@ -67,7 +67,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return dorrect data"
+        "it should return correct data"
       );
     });
     it("should return correctly formatted transit gateway when connecting a vpc via crn", () => {
@@ -83,8 +83,8 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
             },
             {
               tgw: "transit-gateway",
-              crn: "crn:v1:bluemix:public:is:us-south:a/aaaaaaa::vpc:aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
-            }
+              crn: "crn:v1:bluemix:public:is:us-south:a/aaaaaaa::vpc:aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+            },
           ],
         }.connections[1],
         slzNetwork
@@ -104,7 +104,7 @@ resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aa
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return dorrect data"
+        "it should return correct data"
       );
     });
   });
@@ -153,7 +153,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return dorrect data"
+        "it should return correct data"
       );
     });
   });

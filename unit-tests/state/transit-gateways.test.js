@@ -49,6 +49,83 @@ describe("transit_gateways", () => {
         "it should only have one connection"
       );
     });
+    it("should add a connection when crns is provided", () => {
+      let state = new newState();
+      state.transit_gateways.save(
+        { name: "todd", resource_group: "management-rg", crns: ["crn"] },
+        { data: { name: "transit-gateway" } }
+      );
+
+      assert.deepEqual(
+        state.store.json.transit_gateways[0].connections,
+        [
+          { tgw: "todd", vpc: "management" },
+          { tgw: "todd", vpc: "workload" },
+          { tgw: "todd", crn: "crn" },
+        ],
+        "it should have a crn connection"
+      );
+    });
+    it("should add a connection when crns is provided and adding a second one", () => {
+      let state = new newState();
+      state.transit_gateways.save(
+        { name: "todd", resource_group: "management-rg", crns: ["crn"] },
+        { data: { name: "transit-gateway" } }
+      );
+      state.transit_gateways.save(
+        {
+          name: "todd",
+          resource_group: "management-rg",
+          crns: ["crn", "crn2"],
+        },
+        { data: { name: "todd" } }
+      );
+
+      assert.deepEqual(
+        state.store.json.transit_gateways[0].connections,
+        [
+          { tgw: "todd", vpc: "management" },
+          { tgw: "todd", vpc: "workload" },
+          { tgw: "todd", crn: "crn" },
+          { tgw: "todd", crn: "crn2" },
+        ],
+        "it should have a crn connection"
+      );
+    });
+    it("should remove a crn connection when a crn is removed", () => {
+      let state = new newState();
+      state.transit_gateways.save(
+        { name: "todd", resource_group: "management-rg", crns: ["crn"] },
+        { data: { name: "transit-gateway" } }
+      );
+      state.transit_gateways.save(
+        {
+          name: "todd",
+          resource_group: "management-rg",
+          crns: ["crn", "crn2"],
+        },
+        { data: { name: "todd" } }
+      );
+
+      state.transit_gateways.save(
+        {
+          name: "todd",
+          resource_group: "management-rg",
+          crns: ["crn"],
+        },
+        { data: { name: "todd" } }
+      );
+
+      assert.deepEqual(
+        state.store.json.transit_gateways[0].connections,
+        [
+          { tgw: "todd", vpc: "management" },
+          { tgw: "todd", vpc: "workload" },
+          { tgw: "todd", crn: "crn" },
+        ],
+        "it should have a crn connection"
+      );
+    });
     it("should not remove crn connections", () => {
       let state = new newState();
       state.store.json.transit_gateways[0].connections[0].crn = "crn";
@@ -80,13 +157,13 @@ describe("transit_gateways", () => {
         name: "tg-test",
         resource_group: "management-rg",
         global: false,
-        connections: [{ tg: "tg-test", vpc: "management" }],
+        connections: [{ tgw: "tg-test", vpc: "management" }],
       });
       let expectedData = {
         name: "tg-test",
         resource_group: "management-rg",
         global: false,
-        connections: [{ tg: "tg-test", vpc: "management" }],
+        connections: [{ tgw: "tg-test", vpc: "management" }],
       };
       assert.deepEqual(
         state.store.json.transit_gateways[1],
@@ -109,11 +186,11 @@ describe("transit_gateways", () => {
           global: false,
           connections: [
             {
-              tgw: "transit-gateway",
+              tgw: "todd",
               vpc: "management",
             },
             {
-              tgw: "transit-gateway",
+              tgw: "todd",
               vpc: "workload",
             },
           ],

@@ -4,6 +4,7 @@ const {
   invalidSshPublicKey,
   invalidIamAccountSettings,
   invalidTagList,
+  invalidCrnList,
   invalidIpCommaList,
   invalidIdentityProviderURI,
   invalidF5Vsi,
@@ -602,6 +603,27 @@ describe("invalid callbacks", () => {
     });
     it("should return false when no tags", () => {
       assert.isFalse(invalidTagList([]));
+    });
+  });
+  describe("invalidCrnList", () => {
+    it("should return true when invalid crn in list", () => {
+      assert.isTrue(
+        invalidCrnList([
+          "crn:v1:bluemix:public:abcdf",
+          "mooseeeeeeeeeeeeeeeeee",
+        ])
+      );
+    });
+    it("should return false when no crns", () => {
+      assert.isFalse(invalidTagList([]));
+    });
+    it("should return false when valid crn list", () => {
+      assert.isFalse(
+        invalidCrnList([
+          "crn:v1:bluemix:public:abcdf",
+          "crn:v1:bluemix:public:abcde",
+        ])
+      );
     });
   });
   describe("invalidIpCommaList", () => {

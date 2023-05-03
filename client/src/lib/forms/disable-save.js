@@ -19,6 +19,7 @@ const {
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
+  invalidCrnList,
   isValidUrl
 } = require("./invalid-callbacks");
 
@@ -194,7 +195,7 @@ function disableSave(field, stateData, componentProps) {
     return (
       invalidName("transit_gateways")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.resource_group) ||
-      isEmpty(stateData.connections)
+      isEmpty(stateData.connections) || invalidCrnList(stateData.crns)
     );
   } else if (field === "acls") {
     return (

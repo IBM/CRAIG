@@ -31,7 +31,7 @@ resource "ibm_is_ssh_key" "slz_ssh_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return dorrect data"
+        "it should return correct data"
       );
     });
     it("should create correct ssh key from data", () => {

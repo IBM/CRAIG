@@ -1283,6 +1283,38 @@ describe("disableSave", () => {
       "it should be true"
     );
   });
+  it("should return false if tgw enabled with direct crn connections", () => {
+    assert.isFalse(
+      disableSave(
+        "transit_gateways",
+        {
+          name: "hi",
+          resource_group: "what",
+          connections: [
+            {
+              tgw: "hi",
+              crn: "crn:v1:bluemix:public:is:us-east:a/cdefe6d99f7ea459aacb25775fb88a33::vpc:r014-b4d7e79b-32fc-4625-a7e5-46b71b61ed55",
+            },
+          ],
+        },
+        {
+          craig: {
+            store: {
+              resourceGroups: ["what"],
+              json: {
+                transit_gateways: [],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+          parent_name: "frog",
+        }
+      ),
+      "it should be false"
+    );
+  });
   it("should return true if a acl rule has an invalid source", () => {
     assert.isTrue(
       disableSave(

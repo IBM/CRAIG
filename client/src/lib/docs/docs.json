@@ -10,7 +10,12 @@
       },
       {
         "table": [
-          ["_headers", "Group Name", "Description", "Optional"],
+          [
+            "_headers",
+            "Group Name",
+            "Description",
+            "Optional"
+          ],
           [
             "service-rg",
             "A resource group containing all IBM Cloud Services",
@@ -35,7 +40,9 @@
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui"]
+      [
+        "https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui"
+      ]
     ]
   },
   "object_storage": {
@@ -49,7 +56,11 @@
       },
       {
         "table": [
-          ["_headers", "Instance Name", "Description"],
+          [
+            "_headers",
+            "Instance Name",
+            "Description"
+          ],
           [
             "cos",
             "A COS instance with two buckets, a management bucket and a workload bucket, where respective objects can be stored"
@@ -66,7 +77,11 @@
       },
       {
         "table": [
-          ["_headers", "Credential Name", "Description"],
+          [
+            "_headers",
+            "Credential Name",
+            "Description"
+          ],
           [
             "cos-bind-key",
             "A service credential to allow for Activity Tracker to have write access to an Object Storage Instance"
@@ -91,7 +106,11 @@
       },
       {
         "table": [
-          ["_headers", "Service Name", "Description"],
+          [
+            "_headers",
+            "Service Name",
+            "Description"
+          ],
           [
             "IBM Cloud Hyper Protect Crypto Services (HPCS)",
             "A dedicated key management service and hardware security module (HSM) based on IBM Cloud. Built on FIPS 140-2 Level 4-certified hardware, this service allows users to take the ownership of the cloud HSM to fully manage encryption keys and perform cryptographic operations. Users cannot use SLZ to initialize HPCS. In order to use HPCS with Secure Landing Zone users will need to bring an existing instance."
@@ -111,18 +130,27 @@
       },
       {
         "table": [
-          ["_headers", "Key Name", "Description"],
-          ["key", "An encryption key for service instances"],
+          [
+            "_headers",
+            "Key Name",
+            "Description"
+          ],
+          [
+            "key",
+            "An encryption key for service instances"
+          ],
           [
             "vsi-volume-key",
             "An encryption key for Virtual Server Instance (VSI) deployments"
           ],
           [
             "roks-key",
-
             "An encryption key for Red Hat OpenShift Kubernetes (ROKS) cluster deployments"
           ],
-          ["atracker-key", "An encryption key for Activity Tracker"]
+          [
+            "atracker-key",
+            "An encryption key for Activity Tracker"
+          ]
         ]
       },
       {
@@ -154,7 +182,12 @@
       },
       {
         "table": [
-          ["_headers", "Network Name", "Description", "Optional"],
+          [
+            "_headers",
+            "Network Name",
+            "Description",
+            "Optional"
+          ],
           [
             "management",
             "A VPC for management to enable the application provider's administrators to monitor, operation, and maintain the environment",
@@ -173,7 +206,11 @@
         ]
       }
     ],
-    "relatedLinks": [["https://www.ibm.com/cloud/learn/vpc"]]
+    "relatedLinks": [
+      [
+        "https://www.ibm.com/cloud/learn/vpc"
+      ]
+    ]
   },
   "acls": {
     "content": [
@@ -187,10 +224,19 @@
       },
       {
         "table": [
-          ["_headers", "Rule Name"],
-          ["allow-ibm-inbound"],
-          ["allow-all-network-inbound"],
-          ["allow-all-outbound"]
+          [
+            "_headers",
+            "Rule Name"
+          ],
+          [
+            "allow-ibm-inbound"
+          ],
+          [
+            "allow-all-network-inbound"
+          ],
+          [
+            "allow-all-outbound"
+          ]
         ]
       },
       {
@@ -284,7 +330,11 @@
         ]
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-using-acls"]]
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/vpc?topic=vpc-using-acls"
+      ]
+    ]
   },
   "subnets": {
     "content": [
@@ -296,7 +346,14 @@
       },
       {
         "table": [
-          ["_headers", "VPC", "Subnet Tier", "Zone 1", "Zone 2", "Zone 3"],
+          [
+            "_headers",
+            "VPC",
+            "Subnet Tier",
+            "Zone 1",
+            "Zone 2",
+            "Zone 3"
+          ],
           [
             "management",
             "vsi",
@@ -311,7 +368,13 @@
             "10.20.20.0/24",
             "10.20.30.0/24"
           ],
-          ["management", "vpn", "10.30.10.0/24", "-", "-"],
+          [
+            "management",
+            "vpn",
+            "10.30.10.0/24",
+            "-",
+            "-"
+          ],
           [
             "workload",
             "vsi",
@@ -319,7 +382,13 @@
             "10.40.20.0/24",
             "10.40.30.0/24"
           ],
-          ["workload", "vpe", "10.50.10.0/24", "10.50.20.0/24", "10.50.30.0/24"]
+          [
+            "workload",
+            "vpe",
+            "10.50.10.0/24",
+            "10.50.20.0/24",
+            "10.50.30.0/24"
+          ]
         ]
       }
     ],
@@ -332,14 +401,18 @@
   "transit_gateways": {
     "content": [
       {
-        "text": "A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other. By default, a single transit gateway is created connecting the management and workload VPCs."
+        "text": "A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other. By default, a single transit gateway is created connecting the management and workload VPCs. Additional connections can be made to specific VPCs by providing the CRN."
       },
       {
         "text": "_default_includes"
       },
       {
         "table": [
-          ["_headers", "Service Name", "Description"],
+          [
+            "_headers",
+            "Service Name",
+            "Description"
+          ],
           [
             "iac-transit-gateway",
             "A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs."
@@ -348,7 +421,9 @@
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-about"]
+      [
+        "https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-about"
+      ]
     ]
   },
   "security_groups": {
@@ -362,13 +437,28 @@
       },
       {
         "table": [
-          ["_headers", "Rule Name"],
-          ["allow-ibm-inbound"],
-          ["allow-vpc-inbound"],
-          ["allow-vpc-outbound"],
-          ["allow-ibm-tcp-53-outbound"],
-          ["allow-ibm-tcp-80-outbound"],
-          ["allow-ibm-tcp-433-outbound"]
+          [
+            "_headers",
+            "Rule Name"
+          ],
+          [
+            "allow-ibm-inbound"
+          ],
+          [
+            "allow-vpc-inbound"
+          ],
+          [
+            "allow-vpc-outbound"
+          ],
+          [
+            "allow-ibm-tcp-53-outbound"
+          ],
+          [
+            "allow-ibm-tcp-80-outbound"
+          ],
+          [
+            "allow-ibm-tcp-433-outbound"
+          ]
         ]
       }
     ],
@@ -392,7 +482,9 @@
         "https://cloud.ibm.com/docs/vpc?topic=vpc-vpe-supported-services",
         "VPE Supported Services"
       ],
-      ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-vpe"]
+      [
+        "https://cloud.ibm.com/docs/vpc?topic=vpc-about-vpe"
+      ]
     ]
   },
   "atracker": {
@@ -405,10 +497,16 @@
       {
         "text": "The Activity Tracker service can be used to capture and monitor activities performed on the IBM Cloud account by users."
       },
-      { "text": "_default_includes" },
+      {
+        "text": "_default_includes"
+      },
       {
         "table": [
-          ["_headers", "Service Name", "Description"],
+          [
+            "_headers",
+            "Service Name",
+            "Description"
+          ],
           [
             "<your prefix>-atracker",
             "An Activity Tracker instance deployed in the service resource group."
@@ -431,7 +529,9 @@
   },
   "ssh_keys": {
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-about-ssh-keys"]
+      [
+        "https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-about-ssh-keys"
+      ]
     ],
     "content": [
       {
@@ -440,10 +540,23 @@
       },
       {
         "table": [
-          ["_headers", "Pattern", "Configuration"],
-          ["Virtual Server Instance (VSI)", "One SSH key configured."],
-          ["Red Hat OpenShift Kubernetes (ROKS)", "No SSH key configured."],
-          ["Mixed", "One SSH key configured."]
+          [
+            "_headers",
+            "Pattern",
+            "Configuration"
+          ],
+          [
+            "Virtual Server Instance (VSI)",
+            "One SSH key configured."
+          ],
+          [
+            "Red Hat OpenShift Kubernetes (ROKS)",
+            "No SSH key configured."
+          ],
+          [
+            "Mixed",
+            "One SSH key configured."
+          ]
         ]
       }
     ]
@@ -459,7 +572,11 @@
       },
       {
         "table": [
-          ["_headers", "Pattern", "Configuration"],
+          [
+            "_headers",
+            "Pattern",
+            "Configuration"
+          ],
           [
             "Virtual Server Instance (VSI)",
             "Two VSI deployments for three VSIs distributed across the VSI subnet tier of both the management and workload VPCs."
@@ -499,8 +616,15 @@
       },
       {
         "table": [
-          ["_headers", "Pattern", "Configuration"],
-          ["Virtual Server Instance (VSI)", "No clusters configured."],
+          [
+            "_headers",
+            "Pattern",
+            "Configuration"
+          ],
+          [
+            "Virtual Server Instance (VSI)",
+            "No clusters configured."
+          ],
           [
             "Red Hat OpenShift Kubernetes (ROKS)",
             "Two OpenShift clusters with three zones in VSI Subnet Tier with a worker pool dedicated to logging deployed in both management and workload VPCs."
@@ -530,11 +654,18 @@
         ]
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview"]]
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview"
+      ]
+    ]
   },
   "appid": {
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/appid?topic=appid-about", "About App ID"],
+      [
+        "https://cloud.ibm.com/docs/appid?topic=appid-about",
+        "About App ID"
+      ],
       [
         "https://cloud.ibm.com/docs/appid?topic=appid-getting-started",
         "Getting Started With App ID"
@@ -559,7 +690,11 @@
       },
       {
         "table": [
-          ["_headers", "Value", "Description"],
+          [
+            "_headers",
+            "Value",
+            "Description"
+          ],
           [
             "Teleport Template Configuration",
             "The specs required for configuring all bastion hosts to use Teleport"
@@ -575,7 +710,10 @@
       [
         "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-vpc-architecture-connectivity-bastion-tutorial-teleport"
       ],
-      ["https://goteleport.com/", "Teleport"]
+      [
+        "https://goteleport.com/",
+        "Teleport"
+      ]
     ]
   },
   "f5": {
@@ -604,9 +742,21 @@
             "Number of subnets without f5-bastion",
             "Number of subnets with f5-bastion"
           ],
-          ["WAF", "15", "18"],
-          ["VPN", "18", "21"],
-          ["VPN-and-WAF", "21", "24"]
+          [
+            "WAF",
+            "15",
+            "18"
+          ],
+          [
+            "VPN",
+            "18",
+            "21"
+          ],
+          [
+            "VPN-and-WAF",
+            "21",
+            "24"
+          ]
         ]
       },
       {
@@ -618,24 +768,133 @@
       },
       {
         "table": [
-          ["_headers", "CIDR", "Zone", "WAF", "VPN", "VPN-and-WAF"],
-          ["10.5.10.0/24", "zone-1", "✔", "✔", "✔"],
-          ["10.5.20.0/24", "zone-1", "✔", "✔", "✔"],
-          ["10.5.30.0/24", "zone-1", "✔", "✔", "✔"],
-          ["10.5.40.0/24", "zone-1", "", "✔", "✔"],
-          ["10.5.50.0/24", "zone-1", "", "✔", "✔"],
-          ["10.5.60.0/24", "zone-1", "", "", "✔"],
-          ["10.6.10.0/24", "zone-2", "✔", "✔", "✔"],
-          ["10.6.20.0/24", "zone-2", "✔", "✔", "✔"],
-          ["10.6.30.0/24", "zone-2", "✔", "✔", "✔"],
-          ["10.6.40.0/24", "zone-2", "", "✔", "✔"],
-          ["10.6.50.0/24", "zone-2", "", "✔", "✔"],
-          ["10.6.60.0/24", "zone-2", "", "", "✔"],
-          ["10.7.10.0/24", "zone-3", "✔", "✔", "✔"],
-          ["10.7.20.0/24", "zone-3", "✔", "✔", "✔"],
-          ["10.7.30.0/24", "zone-3", "✔", "✔", "✔"],
-          ["10.7.50.0/24", "zone-3", "", "✔", "✔"],
-          ["10.7.60.0/24", "zone-3", "", "", "✔"]
+          [
+            "_headers",
+            "CIDR",
+            "Zone",
+            "WAF",
+            "VPN",
+            "VPN-and-WAF"
+          ],
+          [
+            "10.5.10.0/24",
+            "zone-1",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.5.20.0/24",
+            "zone-1",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.5.30.0/24",
+            "zone-1",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.5.40.0/24",
+            "zone-1",
+            "",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.5.50.0/24",
+            "zone-1",
+            "",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.5.60.0/24",
+            "zone-1",
+            "",
+            "",
+            "✔"
+          ],
+          [
+            "10.6.10.0/24",
+            "zone-2",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.6.20.0/24",
+            "zone-2",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.6.30.0/24",
+            "zone-2",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.6.40.0/24",
+            "zone-2",
+            "",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.6.50.0/24",
+            "zone-2",
+            "",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.6.60.0/24",
+            "zone-2",
+            "",
+            "",
+            "✔"
+          ],
+          [
+            "10.7.10.0/24",
+            "zone-3",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.7.20.0/24",
+            "zone-3",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.7.30.0/24",
+            "zone-3",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.7.50.0/24",
+            "zone-3",
+            "",
+            "✔",
+            "✔"
+          ],
+          [
+            "10.7.60.0/24",
+            "zone-3",
+            "",
+            "",
+            "✔"
+          ]
         ]
       },
       {
@@ -651,11 +910,37 @@
       },
       {
         "table": [
-          ["_headers", "F5 Interface", "WAF", "VPN", "VPN-and-WAF"],
-          ["F5 Management Interface", "✔", "✔", "✔"],
-          ["F5 External Interface", "✔", "✔", "✔"],
-          ["F5 Workload Interface", "✔", "", "✔"],
-          ["F5 Bastion Interface", "", "✔", "✔"]
+          [
+            "_headers",
+            "F5 Interface",
+            "WAF",
+            "VPN",
+            "VPN-and-WAF"
+          ],
+          [
+            "F5 Management Interface",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "F5 External Interface",
+            "✔",
+            "✔",
+            "✔"
+          ],
+          [
+            "F5 Workload Interface",
+            "✔",
+            "",
+            "✔"
+          ],
+          [
+            "F5 Bastion Interface",
+            "",
+            "✔",
+            "✔"
+          ]
         ]
       },
       {
@@ -664,7 +949,11 @@
       },
       {
         "table": [
-          ["_headers", "Interface", "Description"],
+          [
+            "_headers",
+            "Interface",
+            "Description"
+          ],
           [
             "F5 Management Interface",
             "A special interface dedicated to performing a specific set of system management functions."
@@ -737,7 +1026,14 @@
       },
       {
         "table": [
-          ["_headers", "Interface", "Direction", "Protocol", "Source", "Port"],
+          [
+            "_headers",
+            "Interface",
+            "Direction",
+            "Protocol",
+            "Source",
+            "Port"
+          ],
           [
             "F5 Management",
             "Inbound",
@@ -759,7 +1055,13 @@
             "CIS global load balancers allowlisted IP addresses",
             "Ports 443-443"
           ],
-          ["F5 External", "Inbound", "TCP", "Any", "Ports 4443-4443"],
+          [
+            "F5 External",
+            "Inbound",
+            "TCP",
+            "Any",
+            "Ports 4443-4443"
+          ],
           [
             "F5 Workload",
             "Outbound",
@@ -823,7 +1125,10 @@
         "https://github.com/open-toolchain/landing-zone/blob/main/.docs/f5-big-ip/f5-big-ip.md",
         "Landing Zone Documentation"
       ],
-      ["https://clouddocs.f5.com/", "F5 Cloud Documentation"],
+      [
+        "https://clouddocs.f5.com/",
+        "F5 Cloud Documentation"
+      ],
       [
         "https://cloud.ibm.com/docs/cis?topic=cis-cis-allowlisted-ip-addresses",
         "CIS global load balancers allowlisted IP addresses"
@@ -844,7 +1149,10 @@
       },
       {
         "table": [
-          ["NONE", "MFA Disabled"],
+          [
+            "NONE",
+            "MFA Disabled"
+          ],
           [
             "TOTP",
             "All non-federated IBMid users are required to authenticate by using an IBMid, password, and time-based one-time passcode (TOTP)"
@@ -904,8 +1212,15 @@
       },
       {
         "table": [
-          ["_headers", "Parameter", "Description"],
-          ["Resource", "The resource of the policy definition"],
+          [
+            "_headers",
+            "Parameter",
+            "Description"
+          ],
+          [
+            "Resource",
+            "The resource of the policy definition"
+          ],
           [
             "Resource Group",
             "Name of the resource group the policy will apply to"
@@ -918,17 +1233,25 @@
             "Service",
             "Name of the service type of the policy ex. \"cloud-object-storage\""
           ],
-          ["Resource Type", "Name of the resource type for the policy"]
+          [
+            "Resource Type",
+            "Name of the resource type for the policy"
+          ]
         ]
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/account?topic=account-groups&interface=ui"]
+      [
+        "https://cloud.ibm.com/docs/account?topic=account-groups&interface=ui"
+      ]
     ]
   },
   "secrets_manager": {
     "relatedLinks": [
-      ["https://www.vaultproject.io/", "HashiCorp Vault"],
+      [
+        "https://www.vaultproject.io/",
+        "HashiCorp Vault"
+      ],
       [
         "https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-getting-started",
         "Getting Started with Secrets Manager"
@@ -949,14 +1272,25 @@
       },
       {
         "table": [
-          ["_headers", "Secret Types"],
+          [
+            "_headers",
+            "Secret Types"
+          ],
           [
             "Passwords of any type (database logins, OS accounts, functional IDs, etc.)"
           ],
-          ["API keys"],
-          ["Long-lived authentication tokens (OAuth2, GitHub, IAM, etc.)"],
-          ["SSH keys"],
-          ["Encryption keys"],
+          [
+            "API keys"
+          ],
+          [
+            "Long-lived authentication tokens (OAuth2, GitHub, IAM, etc.)"
+          ],
+          [
+            "SSH keys"
+          ],
+          [
+            "Encryption keys"
+          ],
           [
             "Other private keys (PKI/TLS certificates, HMAC keys, signing keys, etc.)"
           ]
@@ -975,7 +1309,11 @@
       },
       {
         "table": [
-          ["_headers", "Component Name", "Description"],
+          [
+            "_headers",
+            "Component Name",
+            "Description"
+          ],
           [
             "Posture Manager",
             "Prevents the misconfiguration of resources by allowing users to standardize how resources should be provisioned and configured according to the organization's security policies."

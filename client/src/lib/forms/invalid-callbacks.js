@@ -4,7 +4,8 @@ const {
   isNullOrEmptyString,
   contains,
   containsKeys,
-  splatContains
+  splatContains,
+  isEmpty
 } = require("lazy-z");
 const {
   newResourceNameExp,
@@ -247,12 +248,34 @@ function isValidUrl(url) {
   return url.match(urlValidationExp) !== null;
 }
 
+/**
+ * test if list of crns is valid
+ * @param {Array} crnList list of crns
+ * @returns true if list of crns is valid
+ */
+function invalidCrnList(crnList) {
+  if (crnList === undefined || isEmpty(crnList)) {
+    return false;
+  }
+
+  const crnRegex = /^(crn:v1:bluemix:(public|dedicated|local):)[A-z-:/0-9]+$/i;
+  let isInvalid = false;
+  crnList.forEach(crn => {
+    if (crn.match(crnRegex) === null) {
+      isInvalid = true
+    }
+  })
+
+  return isInvalid
+}
+
 module.exports = {
   invalidName,
   invalidNewResourceName,
   invalidEncryptionKeyRing,
   invalidSshPublicKey,
   invalidTagList,
+  invalidCrnList,
   validSshKey,
   invalidSubnetTierName,
   invalidIamAccountSettings,

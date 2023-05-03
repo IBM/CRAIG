@@ -2,7 +2,7 @@ const { assert } = require("chai");
 const { slzToCraig } = require("../client/src/lib/slz-to-craig");
 const { transpose } = require("lazy-z");
 const slz = require("./data-files/slz-convert.json");
-const slzMin = require("./data-files/slz-minimum-valid-json.json")
+const slzMin = require("./data-files/slz-minimum-valid-json.json");
 const craigFromMin = require("./data-files/craig-from-slz-minimum-json.json");
 let slzDupe = {}; // use duplicate here to prevent editing slz during run for edge cases
 transpose(slz, slzDupe);
@@ -2228,5 +2228,5 @@ describe("slzToCraig", () => {
       craigFromMin,
       "it should return correct options"
     );
-  })
+  });
 });

@@ -60,7 +60,9 @@ function formatTgw(tgw, config) {
  */
 
 function ibmTgConnection(connection, config) {
-  let vpcName = connection.vpc || connection.crn.replace(/.+vpc:/g, "");
+  let vpcName = connection.crn
+    ? connection.crn.replace(/.+vpc:/g, "")
+    : connection.vpc;
   return {
     name: `${connection.tgw} to ${vpcName} connection`,
     data: {

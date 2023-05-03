@@ -43,7 +43,10 @@
         }
       },
       "has_invites": "boolean",
-      "invites": { "group": "string", "ibm_ids": "Array<string>" }
+      "invites": {
+        "group": "string",
+        "ibm_ids": "Array<string>"
+      }
     }
   },
   "iam_account_settings": {
@@ -239,6 +242,7 @@
       "name": "string",
       "global": "boolean",
       "resource_group": "string",
+      "crns": "Array<string>",
       "connections": {
         "Array": {
           "tgw": "string",
@@ -441,7 +445,10 @@
       "name": "string",
       "image": "string",
       "network_interfaces": {
-        "Array": { "security_groups": "Array<string>", "subnet": "string" }
+        "Array": {
+          "security_groups": "Array<string>",
+          "subnet": "string"
+        }
       },
       "template": {
         "Array": {

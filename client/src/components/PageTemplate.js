@@ -184,7 +184,7 @@ const navCategories = [
         path: "/form/routingTables",
         icon: Router,
         toTf: routingTableTf,
-        jsonField: "routing_tables",
+        jsonField: "routing_tables"
       },
       {
         title: "Transit Gateways",

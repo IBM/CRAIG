@@ -143,7 +143,7 @@ workload   | vpe         | 10.50.10.0/24 | 10.50.20.0/24 | 10.50.30.0/24
 
 ## Transit Gateways
 
-A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other. By default, a single transit gateway is created connecting the management and workload VPCs.
+A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other. By default, a single transit gateway is created connecting the management and workload VPCs. Additional connections can be made to specific VPCs by providing the CRN.
 
 The default configuration includes:
 

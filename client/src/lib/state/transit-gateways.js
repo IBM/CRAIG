@@ -1,4 +1,4 @@
-const { contains, containsKeys, carve } = require("lazy-z");
+const { contains, containsKeys, carve, splatContains } = require("lazy-z");
 const { newDefaultTg } = require("./defaults");
 const { updateChild, pushAndUpdate, carveChild } = require("./store.utils");
 
@@ -21,7 +21,22 @@ function transitGatewayInit(config) {
  */
 function transitGatewayOnStoreUpdate(config) {
   config.store.json.transit_gateways.forEach(gateway => {
+    if (gateway.crns) {
+      gateway.crns.forEach(crn => {
+        if (!splatContains(gateway.connections, "crn", crn)) {
+          gateway.connections.push({ tgw: gateway.name, crn: crn });
+        }
+      });
+    }
     gateway.connections.forEach(connection => {
+      connection.tgw = gateway.name; // make sure name is set for tgw connection
+      if (
+        gateway.crns &&
+        connection.crn &&
+        !contains(gateway.crns, connection.crn)
+      ) {
+        carve(gateway.connections, "crn", connection.crn); // remove from list of connections
+      }
       if (connection.vpc && !contains(config.store.vpcList, connection.vpc)) {
         // if vpc not there
         carve(gateway.connections, "vpc", connection.vpc); // remove from list of connections

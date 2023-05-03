@@ -17,6 +17,7 @@ const {
   validSshKey,
   invalidIamAccountSettings,
   invalidTagList,
+  invalidCrnList,
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
   invalidNewResourceName,
@@ -77,5 +78,6 @@ module.exports = {
   invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl,
-  disableSshKeyDelete
+  disableSshKeyDelete,
+  invalidCrnList
 };
