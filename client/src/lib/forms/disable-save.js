@@ -426,6 +426,9 @@ function disableSave(field, stateData, componentProps) {
  * @returns {boolean} true if should show
  */
 function forceShowForm(stateData, componentProps) {
+  if (componentProps.innerFormProps.data.enable === false) {
+    return false;
+  }
   return disableSave(
     componentProps.submissionFieldName,
     componentProps.innerFormProps.data,

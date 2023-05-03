@@ -3843,7 +3843,7 @@ describe("disableSave", () => {
     });
   });
   describe("forceShowForm", () => {
-    it("should force forms open if save is disabled", () => {
+    it("should force forms open if save is disabled and data does not have field of enable", () => {
       assert.isTrue(
         forceShowForm(
           {},
@@ -3853,6 +3853,39 @@ describe("disableSave", () => {
               data: {
                 name: "management",
                 bucket: null,
+              },
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should not force forms open if it is not enabled", () => {
+      assert.isFalse(
+        forceShowForm(
+          {},
+          {
+            submissionFieldName: "iam_account_settings",
+            innerFormProps: {
+              data: {
+                enable: false,
+              },
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
+    it("should force forms open if save is disabled and it is enabled", () => {
+      assert.isTrue(
+        forceShowForm(
+          {},
+          {
+            submissionFieldName: "iam_account_settings",
+            innerFormProps: {
+              data: {
+                enable: true,
+                max_sessions_per_identity: null,
               },
             },
           }
