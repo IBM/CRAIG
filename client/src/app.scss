@@ -70,3 +70,13 @@ a.tile:is(:link, :visited, :hover, :active) {
 .alignItemsCenter {
   align-items: center;
 }
+
+.edgeFormWidth {
+  width: 95%;
+}
+
+@media screen and (max-width: 1024px) {
+  .displayFlex.edgeFormWidth {
+    flex-direction: column; // place in column when width small
+  }
+}

@@ -148,84 +148,86 @@ class EdgeNetworkingForm extends React.Component {
           onIconClick={this.onToggle}
           hide={this.state.hideEdgeForm}
         >
-          <IcseFormGroup>
-            <div>
-              <EdgeNetworkingDocs />
-              <div className="formInSubForm">
-                <IcseHeading
-                  name="Configure Edge Networking"
-                  type="subHeading"
-                  className="marginBottomSmall"
-                  buttons={
-                    <SaveAddButton
-                      name="edge-networking"
+          <div className="displayFlex edgeFormWidth">
+            <IcseFormGroup>
+              <div>
+                <EdgeNetworkingDocs />
+                <div className="formInSubForm">
+                  <IcseHeading
+                    name="Configure Edge Networking"
+                    type="subHeading"
+                    className="marginBottomSmall"
+                    buttons={
+                      <SaveAddButton
+                        name="edge-networking"
+                        disabled={
+                          this.state.zones === this.state.prevZones
+                            ? true
+                            : this.props.craig.store.edge_vpc_name !== undefined
+                            ? this.state.zones ===
+                              String(this.props.craig.store.edge_zones)
+                            : contains(
+                                [this.state.edgeType, this.state.pattern],
+                                ""
+                              ) || this.state.zones === "0"
+                        }
+                        onClick={this.onModalToggle}
+                      />
+                    }
+                  />
+                  <IcseFormGroup noMarginBottom>
+                    <RadioGroup
+                      name="Edge Network"
+                      type="edgeType"
+                      defaultSelected={this.state.edgeType}
+                      groups={edgeNetworks}
                       disabled={
-                        this.state.zones === this.state.prevZones
-                          ? true
-                          : this.props.craig.store.edge_vpc_name !== undefined
-                          ? this.state.zones ===
-                            String(this.props.craig.store.edge_zones)
-                          : contains(
-                              [this.state.edgeType, this.state.pattern],
-                              ""
-                            ) || this.state.zones === "0"
+                        this.props.craig.store.edge_vpc_name !== undefined
                       }
-                      onClick={this.onModalToggle}
+                      invalid={this.state.edgeType === ""}
+                      invalidText="Select a VPC to create an edge network"
+                      handleRadioChange={this.handleRadioChange}
                     />
-                  }
-                />
-                <IcseFormGroup noMarginBottom>
-                  <RadioGroup
-                    name="Edge Network"
-                    type="edgeType"
-                    defaultSelected={this.state.edgeType}
-                    groups={edgeNetworks}
-                    disabled={
-                      this.props.craig.store.edge_vpc_name !== undefined
-                    }
-                    invalid={this.state.edgeType === ""}
-                    invalidText="Select a VPC to create an edge network"
-                    handleRadioChange={this.handleRadioChange}
-                  />
-                  <RadioGroup
-                    name="Edge Networking Pattern"
-                    type="pattern"
-                    defaultSelected={this.state.pattern}
-                    groups={edgePatterns}
-                    disabled={
-                      this.props.craig.store.edge_vpc_name !== undefined ||
-                      this.state.edgeType === ""
-                    }
-                    invalid={
-                      this.state.pattern === "" && this.state.edgeType !== ""
-                    }
-                    invalidText="Select a pattern to create an edge network"
-                    handleRadioChange={this.handleRadioChange}
-                  />
-                </IcseFormGroup>
-                <IcseFormGroup>
-                  <IcseSelect
-                    groups={
-                      this.state.zones === "0"
-                        ? buildNumberDropdownList(4)
-                        : buildNumberDropdownList(3, 1)
-                    }
-                    formName="edge-network"
-                    name="zones"
-                    value={this.state.zones.toString()}
-                    labelText="Edge Networking Zones"
-                    handleInputChange={this.onChange}
-                    disabled={this.state.edgeType === ""}
-                    invalid={
-                      this.state.edgeType === ""
-                        ? false
-                        : this.state.zones === "0"
-                    }
-                    invalidText="Select availability zones"
-                  />
-                </IcseFormGroup>
+                    <RadioGroup
+                      name="Edge Networking Pattern"
+                      type="pattern"
+                      defaultSelected={this.state.pattern}
+                      groups={edgePatterns}
+                      disabled={
+                        this.props.craig.store.edge_vpc_name !== undefined ||
+                        this.state.edgeType === ""
+                      }
+                      invalid={
+                        this.state.pattern === "" && this.state.edgeType !== ""
+                      }
+                      invalidText="Select a pattern to create an edge network"
+                      handleRadioChange={this.handleRadioChange}
+                    />
+                  </IcseFormGroup>
+                  <IcseFormGroup>
+                    <IcseSelect
+                      groups={
+                        this.state.zones === "0"
+                          ? buildNumberDropdownList(4)
+                          : buildNumberDropdownList(3, 1)
+                      }
+                      formName="edge-network"
+                      name="zones"
+                      value={this.state.zones.toString()}
+                      labelText="Edge Networking Zones"
+                      handleInputChange={this.onChange}
+                      disabled={this.state.edgeType === ""}
+                      invalid={
+                        this.state.edgeType === ""
+                          ? false
+                          : this.state.zones === "0"
+                      }
+                      invalidText="Select availability zones"
+                    />
+                  </IcseFormGroup>
+                </div>
               </div>
-            </div>
+            </IcseFormGroup>
             <div className="edgeTileMargin">
               <a
                 href={edgeNetwork}
@@ -243,7 +245,7 @@ class EdgeNetworkingForm extends React.Component {
                 </Tile>
               </a>
             </div>
-          </IcseFormGroup>
+          </div>
         </StatelessToggleForm>
         {this.state.hideModal === false && (
           <Modal
