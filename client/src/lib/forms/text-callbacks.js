@@ -1,8 +1,14 @@
-const { isNullOrEmptyString, splatContains } = require("lazy-z");
+const {
+  isNullOrEmptyString,
+  splatContains,
+  isIpv4CidrOrAddress,
+  transpose
+} = require("lazy-z");
 const { hasDuplicateName } = require("./duplicate-name");
 const {
   invalidNewResourceName,
-  invalidSecurityGroupRuleName
+  invalidSecurityGroupRuleName,
+  hasOverlappingCidr
 } = require("./invalid-callbacks");
 
 /**
@@ -78,9 +84,10 @@ function invalidSecurityGroupRuleText(stateData, componentProps) {
 /**
  * create invalid text
  * @param {string} field json field name
+ * @param {*=} craig used for subnet
  * @returns {Function} text should be invalid function
  */
-function invalidNameText(field) {
+function invalidNameText(field, craig) {
   /**
    * create invalid text for name
    * @param {Object} stateData
@@ -120,6 +127,12 @@ function invalidNameText(field) {
           field
         );
       }
+    };
+  } else if (field === "subnet") {
+    return function(stateData, componentProps) {
+      let propsCopy = { craig: craig };
+      transpose(componentProps, propsCopy);
+      return invalidNameText("subnet_name")(stateData, propsCopy);
     };
   } else return nameText;
 }
@@ -180,8 +193,48 @@ function iamAccountSettingInvalidText(field) {
     : "Invalid";
 }
 
+/**
+ * create access group policy helper text
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} helper text
+ */
 function accessGroupPolicyHelperTextCallback(stateData, componentProps) {
-  return `${componentProps.craig.store.json._options.prefix}-${stateData.name}-<random-suffix>`;
+  return `${componentProps.craig.store.json._options.prefix}-${stateData.name}`;
+}
+
+/**
+ * create invalid cidr text function
+ * @param {*} craig
+ * @returns {Function} stateData componentProps function
+ */
+function invalidCidrText(craig) {
+  /**
+   * get invalid cidr text
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @returns {string} invalid text string
+   */
+  return function(stateData, componentProps) {
+    if(!stateData.cidr) {
+      return "Invalid CIDR block";
+    }
+    let cidrRange = Number(stateData.cidr.split("/")[1]) > 17;
+    if (componentProps.data.cidr === stateData.cidr && stateData.cidr) {
+      // by checking if matching here prevent hasOverlappingCidr from running
+      // to decrease load times
+      return "";
+    } else if (isIpv4CidrOrAddress(stateData.cidr) === false) {
+      return "Invalid CIDR block";
+    } else if (isIpv4CidrOrAddress(stateData.cidr) && cidrRange) {
+      let invalidCidr = hasOverlappingCidr(craig)(stateData, componentProps);
+      if (invalidCidr.invalid) {
+        return `Warning: CIDR overlaps with ` + invalidCidr.cidr;
+      } else return "";
+    } else {
+      return "CIDR ranges of /17 or less are not supported";
+    }
+  };
 }
 
 module.exports = {
@@ -195,5 +248,6 @@ module.exports = {
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
-  accessGroupPolicyHelperTextCallback
+  accessGroupPolicyHelperTextCallback,
+  invalidCidrText
 };

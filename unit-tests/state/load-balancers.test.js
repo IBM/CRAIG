@@ -112,7 +112,7 @@ describe("load_balancers", () => {
         {},
         {
           name: "management",
-          subnet: {
+          data: {
             name: "vsi-zone-1",
           },
         }
@@ -121,7 +121,7 @@ describe("load_balancers", () => {
         {},
         {
           name: "management",
-          subnet: {
+          data: {
             name: "vsi-zone-2",
           },
         }

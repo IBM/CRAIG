@@ -9,9 +9,43 @@ const {
   invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl,
+  cidrBlocksOverlap,
+  hasOverlappingCidr,
+  invalidCidr,
+  invalidNewResourceName,
 } = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
+  describe("invalidNewResourceName", () => {
+    it("should return true if name has no value", () => {
+      assert.isTrue(invalidNewResourceName(null), "it should be true");
+    });
+  });
+  describe("cidrBlocksOverlap", () => {
+    it("should return true to the overlapping cidr blocks", () => {
+      let testCidrA = "192.168.0.1/24";
+      let testCidrB = "192.168.0.1/18";
+      let actualResp = cidrBlocksOverlap(testCidrA, testCidrB);
+      assert.deepEqual(actualResp, true);
+    });
+    it("should return false to the non-overlapping cidr blocks", () => {
+      let testCidrA = "192.168.0.1/24";
+      let testCidrB = "10.0.0.0/16";
+      let actualResp = cidrBlocksOverlap(testCidrA, testCidrB);
+      assert.deepEqual(actualResp, false);
+    });
+    it("should return true since they are the same cidr blocks", () => {
+      let testCidr = "10.0.0.0/16";
+      let actualResp = cidrBlocksOverlap(testCidr, testCidr);
+      assert.deepEqual(actualResp, true);
+    });
+    it("should return false to the non-overlapping cidr blocks", () => {
+      let testCidrA = "10.0.0.0/16";
+      let testCidrB = "192.168.0.1/24";
+      let actualResp = cidrBlocksOverlap(testCidrA, testCidrB);
+      assert.deepEqual(actualResp, false);
+    });
+  });
   describe("invalidName", () => {
     it("should return true if resource group has a duplicate name", () => {
       let actualData = invalidName("resource_groups")(
@@ -663,6 +697,104 @@ describe("invalid callbacks", () => {
         isValidUrl(
           "https://declarations.s3.us-east.cloud-object-storage.appdomain.cloud/do_declaration.json"
         )
+      );
+    });
+  });
+  describe("hasOverlappingCidr", () => {
+    it("should return true if cidr exists already", () => {
+      let craigData = require("../data-files/craig-json.json");
+      let actualData = hasOverlappingCidr({
+        store: {
+          json: craigData,
+        },
+      })(
+        {
+          name: "test",
+          cidr: "10.20.10.0/24",
+        },
+        {
+          data: {
+            name: "",
+          },
+        }
+      );
+      assert.isTrue(
+        actualData.invalid,
+        "it should return true when overlapping cidr"
+      );
+    });
+    it("should return true if cidr does not already exist but does overlap", () => {
+      let craigData = require("../data-files/craig-json.json");
+      let actualData = hasOverlappingCidr({
+        store: {
+          json: craigData,
+        },
+      })(
+        {
+          name: "vsi-zone-1",
+          cidr: "10.20.20.1/32",
+        },
+        {
+          data: {
+            name: "vsi-zone-1",
+          },
+        }
+      );
+      assert.isTrue(
+        actualData.invalid,
+        "it should return true when overlapping cidr"
+      );
+    });
+  });
+  describe("invalidCidr", () => {
+    it("should return true if cidr is null", () => {
+      assert.isTrue(
+        invalidCidr({})({ cidr: null }, { data: { cidr: "1.2.3.4/5" } }),
+        "it should return correct data"
+      );
+    });
+    it("should return false if cidr is equal to props", () => {
+      assert.isFalse(
+        invalidCidr({})({ cidr: "1.2.3.4/5" }, { data: { cidr: "1.2.3.4/5" } }),
+        "it should return correct data"
+      );
+    });
+    it("should return true if cidr is not valid", () => {
+      assert.isTrue(
+        invalidCidr({})({ cidr: "aaa" }, { data: { cidr: "1.2.3.4/5" } }),
+        "it should return correct data"
+      );
+    });
+    it("should return true if cidr is too many addresses", () => {
+      assert.isTrue(
+        invalidCidr({})(
+          { cidr: "10.0.0.0/11" },
+          { data: { cidr: "1.2.3.4/5" } }
+        ),
+        "it should return correct data"
+      );
+    });
+    it("should return true if cidr overlaps with existing cidr", () => {
+      let craig = {
+        store: {
+          json: require("../data-files/craig-json.json"),
+        },
+      };
+      assert.isTrue(
+        invalidCidr(craig)({ cidr: "10.10.30.0/24" }, { data: {} }),
+        "Warning: CIDR overlaps with 10.10.30.0/24",
+        "it should return correct data"
+      );
+    });
+    it("should return false if cidr does not overlap with existing cidr", () => {
+      let craig = {
+        store: {
+          json: require("../data-files/craig-json.json"),
+        },
+      };
+      assert.isFalse(
+        invalidCidr(craig)({ cidr: "10.10.80.0/24" }, { data: {} }),
+        "it should be true"
       );
     });
   });

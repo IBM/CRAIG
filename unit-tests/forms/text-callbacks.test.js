@@ -10,7 +10,8 @@ const {
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
   accessGroupPolicyHelperTextCallback,
-} = require("../../client/src/lib/forms");
+  invalidCidrText,
+} = require("../../client/src/lib");
 
 describe("text callbacks", () => {
   describe("resourceGroupHelperTextCallback", () => {
@@ -125,6 +126,37 @@ describe("text callbacks", () => {
         actualData,
         "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
         "it should return correct message"
+      );
+    });
+    it("should return true if subnet has a duplicate name", () => {
+      let actualData = invalidNameText("subnet", {
+        store: {
+          json: {
+            vpcs: [
+              {
+                name: "test",
+                subnets: [
+                  {
+                    name: "egg",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      })(
+        { tier: "frog", cidr: "1.2.3.4/15", name: "@@@@" },
+        {
+          data: {
+            name: "",
+          },
+          vpc_name: "test",
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+        "it should be true"
       );
     });
     it("should return true if vpc has a duplicate name", () => {
@@ -573,8 +605,73 @@ describe("text callbacks", () => {
             },
           }
         ),
-        "test-policy-<random-suffix>",
+        "test-policy",
         "it should display data"
+      );
+    });
+  });
+  describe("invalidCidrText", () => {
+    it("should return correct text if cidr is null", () => {
+      assert.deepEqual(
+        invalidCidrText({})({ cidr: null }, { data: { cidr: "1.2.3.4/5" } }),
+        "Invalid CIDR block",
+        "it should return correct data"
+      );
+    });
+    it("should return correct text if cidr is not valid", () => {
+      assert.deepEqual(
+        invalidCidrText({})({ cidr: "aaa" }, { data: { cidr: "1.2.3.4/5" } }),
+        "Invalid CIDR block",
+        "it should return correct data"
+      );
+    });
+    it("should return correct text if cidr is too many addresses", () => {
+      assert.deepEqual(
+        invalidCidrText({})(
+          { cidr: "10.0.0.0/11" },
+          { data: { cidr: "1.2.3.4/5" } }
+        ),
+        "CIDR ranges of /17 or less are not supported",
+        "it should return correct data"
+      );
+    });
+    it("should return correct text if cidr overlaps with existing cidr", () => {
+      let craig = {
+        store: {
+          json: require("../data-files/craig-json.json"),
+        },
+      };
+      assert.deepEqual(
+        invalidCidrText(craig)({ cidr: "10.10.30.0/24" }, { data: {} }),
+        "Warning: CIDR overlaps with 10.10.30.0/24",
+        "it should return correct data"
+      );
+    });
+    it("should return correct text if cidr does not overlap with existing cidr", () => {
+      let craig = {
+        store: {
+          json: require("../data-files/craig-json.json"),
+        },
+      };
+      assert.deepEqual(
+        invalidCidrText(craig)({ cidr: "10.10.80.0/24" }, { data: {} }),
+        "",
+        "it should return correct data"
+      );
+    });
+    it("should return correct text if cidr matches previous cidr", () => {
+      let craig = {
+        store: {
+          json: require("../data-files/craig-json.json"),
+        },
+      };
+      assert.deepEqual(
+        invalidCidrText(craig)(
+          { cidr: "10.10.80.0/24" },
+          { data: { cidr: "10.10.80.0/24" } }
+        ),
+        "",
+        "it should return correct data"
       );
     });
   });

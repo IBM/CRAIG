@@ -12,7 +12,11 @@ import {
   invalidSubnetTierText,
   getTierSubnets,
   getSubnetTierStateData,
-  buildSubnet
+  buildSubnet,
+  invalidCidr,
+  invalidCidrText,
+  invalidName,
+  invalidNameText
 } from "../../lib";
 import { splat } from "lazy-z";
 
@@ -23,7 +27,7 @@ class SubnetForm extends React.Component {
     super(props);
     this.onModalSubmit = this.onModalSubmit.bind(this);
   }
-  
+
   onModalSubmit(data) {
     this.props.craig.vpcs.subnetTiers.create(data, {
       vpc_name: this.props.data.name
@@ -73,6 +77,13 @@ class SubnetForm extends React.Component {
             }}
             invalidTextCallback={invalidSubnetTierText}
             invalidCallback={invalidSubnetTierName}
+            invalidCidr={invalidCidr(this.props.craig)}
+            invalidCidrText={invalidCidrText(this.props.craig)}
+            invalidSubnetCallback={invalidName("subnet", this.props.craig)}
+            invalidSubnetTextCallback={invalidNameText(
+              "subnet",
+              this.props.craig
+            )}
           />
         </FormModal>
         <IcseHeading
@@ -103,7 +114,12 @@ class SubnetForm extends React.Component {
               disableSubnetSaveCallback={(stateData, componentProps) => {
                 return (
                   propsMatchState("subnet", stateData, componentProps) ||
-                  disableSave("subnet", stateData, componentProps)
+                  disableSave(
+                    "subnet",
+                    stateData,
+                    componentProps,
+                    this.props.craig
+                  )
                 );
               }}
               shouldDisableSave={(stateData, componentProps) => {
@@ -118,6 +134,14 @@ class SubnetForm extends React.Component {
               shouldDisableSubmit={none}
               invalidTextCallback={invalidSubnetTierText}
               invalidCallback={invalidSubnetTierName}
+              invalidCidr={invalidCidr(this.props.craig)}
+              invalidCidrText={invalidCidrText(this.props.craig)}
+              invalidSubnetCallback={invalidName("subnet", this.props.craig)}
+              invalidSubnetTextCallback={invalidNameText(
+                "subnet",
+                this.props.craig
+              )}
+              onSubnetSave={this.props.craig.vpcs.subnets.save}
             />
           )
         )}

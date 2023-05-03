@@ -1,4 +1,4 @@
-const { transpose, splat } = require("lazy-z");
+const { transpose, splat, contains } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
@@ -14,25 +14,33 @@ function getTierSubnets(tier, vpc) {
    */
   return function(stateData) {
     let subnets = [];
-    vpc.subnets.forEach(subnet => {
-      if (
-        subnet.name.match(
-          new RegexButWithWords()
-            .stringBegin()
-            .literal(tier.name)
-            .literal("-zone-")
-            .digit()
-            .stringEnd()
-            .done("g")
-        ) !== null &&
-        subnets.length < stateData.zones
-      ) {
-        let tierSubnet = {};
-        tierSubnet.acl_name = subnet.network_acl;
-        transpose(subnet, tierSubnet);
-        subnets.push(tierSubnet);
-      }
-    });
+    if (tier.advanced) {
+      vpc.subnets.forEach(subnet => {
+        if (contains(tier.subnets, subnet.name)) {
+          subnets[subnet.zone - 1] = subnet;
+        }
+      });
+    } else {
+      vpc.subnets.forEach(subnet => {
+        if (
+          subnet.name.match(
+            new RegexButWithWords()
+              .stringBegin()
+              .literal(tier.name)
+              .literal("-zone-")
+              .digit()
+              .stringEnd()
+              .done("g")
+          ) !== null &&
+          subnets.length < stateData.zones
+        ) {
+          let tierSubnet = {};
+          tierSubnet.acl_name = subnet.network_acl;
+          transpose(subnet, tierSubnet);
+          subnets.push(tierSubnet);
+        }
+      });
+    }
     return subnets;
   };
 }

@@ -74,7 +74,7 @@ describe("virtual_private_endpoints", () => {
         {},
         {
           name: "management",
-          subnet: {
+          data: {
             name: "vpe-zone-1",
           },
         }
@@ -83,7 +83,7 @@ describe("virtual_private_endpoints", () => {
         {},
         {
           name: "management",
-          subnet: {
+          data: {
             name: "vpe-zone-2",
           },
         }
@@ -92,7 +92,7 @@ describe("virtual_private_endpoints", () => {
         {},
         {
           name: "management",
-          subnet: {
+          data: {
             name: "vpe-zone-3",
           },
         }

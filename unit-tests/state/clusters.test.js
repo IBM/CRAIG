@@ -275,7 +275,7 @@ describe("clusters", () => {
         {},
         {
           name: "workload",
-          subnet: {
+          data: {
             name: "vsi-zone-1",
           },
         }
@@ -284,7 +284,7 @@ describe("clusters", () => {
         {},
         {
           name: "workload",
-          subnet: {
+          data: {
             name: "vsi-zone-2",
           },
         }
@@ -293,7 +293,7 @@ describe("clusters", () => {
         {},
         {
           name: "workload",
-          subnet: {
+          data: {
             name: "vsi-zone-3",
           },
         }

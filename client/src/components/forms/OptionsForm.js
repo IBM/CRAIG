@@ -67,6 +67,7 @@ class OptionsForm extends React.Component {
             }
             className="marginBottomSmall"
           />
+
           <IcseFormGroup>
             <IcseTextInput
               id="prefix"

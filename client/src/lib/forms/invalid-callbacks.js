@@ -5,6 +5,8 @@ const {
   contains,
   containsKeys,
   splatContains,
+  isIpv4CidrOrAddress,
+  transpose,
   isEmpty
 } = require("lazy-z");
 const {
@@ -21,7 +23,7 @@ const { hasDuplicateName } = require("./duplicate-name");
  * @returns {boolean} true if name is invalid
  */
 function invalidNewResourceName(str) {
-  return str.match(newResourceNameExp) === null;
+  return str ? str.match(newResourceNameExp) === null : true;
 }
 
 /**
@@ -43,14 +45,16 @@ function invalidTagList(tags) {
 /**
  * create invalid bool for resource
  * @param {string} field json field name
+ * @param {*} craig subnet craig data
  * @returns {Function} text should be invalid function
  */
-function invalidName(field) {
+function invalidName(field, craig) {
   /**
    * create invalid for resource
    * @param {Object} stateData
    * @param {boolean} stateData.use_prefix
    * @param {Object} componentProps
+   * @param {string=} overrideField field to override
    * @returns {string} invalid text
    */
   function nameCheck(stateData, componentProps, overrideField) {
@@ -89,6 +93,12 @@ function invalidName(field) {
       } else {
         return invalidName("routing_tables")(stateData, componentProps, field);
       }
+    };
+  } else if (field === "subnet") {
+    return function(stateData, componentProps) {
+      let propsCopy = { craig: craig };
+      transpose(componentProps, propsCopy);
+      return invalidName("subnet_name")(stateData, propsCopy);
     };
   } else return nameCheck;
 }
@@ -223,6 +233,101 @@ function invalidSecurityGroupRuleName(stateData, componentProps) {
 }
 
 /**
+ * make ip from 32 bit number
+ * @param {int} num 32 bit number
+ * @returns {string} ip address string
+ */
+function makeIP(num) {
+  return [
+    // for each number (octet) between the "." (16 bits) shift (>>) to the correct position for big-endian
+    // then do bitwise and (&) to ensure unsigned value since 0xFF is 255 or max value for octet
+    (num >> 24) & 0xff,
+    (num >> 16) & 0xff,
+    (num >> 8) & 0xff,
+    num & 0xff
+  ].join(".");
+}
+
+/**
+ * get 32 bit unsigned int of ip address and the mask in hex for both blocks then get first and last address
+ * @param {string} cidr cidr block string
+ * @returns {object} first and last address of given cidr block in hex
+ */
+function getFirstLastAddress(cidr) {
+  // split address from cidr prefix and get 32 bit unsigned int of ip
+  var mCidr = cidr.match(/\d+/g);
+  var block32 = mCidr.slice(0, 4).reduce(function(a, o) {
+    return ((+a << 8) >>> 0) + +o;
+  });
+  // calculate mask from cidr prefix
+  var mask = (~0 << (32 - +mCidr[4])) >>> 0;
+  // get first and last address from int representation and mask bit manipulation
+  var firstAddress = (block32 & mask) >>> 0;
+  var lastAddress = (block32 | ~mask) >>> 0;
+  return { firstAddress, lastAddress };
+}
+
+/**
+ * generate all ips from first to last and store in array for cidr block
+ * @param {string} firstHex first address in hex format
+ * @param {string} lastHex last address in hex format
+ * @returns {Array<string>} array of all ips in a cidr block range
+ */
+function generateIpRange(firstHex, lastHex) {
+  var ips = [];
+  for (let i = firstHex; i <= lastHex; i++) {
+    ips.push(makeIP(i));
+  }
+  return ips;
+}
+
+/**
+
+/**
+ * check to see if two IPV4 CIDR blocks contain overlapping addresses
+ * @param {string} cidrA cidr block
+ * @param {string} cidrB cidr block
+ * @returns {boolean} true if two CIDR blocks contain one or more of the same addresses, false otherwise
+ */
+function cidrBlocksOverlap(cidrA, cidrB) {
+  if (cidrA === cidrB) {
+    return true;
+  }
+
+  // split cidr to get prefixes
+  cidrATokens = cidrA.split("/");
+  cidrBTokens = cidrB.split("/");
+
+  // find smaller cidr block (bigger prefix means smaller range)
+  if (cidrATokens[1] < cidrBTokens[1]) {
+    var smallerBlock = cidrB;
+    var largerBlock = cidrA;
+  } else {
+    var smallerBlock = cidrA;
+    var largerBlock = cidrB;
+  }
+
+  // get first and last address in hex
+  var smallCidr = getFirstLastAddress(smallerBlock);
+  var bigCidr = getFirstLastAddress(largerBlock);
+
+  // generate all ips from first to last and store in array for cidr blocks
+  var smallerIps = generateIpRange(
+    smallCidr.firstAddress,
+    smallCidr.lastAddress
+  );
+  var biggerIps = generateIpRange(bigCidr.firstAddress, bigCidr.lastAddress);
+
+  // loop through all ips and check if they are in the larger cidr block
+  for (let i = 0; i < smallerIps.length; i++) {
+    if (contains(biggerIps, smallerIps[i])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * check if string of comma separated ips is invalid
  * @param {*} stateData
  * @param {*} componentProps
@@ -249,6 +354,74 @@ function isValidUrl(url) {
 }
 
 /**
+ * check to see if a subnet has overlapping cidr within deployment
+ * @param {*} craig
+ * @returns {Function} statedata component props function
+ */
+function hasOverlappingCidr(craig) {
+  /**
+   * check to see if a subnet has overlapping cidr within deployment
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @returns {boolean} true if overlapping
+   */
+  return function(stateData, componentProps) {
+    let allCidrs = [];
+    let cidrData = {
+      invalid: false,
+      cidr: stateData.cidr
+    };
+    craig.store.json.vpcs.forEach(vpc => {
+      vpc.subnets.forEach(subnet => {
+        if (subnet.name !== componentProps.data.name)
+          allCidrs.push(subnet.cidr);
+      });
+    });
+    if (contains(allCidrs, stateData.cidr)) {
+      cidrData.invalid = true;
+    } else {
+      allCidrs.forEach(cidr => {
+        if (!cidrData.invalid) {
+          cidrData.invalid = cidrBlocksOverlap(cidr, stateData.cidr);
+          if (cidrData.invalid) {
+            cidrData.cidr = cidr;
+          }
+        }
+      });
+    }
+    return cidrData;
+  };
+}
+
+/**
+ * check to see if a subnet has overlapping cidr within deployment
+ * @param {*} craig
+ * @returns {Function} statedata component props function
+ */
+function invalidCidr(craig) {
+  /**
+   * check to see if a subnet has overlapping cidr within deployment
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @returns {boolean} true if overlapping
+   */
+  return function(stateData, componentProps) {
+    if (!stateData.cidr) return true;
+    let cidrRange = Number(stateData.cidr.split("/")[1]) > 17;
+    if (componentProps.data.cidr === stateData.cidr && stateData.cidr) {
+      // by checking if matching here prevent hasOverlappingCidr from running
+      // to decrease load times
+      return false;
+    }
+    if (isIpv4CidrOrAddress(stateData.cidr) && cidrRange) {
+      return hasOverlappingCidr(craig)(stateData, componentProps).invalid;
+    } else if (cidrRange <= 17 && isIpv4CidrOrAddress(stateData.cidr)) {
+      return true;
+    } else return isIpv4CidrOrAddress(stateData.cidr) === false;
+  };
+};
+
+/*
  * test if list of crns is valid
  * @param {Array} crnList list of crns
  * @returns true if list of crns is valid
@@ -267,7 +440,7 @@ function invalidCrnList(crnList) {
   })
 
   return isInvalid
-}
+};
 
 module.exports = {
   invalidName,
@@ -283,5 +456,8 @@ module.exports = {
   invalidIpCommaList,
   invalidIdentityProviderURI,
   invalidF5Vsi,
-  isValidUrl
+  isValidUrl,
+  cidrBlocksOverlap,
+  hasOverlappingCidr,
+  invalidCidr
 };

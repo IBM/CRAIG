@@ -33,7 +33,10 @@ import {
   propsMatchState,
   resourceGroupHelperTextCallback,
   invalidIdentityProviderURI,
-  disableSshKeyDelete
+  disableSshKeyDelete,
+  setFormRgList,
+  defaultFormTemplate,
+  setFormVpcList
 } from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
@@ -153,7 +156,7 @@ function formProps(form, craig) {
   function none() {}
 
   if (form === "nacls" || form === "subnets") {
-    return {
+    let innerFormData = {
       name: form === "nacls" ? "Network Access Control Lists" : "VPC Subnets",
       innerForm: form === "nacls" ? NaclForm : SubnetForm,
       arrayData: craig.store.json.vpcs,
@@ -173,88 +176,22 @@ function formProps(form, craig) {
         noDeleteButton: true,
         noSaveButton: true,
         hideName: true,
+        hide: true,
         submissionFieldName: form === "nacls" ? "network_acls" : "subnetTiers",
         disableSave: none,
         propsMatchState: none,
         nullRef: true
       }
     };
+    return innerFormData;
   }
 
   let formFields = pathToFormMap[form];
   let jsonField = pathToFormMap[form].jsonField;
-  let formTemplate = {
-    craig: craig,
-    name: formFields.name,
-    addText: formFields.addText,
-    innerForm: formFields.innerForm,
-    disableSave: disableSave,
-    propsMatchState: propsMatchState,
-    arrayData: craig.store.json[jsonField],
-    onDelete: craig[jsonField].delete,
-    onSave: craig[jsonField].save,
-    onSubmit: craig[jsonField].create,
-    docs: RenderDocs(jsonField),
-    forceOpen: forceShowForm,
-    innerFormProps: {
-      craig: craig,
-      disableSave: disableSave,
-      invalidCallback: invalidName(jsonField),
-      invalidTextCallback: invalidNameText(jsonField)
-    },
-    toggleFormProps: {
-      craig: craig,
-      disableSave: disableSave,
-      hideName: true,
-      submissionFieldName: jsonField,
-      hide: true
-    }
-  };
-  // add resource groups
-  if (
-    contains(
-      [
-        "appID",
-        "clusters",
-        "eventStreams",
-        "keyManagement",
-        "objectStorage",
-        "secretsManager",
-        "securityGroups",
-        "sshKeys",
-        "transitGateways",
-        "vpcs",
-        "vpe",
-        "vpn",
-        "vsi",
-        "lb"
-      ],
-      form
-    )
-  ) {
-    formTemplate.innerFormProps.resourceGroups = splat(
-      craig.store.json.resource_groups,
-      "name"
-    );
-  }
-  // add vpc list
-  if (
-    contains(
-      [
-        "transitGateways",
-        "vpn",
-        "securityGroups",
-        "clusters",
-        "vpe",
-        "vsi",
-        "routingTables",
-        "lb"
-      ],
-      form
-    )
-  ) {
-    formTemplate.innerFormProps.vpcList = craig.store.vpcList;
-  }
+  let formTemplate = defaultFormTemplate(formFields, jsonField, craig);
+  formTemplate.docs = RenderDocs(jsonField);
+  setFormRgList(form, formTemplate, craig);
+  setFormVpcList(form, formTemplate, craig);
 
   // add encryption keys
   if (contains(["secretsManager", "clusters", "vsi"], form)) {
@@ -407,9 +344,6 @@ function formProps(form, craig) {
       formTemplate.innerFormProps
     );
   } else if (form === "vpcs") {
-    /**
-     * vpcs
-     */
     formTemplate.innerFormProps.cosBuckets = craig.store.cosBuckets;
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;

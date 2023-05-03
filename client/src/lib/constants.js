@@ -420,6 +420,32 @@ module.exports = {
     "vsi",
     "lb"
   ],
+  resourceGroupForms: [
+    "appID",
+    "clusters",
+    "eventStreams",
+    "keyManagement",
+    "objectStorage",
+    "secretsManager",
+    "securityGroups",
+    "sshKeys",
+    "transitGateways",
+    "vpcs",
+    "vpe",
+    "vpn",
+    "vsi",
+    "lb"
+  ],
+  vpcForms: [
+    "transitGateways",
+    "vpn",
+    "securityGroups",
+    "clusters",
+    "vpe",
+    "vsi",
+    "routingTables",
+    "lb"
+  ],
   toggleFormPages: [
     "activityTracker",
     "securityComplianceCenter",

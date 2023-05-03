@@ -1,17 +1,17 @@
+import { IcseModal, StatelessToggleForm } from "icse-react-assets";
+import { getObjectFromArray, revision, splat, splatContains } from "lazy-z";
 import React from "react";
-import { StatelessToggleForm, IcseModal } from "icse-react-assets";
-import { getObjectFromArray, splat, splatContains, revision } from "lazy-z";
-import "./copy-rule-form-page.css";
+import { copyRuleCodeMirrorData } from "../../lib";
 import { CraigCodeMirror } from "../page-template/CodeMirror";
+import "./copy-rule-form-page.css";
 import {
   AddClusterRules,
   AddClusterRulesModalContent,
   CopyAclModalContent,
-  CopyRuleObject,
   CopyRule,
+  CopyRuleObject,
   CopySgModalContent
 } from "./duplicate-rules";
-import { copyRuleCodeMirrorData } from "../../lib";
 
 class CopyRuleForm extends React.Component {
   constructor(props) {

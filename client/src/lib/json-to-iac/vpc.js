@@ -456,7 +456,6 @@ function vpcModuleTf(files, config) {
   let cloneConfig = config;
   cloneConfig.vpcs.forEach(vpc => {
     let main = formatVpc(vpc, cloneConfig, true);
-    let outputs = {};
     let variables = {
       tags: {
         description: "List of tags",

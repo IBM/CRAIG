@@ -273,6 +273,40 @@ describe("state util functions", () => {
         "it should set subnet tiers"
       );
     });
+    it("should set JSON data if valid with advanced subnet tiers", () => {
+      let state = newState();
+      let data = require("../data-files/craig-json.json");
+      data.vpcs[0].subnets.forEach((subnet) => {
+        if (subnet.name.indexOf("vsi-zone") !== -1) {
+          subnet.tier = "frog";
+        }
+      });
+      state.setUpdateCallback(() => {});
+      delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
+      state.hardSetJson(data);
+      assert.deepEqual(state.store.json, data, "it should set the store");
+      assert.deepEqual(
+        state.store.subnetTiers,
+        {
+          management: [
+            { name: "vpe", zones: 3 },
+            { name: "vpn", zones: 1 },
+            {
+              name: "frog",
+              zones: undefined,
+              select_zones: [1, 2, 3],
+              advanced: true,
+              subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+            },
+          ],
+          workload: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+          ],
+        },
+        "it should set subnet tiers"
+      );
+    });
     it("should set JSON data if not valid but slz", () => {
       let state = newState();
       state.setUpdateCallback(() => {});

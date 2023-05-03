@@ -8,7 +8,8 @@ const {
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
-  accessGroupPolicyHelperTextCallback
+  accessGroupPolicyHelperTextCallback,
+  invalidCidrText
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -24,7 +25,10 @@ const {
   invalidIpCommaList,
   invalidIdentityProviderURI,
   invalidF5Vsi,
-  isValidUrl
+  isValidUrl,
+  cidrBlocksOverlap,
+  hasOverlappingCidr,
+  invalidCidr
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -35,14 +39,17 @@ const {
 } = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
-
 const {
   formatConfig,
   copyAclModalContent,
   copyRuleCodeMirrorData,
   copySgModalContent
 } = require("./format-json");
-
+const {
+  setFormRgList,
+  defaultFormTemplate,
+  setFormVpcList
+} = require("./form-props");
 module.exports = {
   hasDuplicateName,
   resourceGroupHelperTextCallback,
@@ -79,5 +86,12 @@ module.exports = {
   invalidF5Vsi,
   isValidUrl,
   disableSshKeyDelete,
+  cidrBlocksOverlap,
+  setFormRgList,
+  defaultFormTemplate,
+  setFormVpcList,
+  hasOverlappingCidr,
+  invalidCidr,
+  invalidCidrText,
   invalidCrnList
 };

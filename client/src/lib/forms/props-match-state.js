@@ -21,8 +21,19 @@ function propsMatchState(field, stateData, componentProps) {
   }
   if (field === "subnetTier") {
     componentProps.data.hide = stateData.hide;
-    componentProps.data.showUnsavedChangesModal =
-      stateData.showUnsavedChangesModal;
+    componentProps.data.select_zones = stateData.select_zones;
+    componentProps.data.advancedSave = stateData.advancedSave;
+    if (stateData.showUnsavedChangesModal !== undefined)
+      componentProps.data.showUnsavedChangesModal =
+        stateData.showUnsavedChangesModal;
+
+    if (
+      stateData.subnets &&
+      stateData.advanced &&
+      stateData.select_zones.length !== stateData.subnets.length
+    ) {
+      return false;
+    }
   } else if (field === "security_groups") {
     componentProps.data.show = stateData.show;
   }

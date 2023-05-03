@@ -31,7 +31,14 @@ const {
   forceShowForm,
   accessGroupPolicyHelperTextCallback,
   invalidIdentityProviderURI,
-  disableSshKeyDelete
+  disableSshKeyDelete,
+  cidrBlocksOverlap,
+  setFormRgList,
+  setFormVpcList,
+  defaultFormTemplate,
+  hasOverlappingCidr,
+  invalidCidr,
+  invalidCidrText
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -182,5 +189,12 @@ module.exports = {
   invalidIdentityProviderURI,
   disableSshKeyDelete,
   vpcModuleJson,
-  vpcModuleOutputs
+  vpcModuleOutputs,
+  cidrBlocksOverlap,
+  setFormRgList,
+  defaultFormTemplate,
+  setFormVpcList,
+  hasOverlappingCidr,
+  invalidCidr,
+  invalidCidrText
 };

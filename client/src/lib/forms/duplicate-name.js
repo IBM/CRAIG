@@ -1,4 +1,10 @@
-const { splat, contains, isNullOrEmptyString, nestedSplat } = require("lazy-z");
+const {
+  splat,
+  contains,
+  isNullOrEmptyString,
+  nestedSplat,
+  revision
+} = require("lazy-z");
 
 /**
  * check for duplicate name
@@ -108,6 +114,12 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       componentProps.craig.store.json.load_balancers,
       "name"
     );
+  } else if (field === "subnet_name") {
+    new revision(componentProps.craig.store.json)
+      .child("vpcs", componentProps.vpc_name, "name")
+      .then(data => {
+        allOtherNames = splat(data.subnets, "name");
+      });
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],

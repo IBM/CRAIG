@@ -526,7 +526,7 @@ describe("vsi", () => {
         {},
         {
           name: "management",
-          subnet: {
+          data: {
             name: "vsi-zone-1",
           },
         }

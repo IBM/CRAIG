@@ -94,10 +94,11 @@ function invalidPort(rule, isSecurityGroup) {
  * @param {string} field field name
  * @param {Object} stateData
  * @param {Object} componentProps
+ * @param {lazyZstate=} craig used for subnets, component props do not have craig
  * @returns {boolean} true if match
  */
 
-function disableSave(field, stateData, componentProps) {
+function disableSave(field, stateData, componentProps, craig) {
   if (field === "scc") {
     return (
       !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.collector_description) ||
@@ -224,10 +225,20 @@ function disableSave(field, stateData, componentProps) {
   } else if (field === "subnetTier") {
     return (
       invalidSubnetTierName(stateData, componentProps) ||
-      badField("networkAcl", stateData)
+      badField("networkAcl", stateData) ||
+      (stateData.advanced && stateData.select_zones.length === 0)
     );
   } else if (field === "subnet") {
-    return badField("network_acl", stateData);
+    if (stateData.tier && isIpv4CidrOrAddress(stateData.cidr || "") === false) {
+      return true;
+    } else if (stateData.tier) {
+      let invalidCidrRange = Number(stateData.cidr.split("/")[1]) <= 12;
+      return (
+        invalidCidrRange ||
+        invalidName("subnet", craig)(stateData, componentProps) ||
+        badField("network_acl", stateData)
+      );
+    } else return badField("network_acl", stateData);
   } else if (field === "iam_account_settings") {
     return (
       fieldsAreBad(

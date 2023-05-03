@@ -62,7 +62,7 @@ describe("vpn_gateways", () => {
         {},
         {
           name: "management",
-          subnet: {
+          data: {
             name: "vpn-zone-1",
           },
         }

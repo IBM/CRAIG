@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.0
+
+### Features
+
+- Implemented Routing Tables Page
+- Implemented Load Balancers Page
+- Support for Teleport has been removed
+- Enhanced CodeMirror styling to more closely match carbon code blocks
+- Copy networking rule fields now have tooltips describing usage
+- Users can now change Activity Tracker instance name
+- Users can now disable Activity Tracker
+- Terraform no longer uses native function `split`, allowing for easier conversion to cdktf
+- Kerning on release notes page now easier to read
+
+### Fixes
+
+- Block Storage volume modal no longer incorrectly shows as invalid
+- Copying a network rule no longer causes Security Groups or Network ACLs to incorrectly be created with copied rule data by default
+- Cluster page no longer fails to load after deleting a vpc where a cluster is created
+- When creating an edge network, a resource group for those resources called `edge-rg` is now created
+- Code Mirror text no longer spreads empty arrays over multiple lines
+- Users can no longer delete SSH keys that are in use
+
 ## 0.3.0
 
 ### Features
