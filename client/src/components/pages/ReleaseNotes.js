@@ -7,6 +7,16 @@ const ReleaseNote = props => {
   return (
     <AccordionItem title={props.note.version}>
       <div>
+        {"upgrade_notes" in props.note && (
+          <>
+            <h5 className="marginBottomXs">Upgrade Notes:</h5>
+            <ul className="bullets indent marginBottomSmall">
+              {props.note.upgrade_notes.map((fix, index) => (
+                <li key={index}>{fix}</li>
+              ))}
+            </ul>
+          </>
+        )}
         {"features" in props.note && (
           <>
             <h5 className="marginBottomXs">Features:</h5>

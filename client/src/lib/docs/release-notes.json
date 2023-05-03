@@ -1,10 +1,12 @@
 [
   {
     "version": "0.4.0",
+    "upgrade_notes": [
+      "Support for Teleport has been removed"
+    ],
     "features": [
       "Implemented Routing Tables Page",
       "Implemented Load Balancers Page",
-      "Support for Teleport has been removed",
       "Enhanced CodeMirror styling to more closely match carbon code blocks",
       "Copy networking rule fields now have tooltips describing usage",
       "Users can now change Activity Tracker instance name",

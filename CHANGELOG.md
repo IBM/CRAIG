@@ -4,11 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## 0.4.0
 
+### Upgrade Notes
+
+- Support for Teleport has been removed
+
 ### Features
 
 - Implemented Routing Tables Page
 - Implemented Load Balancers Page
-- Support for Teleport has been removed
 - Enhanced CodeMirror styling to more closely match carbon code blocks
 - Copy networking rule fields now have tooltips describing usage
 - Users can now change Activity Tracker instance name
