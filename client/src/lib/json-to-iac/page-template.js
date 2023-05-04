@@ -51,10 +51,7 @@ function codeMirrorAclTf(config) {
   config.vpcs.forEach(vpc => {
     let blockData = "";
     vpc.acls.forEach(acl => {
-      blockData += formatAcl(acl, config);
-      acl.rules.forEach(rule => {
-        blockData += formatAclRule(rule);
-      });
+      blockData += formatAcl(acl, config, true);
     });
     tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
   });

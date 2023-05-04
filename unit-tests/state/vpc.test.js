@@ -467,7 +467,7 @@ describe("vpcs", () => {
           {
             advanced: true,
             select_zones: [1],
-            name: "vpn"
+            name: "vpn",
           },
           {
             vpc_name: "management",
@@ -2750,6 +2750,11 @@ describe("vpcs", () => {
           state.store.json.vpcs[0].acls[0].name,
           "new",
           "it should update acl"
+        );
+        assert.deepEqual(
+          state.store.json.vpcs[0].acls[0].rules[0].acl,
+          "new",
+          "it should have correct acl"
         );
       });
       it("should update an acl with no name change", () => {

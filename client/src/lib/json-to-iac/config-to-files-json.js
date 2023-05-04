@@ -17,7 +17,6 @@ const { vpcModuleTf } = require("./vpc");
 const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
 const { vsiTf, lbTf } = require("./vsi");
-const { routingTableTf } = require("./routing-tables");
 const { cbrTf } = require("./cbr");
 
 /**
@@ -93,7 +92,7 @@ variable "tmos_admin_password" {
       "cbr.tf":
         config.cbr_zones.length > 0 && config.cbr_rules.length > 0
           ? cbrTf(config)
-          : null
+          : null,
     };
     vpcModuleTf(files, config);
     return files;

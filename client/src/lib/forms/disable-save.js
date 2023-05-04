@@ -196,7 +196,8 @@ function disableSave(field, stateData, componentProps, craig) {
     return (
       invalidName("transit_gateways")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.resource_group) ||
-      isEmpty(stateData.connections) || invalidCrnList(stateData.crns)
+      isEmpty(stateData.connections) ||
+      invalidCrnList(stateData.crns)
     );
   } else if (field === "acls") {
     return (
@@ -226,7 +227,7 @@ function disableSave(field, stateData, componentProps, craig) {
     return (
       invalidSubnetTierName(stateData, componentProps) ||
       badField("networkAcl", stateData) ||
-      (stateData.advanced && stateData.select_zones.length === 0)
+      (stateData.advanced === true && stateData.select_zones.length === 0)
     );
   } else if (field === "subnet") {
     if (stateData.tier && isIpv4CidrOrAddress(stateData.cidr || "") === false) {

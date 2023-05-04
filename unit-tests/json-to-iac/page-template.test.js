@@ -306,37 +306,32 @@ resource "ibm_is_network_acl" "management_management_acl" {
     "hello",
     "world"
   ]
-}
-
-resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound" {
-  source      = "161.26.0.0/16"
-  network_acl = ibm_is_network_acl.management_management_acl.id
-  action      = "allow"
-  destination = "10.0.0.0/8"
-  direction   = "inbound"
-  name        = "allow-ibm-inbound"
-}
-
-resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_all_network_inbound" {
-  source      = "10.0.0.0/8"
-  network_acl = ibm_is_network_acl.management_management_acl.id
-  action      = "allow"
-  destination = "10.0.0.0/8"
-  direction   = "inbound"
-  name        = "allow-all-network-inbound"
-}
-
-resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_all_outbound" {
-  source      = "0.0.0.0/0"
-  network_acl = ibm_is_network_acl.management_management_acl.id
-  action      = "allow"
-  destination = "0.0.0.0/0"
-  direction   = "outbound"
-  name        = "allow-all-outbound"
+  rules {
+    source      = "161.26.0.0/16"
+    action      = "allow"
+    destination = "10.0.0.0/8"
+    direction   = "inbound"
+    name        = "allow-ibm-inbound"
+  }
+  rules {
+    source      = "10.0.0.0/8"
+    action      = "allow"
+    destination = "10.0.0.0/8"
+    direction   = "inbound"
+    name        = "allow-all-network-inbound"
+  }
+  rules {
+    source      = "0.0.0.0/0"
+    action      = "allow"
+    destination = "0.0.0.0/0"
+    direction   = "outbound"
+    name        = "allow-all-outbound"
+  }
 }
 
 ##############################################################################
 `;
+
         assert.deepEqual(
           codeMirrorAclTf(testData),
           expectedData,

@@ -1,5 +1,10 @@
 const { contains, splat } = require("lazy-z");
-const { resourceGroupForms, vpcForms } = require("../constants");
+const {
+  resourceGroupForms,
+  vpcForms,
+  encryptionKeyForms,
+  subnetForms
+} = require("../constants");
 const { disableSave, forceShowForm } = require("./disable-save");
 const { invalidName } = require("./invalid-callbacks");
 const { invalidNameText } = require("./text-callbacks");
@@ -46,6 +51,7 @@ function defaultFormTemplate(formFields, jsonField, craig) {
 /**
  * set resource group list for forms
  * @param {string} form form name
+ * @param {*} formTemplate form template object
  * @param {*} craig craig object
  */
 function setFormRgList(form, formTemplate, craig) {
@@ -58,8 +64,9 @@ function setFormRgList(form, formTemplate, craig) {
 }
 
 /**
- * set resource group list for forms
+ * set vpc list for forms
  * @param {string} form form name
+ * @param {*} formTemplate form template object
  * @param {*} craig craig object
  */
 function setFormVpcList(form, formTemplate, craig) {
@@ -68,8 +75,52 @@ function setFormVpcList(form, formTemplate, craig) {
   }
 }
 
+/**
+ * set encryption key list for forms
+ * @param {string} form form name
+ * @param {*} formTemplate form template object
+ * @param {*} craig craig object
+ */
+function setFormEncryptionKeyList(form, formTemplate, craig) {
+  if (contains(encryptionKeyForms, form)) {
+    formTemplate.innerFormProps.encryptionKeys = craig.store.encryptionKeys;
+  }
+}
+
+/**
+ * set encryption key list for forms
+ * @param {string} form form name
+ * @param {*} formTemplate form template object
+ * @param {*} craig craig object
+ */
+function setFormSubnetList(form, formTemplate, craig) {
+  if (contains(subnetForms, form)) {
+    formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
+  }
+}
+
+/**
+ * set form delete disabled message
+ * @param {*} form
+ * @param {*} formTemplate
+ */
+function setDeleteDisabledMessage(form, formTemplate) {
+  if (form === "sshKeys") {
+    formTemplate.deleteDisabledMessage =
+      "Cannot delete SSH Keys in use by Virtual Servers";
+  } else if (form === "keyManagement") {
+    formTemplate.deleteDisabledMessage =
+      "Cannot delete only Key Management instance";
+  } else if (form === "resourceGroups") {
+    formTemplate.deleteDisabledMessage = "Cannot delete only resource group";
+  }
+}
+
 module.exports = {
   setFormRgList,
   defaultFormTemplate,
-  setFormVpcList
+  setFormVpcList,
+  setFormEncryptionKeyList,
+  setFormSubnetList,
+  setDeleteDisabledMessage
 };

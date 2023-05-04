@@ -257,6 +257,11 @@ describe("clusters", () => {
         null,
         "it should be null"
       );
+      assert.deepEqual(
+        state.store.json.clusters[0].worker_pools[0].resource_group,
+        null,
+        "it should be null"
+      );
     });
     it("should set cos to null if deleted", () => {
       let state = new newState();

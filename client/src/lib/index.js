@@ -38,7 +38,10 @@ const {
   defaultFormTemplate,
   hasOverlappingCidr,
   invalidCidr,
-  invalidCidrText
+  invalidCidrText,
+  setFormEncryptionKeyList,
+  setFormSubnetList,
+  setDeleteDisabledMessage
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -206,5 +209,8 @@ module.exports = {
   setFormVpcList,
   hasOverlappingCidr,
   invalidCidr,
-  invalidCidrText
+  invalidCidrText,
+  setFormEncryptionKeyList,
+  setFormSubnetList,
+  setDeleteDisabledMessage
 };

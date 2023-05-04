@@ -36,7 +36,10 @@ import {
   disableSshKeyDelete,
   setFormRgList,
   defaultFormTemplate,
-  setFormVpcList
+  setFormVpcList,
+  setFormEncryptionKeyList,
+  setFormSubnetList,
+  setDeleteDisabledMessage
 } from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
@@ -192,16 +195,9 @@ function formProps(form, craig) {
   formTemplate.docs = RenderDocs(jsonField);
   setFormRgList(form, formTemplate, craig);
   setFormVpcList(form, formTemplate, craig);
-
-  // add encryption keys
-  if (contains(["secretsManager", "clusters", "vsi"], form)) {
-    formTemplate.innerFormProps.encryptionKeys = craig.store.encryptionKeys;
-  }
-
-  // add subnets
-  if (contains(["clusters", "vpn", "vpe", "vsi"], form)) {
-    formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
-  }
+  setFormEncryptionKeyList(form, formTemplate, craig);
+  setFormSubnetList(form, formTemplate, craig);
+  setDeleteDisabledMessage(form, formTemplate);
 
   // add security groups
   if (contains(["vpe", "vsi", "lb"], form)) {
@@ -210,13 +206,9 @@ function formProps(form, craig) {
   }
 
   if (form === "resourceGroups") {
-    /**
-     * resource groups
-     */
     formTemplate.deleteDisabled = () => {
       return craig.store.json.resource_groups.length === 1;
     };
-    formTemplate.deleteDisabledMessage = "Cannot delete only resource group";
     formTemplate.innerFormProps.helperTextCallback = resourceGroupHelperTextCallback;
   } else if (form === "keyManagement") {
     /**
@@ -225,8 +217,6 @@ function formProps(form, craig) {
     formTemplate.deleteDisabled = () => {
       return craig.store.json.key_management.length === 1;
     };
-    formTemplate.deleteDisabledMessage =
-      "Cannot delete only Key Management instance";
     transpose(
       {
         invalidKeyCallback: invalidName("encryption_keys"),
@@ -348,8 +338,6 @@ function formProps(form, craig) {
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
     formTemplate.deleteDisabled = disableSshKeyDelete;
-    formTemplate.deleteDisabledMessage =
-      "Cannot delete SSH Keys in use by Virtual Servers";
   } else if (form === "transitGateways") {
     formTemplate.innerFormProps.readOnlyName = false;
   } else if (form === "securityGroups") {

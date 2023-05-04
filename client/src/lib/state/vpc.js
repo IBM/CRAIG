@@ -704,6 +704,11 @@ function naclSave(config, stateData, componentProps) {
   new revision(config.store.json)
     .child("vpcs", componentProps.vpc_name, "name")
     .child("acls", componentProps.data.name)
+    .then(data => {
+      data.rules.forEach(rule => {
+        rule.acl = stateData.name;
+      });
+    })
     .update(stateData);
 }
 

@@ -274,6 +274,108 @@ resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
           name: "management",
           resource_group: "slz-management-rg",
           vpc: "management",
+          rules: [
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound-8080",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: 8080,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound-8080",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              udp: {
+                port_min: 8080,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound-8080",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: 1,
+                code: 2,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+          ],
         },
         {
           _options: {
@@ -298,6 +400,191 @@ resource "ibm_is_network_acl" "management_management_acl" {
     "hello",
     "world"
   ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should format network acl with nested rules", () => {
+      let actualData = formatAcl(
+        {
+          name: "management",
+          resource_group: "slz-management-rg",
+          vpc: "management",
+          rules: [
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound-8080",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: 8080,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound-8080",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              udp: {
+                port_min: 8080,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              acl: "management",
+              vpc: "management",
+              action: "allow",
+              destination: "10.0.0.0/8",
+              direction: "inbound",
+              name: "allow-ibm-inbound-8080",
+              source: "161.26.0.0/16",
+              icmp: {
+                type: 1,
+                code: 2,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+          ],
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-management-rg",
+            },
+          ],
+        },
+        true
+      );
+      let expectedData = `
+resource "ibm_is_network_acl" "management_management_acl" {
+  name           = "iac-management-management-acl"
+  vpc            = ibm_is_vpc.management_vpc.id
+  resource_group = var.slz_management_rg_id
+  tags = [
+    "hello",
+    "world"
+  ]
+  rules {
+    source      = "161.26.0.0/16"
+    action      = "allow"
+    destination = "10.0.0.0/8"
+    direction   = "inbound"
+    name        = "allow-ibm-inbound"
+  }
+  rules {
+    source      = "161.26.0.0/16"
+    action      = "allow"
+    destination = "10.0.0.0/8"
+    direction   = "inbound"
+    name        = "allow-ibm-inbound-8080"
+    tcp {
+      port_min        = 8080
+      port_max        = null
+      source_port_min = null
+      source_port_max = null
+    }
+  }
+  rules {
+    source      = "161.26.0.0/16"
+    action      = "allow"
+    destination = "10.0.0.0/8"
+    direction   = "inbound"
+    name        = "allow-ibm-inbound-8080"
+    udp {
+      port_min        = 8080
+      port_max        = null
+      source_port_min = null
+      source_port_max = null
+    }
+  }
+  rules {
+    source      = "161.26.0.0/16"
+    action      = "allow"
+    destination = "10.0.0.0/8"
+    direction   = "inbound"
+    name        = "allow-ibm-inbound-8080"
+    icmp {
+      type = 1
+      code = 2
+    }
+  }
 }
 `;
       assert.deepEqual(

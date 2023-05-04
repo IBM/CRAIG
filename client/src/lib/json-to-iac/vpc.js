@@ -204,8 +204,8 @@ function formatSubnet(subnet, config, useVarRef) {
  * @returns {object} terraform code
  */
 
-function ibmIsNetworkAcl(acl, config) {
-  return {
+function ibmIsNetworkAcl(acl, config, useRules) {
+  let aclData = {
     name: `${acl.vpc} ${acl.name} acl`,
     data: {
       name: kebabName(config, [acl.vpc, acl.name, "acl"]),
@@ -214,16 +214,51 @@ function ibmIsNetworkAcl(acl, config) {
       tags: getTags(config)
     }
   };
+  if (useRules) {
+    aclData.data.rules = [];
+    acl.rules.forEach(rule => {
+      let ruleValues = {
+        action: rule.action,
+        destination: rule.destination,
+        direction: rule.direction,
+        name: rule.name,
+        source: rule.source
+      };
+      ["icmp", "tcp", "udp"].forEach(protocol => {
+        let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
+        if (ruleHasProtocolData && protocol === "icmp") {
+          ruleValues.icmp = [
+            {
+              type: rule.icmp.type,
+              code: rule.icmp.code
+            }
+          ];
+        } else if (ruleHasProtocolData) {
+          ruleValues[protocol] = [
+            {
+              port_min: rule[protocol].port_min,
+              port_max: rule[protocol].port_max,
+              source_port_min: rule[protocol].source_port_min,
+              source_port_max: rule[protocol].source_port_max
+            }
+          ];
+        }
+      });
+      aclData.data.rules.push(ruleValues)
+    })
+  }
+  return aclData;
 }
 
 /**
  * format network acl
  * @param {Object} acl
  * @param {Object} config
+ * @param {boolean=} useRules create rules within acl block
  * @returns {string} terraform code
  */
-function formatAcl(acl, config) {
-  let data = ibmIsNetworkAcl(acl, config);
+function formatAcl(acl, config, useRules) {
+  let data = ibmIsNetworkAcl(acl, config, useRules);
   return jsonToTfPrint("resource", "ibm_is_network_acl", data.name, data.data);
 }
 
@@ -494,10 +529,7 @@ function vpcModuleTf(files, config) {
     };
 
     vpc.acls.forEach(acl => {
-      let aclData = formatAcl(acl, cloneConfig);
-      acl.rules.forEach(rule => {
-        aclData += formatAclRule(rule);
-      });
+      let aclData = formatAcl(acl, cloneConfig, true);
       let data = tfBlock(
         snakeCase(`${acl.vpc} ${acl.name} acl`),
         aclData

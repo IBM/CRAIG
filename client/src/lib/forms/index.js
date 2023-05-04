@@ -48,7 +48,10 @@ const {
 const {
   setFormRgList,
   defaultFormTemplate,
-  setFormVpcList
+  setFormVpcList,
+  setFormEncryptionKeyList,
+  setFormSubnetList,
+  setDeleteDisabledMessage
 } = require("./form-props");
 module.exports = {
   hasDuplicateName,
@@ -93,5 +96,8 @@ module.exports = {
   hasOverlappingCidr,
   invalidCidr,
   invalidCidrText,
-  invalidCrnList
+  invalidCrnList,
+  setFormEncryptionKeyList,
+  setFormSubnetList,
+  setDeleteDisabledMessage
 };

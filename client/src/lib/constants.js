@@ -446,6 +446,8 @@ module.exports = {
     "routingTables",
     "lb"
   ],
+  encryptionKeyForms: ["secretsManager", "clusters", "vsi"],
+  subnetForms: ["clusters", "vpn", "vpe", "vsi"],
   toggleFormPages: [
     "activityTracker",
     "securityComplianceCenter",

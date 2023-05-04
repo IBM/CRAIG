@@ -78,6 +78,7 @@ function clusterOnStoreUpdate(config) {
       cluster.worker_pools.forEach(pool => {
         pool.cluster = cluster.name;
         pool.subnets = deleteUnfoundArrayItems(vpcSubnets, pool.subnets);
+        setUnfoundResourceGroup(config, pool);
       });
     }
   });
@@ -134,7 +135,6 @@ function clusterDelete(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function clusterWorkerPoolCreate(config, stateData, componentProps) {
-  
   let newPool = { subnets: [] };
   new revision(config.store.json)
     .child("clusters", componentProps.innerFormProps.arrayParentName, "name") // get config cluster
