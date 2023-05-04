@@ -173,6 +173,21 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+    it("should return correct variables.tf without ssh key variable when it's using data", () => {
+      let dataSshNw = { ...slzNetwork };
+      dataSshNw.ssh_keys = [
+        {
+          "name": "slz-ssh-key",
+          "use_data": true
+        }
+      ];
+      let actualData = configToFilesJson(dataSshNw);
+      assert.deepEqual(
+        actualData["variables.tf"],
+        slzNetworkFiles["variables.tf"].replace(/variable\s"slz_ssh[^#]+/, ""),
+        "it should create file without ssh key variable"
+      );
+    });
     it("should return correct craig.json", () => {
       let actualData = configToFilesJson({ ...slzNetwork });
       assert.deepEqual(

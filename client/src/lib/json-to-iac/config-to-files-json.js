@@ -30,8 +30,9 @@ function configToFilesJson(config) {
   try {
     let additionalVariables = "";
     let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
-    if (config.ssh_keys.length > 0) {
-      config.ssh_keys.forEach(key => {
+    let newSshKeys = config.ssh_keys.filter(key => !key.use_data);
+    if (newSshKeys.length > 0) {
+      newSshKeys.forEach(key => {
         additionalVariables += `
 variable "${snakeCase(key.name)}_public_key" {
   description = "Public SSH Key Value for ${titleCase(key.name).replace(

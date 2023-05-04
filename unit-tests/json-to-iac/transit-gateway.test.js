@@ -156,5 +156,108 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
         "it should return correct data"
       );
     });
+
+    it("should return terraform for multiple transit gateways", () => {
+      let config = { ...slzNetwork };
+      config.transit_gateways = [
+        {
+          "name": "transit-gateway",
+          "resource_group": "service-rg",
+          "global": false,
+          "connections": [
+            {
+              "tgw": "transit-gateway",
+              "vpc": "management"
+            },
+            {
+              "tgw": "transit-gateway",
+              "vpc": "workload"
+            }
+          ]
+        },
+        {
+          "global": true,
+          "connections": [
+            {
+              "tgw": "m",
+              "vpc": "management"
+            }
+          ],
+          "resource_group": "service-rg",
+          "name": "m",
+          "crns": []
+        }
+      ];
+      let actualData = tgwTf(config);
+      let expectedData = `##############################################################################
+# Transit Gateway Transit Gateway
+##############################################################################
+
+resource "ibm_tg_gateway" "transit_gateway" {
+  name           = "slz-transit-gateway"
+  location       = "us-south"
+  global         = false
+  resource_group = ibm_resource_group.service_rg.id
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
+  gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "vpc"
+  name         = "slz-transit-gateway-management-hub-connection"
+  network_id   = module.management_vpc.crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
+  gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "vpc"
+  name         = "slz-transit-gateway-workload-hub-connection"
+  network_id   = module.workload_vpc.crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# M Transit Gateway
+##############################################################################
+
+resource "ibm_tg_gateway" "m" {
+  name           = "slz-m"
+  location       = "us-south"
+  global         = true
+  resource_group = ibm_resource_group.service_rg.id
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+resource "ibm_tg_connection" "m_to_management_connection" {
+  gateway      = ibm_tg_gateway.m.id
+  network_type = "vpc"
+  name         = "slz-m-management-hub-connection"
+  network_id   = module.management_vpc.crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+##############################################################################
+`;
+     
+      assert.deepEqual(actualData, expectedData, "it should create correct tf for multiple tgw");
+    });
   });
 });

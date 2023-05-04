@@ -95,12 +95,15 @@ function formatTgwConnection(connection, config) {
  */
 function tgwTf(config) {
   let tf = "";
-  config.transit_gateways.forEach(gw => {
+  config.transit_gateways.forEach((gw, index) => {
     let blockData = formatTgw(gw, config);
     gw.connections.forEach(
       connection => (blockData += formatTgwConnection(connection, config))
     );
     tf += tfBlock(gw.name + " Transit Gateway", blockData);
+    if (index !== config.transit_gateways.length - 1) {
+      tf += "\n";
+    }
   });
   return tfDone(tf);
 }
