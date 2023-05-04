@@ -1,0 +1,439 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-template-code-engine
+spec:
+  params:
+    - name: ibmcloud-api
+      description: the ibmcloud api
+      default: https://cloud.ibm.com
+    - name: repository
+      description: the git repo containing source code. If empty, the repository url will be found from toolchain
+      default: ""
+    - name: branch
+      description: the branch for the git repo
+      default: "master"
+    - name: revision
+      description: the git revision/commit for the git repo
+      default: ""
+    - name: git-token
+      description: access token for the git repo
+      default: ""
+    - name: fail-on-lint-errors
+      description: force failure of task when docker lint errors are found
+      default: "true"
+    - name: fail-on-scanned-issues
+      description: force failure of task when vulnerability advisor scan issues are found
+      default: "false"
+    - name: path-to-context
+      default: "."
+    - name: path-to-dockerfile
+      default: "."
+    - name: dockerfile
+      default: "Dockerfile"
+    - name: registry-region
+      description: The IBM Cloud region for image registry
+    - name: registry-namespace
+      description: container registry namespace
+    - name: registry-create-namespace
+      description: create container registry namespace if it doesn't already exists
+      default: "true"
+    - name: app-name
+      description: application name
+    - name: image-name
+      description: image name
+    - name: region
+      description: region of application deployment
+    - name: resource-group
+      description: resource group for the application deployment
+    - name: code-engine-project
+      description: Code Engine project for the application deployment
+    - name: pipeline-debug
+      description: Pipeline debug mode. Value can be 0 or 1. Default to 0
+      default: "0"
+    - name: custom-script
+      description: The command(s) to run the build in run-build step. It will override the default commands
+
+    - name: cpu
+      description: number of vCPU of the Code Engine application
+      default: "0.25"
+    - name: max-scale
+      description: maximum scale of the Code Engine application
+      default: "1"
+    - name: memory
+      description: total memory of the Code Engine application
+      default: "0.5G"
+    - name: min-scale
+      description: minimum scale of the Code Engine application
+      default: "0"
+    - name: port
+      description: port where the application is listening
+      default: "http1:8080"
+    - name: service-bindings
+      description: service binding JSON for the application deployment
+      default: "{}"
+    - name: ephemeral-storage
+      description: The amount of ephemeral storage to set for the instance of the application.
+      default: "0.4G"
+    - name: craig-api-key
+      description: API Key for CRAIG application
+      default: ""
+
+      #For health task
+    - name: health-endpoint
+      description: application health endpoint, e.g. /health
+      default: ""
+    - name: deployment-timeout
+      description: maximum timeout for the application deployment.
+      default: "300"
+
+      #Cra specific params
+    - name: apikey
+      description: The ibmcloud api key
+    - name: ibmcloud-region
+      description: (Optional) ibmcloud region to use
+      default: ""
+
+    # Common command related params
+    - name: env-props
+      description: (Optional) A custom configuration of environment properties to source before execution, ex. 'export ABC=123 export DEF=456'
+      default: ""
+    - name: fileignore
+      description: (Optional) Filepath to .fileignore
+      default: ""
+    - name: ibmcloud-trace
+      description: (Optional) Enables IBMCLOUD_TRACE for ibmcloud cli logging
+      default: "false"
+    - name: output
+      description: (Optional) Prints command result to console
+      default: "false"
+    - name: path
+      description: Repository path to scan
+      default: "/artifacts"
+    - name: strict
+      description: (Optional) Enables strict mode for scanning
+      default: "false"
+    - name: toolchainid
+      description: (Optional) The target toolchain id to be used. Defaults to the current toolchain id
+      default: ""
+    - name: verbose
+      description: (Optional) Enable verbose log messages
+      default: "false"
+
+    # BOM related params
+    - name: asset-type
+      description: Security checks to run (apps, image, os, all)
+      default: "all"
+    - name: bom-report
+      description: Filepath to store generated Bill of Materials
+      default: "bom.json"
+    - name: docker-build-flags
+      description: (Optional) Customize docker build command for build stage scanning
+      default: ""
+    - name: docker-build-context
+      description: (Optional) If specified, CRA will use the directory in the path parameter as docker build context
+    - name: dockerfile-pattern
+      description: (Optional) Pattern to identify Dockerfile in the repository
+    - name: docker-registry-secret
+      description: Secret to authenticate for docker-registry-url
+    - name: docker-registry-url
+      description: Registry url to use for docker login
+      default: ""
+    - name: docker-registry-username
+      description: Username to authenticate for docker-registry-url
+      default: ""
+    - name: gradle-exclude-configs
+      description: (Optional) Exclude gradle configurations, ex. 'runtimeClasspath,testCompileClasspath'
+      default: ""
+    - name: maven-exclude-scopes
+      description: (Optional) Exclude maven scopes, ex. 'test,compile'
+      default: ""
+    - name: nodejs-create-package-lock
+      description: (Optional) Enable the task to build the package-lock.json for node.js projects
+      default: "false"
+    - name: prev-report
+      description: Filepath to previous BoM report to skip Dockerfile or application manifest scans
+      default: ""
+
+    # Deploy Analytic related params
+    - name: deploy-report
+      description: Filepath to store generated Deploy Analytic report
+      default: "deploy.json"
+
+    # Vulnerability related params
+    - name: cveignore
+      description: (Optional) Filepath to cveignore
+      default: ""
+    - name: exclude-dev
+      description: (Optional) Exclude dev dependencies during vulnerability scan
+      default: "false"
+    - name: vulnerability-report
+      description: Filepath to store Vulnerability report, not stored if empty
+      default: "vulnerability.json"
+
+    # User control params
+    - name: cra-scan-image
+      description: Image to use for `scan` task
+      default: "icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.9"
+
+    # BuildPack related params
+    - name: size
+      description:  The size to use for the build, which determines the amount of resources used. Valid values include small, medium, large, xlarge.
+      default: "medium"  
+    - name: build-strategy
+      description:  The strategy to use for building the image. Valid values are 'dockerfile' and 'buildpacks'. 
+      default: "dockerfile"
+    - name: deployment-type
+      description:  Specifies the type of deployment. Valid values are 'application' and 'job'. 
+      default: "application"
+    - name: maxexecutiontime
+      description: The maximum execution time in seconds for runs of the job. 
+      default: "7200"
+
+  resourcetemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: code-engine-$(uid)-pvc
+      spec:
+        resources:
+          requests:
+            storage: 5Gi
+        volumeMode: Filesystem
+        accessModes:
+          - ReadWriteOnce
+    - apiVersion: v1
+      kind: Secret
+      metadata:
+        name: cd-secret
+      type: Opaque
+      stringData:
+        API_KEY: $(params.apikey)
+        DOCKER_SECRET: $(params.docker-registry-secret)
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: code-engine-$(uid)
+      spec:
+        pipelineRef:
+          name: code-engine-pipeline
+        params:
+          - name: apikey
+            value: $(params.apikey)
+          - name: ibmcloud-api
+            value: $(params.ibmcloud-api)
+          - name: repository
+            value: $(params.repository)
+          - name: branch
+            value: $(params.branch)
+          - name: revision
+            value: $(params.revision)
+          - name: git-token
+            value: $(params.git-token)
+          - name: fail-on-lint-errors
+            value: $(params.fail-on-lint-errors)
+          - name: fail-on-scanned-issues
+            value: $(params.fail-on-scanned-issues)
+          - name: path-to-context
+            value: $(params.path-to-context)
+          - name: path-to-dockerfile
+            value: $(params.path-to-dockerfile)
+          - name: dockerfile
+            value: $(params.dockerfile)
+          - name: registry-region
+            value: $(params.registry-region)
+          - name: registry-namespace
+            value: $(params.registry-namespace)
+          - name: registry-create-namespace
+            value: $(params.registry-create-namespace)
+          - name: app-name
+            value: $(params.app-name)
+          - name: image-name
+            value: $(params.image-name)
+          - name: region
+            value: $(params.region)
+          - name: resource-group
+            value: $(params.resource-group)
+          - name: code-engine-project
+            value: $(params.code-engine-project)
+          - name: service-bindings
+            value: $(params.service-bindings)
+          - name: cpu
+            value: $(params.cpu)
+          - name: max-scale
+            value: $(params.max-scale)
+          - name: memory
+            value: $(params.memory)
+          - name: min-scale
+            value: $(params.min-scale)
+          - name: port
+            value: $(params.port)
+          - name: health-endpoint
+            value: $(params.health-endpoint)
+          - name: pipeline-debug
+            value: $(params.pipeline-debug)
+          - name: custom-script
+            value: $(params.custom-script)
+          - name: deployment-timeout
+            value: $(params.deployment-timeout)
+          - name: ephemeral-storage
+            value: $(params.ephemeral-storage)
+          - name: craig-api-key
+            value: $(params.craig-api-key)
+          #cra specific
+          - name: ibmcloud-region
+            value: $(params.ibmcloud-region)
+          - name: env-props
+            value: $(params.env-props)
+          - name: fileignore
+            value: $(params.fileignore)
+          - name: ibmcloud-trace
+            value: $(params.ibmcloud-trace)
+          - name: output
+            value: $(params.output)
+          - name: path
+            value: $(params.path)
+          - name: strict
+            value: $(params.strict)
+          - name: toolchainid
+            value: $(params.toolchainid)
+          - name: verbose
+            value: $(params.verbose)
+          - name: asset-type
+            value: $(params.asset-type)
+          - name: bom-report
+            value: $(params.bom-report)
+          - name: docker-build-flags
+            value: $(params.docker-build-flags)
+          - name: docker-build-context
+            value: $(params.docker-build-context)
+          - name: dockerfile-pattern
+            value: $(params.dockerfile-pattern)
+          - name: docker-registry-url
+            value: $(params.docker-registry-url)
+          - name: docker-registry-username
+            value: $(params.docker-registry-username)
+          - name: gradle-exclude-configs
+            value: $(params.gradle-exclude-configs)
+          - name: maven-exclude-scopes
+            value: $(params.maven-exclude-scopes)
+          - name: nodejs-create-package-lock
+            value: $(params.nodejs-create-package-lock)
+          - name: prev-report
+            value: $(params.prev-report)
+          - name: deploy-report
+            value: $(params.deploy-report)
+          - name: cveignore
+            value: $(params.cveignore)
+          - name: exclude-dev
+            value: $(params.exclude-dev)
+          - name: vulnerability-report
+            value: $(params.vulnerability-report)
+          - name: cra-scan-image
+            value: $(params.cra-scan-image)
+          - name: size
+            value: $(params.size)
+          - name: build-strategy
+            value: $(params.build-strategy)
+          - name: deployment-type
+            value: $(params.deployment-type)
+          - name: maxexecutiontime
+            value: $(params.maxexecutiontime)
+        workspaces:
+          - name: pipeline-ws
+            persistentVolumeClaim:
+              claimName: code-engine-$(uid)-pvc
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: trigger-binding-manual
+spec:
+  params:
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: manual-run
+spec:
+  triggers:
+    - binding:
+        name: trigger-binding-manual
+      template:
+        name: trigger-template-code-engine
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-commit
+spec:
+  params:
+    - name: repository
+      value: "$(event.repository.url)"
+    - name: branch
+      value: "$(event.ref)"
+    - name: revision
+      value: "$(event.head_commit.id)"
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: github-commit
+spec:
+  triggers:
+    - binding:
+        name: github-commit
+      template:
+        name: trigger-template-code-engine
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: grit-or-gitlab-commit
+spec:
+  params:
+    - name: repository
+      value: "$(event.repository.git_http_url)"
+    - name: branch
+      value: "$(event.ref)"
+    - name: revision
+      value: "$(event.checkout_sha)"
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: grit-or-gitlab-commit
+spec:
+  triggers:
+    - binding:
+        name: grit-or-gitlab-commit
+      template:
+        name: trigger-template-code-engine
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: bitbucket-commit
+spec:
+  params:
+    - name: repository
+      value: "$(event.repository.links.html.href)"
+    - name: revision
+      value: "$(event.push.changes[0].new.target.hash)"
+    - name: branch
+      value: "$(event.push.changes[0].new.name)"
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: bitbucket-commit
+spec:
+  triggers:
+    - binding:
+        name: bitbucket-commit
+      template:
+        name: trigger-template-code-engine

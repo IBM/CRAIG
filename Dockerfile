@@ -2,7 +2,7 @@
 #   docker build . --build-arg api_key=$API_KEY -t craig
 #   docker run -it craig
 # pull base image
-FROM node:alpine as build
+FROM node as build
 WORKDIR /app
 COPY . ./
 RUN npm install react-scripts sass cdktf cdktf-cli@latest -g
