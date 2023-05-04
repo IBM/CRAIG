@@ -54,7 +54,7 @@ function getTierSubnets(tier, vpc) {
 function getSubnetTierStateData(tier, vpc) {
   let state = { hide: true };
   let subnets = getTierSubnets(tier, vpc)(tier);
-  state.networkAcl = splat(subnets, "network_acl")[0];
+  state.networkAcl = tier.advanced ? "-" : splat(subnets, "network_acl")[0];
   state.addPublicGateway = false;
   subnets.forEach(subnet => {
     if (subnet.public_gateway === true) {

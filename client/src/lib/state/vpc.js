@@ -465,7 +465,7 @@ function subnetTierSave(config, stateData, componentProps) {
         name: tierName,
         zones: tierZones
       };
-
+      
       // if is advanced and subnet tier matches data
       if (stateData.advanced && componentProps.data.name === tier.name) {
         tierData.advanced = true;
@@ -477,10 +477,14 @@ function subnetTierSave(config, stateData, componentProps) {
           tierData,
           vpcName,
           newTierName,
-          vpcIndex
+          vpcIndex,
+          tier.advanced && componentProps.data.name !== tier.name
         );
-      }
-      newTiers.push(tierData);
+        newTiers.push(tierData);
+      } else if (tier.advanced) {
+        newTiers.push(tier)
+      } else  newTiers.push(tierData);
+      
     }
   });
 

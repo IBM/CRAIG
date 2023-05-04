@@ -6,7 +6,7 @@ const {
   splatContains,
   arraySplatIndex,
   carve,
-  revision
+  revision,
 } = require("lazy-z");
 
 /**
@@ -225,6 +225,7 @@ function saveAdvancedSubnetTier(
   newTierName,
   vpcIndex
 ) {
+  tierData.networkAcl = "-";
   tierData.zones = undefined;
   tierData.select_zones = stateData.select_zones; // set select zone
   tierData.subnets = []; // set individual subnet managament
@@ -232,7 +233,7 @@ function saveAdvancedSubnetTier(
     // get subnets
     let foundSubnets = data.subnets.filter(subnet =>
       componentProps.data.advanced
-        ? subnet.tier === componentProps.data.name
+        ? subnet.tier === newTierName
         : subnet.name.startsWith(oldTierName)
     );
     let nextTierSubnets = [];
@@ -260,8 +261,8 @@ function saveAdvancedSubnetTier(
         if (!splatContains(nextTierSubnets, "zone", zone)) {
           data.subnets.push({
             name: newTierName + "-zone-" + zone,
-            cidr: null,
-            network_acl: null,
+            cidr: "",
+            network_acl: "",
             public_gateway: false,
             zone: zone,
             vpc: componentProps.vpc_name,

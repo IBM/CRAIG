@@ -237,6 +237,7 @@ function disableSave(field, stateData, componentProps, craig) {
       let invalidCidrRange = Number(stateData.cidr.split("/")[1]) <= 12;
       return (
         invalidCidrRange ||
+        stateData.cidr.indexOf("/") === -1 ||
         invalidName("subnet", craig)(stateData, componentProps) ||
         badField("network_acl", stateData)
       );

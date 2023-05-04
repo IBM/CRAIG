@@ -169,5 +169,16 @@ describe("state data", () => {
       };
       assert.deepEqual(actualData, expectedData, "it should return vpcs");
     });
+    it("should set network acl to - when advanced", () => {
+      let vpc = newDefaultVpcs()[0];
+      vpc.subnets.forEach((subnet) => {
+        subnet.public_gateway = true;
+      });
+      let actualData = getSubnetTierStateData(
+        { name: "vsi", zones: 3, advanced: true, select_zones: [1, 2, 3], subnets:[] },
+        vpc
+      );
+      assert.deepEqual(actualData.networkAcl, "-", "it should return vpcs");
+    });
   });
 });

@@ -1685,10 +1685,166 @@ describe("vpcs", () => {
           advanced: true,
           subnets: ["frog-zone-1", "frog-zone-2"],
           zones: undefined,
+          networkAcl: "-",
         };
         assert.deepEqual(
           vpcState.store.subnetTiers.management[0],
           expectedTier,
+          "it should change subnets"
+        );
+        assert.deepEqual(
+          vpcState.store.json.vpcs[0].subnets,
+          expectedData,
+          "it should change subnets"
+        );
+      });
+      it("should save advanced subnet tier with an existing advanced tier and both should have correct tier data in store", () => {
+        let vpcState = newState();
+        let expectedData = [
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.10.0/24",
+            name: "frog-zone-1",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: true,
+            tier: "frog",
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.30.0/24",
+            name: "vpn-zone-1",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: true,
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.10.0/24",
+            name: "frog-zone-2",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: true,
+            tier: "frog",
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.20.0/24",
+            name: "toad-zone-1",
+            resource_group: "management-rg",
+            network_acl: "management",
+            public_gateway: false,
+            has_prefix: true,
+            tier: "toad"
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.20.0/24",
+            name: "toad-zone-2",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: true,
+            tier: "toad"
+          }
+        ];
+        vpcState.vpcs.subnetTiers.save(
+          {
+            name: "frog",
+            select_zones: [1, 2],
+            advanced: true,
+          },
+          {
+            vpc_name: "management",
+            data: { name: "vsi" },
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "management",
+                      publicGateways: [],
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        );
+        assert.deepEqual(
+          vpcState.store.subnetTiers.management,
+          [
+            {
+              name: "frog",
+              select_zones: [1, 2],
+              advanced: true,
+              subnets: ["frog-zone-1", "frog-zone-2"],
+              zones: undefined,
+              networkAcl: "-",
+            },
+            {
+              name: "vpe",
+              zones: 3,
+            },
+            {
+              name: "vpn",
+              zones: 1,
+            },
+          ],
+          "it should change subnets"
+        );
+        vpcState.vpcs.subnetTiers.save(
+          {
+            name: "toad",
+            select_zones: [1, 2],
+            advanced: true,
+          },
+          {
+            vpc_name: "management",
+            data: { name: "vpe" },
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "management",
+                      publicGateways: [],
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        );
+        assert.deepEqual(
+          vpcState.store.subnetTiers.management,
+          [
+            {
+              name: "frog",
+              zones: undefined,
+              advanced: true,
+              networkAcl: "-",
+              select_zones: [1, 2],
+              subnets: ["frog-zone-1", "frog-zone-2"],
+            },
+            {
+              name: "toad",
+              zones: undefined,
+              advanced: true,
+              networkAcl: "-",
+              select_zones: [1, 2],
+              subnets: ["toad-zone-1", "toad-zone-2"],
+            },
+            { name: "vpn", zones: 1 },
+          ],
           "it should change subnets"
         );
         assert.deepEqual(
@@ -1754,7 +1910,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: null,
+            cidr: "",
             name: "frog-zone-2",
             network_acl: null,
             resource_group: "management-rg",
@@ -1765,7 +1921,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: null,
+            cidr: "",
             name: "frog-zone-3",
             network_acl: null,
             resource_group: "management-rg",
@@ -1826,6 +1982,7 @@ describe("vpcs", () => {
           advanced: true,
           subnets: ["frog-zone-1", "frog-zone-2", "frog-zone-3"],
           zones: undefined,
+          networkAcl: "-",
         };
         assert.deepEqual(
           vpcState.store.subnetTiers.management[0],
