@@ -59,11 +59,12 @@ variable "tmos_admin_password" {
     let files = {
       "main.tf": mainTf.replace("$REGION", `"${config._options.region}"`),
       "flow_logs.tf": flowLogsTf(config),
-      "transit_gateways.tf": tgwTf(config),
+      "transit_gateways.tf":
+        config.transit_gateways.length > 0 ? tgwTf(config) : null,
       "virtual_private_endpoints.tf": vpeTf(config),
-      "virtual_servers.tf": vsiTf(config),
+      "virtual_servers.tf": config.vsi.length > 0 ? vsiTf(config) : null,
       "clusters.tf": clusterTf(config),
-      "vpn_gateways.tf": vpnTf(config),
+      "vpn_gateways.tf": config.vpn_gateways.length > 0 ? vpnTf(config) : null,
       "variables.tf": variablesTf.replace(
         "$ADDITIONAL_VALUES",
         additionalVariables
@@ -74,7 +75,7 @@ variable "tmos_admin_password" {
       "versions.tf": versionsTf,
       "secrets_manager.tf":
         config.secrets_manager.length > 0 ? secretsManagerTf(config) : null,
-      "ssh_keys.tf": sshKeyTf(config),
+      "ssh_keys.tf": config.ssh_keys.length > 0 ? sshKeyTf(config) : null,
       "atracker.tf": atrackerTf(config),
       "craig.json": prettyJSON(config),
       "appid.tf": config.appid.length > 0 ? appidTf(config) : null,
@@ -92,7 +93,7 @@ variable "tmos_admin_password" {
       "cbr.tf":
         config.cbr_zones.length > 0 && config.cbr_rules.length > 0
           ? cbrTf(config)
-          : null,
+          : null
     };
     vpcModuleTf(files, config);
     return files;

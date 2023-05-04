@@ -42,12 +42,42 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+    it("should return correct transit_gateways.tf", () => {
+      let nw = { ...slzNetwork };
+      nw.transit_gateways = [];
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(
+        actualData["transit_gateways.tf"],
+        null,
+        "it should be null"
+      );
+    });
     it("should return correct vpn_gateways.tf", () => {
       let actualData = configToFilesJson({ ...slzNetwork });
       assert.deepEqual(
         actualData["vpn_gateways.tf"],
         slzNetworkFiles["vpn_gateways.tf"],
         "it should create file"
+      );
+    });
+    it("should return correct vpn_gateways.tf", () => {
+      let nw = { ...slzNetwork };
+      nw.vpn_gateways = [];
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(
+        actualData["vpn_gateways.tf"],
+        null,
+        "it should be null"
+      );
+    });
+    it("should return correct vpn_gateways.tf", () => {
+      let nw = { ...slzNetwork };
+      nw.vsi = [];
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(
+        actualData["virtual_servers.tf"],
+        null,
+        "it should be null"
       );
     });
     it("should return correct virtual_private_endpoints.tf", () => {
