@@ -106,8 +106,9 @@ function disableSave(field, stateData, componentProps, craig) {
     );
   } else if (field === "atracker") {
     return (
-      fieldsAreBad(["bucket", "cos_key"], stateData) ||
-      isEmpty(stateData.locations)
+      stateData.enabled &&
+      (fieldsAreBad(["bucket", "cos_key"], stateData) ||
+        isEmpty(stateData.locations))
     );
   } else if (field === "access_groups") {
     return invalidName("access_groups")(stateData, componentProps);

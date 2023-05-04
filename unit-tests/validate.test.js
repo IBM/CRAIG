@@ -952,9 +952,26 @@ function defaultAcl() {
 
 describe("validate", () => {
   describe("atracker", () => {
+    it("should not throw an error if atracker is not enabled even with null bucket/key", () => {
+      let testData = minimumValidJson({
+        atracker: {
+          enabled: false,
+          bucket: null,
+          cos_key: null,
+        },
+      });
+      let task = () => {
+        validate(testData);
+      };
+      assert.doesNotThrow(
+        task,
+        "should not throw if atracker is not enabled"
+      );
+    });
     it("should throw an error if atracker bucket name is null", () => {
       let testData = minimumValidJson({
         atracker: {
+          enabled: true,
           add_route: false,
           receive_global_events: false,
           resource_group: "slz-service-rg",

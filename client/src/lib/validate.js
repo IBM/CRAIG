@@ -300,14 +300,15 @@ const validate = function(json) {
   });
 
   // object storage
-  // atracker must have bucket name
-  if (json.atracker.bucket === null) {
+  // atracker must have bucket name if enabled
+  if (json.atracker.enabled && json.atracker.bucket === null) {
     throw new Error(simpleErrors.invalidAtrackerBucket);
   } else {
     // for each cos instance
     json.object_storage.forEach(instance => {
       if (
-        // if the bucket name is found in the instance
+        // if the bucket name is found in the instance with atracker enabled
+        json.atracker.enabled &&
         contains(splat(instance.buckets, "name"), json.atracker.bucket) &&
         // and instance has no keys
         instance.keys.length === 0
@@ -367,8 +368,10 @@ const validate = function(json) {
   });
 
   // atracker
-  nullEncryptionKeyTest("Atracker", json.atracker, {}, "cos_key");
-  validationTest("Atracker", json.atracker, "bucket", "bucket");
+  if (json.atracker.enabled) {
+    nullEncryptionKeyTest("Atracker", json.atracker, {}, "cos_key");
+    validationTest("Atracker", json.atracker, "bucket", "bucket");
+  }
 
   // vpcs
   json.vpcs.forEach(network => {
