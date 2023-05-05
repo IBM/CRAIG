@@ -31,6 +31,9 @@ function loadBalancerInit(config) {
  */
 function loadBalancerOnStoreUpdate(config) {
   config.store.json.load_balancers.forEach(lb => {
+    if(lb.proxy_protocol === "") {
+      lb.proxy_protocol = null;
+    }
     let targetVsi = []; // store for new vsi
     let lbSubnets = []; // store for vsi subnets
     // remove unfound deployments and subnets

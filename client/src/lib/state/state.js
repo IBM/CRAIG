@@ -627,12 +627,38 @@ const state = function() {
    * @param {Object} json craig json configuration object
    * @param {boolean=} slz skip validation step when slz
    */
-  store.hardSetJson = (json, slz) => {
+  store.hardSetJson = function(json, slz) {
     if (!slz) validate(json);
     let subnetTiers = {};
     transpose(json, store.store.json);
     store.store.json.vpcs.forEach(network => {
       subnetTiers[network.name] = buildSubnetTiers(network);
+    });
+    store.store.json.vpcs.forEach(nw => {
+      nw.subnets.forEach(subnet => {
+        subnet.vpc = nw.name;
+      });
+      nw.address_prefixes.forEach(prefix => {
+        prefix.vpc = nw.name;
+      });
+      nw.acls.forEach(acl => {
+        acl.rules.forEach(rule => {
+          rule.acl = acl.name;
+          rule.vpc = nw.name;
+        });
+      });
+    });
+    store.store.json.clusters.forEach(cluster => {
+      cluster.worker_pools.forEach(pool => {
+        pool.cluster = cluster.name;
+        pool.vpc = cluster.vpc;
+      });
+    });
+    store.store.json.security_groups.forEach(group => {
+      group.rules.forEach(rule => {
+        rule.vpc = group.vpc;
+        rule.sg = group.name;
+      });
     });
     store.store.subnetTiers = subnetTiers;
     store.update();

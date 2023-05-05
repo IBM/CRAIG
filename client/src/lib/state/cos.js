@@ -22,8 +22,10 @@ const {
  */
 function cosSetStoreBucketsAndKeys(config, instanceCallback) {
   config.store.json.object_storage.forEach(instance => {
+    instance.plan = instance.plan.toLowerCase();
     instance.buckets.forEach(bucket => {
       bucket.use_random_suffix = instance.use_random_suffix;
+      bucket.storage_class = bucket.storage_class.toLowerCase();
     });
     instance.keys.forEach(key => {
       key.use_random_suffix = instance.use_random_suffix;

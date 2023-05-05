@@ -369,6 +369,49 @@ describe("vsi", () => {
         "it should update in place"
       );
     });
+    it("should update in place with same name when kms is null", () => {
+      let state = new newState();
+      state.vsi.create(
+        {
+          name: "todd",
+          vpc: "management",
+          security_groups: ["management-vsi"],
+        },
+        { isTeleport: false }
+      );
+      let expectedData = {
+        kms: "kms",
+        encryption_key: "key",
+        image: null,
+        image_name: null,
+        profile: null,
+        name: "todd",
+        security_groups: ["workload-vsi-sg"],
+        ssh_keys: [],
+        subnets: [],
+        vpc: "workload",
+        vsi_per_subnet: null,
+        resource_group: null,
+        override_vsi_name: null,
+        user_data: null,
+        network_interfaces: [],
+        volumes: [],
+      };
+      state.vsi.save(
+        {
+          name: "todd",
+          vpc: "workload",
+          security_groups: ["workload-vsi-sg"],
+          encryption_key: "key",
+        },
+        { data: { name: "todd" }, isTeleport: false }
+      );
+      assert.deepEqual(
+        state.store.json.vsi[1],
+        expectedData,
+        "it should update in place"
+      );
+    });
     it("should update in place with network interfaces", () => {
       let state = new newState();
       state.vsi.create(

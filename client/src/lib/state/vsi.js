@@ -165,6 +165,9 @@ function updateVsi(config, key) {
     // for each deployment
     data.forEach(deployment => {
       let validVpc = hasUnfoundVpc(config, deployment) === false;
+      if (!deployment.kms) {
+        deployment.encryption_key = null;
+      }
       setUnfoundEncryptionKey(config, deployment, "encryption_key");
       setUnfoundResourceGroup(config, deployment);
       // if teleport vsi and vpc is valid
@@ -271,6 +274,11 @@ function vsiSave(config, stateData, componentProps) {
     stateData.image = stateData.image_name
       .replace(/[^\[]+\[/g, "")
       .replace(/]/g, "");
+  config.store.json.key_management.forEach(kms => {
+    if (splatContains(kms.keys, "name", stateData.encryption_key)) {
+      stateData.kms = kms.name;
+    }
+  });
   updateChild(
     config,
     componentProps.isTeleport ? "teleport_vsi" : "vsi",

@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const craig = require("./data-files/craig-json.json");
+const craig = require("./data-files/cdktf-expected-hard-set.json");
 const cdktf = require("./data-files/craig-cdktf.json");
 const f5nw = require("./data-files/f5-nw.json");
 const teleportNw = require("./data-files/appid-scc-teleport-network.json");
@@ -419,7 +419,8 @@ describe("craigToCdktf", () => {
   });
   describe("edge cases", () => {
     it("should convert craig data to cdktf atracker when disabled", () => {
-      let newCraig = { ...craig };
+      let newCraig = {};
+      transpose(craig, newCraig);
       newCraig.atracker.enabled = false;
       let actualData = craigToCdktf(newCraig);
       let data = actualData.resource.ibm_atracker_target;
@@ -431,8 +432,8 @@ describe("craigToCdktf", () => {
       );
     });
     it("should convert craig data to cdktf atracker when no route", () => {
-      let newCraig = { ...craig };
-      newCraig.atracker.add_route = false;
+      let newCraig = {};
+      transpose(craig, newCraig);
       let actualData = craigToCdktf(newCraig);
       let data = actualData.resource.ibm_atracker_route;
       assert.deepEqual(data, undefined, "it should return cdktf data");

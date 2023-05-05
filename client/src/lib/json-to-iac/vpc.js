@@ -151,12 +151,13 @@ function ibmIsSubnet(subnet, config, useVarRef) {
       network_acl: tfRef(
         "ibm_is_network_acl",
         snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`)
-      ),
-      ipv4_cidr_block: subnet.has_prefix
-        ? `\${ibm_is_vpc_address_prefix.${snakeCase(subnetName)}_prefix.cidr}`
-        : subnet.cidr
+      )
     }
   };
+
+  data.data.ipv4_cidr_block = subnet.has_prefix
+    ? `\${ibm_is_vpc_address_prefix.${snakeCase(subnetName)}_prefix.cidr}`
+    : subnet.cidr;
 
   if (subnet.public_gateway) {
     data.data.public_gateway = tfRef(
@@ -244,8 +245,8 @@ function ibmIsNetworkAcl(acl, config, useRules) {
           ];
         }
       });
-      aclData.data.rules.push(ruleValues)
-    })
+      aclData.data.rules.push(ruleValues);
+    });
   }
   return aclData;
 }

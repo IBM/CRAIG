@@ -3,7 +3,8 @@ import {
   FormModal,
   IcseHeading,
   SaveAddButton,
-  SubnetTierForm
+  SubnetTierForm,
+  EmptyResourceTile
 } from "icse-react-assets";
 import {
   propsMatchState,
@@ -18,7 +19,7 @@ import {
   invalidName,
   invalidNameText
 } from "../../lib";
-import { splat } from "lazy-z";
+import { splat, titleCase } from "lazy-z";
 
 function none() {}
 
@@ -98,6 +99,13 @@ class SubnetForm extends React.Component {
             />
           }
         />
+        {tiers.length === 0 && (
+          <EmptyResourceTile
+            name={
+              "Subnet Tiers for " + titleCase(this.props.data.name) + " VPC"
+            }
+          />
+        )}
         {this.props.craig.store.subnetTiers[this.props.data.name].map(
           (tier, index) => (
             <SubnetTierForm

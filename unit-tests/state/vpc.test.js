@@ -2661,7 +2661,7 @@ describe("vpcs", () => {
             network_acl: "management",
             public_gateway: false,
             resource_group: "edge-rg",
-            vpc: "edge",
+            vpc: "management",
             zone: 1,
           },
           {
@@ -2671,7 +2671,7 @@ describe("vpcs", () => {
             network_acl: "management",
             public_gateway: false,
             resource_group: "edge-rg",
-            vpc: "edge",
+            vpc: "management",
             zone: 2,
           },
           {
@@ -2681,7 +2681,7 @@ describe("vpcs", () => {
             network_acl: "management",
             public_gateway: false,
             resource_group: "edge-rg",
-            vpc: "edge",
+            vpc: "management",
             zone: 3,
           },
         ];

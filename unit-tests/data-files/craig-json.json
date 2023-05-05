@@ -140,31 +140,31 @@
         "default_routing_table_name": null,
         "address_prefixes": [
           {
-            "vpc": "management",
+            "vpc": "xx",
             "zone": 1,
             "cidr": "10.10.10.0/24",
             "name": "vsi-zone-1"
           },
           {
-            "vpc": "management",
+            "vpc": "aa",
             "zone": 2,
             "cidr": "10.10.20.0/24",
             "name": "vsi-zone-2"
           },
           {
-            "vpc": "management",
+            "vpc": "aa",
             "zone": 3,
             "cidr": "10.10.30.0/24",
             "name": "vsi-zone-3"
           },
           {
-            "vpc": "management",
+            "vpc": "aa",
             "zone": 1,
             "cidr": "10.20.10.0/24",
             "name": "vpe-zone-1"
           },
           {
-            "vpc": "management",
+            "vpc": "aa",
             "zone": 2,
             "cidr": "10.20.20.0/24",
             "name": "vpe-zone-2"
@@ -224,7 +224,7 @@
             "has_prefix": true
           },
           {
-            "vpc": "management",
+            "vpc": "dddd",
             "zone": 2,
             "cidr": "10.20.10.0/24",
             "name": "vsi-zone-2",
@@ -267,8 +267,8 @@
                 "direction": "inbound",
                 "name": "allow-ibm-inbound",
                 "source": "161.26.0.0/16",
-                "acl": "management",
-                "vpc": "management",
+                "acl": "ggg",
+                "vpc": "sss",
                 "icmp": {
                   "type": null,
                   "code": null
@@ -463,8 +463,8 @@
                 "direction": "inbound",
                 "name": "allow-ibm-inbound",
                 "source": "161.26.0.0/16",
-                "acl": "workload",
-                "vpc": "workload",
+                "acl": "worggggkload",
+                "vpc": "sss",
                 "icmp": {
                   "type": null,
                   "code": null
@@ -574,8 +574,8 @@
         "resource_group": "slz-management-rg",
         "rules": [
           {
-            "vpc": "management",
-            "sg": "management-vpe-sg",
+            "vpc": "fff",
+            "sg": "sdfsfdsf",
             "direction": "inbound",
             "name": "allow-ibm-inbound",
             "source": "161.26.0.0/16",
@@ -670,7 +670,7 @@
           },
           {
             "vpc": "management",
-            "sg": "management-vpe-sg",
+            "sg": "sdfsdf",
             "direction": "outbound",
             "name": "allow-ibm-tcp-443-outbound",
             "source": "161.26.0.0/16",
@@ -865,7 +865,7 @@
         "worker_pools": [
           {
             "entitlement": "cloud_pak",
-            "cluster": "workload",
+            "cluster": "workloddddad",
             "flavor": "bx2.16x64",
             "name": "logging-pool",
             "resource_group": "slz-workload-rg",
@@ -874,7 +874,7 @@
               "vsi-zone-2",
               "vsi-zone-3"
             ],
-            "vpc": "workload",
+            "vpc": "asdasdasdd",
             "workers_per_subnet": 2
           }
         ],

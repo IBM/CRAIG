@@ -42,6 +42,7 @@ function securityGroupOnStoreUpdate(config) {
       sg.vpc = null;
       sg.rules.forEach(rule => {
         rule.vpc = null;
+        rule.sg = sg.name;
       });
     }
     if (sg.vpc) {

@@ -67,7 +67,7 @@ describe("load_balancers", () => {
         health_retries: 5,
         health_timeout: 30,
         health_type: "https",
-        proxy_protocol: "v1",
+        proxy_protocol: null,
         session_persistence_type: "app_cookie",
         session_persistence_app_cookie_name: "cookie1",
         port: 80,
@@ -77,6 +77,7 @@ describe("load_balancers", () => {
         connection_limit: 2,
       };
       state.store.json.vpcs.shift();
+      state.store.json.load_balancers[0].proxy_protocol = "";
       state.update();
       assert.deepEqual(
         state.store.json.load_balancers[0],

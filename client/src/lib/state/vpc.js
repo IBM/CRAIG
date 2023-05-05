@@ -163,6 +163,7 @@ function vpcOnStoreUpdate(config) {
     let subnetList = []; // create a new list
     // for each zone
     network.subnets.forEach(subnet => {
+      subnet.vpc = network.name;
       // add the names of the subnets to the list
       subnetList = subnetList.concat(subnet.name);
       if (
@@ -171,6 +172,13 @@ function vpcOnStoreUpdate(config) {
         subnet.network_acl = null;
       }
     });
+    network.acls.forEach(acl => {
+      acl.vpc = network.name;
+      acl.rules.forEach(rule => {
+        rule.acl = acl.name;
+        rule.vpc = network.name;
+      })
+    })
     // set subnets object vpc name to list
     config.store.subnets[network.name] = subnetList;
     // set acls object to the list of acls

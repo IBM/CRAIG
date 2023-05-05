@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
 const { splat } = require("lazy-z");
 const json = require("../data-files/craig-json.json");
+const hardSetData = require("../data-files/expected-hard-set.json");
 
 /**
  * initialize store
@@ -255,8 +256,52 @@ describe("state util functions", () => {
       let state = newState();
       state.setUpdateCallback(() => {});
       delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
-      state.hardSetJson(json);
-      assert.deepEqual(state.store.json, json, "it should set the store");
+      state.hardSetJson({ ...json });
+      assert.deepEqual(
+        state.store.json,
+        { ...hardSetData },
+        "it should set the store"
+      );
+      assert.deepEqual(
+        state.store.subnetTiers,
+        {
+          management: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+            { name: "vpn", zones: 1 },
+          ],
+          workload: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+          ],
+        },
+        "it should set subnet tiers"
+      );
+    });
+    it("should set JSON data if valid with routing tables", () => {
+      let state = newState();
+      let rtJson = require("../data-files/craig-json-routing-tables.json");
+      state.setUpdateCallback(() => {});
+      delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
+      let expectedData = { ...hardSetData };
+      expectedData.routing_tables = [
+        {
+          name: "table",
+          routes: [
+            {
+              routing_table: "table",
+              vpc: "management",
+            },
+          ],
+          vpc: "management",
+        },
+      ];
+      state.hardSetJson(rtJson);
+      assert.deepEqual(
+        state.store.json,
+        expectedData,
+        "it should set the store"
+      );
       assert.deepEqual(
         state.store.subnetTiers,
         {
