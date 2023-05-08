@@ -177,8 +177,8 @@ function vpcOnStoreUpdate(config) {
       acl.rules.forEach(rule => {
         rule.acl = acl.name;
         rule.vpc = network.name;
-      })
-    })
+      });
+    });
     // set subnets object vpc name to list
     config.store.subnets[network.name] = subnetList;
     // set acls object to the list of acls
@@ -473,7 +473,7 @@ function subnetTierSave(config, stateData, componentProps) {
         name: tierName,
         zones: tierZones
       };
-      
+
       // if is advanced and subnet tier matches data
       if (stateData.advanced && componentProps.data.name === tier.name) {
         tierData.advanced = true;
@@ -489,10 +489,26 @@ function subnetTierSave(config, stateData, componentProps) {
           tier.advanced && componentProps.data.name !== tier.name
         );
         newTiers.push(tierData);
+        // for each address prefix
+        config.store.json.vpcs[vpcIndex].address_prefixes.forEach(prefix => {
+          if (
+            !contains(tierData.select_zones, prefix.zone) &&
+            prefix.name.startsWith(oldTierName)
+          ) {
+            // if starts with old tier name and zone not selected remove
+            carve(
+              config.store.json.vpcs[vpcIndex].address_prefixes,
+              "name",
+              prefix.name
+            );
+          } else if (prefix.name.startsWith(oldTierName)) {
+            // otherwise rename
+            prefix.name = prefix.name.replace(oldTierName, newTierName);
+          }
+        });
       } else if (tier.advanced) {
-        newTiers.push(tier)
-      } else  newTiers.push(tierData);
-      
+        newTiers.push(tier);
+      } else newTiers.push(tierData);
     }
   });
 

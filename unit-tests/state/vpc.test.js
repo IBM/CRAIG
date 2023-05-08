@@ -1687,6 +1687,44 @@ describe("vpcs", () => {
           zones: undefined,
           networkAcl: "-",
         };
+        let expectedPrefixes = [
+          {
+            vpc: 'management',
+            zone: 1,
+            cidr: '10.10.10.0/24',
+            name: 'frog-zone-1'
+          },
+          {
+            vpc: 'management',
+            zone: 2,
+            cidr: '10.20.10.0/24',
+            name: 'frog-zone-2'
+          },
+          {
+            vpc: 'management',
+            zone: 1,
+            cidr: '10.10.20.0/24',
+            name: 'vpe-zone-1'
+          },
+          {
+            vpc: 'management',
+            zone: 2,
+            cidr: '10.20.20.0/24',
+            name: 'vpe-zone-2'
+          },
+          {
+            vpc: 'management',
+            zone: 3,
+            cidr: '10.30.20.0/24',
+            name: 'vpe-zone-3'
+          },
+          {
+            vpc: 'management',
+            zone: 1,
+            cidr: '10.10.30.0/24',
+            name: 'vpn-zone-1'
+          }
+        ]
         assert.deepEqual(
           vpcState.store.subnetTiers.management[0],
           expectedTier,
@@ -1696,6 +1734,11 @@ describe("vpcs", () => {
           vpcState.store.json.vpcs[0].subnets,
           expectedData,
           "it should change subnets"
+        );
+        assert.deepEqual(
+          vpcState.store.json.vpcs[0].address_prefixes,
+          expectedPrefixes,
+          "it should change address prefixes"
         );
       });
       it("should save advanced subnet tier with an existing advanced tier and both should have correct tier data in store", () => {
