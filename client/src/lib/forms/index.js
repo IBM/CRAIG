@@ -28,7 +28,8 @@ const {
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
-  invalidCidr
+  invalidCidr,
+  invalidProjectDescription
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -99,5 +100,6 @@ module.exports = {
   invalidCrnList,
   setFormEncryptionKeyList,
   setFormSubnetList,
-  setDeleteDisabledMessage
+  setDeleteDisabledMessage,
+  invalidProjectDescription
 };

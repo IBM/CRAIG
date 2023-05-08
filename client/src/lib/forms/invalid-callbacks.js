@@ -13,7 +13,9 @@ const {
   newResourceNameExp,
   sshKeyValidationExp,
   commaSeparatedIpListExp,
-  urlValidationExp
+  urlValidationExp,
+  crnRegex,
+  projectDescriptionRegex
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -419,7 +421,7 @@ function invalidCidr(craig) {
       return true;
     } else return isIpv4CidrOrAddress(stateData.cidr) === false;
   };
-};
+}
 
 /*
  * test if list of crns is valid
@@ -430,17 +432,27 @@ function invalidCrnList(crnList) {
   if (crnList === undefined || isEmpty(crnList)) {
     return false;
   }
-
-  const crnRegex = /^(crn:v1:bluemix:(public|dedicated|local):)[A-z-:/0-9]+$/i;
   let isInvalid = false;
   crnList.forEach(crn => {
     if (crn.match(crnRegex) === null) {
-      isInvalid = true
+      isInvalid = true;
     }
-  })
+  });
 
-  return isInvalid
-};
+  return isInvalid;
+}
+
+/**
+ * check if project description is invalid
+ * @param {string} description project description
+ * @returns {boolean} true if invalid
+ */
+function invalidProjectDescription(description) {
+  return (
+    description.length > 99 ||
+    description.match(projectDescriptionRegex) === null
+  );
+}
 
 module.exports = {
   invalidName,
@@ -459,5 +471,6 @@ module.exports = {
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
-  invalidCidr
+  invalidCidr,
+  invalidProjectDescription
 };

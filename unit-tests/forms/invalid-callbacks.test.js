@@ -13,6 +13,7 @@ const {
   hasOverlappingCidr,
   invalidCidr,
   invalidNewResourceName,
+  invalidProjectDescription,
 } = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
@@ -794,6 +795,25 @@ describe("invalid callbacks", () => {
       };
       assert.isFalse(
         invalidCidr(craig)({ cidr: "10.10.80.0/24" }, { data: {} }),
+        "it should be true"
+      );
+    });
+  });
+  describe("invalidProjectDescription", () => {
+    it("should be false if description is empty string", () => {
+      assert.isFalse(invalidProjectDescription(""), "it should be false");
+    });
+    it("should be true if more than 100 characters", () => {
+      assert.isTrue(
+        invalidProjectDescription(
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ),
+        "it should be true"
+      );
+    });
+    it("should be true if contains invalid characters", () => {
+      assert.isTrue(
+        invalidProjectDescription("%%%$$@@@;{}"),
         "it should be true"
       );
     });

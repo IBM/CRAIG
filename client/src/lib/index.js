@@ -41,7 +41,8 @@ const {
   invalidCidrText,
   setFormEncryptionKeyList,
   setFormSubnetList,
-  setDeleteDisabledMessage
+  setDeleteDisabledMessage,
+  invalidProjectDescription
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -212,5 +213,6 @@ module.exports = {
   invalidCidrText,
   setFormEncryptionKeyList,
   setFormSubnetList,
-  setDeleteDisabledMessage
+  setDeleteDisabledMessage,
+  invalidProjectDescription
 };

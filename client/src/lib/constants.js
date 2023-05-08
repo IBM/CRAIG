@@ -237,6 +237,30 @@ module.exports = {
     .anyNumber()
     .stringEnd()
     .done("g"),
+  crnRegex: new RegexButWithWords()
+    .stringBegin()
+    .group(exp => {
+      exp
+        .literal("crn:v1:bluemix:")
+        .group(exp => {
+          exp
+            .literal("public")
+            .or()
+            .literal("dedicated")
+            .or()
+            .literal("local");
+        })
+        .literal(":");
+    })
+    .set("A-z-:/0-9")
+    .oneOrMore()
+    .stringEnd()
+    .done("s"),
+  projectDescriptionRegex: new RegexButWithWords()
+    .stringBegin()
+    .set("A-z0-9\\s_().,;", 0, 100)
+    .stringEnd()
+    .done("g"),
   clusterRules: [
     {
       name: "roks-create-worker-nodes-inbound",

@@ -1,7 +1,7 @@
 /* this file is the main application page */
 
 import React from "react";
-import { contains, titleCase } from "lazy-z";
+import { contains, titleCase, kebabCase } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -30,9 +30,13 @@ class Craig extends React.Component {
       let storeName =
         process.env.NODE_ENV === "development" ? "craigDevStore" : "craigStore";
       let stateInStorage = window.localStorage.getItem(storeName);
+      let projectInStorage = window.localStorage.getItem("craigProjects");
       // If there is a state in browser local storage, use it instead.
       if (stateInStorage) {
         craig.store = JSON.parse(stateInStorage);
+      }
+      if (!projectInStorage) {
+        window.localStorage.setItem("craigProjects", "{}");
       }
       this.state = {
         hideCodeMirror: craig.store.hideCodeMirror,
@@ -51,6 +55,7 @@ class Craig extends React.Component {
     this.onError = this.onError.bind(this);
     this.notify = this.notify.bind(this);
     this.onTabClick = this.onTabClick.bind(this);
+    this.onProjectSave = this.onProjectSave.bind(this);
   }
 
   // when react component mounts, set update callback for store
@@ -135,6 +140,21 @@ class Craig extends React.Component {
     this.setState({ jsonInCodeMirror: value });
   }
 
+  /**
+   * save function for projects
+   * @param {string} name project name
+   * @param {string} description project description
+   */
+  onProjectSave(name, description) {
+    let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
+    projects[kebabCase(name)] = {
+      name: name,
+      description: description,
+      json: craig.store.json
+    };
+    window.localStorage.setItem("craigProjects", JSON.stringify(projects));
+  }
+
   render() {
     return (
       <>
@@ -165,7 +185,7 @@ class Craig extends React.Component {
           ) : window.location.pathname === "/" ? (
             <Home craig={craig} />
           ) : window.location.pathname === "/summary" ? (
-            <Summary craig={craig} />
+            <Summary craig={craig} onProjectSave={this.onProjectSave} />
           ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />
           ) : contains(constants.toggleFormPages, this.props.params.form) ? (
