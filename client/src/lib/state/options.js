@@ -1,5 +1,4 @@
 const { revision } = require("lazy-z");
-const { updateChild } = require("./store.utils");
 const { subnetTierSave } = require("./vpc");
 
 /**
@@ -24,7 +23,7 @@ function optionsInit(config) {
  * @param {object} componentProps props from component form
  */
 function optionsSave(config, stateData, componentProps) {
-  updateChild(config, "_options", stateData, componentProps);
+  config.updateChild(["json", "_options"], componentProps.data.name, stateData);
   let zones = config.store.json._options.zones;
   let vpcs = Object.keys(config.store.subnetTiers);
   vpcs.forEach(vpc => {

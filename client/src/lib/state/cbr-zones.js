@@ -1,8 +1,6 @@
 const { lazyZstate } = require("lazy-z/lib/store");
 const {
   carveChild,
-  updateChild,
-  pushAndUpdate,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal
@@ -29,7 +27,7 @@ function cbrZonesInit(config) {
  * @param {string} stateData.resource_group
  */
 function cbrZoneCreate(config, stateData, componentProps) {
-  pushAndUpdate(config, "cbr_zones", stateData);
+  config.push(["json", "cbr_zones"], stateData);
 }
 
 /**
@@ -38,7 +36,11 @@ function cbrZoneCreate(config, stateData, componentProps) {
  * @param {object} stateData component state data
  */
 function cbrZoneSave(config, stateData, componentProps) {
-  updateChild(config, "cbr_zones", stateData, componentProps);
+  config.updateChild(
+    ["json", "cbr_zones"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -48,7 +50,7 @@ function cbrZoneSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cbrZoneDelete(config, stateData, componentProps) {
-  carveChild(config, "cbr_zones", componentProps);
+  config.carve(["json", "cbr_zones"], componentProps.data.name);
 }
 
 /**

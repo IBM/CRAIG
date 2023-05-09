@@ -1,5 +1,4 @@
-const { transpose, eachKey } = require("lazy-z");
-const state = require("./state");
+const { transpose } = require("lazy-z");
 
 /**
  * initialize atracker

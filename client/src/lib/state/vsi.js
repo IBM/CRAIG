@@ -8,12 +8,8 @@ const {
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
-  setUnfoundEncryptionKey,
   setUnfoundResourceGroup,
   hasUnfoundVpc,
-  pushAndUpdate,
-  updateChild,
-  carveChild,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal
@@ -168,7 +164,7 @@ function updateVsi(config, key) {
       if (!deployment.kms) {
         deployment.encryption_key = null;
       }
-      setUnfoundEncryptionKey(config, deployment, "encryption_key");
+      config.setUnfound("encryptionKeys", deployment, "encryption_key");
       setUnfoundResourceGroup(config, deployment);
       // if teleport vsi and vpc is valid
       if (validVpc && key === "teleport_vsi") {
@@ -248,9 +244,8 @@ function vsiCreate(config, stateData, componentProps) {
     delete defaultVsi.subnets;
   }
 
-  pushAndUpdate(
-    config,
-    componentProps.isTeleport ? "teleport_vsi" : "vsi",
+  config.push(
+    ["json", componentProps.isTeleport ? "teleport_vsi" : "vsi"],
     defaultVsi
   );
 }
@@ -279,11 +274,10 @@ function vsiSave(config, stateData, componentProps) {
       stateData.kms = kms.name;
     }
   });
-  updateChild(
-    config,
-    componentProps.isTeleport ? "teleport_vsi" : "vsi",
-    stateData,
-    componentProps
+  config.updateChild(
+    ["json", componentProps.isTeleport ? "teleport_vsi" : "vsi"],
+    componentProps.data.name,
+    stateData
   );
 }
 
@@ -295,10 +289,9 @@ function vsiSave(config, stateData, componentProps) {
  * @param {boolean} componentProps.isTeleport
  */
 function vsiDelete(config, stateData, componentProps) {
-  carveChild(
-    config,
-    componentProps.isTeleport ? "teleport_vsi" : "vsi",
-    componentProps
+  config.carve(
+    ["json", componentProps.isTeleport ? "teleport_vsi" : "vsi"],
+    componentProps.data.name
   );
 }
 

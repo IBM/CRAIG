@@ -1,11 +1,8 @@
 const { newDefaultVpe } = require("./defaults");
 const {
   splatContains,
-  revision,
-  carve,
   deleteUnfoundArrayItems
 } = require("lazy-z");
-const { pushAndUpdate } = require("./store.utils");
 
 /**
  * initialize vpe
@@ -61,7 +58,7 @@ function vpeOnStoreUpdate(config) {
  * @param {Object} componentProps
  */
 function vpeCreate(config, stateData) {
-  pushAndUpdate(config, "virtual_private_endpoints", stateData);
+  config.push(["json", "virtual_private_endpoints"], stateData);
 }
 
 /**
@@ -77,10 +74,9 @@ function vpeCreate(config, stateData) {
  * @param {string} componentProps.data.service_name original name of service used to update data in place
  */
 function vpeSave(config, stateData, componentProps) {
-  new revision(config.store.json).updateChild(
-    "virtual_private_endpoints",
+  config.updateChild(
+    ["json", "virtual_private_endpoints"],
     componentProps.data.name,
-    "name",
     stateData
   );
 }
@@ -94,9 +90,8 @@ function vpeSave(config, stateData, componentProps) {
  * @param {string} componentProps.data.service original name of service used to delete object
  */
 function vpeDelete(config, stateData, componentProps) {
-  carve(
-    config.store.json.virtual_private_endpoints,
-    "name",
+  config.carve(
+    ["json", "virtual_private_endpoints"],
     componentProps.data.name
   );
 }

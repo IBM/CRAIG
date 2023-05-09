@@ -1,12 +1,10 @@
 const {
   splatContains,
-  revision,
   carve,
   distinct,
   getObjectFromArray,
   deleteUnfoundArrayItems
 } = require("lazy-z");
-const { pushAndUpdate } = require("./store.utils");
 
 /**
  * initialize loadBalancer
@@ -31,7 +29,7 @@ function loadBalancerInit(config) {
  */
 function loadBalancerOnStoreUpdate(config) {
   config.store.json.load_balancers.forEach(lb => {
-    if(lb.proxy_protocol === "") {
+    if (lb.proxy_protocol === "") {
       lb.proxy_protocol = null;
     }
     let targetVsi = []; // store for new vsi
@@ -83,7 +81,7 @@ function loadBalancerOnStoreUpdate(config) {
  * @param {Object} stateData loadBalancer state data
  */
 function loadBalancerCreate(config, stateData) {
-  pushAndUpdate(config, "load_balancers", stateData);
+  config.push(["json", "load_balancers"], stateData);
 }
 
 /**
@@ -97,10 +95,9 @@ function loadBalancerCreate(config, stateData) {
  * @param {string} componentProps.data.name load balancer name
  */
 function loadBalancerSave(config, stateData, componentProps) {
-  new revision(config.store.json).updateChild(
-    "load_balancers",
+  config.updateChild(
+    ["json", "load_balancers"],
     componentProps.data.name,
-    "name",
     stateData
   );
 }
@@ -117,7 +114,7 @@ function loadBalancerSave(config, stateData, componentProps) {
  * @param {string} componentProps.data.name load balancer name
  */
 function loadBalancerDelete(config, stateData, componentProps) {
-  carve(config.store.json.load_balancers, "name", componentProps.data.name);
+  config.carve(["json", "load_balancers"], componentProps.data.name);
 }
 
 module.exports = {

@@ -1,6 +1,5 @@
-const { contains, containsKeys, carve, splatContains } = require("lazy-z");
+const { contains, carve, splatContains } = require("lazy-z");
 const { newDefaultTg } = require("./defaults");
-const { updateChild, pushAndUpdate, carveChild } = require("./store.utils");
 
 /**
  * initialize transit gateway
@@ -58,7 +57,11 @@ function transitGatewayOnStoreUpdate(config) {
  * @param {object} componentProps
  */
 function transitGatewaySave(config, stateData, componentProps) {
-  updateChild(config, "transit_gateways", stateData, componentProps);
+  config.updateChild(
+    ["json", "transit_gateways"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -67,7 +70,7 @@ function transitGatewaySave(config, stateData, componentProps) {
  * @param {object} stateData component state data
  */
 function transitGatewayCreate(config, stateData) {
-  pushAndUpdate(config, "transit_gateways", stateData);
+  config.push(["json", "transit_gateways"], stateData);
 }
 
 /**
@@ -77,7 +80,10 @@ function transitGatewayCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function transitGatewayDelete(config, stateData, componentProps) {
-  carveChild(config, "transit_gateways", componentProps);
+  config.carve(
+    ["json", "transit_gateways"],
+    componentProps.data.name
+  );
 }
 
 module.exports = {

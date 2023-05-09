@@ -1,10 +1,6 @@
 const { deleteUnfoundArrayItems } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const {
-  setUnfoundResourceGroup,
-  carveChild,
-  updateChild,
-  pushAndUpdate,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal,
@@ -23,7 +19,7 @@ function vpnServerInit(config) {
 
 function vpnServerOnStoreUpdate(config) {
   config.store.json.vpn_servers.forEach(server => {
-    setUnfoundResourceGroup(config, server);
+    config.setUnfound("resourceGroups", server, "resource_group");
     // update vpc
     if (hasUnfoundVpc(config, server)) {
       server.vpc = null;
@@ -53,7 +49,11 @@ function vpnServerOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function vpnServerSave(config, stateData, componentProps) {
-  updateChild(config, "vpn_servers", stateData, componentProps);
+  config.updateChild(
+    ["json", "vpn_servers"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -62,7 +62,7 @@ function vpnServerSave(config, stateData, componentProps) {
  * @param {object} stateData component state data
  */
 function vpnServerCreate(config, stateData) {
-  pushAndUpdate(config, "vpn_servers", stateData);
+  config.push(["json", "vpn_servers"], stateData);
 }
 
 /**
@@ -72,7 +72,10 @@ function vpnServerCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function vpnServerDelete(config, stateData, componentProps) {
-  carveChild(config, "vpn_servers", componentProps);
+  config.carve(
+    ["json", "vpn_servers"],
+    componentProps.data.name
+  );
 }
 
 /**

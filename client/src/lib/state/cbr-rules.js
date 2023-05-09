@@ -1,10 +1,5 @@
-const { nestedSplat } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const {
-  setUnfoundResourceGroup,
-  carveChild,
-  updateChild,
-  pushAndUpdate,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal
@@ -33,7 +28,11 @@ function cbrRulesInit(config) {
  * @param {string} stateData.resource_group
  */
 function cbrRuleSave(config, stateData, componentProps) {
-  updateChild(config, "cbr_rules", stateData, componentProps);
+  config.updateChild(
+    ["json", "cbr_rules"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -42,7 +41,7 @@ function cbrRuleSave(config, stateData, componentProps) {
  * @param {object} stateData component state data
  */
 function cbrRuleCreate(config, stateData) {
-  pushAndUpdate(config, "cbr_rules", stateData);
+  config.push(["json", "cbr_rules"], stateData);
 }
 
 /**
@@ -52,7 +51,7 @@ function cbrRuleCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function cbrRuleDelete(config, stateData, componentProps) {
-  carveChild(config, "cbr_rules", componentProps);
+  config.carve(["json", "cbr_rules"], componentProps.data.name);
 }
 
 /**

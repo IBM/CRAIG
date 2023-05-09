@@ -1,8 +1,5 @@
 const {
   setUnfoundResourceGroup,
-  carveChild,
-  updateChild,
-  pushAndUpdate,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal
@@ -87,7 +84,7 @@ function accessGroupOnStoreUpdate(config) {
  * @param {string} stateData.description access group description
  */
 function accessGroupCreate(config, stateData) {
-  pushAndUpdate(config, "access_groups", {
+  config.push(["json", "access_groups"], {
     name: stateData.name,
     description: stateData.description,
     policies: [],
@@ -107,7 +104,11 @@ function accessGroupCreate(config, stateData) {
  */
 function accessGroupSave(config, stateData, componentProps) {
   stateData.invites.group = stateData.name;
-  updateChild(config, "access_groups", stateData, componentProps);
+  config.updateChild(
+    ["json", "access_groups"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -117,7 +118,7 @@ function accessGroupSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function accessGroupDelete(config, stateData, componentProps) {
-  carveChild(config, "access_groups", componentProps);
+  config.carve(["json", "access_groups"], componentProps.data.name);
 }
 
 /**

@@ -2,9 +2,6 @@ const { splat } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultCos } = require("./defaults");
 const {
-  pushAndUpdate,
-  updateChild,
-  carveChild,
   updateSubChild,
   deleteSubChild,
   setUnfoundResourceGroup,
@@ -86,7 +83,7 @@ function cosOnStoreUpdate(config) {
 function cosCreate(config, stateData) {
   stateData.buckets = [];
   stateData.keys = [];
-  pushAndUpdate(config, "object_storage", stateData);
+  config.push(["json", "object_storage"], stateData);
 }
 
 /**
@@ -97,7 +94,7 @@ function cosCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function cosDelete(config, stateData, componentProps) {
-  carveChild(config, "object_storage", componentProps);
+  config.carve(["json", "object_storage"], componentProps.data.name);
 }
 
 /**
@@ -107,7 +104,11 @@ function cosDelete(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cosSave(config, stateData, componentProps) {
-  updateChild(config, "object_storage", stateData, componentProps);
+  config.updateChild(
+    ["json", "object_storage"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**

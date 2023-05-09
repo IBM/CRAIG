@@ -1,9 +1,4 @@
-const {
-  pushAndUpdate,
-  updateChild,
-  carveChild,
-  setUnfoundResourceGroup
-} = require("./store.utils");
+const { setUnfoundResourceGroup } = require("./store.utils");
 
 /**
  * event streams on store update
@@ -24,7 +19,7 @@ function eventStreamsOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function eventStreamsCreate(config, stateData) {
-  pushAndUpdate(config, "event_streams", stateData);
+  config.push(["json", "event_streams"], stateData);
 }
 
 /**
@@ -34,7 +29,11 @@ function eventStreamsCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function eventStreamsSave(config, stateData, componentProps) {
-  updateChild(config, "event_streams", stateData, componentProps);
+  config.updateChild(
+    ["json", "event_streams"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -44,7 +43,7 @@ function eventStreamsSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function eventStreamsDelete(config, stateData, componentProps) {
-  carveChild(config, "event_streams", componentProps);
+  config.carve(["json", "event_streams"], componentProps.data.name);
 }
 
 module.exports = {

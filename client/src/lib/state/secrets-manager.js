@@ -1,10 +1,5 @@
 const { splatContains } = require("lazy-z");
-const {
-  pushAndUpdate,
-  updateChild,
-  carveChild,
-  setUnfoundResourceGroup
-} = require("./store.utils");
+const { setUnfoundResourceGroup } = require("./store.utils");
 
 /**
  * event streams on store update
@@ -22,7 +17,7 @@ function secretsManagerOnStoreUpdate(config) {
         secretsManager.kms = instance.name;
       }
     });
-    if(!secretsManager.kms) {
+    if (!secretsManager.kms) {
       secretsManager.kms = null;
       secretsManager.encryption_key = null;
     }
@@ -35,7 +30,7 @@ function secretsManagerOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function secretsManagerCreate(config, stateData) {
-  pushAndUpdate(config, "secrets_manager", stateData);
+  config.push(["json", "secrets_manager"], stateData);
 }
 
 /**
@@ -45,7 +40,11 @@ function secretsManagerCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function secretsManagerSave(config, stateData, componentProps) {
-  updateChild(config, "secrets_manager", stateData, componentProps);
+  config.updateChild(
+    ["json", "secrets_manager"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -55,7 +54,7 @@ function secretsManagerSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function secretsManagerDelete(config, stateData, componentProps) {
-  carveChild(config, "secrets_manager", componentProps);
+  config.carve(["json", "secrets_manager"], componentProps.data.name);
 }
 
 module.exports = {

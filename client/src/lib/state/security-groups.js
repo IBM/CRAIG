@@ -9,10 +9,7 @@ const {
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultVpeSecurityGroups } = require("./defaults");
 const {
-  updateChild,
   setUnfoundResourceGroup,
-  pushAndUpdate,
-  carveChild,
   deleteSubChild,
   pushToChildField
 } = require("./store.utils");
@@ -62,7 +59,7 @@ function securityGroupOnStoreUpdate(config) {
 function securityGroupCreate(config, stateData) {
   let sg = { resource_group: null, rules: [] };
   transpose(stateData, sg);
-  pushAndUpdate(config, "security_groups", sg);
+  config.push(["json", "security_groups"], sg);
 }
 
 /**
@@ -83,7 +80,11 @@ function securityGroupSave(config, stateData, componentProps) {
       rule.sg = stateData.name;
     });
   }
-  updateChild(config, "security_groups", stateData, componentProps);
+  config.updateChild(
+    ["json", "security_groups"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -93,7 +94,10 @@ function securityGroupSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function securityGroupDelete(config, stateData, componentProps) {
-  carveChild(config, "security_groups", componentProps);
+  config.carve(
+    ["json", "security_groups"],
+    componentProps.data.name
+  );
 }
 
 /**

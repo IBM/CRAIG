@@ -1,10 +1,6 @@
 const { transpose } = require("lazy-z");
 const {
-  pushAndUpdate,
-  updateChild,
-  carveChild,
   setUnfoundResourceGroup,
-  pushToChildField,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal
@@ -32,7 +28,7 @@ function appidOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function appidCreate(config, stateData) {
-  pushAndUpdate(config, "appid", stateData);
+  config.push(["json", "appid"], stateData);
 }
 
 /**
@@ -42,7 +38,7 @@ function appidCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function appidSave(config, stateData, componentProps) {
-  updateChild(config, "appid", stateData, componentProps);
+  config.updateChild(["json", "appid"], componentProps.data.name, stateData);
 }
 
 /**
@@ -52,7 +48,7 @@ function appidSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function appidDelete(config, stateData, componentProps) {
-  carveChild(config, "appid", componentProps);
+  config.carve(["json", "appid"], componentProps.data.name);
 }
 
 /**

@@ -9,7 +9,10 @@ const {
   contains,
   flatten,
   splat,
-  isWholeNumber
+  isWholeNumber,
+  areNotWholeNumbers,
+  anyAreEmpty,
+  haveValidRanges
 } = require("lazy-z");
 const {
   invalidName,
@@ -312,8 +315,7 @@ function disableSave(field, stateData, componentProps, craig) {
         ["resource_group", "security_groups", "service", "subnets", "vpc"],
         stateData
       ) ||
-      isEmpty(stateData.security_groups) ||
-      isEmpty(stateData.subnets)
+      anyAreEmpty(stateData.security_groups, stateData.subnets)
     );
   } else if (field === "vsi") {
     return (
@@ -324,9 +326,11 @@ function disableSave(field, stateData, componentProps, craig) {
       ) ||
       stateData.vsi_per_subnet > 10 ||
       stateData.vsi_per_subnet < 1 ||
-      isEmpty(stateData.security_groups) ||
-      isEmpty(stateData.subnets) ||
-      isEmpty(stateData.ssh_keys)
+      anyAreEmpty(
+        stateData.security_groups,
+        stateData.subnets,
+        stateData.ssh_keys
+      )
     );
   } else if (field === "f5_vsi_template") {
     let extraFields = {
@@ -378,18 +382,6 @@ function disableSave(field, stateData, componentProps, craig) {
       !isIpv4CidrOrAddress(stateData.next_hop)
     );
   } else if (field === "load_balancers") {
-    /**
-     * check a list if fields are whole number
-     * @param {Array<string>} fields list of fields
-     * @returns {boolean} true if any field is not whole number
-     */
-    function areNotWholeNumbers(fields) {
-      let areNotWhole = false;
-      fields.forEach(field => {
-        if (!isWholeNumber(stateData[field])) areNotWhole = true;
-      });
-      return areNotWhole;
-    }
     return (
       invalidName("load_balancers")(stateData, componentProps) ||
       fieldsAreBad(
@@ -411,24 +403,25 @@ function disableSave(field, stateData, componentProps, craig) {
         ],
         stateData
       ) ||
-      areNotWholeNumbers([
-        "listener_port",
-        "health_retries",
-        "health_timeout",
-        "health_delay",
-        "port"
-      ]) ||
+      areNotWholeNumbers(
+        stateData.listener_port,
+        stateData.health_retries,
+        stateData.health_timeout,
+        stateData.health_delay,
+        stateData.port
+      ) ||
       stateData.health_delay <= stateData.health_timeout ||
       (!isNullOrEmptyString(stateData.connection_limit) &&
         (!isWholeNumber(stateData.connection_limit) ||
           !isInRange(stateData.connection_limit, 1, 15000))) ||
-      !isInRange(stateData.port, 1, 65535) ||
-      !isInRange(stateData.listener_port, 1, 65535) ||
-      !isInRange(stateData.health_timeout, 5, 3000) ||
-      !isInRange(stateData.health_delay, 5, 3000) ||
-      !isInRange(stateData.health_retries, 5, 3000) ||
-      isEmpty(stateData.target_vsi) ||
-      isEmpty(stateData.security_groups)
+      !haveValidRanges(
+        [stateData.port, 1, 65535],
+        [stateData.listener_port, 1, 65535],
+        [stateData.health_timeout, 5, 3000],
+        [stateData.health_delay, 5, 3000],
+        [stateData.health_retries, 5, 3000]
+      ) ||
+      anyAreEmpty(stateData.target_vsi, stateData.security_groups)
     );
   } else return false;
 }

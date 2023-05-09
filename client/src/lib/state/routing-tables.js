@@ -1,17 +1,10 @@
-const { nestedSplat, transpose, getObjectFromArray } = require("lazy-z");
+const { transpose } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
-const { buildNewEncryptionKey } = require("../builders");
-const { newDefaultKms } = require("./defaults");
 const {
-  setUnfoundResourceGroup,
-  carveChild,
-  updateChild,
-  pushAndUpdate,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal,
-  hasUnfoundVpc,
-  setUnfound
+  hasUnfoundVpc
 } = require("./store.utils");
 
 /**
@@ -46,7 +39,11 @@ function routingTableOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function routingTableSave(config, stateData, componentProps) {
-  updateChild(config, "routing_tables", stateData, componentProps);
+  config.updateChild(
+    ["json", "routing_tables"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -59,7 +56,7 @@ function routingTableCreate(config, stateData) {
     routes: []
   };
   transpose(stateData, data);
-  pushAndUpdate(config, "routing_tables", data);
+  config.push(["json", "routing_tables"], data);
 }
 
 /**
@@ -69,7 +66,7 @@ function routingTableCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function routingTableDelete(config, stateData, componentProps) {
-  carveChild(config, "routing_tables", componentProps);
+  config.carve(["json", "routing_tables"], componentProps.data.name);
 }
 /**
  * create new routing table route

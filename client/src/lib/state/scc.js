@@ -1,5 +1,4 @@
-const { transpose } = require("lazy-z");
-const { eachKey } = require("regex-but-with-words/lib/utils");
+const { transpose, eachKey } = require("lazy-z");
 
 /**
  * init scc

@@ -2,9 +2,6 @@ const { contains } = require("lazy-z");
 const {
   setUnfoundResourceGroup,
   hasUnfoundVpc,
-  pushAndUpdate,
-  updateChild,
-  carveChild
 } = require("./store.utils");
 
 /**
@@ -51,7 +48,7 @@ function vpnOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function vpnCreate(config, stateData) {
-  pushAndUpdate(config, "vpn_gateways", stateData);
+  config.push(["json", "vpn_gateways"], stateData);
 }
 
 /**
@@ -61,7 +58,11 @@ function vpnCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function vpnSave(config, stateData, componentProps) {
-  updateChild(config, "vpn_gateways", stateData, componentProps);
+  config.updateChild(
+    ["json", "vpn_gateways"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -71,7 +72,10 @@ function vpnSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function vpnDelete(config, stateData, componentProps) {
-  carveChild(config, "vpn_gateways", componentProps);
+  config.carve(
+    ["json", "vpn_gateways"],
+    componentProps.data.name
+  );
 }
 
 module.exports = {

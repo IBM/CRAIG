@@ -1,5 +1,4 @@
 const { splat } = require("lazy-z");
-const { pushAndUpdate, updateChild, carveChild } = require("./store.utils");
 
 /**
  * initialize resource groups
@@ -47,7 +46,7 @@ function resourceGroupOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function resourceGroupCreate(config, stateData) {
-  pushAndUpdate(config, "resource_groups", stateData);
+  config.push(["json", "resource_groups"], stateData);
 }
 
 /**
@@ -57,7 +56,11 @@ function resourceGroupCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function resourceGroupSave(config, stateData, componentProps) {
-  updateChild(config, "resource_groups", stateData, componentProps);
+  config.updateChild(
+    ["json", "resource_groups"],
+    componentProps.data.name,
+    stateData
+  );
 }
 
 /**
@@ -67,7 +70,10 @@ function resourceGroupSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function resourceGroupDelete(config, stateData, componentProps) {
-  carveChild(config, "resource_groups", componentProps);
+  config.carve(
+    ["json", "resource_groups"],
+    componentProps.data.name
+  );
 }
 
 module.exports = {

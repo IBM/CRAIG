@@ -5,8 +5,6 @@ const { newDefaultKms } = require("./defaults");
 const {
   setUnfoundResourceGroup,
   carveChild,
-  updateChild,
-  pushAndUpdate,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal
@@ -68,7 +66,11 @@ function keyManagementSave(config, stateData, componentProps) {
     authorize_vpc_reader_role: stateData.authorize_vpc_reader_role,
     use_data: stateData.use_hs_crypto ? true : stateData.use_data || false
   };
-  updateChild(config, "key_management", keyManagementData, componentProps);
+  config.updateChild(
+    ["json", "key_management"],
+    componentProps.data.name,
+    keyManagementData
+  );
 }
 
 /**
@@ -77,7 +79,7 @@ function keyManagementSave(config, stateData, componentProps) {
  * @param {object} stateData component state data
  */
 function keyManagementCreate(config, stateData) {
-  pushAndUpdate(config, "key_management", stateData);
+  config.push(["json", "key_management"], stateData);
 }
 
 /**
@@ -87,7 +89,7 @@ function keyManagementCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function keyManagementDelete(config, stateData, componentProps) {
-  carveChild(config, "key_management", componentProps);
+  config.carve(["json", "key_management"], componentProps.data.name);
 }
 
 /**

@@ -12,7 +12,6 @@ const {
   setValidSshKeys,
   setUnfoundEncryptionKey,
   setUnfoundResourceGroup,
-  updateChild
 } = require("./store.utils");
 
 /**

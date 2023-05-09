@@ -27,7 +27,6 @@ const {
   newDefaultF5ExternalAclManagement
 } = require("./defaults");
 const { lazyZstate } = require("lazy-z/lib/store");
-const { pushAndUpdate, setUnfoundResourceGroup } = require("./store.utils");
 const { buildSubnet } = require("../builders");
 const { reservedSubnetNameExp } = require("../constants");
 const {
@@ -124,7 +123,7 @@ function vpcCreate(config, stateData) {
   pgwNumberToZone(vpc);
   config.store.subnetTiers[vpc.name] = [];
   vpc.cos = getVpcCosName(config, stateData.bucket);
-  pushAndUpdate(config, "vpcs", vpc);
+  config.push(["json", "vpcs"], vpc);
 }
 
 /**
@@ -182,7 +181,7 @@ function vpcOnStoreUpdate(config) {
     // set subnets object vpc name to list
     config.store.subnets[network.name] = subnetList;
     // set acls object to the list of acls
-    setUnfoundResourceGroup(config, network);
+    config.updateUnfound("resourceGroups", network, "resource_group");
     network.publicGateways = splat(network.public_gateways, "zone");
   });
   config.store.vpcList = splat(config.store.json.vpcs, "name");

@@ -1,10 +1,4 @@
-const { splat, contains } = require("lazy-z");
-const {
-  setUnfoundResourceGroup,
-  pushAndUpdate,
-  updateChild,
-  carveChild
-} = require("./store.utils");
+const { splat } = require("lazy-z");
 
 /**
  * set config store ssh keys
@@ -45,7 +39,7 @@ function sshKeyInit(config) {
 function sshKeyOnStoreUpdate(config) {
   setSshKeys(config);
   config.store.json.ssh_keys.forEach(key => {
-    setUnfoundResourceGroup(config, key);
+    config.setUnfound("resourceGroups", key, "resource_group");
   });
 }
 
@@ -55,7 +49,7 @@ function sshKeyOnStoreUpdate(config) {
  * @param {object} stateData component state data
  */
 function sshKeyCreate(config, stateData) {
-  pushAndUpdate(config, "ssh_keys", stateData);
+  config.push(["json", "ssh_keys"], stateData);
 }
 
 /**
@@ -94,7 +88,7 @@ function sshKeySave(config, stateData, componentProps) {
       instance.ssh_keys = newSshKeys;
     });
   }
-  updateChild(config, "ssh_keys", stateData, componentProps);
+  config.updateChild(["json", "ssh_keys"], componentProps.data.name, stateData);
 }
 
 /**
@@ -104,7 +98,10 @@ function sshKeySave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function sshKeyDelete(config, stateData, componentProps) {
-  carveChild(config, "ssh_keys", componentProps);
+  config.carve(
+    ["json", "ssh_keys"],
+    componentProps.data.name
+  );
 }
 
 module.exports = {

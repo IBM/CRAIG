@@ -8,11 +8,8 @@ const {
 } = require("lazy-z");
 const { newDefaultWorkloadCluster } = require("./defaults");
 const {
-  pushAndUpdate,
   setUnfoundResourceGroup,
   setUnfoundEncryptionKey,
-  updateChild,
-  carveChild,
   pushToChildFieldModal,
   updateSubChild,
   deleteSubChild,
@@ -91,7 +88,7 @@ function clusterOnStoreUpdate(config) {
  * @param {object} stateData.cluster cluster object
  */
 function clusterCreate(config, stateData) {
-  pushAndUpdate(config, "clusters", stateData);
+  config.push(["json", "clusters"], stateData);
 }
 
 /**
@@ -115,7 +112,7 @@ function clusterSave(config, stateData, componentProps) {
       pool.subnets = [];
     });
   }
-  updateChild(config, "clusters", stateData, componentProps);
+  config.updateChild(["json", "clusters"], componentProps.data.name, stateData);
 }
 
 /**
@@ -125,7 +122,7 @@ function clusterSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function clusterDelete(config, stateData, componentProps) {
-  carveChild(config, "clusters", componentProps);
+  config.carve(["json", "clusters"], componentProps.data.name);
 }
 
 /**
