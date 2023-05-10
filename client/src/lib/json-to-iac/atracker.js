@@ -1,3 +1,4 @@
+const { varDotRegion } = require("../constants");
 const {
   kebabName,
   tfRef,
@@ -38,7 +39,7 @@ function ibmAtrackerTarget(config) {
       name: kebabName(config, [config.atracker.name, config.atracker.type]),
       cos_endpoint: [
         {
-          endpoint: `s3.private.${config._options.region}.cloud-object-storage.appdomain.cloud`,
+          endpoint: `s3.private.${varDotRegion}.cloud-object-storage.appdomain.cloud`,
           target_crn: cosRef(config.atracker.target_name),
           bucket: bucketRef(
             config.atracker.target_name,
@@ -53,7 +54,7 @@ function ibmAtrackerTarget(config) {
           )
         }
       ],
-      region: config._options.region,
+      region: varDotRegion,
       target_type: "cloud_object_storage"
     }
   };
@@ -71,7 +72,7 @@ function ibmAtrackerTarget(config) {
  * @returns {Object} terraform atracker target
  */
 function ibmAtrackerRoute(config) {
-  return {
+  let routeData = {
     name: `${config.atracker.name} ${config.atracker.type} route`,
     data: {
       name: kebabName(config, [
@@ -81,7 +82,7 @@ function ibmAtrackerRoute(config) {
       ]),
       rules: [
         {
-          locations: config.atracker.locations,
+          locations: [],
           target_ids: [
             tfRef(
               "ibm_atracker_target",
@@ -92,6 +93,12 @@ function ibmAtrackerRoute(config) {
       ]
     }
   };
+  config.atracker.locations.forEach(location => {
+    if (location === config._options.region) {
+      routeData.data.rules[0].locations.push(varDotRegion);
+    } else routeData.data.rules[0].locations.push(location);
+  });
+  return routeData;
 }
 
 /**

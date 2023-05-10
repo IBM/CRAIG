@@ -54,7 +54,7 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
     value = "169.23.56.234"
     ref {
       account_id       = "12ab34cd56ef78ab90cd12ef34ab56cd"
-      location         = "us-south"
+      location         = var.region
       service_instance = "fake-service-instance"
       service_name     = "frog-service-name"
       service_type     = "frog-service"
@@ -63,7 +63,7 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
   addresses {
     ref {
       account_id       = "12ab34cd56ef78ab90cd12ef34ab56cd"
-      location         = "us-south"
+      location         = var.region
       service_instance = "fake-service-instance"
       service_name     = "frog-service-name"
       service_type     = "frog-service"

@@ -26,7 +26,7 @@ terraform {
 
 provider "ibm" {
   ibmcloud_api_key = var.ibmcloud_api_key
-  region           = $REGION
+  region           = var.region
   ibmcloud_timeout = 60
 }
 
@@ -40,6 +40,12 @@ variable "ibmcloud_api_key" {
   description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
   type        = string
   sensitive   = true
+}
+
+variable "region" {
+  description = "IBM Cloud Region where resources will be provisioned"
+  type        = string
+  default     = "$REGION"
 }
 $ADDITIONAL_VALUES
 ##############################################################################

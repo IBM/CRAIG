@@ -10,6 +10,7 @@ const {
   jsonToTfPrint,
   getResourceOrData
 } = require("./utils");
+const { varDotRegion } = require("../constants");
 
 /**
  * create terraform for appid key
@@ -69,7 +70,7 @@ function ibmResourceInstanceAppId(instance, config) {
     appIdValues.tags = config._options.tags;
     appIdValues.service = "appid";
     appIdValues.plan = "graduated-tier";
-    appIdValues.location = config._options.region;
+    appIdValues.location = varDotRegion
   }
   return {
     name: instance.name,

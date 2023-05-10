@@ -47,7 +47,7 @@ resource "ibm_resource_instance" "event_streams_es" {
   name              = "iac-event-streams"
   service           = "messagehub"
   plan              = "enterprise"
-  location          = "us-south"
+  location          = var.region
   resource_group_id = ibm_resource_group.slz_service_rg.id
   parameters = {
     service-endpoints    = "private"
@@ -106,7 +106,7 @@ resource "ibm_resource_instance" "event_streams_es" {
   name              = "iac-event-streams"
   service           = "messagehub"
   plan              = "enterprise"
-  location          = "us-south"
+  location          = var.region
   resource_group_id = ibm_resource_group.slz_service_rg.id
   parameters = {
     service-endpoints = "private"
@@ -170,7 +170,7 @@ resource "ibm_resource_instance" "event_streams_es" {
   name              = "iac-event-streams"
   service           = "messagehub"
   plan              = "enterprise"
-  location          = "us-south"
+  location          = var.region
   resource_group_id = ibm_resource_group.slz_service_rg.id
   parameters = {
     service-endpoints    = "private"
@@ -237,7 +237,7 @@ resource "ibm_resource_instance" "event_streams_es" {
   name              = "iac-event-streams"
   service           = "messagehub"
   plan              = "standard"
-  location          = "us-south"
+  location          = var.region
   resource_group_id = ibm_resource_group.slz_service_rg.id
   timeouts {
     create = "3h"

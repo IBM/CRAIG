@@ -66,7 +66,8 @@ const {
 const {
   secretsManagerTf,
   ibmResourceInstanceSecretsManager,
-  ibmIamAuthorizationPolicySecretsManager
+  ibmIamAuthorizationPolicySecretsManager,
+  formatSecretsManagerSecret
 } = require("./secrets-manager");
 const {
   sgTf,
@@ -133,6 +134,14 @@ const {
   ibmCbrRule,
   cbrTf
 } = require("./cbr");
+const {
+  formatDnsService,
+  formatDnsZone,
+  formatDnsRecord,
+  formatDnsPermittedNetwork,
+  formatDnsCustomResolver,
+  dnsTf
+} = require("./dns");
 module.exports = {
   buildTitleComment,
   formatPgw,
@@ -237,5 +246,12 @@ module.exports = {
   ibmCbrRule,
   cbrTf,
   vpcModuleJson,
-  vpcModuleOutputs
+  vpcModuleOutputs,
+  formatSecretsManagerSecret,
+  formatDnsService,
+  formatDnsZone,
+  formatDnsRecord,
+  formatDnsPermittedNetwork,
+  formatDnsCustomResolver,
+  dnsTf
 };

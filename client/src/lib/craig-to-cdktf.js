@@ -67,6 +67,7 @@ const {
   vpcModuleOutputs
 } = require("./json-to-iac");
 const { cdktfValues, getResourceOrData } = require("./json-to-iac/utils");
+const { varDotRegion } = require("./constants");
 
 /**
  * create vpc modules from craig
@@ -92,6 +93,10 @@ function craigToVpcModuleCdktf(craig) {
         tags: {
           description: "List of tags",
           type: "${list(string)}"
+        },
+        region: {
+          description: "IBM Cloud Region where resources will be provisioned",
+          type: "${string}"
         }
       }
     };
@@ -197,7 +202,7 @@ function craigToCdktf(craig) {
       ibm: [
         {
           ibmcloud_api_key: "${var.ibmcloud_api_key}",
-          region: `${craig._options.region}`
+          region: varDotRegion
         }
       ]
     },
@@ -412,28 +417,6 @@ function craigToCdktf(craig) {
       );
     });
   });
-
-  // security groups
-  // craig.security_groups.forEach(sg => {
-  //   let group = ibmIsSecurityGroup(sg, craig);
-  //   cdktfValues(
-  //     cdktfJson,
-  //     "resource",
-  //     "ibm_is_security_group",
-  //     group.name,
-  //     group.data
-  //   );
-  //   sg.rules.forEach(rule => {
-  //     let data = ibmIsSecurityGroupRule(rule);
-  //     cdktfValues(
-  //       cdktfJson,
-  //       "resource",
-  //       "ibm_is_security_group_rule",
-  //       data.name,
-  //       data.data
-  //     );
-  //   });
-  // });
 
   // ssh keys
   craig.ssh_keys.forEach(key => {

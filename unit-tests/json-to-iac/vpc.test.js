@@ -168,7 +168,7 @@ resource "ibm_is_vpc" "management_vpc" {
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
   name = "iac-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
-  zone = "us-south-1"
+  zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
 }
 `;
@@ -210,7 +210,7 @@ resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vsi-subnet-1"
-  zone            = "us-south-1"
+  zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr
@@ -245,7 +245,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
   vpc             = ibm_is_vpc.edge_vpc.id
   name            = "slz-edge-f5-bastion-zone-1"
-  zone            = "us-south-1"
+  zone            = "\${var.region}-1"
   resource_group  = var.slz_edge_rg_id
   network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
   ipv4_cidr_block = "10.5.60.0/24"
@@ -867,7 +867,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   name           = "iac-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
-  zone           = "us-south-1"
+  zone           = "\${var.region}-1"
   tags = [
     "hello",
     "world"
@@ -907,7 +907,7 @@ resource "ibm_is_public_gateway" "management_override_gw" {
   name           = "iac-management-override-gw"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
-  zone           = "us-south-1"
+  zone           = "\${var.region}-1"
   tags = [
     "hello",
     "world"
@@ -1028,7 +1028,7 @@ resource "ibm_is_vpc" "management_vpc" {
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
   name = "iac-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
-  zone = "us-south-1"
+  zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
 }
 
@@ -1055,7 +1055,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   name           = "iac-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
-  zone           = "us-south-1"
+  zone           = "\${var.region}-1"
   tags = [
     "hello",
     "world"
@@ -1065,7 +1065,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vsi-subnet-1"
-  zone            = "us-south-1"
+  zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr
@@ -1260,7 +1260,7 @@ resource "ibm_is_vpc" "management_vpc" {
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
   name = "iac-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
-  zone = "us-south-1"
+  zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
 }
 
@@ -1287,7 +1287,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   name           = "iac-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
-  zone           = "us-south-1"
+  zone           = "\${var.region}-1"
   tags = [
     "hello",
     "world"
@@ -1297,7 +1297,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vsi-subnet-1"
-  zone            = "us-south-1"
+  zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr
@@ -1330,7 +1330,7 @@ resource "ibm_is_vpc" "workload_vpc" {
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
   name = "iac-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
-  zone = "us-south-1"
+  zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
 }
 
@@ -1357,7 +1357,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
   name           = "iac-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
-  zone           = "us-south-1"
+  zone           = "\${var.region}-1"
   tags = [
     "hello",
     "world"
@@ -1367,7 +1367,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
   name            = "iac-management-vsi-subnet-1"
-  zone            = "us-south-1"
+  zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
   ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_subnet_1_prefix.cidr

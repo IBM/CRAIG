@@ -4,7 +4,6 @@ const {
   getKmsInstanceData,
   subnetZone,
   composedZone,
-  subnetRef,
   kebabName,
   vpcRef,
   resourceRef,
@@ -68,7 +67,7 @@ function ibmContainerVpcCluster(cluster, config) {
   // add subnets
   cluster.subnets.forEach(subnet => {
     clusterData.zones.push({
-      name: composedZone(config, subnetZone(subnet), true),
+      name: composedZone(subnetZone(subnet), true),
       subnet_id: `\${module.${snakeCase(cluster.vpc)}_vpc.${snakeCase(
         subnet
       )}_id}`
@@ -129,7 +128,7 @@ function ibmContainerVpcWorkerPool(pool, config) {
   // add subnets
   pool.subnets.forEach(subnet => {
     poolData.zones.push({
-      name: composedZone(config, subnetZone(subnet), true),
+      name: composedZone(subnetZone(subnet), true),
       subnet_id: `\${module.${snakeCase(poolCluster.vpc)}_vpc.${snakeCase(
         subnet
       )}_id}`

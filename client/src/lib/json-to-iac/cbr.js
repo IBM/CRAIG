@@ -1,3 +1,4 @@
+const { varDotRegion } = require("../constants");
 const { kebabName, jsonToTfPrint, tfBlock, tfDone } = require("./utils");
 
 /**
@@ -19,7 +20,10 @@ function ibmCbrZoneAddressAndExclusion(item, type) {
       "service_name",
       "service_type"
     ].forEach(field => {
-      if (item[field] !== undefined) zone.ref[0][field] = String(item[field]);
+      if (field === "location" && item[field] !== undefined)
+        zone.ref[0][field] = varDotRegion;
+      else if (item[field] !== undefined)
+        zone.ref[0][field] = String(item[field]);
     });
   }
   return zone;

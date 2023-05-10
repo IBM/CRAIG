@@ -6,6 +6,7 @@ const {
   getTags,
   jsonToTfPrint
 } = require("./utils");
+const { varDotRegion } = require("../constants");
 
 /**
  * format iam account settings terraform
@@ -96,6 +97,9 @@ function ibmIamAccessGroupPolicy(policy) {
   };
   if (policy.resources) {
     policyValues.resources = [policy.resources];
+    if (policyValues.resources[0].region) {
+      policyValues.resources[0].region = varDotRegion;
+    }
   }
   if (policy.resource_attributes) {
     policyValues.resource_attributes = [policy.resource_attributes];

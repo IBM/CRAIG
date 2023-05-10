@@ -1,3 +1,4 @@
+const { varDotRegion } = require("../constants");
 const {
   kebabName,
   rgIdRef,
@@ -25,7 +26,7 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
     name: kebabName(config, [eventStreams.name]),
     service: "messagehub",
     plan: eventStreams.plan,
-    location: config._options.region,
+    location: varDotRegion,
     resource_group_id: rgIdRef(eventStreams.resource_group, config),
     parameters: {
       "service-endpoints": eventStreams.endpoints

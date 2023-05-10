@@ -68,7 +68,64 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
     module.management_vpc.management_vpe_sg_id
   ]
   target {
-    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
+    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.\${var.region}.cloud-object-storage.appdomain.cloud"
+    resource_type = "provider_cloud_service"
+  }
+}
+`;
+
+      assert.deepEqual(actualData, expectedData, "it should create correct tf");
+    });
+    it("should format vpe gateway for secrets manager", () => {
+      let actualData = fortmatVpeGateway(
+        {
+          vpc: "management",
+          service: "secrets-manager",
+          resource_group: "slz-management-rg",
+          security_groups: ["management-vpe-sg"],
+          subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+          account_id: "1234",
+          instance: "secrets-manager"
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_prefix: false,
+              name: "slz-service-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: false,
+              name: "slz-management-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: false,
+              name: "slz-workload-rg",
+              use_data: false,
+            },
+          ]
+        }
+      );
+      let expectedData = `
+resource "ibm_is_virtual_endpoint_gateway" "management_vpc_secrets_manager_vpe_gateway" {
+  name           = "iac-management-secrets-manager-vpe-gw"
+  vpc            = module.management_vpc.id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+  target {
+    crn           = "crn:v1:bluemix:public:secrets-manager:\${var.region}:a/1234:\${ibm_resource_instance.secrets_manager_secrets_manager.guid}::"
     resource_type = "provider_cloud_service"
   }
 }
@@ -121,7 +178,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
   ]
   security_groups = []
   target {
-    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
+    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.\${var.region}.cloud-object-storage.appdomain.cloud"
     resource_type = "provider_cloud_service"
   }
 }
@@ -183,7 +240,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
     module.management_vpc.management_vpe_sg_id
   ]
   target {
-    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
+    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.\${var.region}.cloud-object-storage.appdomain.cloud"
     resource_type = "provider_cloud_service"
   }
 }
@@ -233,7 +290,7 @@ resource "ibm_is_virtual_endpoint_gateway" "workload_vpc_cos_vpe_gateway" {
     module.workload_vpc.workload_vpe_sg_id
   ]
   target {
-    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud"
+    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.\${var.region}.cloud-object-storage.appdomain.cloud"
     resource_type = "provider_cloud_service"
   }
 }

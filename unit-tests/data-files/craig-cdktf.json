@@ -3,7 +3,7 @@
     "ibm": [
       {
         "ibmcloud_api_key": "${var.ibmcloud_api_key}",
-        "region": "us-south"
+        "region": "${var.region}"
       }
     ]
   },
@@ -15,6 +15,7 @@
           "path": "./management_vpc"
         }
       },
+      "region": "${var.region}",
       "source": "./management_vpc",
       "tags": [
         "slz",
@@ -29,6 +30,7 @@
           "path": "./workload_vpc"
         }
       },
+      "region": "${var.region}",
       "source": "./workload_vpc",
       "tags": [
         "slz",
@@ -50,13 +52,13 @@
         "name": "slz-slz-atracker-cos",
         "cos_endpoint": [
           {
-            "endpoint": "s3.private.us-south.cloud-object-storage.appdomain.cloud",
+            "endpoint": "s3.private.${var.region}.cloud-object-storage.appdomain.cloud",
             "target_crn": "${ibm_resource_instance.atracker_cos_object_storage.id}",
             "bucket": "${ibm_cos_bucket.atracker_cos_object_storage_atracker_bucket_bucket.bucket_name}",
             "api_key": "${ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key.credentials.apikey}"
           }
         ],
-        "region": "us-south",
+        "region": "${var.region}",
         "target_type": "cloud_object_storage"
       }
     },
@@ -67,7 +69,7 @@
           {
             "locations": [
               "global",
-              "us-south"
+              "${var.region}"
             ],
             "target_ids": [
               "${ibm_atracker_target.slz_atracker_cos_target.id}"
@@ -93,15 +95,15 @@
         "disable_public_service_endpoint": false,
         "zones": [
           {
-            "name": "us-south-1",
+            "name": "${var.region}-1",
             "subnet_id": "${module.workload_vpc.vsi_zone_1_id}"
           },
           {
-            "name": "us-south-2",
+            "name": "${var.region}-2",
             "subnet_id": "${module.workload_vpc.vsi_zone_2_id}"
           },
           {
-            "name": "us-south-3",
+            "name": "${var.region}-3",
             "subnet_id": "${module.workload_vpc.vsi_zone_3_id}"
           }
         ],
@@ -133,15 +135,15 @@
         "worker_count": 2,
         "zones": [
           {
-            "name": "us-south-1",
+            "name": "${var.region}-1",
             "subnet_id": "${module.workload_vpc.vsi_zone_1_id}"
           },
           {
-            "name": "us-south-2",
+            "name": "${var.region}-2",
             "subnet_id": "${module.workload_vpc.vsi_zone_2_id}"
           },
           {
-            "name": "us-south-3",
+            "name": "${var.region}-3",
             "subnet_id": "${module.workload_vpc.vsi_zone_3_id}"
           }
         ],
@@ -281,7 +283,7 @@
         "resource_group_id": "${ibm_resource_group.slz_service_rg.id}",
         "service": "kms",
         "plan": "tiered-pricing",
-        "location": "us-south",
+        "location": "${var.region}",
         "tags": [
           "slz",
           "landing-zone"
@@ -295,7 +297,7 @@
         "storage_class": "standard",
         "endpoint_type": "public",
         "force_delete": true,
-        "region_location": "us-south",
+        "region_location": "${var.region}",
         "key_protect": "${ibm_kms_key.slz_kms_slz_atracker_key_key.crn}",
         "depends_on": [
           "ibm_iam_authorization_policy.atracker_cos_cos_to_slz_kms_kms_policy"
@@ -307,7 +309,7 @@
         "storage_class": "standard",
         "endpoint_type": "public",
         "force_delete": true,
-        "region_location": "us-south",
+        "region_location": "${var.region}",
         "key_protect": "${ibm_kms_key.slz_kms_slz_slz_key_key.crn}",
         "depends_on": [
           "ibm_iam_authorization_policy.cos_cos_to_slz_kms_kms_policy"
@@ -319,7 +321,7 @@
         "storage_class": "standard",
         "endpoint_type": "public",
         "force_delete": true,
-        "region_location": "us-south",
+        "region_location": "${var.region}",
         "key_protect": "${ibm_kms_key.slz_kms_slz_slz_key_key.crn}",
         "depends_on": [
           "ibm_iam_authorization_policy.cos_cos_to_slz_kms_kms_policy"
@@ -442,7 +444,7 @@
     "ibm_tg_gateway": {
       "transit_gateway": {
         "name": "slz-transit-gateway",
-        "location": "us-south",
+        "location": "${var.region}",
         "global": false,
         "resource_group": "${ibm_resource_group.slz_service_rg.id}",
         "timeouts": [
@@ -539,7 +541,7 @@
         ],
         "target": [
           {
-            "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud",
+            "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.${var.region}.cloud-object-storage.appdomain.cloud",
             "resource_type": "provider_cloud_service"
           }
         ]
@@ -557,7 +559,7 @@
         ],
         "target": [
           {
-            "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.us-south.cloud-object-storage.appdomain.cloud",
+            "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.${var.region}.cloud-object-storage.appdomain.cloud",
             "resource_type": "provider_cloud_service"
           }
         ]
@@ -570,7 +572,7 @@
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
-        "zone": "us-south-1",
+        "zone": "${var.region}-1",
         "tags": [
           "slz",
           "landing-zone"
@@ -598,7 +600,7 @@
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
-        "zone": "us-south-1",
+        "zone": "${var.region}-1",
         "tags": [
           "slz",
           "landing-zone"
@@ -626,7 +628,7 @@
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
-        "zone": "us-south-2",
+        "zone": "${var.region}-2",
         "tags": [
           "slz",
           "landing-zone"
@@ -654,7 +656,7 @@
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
-        "zone": "us-south-2",
+        "zone": "${var.region}-2",
         "tags": [
           "slz",
           "landing-zone"
@@ -682,7 +684,7 @@
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
-        "zone": "us-south-3",
+        "zone": "${var.region}-3",
         "tags": [
           "slz",
           "landing-zone"
@@ -710,7 +712,7 @@
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
-        "zone": "us-south-3",
+        "zone": "${var.region}-3",
         "tags": [
           "slz",
           "landing-zone"

@@ -117,7 +117,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   ]
   resources {
     resource_instance_id = "1234"
-    region               = "us-south"
+    region               = var.region
     service              = "cloud-object-storage"
     resource_type        = "resource-group"
     attributes = {
@@ -152,7 +152,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   ]
   resources {
     resource_instance_id = "1234"
-    region               = "us-south"
+    region               = var.region
     service              = "cloud-object-storage"
     resource_type        = "resource-group"
   }
@@ -380,7 +380,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   ]
   resources {
     resource_instance_id = "1234"
-    region               = "us-south"
+    region               = var.region
     service              = "cloud-object-storage"
     resource_type        = "resource-group"
     attributes = {
@@ -494,7 +494,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
   ]
   resources {
     resource_instance_id = "1234"
-    region               = "us-south"
+    region               = var.region
     service              = "cloud-object-storage"
     resource_type        = "resource-group"
     attributes = {

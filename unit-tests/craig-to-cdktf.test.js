@@ -555,14 +555,14 @@ describe("craigToCdktf", () => {
               resource_group_id: "${ibm_resource_group.slz_service_rg.id}",
               service: "kms",
               plan: "tiered-pricing",
-              location: "us-south",
+              location: "${var.region}",
               tags: ["slz", "landing-zone"],
             },
             event_streams_es: {
               name: "slz-event-streams",
               service: "messagehub",
               plan: "enterprise-3nodes-2tb",
-              location: "us-south",
+              location: "${var.region}",
               resource_group_id: "${ibm_resource_group.slz_service_rg.id}",
               timeouts: [{ create: "3h", update: "1h", delete: "1h" }],
               parameters: {
@@ -578,11 +578,11 @@ describe("craigToCdktf", () => {
               tags: ["slz", "landing-zone"],
               service: "appid",
               plan: "graduated-tier",
-              location: "us-south",
+              location: "${var.region}",
             },
             secrets_manager_secrets_manager: {
               name: "slz-secrets-manager",
-              location: "us-south",
+              location: "${var.region}",
               plan: "standard",
               service: "secrets-manager",
               resource_group_id: "${ibm_resource_group.slz_service_rg.id}",
@@ -821,7 +821,7 @@ describe("craigToCdktf", () => {
       //         name: "slz-management-gateway-zone-1",
       //         vpc: "${ibm_is_vpc.management_vpc.id}",
       //         resource_group: "${var.slz_management_rg_id}",
-      //         zone: "us-south-1",
+      //         zone: "${var.region}-1",
       //         tags: ["slz", "landing-zone"],
       //       },
       //     },
@@ -846,7 +846,7 @@ describe("craigToCdktf", () => {
             management_vpc_management_server_vsi_1_1_block_storage_1: {
               name: "slz-management-management-server-vsi-zone-1-1-block-storage-1",
               profile: "custom",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               iops: 1000,
               capacity: 200,
               encryption_key:
@@ -856,7 +856,7 @@ describe("craigToCdktf", () => {
             management_vpc_management_server_vsi_1_2_block_storage_1: {
               name: "slz-management-management-server-vsi-zone-1-2-block-storage-1",
               profile: "custom",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               iops: 1000,
               capacity: 200,
               encryption_key:
@@ -866,7 +866,7 @@ describe("craigToCdktf", () => {
             management_vpc_management_server_vsi_2_1_block_storage_1: {
               name: "slz-management-management-server-vsi-zone-2-1-block-storage-1",
               profile: "custom",
-              zone: "us-south-2",
+              zone: "${var.region}-2",
               iops: 1000,
               capacity: 200,
               encryption_key:
@@ -876,7 +876,7 @@ describe("craigToCdktf", () => {
             management_vpc_management_server_vsi_2_2_block_storage_1: {
               name: "slz-management-management-server-vsi-zone-2-2-block-storage-1",
               profile: "custom",
-              zone: "us-south-2",
+              zone: "${var.region}-2",
               iops: 1000,
               capacity: 200,
               encryption_key:
@@ -886,7 +886,7 @@ describe("craigToCdktf", () => {
             management_vpc_management_server_vsi_3_1_block_storage_1: {
               name: "slz-management-management-server-vsi-zone-3-1-block-storage-1",
               profile: "custom",
-              zone: "us-south-3",
+              zone: "${var.region}-3",
               iops: 1000,
               capacity: 200,
               encryption_key:
@@ -896,7 +896,7 @@ describe("craigToCdktf", () => {
             management_vpc_management_server_vsi_3_2_block_storage_1: {
               name: "slz-management-management-server-vsi-zone-3-2-block-storage-1",
               profile: "custom",
-              zone: "us-south-3",
+              zone: "${var.region}-3",
               iops: 1000,
               capacity: 200,
               encryption_key:
@@ -935,7 +935,7 @@ describe("craigToCdktf", () => {
                 template_source:
                   "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
                 template_version: "hi",
-                zone: "us-south-1",
+                zone: "${var.region}-1",
                 vpc: "${module.edge_vpc.id}",
                 app_id: "hi",
               },
@@ -948,7 +948,7 @@ describe("craigToCdktf", () => {
         let actualData = craigToCdktf({
           _options: {
             prefix: "slz",
-            region: "us-south",
+            region: "${var.region}",
             tags: ["slz", "landing-zone"],
           },
           resource_groups: [
@@ -1066,7 +1066,7 @@ describe("craigToCdktf", () => {
             bucket: "atracker-bucket",
             add_route: true,
             cos_key: "cos-bind-key",
-            locations: ["global", "us-south"],
+            locations: ["global", "${var.region}"],
           },
           vpcs: [
             {
@@ -1507,6 +1507,7 @@ describe("craigToCdktf", () => {
                   path: "./management_vpc",
                 },
               },
+              region: "${var.region}",
               source: "./management_vpc",
               tags: ["slz", "landing-zone"],
               slz_workload_rg_id: "${ibm_resource_group.slz_service_rg.id}",
@@ -1517,6 +1518,7 @@ describe("craigToCdktf", () => {
               "//": {
                 metadata: { uniqueId: "workload_vpc", path: "./workload_vpc" },
               },
+              region: "${var.region}",
               source: "./workload_vpc",
               tags: ["slz", "landing-zone"],
               slz_workload_rg_id: "${ibm_resource_group.slz_workload_rg.id}",
@@ -1607,6 +1609,10 @@ describe("craigToCdktf", () => {
       let expectedData = {
         variable: {
           tags: { description: "List of tags", type: "${list(string)}" },
+          region: {
+            description: "IBM Cloud Region where resources will be provisioned",
+            type: "${string}",
+          },
           slz_management_rg_id: {
             description: "ID for the resource group slz-management-rg",
             type: "${string}",
@@ -1628,43 +1634,43 @@ describe("craigToCdktf", () => {
             management_vsi_zone_1_prefix: {
               name: "slz-management-vsi-zone-1",
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               cidr: "10.10.10.0/24",
             },
             management_vsi_zone_2_prefix: {
               name: "slz-management-vsi-zone-2",
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-2",
+              zone: "${var.region}-2",
               cidr: "10.10.20.0/24",
             },
             management_vsi_zone_3_prefix: {
               name: "slz-management-vsi-zone-3",
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-3",
+              zone: "${var.region}-3",
               cidr: "10.10.30.0/24",
             },
             management_vpe_zone_1_prefix: {
               name: "slz-management-vpe-zone-1",
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               cidr: "10.20.10.0/24",
             },
             management_vpe_zone_2_prefix: {
               name: "slz-management-vpe-zone-2",
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-2",
+              zone: "${var.region}-2",
               cidr: "10.20.20.0/24",
             },
             management_vpe_zone_3_prefix: {
               name: "slz-management-vpe-zone-3",
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-3",
+              zone: "${var.region}-3",
               cidr: "10.20.30.0/24",
             },
             management_vpn_zone_1_prefix: {
               name: "slz-management-vpn-zone-1",
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               cidr: "10.30.10.0/24",
             },
           },
@@ -1706,7 +1712,7 @@ describe("craigToCdktf", () => {
             management_vpe_zone_1: {
               vpc: "${ibm_is_vpc.management_vpc.id}",
               name: "slz-management-vpe-zone-1",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               resource_group: "${var.slz_management_rg_id}",
               tags: ["slz", "landing-zone"],
               network_acl: "${ibm_is_network_acl.management_management_acl.id}",
@@ -1716,7 +1722,7 @@ describe("craigToCdktf", () => {
             management_vpe_zone_2: {
               vpc: "${ibm_is_vpc.management_vpc.id}",
               name: "slz-management-vpe-zone-2",
-              zone: "us-south-2",
+              zone: "${var.region}-2",
               resource_group: "${var.slz_management_rg_id}",
               tags: ["slz", "landing-zone"],
               network_acl: "${ibm_is_network_acl.management_management_acl.id}",
@@ -1726,7 +1732,7 @@ describe("craigToCdktf", () => {
             management_vpe_zone_3: {
               vpc: "${ibm_is_vpc.management_vpc.id}",
               name: "slz-management-vpe-zone-3",
-              zone: "us-south-3",
+              zone: "${var.region}-3",
               resource_group: "${var.slz_management_rg_id}",
               tags: ["slz", "landing-zone"],
               network_acl: "${ibm_is_network_acl.management_management_acl.id}",
@@ -1736,7 +1742,7 @@ describe("craigToCdktf", () => {
             management_vsi_zone_1: {
               vpc: "${ibm_is_vpc.management_vpc.id}",
               name: "slz-management-vsi-zone-1",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               resource_group: "${var.slz_management_rg_id}",
               tags: ["slz", "landing-zone"],
               network_acl: "${ibm_is_network_acl.management_management_acl.id}",
@@ -1746,7 +1752,7 @@ describe("craigToCdktf", () => {
             management_vsi_zone_2: {
               vpc: "${ibm_is_vpc.management_vpc.id}",
               name: "slz-management-vsi-zone-2",
-              zone: "us-south-2",
+              zone: "${var.region}-2",
               resource_group: "${var.slz_management_rg_id}",
               tags: ["slz", "landing-zone"],
               network_acl: "${ibm_is_network_acl.management_management_acl.id}",
@@ -1756,7 +1762,7 @@ describe("craigToCdktf", () => {
             management_vsi_zone_3: {
               vpc: "${ibm_is_vpc.management_vpc.id}",
               name: "slz-management-vsi-zone-3",
-              zone: "us-south-3",
+              zone: "${var.region}-3",
               resource_group: "${var.slz_management_rg_id}",
               tags: ["slz", "landing-zone"],
               network_acl: "${ibm_is_network_acl.management_management_acl.id}",
@@ -1766,7 +1772,7 @@ describe("craigToCdktf", () => {
             management_vpn_zone_1: {
               vpc: "${ibm_is_vpc.management_vpc.id}",
               name: "slz-management-vpn-zone-1",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
               resource_group: "${var.slz_management_rg_id}",
               tags: ["slz", "landing-zone"],
               network_acl: "${ibm_is_network_acl.management_management_acl.id}",
@@ -1780,7 +1786,7 @@ describe("craigToCdktf", () => {
               resource_group: "${var.management_rg_id}",
               tags: ["slz", "landing-zone"],
               vpc: "${ibm_is_vpc.management_vpc.id}",
-              zone: "us-south-1",
+              zone: "${var.region}-1",
             },
           },
           ibm_is_security_group: {
@@ -1857,23 +1863,44 @@ describe("craigToCdktf", () => {
           vsi_zone_1_id: {
             value: "${ibm_is_subnet.management_vsi_zone_1.id}",
           },
+          vsi_zone_1_crn: {
+            value: "${ibm_is_subnet.management_vsi_zone_1.crn}",
+          },
           vpn_zone_1_id: {
             value: "${ibm_is_subnet.management_vpn_zone_1.id}",
+          },
+          vpn_zone_1_crn: {
+            value: "${ibm_is_subnet.management_vpn_zone_1.crn}",
           },
           vsi_zone_2_id: {
             value: "${ibm_is_subnet.management_vsi_zone_2.id}",
           },
+          vsi_zone_2_crn: {
+            value: "${ibm_is_subnet.management_vsi_zone_2.crn}",
+          }, 
           vsi_zone_3_id: {
             value: "${ibm_is_subnet.management_vsi_zone_3.id}",
+          },
+          vsi_zone_3_crn: {
+            value: "${ibm_is_subnet.management_vsi_zone_3.crn}",
           },
           vpe_zone_1_id: {
             value: "${ibm_is_subnet.management_vpe_zone_1.id}",
           },
+          vpe_zone_1_crn: {
+            value: "${ibm_is_subnet.management_vpe_zone_1.crn}",
+          },
           vpe_zone_2_id: {
             value: "${ibm_is_subnet.management_vpe_zone_2.id}",
           },
+          vpe_zone_2_crn: {
+            value: "${ibm_is_subnet.management_vpe_zone_2.crn}",
+          },
           vpe_zone_3_id: {
             value: "${ibm_is_subnet.management_vpe_zone_3.id}",
+          },
+          vpe_zone_3_crn: {
+            value: "${ibm_is_subnet.management_vpe_zone_3.crn}",
           },
           management_vpe_sg_id: {
             value:

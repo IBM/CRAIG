@@ -281,7 +281,7 @@ function f5TemplateFile(template, config) {
         template_source:
           "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
         template_version: template.template_version || "20210201",
-        zone: composedZone(config, template.zone),
+        zone: composedZone(template.zone),
         vpc: vpcRef(template.vpc, "id", true),
         app_id: template.app_id || "null"
       }

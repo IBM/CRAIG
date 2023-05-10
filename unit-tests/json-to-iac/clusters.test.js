@@ -47,15 +47,15 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
     "landing-zone"
   ]
   zones {
-    name      = "us-south-1"
+    name      = "\${var.region}-1"
     subnet_id = module.workload_vpc.vsi_zone_1_id
   }
   zones {
-    name      = "us-south-2"
+    name      = "\${var.region}-2"
     subnet_id = module.workload_vpc.vsi_zone_2_id
   }
   zones {
-    name      = "us-south-3"
+    name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.vsi_zone_3_id
   }
   timeouts {
@@ -990,15 +990,15 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
     "landing-zone"
   ]
   zones {
-    name      = "us-south-1"
+    name      = "\${var.region}-1"
     subnet_id = module.workload_vpc.vsi_zone_1_id
   }
   zones {
-    name      = "us-south-2"
+    name      = "\${var.region}-2"
     subnet_id = module.workload_vpc.vsi_zone_2_id
   }
   zones {
-    name      = "us-south-3"
+    name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.vsi_zone_3_id
   }
   timeouts {
@@ -1046,15 +1046,15 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
   worker_count      = 2
   entitlement       = "cloud_pak"
   zones {
-    name      = "us-south-1"
+    name      = "\${var.region}-1"
     subnet_id = module.workload_vpc.vsi_zone_1_id
   }
   zones {
-    name      = "us-south-2"
+    name      = "\${var.region}-2"
     subnet_id = module.workload_vpc.vsi_zone_2_id
   }
   zones {
-    name      = "us-south-3"
+    name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.vsi_zone_3_id
   }
 }
@@ -1090,15 +1090,15 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
     "landing-zone"
   ]
   zones {
-    name      = "us-south-1"
+    name      = "\${var.region}-1"
     subnet_id = module.workload_vpc.vsi_zone_1_id
   }
   zones {
-    name      = "us-south-2"
+    name      = "\${var.region}-2"
     subnet_id = module.workload_vpc.vsi_zone_2_id
   }
   zones {
-    name      = "us-south-3"
+    name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.vsi_zone_3_id
   }
   timeouts {
@@ -1122,15 +1122,15 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
   worker_count      = 2
   entitlement       = "cloud_pak"
   zones {
-    name      = "us-south-1"
+    name      = "\${var.region}-1"
     subnet_id = module.workload_vpc.vsi_zone_1_id
   }
   zones {
-    name      = "us-south-2"
+    name      = "\${var.region}-2"
     subnet_id = module.workload_vpc.vsi_zone_2_id
   }
   zones {
-    name      = "us-south-3"
+    name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.vsi_zone_3_id
   }
 }
@@ -2047,15 +2047,15 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
   flavor            = "bx2.16x64"
   worker_count      = 2
   zones {
-    name      = "us-south-1"
+    name      = "\${var.region}-1"
     subnet_id = module.workload_vpc.vsi_zone_1_id
   }
   zones {
-    name      = "us-south-2"
+    name      = "\${var.region}-2"
     subnet_id = module.workload_vpc.vsi_zone_2_id
   }
   zones {
-    name      = "us-south-3"
+    name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.vsi_zone_3_id
   }
 }

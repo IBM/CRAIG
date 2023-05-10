@@ -9,6 +9,7 @@ const {
   timeouts,
   jsonToTfPrint
 } = require("./utils");
+const { varDotRegion } = require("../constants");
 
 /**
  * configure transit gateway
@@ -27,7 +28,7 @@ function ibmTgGateway(tgw, config) {
     name: tgw.name,
     data: {
       name: kebabName(config, [tgw.name]),
-      location: config._options.region,
+      location: varDotRegion,
       global: tgw.global,
       resource_group: rgIdRef(tgw.resource_group, config),
       timeouts: timeouts("30m", "", "30m")

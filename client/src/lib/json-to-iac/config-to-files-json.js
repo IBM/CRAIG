@@ -18,6 +18,7 @@ const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
 const { vsiTf, lbTf } = require("./vsi");
 const { cbrTf } = require("./cbr");
+const { dnsTf } = require("./dns");
 
 /**
  * create a json document with file names as keys and text as value
@@ -66,10 +67,9 @@ variable "tmos_admin_password" {
       "virtual_servers.tf": config.vsi.length > 0 ? vsiTf(config) : null,
       "clusters.tf": clusterTf(config),
       "vpn_gateways.tf": config.vpn_gateways.length > 0 ? vpnTf(config) : null,
-      "variables.tf": variablesTf.replace(
-        "$ADDITIONAL_VALUES",
-        additionalVariables
-      ),
+      "variables.tf": variablesTf
+        .replace("$ADDITIONAL_VALUES", additionalVariables)
+        .replace("$REGION", config._options.region),
       "key_management.tf": kmsTf(config) + "\n",
       "object_storage.tf": cosTf(config) + "\n",
       "resource_groups.tf": resourceGroupTf(config),
@@ -94,7 +94,8 @@ variable "tmos_admin_password" {
       "cbr.tf":
         config.cbr_zones.length > 0 && config.cbr_rules.length > 0
           ? cbrTf(config)
-          : null
+          : null,
+      "dns.tf": config.dns && config.dns.length > 0 ? dnsTf(config) : null
     };
     vpcModuleTf(files, config);
     return files;

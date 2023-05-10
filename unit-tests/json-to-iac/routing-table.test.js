@@ -61,7 +61,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
 resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route_route" {
   vpc           = ibm_is_vpc.management_vpc.id
   routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
-  zone          = "us-south-1"
+  zone          = "\${var.region}-1"
   name          = "iac-management-routing-table-test-route-route"
   destination   = "1.2.3.4/5"
   action        = "delegate"
@@ -96,7 +96,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
 resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route_route" {
   vpc           = ibm_is_vpc.management_vpc.id
   routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
-  zone          = "us-south-1"
+  zone          = "\${var.region}-1"
   name          = "iac-management-routing-table-test-route-route"
   destination   = "1.2.3.4/5"
   action        = "deliver"
@@ -152,7 +152,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
 resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route_route" {
   vpc           = ibm_is_vpc.management_vpc.id
   routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
-  zone          = "us-south-1"
+  zone          = "\${var.region}-1"
   name          = "iac-management-routing-table-test-route-route"
   destination   = "1.2.3.4/5"
   action        = "delegate"

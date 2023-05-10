@@ -120,7 +120,7 @@ resource "ibm_resource_instance" "test_appid" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "appid"
   plan              = "graduated-tier"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"
@@ -282,7 +282,7 @@ resource "ibm_resource_instance" "test_appid" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "appid"
   plan              = "graduated-tier"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"

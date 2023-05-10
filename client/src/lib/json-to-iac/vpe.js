@@ -1,3 +1,4 @@
+const { varDotRegion } = require("../constants");
 const {
   rgIdRef,
   subnetRef,
@@ -19,7 +20,9 @@ const serviceToEndpointMap = {
   cos:
     "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.$REGION.cloud-object-storage.appdomain.cloud",
   icr:
-    "crn:v1:bluemix:public:container-registry:$REGION:::endpoint:vpe.$REGION.container-registry.cloud.ibm.com"
+    "crn:v1:bluemix:public:container-registry:$REGION:::endpoint:vpe.$REGION.container-registry.cloud.ibm.com",
+  "secrets-manager":
+    "crn:v1:bluemix:public:secrets-manager:$REGION:a/$ACCOUNT_ID:${ibm_resource_instance.$SNAKE_NAME.guid}::"
 };
 
 /**
@@ -58,8 +61,10 @@ function formatReservedIp(vpcName, subnetName) {
  * format vpe gw
  * @param {Object} vpe
  * @param {string} vpe.vpc
- * @param {string} vpe.service can be icr, cos, kms, or hpcse
+ * @param {string} vpe.service can be icr, secrets manager, cos, kms, or hpcse
  * @param {string} vpe.resource_group
+ * @param {string=} vpe.instance name of instance, used only for secrets manager
+ * @param {string=} vpe.account_id used for secrets manager crn
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.region
@@ -71,22 +76,31 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
   let data = {
     name: `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
     data: {
-      name: kebabName(config, [vpe.vpc, vpe.service, "vpe-gw"]),
+      name: kebabName(config, [
+        vpe.vpc,
+        vpe.instance ? vpe.instance : vpe.service,
+        "vpe-gw"
+      ]),
       vpc: vpcRef(vpe.vpc, "id", true),
       resource_group: rgIdRef(vpe.resource_group, config),
       tags: getTags(config),
       security_groups: [],
-      target: [
-        {
-          crn: serviceToEndpointMap[vpe.service].replace(
-            /\$REGION/g,
-            config._options.region
-          ),
-          resource_type: "provider_cloud_service"
-        }
-      ]
+      target: []
     }
   };
+  let target = {
+    crn: serviceToEndpointMap[vpe.service].replace(
+      /\$REGION/g,
+      varDotRegion
+    ),
+    resource_type: "provider_cloud_service"
+  };
+  if (vpe.service === "secrets-manager") {
+    target.crn = target.crn
+      .replace("$ACCOUNT_ID", vpe.account_id)
+      .replace("$SNAKE_NAME", "secrets_manager_" + snakeCase(vpe.instance));
+  }
+  data.data.target.push(target);
   vpe.security_groups.forEach(group => {
     data.data.security_groups.push(
       `\${module.${vpe.vpc}_vpc.${snakeCase(group)}_id}`

@@ -104,7 +104,14 @@ const {
   ibmCbrRule,
   cbrTf,
   vpcModuleJson,
-  vpcModuleOutputs
+  vpcModuleOutputs,
+  formatSecretsManagerSecret,
+  formatDnsService,
+  formatDnsZone,
+  formatDnsRecord,
+  formatDnsPermittedNetwork,
+  formatDnsCustomResolver,
+  dnsTf
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
@@ -214,5 +221,12 @@ module.exports = {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
-  invalidProjectDescription
+  invalidProjectDescription,
+  formatSecretsManagerSecret,
+  formatDnsService,
+  formatDnsZone,
+  formatDnsRecord,
+  formatDnsPermittedNetwork,
+  formatDnsCustomResolver,
+  dnsTf
 };

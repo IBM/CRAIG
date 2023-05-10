@@ -360,7 +360,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
@@ -432,7 +432,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
@@ -504,7 +504,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
@@ -577,7 +577,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   object_versioning {
     enable = true
@@ -660,7 +660,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   archive_rule {
     days    = 30
@@ -746,7 +746,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   expire_rule {
     days                         = 30
@@ -832,7 +832,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   retention_rule {
     default   = 1
@@ -911,7 +911,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   allowed_ip           = "[\"1.2.3.4\",\"5.6.7.8\"]"
   depends_on = [
@@ -987,7 +987,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   metrics_monitoring {
     metrics_monitoring_crn  = "metrics_monitoring"
@@ -1067,7 +1067,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   activity_tracking {
     read_data_events     = true
@@ -1326,7 +1326,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
@@ -1452,7 +1452,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
@@ -1601,7 +1601,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
@@ -1651,7 +1651,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
   storage_class        = "standard"
   endpoint_type        = "public"
   force_delete         = true
-  region_location      = "us-south"
+  region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy

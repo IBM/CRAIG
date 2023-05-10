@@ -13,6 +13,7 @@ const {
   cdktfRef,
   getResourceOrData
 } = require("./utils");
+const { varDotRegion } = require("../constants");
 
 /**
  * format a key management resource terraform code
@@ -32,7 +33,7 @@ function ibmResourceInstanceKms(kms, config) {
   };
   if (!kms.use_data) {
     instance.plan = "tiered-pricing";
-    instance.location = config._options.region;
+    instance.location = varDotRegion;
     instance.tags = getTags(config);
   }
   return {

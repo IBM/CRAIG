@@ -20,7 +20,7 @@ describe("transit gateway", () => {
       let expectedData = `
 resource "ibm_tg_gateway" "transit_gateway" {
   name           = "slz-transit-gateway"
-  location       = "us-south"
+  location       = var.region
   global         = false
   resource_group = ibm_resource_group.slz_service_rg.id
   timeouts {
@@ -117,7 +117,7 @@ resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aa
 
 resource "ibm_tg_gateway" "transit_gateway" {
   name           = "slz-transit-gateway"
-  location       = "us-south"
+  location       = var.region
   global         = false
   resource_group = ibm_resource_group.slz_service_rg.id
   timeouts {
@@ -195,7 +195,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
 
 resource "ibm_tg_gateway" "transit_gateway" {
   name           = "slz-transit-gateway"
-  location       = "us-south"
+  location       = var.region
   global         = false
   resource_group = ibm_resource_group.service_rg.id
   timeouts {
@@ -234,7 +234,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
 
 resource "ibm_tg_gateway" "m" {
   name           = "slz-m"
-  location       = "us-south"
+  location       = var.region
   global         = true
   resource_group = ibm_resource_group.service_rg.id
   timeouts {

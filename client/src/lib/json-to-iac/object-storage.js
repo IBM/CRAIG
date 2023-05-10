@@ -16,6 +16,7 @@ const {
   cdktfRef,
   getResourceOrData
 } = require("./utils");
+const { varDotRegion } = require("../constants");
 
 /**
  * format tf block for object storage resource
@@ -186,7 +187,7 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
     storage_class: bucket.storage_class,
     endpoint_type: bucket.endpoint,
     force_delete: bucket.force_delete,
-    region_location: config._options.region,
+    region_location: varDotRegion,
     key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn")
   };
   if (bucket.allowed_ip) {

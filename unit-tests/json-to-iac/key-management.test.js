@@ -21,7 +21,7 @@ resource "ibm_resource_instance" "kms" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"
@@ -61,7 +61,7 @@ resource "ibm_resource_instance" "kms" {
   resource_group_id = data.ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"
@@ -464,7 +464,7 @@ resource "ibm_resource_instance" "kms" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"
@@ -575,7 +575,7 @@ resource "ibm_resource_instance" "kms" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"
@@ -662,7 +662,7 @@ resource "ibm_resource_instance" "kms" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"
@@ -792,7 +792,7 @@ resource "ibm_resource_instance" "kms" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"
@@ -862,7 +862,7 @@ resource "ibm_resource_instance" "kms2" {
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
-  location          = "us-south"
+  location          = var.region
   tags = [
     "hello",
     "world"

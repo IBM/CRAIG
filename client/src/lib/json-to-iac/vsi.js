@@ -5,7 +5,9 @@ const {
   splat,
   transpose,
   parseIntFromZone,
-  contains
+  contains,
+  kebabCase,
+  azsort
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -64,7 +66,7 @@ function ibmIsInstance(vsi, config) {
     profile: vsi.profile,
     resource_group: rgIdRef(vsi.resource_group, config),
     vpc: vpcRef(vsi.vpc, "id", true),
-    zone: composedZone(config, zone),
+    zone: composedZone(zone),
     tags: config._options.tags,
     primary_network_interface: [
       {
@@ -129,6 +131,15 @@ function ibmIsInstance(vsi, config) {
       );
     });
   }
+  if (vsi.reserved_ip) {
+    vsiData.primary_network_interface[0].primary_ip = [
+      {
+        reserved_ip: `\${ibm_is_subnet_reserved_ip.${snakeCase(
+          data.name
+        )}_reserved_ip.reserved_ip}`
+      }
+    ];
+  }
   data.data = vsiData;
   return data;
 }
@@ -158,7 +169,7 @@ function ibmIsVolume(vsi, config) {
             "-" +
             volume.name,
           profile: volume.profile,
-          zone: composedZone(config, zone),
+          zone: composedZone(zone),
           iops: volume.iops,
           capacity: volume.capacity,
           encryption_key: encryptionKeyRef(
@@ -182,7 +193,20 @@ function ibmIsVolume(vsi, config) {
  */
 function formatVsi(vsi, config) {
   let data = ibmIsInstance(vsi, config);
-  let tf = jsonToTfPrint("resource", "ibm_is_instance", data.name, data.data);
+  let tf = "";
+  if (vsi.reserved_ip) {
+    tf += jsonToTfPrint(
+      "resource",
+      "ibm_is_subnet_reserved_ip",
+      data.name + "_reserved_ip",
+      {
+        subnet: `\${module.${vsi.vpc}_vpc.${snakeCase(vsi.subnet)}_id}`,
+        name: kebabCase(data.data.name + "-reserved-ip"),
+        address: vsi.reserved_ip
+      }
+    );
+  }
+  tf += jsonToTfPrint("resource", "ibm_is_instance", data.name, data.data);
   ibmIsVolume(vsi, config).forEach(volume => {
     tf += jsonToTfPrint("resource", "ibm_is_volume", volume.name, volume.data);
   });
@@ -409,12 +433,16 @@ function vsiTf(config) {
   tf += tfBlock("image data sources", imageTf) + "\n";
   config.vsi.forEach(deployment => {
     let blockData = "";
-    deployment.subnets.forEach(subnet => {
+    deployment.subnets.sort(azsort).forEach(subnet => {
       for (let i = 0; i < deployment.vsi_per_subnet; i++) {
         let instance = {};
         transpose(deployment, instance);
         instance.subnet = subnet;
         instance.index = i + 1;
+        if (deployment.reserved_ips) {
+          instance.reserved_ip = // get address at same index as subnet followed by index of vsi
+            deployment.reserved_ips[deployment.subnets.indexOf(subnet)][i];
+        }
         blockData += formatVsi(instance, config);
       }
     });
@@ -435,9 +463,11 @@ function vsiTf(config) {
 function lbTf(config) {
   let tf = "";
   config.load_balancers.forEach(lb => {
-    tf += tfBlock(lb.name + " load balancer", formatLoadBalancer(lb, config));
+    tf +=
+      tfBlock(lb.name + " load balancer", formatLoadBalancer(lb, config)) +
+      "\n";
   });
-  return tf;
+  return tfDone(tf);
 }
 
 module.exports = {

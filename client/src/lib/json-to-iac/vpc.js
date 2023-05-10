@@ -21,6 +21,7 @@ const { jsonToTf } = require("json-to-tf");
 const { formatSgRule, formatSecurityGroup } = require("./security-groups");
 const { versionsTf } = require("./constants");
 const { routingTableTf } = require("./routing-tables");
+const { varDotRegion } = require("../constants");
 
 /**
  * format vpc terraform
@@ -98,7 +99,7 @@ function ibmIsVpcAddressPrefix(address, config) {
     data: {
       name: kebabName(config, [address.vpc, address.name]),
       vpc: vpcRef(address.vpc),
-      zone: composedZone(config, address.zone),
+      zone: composedZone(address.zone),
       cidr: address.cidr
     }
   };
@@ -145,7 +146,7 @@ function ibmIsSubnet(subnet, config, useVarRef) {
     data: {
       vpc: vpcRef(subnet.vpc),
       name: kebabName(config, [subnetName]),
-      zone: composedZone(config, subnet.zone),
+      zone: composedZone(subnet.zone),
       resource_group: `\${var.${snakeCase(subnet.resource_group)}_id}`,
       tags: getTags(config, useVarRef),
       network_acl: tfRef(
@@ -365,7 +366,7 @@ function ibmIsPublicGateway(pgw, config, useVarRef) {
       name: kebabName(config, [pgwName]),
       vpc: vpcRef(pgw.vpc),
       resource_group: `\${var.${snakeCase(pgw.resource_group)}_id}`,
-      zone: composedZone(config, pgw.zone),
+      zone: composedZone(pgw.zone),
       tags: getTags(config, useVarRef)
     }
   };
@@ -441,6 +442,7 @@ function vpcModuleJson(vpc, rgs, config) {
       }
     },
     source: "./" + vpcModule,
+    region: varDotRegion,
     tags: config._options.tags
   };
   rgs.forEach(rg => {
@@ -469,6 +471,9 @@ function vpcModuleOutputs(vpc, securityGroups) {
     outputs[snakeCase(subnet.name) + `_id`] = {
       value: `\${ibm_is_subnet.${snakeCase(`${subnet.vpc}-${subnet.name}`)}.id}`
     };
+    outputs[snakeCase(subnet.name) + `_crn`] = {
+      value: `\${ibm_is_subnet.${snakeCase(`${subnet.vpc}-${subnet.name}`)}.crn}`
+    };
   });
   securityGroups.forEach(sg => {
     if (sg.vpc === vpc.name) {
@@ -496,6 +501,10 @@ function vpcModuleTf(files, config) {
       tags: {
         description: "List of tags",
         type: "${list(string)}"
+      },
+      region: {
+        description: "IBM Cloud Region where resources will be provisioned",
+        type: "${string}"
       }
     };
     let vpcModule = vpc.name + "_vpc";

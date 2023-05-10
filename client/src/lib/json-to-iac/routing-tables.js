@@ -1,3 +1,4 @@
+const { varDotRegion } = require("../constants");
 const { kebabName, vpcRef, jsonToTfPrint, tfRef, tfBlock } = require("./utils");
 
 /**
@@ -70,7 +71,7 @@ function ibmIsVpcRoutingTableRoute(route, config) {
         `${route.vpc}-vpc-${route.routing_table}-table`,
         "routing_table"
       ),
-      zone: `${config._options.region}-${route.zone}`,
+      zone: `${varDotRegion}-${route.zone}`,
       name: kebabName(config, [
         route.vpc,
         route.routing_table,

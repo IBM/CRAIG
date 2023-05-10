@@ -80,7 +80,8 @@ function buildTitleComment(name) {
       .replace(/Ssh(?=\s)/g, "SSH")
       .replace(/Vpc(?=\s)/g, "VPC")
       .replace(/Vsi(?=\s)/g, "VSI")
-      .replace(/Vpn(?=\s)/g, "VPN") + "\n"
+      .replace(/Vpn(?=\s)/g, "VPN")
+      .replace(/Dns(?=\s)/g, "DNS") + "\n"
   );
 }
 
@@ -229,14 +230,11 @@ function subnetZone(subnet) {
 
 /**
  * get composed zone
- * @param {Object} config
- * @param {Object} config._options
- * @param {string} config._options.region
  * @param {number} zone
  * @returns {string} composed zone
  */
-function composedZone(config, zone, cdktf) {
-  let zoneName = `${config._options.region}-${zone}`;
+function composedZone(zone, cdktf) {
+  let zoneName = `\${var.region}-${zone}`;
   return cdktf ? zoneName.replace(/"/g, "") : zoneName;
 }
 

@@ -433,7 +433,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     tgrefresh_url           = "null"
     template_source         = "f5devcentral/ibmcloud_schematics_bigip_multinic_declared"
     template_version        = "20210201"
-    zone                    = "us-south-1"
+    zone                    = "\${var.region}-1"
     vpc                     = module.management_vpc.id
     app_id                  = "null"
   }
@@ -914,7 +914,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     tgrefresh_url           = "hi"
     template_source         = "f5devcentral/ibmcloud_schematics_bigip_multinic_declared"
     template_version        = "hi"
-    zone                    = "us-south-1"
+    zone                    = "\${var.region}-1"
     vpc                     = module.management_vpc.id
     app_id                  = "hi"
   }
@@ -1527,7 +1527,7 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
     tgrefresh_url           = "hi"
     template_source         = "f5devcentral/ibmcloud_schematics_bigip_multinic_declared"
     template_version        = "hi"
-    zone                    = "us-south-1"
+    zone                    = "\${var.region}-1"
     vpc                     = module.edge_vpc.id
     app_id                  = "hi"
   }
@@ -1539,7 +1539,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_edge_rg.id
   vpc            = module.edge_vpc.id
-  zone           = "us-south-1"
+  zone           = "\${var.region}-1"
   user_data      = data.template_file.user_data_f5_ve_01_zone_1.rendered
   tags = [
     "slz",
