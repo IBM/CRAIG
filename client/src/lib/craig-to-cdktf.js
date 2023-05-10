@@ -67,7 +67,7 @@ const {
   vpcModuleOutputs
 } = require("./json-to-iac");
 const { cdktfValues, getResourceOrData } = require("./json-to-iac/utils");
-const { varDotRegion } = require("./constants");
+const { varDotRegion, varDotPrefix } = require("./constants");
 
 /**
  * create vpc modules from craig
@@ -97,7 +97,11 @@ function craigToVpcModuleCdktf(craig) {
         region: {
           description: "IBM Cloud Region where resources will be provisioned",
           type: "${string}"
-        }
+        },
+        prefix: {
+          description: "Name prefix that will be prepended to named resources",
+          type: "${string}",
+        },
       }
     };
     let nw = ibmIsVpc(vpc, craig);
@@ -309,7 +313,7 @@ function craigToCdktf(craig) {
   craig.resource_groups.forEach(rg => {
     let type = getResourceOrData(rg);
     cdktfValues(cdktfJson, type, "ibm_resource_group", rg.name, {
-      name: (rg.use_prefix ? `${prefix}-` : "") + rg.name,
+      name: (rg.use_prefix ? `${varDotPrefix}-` : "") + rg.name,
       tags: tags
     });
   });

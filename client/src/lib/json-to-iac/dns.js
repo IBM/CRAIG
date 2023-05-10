@@ -22,7 +22,7 @@ function ibmResourceInstanceDnsServices(dns, config) {
   return {
     name: dns.name + "_dns_instance",
     data: {
-      name: kebabName(config, [dns.name, "dns-instance"]),
+      name: kebabName( [dns.name, "dns-instance"]),
       resource_group_id: rgIdRef(dns.resource_group, config),
       location: "global",
       service: "dns-svcs",
@@ -233,11 +233,11 @@ function ibmDnsCustomResolver(resolver) {
       description: resolver.description,
       high_availability: resolver.high_availability,
       enabled: resolver.enabled,
-      loacations: []
+      locations: []
     }
   };
   resolver.subnets.forEach(subnet => {
-    data.data.loacations.push({
+    data.data.locations.push({
       subnet_crn: `\${module.${snakeCase(resolver.vpc)}_vpc.${snakeCase(
         subnet.name
       )}_crn}`,

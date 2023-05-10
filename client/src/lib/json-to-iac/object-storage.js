@@ -36,7 +36,6 @@ const { varDotRegion } = require("../constants");
 function ibmResourceInstanceCos(cos, config) {
   let instanceName = dataResourceName(
     cos,
-    config,
     cos.use_data ? "" : "-object-storage" + randomSuffix(cos)
   );
   let cosInstance = {
@@ -182,7 +181,7 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
     name: cos.name + "-object-storage-" + bucket.name + "-bucket"
   };
   let bucketValues = {
-    bucket_name: kebabName(config, [cos.name, bucket.name], randomSuffix(cos)),
+    bucket_name: kebabName([cos.name, bucket.name], randomSuffix(cos)),
     resource_instance_id: cosRef(cos.name, "id", cos.use_data),
     storage_class: bucket.storage_class,
     endpoint_type: bucket.endpoint,
@@ -291,7 +290,7 @@ function formatCosBucket(bucket, cos, config) {
 
 function ibmResourceKeyCos(key, cos, config) {
   let keyValues = {
-    name: kebabName(config, [cos.name, "key", key.name], randomSuffix(cos)),
+    name: kebabName([cos.name, "key", key.name], randomSuffix(cos)),
     resource_instance_id: getCosId(cos),
     role: "Writer",
     tags: getTags(config)

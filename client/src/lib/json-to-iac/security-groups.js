@@ -1,9 +1,7 @@
 const { snakeCase, allFieldsNull } = require("lazy-z");
 const {
-  rgIdRef,
   kebabName,
   vpcRef,
-  jsonToIac,
   tfRef,
   tfBlock,
   tfDone,
@@ -27,7 +25,7 @@ function ibmIsSecurityGroup(sg, config) {
   return {
     name: `${sg.vpc} vpc ${sg.name} sg`,
     data: {
-      name: kebabName(config, [sg.vpc, sg.name, "sg"]),
+      name: kebabName([sg.vpc, sg.name, "sg"]),
       vpc: vpcRef(sg.vpc),
       resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
       tags: getTags(config)

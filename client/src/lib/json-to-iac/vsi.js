@@ -21,6 +21,7 @@ const {
   jsonToTfPrint,
   cdktfRef
 } = require("./utils");
+const { varDotPrefix } = require("../constants");
 
 /**
  * format vsi
@@ -46,9 +47,9 @@ const {
 function ibmIsInstance(vsi, config) {
   let zone = vsi.subnet.replace(/[^]+(?=\d$)/g, "");
   let vsiName = vsi.index
-    ? `${config._options.prefix}-${snakeCase(vsi.vpc)}-${
-        vsi.name
-      }-vsi-zone-${zone}-${vsi.index}`
+    ? `${varDotPrefix}-${snakeCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
+        vsi.index
+      }`
     : vsi.name;
   let allSgIds = [],
     allSshKeyIds = [],
@@ -162,7 +163,7 @@ function ibmIsVolume(vsi, config) {
         data: {
           name:
             (vsi.index
-              ? `${config._options.prefix}-${snakeCase(vsi.vpc)}-${
+              ? `${varDotPrefix}-${snakeCase(vsi.vpc)}-${
                   vsi.name
                 }-vsi-zone-${zone}-${vsi.index}`
               : vsi.name) +
@@ -322,15 +323,14 @@ function ibmIsLbListener(deployment, poolMemberData, cdktf) {
  * @param {string} deployment.health_type  Enumeration type: http, https, tcp are supported.
  * @param {string} deployment.session_persistence_type the session persistence type, Enumeration type: source_ip, app_cookie, http_cookie
  * @param {string} deployment.session_persistence_app_cookie_name Session persistence app cookie name. This is applicable only to app_cookie type.
- * @param {Object} config
  * @returns {string} terraform formatted string
  */
-function ibmIsLbPool(deployment, config) {
+function ibmIsLbPool(deployment) {
   let data = {
     name: `${deployment.name} load balancer pool`,
     data: {
       lb: tfRef("ibm_is_lb", `${deployment.name} load balancer`),
-      name: kebabName(config, [deployment.name, "lb", "pool"]),
+      name: kebabName([deployment.name, "lb", "pool"]),
       algorithm: deployment.algorithm,
       protocol: deployment.protocol,
       health_delay: deployment.health_delay,
@@ -362,7 +362,7 @@ function ibmIsLbPool(deployment, config) {
 function ibmIsLb(deployment, config) {
   let data = {
     data: {
-      name: kebabName(config, [deployment.name, "lb"]),
+      name: kebabName([deployment.name, "lb"]),
       type: deployment.type,
       resource_group: rgIdRef(deployment.resource_group, config),
       tags: config._options.tags,

@@ -30,7 +30,7 @@ describe("resource groups", () => {
 ##############################################################################
 
 resource "ibm_resource_group" "slz_service_rg" {
-  name = "ut-slz-service-rg"
+  name = "\${var.prefix}-slz-service-rg"
   tags = [
     "hello",
     "world"
@@ -38,7 +38,7 @@ resource "ibm_resource_group" "slz_service_rg" {
 }
 
 resource "ibm_resource_group" "slz_management_rg" {
-  name = "ut-slz-management-rg"
+  name = "\${var.prefix}-slz-management-rg"
   tags = [
     "hello",
     "world"

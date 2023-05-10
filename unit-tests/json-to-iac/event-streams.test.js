@@ -44,7 +44,7 @@ describe("event streams", () => {
       );
       let expectedData = `
 resource "ibm_resource_instance" "event_streams_es" {
-  name              = "iac-event-streams"
+  name              = "\${var.prefix}-event-streams"
   service           = "messagehub"
   plan              = "enterprise"
   location          = var.region
@@ -103,7 +103,7 @@ resource "ibm_resource_instance" "event_streams_es" {
       );
       let expectedData = `
 resource "ibm_resource_instance" "event_streams_es" {
-  name              = "iac-event-streams"
+  name              = "\${var.prefix}-event-streams"
   service           = "messagehub"
   plan              = "enterprise"
   location          = var.region
@@ -167,7 +167,7 @@ resource "ibm_resource_instance" "event_streams_es" {
 ##############################################################################
 
 resource "ibm_resource_instance" "event_streams_es" {
-  name              = "iac-event-streams"
+  name              = "\${var.prefix}-event-streams"
   service           = "messagehub"
   plan              = "enterprise"
   location          = var.region
@@ -234,7 +234,7 @@ resource "ibm_resource_instance" "event_streams_es" {
 ##############################################################################
 
 resource "ibm_resource_instance" "event_streams_es" {
-  name              = "iac-event-streams"
+  name              = "\${var.prefix}-event-streams"
   service           = "messagehub"
   plan              = "standard"
   location          = var.region

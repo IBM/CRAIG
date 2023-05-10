@@ -39,7 +39,7 @@ describe("vpc", () => {
       );
       let expectedData = `
 resource "ibm_is_vpc" "management_vpc" {
-  name                        = "iac-management-vpc"
+  name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
   default_network_acl_name    = null
   default_security_group_name = null
@@ -83,7 +83,7 @@ resource "ibm_is_vpc" "management_vpc" {
       );
       let expectedData = `
 resource "ibm_is_vpc" "management_vpc" {
-  name                        = "iac-management-vpc"
+  name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
   default_network_acl_name    = "null"
   default_security_group_name = "null"
@@ -127,7 +127,7 @@ resource "ibm_is_vpc" "management_vpc" {
       );
       let expectedData = `
 resource "ibm_is_vpc" "management_vpc" {
-  name                        = "iac-management-vpc"
+  name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
   classic_access              = true
   address_prefix_management   = "manual"
@@ -166,7 +166,7 @@ resource "ibm_is_vpc" "management_vpc" {
       );
       let expectedData = `
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
-  name = "iac-management-vsi-subnet-1"
+  name = "\${var.prefix}-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
   zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
@@ -209,7 +209,7 @@ resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
       let expectedData = `
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-subnet-1"
+  name            = "\${var.prefix}-management-vsi-subnet-1"
   zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -244,7 +244,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
       let expectedData = `
 resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
   vpc             = ibm_is_vpc.edge_vpc.id
-  name            = "slz-edge-f5-bastion-zone-1"
+  name            = "\${var.prefix}-edge-f5-bastion-zone-1"
   zone            = "\${var.region}-1"
   resource_group  = var.slz_edge_rg_id
   network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
@@ -393,7 +393,7 @@ resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
       );
       let expectedData = `
 resource "ibm_is_network_acl" "management_management_acl" {
-  name           = "iac-management-management-acl"
+  name           = "\${var.prefix}-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   tags = [
@@ -534,7 +534,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
       );
       let expectedData = `
 resource "ibm_is_network_acl" "management_management_acl" {
-  name           = "iac-management-management-acl"
+  name           = "\${var.prefix}-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   tags = [
@@ -864,7 +864,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       );
       let expectedData = `
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
-  name           = "iac-management-gateway-zone-1"
+  name           = "\${var.prefix}-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   zone           = "\${var.region}-1"
@@ -904,7 +904,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
       );
       let expectedData = `
 resource "ibm_is_public_gateway" "management_override_gw" {
-  name           = "iac-management-override-gw"
+  name           = "\${var.prefix}-management-override-gw"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   zone           = "\${var.region}-1"
@@ -1013,7 +1013,7 @@ resource "ibm_is_public_gateway" "management_override_gw" {
 ##############################################################################
 
 resource "ibm_is_vpc" "management_vpc" {
-  name                        = "iac-management-vpc"
+  name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
   address_prefix_management   = "manual"
   default_network_acl_name    = null
@@ -1026,14 +1026,14 @@ resource "ibm_is_vpc" "management_vpc" {
 }
 
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
-  name = "iac-management-vsi-subnet-1"
+  name = "\${var.prefix}-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
   zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
 }
 
 resource "ibm_is_network_acl" "management_management_acl" {
-  name           = "iac-management-management-acl"
+  name           = "\${var.prefix}-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   tags = [
@@ -1052,7 +1052,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
 }
 
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
-  name           = "iac-management-gateway-zone-1"
+  name           = "\${var.prefix}-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   zone           = "\${var.region}-1"
@@ -1064,7 +1064,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-subnet-1"
+  name            = "\${var.prefix}-management-vsi-subnet-1"
   zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -1245,7 +1245,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 ##############################################################################
 
 resource "ibm_is_vpc" "management_vpc" {
-  name                        = "iac-management-vpc"
+  name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
   address_prefix_management   = "manual"
   default_network_acl_name    = null
@@ -1258,14 +1258,14 @@ resource "ibm_is_vpc" "management_vpc" {
 }
 
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
-  name = "iac-management-vsi-subnet-1"
+  name = "\${var.prefix}-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
   zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
 }
 
 resource "ibm_is_network_acl" "management_management_acl" {
-  name           = "iac-management-management-acl"
+  name           = "\${var.prefix}-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   tags = [
@@ -1284,7 +1284,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
 }
 
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
-  name           = "iac-management-gateway-zone-1"
+  name           = "\${var.prefix}-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   zone           = "\${var.region}-1"
@@ -1296,7 +1296,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-subnet-1"
+  name            = "\${var.prefix}-management-vsi-subnet-1"
   zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -1315,7 +1315,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 ##############################################################################
 
 resource "ibm_is_vpc" "workload_vpc" {
-  name                        = "iac-workload-vpc"
+  name                        = "\${var.prefix}-workload-vpc"
   resource_group              = var.slz_management_rg_id
   address_prefix_management   = "manual"
   default_network_acl_name    = null
@@ -1328,14 +1328,14 @@ resource "ibm_is_vpc" "workload_vpc" {
 }
 
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
-  name = "iac-management-vsi-subnet-1"
+  name = "\${var.prefix}-management-vsi-subnet-1"
   vpc  = ibm_is_vpc.management_vpc.id
   zone = "\${var.region}-1"
   cidr = "1.2.3.4/5"
 }
 
 resource "ibm_is_network_acl" "management_management_acl" {
-  name           = "iac-management-management-acl"
+  name           = "\${var.prefix}-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   tags = [
@@ -1354,7 +1354,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
 }
 
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
-  name           = "iac-management-gateway-zone-1"
+  name           = "\${var.prefix}-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   zone           = "\${var.region}-1"
@@ -1366,7 +1366,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-subnet-1"
+  name            = "\${var.prefix}-management-vsi-subnet-1"
   zone            = "\${var.region}-1"
   resource_group  = var.slz_management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id

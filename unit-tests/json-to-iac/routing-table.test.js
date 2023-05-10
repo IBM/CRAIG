@@ -24,7 +24,7 @@ describe("routing table", () => {
       );
       let expectedData = `
 resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
-  name                          = "iac-management-vpc-routing-table-table"
+  name                          = "\${var.prefix}-management-vpc-routing-table-table"
   vpc                           = ibm_is_vpc.management_vpc.id
   route_direct_link_ingress     = true
   route_transit_gateway_ingress = true
@@ -62,7 +62,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
   vpc           = ibm_is_vpc.management_vpc.id
   routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
   zone          = "\${var.region}-1"
-  name          = "iac-management-routing-table-test-route-route"
+  name          = "\${var.prefix}-management-routing-table-test-route-route"
   destination   = "1.2.3.4/5"
   action        = "delegate"
   next_hop      = "0.0.0.0"
@@ -97,7 +97,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
   vpc           = ibm_is_vpc.management_vpc.id
   routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
   zone          = "\${var.region}-1"
-  name          = "iac-management-routing-table-test-route-route"
+  name          = "\${var.prefix}-management-routing-table-test-route-route"
   destination   = "1.2.3.4/5"
   action        = "deliver"
   next_hop      = "5.6.7.8"
@@ -142,7 +142,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
 ##############################################################################
 
 resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
-  name                          = "iac-management-vpc-routing-table-table"
+  name                          = "\${var.prefix}-management-vpc-routing-table-table"
   vpc                           = ibm_is_vpc.management_vpc.id
   route_direct_link_ingress     = true
   route_transit_gateway_ingress = true
@@ -153,7 +153,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
   vpc           = ibm_is_vpc.management_vpc.id
   routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
   zone          = "\${var.region}-1"
-  name          = "iac-management-routing-table-test-route-route"
+  name          = "\${var.prefix}-management-routing-table-test-route-route"
   destination   = "1.2.3.4/5"
   action        = "delegate"
   next_hop      = "0.0.0.0"

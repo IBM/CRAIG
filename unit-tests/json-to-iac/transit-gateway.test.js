@@ -19,7 +19,7 @@ describe("transit gateway", () => {
       );
       let expectedData = `
 resource "ibm_tg_gateway" "transit_gateway" {
-  name           = "slz-transit-gateway"
+  name           = "\${var.prefix}-transit-gateway"
   location       = var.region
   global         = false
   resource_group = ibm_resource_group.slz_service_rg.id
@@ -56,7 +56,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "slz-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -93,7 +93,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aaaaaaaaaaaa_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "slz-transit-gateway-aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-hub-connection"
   network_id   = "crn:v1:bluemix:public:is:us-south:a/aaaaaaa::vpc:aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
   timeouts {
     create = "30m"
@@ -116,7 +116,7 @@ resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aa
 ##############################################################################
 
 resource "ibm_tg_gateway" "transit_gateway" {
-  name           = "slz-transit-gateway"
+  name           = "\${var.prefix}-transit-gateway"
   location       = var.region
   global         = false
   resource_group = ibm_resource_group.slz_service_rg.id
@@ -129,7 +129,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "slz-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -140,7 +140,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "slz-transit-gateway-workload-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-workload-hub-connection"
   network_id   = module.workload_vpc.crn
   timeouts {
     create = "30m"
@@ -194,7 +194,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
 ##############################################################################
 
 resource "ibm_tg_gateway" "transit_gateway" {
-  name           = "slz-transit-gateway"
+  name           = "\${var.prefix}-transit-gateway"
   location       = var.region
   global         = false
   resource_group = ibm_resource_group.service_rg.id
@@ -207,7 +207,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "slz-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -218,7 +218,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "slz-transit-gateway-workload-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-workload-hub-connection"
   network_id   = module.workload_vpc.crn
   timeouts {
     create = "30m"
@@ -233,7 +233,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
 ##############################################################################
 
 resource "ibm_tg_gateway" "m" {
-  name           = "slz-m"
+  name           = "\${var.prefix}-m"
   location       = var.region
   global         = true
   resource_group = ibm_resource_group.service_rg.id
@@ -246,7 +246,7 @@ resource "ibm_tg_gateway" "m" {
 resource "ibm_tg_connection" "m_to_management_connection" {
   gateway      = ibm_tg_gateway.m.id
   network_type = "vpc"
-  name         = "slz-m-management-hub-connection"
+  name         = "\${var.prefix}-m-management-hub-connection"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"

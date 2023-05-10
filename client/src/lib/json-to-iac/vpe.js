@@ -76,7 +76,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
   let data = {
     name: `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
     data: {
-      name: kebabName(config, [
+      name: kebabName([
         vpe.vpc,
         vpe.instance ? vpe.instance : vpe.service,
         "vpe-gw"
@@ -89,10 +89,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
     }
   };
   let target = {
-    crn: serviceToEndpointMap[vpe.service].replace(
-      /\$REGION/g,
-      varDotRegion
-    ),
+    crn: serviceToEndpointMap[vpe.service].replace(/\$REGION/g, varDotRegion),
     resource_type: "provider_cloud_service"
   };
   if (vpe.service === "secrets-manager") {

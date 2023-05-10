@@ -57,7 +57,7 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip" {
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
-  name           = "iac-management-cos-vpe-gw"
+  name           = "\${var.prefix}-management-cos-vpe-gw"
   vpc            = module.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -114,7 +114,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_secrets_manager_vpe_gateway" {
-  name           = "iac-management-secrets-manager-vpe-gw"
+  name           = "\${var.prefix}-management-secrets-manager-vpe-gw"
   vpc            = module.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -169,7 +169,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_secrets_manager_vpe_g
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
-  name           = "iac-management-cos-vpe-gw"
+  name           = "\${var.prefix}-management-cos-vpe-gw"
   vpc            = module.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -229,7 +229,7 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_3_subnet_vpe_ip" {
 }
 
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
-  name           = "slz-management-cos-vpe-gw"
+  name           = "\${var.prefix}-management-cos-vpe-gw"
   vpc            = module.management_vpc.id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -279,7 +279,7 @@ resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_3_subnet_vpe_ip" {
 }
 
 resource "ibm_is_virtual_endpoint_gateway" "workload_vpc_cos_vpe_gateway" {
-  name           = "slz-workload-cos-vpe-gw"
+  name           = "\${var.prefix}-workload-cos-vpe-gw"
   vpc            = module.workload_vpc.id
   resource_group = ibm_resource_group.slz_workload_rg.id
   tags = [

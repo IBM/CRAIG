@@ -16,7 +16,7 @@ function ibmIsVpcRoutingTable(table, config) {
   return {
     name: `${table.vpc}-vpc-${table.name}-table`,
     data: {
-      name: kebabName(config, [table.vpc, "vpc", table.name, "table"]),
+      name: kebabName( [table.vpc, "vpc", table.name, "table"]),
       vpc: vpcRef(table.vpc),
       route_direct_link_ingress: table.route_direct_link_ingress,
       route_transit_gateway_ingress: table.route_transit_gateway_ingress,
@@ -72,7 +72,7 @@ function ibmIsVpcRoutingTableRoute(route, config) {
         "routing_table"
       ),
       zone: `${varDotRegion}-${route.zone}`,
-      name: kebabName(config, [
+      name: kebabName( [
         route.vpc,
         route.routing_table,
         route.name,

@@ -42,7 +42,7 @@ describe("dns service", () => {
       );
       let expectedData = `
 resource "ibm_resource_instance" "test_dns_instance" {
-  name              = "iac-test-dns-instance"
+  name              = "\${var.prefix}-test-dns-instance"
   resource_group_id = ibm_resource_group.service_rg.id
   location          = "global"
   service           = "dns-svcs"
@@ -172,15 +172,15 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
   description       = "new resolve"
   high_availability = true
   enabled           = true
-  loacations {
+  locations {
     subnet_crn = module.management_vpc.vsi_zone_1_crn
     enabled    = true
   }
-  loacations {
+  locations {
     subnet_crn = module.management_vpc.vsi_zone_2_crn
     enabled    = true
   }
-  loacations {
+  locations {
     subnet_crn = module.management_vpc.vsi_zone_3_crn
     enabled    = true
   }
@@ -274,7 +274,7 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
 ##############################################################################
 
 resource "ibm_resource_instance" "test_dns_instance" {
-  name              = "iac-test-dns-instance"
+  name              = "\${var.prefix}-test-dns-instance"
   resource_group_id = ibm_resource_group.service_rg.id
   location          = "global"
   service           = "dns-svcs"
@@ -321,15 +321,15 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
   description       = "new resolve"
   high_availability = true
   enabled           = true
-  loacations {
+  locations {
     subnet_crn = module.management_vpc.vsi_zone_1_crn
     enabled    = true
   }
-  loacations {
+  locations {
     subnet_crn = module.management_vpc.vsi_zone_2_crn
     enabled    = true
   }
-  loacations {
+  locations {
     subnet_crn = module.management_vpc.vsi_zone_3_crn
     enabled    = true
   }
@@ -400,7 +400,7 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
 ##############################################################################
 
 resource "ibm_resource_instance" "test_dns_instance" {
-  name              = "iac-test-dns-instance"
+  name              = "\${var.prefix}-test-dns-instance"
   resource_group_id = ibm_resource_group.service_rg.id
   location          = "global"
   service           = "dns-svcs"

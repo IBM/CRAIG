@@ -79,7 +79,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
       );
       let expectedData = `
 resource "ibm_iam_access_group" "frog_access_group" {
-  name        = "iac-frog-ag"
+  name        = "\${var.prefix}-frog-ag"
   description = "an access group for frogs"
   tags = [
     "frog"
@@ -366,7 +366,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
 ##############################################################################
 
 resource "ibm_iam_access_group" "frog_access_group" {
-  name        = "iac-frog-ag"
+  name        = "\${var.prefix}-frog-ag"
   description = "an access group for frogs"
   tags = [
     "frog"
@@ -480,7 +480,7 @@ resource "ibm_iam_access_group_members" "frog_invites" {
 ##############################################################################
 
 resource "ibm_iam_access_group" "frog_access_group" {
-  name        = "iac-frog-ag"
+  name        = "\${var.prefix}-frog-ag"
   description = "an access group for frogs"
   tags = [
     "frog"

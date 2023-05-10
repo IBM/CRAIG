@@ -159,7 +159,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
       );
       let expectedData = `
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
-  name              = "iac-secrets-manager"
+  name              = "\${var.prefix}-secrets-manager"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -231,7 +231,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
       );
       let expectedData = `
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
-  name              = "iac-secrets-manager"
+  name              = "\${var.prefix}-secrets-manager"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -276,7 +276,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
       );
       let expectedData = `
 resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
-  name        = "iac-secrets-manager-cos-secret"
+  name        = "\${var.prefix}-secrets-manager-cos-secret"
   instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
   region      = var.region
   description = "Credentials for COS instance"
@@ -414,7 +414,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms2_kms_policy" {
 ##############################################################################
 
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
-  name              = "iac-secrets-manager"
+  name              = "\${var.prefix}-secrets-manager"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -436,7 +436,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
 }
 
 resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
-  name              = "iac-secrets-manager2"
+  name              = "\${var.prefix}-secrets-manager2"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -458,7 +458,7 @@ resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
 }
 
 resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
-  name              = "iac-secrets-manager3"
+  name              = "\${var.prefix}-secrets-manager3"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -571,7 +571,7 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
 ##############################################################################
 
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
-  name              = "iac-secrets-manager"
+  name              = "\${var.prefix}-secrets-manager"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -780,7 +780,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
 ##############################################################################
 
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
-  name              = "iac-secrets-manager"
+  name              = "\${var.prefix}-secrets-manager"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -799,7 +799,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
 }
 
 resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
-  name              = "iac-secrets-manager2"
+  name              = "\${var.prefix}-secrets-manager2"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -818,7 +818,7 @@ resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
 }
 
 resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
-  name              = "iac-secrets-manager3"
+  name              = "\${var.prefix}-secrets-manager3"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -979,7 +979,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms2_kms_policy" {
 ##############################################################################
 
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
-  name              = "iac-secrets-manager"
+  name              = "\${var.prefix}-secrets-manager"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -1001,7 +1001,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
 }
 
 resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
-  name        = "iac-secrets-manager-cos-secret"
+  name        = "\${var.prefix}-secrets-manager-cos-secret"
   instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
   region      = var.region
   description = "Credentials for COS instance"
@@ -1011,7 +1011,7 @@ resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
 }
 
 resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
-  name              = "iac-secrets-manager2"
+  name              = "\${var.prefix}-secrets-manager2"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"
@@ -1033,7 +1033,7 @@ resource "ibm_resource_instance" "secrets_manager2_secrets_manager" {
 }
 
 resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
-  name              = "iac-secrets-manager3"
+  name              = "\${var.prefix}-secrets-manager3"
   location          = var.region
   plan              = "standard"
   service           = "secrets-manager"

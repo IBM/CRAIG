@@ -24,7 +24,7 @@ describe("atracker", () => {
       });
       let expectedData = `
 resource "ibm_atracker_target" "atracker_cos_target" {
-  name        = "iac-atracker-cos"
+  name        = "\${var.prefix}-atracker-cos"
   region      = var.region
   target_type = "cloud_object_storage"
   cos_endpoint {
@@ -63,7 +63,7 @@ resource "ibm_atracker_target" "atracker_cos_target" {
       });
       let expectedData = `
 resource "ibm_atracker_route" "atracker_cos_route" {
-  name = "iac-atracker-cos-route"
+  name = "\${var.prefix}-atracker-cos-route"
   rules {
     locations = [
       var.region,
@@ -106,7 +106,7 @@ resource "ibm_atracker_route" "atracker_cos_route" {
 ##############################################################################
 
 resource "ibm_atracker_target" "atracker_cos_target" {
-  name        = "iac-atracker-cos"
+  name        = "\${var.prefix}-atracker-cos"
   region      = var.region
   target_type = "cloud_object_storage"
   cos_endpoint {
@@ -118,7 +118,7 @@ resource "ibm_atracker_target" "atracker_cos_target" {
 }
 
 resource "ibm_atracker_route" "atracker_cos_route" {
-  name = "iac-atracker-cos-route"
+  name = "\${var.prefix}-atracker-cos-route"
   rules {
     locations = [
       var.region,
@@ -161,7 +161,7 @@ resource "ibm_atracker_route" "atracker_cos_route" {
 ##############################################################################
 
 resource "ibm_atracker_target" "atracker_cos_target" {
-  name        = "iac-atracker-cos"
+  name        = "\${var.prefix}-atracker-cos"
   region      = var.region
   target_type = "cloud_object_storage"
   cos_endpoint {

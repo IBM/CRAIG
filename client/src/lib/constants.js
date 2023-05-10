@@ -2,6 +2,7 @@ const { RegexButWithWords } = require("regex-but-with-words");
 
 module.exports = {
   varDotRegion: "${var.region}",
+  varDotPrefix: "${var.prefix}",
   lastCommaExp: new RegexButWithWords()
     .literal(",")
     .look.ahead(exp => exp.stringEnd())

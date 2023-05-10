@@ -52,7 +52,7 @@ function ibmIamAccessGroup(group, config) {
   return {
     name: `${group.name}_access_group`,
     data: {
-      name: kebabName(config, [group.name, "ag"]),
+      name: kebabName([group.name, "ag"]),
       description: group.description,
       tags: getTags(config)
     }

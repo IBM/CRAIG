@@ -30,7 +30,7 @@ function ibmIsFlowLog(vpc, config, cdktf) {
     vpc.cos
   )}_object_storage_policy`;
   let flowLogsData = {
-    name: kebabName(config, [vpc.name, "vpc-logs"]),
+    name: kebabName( [vpc.name, "vpc-logs"]),
     target: vpcRef(vpc.name, "id", true),
     active: true,
     storage_bucket: bucketRef(vpc.cos, vpc.bucket),

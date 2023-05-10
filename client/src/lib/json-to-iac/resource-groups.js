@@ -19,7 +19,7 @@ const {
  */
 function formatResourceGroup(group, config) {
   let rgValues = {
-    name: dataResourceName(group, config)
+    name: dataResourceName(group)
   };
   if (!group.use_data) rgValues.tags = getTags(config);
   return jsonToTfPrint(

@@ -27,7 +27,7 @@ function ibmTgGateway(tgw, config) {
   return {
     name: tgw.name,
     data: {
-      name: kebabName(config, [tgw.name]),
+      name: kebabName([tgw.name]),
       location: varDotRegion,
       global: tgw.global,
       resource_group: rgIdRef(tgw.resource_group, config),
@@ -69,7 +69,7 @@ function ibmTgConnection(connection, config) {
     data: {
       gateway: tfRef("ibm_tg_gateway", snakeCase(connection.tgw)),
       network_type: "vpc",
-      name: kebabName(config, [connection.tgw, vpcName, "hub-connection"]),
+      name: kebabName([connection.tgw, vpcName, "hub-connection"]),
       network_id: connection.vpc
         ? vpcRef(connection.vpc, "crn", true)
         : connection.crn,

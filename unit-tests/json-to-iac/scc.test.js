@@ -75,14 +75,14 @@ resource "ibm_scc_posture_collector" "collector" {
   description = "scc collector"
   is_public   = true
   managed_by  = "ibm"
-  name        = "iac-scc-collector"
+  name        = "\${var.prefix}-scc-collector"
 }
 
 resource "ibm_scc_posture_scope" "scc_scope" {
   credential_id   = ibm_scc_posture_credential.scc_credentials.id
   credential_type = "ibm"
   description     = "scc scope"
-  name            = "iac-scc-scope"
+  name            = "\${var.prefix}-scc-scope"
   collector_ids = [
     ibm_scc_posture_collector.collector.id
   ]
@@ -150,14 +150,14 @@ resource "ibm_scc_posture_collector" "collector" {
   description = "scc collector"
   is_public   = true
   managed_by  = "ibm"
-  name        = "iac-scc-collector"
+  name        = "\${var.prefix}-scc-collector"
 }
 
 resource "ibm_scc_posture_scope" "scc_scope" {
   credential_id   = ibm_scc_posture_credential.scc_credentials.id
   credential_type = "ibm"
   description     = "scc scope"
-  name            = "iac-scc-scope"
+  name            = "\${var.prefix}-scc-scope"
   collector_ids = [
     ibm_scc_posture_collector.collector.id
   ]

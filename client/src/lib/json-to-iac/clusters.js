@@ -44,7 +44,7 @@ function ibmContainerVpcCluster(cluster, config) {
     name: `${cluster.vpc} vpc ${cluster.name} cluster`
   };
   let clusterData = {
-    name: kebabName(config, [cluster.name, "cluster"]),
+    name: kebabName( [cluster.name, "cluster"]),
     vpc_id: vpcRef(cluster.vpc, "id", true),
     resource_group_id: rgIdRef(cluster.resource_group, config),
     flavor: cluster.flavor,
@@ -110,7 +110,7 @@ function ibmContainerVpcWorkerPool(pool, config) {
     name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`
   };
   let poolData = {
-    worker_pool_name: kebabName(config, [pool.cluster, "cluster", pool.name]),
+    worker_pool_name: kebabName( [pool.cluster, "cluster", pool.name]),
     vpc_id: vpcRef(pool.vpc, "id", true),
     resource_group_id: rgIdRef(pool.resource_group, config),
     cluster: tfRef(

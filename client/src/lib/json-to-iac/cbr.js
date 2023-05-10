@@ -40,7 +40,7 @@ function ibmCbrZone(zone, config) {
     name: `${config._options.prefix} ${zone.name} zone`
   };
   let cbrZoneData = {
-    name: kebabName(config, ["zone", zone.name]),
+    name: kebabName( ["zone", zone.name]),
     account_id: `${zone.account_id}`,
     description: `${zone.description}`,
     addresses: [],

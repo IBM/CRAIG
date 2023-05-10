@@ -16,7 +16,7 @@ describe("vpn gateways", () => {
       );
       let expectedData = `
 resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
-  name           = "slz-management-management-vpn-gw"
+  name           = "\${var.prefix}-management-management-vpn-gw"
   subnet         = module.management_vpc.vpn_zone_1_id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -46,7 +46,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
 ##############################################################################
 
 resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
-  name           = "slz-management-management-gateway-vpn-gw"
+  name           = "\${var.prefix}-management-management-gateway-vpn-gw"
   subnet         = module.management_vpc.vpn_zone_1_id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [

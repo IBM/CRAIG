@@ -69,7 +69,8 @@ variable "tmos_admin_password" {
       "vpn_gateways.tf": config.vpn_gateways.length > 0 ? vpnTf(config) : null,
       "variables.tf": variablesTf
         .replace("$ADDITIONAL_VALUES", additionalVariables)
-        .replace("$REGION", config._options.region),
+        .replace("$REGION", config._options.region)
+        .replace("$PREFIX", config._options.prefix),
       "key_management.tf": kmsTf(config) + "\n",
       "object_storage.tf": cosTf(config) + "\n",
       "resource_groups.tf": resourceGroupTf(config),

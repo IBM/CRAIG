@@ -17,7 +17,7 @@ describe("key management", () => {
     it("should format a key management resource", () => {
       let expectedData = `
 resource "ibm_resource_instance" "kms" {
-  name              = "iac-kms"
+  name              = "\${var.prefix}-kms"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
@@ -57,7 +57,7 @@ resource "ibm_resource_instance" "kms" {
     it("should format a key management resource with resource group from data", () => {
       let expectedData = `
 resource "ibm_resource_instance" "kms" {
-  name              = "iac-kms"
+  name              = "\${var.prefix}-kms"
   resource_group_id = data.ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
@@ -291,7 +291,7 @@ resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
       );
       let expectedData = `
 resource "ibm_kms_key_rings" "kms_ring_ring" {
-  key_ring_id = "iac-kms-ring"
+  key_ring_id = "\${var.prefix}-kms-ring"
   instance_id = ibm_resource_instance.kms.guid
 }
 `;
@@ -326,7 +326,7 @@ resource "ibm_kms_key_rings" "kms_ring_ring" {
       let expectedData = `
 resource "ibm_kms_key" "kms_key_key" {
   instance_id   = ibm_resource_instance.kms.guid
-  key_name      = "iac-kms-key"
+  key_name      = "\${var.prefix}-kms-key"
   standard_key  = false
   key_ring_id   = ibm_kms_key_rings.kms_test_ring_ring.key_ring_id
   force_delete  = true
@@ -363,7 +363,7 @@ resource "ibm_kms_key" "kms_key_key" {
       let expectedData = `
 resource "ibm_kms_key" "kms_key_key" {
   instance_id   = ibm_resource_instance.kms.guid
-  key_name      = "iac-kms-key"
+  key_name      = "\${var.prefix}-kms-key"
   standard_key  = false
   key_ring_id   = ibm_kms_key_rings.kms_test_ring_ring.key_ring_id
   force_delete  = true
@@ -460,7 +460,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
 ##############################################################################
 
 resource "ibm_resource_instance" "kms" {
-  name              = "iac-kms"
+  name              = "\${var.prefix}-kms"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
@@ -494,13 +494,13 @@ resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
-  key_ring_id = "iac-kms-test"
+  key_ring_id = "\${var.prefix}-kms-test"
   instance_id = ibm_resource_instance.kms.guid
 }
 
 resource "ibm_kms_key" "kms_key_key" {
   instance_id   = ibm_resource_instance.kms.guid
-  key_name      = "iac-kms-key"
+  key_name      = "\${var.prefix}-kms-key"
   standard_key  = false
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
@@ -571,7 +571,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
 ##############################################################################
 
 resource "ibm_resource_instance" "kms" {
-  name              = "iac-kms"
+  name              = "\${var.prefix}-kms"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
@@ -583,13 +583,13 @@ resource "ibm_resource_instance" "kms" {
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
-  key_ring_id = "iac-kms-test"
+  key_ring_id = "\${var.prefix}-kms-test"
   instance_id = ibm_resource_instance.kms.guid
 }
 
 resource "ibm_kms_key" "kms_key_key" {
   instance_id   = ibm_resource_instance.kms.guid
-  key_name      = "iac-kms-key"
+  key_name      = "\${var.prefix}-kms-key"
   standard_key  = false
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
@@ -658,7 +658,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
 ##############################################################################
 
 resource "ibm_resource_instance" "kms" {
-  name              = "iac-kms"
+  name              = "\${var.prefix}-kms"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
@@ -692,13 +692,13 @@ resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
-  key_ring_id = "iac-kms-test"
+  key_ring_id = "\${var.prefix}-kms-test"
   instance_id = ibm_resource_instance.kms.guid
 }
 
 resource "ibm_kms_key" "kms_key_key" {
   instance_id   = ibm_resource_instance.kms.guid
-  key_name      = "iac-kms-key"
+  key_name      = "\${var.prefix}-kms-key"
   standard_key  = false
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
@@ -788,7 +788,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
 ##############################################################################
 
 resource "ibm_resource_instance" "kms" {
-  name              = "iac-kms"
+  name              = "\${var.prefix}-kms"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
@@ -822,13 +822,13 @@ resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
 }
 
 resource "ibm_kms_key_rings" "kms_test_ring" {
-  key_ring_id = "iac-kms-test"
+  key_ring_id = "\${var.prefix}-kms-test"
   instance_id = ibm_resource_instance.kms.guid
 }
 
 resource "ibm_kms_key" "kms_key_key" {
   instance_id   = ibm_resource_instance.kms.guid
-  key_name      = "iac-kms-key"
+  key_name      = "\${var.prefix}-kms-key"
   standard_key  = false
   key_ring_id   = ibm_kms_key_rings.kms_test_ring.key_ring_id
   force_delete  = true
@@ -858,7 +858,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
 ##############################################################################
 
 resource "ibm_resource_instance" "kms2" {
-  name              = "iac-kms2"
+  name              = "\${var.prefix}-kms2"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "kms"
   plan              = "tiered-pricing"
@@ -892,13 +892,13 @@ resource "ibm_iam_authorization_policy" "kms2_block_storage_policy" {
 }
 
 resource "ibm_kms_key_rings" "kms2_test_ring" {
-  key_ring_id = "iac-kms2-test"
+  key_ring_id = "\${var.prefix}-kms2-test"
   instance_id = ibm_resource_instance.kms2.guid
 }
 
 resource "ibm_kms_key" "kms2_key_key" {
   instance_id   = ibm_resource_instance.kms2.guid
-  key_name      = "iac-kms2-key"
+  key_name      = "\${var.prefix}-kms2-key"
   standard_key  = false
   key_ring_id   = ibm_kms_key_rings.kms2_test_ring.key_ring_id
   force_delete  = true

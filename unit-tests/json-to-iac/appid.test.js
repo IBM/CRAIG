@@ -29,7 +29,7 @@ describe("appid", () => {
       );
       let expectedData = `
 resource "ibm_resource_key" "test_appid_key_test_key" {
-  name                 = "iac-test-appid-test-key"
+  name                 = "\${var.prefix}-test-appid-test-key"
   resource_instance_id = ibm_resource_instance.test_appid.id
   role                 = "Writer"
   tags = [
@@ -65,7 +65,7 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
       );
       let expectedData = `
 resource "ibm_resource_key" "test_appid_key_test_key" {
-  name                 = "iac-test-appid-test-key"
+  name                 = "\${var.prefix}-test-appid-test-key"
   resource_instance_id = data.ibm_resource_instance.test_appid.id
   role                 = "Writer"
   tags = [
@@ -116,7 +116,7 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
       );
       let expectedData = `
 resource "ibm_resource_instance" "test_appid" {
-  name              = "iac-test-appid"
+  name              = "\${var.prefix}-test-appid"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "appid"
   plan              = "graduated-tier"
@@ -278,7 +278,7 @@ resource "ibm_appid_redirect_urls" "test_appid_urls" {
 ##############################################################################
 
 resource "ibm_resource_instance" "test_appid" {
-  name              = "iac-test-appid"
+  name              = "\${var.prefix}-test-appid"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "appid"
   plan              = "graduated-tier"
@@ -290,7 +290,7 @@ resource "ibm_resource_instance" "test_appid" {
 }
 
 resource "ibm_resource_key" "test_appid_key_test_key" {
-  name                 = "iac-test-appid-test-key"
+  name                 = "\${var.prefix}-test-appid-test-key"
   resource_instance_id = ibm_resource_instance.test_appid.id
   role                 = "Writer"
   tags = [
@@ -300,7 +300,7 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
 }
 
 resource "ibm_resource_key" "test_appid_key_test_key_2" {
-  name                 = "iac-test-appid-test-key-2"
+  name                 = "\${var.prefix}-test-appid-test-key-2"
   resource_instance_id = ibm_resource_instance.test_appid.id
   role                 = "Writer"
   tags = [

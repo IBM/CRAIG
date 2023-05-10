@@ -27,7 +27,7 @@ const { varDotRegion } = require("../constants");
 
 function ibmResourceInstanceKms(kms, config) {
   let instance = {
-    name: dataResourceName(kms, config),
+    name: dataResourceName(kms),
     resource_group_id: rgIdRef(kms.resource_group, config),
     service: kms.use_hs_crypto ? "hs-crypto" : "kms"
   };
@@ -118,7 +118,7 @@ function ibmKmsKeyRings(name, kms, config) {
   return {
     name: `${kms.name} ${name} ring`,
     data: {
-      key_ring_id: kebabName(config, [kms.name, name]),
+      key_ring_id: kebabName([kms.name, name]),
       instance_id: composedKmsId(kms)
     }
   };
@@ -159,7 +159,7 @@ function formatKeyRing(name, kms, config) {
 function ibmKmsKey(key, kms, config, cdktf) {
   let keyValues = {
     instance_id: composedKmsId(kms),
-    key_name: kebabName(config, [kms.name, key.name]),
+    key_name: kebabName([kms.name, key.name]),
     standard_key: !key.root_key,
     key_ring_id: tfRef(
       "ibm_kms_key_rings",

@@ -247,7 +247,7 @@ describe("flow logs", () => {
       );
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
-  name           = "iac-management-vpc-logs"
+  name           = "\${var.prefix}-management-vpc-logs"
   target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
@@ -508,7 +508,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
       );
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
-  name           = "iac-management-vpc-logs"
+  name           = "\${var.prefix}-management-vpc-logs"
   target         = module.management_vpc.id
   active         = true
   storage_bucket = "ERROR: Unfound ref"
@@ -766,7 +766,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
       );
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
-  name           = "iac-management-vpc-logs"
+  name           = "\${var.prefix}-management-vpc-logs"
   target         = module.management_vpc.id
   active         = true
   storage_bucket = "ERROR: Unfound ref"
@@ -899,7 +899,7 @@ resource "ibm_iam_authorization_policy" "flow_logs_to_cos_object_storage_policy"
 }
 
 resource "ibm_is_flow_log" "management_flow_log_collector" {
-  name           = "slz-management-vpc-logs"
+  name           = "\${var.prefix}-management-vpc-logs"
   target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
@@ -914,7 +914,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
 }
 
 resource "ibm_is_flow_log" "workload_flow_log_collector" {
-  name           = "slz-workload-vpc-logs"
+  name           = "\${var.prefix}-workload-vpc-logs"
   target         = module.workload_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name

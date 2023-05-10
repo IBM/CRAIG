@@ -3,7 +3,6 @@ const {
   formatSubnet,
   formatVpc,
   formatAcl,
-  formatAclRule,
   formatPgw
 } = require("./vpc");
 const { formatFlowLogs } = require("./flow-logs");
@@ -16,7 +15,7 @@ const {
   maskFieldsExpStep4HideValue,
   maskFieldsExpStep5CleanUp
 } = require("../constants");
-const { prettyJSON } = require("lazy-z")
+const { prettyJSON } = require("lazy-z");
 
 /**
  * code mirror display function for vpc
@@ -132,10 +131,7 @@ function codeMirrorGetDisplay(json, jsonInCodeMirror, path, toTf, jsonField) {
           ? "license_password%%%%"
           : "license_password"
       )
-      .replace(
-        maskFieldsExpStep4HideValue,
-        '": "****************************'
-      )
+      .replace(maskFieldsExpStep4HideValue, '": "****************************')
       .replace(maskFieldsExpStep5CleanUp, "public_key"); // remove any extraneous %%%% from setting fields to null
   } else if (toTf) {
     return toTf(json).replace(/\[\n\s*\]/g, "[]");

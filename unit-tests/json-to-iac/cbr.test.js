@@ -46,7 +46,7 @@ describe("cbr", () => {
       );
       let expectedData = `
 resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
-  name        = "slz-zone-foo-cbr-name"
+  name        = "\${var.prefix}-zone-foo-cbr-name"
   account_id  = "12ab34cd56ef78ab90cd12ef34ab56cd"
   description = "this is a cbr zone description"
   addresses {

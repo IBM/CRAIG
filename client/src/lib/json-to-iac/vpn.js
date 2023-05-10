@@ -24,7 +24,7 @@ function ibmIsVpnGateway(gw, config) {
   return {
     name: `${gw.vpc} ${gw.name} vpn gw`,
     data: {
-      name: kebabName(config, [gw.vpc, gw.name, "vpn-gw"]),
+      name: kebabName([gw.vpc, gw.name, "vpn-gw"]),
       subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(gw.subnet)}_id}`,
       resource_group: rgIdRef(gw.resource_group, config),
       tags: config._options.tags,

@@ -1,3 +1,4 @@
+const { varDotPrefix } = require("../constants");
 const { tfBlock, cdktfRef, jsonToTfPrint } = require("./utils");
 
 /**
@@ -85,7 +86,7 @@ function ibmSccPostureCollector(scc, config) {
       description: scc.collector_description,
       is_public: scc.is_public,
       managed_by: "ibm",
-      name: `${config._options.prefix}-scc-collector`
+      name: `${varDotPrefix}-scc-collector`
     }
   };
 }
@@ -104,7 +105,7 @@ function ibmSccPostureScope(scc, config) {
       credential_id: cdktfRef(`ibm_scc_posture_credential.scc_credentials.id`),
       credential_type: `ibm`,
       description: scc.scope_description,
-      name: `${config._options.prefix}-scc-scope`
+      name: `${varDotPrefix}-scc-scope`
     }
   };
 }

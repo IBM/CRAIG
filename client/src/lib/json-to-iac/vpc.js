@@ -21,7 +21,7 @@ const { jsonToTf } = require("json-to-tf");
 const { formatSgRule, formatSecurityGroup } = require("./security-groups");
 const { versionsTf } = require("./constants");
 const { routingTableTf } = require("./routing-tables");
-const { varDotRegion } = require("../constants");
+const { varDotRegion, varDotPrefix } = require("../constants");
 
 /**
  * format vpc terraform
@@ -44,7 +44,7 @@ function ibmIsVpc(vpc, config, useVarRef) {
   let data = {
     name: `${vpc.name}-vpc`,
     data: {
-      name: kebabName(config, [vpc.name, "vpc"]),
+      name: kebabName([vpc.name, "vpc"]),
       resource_group: `\${var.${snakeCase(vpc.resource_group)}_id}`,
       default_network_acl_name: vpc.default_network_acl_name
         ? vpc.default_network_acl_name
@@ -97,7 +97,7 @@ function ibmIsVpcAddressPrefix(address, config) {
   return {
     name: `${address.vpc}-${address.name}-prefix`,
     data: {
-      name: kebabName(config, [address.vpc, address.name]),
+      name: kebabName([address.vpc, address.name]),
       vpc: vpcRef(address.vpc),
       zone: composedZone(address.zone),
       cidr: address.cidr
@@ -145,7 +145,7 @@ function ibmIsSubnet(subnet, config, useVarRef) {
     name: subnetName,
     data: {
       vpc: vpcRef(subnet.vpc),
-      name: kebabName(config, [subnetName]),
+      name: kebabName([subnetName]),
       zone: composedZone(subnet.zone),
       resource_group: `\${var.${snakeCase(subnet.resource_group)}_id}`,
       tags: getTags(config, useVarRef),
@@ -210,7 +210,7 @@ function ibmIsNetworkAcl(acl, config, useRules) {
   let aclData = {
     name: `${acl.vpc} ${acl.name} acl`,
     data: {
-      name: kebabName(config, [acl.vpc, acl.name, "acl"]),
+      name: kebabName([acl.vpc, acl.name, "acl"]),
       vpc: vpcRef(acl.vpc),
       resource_group: `\${var.${snakeCase(acl.resource_group)}_id}`,
       tags: getTags(config)
@@ -363,7 +363,7 @@ function ibmIsPublicGateway(pgw, config, useVarRef) {
   return {
     name: pgwName,
     data: {
-      name: kebabName(config, [pgwName]),
+      name: kebabName([pgwName]),
       vpc: vpcRef(pgw.vpc),
       resource_group: `\${var.${snakeCase(pgw.resource_group)}_id}`,
       zone: composedZone(pgw.zone),
@@ -443,6 +443,7 @@ function vpcModuleJson(vpc, rgs, config) {
     },
     source: "./" + vpcModule,
     region: varDotRegion,
+    prefix: varDotPrefix,
     tags: config._options.tags
   };
   rgs.forEach(rg => {
@@ -472,7 +473,9 @@ function vpcModuleOutputs(vpc, securityGroups) {
       value: `\${ibm_is_subnet.${snakeCase(`${subnet.vpc}-${subnet.name}`)}.id}`
     };
     outputs[snakeCase(subnet.name) + `_crn`] = {
-      value: `\${ibm_is_subnet.${snakeCase(`${subnet.vpc}-${subnet.name}`)}.crn}`
+      value: `\${ibm_is_subnet.${snakeCase(
+        `${subnet.vpc}-${subnet.name}`
+      )}.crn}`
     };
   });
   securityGroups.forEach(sg => {
@@ -504,6 +507,10 @@ function vpcModuleTf(files, config) {
       },
       region: {
         description: "IBM Cloud Region where resources will be provisioned",
+        type: "${string}"
+      },
+      prefix: {
+        description: "Name prefix that will be prepended to named resources",
         type: "${string}"
       }
     };

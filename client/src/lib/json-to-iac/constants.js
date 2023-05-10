@@ -47,6 +47,12 @@ variable "region" {
   type        = string
   default     = "$REGION"
 }
+
+variable "prefix" {
+  description = "Name prefix that will be prepended to named resources"
+  type        = string
+  default     = "$PREFIX"
+}
 $ADDITIONAL_VALUES
 ##############################################################################
 `,

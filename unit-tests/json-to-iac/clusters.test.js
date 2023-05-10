@@ -31,7 +31,7 @@ describe("clusters", () => {
       );
       let expectedData = `
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
-  name                            = "slz-workload-cluster-cluster"
+  name                            = "\${var.prefix}-workload-cluster-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
   flavor                          = "bx2.16x64"
@@ -976,7 +976,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
       );
       let expectedData = `
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
-  name                            = "slz-workload-cluster"
+  name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
   flavor                          = "bx2.16x64"
@@ -1038,7 +1038,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
       );
       let expectedData = `
 resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
-  worker_pool_name  = "slz-workload-cluster-logging-pool"
+  worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
   cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
@@ -1074,7 +1074,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 ##############################################################################
 
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
-  name                            = "slz-workload-cluster"
+  name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
   flavor                          = "bx2.16x64"
@@ -1114,7 +1114,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
 }
 
 resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
-  worker_pool_name  = "slz-workload-cluster-logging-pool"
+  worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
   cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
@@ -2040,7 +2040,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 
       let expectedData = `
 resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
-  worker_pool_name  = "slz-workload-cluster-logging-pool"
+  worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
   cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id

@@ -54,7 +54,7 @@ describe("page template", () => {
 ##############################################################################
 
 resource "ibm_is_vpc" "management_vpc" {
-  name                        = "iac-management-vpc"
+  name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.management_rg_id
   address_prefix_management   = "manual"
   default_network_acl_name    = null
@@ -67,7 +67,7 @@ resource "ibm_is_vpc" "management_vpc" {
 }
 
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
-  name           = "iac-management-gateway-zone-1"
+  name           = "\${var.prefix}-management-gateway-zone-1"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.management_rg_id
   zone           = "\${var.region}-1"
@@ -84,7 +84,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 ##############################################################################
 
 resource "ibm_is_flow_log" "management_flow_log_collector" {
-  name           = "iac-management-vpc-logs"
+  name           = "\${var.prefix}-management-vpc-logs"
   target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
@@ -139,7 +139,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
 ##############################################################################
 
 resource "ibm_is_vpc" "management_vpc" {
-  name                        = "iac-management-vpc"
+  name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.management_rg_id
   address_prefix_management   = "manual"
   default_network_acl_name    = null
@@ -158,7 +158,7 @@ resource "ibm_is_vpc" "management_vpc" {
 ##############################################################################
 
 resource "ibm_is_flow_log" "management_flow_log_collector" {
-  name           = "iac-management-vpc-logs"
+  name           = "\${var.prefix}-management-vpc-logs"
   target         = module.management_vpc.id
   active         = true
   storage_bucket = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
@@ -299,7 +299,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
 ##############################################################################
 
 resource "ibm_is_network_acl" "management_management_acl" {
-  name           = "iac-management-management-acl"
+  name           = "\${var.prefix}-management-management-acl"
   vpc            = ibm_is_vpc.management_vpc.id
   resource_group = var.management_rg_id
   tags = [
@@ -446,7 +446,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
 
 resource "ibm_is_subnet" "management_vsi_zone_1" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-zone-1"
+  name            = "\${var.prefix}-management-vsi-zone-1"
   zone            = "\${var.region}-1"
   resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -459,7 +459,7 @@ resource "ibm_is_subnet" "management_vsi_zone_1" {
 
 resource "ibm_is_subnet" "management_vpn_zone_1" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vpn-zone-1"
+  name            = "\${var.prefix}-management-vpn-zone-1"
   zone            = "\${var.region}-1"
   resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -472,7 +472,7 @@ resource "ibm_is_subnet" "management_vpn_zone_1" {
 
 resource "ibm_is_subnet" "management_vsi_zone_2" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-zone-2"
+  name            = "\${var.prefix}-management-vsi-zone-2"
   zone            = "\${var.region}-2"
   resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -485,7 +485,7 @@ resource "ibm_is_subnet" "management_vsi_zone_2" {
 
 resource "ibm_is_subnet" "management_vsi_zone_3" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vsi-zone-3"
+  name            = "\${var.prefix}-management-vsi-zone-3"
   zone            = "\${var.region}-3"
   resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -498,7 +498,7 @@ resource "ibm_is_subnet" "management_vsi_zone_3" {
 
 resource "ibm_is_subnet" "management_vpe_zone_1" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vpe-zone-1"
+  name            = "\${var.prefix}-management-vpe-zone-1"
   zone            = "\${var.region}-1"
   resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -511,7 +511,7 @@ resource "ibm_is_subnet" "management_vpe_zone_1" {
 
 resource "ibm_is_subnet" "management_vpe_zone_2" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vpe-zone-2"
+  name            = "\${var.prefix}-management-vpe-zone-2"
   zone            = "\${var.region}-2"
   resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -524,7 +524,7 @@ resource "ibm_is_subnet" "management_vpe_zone_2" {
 
 resource "ibm_is_subnet" "management_vpe_zone_3" {
   vpc             = ibm_is_vpc.management_vpc.id
-  name            = "iac-management-vpe-zone-3"
+  name            = "\${var.prefix}-management-vpe-zone-3"
   zone            = "\${var.region}-3"
   resource_group  = var.management_rg_id
   network_acl     = ibm_is_network_acl.management_management_acl.id
@@ -596,7 +596,7 @@ resource "ibm_is_subnet" "management_vpe_zone_3" {
 ##############################################################################
 
 resource "ibm_resource_instance" "event_streams_es" {
-  name              = "iac-event-streams"
+  name              = "\${var.prefix}-event-streams"
   service           = "messagehub"
   plan              = "enterprise"
   location          = var.region
@@ -1088,7 +1088,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
 ##############################################################################
 
 resource "ibm_resource_group" "service_rg" {
-  name = "iac-service-rg"
+  name = "\${var.prefix}-service-rg"
   tags = [
     "hello",
     "world"
@@ -1096,7 +1096,7 @@ resource "ibm_resource_group" "service_rg" {
 }
 
 resource "ibm_resource_group" "management_rg" {
-  name = "iac-management-rg"
+  name = "\${var.prefix}-management-rg"
   tags = [
     "hello",
     "world"
@@ -1104,7 +1104,7 @@ resource "ibm_resource_group" "management_rg" {
 }
 
 resource "ibm_resource_group" "workload_rg" {
-  name = "iac-workload-rg"
+  name = "\${var.prefix}-workload-rg"
   tags = [
     "hello",
     "world"

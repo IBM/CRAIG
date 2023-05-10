@@ -19,7 +19,7 @@ describe("ssh keys", () => {
       );
       let expectedData = `
 resource "ibm_is_ssh_key" "slz_ssh_key" {
-  name           = "slz-slz-ssh-key"
+  name           = "\${var.prefix}-slz-ssh-key"
   public_key     = var.slz_ssh_key_public_key
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -64,7 +64,7 @@ data "ibm_is_ssh_key" "slz_ssh_key" {
 ##############################################################################
 
 resource "ibm_is_ssh_key" "slz_ssh_key" {
-  name           = "slz-slz-ssh-key"
+  name           = "\${var.prefix}-slz-ssh-key"
   public_key     = var.slz_ssh_key_public_key
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [

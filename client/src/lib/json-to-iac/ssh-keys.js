@@ -16,8 +16,6 @@ const {
  * @param {string} key.resource_group
  * @param {boolean} key.use_data
  * @param {Object} config
- * @param {Object} config._options
- * @param {string} config._options.prefix
  * @returns {object} terraform string
  */
 
@@ -25,7 +23,7 @@ function ibmIsSshKey(key, config) {
   let sshKey = {
     name: key.name,
     data: {
-      name: dataResourceName(key, config)
+      name: dataResourceName(key)
     }
   };
   if (!key.use_data) {

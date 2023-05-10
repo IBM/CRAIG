@@ -36,7 +36,7 @@ describe("object storage", () => {
       );
       let expectedData = `
 resource "ibm_resource_instance" "cos_object_storage" {
-  name              = "iac-cos-object-storage"
+  name              = "\${var.prefix}-cos-object-storage"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "cloud-object-storage"
   location          = "global"
@@ -83,7 +83,7 @@ resource "random_string" "cos_random_suffix" {
 }
 
 resource "ibm_resource_instance" "cos_object_storage" {
-  name              = "iac-cos-object-storage-\${random_string.cos_random_suffix.result}"
+  name              = "\${var.prefix}-cos-object-storage-\${random_string.cos_random_suffix.result}"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "cloud-object-storage"
   location          = "global"
@@ -355,7 +355,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket"
+  bucket_name          = "\${var.prefix}-cos-bucket"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -427,7 +427,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket"
+  bucket_name          = "\${var.prefix}-cos-bucket"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -499,7 +499,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -572,7 +572,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -655,7 +655,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -741,7 +741,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -827,7 +827,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -906,7 +906,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -982,7 +982,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -1062,7 +1062,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -1139,7 +1139,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       );
       let expectedData = `
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
-  name                 = "iac-cos-key-cos-key"
+  name                 = "\${var.prefix}-cos-key-cos-key"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
   tags = [
@@ -1206,7 +1206,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
       );
       let expectedData = `
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
-  name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
+  name                 = "\${var.prefix}-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
   tags = [
@@ -1298,7 +1298,7 @@ resource "random_string" "cos_random_suffix" {
 }
 
 resource "ibm_resource_instance" "cos_object_storage" {
-  name              = "iac-cos-object-storage-\${random_string.cos_random_suffix.result}"
+  name              = "\${var.prefix}-cos-object-storage-\${random_string.cos_random_suffix.result}"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "cloud-object-storage"
   location          = "global"
@@ -1321,7 +1321,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -1334,7 +1334,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
-  name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
+  name                 = "\${var.prefix}-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
   tags = [
@@ -1424,7 +1424,7 @@ resource "random_string" "cos_random_suffix" {
 }
 
 resource "ibm_resource_instance" "cos_object_storage" {
-  name              = "iac-cos-object-storage-\${random_string.cos_random_suffix.result}"
+  name              = "\${var.prefix}-cos-object-storage-\${random_string.cos_random_suffix.result}"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "cloud-object-storage"
   location          = "global"
@@ -1447,7 +1447,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -1460,7 +1460,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
-  name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
+  name                 = "\${var.prefix}-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
   tags = [
@@ -1573,7 +1573,7 @@ resource "random_string" "cos_random_suffix" {
 }
 
 resource "ibm_resource_instance" "cos_object_storage" {
-  name              = "iac-cos-object-storage-\${random_string.cos_random_suffix.result}"
+  name              = "\${var.prefix}-cos-object-storage-\${random_string.cos_random_suffix.result}"
   resource_group_id = ibm_resource_group.slz_service_rg.id
   service           = "cloud-object-storage"
   location          = "global"
@@ -1596,7 +1596,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
-  bucket_name          = "iac-cos-bucket-\${random_string.cos_random_suffix.result}"
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -1609,7 +1609,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
-  name                 = "iac-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
+  name                 = "\${var.prefix}-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
   tags = [
@@ -1646,7 +1646,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
 }
 
 resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
-  bucket_name          = "iac-cos-bucket2"
+  bucket_name          = "\${var.prefix}-cos-bucket2"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
   endpoint_type        = "public"
@@ -1659,7 +1659,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
-  name                 = "iac-cos-key-cos-key"
+  name                 = "\${var.prefix}-cos-key-cos-key"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   role                 = "Writer"
   tags = [

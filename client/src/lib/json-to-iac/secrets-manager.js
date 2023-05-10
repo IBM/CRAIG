@@ -67,7 +67,7 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
     ? getObjectFromArray(config.key_management, "name", secretsManager.kms)
     : null;
   let instance = {
-    name: kebabName(config, [secretsManager.name]),
+    name: kebabName([secretsManager.name]),
     location: varDotRegion,
     plan: "standard",
     service: "secrets-manager",
@@ -129,14 +129,13 @@ function formatSecretsManagerInstance(secretsManager, config) {
  * @param {string} secret.description description of secret
  * @param {string} secret.credentials name of cred
  * @param {string} secret.credential_instance instance, currently only cos supported
- * @param {*} config config object
  * @returns {string} terraform object
  */
-function ibmSmKvSecret(secret, config) {
+function ibmSmKvSecret(secret) {
   let data = {
     name: snakeCase(secret.secrets_manager + " " + secret.name),
     data: {
-      name: kebabName(config, [secret.secrets_manager, secret.name]),
+      name: kebabName([secret.secrets_manager, secret.name]),
       instance_id: `\${ibm_resource_instance.${snakeCase(
         secret.secrets_manager
       )}_secrets_manager.guid}`,

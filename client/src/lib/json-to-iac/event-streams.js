@@ -6,7 +6,7 @@ const {
   timeouts,
   jsonToTfPrint
 } = require("./utils");
-const {contains} = require("lazy-z")
+const { contains } = require("lazy-z");
 /**
  * create event streams terraform
  * @param {Object} eventStreams
@@ -23,7 +23,7 @@ const {contains} = require("lazy-z")
 
 function ibmResourceInstanceEventStreams(eventStreams, config) {
   let eventStreamsValues = {
-    name: kebabName(config, [eventStreams.name]),
+    name: kebabName([eventStreams.name]),
     service: "messagehub",
     plan: eventStreams.plan,
     location: varDotRegion,

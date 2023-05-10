@@ -36,7 +36,7 @@ function ibmAtrackerTarget(config) {
   return {
     name: `${config.atracker.name} ${config.atracker.type} target`,
     data: {
-      name: kebabName(config, [config.atracker.name, config.atracker.type]),
+      name: kebabName( [config.atracker.name, config.atracker.type]),
       cos_endpoint: [
         {
           endpoint: `s3.private.${varDotRegion}.cloud-object-storage.appdomain.cloud`,
@@ -75,7 +75,7 @@ function ibmAtrackerRoute(config) {
   let routeData = {
     name: `${config.atracker.name} ${config.atracker.type} route`,
     data: {
-      name: kebabName(config, [
+      name: kebabName( [
         config.atracker.name,
         config.atracker.type,
         "route"

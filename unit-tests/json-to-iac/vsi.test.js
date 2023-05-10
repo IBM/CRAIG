@@ -31,7 +31,7 @@ describe("virtual server", () => {
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -81,7 +81,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -142,7 +142,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -171,7 +171,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
 }
 
 resource "ibm_is_volume" "management_vpc_management_server_vsi_1_1_block_storage_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1-block-storage-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1-block-storage-1"
   profile        = "custom"
   zone           = "\${var.region}-1"
   iops           = 1000
@@ -288,7 +288,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_block_storage_1
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -342,12 +342,12 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
   subnet  = module.management_vpc.vsi_zone_1_id
-  name    = "slz-management-management-server-vsi-zone-1-1-reserved-ip"
+  name    = "\${var.prefix}-management-management-server-vsi-zone-1-1-reserved-ip"
   address = "1.2.3.4"
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -464,7 +464,7 @@ data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
       let expectedData =
         `
 resource "ibm_is_lb" "lb_1_load_balancer" {
-  name           = "iac-lb-1-lb"
+  name           = "\${var.prefix}-lb-1-lb"
   type           = "public"
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -484,7 +484,7 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
 
 resource "ibm_is_lb_pool" "lb_1_load_balancer_pool" {
   lb                                  = ibm_is_lb.lb_1_load_balancer.id
-  name                                = "iac-lb-1-lb-pool"
+  name                                = "\${var.prefix}-lb-1-lb-pool"
   algorithm                           = "round_robin"
   protocol                            = "tcp"
   health_delay                        = 60
@@ -629,7 +629,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
       let expectedData =
         `
 resource "ibm_is_lb" "lb_1_load_balancer" {
-  name           = "iac-lb-1-lb"
+  name           = "\${var.prefix}-lb-1-lb"
   type           = "public"
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -649,7 +649,7 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
 
 resource "ibm_is_lb_pool" "lb_1_load_balancer_pool" {
   lb                       = ibm_is_lb.lb_1_load_balancer.id
-  name                     = "iac-lb-1-lb-pool"
+  name                     = "\${var.prefix}-lb-1-lb-pool"
   algorithm                = "round_robin"
   protocol                 = "tcp"
   health_delay             = 60
@@ -798,7 +798,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
 ##############################################################################
 
 resource "ibm_is_lb" "lb_1_load_balancer" {
-  name           = "iac-lb-1-lb"
+  name           = "\${var.prefix}-lb-1-lb"
   type           = "public"
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
@@ -818,7 +818,7 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
 
 resource "ibm_is_lb_pool" "lb_1_load_balancer_pool" {
   lb                                  = ibm_is_lb.lb_1_load_balancer.id
-  name                                = "iac-lb-1-lb-pool"
+  name                                = "\${var.prefix}-lb-1-lb-pool"
   algorithm                           = "round_robin"
   protocol                            = "tcp"
   health_delay                        = 60
@@ -919,7 +919,7 @@ data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
 ##############################################################################
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -944,7 +944,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
-  name           = "slz-management-management-server-vsi-zone-1-2"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-2"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -969,7 +969,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
-  name           = "slz-management-management-server-vsi-zone-2-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-2-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -994,7 +994,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
-  name           = "slz-management-management-server-vsi-zone-2-2"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-2-2"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -1019,7 +1019,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
-  name           = "slz-management-management-server-vsi-zone-3-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-3-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -1044,7 +1044,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
-  name           = "slz-management-management-server-vsi-zone-3-2"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-3-2"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -1116,12 +1116,12 @@ data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
   subnet  = module.management_vpc.vsi_zone_1_id
-  name    = "slz-management-management-server-vsi-zone-1-1-reserved-ip"
+  name    = "\${var.prefix}-management-management-server-vsi-zone-1-1-reserved-ip"
   address = "1.2.3.4"
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
-  name           = "slz-management-management-server-vsi-zone-1-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -1150,12 +1150,12 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_2_1_reserved_ip" {
   subnet  = module.management_vpc.vsi_zone_2_id
-  name    = "slz-management-management-server-vsi-zone-2-1-reserved-ip"
+  name    = "\${var.prefix}-management-management-server-vsi-zone-2-1-reserved-ip"
   address = "5.6.7.8"
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
-  name           = "slz-management-management-server-vsi-zone-2-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-2-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
@@ -1184,12 +1184,12 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_3_1_reserved_ip" {
   subnet  = module.management_vpc.vsi_zone_3_id
-  name    = "slz-management-management-server-vsi-zone-3-1-reserved-ip"
+  name    = "\${var.prefix}-management-management-server-vsi-zone-3-1-reserved-ip"
   address = "9.10.11.12"
 }
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
-  name           = "slz-management-management-server-vsi-zone-3-1"
+  name           = "\${var.prefix}-management-management-server-vsi-zone-3-1"
   image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id

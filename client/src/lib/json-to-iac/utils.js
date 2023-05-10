@@ -11,6 +11,7 @@ const { RegexButWithWords } = require("regex-but-with-words");
 const { endComment } = require("./constants");
 const constants = require("./constants");
 const { jsonToTf } = require("json-to-tf");
+const { varDotPrefix } = require("../constants");
 
 /**
  * get a resource group id using name
@@ -119,19 +120,14 @@ function vpcRef(vpcName, value, useModule) {
 
 /**
  * create name in kebab case
- * @param {Object} config
- * @param {Object} config._options
- * @param {string} config._options.prefix
  * @param {Array<string>} segments array of substrings
  * @param {string=} addText additional text
  * @returns {string} kebab-case-name
  */
-function kebabName(config, segments, addText) {
+function kebabName(segments, addText) {
   return (
-    kebabCase(config._options.prefix + "-" + segments.join("-")).replace(
-      /-$/,
-      ""
-    ) + (addText || "")
+    kebabCase("${var.prefix}" + "-" + segments.join("-")).replace(/-$/, "") +
+    (addText || "")
   );
 }
 
@@ -260,8 +256,8 @@ function tfDone(tf) {
  * @param {string} appendText text to add
  * @returns {string} data resource name
  */
-function dataResourceName(resource, config, appendText) {
-  return `${resource.use_data ? "" : config._options.prefix + "-"}${
+function dataResourceName(resource, appendText) {
+  return `${resource.use_data ? "" : varDotPrefix + "-"}${
     resource.name
   }${appendText ? appendText : ""}`;
 }

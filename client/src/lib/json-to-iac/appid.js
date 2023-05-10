@@ -26,7 +26,7 @@ function ibmResourceKeyAppId(key, config) {
   return {
     name: `${key.appid} key ${key.name}`,
     data: {
-      name: kebabName(config, [key.appid, key.name]),
+      name: kebabName([key.appid, key.name]),
       resource_instance_id: resourceRef(
         key.appid,
         "id",
@@ -62,7 +62,7 @@ function formatAppIdKey(key, config) {
  */
 function ibmResourceInstanceAppId(instance, config) {
   let appIdValues = {
-    name: dataResourceName(instance, config),
+    name: dataResourceName(instance),
     resource_group_id: rgIdRef(instance.resource_group, config)
   };
   // add needed values when new instance is created
@@ -70,7 +70,7 @@ function ibmResourceInstanceAppId(instance, config) {
     appIdValues.tags = config._options.tags;
     appIdValues.service = "appid";
     appIdValues.plan = "graduated-tier";
-    appIdValues.location = varDotRegion
+    appIdValues.location = varDotRegion;
   }
   return {
     name: instance.name,
@@ -103,7 +103,7 @@ function formatAppId(instance, config) {
 
 function ibmAppIdRedirectUrls(appid, urls) {
   return {
-    name:`${appid.name} urls`,
+    name: `${appid.name} urls`,
     data: {
       tenant_id: resourceRef(appid.name, "guid", useData(appid.use_data)),
       urls: urls
