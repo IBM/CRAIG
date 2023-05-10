@@ -244,6 +244,82 @@ function controller(axios) {
         });
     });
   };
+
+  /**
+   * get details about provided workspace
+   * @param {string} workspaceName
+   * @returns {Promise}
+   */
+  this.getWorkspaceData = function (workspaceName) {
+    return new Promise((resolve, reject) => {
+      return this.getBearerToken()
+        .then(() => {
+          let requestConfig = {
+            method: "get",
+            url: "https://schematics.cloud.ibm.com/v1/workspaces",
+            headers: {
+              Accept: "application/json",
+              Authorization: this.token,
+            },
+          };
+
+          return axios(requestConfig);
+        })
+        .then((response) => {
+          let workspaces = response.data.workspaces;
+          let data = { w_id: "", t_id: "" };
+          workspaces.forEach((workspace) => {
+            if (workspace.name === workspaceName) {
+              data.w_id = workspace.id;
+              data.t_id = workspace.template_data[0].id;
+            }
+          });
+          resolve(data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
+
+  /**
+   * uploads given file to specified workspace, see https://cloud.ibm.com/apidocs/schematics/schematics#template-repo-upload
+   * @param {string} workspaceName
+   * @param {ReadableStream} file
+   * @returns {Promise}
+   */
+  this.uploadTar = function (workspaceName, file) {
+    return new Promise((resolve, reject) => {
+      return this.getWorkspaceData(workspaceName)
+        .then((wsData) => {
+          return this.getBearerToken().then(() => {
+            let form = new FormData();
+            form.append("file", "=@" + file);
+            let requestConfig = {
+              method: "put",
+              url: `https://schematics.cloud.ibm.com/v1/workspaces/${wsData.w_id}/template_data/${wsData.t_id}/template_repo_upload`,
+              headers: {
+                Authorization: this.token,
+                "Content-Type": "multipart/form-data",
+              },
+              data: { file: file },
+            };
+            return axios(requestConfig);
+          });
+        })
+        .then((response) => {
+          if (response.data.has_received_file !== true) {
+            throw new Error(
+              `${workspaceName} has not received file, in uploadTar response data has_received_file is not true`
+            );
+          }
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
 }
 
 module.exports = controller;

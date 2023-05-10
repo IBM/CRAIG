@@ -212,4 +212,75 @@ describe("controller", () => {
       });
     });
   });
+  describe("schematics-upload", () => {
+    let { axios } = initMockAxios(
+      {
+        workspaces: [
+          {
+            name: "frog-workspace",
+            id: "foo-workspace-id",
+            template_data: [{ id: "123abc-id" }],
+          },
+        ],
+      },
+      false
+    );
+    it("should return data passed", () => {
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .uploadTar("frog-workspace", "./fake/file.tar")
+        .then((data) => {
+          assert.deepEqual(
+            data,
+            {
+              data: {
+                workspaces: [
+                  {
+                    name: "frog-workspace",
+                    id: "foo-workspace-id",
+                    template_data: [{ id: "123abc-id" }],
+                  },
+                ],
+              },
+            },
+            "it should return correct data"
+          );
+        });
+    });
+    it("should return data passed", () => {
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .uploadTar("wrong-workspace", "./fake/file.tar")
+        .then((data) => {
+          assert.deepEqual(
+            data,
+            {
+              data: {
+                workspaces: [
+                  {
+                    name: "frog-workspace",
+                    id: "foo-workspace-id",
+                    template_data: [{ id: "123abc-id" }],
+                  },
+                ],
+              },
+            },
+            "it should return correct data"
+          );
+        });
+    });
+    it("should reject on error", () => {
+      let { axios } = initMockAxios({ stderr: "promise rejected" }, true);
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .uploadTar("wrong-workspace", "./fake/file.tar")
+        .catch((data) => {
+          assert.deepEqual(
+            data,
+            { stderr: "promise rejected" },
+            "it should return correct data"
+          );
+        });
+    });
+  });
 });
