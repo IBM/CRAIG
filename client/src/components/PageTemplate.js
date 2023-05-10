@@ -355,6 +355,7 @@ const PageTemplate = props => {
         onJsonToggle={() => props.toggleHide("hideCodeMirror")}
         navCategories={navCategories}
         json={props.json}
+        project={props.project}
         notify={props.notify}
         isResetState={isResetState}
         formPathNotPresent={formPathNotPresent}

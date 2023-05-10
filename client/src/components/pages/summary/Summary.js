@@ -101,7 +101,7 @@ class Summary extends React.Component {
             >
               Copy JSON
             </Button>
-            {!this.props.craig.store.project && (
+            {!this.props.craig.store.project_name && (
               <Button
                 kind="tertiary"
                 onClick={this.toggleShowSaveModal}

@@ -121,3 +121,21 @@ div .cds--side-nav__overlay-active { /* specify application to div to raise clas
   opacity: 1;
   transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1), background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
 }
+
+// Styles for header menu box
+.no-marker {
+  list-style-type: none;
+}
+
+.headerMenuBox {
+  width: fit-content;
+  height: fit-content;
+  background-color: var(--white);
+  box-shadow: -1px 1px 9px 2px #d5d2d2;
+  padding: 0.5rem;
+  min-width: 14.5rem;
+}
+
+.marginBottomXs {
+  margin-bottom: 0.5rem;
+}

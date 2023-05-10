@@ -4,6 +4,7 @@ import {
   HeaderGlobalAction,
   HeaderGlobalBar,
   HeaderName,
+  HeaderMenu,
   HeaderMenuButton,
   Modal,
   Theme
@@ -100,6 +101,27 @@ class Navigation extends React.Component {
           <HeaderName href="/" prefix="">
             CRAIG
           </HeaderName>
+          {this.props.project && (
+            <HeaderMenu
+              className="no-marker"
+              menuLinkName={`Project: ${this.props.project.name}`}
+            >
+              <div className="headerMenuBox">
+                <p className="smallerText marginBottomXs">
+                  Project: {this.props.project.name}
+                </p>
+                {this.props.project.description && (
+                  <p className="smallerText marginBottomXs">
+                    Description: {this.props.project.description}
+                  </p>
+                )}
+                <p className="smallerText">
+                  Saved:{" "}
+                  {new Date(this.props.project.last_save).toLocaleString()}
+                </p>
+              </div>
+            </HeaderMenu>
+          )}
           <HeaderGlobalBar>
             {this.props.isResetState === false &&
               this.props.formPathNotPresent === false && (

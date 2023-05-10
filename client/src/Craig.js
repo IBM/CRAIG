@@ -36,7 +36,8 @@ class Craig extends React.Component {
         craig.store = JSON.parse(stateInStorage);
       }
       if (!projectInStorage) {
-        window.localStorage.setItem("craigProjects", "{}");
+        projectInStorage = "{}";
+        window.localStorage.setItem("craigProjects", projectInStorage);
       }
       this.state = {
         hideCodeMirror: craig.store.hideCodeMirror,
@@ -44,6 +45,7 @@ class Craig extends React.Component {
         jsonInCodeMirror: craig.store.jsonInCodeMirror,
         notifications: [],
         storeName: storeName,
+        projects: JSON.parse(projectInStorage),
         store: craig.store
       };
     } catch (err) {
@@ -70,7 +72,7 @@ class Craig extends React.Component {
   }
 
   // update components
-  updateComponents() {
+  updateComponents(message) {
     // Save state to local storage
     this.setItem(this.state.storeName, craig.store);
     // Show a notification when state is updated successfully
@@ -83,7 +85,7 @@ class Craig extends React.Component {
     let notification = {
       title: "Success",
       kind: "success",
-      text: `Successfully updated ${updatedForm}`,
+      text: message || `Successfully updated ${updatedForm}`,
       timeout: 3000
     };
     this.setState(
@@ -149,10 +151,15 @@ class Craig extends React.Component {
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
     projects[kebabCase(name)] = {
       name: name,
+      last_save: Date.now(),
       description: description,
       json: craig.store.json
     };
     window.localStorage.setItem("craigProjects", JSON.stringify(projects));
+    this.setState({ projects }, () => {
+      craig.store.project_name = kebabCase(name);
+      this.updateComponents(`Successfully saved project as ${name}`);
+    });
   }
 
   render() {
@@ -168,6 +175,7 @@ class Craig extends React.Component {
           hideFooter={this.state.hideFooter}
           toggleHide={this.toggleHide}
           json={craig.store.json}
+          project={this.state.projects[this.state.store.project_name]}
           nav={this.props.craigRouter.nav}
           form={this.props.params.form}
           storeName={this.state.storeName}
