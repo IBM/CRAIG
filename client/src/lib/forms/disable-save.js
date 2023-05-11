@@ -23,7 +23,9 @@ const {
   invalidIpCommaList,
   invalidIdentityProviderURI,
   invalidCrnList,
-  isValidUrl
+  isValidUrl,
+  invalidCbrRule,
+  invalidCbrZone
 } = require("./invalid-callbacks");
 
 /**
@@ -53,7 +55,7 @@ function fieldsAreBad(fields, stateData) {
 }
 
 /**
- * check multiple fields against the same regex expression
+ * check multiple fields against the same validating regex expression
  * @param {Array} fields list of fields
  * @param {Function} check test fields with this
  * @param {Object} stateData
@@ -63,6 +65,23 @@ function fieldCheck(fields, check, stateData) {
   let hasBadFields = false;
   fields.forEach(field => {
     if (!check(stateData[field])) {
+      hasBadFields = true;
+    }
+  });
+  return hasBadFields;
+}
+
+/**
+ * check multiple fields against the same invalidating regex expression
+ * @param {Array} fields  list of fields to check
+ * @param {function} check the check to run
+ * @param {Object} stateData
+ * @returns {boolean} true if any are invalid
+ */
+function invalidFieldCheck(fields, check, stateData) {
+  let hasBadFields = false;
+  fields.forEach(field => {
+    if (check(field, stateData)) {
       hasBadFields = true;
     }
   });
@@ -422,6 +441,71 @@ function disableSave(field, stateData, componentProps, craig) {
         [stateData.health_retries, 5, 3000]
       ) ||
       anyAreEmpty(stateData.target_vsi, stateData.security_groups)
+    );
+  } else if (field === "cbr_rules") {
+    return (
+      invalidName("cbr_rules")(stateData, componentProps) ||
+      invalidFieldCheck(
+        ["description", "api_type_id"],
+        invalidCbrRule,
+        stateData
+      )
+    );
+  } else if (field === "contexts") {
+    return (
+      invalidName("contexts")(stateData, componentProps) ||
+      invalidCbrRule("value", stateData, componentProps)
+    );
+  } else if (field === "resource_attributes") {
+    return (
+      invalidName("resource_attributes")(stateData, componentProps) ||
+      invalidCbrRule("value", stateData, componentProps)
+    );
+  } else if (field === "tags") {
+    return (
+      invalidName("tags")(stateData, componentProps) ||
+      invalidFieldCheck(["value", "operator"], invalidCbrRule, stateData)
+    );
+  } else if (field == "cbr_zones") {
+    return (
+      invalidName("cbr_zones")(stateData, componentProps) ||
+      invalidFieldCheck(
+        ["description", "account_id"],
+        invalidCbrZone,
+        stateData
+      )
+    );
+  } else if (field === "addresses") {
+    return (
+      invalidName("addresses")(stateData, componentProps) ||
+      invalidFieldCheck(
+        [
+          "account_id",
+          "location",
+          "service_name",
+          "service_type",
+          "service_instance",
+          "value"
+        ],
+        invalidCbrZone,
+        stateData
+      )
+    );
+  } else if (field === "exclusions") {
+    return (
+      invalidName("exclusions")(stateData, componentProps) ||
+      invalidFieldCheck(
+        [
+          "account_id",
+          "location",
+          "service_name",
+          "service_type",
+          "service_instance",
+          "value"
+        ],
+        invalidCbrZone,
+        stateData
+      )
     );
   } else return false;
 }

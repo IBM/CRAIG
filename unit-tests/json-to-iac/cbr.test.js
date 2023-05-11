@@ -85,11 +85,74 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
         "it should return correct data"
       );
     });
+    it("should create terraform code for cbr zone with null values", () => {
+      let actualData = formatCbrZone(
+        {
+          name: "foo-cbr-name",
+          account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
+          description: "this is a cbr zone description",
+          addresses: [
+            {
+              account_id: "",
+              type: "",
+              value: "",
+              location: "us-south",
+              service_instance: "",
+              service_name: "",
+              service_type: "",
+            },
+          ],
+          exclusions: [
+            {
+              type: "ipAddress",
+              value: "169.23.22.11",
+            },
+            {
+              type: "ipAddress",
+              value: "169.23.22.10",
+            },
+          ],
+        },
+        craigJson
+      );
+      let expectedData = `
+resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
+  name        = "\${var.prefix}-zone-foo-cbr-name"
+  account_id  = "12ab34cd56ef78ab90cd12ef34ab56cd"
+  description = "this is a cbr zone description"
+  addresses {
+    type  = null
+    value = null
+    ref {
+      location         = var.region
+      account_id       = null
+      service_instance = null
+      service_name     = null
+      service_type     = null
+    }
+  }
+  excluded {
+    type  = "ipAddress"
+    value = "169.23.22.11"
+  }
+  excluded {
+    type  = "ipAddress"
+    value = "169.23.22.10"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("formatCbrRule", () => {
     it("should create terraform code for cbr rule", () => {
       let actualData = formatCbrRule(
         {
+          name: "test",
           description: "test cbr rule description",
           enforcement_mode: "enabled",
           api_type_id: "api_type_id",
@@ -124,7 +187,7 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
         craigJson
       );
       let expectedData = `
-resource "ibm_cbr_rule" "slz_cbr_rule" {
+resource "ibm_cbr_rule" "slz_cbr_rule_test" {
   description      = "test cbr rule description"
   enforcement_mode = "enabled"
   contexts {
@@ -138,6 +201,10 @@ resource "ibm_cbr_rule" "slz_cbr_rule" {
     }
   }
   resources {
+    tags {
+      name  = "tag_name"
+      value = "tag_value"
+    }
     attributes {
       name  = "accountId"
       value = "12ab34cd56ef78ab90cd12ef34ab56cd"
@@ -146,6 +213,43 @@ resource "ibm_cbr_rule" "slz_cbr_rule" {
       name  = "serviceName"
       value = "network-policy-enabled"
     }
+  }
+  operations {
+    api_types {
+      api_type_id = "api_type_id"
+    }
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should create terraform code for cbr rule with no sub objects", () => {
+      let actualData = formatCbrRule(
+        {
+          name: "test",
+          description: "test cbr rule description",
+          enforcement_mode: "enabled",
+          api_type_id: "api_type_id",
+          contexts: [],
+          resource_attributes: [],
+          tags: [
+            {
+              name: "tag_name",
+              value: "tag_value",
+            },
+          ],
+        },
+        craigJson
+      );
+      let expectedData = `
+resource "ibm_cbr_rule" "slz_cbr_rule_test" {
+  description      = "test cbr rule description"
+  enforcement_mode = "enabled"
+  resources {
     tags {
       name  = "tag_name"
       value = "tag_value"

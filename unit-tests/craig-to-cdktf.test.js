@@ -367,7 +367,7 @@ describe("craigToCdktf", () => {
     let actualData = craigToCdktf(f5nw);
     let data = actualData.resource.ibm_cbr_rule;
     assert.deepEqual(data, {
-      slz_cbr_rule: {
+      slz_cbr_rule_foo_cbr_rule: {
         description: "test cbr rule description",
         enforcement_mode: "enabled",
         contexts: [

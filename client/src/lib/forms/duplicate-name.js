@@ -120,6 +120,40 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       .then(data => {
         allOtherNames = splat(data.subnets, "name");
       });
+  } else if (field === "cbr_rules") {
+    allOtherNames = splat(componentProps.craig.store.json.cbr_rules, "name");
+  } else if (field === "contexts") {
+    componentProps.craig.store.json.cbr_rules.forEach(rule =>
+      rule.contexts.forEach(context => {
+        allOtherNames.push(context.name);
+      })
+    );
+  } else if (field === "resource_attributes") {
+    componentProps.craig.store.json.cbr_rules.forEach(rule =>
+      rule.resource_attributes.forEach(attribute => {
+        allOtherNames.push(attribute.name);
+      })
+    );
+  } else if (field === "tags") {
+    componentProps.craig.store.json.cbr_rules.forEach(rule =>
+      rule.tags.forEach(tag => {
+        allOtherNames.push(tag.name);
+      })
+    );
+  } else if (field === "cbr_zones") {
+    allOtherNames = splat(componentProps.craig.store.json.cbr_zones, "name");
+  } else if (field === "exclusions") {
+    componentProps.craig.store.json.cbr_zones.forEach(zone =>
+      zone.exclusions.forEach(exclusion => {
+        allOtherNames.push(exclusion.name);
+      })
+    );
+  } else if (field === "addresses") {
+    componentProps.craig.store.json.cbr_zones.forEach(zone =>
+      zone.addresses.forEach(address => {
+        allOtherNames.push(address.name);
+      })
+    );
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],

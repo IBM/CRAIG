@@ -402,6 +402,7 @@ describe("configToFilesJson", () => {
       ];
       nw.cbr_rules = [
         {
+          name: "frog",
           description: "test cbr rule description",
           enforcement_mode: "enabled",
           api_type_id: "api_type_id",

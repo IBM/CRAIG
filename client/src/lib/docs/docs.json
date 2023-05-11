@@ -1040,5 +1040,15 @@
       }
     ],
     "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-nlb-vs-elb"]]
+  },
+  "cbr": {
+    "content": [
+      {
+        "text": "nyi"
+      }
+    ],
+    "relatedLinks": [
+      []
+    ]
   }
 }

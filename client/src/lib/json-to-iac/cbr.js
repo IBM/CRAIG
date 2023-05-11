@@ -1,3 +1,4 @@
+const { isNullOrEmptyString } = require("lazy-z");
 const { varDotRegion } = require("../constants");
 const { kebabName, jsonToTfPrint, tfBlock, tfDone } = require("./utils");
 
@@ -9,7 +10,10 @@ const { kebabName, jsonToTfPrint, tfBlock, tfDone } = require("./utils");
 function ibmCbrZoneAddressAndExclusion(item, type) {
   let zone = {};
   ["type", "value"].forEach(field => {
-    if (item[field] !== undefined) zone[field] = String(item[field]);
+    if (item[field] !== undefined)
+      zone[field] = isNullOrEmptyString(item[field])
+        ? null
+        : String(item[field]);
   });
   if (type === "address") {
     zone.ref = [{}];
@@ -23,7 +27,9 @@ function ibmCbrZoneAddressAndExclusion(item, type) {
       if (field === "location" && item[field] !== undefined)
         zone.ref[0][field] = varDotRegion;
       else if (item[field] !== undefined)
-        zone.ref[0][field] = String(item[field]);
+        zone.ref[0][field] = isNullOrEmptyString(item[field])
+          ? null
+          : String(item[field]);
     });
   }
   return zone;
@@ -40,7 +46,7 @@ function ibmCbrZone(zone, config) {
     name: `${config._options.prefix} ${zone.name} zone`
   };
   let cbrZoneData = {
-    name: kebabName( ["zone", zone.name]),
+    name: kebabName(["zone", zone.name]),
     account_id: `${zone.account_id}`,
     description: `${zone.description}`,
     addresses: [],
@@ -48,14 +54,14 @@ function ibmCbrZone(zone, config) {
   };
 
   // add addresses
-  zone.addresses.forEach(address => {
+  zone?.addresses?.forEach(address => {
     cbrZoneData.addresses.push(
       ibmCbrZoneAddressAndExclusion(address, "address")
     );
   });
 
   // add excluded
-  zone.exclusions.forEach(exclude => {
+  zone?.exclusions?.forEach(exclude => {
     cbrZoneData.excluded.push(
       ibmCbrZoneAddressAndExclusion(exclude, "exclude")
     );
@@ -93,28 +99,35 @@ function ibmCbrRuleAttributes(item) {
  */
 function ibmCbrRule(rule, config) {
   let data = {
-    name: `${config._options.prefix} cbr rule`
+    name: `${config._options.prefix} cbr rule ${rule.name}`
   };
   let cbrRuleData = {
     description: `${rule.description}`,
     enforcement_mode: `${rule.enforcement_mode}`,
-    contexts: [{ attributes: [] }],
-    resources: [{ attributes: [], tags: [] }],
+    contexts: [],
+    resources: [],
     operations: [{ api_types: [{ api_type_id: `${rule.api_type_id}` }] }]
   };
 
-  // add contexts
-  rule.contexts.forEach(context => {
-    cbrRuleData.contexts[0].attributes.push(ibmCbrRuleAttributes(context));
-  });
+  if (rule.contexts && rule.contexts.length > 0) {
+    // add contexts
+    cbrRuleData.contexts.push({ attributes: [] });
+    rule.contexts?.forEach(context => {
+      cbrRuleData.contexts[0].attributes.push(ibmCbrRuleAttributes(context));
+    });
+  } else delete cbrRuleData.contexts;
 
+  cbrRuleData.resources.push({ tags: [] });
   // add resources
-  rule.resource_attributes.forEach(resource => {
-    cbrRuleData.resources[0].attributes.push(ibmCbrRuleAttributes(resource));
-  });
+  if (rule.resource_attributes && rule.resource_attributes.length > 0) {
+    cbrRuleData.resources[0].attributes = [];
+    rule.resource_attributes.forEach(resource => {
+      cbrRuleData.resources[0].attributes.push(ibmCbrRuleAttributes(resource));
+    });
+  }
 
   // add tags
-  rule.tags.forEach(tag => {
+  rule.tags?.forEach(tag => {
     cbrRuleData.resources[0].tags.push(ibmCbrRuleAttributes(tag));
   });
 

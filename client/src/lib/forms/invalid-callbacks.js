@@ -15,7 +15,8 @@ const {
   commaSeparatedIpListExp,
   urlValidationExp,
   crnRegex,
-  projectDescriptionRegex
+  projectDescriptionRegex,
+  ipRangeExpression
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -454,6 +455,63 @@ function invalidProjectDescription(description) {
   );
 }
 
+/**
+ * @param {string} field field to check invalid
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidCbrRule(field, stateData, componentProps) {
+  if (field === "api_type_id")
+    return (
+      isNullOrEmptyString(stateData.api_type_id) ||
+      stateData.api_type_id.match(/^[a-zA-Z0-9_.\-:]+$/) === null
+    );
+  else if (field === "description") {
+    return (
+      stateData.description.length > 300 ||
+      stateData.description.match(/^[\x20-\xFE]*$/) === null
+    );
+  } else if (field === "value") {
+    return stateData.value.match(/^[\S\s]+$/) === null;
+  } else if (field === "operator") {
+    return (
+      !isNullOrEmptyString(stateData.operator) &&
+      stateData.operator.match(/^[a-zA-Z0-9]+$/) === null
+    );
+  } else {
+    return isNullOrEmptyString(stateData[field]); // dropdown should have a selection
+  }
+}
+
+/**
+ * @param {string} field field to check invalid
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidCbrZone(field, stateData, componentProps) {
+  if (field === "description") {
+    return (
+      stateData.description.length > 300 ||
+      stateData.description.match(/^[\x20-\xFE]*$/) === null
+    );
+  } else if (field === "value") {
+    if (stateData.type === "ipAddress")
+      return (
+        !isIpv4CidrOrAddress(stateData.value) || stateData.value.includes("/")
+      );
+    else if (stateData.type === "ipRange")
+      return stateData.value.match(ipRangeExpression) === null;
+    else return stateData.value.match(/^[0-9a-z\-]+$/) === null;
+  } else {
+    return (
+      !isNullOrEmptyString(stateData[field]) &&
+      stateData[field].match(/^[0-9a-z\-]+$/) === null
+    );
+  }
+}
+
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -472,5 +530,7 @@ module.exports = {
   cidrBlocksOverlap,
   hasOverlappingCidr,
   invalidCidr,
+  invalidCbrRule,
+  invalidCbrZone,
   invalidProjectDescription
 };

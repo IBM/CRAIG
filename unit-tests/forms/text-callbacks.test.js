@@ -12,6 +12,10 @@ const {
   accessGroupPolicyHelperTextCallback,
   invalidCidrText,
 } = require("../../client/src/lib");
+const {
+  invalidCbrZoneText,
+  invalidCbrRuleText,
+} = require("../../client/src/lib/forms");
 
 describe("text callbacks", () => {
   describe("resourceGroupHelperTextCallback", () => {
@@ -673,6 +677,51 @@ describe("text callbacks", () => {
         "",
         "it should return correct data"
       );
+    });
+  });
+  describe("invalidCbrRuleText", () => {
+    it("returns error message for invalid api_type_id field", () => {
+      let errorMessage = invalidCbrRuleText("api_type_id", {}, {});
+      assert.equal(
+        errorMessage,
+        "Invalid api_type_id. Must match the regex expression /^[a-zA-Z0-9_.-:]+$/"
+      );
+    });
+    it("returns error message for invalid description field", () => {
+      let errorMessage = invalidCbrRuleText("description", {}, {});
+      assert.equal(
+        errorMessage,
+        "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/"
+      );
+    });
+    it("returns error message for invalid value field", () => {
+      let errorMessage = invalidCbrRuleText("value", {}, {});
+      assert.equal(
+        errorMessage,
+        "Invalid value. Must match the regex expression /^[Ss]+$/"
+      );
+    });
+    it("returns error message for invalid operator field", () => {
+      let errorMessage = invalidCbrRuleText("operator", {}, {});
+      assert.equal(
+        errorMessage,
+        "Invalid operator. Must match the regex expression /^[a-zA-Z0-9]+$/"
+      );
+    });
+    it("returns no invalid text for other fields", () => {
+      assert.equal(invalidCbrRuleText("not real field", {}, {}), "");
+    });
+  });
+  describe("invalidCbrZoneText", () => {
+    it("returns error message for invalid description field", () => {
+      let errorMessage = invalidCbrZoneText("description", {}, {});
+      assert.equal(
+        errorMessage,
+        "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/"
+      );
+    });
+    it("returns no invalid text for other fields", () => {
+      assert.equal(invalidCbrZoneText("not real field", {}, {}), "");
     });
   });
 });

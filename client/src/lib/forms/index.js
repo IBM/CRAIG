@@ -9,7 +9,9 @@ const {
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
   accessGroupPolicyHelperTextCallback,
-  invalidCidrText
+  invalidCidrText,
+  invalidCbrRuleText,
+  invalidCbrZoneText
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -29,7 +31,9 @@ const {
   cidrBlocksOverlap,
   hasOverlappingCidr,
   invalidCidr,
-  invalidProjectDescription
+  invalidProjectDescription,
+  invalidCbrRule,
+  invalidCbrZone
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -101,5 +105,9 @@ module.exports = {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
-  invalidProjectDescription
+  invalidProjectDescription,
+  invalidCbrRule,
+  invalidCbrRuleText,
+  invalidCbrZone,
+  invalidCbrZoneText
 };

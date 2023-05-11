@@ -216,7 +216,7 @@ function invalidCidrText(craig) {
    * @returns {string} invalid text string
    */
   return function(stateData, componentProps) {
-    if(!stateData.cidr) {
+    if (!stateData.cidr) {
       return "Invalid CIDR block";
     }
     let cidrRange = Number(stateData.cidr.split("/")[1]) > 17;
@@ -237,6 +237,40 @@ function invalidCidrText(craig) {
   };
 }
 
+/**
+ * @param {string} field field to get invalid text for
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} invalid text string
+ */
+function invalidCbrRuleText(field, stateData, componentProps) {
+  if (field === "api_type_id") {
+    return "Invalid api_type_id. Must match the regex expression /^[a-zA-Z0-9_.-:]+$/";
+  } else if (field === "description") {
+    return "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/";
+  } else if (field === "value") {
+    return "Invalid value. Must match the regex expression /^[Ss]+$/";
+  } else if (field == "operator") {
+    return "Invalid operator. Must match the regex expression /^[a-zA-Z0-9]+$/";
+  } else {
+    return "";
+  }
+}
+
+/**
+ * @param {string} field field to get invalid text for
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} invalid text string
+ */
+function invalidCbrZoneText(field, stateData, componentProps) {
+  if (field === "description") {
+    return "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/";
+  } else {
+    return "";
+  }
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
@@ -249,5 +283,7 @@ module.exports = {
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
   accessGroupPolicyHelperTextCallback,
-  invalidCidrText
+  invalidCidrText,
+  invalidCbrRuleText,
+  invalidCbrZoneText
 };

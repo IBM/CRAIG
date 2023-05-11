@@ -116,6 +116,11 @@ function codeMirrorGetDisplay(json, jsonInCodeMirror, path, toTf, jsonField) {
         allSubnets = allSubnets.concat(nw.subnets);
       });
       return prettyJSON(allSubnets);
+    } else if (path === "/form/cbr") {
+      let allCbr = [];
+      allCbr = allCbr.concat({ cbr_zones: json.cbr_zones });
+      allCbr = allCbr.concat({ cbr_rules: json.cbr_rules });
+      return prettyJSON(allCbr);
     }
     return prettyJSON(json[jsonField] || json) // if pageObj.jsonField is undefined - aka, home page
       .replace(maskFieldsExpStep1ReplacePublicKey, "public_key%%%%")

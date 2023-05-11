@@ -516,3 +516,13 @@ By default, IBM Event Streams instances are not created but can be if desired.
 - [Docs](https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started)
 
 -----
+
+## Context Based Restrictions
+
+nyi
+
+### Related Links
+
+- [undefined](undefined)
+
+-----

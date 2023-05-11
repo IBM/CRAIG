@@ -263,6 +263,87 @@ module.exports = {
     .set("A-z0-9\\s_().,;", 0, 100)
     .stringEnd()
     .done("g"),
+  ipRangeExpression: new RegexButWithWords()
+    .wordBoundary()
+    .group(exp => {
+      exp
+        .group(exp => {
+          exp
+            .group(exp => {
+              exp
+                .literal("2")
+                .set("1-5")
+                .set("0-6");
+            })
+            .or()
+            .group(exp => {
+              exp.literal("1").digit(2);
+            })
+            .or()
+            .group(exp => {
+              exp.digit(1, 2);
+            });
+        })
+        .literal(".");
+    }, 3)
+    .group(exp => {
+      exp
+        .group(exp => {
+          exp
+            .literal("2")
+            .set("1-5")
+            .set("0-6");
+        })
+        .or()
+        .group(exp => {
+          exp.literal("1").digit(2);
+        })
+        .or()
+        .group(exp => {
+          exp.digit(1, 2);
+        });
+    })
+    .literal("-")
+    .group(exp => {
+      exp
+        .group(exp => {
+          exp
+            .group(exp => {
+              exp
+                .literal("2")
+                .set("1-5")
+                .set("0-6");
+            })
+            .or()
+            .group(exp => {
+              exp.literal("1").digit(2);
+            })
+            .or()
+            .group(exp => {
+              exp.digit(1, 2);
+            });
+        })
+        .literal(".");
+    }, 3)
+    .group(exp => {
+      exp
+        .group(exp => {
+          exp
+            .literal("2")
+            .set("1-5")
+            .set("0-6");
+        })
+        .or()
+        .group(exp => {
+          exp.literal("1").digit(2);
+        })
+        .or()
+        .group(exp => {
+          exp.digit(1, 2);
+        });
+    })
+    .wordBoundary()
+    .done("g"),
   clusterRules: [
     {
       name: "roks-create-worker-nodes-inbound",

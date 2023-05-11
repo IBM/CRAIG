@@ -14,6 +14,8 @@ const {
   invalidCidr,
   invalidNewResourceName,
   invalidProjectDescription,
+  invalidCbrRule,
+  invalidCbrZone,
 } = require("../../client/src/lib/forms");
 
 describe("invalid callbacks", () => {
@@ -355,6 +357,220 @@ describe("invalid callbacks", () => {
       );
       assert.isTrue(actualData, "it should be true");
     });
+    it("should return true when a cbr rule with the same name", () => {
+      let actualData = invalidName("cbr_rules")(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "test",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true when a cbr context with the same name", () => {
+      let actualData = invalidName("contexts")(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "hi",
+                    contexts: [
+                      {
+                        name: "test",
+                      },
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true when a cbr resource attribute with the same name", () => {
+      let actualData = invalidName("resource_attributes")(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "hi",
+                    resource_attributes: [
+                      {
+                        name: "test",
+                      },
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true when a cbr tag with the same name", () => {
+      let actualData = invalidName("tags")(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "hi",
+                    tags: [
+                      {
+                        name: "test",
+                      },
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+  });
+  it("should return true when a cbr rule with the same name", () => {
+    let actualData = invalidName("cbr_zones")(
+      {
+        name: "test",
+      },
+      {
+        craig: {
+          store: {
+            json: {
+              cbr_zones: [
+                {
+                  name: "test",
+                },
+                {
+                  name: "frog",
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "frog",
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be true");
+  });
+  it("should return true when a cbr address with the same name", () => {
+    let actualData = invalidName("addresses")(
+      {
+        name: "test",
+      },
+      {
+        craig: {
+          store: {
+            json: {
+              cbr_zones: [
+                {
+                  name: "hi",
+                  addresses: [
+                    {
+                      name: "test",
+                    },
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "frog",
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be true");
+  });
+  it("should return true when a cbr exclusion with the same name", () => {
+    let actualData = invalidName("exclusions")(
+      {
+        name: "test",
+      },
+      {
+        craig: {
+          store: {
+            json: {
+              cbr_zones: [
+                {
+                  name: "hi",
+                  exclusions: [
+                    {
+                      name: "test",
+                    },
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "frog",
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be true");
   });
   describe("invalidSshKey", () => {
     it("should return false when updating name", () => {
@@ -815,6 +1031,78 @@ describe("invalid callbacks", () => {
       assert.isTrue(
         invalidProjectDescription("%%%$$@@@;{}"),
         "it should be true"
+      );
+    });
+  });
+  describe("invalidCbrRule", () => {
+    it("should return true when api_type_id empty string", () => {
+      assert.isTrue(invalidCbrRule("api_type_id", { api_type_id: "" }));
+    });
+    it("should return true when api_type_id is invalid string", () => {
+      assert.isTrue(invalidCbrRule("api_type_id", { api_type_id: "?" }));
+    });
+    it("should return true when description contains invalid character", () => {
+      assert.isTrue(invalidCbrRule("description", { description: "\x00" }));
+    });
+    it("should return true when description is more than 300 chars", () => {
+      let longDescription = "*".repeat(301);
+      assert.isTrue(
+        invalidCbrRule("description", {
+          description: longDescription,
+        })
+      );
+    });
+    it("should return true when empty string", () => {
+      assert.isTrue(invalidCbrRule("value", { value: "" }));
+    });
+    it("should return true if enforcement_mode not selected", () => {
+      assert.isTrue(
+        invalidCbrRule("enforcement_mode", { enforcement_mode: "" })
+      );
+    });
+    it("should return false when operator is empty", () => {
+      assert.isFalse(invalidCbrRule("operator", { operator: "" }));
+    });
+    it("should return true when operator is not empty and doesn't match regex", () => {
+      assert.isTrue(invalidCbrRule("operator", { operator: "??" }));
+    });
+  });
+  describe("invalidCbrZone", () => {
+    it("should return true when description contains invalid character", () => {
+      assert.isTrue(invalidCbrZone("description", { description: "\x00" }));
+    });
+    it("should return true when description is more than 300 chars", () => {
+      let longDescription = "*".repeat(301);
+      assert.isTrue(
+        invalidCbrRule("description", {
+          description: longDescription,
+        })
+      );
+    });
+    it("should return true when invalid ip when type is ipAddress and ip is cidr", () => {
+      assert.isTrue(
+        invalidCbrZone("value", { type: "ipAddress", value: "2.2.2.2/12" })
+      );
+    });
+    it("should return true when not ip", () => {
+      assert.isTrue(
+        invalidCbrZone("value", { type: "ipAddress", value: "blah" })
+      );
+    });
+    it("should return false when valid ip range", () => {
+      assert.isFalse(
+        invalidCbrZone("value", { type: "ipRange", value: "2.2.2.2-2.2.2.2" })
+      );
+    });
+    it("should check that all other value/type combos match regex", () => {
+      assert.isTrue(invalidCbrZone("value", { type: "vpc", value: "?@?" }));
+    });
+    it("should allow empty fields if not value", () => {
+      assert.isFalse(invalidCbrZone("service_type", { service_type: "" }));
+    });
+    it("should return true if invalid field that is typed in", () => {
+      assert.isTrue(
+        invalidCbrZone("service_instance", { service_instance: "?@?#(#*" })
       );
     });
   });

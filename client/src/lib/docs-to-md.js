@@ -109,6 +109,8 @@ function allDocs() {
           ? "F5 Big IP"
           : heading === "atracker"
           ? "Activity Tracker"
+          : heading === "cbr"
+          ? "Context Based Restrictions"
           : titleCase(heading)
               .replace(/Ssh/g, "SSH") // capitalize these
               .replace("Vpn", "VPN")

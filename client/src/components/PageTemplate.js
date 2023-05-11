@@ -26,11 +26,7 @@ import {
   Router
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
-import {
-  arraySplatIndex,
-  contains,
-  getObjectFromArray,
-} from "lazy-z";
+import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
 import { CraigCodeMirror, Navigation, Footer } from "./page-template";
 import PropTypes from "prop-types";
 import "./page-template.css";
@@ -58,7 +54,8 @@ import {
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
   codeMirrorGetDisplay,
-  routingTableTf
+  routingTableTf,
+  cbrTf
 } from "../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../images/cbr";
@@ -258,8 +255,8 @@ const navCategories = [
       {
         title: "Context Based Restrictions",
         path: "/form/cbr",
-        icon: CBRIcon
-        //toTf:
+        icon: CBRIcon,
+        toTf: cbrTf
       },
       {
         title: "F5 Big IP",
@@ -382,7 +379,13 @@ const PageTemplate = props => {
         </div>
         <CraigCodeMirror
           hideCodeMirror={formPathNotPresent === true || props.hideCodeMirror}
-          code={codeMirrorGetDisplay(props.json, props.jsonInCodeMirror, pageObj.path, pageObj.toTf, pageObj.jsonField)}
+          code={codeMirrorGetDisplay(
+            props.json,
+            props.jsonInCodeMirror,
+            pageObj.path,
+            pageObj.toTf,
+            pageObj.jsonField
+          )}
           onTabClick={props.onTabClick}
           jsonInCodeMirror={props.jsonInCodeMirror}
         />

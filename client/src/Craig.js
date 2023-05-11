@@ -15,6 +15,7 @@ import {
 } from "./components";
 import { buildTitleComment, state } from "./lib";
 import { default as constants } from "./lib/constants";
+import { CbrForm } from "./components/forms";
 
 const withRouter = Page => props => {
   const params = useParams();
@@ -198,6 +199,8 @@ class Craig extends React.Component {
             <FormPage craig={craig} form={this.props.params.form} />
           ) : contains(constants.toggleFormPages, this.props.params.form) ? (
             <ToggleFormPage craig={craig} form={this.props.params.form} />
+          ) : window.location.pathname === "/form/cbr" ? (
+            <CbrForm craig={craig} />
           ) : (
             // if no form yet, render name
             titleCase(this.props.params.form)
