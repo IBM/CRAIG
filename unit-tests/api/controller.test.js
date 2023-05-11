@@ -226,6 +226,7 @@ describe("controller", () => {
   describe("schematics-upload", () => {
     let { axios } = initMockAxios(
       {
+        has_received_file: true,
         workspaces: [
           {
             name: "frog-workspace",
@@ -245,6 +246,7 @@ describe("controller", () => {
             data,
             {
               data: {
+                has_received_file: true,
                 workspaces: [
                   {
                     name: "frog-workspace",
@@ -267,6 +269,7 @@ describe("controller", () => {
             data,
             {
               data: {
+                has_received_file: true,
                 workspaces: [
                   {
                     name: "frog-workspace",
@@ -278,6 +281,30 @@ describe("controller", () => {
             },
             "it should return correct data"
           );
+        });
+    });
+    it("should throw error", () => {
+      let { axios } = initMockAxios(
+        {
+          has_received_file: false,
+          workspaces: [
+            {
+              name: "frog-workspace",
+              id: "foo-workspace-id",
+              template_data: [{ id: "123abc-id" }],
+            },
+          ],
+        },
+        false
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .uploadTar("wrong-workspace", "./fake/file.tar")
+        .then(() => {
+          assert.isTrue(false);
+        })
+        .catch(() => {
+          assert.isTrue(true);
         });
     });
     it("should reject on error", () => {
