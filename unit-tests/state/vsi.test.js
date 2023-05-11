@@ -52,6 +52,46 @@ describe("vsi", () => {
         "it should set vsiList"
       );
     });
+    it("should find kms based on key", () => {
+      let state = new newState();
+      state.vsi.create(
+        {
+          name: "test-vsi",
+          vpc: "management",
+          encryption_key: "atracker-key",
+        },
+        {
+          isTeleport: false,
+        }
+      );
+      assert.deepEqual(
+        state.store.json.vsi[1],
+        {
+          kms: "kms",
+          encryption_key: "atracker-key",
+          image: null,
+          image_name: null,
+          profile: null,
+          name: "test-vsi",
+          security_groups: [],
+          ssh_keys: [],
+          subnets: [],
+          vpc: "management",
+          vsi_per_subnet: null,
+          resource_group: null,
+          override_vsi_name: null,
+          user_data: null,
+          network_interfaces: [],
+          volumes: [],
+        },
+        "it should return correct server"
+      );
+      assert.deepEqual(
+        state.store.vsiList,
+        ["management-server", "test-vsi"],
+        "it should set vsiList"
+      );
+    });
     it("should return the correct teleport vsi deployment", () => {
       let state = new newState();
       state.appid.create({

@@ -4,7 +4,8 @@ const {
   transpose,
   camelCase,
   splat,
-  splatContains
+  splatContains,
+  getObjectFromArray
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -231,6 +232,13 @@ function vsiCreate(config, stateData, componentProps) {
     stateData.image = stateData.image_name
       .replace(/[^\[]+\[/g, "")
       .replace(/]/g, "");
+  // find kms
+  config.store.json.key_management.forEach(kms => {
+    kms.keys.forEach(key => {
+      if (key.name === stateData.encryption_key) stateData.kms = kms.name;
+    });
+  });
+
   transpose(stateData, defaultVsi);
 
   // if overriding key
