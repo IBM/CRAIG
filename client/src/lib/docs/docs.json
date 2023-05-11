@@ -1028,8 +1028,17 @@
   "load_balancers": {
     "content": [
       {
-        "text": "nyi"
+        "text": "IBM Cloud provides to types of Load Balancers, an Application Load Balancer (ALB) and a Network Load Balancer (NLB). Currently only Application Load Balancers are supported in CRAIG."
+      },
+      {
+        "table" : [
+          ["_headers", "", "NLB", "ALB"],
+          ["Security Group Support", "", "✔"],
+          ["SSL Offloading", "", "✔"],
+          ["Supported Protocols", "TCP, UDP", "HTTPS, HTTP, TCP"]
+        ]
       }
-    ]
+    ],
+    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-nlb-vs-elb"]]
   }
 }

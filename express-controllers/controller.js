@@ -1,3 +1,5 @@
+const { azsort } = require("lazy-z");
+
 /**
  * controller constructor
  * @param {*} axios initialized axios package
@@ -112,7 +114,7 @@ function controller(axios) {
           response.data.profiles.forEach((element) => {
             instanceProfiles.push(element.name);
           });
-          this.instanceProfiles = instanceProfiles;
+          this.instanceProfiles = instanceProfiles.sort(azsort);
           res.send(instanceProfiles);
         })
         .catch((error) => {
@@ -151,7 +153,7 @@ function controller(axios) {
               element.operating_system.display_name + ` [${element.name}]`
             );
           });
-          this.images = images;
+          this.images = images.sort(azsort);
           res.send(images);
         })
         .catch((error) => {

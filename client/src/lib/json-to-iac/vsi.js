@@ -449,7 +449,7 @@ function vsiTf(config) {
     tf += tfBlock(
       `${deployment.vpc} vpc ${deployment.name} deployment`,
       blockData
-    );
+    ) + "\n";
   });
   return tfDone(tf);
 }

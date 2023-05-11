@@ -94,6 +94,17 @@ describe("controller", () => {
         .vsiImages({ params: { region: "us-south" } }, res)
         .then(() => {
           assert.isTrue(res.send.calledOnce);
+          assert.deepEqual(
+            res.send.lastCall.args,
+            [
+              [
+                "Debian GNU/Linux 9.x Stretch/Stable - Minimal Install (amd64) [debian-9-amd64]",
+                "Ubuntu Linux 16.04 LTS Xenial Xerus Minimal Install (amd64) [my-image]",
+                "Windows Server 2016 Standard Edition (amd64) [windows-2016-amd64]",
+              ],
+            ],
+            "it should get images"
+          );
         });
     });
     it("should respond with error", () => {
@@ -142,7 +153,7 @@ describe("controller", () => {
           assert.isTrue(res.send.calledOnceWith(["1234"]), "it should be true");
         });
     });
-    it("should respond with eror", () => {
+    it("should respond with error", () => {
       let { axios } = initMockAxios(clusterFlavorsRaw, true);
       let testController = new controller(axios);
       return testController
