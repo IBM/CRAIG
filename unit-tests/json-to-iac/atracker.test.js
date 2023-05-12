@@ -10,6 +10,7 @@ describe("atracker", () => {
     it("should format a target", () => {
       let actualData = formatAtrackerTarget({
         atracker: {
+          enabled: true,
           name: "atracker",
           type: "cos",
           target_name: "cos",
@@ -46,7 +47,7 @@ resource "ibm_atracker_target" "atracker_cos_target" {
     it("should format a route", () => {
       let actualData = formatAtrackerRoute({
         atracker: {
-          enabled: false,
+          enabled: true,
           name: "atracker",
           type: "cos",
           target_name: "cos",
@@ -86,7 +87,7 @@ resource "ibm_atracker_route" "atracker_cos_route" {
     it("should create the correct terraform for atracker", () => {
       let actualData = atrackerTf({
         atracker: {
-          enabled: false,
+          enabled: true,
           name: "atracker",
           type: "cos",
           target_name: "cos",
@@ -141,7 +142,7 @@ resource "ibm_atracker_route" "atracker_cos_route" {
     it("should create the correct terraform for  with no route", () => {
       let actualData = atrackerTf({
         atracker: {
-          enabled: false,
+          enabled: true,
           name: "atracker",
           type: "cos",
           target_name: "cos",
@@ -178,6 +179,27 @@ resource "ibm_atracker_target" "atracker_cos_target" {
         actualData,
         expectedData,
         "it should return correct data"
+      );
+    });
+
+    it("should return empty string when not enabled", () => {
+      let actualData = atrackerTf({
+        atracker: {
+          enabled: false,
+          name: "atracker",
+          type: "cos",
+          target_name: "cos",
+          bucket: "atracker",
+          cos_key: "atracker-cos-key",
+          add_route: false,
+          locations: ["us-south", "global"],
+        },
+      });
+      let expectedData = "";
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should create correct terraform"
       );
     });
   });

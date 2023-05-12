@@ -132,7 +132,7 @@ function atrackerTf(config) {
   if (config.atracker.add_route) {
     str += formatAtrackerRoute(config);
   }
-  return tfBlock("Atracker Resources", str);
+  return config.atracker.enabled ? tfBlock("Atracker Resources", str) : "";
 }
 
 module.exports = {
