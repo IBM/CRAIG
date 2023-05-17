@@ -227,6 +227,22 @@ const {
   vpnServerRouteSave,
   vpnServerRouteDelete
 } = require("./vpn-servers");
+const {
+  dnsInit,
+  dnsCreate,
+  dnsSave,
+  dnsDelete,
+  dnsOnStoreUpdate,
+  dnsZoneCreate,
+  dnsZoneDelete,
+  dnsZoneSave,
+  dnsRecordCreate,
+  dnsRecordSave,
+  dnsRecordDelete,
+  dnsResolverCreate,
+  dnsResolverDelete,
+  dnsResolverSave
+} = require("./dns");
 
 const state = function() {
   let store = new lazyZstate({
@@ -618,6 +634,31 @@ const state = function() {
         create: vpnServerRouteCreate,
         save: vpnServerRouteSave,
         delete: vpnServerRouteDelete
+      }
+    }
+  });
+
+  store.newField("dns", {
+    init: dnsInit,
+    onStoreUpdate: dnsOnStoreUpdate,
+    create: dnsCreate,
+    save: dnsSave,
+    delete: dnsDelete,
+    subComponents: {
+      zones: {
+        create: dnsZoneCreate,
+        delete: dnsZoneDelete,
+        save: dnsZoneSave
+      },
+      records: {
+        create: dnsRecordCreate,
+        save: dnsRecordSave,
+        delete: dnsRecordDelete
+      },
+      custom_resolvers: {
+        create: dnsResolverCreate,
+        delete: dnsResolverDelete,
+        save: dnsResolverSave
       }
     }
   });

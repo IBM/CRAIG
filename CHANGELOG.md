@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.5.0
+
+### Upgrade Notes
+
+- Code Mirror Rendering is now handled by `carbon-react-code-mirror`
+
+### Features
+
+- Users can now create advanced Subnet Tiers. This allows users to create subnets with custom CIDR blocks and choose zones within a tier
+- Users can now create Context Based Restrictions Rules and Zones from the `/forms/cbr` page
+- Users can now create VPN Servers and VPN Server Routes from the `/forms/vpnServers` page
+- Added documentation for Routing Tables
+- Added documentation for Load Balancers
+- When downloading terraform code, VPCs are now separated into modules with grouped components
+- When downloading terraform code, ACLs, Security Groups, and Routing Tables are now each in their own file within the VPC module
+- Release notes now contain upgrade notes
+- To maintain rule order, ACL rules are now nested in each ACL block, rather than being their own resource
+- VSI Image names are now rendered in alphabetical order
+- Added JSON to IAC code for Secrets Manager VPE, Reserved IP for VSI, Secrets Manager Key Value Secret, and DNS Service
+- When downloading Terraform code, `prefix` and `region` are now variables to allow for easier reuse
+- Users can now save configurations as projects in browser storage
+
+### Fixes
+
+- Fixed an issue causing security group rules and acl rules to be incorrectly added to new groups after duplication
+- SCC and IAM Account Settings pages are no longer forced open when disabled
+- Duplicate lists and rules form is no longer shown when no security groups are created
+- Fixed an issue where no margin was created between form titles and the empty resource tile
+- When updating the name of an ACL, child rules are correctly updated to point to the parent ACL
+- Empty tile form is now shown in VPC Subnet Tiers for VPCs where no subnets have been provisioned
+- Users can now save Activity Tracker when it is disabled
+- When deleting a resource group, Cluster Worker Pools will now have the value set to null if unfound
+- `virtual_servers.tf`, `ssh_keys.tf`, and `vpn_gateways.tf` are no longer created as part of the download when no resources are present
+- A variable for an SSH public key is no longer created for SSH Keys that are retrieved from data
+- COS bucket types are now correctly saved as lower case
+- When updating the store, security groups will now have `sg` set to the parent name when the name has changed
+
 ## 0.4.0
 
 ### Upgrade Notes

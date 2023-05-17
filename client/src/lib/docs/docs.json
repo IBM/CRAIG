@@ -1031,7 +1031,7 @@
         "text": "IBM Cloud provides to types of Load Balancers, an Application Load Balancer (ALB) and a Network Load Balancer (NLB). Currently only Application Load Balancers are supported in CRAIG."
       },
       {
-        "table" : [
+        "table": [
           ["_headers", "", "NLB", "ALB"],
           ["Security Group Support", "", "✔"],
           ["SSL Offloading", "", "✔"],
@@ -1047,8 +1047,17 @@
         "text": "nyi"
       }
     ],
-    "relatedLinks": [
-      []
-    ]
+    "relatedLinks": [["nyi"]]
+  },
+  "vpn_servers": {
+    "content": [
+      {
+        "text": "VPN Servers create client-to-site connectivity that allows remote devices to securely connect to a VPN network using an OpenVPN client."
+      },
+      {
+        "text": "Secrets Manager is required to create VPN Server instances."
+      }
+    ],
+    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"]]
   }
 }

@@ -276,4 +276,19 @@ class EdgeNetworkingForm extends React.Component {
   }
 }
 
+EdgeNetworkingForm.propTypes = {
+  craig: PropTypes.shape({
+    store: PropTypes.shape({
+      edge_pattern: PropTypes.string,
+      edge_zones: PropTypes.number,
+      edge_vpc_name: PropTypes.string
+    }).isRequired,
+    f5: PropTypes.shape({
+      vsi: PropTypes.shape({
+        create: PropTypes.func.isRequired
+      }).isRequired
+    }).isRequired
+  }).isRequired
+};
+
 export default EdgeNetworkingForm;

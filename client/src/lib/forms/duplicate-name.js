@@ -154,6 +154,12 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         allOtherNames.push(address.name);
       })
     );
+  } else if (field === "vpn_server_routes") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.vpn_servers,
+      "routes",
+      "name"
+    );
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],

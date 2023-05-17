@@ -8,6 +8,7 @@ import {
   SaveAddButton,
   IcseNumberSelect
 } from "icse-react-assets";
+import PropTypes from "prop-types";
 import { Tag, TextArea } from "@carbon/react";
 import { deepEqual } from "lazy-z";
 import { invalidNewResourceName, invalidTagList } from "../../lib";
@@ -125,5 +126,18 @@ class OptionsForm extends React.Component {
     );
   }
 }
+
+OptionsForm.propTypes = {
+  data: PropTypes.shape({
+    craig: PropTypes.shape({
+      options: PropTypes.shape({
+        save: PropTypes.func.isRequired
+      }).isRequired,
+      store: PropTypes.shape({
+        _options: PropTypes.shape({}).isRequired
+      }).isRequired
+    }).isRequired
+  }).isRequired
+};
 
 export default OptionsForm;

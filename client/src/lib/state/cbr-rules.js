@@ -1,4 +1,3 @@
-const { lazyZstate } = require("lazy-z/lib/store");
 const {
   updateSubChild,
   deleteSubChild,
@@ -18,14 +17,9 @@ function cbrRulesInit(config) {
 /**
  * save cbr rules
  * @param {lazyZstate} config
- * @param {object} config.store
- * @param {object} config.store.json
- * @param {object} config.store.json.cbr_rules
  * @param {object} stateData component state data
- * @param {boolean} stateData.use_hs_crypto
- * @param {boolean} stateData.use_data
- * @param {string} stateData.name
- * @param {string} stateData.resource_group
+ * @param {object} componentProps component props
+ * @param {string} componentProps.data.name name
  */
 function cbrRuleSave(config, stateData, componentProps) {
   config.updateChild(

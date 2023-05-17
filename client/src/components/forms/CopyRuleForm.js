@@ -12,6 +12,7 @@ import {
   CopyRuleObject,
   CopySgModalContent
 } from "./duplicate-rules";
+import PropTypes from "prop-types";
 
 class CopyRuleForm extends React.Component {
   constructor(props) {
@@ -324,6 +325,28 @@ class CopyRuleForm extends React.Component {
     );
   }
 }
+
+CopyRuleForm.propTypes = {
+  craig: PropTypes.shape({
+    store: PropTypes.shape({
+      json: PropTypes.shape({
+        vpcs: PropTypes.array.isRequired,
+        security_groups: PropTypes.array
+      }).isRequired
+    }).isRequired,
+    getAllRuleNames: PropTypes.func.isRequired,
+    getAllOtherGroups: PropTypes.func.isRequired,
+    copySgRule: PropTypes.func.isRequired,
+    copySecurityGroup: PropTypes.func.isRequired,
+    addClusterRules: PropTypes.func.isRequired,
+    copyRule: PropTypes.func.isRequired,
+    copyNetworkAcl: PropTypes.func.isRequired
+  }).isRequired,
+  data: PropTypes.shape({
+    acls: PropTypes.array
+  }),
+  isAclForm: PropTypes.bool
+};
 
 CopyRuleForm.defaultProps = {
   isAclForm: true

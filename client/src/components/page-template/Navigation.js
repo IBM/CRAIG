@@ -14,8 +14,6 @@ import {
   Download,
   Code,
   CodeHide,
-  Script,
-  Json
 } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";

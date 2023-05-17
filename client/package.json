@@ -1,6 +1,6 @@
 {
   "name": "craig",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "repository": "git@github.com:carbon-design-system/carbon-tutorial.git",
   "bugs": "https://github.com/carbon-design-system/carbon-tutorial/issues",
@@ -24,7 +24,7 @@
     "craco": "^0.0.3",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
-    "icse-react-assets": "0.6.2",
+    "icse-react-assets": "0.6.9",
     "json-to-tf": "^0.2.1",
     "jszip": "^3.10.1",
     "lazy-z": "^1.10.0",

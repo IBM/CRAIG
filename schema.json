@@ -576,5 +576,53 @@
         }
       }
     }
+  },
+  "dns": {
+    "Array": {
+      "name": "string",
+      "plan": "string",
+      "resource_group": "string",
+      "zones": {
+        "Array": {
+          "name": "string",
+          "instance": "string",
+          "description": "string",
+          "label": "string",
+          "permitted_networks": "Array<string>"
+        }
+      },
+      "records": {
+        "Array": {
+          "instance": "string",
+          "dns_zone": "string",
+          "type": "string",
+          "name": "string",
+          "rdata": "string",
+          "ttl": "number",
+          "port": "number",
+          "protocol": "string",
+          "priority": "number",
+          "service": "string",
+          "weight": "number",
+          "preference": "string"
+        }
+      },
+      "custom_resolvers": {
+        "Array": {
+          "name": "string",
+          "instance": "string",
+          "description": "string",
+          "high_availability": "boolean",
+          "enabled": "boolean",
+          "vpc": "string",
+          "subnets": {
+            "Array": {
+              "name": "string",
+              "enabled": "boolean"
+            }
+          }
+        }
+      }
+    }
   }
 }

@@ -15,9 +15,10 @@ import {
   VpnGatewayForm,
   VsiForm,
   RoutingTableForm,
-  VsiLoadBalancerForm
+  VsiLoadBalancerForm,
+  VpnServerForm
 } from "icse-react-assets";
-import { contains, getObjectFromArray, splat, transpose } from "lazy-z";
+import { getObjectFromArray, splat, transpose } from "lazy-z";
 import {
   clusterHelperTestCallback,
   cosResourceHelperTextCallback,
@@ -39,11 +40,14 @@ import {
   setFormVpcList,
   setFormEncryptionKeyList,
   setFormSubnetList,
-  setDeleteDisabledMessage
+  setDeleteDisabledMessage,
+  invalidCidrBlock,
+  setFormSgList
 } from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
+import { invalidCrnList } from "../../lib/forms";
 
 const pathToFormMap = {
   accessGroups: {
@@ -147,6 +151,12 @@ const pathToFormMap = {
     name: "VPC Load Balancers",
     addText: "Create a Load Balancer",
     innerForm: VsiLoadBalancerForm
+  },
+  vpnServers: {
+    jsonField: "vpn_servers",
+    name: "VPN Servers",
+    addText: "Create a VPN Server",
+    innerForm: VpnServerForm
   }
 };
 /**
@@ -198,14 +208,53 @@ function formProps(form, craig) {
   setFormEncryptionKeyList(form, formTemplate, craig);
   setFormSubnetList(form, formTemplate, craig);
   setDeleteDisabledMessage(form, formTemplate);
+  setFormSgList(form, formTemplate, craig);
 
-  // add security groups
-  if (contains(["vpe", "vsi", "lb"], form)) {
-    formTemplate.innerFormProps.securityGroups =
-      craig.store.json.security_groups;
+  if (form === "vpe") {
+    formTemplate.innerFormProps.secretsManagerInstances = splat(
+      craig.store.json.secrets_manager,
+      "name"
+    );
   }
 
-  if (form === "resourceGroups") {
+  if (form === "vpnServers") {
+    if (craig.store.json.secrets_manager.length === 0) {
+      formTemplate.hideFormTitleButton = true;
+    }
+    let vpnProps = {
+      invalidClientIpPoolTextCallback: function(stateData) {
+        return invalidCidrBlock(stateData.client_ip_pool)
+          ? "Invalid CIDR block"
+          : "";
+      },
+      invalidClientIpPoolCallback: function(stateData) {
+        return invalidCidrBlock(stateData.client_ip_pool);
+      },
+      invalidCrns: function(stateData, componentProps, field) {
+        return invalidCrnList([stateData[field]]);
+      },
+      invalidCrnText: function(stateData, componentProps, field) {
+        return invalidCrnList([stateData[field]])
+          ? "Enter a valid resource CRN"
+          : "";
+      },
+      propsMatchState: propsMatchState,
+      vpnServerRouteProps: {
+        onSave: craig.vpn_servers.routes.save,
+        onSubmit: craig.vpn_servers.routes.create,
+        onDelete: craig.vpn_servers.routes.delete,
+        disableSave: function(field, stateData, componentProps) {
+          // pass through function to change field name
+          return disableSave("vpn_server_routes", stateData, componentProps);
+        },
+        invalidTextCallback: invalidNameText("vpn_server_routes"),
+        invalidCallback: invalidName("vpn_server_routes"),
+        propsMatchState: propsMatchState,
+        craig: craig
+      }
+    };
+    transpose(vpnProps, formTemplate.innerFormProps);
+  } else if (form === "resourceGroups") {
     formTemplate.deleteDisabled = () => {
       return craig.store.json.resource_groups.length === 1;
     };
@@ -340,6 +389,14 @@ function formProps(form, craig) {
     formTemplate.deleteDisabled = disableSshKeyDelete;
   } else if (form === "transitGateways") {
     formTemplate.innerFormProps.readOnlyName = false;
+    formTemplate.innerFormProps.invalidCrns = function(stateData) {
+      return invalidCrnList(stateData.crns);
+    };
+    formTemplate.innerFormProps.invalicCrnText = function(stateData) {
+      return invalidCrnList(stateData.crns)
+        ? "Enter a valid comma separated list of CRNs"
+        : "";
+    };
   } else if (form === "securityGroups") {
     let sgInnerFormProps = {
       onSubmitCallback: craig.security_groups.rules.create,

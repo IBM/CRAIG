@@ -12,6 +12,7 @@ import {
   invalidProjectDescription
 } from "../../../lib";
 import { projectDescriptionRegex } from "../../../lib/constants";
+import PropTypes from "prop-types";
 
 export const SummaryErrorText = props => {
   return (
@@ -29,6 +30,10 @@ export const SummaryErrorText = props => {
       </p>
     </>
   );
+};
+
+SummaryErrorText.propTypes = {
+  error: PropTypes.string.isRequired
 };
 
 export const SummaryText = () => {
@@ -127,3 +132,9 @@ export class SaveProjectAsModal extends React.Component {
     );
   }
 }
+
+SaveProjectAsModal.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  onProjectSave: PropTypes.func.isRequired
+};

@@ -40,7 +40,8 @@ const {
   disableSave,
   invalidPort,
   forceShowForm,
-  disableSshKeyDelete
+  disableSshKeyDelete,
+  invalidCidrBlock
 } = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
@@ -56,7 +57,8 @@ const {
   setFormVpcList,
   setFormEncryptionKeyList,
   setFormSubnetList,
-  setDeleteDisabledMessage
+  setDeleteDisabledMessage,
+  setFormSgList
 } = require("./form-props");
 module.exports = {
   hasDuplicateName,
@@ -109,5 +111,7 @@ module.exports = {
   invalidCbrRule,
   invalidCbrRuleText,
   invalidCbrZone,
-  invalidCbrZoneText
+  invalidCbrZoneText,
+  invalidCidrBlock,
+  setFormSgList
 };

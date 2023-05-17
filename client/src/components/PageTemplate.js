@@ -14,7 +14,6 @@ import {
   IbmCloudKubernetesService,
   CloudApp,
   GatewayVpn,
-  BastionHost,
   IdManagement,
   GroupAccess,
   GroupResource,
@@ -23,7 +22,8 @@ import {
   IbmCloudEventStreams,
   LoadBalancerVpc,
   Report,
-  Router
+  Router,
+  ServerProxy
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -59,6 +59,7 @@ import {
 } from "../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../images/cbr";
+import { vpnServerTf } from "../lib/json-to-iac/vpn-server";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -89,7 +90,13 @@ const navCategories = [
         icon: IdManagement,
         toTf: json => codeMirrorFormatIamAccountSettingsTf(json),
         jsonField: "iam_account_settings"
-      }
+      },
+      {
+        title: "Context Based Restrictions",
+        path: "/form/cbr",
+        icon: CBRIcon,
+        toTf: cbrTf,
+      },
     ]
   },
   {
@@ -246,17 +253,18 @@ const navCategories = [
         jsonField: "vsi"
       },
       {
+        title: "VPN Servers",
+        path: "/form/vpnServers",
+        toTf: vpnServerTf,
+        jsonField: "vpn_servers",
+        icon: ServerProxy
+      },
+      {
         title: "Load Balancers",
         path: "/form/lb",
         icon: LoadBalancerVpc,
         toTf: lbTf,
         jsonField: "load_balancers"
-      },
-      {
-        title: "Context Based Restrictions",
-        path: "/form/cbr",
-        icon: CBRIcon,
-        toTf: cbrTf
       },
       {
         title: "F5 Big IP",

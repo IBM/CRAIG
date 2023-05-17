@@ -62,6 +62,7 @@ function vpnServerSave(config, stateData, componentProps) {
  * @param {object} stateData component state data
  */
 function vpnServerCreate(config, stateData) {
+  stateData.routes = [];
   config.push(["json", "vpn_servers"], stateData);
 }
 
@@ -72,10 +73,7 @@ function vpnServerCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function vpnServerDelete(config, stateData, componentProps) {
-  config.carve(
-    ["json", "vpn_servers"],
-    componentProps.data.name
-  );
+  config.carve(["json", "vpn_servers"], componentProps.data.name);
 }
 
 /**

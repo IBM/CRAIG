@@ -15,6 +15,7 @@ import {
 } from "../../lib";
 import { splat } from "lazy-z";
 import CopyRuleForm from "./CopyRuleForm";
+import PropTypes from "prop-types";
 
 function none() {}
 
@@ -141,5 +142,31 @@ class NaclForm extends React.Component {
     );
   }
 }
+
+NaclForm.propTypes = {
+  craig: PropTypes.shape({
+    vpcs: PropTypes.shape({
+      acls: PropTypes.shape({
+        create: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        delete: PropTypes.func.isRequired,
+        rules: PropTypes.shape({
+          create: PropTypes.func.isRequired,
+          save: PropTypes.func.isRequired,
+          delete: PropTypes.func.isRequired
+        }).isRequired
+      }).isRequired
+    }).isRequired,
+    store: PropTypes.shape({
+      json: PropTypes.shape({
+        resource_groups: PropTypes.array.isRequired
+      }).isRequired
+    }).isRequired
+  }).isRequired,
+  data: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    acls: PropTypes.array
+  }).isRequired
+};
 
 export default NaclForm;

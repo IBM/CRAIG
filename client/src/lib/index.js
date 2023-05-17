@@ -42,7 +42,9 @@ const {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
-  invalidProjectDescription
+  invalidProjectDescription,
+  invalidCidrBlock,
+  setFormSgList
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -228,5 +230,7 @@ module.exports = {
   formatDnsRecord,
   formatDnsPermittedNetwork,
   formatDnsCustomResolver,
-  dnsTf
+  dnsTf,
+  invalidCidrBlock,
+  setFormSgList
 };

@@ -288,7 +288,46 @@ export default CbrForm;
 
 CbrForm.propTypes = {
   craig: PropTypes.shape({
-    cbr_zones: PropTypes.shape({}).isRequired,
-    cbr_rules: PropTypes.shape({}).isRequired
+    cbr_zones: PropTypes.shape({
+      create: PropTypes.func.isRequired,
+      save: PropTypes.func.isRequired,
+      delete: PropTypes.func.isRequired,
+      addresses: PropTypes.shape({
+        create: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        delete: PropTypes.func.isRequired
+      }).isRequired,
+      exclusions: PropTypes.shape({
+        create: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        delete: PropTypes.func.isRequired
+      }).isRequired
+    }).isRequired,
+    cbr_rules: PropTypes.shape({
+      create: PropTypes.func.isRequired,
+      save: PropTypes.func.isRequired,
+      delete: PropTypes.func.isRequired,
+      contexts: PropTypes.shape({
+        create: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        delete: PropTypes.func.isRequired
+      }).isRequired,
+      resource_attributes: PropTypes.shape({
+        create: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        delete: PropTypes.func.isRequired
+      }).isRequired,
+      tags: PropTypes.shape({
+        create: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        delete: PropTypes.func.isRequired
+      }).isRequired
+    }).isRequired,
+    store: PropTypes.shape({
+      json: PropTypes.shape({
+        cbr_zones: PropTypes.array.isRequired,
+        cbr_rules: PropTypes.array.isRequired
+      }).isRequired
+    }).isRequired
   })
 };

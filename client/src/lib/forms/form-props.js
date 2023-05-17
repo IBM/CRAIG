@@ -3,7 +3,8 @@ const {
   resourceGroupForms,
   vpcForms,
   encryptionKeyForms,
-  subnetForms
+  subnetForms,
+  securityGroupForms
 } = require("../constants");
 const { disableSave, forceShowForm } = require("./disable-save");
 const { invalidName } = require("./invalid-callbacks");
@@ -88,7 +89,7 @@ function setFormEncryptionKeyList(form, formTemplate, craig) {
 }
 
 /**
- * set encryption key list for forms
+ * set subnet list for forms
  * @param {string} form form name
  * @param {*} formTemplate form template object
  * @param {*} craig craig object
@@ -96,6 +97,19 @@ function setFormEncryptionKeyList(form, formTemplate, craig) {
 function setFormSubnetList(form, formTemplate, craig) {
   if (contains(subnetForms, form)) {
     formTemplate.innerFormProps.subnetList = craig.getAllSubnets();
+  }
+}
+
+/**
+ * set security group list for forms
+ * @param {string} form form name
+ * @param {*} formTemplate form template object
+ * @param {*} craig craig object
+ */
+function setFormSgList(form, formTemplate, craig) {
+  if (contains(securityGroupForms, form)) {
+    formTemplate.innerFormProps.securityGroups =
+      craig.store.json.security_groups;
   }
 }
 
@@ -122,5 +136,6 @@ module.exports = {
   setFormVpcList,
   setFormEncryptionKeyList,
   setFormSubnetList,
-  setDeleteDisabledMessage
+  setDeleteDisabledMessage,
+  setFormSgList
 };

@@ -7,6 +7,7 @@
         "landing-zone"
       ]
     },
+    "dns": [],
     "resource_groups": [
       {
         "use_prefix": true,

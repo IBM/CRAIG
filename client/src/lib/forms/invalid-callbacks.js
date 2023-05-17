@@ -7,7 +7,8 @@ const {
   splatContains,
   isIpv4CidrOrAddress,
   transpose,
-  isEmpty
+  isEmpty,
+  isString
 } = require("lazy-z");
 const {
   newResourceNameExp,
@@ -435,7 +436,7 @@ function invalidCrnList(crnList) {
   }
   let isInvalid = false;
   crnList.forEach(crn => {
-    if (crn.match(crnRegex) === null) {
+    if ((isString(crn) ? crn : "").match(crnRegex) === null) {
       isInvalid = true;
     }
   });

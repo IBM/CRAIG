@@ -866,7 +866,10 @@ describe("invalid callbacks", () => {
       );
     });
     it("should return false when no crns", () => {
-      assert.isFalse(invalidTagList([]));
+      assert.isFalse(invalidCrnList([]));
+    });
+    it("should return true when null crns", () => {
+      assert.isTrue(invalidCrnList([null]));
     });
     it("should return false when valid crn list", () => {
       assert.isFalse(

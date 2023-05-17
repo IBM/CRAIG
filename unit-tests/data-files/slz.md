@@ -523,6 +523,18 @@ nyi
 
 ### Related Links
 
-- [undefined](undefined)
+- [Docs](nyi)
+
+-----
+
+## VPN Servers
+
+VPN Servers create client-to-site connectivity that allows remote devices to securely connect to a VPN network using an OpenVPN client.
+
+Secrets Manager is required to create VPN Server instances.
+
+### Related Links
+
+- [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview)
 
 -----

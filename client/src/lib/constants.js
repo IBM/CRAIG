@@ -243,19 +243,27 @@ module.exports = {
     .stringBegin()
     .group(exp => {
       exp
-        .literal("crn:v1:bluemix:")
         .group(exp => {
           exp
-            .literal("public")
-            .or()
-            .literal("dedicated")
-            .or()
-            .literal("local");
+            .group(exp => {
+              exp
+                .literal("crn:v1:bluemix:")
+                .group(exp => {
+                  exp
+                    .literal("public")
+                    .or()
+                    .literal("dedicated")
+                    .or()
+                    .literal("local");
+                })
+                .literal(":");
+            })
+            .set("A-z-:/0-9")
+            .oneOrMore();
         })
-        .literal(":");
+        .or()
+        .literal("CHEATER");
     })
-    .set("A-z-:/0-9")
-    .oneOrMore()
     .stringEnd()
     .done("s"),
   projectDescriptionRegex: new RegexButWithWords()
@@ -525,7 +533,8 @@ module.exports = {
     "vpe",
     "vpn",
     "vsi",
-    "lb"
+    "lb",
+    "vpnServers"
   ],
   resourceGroupForms: [
     "appID",
@@ -541,7 +550,9 @@ module.exports = {
     "vpe",
     "vpn",
     "vsi",
-    "lb"
+    "lb",
+    "vpnServers",
+    "dns"
   ],
   vpcForms: [
     "transitGateways",
@@ -551,10 +562,13 @@ module.exports = {
     "vpe",
     "vsi",
     "routingTables",
-    "lb"
+    "lb",
+    "vpnServers",
+    "dns"
   ],
   encryptionKeyForms: ["secretsManager", "clusters", "vsi"],
-  subnetForms: ["clusters", "vpn", "vpe", "vsi"],
+  subnetForms: ["clusters", "vpn", "vpe", "vsi", "vpnServers", "dns"],
+  securityGroupForms: ["vpe", "vsi", "lb", "vpnServers"],
   toggleFormPages: [
     "activityTracker",
     "securityComplianceCenter",

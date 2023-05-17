@@ -4,6 +4,7 @@
     "region": "us-south",
     "tags": ["slz", "landing-zone"]
   },
+  "dns": [],
   "resource_groups": [
     {
       "use_prefix": true,

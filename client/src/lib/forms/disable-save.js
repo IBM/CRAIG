@@ -27,6 +27,7 @@ const {
   invalidCbrRule,
   invalidCbrZone
 } = require("./invalid-callbacks");
+const { commaSeparatedIpListExp } = require("../constants");
 
 /**
  * check if a field is null or empty string, reduce unit test writing
@@ -507,7 +508,48 @@ function disableSave(field, stateData, componentProps, craig) {
         stateData
       )
     );
+  } else if (field === "vpn_servers") {
+    return (
+      invalidName("vpn_servers")(stateData, componentProps) ||
+      fieldsAreBad(
+        [
+          "resource_group",
+          "vpc",
+          "security_groups",
+          "certificate_crn",
+          "method",
+          "port",
+          "client_ip_pool"
+        ],
+        stateData
+      ) ||
+      validPortRange("port_min", stateData.port) === false ||
+      invalidCrnList(
+        [stateData.certificate_crn].concat(
+          stateData.method === "username" ? [] : stateData.client_ca_crn
+        )
+      ) ||
+      invalidCidrBlock(stateData.client_ip_pool) ||
+      (!isNullOrEmptyString(stateData.client_dns_server_ips) &&
+        stateData.client_dns_server_ips.match(commaSeparatedIpListExp) ===
+          null) ||
+      isEmpty(stateData.subnets)
+    );
+  } else if (field === "vpn_server_routes") {
+    return (
+      invalidName("vpn_server_routes")(stateData, componentProps) ||
+      invalidCidrBlock(stateData.destination)
+    );
   } else return false;
+}
+
+/**
+ * check if a cidr is invalid
+ * @param {*} value
+ * @returns {boolean} true when not a valid cidr
+ */
+function invalidCidrBlock(value) {
+  return isIpv4CidrOrAddress(value || "") === false || !contains(value, "/");
 }
 
 /**
@@ -552,5 +594,6 @@ module.exports = {
   disableSave,
   invalidPort,
   forceShowForm,
-  disableSshKeyDelete
+  disableSshKeyDelete,
+  invalidCidrBlock
 };

@@ -7,6 +7,7 @@ const {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
+  setFormSgList,
 } = require("../../client/src/lib");
 
 /**
@@ -311,6 +312,42 @@ describe("form props", () => {
         innerFormProps: {},
       };
       setFormSubnetList(form, formTemplate, craig);
+      assert.deepEqual(
+        formTemplate,
+        expectedData,
+        "it should have correct data"
+      );
+    });
+  });
+  describe("setFormSgList", () => {
+    it("should set sg list if creating a form with sgs", () => {
+      let craig = newState();
+      let form = "vsi";
+      let formTemplate = {
+        innerFormProps: {},
+      };
+      let expectedData = {
+        innerFormProps: {
+          securityGroups: craig.store.json.security_groups,
+        },
+      };
+      setFormSgList(form, formTemplate, craig);
+      assert.deepEqual(
+        formTemplate,
+        expectedData,
+        "it should have correct data"
+      );
+    });
+    it("should set not set subnet list if creating a form without subnets", () => {
+      let craig = newState();
+      let form = "bad-form";
+      let formTemplate = {
+        innerFormProps: {},
+      };
+      let expectedData = {
+        innerFormProps: {},
+      };
+      setFormSgList(form, formTemplate, craig);
       assert.deepEqual(
         formTemplate,
         expectedData,
