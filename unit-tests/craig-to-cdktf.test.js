@@ -210,6 +210,24 @@ describe("craigToCdktf", () => {
       "it should return cdktf data"
     );
   });
+  it("should convert craig data to cdktf ibm_is_vpn_server", () => {
+    let actualData = craigToCdktf(craig);
+    let data = actualData.resource.ibm_is_vpn_server;
+    assert.deepEqual(
+      data,
+      cdktf.resource.ibm_is_vpn_server,
+      "it should return cdktf data"
+    );
+  });
+  it("should convert craig data to cdktf ibm_is_vpn_server_route", () => {
+    let actualData = craigToCdktf(craig);
+    let data = actualData.resource.ibm_is_vpn_server_route;
+    assert.deepEqual(
+      data,
+      cdktf.resource.ibm_is_vpn_server_route,
+      "it should return cdktf data"
+    );
+  });
   it("should convert craig data to cdktf for images", () => {
     let actualData = craigToCdktf(craig);
     let data = actualData.data;

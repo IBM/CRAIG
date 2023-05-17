@@ -16,6 +16,7 @@ const { tgwTf } = require("./transit-gateway");
 const { vpcModuleTf } = require("./vpc");
 const { vpeTf } = require("./vpe");
 const { vpnTf } = require("./vpn");
+const { vpnServerTf } = require("./vpn-server");
 const { vsiTf, lbTf } = require("./vsi");
 const { cbrTf } = require("./cbr");
 const { dnsTf } = require("./dns");
@@ -67,6 +68,8 @@ variable "tmos_admin_password" {
       "virtual_servers.tf": config.vsi.length > 0 ? vsiTf(config) : null,
       "clusters.tf": clusterTf(config),
       "vpn_gateways.tf": config.vpn_gateways.length > 0 ? vpnTf(config) : null,
+      "vpn_servers.tf":
+        config.vpn_servers.length > 0 ? vpnServerTf(config) : null,
       "variables.tf": variablesTf
         .replace("$ADDITIONAL_VALUES", additionalVariables)
         .replace("$REGION", config._options.region)

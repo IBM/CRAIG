@@ -56,6 +56,8 @@ const {
   ibmIsLbListener,
   ibmIsPublicGateway,
   ibmIsVolume,
+  ibmIsVpnServer,
+  ibmIsVpnServerRoute,
   ibmIamAccountSettings,
   ibmIamAccessGroup,
   ibmIamAccessGroupDynamicRule,
@@ -528,6 +530,30 @@ function craigToCdktf(craig) {
       }
     });
   });
+
+  // // vpn servers
+  if (craig.vpn_servers) {
+    craig.vpn_servers.forEach(vpnServer => {
+      let server = ibmIsVpnServer(vpnServer, craig);
+      cdktfValues(
+        cdktfJson,
+        "resource",
+        "ibm_is_vpn_server",
+        server.name,
+        server.data
+      );
+      vpnServer.routes.forEach(vpnRoute => {
+        let route = ibmIsVpnServerRoute(vpnServer, vpnRoute, craig);
+        cdktfValues(
+          cdktfJson,
+          "resource",
+          "ibm_is_vpn_server_route",
+          route.name,
+          route.data
+        );
+      });
+    });
+  }
 
   // vpn gateways
   craig.vpn_gateways.forEach(vpnGw => {

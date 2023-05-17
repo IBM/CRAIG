@@ -135,6 +135,10 @@ const {
   cbrTf
 } = require("./cbr");
 const {
+  ibmIsVpnServer,
+  ibmIsVpnServerRoute
+} = require("./vpn-server")
+const {
   formatDnsService,
   formatDnsZone,
   formatDnsRecord,
@@ -229,6 +233,8 @@ module.exports = {
   ibmIamAccessGroupPolicy,
   ibmIamAccessGroupMembers,
   ibmIsFlowLog,
+  ibmIsVpnServer,
+  ibmIsVpnServerRoute,
   ibmIamAuthorizationPolicyFlowLogs,
   ibmResourceInstanceEventStreams,
   f5TemplateFile,

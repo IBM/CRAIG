@@ -80,6 +80,38 @@ describe("configToFilesJson", () => {
         "it should be null"
       );
     });
+    it("should return correct craig.json", () => {
+      let actualData = configToFilesJson({ ...slzNetwork });
+      assert.deepEqual(
+        actualData["craig.json"],
+        slzNetworkFiles["craig.json"],
+        "it should create file"
+      );
+    });
+    it("should return correct vpn_servers.tf", () => {
+      let actualData = configToFilesJson({ ...slzNetwork });
+      assert.deepEqual(
+        actualData["vpn_servers.tf"],
+        slzNetworkFiles["vpn_servers.tf"],
+        "it should create file"
+      );
+    });
+    it("should return correct vpn_servers.tf with empty vpn_servers", () => {
+      let nw = { ...slzNetwork };
+      nw.vpn_servers = [];
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(actualData["vpn_servers.tf"], null, "it should be null");
+    });
+    it("should return correct vpn_servers.tf with empty vpn_servers routes", () => {
+      let nw = { ...slzNetwork };
+      nw.vpn_servers[0]["routes"] = [];
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(
+        actualData["vpn_servers.tf"],
+        slzNetworkFiles["vpn_servers_no_route.tf"],
+        "it should be null"
+      );
+    });
     it("should return correct virtual_private_endpoints.tf", () => {
       let actualData = configToFilesJson({ ...slzNetwork });
       assert.deepEqual(
@@ -177,23 +209,15 @@ describe("configToFilesJson", () => {
       let dataSshNw = { ...slzNetwork };
       dataSshNw.ssh_keys = [
         {
-          "name": "slz-ssh-key",
-          "use_data": true
-        }
+          name: "slz-ssh-key",
+          use_data: true,
+        },
       ];
       let actualData = configToFilesJson(dataSshNw);
       assert.deepEqual(
         actualData["variables.tf"],
         slzNetworkFiles["variables.tf"].replace(/variable\s"slz_ssh[^#]+/, ""),
         "it should create file without ssh key variable"
-      );
-    });
-    it("should return correct craig.json", () => {
-      let actualData = configToFilesJson({ ...slzNetwork });
-      assert.deepEqual(
-        actualData["craig.json"],
-        slzNetworkFiles["craig.json"],
-        "it should create file"
       );
     });
     it("should return correct appid.tf", () => {
@@ -360,7 +384,7 @@ describe("configToFilesJson", () => {
         slzNetworkFiles["dns.tf"],
         "it should create file"
       );
-    })
+    });
     it("should return correct cbr.tf", () => {
       let nw = { ...slzNetwork };
       nw.cbr_zones = [

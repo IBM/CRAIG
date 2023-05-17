@@ -173,7 +173,7 @@
           "zone": 1,
           "cidr": "10.30.10.0/24",
           "name": "vpn-zone-1"
-        } 
+        }
       ],
       "subnets": [
         {
@@ -798,6 +798,31 @@
       "vpc": "management"
     }
   ],
+  "vpn_servers": [
+    {
+      "name": "vpn-server",
+      "certificate_crn": "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083",
+      "method": "certificate",
+      "client_ca_crn": "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083",
+      "client_ip_pool": "10.5.0.0/21",
+      "client_dns_server_ips": "192.168.3.4",
+      "client_idle_timeout": 2000,
+      "enable_split_tunneling": true,
+      "port": 255,
+      "protocol": "udp",
+      "resource_group": "slz-management-rg",
+      "security_groups": ["management-vpe-sg"],
+      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "vpc": "management",
+      "routes": [
+        {
+          "name": "vpn-route",
+          "action": "translate",
+          "destination": "172.16.0.0/16"
+        }
+      ]
+    }
+  ],
   "ssh_keys": [
     {
       "name": "slz-ssh-key",
@@ -873,8 +898,8 @@
   "scc": {
     "name": ""
   },
-  "event_streams":[],
-  "load_balancers":[],
+  "event_streams": [],
+  "load_balancers": [],
   "cbr_zones": [],
   "cbr_rules": []
 }

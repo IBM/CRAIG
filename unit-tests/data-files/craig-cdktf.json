@@ -18,10 +18,7 @@
       "prefix": "${var.prefix}",
       "region": "${var.region}",
       "source": "./management_vpc",
-      "tags": [
-        "slz",
-        "landing-zone"
-      ],
+      "tags": ["slz", "landing-zone"],
       "slz_management_rg_id": "${ibm_resource_group.slz_management_rg.id}"
     },
     "workload_vpc": {
@@ -34,10 +31,7 @@
       "prefix": "${var.prefix}",
       "region": "${var.region}",
       "source": "./workload_vpc",
-      "tags": [
-        "slz",
-        "landing-zone"
-      ],
+      "tags": ["slz", "landing-zone"],
       "slz_workload_rg_id": "${ibm_resource_group.slz_workload_rg.id}"
     }
   },
@@ -89,10 +83,7 @@
         "worker_count": 2,
         "kube_version": "default",
         "update_all_workers": null,
-        "tags": [
-          "slz",
-          "landing-zone"
-        ],
+        "tags": ["slz", "landing-zone"],
         "wait_till": "IngressReady",
         "disable_public_service_endpoint": false,
         "zones": [
@@ -157,18 +148,14 @@
         "source_service_name": "is",
         "source_resource_type": "flow-log-collector",
         "description": "Allow flow logs write access cloud object storage instance",
-        "roles": [
-          "Writer"
-        ],
+        "roles": ["Writer"],
         "target_service_name": "cloud-object-storage",
         "target_resource_instance_id": "${ibm_resource_instance.cos_object_storage.guid}"
       },
       "atracker_cos_cos_to_slz_kms_kms_policy": {
         "source_service_name": "cloud-object-storage",
         "source_resource_instance_id": "${ibm_resource_instance.atracker_cos_object_storage.guid}",
-        "roles": [
-          "Reader"
-        ],
+        "roles": ["Reader"],
         "description": "Allow COS instance to read from KMS instance",
         "target_service_name": "kms",
         "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}"
@@ -176,9 +163,7 @@
       "cos_cos_to_slz_kms_kms_policy": {
         "source_service_name": "cloud-object-storage",
         "source_resource_instance_id": "${ibm_resource_instance.cos_object_storage.guid}",
-        "roles": [
-          "Reader"
-        ],
+        "roles": ["Reader"],
         "description": "Allow COS instance to read from KMS instance",
         "target_service_name": "kms",
         "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}"
@@ -187,10 +172,7 @@
         "source_service_name": "is",
         "target_service_name": "kms",
         "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}",
-        "roles": [
-          "Reader",
-          "Authorization Delegator"
-        ],
+        "roles": ["Reader", "Authorization Delegator"],
         "description": "Allow block storage volumes to be encrypted by Key Management instance.",
         "source_resource_type": "share"
       },
@@ -198,9 +180,7 @@
         "source_service_name": "server-protect",
         "target_service_name": "kms",
         "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}",
-        "roles": [
-          "Reader"
-        ],
+        "roles": ["Reader"],
         "description": "Allow block storage volumes to be encrypted by Key Management instance."
       }
     },
@@ -211,10 +191,7 @@
         "active": true,
         "storage_bucket": "${ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name}",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ],
+        "tags": ["slz", "landing-zone"],
         "depends_on": [
           "ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy"
         ]
@@ -225,10 +202,7 @@
         "active": true,
         "storage_bucket": "${ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name}",
         "resource_group": "${ibm_resource_group.slz_workload_rg.id}",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ],
+        "tags": ["slz", "landing-zone"],
         "depends_on": [
           "ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy"
         ]
@@ -264,10 +238,7 @@
         "service": "cloud-object-storage",
         "location": "global",
         "plan": "standard",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ]
+        "tags": ["slz", "landing-zone"]
       },
       "cos_object_storage": {
         "name": "${var.prefix}-cos-object-storage",
@@ -275,10 +246,7 @@
         "service": "cloud-object-storage",
         "location": "global",
         "plan": "standard",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ]
+        "tags": ["slz", "landing-zone"]
       },
       "slz_kms": {
         "name": "${var.prefix}-slz-kms",
@@ -335,10 +303,7 @@
         "name": "${var.prefix}-atracker-cos-key-cos-bind-key",
         "resource_instance_id": "${ibm_resource_instance.atracker_cos_object_storage.id}",
         "role": "Writer",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ]
+        "tags": ["slz", "landing-zone"]
       }
     },
     "ibm_kms_key_rings": {
@@ -437,10 +402,7 @@
         "name": "${var.prefix}-slz-ssh-key",
         "public_key": "${var.slz_ssh_key_public_key}",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ]
+        "tags": ["slz", "landing-zone"]
       }
     },
     "ibm_tg_gateway": {
@@ -534,13 +496,8 @@
         "name": "${var.prefix}-management-cos-vpe-gw",
         "vpc": "${module.management_vpc.id}",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ],
-        "security_groups": [
-          "${module.management_vpc.management_vpe_sg_id}"
-        ],
+        "tags": ["slz", "landing-zone"],
+        "security_groups": ["${module.management_vpc.management_vpe_sg_id}"],
         "target": [
           {
             "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.${var.region}.cloud-object-storage.appdomain.cloud",
@@ -552,13 +509,8 @@
         "name": "${var.prefix}-workload-cos-vpe-gw",
         "vpc": "${module.workload_vpc.id}",
         "resource_group": "${ibm_resource_group.slz_workload_rg.id}",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ],
-        "security_groups": [
-          "${module.workload_vpc.workload_vpe_sg_id}"
-        ],
+        "tags": ["slz", "landing-zone"],
+        "security_groups": ["${module.workload_vpc.workload_vpe_sg_id}"],
         "target": [
           {
             "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.${var.region}.cloud-object-storage.appdomain.cloud",
@@ -582,9 +534,7 @@
         "primary_network_interface": [
           {
             "subnet": "${module.management_vpc.vsi_zone_1_id}",
-            "security_groups": [
-              "${module.management_vpc.management_vpe_sg_id}"
-            ]
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
           }
         ],
         "boot_volume": [
@@ -592,9 +542,7 @@
             "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
           }
         ],
-        "keys": [
-          "${ibm_is_ssh_key.slz_ssh_key.id}"
-        ]
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
       },
       "management_vpc_management_server_vsi_1_2": {
         "name": "${var.prefix}-management-management-server-vsi-zone-1-2",
@@ -610,9 +558,7 @@
         "primary_network_interface": [
           {
             "subnet": "${module.management_vpc.vsi_zone_1_id}",
-            "security_groups": [
-              "${module.management_vpc.management_vpe_sg_id}"
-            ]
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
           }
         ],
         "boot_volume": [
@@ -620,9 +566,7 @@
             "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
           }
         ],
-        "keys": [
-          "${ibm_is_ssh_key.slz_ssh_key.id}"
-        ]
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
       },
       "management_vpc_management_server_vsi_2_1": {
         "name": "${var.prefix}-management-management-server-vsi-zone-2-1",
@@ -638,9 +582,7 @@
         "primary_network_interface": [
           {
             "subnet": "${module.management_vpc.vsi_zone_2_id}",
-            "security_groups": [
-              "${module.management_vpc.management_vpe_sg_id}"
-            ]
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
           }
         ],
         "boot_volume": [
@@ -648,9 +590,7 @@
             "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
           }
         ],
-        "keys": [
-          "${ibm_is_ssh_key.slz_ssh_key.id}"
-        ]
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
       },
       "management_vpc_management_server_vsi_2_2": {
         "name": "${var.prefix}-management-management-server-vsi-zone-2-2",
@@ -666,9 +606,7 @@
         "primary_network_interface": [
           {
             "subnet": "${module.management_vpc.vsi_zone_2_id}",
-            "security_groups": [
-              "${module.management_vpc.management_vpe_sg_id}"
-            ]
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
           }
         ],
         "boot_volume": [
@@ -676,9 +614,7 @@
             "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
           }
         ],
-        "keys": [
-          "${ibm_is_ssh_key.slz_ssh_key.id}"
-        ]
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
       },
       "management_vpc_management_server_vsi_3_1": {
         "name": "${var.prefix}-management-management-server-vsi-zone-3-1",
@@ -694,9 +630,7 @@
         "primary_network_interface": [
           {
             "subnet": "${module.management_vpc.vsi_zone_3_id}",
-            "security_groups": [
-              "${module.management_vpc.management_vpe_sg_id}"
-            ]
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
           }
         ],
         "boot_volume": [
@@ -704,9 +638,7 @@
             "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
           }
         ],
-        "keys": [
-          "${ibm_is_ssh_key.slz_ssh_key.id}"
-        ]
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
       },
       "management_vpc_management_server_vsi_3_2": {
         "name": "${var.prefix}-management-management-server-vsi-zone-3-2",
@@ -722,9 +654,7 @@
         "primary_network_interface": [
           {
             "subnet": "${module.management_vpc.vsi_zone_3_id}",
-            "security_groups": [
-              "${module.management_vpc.management_vpe_sg_id}"
-            ]
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
           }
         ],
         "boot_volume": [
@@ -732,9 +662,7 @@
             "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
           }
         ],
-        "keys": [
-          "${ibm_is_ssh_key.slz_ssh_key.id}"
-        ]
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
       }
     },
     "ibm_is_vpn_gateway": {
@@ -742,15 +670,41 @@
         "name": "${var.prefix}-management-management-gateway-vpn-gw",
         "subnet": "${module.management_vpc.vpn_zone_1_id}",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
-        "tags": [
-          "slz",
-          "landing-zone"
-        ],
+        "tags": ["slz", "landing-zone"],
         "timeouts": [
           {
             "delete": "1h"
           }
         ]
+      }
+    },
+    "ibm_is_vpn_server": {
+      "management_vpn_server_vpn_server": {
+        "certificate_crn": "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083",
+        "client_authentication": [
+          {
+            "method": "certificate",
+            "client_ca_crn": "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+          }
+        ],
+        "client_ip_pool": "10.5.0.0/21",
+        "client_dns_server_ips": ["192.168.3.4"],
+        "client_idle_timeout": 2000,
+        "enable_split_tunneling": true,
+        "name": "slz-management-vpn-server-server",
+        "port": 255,
+        "protocol": "udp",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "security_groups": ["${module.management_vpc.management_vpe_sg_id}"],
+        "subnets": ["${module.management_vpc.vsi_zone_1_id}"]
+      }
+    },
+    "ibm_is_vpn_server_route": {
+      "management_vpn_server_route_vpn_route": {
+        "name": "slz-management-vpn-route-route",
+        "action": "translate",
+        "destination": "172.16.0.0/16",
+        "vpn_server": "${ibm_is_vpn_server.management_vpn_server_vpn_server.id}"
       }
     }
   },
