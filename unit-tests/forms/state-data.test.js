@@ -175,7 +175,13 @@ describe("state data", () => {
         subnet.public_gateway = true;
       });
       let actualData = getSubnetTierStateData(
-        { name: "vsi", zones: 3, advanced: true, select_zones: [1, 2, 3], subnets:[] },
+        {
+          name: "vsi",
+          zones: 3,
+          advanced: true,
+          select_zones: [1, 2, 3],
+          subnets: [],
+        },
         vpc
       );
       assert.deepEqual(actualData.networkAcl, "-", "it should return vpcs");

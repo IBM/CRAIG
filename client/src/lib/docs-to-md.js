@@ -9,7 +9,7 @@ const { docs } = require("./docs");
  */
 function getLongestFromCol(arr, index) {
   let longest = 0;
-  arr.forEach(item => {
+  arr.forEach((item) => {
     if (item[index].length > longest) longest = item[index].length;
   });
   return longest;
@@ -24,7 +24,7 @@ function getLongestFromCol(arr, index) {
  */
 function docsToMd(docsJson) {
   let doc = "\n";
-  docsJson.content.forEach(item => {
+  docsJson.content.forEach((item) => {
     if (item.text) {
       // add text and double newline
       doc +=
@@ -80,7 +80,7 @@ function docsToMd(docsJson) {
     }
   });
   doc += "### Related Links\n\n";
-  docsJson.relatedLinks.forEach(link => {
+  docsJson.relatedLinks.forEach((link) => {
     let title = link.length === 1 ? "Docs" : link[1];
     doc += `- [${title}](${link[0]})\n`;
   });
@@ -89,7 +89,7 @@ function docsToMd(docsJson) {
 
 function allDocs() {
   let doc = "";
-  eachKey(docs, heading => {
+  eachKey(docs, (heading) => {
     // remove when adding docs
     if (heading !== "routing_tables" && heading !== "load_balancers") {
       let header =
@@ -125,5 +125,5 @@ function allDocs() {
 
 module.exports = {
   docsToMd,
-  allDocs
+  allDocs,
 };

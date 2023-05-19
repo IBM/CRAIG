@@ -5,7 +5,7 @@ const {
   kebabCase,
   parseIntFromZone,
   isNullOrEmptyString,
-  transpose
+  transpose,
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { endComment } = require("./constants");
@@ -101,7 +101,7 @@ function getKmsInstanceData(kmsName, config) {
   return {
     name: baseName + "name",
     guid: baseName + "guid",
-    type: kmsInstance.use_hs_crypto ? "hs-crypto" : "kms"
+    type: kmsInstance.use_hs_crypto ? "hs-crypto" : "kms",
   };
 }
 
@@ -113,9 +113,9 @@ function getKmsInstanceData(kmsName, config) {
  * @returns {string} formatted id
  */
 function vpcRef(vpcName, value, useModule) {
-  return `\${${useModule ? "module" : "ibm_is_vpc"}.${snakeCase(
-    vpcName
-  )}_vpc.${value || "id"}}`;
+  return `\${${useModule ? "module" : "ibm_is_vpc"}.${snakeCase(vpcName)}_vpc.${
+    value || "id"
+  }}`;
 }
 
 /**
@@ -257,9 +257,9 @@ function tfDone(tf) {
  * @returns {string} data resource name
  */
 function dataResourceName(resource, appendText) {
-  return `${resource.use_data ? "" : varDotPrefix + "-"}${
-    resource.name
-  }${appendText ? appendText : ""}`;
+  return `${resource.use_data ? "" : varDotPrefix + "-"}${resource.name}${
+    appendText ? appendText : ""
+  }`;
 }
 
 /**
@@ -390,5 +390,5 @@ module.exports = {
   randomSuffix,
   jsonToTfPrint,
   cdktfValues,
-  getResourceOrData
+  getResourceOrData,
 };

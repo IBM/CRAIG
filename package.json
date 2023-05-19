@@ -14,9 +14,11 @@
     "deploy": "./deploy.sh",
     "compatibility-tests": "./compatibility.sh",
     "tf": "node lib/build-tf.js",
-    "setup": " npm i cdktf mocha -g && npm i && cd client && npm i",
+    "setup": "npm i cdktf cfktf-cli mocha -g && npm i && cd client && npm i",
     "docker-start": "NODE_ENV=production && npm i && node server.js",
-    "front-end-test": "cd client && npm test"
+    "front-end-test": "cd client && npm test",
+    "pretty": "npx prettier --write .",
+    "dev-start": "cd client && npm start"
   },
   "authors": [
     "Jennifer Valle",
@@ -45,7 +47,9 @@
     "husky": "^8.0.3",
     "mocha": "^9.2.2",
     "nyc": "^15.1.0",
+    "prettier": "^2.8.8",
     "sinon": "^15.0.1",
+    "nodemon": "^2.0.22",
     "tfxjs": "^1.1.0"
   }
 }

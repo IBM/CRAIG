@@ -1,12 +1,12 @@
 # Cloud Resource and Infrastructure-as-code Generator (CRAIG)
 
-## What is CRAIG? 
-
 Cloud Resource and Infrastructure-as-Code Generator (or **CRAIG**) allows users to generate Infrastructure-as-Code (IaC) to create a fully customizable environment on IBM Cloud.
 
 CRAIG simplifies the process of creating IaC through its GUI, which manages and updates interconnected resources as they are created.
 
 CRAIG configures infrastructure using JSON to create full VPC networks, manage security and networking with VSI deployments, and create services, clusters, and manage IAM for an IBM Cloud Account. This JSON configuration can be imported to quick start environments, and can be downloaded as Terraform code directly from the GUI.
+
+---
 
 ## Prerequisites
 
@@ -14,14 +14,29 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 - NPM version 8.19.2 or higher
 - Terraform 1.3 or higher
 
-## Running the CRAIG App
+---
 
-CRAIG is a flexible application that can be used directly from your local environment or containerized an deployed to your platform of choice. 
+## Installation
 
-To run CRAIG locally, follow these steps:
+1. [Running CRAIG Application Locally](#running-craig-application-locally)
+2. [Setting Up CRAIG Development Environment](#setting-up-craig-development-environment)
+3. [Building Local CRAIG Container Image](#building-local-container-image)
+4. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
 
+---
 
-### 1. Set envionment variables
+### Running CRAIG Application Locally
+
+To get started using CRAIG locally, follow these steps:
+
+#### 1. Install Dependencies
+
+To install needed dependencies, use the command
+```shell
+npm run setup
+```
+
+#### 2. Set envionment variables
 
 Add you IBM Cloud platform API key to the environment. This API key is used by the back end API server to retrieve Cluster flavors, Cluster versions, VSI instance profiles, and VSI images.
 
@@ -29,7 +44,7 @@ Add you IBM Cloud platform API key to the environment. This API key is used by t
 export API_KEY="<your ibm cloud platform API key>"
 ```
 
-### 2. Start the application
+#### 3. Start the application
 
 Building the application, installing dependencies, and starting the server can be done with one easy command. From your directory, run:
 
@@ -37,84 +52,86 @@ Building the application, installing dependencies, and starting the server can b
 npm run start
 ```
 
-### 3. Open the Application
+#### 4. Open the Application
 
 Congratulations! Your application is now available at localhost:8080!
 
-### Other deployment methods
-
-For more information on deploying, see [Building Container Image](#building-container-image) and [Deploying to Code Engine](#deploying-to-code-engine-with-deploysh).
-
-## Running the Terraform Files
-
-After creating a deployment using the GUI, users can download a file called `craig.zip`. Included in this file are all the Terraform files needed to create you environment. In addition, your environment configuration is saved as `craig.json` and can easily be imported into the GUI for further customization.
-
-### Prerequisites
-
-- Terraform v1.3 or higher
-- Terraform CLI
-- IBM Cloud Platform API Key
-
-### 1. Intializing the Directory
-
-After unzipping craig.zip, enter the containing folder from your terminal. In your directory, run the following command to install needed providers and to initialize the directory:
-```
-terraform init
-```
-
-### 2. Adding Environment Variables
-
-Once your environment has been initialized, add your IBM Cloud Platform API key to the environment. This can be done by exporting your API key as an environment variable. Once that's complete, run the following command to plan your terraform directory.
-
-```
-terraform plan
-```
-
-### 3. Creating Resources
-
-Resources can be created from the directory by running the Terraform Apply command after a successful plan
-
-```
-terraform apply
-```
-
-### 4. Destroying Resources
-
-To destroy you resources, use the following command. This will **delete all resources** provisioned by the template.
-
-```
-terraform destroy
-```
-
-## Building Example Terraform Files
-
-Run the following commands to build a terraform environment for testing:
-
-### Creating Test Folder
-
-If you do not have a folder `tf-test` created in the root directory, create one
-
-```shell
-mkdir tf-test
-```
-
-### Run the NPM Command
-
-```shell
-npm run tf -- <json file path>
-```
 ---
-## Building Container Image
-To build CRAIG locally the following Docker command can be used. The Dockerfile accepts `api_key` as a build argument.
+
+### Setting Up CRAIG Development Environment
+
+CRAIG is a flexible application that can be used directly from your local environment or containerized an deployed to your platform of choice. 
+
+To run CRAIG in your development environment, follow these steps:
+
+#### 1. Install Dependencies
+
+To install needed dependencies, use the command
+```shell
+npm run setup
 ```
+
+#### 2. Set envionment variables
+
+Add you IBM Cloud platform API key to the environment. This API key is used by the back end API server to retrieve Cluster flavors, Cluster versions, VSI instance profiles, and VSI images.
+
+```shell
+export API_KEY="<your ibm cloud platform API key>"
+```
+
+#### 3. Starting the Back-End Server
+
+In order to make sure the Back-End API calls are successful, the server needs to be started. To start the server run the following command from the root directory:
+
+```shell
+node server.js
+```
+
+#### 4. Starting the Front-End Application
+
+CRAIG uses [craco](https://www.npmjs.com/package/@craco/craco) to setup and run the development environment. To start the development build server, run the following command in parallel with [Step 3](#3-starting-the-back-end-server):
+
+```shell
+npm run dev-start
+```
+
+#### 5. Opening the Application
+
+Congratulations! CRAIG is now running at `localhost:3000`
+
+#### 6. Testing the Development Envionment
+
+CRAIG uses [mocha](https://mochajs.org/) and [chai](https://www.chaijs.com/) for unit testing. To run unit tests use the command:
+
+```shell
+npm run test
+```
+
+Craig uses [nyc](https://www.npmjs.com/package/nyc) for unit test coverage. To get a report of unit test coverage run the command
+
+```shell
+npn run coverage
+```
+
+---
+
+### Building Local Container Image
+
+To build CRAIG locally the following Docker command can be used. The Dockerfile accepts `api_key` as a build argument.
+
+```shell
 docker build . --build-arg api_key=$API_KEY -t craig
 ```
-to run the container
-```
+
+#### Running the Container Image Locally
+
+```shell
 docker run -it craig
 ```
+
 ---
-## Deploying to Code Engine with `deploy.sh`
+
+### Deploying to IBM Code Engine
 
 Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. At a minimum an IBM Cloud API key will be needed that has sufficient permissions to provision a Code Engine project, application, and secrets. In addition, this API key must be able to create a IBM Container Registry namespace. See below for a simple use case using the default parameters.
 
@@ -150,89 +167,61 @@ npm run deploy -- -h
 
 ---
 
+## Running the Terraform Files
+
+After creating a deployment using the GUI, users can download a file called `craig.zip`. Included in this file are all the Terraform files needed to create you environment. In addition, your environment configuration is saved as `craig.json` and can easily be imported into the GUI for further customization.
+
+### Prerequisites
+
+- Terraform v1.3 or higher
+- Terraform CLI
+- IBM Cloud Platform API Key
+
+#### 1. Intializing the Directory
+
+After unzipping craig.zip, enter the containing folder from your terminal. In your directory, run the following command to install needed providers and to initialize the directory:
+```
+terraform init
+```
+
+#### 2. Adding Environment Variables
+
+Once your environment has been initialized, add your IBM Cloud Platform API key to the environment. This can be done by exporting your API key as an environment variable. Once that's complete, run the following command to plan your terraform directory.
+
+```
+terraform plan
+```
+
+#### 3. Creating Resources
+
+Resources can be created from the directory by running the Terraform Apply command after a successful plan
+
+```
+terraform apply
+```
+
+#### 4. Destroying Resources
+
+To destroy you resources, use the following command. This will **delete all resources** provisioned by the template.
+
+```
+terraform destroy
+```
+
+---
+
 ## Code Test Coverage
 
 File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 ----------------------------|---------|----------|---------|---------|-------------------
 All files                   |     100 |      100 |     100 |     100 | 🏆   
  client/src/lib             |     100 |      100 |     100 |     100 | 🏆   
-  builders.js               |     100 |      100 |     100 |     100 | 🏆   
-  changelog-to-markdown.js  |     100 |      100 |     100 |     100 | 🏆   
-  constants.js              |     100 |      100 |     100 |     100 | 🏆   
-  craig-to-cdktf.js         |     100 |      100 |     100 |     100 | 🏆   
-  docs-to-md.js             |     100 |      100 |     100 |     100 | 🏆   
-  index.js                  |     100 |      100 |     100 |     100 | 🏆   
-  slz-to-craig.js           |     100 |      100 |     100 |     100 | 🏆   
-  validate.js               |     100 |      100 |     100 |     100 | 🏆   
  client/src/lib/docs        |     100 |      100 |     100 |     100 | 🏆   
-  index.js                  |     100 |      100 |     100 |     100 | 🏆   
  client/src/lib/forms       |     100 |      100 |     100 |     100 | 🏆   
-  disable-save.js           |     100 |      100 |     100 |     100 | 🏆   
-  duplicate-name.js         |     100 |      100 |     100 |     100 | 🏆   
-  format-json.js            |     100 |      100 |     100 |     100 | 🏆   
-  index.js                  |     100 |      100 |     100 |     100 | 🏆   
-  invalid-callbacks.js      |     100 |      100 |     100 |     100 | 🏆   
-  props-match-state.js      |     100 |      100 |     100 |     100 | 🏆   
-  state-data.js             |     100 |      100 |     100 |     100 | 🏆   
-  text-callbacks.js         |     100 |      100 |     100 |     100 | 🏆   
  client/src/lib/json-to-iac |     100 |      100 |     100 |     100 | 🏆   
-  appid.js                  |     100 |      100 |     100 |     100 | 🏆   
-  atracker.js               |     100 |      100 |     100 |     100 | 🏆   
-  clusters.js               |     100 |      100 |     100 |     100 | 🏆   
-  config-to-files-json.js   |     100 |      100 |     100 |     100 | 🏆   
-  constants.js              |     100 |      100 |     100 |     100 | 🏆   
-  event-streams.js          |     100 |      100 |     100 |     100 | 🏆   
-  f5.js                     |     100 |      100 |     100 |     100 | 🏆   
-  flow-logs.js              |     100 |      100 |     100 |     100 | 🏆   
-  iam.js                    |     100 |      100 |     100 |     100 | 🏆   
-  index.js                  |     100 |      100 |     100 |     100 | 🏆   
-  key-management.js         |     100 |      100 |     100 |     100 | 🏆   
-  object-storage.js         |     100 |      100 |     100 |     100 | 🏆   
-  page-template.js          |     100 |      100 |     100 |     100 | 🏆   
-  resource-groups.js        |     100 |      100 |     100 |     100 | 🏆   
-  scc.js                    |     100 |      100 |     100 |     100 | 🏆   
-  secrets-manager.js        |     100 |      100 |     100 |     100 | 🏆   
-  security-groups.js        |     100 |      100 |     100 |     100 | 🏆   
-  ssh-keys.js               |     100 |      100 |     100 |     100 | 🏆   
-  teleport.js               |     100 |      100 |     100 |     100 | 🏆   
-  transit-gateway.js        |     100 |      100 |     100 |     100 | 🏆   
-  utils.js                  |     100 |      100 |     100 |     100 | 🏆   
-  vpc.js                    |     100 |      100 |     100 |     100 | 🏆   
-  vpe.js                    |     100 |      100 |     100 |     100 | 🏆   
-  vpn.js                    |     100 |      100 |     100 |     100 | 🏆   
-  vsi.js                    |     100 |      100 |     100 |     100 | 🏆   
  client/src/lib/state       |     100 |      100 |     100 |     100 | 🏆   
-  appid.js                  |     100 |      100 |     100 |     100 | 🏆   
-  atracker.js               |     100 |      100 |     100 |     100 | 🏆   
-  clusters.js               |     100 |      100 |     100 |     100 | 🏆   
-  copy-rules.js             |     100 |      100 |     100 |     100 | 🏆   
-  cos.js                    |     100 |      100 |     100 |     100 | 🏆   
-  defaults.js               |     100 |      100 |     100 |     100 | 🏆   
-  event-streams.js          |     100 |      100 |     100 |     100 | 🏆   
-  f5.js                     |     100 |      100 |     100 |     100 | 🏆   
-  iam.js                    |     100 |      100 |     100 |     100 | 🏆   
-  index.js                  |     100 |      100 |     100 |     100 | 🏆   
-  key-management.js         |     100 |      100 |     100 |     100 | 🏆   
-  load-balancers.js         |     100 |      100 |     100 |     100 | 🏆   
-  options.js                |     100 |      100 |     100 |     100 | 🏆   
-  resource-groups.js        |     100 |      100 |     100 |     100 | 🏆   
-  scc.js                    |     100 |      100 |     100 |     100 | 🏆   
-  secrets-manager.js        |     100 |      100 |     100 |     100 | 🏆   
-  security-groups.js        |     100 |      100 |     100 |     100 | 🏆   
-  ssh-keys.js               |     100 |      100 |     100 |     100 | 🏆   
-  state.js                  |     100 |      100 |     100 |     100 | 🏆   
-  store.utils.js            |     100 |      100 |     100 |     100 | 🏆   
-  transit-gateways.js       |     100 |      100 |     100 |     100 | 🏆   
-  utils.js                  |     100 |      100 |     100 |     100 | 🏆   
-  vpc.js                    |     100 |      100 |     100 |     100 | 🏆   
-  vpe.js                    |     100 |      100 |     100 |     100 | 🏆   
-  vpn.js                    |     100 |      100 |     100 |     100 | 🏆   
-  vsi.js                    |     100 |      100 |     100 |     100 | 🏆   
- express-controllers        |     100 |      100 |     100 |     100 | 🏆   
-  cdktf.js                  |     100 |      100 |     100 |     100 | 🏆   
-  controller.js             |     100 |      100 |     100 |     100 | 🏆   
+ express-controllers        |     100 |      100 |     100 |     100 | 🏆    
  unit-tests/mocks           |     100 |      100 |     100 |     100 | 🏆   
-  response.mock.js          |     100 |      100 |     100 |     100 | 🏆
 
 ---
 
@@ -260,16 +249,5 @@ Want to work on an issue? Be sure to assign it to yourself and branch from main.
 
 **Do not merge directly to main**. Pull requests should reference the corresponding issue filed in this repository. Please be sure to maintain **code coverage** before merging.
 
-To run tests,
-
-```shell
-npm run test
-```
-
-To check code coverage:
-
-```shell
-npm run coverage
-```
-
 At least **two** reviews are required to merge a pull request. When creating a pull request, please ensure that details about unexpected changes to the codebase are provided in the description.
+

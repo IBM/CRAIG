@@ -3,7 +3,7 @@ import { Tile, Button } from "@carbon/react";
 import React from "react";
 import PageTemplate from "../PageTemplate";
 
-const ResetState = props => {
+const ResetState = (props) => {
   return (
     <PageTemplate
       hideCodeMirror

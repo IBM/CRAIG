@@ -7,14 +7,9 @@ import {
   HeaderMenu,
   HeaderMenuButton,
   Modal,
-  Theme
+  Theme,
 } from "@carbon/react";
-import {
-  Reset,
-  Download,
-  Code,
-  CodeHide,
-} from "@carbon/icons-react";
+import { Reset, Download, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "./DownloadConfig";
@@ -26,7 +21,7 @@ class Navigation extends React.Component {
     this.state = {
       fileDownloadUrl: "",
       showModal: false,
-      expanded: false
+      expanded: false,
     };
     this.isResetState = this.isResetState.bind(this);
     this.onModalClose = this.onModalClose.bind(this);
@@ -58,7 +53,7 @@ class Navigation extends React.Component {
       title: "Success",
       kind: "success",
       text: `Successfully downloaded configuration.`,
-      timeout: 3000
+      timeout: 3000,
     };
     let validated = false;
     try {
@@ -69,7 +64,7 @@ class Navigation extends React.Component {
       notification = {
         title: "Error",
         kind: "error",
-        text: `Invalid configuration.\n${err.message}`
+        text: `Invalid configuration.\n${err.message}`,
       };
     }
     if (validated) {
@@ -79,7 +74,7 @@ class Navigation extends React.Component {
         notification = {
           title: "Error",
           kind: "error",
-          text: `Unable to download configuration.\n${error.message}`
+          text: `Unable to download configuration.\n${error.message}`,
         };
       }
     }
@@ -186,14 +181,14 @@ class Navigation extends React.Component {
 
 Navigation.defaultProps = {
   hideCodeMirror: false,
-  isResetState: false
+  isResetState: false,
 };
 
 Navigation.propTypes = {
   onJsonToggle: PropTypes.func.isRequired,
   hideCodeMirror: PropTypes.bool.isRequired,
   navCategories: PropTypes.array.isRequired,
-  isResetState: PropTypes.bool.isRequired
+  isResetState: PropTypes.bool.isRequired,
 };
 
 export default Navigation;

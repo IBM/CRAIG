@@ -3,7 +3,7 @@ const {
   contains,
   isNullOrEmptyString,
   nestedSplat,
-  revision
+  revision,
 } = require("lazy-z");
 
 /**
@@ -67,7 +67,7 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     // all of the extra ifs and elses here are to prevent order card from
     // triggering disable save when it has no props
     if (!componentProps.id && !componentProps.parent_name) {
-      componentProps.craig.store.json.vpcs.forEach(network => {
+      componentProps.craig.store.json.vpcs.forEach((network) => {
         allOtherNames = allOtherNames.concat(splat(network.acls, "name"));
         if (!isNullOrEmptyString(network.default_network_acl_name)) {
           allOtherNames.push(network.default_network_acl_name);
@@ -79,13 +79,13 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       componentProps.craig.store.json.security_groups,
       "name"
     );
-    componentProps.craig.store.json.vpcs.forEach(network => {
+    componentProps.craig.store.json.vpcs.forEach((network) => {
       if (!isNullOrEmptyString(network.default_security_group_name)) {
         allOtherNames.push(network.default_security_group_name);
       }
     });
   } else if (field === "routing_tables") {
-    componentProps.craig.store.json.vpcs.forEach(network => {
+    componentProps.craig.store.json.vpcs.forEach((network) => {
       if (!isNullOrEmptyString(network.default_routing_table_name)) {
         allOtherNames.push(network.default_routing_table_name);
       }
@@ -98,8 +98,8 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     let craigRef = componentProps.isModal
       ? componentProps.craig
       : componentProps.innerFormProps.craig;
-    craigRef.store.json.vpcs.forEach(network => {
-      network.acls.forEach(acl => {
+    craigRef.store.json.vpcs.forEach((network) => {
+      network.acls.forEach((acl) => {
         if (acl.name === componentProps.parent_name) {
           allOtherNames = splat(acl.rules, "name");
         }
@@ -117,40 +117,40 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
   } else if (field === "subnet_name") {
     new revision(componentProps.craig.store.json)
       .child("vpcs", componentProps.vpc_name, "name")
-      .then(data => {
+      .then((data) => {
         allOtherNames = splat(data.subnets, "name");
       });
   } else if (field === "cbr_rules") {
     allOtherNames = splat(componentProps.craig.store.json.cbr_rules, "name");
   } else if (field === "contexts") {
-    componentProps.craig.store.json.cbr_rules.forEach(rule =>
-      rule.contexts.forEach(context => {
+    componentProps.craig.store.json.cbr_rules.forEach((rule) =>
+      rule.contexts.forEach((context) => {
         allOtherNames.push(context.name);
       })
     );
   } else if (field === "resource_attributes") {
-    componentProps.craig.store.json.cbr_rules.forEach(rule =>
-      rule.resource_attributes.forEach(attribute => {
+    componentProps.craig.store.json.cbr_rules.forEach((rule) =>
+      rule.resource_attributes.forEach((attribute) => {
         allOtherNames.push(attribute.name);
       })
     );
   } else if (field === "tags") {
-    componentProps.craig.store.json.cbr_rules.forEach(rule =>
-      rule.tags.forEach(tag => {
+    componentProps.craig.store.json.cbr_rules.forEach((rule) =>
+      rule.tags.forEach((tag) => {
         allOtherNames.push(tag.name);
       })
     );
   } else if (field === "cbr_zones") {
     allOtherNames = splat(componentProps.craig.store.json.cbr_zones, "name");
   } else if (field === "exclusions") {
-    componentProps.craig.store.json.cbr_zones.forEach(zone =>
-      zone.exclusions.forEach(exclusion => {
+    componentProps.craig.store.json.cbr_zones.forEach((zone) =>
+      zone.exclusions.forEach((exclusion) => {
         allOtherNames.push(exclusion.name);
       })
     );
   } else if (field === "addresses") {
-    componentProps.craig.store.json.cbr_zones.forEach(zone =>
-      zone.addresses.forEach(address => {
+    componentProps.craig.store.json.cbr_zones.forEach((zone) =>
+      zone.addresses.forEach((address) => {
         allOtherNames.push(address.name);
       })
     );
@@ -178,5 +178,5 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
 }
 
 module.exports = {
-  hasDuplicateName
+  hasDuplicateName,
 };

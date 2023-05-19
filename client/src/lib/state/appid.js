@@ -3,7 +3,7 @@ const {
   setUnfoundResourceGroup,
   updateSubChild,
   deleteSubChild,
-  pushToChildFieldModal
+  pushToChildFieldModal,
 } = require("./store.utils");
 
 /**
@@ -14,9 +14,9 @@ const {
  * @param {Array<Object>} config.store.json.appid
  */
 function appidOnStoreUpdate(config) {
-  config.store.json.appid.forEach(appid => {
+  config.store.json.appid.forEach((appid) => {
     setUnfoundResourceGroup(config, appid);
-    appid.keys.forEach(key => {
+    appid.keys.forEach((key) => {
       key.appid = appid.name;
     });
   });
@@ -68,7 +68,7 @@ function appidKeyDelete(config, stateData, componentProps) {
  */
 function appidKeyCreate(config, stateData, componentProps) {
   let newKey = {
-    appid: componentProps.innerFormProps.arrayParentName
+    appid: componentProps.innerFormProps.arrayParentName,
   };
   transpose(newKey, stateData);
   pushToChildFieldModal(config, "appid", "keys", stateData, componentProps);
@@ -91,5 +91,5 @@ module.exports = {
   appidDelete,
   appidKeyCreate,
   appidKeyDelete,
-  appidKeySave
+  appidKeySave,
 };

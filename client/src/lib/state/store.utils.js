@@ -81,7 +81,7 @@ function pushToChildFieldModal(
 ) {
   let parentName = componentProps.innerFormProps.arrayParentName;
   pushToChildField(config, field, subField, stateData, {
-    arrayParentName: parentName
+    arrayParentName: parentName,
   });
 }
 
@@ -125,7 +125,7 @@ function hasUnfoundVpc(config, obj) {
  */
 function setValidSshKeys(config, obj) {
   let sshKeys = [];
-  obj.ssh_keys.forEach(key => {
+  obj.ssh_keys.forEach((key) => {
     if (contains(config.store.sshKeys, key)) sshKeys.push(key);
   });
   obj.ssh_keys = sshKeys;
@@ -139,5 +139,5 @@ module.exports = {
   pushToChildField,
   deleteSubChild,
   hasUnfoundVpc,
-  pushToChildFieldModal
+  pushToChildFieldModal,
 };

@@ -4,14 +4,14 @@ const {
   transpose,
   revision,
   buildNetworkingRule,
-  getObjectFromArray
+  getObjectFromArray,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultVpeSecurityGroups } = require("./defaults");
 const {
   setUnfoundResourceGroup,
   deleteSubChild,
-  pushToChildField
+  pushToChildField,
 } = require("./store.utils");
 const { updateNetworkingRule, formatNetworkingRule } = require("./utils");
 
@@ -33,11 +33,11 @@ function securityGroupInit(config) {
 
 function securityGroupOnStoreUpdate(config) {
   let securityGroupMap = {};
-  config.store.json.security_groups.forEach(sg => {
+  config.store.json.security_groups.forEach((sg) => {
     setUnfoundResourceGroup(config, sg);
     if (!splatContains(config.store.json.vpcs, "name", sg.vpc)) {
       sg.vpc = null;
-      sg.rules.forEach(rule => {
+      sg.rules.forEach((rule) => {
         rule.vpc = null;
         rule.sg = sg.name;
       });
@@ -71,12 +71,12 @@ function securityGroupCreate(config, stateData) {
 function securityGroupSave(config, stateData, componentProps) {
   stateData.rules = componentProps.data.rules;
   if (stateData.vpc !== componentProps.data.vpc) {
-    stateData.rules.forEach(rule => {
+    stateData.rules.forEach((rule) => {
       rule.vpc = stateData.vpc;
     });
   }
   if (stateData.name !== componentProps.data.name) {
-    stateData.rules.forEach(rule => {
+    stateData.rules.forEach((rule) => {
       rule.sg = stateData.name;
     });
   }
@@ -94,10 +94,7 @@ function securityGroupSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function securityGroupDelete(config, stateData, componentProps) {
-  config.carve(
-    ["json", "security_groups"],
-    componentProps.data.name
-  );
+  config.carve(["json", "security_groups"], componentProps.data.name);
 }
 
 /**
@@ -121,7 +118,7 @@ function securityGroupRulesCreate(config, stateData, componentProps) {
   rule.sg = parent.name;
   pushToChildField(config, "security_groups", "rules", rule, {
     arrayParentName: componentProps.parent_name,
-    data: componentProps.data
+    data: componentProps.data,
   });
 }
 
@@ -143,7 +140,7 @@ function securityGroupRulesSave(config, stateData, componentProps) {
   new revision(config.store.json)
     .child("security_groups", componentProps.parent_name) // get security group
     .child("rules", componentProps.data.name) // get rule
-    .then(data => {
+    .then((data) => {
       // update rule and update parent
       updateNetworkingRule(false, data, stateData);
     });
@@ -161,7 +158,7 @@ function securityGroupRulesSave(config, stateData, componentProps) {
 function securityGroupRulesDelete(config, stateData, componentProps) {
   deleteSubChild(config, "security_groups", "rules", {
     arrayParentName: componentProps.parent_name,
-    data: componentProps.data
+    data: componentProps.data,
   });
 }
 
@@ -173,5 +170,5 @@ module.exports = {
   securityGroupDelete,
   securityGroupRulesCreate,
   securityGroupRulesSave,
-  securityGroupRulesDelete
+  securityGroupRulesDelete,
 };

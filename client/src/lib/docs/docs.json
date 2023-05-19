@@ -1058,6 +1058,8 @@
         "text": "Secrets Manager is required to create VPN Server instances."
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"]]
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"]
+    ]
   }
 }

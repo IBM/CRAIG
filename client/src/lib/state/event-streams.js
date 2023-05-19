@@ -8,7 +8,7 @@ const { setUnfoundResourceGroup } = require("./store.utils");
  * @param {Array<Object>} config.store.json.event_streams
  */
 function eventStreamsOnStoreUpdate(config) {
-  config.store.json.event_streams.forEach(eventStreams => {
+  config.store.json.event_streams.forEach((eventStreams) => {
     setUnfoundResourceGroup(config, eventStreams);
   });
 }
@@ -50,5 +50,5 @@ module.exports = {
   eventStreamsOnStoreUpdate,
   eventStreamsCreate,
   eventStreamsSave,
-  eventStreamsDelete
+  eventStreamsDelete,
 };

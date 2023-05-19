@@ -12,7 +12,7 @@ const {
   isWholeNumber,
   areNotWholeNumbers,
   anyAreEmpty,
-  haveValidRanges
+  haveValidRanges,
 } = require("lazy-z");
 const {
   invalidName,
@@ -25,7 +25,7 @@ const {
   invalidCrnList,
   isValidUrl,
   invalidCbrRule,
-  invalidCbrZone
+  invalidCbrZone,
 } = require("./invalid-callbacks");
 const { commaSeparatedIpListExp } = require("../constants");
 
@@ -47,7 +47,7 @@ function badField(field, stateData) {
  */
 function fieldsAreBad(fields, stateData) {
   let hasBadFields = false;
-  fields.forEach(field => {
+  fields.forEach((field) => {
     if (badField(field, stateData)) {
       hasBadFields = true;
     }
@@ -64,7 +64,7 @@ function fieldsAreBad(fields, stateData) {
  */
 function fieldCheck(fields, check, stateData) {
   let hasBadFields = false;
-  fields.forEach(field => {
+  fields.forEach((field) => {
     if (!check(stateData[field])) {
       hasBadFields = true;
     }
@@ -81,7 +81,7 @@ function fieldCheck(fields, check, stateData) {
  */
 function invalidFieldCheck(fields, check, stateData) {
   let hasBadFields = false;
-  fields.forEach(field => {
+  fields.forEach((field) => {
     if (check(field, stateData)) {
       hasBadFields = true;
     }
@@ -103,7 +103,7 @@ function invalidPort(rule, isSecurityGroup) {
       : isSecurityGroup
       ? ["port_min", "port_max"]
       : ["port_min", "port_max", "source_port_min", "source_port_max"]
-    ).forEach(type => {
+    ).forEach((type) => {
       if (rule.rule[type] && !hasInvalidPort) {
         hasInvalidPort = !validPortRange(type, rule.rule[type]);
       }
@@ -272,7 +272,7 @@ function disableSave(field, stateData, componentProps, craig) {
           "mfa",
           "restrict_create_platform_apikey",
           "restrict_create_service_id",
-          "max_sessions_per_identity"
+          "max_sessions_per_identity",
         ],
         stateData
       ) || invalidIpCommaList(stateData.allowed_ip_addresses)
@@ -299,7 +299,7 @@ function disableSave(field, stateData, componentProps, craig) {
           "subnets",
           "encryption_key",
           "flavor",
-          "kube_version"
+          "kube_version",
         ],
         stateData
       ) ||
@@ -363,8 +363,8 @@ function disableSave(field, stateData, componentProps, craig) {
         "license_pool",
         "license_unit_of_measure",
         "license_sku_keyword_1",
-        "license_sku_keyword_2"
-      ]
+        "license_sku_keyword_2",
+      ],
     };
     return (
       fieldsAreBad(
@@ -381,7 +381,7 @@ function disableSave(field, stateData, componentProps, craig) {
           "phone_home_url",
           "tgstandby_url",
           "tgrefresh_url",
-          "tgactive_url"
+          "tgactive_url",
         ],
         isValidUrl,
         stateData
@@ -419,7 +419,7 @@ function disableSave(field, stateData, componentProps, craig) {
           "health_retries",
           "health_timeout",
           "health_delay",
-          "port"
+          "port",
         ],
         stateData
       ) ||
@@ -486,7 +486,7 @@ function disableSave(field, stateData, componentProps, craig) {
           "service_name",
           "service_type",
           "service_instance",
-          "value"
+          "value",
         ],
         invalidCbrZone,
         stateData
@@ -502,7 +502,7 @@ function disableSave(field, stateData, componentProps, craig) {
           "service_name",
           "service_type",
           "service_instance",
-          "value"
+          "value",
         ],
         invalidCbrZone,
         stateData
@@ -519,7 +519,7 @@ function disableSave(field, stateData, componentProps, craig) {
           "certificate_crn",
           "method",
           "port",
-          "client_ip_pool"
+          "client_ip_pool",
         ],
         stateData
       ) ||
@@ -580,7 +580,7 @@ function forceShowForm(stateData, componentProps) {
  */
 function disableSshKeyDelete(componentProps) {
   let allVsiSshKeys = [];
-  ["vsi", "teleport_vsi", "f5_vsi"].forEach(vsi => {
+  ["vsi", "teleport_vsi", "f5_vsi"].forEach((vsi) => {
     allVsiSshKeys = distinct(
       allVsiSshKeys.concat(
         flatten(splat(componentProps.craig.store.json[vsi], "ssh_keys"))
@@ -595,5 +595,5 @@ module.exports = {
   invalidPort,
   forceShowForm,
   disableSshKeyDelete,
-  invalidCidrBlock
+  invalidCidrBlock,
 };

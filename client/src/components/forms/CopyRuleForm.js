@@ -10,7 +10,7 @@ import {
   CopyAclModalContent,
   CopyRule,
   CopyRuleObject,
-  CopySgModalContent
+  CopySgModalContent,
 } from "./duplicate-rules";
 import PropTypes from "prop-types";
 
@@ -27,7 +27,7 @@ class CopyRuleForm extends React.Component {
       ruleDestination: null,
       destinationRuleNames: [],
       showModal: false,
-      modalStyle: null
+      modalStyle: null,
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.getAllRuleNames = this.getAllRuleNames.bind(this);
@@ -46,7 +46,7 @@ class CopyRuleForm extends React.Component {
   openModal(style) {
     this.setState({
       modalStyle: style,
-      showModal: true
+      showModal: true,
     });
   }
 
@@ -62,7 +62,7 @@ class CopyRuleForm extends React.Component {
     } else if (name === "ruleDestination" && this.props.isAclForm) {
       nextState.destinationRuleNames = [];
       // for each vpc
-      this.props.craig.store.json.vpcs.forEach(vpc => {
+      this.props.craig.store.json.vpcs.forEach((vpc) => {
         // set rule names to be rules if acl name is found in vpc
         if (splatContains(vpc.acls, "name", value)) {
           nextState.destinationRuleNames = splat(
@@ -201,7 +201,7 @@ class CopyRuleForm extends React.Component {
       ruleDestination: null,
       destinationRuleNames: [],
       showModal: false,
-      modalStyle: null
+      modalStyle: null,
     });
   }
 
@@ -331,8 +331,8 @@ CopyRuleForm.propTypes = {
     store: PropTypes.shape({
       json: PropTypes.shape({
         vpcs: PropTypes.array.isRequired,
-        security_groups: PropTypes.array
-      }).isRequired
+        security_groups: PropTypes.array,
+      }).isRequired,
     }).isRequired,
     getAllRuleNames: PropTypes.func.isRequired,
     getAllOtherGroups: PropTypes.func.isRequired,
@@ -340,16 +340,16 @@ CopyRuleForm.propTypes = {
     copySecurityGroup: PropTypes.func.isRequired,
     addClusterRules: PropTypes.func.isRequired,
     copyRule: PropTypes.func.isRequired,
-    copyNetworkAcl: PropTypes.func.isRequired
+    copyNetworkAcl: PropTypes.func.isRequired,
   }).isRequired,
   data: PropTypes.shape({
-    acls: PropTypes.array
+    acls: PropTypes.array,
   }),
-  isAclForm: PropTypes.bool
+  isAclForm: PropTypes.bool,
 };
 
 CopyRuleForm.defaultProps = {
-  isAclForm: true
+  isAclForm: true,
 };
 
 export default CopyRuleForm;

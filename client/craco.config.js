@@ -6,14 +6,14 @@ module.exports = {
     configure: {
       resolve: {
         fallback: {
-          stream: require.resolve("stream-browserify")
-        }
+          stream: require.resolve("stream-browserify"),
+        },
       },
       plugins: [
         new webpack.ProvidePlugin({
-          Buffer: ["buffer", "Buffer"]
-        })
-      ]
-    }
-  }
+          Buffer: ["buffer", "Buffer"],
+        }),
+      ],
+    },
+  },
 };

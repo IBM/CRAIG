@@ -145,6 +145,79 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+    it("should add variable for imported certificated", () => {
+      let secretsManagerNw = { ...slzNetwork };
+      secretsManagerNw.secrets_manager = [
+        {
+          name: "secrets-manager",
+          resource_group: "slz-service-rg",
+          kms: "slz-kms",
+          encryption_key: "slz-slz-key",
+          secrets: [
+            {
+              name: "imported-cert",
+              secrets_manager: "secrets-manager",
+              credentials: "cos-bind-key",
+              credential_instance: "cos",
+              credential_type: "cos",
+              description: "Credentials for COS instance",
+              type: "imported",
+            },
+            {
+              name: "cos-secret",
+              secrets_manager: "secrets-manager",
+              credentials: "cos-bind-key",
+              credential_instance: "cos",
+              credential_type: "cos",
+              description: "Credentials for COS instance",
+              type: "kv",
+            },
+          ],
+        },
+      ];
+      let actualData = configToFilesJson(secretsManagerNw);
+      assert.deepEqual(
+        actualData["variables.tf"],
+        `##############################################################################
+# Variables
+##############################################################################
+
+variable "ibmcloud_api_key" {
+  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
+  type        = string
+  sensitive   = true
+}
+
+variable "region" {
+  description = "IBM Cloud Region where resources will be provisioned"
+  type        = string
+  default     = "us-south"
+}
+
+variable "prefix" {
+  description = "Name prefix that will be prepended to named resources"
+  type        = string
+  default     = "slz"
+}
+
+variable "slz_ssh_key_public_key" {
+  description = "Public SSH Key Value for Slz SSH Key"
+  type        = string
+  sensitive   = true
+  default     = "public-key"
+}
+
+variable "secrets_manager_imported_cert_data" {
+  description = "PEM encoded contents of your imported certificate"
+  type        = string
+  sensitive   = true
+}
+
+##############################################################################
+`,
+        "it should return correct variables"
+      );
+    });
     it("should return correct secrets_manager.tf when no instances present", () => {
       let noSecretsManagerNw = { ...slzNetwork };
       noSecretsManagerNw.secrets_manager = [];
@@ -286,6 +359,184 @@ describe("configToFilesJson", () => {
         "it should create file"
       );
     });
+    it("should return correct logging_monitoring.tf", () => {
+      let nw = { ...slzNetwork };
+      transpose(
+        {
+          logdna: {
+            enabled: true,
+            plan: "lite",
+            endpoints: "private",
+            platform_logs: true,
+            resource_group: "service-rg",
+            role: "Manager",
+            bucket: "atracker",
+            cos: "cos",
+            bucket_endpoint: "private",
+            archive: true,
+          },
+          sysdig: {
+            enabled: true,
+            plan: "lite",
+            endpoints: "private",
+            resource_group: "service-rg",
+            platform_logs: true,
+          },
+          atracker: {
+            enabled: true,
+            name: "atracker",
+            type: "cos",
+            target_name: "cos",
+            bucket: "atracker",
+            cos_key: "atracker-cos-key",
+            plan: "lite",
+            endpoints: "private",
+            resource_group: "service-rg",
+            archive: true,
+            instance: true,
+          },
+        },
+        nw
+      );
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(
+        actualData["logging_monitoring.tf"],
+        `##############################################################################
+# Atracker Instance
+##############################################################################
+
+resource "ibm_resource_instance" "atracker" {
+  name              = "\${var.prefix}-\${var.region}-atracker"
+  resource_group_id = ibm_resource_group.service_rg.id
+  service           = "logdnaat"
+  plan              = "lite"
+  location          = var.region
+  service_endpoints = "private"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
+resource "ibm_resource_key" "atracker_key" {
+  name                 = "\${var.prefix}-\${var.region}-atracker-key"
+  resource_instance_id = ibm_resource_instance.atracker.id
+  role                 = "Manager"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
+##############################################################################
+
+##############################################################################
+# LogDNA Instance
+##############################################################################
+
+resource "ibm_resource_instance" "logdna" {
+  name              = "\${var.prefix}-logdna"
+  resource_group_id = ibm_resource_group.service_rg.id
+  service           = "logdna"
+  plan              = "lite"
+  location          = var.region
+  service_endpoints = "private"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  parameters = {
+    default_receiver = true
+  }
+}
+
+resource "ibm_resource_key" "logdna_key" {
+  name                 = "\${var.prefix}-logdna-key"
+  resource_instance_id = ibm_resource_instance.logdna.id
+  role                 = "Manager"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
+##############################################################################
+
+##############################################################################
+# LogDNA Resources
+##############################################################################
+
+provider "logdna" {
+  alias      = "logdna"
+  servicekey = ibm_resource_key.logdna_key.credentials["service_key"]
+  url        = "https://api.\${var.region}.logging.cloud.ibm.com"
+}
+
+resource "logdna_archive" "logdna_archive" {
+  provider    = logdna.logdna
+  integration = "ibm"
+  ibm_config {
+    apikey             = var.ibmcloud_api_key
+    bucket             = ibm_cos_bucket.cos_object_storage_atracker_bucket.bucket_name
+    endpoint           = ibm_cos_bucket.cos_object_storage_atracker_bucket.s3_endpoint_private
+    resourceinstanceid = ibm_resource_instance.cos_object_storage.id
+  }
+}
+
+provider "logdna" {
+  alias      = "atracker"
+  servicekey = ibm_resource_key.atracker_key.credentials["service_key"]
+  url        = "https://api.\${var.region}.logging.cloud.ibm.com"
+}
+
+resource "logdna_archive" "atracker_archive" {
+  provider    = logdna.atracker
+  integration = "ibm"
+  ibm_config {
+    apikey             = var.ibmcloud_api_key
+    bucket             = ibm_cos_bucket.cos_object_storage_atracker_bucket.bucket_name
+    endpoint           = ibm_cos_bucket.cos_object_storage_atracker_bucket.s3_endpoint_private
+    resourceinstanceid = ibm_resource_instance.cos_object_storage.id
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# Sysdig Instance
+##############################################################################
+
+resource "ibm_resource_instance" "sysdig" {
+  name              = "\${var.prefix}-sysdig"
+  resource_group_id = ibm_resource_group.service_rg.id
+  service           = "sysdig"
+  plan              = "lite"
+  location          = var.region
+  service_endpoints = "private"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  parameters = {
+    default_receiver = true
+  }
+}
+
+resource "ibm_resource_key" "sysdig_key" {
+  name                 = "\${var.prefix}-sysdig-key"
+  resource_instance_id = ibm_resource_instance.sysdig.id
+  role                 = "Manager"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
+##############################################################################
+`,
+        "it should return corer"
+      );
+    });
     it("should return correct load_balancers.tf", () => {
       let nw = { ...slzNetwork };
       nw.load_balancers = [
@@ -360,20 +611,7 @@ describe("configToFilesJson", () => {
               high_availability: true,
               enabled: true,
               vpc: "management",
-              subnets: [
-                {
-                  name: "vsi-zone-1",
-                  enabled: true,
-                },
-                {
-                  name: "vsi-zone-2",
-                  enabled: true,
-                },
-                {
-                  name: "vsi-zone-3",
-                  enabled: true,
-                },
-              ],
+              subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
             },
           ],
         },

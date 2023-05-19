@@ -1689,42 +1689,42 @@ describe("vpcs", () => {
         };
         let expectedPrefixes = [
           {
-            vpc: 'management',
+            vpc: "management",
             zone: 1,
-            cidr: '10.10.10.0/24',
-            name: 'frog-zone-1'
+            cidr: "10.10.10.0/24",
+            name: "frog-zone-1",
           },
           {
-            vpc: 'management',
+            vpc: "management",
             zone: 2,
-            cidr: '10.20.10.0/24',
-            name: 'frog-zone-2'
+            cidr: "10.20.10.0/24",
+            name: "frog-zone-2",
           },
           {
-            vpc: 'management',
+            vpc: "management",
             zone: 1,
-            cidr: '10.10.20.0/24',
-            name: 'vpe-zone-1'
+            cidr: "10.10.20.0/24",
+            name: "vpe-zone-1",
           },
           {
-            vpc: 'management',
+            vpc: "management",
             zone: 2,
-            cidr: '10.20.20.0/24',
-            name: 'vpe-zone-2'
+            cidr: "10.20.20.0/24",
+            name: "vpe-zone-2",
           },
           {
-            vpc: 'management',
+            vpc: "management",
             zone: 3,
-            cidr: '10.30.20.0/24',
-            name: 'vpe-zone-3'
+            cidr: "10.30.20.0/24",
+            name: "vpe-zone-3",
           },
           {
-            vpc: 'management',
+            vpc: "management",
             zone: 1,
-            cidr: '10.10.30.0/24',
-            name: 'vpn-zone-1'
-          }
-        ]
+            cidr: "10.10.30.0/24",
+            name: "vpn-zone-1",
+          },
+        ];
         assert.deepEqual(
           vpcState.store.subnetTiers.management[0],
           expectedTier,
@@ -1785,7 +1785,7 @@ describe("vpcs", () => {
             network_acl: "management",
             public_gateway: false,
             has_prefix: true,
-            tier: "toad"
+            tier: "toad",
           },
           {
             vpc: "management",
@@ -1796,8 +1796,8 @@ describe("vpcs", () => {
             resource_group: "management-rg",
             public_gateway: false,
             has_prefix: true,
-            tier: "toad"
-          }
+            tier: "toad",
+          },
         ];
         vpcState.vpcs.subnetTiers.save(
           {

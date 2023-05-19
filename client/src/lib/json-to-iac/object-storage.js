@@ -14,7 +14,7 @@ const {
   randomSuffix,
   jsonToTfPrint,
   cdktfRef,
-  getResourceOrData
+  getResourceOrData,
 } = require("./utils");
 const { varDotRegion } = require("../constants");
 
@@ -42,7 +42,7 @@ function ibmResourceInstanceCos(cos, config) {
     name: instanceName,
     resource_group_id: rgIdRef(cos.resource_group, config),
     service: "cloud-object-storage",
-    location: "global"
+    location: "global",
   };
   if (!cos.use_data) {
     cosInstance.plan = cos.plan;
@@ -50,7 +50,7 @@ function ibmResourceInstanceCos(cos, config) {
   }
   return {
     name: `${cos.name} object storage`,
-    data: cosInstance
+    data: cosInstance,
   };
 }
 
@@ -67,7 +67,7 @@ function randomString(cosName) {
     {
       length: 8,
       special: false,
-      upper: false
+      upper: false,
     }
   );
 }
@@ -127,8 +127,8 @@ function ibmIamAuthorizationPolicyCos(cos, config) {
       roles: ["Reader"],
       description: "Allow COS instance to read from KMS instance",
       target_service_name: kmsInstance.type,
-      target_resource_instance_id: cdktfRef(kmsInstance.guid)
-    }
+      target_resource_instance_id: cdktfRef(kmsInstance.guid),
+    },
   };
 }
 
@@ -178,7 +178,7 @@ function formatCosToKmsAuth(cos, config) {
 
 function ibmCosBucket(bucket, cos, config, cdktf) {
   let data = {
-    name: cos.name + "-object-storage-" + bucket.name + "-bucket"
+    name: cos.name + "-object-storage-" + bucket.name + "-bucket",
   };
   let bucketValues = {
     bucket_name: kebabName([cos.name, bucket.name], randomSuffix(cos)),
@@ -187,7 +187,7 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
     endpoint_type: bucket.endpoint,
     force_delete: bucket.force_delete,
     region_location: varDotRegion,
-    key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn")
+    key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn"),
   };
   if (bucket.allowed_ip) {
     bucketValues.allowed_ip = JSON.stringify(bucket.allowed_ip).replace(
@@ -200,8 +200,8 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
       {
         read_data_events: bucket.read_data_events,
         write_data_events: bucket.write_data_events,
-        activity_tracker_crn: bucket.atracker // need logic to implement atracker, probably from data?
-      }
+        activity_tracker_crn: bucket.atracker, // need logic to implement atracker, probably from data?
+      },
     ];
   }
   if (bucket.metrics_monitoring) {
@@ -209,22 +209,22 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
       {
         metrics_monitoring_crn: bucket.metrics_monitoring, // need logic to implement crn ref
         usage_metrics_enabled: bucket.usage_metrics_enabled,
-        request_metrics_enabled: bucket.request_metrics_enabled
-      }
+        request_metrics_enabled: bucket.request_metrics_enabled,
+      },
     ];
   }
   if (containsKeys(bucket, "object_versioning")) {
     bucketValues.object_versioning = [
       {
-        enable: bucket.object_versioning
-      }
+        enable: bucket.object_versioning,
+      },
     ];
   }
   if (bucket.archive_rules) {
     bucketValues["archive_rule"] = [];
-    bucket.archive_rules.forEach(rule => {
+    bucket.archive_rules.forEach((rule) => {
       let stringifiedRule = {};
-      eachKey(rule, key => {
+      eachKey(rule, (key) => {
         stringifiedRule[key] = rule[key];
       });
       bucketValues["archive_rule"].push(stringifiedRule);
@@ -232,7 +232,7 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
   }
   if (bucket.expire_rule) {
     bucketValues.expire_rule = [{}];
-    eachKey(bucket.expire_rule, key => {
+    eachKey(bucket.expire_rule, (key) => {
       bucketValues.expire_rule[0][key] = bucket.expire_rule[key];
     });
   }
@@ -293,16 +293,16 @@ function ibmResourceKeyCos(key, cos, config) {
     name: kebabName([cos.name, "key", key.name], randomSuffix(cos)),
     resource_instance_id: getCosId(cos),
     role: "Writer",
-    tags: getTags(config)
+    tags: getTags(config),
   };
   if (key.enable_hmac) {
     keyValues.parameters = {
-      HMAC: true
+      HMAC: true,
     };
   }
   return {
     name: `${snakeCase(cos.name + "-object-storage-key-" + key.name)}`,
-    data: keyValues
+    data: keyValues,
   };
 }
 
@@ -340,9 +340,9 @@ function cosInstanceTf(cos, config) {
   let instanceTf =
     formatCosInstance(cos, config) + formatCosToKmsAuth(cos, config);
   cos.buckets.forEach(
-    bucket => (instanceTf += formatCosBucket(bucket, cos, config))
+    (bucket) => (instanceTf += formatCosBucket(bucket, cos, config))
   );
-  cos.keys.forEach(key => (instanceTf += formatCosKey(key, cos, config)));
+  cos.keys.forEach((key) => (instanceTf += formatCosKey(key, cos, config)));
   return tfBlock("Object Storage Instance " + cos.name, instanceTf);
 }
 
@@ -356,7 +356,7 @@ function cosInstanceTf(cos, config) {
 function cosTf(config) {
   let cosTerraform = "";
   let cosNames = splat(config.object_storage, "name");
-  config.object_storage.forEach(instance => {
+  config.object_storage.forEach((instance) => {
     cosTerraform += cosInstanceTf(instance, config);
     if (
       cosNames.length > 1 &&
@@ -378,5 +378,5 @@ module.exports = {
   ibmResourceInstanceCos,
   ibmIamAuthorizationPolicyCos,
   ibmCosBucket,
-  ibmResourceKeyCos
+  ibmResourceKeyCos,
 };

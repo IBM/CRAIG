@@ -1,8 +1,5 @@
 const { newDefaultVpe } = require("./defaults");
-const {
-  splatContains,
-  deleteUnfoundArrayItems
-} = require("lazy-z");
+const { splatContains, deleteUnfoundArrayItems } = require("lazy-z");
 
 /**
  * initialize vpe
@@ -21,7 +18,7 @@ function vpeInit(config) {
  * @param {object} config.store.json configuration JSON
  */
 function vpeOnStoreUpdate(config) {
-  config.store.json.virtual_private_endpoints.forEach(vpe => {
+  config.store.json.virtual_private_endpoints.forEach((vpe) => {
     let vpcExists = splatContains(config.store.json.vpcs, "name", vpe.vpc);
     // if the vpc is in names
     if (vpcExists) {
@@ -90,10 +87,7 @@ function vpeSave(config, stateData, componentProps) {
  * @param {string} componentProps.data.service original name of service used to delete object
  */
 function vpeDelete(config, stateData, componentProps) {
-  config.carve(
-    ["json", "virtual_private_endpoints"],
-    componentProps.data.name
-  );
+  config.carve(["json", "virtual_private_endpoints"], componentProps.data.name);
 }
 
 module.exports = {
@@ -101,5 +95,5 @@ module.exports = {
   vpeOnStoreUpdate,
   vpeCreate,
   vpeSave,
-  vpeDelete
+  vpeDelete,
 };

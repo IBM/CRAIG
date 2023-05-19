@@ -7,7 +7,7 @@ const {
   tfBlock,
   timeouts,
   jsonToTfPrint,
-  cdktfRef
+  cdktfRef,
 } = require("./utils");
 const { varDotRegion } = require("../constants");
 
@@ -28,8 +28,8 @@ function ibmIamAuthorizationPolicySecretsManager(kmsName, config) {
       roles: ["Reader"],
       description: "Allow Secets Manager instance to read from KMS instance",
       target_service_name: kmsInstance.type,
-      target_resource_instance_id: cdktfRef(kmsInstance.guid)
-    }
+      target_resource_instance_id: cdktfRef(kmsInstance.guid),
+    },
   };
 }
 
@@ -79,10 +79,10 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
             secretsManager.kms,
             secretsManager.encryption_key,
             "crn"
-          )
+          ),
     },
     timeouts: timeouts("1h", "", "1h"),
-    tags: config._options.tags
+    tags: config._options.tags,
   };
   if (kmsInstance && kmsInstance.has_secrets_manager_auth !== true) {
     instance.depends_on = [
@@ -90,12 +90,12 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
         `ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
           secretsManager.kms
         )}_kms_policy`
-      )
+      ),
     ];
   }
   return {
     name: secretsManager.name + "-secrets-manager",
-    data: instance
+    data: instance,
   };
 }
 
@@ -140,16 +140,18 @@ function ibmSmKvSecret(secret) {
         secret.secrets_manager
       )}_secrets_manager.guid}`,
       region: varDotRegion,
-      data: {
-        credentials: `\${ibm_resource_key.${snakeCase(
-          secret.credential_instance +
-            " object storage key " +
-            secret.credentials
-        )}.credentials}`
-      },
-      description: secret.description
-    }
+      description: secret.description,
+    },
   };
+  if (secret.type === "imported") {
+    data.data.certificate = `\${var.${data.name}_data}`;
+  } else {
+    data.data.data = {
+      credentials: `\${ibm_resource_key.${snakeCase(
+        secret.credential_instance + " object storage key " + secret.credentials
+      )}.credentials}`,
+    };
+  }
   return data;
 }
 
@@ -182,7 +184,7 @@ function secretsManagerTf(config) {
   let allKmsServices = splat(config.secrets_manager, "kms");
   let kmstf = "";
   let totalKmsInstances = 0;
-  allKmsServices.forEach(service => {
+  allKmsServices.forEach((service) => {
     if (service) {
       if (
         // if service doesn't already have auth
@@ -198,10 +200,10 @@ function secretsManagerTf(config) {
     tf += tfBlock("Key Management Authorizations", kmstf) + "\n";
   }
   let secretsManagerData = "";
-  config.secrets_manager.forEach(instance => {
+  config.secrets_manager.forEach((instance) => {
     secretsManagerData += formatSecretsManagerInstance(instance, config);
-    if (instance.kv_secrets) {
-      instance.kv_secrets.forEach(secret => {
+    if (instance.secrets) {
+      instance.secrets.forEach((secret) => {
         secretsManagerData += formatSecretsManagerSecret(secret, config);
       });
     }
@@ -217,5 +219,5 @@ module.exports = {
   secretsManagerTf,
   ibmResourceInstanceSecretsManager,
   ibmIamAuthorizationPolicySecretsManager,
-  formatSecretsManagerSecret
+  formatSecretsManagerSecret,
 };

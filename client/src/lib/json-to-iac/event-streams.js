@@ -4,7 +4,7 @@ const {
   rgIdRef,
   tfBlock,
   timeouts,
-  jsonToTfPrint
+  jsonToTfPrint,
 } = require("./utils");
 const { contains } = require("lazy-z");
 /**
@@ -29,9 +29,9 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
     location: varDotRegion,
     resource_group_id: rgIdRef(eventStreams.resource_group, config),
     parameters: {
-      "service-endpoints": eventStreams.endpoints
+      "service-endpoints": eventStreams.endpoints,
     },
-    timeouts: timeouts("3h", "1h", "1h")
+    timeouts: timeouts("3h", "1h", "1h"),
   };
   if (contains(eventStreams.plan, "enterprise")) {
     if (eventStreams.private_ip_allowlist) {
@@ -39,7 +39,7 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
         eventStreams.private_ip_allowlist
       ).replace(/\"/g, "")}`; // remove quotes to match intended params
     }
-    ["throughput", "storage_size"].forEach(field => {
+    ["throughput", "storage_size"].forEach((field) => {
       if (eventStreams[field]) {
         field === "throughput"
           ? (eventStreamsValues.parameters[field] = eventStreams[field].slice(
@@ -54,7 +54,7 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
   } else delete eventStreamsValues.parameters;
   return {
     data: eventStreamsValues,
-    name: `${eventStreams.name} es`
+    name: `${eventStreams.name} es`,
   };
 }
 
@@ -87,7 +87,7 @@ function formatEventStreams(eventStreams, config) {
  */
 function eventStreamsTf(config) {
   let blockData = "";
-  config.event_streams.forEach(instance => {
+  config.event_streams.forEach((instance) => {
     blockData += formatEventStreams(instance, config);
   });
   return tfBlock("Event Streams", blockData);
@@ -96,5 +96,5 @@ function eventStreamsTf(config) {
 module.exports = {
   formatEventStreams,
   eventStreamsTf,
-  ibmResourceInstanceEventStreams
+  ibmResourceInstanceEventStreams,
 };

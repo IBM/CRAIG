@@ -4,7 +4,7 @@ const {
   splat,
   transpose,
   deleteUnfoundArrayItems,
-  splatContains
+  splatContains,
 } = require("lazy-z");
 const { newDefaultWorkloadCluster } = require("./defaults");
 const {
@@ -13,7 +13,7 @@ const {
   pushToChildFieldModal,
   updateSubChild,
   deleteSubChild,
-  hasUnfoundVpc
+  hasUnfoundVpc,
 } = require("./store.utils");
 
 /**
@@ -41,7 +41,7 @@ function clusterInit(config) {
  * @param {Array<string>} config.store.vpcList list of VPC names
  */
 function clusterOnStoreUpdate(config) {
-  config.store.json.clusters.forEach(cluster => {
+  config.store.json.clusters.forEach((cluster) => {
     let allCosInstances = splat(config.store.json.object_storage, "name");
     if (cluster.cos && !contains(allCosInstances, cluster.cos)) {
       cluster.cos = null;
@@ -49,7 +49,7 @@ function clusterOnStoreUpdate(config) {
     setUnfoundEncryptionKey(config, cluster, "encryption_key");
     setUnfoundResourceGroup(config, cluster);
     cluster.kms = null;
-    config.store.json.key_management.forEach(instance => {
+    config.store.json.key_management.forEach((instance) => {
       if (splatContains(instance.keys, "name", cluster.encryption_key)) {
         cluster.kms = instance.name;
       }
@@ -62,7 +62,7 @@ function clusterOnStoreUpdate(config) {
     if (hasUnfoundVpc(config, cluster)) {
       cluster.vpc = null;
       cluster.subnets = [];
-      cluster.worker_pools.forEach(pool => {
+      cluster.worker_pools.forEach((pool) => {
         pool.vpc = null;
         pool.subnets = [];
       });
@@ -72,9 +72,10 @@ function clusterOnStoreUpdate(config) {
       // delete cluster subnets
       cluster.subnets = deleteUnfoundArrayItems(vpcSubnets, cluster.subnets);
       // delete worker pool subnets
-      cluster.worker_pools.forEach(pool => {
+      cluster.worker_pools.forEach((pool) => {
         pool.cluster = cluster.name;
         pool.subnets = deleteUnfoundArrayItems(vpcSubnets, pool.subnets);
+        pool.vpc = cluster.vpc;
         setUnfoundResourceGroup(config, pool);
       });
     }
@@ -107,7 +108,7 @@ function clusterSave(config, stateData, componentProps) {
   // if changing vpc name, set cluster pools to new vpc name and
   // remove pool subnet names
   if (stateData.vpc !== componentProps.data.vpc) {
-    stateData.worker_pools.forEach(pool => {
+    stateData.worker_pools.forEach((pool) => {
       pool.vpc = stateData.vpc;
       pool.subnets = [];
     });
@@ -135,7 +136,7 @@ function clusterWorkerPoolCreate(config, stateData, componentProps) {
   let newPool = { subnets: [] };
   new revision(config.store.json)
     .child("clusters", componentProps.innerFormProps.arrayParentName, "name") // get config cluster
-    .then(data => {
+    .then((data) => {
       // set vpc name and flavor from parent cluster
       newPool.vpc = data.vpc;
       newPool.flavor = data.flavor;
@@ -179,5 +180,5 @@ module.exports = {
   clusterDelete,
   clusterWorkerPoolCreate,
   clusterWorkerPoolSave,
-  clusterWorkerPoolDelete
+  clusterWorkerPoolDelete,
 };

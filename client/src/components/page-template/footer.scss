@@ -20,7 +20,7 @@
 }
 
 .backButton {
-  padding: .5rem 0 .5rem .5rem;
+  padding: 0.5rem 0 0.5rem 0.5rem;
   display: flex;
   align-items: center;
   width: 50%;
@@ -29,7 +29,7 @@
 }
 
 .nextButton {
-  padding: .5rem .5rem .5rem 0;
+  padding: 0.5rem 0.5rem 0.5rem 0;
   display: flex;
   justify-content: right;
   align-items: center;
@@ -60,7 +60,7 @@
   right: 450% !important; // important to override auto align
 }
 
- .footerPopoverShow {
+.footerPopoverShow {
   right: 412.5% !important; // important to override auto align
 }
 

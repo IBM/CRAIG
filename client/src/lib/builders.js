@@ -2,7 +2,7 @@ const {
   transpose,
   formatCidrBlock,
   azsort,
-  parseIntFromZone
+  parseIntFromZone,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { firewallTiers } = require("./state/defaults");
@@ -27,7 +27,7 @@ function buildNewEncryptionKey(keyParams) {
     force_delete: null,
     endpoint: null,
     rotation: 12,
-    dual_auth_delete: false
+    dual_auth_delete: false,
   };
   if (params?.rotation) {
     newKey.rotation = params.rotation;
@@ -69,7 +69,7 @@ function buildSubnet(
     network_acl: aclName === null ? null : `${aclName}`,
     resource_group: resourceGroup,
     public_gateway: addPublicGateway || false,
-    has_prefix: addPrefix || true
+    has_prefix: addPrefix || true,
   };
 }
 
@@ -85,7 +85,7 @@ function addVsiEncryptionKey(parent) {
     force_delete: null,
     endpoint: "public",
     rotation: 12,
-    dual_auth_delete: false
+    dual_auth_delete: false,
   });
 }
 
@@ -107,13 +107,13 @@ function newF5Vsi(pattern, zone, useManagementVpc, params) {
   network_interfaces = [];
 
   // for each tier in alphabetical order
-  tiers.sort(azsort).forEach(tier => {
+  tiers.sort(azsort).forEach((tier) => {
     // if a secondary tier
     if (tier !== "f5-management") {
       // add network_interfaces
       network_interfaces.push({
         security_groups: [tier + "-sg"],
-        subnet: `${tier}-${zone}`
+        subnet: `${tier}-${zone}`,
       });
     }
   });
@@ -154,8 +154,8 @@ function newF5Vsi(pattern, zone, useManagementVpc, params) {
       license_pool: "null",
       license_sku_keyword_1: "null",
       license_sku_keyword_2: "null",
-      tmos_admin_password: null
-    }
+      tmos_admin_password: null,
+    },
   };
   return vsi;
 }
@@ -164,5 +164,5 @@ module.exports = {
   buildNewEncryptionKey,
   buildSubnet,
   addVsiEncryptionKey,
-  newF5Vsi
+  newF5Vsi,
 };

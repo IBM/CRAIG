@@ -20,6 +20,7 @@ const { vpnServerTf } = require("./vpn-server");
 const { vsiTf, lbTf } = require("./vsi");
 const { cbrTf } = require("./cbr");
 const { dnsTf } = require("./dns");
+const { loggingMonitoringTf } = require("./logging-monitoring");
 
 /**
  * create a json document with file names as keys and text as value
@@ -32,9 +33,9 @@ function configToFilesJson(config) {
   try {
     let additionalVariables = "";
     let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
-    let newSshKeys = config.ssh_keys.filter(key => !key.use_data);
+    let newSshKeys = config.ssh_keys.filter((key) => !key.use_data);
     if (newSshKeys.length > 0) {
-      newSshKeys.forEach(key => {
+      newSshKeys.forEach((key) => {
         additionalVariables += `
 variable "${snakeCase(key.name)}_public_key" {
   description = "Public SSH Key Value for ${titleCase(key.name).replace(
@@ -57,6 +58,22 @@ variable "tmos_admin_password" {
 }
 `;
       }
+    }
+    if (config.secrets_manager.length > 0) {
+      config.secrets_manager.forEach((instance) => {
+        if (instance.secrets)
+          instance.secrets.forEach((secret) => {
+            if (secret.type === "imported") {
+              additionalVariables += `
+variable "${snakeCase(instance.name + " " + secret.name + " data")}" {
+  description = "PEM encoded contents of your imported certificate"
+  type        = string
+  sensitive   = true
+}
+`;
+            }
+          });
+      });
     }
 
     let files = {
@@ -99,7 +116,8 @@ variable "tmos_admin_password" {
         config.cbr_zones.length > 0 && config.cbr_rules.length > 0
           ? cbrTf(config)
           : null,
-      "dns.tf": config.dns && config.dns.length > 0 ? dnsTf(config) : null
+      "dns.tf": config.dns && config.dns.length > 0 ? dnsTf(config) : null,
+      "logging_monitoring.tf": loggingMonitoringTf(config),
     };
     vpcModuleTf(files, config);
     return files;
@@ -110,5 +128,5 @@ variable "tmos_admin_password" {
 }
 
 module.exports = {
-  configToFilesJson
+  configToFilesJson,
 };

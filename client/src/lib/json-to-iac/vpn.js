@@ -3,7 +3,7 @@ const {
   kebabName,
   tfBlock,
   timeouts,
-  jsonToTfPrint
+  jsonToTfPrint,
 } = require("./utils");
 const { snakeCase } = require("lazy-z");
 
@@ -28,8 +28,8 @@ function ibmIsVpnGateway(gw, config) {
       subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(gw.subnet)}_id}`,
       resource_group: rgIdRef(gw.resource_group, config),
       tags: config._options.tags,
-      timeouts: timeouts("", "", "1h")
-    }
+      timeouts: timeouts("", "", "1h"),
+    },
   };
 }
 
@@ -52,12 +52,12 @@ function formatVpn(gw, config) {
  */
 function vpnTf(config) {
   let tf = "";
-  config.vpn_gateways.forEach(gw => (tf += formatVpn(gw, config)));
+  config.vpn_gateways.forEach((gw) => (tf += formatVpn(gw, config)));
   return tfBlock("vpn gateways", tf);
 }
 
 module.exports = {
   formatVpn,
   vpnTf,
-  ibmIsVpnGateway
+  ibmIsVpnGateway,
 };

@@ -1,4 +1,4 @@
-const { snakeCase, kebabCase } = require("lazy-z");
+const { snakeCase, kebabCase, isNullOrEmptyString } = require("lazy-z");
 const { rgIdRef, tfBlock, jsonToTfPrint } = require("./utils");
 /**
  * format vpn server
@@ -26,8 +26,12 @@ function ibmIsVpnServer(server, craig) {
   let serverData = {
     certificate_crn: server.certificate_crn,
     client_authentication: [{ method: server.method }],
-    client_dns_server_ips: server.client_dns_server_ips,
-    client_idle_timeout: server.client_idle_timeout,
+    client_dns_server_ips: isNullOrEmptyString(server.client_dns_server_ips)
+      ? null
+      : server.client_dns_server_ips,
+    client_idle_timeout: isNullOrEmptyString(server.client_idle_timeout)
+      ? null
+      : server.client_idle_timeout,
     client_ip_pool: server.client_ip_pool,
     enable_split_tunneling: server.enable_split_tunneling,
     name: kebabCase(
@@ -37,14 +41,14 @@ function ibmIsVpnServer(server, craig) {
     protocol: server.protocol,
     resource_group: rgIdRef(server.resource_group, craig),
     subnets: [],
-    security_groups: []
+    security_groups: [],
   };
-  server.subnets.forEach(subnet => {
+  server.subnets.forEach((subnet) => {
     serverData["subnets"].push(
       `\${module.${snakeCase(server.vpc)}_vpc.${snakeCase(subnet)}_id}`
     );
   });
-  server.security_groups.forEach(group => {
+  server.security_groups.forEach((group) => {
     serverData["security_groups"].push(
       `\${module.${snakeCase(server.vpc)}_vpc.${snakeCase(group)}_id}`
     );
@@ -56,7 +60,7 @@ function ibmIsVpnServer(server, craig) {
   }
   return {
     name: snakeCase(`${server.vpc} vpn server ${server.name}`),
-    data: serverData
+    data: serverData,
   };
 }
 
@@ -82,11 +86,11 @@ function ibmIsVpnServerRoute(server, route, craig) {
     destination: route.destination,
     vpn_server: `\${ibm_is_vpn_server.${snakeCase(
       server.vpc
-    )}_vpn_server_${snakeCase(server.name)}.id}`
+    )}_vpn_server_${snakeCase(server.name)}.id}`,
   };
   return {
     name: snakeCase(`${server.vpc} vpn server route ${route.name}`),
-    data: routeData
+    data: routeData,
   };
 }
 
@@ -126,13 +130,13 @@ function formatVpnServerRoute(server, route, config) {
  */
 function vpnServerTf(config) {
   let tf = "";
-  config.vpn_servers.forEach(server => {
+  config.vpn_servers.forEach((server) => {
     tf += formatVpnServer(server, config);
-    server.routes.forEach(route => {
+    server.routes.forEach((route) => {
       tf += formatVpnServerRoute(server, route, config);
     });
   });
-  return tfBlock("vpn servers", tf);
+  return tf === "" ? "" : tfBlock("vpn servers", tf);
 }
 
 module.exports = {
@@ -140,5 +144,5 @@ module.exports = {
   formatVpnServerRoute,
   vpnServerTf,
   ibmIsVpnServer,
-  ibmIsVpnServerRoute
+  ibmIsVpnServerRoute,
 };

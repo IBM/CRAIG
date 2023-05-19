@@ -6,7 +6,7 @@ const {
   getTags,
   jsonToTfPrint,
   cdktfRef,
-  getResourceOrData
+  getResourceOrData,
 } = require("./utils");
 
 /**
@@ -23,8 +23,8 @@ function ibmIsSshKey(key, config) {
   let sshKey = {
     name: key.name,
     data: {
-      name: dataResourceName(key)
-    }
+      name: dataResourceName(key),
+    },
   };
   if (!key.use_data) {
     sshKey.data.public_key = cdktfRef(`var.${snakeCase(key.name)}_public_key`);
@@ -58,12 +58,12 @@ function formatSshKey(key, config) {
  */
 function sshKeyTf(config) {
   let tf = "";
-  config.ssh_keys.forEach(key => (tf += formatSshKey(key, config)));
+  config.ssh_keys.forEach((key) => (tf += formatSshKey(key, config)));
   return tfBlock("ssh keys", tf);
 }
 
 module.exports = {
   formatSshKey,
   sshKeyTf,
-  ibmIsSshKey
+  ibmIsSshKey,
 };
