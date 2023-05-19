@@ -4,7 +4,7 @@ const {
   tfBlock,
   getTags,
   jsonToTfPrint,
-  getResourceOrData,
+  getResourceOrData
 } = require("./utils");
 
 /**
@@ -19,7 +19,7 @@ const {
  */
 function formatResourceGroup(group, config) {
   let rgValues = {
-    name: dataResourceName(group),
+    name: dataResourceName(group)
   };
   if (!group.use_data) rgValues.tags = getTags(config);
   return jsonToTfPrint(
@@ -37,7 +37,7 @@ function formatResourceGroup(group, config) {
  */
 function resourceGroupTf(config) {
   let text = "";
-  config.resource_groups.forEach((group) => {
+  config.resource_groups.forEach(group => {
     text += formatResourceGroup(group, config);
   });
   return tfBlock("Resource Groups", text);

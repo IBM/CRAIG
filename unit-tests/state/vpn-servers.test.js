@@ -35,7 +35,7 @@ describe("vpn_servers", () => {
         resource_group: "management-rg",
         security_groups: ["management-vpe"],
         subnets: ["vsi-zone-1"],
-        vpc: "blah",
+        vpc: "blah"
       });
       let expectedData = {
         name: "vpn-server",

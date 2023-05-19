@@ -1634,8 +1634,7 @@ describe("craigToCdktf", () => {
             type: "${string}",
           },
           prefix: {
-            description:
-              "Name prefix that will be prepended to named resources",
+            description: "Name prefix that will be prepended to named resources",
             type: "${string}",
           },
           slz_management_rg_id: {
@@ -1902,7 +1901,7 @@ describe("craigToCdktf", () => {
           },
           vsi_zone_2_crn: {
             value: "${ibm_is_subnet.management_vsi_zone_2.crn}",
-          },
+          }, 
           vsi_zone_3_id: {
             value: "${ibm_is_subnet.management_vsi_zone_3.id}",
           },

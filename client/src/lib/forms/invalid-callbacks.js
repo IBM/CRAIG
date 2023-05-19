@@ -8,7 +8,7 @@ const {
   isIpv4CidrOrAddress,
   transpose,
   isEmpty,
-  isString,
+  isString
 } = require("lazy-z");
 const {
   newResourceNameExp,
@@ -17,7 +17,7 @@ const {
   urlValidationExp,
   crnRegex,
   projectDescriptionRegex,
-  ipRangeExpression,
+  ipRangeExpression
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -38,7 +38,7 @@ function invalidNewResourceName(str) {
 function invalidTagList(tags) {
   if (tags.length === 0) return false;
   let invalid = false;
-  tags.forEach((tag) => {
+  tags.forEach(tag => {
     if (tag.match(newResourceNameExp) === null || tag.length > 128) {
       invalid = true;
     }
@@ -85,7 +85,7 @@ function invalidName(field, craig) {
      * @param {Object} stateData
      * @param {Object} componentProps
      */
-    return function (field, stateData, componentProps) {
+    return function(field, stateData, componentProps) {
       if (field === "name") {
         return invalidName("vpc_name")(stateData, componentProps);
       } else if (isNullOrEmptyString(stateData[field])) {
@@ -99,7 +99,7 @@ function invalidName(field, craig) {
       }
     };
   } else if (field === "subnet") {
-    return function (stateData, componentProps) {
+    return function(stateData, componentProps) {
       let propsCopy = { craig: craig };
       transpose(componentProps, propsCopy);
       return invalidName("subnet_name")(stateData, propsCopy);
@@ -142,7 +142,7 @@ function invalidSshPublicKey(stateData, componentProps) {
   let invalid = {
     invalid: false,
     invalidText:
-      "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region",
+      "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region"
   };
   if (!validSshKey(stateData.public_key)) {
     invalid.invalid = true;
@@ -206,7 +206,7 @@ function invalidF5Vsi(field, stateData, componentProps) {
   let optionalFields = [
     "app_id",
     "license_password",
-    "license_unit_of_measure",
+    "license_unit_of_measure"
   ];
   if (
     field.includes("url") || // all url fields have their own validation
@@ -248,7 +248,7 @@ function makeIP(num) {
     (num >> 24) & 0xff,
     (num >> 16) & 0xff,
     (num >> 8) & 0xff,
-    num & 0xff,
+    num & 0xff
   ].join(".");
 }
 
@@ -260,7 +260,7 @@ function makeIP(num) {
 function getFirstLastAddress(cidr) {
   // split address from cidr prefix and get 32 bit unsigned int of ip
   var mCidr = cidr.match(/\d+/g);
-  var block32 = mCidr.slice(0, 4).reduce(function (a, o) {
+  var block32 = mCidr.slice(0, 4).reduce(function(a, o) {
     return ((+a << 8) >>> 0) + +o;
   });
   // calculate mask from cidr prefix
@@ -369,14 +369,14 @@ function hasOverlappingCidr(craig) {
    * @param {*} componentProps
    * @returns {boolean} true if overlapping
    */
-  return function (stateData, componentProps) {
+  return function(stateData, componentProps) {
     let allCidrs = [];
     let cidrData = {
       invalid: false,
-      cidr: stateData.cidr,
+      cidr: stateData.cidr
     };
-    craig.store.json.vpcs.forEach((vpc) => {
-      vpc.subnets.forEach((subnet) => {
+    craig.store.json.vpcs.forEach(vpc => {
+      vpc.subnets.forEach(subnet => {
         if (subnet.name !== componentProps.data.name)
           allCidrs.push(subnet.cidr);
       });
@@ -384,7 +384,7 @@ function hasOverlappingCidr(craig) {
     if (contains(allCidrs, stateData.cidr)) {
       cidrData.invalid = true;
     } else {
-      allCidrs.forEach((cidr) => {
+      allCidrs.forEach(cidr => {
         if (!cidrData.invalid) {
           cidrData.invalid = cidrBlocksOverlap(cidr, stateData.cidr);
           if (cidrData.invalid) {
@@ -409,7 +409,7 @@ function invalidCidr(craig) {
    * @param {*} componentProps
    * @returns {boolean} true if overlapping
    */
-  return function (stateData, componentProps) {
+  return function(stateData, componentProps) {
     if (!stateData.cidr) return true;
     let cidrRange = Number(stateData.cidr.split("/")[1]) > 17;
     if (componentProps.data.cidr === stateData.cidr && stateData.cidr) {
@@ -435,7 +435,7 @@ function invalidCrnList(crnList) {
     return false;
   }
   let isInvalid = false;
-  crnList.forEach((crn) => {
+  crnList.forEach(crn => {
     if ((isString(crn) ? crn : "").match(crnRegex) === null) {
       isInvalid = true;
     }
@@ -533,5 +533,5 @@ module.exports = {
   invalidCidr,
   invalidCbrRule,
   invalidCbrZone,
-  invalidProjectDescription,
+  invalidProjectDescription
 };

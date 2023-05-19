@@ -64,11 +64,8 @@ describe("docs to markdown", () => {
   describe("allDocs", () => {
     it("should return a markdown file for the whole slz docs json", () => {
       let actualData = allDocs();
-      fs.writeFileSync("dev.md", actualData);
-      let expectedData = fs.readFileSync(
-        "./unit-tests/data-files/slz.md",
-        "utf-8"
-      );
+      fs.writeFileSync("dev.md", actualData)
+      let expectedData = fs.readFileSync("./unit-tests/data-files/slz.md", "utf-8");
       assert.deepEqual(actualData, expectedData, "it should return docs");
     });
   });

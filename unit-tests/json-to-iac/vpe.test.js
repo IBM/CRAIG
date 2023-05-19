@@ -85,7 +85,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
           security_groups: ["management-vpe-sg"],
           subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
           account_id: "1234",
-          instance: "secrets-manager",
+          instance: "secrets-manager"
         },
         {
           _options: {
@@ -109,7 +109,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
               name: "slz-workload-rg",
               use_data: false,
             },
-          ],
+          ]
         }
       );
       let expectedData = `

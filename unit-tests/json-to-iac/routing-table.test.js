@@ -111,10 +111,6 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
     });
   });
   describe("routingTableTf", () => {
-    it("should return empty string when no routing tables", () => {
-      let actualData = routingTableTf({});
-      assert.deepEqual(actualData, "", "it should return correct data");
-    });
     it("should return correct routing table", () => {
       let actualData = routingTableTf({
         _options: {

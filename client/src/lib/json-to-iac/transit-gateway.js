@@ -7,7 +7,7 @@ const {
   tfBlock,
   tfDone,
   timeouts,
-  jsonToTfPrint,
+  jsonToTfPrint
 } = require("./utils");
 const { varDotRegion } = require("../constants");
 
@@ -31,8 +31,8 @@ function ibmTgGateway(tgw, config) {
       location: varDotRegion,
       global: tgw.global,
       resource_group: rgIdRef(tgw.resource_group, config),
-      timeouts: timeouts("30m", "", "30m"),
-    },
+      timeouts: timeouts("30m", "", "30m")
+    }
   };
 }
 
@@ -73,8 +73,8 @@ function ibmTgConnection(connection, config) {
       network_id: connection.vpc
         ? vpcRef(connection.vpc, "crn", true)
         : connection.crn,
-      timeouts: timeouts("30m", "", "30m"),
-    },
+      timeouts: timeouts("30m", "", "30m")
+    }
   };
 }
 /**
@@ -99,7 +99,7 @@ function tgwTf(config) {
   config.transit_gateways.forEach((gw, index) => {
     let blockData = formatTgw(gw, config);
     gw.connections.forEach(
-      (connection) => (blockData += formatTgwConnection(connection, config))
+      connection => (blockData += formatTgwConnection(connection, config))
     );
     tf += tfBlock(gw.name + " Transit Gateway", blockData);
     if (index !== config.transit_gateways.length - 1) {
@@ -114,5 +114,5 @@ module.exports = {
   formatTgwConnection,
   tgwTf,
   ibmTgConnection,
-  ibmTgGateway,
+  ibmTgGateway
 };

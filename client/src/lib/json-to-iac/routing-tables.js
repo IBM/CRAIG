@@ -16,12 +16,12 @@ function ibmIsVpcRoutingTable(table, config) {
   return {
     name: `${table.vpc}-vpc-${table.name}-table`,
     data: {
-      name: kebabName([table.vpc, "vpc", table.name, "table"]),
+      name: kebabName( [table.vpc, "vpc", table.name, "table"]),
       vpc: vpcRef(table.vpc),
       route_direct_link_ingress: table.route_direct_link_ingress,
       route_transit_gateway_ingress: table.route_transit_gateway_ingress,
-      route_vpc_zone_ingress: table.route_vpc_zone_ingress,
-    },
+      route_vpc_zone_ingress: table.route_vpc_zone_ingress
+    }
   };
 }
 
@@ -72,11 +72,16 @@ function ibmIsVpcRoutingTableRoute(route, config) {
         "routing_table"
       ),
       zone: `${varDotRegion}-${route.zone}`,
-      name: kebabName([route.vpc, route.routing_table, route.name, "route"]),
+      name: kebabName( [
+        route.vpc,
+        route.routing_table,
+        route.name,
+        "route"
+      ]),
       destination: route.destination,
       action: route.action,
-      next_hop: route.action === "deliver" ? route.next_hop : "0.0.0.0",
-    },
+      next_hop: route.action === "deliver" ? route.next_hop : "0.0.0.0"
+    }
   };
 }
 
@@ -112,14 +117,13 @@ function formatRoutingTableRoute(route, config) {
  */
 function routingTableTf(config) {
   let tf = "";
-  if (config.routing_tables)
-    config.routing_tables.forEach((table) => {
-      let blockText = formatRoutingTable(table, config);
-      table.routes.forEach((route) => {
-        blockText += formatRoutingTableRoute(route, config);
-      });
-      tf += tfBlock(`${table.name} routing table`, blockText);
+  config.routing_tables.forEach(table => {
+    let blockText = formatRoutingTable(table, config);
+    table.routes.forEach(route => {
+      blockText += formatRoutingTableRoute(route, config);
     });
+    tf += tfBlock(`${table.name} routing table`, blockText);
+  });
   return tf;
 }
 
@@ -128,5 +132,5 @@ module.exports = {
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  routingTableTf,
+  routingTableTf
 };

@@ -1,7 +1,7 @@
 import { ToastNotification } from "@carbon/react";
 import PropTypes from "prop-types";
 
-export const Notification = (props) => {
+export const Notification = props => {
   return (
     <ToastNotification
       lowContrast
@@ -17,11 +17,11 @@ export const Notification = (props) => {
 Notification.defaultProps = {
   kind: "error",
   title: "An error occurred",
-  timeout: 3000,
+  timeout: 3000
 };
 
 Notification.propTypes = {
   kind: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  timeout: PropTypes.number.isRequired,
+  timeout: PropTypes.number.isRequired
 };

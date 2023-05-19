@@ -4,7 +4,7 @@ const {
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal,
-  hasUnfoundVpc,
+  hasUnfoundVpc
 } = require("./store.utils");
 
 /**
@@ -18,7 +18,7 @@ function vpnServerInit(config) {
 }
 
 function vpnServerOnStoreUpdate(config) {
-  config.store.json.vpn_servers.forEach((server) => {
+  config.store.json.vpn_servers.forEach(server => {
     config.setUnfound("resourceGroups", server, "resource_group");
     // update vpc
     if (hasUnfoundVpc(config, server)) {
@@ -132,5 +132,5 @@ module.exports = {
   vpnServerDelete,
   vpnServerRouteCreate,
   vpnServerRouteSave,
-  vpnServerRouteDelete,
+  vpnServerRouteDelete
 };

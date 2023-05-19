@@ -23,7 +23,7 @@ import {
   LoadBalancerVpc,
   Report,
   Router,
-  ServerProxy,
+  ServerProxy
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -55,7 +55,7 @@ import {
   codeMirrorFormatIamAccountSettingsTf,
   codeMirrorGetDisplay,
   routingTableTf,
-  cbrTf,
+  cbrTf
 } from "../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../images/cbr";
@@ -75,21 +75,21 @@ const navCategories = [
         icon: GroupResource,
         toTf: resourceGroupTf,
         jsonField: "resource_groups",
-        required: true,
+        required: true
       },
       {
         title: "Access Groups",
         path: "/form/accessGroups",
         icon: GroupAccess,
         toTf: iamTf,
-        jsonField: "access_groups",
+        jsonField: "access_groups"
       },
       {
         title: "IAM Account Settings",
         path: "/form/iamAccountSettings",
         icon: IdManagement,
-        toTf: (json) => codeMirrorFormatIamAccountSettingsTf(json),
-        jsonField: "iam_account_settings",
+        toTf: json => codeMirrorFormatIamAccountSettingsTf(json),
+        jsonField: "iam_account_settings"
       },
       {
         title: "Context Based Restrictions",
@@ -97,7 +97,7 @@ const navCategories = [
         icon: CBRIcon,
         toTf: cbrTf,
       },
-    ],
+    ]
   },
   {
     name: "Services",
@@ -109,7 +109,7 @@ const navCategories = [
         field: "key_management",
         toTf: kmsTf,
         required: true,
-        jsonField: "key_management",
+        jsonField: "key_management"
       },
       {
         title: "Object Storage",
@@ -118,14 +118,14 @@ const navCategories = [
         field: "cos",
         toTf: cosTf,
         required: true,
-        jsonField: "object_storage",
+        jsonField: "object_storage"
       },
       {
         title: "Secrets Manager",
         path: "/form/secretsManager",
         icon: IbmCloudSecretsManager,
         jsonField: "secrets_manager",
-        toTf: secretsManagerTf,
+        toTf: secretsManagerTf
       },
       {
         title: "Activity Tracker",
@@ -133,30 +133,30 @@ const navCategories = [
         icon: CloudAuditing,
         jsonField: "atracker",
         toTf: atrackerTf,
-        required: true,
+        required: true
       },
       {
         title: "Event Streams",
         path: "/form/eventStreams",
         icon: IbmCloudEventStreams,
         jsonField: "event_streams",
-        toTf: codeMirrorEventStreamsTf,
+        toTf: codeMirrorEventStreamsTf
       },
       {
         title: "App ID",
         path: "/form/appID",
         icon: CloudApp,
         toTf: appidTf,
-        jsonField: "appid",
+        jsonField: "appid"
       },
       {
         title: "Security Compliance Center",
         path: "/form/securityComplianceCenter",
         icon: IbmCloudSecurityComplianceCenter,
         toTf: sccTf,
-        jsonField: "scc",
-      },
-    ],
+        jsonField: "scc"
+      }
+    ]
   },
   {
     name: "Network",
@@ -167,35 +167,35 @@ const navCategories = [
         icon: VirtualPrivateCloud,
         toTf: codeMirrorVpcTf,
         jsonField: "vpcs",
-        required: true,
+        required: true
       },
       {
         title: "VPC Access Control",
         path: "/form/nacls",
         icon: SubnetAclRules,
         toTf: codeMirrorAclTf,
-        required: true,
+        required: true
       },
       {
         title: "VPC Subnets",
         path: "/form/subnets",
         icon: IbmCloudSubnets,
         toTf: codeMirrorSubnetsTf,
-        required: true,
+        required: true
       },
       {
         title: "Routing Tables",
         path: "/form/routingTables",
         icon: Router,
         toTf: routingTableTf,
-        jsonField: "routing_tables",
+        jsonField: "routing_tables"
       },
       {
         title: "Transit Gateways",
         path: "/form/transitGateways",
         icon: IbmCloudTransitGateway,
         toTf: tgwTf,
-        jsonField: "transit_gateways",
+        jsonField: "transit_gateways"
       },
       {
         title: "Security Groups",
@@ -203,7 +203,7 @@ const navCategories = [
         icon: Security,
         toTf: sgTf,
         required: true,
-        jsonField: "security_groups",
+        jsonField: "security_groups"
       },
       {
         title: "Virtual Private Endpoints",
@@ -211,16 +211,16 @@ const navCategories = [
         icon: IbmCloudVpcEndpoints,
         toTf: vpeTf,
         jsonField: "virtual_private_endpoints",
-        required: true,
+        required: true
       },
       {
         title: "VPN Gateways",
         path: "/form/vpn",
         icon: GatewayVpn,
         toTf: vpnTf,
-        jsonField: "vpn_gateways",
-      },
-    ],
+        jsonField: "vpn_gateways"
+      }
+    ]
   },
   {
     name: "Clusters",
@@ -231,9 +231,9 @@ const navCategories = [
         icon: IbmCloudKubernetesService,
         toTf: clusterTf,
         required: true,
-        jsonField: "clusters",
-      },
-    ],
+        jsonField: "clusters"
+      }
+    ]
   },
   {
     name: "Virtual Servers",
@@ -243,37 +243,37 @@ const navCategories = [
         path: "/form/sshKeys",
         icon: Password,
         toTf: sshKeyTf,
-        jsonField: "ssh_keys",
+        jsonField: "ssh_keys"
       },
       {
         title: "Virtual Server Instances",
         path: "/form/vsi",
         icon: BareMetalServer_02,
         toTf: vsiTf,
-        jsonField: "vsi",
+        jsonField: "vsi"
       },
       {
         title: "VPN Servers",
         path: "/form/vpnServers",
         toTf: vpnServerTf,
         jsonField: "vpn_servers",
-        icon: ServerProxy,
+        icon: ServerProxy
       },
       {
         title: "Load Balancers",
         path: "/form/lb",
         icon: LoadBalancerVpc,
         toTf: lbTf,
-        jsonField: "load_balancers",
+        jsonField: "load_balancers"
       },
       {
         title: "F5 Big IP",
         path: "/form/f5",
         icon: F5Icon,
         jsonField: "f5_vsi",
-        toTf: f5Tf,
-      },
-    ],
+        toTf: f5Tf
+      }
+    ]
   },
   {
     name: "Final Steps",
@@ -281,10 +281,10 @@ const navCategories = [
       {
         title: "Summary",
         path: "/summary",
-        icon: Report,
-      },
-    ],
-  },
+        icon: Report
+      }
+    ]
+  }
 ];
 
 let pageOrder = [
@@ -292,14 +292,14 @@ let pageOrder = [
   { title: "Release Notes", path: "/docs/releaseNotes" },
   {
     title: "Options",
-    path: "/",
-  },
+    path: "/"
+  }
 ];
 
 // for each nav category
-navCategories.forEach((category) => {
+navCategories.forEach(category => {
   // for each link
-  category.links.forEach((link) => {
+  category.links.forEach(link => {
     // add the title and path to path order
     pageOrder.push(link);
   });
@@ -307,10 +307,10 @@ navCategories.forEach((category) => {
 
 pageOrder.push({
   title: "Summary",
-  path: "/summary",
+  path: "/summary"
 });
 
-const PageTemplate = (props) => {
+const PageTemplate = props => {
   let isResetState = window.location.pathname === "/resetState";
   /**
    * Footer navigation function
@@ -332,17 +332,17 @@ const PageTemplate = (props) => {
 
     return isResetState
       ? {
-          title: "Reset State",
+          title: "Reset State"
         }
       : nextPathIndex === pageOrder.length || nextPathIndex === -1
       ? {
           // if next index is out of bounds of array, send empty string
           // and no onclick function
-          title: "",
+          title: ""
         }
       : {
           title: pageOrder[nextPathIndex].title,
-          onClick: onClick,
+          onClick: onClick
         };
   }
   let pageObj = props.form
@@ -412,7 +412,7 @@ const PageTemplate = (props) => {
 PageTemplate.defaultProps = {
   hideFooter: false,
   hideCodeMirror: false,
-  jsonInCodeMirror: false,
+  jsonInCodeMirror: false
 };
 
 PageTemplate.propTypes = {
@@ -420,7 +420,7 @@ PageTemplate.propTypes = {
   hideCodeMirror: PropTypes.bool.isRequired,
   hideFooter: PropTypes.bool.isRequired,
   toggleHide: PropTypes.func,
-  jsonInCodeMirror: PropTypes.bool.isRequired,
+  jsonInCodeMirror: PropTypes.bool.isRequired
 };
 
 export default PageTemplate;

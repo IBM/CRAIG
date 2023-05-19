@@ -9,7 +9,7 @@ const {
   tfBlock,
   getTags,
   cdktfRef,
-  jsonToTfPrint,
+  jsonToTfPrint
 } = require("./utils");
 
 /**
@@ -30,20 +30,20 @@ function ibmIsFlowLog(vpc, config, cdktf) {
     vpc.cos
   )}_object_storage_policy`;
   let flowLogsData = {
-    name: kebabName([vpc.name, "vpc-logs"]),
+    name: kebabName( [vpc.name, "vpc-logs"]),
     target: vpcRef(vpc.name, "id", true),
     active: true,
     storage_bucket: bucketRef(vpc.cos, vpc.bucket),
     resource_group: rgIdRef(vpc.resource_group, config),
     tags: getTags(config),
-    depends_on: [cdktf ? depends : cdktfRef(depends)],
+    depends_on: [cdktf ? depends : cdktfRef(depends)]
   };
   if (!vpc.cos || !vpc.bucket) {
     delete flowLogsData.depends_on;
   }
   return {
     name: `${vpc.name}-flow-log-collector`,
-    data: flowLogsData,
+    data: flowLogsData
   };
 }
 
@@ -91,8 +91,8 @@ function ibmIamAuthorizationPolicyFlowLogs(cosName, config) {
       target_resource_instance_id: getCosId(
         getObjectFromArray(config.object_storage, "name", cosName),
         true
-      ),
-    },
+      )
+    }
   };
 }
 
@@ -126,10 +126,10 @@ function flowLogsTf(config) {
   let allFlowLogsCos = distinct(splat(config.vpcs, "cos"));
   let blockData = "";
   allFlowLogsCos.forEach(
-    (cos) => (blockData += formatFlowLogsPolicy(cos, config))
+    cos => (blockData += formatFlowLogsPolicy(cos, config))
   );
   config.vpcs.forEach(
-    (instance) => (blockData += formatFlowLogs(instance, config))
+    instance => (blockData += formatFlowLogs(instance, config))
   );
   return tfBlock("Flow Logs Resources", blockData);
 }
@@ -139,5 +139,5 @@ module.exports = {
   formatFlowLogsPolicy,
   flowLogsTf,
   ibmIsFlowLog,
-  ibmIamAuthorizationPolicyFlowLogs,
+  ibmIamAuthorizationPolicyFlowLogs
 };

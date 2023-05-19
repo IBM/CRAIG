@@ -8,7 +8,7 @@ const {
   tfBlock,
   tfDone,
   jsonToTfPrint,
-  getResourceOrData,
+  getResourceOrData
 } = require("./utils");
 const { varDotRegion } = require("../constants");
 
@@ -33,8 +33,8 @@ function ibmResourceKeyAppId(key, config) {
         getObjectFromArray(config.appid, "name", key.appid).use_data
       ),
       role: "Writer",
-      tags: config._options.tags,
-    },
+      tags: config._options.tags
+    }
   };
 }
 
@@ -63,7 +63,7 @@ function formatAppIdKey(key, config) {
 function ibmResourceInstanceAppId(instance, config) {
   let appIdValues = {
     name: dataResourceName(instance),
-    resource_group_id: rgIdRef(instance.resource_group, config),
+    resource_group_id: rgIdRef(instance.resource_group, config)
   };
   // add needed values when new instance is created
   if (!instance.use_data) {
@@ -74,7 +74,7 @@ function ibmResourceInstanceAppId(instance, config) {
   }
   return {
     name: instance.name,
-    data: appIdValues,
+    data: appIdValues
   };
 }
 
@@ -106,8 +106,8 @@ function ibmAppIdRedirectUrls(appid, urls) {
     name: `${appid.name} urls`,
     data: {
       tenant_id: resourceRef(appid.name, "guid", useData(appid.use_data)),
-      urls: urls,
-    },
+      urls: urls
+    }
   };
 }
 
@@ -131,9 +131,9 @@ function formatAppIdRedirectUrls(appid, urls, resourceName) {
  */
 function appidTf(config) {
   let tf = "";
-  config.appid.forEach((instance) => {
+  config.appid.forEach(instance => {
     let str = formatAppId(instance, config);
-    instance.keys.forEach((key) => {
+    instance.keys.forEach(key => {
       str += formatAppIdKey(key, config);
     });
     tf += tfBlock(`${instance.name} Resources`, str);
@@ -148,5 +148,5 @@ module.exports = {
   appidTf,
   ibmResourceKeyAppId,
   ibmResourceInstanceAppId,
-  ibmAppIdRedirectUrls,
+  ibmAppIdRedirectUrls
 };

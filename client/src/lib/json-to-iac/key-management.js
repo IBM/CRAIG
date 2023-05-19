@@ -11,7 +11,7 @@ const {
   composedKmsId,
   jsonToTfPrint,
   cdktfRef,
-  getResourceOrData,
+  getResourceOrData
 } = require("./utils");
 const { varDotRegion } = require("../constants");
 
@@ -29,7 +29,7 @@ function ibmResourceInstanceKms(kms, config) {
   let instance = {
     name: dataResourceName(kms),
     resource_group_id: rgIdRef(kms.resource_group, config),
-    service: kms.use_hs_crypto ? "hs-crypto" : "kms",
+    service: kms.use_hs_crypto ? "hs-crypto" : "kms"
   };
   if (!kms.use_data) {
     instance.plan = "tiered-pricing";
@@ -38,7 +38,7 @@ function ibmResourceInstanceKms(kms, config) {
   }
   return {
     name: kms.name,
-    data: instance,
+    data: instance
   };
 }
 
@@ -74,7 +74,7 @@ function ibmIamAuthorizationPolicyKms(kms, isBlockStorage) {
     target_resource_instance_id: composedKmsId(kms),
     roles: ["Reader"],
     description:
-      "Allow block storage volumes to be encrypted by Key Management instance.",
+      "Allow block storage volumes to be encrypted by Key Management instance."
   };
   if (isBlockStorage) {
     data.roles.push("Authorization Delegator");
@@ -84,7 +84,7 @@ function ibmIamAuthorizationPolicyKms(kms, isBlockStorage) {
     data: data,
     name:
       kms.name +
-      (isBlockStorage ? " block_storage_policy" : " server protect policy"),
+      (isBlockStorage ? " block_storage_policy" : " server protect policy")
   };
 }
 
@@ -119,8 +119,8 @@ function ibmKmsKeyRings(name, kms, config) {
     name: `${kms.name} ${name} ring`,
     data: {
       key_ring_id: kebabName([kms.name, name]),
-      instance_id: composedKmsId(kms),
-    },
+      instance_id: composedKmsId(kms)
+    }
   };
 }
 
@@ -167,7 +167,7 @@ function ibmKmsKey(key, kms, config, cdktf) {
       "key_ring_id"
     ),
     force_delete: key.force_delete,
-    endpoint_type: key.endpoint,
+    endpoint_type: key.endpoint
   };
 
   if (kms.authorize_vpc_reader_role) {
@@ -176,16 +176,14 @@ function ibmKmsKey(key, kms, config, cdktf) {
       `ibm_iam_authorization_policy.${snakeCase(
         kms.name
       )}_server_protect_policy`,
-      `ibm_iam_authorization_policy.${snakeCase(
-        kms.name
-      )}_block_storage_policy`,
-    ].forEach((ref) => {
+      `ibm_iam_authorization_policy.${snakeCase(kms.name)}_block_storage_policy`
+    ].forEach(ref => {
       keyValues.depends_on.push(cdktf ? ref : cdktfRef(ref));
     });
   }
   return {
     name: `${kms.name}-${key.name}-key`,
-    data: keyValues,
+    data: keyValues
   };
 }
 
@@ -229,15 +227,15 @@ function ibmKmsKeyPolicy(key, kms) {
       key_id: encryptionKeyRef(kms.name, key.name),
       rotation: [
         {
-          interval_month: key.rotation,
-        },
+          interval_month: key.rotation
+        }
       ],
       dual_auth_delete: [
         {
-          enabled: key.dual_auth_delete,
-        },
-      ],
-    },
+          enabled: key.dual_auth_delete
+        }
+      ]
+    }
   };
 }
 
@@ -278,10 +276,10 @@ function kmsInstanceTf(kms, config) {
   if (kms.authorize_vpc_reader_role) {
     instanceTf += formatKmsAuthPolicy(kms) + formatKmsAuthPolicy(kms, true);
   }
-  keyRings.forEach((ring) => {
+  keyRings.forEach(ring => {
     instanceTf += formatKeyRing(ring, kms, config);
   });
-  kms.keys.forEach((key) => {
+  kms.keys.forEach(key => {
     instanceTf += formatKmsKey(key, kms, config) + formatKmsKeyPolicy(key, kms);
   });
   return tfBlock("Key Management Instance " + kms.name, instanceTf);
@@ -297,7 +295,7 @@ function kmsInstanceTf(kms, config) {
 function kmsTf(config) {
   let kmsTerraform = "";
   let names = splat(config.key_management, "name");
-  config.key_management.forEach((instance) => {
+  config.key_management.forEach(instance => {
     kmsTerraform += kmsInstanceTf(instance, config, config);
     if (names.length > 1 && names.indexOf(instance.name) !== names.length - 1) {
       kmsTerraform += "\n";
@@ -318,5 +316,5 @@ module.exports = {
   ibmKmsKeyPolicy,
   ibmKmsKey,
   ibmKmsKeyRings,
-  ibmIamAuthorizationPolicyKms,
+  ibmIamAuthorizationPolicyKms
 };

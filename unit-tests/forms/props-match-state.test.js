@@ -35,11 +35,7 @@ describe("propsMatchState", () => {
     assert.isTrue(
       propsMatchState(
         "subnetTier",
-        {
-          hide: false,
-          showUnsavedChangesModal: undefined,
-          advancedSave: false,
-        },
+        { hide: false, showUnsavedChangesModal: undefined, advancedSave: false },
         { data: {} }
       ),
       "it should be true"
@@ -76,7 +72,7 @@ describe("propsMatchState", () => {
           select_zones: [1],
           advancedSave: true,
           subnets: [],
-          advanced: true,
+          advanced: true
         },
         {
           data: {
@@ -84,7 +80,7 @@ describe("propsMatchState", () => {
             select_zones: undefined,
             hide: false,
             select_zones: [1],
-            subnets: [],
+            subnets: []
           },
         }
       ),

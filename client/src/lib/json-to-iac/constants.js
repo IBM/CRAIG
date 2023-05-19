@@ -268,5 +268,5 @@ runcmd:
         sleep 10
       done
       /root/install.sh
-    ) &`,
+    ) &`
 };

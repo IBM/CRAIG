@@ -4,7 +4,7 @@ const {
   rgIdRef,
   tfRef,
   tfBlock,
-  tfDone,
+  tfDone
 } = require("./utils");
 const { snakeCase } = require("lazy-z");
 
@@ -22,12 +22,12 @@ function ibmResourceInstanceDnsServices(dns, config) {
   return {
     name: dns.name + "_dns_instance",
     data: {
-      name: kebabName([dns.name, "dns-instance"]),
+      name: kebabName( [dns.name, "dns-instance"]),
       resource_group_id: rgIdRef(dns.resource_group, config),
       location: "global",
       service: "dns-svcs",
-      plan: dns.plan,
-    },
+      plan: dns.plan
+    }
   };
 }
 
@@ -71,8 +71,8 @@ function ibmDnsZone(zone) {
         "guid"
       ),
       description: zone.description,
-      label: zone.label,
-    },
+      label: zone.label
+    }
   };
 }
 
@@ -121,11 +121,11 @@ function ibmDnsResourceRecord(record) {
       zone_id: tfRef("ibm_dns_zone", zoneName, "zone_id"),
       type: record.type,
       name: record.name,
-      rdata: record.rdata,
-    },
+      rdata: record.rdata
+    }
   };
   ["ttl", "weight", "priority", "port", "service", "protocol"].forEach(
-    (field) => {
+    field => {
       if (record[field]) {
         data.data[field] = record[field];
       }
@@ -183,8 +183,8 @@ function ibmDnsPermittedNetwork(nw) {
       ),
       zone_id: tfRef("ibm_dns_zone", zoneName, "zone_id"),
       vpc_crn: `\${module.${snakeCase(nw.vpc) + "_vpc"}.crn}`,
-      type: "vpc",
-    },
+      type: "vpc"
+    }
   };
 }
 
@@ -233,15 +233,15 @@ function ibmDnsCustomResolver(resolver) {
       description: resolver.description,
       high_availability: resolver.high_availability,
       enabled: resolver.enabled,
-      locations: [],
-    },
+      locations: []
+    }
   };
-  resolver.subnets.forEach((subnet) => {
+  resolver.subnets.forEach(subnet => {
     data.data.locations.push({
       subnet_crn: `\${module.${snakeCase(resolver.vpc)}_vpc.${snakeCase(
-        subnet
+        subnet.name
       )}_crn}`,
-      enabled: true,
+      enabled: subnet.enabled
     });
   });
   return data;
@@ -277,33 +277,33 @@ function formatDnsCustomResolver(resolver) {
  */
 function dnsTf(config) {
   let tf = "";
-  config.dns.forEach((dns) => {
+  config.dns.forEach(dns => {
     tf +=
       tfBlock(dns.name + " dns service", formatDnsService(dns, config)) + "\n";
-    dns.zones.forEach((zone) => {
+    dns.zones.forEach(zone => {
       let zoneTf = "";
       zoneTf += formatDnsZone(zone);
-      dns.records.forEach((record) => {
+      dns.records.forEach(record => {
         if (record.dns_zone === zone.name) {
           zoneTf += formatDnsRecord(record);
         }
       });
-      zone.permitted_networks.forEach((nw) => {
+      zone.permitted_networks.forEach(nw => {
         zoneTf += formatDnsPermittedNetwork({
           vpc: nw,
           instance: dns.name,
-          dns_zone: zone.name,
+          dns_zone: zone.name
         });
       });
       tf += tfBlock(dns.name + " dns zone " + zone.name, zoneTf) + "\n";
     });
     if (dns.custom_resolvers.length > 0) {
       let resolverTf = "";
-      dns.custom_resolvers.forEach((resolver) => {
+      dns.custom_resolvers.forEach(resolver => {
         resolverTf += formatDnsCustomResolver(resolver);
       });
       tf += tfBlock(dns.name + " dns custom resolvers", resolverTf);
-      tf += "\n";
+      tf += "\n"
     }
   });
   return tfDone(tf);
@@ -315,5 +315,5 @@ module.exports = {
   formatDnsRecord,
   formatDnsPermittedNetwork,
   formatDnsCustomResolver,
-  dnsTf,
+  dnsTf
 };

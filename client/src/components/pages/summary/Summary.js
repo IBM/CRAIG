@@ -8,7 +8,7 @@ import "./summary.css";
 import {
   SaveProjectAsModal,
   SummaryErrorText,
-  SummaryText,
+  SummaryText
 } from "./SummaryContent";
 
 class Summary extends React.Component {
@@ -18,7 +18,7 @@ class Summary extends React.Component {
       usePrettyJson: true,
       error: "",
       fileDownloadUrl: "",
-      showSaveModal: false,
+      showSaveModal: false
     };
     try {
       validate(this.props.craig.store.json);

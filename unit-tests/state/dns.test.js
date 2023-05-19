@@ -313,7 +313,7 @@ describe("dns", () => {
           name: "zone",
           vpc: "management",
           subnets: ["vsi-zone-1"],
-          zone: null,
+          zone: null
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -323,7 +323,7 @@ describe("dns", () => {
         name: "zone",
         vpc: "management",
         subnets: ["vsi-zone-1"],
-        zone: null,
+        zone: null
       };
       assert.deepEqual(
         state.store.json.dns[0].custom_resolvers[0],
@@ -336,7 +336,7 @@ describe("dns", () => {
         {
           name: "zone",
           vpc: "management",
-          subnets: ["vsi-zone-1"],
+          subnets: ["vsi-zone-1"]
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -346,7 +346,7 @@ describe("dns", () => {
         {
           name: "zzzz",
           vpc: "management",
-          subnets: ["vsi-zone-1"],
+          subnets: ["vsi-zone-1"]
         },
         {
           data: { name: "zone" },
@@ -357,7 +357,7 @@ describe("dns", () => {
         name: "zzzz",
         vpc: "management",
         subnets: ["vsi-zone-1"],
-        zone: null,
+        zone: null
       };
       assert.deepEqual(
         state.store.json.dns[0].custom_resolvers[0],
@@ -370,7 +370,7 @@ describe("dns", () => {
         {
           name: "zone",
           vpc: "management",
-          subnets: ["vsi-zone-1"],
+          subnets: ["vsi-zone-1"]
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -381,7 +381,7 @@ describe("dns", () => {
           name: "zzzz",
           vpc: "bad",
           subnets: ["vsi-zone-1"],
-          zone: null,
+          zone: null
         },
         {
           data: { name: "zone" },
@@ -392,7 +392,7 @@ describe("dns", () => {
         name: "zzzz",
         vpc: null,
         subnets: [],
-        zone: null,
+        zone: null
       };
       assert.deepEqual(
         state.store.json.dns[0].custom_resolvers[0],
@@ -406,7 +406,7 @@ describe("dns", () => {
           name: "zone",
           vpc: "management",
           subnets: ["vsi-zone-1"],
-          zone: null,
+          zone: null
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -416,7 +416,7 @@ describe("dns", () => {
         {
           name: "zzzz",
           vpc: "management",
-          subnets: ["vsi-zone-1", "bad"],
+          subnets: ["vsi-zone-1", "bad"]
         },
         {
           data: { name: "zone" },
@@ -427,7 +427,7 @@ describe("dns", () => {
         name: "zzzz",
         vpc: "management",
         subnets: ["vsi-zone-1"],
-        zone: null,
+        zone: null
       };
       assert.deepEqual(
         state.store.json.dns[0].custom_resolvers[0],
@@ -441,7 +441,7 @@ describe("dns", () => {
           name: "zone",
           vpc: "management",
           subnets: ["vsi-zone-1"],
-          zone: null,
+          zone: null
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -461,7 +461,7 @@ describe("dns", () => {
           name: "zzzz",
           vpc: "management",
           subnets: ["vsi-zone-1", "bad"],
-          zone: "zone",
+          zone: "zone"
         },
         {
           data: { name: "zone" },
@@ -472,7 +472,7 @@ describe("dns", () => {
         name: "zzzz",
         vpc: "management",
         subnets: ["vsi-zone-1"],
-        zone: "zone",
+        zone: "zone"
       };
       assert.deepEqual(
         state.store.json.dns[0].custom_resolvers[0],

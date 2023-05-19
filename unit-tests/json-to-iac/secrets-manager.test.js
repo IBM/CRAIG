@@ -266,12 +266,11 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
           credential_instance: "cos",
           credential_type: "cos",
           description: "Credentials for COS instance",
-          type: "kv",
         },
         {
           _options: {
             region: "us-south",
-            prefix: "iac",
+            prefix: "iac"
           },
         }
       );
@@ -284,35 +283,6 @@ resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
   data = {
     credentials = ibm_resource_key.cos_object_storage_key_cos_bind_key.credentials
   }
-}
-`;
-      assert.deepEqual(actualData, expectedData, "it should return secret tf");
-    });
-    it("should return correct data for secrets manager secret with imported cert", () => {
-      let actualData = formatSecretsManagerSecret(
-        {
-          name: "imported-cert",
-          secrets_manager: "secrets-manager",
-          credentials: "cos-bind-key",
-          credential_instance: "cos",
-          credential_type: "cos",
-          description: "Credentials for COS instance",
-          type: "imported",
-        },
-        {
-          _options: {
-            region: "us-south",
-            prefix: "iac",
-          },
-        }
-      );
-      let expectedData = `
-resource "ibm_sm_kv_secret" "secrets_manager_imported_cert" {
-  name        = "\${var.prefix}-secrets-manager-imported-cert"
-  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
-  region      = var.region
-  description = "Credentials for COS instance"
-  certificate = var.secrets_manager_imported_cert_data
 }
 `;
       assert.deepEqual(actualData, expectedData, "it should return secret tf");
@@ -953,7 +923,7 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
             resource_group: "slz-service-rg",
             kms: "kms",
             encryption_key: "key",
-            secrets: [
+            kv_secrets: [
               {
                 name: "cos-secret",
                 secrets_manager: "secrets-manager",
@@ -961,8 +931,8 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
                 credential_instance: "cos",
                 credential_type: "cos",
                 description: "Credentials for COS instance",
-              },
-            ],
+              }
+            ]
           },
           {
             name: "secrets-manager2",

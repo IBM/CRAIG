@@ -48,7 +48,7 @@ describe("tabPanel", () => {
     test("json can be imported", async () => {
       // use fireEvent here due to how userEvent works with typing - can't have _ in json
       fireEvent.change(screen.getByRole("textbox"), {
-        target: { value: JSON.stringify(craigJSON) },
+        target: { value: JSON.stringify(craigJSON) }
       });
       expect(screen.getByRole("button", { name: "json-submit" })).toBeEnabled(); // after importing json, expect submit json button to be enabled
     });
@@ -79,7 +79,7 @@ describe("tabPanel", () => {
       );
       // use fireEvent here due to how userEvent works with typing - can't have _ in json
       fireEvent.change(screen.getByRole("textbox", { name: "import-json" }), {
-        target: { value: JSON.stringify(slzJSON) },
+        target: { value: JSON.stringify(slzJSON) }
       });
       expect(screen.getByRole("button", { name: "json-submit" })).toBeEnabled(); // after importing json, expect submit json button to be enabled
     });
@@ -90,13 +90,13 @@ describe("edge networking", () => {
     const user = userEvent.setup();
     user.click(
       screen.getByRole("button", {
-        name: "(optional)-transit-vpc-and-edge-networking-open-close",
+        name: "(optional)-transit-vpc-and-edge-networking-open-close"
       })
     );
     await waitFor(() => {
       expect(
         screen.getByRole("button", {
-          name: "edge-networking-save",
+          name: "edge-networking-save"
         }) // save button will exist if toggleform opened correctly
       ).toBeInTheDocument();
     });
@@ -106,7 +106,7 @@ describe("edge networking", () => {
     // open Edge Networking Form
     await user.click(
       screen.getByRole("button", {
-        name: "(optional)-transit-vpc-and-edge-networking-open-close",
+        name: "(optional)-transit-vpc-and-edge-networking-open-close"
       })
     );
     // after form is opened, we expect save to be disabled

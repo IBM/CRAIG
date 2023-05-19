@@ -1,5 +1,10 @@
 const { tfDone, tfBlock } = require("./utils");
-const { formatSubnet, formatVpc, formatAcl, formatPgw } = require("./vpc");
+const {
+  formatSubnet,
+  formatVpc,
+  formatAcl,
+  formatPgw
+} = require("./vpc");
 const { formatFlowLogs } = require("./flow-logs");
 const { eventStreamsTf } = require("./event-streams");
 const { formatIamAccountSettings } = require("./iam");
@@ -8,7 +13,7 @@ const {
   maskFieldsExpStep2ReplaceTmosAdminPassword,
   maskFieldsExpStep3ReplaceLicensePassword,
   maskFieldsExpStep4HideValue,
-  maskFieldsExpStep5CleanUp,
+  maskFieldsExpStep5CleanUp
 } = require("../constants");
 const { prettyJSON } = require("lazy-z");
 
@@ -19,10 +24,10 @@ const { prettyJSON } = require("lazy-z");
  */
 function codeMirrorVpcTf(config) {
   let tf = "";
-  config.vpcs.forEach((vpc) => {
+  config.vpcs.forEach(vpc => {
     let blockData = formatVpc(vpc, config);
     if (vpc.publicGateways.length !== 0) {
-      vpc.public_gateways.forEach((gateway) => {
+      vpc.public_gateways.forEach(gateway => {
         blockData += formatPgw(gateway, config);
       });
     }
@@ -42,9 +47,9 @@ function codeMirrorVpcTf(config) {
  */
 function codeMirrorAclTf(config) {
   let tf = "";
-  config.vpcs.forEach((vpc) => {
+  config.vpcs.forEach(vpc => {
     let blockData = "";
-    vpc.acls.forEach((acl) => {
+    vpc.acls.forEach(acl => {
       blockData += formatAcl(acl, config, true);
     });
     tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
@@ -59,9 +64,9 @@ function codeMirrorAclTf(config) {
  */
 function codeMirrorSubnetsTf(config) {
   let tf = "";
-  config.vpcs.forEach((vpc) => {
+  config.vpcs.forEach(vpc => {
     let blockData = "";
-    vpc.subnets.forEach((subnet) => {
+    vpc.subnets.forEach(subnet => {
       blockData += formatSubnet(subnet, config);
     });
     tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
@@ -101,13 +106,13 @@ function codeMirrorGetDisplay(json, jsonInCodeMirror, path, toTf, jsonField) {
   if (jsonInCodeMirror) {
     if (path === "/form/nacls") {
       let allAcls = [];
-      json.vpcs.forEach((nw) => {
+      json.vpcs.forEach(nw => {
         allAcls = allAcls.concat(nw.acls);
       });
       return prettyJSON(allAcls);
     } else if (path === "/form/subnets") {
       let allSubnets = [];
-      json.vpcs.forEach((nw) => {
+      json.vpcs.forEach(nw => {
         allSubnets = allSubnets.concat(nw.subnets);
       });
       return prettyJSON(allSubnets);
@@ -144,5 +149,5 @@ module.exports = {
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
-  codeMirrorGetDisplay,
+  codeMirrorGetDisplay
 };

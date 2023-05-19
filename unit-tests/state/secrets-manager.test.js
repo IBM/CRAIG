@@ -37,8 +37,7 @@ describe("secrets_manager", () => {
             name: "default",
             resource_group: null,
             encryption_key: null,
-            kms: null,
-            secrets: [],
+            kms: null
           },
         ],
         "it should create secrets_manager"
@@ -61,7 +60,6 @@ describe("secrets_manager", () => {
             resource_group: "service-rg",
             encryption_key: "key",
             kms: "kms",
-            secrets: [],
           },
         ],
         "it should create secrets_manager"

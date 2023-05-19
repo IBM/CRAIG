@@ -2,7 +2,7 @@ const {
   setUnfoundResourceGroup,
   updateSubChild,
   deleteSubChild,
-  pushToChildFieldModal,
+  pushToChildFieldModal
 } = require("./store.utils");
 
 /**
@@ -23,7 +23,7 @@ function iamInit(config) {
     restrict_create_service_id: null, // must be one of ["NOT_SET", "RESTRICTED", "NOT_RESTRICTED"]
     restrict_create_platform_apikey: null, // must be one of ["NOT_SET", "RESTRICTED", "NOT_RESTRICTED"]
     session_expiration_in_seconds: null, // must be `NOT_SET` or number between 900 and 86400
-    session_invalidation_in_seconds: null, // must be `NOT_SET` or number between 900 and 7200
+    session_invalidation_in_seconds: null // must be `NOT_SET` or number between 900 and 7200
   };
 }
 
@@ -46,8 +46,8 @@ function iamSave(config, stateData) {
       "restrict_create_service_id",
       "restrict_create_platform_apikey",
       "session_expiration_in_seconds",
-      "session_invalidation_in_seconds",
-    ].forEach((field) => {
+      "session_invalidation_in_seconds"
+    ].forEach(field => {
       stateData[field] = null;
     });
     stateData["include_history"] = false;
@@ -69,9 +69,9 @@ function accessGroupInit(config) {
  */
 function accessGroupOnStoreUpdate(config) {
   // for each access group
-  config.store.json.access_groups.forEach((group) => {
+  config.store.json.access_groups.forEach(group => {
     // for each policy in that group
-    group.policies.forEach((policy) => {
+    group.policies.forEach(policy => {
       setUnfoundResourceGroup(config, policy.resources);
     });
   });
@@ -92,8 +92,8 @@ function accessGroupCreate(config, stateData) {
     has_invites: false,
     invites: {
       group: stateData.name,
-      ibm_ids: [],
-    },
+      ibm_ids: []
+    }
   });
 }
 /**
@@ -221,5 +221,5 @@ module.exports = {
   accessGroupPolicyDelete,
   accessGroupDynamicPolicyCreate,
   accessGroupDynamicPolicySave,
-  accessGroupDynamicPolicyDelete,
+  accessGroupDynamicPolicyDelete
 };

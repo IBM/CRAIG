@@ -4,7 +4,7 @@ const {
   kebabName,
   tfBlock,
   getTags,
-  jsonToTfPrint,
+  jsonToTfPrint
 } = require("./utils");
 const { varDotRegion } = require("../constants");
 
@@ -19,7 +19,7 @@ function ibmIamAccountSettings(iamSettings) {
   delete iamSettings.enable;
   return {
     name: "iam_account_settings",
-    data: iamSettings,
+    data: iamSettings
   };
 }
 
@@ -54,8 +54,8 @@ function ibmIamAccessGroup(group, config) {
     data: {
       name: kebabName([group.name, "ag"]),
       description: group.description,
-      tags: getTags(config),
-    },
+      tags: getTags(config)
+    }
   };
 }
 
@@ -93,7 +93,7 @@ function ibmIamAccessGroupPolicy(policy) {
       "ibm_iam_access_group",
       policy.group + " access group"
     ),
-    roles: policy.roles,
+    roles: policy.roles
   };
   if (policy.resources) {
     policyValues.resources = [policy.resources];
@@ -109,7 +109,7 @@ function ibmIamAccessGroupPolicy(policy) {
   }
   return {
     name: `${policy.group} ${policy.name} policy`,
-    data: policyValues,
+    data: policyValues
   };
 }
 
@@ -156,8 +156,8 @@ function ibmIamAccessGroupDynamicRule(policy) {
       ),
       expiration: policy.expiration,
       identity_provider: policy.identity_provider,
-      conditions: [policy.conditions],
-    },
+      conditions: [policy.conditions]
+    }
   };
 }
 
@@ -195,8 +195,8 @@ function ibmIamAccessGroupMembers(invite) {
         "ibm_iam_access_group",
         invite.group + " access group"
       ),
-      ibm_ids: invite.ibm_ids,
-    },
+      ibm_ids: invite.ibm_ids
+    }
   };
 }
 
@@ -225,13 +225,13 @@ function iamTf(config) {
         formatIamAccountSettings(config.iam_account_settings)
       ) + "\n";
   }
-  config.access_groups.forEach((group) => {
+  config.access_groups.forEach(group => {
     let blockData = formatAccessGroup(group, config);
     group.policies.forEach(
-      (policy) => (blockData += formatAccessGroupPolicy(policy))
+      policy => (blockData += formatAccessGroupPolicy(policy))
     );
     group.dynamic_policies.forEach(
-      (policy) => (blockData += formatAccessGroupDynamicRule(policy))
+      policy => (blockData += formatAccessGroupDynamicRule(policy))
     );
     if (group.has_invites) blockData += formatGroupMembers(group.invites);
     tf += tfBlock(`${group.name} access group`, blockData);
@@ -250,5 +250,5 @@ module.exports = {
   ibmIamAccessGroup,
   ibmIamAccessGroupDynamicRule,
   ibmIamAccessGroupPolicy,
-  ibmIamAccessGroupMembers,
+  ibmIamAccessGroupMembers
 };

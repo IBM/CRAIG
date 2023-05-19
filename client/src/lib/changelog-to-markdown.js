@@ -6,13 +6,13 @@
 function changelogToMarkdown(changelogJson) {
   let mdString = `# Changelog\n\nAll notable changes to this project will be documented in this file.\n`;
 
-  changelogJson.forEach((entry) => {
+  changelogJson.forEach(entry => {
     mdString += `\n## ${entry.version}`;
 
     /* upgrade notes */
     if (entry.upgrade_notes) {
       mdString += `\n\n### Upgrade Notes\n`;
-      entry.upgrade_notes.forEach((note) => {
+      entry.upgrade_notes.forEach(note => {
         mdString += "\n- " + note;
       });
     }
@@ -20,7 +20,7 @@ function changelogToMarkdown(changelogJson) {
     /* features */
     if (entry.features) {
       mdString += `\n\n### Features\n`;
-      entry.features.forEach((feature) => {
+      entry.features.forEach(feature => {
         mdString += "\n- " + feature;
       });
     }
@@ -28,7 +28,7 @@ function changelogToMarkdown(changelogJson) {
     /* fixes */
     if (entry.fixes) {
       mdString += `\n\n### Fixes\n`;
-      entry.fixes.forEach((fix) => {
+      entry.fixes.forEach(fix => {
         mdString += "\n- " + fix;
       });
     }

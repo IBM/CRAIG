@@ -3,13 +3,13 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
   setUnfoundResourceGroup,
-  hasUnfoundVpc,
+  hasUnfoundVpc
 } = require("./store.utils");
 const {
   deleteUnfoundArrayItems,
   splat,
   getObjectFromArray,
-  splatContains,
+  splatContains
 } = require("lazy-z");
 
 function dnsInit(config) {
@@ -21,15 +21,15 @@ function dnsInit(config) {
  * @param {*} config
  */
 function dnsOnStoreUpdate(config) {
-  config.store.json.dns.forEach((dns) => {
+  config.store.json.dns.forEach(dns => {
     setUnfoundResourceGroup(config, dns);
-    dns.zones.forEach((zone) => {
+    dns.zones.forEach(zone => {
       zone.permitted_networks = deleteUnfoundArrayItems(
         splat(config.store.json.vpcs, "name"),
         zone.permitted_networks
       );
     });
-    dns.custom_resolvers.forEach((resolver) => {
+    dns.custom_resolvers.forEach(resolver => {
       if (hasUnfoundVpc(config, resolver)) {
         resolver.vpc = null;
         resolver.subnets = [];
@@ -218,5 +218,5 @@ module.exports = {
   dnsRecordSave,
   dnsResolverCreate,
   dnsResolverDelete,
-  dnsResolverSave,
+  dnsResolverSave
 };

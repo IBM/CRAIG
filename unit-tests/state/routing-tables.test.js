@@ -34,7 +34,7 @@ describe("routing_tables", () => {
           {
             name: "frog",
             vpc: null,
-            routing_table: "test",
+            routing_table: "test"
           },
         ],
       };

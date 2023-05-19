@@ -12,7 +12,7 @@ class FooterHighlight extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHovering: false,
+      isHovering: false
     };
     this.handleMouseOver = this.handleMouseOver.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
@@ -52,10 +52,10 @@ class FooterHighlight extends React.Component {
 
 FooterHighlight.propTypes = {
   children: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
-const Footer = (props) => {
+const Footer = props => {
   let next = props.navigate();
   let previous = props.navigate(true);
   return (
@@ -125,7 +125,7 @@ const Footer = (props) => {
 Footer.propTypes = {
   hideFooter: PropTypes.bool.isRequired,
   navigate: PropTypes.func.isRequired,
-  toggleFooter: PropTypes.func.isRequired,
+  toggleFooter: PropTypes.func.isRequired
 };
 
 export default Footer;

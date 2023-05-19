@@ -161,32 +161,32 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
       let config = { ...slzNetwork };
       config.transit_gateways = [
         {
-          name: "transit-gateway",
-          resource_group: "service-rg",
-          global: false,
-          connections: [
+          "name": "transit-gateway",
+          "resource_group": "service-rg",
+          "global": false,
+          "connections": [
             {
-              tgw: "transit-gateway",
-              vpc: "management",
+              "tgw": "transit-gateway",
+              "vpc": "management"
             },
             {
-              tgw: "transit-gateway",
-              vpc: "workload",
-            },
-          ],
+              "tgw": "transit-gateway",
+              "vpc": "workload"
+            }
+          ]
         },
         {
-          global: true,
-          connections: [
+          "global": true,
+          "connections": [
             {
-              tgw: "m",
-              vpc: "management",
-            },
+              "tgw": "m",
+              "vpc": "management"
+            }
           ],
-          resource_group: "service-rg",
-          name: "m",
-          crns: [],
-        },
+          "resource_group": "service-rg",
+          "name": "m",
+          "crns": []
+        }
       ];
       let actualData = tgwTf(config);
       let expectedData = `##############################################################################
@@ -256,12 +256,8 @@ resource "ibm_tg_connection" "m_to_management_connection" {
 
 ##############################################################################
 `;
-
-      assert.deepEqual(
-        actualData,
-        expectedData,
-        "it should create correct tf for multiple tgw"
-      );
+     
+      assert.deepEqual(actualData, expectedData, "it should create correct tf for multiple tgw");
     });
   });
 });

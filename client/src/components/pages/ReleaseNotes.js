@@ -3,7 +3,7 @@ import "./releasenotes.scss";
 
 const { releaseNotes } = require("../../lib");
 
-const ReleaseNote = (props) => {
+const ReleaseNote = props => {
   return (
     <AccordionItem title={props.note.version}>
       <div>
@@ -48,7 +48,7 @@ const ReleaseNotes = () => {
       <h4>Release Notes</h4>
       <br />
       <Accordion align="start" size="lg">
-        {releaseNotes.map((note) => (
+        {releaseNotes.map(note => (
           <ReleaseNote key={note.version} note={note} />
         ))}
       </Accordion>

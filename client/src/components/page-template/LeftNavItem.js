@@ -26,7 +26,7 @@ class LeftNavItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHovering: false,
+      isHovering: false
     };
 
     this.setHover = this.setHover.bind(this);
@@ -85,9 +85,9 @@ LeftNavItem.propTypes = {
     path: PropTypes.string.isRequired,
     // icon can be stateless component or import from carbon
     icon: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
-    required: PropTypes.bool,
+    required: PropTypes.bool
   }).isRequired,
-  expanded: PropTypes.bool.isRequired,
+  expanded: PropTypes.bool.isRequired
 };
 
 export default LeftNavItem;

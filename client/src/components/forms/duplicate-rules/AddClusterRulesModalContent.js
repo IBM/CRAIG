@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { Docs } from "icse-react-assets";
 import React from "react";
 
-const AddClusterRulesModalContent = (props) => {
+const AddClusterRulesModalContent = props => {
   return (
     <>
       <p className="marginBottomSmall">
@@ -22,7 +22,7 @@ const AddClusterRulesModalContent = (props) => {
                 "Destination",
                 "Protocol",
                 "Port",
-                "Unique Name",
+                "Unique Name"
               ],
               [
                 "roks-create-worker-nodes-inbound",
@@ -32,7 +32,7 @@ const AddClusterRulesModalContent = (props) => {
                 "10.0.0.0/8",
                 "All",
                 "",
-                props.hasRuleName("roks-create-worker-nodes-inbound"),
+                props.hasRuleName("roks-create-worker-nodes-inbound")
               ],
               [
                 "roks-create-worker-nodes-outbound",
@@ -42,7 +42,7 @@ const AddClusterRulesModalContent = (props) => {
                 "161.26.0.0/16",
                 "All",
                 "",
-                props.hasRuleName("roks-create-worker-nodes-outbound"),
+                props.hasRuleName("roks-create-worker-nodes-outbound")
               ],
               [
                 "roks-nodes-to-service-inbound",
@@ -52,7 +52,7 @@ const AddClusterRulesModalContent = (props) => {
                 "10.0.0.0/8",
                 "All",
                 "",
-                props.hasRuleName("roks-nodes-to-service-inbound"),
+                props.hasRuleName("roks-nodes-to-service-inbound")
               ],
               [
                 "roks-nodes-to-service-outbound",
@@ -62,7 +62,7 @@ const AddClusterRulesModalContent = (props) => {
                 "10.0.0.0/8",
                 "All",
                 "",
-                props.hasRuleName("roks-nodes-to-service-outbound"),
+                props.hasRuleName("roks-nodes-to-service-outbound")
               ],
               [
                 "allow-app-incoming-traffic-requests",
@@ -72,7 +72,7 @@ const AddClusterRulesModalContent = (props) => {
                 "10.0.0.0/8",
                 "TCP",
                 "30000-32767",
-                props.hasRuleName("allow-app-incoming-traffic-requests"),
+                props.hasRuleName("allow-app-incoming-traffic-requests")
               ],
               [
                 "allow-app-outgoing-traffic-requests",
@@ -82,7 +82,7 @@ const AddClusterRulesModalContent = (props) => {
                 "10.0.0.0/8",
                 "TCP",
                 "30000-32767",
-                props.hasRuleName("allow-app-outgoing-traffic-requests"),
+                props.hasRuleName("allow-app-outgoing-traffic-requests")
               ],
               [
                 "allow-lb-incoming-traffic-requests",
@@ -92,7 +92,7 @@ const AddClusterRulesModalContent = (props) => {
                 "10.0.0.0/8",
                 "TCP",
                 "443",
-                props.hasRuleName("allow-lb-incoming-traffic-requests"),
+                props.hasRuleName("allow-lb-incoming-traffic-requests")
               ],
               [
                 "allow-lb-outgoing-traffic-requests",
@@ -102,11 +102,11 @@ const AddClusterRulesModalContent = (props) => {
                 "10.0.0.0/8",
                 "TCP",
                 "443",
-                props.hasRuleName("allow-lb-outgoing-traffic-requests"),
-              ],
-            ],
-          },
-        ],
+                props.hasRuleName("allow-lb-outgoing-traffic-requests")
+              ]
+            ]
+          }
+        ]
       })}
     </>
   );
@@ -114,7 +114,7 @@ const AddClusterRulesModalContent = (props) => {
 
 AddClusterRulesModalContent.propTypes = {
   addClusterRuleAcl: PropTypes.string.isRequired,
-  hasRuleName: PropTypes.func.isRequired,
+  hasRuleName: PropTypes.func.isRequired
 };
 
 export default AddClusterRulesModalContent;

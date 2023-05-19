@@ -19,15 +19,15 @@ function transitGatewayInit(config) {
  * @param {object} config.store.json configuration JSON
  */
 function transitGatewayOnStoreUpdate(config) {
-  config.store.json.transit_gateways.forEach((gateway) => {
+  config.store.json.transit_gateways.forEach(gateway => {
     if (gateway.crns) {
-      gateway.crns.forEach((crn) => {
+      gateway.crns.forEach(crn => {
         if (!splatContains(gateway.connections, "crn", crn)) {
           gateway.connections.push({ tgw: gateway.name, crn: crn });
         }
       });
     }
-    gateway.connections.forEach((connection) => {
+    gateway.connections.forEach(connection => {
       connection.tgw = gateway.name; // make sure name is set for tgw connection
       if (
         gateway.crns &&
@@ -80,7 +80,10 @@ function transitGatewayCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function transitGatewayDelete(config, stateData, componentProps) {
-  config.carve(["json", "transit_gateways"], componentProps.data.name);
+  config.carve(
+    ["json", "transit_gateways"],
+    componentProps.data.name
+  );
 }
 
 module.exports = {
@@ -88,5 +91,5 @@ module.exports = {
   transitGatewayOnStoreUpdate,
   transitGatewaySave,
   transitGatewayCreate,
-  transitGatewayDelete,
+  transitGatewayDelete
 };

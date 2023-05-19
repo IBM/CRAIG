@@ -60,10 +60,7 @@ describe("event_streams", () => {
     });
     it("should delete an event_streams instance", () => {
       event_streamsState.event_streams.create({ name: "default" });
-      event_streamsState.event_streams.delete(
-        {},
-        { data: { name: "default" } }
-      );
+      event_streamsState.event_streams.delete({}, { data: { name: "default" } });
       assert.deepEqual(
         event_streamsState.store.json.event_streams,
         [],

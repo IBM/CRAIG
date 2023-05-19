@@ -3,13 +3,13 @@ import {
   SaveAddButton,
   IcseFormGroup,
   IcseSelect,
-  IcseHeading,
+  IcseHeading
 } from "icse-react-assets";
 import { isNullOrEmptyString, splat, contains } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 
-const CopyRule = (props) => {
+const CopyRule = props => {
   let ruleType = props.isSecurityGroup ? "Security Group" : "ACL";
 
   /**
@@ -29,7 +29,7 @@ const CopyRule = (props) => {
         type="subHeading"
         name={"Copy Rule to " + ruleType}
         tooltip={{
-          content: "Copy a rule from one " + ruleType + " to another",
+          content: "Copy a rule from one " + ruleType + " to another"
         }}
       />
       <IcseFormGroup noMarginBottom className="align-row">
@@ -107,7 +107,7 @@ const CopyRule = (props) => {
 CopyRule.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    acls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    acls: PropTypes.arrayOf(PropTypes.shape({})).isRequired
   }),
   handleSelect: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
@@ -115,7 +115,7 @@ CopyRule.propTypes = {
   ruleDestination: PropTypes.string,
   destinationRuleNames: PropTypes.arrayOf(PropTypes.string),
   ruleCopyName: PropTypes.string,
-  allOtherAcls: PropTypes.arrayOf(PropTypes.string),
+  allOtherAcls: PropTypes.arrayOf(PropTypes.string)
 };
 
 export default CopyRule;

@@ -4,7 +4,7 @@ import {
   IcseHeading,
   IcseSelect,
   SaveAddButton,
-  StatelessToggleForm,
+  StatelessToggleForm
 } from "icse-react-assets";
 import { contains, buildNumberDropdownList, kebabCase } from "lazy-z";
 import { Modal, RadioButtonGroup, RadioButton, Tile } from "@carbon/react";
@@ -16,32 +16,32 @@ import "./edge-network.css";
 const edgePatterns = [
   {
     id: "full-tunnel",
-    name: "VPN",
+    name: "VPN"
   },
   {
     id: "waf",
-    name: "Web Application Firewall (WAF)",
+    name: "Web Application Firewall (WAF)"
   },
-  { id: "vpn-and-waf", name: "Both VPN and WAF" },
+  { id: "vpn-and-waf", name: "Both VPN and WAF" }
 ];
 
 const edgeNetworks = [
   {
     id: "edge",
-    name: "Create a new Edge VPC",
+    name: "Create a new Edge VPC"
   },
   {
     id: "management",
-    name: "Use existing Management VPC",
-  },
+    name: "Use existing Management VPC"
+  }
 ];
 
-const RadioGroup = (props) => {
+const RadioGroup = props => {
   return (
     <RadioButtonGroup
       legendText={props.name}
       name={kebabCase(props.name)}
-      onChange={(name) => props.handleRadioChange(props.type, name)}
+      onChange={name => props.handleRadioChange(props.type, name)}
       defaultSelected={props.defaultSelected}
       className="leftTextAlign marginBottom"
       disabled={props.disabled}
@@ -49,7 +49,7 @@ const RadioGroup = (props) => {
       invalid={props.invalid}
       invalidText={props.invalidText}
     >
-      {props.groups.map((pattern) => (
+      {props.groups.map(pattern => (
         <RadioButton
           labelText={pattern.name}
           value={pattern.id}
@@ -62,7 +62,7 @@ const RadioGroup = (props) => {
 };
 
 RadioGroup.defaultProps = {
-  disabled: false,
+  disabled: false
 };
 
 RadioGroup.propTypes = {
@@ -72,7 +72,7 @@ RadioGroup.propTypes = {
   invalid: PropTypes.bool.isRequired,
   invalidText: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired
 };
 
 class EdgeNetworkingForm extends React.Component {
@@ -92,7 +92,7 @@ class EdgeNetworkingForm extends React.Component {
       prevZones: this.props.craig.store.edge_pattern
         ? String(this.props.craig.store.edge_zones)
         : "0",
-      hideModal: true,
+      hideModal: true
     };
     this.onToggle = this.onToggle.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
@@ -135,7 +135,7 @@ class EdgeNetworkingForm extends React.Component {
     this.setState({
       hideModal: true,
       hideEdgeForm: true,
-      prevZones: this.state.zones,
+      prevZones: this.state.zones
     });
   }
 
@@ -281,14 +281,14 @@ EdgeNetworkingForm.propTypes = {
     store: PropTypes.shape({
       edge_pattern: PropTypes.string,
       edge_zones: PropTypes.number,
-      edge_vpc_name: PropTypes.string,
+      edge_vpc_name: PropTypes.string
     }).isRequired,
     f5: PropTypes.shape({
       vsi: PropTypes.shape({
-        create: PropTypes.func.isRequired,
-      }).isRequired,
-    }).isRequired,
-  }).isRequired,
+        create: PropTypes.func.isRequired
+      }).isRequired
+    }).isRequired
+  }).isRequired
 };
 
 export default EdgeNetworkingForm;

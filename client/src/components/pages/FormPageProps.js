@@ -16,7 +16,7 @@ import {
   VsiForm,
   RoutingTableForm,
   VsiLoadBalancerForm,
-  VpnServerForm,
+  VpnServerForm
 } from "icse-react-assets";
 import { getObjectFromArray, splat, transpose } from "lazy-z";
 import {
@@ -42,123 +42,122 @@ import {
   setFormSubnetList,
   setDeleteDisabledMessage,
   invalidCidrBlock,
-  setFormSgList,
+  setFormSgList
 } from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
 import { invalidCrnList } from "../../lib/forms";
-import { NoSecretsManagerTile } from "../utils/NoSecretsManagerTile";
 
 const pathToFormMap = {
   accessGroups: {
     jsonField: "access_groups",
     name: "Access Groups",
     addText: "Create an Access Group",
-    innerForm: AccessGroupForm,
+    innerForm: AccessGroupForm
   },
   resourceGroups: {
     jsonField: "resource_groups",
     name: "Resource Groups",
     addText: "Create a Resource Group",
-    innerForm: ResourceGroupForm,
+    innerForm: ResourceGroupForm
   },
   secretsManager: {
     jsonField: "secrets_manager",
     name: "Secrets Manager",
     addText: "Create a Secrets Manager Instance",
-    innerForm: SecretsManagerForm,
+    innerForm: SecretsManagerForm
   },
   keyManagement: {
     jsonField: "key_management",
     name: "Key Management",
     addText: "Create a Key Management Service",
-    innerForm: KeyManagementForm,
+    innerForm: KeyManagementForm
   },
   objectStorage: {
     jsonField: "object_storage",
     name: "Object Storage",
     addText: "Create an Object Storage Service",
-    innerForm: ObjectStorageForm,
+    innerForm: ObjectStorageForm
   },
   appID: {
     jsonField: "appid",
     name: "AppID",
     addText: "Create an AppID Service",
-    innerForm: AppIdForm,
+    innerForm: AppIdForm
   },
   vpcs: {
     jsonField: "vpcs",
     name: "Virtual Private Clouds",
     addText: "Create a VPC",
-    innerForm: VpcForm,
+    innerForm: VpcForm
   },
   vsi: {
     jsonField: "vsi",
     name: "Virtual Server Instances",
     addText: "Create a VSI",
-    innerForm: VsiForm,
+    innerForm: VsiForm
   },
   sshKeys: {
     jsonField: "ssh_keys",
     name: "SSH Keys",
     addText: "Create an SSH Key",
-    innerForm: SshKeyForm,
+    innerForm: SshKeyForm
   },
   transitGateways: {
     jsonField: "transit_gateways",
     name: "Transit Gateways",
     addText: "Create a Transit Gateway",
-    innerForm: TransitGatewayForm,
+    innerForm: TransitGatewayForm
   },
   vpn: {
     jsonField: "vpn_gateways",
     name: "VPN Gateways",
     addText: "Create a VPN Gateway",
-    innerForm: VpnGatewayForm,
+    innerForm: VpnGatewayForm
   },
   securityGroups: {
     jsonField: "security_groups",
     name: "Security Groups",
     addText: "Create a Security Group",
-    innerForm: SecurityGroupForm,
+    innerForm: SecurityGroupForm
   },
   eventStreams: {
     jsonField: "event_streams",
     name: "Event Streams",
     addText: "Create an Event Streams Service",
-    innerForm: EventStreamsForm,
+    innerForm: EventStreamsForm
   },
   clusters: {
     jsonField: "clusters",
     name: "Clusters",
     addText: "Create a Cluster",
-    innerForm: ClusterForm,
+    innerForm: ClusterForm
   },
   vpe: {
     jsonField: "virtual_private_endpoints",
     name: "Virtual Private Endpoints",
     addText: "Create a VPE",
-    innerForm: VpeForm,
+    innerForm: VpeForm
   },
   routingTables: {
     jsonField: "routing_tables",
     name: "Routing Tables",
     addText: "Create a Routing Table",
-    innerForm: RoutingTableForm,
+    innerForm: RoutingTableForm
   },
   lb: {
     jsonField: "load_balancers",
     name: "VPC Load Balancers",
     addText: "Create a Load Balancer",
-    innerForm: VsiLoadBalancerForm,
+    innerForm: VsiLoadBalancerForm
   },
   vpnServers: {
     jsonField: "vpn_servers",
     name: "VPN Servers",
     addText: "Create a VPN Server",
-    innerForm: VpnServerForm,
-  },
+    innerForm: VpnServerForm
+  }
 };
 /**
  * create form template props for form page
@@ -183,7 +182,7 @@ function formProps(form, craig) {
       forceOpen: forceShowForm,
       hideFormTitleButton: true,
       innerFormProps: {
-        craig: craig,
+        craig: craig
       },
       toggleFormProps: {
         craig: craig,
@@ -194,8 +193,8 @@ function formProps(form, craig) {
         submissionFieldName: form === "nacls" ? "network_acls" : "subnetTiers",
         disableSave: none,
         propsMatchState: none,
-        nullRef: true,
-      },
+        nullRef: true
+      }
     };
     return innerFormData;
   }
@@ -221,21 +220,20 @@ function formProps(form, craig) {
   if (form === "vpnServers") {
     if (craig.store.json.secrets_manager.length === 0) {
       formTemplate.hideFormTitleButton = true;
-      formTemplate.overrideTile = <NoSecretsManagerTile />;
     }
     let vpnProps = {
-      invalidClientIpPoolTextCallback: function (stateData) {
+      invalidClientIpPoolTextCallback: function(stateData) {
         return invalidCidrBlock(stateData.client_ip_pool)
           ? "Invalid CIDR block"
           : "";
       },
-      invalidClientIpPoolCallback: function (stateData) {
+      invalidClientIpPoolCallback: function(stateData) {
         return invalidCidrBlock(stateData.client_ip_pool);
       },
-      invalidCrns: function (stateData, componentProps, field) {
+      invalidCrns: function(stateData, componentProps, field) {
         return invalidCrnList([stateData[field]]);
       },
-      invalidCrnText: function (stateData, componentProps, field) {
+      invalidCrnText: function(stateData, componentProps, field) {
         return invalidCrnList([stateData[field]])
           ? "Enter a valid resource CRN"
           : "";
@@ -245,23 +243,22 @@ function formProps(form, craig) {
         onSave: craig.vpn_servers.routes.save,
         onSubmit: craig.vpn_servers.routes.create,
         onDelete: craig.vpn_servers.routes.delete,
-        disableSave: function (field, stateData, componentProps) {
+        disableSave: function(field, stateData, componentProps) {
           // pass through function to change field name
           return disableSave("vpn_server_routes", stateData, componentProps);
         },
         invalidTextCallback: invalidNameText("vpn_server_routes"),
         invalidCallback: invalidName("vpn_server_routes"),
         propsMatchState: propsMatchState,
-        craig: craig,
-      },
+        craig: craig
+      }
     };
     transpose(vpnProps, formTemplate.innerFormProps);
   } else if (form === "resourceGroups") {
     formTemplate.deleteDisabled = () => {
       return craig.store.json.resource_groups.length === 1;
     };
-    formTemplate.innerFormProps.helperTextCallback =
-      resourceGroupHelperTextCallback;
+    formTemplate.innerFormProps.helperTextCallback = resourceGroupHelperTextCallback;
   } else if (form === "keyManagement") {
     /**
      * key management
@@ -282,8 +279,8 @@ function formProps(form, craig) {
           onDelete: craig.key_management.keys.delete,
           onSubmit: craig.key_management.keys.create,
           disableSave: disableSave,
-          craig: craig,
-        },
+          craig: craig
+        }
       },
       formTemplate.innerFormProps
     );
@@ -302,7 +299,7 @@ function formProps(form, craig) {
           onSubmit: craig.access_groups.policies.create,
           disableSave: disableSave,
           craig: craig,
-          resourceGroups: splat(craig.store.json.resource_groups, "name"),
+          resourceGroups: splat(craig.store.json.resource_groups, "name")
         },
         /* dynamic policies */
         invalidDynamicPolicyCallback: invalidName("dynamic_policies"),
@@ -314,8 +311,8 @@ function formProps(form, craig) {
           onDelete: craig.access_groups.dynamic_policies.delete,
           onSubmit: craig.access_groups.dynamic_policies.create,
           disableSave: disableSave,
-          craig: craig,
-        },
+          craig: craig
+        }
       },
       formTemplate.innerFormProps
     );
@@ -337,7 +334,7 @@ function formProps(form, craig) {
           onDelete: craig.object_storage.keys.delete,
           onSubmit: craig.object_storage.keys.create,
           disableSave: disableSave,
-          craig: craig,
+          craig: craig
         },
         bucketProps: {
           onSave: craig.object_storage.buckets.save,
@@ -346,7 +343,7 @@ function formProps(form, craig) {
           disableSave: disableSave,
           craig: craig,
           encryptionKeys: craig.store.encryptionKeys,
-          encryptionKeyFilter: function (_, componentProps) {
+          encryptionKeyFilter: function(_, componentProps) {
             let cosName = componentProps.isModal
               ? componentProps.parent_name
               : componentProps.arrayParentName;
@@ -361,8 +358,8 @@ function formProps(form, craig) {
               kms
             );
             return splat(keys, "name");
-          },
-        },
+          }
+        }
       },
       formTemplate.innerFormProps
     );
@@ -380,8 +377,8 @@ function formProps(form, craig) {
           onSave: craig.appid.keys.save,
           onDelete: craig.appid.keys.delete,
           onSubmit: craig.appid.keys.create,
-          craig: craig,
-        },
+          craig: craig
+        }
       },
       formTemplate.innerFormProps
     );
@@ -392,10 +389,10 @@ function formProps(form, craig) {
     formTemplate.deleteDisabled = disableSshKeyDelete;
   } else if (form === "transitGateways") {
     formTemplate.innerFormProps.readOnlyName = false;
-    formTemplate.innerFormProps.invalidCrns = function (stateData) {
+    formTemplate.innerFormProps.invalidCrns = function(stateData) {
       return invalidCrnList(stateData.crns);
     };
-    formTemplate.innerFormProps.invalicCrnText = function (stateData) {
+    formTemplate.innerFormProps.invalicCrnText = function(stateData) {
       return invalidCrnList(stateData.crns)
         ? "Enter a valid comma separated list of CRNs"
         : "";
@@ -406,7 +403,7 @@ function formProps(form, craig) {
       onRuleSave: craig.security_groups.rules.save,
       onRuleDelete: craig.security_groups.rules.delete,
       disableModalSubmitCallback: none,
-      disableSaveCallback: function (stateData, componentProps) {
+      disableSaveCallback: function(stateData, componentProps) {
         return (
           propsMatchState("sg_rules", stateData, componentProps) ||
           disableSave("sg_rules", stateData, componentProps)
@@ -415,7 +412,7 @@ function formProps(form, craig) {
       invalidCallback: invalidName("security_groups"),
       invalidRuleText: invalidSecurityGroupRuleName,
       invalidTextCallback: invalidNameText("security_groups"),
-      invalidRuleTextCallback: invalidSecurityGroupRuleText,
+      invalidRuleTextCallback: invalidSecurityGroupRuleText
     };
     formTemplate.isSecurityGroup = true;
     transpose(sgInnerFormProps, formTemplate.innerFormProps);
@@ -434,15 +431,15 @@ function formProps(form, craig) {
           onSubmit: craig.vsi.volumes.create,
           disableSave: disableSave,
           encryptionKeys: craig.store.encryptionKeys,
-          craig: craig,
-        },
+          craig: craig
+        }
       },
       formTemplate.innerFormProps
     );
   } else if (form === "eventStreams") {
     let esInnerFormProps = {
       invalidCallback: invalidName("event_streams"),
-      invalidTextCallback: invalidNameText("event_streams"),
+      invalidTextCallback: invalidNameText("event_streams")
     };
     transpose(esInnerFormProps, formTemplate.innerFormProps);
   } else if (form === "clusters") {
@@ -453,20 +450,20 @@ function formProps(form, craig) {
         onSave: craig.clusters.worker_pools.save,
         onDelete: craig.clusters.worker_pools.delete,
         onSubmit: craig.clusters.worker_pools.create,
-        disableSave: function (field, stateData, componentProps) {
+        disableSave: function(field, stateData, componentProps) {
           // field is clusters, inject worker pools
           return disableSave("worker_pools", stateData, componentProps);
         },
         invalidCallback: invalidName("worker_pools"),
         invalidTextCallback: invalidNameText("worker_pools"),
         craig: craig,
-        flavorApiEndpoint: `/api/cluster/${craig.store.json._options.region}/flavors`,
+        flavorApiEndpoint: `/api/cluster/${craig.store.json._options.region}/flavors`
       },
       invalidCallback: invalidName("clusters"),
       invalidTextCallback: invalidNameText("clusters"),
       helperTextCallback: clusterHelperTestCallback,
       propsMatchState: propsMatchState,
-      cosNames: splat(craig.store.json.object_storage, "name"),
+      cosNames: splat(craig.store.json.object_storage, "name")
     };
     transpose(clusterInnerFormProps, formTemplate.innerFormProps);
   } else if (form === "routingTables") {
@@ -479,8 +476,8 @@ function formProps(form, craig) {
         onDelete: craig.routing_tables.routes.delete,
         onSave: craig.routing_tables.routes.save,
         onSubmit: craig.routing_tables.routes.create,
-        craig: craig,
-      },
+        craig: craig
+      }
     };
     transpose(routeFormProps, formTemplate.innerFormProps);
   } else if (form === "lb") {

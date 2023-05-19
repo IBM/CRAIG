@@ -9,14 +9,14 @@ const {
   kmsKeyDelete,
   kmsKeySave,
   keyManagementCreate,
-  keyManagementDelete,
+  keyManagementDelete
 } = require("./key-management");
 const {
   resourceGroupInit,
   resourceGroupOnStoreUpdate,
   resourceGroupCreate,
   resourceGroupSave,
-  resourceGroupDelete,
+  resourceGroupDelete
 } = require("./resource-groups");
 const {
   cosInit,
@@ -29,12 +29,12 @@ const {
   cosBucketDelete,
   cosKeyCreate,
   cosKeySave,
-  cosKeyDelete,
+  cosKeyDelete
 } = require("./cos");
 const {
   atrackerInit,
   atrackerOnStoreUpdate,
-  atrackerSave,
+  atrackerSave
 } = require("./atracker");
 const {
   appidCreate,
@@ -43,7 +43,7 @@ const {
   appidDelete,
   appidKeyCreate,
   appidKeySave,
-  appidKeyDelete,
+  appidKeyDelete
 } = require("./appid");
 const {
   vpcCreate,
@@ -63,7 +63,7 @@ const {
   naclRuleCreate,
   naclRuleSave,
   naclRuleDelete,
-  createEdgeVpc,
+  createEdgeVpc
 } = require("./vpc");
 const { sccInit, sccSave, sccDelete } = require("./scc");
 const {
@@ -71,7 +71,7 @@ const {
   sshKeyDelete,
   sshKeySave,
   sshKeyInit,
-  sshKeyOnStoreUpdate,
+  sshKeyOnStoreUpdate
 } = require("./ssh-keys.js");
 const {
   securityGroupInit,
@@ -81,21 +81,21 @@ const {
   securityGroupDelete,
   securityGroupRulesCreate,
   securityGroupRulesSave,
-  securityGroupRulesDelete,
+  securityGroupRulesDelete
 } = require("./security-groups");
 const {
   transitGatewayInit,
   transitGatewayOnStoreUpdate,
   transitGatewayCreate,
   transitGatewayDelete,
-  transitGatewaySave,
+  transitGatewaySave
 } = require("./transit-gateways");
 const {
   vpnInit,
   vpnCreate,
   vpnDelete,
   vpnSave,
-  vpnOnStoreUpdate,
+  vpnOnStoreUpdate
 } = require("./vpn");
 const {
   clusterInit,
@@ -105,7 +105,7 @@ const {
   clusterSave,
   clusterWorkerPoolCreate,
   clusterWorkerPoolDelete,
-  clusterWorkerPoolSave,
+  clusterWorkerPoolSave
 } = require("./clusters");
 const {
   vsiCreate,
@@ -115,14 +115,14 @@ const {
   vsiSave,
   vsiVolumeCreate,
   vsiVolumeDelete,
-  vsiVolumeSave,
+  vsiVolumeSave
 } = require("./vsi");
 const {
   vpeInit,
   vpeCreate,
   vpeDelete,
   vpeSave,
-  vpeOnStoreUpdate,
+  vpeOnStoreUpdate
 } = require("./vpe");
 const {
   f5Init,
@@ -130,26 +130,26 @@ const {
   f5InstanceSave,
   f5VsiCreate,
   f5OnStoreUpdate,
-  f5TemplateSave,
+  f5TemplateSave
 } = require("./f5");
 const {
   loadBalancerInit,
   loadBalancerOnStoreUpdate,
   loadBalancerCreate,
   loadBalancerSave,
-  loadBalancerDelete,
+  loadBalancerDelete
 } = require("./load-balancers");
 const {
   eventStreamsOnStoreUpdate,
   eventStreamsCreate,
   eventStreamsSave,
-  eventStreamsDelete,
+  eventStreamsDelete
 } = require("./event-streams");
 const {
   secretsManagerOnStoreUpdate,
   secretsManagerCreate,
   secretsManagerSave,
-  secretsManagerDelete,
+  secretsManagerDelete
 } = require("./secrets-manager");
 const {
   iamInit,
@@ -164,7 +164,7 @@ const {
   accessGroupPolicyDelete,
   accessGroupDynamicPolicyCreate,
   accessGroupDynamicPolicySave,
-  accessGroupDynamicPolicyDelete,
+  accessGroupDynamicPolicyDelete
 } = require("./iam");
 
 const validate = require("../validate");
@@ -176,7 +176,7 @@ const {
   copyRule,
   copySgRule,
   getAllOtherGroups,
-  getAllRuleNames,
+  getAllRuleNames
 } = require("./copy-rules");
 const {
   routingTableInit,
@@ -186,7 +186,7 @@ const {
   routingTableDelete,
   routingTableRouteCreate,
   routingTableRouteSave,
-  routingTableRouteDelete,
+  routingTableRouteDelete
 } = require("./routing-tables");
 const {
   cbrZonesInit,
@@ -199,7 +199,7 @@ const {
   cbrZoneAddressDelete,
   cbrZoneExclusionCreate,
   cbrZoneExclusionSave,
-  cbrZoneExclusionDelete,
+  cbrZoneExclusionDelete
 } = require("./cbr-zones");
 const {
   cbrRulesInit,
@@ -215,7 +215,7 @@ const {
   cbrRuleAttributeDelete,
   cbrRuleTagCreate,
   cbrRuleTagSave,
-  cbrRuleTagDelete,
+  cbrRuleTagDelete
 } = require("./cbr-rules");
 const {
   vpnServerInit,
@@ -225,7 +225,7 @@ const {
   vpnServerOnStoreUpdate,
   vpnServerRouteCreate,
   vpnServerRouteSave,
-  vpnServerRouteDelete,
+  vpnServerRouteDelete
 } = require("./vpn-servers");
 const {
   dnsInit,
@@ -241,34 +241,34 @@ const {
   dnsRecordDelete,
   dnsResolverCreate,
   dnsResolverDelete,
-  dnsResolverSave,
+  dnsResolverSave
 } = require("./dns");
 
-const state = function () {
+const state = function() {
   let store = new lazyZstate({
     _defaults: {
       json: {
         iam_account_settings: {
-          enable: false,
+          enable: false
         },
         access_groups: [],
         secrets_manager: [],
-        f5_vsi: [],
+        f5_vsi: []
       },
       cosBuckets: [],
       cosKeys: [],
       hideCodeMirror: false,
       hideFooter: false,
-      jsonInCodeMirror: false,
+      jsonInCodeMirror: false
     },
-    _no_default: [],
+    _no_default: []
   });
 
   /**
    * toggle a state store value
    * @param {string} value name of the boolean value to toggle
    */
-  store.toggleStoreValue = function (value) {
+  store.toggleStoreValue = function(value) {
     typeCheck(
       `store.toggleStoreValue - store.${value}`,
       "boolean",
@@ -277,7 +277,7 @@ const state = function () {
     store.store[value] = !store.store[value];
   };
 
-  store.setStoreValue = function (field, value) {
+  store.setStoreValue = function(field, value) {
     store.store[field] = value;
   };
 
@@ -287,7 +287,7 @@ const state = function () {
    * @param {Object} obj arbitrary object
    * @param {string} field name of the field on the object to update
    */
-  store.updateUnfound = function (listName, obj, field) {
+  store.updateUnfound = function(listName, obj, field) {
     if (!contains(store.store[listName], obj[field])) {
       obj[field] = null;
     }
@@ -298,18 +298,18 @@ const state = function () {
    * @param {Object} obj arbitrary object
    * @param {string=} field name of the field to update default to `resource_group`
    */
-  store.updateUnfoundResourceGroup = function (obj, field) {
+  store.updateUnfoundResourceGroup = function(obj, field) {
     let rgField = field || "resource_group";
     store.updateUnfound("resourceGroups", obj, rgField);
   };
 
-  store.createEdgeVpc = function (pattern, managementVpc, zones) {
+  store.createEdgeVpc = function(pattern, managementVpc, zones) {
     createEdgeVpc(store, pattern, managementVpc, zones);
   };
 
   store.newField("options", {
     init: optionsInit,
-    save: optionsSave,
+    save: optionsSave
   });
 
   store.newField("resource_groups", {
@@ -317,7 +317,7 @@ const state = function () {
     onStoreUpdate: resourceGroupOnStoreUpdate,
     create: resourceGroupCreate,
     save: resourceGroupSave,
-    delete: resourceGroupDelete,
+    delete: resourceGroupDelete
   });
 
   // components must check for key management second
@@ -331,9 +331,9 @@ const state = function () {
       keys: {
         create: kmsKeyCreate,
         delete: kmsKeyDelete,
-        save: kmsKeySave,
-      },
-    },
+        save: kmsKeySave
+      }
+    }
   });
 
   // next, update cos
@@ -347,14 +347,14 @@ const state = function () {
       buckets: {
         create: cosBucketCreate,
         save: cosBucketSave,
-        delete: cosBucketDelete,
+        delete: cosBucketDelete
       },
       keys: {
         create: cosKeyCreate,
         save: cosKeySave,
-        delete: cosKeyDelete,
-      },
-    },
+        delete: cosKeyDelete
+      }
+    }
   });
 
   store.newField("vpcs", {
@@ -372,31 +372,31 @@ const state = function () {
           rules: {
             create: naclRuleCreate,
             save: naclRuleSave,
-            delete: naclRuleDelete,
-          },
-        },
+            delete: naclRuleDelete
+          }
+        }
       },
       subnets: {
         create: subnetCreate,
         save: subnetSave,
-        delete: subnetDelete,
+        delete: subnetDelete
       },
       subnetTiers: {
         create: subnetTierCreate,
         save: subnetTierSave,
-        delete: subnetTierDelete,
-      },
-    },
+        delete: subnetTierDelete
+      }
+    }
   });
 
   store.newField("atracker", {
     init: atrackerInit,
     onStoreUpdate: atrackerOnStoreUpdate,
-    save: atrackerSave,
+    save: atrackerSave
   });
 
   store.newField("appid", {
-    init: (config) => {
+    init: config => {
       config.store.json.appid = [];
     },
     onStoreUpdate: appidOnStoreUpdate,
@@ -407,15 +407,15 @@ const state = function () {
       keys: {
         create: appidKeyCreate,
         save: appidKeySave,
-        delete: appidKeyDelete,
-      },
-    },
+        delete: appidKeyDelete
+      }
+    }
   });
 
   store.newField("scc", {
     init: sccInit,
     save: sccSave,
-    delete: sccDelete,
+    delete: sccDelete
   });
 
   store.newField("ssh_keys", {
@@ -423,7 +423,7 @@ const state = function () {
     onStoreUpdate: sshKeyOnStoreUpdate,
     create: sshKeyCreate,
     save: sshKeySave,
-    delete: sshKeyDelete,
+    delete: sshKeyDelete
   });
 
   store.newField("security_groups", {
@@ -436,9 +436,9 @@ const state = function () {
       rules: {
         create: securityGroupRulesCreate,
         save: securityGroupRulesSave,
-        delete: securityGroupRulesDelete,
-      },
-    },
+        delete: securityGroupRulesDelete
+      }
+    }
   });
 
   store.newField("transit_gateways", {
@@ -446,7 +446,7 @@ const state = function () {
     onStoreUpdate: transitGatewayOnStoreUpdate,
     create: transitGatewayCreate,
     save: transitGatewaySave,
-    delete: transitGatewayDelete,
+    delete: transitGatewayDelete
   });
 
   store.newField("vpn_gateways", {
@@ -454,7 +454,7 @@ const state = function () {
     onStoreUpdate: vpnOnStoreUpdate,
     create: vpnCreate,
     save: vpnSave,
-    delete: vpnDelete,
+    delete: vpnDelete
   });
 
   store.newField("clusters", {
@@ -467,9 +467,9 @@ const state = function () {
       worker_pools: {
         create: clusterWorkerPoolCreate,
         save: clusterWorkerPoolSave,
-        delete: clusterWorkerPoolDelete,
-      },
-    },
+        delete: clusterWorkerPoolDelete
+      }
+    }
   });
 
   store.newField("vsi", {
@@ -482,9 +482,9 @@ const state = function () {
       volumes: {
         create: vsiVolumeCreate,
         save: vsiVolumeSave,
-        delete: vsiVolumeDelete,
-      },
-    },
+        delete: vsiVolumeDelete
+      }
+    }
   });
 
   store.newField("virtual_private_endpoints", {
@@ -492,7 +492,7 @@ const state = function () {
     onStoreUpdate: vpeOnStoreUpdate,
     create: vpeCreate,
     save: vpeSave,
-    delete: vpeDelete,
+    delete: vpeDelete
   });
 
   store.newField("f5", {
@@ -500,16 +500,16 @@ const state = function () {
     onStoreUpdate: f5OnStoreUpdate,
     subComponents: {
       instance: {
-        save: f5InstanceSave,
+        save: f5InstanceSave
       },
       vsi: {
         create: f5VsiCreate,
-        save: f5VsiSave,
+        save: f5VsiSave
       },
       template: {
-        save: f5TemplateSave,
-      },
-    },
+        save: f5TemplateSave
+      }
+    }
   });
 
   store.newField("load_balancers", {
@@ -517,32 +517,32 @@ const state = function () {
     onStoreUpdate: loadBalancerOnStoreUpdate,
     create: loadBalancerCreate,
     save: loadBalancerSave,
-    delete: loadBalancerDelete,
+    delete: loadBalancerDelete
   });
 
   store.newField("event_streams", {
-    init: (config) => {
+    init: config => {
       config.store.json.event_streams = [];
     },
     onStoreUpdate: eventStreamsOnStoreUpdate,
     create: eventStreamsCreate,
     save: eventStreamsSave,
-    delete: eventStreamsDelete,
+    delete: eventStreamsDelete
   });
 
   store.newField("secrets_manager", {
-    init: (config) => {
+    init: config => {
       config.store.json.secrets_manager = [];
     },
     onStoreUpdate: secretsManagerOnStoreUpdate,
     create: secretsManagerCreate,
     save: secretsManagerSave,
-    delete: secretsManagerDelete,
+    delete: secretsManagerDelete
   });
 
   store.newField("iam_account_settings", {
     init: iamInit,
-    save: iamSave,
+    save: iamSave
   });
 
   store.newField("routing_tables", {
@@ -555,9 +555,9 @@ const state = function () {
       routes: {
         create: routingTableRouteCreate,
         save: routingTableRouteSave,
-        delete: routingTableRouteDelete,
-      },
-    },
+        delete: routingTableRouteDelete
+      }
+    }
   });
 
   store.newField("access_groups", {
@@ -570,14 +570,14 @@ const state = function () {
       policies: {
         create: accessGroupPolicyCreate,
         save: accessGroupPolicySave,
-        delete: accessGroupPolicyDelete,
+        delete: accessGroupPolicyDelete
       },
       dynamic_policies: {
         create: accessGroupDynamicPolicyCreate,
         save: accessGroupDynamicPolicySave,
-        delete: accessGroupDynamicPolicyDelete,
-      },
-    },
+        delete: accessGroupDynamicPolicyDelete
+      }
+    }
   });
 
   store.newField("cbr_zones", {
@@ -589,14 +589,14 @@ const state = function () {
       addresses: {
         create: cbrZoneAddressCreate,
         save: cbrZoneAddressSave,
-        delete: cbrZoneAddressDelete,
+        delete: cbrZoneAddressDelete
       },
       exclusions: {
         create: cbrZoneExclusionCreate,
         save: cbrZoneExclusionSave,
-        delete: cbrZoneExclusionDelete,
-      },
-    },
+        delete: cbrZoneExclusionDelete
+      }
+    }
   });
 
   store.newField("cbr_rules", {
@@ -608,19 +608,19 @@ const state = function () {
       contexts: {
         create: cbrRuleContextCreate,
         save: cbrRuleContextSave,
-        delete: cbrRuleContextDelete,
+        delete: cbrRuleContextDelete
       },
       resource_attributes: {
         create: cbrRuleAttributeCreate,
         save: cbrRuleAttributeSave,
-        delete: cbrRuleAttributeDelete,
+        delete: cbrRuleAttributeDelete
       },
       tags: {
         create: cbrRuleTagCreate,
         save: cbrRuleTagSave,
-        delete: cbrRuleTagDelete,
-      },
-    },
+        delete: cbrRuleTagDelete
+      }
+    }
   });
 
   store.newField("vpn_servers", {
@@ -633,9 +633,9 @@ const state = function () {
       routes: {
         create: vpnServerRouteCreate,
         save: vpnServerRouteSave,
-        delete: vpnServerRouteDelete,
-      },
-    },
+        delete: vpnServerRouteDelete
+      }
+    }
   });
 
   store.newField("dns", {
@@ -648,19 +648,19 @@ const state = function () {
       zones: {
         create: dnsZoneCreate,
         delete: dnsZoneDelete,
-        save: dnsZoneSave,
+        save: dnsZoneSave
       },
       records: {
         create: dnsRecordCreate,
         save: dnsRecordSave,
-        delete: dnsRecordDelete,
+        delete: dnsRecordDelete
       },
       custom_resolvers: {
         create: dnsResolverCreate,
         delete: dnsResolverDelete,
-        save: dnsResolverSave,
-      },
-    },
+        save: dnsResolverSave
+      }
+    }
   });
 
   /**
@@ -668,35 +668,35 @@ const state = function () {
    * @param {Object} json craig json configuration object
    * @param {boolean=} slz skip validation step when slz
    */
-  store.hardSetJson = function (json, slz) {
+  store.hardSetJson = function(json, slz) {
     if (!slz) validate(json);
     let subnetTiers = {};
     transpose(json, store.store.json);
-    store.store.json.vpcs.forEach((network) => {
+    store.store.json.vpcs.forEach(network => {
       subnetTiers[network.name] = buildSubnetTiers(network);
     });
-    store.store.json.vpcs.forEach((nw) => {
-      nw.subnets.forEach((subnet) => {
+    store.store.json.vpcs.forEach(nw => {
+      nw.subnets.forEach(subnet => {
         subnet.vpc = nw.name;
       });
-      nw.address_prefixes.forEach((prefix) => {
+      nw.address_prefixes.forEach(prefix => {
         prefix.vpc = nw.name;
       });
-      nw.acls.forEach((acl) => {
-        acl.rules.forEach((rule) => {
+      nw.acls.forEach(acl => {
+        acl.rules.forEach(rule => {
           rule.acl = acl.name;
           rule.vpc = nw.name;
         });
       });
     });
-    store.store.json.clusters.forEach((cluster) => {
-      cluster.worker_pools.forEach((pool) => {
+    store.store.json.clusters.forEach(cluster => {
+      cluster.worker_pools.forEach(pool => {
         pool.cluster = cluster.name;
         pool.vpc = cluster.vpc;
       });
     });
-    store.store.json.security_groups.forEach((group) => {
-      group.rules.forEach((rule) => {
+    store.store.json.security_groups.forEach(group => {
+      group.rules.forEach(rule => {
         rule.vpc = group.vpc;
         rule.sg = group.name;
       });
@@ -709,10 +709,10 @@ const state = function () {
    * get all subnets
    * @returns {Array<object>} all subnet objects
    */
-  store.getAllSubnets = function () {
+  store.getAllSubnets = function() {
     let subnetList = [];
-    store.store.json.vpcs.forEach((vpc) => {
-      vpc.subnets.forEach((subnet) => subnetList.push(subnet));
+    store.store.json.vpcs.forEach(vpc => {
+      vpc.subnets.forEach(subnet => subnetList.push(subnet));
     });
     return subnetList;
   };
@@ -722,7 +722,7 @@ const state = function () {
    * @param {string} vpcName
    * @param {string} aclName
    */
-  store.addClusterRules = function (vpcName, aclName) {
+  store.addClusterRules = function(vpcName, aclName) {
     addClusterRules(store, vpcName, aclName);
   };
 
@@ -731,7 +731,7 @@ const state = function () {
    * @param {string} sourceSecurityGroup name of acl to copy
    * @param {string} destinationVpc copy destination
    */
-  store.copySecurityGroup = function (sourceSecurityGroup, destinationVpc) {
+  store.copySecurityGroup = function(sourceSecurityGroup, destinationVpc) {
     copySecurityGroup(store, sourceSecurityGroup, destinationVpc);
   };
 
@@ -741,7 +741,7 @@ const state = function () {
    * @param {string} aclName name of acl to copy
    * @param {string} destinationVpc copy destination
    */
-  store.copyNetworkAcl = function (sourceVpc, aclName, destinationVpc) {
+  store.copyNetworkAcl = function(sourceVpc, aclName, destinationVpc) {
     copyNetworkAcl(store, sourceVpc, aclName, destinationVpc);
   };
 
@@ -752,7 +752,7 @@ const state = function () {
    * @param {string} ruleName
    * @param {string} destinationAcl
    */
-  store.copyRule = function (sourceVpc, aclName, ruleName, destinationAcl) {
+  store.copyRule = function(sourceVpc, aclName, ruleName, destinationAcl) {
     copyRule(store, sourceVpc, aclName, ruleName, destinationAcl);
   };
 
@@ -762,7 +762,7 @@ const state = function () {
    * @param {string} ruleName
    * @param {string} destinationSg
    */
-  store.copySgRule = function (sgName, ruleName, destinationSg) {
+  store.copySgRule = function(sgName, ruleName, destinationSg) {
     copySgRule(store, sgName, ruleName, destinationSg);
   };
 
@@ -771,7 +771,7 @@ const state = function () {
    * @param {string} ruleSource rule source
    * @param {string=} sourceName vpc acl source name, used only for acls
    */
-  store.getAllRuleNames = function (ruleSource, sourceName) {
+  store.getAllRuleNames = function(ruleSource, sourceName) {
     return getAllRuleNames(store, ruleSource, sourceName);
   };
 
@@ -781,7 +781,7 @@ const state = function () {
    * @param {*} componentProps
    * @returns {Array<string>} list of acl names
    */
-  store.getAllOtherGroups = function (stateData, componentProps) {
+  store.getAllOtherGroups = function(stateData, componentProps) {
     return getAllOtherGroups(store, stateData, componentProps);
   };
 

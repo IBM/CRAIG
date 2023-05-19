@@ -6,7 +6,7 @@ const {
   deleteSubChild,
   setUnfoundResourceGroup,
   setUnfoundEncryptionKey,
-  pushToChildFieldModal,
+  pushToChildFieldModal
 } = require("./store.utils");
 
 /**
@@ -18,13 +18,13 @@ const {
  * @param {Function} instanceCallback callback after setting splat
  */
 function cosSetStoreBucketsAndKeys(config, instanceCallback) {
-  config.store.json.object_storage.forEach((instance) => {
+  config.store.json.object_storage.forEach(instance => {
     instance.plan = instance.plan.toLowerCase();
-    instance.buckets.forEach((bucket) => {
+    instance.buckets.forEach(bucket => {
       bucket.use_random_suffix = instance.use_random_suffix;
       bucket.storage_class = bucket.storage_class.toLowerCase();
     });
-    instance.keys.forEach((key) => {
+    instance.keys.forEach(key => {
       key.use_random_suffix = instance.use_random_suffix;
     });
     // add all bucket names from instance to buckets
@@ -66,10 +66,10 @@ function cosOnStoreUpdate(config) {
   config.store.cosInstances = splat(config.store.json.object_storage, "name");
   config.store.cosBuckets = [];
   config.store.cosKeys = [];
-  cosSetStoreBucketsAndKeys(config, (instance) => {
+  cosSetStoreBucketsAndKeys(config, instance => {
     setUnfoundResourceGroup(config, instance);
     // for each bucket, if encryption key is not found set to null
-    instance.buckets.forEach((bucket) => {
+    instance.buckets.forEach(bucket => {
       setUnfoundEncryptionKey(config, bucket);
     });
   });
@@ -148,7 +148,7 @@ function cosBucketSave(config, stateData, componentProps) {
     "buckets",
     stateData,
     componentProps,
-    (config) => {
+    config => {
       if (
         config.store.json.atracker.collector_bucket_name ===
         componentProps.data.name
@@ -200,7 +200,7 @@ function cosKeySave(config, stateData, componentProps) {
     "keys",
     stateData,
     componentProps,
-    (config) => {
+    config => {
       if (config.store.json.atracker.cos_key === componentProps.data.name) {
         config.store.json.atracker.cos_key = stateData.name;
       }
@@ -229,5 +229,5 @@ module.exports = {
   cosDelete,
   cosSave,
   cosOnStoreUpdate,
-  cosInit,
+  cosInit
 };

@@ -4,17 +4,17 @@ import {
   IcseFormGroup,
   IcseNameInput,
   IcseModal,
-  IcseTextInput,
+  IcseTextInput
 } from "icse-react-assets";
 import {
   genericNameCallback,
   invalidNewResourceName,
-  invalidProjectDescription,
+  invalidProjectDescription
 } from "../../../lib";
 import { projectDescriptionRegex } from "../../../lib/constants";
 import PropTypes from "prop-types";
 
-export const SummaryErrorText = (props) => {
+export const SummaryErrorText = props => {
   return (
     <>
       <div className="displayFlex">
@@ -33,7 +33,7 @@ export const SummaryErrorText = (props) => {
 };
 
 SummaryErrorText.propTypes = {
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string.isRequired
 };
 
 export const SummaryText = () => {
@@ -70,7 +70,7 @@ export class SaveProjectAsModal extends React.Component {
     super(props);
     this.state = {
       name: "",
-      description: "",
+      description: ""
     };
     this.setEventValue = this.setEventValue.bind(this);
   }
@@ -136,5 +136,5 @@ export class SaveProjectAsModal extends React.Component {
 SaveProjectAsModal.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
-  onProjectSave: PropTypes.func.isRequired,
+  onProjectSave: PropTypes.func.isRequired
 };

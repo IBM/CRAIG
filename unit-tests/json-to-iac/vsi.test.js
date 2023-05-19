@@ -1081,20 +1081,24 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
       transpose(slzNetwork, nw);
       nw.vsi = [
         {
-          kms: "slz-kms",
-          encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
-          profile: "cx2-4x8",
-          name: "management-server",
-          security_groups: ["management-vpe-sg"],
-          ssh_keys: ["slz-ssh-key"],
-          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
-          vpc: "management",
+          kms: 'slz-kms',
+          encryption_key: 'slz-vsi-volume-key',
+          image: 'ibm-ubuntu-18-04-6-minimal-amd64-2',
+          profile: 'cx2-4x8',
+          name: 'management-server',
+          security_groups: [ 'management-vpe-sg' ],
+          ssh_keys: [ 'slz-ssh-key' ],
+          subnets: [ 'vsi-zone-1', 'vsi-zone-2', 'vsi-zone-3' ],
+          vpc: 'management',
           vsi_per_subnet: 1,
-          resource_group: "slz-management-rg",
-          reserved_ips: [["1.2.3.4"], ["5.6.7.8"], ["9.10.11.12"]],
-        },
-      ];
+          resource_group: 'slz-management-rg',
+          reserved_ips: [
+            ["1.2.3.4"],
+            ["5.6.7.8"],
+            ["9.10.11.12"]
+          ]
+        }
+      ]
       let actualData = vsiTf(nw);
       let expectedData = `##############################################################################
 # Image Data Sources

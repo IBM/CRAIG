@@ -3,7 +3,7 @@ import {
   ToggleForm,
   IcseFormTemplate,
   EmptyResourceTile,
-  StatefulTabPanel,
+  StatefulTabPanel
 } from "icse-react-assets";
 import PropTypes from "prop-types";
 import toggleFormProps from "./ToggleFormPageProps";
@@ -12,7 +12,7 @@ import { CopyRuleForm } from "../forms";
 import { Docs } from "icse-react-assets";
 const { docs } = require("../../lib");
 
-export const ToggleFormPage = (props) => {
+export const ToggleFormPage = props => {
   return props.form === "f5" && props.craig.store.edge_pattern === undefined ? (
     <StatefulTabPanel
       name="F5 Big IP"
@@ -32,10 +32,10 @@ export const ToggleFormPage = (props) => {
 };
 
 ToggleFormPage.propTypes = {
-  form: PropTypes.string.isRequired,
+  form: PropTypes.string.isRequired
 };
 
-export const FormPage = (props) => {
+export const FormPage = props => {
   return (
     <>
       <IcseFormTemplate {...formProps(props.form, props.craig)} />
@@ -48,7 +48,7 @@ export const FormPage = (props) => {
 };
 
 FormPage.propTypes = {
-  form: PropTypes.string.isRequired,
+  form: PropTypes.string.isRequired
 };
 
 /**
@@ -57,7 +57,7 @@ FormPage.propTypes = {
  * @returns {Function} function to display docs
  */
 export function RenderDocs(field) {
-  return function () {
+  return function() {
     return Docs(docs[field]);
   };
 }

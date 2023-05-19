@@ -26,7 +26,7 @@ describe("resource groups", () => {
     const user = userEvent.setup();
     user.click(
       screen.getByRole("button", {
-        name: "service-rg-open-close",
+        name: "service-rg-open-close"
       })
     );
   });
@@ -35,11 +35,11 @@ describe("resource groups", () => {
       const user = userEvent.setup();
       await user.click(
         screen.getByRole("button", {
-          name: "resource-groups-add",
+          name: "resource-groups-add"
         })
       );
       let nameInput = screen.getByRole("textbox", {
-        name: /Name/i,
+        name: /Name/i
       });
       let submitButton = screen.getByRole("button", { name: /submit/i });
       expect(submitButton).toBeDisabled(); // invalid
@@ -55,7 +55,7 @@ describe("resource groups", () => {
       const user = userEvent.setup();
       await user.click(
         screen.getByRole("button", {
-          name: "service-rg-open-close",
+          name: "service-rg-open-close"
         })
       );
       let nameInput = screen.getByRole("textbox", { name: /Name/i });
@@ -66,7 +66,7 @@ describe("resource groups", () => {
       ).toBeEnabled();
       await user.click(
         screen.getByRole("button", {
-          name: "service-rg-save", // save
+          name: "service-rg-save" // save
         })
       );
       waitFor(() => {
@@ -79,12 +79,12 @@ describe("resource groups", () => {
       const user = userEvent.setup();
       await user.click(
         screen.getByRole("button", {
-          name: "service-rg-open-close",
+          name: "service-rg-open-close"
         })
       );
       await user.click(
         screen.getByRole("button", {
-          name: /service\-rg\-delete/i,
+          name: /service\-rg\-delete/i
         })
       );
       waitFor(() => {

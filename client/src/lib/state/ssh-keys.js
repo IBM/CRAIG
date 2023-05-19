@@ -23,8 +23,8 @@ function sshKeyInit(config) {
       name: "ssh-key",
       public_key: "<user-determined-value>",
       resource_group: "management-rg",
-      use_data: false,
-    },
+      use_data: false
+    }
   ];
   setSshKeys(config);
 }
@@ -38,7 +38,7 @@ function sshKeyInit(config) {
  */
 function sshKeyOnStoreUpdate(config) {
   setSshKeys(config);
-  config.store.json.ssh_keys.forEach((key) => {
+  config.store.json.ssh_keys.forEach(key => {
     config.setUnfound("resourceGroups", key, "resource_group");
   });
 }
@@ -74,11 +74,11 @@ function sshKeySave(config, stateData, componentProps) {
   // if ssh key has new name
   if (stateData.name !== componentProps.data.name) {
     // for each vsi
-    config.store.json.vsi?.forEach((instance) => {
+    config.store.json.vsi?.forEach(instance => {
       // if old key is found
       let newSshKeys = []; // list of ssh keys
       // for each key in the instance
-      instance.ssh_keys.forEach((key) => {
+      instance.ssh_keys.forEach(key => {
         newSshKeys.push(
           // add either the key name or the new key name
           stateData.name
@@ -98,7 +98,10 @@ function sshKeySave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function sshKeyDelete(config, stateData, componentProps) {
-  config.carve(["json", "ssh_keys"], componentProps.data.name);
+  config.carve(
+    ["json", "ssh_keys"],
+    componentProps.data.name
+  );
 }
 
 module.exports = {
@@ -106,5 +109,5 @@ module.exports = {
   sshKeyDelete,
   sshKeySave,
   sshKeyInit,
-  sshKeyOnStoreUpdate,
+  sshKeyOnStoreUpdate
 };

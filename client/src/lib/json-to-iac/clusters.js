@@ -13,7 +13,7 @@ const {
   tfBlock,
   jsonToTfPrint,
   timeouts,
-  cdktfRef,
+  cdktfRef
 } = require("./utils");
 
 /**
@@ -41,10 +41,10 @@ const {
  */
 function ibmContainerVpcCluster(cluster, config) {
   let data = {
-    name: `${cluster.vpc} vpc ${cluster.name} cluster`,
+    name: `${cluster.vpc} vpc ${cluster.name} cluster`
   };
   let clusterData = {
-    name: kebabName([cluster.name, "cluster"]),
+    name: kebabName( [cluster.name, "cluster"]),
     vpc_id: vpcRef(cluster.vpc, "id", true),
     resource_group_id: rgIdRef(cluster.resource_group, config),
     flavor: cluster.flavor,
@@ -60,17 +60,17 @@ function ibmContainerVpcCluster(cluster, config) {
       {
         crk_id: encryptionKeyRef(cluster.kms, cluster.encryption_key),
         instance_id: cdktfRef(getKmsInstanceData(cluster.kms, config).guid),
-        private_endpoint: cluster.private_endpoint || false,
-      },
-    ],
+        private_endpoint: cluster.private_endpoint || false
+      }
+    ]
   };
   // add subnets
-  cluster.subnets.forEach((subnet) => {
+  cluster.subnets.forEach(subnet => {
     clusterData.zones.push({
       name: composedZone(subnetZone(subnet), true),
       subnet_id: `\${module.${snakeCase(cluster.vpc)}_vpc.${snakeCase(
         subnet
-      )}_id}`,
+      )}_id}`
     });
   });
 
@@ -107,10 +107,10 @@ function ibmContainerVpcCluster(cluster, config) {
 function ibmContainerVpcWorkerPool(pool, config) {
   let poolCluster = getObjectFromArray(config.clusters, "name", pool.cluster);
   let data = {
-    name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`,
+    name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`
   };
   let poolData = {
-    worker_pool_name: kebabName([pool.cluster, "cluster", pool.name]),
+    worker_pool_name: kebabName( [pool.cluster, "cluster", pool.name]),
     vpc_id: vpcRef(pool.vpc, "id", true),
     resource_group_id: rgIdRef(pool.resource_group, config),
     cluster: tfRef(
@@ -119,19 +119,19 @@ function ibmContainerVpcWorkerPool(pool, config) {
     ),
     flavor: pool.flavor,
     worker_count: pool.workers_per_subnet,
-    zones: [],
+    zones: []
   };
   if (poolCluster.type === "openshift") {
     poolData.entitlement = poolCluster.entitlement;
   }
 
   // add subnets
-  pool.subnets.forEach((subnet) => {
+  pool.subnets.forEach(subnet => {
     poolData.zones.push({
       name: composedZone(subnetZone(subnet), true),
       subnet_id: `\${module.${snakeCase(poolCluster.vpc)}_vpc.${snakeCase(
         subnet
-      )}_id}`,
+      )}_id}`
     });
   });
   data.data = poolData;
@@ -179,9 +179,9 @@ function formatWorkerPool(pool, config) {
  */
 function clusterTf(config) {
   let tf = "";
-  config.clusters.forEach((cluster) => {
+  config.clusters.forEach(cluster => {
     let blockData = formatCluster(cluster, config);
-    cluster.worker_pools.forEach((pool) => {
+    cluster.worker_pools.forEach(pool => {
       blockData += formatWorkerPool(pool, config);
     });
     tf += tfBlock(cluster.name + " Cluster", blockData) + "\n";
@@ -194,5 +194,5 @@ module.exports = {
   formatWorkerPool,
   clusterTf,
   ibmContainerVpcCluster,
-  ibmContainerVpcWorkerPool,
+  ibmContainerVpcWorkerPool
 };

@@ -11,7 +11,7 @@ const {
   accessGroupPolicyHelperTextCallback,
   invalidCidrText,
   invalidCbrRuleText,
-  invalidCbrZoneText,
+  invalidCbrZoneText
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -33,7 +33,7 @@ const {
   invalidCidr,
   invalidProjectDescription,
   invalidCbrRule,
-  invalidCbrZone,
+  invalidCbrZone
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -41,7 +41,7 @@ const {
   invalidPort,
   forceShowForm,
   disableSshKeyDelete,
-  invalidCidrBlock,
+  invalidCidrBlock
 } = require("./disable-save");
 const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
@@ -49,7 +49,7 @@ const {
   formatConfig,
   copyAclModalContent,
   copyRuleCodeMirrorData,
-  copySgModalContent,
+  copySgModalContent
 } = require("./format-json");
 const {
   setFormRgList,
@@ -58,7 +58,7 @@ const {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
-  setFormSgList,
+  setFormSgList
 } = require("./form-props");
 module.exports = {
   hasDuplicateName,
@@ -113,5 +113,5 @@ module.exports = {
   invalidCbrZone,
   invalidCbrZoneText,
   invalidCidrBlock,
-  setFormSgList,
+  setFormSgList
 };

@@ -115,15 +115,14 @@
       "resource_group": "string",
       "encryption_key": "string",
       "kms": "string",
-      "secrets": {
+      "kv_secrets": {
         "Array": {
           "name": "string",
           "secrets_manager": "string",
           "credentials": "string",
           "credential_instance": "string",
           "credential_type": "string",
-          "description": "string",
-          "type": "string"
+          "description": "string"
         }
       }
     }
@@ -136,12 +135,7 @@
     "bucket": "string",
     "cos_key": "string",
     "add_route": "boolean",
-    "locations": "Array<string>",
-    "instance": "boolean",
-    "resource_group": "string",
-    "plan": "string",
-    "endpoints": "string",
-    "archive": "boolean"
+    "locations": "Array<string>"
   },
   "event_streams": {
     "Array": {

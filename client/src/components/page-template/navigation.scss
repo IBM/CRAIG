@@ -113,15 +113,13 @@ a.cds--side-nav__link {
   width: 16rem; // full width
 }
 
-div .cds--side-nav__overlay-active {
-  /* specify application to div to raise class priority */
+div .cds--side-nav__overlay-active { /* specify application to div to raise class priority */
   width: 100vw;
   height: 100vh;
   background-color: rgba(22, 22, 22, 0.5);
   background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
   opacity: 1;
-  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1),
-    background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
+  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1), background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
 }
 
 // Styles for header menu box

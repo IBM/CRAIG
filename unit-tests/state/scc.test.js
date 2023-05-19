@@ -96,7 +96,7 @@ describe("scc", () => {
         id: null,
         passphrase: null,
         name: null,
-        location: null,
+        location:  null,
         collector_description: null,
         is_public: false,
         scope_description: null,

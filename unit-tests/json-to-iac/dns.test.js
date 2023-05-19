@@ -150,7 +150,20 @@ resource "ibm_dns_permitted_network" "test_dns_instance_test_dot_com_permitted_n
         high_availability: true,
         enabled: true,
         vpc: "management",
-        subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+        subnets: [
+          {
+            name: "vsi-zone-1",
+            enabled: true,
+          },
+          {
+            name: "vsi-zone-2",
+            enabled: true,
+          },
+          {
+            name: "vsi-zone-3",
+            enabled: true,
+          },
+        ],
       });
       let expectedData = `
 resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
@@ -220,7 +233,20 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
                 high_availability: true,
                 enabled: true,
                 vpc: "management",
-                subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+                subnets: [
+                  {
+                    name: "vsi-zone-1",
+                    enabled: true,
+                  },
+                  {
+                    name: "vsi-zone-2",
+                    enabled: true,
+                  },
+                  {
+                    name: "vsi-zone-3",
+                    enabled: true,
+                  },
+                ],
               },
             ],
           },

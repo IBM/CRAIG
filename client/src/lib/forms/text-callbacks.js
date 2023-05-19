@@ -2,13 +2,13 @@ const {
   isNullOrEmptyString,
   splatContains,
   isIpv4CidrOrAddress,
-  transpose,
+  transpose
 } = require("lazy-z");
 const { hasDuplicateName } = require("./duplicate-name");
 const {
   invalidNewResourceName,
   invalidSecurityGroupRuleName,
-  hasOverlappingCidr,
+  hasOverlappingCidr
 } = require("./invalid-callbacks");
 
 /**
@@ -107,7 +107,7 @@ function invalidNameText(field, craig) {
      * @param {Object} stateData
      * @param {Object} componentProps
      */
-    return function (field, stateData, componentProps) {
+    return function(field, stateData, componentProps) {
       if (field === "name") {
         return invalidNameText("vpc_name")(stateData, componentProps);
       } else if (isNullOrEmptyString(stateData[field])) {
@@ -129,7 +129,7 @@ function invalidNameText(field, craig) {
       }
     };
   } else if (field === "subnet") {
-    return function (stateData, componentProps) {
+    return function(stateData, componentProps) {
       let propsCopy = { craig: craig };
       transpose(componentProps, propsCopy);
       return invalidNameText("subnet_name")(stateData, propsCopy);
@@ -215,7 +215,7 @@ function invalidCidrText(craig) {
    * @param {*} componentProps
    * @returns {string} invalid text string
    */
-  return function (stateData, componentProps) {
+  return function(stateData, componentProps) {
     if (!stateData.cidr) {
       return "Invalid CIDR block";
     }
@@ -285,5 +285,5 @@ module.exports = {
   accessGroupPolicyHelperTextCallback,
   invalidCidrText,
   invalidCbrRuleText,
-  invalidCbrZoneText,
+  invalidCbrZoneText
 };

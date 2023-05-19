@@ -5,7 +5,7 @@ const {
   camelCase,
   splat,
   splatContains,
-  getObjectFromArray,
+  getObjectFromArray
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -13,7 +13,7 @@ const {
   hasUnfoundVpc,
   updateSubChild,
   deleteSubChild,
-  pushToChildFieldModal,
+  pushToChildFieldModal
 } = require("./store.utils");
 
 /**
@@ -37,16 +37,16 @@ function vsiInit(config) {
         source: "161.26.0.0/16",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         udp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           type: null,
-          code: null,
-        },
+          code: null
+        }
       },
       {
         vpc: "management",
@@ -56,16 +56,16 @@ function vsiInit(config) {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         udp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           type: null,
-          code: null,
-        },
+          code: null
+        }
       },
       {
         vpc: "management",
@@ -75,16 +75,16 @@ function vsiInit(config) {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         udp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           type: null,
-          code: null,
-        },
+          code: null
+        }
       },
       {
         vpc: "management",
@@ -94,16 +94,16 @@ function vsiInit(config) {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 53,
-          port_min: 53,
+          port_min: 53
         },
         udp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           type: null,
-          code: null,
-        },
+          code: null
+        }
       },
       {
         vpc: "management",
@@ -113,16 +113,16 @@ function vsiInit(config) {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 80,
-          port_min: 80,
+          port_min: 80
         },
         udp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           type: null,
-          code: null,
-        },
+          code: null
+        }
       },
       {
         vpc: "management",
@@ -132,18 +132,18 @@ function vsiInit(config) {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         udp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           type: null,
-          code: null,
-        },
-      },
-    ],
+          code: null
+        }
+      }
+    ]
   });
   config.store.json.teleport_vsi = [];
 }
@@ -158,9 +158,9 @@ function vsiInit(config) {
  */
 function updateVsi(config, key) {
   // get data based on key
-  new revision(config.store.json).child(key).then((data) => {
+  new revision(config.store.json).child(key).then(data => {
     // for each deployment
-    data.forEach((deployment) => {
+    data.forEach(deployment => {
       let validVpc = hasUnfoundVpc(config, deployment) === false;
       if (!deployment.kms) {
         deployment.encryption_key = null;
@@ -194,7 +194,7 @@ function updateVsi(config, key) {
  * @param {object} config.store state store
  **/
 function vsiOnStoreUpdate(config) {
-  ["teleport_vsi", "vsi"].forEach((key) => {
+  ["teleport_vsi", "vsi"].forEach(key => {
     updateVsi(config, key);
   });
 }
@@ -226,15 +226,15 @@ function vsiCreate(config, stateData, componentProps) {
     user_data: null,
     network_interfaces: [],
     subnets: stateData.subnets || [],
-    volumes: [],
+    volumes: []
   };
   if (stateData.image_name)
     stateData.image = stateData.image_name
       .replace(/[^\[]+\[/g, "")
       .replace(/]/g, "");
   // find kms
-  config.store.json.key_management.forEach((kms) => {
-    kms.keys.forEach((key) => {
+  config.store.json.key_management.forEach(kms => {
+    kms.keys.forEach(key => {
       if (key.name === stateData.encryption_key) stateData.kms = kms.name;
     });
   });
@@ -277,7 +277,7 @@ function vsiSave(config, stateData, componentProps) {
     stateData.image = stateData.image_name
       .replace(/[^\[]+\[/g, "")
       .replace(/]/g, "");
-  config.store.json.key_management.forEach((kms) => {
+  config.store.json.key_management.forEach(kms => {
     if (splatContains(kms.keys, "name", stateData.encryption_key)) {
       stateData.kms = kms.name;
     }
@@ -352,5 +352,5 @@ module.exports = {
   vsiInit,
   vsiVolumeCreate,
   vsiVolumeSave,
-  vsiVolumeDelete,
+  vsiVolumeDelete
 };

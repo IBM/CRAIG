@@ -14,7 +14,7 @@ function newDefaultKms() {
           force_delete: true,
           endpoint: "public",
           rotation: 12,
-          dual_auth_delete: false,
+          dual_auth_delete: false
         },
         {
           key_ring: "ring",
@@ -23,7 +23,7 @@ function newDefaultKms() {
           force_delete: true,
           endpoint: "public",
           rotation: 12,
-          dual_auth_delete: false,
+          dual_auth_delete: false
         },
         {
           key_ring: "ring",
@@ -32,10 +32,10 @@ function newDefaultKms() {
           force_delete: true,
           endpoint: "public",
           rotation: 12,
-          dual_auth_delete: false,
-        },
-      ],
-    },
+          dual_auth_delete: false
+        }
+      ]
+    }
   ];
 }
 
@@ -51,23 +51,23 @@ function newDefaultCos() {
           force_delete: true,
           kms_key: "atracker-key",
           name: "atracker-bucket",
-          storage_class: "standard",
-        },
+          storage_class: "standard"
+        }
       ],
       keys: [
         {
           name: "cos-bind-key",
           role: "Writer",
           enable_hmac: false,
-          use_random_suffix: true,
-        },
+          use_random_suffix: true
+        }
       ],
       name: "atracker-cos",
       plan: "standard",
       resource_group: "service-rg",
       use_data: false,
       use_random_suffix: true,
-      kms: "kms",
+      kms: "kms"
     },
     {
       buckets: [
@@ -77,7 +77,7 @@ function newDefaultCos() {
           kms_key: "key",
           name: "management-bucket",
           storage_class: "standard",
-          use_random_suffix: true,
+          use_random_suffix: true
         },
         {
           endpoint: "public",
@@ -85,8 +85,8 @@ function newDefaultCos() {
           kms_key: "key",
           name: "workload-bucket",
           storage_class: "standard",
-          use_random_suffix: true,
-        },
+          use_random_suffix: true
+        }
       ],
       use_random_suffix: true,
       keys: [],
@@ -94,8 +94,8 @@ function newDefaultCos() {
       plan: "standard",
       resource_group: "service-rg",
       use_data: false,
-      kms: "kms",
-    },
+      kms: "kms"
+    }
   ];
 }
 
@@ -117,44 +117,44 @@ function newDefaultVpcs() {
           vpc: "management",
           zone: 1,
           cidr: "10.10.10.0/24",
-          name: "vsi-zone-1",
+          name: "vsi-zone-1"
         },
         {
           vpc: "management",
           zone: 2,
           cidr: "10.20.10.0/24",
-          name: "vsi-zone-2",
+          name: "vsi-zone-2"
         },
         {
           vpc: "management",
           zone: 3,
           cidr: "10.30.10.0/24",
-          name: "vsi-zone-3",
+          name: "vsi-zone-3"
         },
         {
           vpc: "management",
           zone: 1,
           cidr: "10.10.20.0/24",
-          name: "vpe-zone-1",
+          name: "vpe-zone-1"
         },
         {
           vpc: "management",
           zone: 2,
           cidr: "10.20.20.0/24",
-          name: "vpe-zone-2",
+          name: "vpe-zone-2"
         },
         {
           vpc: "management",
           zone: 3,
           cidr: "10.30.20.0/24",
-          name: "vpe-zone-3",
+          name: "vpe-zone-3"
         },
         {
           vpc: "management",
           zone: 1,
           cidr: "10.10.30.0/24",
-          name: "vpn-zone-1",
-        },
+          name: "vpn-zone-1"
+        }
       ],
       subnets: [
         {
@@ -165,7 +165,7 @@ function newDefaultVpcs() {
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "management",
@@ -175,7 +175,7 @@ function newDefaultVpcs() {
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "management",
@@ -185,7 +185,7 @@ function newDefaultVpcs() {
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "management",
@@ -195,7 +195,7 @@ function newDefaultVpcs() {
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "management",
@@ -205,7 +205,7 @@ function newDefaultVpcs() {
           resource_group: "management-rg",
           network_acl: "management",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "management",
@@ -215,7 +215,7 @@ function newDefaultVpcs() {
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "management",
@@ -225,8 +225,8 @@ function newDefaultVpcs() {
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
-        },
+          has_prefix: true
+        }
       ],
       public_gateways: [],
       acls: [
@@ -245,20 +245,20 @@ function newDefaultVpcs() {
               vpc: "management",
               icmp: {
                 type: null,
-                code: null,
+                code: null
               },
               tcp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
+                source_port_max: null
               },
               udp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
-              },
+                source_port_max: null
+              }
             },
             {
               action: "allow",
@@ -270,20 +270,20 @@ function newDefaultVpcs() {
               vpc: "management",
               icmp: {
                 type: null,
-                code: null,
+                code: null
               },
               tcp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
+                source_port_max: null
               },
               udp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
-              },
+                source_port_max: null
+              }
             },
             {
               action: "allow",
@@ -295,24 +295,24 @@ function newDefaultVpcs() {
               vpc: "management",
               icmp: {
                 type: null,
-                code: null,
+                code: null
               },
               tcp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
+                source_port_max: null
               },
               udp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
-              },
-            },
-          ],
-        },
-      ],
+                source_port_max: null
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       cos: "cos",
@@ -330,38 +330,38 @@ function newDefaultVpcs() {
           vpc: "workload",
           zone: 1,
           cidr: "10.40.10.0/24",
-          name: "vsi-zone-1",
+          name: "vsi-zone-1"
         },
         {
           vpc: "workload",
           zone: 2,
           cidr: "10.50.10.0/24",
-          name: "vsi-zone-2",
+          name: "vsi-zone-2"
         },
         {
           vpc: "workload",
           zone: 3,
           cidr: "10.60.10.0/24",
-          name: "vsi-zone-3",
+          name: "vsi-zone-3"
         },
         {
           vpc: "workload",
           zone: 1,
           cidr: "10.40.20.0/24",
-          name: "vpe-zone-1",
+          name: "vpe-zone-1"
         },
         {
           vpc: "workload",
           zone: 2,
           cidr: "10.50.20.0/24",
-          name: "vpe-zone-2",
+          name: "vpe-zone-2"
         },
         {
           vpc: "workload",
           zone: 3,
           cidr: "10.60.20.0/24",
-          name: "vpe-zone-3",
-        },
+          name: "vpe-zone-3"
+        }
       ],
       subnets: [
         {
@@ -372,7 +372,7 @@ function newDefaultVpcs() {
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "workload",
@@ -382,7 +382,7 @@ function newDefaultVpcs() {
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "workload",
@@ -392,7 +392,7 @@ function newDefaultVpcs() {
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "workload",
@@ -402,7 +402,7 @@ function newDefaultVpcs() {
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "workload",
@@ -412,7 +412,7 @@ function newDefaultVpcs() {
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: true
         },
         {
           vpc: "workload",
@@ -422,8 +422,8 @@ function newDefaultVpcs() {
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
-        },
+          has_prefix: true
+        }
       ],
       public_gateways: [],
       acls: [
@@ -442,20 +442,20 @@ function newDefaultVpcs() {
               vpc: "workload",
               icmp: {
                 type: null,
-                code: null,
+                code: null
               },
               tcp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
+                source_port_max: null
               },
               udp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
-              },
+                source_port_max: null
+              }
             },
             {
               action: "allow",
@@ -467,20 +467,20 @@ function newDefaultVpcs() {
               vpc: "workload",
               icmp: {
                 type: null,
-                code: null,
+                code: null
               },
               tcp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
+                source_port_max: null
               },
               udp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
-              },
+                source_port_max: null
+              }
             },
             {
               action: "allow",
@@ -492,25 +492,25 @@ function newDefaultVpcs() {
               vpc: "workload",
               icmp: {
                 type: null,
-                code: null,
+                code: null
               },
               tcp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
+                source_port_max: null
               },
               udp: {
                 port_min: null,
                 port_max: null,
                 source_port_min: null,
-                source_port_max: null,
-              },
-            },
-          ],
-        },
-      ],
-    },
+                source_port_max: null
+              }
+            }
+          ]
+        }
+      ]
+    }
   ];
 }
 
@@ -529,16 +529,16 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -548,16 +548,16 @@ function newDefaultVpeSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -567,16 +567,16 @@ function newDefaultVpeSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -586,16 +586,16 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 53,
-            port_min: 53,
+            port_min: 53
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -605,16 +605,16 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 80,
-            port_min: 80,
+            port_min: 80
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -624,18 +624,18 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 443,
-            port_min: 443,
+            port_min: 443
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
-        },
-      ],
+            code: null
+          }
+        }
+      ]
     },
     {
       vpc: "workload",
@@ -650,16 +650,16 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "workload",
@@ -669,16 +669,16 @@ function newDefaultVpeSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "workload",
@@ -688,16 +688,16 @@ function newDefaultVpeSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "workload",
@@ -707,16 +707,16 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 53,
-            port_min: 53,
+            port_min: 53
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "workload",
@@ -726,16 +726,16 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 80,
-            port_min: 80,
+            port_min: 80
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "workload",
@@ -745,19 +745,19 @@ function newDefaultVpeSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 443,
-            port_min: 443,
+            port_min: 443
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
-        },
-      ],
-    },
+            code: null
+          }
+        }
+      ]
+    }
   ];
 }
 
@@ -769,13 +769,13 @@ function newDefaultTg() {
     connections: [
       {
         tgw: "transit-gateway",
-        vpc: "management",
+        vpc: "management"
       },
       {
         tgw: "transit-gateway",
-        vpc: "workload",
-      },
-    ],
+        vpc: "workload"
+      }
+    ]
   };
 }
 
@@ -802,11 +802,11 @@ function newDefaultWorkloadCluster() {
         resource_group: "workload-rg",
         subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
         vpc: "workload",
-        workers_per_subnet: 2,
-      },
+        workers_per_subnet: 2
+      }
     ],
     workers_per_subnet: 2,
-    private_endpoint: true,
+    private_endpoint: true
   };
 }
 
@@ -826,7 +826,7 @@ function newDefaultManagementServer() {
     override_vsi_name: null,
     user_data: "",
     network_interfaces: [],
-    volumes: [],
+    volumes: []
   };
 }
 
@@ -838,7 +838,7 @@ function newDefaultVpe() {
       vpc: "management",
       resource_group: "management-rg",
       security_groups: ["management-vpe"],
-      subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
     },
     {
       name: "workload-cos",
@@ -846,8 +846,8 @@ function newDefaultVpe() {
       vpc: "workload",
       resource_group: "workload-rg",
       security_groups: ["workload-vpe"],
-      subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
-    },
+      subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+    }
   ];
 }
 
@@ -861,7 +861,7 @@ const firewallTiers = {
   },
   "vpn-and-waf": () => {
     return ["f5-bastion", "f5-external", "f5-management", "f5-workload"];
-  },
+  }
 };
 
 function defaultSecurityGroups() {
@@ -878,16 +878,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "management-vpe",
@@ -897,16 +897,16 @@ function defaultSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "management-vpe",
@@ -916,16 +916,16 @@ function defaultSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "management-vpe",
@@ -935,16 +935,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 53,
-            port_min: 53,
+            port_min: 53
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "management-vpe",
@@ -954,16 +954,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 80,
-            port_min: 80,
+            port_min: 80
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "management-vpe",
@@ -973,19 +973,19 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 443,
-            port_min: 443,
+            port_min: 443
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
-        },
+            port_min: null
+          }
+        }
       ],
-      vpc: "management",
+      vpc: "management"
     },
     {
       name: "workload-vpe",
@@ -999,16 +999,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "workload-vpe",
@@ -1018,16 +1018,16 @@ function defaultSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "workload-vpe",
@@ -1037,16 +1037,16 @@ function defaultSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "workload-vpe",
@@ -1056,16 +1056,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 53,
-            port_min: 53,
+            port_min: 53
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "workload-vpe",
@@ -1075,16 +1075,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 80,
-            port_min: 80,
+            port_min: 80
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
+            port_min: null
+          }
         },
         {
           sg: "workload-vpe",
@@ -1094,19 +1094,19 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 443,
-            port_min: 443,
+            port_min: 443
           },
           icmp: {
             code: null,
-            type: null,
+            type: null
           },
           udp: {
             port_max: null,
-            port_min: null,
-          },
-        },
+            port_min: null
+          }
+        }
       ],
-      vpc: "workload",
+      vpc: "workload"
     },
     {
       vpc: "management",
@@ -1121,16 +1121,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -1140,16 +1140,16 @@ function defaultSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -1159,16 +1159,16 @@ function defaultSecurityGroups() {
           source: "10.0.0.0/8",
           tcp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -1178,16 +1178,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 53,
-            port_min: 53,
+            port_min: 53
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -1197,16 +1197,16 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 80,
-            port_min: 80,
+            port_min: 80
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
+            code: null
+          }
         },
         {
           vpc: "management",
@@ -1216,19 +1216,19 @@ function defaultSecurityGroups() {
           source: "161.26.0.0/16",
           tcp: {
             port_max: 443,
-            port_min: 443,
+            port_min: 443
           },
           udp: {
             port_max: null,
-            port_min: null,
+            port_min: null
           },
           icmp: {
             type: null,
-            code: null,
-          },
-        },
-      ],
-    },
+            code: null
+          }
+        }
+      ]
+    }
   ];
 }
 
@@ -1245,16 +1245,16 @@ function newF5ManagementSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-management-sg",
@@ -1264,16 +1264,16 @@ function newF5ManagementSg() {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-management-sg",
@@ -1283,16 +1283,16 @@ function newF5ManagementSg() {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-management-sg",
@@ -1302,16 +1302,16 @@ function newF5ManagementSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 53,
-          port_min: 53,
+          port_min: 53
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-management-sg",
@@ -1321,16 +1321,16 @@ function newF5ManagementSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 80,
-          port_min: 80,
+          port_min: 80
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-management-sg",
@@ -1340,19 +1340,19 @@ function newF5ManagementSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
-      },
+          port_min: null
+        }
+      }
     ],
-    vpc: "edge",
+    vpc: "edge"
   };
 }
 
@@ -1370,19 +1370,19 @@ function newF5ExternalSg() {
 
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
-      },
+          port_min: null
+        }
+      }
     ],
-    vpc: "edge",
+    vpc: "edge"
   };
 }
 
@@ -1399,16 +1399,16 @@ function newF5WorkloadSg() {
         source: "10.10.10.0/24",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1418,16 +1418,16 @@ function newF5WorkloadSg() {
         source: "10.20.10.0/24",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1437,16 +1437,16 @@ function newF5WorkloadSg() {
         source: "10.30.10.0/24",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1456,16 +1456,16 @@ function newF5WorkloadSg() {
         source: "10.40.10.0/24",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1475,16 +1475,16 @@ function newF5WorkloadSg() {
         source: "10.50.10.0/24",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1494,16 +1494,16 @@ function newF5WorkloadSg() {
         source: "10.60.10.0/24",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1513,16 +1513,16 @@ function newF5WorkloadSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1532,16 +1532,16 @@ function newF5WorkloadSg() {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1551,16 +1551,16 @@ function newF5WorkloadSg() {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1570,16 +1570,16 @@ function newF5WorkloadSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 53,
-          port_min: 53,
+          port_min: 53
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1589,16 +1589,16 @@ function newF5WorkloadSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 80,
-          port_min: 80,
+          port_min: 80
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-workload-sg",
@@ -1608,19 +1608,19 @@ function newF5WorkloadSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
-      },
+          port_min: null
+        }
+      }
     ],
-    vpc: "edge",
+    vpc: "edge"
   };
 }
 
@@ -1637,16 +1637,16 @@ function newF5BastionSg() {
         source: "10.5.80.0/24",
         tcp: {
           port_max: 3025,
-          port_min: 3023,
+          port_min: 3023
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-bastion-sg",
@@ -1656,16 +1656,16 @@ function newF5BastionSg() {
         source: "10.5.80.0/24",
         tcp: {
           port_max: 3080,
-          port_min: 3080,
+          port_min: 3080
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-bastion-sg",
@@ -1675,16 +1675,16 @@ function newF5BastionSg() {
         source: "10.6.80.0/24",
         tcp: {
           port_max: 3025,
-          port_min: 3023,
+          port_min: 3023
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-bastion-sg",
@@ -1694,16 +1694,16 @@ function newF5BastionSg() {
         source: "10.6.80.0/24",
         tcp: {
           port_max: 3080,
-          port_min: 3080,
+          port_min: 3080
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-bastion-sg",
@@ -1713,16 +1713,16 @@ function newF5BastionSg() {
         source: "10.7.80.0/24",
         tcp: {
           port_max: 3025,
-          port_min: 3023,
+          port_min: 3023
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "f5-bastion-sg",
@@ -1732,19 +1732,19 @@ function newF5BastionSg() {
         source: "10.7.80.0/24",
         tcp: {
           port_max: 3080,
-          port_min: 3080,
+          port_min: 3080
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
-      },
+          port_min: null
+        }
+      }
     ],
-    vpc: "edge",
+    vpc: "edge"
   };
 }
 
@@ -1761,16 +1761,16 @@ function newF5VpeSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "edge-vpe-sg",
@@ -1780,16 +1780,16 @@ function newF5VpeSg() {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "edge-vpe-sg",
@@ -1799,16 +1799,16 @@ function newF5VpeSg() {
         source: "10.0.0.0/8",
         tcp: {
           port_max: null,
-          port_min: null,
+          port_min: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "edge-vpe-sg",
@@ -1818,16 +1818,16 @@ function newF5VpeSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 53,
-          port_min: 53,
+          port_min: 53
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "edge-vpe-sg",
@@ -1837,16 +1837,16 @@ function newF5VpeSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 80,
-          port_min: 80,
+          port_min: 80
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
+          port_min: null
+        }
       },
       {
         sg: "edge-vpe-sg",
@@ -1856,19 +1856,19 @@ function newF5VpeSg() {
         source: "161.26.0.0/16",
         tcp: {
           port_max: 443,
-          port_min: 443,
+          port_min: 443
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
-          port_min: null,
-        },
-      },
+          port_min: null
+        }
+      }
     ],
-    vpc: "edge",
+    vpc: "edge"
   };
 }
 
@@ -1890,18 +1890,18 @@ function newDefaultF5ExternalAcl() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         action: "allow",
@@ -1915,18 +1915,18 @@ function newDefaultF5ExternalAcl() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         action: "allow",
@@ -1940,18 +1940,18 @@ function newDefaultF5ExternalAcl() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         action: "allow",
@@ -1965,20 +1965,20 @@ function newDefaultF5ExternalAcl() {
           port_max: 443,
           port_min: 443,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
-      },
-    ],
+          source_port_max: null
+        }
+      }
+    ]
   };
 }
 function newDefaultF5ExternalAclManagement() {
@@ -1999,18 +1999,18 @@ function newDefaultF5ExternalAclManagement() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         action: "allow",
@@ -2024,18 +2024,18 @@ function newDefaultF5ExternalAclManagement() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         action: "allow",
@@ -2049,18 +2049,18 @@ function newDefaultF5ExternalAclManagement() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         action: "allow",
@@ -2074,20 +2074,20 @@ function newDefaultF5ExternalAclManagement() {
           port_max: 443,
           port_min: 443,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
-      },
-    ],
+          source_port_max: null
+        }
+      }
+    ]
   };
 }
 
@@ -2109,18 +2109,18 @@ function newDefaultEdgeAcl() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         acl: "edge-acl",
@@ -2134,18 +2134,18 @@ function newDefaultEdgeAcl() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
+          source_port_max: null
+        }
       },
       {
         acl: "edge-acl",
@@ -2159,20 +2159,20 @@ function newDefaultEdgeAcl() {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
+          source_port_max: null
         },
         icmp: {
           code: null,
-          type: null,
+          type: null
         },
         udp: {
           port_max: null,
           port_min: null,
           source_port_min: null,
-          source_port_max: null,
-        },
-      },
-    ],
+          source_port_max: null
+        }
+      }
+    ]
   };
 }
 
@@ -2194,5 +2194,5 @@ module.exports = {
   newF5ManagementSg,
   newF5WorkloadSg,
   firewallTiers,
-  defaultSecurityGroups,
+  defaultSecurityGroups
 };

@@ -9,10 +9,10 @@ const { setUnfoundResourceGroup } = require("./store.utils");
  * @param {Array<Object>} config.store.json.secrets_manager
  */
 function secretsManagerOnStoreUpdate(config) {
-  config.store.json.secrets_manager.forEach((secretsManager) => {
+  config.store.json.secrets_manager.forEach(secretsManager => {
     setUnfoundResourceGroup(config, secretsManager);
     secretsManager.kms = null;
-    config.store.json.key_management.forEach((instance) => {
+    config.store.json.key_management.forEach(instance => {
       if (splatContains(instance.keys, "name", secretsManager.encryption_key)) {
         secretsManager.kms = instance.name;
       }
@@ -20,9 +20,6 @@ function secretsManagerOnStoreUpdate(config) {
     if (!secretsManager.kms) {
       secretsManager.kms = null;
       secretsManager.encryption_key = null;
-    }
-    if (!secretsManager.secrets) {
-      secretsManager.secrets = [];
     }
   });
 }
@@ -64,5 +61,5 @@ module.exports = {
   secretsManagerOnStoreUpdate,
   secretsManagerCreate,
   secretsManagerSave,
-  secretsManagerDelete,
+  secretsManagerDelete
 };

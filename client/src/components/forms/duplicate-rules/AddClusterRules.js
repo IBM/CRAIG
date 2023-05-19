@@ -3,13 +3,13 @@ import {
   SaveAddButton,
   IcseFormGroup,
   IcseSelect,
-  IcseHeading,
+  IcseHeading
 } from "icse-react-assets";
 import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 
-const AddClusterRules = (props) => {
+const AddClusterRules = props => {
   return (
     <>
       <IcseHeading
@@ -18,7 +18,7 @@ const AddClusterRules = (props) => {
         tooltip={{
           content:
             "Add rules to allow needed traffic for provisioning Red Hat OpenShift and IBM Kubernetes Service clusters.",
-          link: "https://cloud.ibm.com/docs/openshift?topic=openshift-vpc-acls#acls_ui",
+          link: "https://cloud.ibm.com/docs/openshift?topic=openshift-vpc-acls#acls_ui"
         }}
       />
       <IcseFormGroup className="align-row">
@@ -53,11 +53,11 @@ const AddClusterRules = (props) => {
 AddClusterRules.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    acls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    acls: PropTypes.arrayOf(PropTypes.shape({})).isRequired
   }),
   handleSelect: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
-  addClusterRuleAcl: PropTypes.string,
+  addClusterRuleAcl: PropTypes.string
 };
 
 export default AddClusterRules;

@@ -3,7 +3,7 @@ import { Modal, Button } from "@carbon/react";
 import PropTypes from "prop-types";
 import "./NavigationRedirectModal.css";
 
-export const NavigationRedirectModal = (props) => {
+export const NavigationRedirectModal = props => {
   let options = props.craig.store.json._options;
   let unsetOptions = [];
   // two ifs, we want both to occur separately
@@ -53,9 +53,9 @@ NavigationRedirectModal.propTypes = {
       json: PropTypes.shape({
         _options: PropTypes.shape({
           region: PropTypes.string.isRequired,
-          prefix: PropTypes.string.isRequired,
-        }).isRequired,
-      }).isRequired,
-    }).isRequired,
-  }).isRequired,
+          prefix: PropTypes.string.isRequired
+        }).isRequired
+      }).isRequired
+    }).isRequired
+  }).isRequired
 };

@@ -16,7 +16,7 @@ function atrackerInit(config) {
     bucket: "atracker-bucket",
     add_route: true,
     cos_key: "cos-bind-key",
-    locations: ["global", "us-south"],
+    locations: ["global", "us-south"]
   };
 }
 
@@ -49,5 +49,5 @@ function atrackerSave(config, stateData) {
 module.exports = {
   atrackerInit,
   atrackerOnStoreUpdate,
-  atrackerSave,
+  atrackerSave
 };
