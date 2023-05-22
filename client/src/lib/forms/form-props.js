@@ -4,7 +4,7 @@ const {
   vpcForms,
   encryptionKeyForms,
   subnetForms,
-  securityGroupForms
+  securityGroupForms,
 } = require("../constants");
 const { disableSave, forceShowForm } = require("./disable-save");
 const { invalidName } = require("./invalid-callbacks");
@@ -37,15 +37,15 @@ function defaultFormTemplate(formFields, jsonField, craig) {
       craig: craig,
       disableSave: disableSave,
       invalidCallback: invalidName(jsonField),
-      invalidTextCallback: invalidNameText(jsonField)
+      invalidTextCallback: invalidNameText(jsonField),
     },
     toggleFormProps: {
       craig: craig,
       disableSave: disableSave,
       hideName: true,
       submissionFieldName: jsonField,
-      hide: true
-    }
+      hide: true,
+    },
   };
 }
 
@@ -137,5 +137,5 @@ module.exports = {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
-  setFormSgList
+  setFormSgList,
 };

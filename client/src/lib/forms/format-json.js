@@ -10,7 +10,7 @@ function formatConfig(json, isCopy) {
   // sort fields from a-z to match override.json in landing zone
   keys(json)
     .sort(azsort)
-    .forEach(key => {
+    .forEach((key) => {
       newOverrideJson[key] = json[key];
     });
   if (isCopy)
@@ -44,22 +44,14 @@ function copyRuleCodeMirrorData(stateData, componentProps) {
     .replace(
       new RegexButWithWords()
         .literal('"')
-        .group(exp => {
-          exp
-            .literal("vpc")
-            .or()
-            .literal("acl")
-            .or()
-            .literal("sg");
+        .group((exp) => {
+          exp.literal("vpc").or().literal("acl").or().literal("sg");
         })
         .literal('"')
         .negatedSet(",\n")
         .oneOrMore()
-        .group(exp => {
-          exp
-            .literal(",")
-            .whitespace()
-            .oneOrMore();
+        .group((exp) => {
+          exp.literal(",").whitespace().oneOrMore();
         })
         .lazy()
         .done("g"),
@@ -68,11 +60,11 @@ function copyRuleCodeMirrorData(stateData, componentProps) {
     .replace(
       new RegexButWithWords()
         .literal(",")
-        .negatedSet(exp => {
+        .negatedSet((exp) => {
           exp.word().literal('"');
         })
         .oneOrMore()
-        .look.ahead(exp => {
+        .look.ahead((exp) => {
           exp.literal("\n}").stringEnd();
         })
         .done("g"),
@@ -110,29 +102,29 @@ function copyAclModalContent(props) {
     .replace(
       // replace all other references to vpc and acl name with empty space
       new RegexButWithWords()
-        .group(exp =>
+        .group((exp) =>
           exp
-            .group(exp =>
+            .group((exp) =>
               exp
-                .group(exp => exp.literal(`"vpc": "${props.data.name}"`))
+                .group((exp) => exp.literal(`"vpc": "${props.data.name}"`))
                 .or()
-                .group(exp => exp.literal(`"name": "${props.sourceAcl}"`))
+                .group((exp) => exp.literal(`"name": "${props.sourceAcl}"`))
             )
             .literal(",")
             .whitespace()
             .oneOrMore()
         )
         .or()
-        .group(exp =>
+        .group((exp) =>
           exp
             .literal(",")
             .whitespace()
             .anyNumber()
-            .group(exp =>
+            .group((exp) =>
               exp
-                .group(exp => exp.literal(`"vpc": "${props.data.name}"`))
+                .group((exp) => exp.literal(`"vpc": "${props.data.name}"`))
                 .or()
-                .group(exp => exp.literal(`"acl": "${props.sourceAcl}"`))
+                .group((exp) => exp.literal(`"acl": "${props.sourceAcl}"`))
             )
         )
         .done("g"),
@@ -175,13 +167,13 @@ function copySgModalContent(props) {
     .replace(
       // replace all other references to vpc and sg name with empty space
       new RegexButWithWords()
-        .group(exp =>
+        .group((exp) =>
           exp
-            .group(exp =>
+            .group((exp) =>
               exp
-                .group(exp => exp.literal(`"sg": "${props.source}"`))
+                .group((exp) => exp.literal(`"sg": "${props.source}"`))
                 .or()
-                .group(exp =>
+                .group((exp) =>
                   exp
                     .literal('"vpc": "')
                     .negativeLook.ahead(props.destinationVpc)
@@ -215,5 +207,5 @@ module.exports = {
   formatConfig,
   copyRuleCodeMirrorData,
   copyAclModalContent,
-  copySgModalContent
+  copySgModalContent,
 };

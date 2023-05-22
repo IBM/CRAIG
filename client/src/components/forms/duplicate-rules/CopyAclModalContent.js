@@ -3,7 +3,7 @@ import { CraigCodeMirror } from "../../page-template/CodeMirror";
 import PropTypes from "prop-types";
 import { copyAclModalContent } from "../../../lib";
 
-const CopyAclModalContent = props => {
+const CopyAclModalContent = (props) => {
   return (
     <>
       <p className="marginBottomSmall">
@@ -23,15 +23,15 @@ CopyAclModalContent.propTypes = {
   sourceAcl: PropTypes.string.isRequired,
   destinationVpc: PropTypes.string.isRequired,
   data: PropTypes.shape({
-    name: PropTypes.string.isRequired
+    name: PropTypes.string.isRequired,
   }).isRequired,
   craig: PropTypes.shape({
     store: PropTypes.shape({
       json: PropTypes.shape({
-        vpcs: PropTypes.arrayOf(PropTypes.shape({})).isRequired
-      }).isRequired
-    }).isRequired
-  }).isRequired
+        vpcs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default CopyAclModalContent;

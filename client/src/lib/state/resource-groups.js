@@ -11,18 +11,18 @@ function resourceGroupInit(config) {
     {
       use_prefix: true,
       name: "service-rg",
-      use_data: false
+      use_data: false,
     },
     {
       use_prefix: true,
       name: "management-rg",
-      use_data: false
+      use_data: false,
     },
     {
       use_prefix: true,
       name: "workload-rg",
-      use_data: false
-    }
+      use_data: false,
+    },
   ];
   resourceGroupOnStoreUpdate(config);
 }
@@ -70,10 +70,7 @@ function resourceGroupSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function resourceGroupDelete(config, stateData, componentProps) {
-  config.carve(
-    ["json", "resource_groups"],
-    componentProps.data.name
-  );
+  config.carve(["json", "resource_groups"], componentProps.data.name);
 }
 
 module.exports = {
@@ -81,5 +78,5 @@ module.exports = {
   resourceGroupOnStoreUpdate,
   resourceGroupCreate,
   resourceGroupSave,
-  resourceGroupDelete
+  resourceGroupDelete,
 };

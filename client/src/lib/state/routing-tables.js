@@ -4,7 +4,7 @@ const {
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal,
-  hasUnfoundVpc
+  hasUnfoundVpc,
 } = require("./store.utils");
 
 /**
@@ -20,14 +20,14 @@ function routingTableInit(config) {
  * @param {lazyZstate} config
  */
 function routingTableOnStoreUpdate(config) {
-  config.store.json.routing_tables.forEach(table => {
+  config.store.json.routing_tables.forEach((table) => {
     if (hasUnfoundVpc(config, table)) {
       table.vpc = null;
-      table.routes.forEach(route => {
+      table.routes.forEach((route) => {
         route.vpc = null;
       });
     }
-    table.routes.forEach(route => {
+    table.routes.forEach((route) => {
       route.routing_table = table.name;
       route.vpc = table.vpc;
     });
@@ -53,7 +53,7 @@ function routingTableSave(config, stateData, componentProps) {
  */
 function routingTableCreate(config, stateData) {
   let data = {
-    routes: []
+    routes: [],
   };
   transpose(stateData, data);
   config.push(["json", "routing_tables"], data);
@@ -111,5 +111,5 @@ module.exports = {
   routingTableDelete,
   routingTableRouteCreate,
   routingTableRouteSave,
-  routingTableRouteDelete
+  routingTableRouteDelete,
 };

@@ -7,7 +7,7 @@ const {
   parseIntFromZone,
   contains,
   kebabCase,
-  azsort
+  azsort,
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -19,7 +19,7 @@ const {
   tfBlock,
   tfDone,
   jsonToTfPrint,
-  cdktfRef
+  cdktfRef,
 } = require("./utils");
 const { varDotPrefix } = require("../constants");
 
@@ -57,7 +57,7 @@ function ibmIsInstance(vsi, config) {
   let data = {
     name: vsi.index
       ? `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${vsi.index}`
-      : vsi.name
+      : vsi.name,
   };
   let vsiData = {
     name: vsiName,
@@ -73,23 +73,23 @@ function ibmIsInstance(vsi, config) {
       {
         subnet: `\${module.${snakeCase(vsi.vpc)}_vpc.${snakeCase(
           vsi.subnet
-        )}_id}`
-      }
+        )}_id}`,
+      },
     ],
     boot_volume: [
       {
-        encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key, "crn")
-      }
-    ]
+        encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key, "crn"),
+      },
+    ],
   };
   if (vsi.network_interfaces) {
-    vsi.network_interfaces.forEach(intf => {
+    vsi.network_interfaces.forEach((intf) => {
       let nwInterface = {
         subnet: `\${module.${vsi.vpc}_vpc.${snakeCase(intf.subnet)}_id}`,
         allow_ip_spoofing: true,
-        security_groups: []
+        security_groups: [],
       };
-      intf.security_groups.forEach(group => {
+      intf.security_groups.forEach((group) => {
         nwInterface["security_groups"].push(
           `\${module.${vsi.vpc}_vpc.${snakeCase(group)}_id}`
         );
@@ -100,12 +100,12 @@ function ibmIsInstance(vsi, config) {
       vsiData.network_interfaces = networkInterfaces;
   }
   // add security groups
-  vsi.security_groups.forEach(group => {
+  vsi.security_groups.forEach((group) => {
     allSgIds.push(`\${module.${vsi.vpc}_vpc.${snakeCase(group)}_id}`);
   });
   vsiData.primary_network_interface[0].security_groups = allSgIds;
   // add ssh keys
-  vsi.ssh_keys.forEach(key => {
+  vsi.ssh_keys.forEach((key) => {
     allSshKeyIds.push(
       tfRef(
         `ibm_is_ssh_key`,
@@ -121,7 +121,7 @@ function ibmIsInstance(vsi, config) {
   }
   if (vsi.volumes) {
     vsiData.volumes = [];
-    vsi.volumes.forEach(volume => {
+    vsi.volumes.forEach((volume) => {
       vsiData.volumes.push(
         tfRef(
           "ibm_is_volume",
@@ -137,8 +137,8 @@ function ibmIsInstance(vsi, config) {
       {
         reserved_ip: `\${ibm_is_subnet_reserved_ip.${snakeCase(
           data.name
-        )}_reserved_ip.reserved_ip}`
-      }
+        )}_reserved_ip.reserved_ip}`,
+      },
     ];
   }
   data.data = vsiData;
@@ -155,7 +155,7 @@ function ibmIsVolume(vsi, config) {
   let volumes = [];
   let zone = vsi.subnet.replace(/[^]+(?=\d$)/g, "");
   if (vsi.volumes)
-    vsi.volumes.forEach(volume => {
+    vsi.volumes.forEach((volume) => {
       let data = {
         name: `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${
           vsi.index ? vsi.index + " " : ""
@@ -178,8 +178,8 @@ function ibmIsVolume(vsi, config) {
             volume.encryption_key,
             "crn"
           ),
-          tags: config._options.tags
-        }
+          tags: config._options.tags,
+        },
       };
       volumes.push(data);
     });
@@ -203,12 +203,12 @@ function formatVsi(vsi, config) {
       {
         subnet: `\${module.${vsi.vpc}_vpc.${snakeCase(vsi.subnet)}_id}`,
         name: kebabCase(data.data.name + "-reserved-ip"),
-        address: vsi.reserved_ip
+        address: vsi.reserved_ip,
       }
     );
   }
   tf += jsonToTfPrint("resource", "ibm_is_instance", data.name, data.data);
-  ibmIsVolume(vsi, config).forEach(volume => {
+  ibmIsVolume(vsi, config).forEach((volume) => {
     tf += jsonToTfPrint("resource", "ibm_is_volume", volume.name, volume.data);
   });
   return tf;
@@ -221,7 +221,7 @@ function formatVsi(vsi, config) {
  */
 function formatVsiImage(imageName) {
   return jsonToTfPrint("data", "ibm_is_image", imageName, {
-    name: imageName
+    name: imageName,
   });
 }
 
@@ -240,7 +240,7 @@ function formatVsiImage(imageName) {
 
 function ibmIsLbPoolMembers(deployment, config) {
   let members = [];
-  deployment.target_vsi.forEach(vsi => {
+  deployment.target_vsi.forEach((vsi) => {
     // fetch vsi
     let vsiDeployment = getObjectFromArray(config.vsi, "name", vsi);
     // for each subnet vsi
@@ -267,8 +267,8 @@ function ibmIsLbPoolMembers(deployment, config) {
               "ibm_is_instance",
               vsiAddress,
               "primary_network_interface.0.primary_ip.0.address"
-            )
-          }
+            ),
+          },
         });
       }
     }
@@ -299,10 +299,10 @@ function ibmIsLbListener(deployment, poolMemberData, cdktf) {
       port: deployment.listener_port,
       protocol: deployment.listener_protocol,
       connection_limit: deployment.connection_limit,
-      depends_on: []
-    }
+      depends_on: [],
+    },
   };
-  poolMemberData.forEach(member => {
+  poolMemberData.forEach((member) => {
     let ref = "ibm_is_lb_pool_member." + snakeCase(member.name);
     data.data.depends_on.push(
       cdktf ? ref : cdktfRef("ibm_is_lb_pool_member." + snakeCase(member.name))
@@ -340,8 +340,8 @@ function ibmIsLbPool(deployment) {
       proxy_protocol: deployment.proxy_protocol,
       session_persistence_type: deployment.session_persistence_type,
       session_persistence_app_cookie_name:
-        deployment.session_persistence_app_cookie_name
-    }
+        deployment.session_persistence_app_cookie_name,
+    },
   };
   if (deployment.session_persistence_type !== "app_cookie") {
     delete data.data.session_persistence_app_cookie_name;
@@ -367,16 +367,16 @@ function ibmIsLb(deployment, config) {
       resource_group: rgIdRef(deployment.resource_group, config),
       tags: config._options.tags,
       security_groups: [],
-      subnets: []
+      subnets: [],
     },
-    name: `${deployment.name} load balancer`
+    name: `${deployment.name} load balancer`,
   };
-  deployment.security_groups.forEach(group => {
+  deployment.security_groups.forEach((group) => {
     data.data.security_groups.push(
       `\${module.${deployment.vpc}_vpc.${snakeCase(group)}_id}`
     );
   });
-  deployment.subnets.forEach(subnet => {
+  deployment.subnets.forEach((subnet) => {
     data.data.subnets.push(
       `\${module.${snakeCase(deployment.vpc)}_vpc.${snakeCase(subnet)}_id}`
     );
@@ -393,7 +393,7 @@ function ibmIsLb(deployment, config) {
 function formatLoadBalancer(deployment, config) {
   let poolTf = "";
   let poolMemberData = ibmIsLbPoolMembers(deployment, config);
-  poolMemberData.forEach(member => {
+  poolMemberData.forEach((member) => {
     poolTf += jsonToTfPrint(
       "resource",
       "ibm_is_lb_pool_member",
@@ -427,13 +427,13 @@ function vsiTf(config) {
   let tf = "",
     imageTf = "";
   let allImagesNames = distinct(splat(config.vsi, "image"));
-  allImagesNames.forEach(name => {
+  allImagesNames.forEach((name) => {
     imageTf += formatVsiImage(name);
   });
   tf += tfBlock("image data sources", imageTf) + "\n";
-  config.vsi.forEach(deployment => {
+  config.vsi.forEach((deployment) => {
     let blockData = "";
-    deployment.subnets.sort(azsort).forEach(subnet => {
+    deployment.subnets.sort(azsort).forEach((subnet) => {
       for (let i = 0; i < deployment.vsi_per_subnet; i++) {
         let instance = {};
         transpose(deployment, instance);
@@ -446,10 +446,11 @@ function vsiTf(config) {
         blockData += formatVsi(instance, config);
       }
     });
-    tf += tfBlock(
-      `${deployment.vpc} vpc ${deployment.name} deployment`,
-      blockData
-    ) + "\n";
+    tf +=
+      tfBlock(
+        `${deployment.vpc} vpc ${deployment.name} deployment`,
+        blockData
+      ) + "\n";
   });
   return tfDone(tf);
 }
@@ -462,7 +463,7 @@ function vsiTf(config) {
  */
 function lbTf(config) {
   let tf = "";
-  config.load_balancers.forEach(lb => {
+  config.load_balancers.forEach((lb) => {
     tf +=
       tfBlock(lb.name + " load balancer", formatLoadBalancer(lb, config)) +
       "\n";
@@ -481,5 +482,5 @@ module.exports = {
   ibmIsLbPool,
   ibmIsInstance,
   ibmIsLb,
-  ibmIsVolume
+  ibmIsVolume,
 };

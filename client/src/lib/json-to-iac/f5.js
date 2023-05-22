@@ -5,7 +5,7 @@ const {
   vpcRef,
   tfBlock,
   subnetRef,
-  jsonToTfPrint
+  jsonToTfPrint,
 } = require("./utils");
 const { formatVsi } = require("./vsi");
 
@@ -26,7 +26,7 @@ function f5Images() {
         '"eu-gb"': "r018-6dce329f-a6eb-4146-ba3e-5560afc84aa1",
         '"jp-osa"': "r034-4ecc10ff-3dc7-42fb-9cae-189fb559dd61",
         '"us-east"': "r014-87371e4c-3645-4579-857c-7e02fe5e9ff4",
-        '"ca-tor"': "r038-0840034f-5d05-4a6d-bdae-123628f1d323"
+        '"ca-tor"': "r038-0840034f-5d05-4a6d-bdae-123628f1d323",
       },
       "f5-bigip-15-1-5-1-0-0-14-ltm-1slot": {
         '"eu-de"': "r010-efad005b-4deb-45a8-b1c5-5b3cea55e7e3",
@@ -37,7 +37,7 @@ function f5Images() {
         '"eu-gb"': "r018-f2083d86-6f25-42d6-b66a-d5ed2a0108d2",
         '"jp-osa"': "r034-edd01010-b7ee-411c-9158-d41960bf9def",
         '"us-east"': "r014-41db5a03-ab7f-4bf7-95c2-8edbeea0e3af",
-        '"ca-tor"': "r038-f5d750b1-61dc-4fa5-98d3-a790417f07dd"
+        '"ca-tor"': "r038-f5d750b1-61dc-4fa5-98d3-a790417f07dd",
       },
       "f5-bigip-16-1-2-2-0-0-28-ltm-1slot": {
         '"eu-de"': "r010-c90f3597-d03e-4ce6-8efa-870c782952cd",
@@ -48,7 +48,7 @@ function f5Images() {
         '"eu-gb"': "r018-a88026c2-89b4-43d6-8688-f28ac259627d",
         '"jp-osa"': "r034-585692ec-9508-4a41-bcc3-3a94b31ad161",
         '"us-east"': "r014-b675ae9f-109d-4499-9639-2fbc7b1d55e9",
-        '"ca-tor"': "r038-56cc321b-1920-443e-a400-c58905c8f46c"
+        '"ca-tor"': "r038-56cc321b-1920-443e-a400-c58905c8f46c",
       },
       "f5-bigip-16-1-2-2-0-0-28-all-1slot": {
         '"eu-de"': "r010-af6fa90b-ea18-48af-bfb9-a3605d60224d",
@@ -59,9 +59,9 @@ function f5Images() {
         '"eu-gb"': "r018-d33e87cb-0342-41e2-8e29-2b0db4a5881f",
         '"jp-osa"': "r034-1b04698d-9935-4477-8f72-958c7f08c85f",
         '"us-east"': "r014-015d6b06-611e-4e1a-9284-551ed3832182",
-        '"ca-tor"': "r038-b7a44268-e95f-425b-99ac-6ec5fc2c4cdc"
-      }
-    }
+        '"ca-tor"': "r038-b7a44268-e95f-425b-99ac-6ec5fc2c4cdc",
+      },
+    },
   };
 }
 
@@ -76,7 +76,7 @@ function f5ImageLocals() {
     "\n" +
       jsonToTf(
         JSON.stringify({
-          locals: f5Images()
+          locals: f5Images(),
         })
       ) +
       "\n"
@@ -201,7 +201,7 @@ EOD}`,
       ? `\${var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2}`
       : template.license_type === "utilitypool"
       ? "${chomp(local.do_utilitypool)}"
-      : "${local.do_dec2}"
+      : "${local.do_dec2}",
   };
 }
 
@@ -218,7 +218,7 @@ function f5TemplateLocals(template) {
     "\n" +
       jsonToTf(
         JSON.stringify({
-          locals: f5Locals(template)
+          locals: f5Locals(template),
         })
       )
         .replace(/"\$\{(?=file)/g, "")
@@ -283,10 +283,12 @@ function f5TemplateFile(template, config) {
         template_version: template.template_version || "20210201",
         zone: composedZone(template.zone),
         vpc: vpcRef(template.vpc, "id", true),
-        app_id: template.app_id || "null"
-      }
+        app_id: template.app_id || "null",
+      },
     },
-    name: `user_data_${snakeCase(`${template.hostname} zone ${template.zone}`)}`
+    name: `user_data_${snakeCase(
+      `${template.hostname} zone ${template.zone}`
+    )}`,
   };
 }
 
@@ -357,7 +359,7 @@ function f5Tf(config) {
       "\n" +
       f5TemplateLocals(config.f5_vsi[0].template) +
       "\n";
-    config.f5_vsi.forEach(instance => {
+    config.f5_vsi.forEach((instance) => {
       let blockData =
         f5TemplateUserData(instance.template, config) +
         formatF5Vsi(instance, config);
@@ -376,5 +378,5 @@ module.exports = {
   f5Tf,
   f5TemplateFile,
   f5Locals,
-  f5Images
+  f5Images,
 };

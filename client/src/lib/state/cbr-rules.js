@@ -1,7 +1,7 @@
 const {
   updateSubChild,
   deleteSubChild,
-  pushToChildFieldModal
+  pushToChildFieldModal,
 } = require("./store.utils");
 
 /**
@@ -205,5 +205,5 @@ module.exports = {
   cbrRuleAttributeDelete,
   cbrRuleTagCreate,
   cbrRuleTagSave,
-  cbrRuleTagDelete
+  cbrRuleTagDelete,
 };

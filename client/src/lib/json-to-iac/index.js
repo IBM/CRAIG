@@ -2,21 +2,21 @@ const {
   appidTf,
   ibmResourceKeyAppId,
   ibmResourceInstanceAppId,
-  ibmAppIdRedirectUrls
+  ibmAppIdRedirectUrls,
 } = require("./appid");
 const {
   atrackerTf,
   ibmAtrackerRoute,
-  ibmAtrackerTarget
+  ibmAtrackerTarget,
 } = require("./atracker");
 const {
   clusterTf,
   ibmContainerVpcCluster,
-  ibmContainerVpcWorkerPool
+  ibmContainerVpcWorkerPool,
 } = require("./clusters");
 const {
   eventStreamsTf,
-  ibmResourceInstanceEventStreams
+  ibmResourceInstanceEventStreams,
 } = require("./event-streams");
 const {
   f5Tf,
@@ -24,12 +24,12 @@ const {
   f5TemplateFile,
   f5Locals,
   f5ImageLocals,
-  f5Images
+  f5Images,
 } = require("./f5");
 const {
   flowLogsTf,
   ibmIsFlowLog,
-  ibmIamAuthorizationPolicyFlowLogs
+  ibmIamAuthorizationPolicyFlowLogs,
 } = require("./flow-logs");
 const {
   formatIamAccountSettings,
@@ -38,7 +38,7 @@ const {
   ibmIamAccessGroup,
   ibmIamAccessGroupDynamicRule,
   ibmIamAccessGroupPolicy,
-  ibmIamAccessGroupMembers
+  ibmIamAccessGroupMembers,
 } = require("./iam");
 const {
   kmsTf,
@@ -46,14 +46,14 @@ const {
   ibmKmsKeyPolicy,
   ibmKmsKey,
   ibmKmsKeyRings,
-  ibmIamAuthorizationPolicyKms
+  ibmIamAuthorizationPolicyKms,
 } = require("./key-management");
 const {
   cosTf,
   ibmResourceInstanceCos,
   ibmIamAuthorizationPolicyCos,
   ibmCosBucket,
-  ibmResourceKeyCos
+  ibmResourceKeyCos,
 } = require("./object-storage");
 const resourceGroupTf = require("./resource-groups");
 const {
@@ -61,18 +61,18 @@ const {
   ibmSccPostureCredential,
   ibmSccAccountSettings,
   ibmSccPostureScope,
-  ibmSccPostureCollector
+  ibmSccPostureCollector,
 } = require("./scc");
 const {
   secretsManagerTf,
   ibmResourceInstanceSecretsManager,
   ibmIamAuthorizationPolicySecretsManager,
-  formatSecretsManagerSecret
+  formatSecretsManagerSecret,
 } = require("./secrets-manager");
 const {
   sgTf,
   ibmIsSecurityGroupRule,
-  ibmIsSecurityGroup
+  ibmIsSecurityGroup,
 } = require("./security-groups");
 const { sshKeyTf, ibmIsSshKey } = require("./ssh-keys");
 const { tgwTf, ibmTgConnection, ibmTgGateway } = require("./transit-gateway");
@@ -91,13 +91,13 @@ const {
   ibmIsNetworkAcl,
   ibmIsVpcAddressPrefix,
   vpcModuleJson,
-  vpcModuleOutputs
+  vpcModuleOutputs,
 } = require("./vpc");
 const {
   vpeTf,
   ibmIsVirtualEndpointGatewayIp,
   ibmIsVirtualEndpointGateway,
-  ibmIsSubnetReservedIp
+  ibmIsSubnetReservedIp,
 } = require("./vpe");
 const { vpnTf, ibmIsVpnGateway } = require("./vpn");
 const {
@@ -108,7 +108,7 @@ const {
   ibmIsLbPool,
   ibmIsInstance,
   ibmIsLb,
-  ibmIsVolume
+  ibmIsVolume,
 } = require("./vsi");
 const { configToFilesJson } = require("./config-to-files-json");
 const {
@@ -117,14 +117,14 @@ const {
   codeMirrorSubnetsTf,
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
-  codeMirrorGetDisplay
+  codeMirrorGetDisplay,
 } = require("./page-template");
 const {
   formatRoutingTable,
   ibmIsVpcRoutingTable,
   ibmIsVpcRoutingTableRoute,
   formatRoutingTableRoute,
-  routingTableTf
+  routingTableTf,
 } = require("./routing-tables");
 const { buildTitleComment } = require("./utils");
 const {
@@ -132,21 +132,40 @@ const {
   ibmCbrZone,
   formatCbrRule,
   ibmCbrRule,
-  cbrTf
+  cbrTf,
 } = require("./cbr");
-const {
-  ibmIsVpnServer,
-  ibmIsVpnServerRoute
-} = require("./vpn-server")
+const { ibmIsVpnServer, ibmIsVpnServerRoute } = require("./vpn-server");
 const {
   formatDnsService,
   formatDnsZone,
   formatDnsRecord,
   formatDnsPermittedNetwork,
   formatDnsCustomResolver,
-  dnsTf
+  dnsTf,
 } = require("./dns");
+const {
+  formatLogdnaInstance,
+  formatLogdnaKey,
+  formatLogdnaArchive,
+  formatLogdnaProvider,
+  formatSysdigKey,
+  formatSysdigInstance,
+  loggingMonitoringTf,
+  formatAtrackerInstance,
+  formatAtrackerKey,
+  formatAtrackerArchive,
+} = require("./logging-monitoring");
 module.exports = {
+  formatLogdnaInstance,
+  formatLogdnaKey,
+  formatLogdnaArchive,
+  formatLogdnaProvider,
+  formatSysdigKey,
+  formatSysdigInstance,
+  loggingMonitoringTf,
+  formatAtrackerInstance,
+  formatAtrackerKey,
+  formatAtrackerArchive,
   buildTitleComment,
   formatPgw,
   formatSubnet,
@@ -259,5 +278,5 @@ module.exports = {
   formatDnsRecord,
   formatDnsPermittedNetwork,
   formatDnsCustomResolver,
-  dnsTf
+  dnsTf,
 };

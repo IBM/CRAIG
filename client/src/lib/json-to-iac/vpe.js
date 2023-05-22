@@ -8,21 +8,17 @@ const {
   tfBlock,
   tfDone,
   getTags,
-  jsonToTfPrint
+  jsonToTfPrint,
 } = require("./utils");
 const { snakeCase } = require("lazy-z");
 
 const serviceToEndpointMap = {
-  kms:
-    "crn:v1:bluemix:public:kms:$REGION:::endpoint:${var.service_endpoints}.$REGION.kms.cloud.ibm.com",
-  hpcs:
-    "crn:v1:bluemix:public:hs-crypto:$REGION:::endpoint:api.${var.service_endpoints}.$REGION.hs-crypto.cloud.ibm.com",
-  cos:
-    "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.$REGION.cloud-object-storage.appdomain.cloud",
-  icr:
-    "crn:v1:bluemix:public:container-registry:$REGION:::endpoint:vpe.$REGION.container-registry.cloud.ibm.com",
+  kms: "crn:v1:bluemix:public:kms:$REGION:::endpoint:${var.service_endpoints}.$REGION.kms.cloud.ibm.com",
+  hpcs: "crn:v1:bluemix:public:hs-crypto:$REGION:::endpoint:api.${var.service_endpoints}.$REGION.hs-crypto.cloud.ibm.com",
+  cos: "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.$REGION.cloud-object-storage.appdomain.cloud",
+  icr: "crn:v1:bluemix:public:container-registry:$REGION:::endpoint:vpe.$REGION.container-registry.cloud.ibm.com",
   "secrets-manager":
-    "crn:v1:bluemix:public:secrets-manager:$REGION:a/$ACCOUNT_ID:${ibm_resource_instance.$SNAKE_NAME.guid}::"
+    "crn:v1:bluemix:public:secrets-manager:$REGION:a/$ACCOUNT_ID:${ibm_resource_instance.$SNAKE_NAME.guid}::",
 };
 
 /**
@@ -36,8 +32,10 @@ function ibmIsSubnetReservedIp(vpcName, subnetName) {
   return {
     name: `${vpcName} vpc ${subnetName} subnet vpe ip`,
     data: {
-      subnet: `\${module.${snakeCase(vpcName)}_vpc.${snakeCase(subnetName)}_id}`
-    }
+      subnet: `\${module.${snakeCase(vpcName)}_vpc.${snakeCase(
+        subnetName
+      )}_id}`,
+    },
   };
 }
 
@@ -79,18 +77,18 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
       name: kebabName([
         vpe.vpc,
         vpe.instance ? vpe.instance : vpe.service,
-        "vpe-gw"
+        "vpe-gw",
       ]),
       vpc: vpcRef(vpe.vpc, "id", true),
       resource_group: rgIdRef(vpe.resource_group, config),
       tags: getTags(config),
       security_groups: [],
-      target: []
-    }
+      target: [],
+    },
   };
   let target = {
     crn: serviceToEndpointMap[vpe.service].replace(/\$REGION/g, varDotRegion),
-    resource_type: "provider_cloud_service"
+    resource_type: "provider_cloud_service",
   };
   if (vpe.service === "secrets-manager") {
     target.crn = target.crn
@@ -98,7 +96,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
       .replace("$SNAKE_NAME", "secrets_manager_" + snakeCase(vpe.instance));
   }
   data.data.target.push(target);
-  vpe.security_groups.forEach(group => {
+  vpe.security_groups.forEach((group) => {
     data.data.security_groups.push(
       `\${module.${vpe.vpc}_vpc.${snakeCase(group)}_id}`
     );
@@ -144,8 +142,8 @@ function ibmIsVirtualEndpointGatewayIp(vpe, subnetName) {
         "ibm_is_subnet_reserved_ip",
         `${vpe.vpc} vpc ${subnetName} subnet vpe ip`,
         "reserved_ip"
-      )
-    }
+      ),
+    },
   };
 }
 
@@ -172,14 +170,14 @@ function fortmatVpeGatewayIp(vpe, subnetName) {
  */
 function vpeTf(config) {
   let tf = "";
-  config.virtual_private_endpoints.forEach(vpe => {
+  config.virtual_private_endpoints.forEach((vpe) => {
     let blockData = "";
     vpe.subnets.forEach(
-      subnet => (blockData += formatReservedIp(vpe.vpc, subnet))
+      (subnet) => (blockData += formatReservedIp(vpe.vpc, subnet))
     );
     blockData += fortmatVpeGateway(vpe, config);
     vpe.subnets.forEach(
-      subnet => (blockData += fortmatVpeGatewayIp(vpe, subnet))
+      (subnet) => (blockData += fortmatVpeGatewayIp(vpe, subnet))
     );
     tf += tfBlock(vpe.vpc + " vpe resources", blockData) + "\n";
   });
@@ -193,5 +191,5 @@ module.exports = {
   vpeTf,
   ibmIsVirtualEndpointGatewayIp,
   ibmIsVirtualEndpointGateway,
-  ibmIsSubnetReservedIp
+  ibmIsSubnetReservedIp,
 };

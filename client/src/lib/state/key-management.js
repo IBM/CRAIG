@@ -7,7 +7,7 @@ const {
   carveChild,
   updateSubChild,
   deleteSubChild,
-  pushToChildFieldModal
+  pushToChildFieldModal,
 } = require("./store.utils");
 
 /**
@@ -26,7 +26,7 @@ function keyManagementInit(config) {
     force_delete: null,
     endpoint: null,
     rotation: 12,
-    dual_auth_delete: false
+    dual_auth_delete: false,
   });
   setEncryptionKeys(config);
 }
@@ -40,7 +40,7 @@ function keyManagementInit(config) {
  */
 function keyManagementOnStoreUpdate(config) {
   setEncryptionKeys(config);
-  config.store.json.key_management.forEach(kms => {
+  config.store.json.key_management.forEach((kms) => {
     setUnfoundResourceGroup(config, kms);
   });
 }
@@ -64,7 +64,7 @@ function keyManagementSave(config, stateData, componentProps) {
     resource_group: stateData.resource_group,
     use_hs_crypto: stateData.use_hs_crypto || false,
     authorize_vpc_reader_role: stateData.authorize_vpc_reader_role,
-    use_data: stateData.use_hs_crypto ? true : stateData.use_data || false
+    use_data: stateData.use_hs_crypto ? true : stateData.use_data || false,
   };
   config.updateChild(
     ["json", "key_management"],
@@ -172,5 +172,5 @@ module.exports = {
   keyManagementDelete,
   kmsKeyCreate,
   kmsKeySave,
-  kmsKeyDelete
+  kmsKeyDelete,
 };

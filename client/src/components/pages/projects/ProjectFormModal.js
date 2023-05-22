@@ -4,7 +4,7 @@ import {
   IcseFormGroup,
   IcseNameInput,
   IcseTextInput,
-  IcseModal
+  IcseModal,
 } from "icse-react-assets";
 import { projectDescriptionRegex } from "../../../lib/constants";
 import {

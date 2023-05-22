@@ -21,16 +21,16 @@ function ibmSccPostureCredential(scc) {
       purpose: "discovery_fact_collection_remediation",
       display_fields: [
         {
-          ibm_api_key: cdktfRef("var.ibmcloud_api_key")
-        }
+          ibm_api_key: cdktfRef("var.ibmcloud_api_key"),
+        },
       ],
       group: [
         {
           id: scc.id,
-          passphrase: scc.passphrase
-        }
-      ]
-    }
+          passphrase: scc.passphrase,
+        },
+      ],
+    },
   };
 }
 
@@ -66,10 +66,10 @@ function ibmSccAccountSettings(scc) {
     data: {
       location: [
         {
-          location_id: scc.location
-        }
-      ]
-    }
+          location_id: scc.location,
+        },
+      ],
+    },
   };
 }
 
@@ -86,8 +86,8 @@ function ibmSccPostureCollector(scc, config) {
       description: scc.collector_description,
       is_public: scc.is_public,
       managed_by: "ibm",
-      name: `${varDotPrefix}-scc-collector`
-    }
+      name: `${varDotPrefix}-scc-collector`,
+    },
   };
 }
 
@@ -105,8 +105,8 @@ function ibmSccPostureScope(scc, config) {
       credential_id: cdktfRef(`ibm_scc_posture_credential.scc_credentials.id`),
       credential_type: `ibm`,
       description: scc.scope_description,
-      name: `${varDotPrefix}-scc-scope`
-    }
+      name: `${varDotPrefix}-scc-scope`,
+    },
   };
 }
 
@@ -167,5 +167,5 @@ module.exports = {
   ibmSccPostureCredential,
   ibmSccAccountSettings,
   ibmSccPostureScope,
-  ibmSccPostureCollector
+  ibmSccPostureCollector,
 };

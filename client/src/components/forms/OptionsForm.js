@@ -6,7 +6,7 @@ import {
   buildFormFunctions,
   IcseHeading,
   SaveAddButton,
-  IcseNumberSelect
+  IcseNumberSelect,
 } from "icse-react-assets";
 import PropTypes from "prop-types";
 import { Tag, TextArea } from "@carbon/react";
@@ -19,7 +19,7 @@ class OptionsForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...this.props.data
+      ...this.props.data,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleTags = this.handleTags.bind(this);
@@ -128,16 +128,17 @@ class OptionsForm extends React.Component {
 }
 
 OptionsForm.propTypes = {
-  data: PropTypes.shape({
-    craig: PropTypes.shape({
-      options: PropTypes.shape({
-        save: PropTypes.func.isRequired
+  data: PropTypes.shape({}).isRequired,
+  craig: PropTypes.shape({
+    options: PropTypes.shape({
+      save: PropTypes.func.isRequired,
+    }).isRequired,
+    store: PropTypes.shape({
+      json: PropTypes.shape({
+        _options: PropTypes.shape({}).isRequired,
       }).isRequired,
-      store: PropTypes.shape({
-        _options: PropTypes.shape({}).isRequired
-      }).isRequired
-    }).isRequired
-  }).isRequired
+    }).isRequired,
+  }).isRequired,
 };
 
 export default OptionsForm;

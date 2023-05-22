@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.6.0
+
+### Features
+
+- Prettier added as a dependency as well as repo level `.prettierrc.json` and `.prettierignore`. To run prettier from the root directory, use the command `npm run pretty`
+- Added functionality to allow for CRAIG to create Terraform for imported Secrets Manager certificates in an existing secrets manager instance
+- Secrets Manager instance objects without a `secrets` array now have one added on store update
+- When no Secrets Manager instances are created within the state store, the VPN Server page now shows a tile with an explanation and a link to `/form/secretsManager`
+- Detailed installation instructions have been added to `README.md`
+- Added functionality to allow CRAIG to create LogDNA, Sysdig, Activity Tracker, and needed resources to match the Terraform IBM Modules Obsrvability Module functionality
+
+### Fixes
+
+- DNS subnets now correctly render when list of strings
+- Fixed an issue cauing errors to occur for unfound props on the Options page
+
 ## 0.5.0
 
 ### Upgrade Notes

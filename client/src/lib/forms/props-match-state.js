@@ -12,8 +12,8 @@ function propsMatchState(field, stateData, componentProps) {
     [
       "default_network_acl_name",
       "default_routing_table_name",
-      "default_security_group_name"
-    ].forEach(field => {
+      "default_security_group_name",
+    ].forEach((field) => {
       if (isNullOrEmptyString(stateData[field])) {
         stateData[field] = null;
       }
@@ -41,5 +41,5 @@ function propsMatchState(field, stateData, componentProps) {
 }
 
 module.exports = {
-  propsMatchState
+  propsMatchState,
 };

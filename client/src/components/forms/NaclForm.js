@@ -4,14 +4,14 @@ import {
   FormModal,
   IcseHeading,
   SaveAddButton,
-  NetworkAclForm
+  NetworkAclForm,
 } from "icse-react-assets";
 import {
   invalidNameText,
   propsMatchState,
   disableSave,
   invalidName,
-  aclHelperTextCallback
+  aclHelperTextCallback,
 } from "../../lib";
 import { splat } from "lazy-z";
 import CopyRuleForm from "./CopyRuleForm";
@@ -26,7 +26,7 @@ class NaclForm extends React.Component {
       showToggleForm: false,
       sourceAcl: null,
       destinationVpc: null,
-      addClusterRuleAcl: null
+      addClusterRuleAcl: null,
     };
     this.onModalSubmit = this.onModalSubmit.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
@@ -34,7 +34,7 @@ class NaclForm extends React.Component {
 
   onModalSubmit(data) {
     this.props.craig.vpcs.acls.create(data, {
-      vpc_name: this.props.data.name
+      vpc_name: this.props.data.name,
     });
     this.props.handleModalToggle();
   }
@@ -62,7 +62,7 @@ class NaclForm extends React.Component {
               "name"
             )}
             vpc_name={this.props.data.name}
-            shouldDisableSubmit={function() {
+            shouldDisableSubmit={function () {
               // set modal form enable submit
               if (disableSave("acls", this.state, this.props) === false) {
                 this.props.enableModal();
@@ -105,7 +105,7 @@ class NaclForm extends React.Component {
             invalidCallback: invalidName("acls"),
             invalidRuleTextCallback: invalidNameText("acl_rules"),
             invalidRuleText: invalidName("acl_rules"),
-            disableSaveCallback: function(stateData, componentProps) {
+            disableSaveCallback: function (stateData, componentProps) {
               return (
                 disableSave("acl_rules", stateData, componentProps) ||
                 propsMatchState("acl_rules", stateData, componentProps)
@@ -121,7 +121,7 @@ class NaclForm extends React.Component {
             ),
             vpc_name: this.props.data.name,
             craig: this.props.craig,
-            disableModalSubmitCallback: none
+            disableModalSubmitCallback: none,
           }}
           disableSave={disableSave}
           propsMatchState={propsMatchState}
@@ -131,7 +131,7 @@ class NaclForm extends React.Component {
             type: "formInSubForm",
             disableSave: disableSave,
             propsMatchState: propsMatchState,
-            vpc_name: this.props.data.name
+            vpc_name: this.props.data.name,
           }}
           hideAbout
         />
@@ -153,20 +153,20 @@ NaclForm.propTypes = {
         rules: PropTypes.shape({
           create: PropTypes.func.isRequired,
           save: PropTypes.func.isRequired,
-          delete: PropTypes.func.isRequired
-        }).isRequired
-      }).isRequired
+          delete: PropTypes.func.isRequired,
+        }).isRequired,
+      }).isRequired,
     }).isRequired,
     store: PropTypes.shape({
       json: PropTypes.shape({
-        resource_groups: PropTypes.array.isRequired
-      }).isRequired
-    }).isRequired
+        resource_groups: PropTypes.array.isRequired,
+      }).isRequired,
+    }).isRequired,
   }).isRequired,
   data: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    acls: PropTypes.array
-  }).isRequired
+    acls: PropTypes.array,
+  }).isRequired,
 };
 
 export default NaclForm;

@@ -46,7 +46,7 @@ const {
   invalidProjectNameText,
   invalidProjectDescription,
   invalidCidrBlock,
-  setFormSgList
+  setFormSgList,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -55,7 +55,7 @@ const {
   buildNewEncryptionKey,
   buildSubnet,
   addVsiEncryptionKey,
-  newF5Vsi
+  newF5Vsi,
 } = require("./builders");
 const changelogToMarkdown = require("./changelog-to-markdown");
 const constants = require("./constants");
@@ -115,11 +115,31 @@ const {
   formatDnsRecord,
   formatDnsPermittedNetwork,
   formatDnsCustomResolver,
-  dnsTf
+  dnsTf,
+  formatLogdnaInstance,
+  formatLogdnaKey,
+  formatLogdnaArchive,
+  formatLogdnaProvider,
+  formatSysdigKey,
+  formatSysdigInstance,
+  loggingMonitoringTf,
+  formatAtrackerInstance,
+  formatAtrackerKey,
+  formatAtrackerArchive,
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
 module.exports = {
+  formatAtrackerArchive,
+  formatAtrackerKey,
+  formatAtrackerInstance,
+  loggingMonitoringTf,
+  formatSysdigInstance,
+  formatSysdigKey,
+  formatLogdnaInstance,
+  formatLogdnaKey,
+  formatLogdnaArchive,
+  formatLogdnaProvider,
   state,
   buildTitleComment,
   slzToCraig,
@@ -236,5 +256,5 @@ module.exports = {
   formatDnsCustomResolver,
   dnsTf,
   invalidCidrBlock,
-  setFormSgList
+  setFormSgList,
 };

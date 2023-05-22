@@ -49,37 +49,37 @@ function updateNetworkingRule(isAcl, rule, params) {
       {
         icmp: {
           type: null,
-          code: null
+          code: null,
         },
         tcp: {
           port_min: null,
           port_max: null,
           source_port_min: null,
-          source_port_max: null
+          source_port_max: null,
         },
         udp: {
           port_min: null,
           port_max: null,
           source_port_min: null,
-          source_port_max: null
-        }
+          source_port_max: null,
+        },
       }
     : // security group rule style
       {
         icmp: {
           type: null,
-          code: null
+          code: null,
         },
         tcp: {
           port_min: null,
-          port_max: null
+          port_max: null,
         },
         udp: {
           port_min: null,
-          port_max: null
-        }
+          port_max: null,
+        },
       };
-  eachKey(params, key => {
+  eachKey(params, (key) => {
     if (isAcl && key === "allow") {
       // set action
       rule.action = params[key] ? "allow" : "deny";
@@ -94,7 +94,7 @@ function updateNetworkingRule(isAcl, rule, params) {
       transpose(defaultRuleStyle, rule);
       transpose(params.rule, rule[params.ruleProtocol]);
       let allTargetFieldsNull = allFieldsNull(rule[params.ruleProtocol]);
-      eachKey(rule[params.ruleProtocol], key => {
+      eachKey(rule[params.ruleProtocol], (key) => {
         if (rule[params.ruleProtocol][key] !== null) {
           rule[params.ruleProtocol][key] = parseInt(
             rule[params.ruleProtocol][key]
@@ -125,7 +125,7 @@ function updateNetworkingRule(isAcl, rule, params) {
  * @param {eachProtocolCallback} eachProtocolCallback
  */
 function eachRuleProtocol(eachProtocolCallback) {
-  ["icmp", "tcp", "udp"].forEach(protocol => {
+  ["icmp", "tcp", "udp"].forEach((protocol) => {
     eachProtocolCallback(protocol);
   });
 }
@@ -140,7 +140,7 @@ function buildSubnetTiers(vpcObject) {
   let smallestZoneCidr = 0; // smallest zone cidr used to order tiers
   let advancedTiers = {};
   // for each subnet
-  vpcObject.subnets.forEach(subnet => {
+  vpcObject.subnets.forEach((subnet) => {
     if (subnet.tier) {
       // create advanced tier object
       if (!advancedTiers[subnet.tier]) {
@@ -149,7 +149,7 @@ function buildSubnetTiers(vpcObject) {
           zones: undefined,
           select_zones: [],
           advanced: true,
-          subnets: []
+          subnets: [],
         };
       }
       // add zone and name
@@ -177,7 +177,7 @@ function buildSubnetTiers(vpcObject) {
         // if the subnet tier does not exist in the list, add to list
         subnetTiers[arrayMethod]({
           name: tierName,
-          zones: 1
+          zones: 1,
         });
       } else {
         // otherwise, increase number of zones
@@ -187,7 +187,7 @@ function buildSubnetTiers(vpcObject) {
     }
   });
   // add advanced tiers
-  eachKey(advancedTiers, key => {
+  eachKey(advancedTiers, (key) => {
     subnetTiers.push(advancedTiers[key]);
   });
   return subnetTiers;
@@ -229,52 +229,54 @@ function saveAdvancedSubnetTier(
   tierData.zones = undefined;
   tierData.select_zones = stateData.select_zones; // set select zone
   tierData.subnets = []; // set individual subnet managament
-  new revision(config.store.json).child("vpcs", vpcName, "name").then(data => {
-    // get subnets
-    let foundSubnets = data.subnets.filter(subnet =>
-      componentProps.data.advanced
-        ? subnet.tier === newTierName
-        : subnet.name.startsWith(oldTierName)
-    );
-    let nextTierSubnets = [];
-    // for each subnet
-    foundSubnets.forEach(subnet => {
-      // if is in current zone
-      if (contains(stateData.select_zones, subnet.zone)) {
-        let newSubnetName = subnet.name.replace(oldTierName, stateData.name);
-        tierData.subnets.push(newSubnetName);
-        nextTierSubnets.push({
-          zone: subnet.zone,
-          name: newSubnetName
-        });
-        new revision(data).child("subnets", subnet.name).then(data => {
-          data.name = newSubnetName;
-          data.tier = stateData.name;
-        });
-      } else {
-        // otherwise delete
-        carve(data.subnets, "name", subnet.name);
-      }
-    });
-    if (tierData.subnets.length < stateData.select_zones.length) {
-      [1, 2, 3].forEach(zone => {
-        if (!splatContains(nextTierSubnets, "zone", zone)) {
-          data.subnets.push({
-            name: newTierName + "-zone-" + zone,
-            cidr: "",
-            network_acl: "",
-            public_gateway: false,
-            zone: zone,
-            vpc: componentProps.vpc_name,
-            resource_group: config.store.json.vpcs[vpcIndex].resource_group,
-            has_prefix: true,
-            tier: newTierName
+  new revision(config.store.json)
+    .child("vpcs", vpcName, "name")
+    .then((data) => {
+      // get subnets
+      let foundSubnets = data.subnets.filter((subnet) =>
+        componentProps.data.advanced
+          ? subnet.tier === newTierName
+          : subnet.name.startsWith(oldTierName)
+      );
+      let nextTierSubnets = [];
+      // for each subnet
+      foundSubnets.forEach((subnet) => {
+        // if is in current zone
+        if (contains(stateData.select_zones, subnet.zone)) {
+          let newSubnetName = subnet.name.replace(oldTierName, stateData.name);
+          tierData.subnets.push(newSubnetName);
+          nextTierSubnets.push({
+            zone: subnet.zone,
+            name: newSubnetName,
           });
-          tierData.subnets.push(newTierName + "-zone-" + zone);
+          new revision(data).child("subnets", subnet.name).then((data) => {
+            data.name = newSubnetName;
+            data.tier = stateData.name;
+          });
+        } else {
+          // otherwise delete
+          carve(data.subnets, "name", subnet.name);
         }
       });
-    }
-  });
+      if (tierData.subnets.length < stateData.select_zones.length) {
+        [1, 2, 3].forEach((zone) => {
+          if (!splatContains(nextTierSubnets, "zone", zone)) {
+            data.subnets.push({
+              name: newTierName + "-zone-" + zone,
+              cidr: "",
+              network_acl: "",
+              public_gateway: false,
+              zone: zone,
+              vpc: componentProps.vpc_name,
+              resource_group: config.store.json.vpcs[vpcIndex].resource_group,
+              has_prefix: true,
+              tier: newTierName,
+            });
+            tierData.subnets.push(newTierName + "-zone-" + zone);
+          }
+        });
+      }
+    });
 }
 
 module.exports = {
@@ -282,5 +284,5 @@ module.exports = {
   updateNetworkingRule,
   eachRuleProtocol,
   buildSubnetTiers,
-  saveAdvancedSubnetTier
+  saveAdvancedSubnetTier,
 };

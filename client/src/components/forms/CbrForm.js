@@ -9,14 +9,14 @@ import {
   SaveAddButton,
   IcseHeading,
   FormModal,
-  buildFormFunctions
+  buildFormFunctions,
 } from "icse-react-assets";
 import { RenderDocs } from "../pages/SimplePages";
 import {
   disableSave,
   invalidName,
   invalidNameText,
-  propsMatchState
+  propsMatchState,
 } from "../../lib";
 import { invalidCbrRuleText } from "../../lib/forms/text-callbacks";
 import { invalidCbrRule } from "../../lib/forms/invalid-callbacks";
@@ -68,7 +68,7 @@ class CbrForm extends React.Component {
             disableSave={disableSave}
             propsMatchState={propsMatchState}
             isModal
-            shouldDisableSubmit={function() {
+            shouldDisableSubmit={function () {
               // set modal form enable submit
               if (disableSave("cbr_zones", this.state, this.props) === false) {
                 this.props.enableModal();
@@ -93,7 +93,7 @@ class CbrForm extends React.Component {
             invalidTextCallback={invalidCbrRuleText}
             disableSave={disableSave}
             propsMatchState={propsMatchState}
-            shouldDisableSubmit={function() {
+            shouldDisableSubmit={function () {
               // set modal form enable submit
               if (disableSave("cbr_rules", this.state, this.props) === false) {
                 this.props.enableModal();
@@ -150,7 +150,7 @@ class CbrForm extends React.Component {
                     tabPanel={{
                       name: this.props.name,
                       hideAbout: true, // passed to ignore second tab panel
-                      hasBuiltInHeading: true // passed to ignore second tabPanel
+                      hasBuiltInHeading: true, // passed to ignore second tabPanel
                     }}
                     craig={this.props.craig}
                     innerFormProps={{
@@ -161,9 +161,8 @@ class CbrForm extends React.Component {
                       invalidAddressCallback: invalidName("addresses"),
                       invalidAddressTextCallback: invalidNameText("addresses"),
                       invalidExclusionCallback: invalidName("exclusions"),
-                      invalidExclusionTextCallback: invalidNameText(
-                        "exclusions"
-                      ),
+                      invalidExclusionTextCallback:
+                        invalidNameText("exclusions"),
                       disableSave: disableSave,
                       propsMatchState: propsMatchState,
                       addressProps: {
@@ -171,15 +170,15 @@ class CbrForm extends React.Component {
                         onSave: this.props.craig.cbr_zones.addresses.save,
                         onDelete: this.props.craig.cbr_zones.addresses.delete,
                         onSubmit: this.props.craig.cbr_zones.addresses.create,
-                        disableSave: disableSave
+                        disableSave: disableSave,
                       },
                       exclusionProps: {
                         craig: this.props.craig,
                         onSave: this.props.craig.cbr_zones.exclusions.save,
                         onDelete: this.props.craig.cbr_zones.exclusions.delete,
                         onSubmit: this.props.craig.cbr_zones.exclusions.create,
-                        disableSave: disableSave
-                      }
+                        disableSave: disableSave,
+                      },
                     }}
                   />
                 );
@@ -222,7 +221,7 @@ class CbrForm extends React.Component {
                     tabPanel={{
                       name: this.props.name,
                       hideAbout: true, // passed to ignore second tab panel
-                      hasBuiltInHeading: true // passed to ignore second tabPanel
+                      hasBuiltInHeading: true, // passed to ignore second tabPanel
                     }}
                     craig={this.props.craig}
                     innerFormProps={{
@@ -243,23 +242,23 @@ class CbrForm extends React.Component {
                         invalidCallback: invalidCbrRule,
                         invalidTextCallback: invalidCbrRuleText,
                         invalidNameCallback: invalidName("contexts"),
-                        invalidNameTextCallback: invalidNameText("contexts")
+                        invalidNameTextCallback: invalidNameText("contexts"),
                       },
                       resourceAttributeProps: {
                         craig: this.props.craig,
                         disableSave: disableSave,
-                        onSave: this.props.craig.cbr_rules.resource_attributes
-                          .save,
-                        onSubmit: this.props.craig.cbr_rules.resource_attributes
-                          .create,
-                        onDelete: this.props.craig.cbr_rules.resource_attributes
-                          .delete,
+                        onSave:
+                          this.props.craig.cbr_rules.resource_attributes.save,
+                        onSubmit:
+                          this.props.craig.cbr_rules.resource_attributes.create,
+                        onDelete:
+                          this.props.craig.cbr_rules.resource_attributes.delete,
                         invalidCallback: invalidCbrRule,
                         invalidTextCallback: invalidCbrRuleText,
                         invalidNameCallback: invalidName("resource_attributes"),
                         invalidNameTextCallback: invalidNameText(
                           "resource_attributes"
-                        )
+                        ),
                       },
                       tagProps: {
                         craig: this.props.craig,
@@ -270,8 +269,8 @@ class CbrForm extends React.Component {
                         invalidCallback: invalidCbrRule,
                         invalidTextCallback: invalidCbrRuleText,
                         invalidNameCallback: invalidName("tags"),
-                        invalidNameTextCallback: invalidNameText("tags")
-                      }
+                        invalidNameTextCallback: invalidNameText("tags"),
+                      },
                     }}
                   />
                 );
@@ -295,13 +294,13 @@ CbrForm.propTypes = {
       addresses: PropTypes.shape({
         create: PropTypes.func.isRequired,
         save: PropTypes.func.isRequired,
-        delete: PropTypes.func.isRequired
+        delete: PropTypes.func.isRequired,
       }).isRequired,
       exclusions: PropTypes.shape({
         create: PropTypes.func.isRequired,
         save: PropTypes.func.isRequired,
-        delete: PropTypes.func.isRequired
-      }).isRequired
+        delete: PropTypes.func.isRequired,
+      }).isRequired,
     }).isRequired,
     cbr_rules: PropTypes.shape({
       create: PropTypes.func.isRequired,
@@ -310,24 +309,24 @@ CbrForm.propTypes = {
       contexts: PropTypes.shape({
         create: PropTypes.func.isRequired,
         save: PropTypes.func.isRequired,
-        delete: PropTypes.func.isRequired
+        delete: PropTypes.func.isRequired,
       }).isRequired,
       resource_attributes: PropTypes.shape({
         create: PropTypes.func.isRequired,
         save: PropTypes.func.isRequired,
-        delete: PropTypes.func.isRequired
+        delete: PropTypes.func.isRequired,
       }).isRequired,
       tags: PropTypes.shape({
         create: PropTypes.func.isRequired,
         save: PropTypes.func.isRequired,
-        delete: PropTypes.func.isRequired
-      }).isRequired
+        delete: PropTypes.func.isRequired,
+      }).isRequired,
     }).isRequired,
     store: PropTypes.shape({
       json: PropTypes.shape({
         cbr_zones: PropTypes.array.isRequired,
-        cbr_rules: PropTypes.array.isRequired
-      }).isRequired
-    }).isRequired
-  })
+        cbr_rules: PropTypes.array.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }),
 };

@@ -4,7 +4,7 @@ const {
   isEmpty,
   eachZone,
   transpose,
-  revision
+  revision,
 } = require("lazy-z");
 const { addVsiEncryptionKey, newF5Vsi } = require("../builders");
 const {
@@ -33,7 +33,7 @@ function f5Init(config) {
  * @param {object} config.store.subnets map of vpc subnets
  */
 function f5OnStoreUpdate(config) {
-  config.store.json.f5_vsi.forEach(instance => {
+  config.store.json.f5_vsi.forEach((instance) => {
     if (hasUnfoundVpc(config, instance)) {
       // if vpc no longer exists reinitialize fields
       instance.vpc = null;
@@ -73,10 +73,10 @@ function f5VsiCreate(config, stateData) {
   if (isEmpty(config.store.json.ssh_keys)) {
     config.store.json.ssh_keys.push({
       name: "ssh-key",
-      public_key: "<user-determined-value>"
+      public_key: "<user-determined-value>",
     });
   }
-  eachZone(zones || 3, zone => {
+  eachZone(zones || 3, (zone) => {
     config.store.json.f5_vsi.push(
       newF5Vsi(config.store.edge_pattern, zone, useManagement, stateData)
     );
@@ -96,7 +96,7 @@ function f5VsiCreate(config, stateData) {
  */
 function f5VsiSave(config, stateData) {
   config.store.json.f5_vsi = [];
-  eachZone(stateData.zones, zone => {
+  eachZone(stateData.zones, (zone) => {
     config.store.json.f5_vsi.push(
       newF5Vsi(
         config.store.edge_pattern,
@@ -120,14 +120,14 @@ function f5VsiSave(config, stateData) {
  * @param {string} stateData.boot_volume_encryption_key_name
  */
 function f5TemplateSave(config, stateData, componentProps) {
-  eachKey(stateData, key => {
+  eachKey(stateData, (key) => {
     if (key === "tmos_admin_password" && stateData.tmos_admin_password === "") {
       stateData.tmos_admin_password = null;
     } else if (stateData[key] === "") {
       stateData[key] = "null";
     }
   });
-  config.store.json.f5_vsi.forEach(vsi => {
+  config.store.json.f5_vsi.forEach((vsi) => {
     transpose(stateData, vsi.template);
   });
 }
@@ -144,10 +144,12 @@ function f5TemplateSave(config, stateData, componentProps) {
  * @param {string} stateData.encryption_key
  */
 function f5InstanceSave(config, stateData) {
-  new revision(config.store.json).child("f5_vsi", stateData.name).then(data => {
-    data.resource_group = stateData.resource_group;
-    data.encryption_key = stateData.encryption_key;
-  });
+  new revision(config.store.json)
+    .child("f5_vsi", stateData.name)
+    .then((data) => {
+      data.resource_group = stateData.resource_group;
+      data.encryption_key = stateData.encryption_key;
+    });
 }
 
 module.exports = {
@@ -156,5 +158,5 @@ module.exports = {
   f5VsiCreate,
   f5VsiSave,
   f5InstanceSave,
-  f5TemplateSave
+  f5TemplateSave,
 };

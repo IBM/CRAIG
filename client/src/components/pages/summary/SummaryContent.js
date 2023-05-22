@@ -1,8 +1,8 @@
 import React from "react";
 import { CheckmarkFilled, ErrorFilled } from "@carbon/icons-react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-export const SummaryErrorText = props => {
+export const SummaryErrorText = (props) => {
   return (
     <>
       <div className="displayFlex">
@@ -21,7 +21,7 @@ export const SummaryErrorText = props => {
 };
 
 SummaryErrorText.propTypes = {
-  error: PropTypes.string.isRequired
+  error: PropTypes.string.isRequired,
 };
 
 export const SummaryText = () => {

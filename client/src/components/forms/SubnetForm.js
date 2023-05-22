@@ -4,7 +4,7 @@ import {
   IcseHeading,
   SaveAddButton,
   SubnetTierForm,
-  EmptyResourceTile
+  EmptyResourceTile,
 } from "icse-react-assets";
 import {
   propsMatchState,
@@ -17,7 +17,7 @@ import {
   invalidCidr,
   invalidCidrText,
   invalidName,
-  invalidNameText
+  invalidNameText,
 } from "../../lib";
 import { splat, titleCase } from "lazy-z";
 
@@ -31,7 +31,7 @@ class SubnetForm extends React.Component {
 
   onModalSubmit(data) {
     this.props.craig.vpcs.subnetTiers.create(data, {
-      vpc_name: this.props.data.name
+      vpc_name: this.props.data.name,
     });
     this.props.handleModalToggle();
   }
@@ -50,7 +50,7 @@ class SubnetForm extends React.Component {
             networkAcls={splat(this.props.data.acls, "name")}
             enabledPublicGateways={this.props.data.publicGateways}
             vpc_name={this.props.data.name}
-            subnetListCallback={stateData => {
+            subnetListCallback={(stateData) => {
               let nextTier = tiers.length;
               let subnets = [];
               while (subnets.length < stateData.zones) {

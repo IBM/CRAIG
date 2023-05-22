@@ -10,7 +10,7 @@ import {
   StarFilled,
   Add,
   View,
-  Star
+  Star,
 } from "@carbon/icons-react";
 import "./project.css";
 
@@ -21,7 +21,7 @@ class Projects extends React.Component {
     this.state = {
       modalOpen: false,
       viewJSONModalOpen: false,
-      deleteModalOpen: false
+      deleteModalOpen: false,
     };
 
     /* do not delete, for debugging */
@@ -108,7 +108,7 @@ class Projects extends React.Component {
               className="newProjectButton"
               onClick={() => {
                 this.setState({
-                  modalData: this.props.new()
+                  modalData: this.props.new(),
                 });
                 this.toggleModal();
               }}
@@ -126,7 +126,7 @@ class Projects extends React.Component {
                 {/* projects */}
                 {Object.keys(this.props.projects)
                   .sort(azsort)
-                  .map(kname => {
+                  .map((kname) => {
                     return (
                       <ClickableTile
                         key={kname}
@@ -138,7 +138,7 @@ class Projects extends React.Component {
                             ? "selected"
                             : "notSelected")
                         }
-                        onClick={event => {
+                        onClick={(event) => {
                           if (
                             !event.target.id.startsWith("edit") &&
                             !event.target.id.startsWith("delete") &&
@@ -207,7 +207,7 @@ class Projects extends React.Component {
                             className="projectTileButton marginBottomSmall"
                             onClick={() => {
                               this.setState({
-                                modalData: this.props.projects[kname]
+                                modalData: this.props.projects[kname],
                               });
                               this.toggleModal();
                             }}
@@ -224,8 +224,8 @@ class Projects extends React.Component {
                               this.setState({
                                 viewJSONModalData: {
                                   name: this.props.projects[kname].name,
-                                  json: this.props.projects[kname].json
-                                }
+                                  json: this.props.projects[kname].json,
+                                },
                               });
                               this.toggleViewJSONModal();
                             }}
@@ -240,7 +240,7 @@ class Projects extends React.Component {
                             className="projectTileButton"
                             onClick={() => {
                               this.setState({
-                                deleteProject: kname
+                                deleteProject: kname,
                               });
                               this.toggleDeleteModal();
                             }}

@@ -36,7 +36,7 @@ describe("appid", () => {
           {
             name: "default",
             resource_group: null,
-            keys: []
+            keys: [],
           },
         ],
         "it should create appid"

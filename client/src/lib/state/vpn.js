@@ -1,8 +1,5 @@
 const { contains } = require("lazy-z");
-const {
-  setUnfoundResourceGroup,
-  hasUnfoundVpc,
-} = require("./store.utils");
+const { setUnfoundResourceGroup, hasUnfoundVpc } = require("./store.utils");
 
 /**
  * initialize vpn gateway
@@ -16,8 +13,8 @@ function vpnInit(config) {
       name: "management-gateway",
       resource_group: "management-rg",
       subnet: "vpn-zone-1",
-      vpc: "management"
-    }
+      vpc: "management",
+    },
   ];
 }
 
@@ -29,7 +26,7 @@ function vpnInit(config) {
  * @param {Array<object>} config.store.json.vpn_gateways
  */
 function vpnOnStoreUpdate(config) {
-  config.store.json.vpn_gateways.forEach(gateway => {
+  config.store.json.vpn_gateways.forEach((gateway) => {
     if (hasUnfoundVpc(config, gateway)) {
       // if the vpc no longer exists, set vpc and subnet to null
       gateway.vpc = null;
@@ -72,10 +69,7 @@ function vpnSave(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function vpnDelete(config, stateData, componentProps) {
-  config.carve(
-    ["json", "vpn_gateways"],
-    componentProps.data.name
-  );
+  config.carve(["json", "vpn_gateways"], componentProps.data.name);
 }
 
 module.exports = {
@@ -83,5 +77,5 @@ module.exports = {
   vpnOnStoreUpdate,
   vpnCreate,
   vpnSave,
-  vpnDelete
+  vpnDelete,
 };

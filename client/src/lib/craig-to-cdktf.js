@@ -5,7 +5,7 @@ const {
   contains,
   titleCase,
   transpose,
-  eachKey
+  eachKey,
 } = require("lazy-z");
 const {
   ibmAtrackerRoute,
@@ -66,7 +66,7 @@ const {
   ibmCbrZone,
   ibmCbrRule,
   vpcModuleJson,
-  vpcModuleOutputs
+  vpcModuleOutputs,
 } = require("./json-to-iac");
 const { cdktfValues, getResourceOrData } = require("./json-to-iac/utils");
 const { varDotRegion, varDotPrefix } = require("./constants");
@@ -78,7 +78,7 @@ const { varDotRegion, varDotPrefix } = require("./constants");
  */
 function craigToVpcModuleCdktf(craig) {
   let vpcModules = [];
-  craig.vpcs.forEach(vpc => {
+  craig.vpcs.forEach((vpc) => {
     let vpcRgs = [];
     let moduleJson = {
       resource: {},
@@ -87,28 +87,28 @@ function craigToVpcModuleCdktf(craig) {
         required_providers: {
           ibm: {
             source: "IBM-Cloud/ibm",
-            version: "1.44.1"
-          }
-        }
+            version: "1.44.1",
+          },
+        },
       },
       variable: {
         tags: {
           description: "List of tags",
-          type: "${list(string)}"
+          type: "${list(string)}",
         },
         region: {
           description: "IBM Cloud Region where resources will be provisioned",
-          type: "${string}"
+          type: "${string}",
         },
         prefix: {
           description: "Name prefix that will be prepended to named resources",
           type: "${string}",
         },
-      }
+      },
     };
     let nw = ibmIsVpc(vpc, craig);
     cdktfValues(moduleJson, "resource", "ibm_is_vpc", nw.name, nw.data);
-    vpc.address_prefixes.forEach(prefix => {
+    vpc.address_prefixes.forEach((prefix) => {
       let cidr = ibmIsVpcAddressPrefix(prefix, craig);
       cdktfValues(
         moduleJson,
@@ -118,7 +118,7 @@ function craigToVpcModuleCdktf(craig) {
         cidr.data
       );
     });
-    vpc.acls.forEach(nacl => {
+    vpc.acls.forEach((nacl) => {
       let acl = ibmIsNetworkAcl(nacl, craig);
       cdktfValues(
         moduleJson,
@@ -127,7 +127,7 @@ function craigToVpcModuleCdktf(craig) {
         acl.name,
         acl.data
       );
-      nacl.rules.forEach(aclRule => {
+      nacl.rules.forEach((aclRule) => {
         let rule = ibmIsNetworkAclRule(aclRule);
         cdktfValues(
           moduleJson,
@@ -139,7 +139,7 @@ function craigToVpcModuleCdktf(craig) {
       });
       vpcRgs.push(nacl.resource_group);
     });
-    vpc.subnets.forEach(sub => {
+    vpc.subnets.forEach((sub) => {
       let subnet = ibmIsSubnet(sub, craig);
       cdktfValues(
         moduleJson,
@@ -151,7 +151,7 @@ function craigToVpcModuleCdktf(craig) {
       vpcRgs.push(sub.resource_group);
     });
 
-    vpc.public_gateways.forEach(gw => {
+    vpc.public_gateways.forEach((gw) => {
       let pgw = ibmIsPublicGateway(gw, craig);
       cdktfValues(
         moduleJson,
@@ -162,7 +162,7 @@ function craigToVpcModuleCdktf(craig) {
       );
     });
 
-    craig.security_groups.forEach(sg => {
+    craig.security_groups.forEach((sg) => {
       if (sg.vpc === vpc.name) {
         let group = ibmIsSecurityGroup(sg, craig);
         cdktfValues(
@@ -172,7 +172,7 @@ function craigToVpcModuleCdktf(craig) {
           group.name,
           group.data
         );
-        sg.rules.forEach(rule => {
+        sg.rules.forEach((rule) => {
           let data = ibmIsSecurityGroupRule(rule);
           cdktfValues(
             moduleJson,
@@ -184,10 +184,10 @@ function craigToVpcModuleCdktf(craig) {
         });
       }
     });
-    distinct(vpcRgs).forEach(rg => {
+    distinct(vpcRgs).forEach((rg) => {
       moduleJson.variable[snakeCase(rg) + "_id"] = {
         description: "ID for the resource group " + rg,
-        type: "${string}"
+        type: "${string}",
       };
     });
     vpcModules.push(moduleJson);
@@ -208,9 +208,9 @@ function craigToCdktf(craig) {
       ibm: [
         {
           ibmcloud_api_key: "${var.ibmcloud_api_key}",
-          region: varDotRegion
-        }
-      ]
+          region: varDotRegion,
+        },
+      ],
     },
     module: {},
     data: {},
@@ -219,17 +219,17 @@ function craigToCdktf(craig) {
       ibmcloud_api_key: {
         description:
           "The IBM Cloud platform API key needed to deploy IAM enabled resources.",
-        sensitive: true
-      }
+        sensitive: true,
+      },
     },
     terraform: {
       required_providers: {
         ibm: {
           source: "IBM-Cloud/ibm",
-          version: "1.44.1"
-        }
-      }
-    }
+          version: "1.44.1",
+        },
+      },
+    },
   };
 
   // atracker target
@@ -254,7 +254,7 @@ function craigToCdktf(craig) {
   }
 
   // clusters
-  craig.clusters.forEach(cluster => {
+  craig.clusters.forEach((cluster) => {
     // address for name
     let clusterData = ibmContainerVpcCluster(cluster, craig);
     cdktfValues(
@@ -266,7 +266,7 @@ function craigToCdktf(craig) {
     );
 
     // add worker pool
-    cluster.worker_pools.forEach(pool => {
+    cluster.worker_pools.forEach((pool) => {
       let poolData = ibmContainerVpcWorkerPool(pool, craig);
       cdktfValues(
         cdktfJson,
@@ -279,7 +279,7 @@ function craigToCdktf(craig) {
   });
 
   // flow logs auth policies
-  distinct(splat(craig.vpcs, "cos")).forEach(cos => {
+  distinct(splat(craig.vpcs, "cos")).forEach((cos) => {
     let auth = ibmIamAuthorizationPolicyFlowLogs(cos, craig);
     cdktfValues(
       cdktfJson,
@@ -291,16 +291,16 @@ function craigToCdktf(craig) {
   });
 
   // vpcs
-  craig.vpcs.forEach(vpc => {
+  craig.vpcs.forEach((vpc) => {
     let logs = ibmIsFlowLog(vpc, craig, true);
     let vpcRgs = [];
     cdktfValues(cdktfJson, "resource", "ibm_is_flow_log", logs.name, logs.data);
-    vpc.acls.forEach(nacl => {
+    vpc.acls.forEach((nacl) => {
       if (!contains(vpcRgs, nacl.resource_group)) {
         vpcRgs.push(nacl.resource_group);
       }
     });
-    vpc.subnets.forEach(sub => {
+    vpc.subnets.forEach((sub) => {
       if (!contains(vpcRgs, sub.resource_group)) {
         vpcRgs.push(sub.resource_group);
       }
@@ -312,16 +312,16 @@ function craigToCdktf(craig) {
   });
 
   // resource groups
-  craig.resource_groups.forEach(rg => {
+  craig.resource_groups.forEach((rg) => {
     let type = getResourceOrData(rg);
     cdktfValues(cdktfJson, type, "ibm_resource_group", rg.name, {
       name: (rg.use_prefix ? `${varDotPrefix}-` : "") + rg.name,
-      tags: tags
+      tags: tags,
     });
   });
 
   // object storage
-  craig.object_storage.forEach(cos => {
+  craig.object_storage.forEach((cos) => {
     let instance = ibmResourceInstanceCos(cos, craig);
     let auth = ibmIamAuthorizationPolicyCos(cos, craig);
     if (cos.use_random_suffix) {
@@ -333,7 +333,7 @@ function craigToCdktf(craig) {
         {
           length: 8,
           special: false,
-          upper: false
+          upper: false,
         }
       );
     }
@@ -351,7 +351,7 @@ function craigToCdktf(craig) {
       auth.name,
       auth.data
     );
-    cos.buckets.forEach(bucket => {
+    cos.buckets.forEach((bucket) => {
       let data = ibmCosBucket(bucket, cos, craig, true);
       cdktfValues(
         cdktfJson,
@@ -361,7 +361,7 @@ function craigToCdktf(craig) {
         data.data
       );
     });
-    cos.keys.forEach(key => {
+    cos.keys.forEach((key) => {
       let data = ibmResourceKeyCos(key, cos, craig);
       cdktfValues(
         cdktfJson,
@@ -374,7 +374,7 @@ function craigToCdktf(craig) {
   });
 
   // kms
-  craig.key_management.forEach(kms => {
+  craig.key_management.forEach((kms) => {
     // set vpc auth policies
     if (kms.authorize_vpc_reader_role) {
       let is = ibmIamAuthorizationPolicyKms(kms, true);
@@ -404,13 +404,13 @@ function craigToCdktf(craig) {
     );
 
     // create key rings
-    distinct(splat(kms.keys, "key_ring")).forEach(ring => {
+    distinct(splat(kms.keys, "key_ring")).forEach((ring) => {
       let tf = ibmKmsKeyRings(ring, kms, craig);
       cdktfValues(cdktfJson, "resource", "ibm_kms_key_rings", tf.name, tf.data);
     });
 
     // create keys
-    kms.keys.forEach(key => {
+    kms.keys.forEach((key) => {
       let keyTf = ibmKmsKey(key, kms, craig, true);
       let policy = ibmKmsKeyPolicy(key, kms);
       cdktfValues(cdktfJson, "resource", "ibm_kms_key", keyTf.name, keyTf.data);
@@ -425,7 +425,7 @@ function craigToCdktf(craig) {
   });
 
   // ssh keys
-  craig.ssh_keys.forEach(key => {
+  craig.ssh_keys.forEach((key) => {
     let sshKey = ibmIsSshKey(key, craig);
     if (!key.use_data) {
       cdktfJson.variable[snakeCase(key.name) + "_public_key"] = {
@@ -435,7 +435,7 @@ function craigToCdktf(craig) {
           "SSH"
         )}`,
         type: "string",
-        sensitive: true
+        sensitive: true,
       };
     }
     cdktfValues(
@@ -448,12 +448,12 @@ function craigToCdktf(craig) {
   });
 
   // handle tgw
-  craig.transit_gateways.forEach(tgw => {
+  craig.transit_gateways.forEach((tgw) => {
     let gw = ibmTgGateway(tgw, craig);
     cdktfValues(cdktfJson, "resource", "ibm_tg_gateway", gw.name, gw.data);
 
     // handle tgw connections
-    tgw.connections.forEach(connection => {
+    tgw.connections.forEach((connection) => {
       let data = ibmTgConnection(connection, craig);
       cdktfValues(
         cdktfJson,
@@ -466,8 +466,8 @@ function craigToCdktf(craig) {
   });
 
   // vpes
-  craig.virtual_private_endpoints.forEach(vpe => {
-    vpe.subnets.forEach(subnet => {
+  craig.virtual_private_endpoints.forEach((vpe) => {
+    vpe.subnets.forEach((subnet) => {
       let reservedIp = ibmIsSubnetReservedIp(vpe.vpc, subnet);
       let endpoint = ibmIsVirtualEndpointGatewayIp(vpe, subnet);
       cdktfValues(
@@ -496,8 +496,8 @@ function craigToCdktf(craig) {
   });
 
   // vsis
-  craig.vsi.forEach(deployment => {
-    deployment.subnets.forEach(subnet => {
+  craig.vsi.forEach((deployment) => {
+    deployment.subnets.forEach((subnet) => {
       for (let i = 0; i < deployment.vsi_per_subnet; i++) {
         let instance = {};
         transpose(deployment, instance);
@@ -513,11 +513,11 @@ function craigToCdktf(craig) {
         );
         if (!contains(instance.image, "local")) {
           cdktfValues(cdktfJson, "data", "ibm_is_image", instance.image, {
-            name: instance.image
+            name: instance.image,
           });
         }
         if (deployment.volumes) {
-          ibmIsVolume(instance, craig).forEach(volume => {
+          ibmIsVolume(instance, craig).forEach((volume) => {
             cdktfValues(
               cdktfJson,
               "resource",
@@ -533,7 +533,7 @@ function craigToCdktf(craig) {
 
   // // vpn servers
   if (craig.vpn_servers) {
-    craig.vpn_servers.forEach(vpnServer => {
+    craig.vpn_servers.forEach((vpnServer) => {
       let server = ibmIsVpnServer(vpnServer, craig);
       cdktfValues(
         cdktfJson,
@@ -542,7 +542,7 @@ function craigToCdktf(craig) {
         server.name,
         server.data
       );
-      vpnServer.routes.forEach(vpnRoute => {
+      vpnServer.routes.forEach((vpnRoute) => {
         let route = ibmIsVpnServerRoute(vpnServer, vpnRoute, craig);
         cdktfValues(
           cdktfJson,
@@ -556,7 +556,7 @@ function craigToCdktf(craig) {
   }
 
   // vpn gateways
-  craig.vpn_gateways.forEach(vpnGw => {
+  craig.vpn_gateways.forEach((vpnGw) => {
     let vpn = ibmIsVpnGateway(vpnGw, craig);
     cdktfValues(
       cdktfJson,
@@ -572,11 +572,11 @@ function craigToCdktf(craig) {
 
   if (craig.f5_vsi && craig.f5_vsi.length > 0) {
     let images = f5Images();
-    eachKey(images, key => {
+    eachKey(images, (key) => {
       cdktfJson.locals[key] = images[key];
     });
     let locals = f5Locals(craig.f5_vsi[0].template);
-    eachKey(locals, key => {
+    eachKey(locals, (key) => {
       cdktfJson.locals[key] = locals[key];
     });
     let template = f5TemplateFile(craig.f5_vsi[0].template, craig);
@@ -591,7 +591,7 @@ function craigToCdktf(craig) {
 
   // event streams
   if (craig.event_streams)
-    craig.event_streams.forEach(instance => {
+    craig.event_streams.forEach((instance) => {
       let es = ibmResourceInstanceEventStreams(instance, craig);
       cdktfValues(
         cdktfJson,
@@ -603,7 +603,7 @@ function craigToCdktf(craig) {
     });
 
   // appid
-  craig.appid.forEach(instance => {
+  craig.appid.forEach((instance) => {
     let appid = ibmResourceInstanceAppId(instance, craig);
     cdktfValues(
       cdktfJson,
@@ -612,7 +612,7 @@ function craigToCdktf(craig) {
       appid.name,
       appid.data
     );
-    instance.keys.forEach(appidKey => {
+    instance.keys.forEach((appidKey) => {
       let key = ibmResourceKeyAppId(appidKey, craig);
       cdktfValues(
         cdktfJson,
@@ -625,7 +625,7 @@ function craigToCdktf(craig) {
   });
 
   // secrets manager
-  craig.secrets_manager.forEach(instance => {
+  craig.secrets_manager.forEach((instance) => {
     let auth = ibmIamAuthorizationPolicySecretsManager(instance.kms, craig);
     let secrets = ibmResourceInstanceSecretsManager(instance, craig);
     cdktfValues(
@@ -682,7 +682,7 @@ function craigToCdktf(craig) {
 
   // load balancers
   if (craig.load_balancers)
-    craig.load_balancers.forEach(lb => {
+    craig.load_balancers.forEach((lb) => {
       let poolData = ibmIsLbPool(lb, craig);
       cdktfValues(
         cdktfJson,
@@ -694,7 +694,7 @@ function craigToCdktf(craig) {
       let lbData = ibmIsLb(lb, craig);
       cdktfValues(cdktfJson, "resource", "ibm_is_lb", lbData.name, lbData.data);
       let poolMemberData = ibmIsLbPoolMembers(lb, craig);
-      poolMemberData.forEach(vsi => {
+      poolMemberData.forEach((vsi) => {
         cdktfValues(
           cdktfJson,
           "resource",
@@ -726,7 +726,7 @@ function craigToCdktf(craig) {
   }
 
   // access groups
-  craig.access_groups.forEach(instance => {
+  craig.access_groups.forEach((instance) => {
     // access group fields
     let ag = ibmIamAccessGroup(instance, craig);
     cdktfValues(
@@ -737,7 +737,7 @@ function craigToCdktf(craig) {
       ag.data
     );
     // access group policies
-    instance.policies.forEach(policy => {
+    instance.policies.forEach((policy) => {
       let agPolicy = ibmIamAccessGroupPolicy(policy);
       cdktfValues(
         cdktfJson,
@@ -748,7 +748,7 @@ function craigToCdktf(craig) {
       );
     });
     // access group dynamic policies
-    instance.dynamic_policies.forEach(policy => {
+    instance.dynamic_policies.forEach((policy) => {
       let agDynamicPolicy = ibmIamAccessGroupDynamicRule(policy);
       cdktfValues(
         cdktfJson,
@@ -772,7 +772,7 @@ function craigToCdktf(craig) {
   });
 
   // cbr zones
-  craig.cbr_zones.forEach(zone => {
+  craig.cbr_zones.forEach((zone) => {
     let cbrZone = ibmCbrZone(zone, craig);
     cdktfValues(
       cdktfJson,
@@ -784,7 +784,7 @@ function craigToCdktf(craig) {
   });
 
   // cbr rules
-  craig.cbr_rules.forEach(rule => {
+  craig.cbr_rules.forEach((rule) => {
     let cbrRule = ibmCbrRule(rule, craig);
     cdktfValues(
       cdktfJson,
@@ -800,5 +800,5 @@ function craigToCdktf(craig) {
 
 module.exports = {
   craigToCdktf,
-  craigToVpcModuleCdktf
+  craigToVpcModuleCdktf,
 };

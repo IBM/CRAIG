@@ -18,7 +18,7 @@ export {
   ToggleFormPageProps,
   ToggleFormPage,
   FormPage,
-  EdgeNetworkingDocs
+  EdgeNetworkingDocs,
 } from "./pages";
 export { Notification } from "./Notification";
 export { default as PageTemplate } from "./PageTemplate";

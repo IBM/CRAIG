@@ -4,7 +4,7 @@ const {
   isEmpty,
   containsKeys,
   eachKey,
-  getObjectFromArray
+  getObjectFromArray,
 } = require("lazy-z");
 const { requiredOptionalFields, sshKeyValidationExp } = require("./constants");
 const { eachRuleProtocol } = require("./state/utils");
@@ -15,16 +15,16 @@ const simpleErrors = {
   unfoundAtrackerKey:
     "The COS instance where the Activity Tracker bucket is created must have at least one key. Got 0",
   noCosInstances: "At least one Object Storage Instance is required. Got 0",
-  noOpenShiftCosInstance: clusterName => {
+  noOpenShiftCosInstance: (clusterName) => {
     return `OpenShift clusters require a cos instance. Cluster \`${clusterName}\` cos is null.`;
   },
   noVpeSubnets: (serviceName, vpcName) => {
     return `Virtual Private Endpoints must have at least one VPC subnet. Service name \`${serviceName}\` VPC Name \`${vpcName}\` has 0.`;
   },
-  noVpeSgs: serviceName => {
+  noVpeSgs: (serviceName) => {
     return `Virtual Private Endpoints must have at least one Security Group. Service name \`${serviceName}\` has 0.`;
   },
-  noDeploymentSshKeys: deploymentName => {
+  noDeploymentSshKeys: (deploymentName) => {
     return `${deploymentName} must have at least one SSH Key, got 0.`;
   },
   noDeploymentPrimarySubnet: (deploymentName, subnetField) => {
@@ -36,14 +36,14 @@ const simpleErrors = {
   },
   invalidClusterEncryptionKey: (clusterName, kms, key) => {
     return `${clusterName} must reference a key in the kms service ${kms}. ${key} is invalid.`;
-  }
+  },
 };
 
 /**
  * validate a json configuration object
  * @param {Object} json landing zone configuration json
  */
-const validate = function(json) {
+const validate = function (json) {
   const optionalComponents = [
     "secrets_manager",
     "teleport_vsi",
@@ -54,7 +54,7 @@ const validate = function(json) {
     "appid",
     "cbr_rules",
     "cbr_zones",
-    "vpn_servers"
+    "vpn_servers",
   ];
   /**
    * validate something
@@ -87,7 +87,7 @@ const validate = function(json) {
         "Transit Gateway",
         "App ID",
         "Secrets Manager",
-        "Security Compliance Center"
+        "Security Compliance Center",
       ],
       componentName
     )
@@ -121,7 +121,7 @@ const validate = function(json) {
    */
   function nullResourceGroupTest(componentName, component, testParams) {
     let params = {};
-    eachKey(testParams || {}, key => {
+    eachKey(testParams || {}, (key) => {
       params[key] = testParams[key];
     });
     validationTest(
@@ -189,21 +189,21 @@ const validate = function(json) {
    * @param {boolean=} isAcl is network acl
    */
   function updateNetworkingRulesForCompatibility(rules, isAcl) {
-    rules.forEach(rule => {
+    rules.forEach((rule) => {
       // for each rule type
-      eachRuleProtocol(type => {
+      eachRuleProtocol((type) => {
         // if the rule type is not part of the rule object
         if (!containsKeys(rule, type)) {
           // set rule
           if (type === "icmp") {
             rule[type] = {
               type: null,
-              code: null
+              code: null,
             };
           } else {
             rule[type] = {
               port_min: null,
-              port_max: null
+              port_max: null,
             };
             if (isAcl) {
               rule[type].source_port_max = null;
@@ -211,7 +211,7 @@ const validate = function(json) {
             }
           }
         } else {
-          eachKey(rule[type], key => {
+          eachKey(rule[type], (key) => {
             if (rule[type][key] !== null)
               rule[type][key] = parseInt(rule[type][key]);
           });
@@ -231,7 +231,7 @@ const validate = function(json) {
       is_public: false,
       location: [],
       scope_description: null,
-      id: null
+      id: null,
     };
   } else {
     if (json.scc?.enable) {
@@ -241,8 +241,8 @@ const validate = function(json) {
         "scope_description",
         "passphrase",
         "collector_description",
-        "id"
-      ].forEach(field => {
+        "id",
+      ].forEach((field) => {
         if (!containsKeys(json.scc, field)) {
           json.scc[field] = null;
         }
@@ -266,19 +266,19 @@ const validate = function(json) {
       restrict_create_service_id: null,
       restrict_create_platform_apikey: null,
       session_expiration_in_seconds: null,
-      session_invalidation_in_seconds: null
+      session_invalidation_in_seconds: null,
     };
   }
 
-  json.key_management.forEach(kms => {
+  json.key_management.forEach((kms) => {
     kms.use_data = kms.use_hs_crypto ? true : kms.use_data;
   });
 
-  json.resource_groups.forEach(group => {
+  json.resource_groups.forEach((group) => {
     if (group.use_prefix === null) group.use_prefix = false;
   });
 
-  optionalComponents.forEach(name => {
+  optionalComponents.forEach((name) => {
     if (!json[name]) json[name] = [];
   });
 
@@ -295,7 +295,7 @@ const validate = function(json) {
   // IAM - none
 
   // key management
-  json.key_management.forEach(kms => {
+  json.key_management.forEach((kms) => {
     nullResourceGroupTest("Key Management", kms);
   });
 
@@ -305,7 +305,7 @@ const validate = function(json) {
     throw new Error(simpleErrors.invalidAtrackerBucket);
   } else {
     // for each cos instance
-    json.object_storage.forEach(instance => {
+    json.object_storage.forEach((instance) => {
       if (
         // if the bucket name is found in the instance with atracker enabled
         json.atracker.enabled &&
@@ -317,7 +317,7 @@ const validate = function(json) {
       }
       nullResourceGroupTest("Object Storage", instance);
       validationTest("Object Storage", instance, "kms", "kms"); // check if key management service provided
-      instance.buckets.forEach(bucket => {
+      instance.buckets.forEach((bucket) => {
         validationTest("Object Storage Buckets", bucket, "kms_key", "kms_key");
         if (
           !contains(
@@ -347,23 +347,23 @@ const validate = function(json) {
   }
 
   // secrets manager
-  json.secrets_manager.forEach(instance => {
+  json.secrets_manager.forEach((instance) => {
     nullResourceGroupTest("Secrets Manager", instance, {
-      overrideName: "Secrets Manager Resource Group"
+      overrideName: "Secrets Manager Resource Group",
     });
     nullEncryptionKeyTest("Secrets Manager", instance, {}, "encryption_key");
     validationTest("Secrets Manager", instance, "Key Management", "kms"); // check for null kms
   });
 
   // event streams
-  json.event_streams.forEach(instance => {
+  json.event_streams.forEach((instance) => {
     nullResourceGroupTest("Event Streams", instance);
   });
 
   // app id
-  json.appid.forEach(appid => {
+  json.appid.forEach((appid) => {
     nullResourceGroupTest("App ID", appid, {
-      overrideName: "App ID resource_group"
+      overrideName: "App ID resource_group",
     });
   });
 
@@ -374,28 +374,28 @@ const validate = function(json) {
   }
 
   // vpcs
-  json.vpcs.forEach(network => {
+  json.vpcs.forEach((network) => {
     validationTest("VPCs", network, "Flow Logs Bucket", "bucket", {
-      overrideNameField: "name"
+      overrideNameField: "name",
     });
     validationTest("VPCs", network, "COS", "cos");
     nullResourceGroupTest("VPCs", network);
 
     // for each address prefix
-    network.address_prefixes.forEach(prefix => {
+    network.address_prefixes.forEach((prefix) => {
       nullVpcNameTest("Address Prefix", prefix, "name", "name");
       validationTest("Address Prefix", prefix, "zone", "zone"); // mark zone required
     });
     // for each acl
-    network.acls.forEach(acl => {
+    network.acls.forEach((acl) => {
       updateNetworkingRulesForCompatibility(acl.rules, true);
-      acl.rules.forEach(rule => {
+      acl.rules.forEach((rule) => {
         validationTest("Network ACL Rule", rule, "acl", "acl");
         nullVpcNameTest("Network ACL Rule", rule);
       });
     });
     // for each subnet
-    network.subnets.forEach(subnet => {
+    network.subnets.forEach((subnet) => {
       nullResourceGroupTest("Subnets", subnet);
       validationTest("Subnets", subnet, "vpc", "vpc");
       validationTest("Subnets", subnet, "network_acl", "network_acl");
@@ -404,23 +404,23 @@ const validate = function(json) {
   });
 
   // transit gateways
-  json.transit_gateways.forEach(instance => {
+  json.transit_gateways.forEach((instance) => {
     nullResourceGroupTest("Transit Gateways", instance);
   });
 
   // security groups
-  json.security_groups.forEach(group => {
+  json.security_groups.forEach((group) => {
     nullVpcNameTest("Security Groups", group);
     nullResourceGroupTest("Security Groups", group);
     updateNetworkingRulesForCompatibility(group.rules);
-    group.rules.forEach(rule => {
+    group.rules.forEach((rule) => {
       validationTest("Security Group Rule", rule, "security group", "sg");
       nullVpcNameTest("Security Group Rule", rule);
     });
   });
 
   // vpes
-  json.virtual_private_endpoints.forEach(instance => {
+  json.virtual_private_endpoints.forEach((instance) => {
     nullVpcNameTest("virtual_private_endpoints", instance);
     if (isEmpty(instance.subnets)) {
       throw new Error(simpleErrors.noVpeSubnets(instance.name, instance.vpc));
@@ -430,14 +430,14 @@ const validate = function(json) {
   });
 
   // vpn gateways
-  json.vpn_gateways.forEach(gateway => {
+  json.vpn_gateways.forEach((gateway) => {
     nullVpcNameTest("VPN Gateways", gateway);
     nullResourceGroupTest("VPN Gateways", gateway);
     validationTest("VPN Gateways", gateway, "subnet name", "subnet");
   });
 
   // cluster configuration
-  json.clusters.forEach(cluster => {
+  json.clusters.forEach((cluster) => {
     // if cluster is openshift and no cos name, throw error
     if (cluster.type === "openshift" && cluster.cos === null) {
       throw new Error(simpleErrors.noOpenShiftCosInstance(cluster.name));
@@ -467,12 +467,12 @@ const validate = function(json) {
     }
 
     // test for empty pool subnets
-    cluster.worker_pools.forEach(pool => {
+    cluster.worker_pools.forEach((pool) => {
       emptySubnetNamesTest("Worker Pools", pool, {
-        parentName: "`workload-cluster` worker_pool"
+        parentName: "`workload-cluster` worker_pool",
       });
       validationTest("Worker Pools", pool, "cluster", "cluster", {
-        parentName: cluster.name
+        parentName: cluster.name,
       });
       nullResourceGroupTest("Worker Pools", pool);
       nullVpcNameTest("Worker Pools", pool);
@@ -480,7 +480,7 @@ const validate = function(json) {
   });
 
   // ssh keys
-  json.ssh_keys.forEach(key => {
+  json.ssh_keys.forEach((key) => {
     nullResourceGroupTest("SSH Keys", key);
     if (
       !key.use_data &&
@@ -491,7 +491,7 @@ const validate = function(json) {
   });
 
   // vsi
-  json.vsi.forEach(deployment => {
+  json.vsi.forEach((deployment) => {
     instanceTests(deployment);
     emptySubnetNamesTest("VSIs", deployment);
   });
@@ -524,7 +524,7 @@ const validate = function(json) {
     }
 
     // check security groups in security_groups are in vpc && update rules
-    deployment.security_groups.forEach(sg => {
+    deployment.security_groups.forEach((sg) => {
       let sgObject = getObjectFromArray(json.security_groups, "name", sg);
       if (sgObject.vpc !== deployment.vpc) {
         throw new Error(
@@ -536,12 +536,12 @@ const validate = function(json) {
   }
 
   // teleport vsi
-  json.teleport_vsi.forEach(deployment => {
+  json.teleport_vsi.forEach((deployment) => {
     instanceTests(deployment, "Teleport");
   });
 
   // f5 vsi
-  json.f5_vsi.forEach(deployment => {
+  json.f5_vsi.forEach((deployment) => {
     instanceTests(deployment, "F5");
   });
 
@@ -553,7 +553,7 @@ const validate = function(json) {
    * @param {Object} componentFields component fields object
    */
   function addUnfoundListFields(instance, componentFields) {
-    eachKey(componentFields, action => {
+    eachKey(componentFields, (action) => {
       if (action !== "setToValue") {
         // value to set if not direct value
         let setValue =
@@ -563,14 +563,14 @@ const validate = function(json) {
             ? []
             : false;
         // for each field to set
-        componentFields[action].forEach(field => {
+        componentFields[action].forEach((field) => {
           if (!containsKeys(instance, field)) {
             instance[field] = setValue;
           }
         });
       } else {
         // for each key that is not set
-        eachKey(componentFields[action], valueToSet => {
+        eachKey(componentFields[action], (valueToSet) => {
           // if the instance does not contain the value
           if (!containsKeys(instance, valueToSet)) {
             // set value to value to set
@@ -582,9 +582,9 @@ const validate = function(json) {
   }
 
   // for each shallow component
-  eachKey(requiredOptionalFields.shallowComponents, component => {
+  eachKey(requiredOptionalFields.shallowComponents, (component) => {
     // for each instance of that component
-    json[component].forEach(instance => {
+    json[component].forEach((instance) => {
       // add unfound list fields
       addUnfoundListFields(
         instance,
@@ -595,9 +595,9 @@ const validate = function(json) {
         // for each nested field
         eachKey(
           requiredOptionalFields.nestedComponents[component],
-          subField => {
+          (subField) => {
             // for each object in nested instance
-            instance[subField].forEach(nestedInstance => {
+            instance[subField].forEach((nestedInstance) => {
               // add unfound list fields
               addUnfoundListFields(
                 nestedInstance,

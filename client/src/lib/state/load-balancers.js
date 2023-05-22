@@ -3,7 +3,7 @@ const {
   carve,
   distinct,
   getObjectFromArray,
-  deleteUnfoundArrayItems
+  deleteUnfoundArrayItems,
 } = require("lazy-z");
 
 /**
@@ -28,14 +28,14 @@ function loadBalancerInit(config) {
  * @param {Object} config.store.securityGroups map of security groups
  */
 function loadBalancerOnStoreUpdate(config) {
-  config.store.json.load_balancers.forEach(lb => {
+  config.store.json.load_balancers.forEach((lb) => {
     if (lb.proxy_protocol === "") {
       lb.proxy_protocol = null;
     }
     let targetVsi = []; // store for new vsi
     let lbSubnets = []; // store for vsi subnets
     // remove unfound deployments and subnets
-    lb.target_vsi.forEach(deployment => {
+    lb.target_vsi.forEach((deployment) => {
       // if vsi exists
       if (splatContains(config.store.json.vsi, "name", deployment)) {
         targetVsi.push(deployment); // add vsi
@@ -122,5 +122,5 @@ module.exports = {
   loadBalancerOnStoreUpdate,
   loadBalancerCreate,
   loadBalancerSave,
-  loadBalancerDelete
+  loadBalancerDelete,
 };

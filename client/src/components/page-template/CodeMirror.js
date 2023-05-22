@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { CopyButton } from "@carbon/react";
 import { CarbonCodeMirror } from "carbon-react-code-mirror";
 
-const CodeMirrorHeader = props => {
+const CodeMirrorHeader = (props) => {
   return (
     <div className="tabPanel displayFlex spaceBetween">
       <div className="displayFlex gap">
@@ -30,7 +30,7 @@ const CodeMirrorHeader = props => {
   );
 };
 
-export const CraigCodeMirror = props => {
+export const CraigCodeMirror = (props) => {
   return (
     props.hideCodeMirror !== true && (
       <CarbonCodeMirror
@@ -53,13 +53,13 @@ export const CraigCodeMirror = props => {
 // Header PropTypes
 CodeMirrorHeader.propTypes = {
   jsonInCodeMirror: PropTypes.bool.isRequired,
-  onTabClick: PropTypes.func.isRequired
+  onTabClick: PropTypes.func.isRequired,
 };
 
 // CodeMirror Props
 CraigCodeMirror.defaultProps = {
   code: "",
-  className: "rightPanelWidth"
+  className: "rightPanelWidth",
 };
 
 CraigCodeMirror.propTypes = {
@@ -67,5 +67,5 @@ CraigCodeMirror.propTypes = {
   className: PropTypes.string,
   code: PropTypes.string.isRequired,
   jsonInCodeMirror: PropTypes.bool.isRequired,
-  onTabClick: PropTypes.func.isRequired
+  onTabClick: PropTypes.func.isRequired,
 };

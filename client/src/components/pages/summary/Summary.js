@@ -15,7 +15,7 @@ class Summary extends React.Component {
       usePrettyJson: true,
       error: "",
       fileDownloadUrl: "",
-      showSaveModal: false
+      showSaveModal: false,
     };
     try {
       validate(this.props.craig.store.json);
@@ -48,7 +48,7 @@ class Summary extends React.Component {
             data={{
               name: "",
               description: "",
-              json: this.props.craig.store.json
+              json: this.props.craig.store.json,
             }}
             onClose={this.toggleShowSaveModal}
             onSubmit={this.props.onProjectSave}
@@ -112,13 +112,10 @@ class Summary extends React.Component {
               <Button
                 kind="tertiary"
                 onClick={() => {
-                  let project = this.props.projects[
-                    this.props.craig.store.project_name
-                  ];
-
+                  let project =
+                    this.props.projects[this.props.craig.store.project_name];
                   let newProject = { ...project };
                   newProject.json = this.props.craig.store.json;
-
                   this.props.onProjectSave(newProject, { data: project }, true);
                 }}
                 disabled={Boolean(this.state.error)}

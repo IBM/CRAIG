@@ -12,7 +12,7 @@ function optionsInit(config) {
     prefix: "iac",
     region: "us-south",
     tags: ["hello", "world"],
-    zones: 3
+    zones: 3,
   };
 }
 
@@ -26,8 +26,8 @@ function optionsSave(config, stateData, componentProps) {
   config.updateChild(["json", "_options"], componentProps.data.name, stateData);
   let zones = config.store.json._options.zones;
   let vpcs = Object.keys(config.store.subnetTiers);
-  vpcs.forEach(vpc => {
-    config.store.subnetTiers[vpc].forEach(subnetTier => {
+  vpcs.forEach((vpc) => {
+    config.store.subnetTiers[vpc].forEach((subnetTier) => {
       let newSubnetTier = subnetTier;
       newSubnetTier.zones = zones; // update zones
       newSubnetTier.networkAcl = new revision(config.store.json)
@@ -37,7 +37,7 @@ function optionsSave(config, stateData, componentProps) {
       subnetTierSave(config, newSubnetTier, {
         data: subnetTier,
         vpc_name: vpc,
-        craig: config
+        craig: config,
       });
     });
   });
@@ -45,5 +45,5 @@ function optionsSave(config, stateData, componentProps) {
 
 module.exports = {
   optionsInit,
-  optionsSave
+  optionsSave,
 };

@@ -963,10 +963,7 @@ describe("validate", () => {
       let task = () => {
         validate(testData);
       };
-      assert.doesNotThrow(
-        task,
-        "should not throw if atracker is not enabled"
-      );
+      assert.doesNotThrow(task, "should not throw if atracker is not enabled");
     });
     it("should throw an error if atracker bucket name is null", () => {
       let testData = minimumValidJson({

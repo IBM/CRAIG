@@ -3,7 +3,7 @@ import { CraigCodeMirror } from "../../page-template/CodeMirror";
 import PropTypes from "prop-types";
 import { copySgModalContent } from "../../../lib";
 
-const CopySgModalContent = props => {
+const CopySgModalContent = (props) => {
   return (
     <>
       <p className="marginBottomSmall">
@@ -25,10 +25,10 @@ CopySgModalContent.propTypes = {
   craig: PropTypes.shape({
     store: PropTypes.shape({
       json: PropTypes.shape({
-        vpcs: PropTypes.arrayOf(PropTypes.shape({})).isRequired
-      }).isRequired
-    }).isRequired
-  }).isRequired
+        vpcs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default CopySgModalContent;

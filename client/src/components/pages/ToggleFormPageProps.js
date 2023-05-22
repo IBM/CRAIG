@@ -7,13 +7,13 @@ import {
   genericNameCallback,
   invalidName,
   propsMatchState,
-  newF5Vsi
+  newF5Vsi,
 } from "../../lib";
 import {
   AtrackerForm,
   SccForm,
   IamAccountSettingsForm,
-  F5VsiForm
+  F5VsiForm,
 } from "icse-react-assets";
 import { forceShowForm } from "../../lib";
 import { F5Form } from "../forms/";
@@ -25,26 +25,26 @@ const pathToFormMap = {
     jsonField: "atracker",
     docsField: "atracker",
     name: "Activity Tracker",
-    innerForm: AtrackerForm
+    innerForm: AtrackerForm,
   },
   securityComplianceCenter: {
     jsonField: "scc",
     docsField: "security_compliance_center",
     name: "Security and Compliance Center",
-    innerForm: SccForm
+    innerForm: SccForm,
   },
   iamAccountSettings: {
     jsonField: "iam_account_settings",
     docsField: "iam_account_settings",
     name: "IAM Account Settings",
-    innerForm: IamAccountSettingsForm
+    innerForm: IamAccountSettingsForm,
   },
   f5BigIP: {
     jsonField: "f5_vsi",
     docsField: "f5",
     name: "F5 VSI",
-    innerForm: F5VsiForm
-  }
+    innerForm: F5VsiForm,
+  },
 };
 
 function none() {}
@@ -62,7 +62,7 @@ function toggleFormProps(form, craig) {
       hideName: true,
       noDeleteButton: true,
       tabPanel: {
-        name: "F5 Big IP"
+        name: "F5 Big IP",
       },
       propsMatchState: propsMatchState,
       disableSave: disableSave,
@@ -76,7 +76,7 @@ function toggleFormProps(form, craig) {
           invalidCallback: invalidF5Vsi,
           invalidTextCallback: none, // all fields can use default field invalid text
           disableSave: disableSave,
-          propsMatchState: propsMatchState
+          propsMatchState: propsMatchState,
         },
         deploymentInnerFormProps: {
           craig: craig,
@@ -92,26 +92,27 @@ function toggleFormProps(form, craig) {
           saveVsiCallback: craig.f5.instance.save,
           disableSaveCallback: propsMatchState,
           hideSaveCallback: none, // not hiding save
-          propsMatchState: propsMatchState
-        }
-      }
+          propsMatchState: propsMatchState,
+        },
+      },
     };
     if (craig.store.json.f5_vsi.length > 0) {
       // pass in defaults if instances exist
       props.innerFormProps.deploymentInnerFormProps.data = {
         resource_group: craig.store.json.f5_vsi[0].resource_group,
         ssh_keys: craig.store.json.f5_vsi[0].ssh_keys,
-        image: /f5-bigip-(15-1-5-1-0-0-14|16-1-2-2-0-0-28)-(ltm|all)-1slot/.exec(
-          craig.store.json.f5_vsi[0].image
-        )[0], // keep only image name in props
+        image:
+          /f5-bigip-(15-1-5-1-0-0-14|16-1-2-2-0-0-28)-(ltm|all)-1slot/.exec(
+            craig.store.json.f5_vsi[0].image
+          )[0], // keep only image name in props
         profile: craig.store.json.f5_vsi[0].profile,
-        zones: craig.store.json.f5_vsi.length
+        zones: craig.store.json.f5_vsi.length,
       };
       props.innerFormProps.templateInnerFormProps.data =
         craig.store.json.f5_vsi[0].template;
     } else {
       props.innerFormProps.deploymentInnerFormProps.data = {
-        zones: craig.store.json.f5_vsi.length
+        zones: craig.store.json.f5_vsi.length,
       };
     }
     return props;
@@ -132,13 +133,13 @@ function toggleFormProps(form, craig) {
     hideName: true,
     noDeleteButton: true,
     tabPanel: {
-      name: formFields.name
+      name: formFields.name,
     },
     hide: true,
     innerFormProps: {
-      craig: craig
+      craig: craig,
     },
-    forceOpen: forceShowForm
+    forceOpen: forceShowForm,
   };
 
   if (form === "activityTracker") {
@@ -149,7 +150,7 @@ function toggleFormProps(form, craig) {
       prefix: craig.store.json._options.prefix,
       resourceGroups: splat(craig.store.json.resource_groups, "name"),
       cosBuckets: craig.store.cosBuckets,
-      cosKeys: craig.store.cosKeys
+      cosKeys: craig.store.cosKeys,
     };
     transpose(atrackerInnerFormProps, formTemplate.innerFormProps);
     formTemplate.tabPanel.name = "Activity Tracker";
@@ -160,7 +161,7 @@ function toggleFormProps(form, craig) {
     formTemplate.noDeleteButton = craig.store.json.scc.enable === false;
     formTemplate.onDelete = craig[jsonField].delete;
     let sccData = { ...craig.store.json.scc };
-    eachKey(sccData, key => {
+    eachKey(sccData, (key) => {
       if (sccData[key] === null) {
         sccData[key] = "";
       }
@@ -170,7 +171,7 @@ function toggleFormProps(form, craig) {
       invalidCallback: invalidName("scc"),
       invalidTextCallback: () => {
         return genericNameCallback();
-      }
+      },
     };
     transpose(sccInnerFormProps, formTemplate.innerFormProps);
   } else if (form === "iamAccountSettings") {
@@ -182,7 +183,7 @@ function toggleFormProps(form, craig) {
     let iamInnerFormProps = {
       data: data,
       invalidCallback: invalidIamAccountSettings,
-      invalidTextCallback: iamAccountSettingInvalidText
+      invalidTextCallback: iamAccountSettingInvalidText,
     };
     transpose(iamInnerFormProps, formTemplate.innerFormProps);
   }

@@ -4,7 +4,7 @@ const {
   transpose,
   getObjectFromArray,
   isNullOrEmptyString,
-  splat
+  splat,
 } = require("lazy-z");
 const { clusterRules } = require("../constants");
 
@@ -18,11 +18,11 @@ function addClusterRules(store, vpcName, aclName) {
   let acl = new revision(store.store.json)
     .child("vpcs", vpcName, "name")
     .child("acls", aclName, "name").data;
-  clusterRules.forEach(rule => {
+  clusterRules.forEach((rule) => {
     if (!splatContains(acl.rules, "name", rule.name)) {
       let newRule = {
         vpc: vpcName,
-        acl: aclName
+        acl: aclName,
       };
       transpose(rule, newRule);
       acl.rules.push(newRule);
@@ -47,7 +47,7 @@ function copySecurityGroup(store, sourceSecurityGroup, destinationVpc) {
   transpose(oldSg, sg);
   sg.name += "-copy";
   sg.vpc = destinationVpc;
-  sg.rules.forEach(rule => {
+  sg.rules.forEach((rule) => {
     rule.vpc = sg.vpc;
     rule.sg = sg.name;
   });
@@ -70,7 +70,7 @@ function copyNetworkAcl(store, sourceVpc, aclName, destinationVpc) {
   transpose(oldAcl, acl);
   acl.vpc = destinationVpc;
   acl.name += "-copy";
-  acl.rules.forEach(rule => {
+  acl.rules.forEach((rule) => {
     rule.vpc = acl.vpc;
     rule.acl = acl.name;
   });
@@ -95,7 +95,7 @@ function copyRule(store, sourceVpc, aclName, ruleName, destinationAcl) {
     .child("rules", ruleName, "name").data;
   let rule = {};
   transpose(oldRule, rule);
-  store.store.json.vpcs.forEach(vpc => {
+  store.store.json.vpcs.forEach((vpc) => {
     if (splatContains(vpc.acls, "name", destinationAcl)) {
       rule.vpc = vpc.name;
       rule.acl = destinationAcl;
@@ -121,7 +121,7 @@ function copySgRule(store, sgName, ruleName, destinationSg) {
   rule.sg = destinationSg;
   new revision(store.store.json)
     .child("security_groups", destinationSg, "name")
-    .then(data => {
+    .then((data) => {
       rule.vpc = data.vpc;
       delete data.show;
       data.rules.push(rule);
@@ -143,15 +143,15 @@ function getAllOtherGroups(store, stateData, componentProps) {
   } else if (componentProps.isAclForm) {
     // handle acls
     let aclNames = [];
-    store.store.json.vpcs.forEach(vpc => {
-      vpc.acls.forEach(acl => {
+    store.store.json.vpcs.forEach((vpc) => {
+      vpc.acls.forEach((acl) => {
         if (acl.name !== ruleSource) aclNames.push(acl.name);
       });
     });
     return aclNames;
   } else {
     // handle security groups
-    return splat(store.store.json.security_groups, "name").filter(name => {
+    return splat(store.store.json.security_groups, "name").filter((name) => {
       if (name !== ruleSource) return name;
     });
   }
@@ -190,5 +190,5 @@ module.exports = {
   copyRule,
   copySgRule,
   getAllOtherGroups,
-  getAllRuleNames
+  getAllRuleNames,
 };

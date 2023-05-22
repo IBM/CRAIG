@@ -38,9 +38,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
   });
   describe("vpnTf", () => {
     it("should create tf code for vpn gateway", () => {
-      let actualData = vpnTf(
-        slzNetwork
-      );
+      let actualData = vpnTf(slzNetwork);
       let expectedData = `##############################################################################
 # VPN Gateways
 ##############################################################################

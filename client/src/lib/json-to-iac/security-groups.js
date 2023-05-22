@@ -6,7 +6,7 @@ const {
   tfBlock,
   tfDone,
   getTags,
-  jsonToTfPrint
+  jsonToTfPrint,
 } = require("./utils");
 
 /**
@@ -28,8 +28,8 @@ function ibmIsSecurityGroup(sg, config) {
       name: kebabName([sg.vpc, sg.name, "sg"]),
       vpc: vpcRef(sg.vpc),
       resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
-      tags: getTags(config)
-    }
+      tags: getTags(config),
+    },
   };
 }
 
@@ -82,29 +82,29 @@ function ibmIsSecurityGroupRule(rule) {
   let sgRule = {
     group: tfRef("ibm_is_security_group", snakeCase(sgAddress), "id"),
     remote: rule.source,
-    direction: rule.direction
+    direction: rule.direction,
   };
-  ["icmp", "tcp", "udp"].forEach(protocol => {
+  ["icmp", "tcp", "udp"].forEach((protocol) => {
     let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
     if (ruleHasProtocolData && protocol === "icmp") {
       sgRule.icmp = [
         {
           type: rule.icmp.type,
-          code: rule.icmp.code
-        }
+          code: rule.icmp.code,
+        },
       ];
     } else if (ruleHasProtocolData) {
       sgRule[protocol] = [
         {
           port_min: rule[protocol].port_min,
-          port_max: rule[protocol].port_max
-        }
+          port_max: rule[protocol].port_max,
+        },
       ];
     }
   });
   return {
     name: `${sgAddress} rule ${rule.name}`,
-    data: sgRule
+    data: sgRule,
   };
 }
 
@@ -132,9 +132,9 @@ function formatSgRule(rule) {
  */
 function sgTf(config) {
   let tf = "";
-  config.security_groups.forEach(group => {
+  config.security_groups.forEach((group) => {
     let blockData = formatSecurityGroup(group, config);
-    group.rules.forEach(rule => (blockData += formatSgRule(rule)));
+    group.rules.forEach((rule) => (blockData += formatSgRule(rule)));
     tf += tfBlock("Security Group " + group.name, blockData) + "\n";
   });
   return tfDone(tf);
@@ -145,5 +145,5 @@ module.exports = {
   formatSgRule,
   sgTf,
   ibmIsSecurityGroupRule,
-  ibmIsSecurityGroup
+  ibmIsSecurityGroup,
 };

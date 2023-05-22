@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { F5VsiForm, F5VsiTemplateForm, ToggleForm } from "icse-react-assets";
 
-const F5Form = props => {
+const F5Form = (props) => {
   return (
     <div>
       <ToggleForm
@@ -43,12 +43,12 @@ F5Form.propTypes = {
   craig: PropTypes.shape({
     f5: PropTypes.shape({
       template: PropTypes.shape({ save: PropTypes.func.isRequired }),
-      vsi: PropTypes.shape({ save: PropTypes.func.isRequired })
-    })
+      vsi: PropTypes.shape({ save: PropTypes.func.isRequired }),
+    }),
   }),
   propsMatchState: PropTypes.func.isRequired,
   disableSave: PropTypes.func.isRequired,
   templateInnerFormProps: PropTypes.shape({}).isRequired,
   deploymentInnerFormProps: PropTypes.shape({}).isRequired,
-  data: PropTypes.shape({})
+  data: PropTypes.shape({}),
 };

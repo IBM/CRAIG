@@ -3,13 +3,13 @@ import {
   SaveAddButton,
   IcseFormGroup,
   IcseSelect,
-  IcseHeading
+  IcseHeading,
 } from "icse-react-assets";
 import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 
-const CopyRuleObject = props => {
+const CopyRuleObject = (props) => {
   /**
    * get form name for icse props
    * @param {string} field name of field
@@ -32,7 +32,7 @@ const CopyRuleObject = props => {
         tooltip={{
           content: props.isSecurityGroup
             ? "Copy Security Group from one VPC to another"
-            : "Copy ACL from one VPC to another"
+            : "Copy ACL from one VPC to another",
         }}
       />
       <IcseFormGroup className="align-row">
@@ -61,7 +61,7 @@ const CopyRuleObject = props => {
           formName={getFormName("destination")}
           labelText="Destination VPC"
           groups={(props.destinationVpc ? [""] : []).concat(
-            splat(props.craig.store.json.vpcs, "name").filter(vpc => {
+            splat(props.craig.store.json.vpcs, "name").filter((vpc) => {
               if (props.isSecurityGroup) {
                 return vpc;
               } else if (vpc !== props.data.name) return vpc;
@@ -97,20 +97,20 @@ const CopyRuleObject = props => {
 CopyRuleObject.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    acls: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+    acls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   }),
   craig: PropTypes.shape({
     store: PropTypes.shape({
       json: PropTypes.shape({
-        vpcs: PropTypes.arrayOf(PropTypes.shape({})).isRequired
-      }).isRequired
-    }).isRequired
+        vpcs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+      }).isRequired,
+    }).isRequired,
   }).isRequired,
   handleSelect: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   source: PropTypes.string,
   destinationVpc: PropTypes.string,
-  hoverText: PropTypes.string.isRequired
+  hoverText: PropTypes.string.isRequired,
 };
 
 export default CopyRuleObject;

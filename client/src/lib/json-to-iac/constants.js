@@ -14,11 +14,18 @@ terraform {
       source  = "IBM-Cloud/ibm"
       version = "~>1.52.1"
     }
+$ADDITIONAL_PROVIDERS
   }
   required_version = ">=1.3"
 }
 
 ##############################################################################
+`,
+  logdnaProviders: `    logdna = {
+      source                = "logdna/logdna"
+      version               = ">= 1.14.2"
+      configuration_aliases = [$ALIASES]
+    }
 `,
   mainTf: `##############################################################################
 # IBM Cloud Provider
@@ -268,5 +275,5 @@ runcmd:
         sleep 10
       done
       /root/install.sh
-    ) &`
+    ) &`,
 };

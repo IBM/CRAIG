@@ -12,16 +12,16 @@ function getTierSubnets(tier, vpc) {
    * @param {*} stateData component state data
    * @returns {Array<object>} list of subnet objects
    */
-  return function(stateData) {
+  return function (stateData) {
     let subnets = [];
     if (tier.advanced) {
-      vpc.subnets.forEach(subnet => {
+      vpc.subnets.forEach((subnet) => {
         if (contains(tier.subnets, subnet.name)) {
           subnets[subnet.zone - 1] = subnet;
         }
       });
     } else {
-      vpc.subnets.forEach(subnet => {
+      vpc.subnets.forEach((subnet) => {
         if (
           subnet.name.match(
             new RegexButWithWords()
@@ -56,7 +56,7 @@ function getSubnetTierStateData(tier, vpc) {
   let subnets = getTierSubnets(tier, vpc)(tier);
   state.networkAcl = tier.advanced ? "-" : splat(subnets, "network_acl")[0];
   state.addPublicGateway = false;
-  subnets.forEach(subnet => {
+  subnets.forEach((subnet) => {
     if (subnet.public_gateway === true) {
       state.addPublicGateway = true;
     }
@@ -67,5 +67,5 @@ function getSubnetTierStateData(tier, vpc) {
 
 module.exports = {
   getSubnetTierStateData,
-  getTierSubnets
+  getTierSubnets,
 };
