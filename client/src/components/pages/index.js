@@ -5,5 +5,6 @@ export { default as Home } from "./Home";
 export { default as ReleaseNotes } from "./ReleaseNotes";
 export { default as ResetState } from "./ResetState";
 export { default as Summary } from "./summary/Summary";
+export { default as Projects } from "./projects/Projects";
 export { default as ToggleFormPageProps } from "./ToggleFormPageProps";
 export { ToggleFormPage, FormPage, EdgeNetworkingDocs } from "./SimplePages";

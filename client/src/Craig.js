@@ -11,6 +11,7 @@ import {
   PageTemplate,
   ReleaseNotes,
   Summary,
+  Projects,
   ToggleFormPage
 } from "./components";
 import { buildTitleComment, state } from "./lib";
@@ -53,19 +54,22 @@ class Craig extends React.Component {
       window.location.pathname = "/resetState";
     }
     this.toggleHide = this.toggleHide.bind(this);
-    this.updateComponents = this.updateComponents.bind(this);
+    this.saveAndSendNotification = this.saveAndSendNotification.bind(this);
     this.setItem = this.setItem.bind(this);
     this.onError = this.onError.bind(this);
     this.notify = this.notify.bind(this);
     this.onTabClick = this.onTabClick.bind(this);
     this.onProjectSave = this.onProjectSave.bind(this);
+    this.onProjectDelete = this.onProjectDelete.bind(this);
+    this.onProjectSelect = this.onProjectSelect.bind(this);
+    this.onProjectDeselect = this.onProjectDeselect.bind(this);
   }
 
   // when react component mounts, set update callback for store
   // to update components
   componentDidMount() {
     craig.setUpdateCallback(() => {
-      this.updateComponents();
+      this.saveAndSendNotification();
     });
     craig.setErrorCallback(() => {
       this.onError();
@@ -73,7 +77,7 @@ class Craig extends React.Component {
   }
 
   // update components
-  updateComponents(message) {
+  saveAndSendNotification(message) {
     // Save state to local storage
     this.setItem(this.state.storeName, craig.store);
     // Show a notification when state is updated successfully
@@ -144,23 +148,116 @@ class Craig extends React.Component {
   }
 
   /**
-   * save function for projects
-   * @param {string} name project name
-   * @param {string} description project description
+   * project with brand new state
    */
-  onProjectSave(name, description) {
-    let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
-    projects[kebabCase(name)] = {
-      name: name,
-      last_save: Date.now(),
-      description: description,
-      json: craig.store.json
+  newProject() {
+    return {
+      name: "",
+      description: "",
+      json: new state().store.json
     };
+  }
+
+  /**
+   * save function for project
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @param {boolean} setCurrentProject if true, set project as current project
+   */
+  onProjectSave(stateData, componentProps, setCurrentProject) {
+    let now = Date.now();
+    let kname = kebabCase(stateData.name);
+    let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
+
+    projects[kname] = {
+      name: stateData.name,
+      description: stateData.description,
+      json: stateData.json,
+      last_save: now
+    };
+
+    // if the project name is changing, remove the old key from projects object
+    let nameChange = false;
+    if (
+      componentProps.data.name !== "" &&
+      kname !== kebabCase(componentProps.data.name)
+    ) {
+      nameChange = true;
+      delete projects[kebabCase(componentProps.data.name)];
+    }
+
+    window.localStorage.setItem("craigProjects", JSON.stringify(projects));
+    this.setState({ projects: { ...projects } }, () => {
+      if (setCurrentProject) {
+        this.onProjectSelect(
+          stateData.name,
+          `Successfully saved project ${stateData.name}`
+        );
+      } else {
+        // if the project name changed and that was our current project, update name
+        if (
+          nameChange &&
+          craig.store.project_name === componentProps.data.name
+        ) {
+          craig.store.project_name = kname;
+        }
+
+        this.saveAndSendNotification(
+          `Successfully saved project ${stateData.name}`
+        );
+      }
+    });
+  }
+
+  /**
+   * delete function for project
+   * @param {string} name project name
+   */
+  onProjectDelete(name) {
+    let kname = kebabCase(name);
+    let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
+
+    // remove from projects
+    delete projects[kname];
+
     window.localStorage.setItem("craigProjects", JSON.stringify(projects));
     this.setState({ projects }, () => {
-      craig.store.project_name = kebabCase(name);
-      this.updateComponents(`Successfully saved project as ${name}`);
+      this.saveAndSendNotification(`Successfully deleted project ${name}`);
+
+      // deselect if project being deleted is currently selected
+      if (craig.store.project_name === kname) {
+        this.onProjectDeselect();
+      }
     });
+  }
+
+  /**
+   * load function for when project is selected
+   * @param {string} name project name
+   * @param {string=} message message to be display in notification
+   */
+  onProjectSelect(name, message) {
+    let kname = kebabCase(name);
+    let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
+
+    // update store project name and json
+    craig.store.project_name = kname;
+    craig.store.json = projects[kname].json;
+
+    this.saveAndSendNotification(
+      message || `Project ${name} successfully imported`
+    );
+  }
+
+  /**
+   * deselect function for when project selection is to be cleared
+   */
+  onProjectDeselect() {
+    // reset store project name and json
+    craig.store.project_name = "";
+    craig.store.json = new state().store.json;
+
+    this.saveAndSendNotification(`Successfully cleared project selection`);
   }
 
   render() {
@@ -184,6 +281,7 @@ class Craig extends React.Component {
           notifications={this.state.notifications}
           notify={this.notify}
           onTabClick={this.onTabClick}
+          current_project={craig.store.project_name}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
@@ -191,10 +289,25 @@ class Craig extends React.Component {
             ) : (
               <ReleaseNotes />
             )
+          ) : window.location.pathname === "/projects" ? (
+            <Projects
+              current_project={craig.store.project_name}
+              projects={this.state.projects}
+              new={this.newProject}
+              save={this.onProjectSave}
+              delete={this.onProjectDelete}
+              select={this.onProjectSelect}
+              deselect={this.onProjectDeselect}
+            />
           ) : window.location.pathname === "/" ? (
             <Home craig={craig} />
           ) : window.location.pathname === "/summary" ? (
-            <Summary craig={craig} onProjectSave={this.onProjectSave} />
+            <Summary
+              craig={craig}
+              onProjectSave={this.onProjectSave}
+              projects={this.state.projects}
+              nav={this.props.craigRouter.nav}
+            />
           ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />
           ) : contains(constants.toggleFormPages, this.props.params.form) ? (

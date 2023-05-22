@@ -11,7 +11,8 @@ const {
   accessGroupPolicyHelperTextCallback,
   invalidCidrText,
   invalidCbrRuleText,
-  invalidCbrZoneText
+  invalidCbrZoneText,
+  invalidProjectNameText
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -31,6 +32,7 @@ const {
   cidrBlocksOverlap,
   hasOverlappingCidr,
   invalidCidr,
+  invalidProjectName,
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrZone
@@ -107,11 +109,13 @@ module.exports = {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
+  invalidProjectName,
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrRuleText,
   invalidCbrZone,
   invalidCbrZoneText,
   invalidCidrBlock,
-  setFormSgList
+  setFormSgList,
+  invalidProjectNameText
 };

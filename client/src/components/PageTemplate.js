@@ -23,6 +23,7 @@ import {
   LoadBalancerVpc,
   Report,
   Router,
+  Folders,
   ServerProxy
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
@@ -95,8 +96,8 @@ const navCategories = [
         title: "Context Based Restrictions",
         path: "/form/cbr",
         icon: CBRIcon,
-        toTf: cbrTf,
-      },
+        toTf: cbrTf
+      }
     ]
   },
   {
@@ -282,7 +283,8 @@ const navCategories = [
         title: "Summary",
         path: "/summary",
         icon: Report
-      }
+      },
+      { title: "Projects", path: "/projects", icon: Folders }
     ]
   }
 ];
@@ -305,11 +307,6 @@ navCategories.forEach(category => {
   });
 });
 
-pageOrder.push({
-  title: "Summary",
-  path: "/summary"
-});
-
 const PageTemplate = props => {
   let isResetState = window.location.pathname === "/resetState";
   /**
@@ -319,6 +316,17 @@ const PageTemplate = props => {
    */
   function navigate(isBackward) {
     let currentPath = window.location.pathname;
+
+    if (currentPath === "/projects" && props.current_project && !isBackward) {
+      if (pageOrder[pageOrder.length - 1].path === "/") {
+        pageOrder.pop();
+      }
+      pageOrder.push({
+        title: "Configure " + props.current_project,
+        path: "/"
+      });
+    }
+
     let nextPathIndex = isBackward // get next path based on direction
       ? arraySplatIndex(pageOrder, "path", currentPath) - 1
       : arraySplatIndex(pageOrder, "path", currentPath) + 1;

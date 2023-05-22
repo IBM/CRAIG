@@ -113,18 +113,24 @@ a.cds--side-nav__link {
   width: 16rem; // full width
 }
 
-div .cds--side-nav__overlay-active { /* specify application to div to raise class priority */
+div .cds--side-nav__overlay-active {
+  /* specify application to div to raise class priority */
   width: 100vw;
   height: 100vh;
   background-color: rgba(22, 22, 22, 0.5);
   background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
   opacity: 1;
-  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1), background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
+  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1),
+    background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
 }
 
 // Styles for header menu box
 .no-marker {
   list-style-type: none;
+}
+
+.projectMenu {
+  height: 100%;
 }
 
 .headerMenuBox {
@@ -133,7 +139,16 @@ div .cds--side-nav__overlay-active { /* specify application to div to raise clas
   background-color: var(--white);
   box-shadow: -1px 1px 9px 2px #d5d2d2;
   padding: 0.5rem;
-  min-width: 14.5rem;
+  min-width: 19rem;
+}
+
+.headerMenuBoxItemText {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.headerMenuBoxItemLink > a {
+  color: var(--blue);
 }
 
 .marginBottomXs {

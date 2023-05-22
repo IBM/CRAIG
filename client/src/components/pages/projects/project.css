@@ -1,0 +1,93 @@
+.projects {
+  background-color: #f4f4f4;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4rem;
+}
+
+.line {
+  border-top: 0.9px solid black;
+  padding-top: 0.8rem;
+  padding-left: 6.5rem;
+  padding-right: 6.5rem;
+  width: 40rem;
+}
+
+.headerItem {
+  width: auto;
+  margin: 5px;
+  text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.body {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+}
+
+.craigBlue {
+  color: var(--blue);
+}
+
+.projectTiles > div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.projectTile {
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: break-word;
+  max-width: 16rem;
+  width: 16rem;
+}
+
+.projectTileHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.selected {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
+.notSelected {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+.projectDetails {
+  height: fit-content;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.newProjectButton {
+  margin: 1rem;
+  width: 14rem;
+  max-width: 14rem;
+}
+
+.projectTileButton {
+  width: 14rem;
+  max-width: 14rem;
+}

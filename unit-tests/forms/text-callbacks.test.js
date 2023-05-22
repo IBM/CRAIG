@@ -11,6 +11,7 @@ const {
   clusterHelperTestCallback,
   accessGroupPolicyHelperTextCallback,
   invalidCidrText,
+  invalidProjectNameText,
 } = require("../../client/src/lib");
 const {
   invalidCbrZoneText,
@@ -722,6 +723,34 @@ describe("text callbacks", () => {
     });
     it("returns no invalid text for other fields", () => {
       assert.equal(invalidCbrZoneText("not real field", {}, {}), "");
+    });
+  });
+  describe("invalidProjectNameText", () => {
+    it("it should return an empty string if name is unique", () => {
+      last_save = Date.now();
+      assert.deepEqual(
+        invalidProjectNameText(
+          { name: "blue" },
+          { projects: { test: { name: "test", last_save } } }
+        ),
+        ""
+      );
+    });
+    it("it should be true if name is empty string", () => {
+      assert.deepEqual(
+        invalidProjectNameText({ name: "" }, {}),
+        "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s"
+      );
+    });
+    it("should be true if name is already in use", () => {
+      last_save = Date.now();
+      assert.deepEqual(
+        invalidProjectNameText(
+          { name: "test" },
+          { projects: { test: { name: "test", last_save } } }
+        ),
+        `Name "test" already in use`
+      );
     });
   });
 });

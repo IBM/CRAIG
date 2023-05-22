@@ -6,15 +6,11 @@ import {
   HeaderName,
   HeaderMenu,
   HeaderMenuButton,
+  HeaderMenuItem,
   Modal,
   Theme
 } from "@carbon/react";
-import {
-  Reset,
-  Download,
-  Code,
-  CodeHide,
-} from "@carbon/icons-react";
+import { Reset, Download, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "./DownloadConfig";
@@ -101,22 +97,32 @@ class Navigation extends React.Component {
           </HeaderName>
           {this.props.project && (
             <HeaderMenu
-              className="no-marker"
+              aria-label="Open current project menu"
+              className="no-marker projectMenu"
               menuLinkName={`Project: ${this.props.project.name}`}
             >
               <div className="headerMenuBox">
-                <p className="smallerText marginBottomXs">
-                  Project: {this.props.project.name}
+                <p className="smallerText marginTopXs marginBottomSmall headerMenuBoxItemText bold">
+                  Project Details
+                </p>
+                <p className="smallerText marginBottomXs headerMenuBoxItemText">
+                  Name: {this.props.project.name}
                 </p>
                 {this.props.project.description && (
-                  <p className="smallerText marginBottomXs">
+                  <p className="smallerText marginBottomXs headerMenuBoxItemText">
                     Description: {this.props.project.description}
                   </p>
                 )}
-                <p className="smallerText">
-                  Saved:{" "}
+                <p className="smallerText headerMenuBoxItemText marginBottomXs">
+                  Last Saved:{" "}
                   {new Date(this.props.project.last_save).toLocaleString()}
                 </p>
+                <HeaderMenuItem
+                  className="headerMenuBoxItemLink"
+                  href="/projects"
+                >
+                  Manage Projects
+                </HeaderMenuItem>
               </div>
             </HeaderMenu>
           )}

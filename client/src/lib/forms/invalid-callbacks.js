@@ -8,6 +8,7 @@ const {
   isIpv4CidrOrAddress,
   transpose,
   isEmpty,
+  kebabCase,
   isString
 } = require("lazy-z");
 const {
@@ -425,7 +426,7 @@ function invalidCidr(craig) {
   };
 }
 
-/*
+/**
  * test if list of crns is valid
  * @param {Array} crnList list of crns
  * @returns true if list of crns is valid
@@ -445,14 +446,44 @@ function invalidCrnList(crnList) {
 }
 
 /**
+ * check if project name is invalid
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidProjectName(stateData, componentProps) {
+  let name = stateData.name;
+  let invalid = false;
+
+  if (invalidNewResourceName(name)) {
+    invalid = true;
+  } else {
+    // check if dupe
+    let kname = kebabCase(name);
+    let isNew = componentProps.data?.last_save === undefined;
+    let existingProject = componentProps.projects[kname];
+
+    if (
+      isNew &&
+      existingProject &&
+      existingProject.last_save !== stateData.last_save
+    ) {
+      invalid = true;
+    }
+  }
+
+  return invalid;
+}
+
+/**
  * check if project description is invalid
- * @param {string} description project description
+ * @param {string} description
  * @returns {boolean} true if invalid
  */
 function invalidProjectDescription(description) {
   return (
-    description.length > 99 ||
-    description.match(projectDescriptionRegex) === null
+    description?.length > 99 ||
+    description?.match(projectDescriptionRegex) === null
   );
 }
 
@@ -531,7 +562,8 @@ module.exports = {
   cidrBlocksOverlap,
   hasOverlappingCidr,
   invalidCidr,
+  invalidProjectName,
+  invalidProjectDescription,
   invalidCbrRule,
-  invalidCbrZone,
-  invalidProjectDescription
+  invalidCbrZone
 };

@@ -42,6 +42,8 @@ const {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
+  invalidProjectName,
+  invalidProjectNameText,
   invalidProjectDescription,
   invalidCidrBlock,
   setFormSgList
@@ -223,6 +225,8 @@ module.exports = {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
+  invalidProjectName,
+  invalidProjectNameText,
   invalidProjectDescription,
   formatSecretsManagerSecret,
   formatDnsService,

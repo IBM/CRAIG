@@ -4,7 +4,7 @@ import {
   SideNavItems,
   SideNavLink
 } from "@carbon/react";
-import { Home, Help, Bullhorn } from "@carbon/icons-react";
+import { Home, Help, Bullhorn, Folders } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
 import LeftNavItem from "./LeftNavItem";

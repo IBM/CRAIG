@@ -3,7 +3,7 @@ export {
   NaclForm,
   OptionsForm,
   CopyRuleForm,
-  EdgeNetworkingForm
+  EdgeNetworkingForm,
 } from "./forms";
 export { NavigationRedirectModal } from "./modals/NavigationRedirectModal";
 export {
@@ -14,6 +14,7 @@ export {
   ReleaseNotes,
   ResetState,
   Summary,
+  Projects,
   ToggleFormPageProps,
   ToggleFormPage,
   FormPage,

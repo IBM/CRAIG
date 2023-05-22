@@ -2,7 +2,8 @@ const {
   isNullOrEmptyString,
   splatContains,
   isIpv4CidrOrAddress,
-  transpose
+  transpose,
+  kebabCase
 } = require("lazy-z");
 const { hasDuplicateName } = require("./duplicate-name");
 const {
@@ -271,6 +272,36 @@ function invalidCbrZoneText(field, stateData, componentProps) {
   }
 }
 
+/**
+ * create text if project name is invalid
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} invalid text string
+ */
+function invalidProjectNameText(stateData, componentProps) {
+  let name = stateData.name;
+  let invalidText = "";
+
+  if (invalidNewResourceName(name)) {
+    invalidText = genericNameCallback();
+  } else {
+    // check if dupe
+    let kname = kebabCase(name);
+    let isNew = componentProps.data?.last_save === undefined;
+    let existingProject = componentProps.projects[kname];
+
+    if (
+      isNew &&
+      existingProject &&
+      existingProject.last_save !== stateData.last_save
+    ) {
+      invalidText = duplicateNameCallback(name);
+    }
+  }
+
+  return invalidText;
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
@@ -285,5 +316,6 @@ module.exports = {
   accessGroupPolicyHelperTextCallback,
   invalidCidrText,
   invalidCbrRuleText,
-  invalidCbrZoneText
+  invalidCbrZoneText,
+  invalidProjectNameText
 };

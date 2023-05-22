@@ -14,6 +14,7 @@ const {
   invalidCidr,
   invalidNewResourceName,
   invalidProjectDescription,
+  invalidProjectName,
   invalidCbrRule,
   invalidCbrZone,
 } = require("../../client/src/lib/forms");
@@ -1014,6 +1015,37 @@ describe("invalid callbacks", () => {
       };
       assert.isFalse(
         invalidCidr(craig)({ cidr: "10.10.80.0/24" }, { data: {} }),
+        "it should be true"
+      );
+    });
+  });
+  describe("invalidProjectName", () => {
+    it("it should be false if name is unique", () => {
+      last_save = Date.now();
+      assert.isFalse(
+        invalidProjectName(
+          { name: "blue", description: "test description", json: {} },
+          { projects: { test: { name: "test", last_save } } }
+        ),
+        "it should be false"
+      );
+    });
+    it("it should be true if name is empty string", () => {
+      assert.isTrue(
+        invalidProjectName(
+          { name: "", description: "test description", json: {} },
+          { projects: { test: { name: "test", last_save } } }
+        ),
+        "it should be true"
+      );
+    });
+    it("should be true if name is already in use", () => {
+      last_save = Date.now();
+      assert.isTrue(
+        invalidProjectName(
+          { name: "test", description: "test description", json: {} },
+          { projects: { test: { name: "test", last_save } } }
+        ),
         "it should be true"
       );
     });

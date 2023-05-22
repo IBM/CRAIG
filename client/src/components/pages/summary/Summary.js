@@ -1,15 +1,12 @@
 import React from "react";
-import { FolderAdd, Download, Copy } from "@carbon/icons-react";
+import { FolderAdd, Download, Copy, Save } from "@carbon/icons-react";
 import { Tile, Button, TextArea } from "@carbon/react";
 import { IcseToggle } from "icse-react-assets";
 import { downloadContent } from "../../page-template";
 import { formatConfig, validate } from "../../../lib";
+import { SummaryErrorText, SummaryText } from "./SummaryContent";
+import { ProjectFormModal } from "../projects/ProjectFormModal";
 import "./summary.css";
-import {
-  SaveProjectAsModal,
-  SummaryErrorText,
-  SummaryText
-} from "./SummaryContent";
 
 class Summary extends React.Component {
   constructor(props) {
@@ -45,11 +42,21 @@ class Summary extends React.Component {
     return (
       <>
         <h4 className="leftTextAlign marginBottomSmall">Summary</h4>
-        <SaveProjectAsModal
-          open={this.state.showSaveModal}
-          onClose={this.toggleShowSaveModal}
-          onProjectSave={this.props.onProjectSave}
-        />
+        {this.state.showSaveModal && (
+          <ProjectFormModal
+            open={this.state.showSaveModal}
+            data={{
+              name: "",
+              description: "",
+              json: this.props.craig.store.json
+            }}
+            onClose={this.toggleShowSaveModal}
+            onSubmit={this.props.onProjectSave}
+            setCurrentProject={true}
+            projects={this.props.projects}
+            nav={this.props.nav}
+          />
+        )}
         <Tile className="widthOneHundredPercent">
           {this.state.error ? (
             <SummaryErrorText error={this.state.error} />
@@ -101,12 +108,33 @@ class Summary extends React.Component {
             >
               Copy JSON
             </Button>
-            {!this.props.craig.store.project_name && (
+            {this.props.craig.store.project_name ? (
+              <Button
+                kind="tertiary"
+                onClick={() => {
+                  let project = this.props.projects[
+                    this.props.craig.store.project_name
+                  ];
+
+                  let newProject = { ...project };
+                  newProject.json = this.props.craig.store.json;
+
+                  this.props.onProjectSave(newProject, { data: project }, true);
+                }}
+                disabled={Boolean(this.state.error)}
+                renderIcon={Save}
+                className="marginRightMed"
+                iconDescription="Save Project"
+              >
+                Save
+              </Button>
+            ) : (
               <Button
                 kind="tertiary"
                 onClick={this.toggleShowSaveModal}
                 disabled={Boolean(this.state.error)}
                 renderIcon={FolderAdd}
+                className="marginRightMed"
                 iconDescription="Save as Project"
               >
                 Save as Project
