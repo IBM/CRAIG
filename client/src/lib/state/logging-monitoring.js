@@ -13,7 +13,7 @@ function logdnaInit(config) {
     platform_logs: false,
     resource_group: "",
     cos: "",
-    bucket: ""
+    bucket: "",
   };
 }
 
@@ -54,7 +54,7 @@ function sysdigInit(config) {
   config.store.json.sysdig = {
     enabled: false,
     plan: "",
-    resource_group: null
+    resource_group: null,
   };
 }
 
@@ -81,5 +81,5 @@ module.exports = {
   logdnaSave,
   sysdigInit,
   sysdigSave,
-  sysdigOnStoreUpdate
+  sysdigOnStoreUpdate,
 };

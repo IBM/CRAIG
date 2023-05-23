@@ -26,6 +26,7 @@ const { vsiTf, lbTf } = require("./vsi");
 const { cbrTf } = require("./cbr");
 const { dnsTf } = require("./dns");
 const { loggingMonitoringTf } = require("./logging-monitoring");
+const { variablesDotTf } = require("./variables");
 
 /**
  * create a json document with file names as keys and text as value
@@ -36,51 +37,7 @@ const { loggingMonitoringTf } = require("./logging-monitoring");
  */
 function configToFilesJson(config) {
   try {
-    let additionalVariables = "";
     let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
-    let newSshKeys = config.ssh_keys.filter((key) => !key.use_data);
-    if (newSshKeys.length > 0) {
-      newSshKeys.forEach((key) => {
-        additionalVariables += `
-variable "${snakeCase(key.name)}_public_key" {
-  description = "Public SSH Key Value for ${titleCase(key.name).replace(
-    /Ssh/g,
-    "SSH"
-  )}"
-  type        = string
-  sensitive   = true
-  default     = "${key.public_key}"
-}
-`;
-      });
-      if (useF5) {
-        additionalVariables += `
-variable "tmos_admin_password" {
-  description = "F5 TMOS Admin Password"
-  type        = string
-  sensitive   = true
-  default     = "${config.f5_vsi[0].template.tmos_admin_password}"
-}
-`;
-      }
-    }
-    if (config.secrets_manager.length > 0) {
-      config.secrets_manager.forEach((instance) => {
-        if (instance.secrets)
-          instance.secrets.forEach((secret) => {
-            if (secret.type === "imported") {
-              additionalVariables += `
-variable "${snakeCase(instance.name + " " + secret.name + " data")}" {
-  description = "PEM encoded contents of your imported certificate"
-  type        = string
-  sensitive   = true
-}
-`;
-            }
-          });
-      });
-    }
-
     let files = {
       "main.tf": mainTf.replace("$REGION", `"${config._options.region}"`),
       "flow_logs.tf": flowLogsTf(config),
@@ -92,10 +49,7 @@ variable "${snakeCase(instance.name + " " + secret.name + " data")}" {
       "vpn_gateways.tf": config.vpn_gateways.length > 0 ? vpnTf(config) : null,
       "vpn_servers.tf":
         config.vpn_servers.length > 0 ? vpnServerTf(config) : null,
-      "variables.tf": variablesTf
-        .replace("$ADDITIONAL_VALUES", additionalVariables)
-        .replace("$REGION", config._options.region)
-        .replace("$PREFIX", config._options.prefix),
+      "variables.tf": variablesDotTf(config, useF5),
       "key_management.tf": kmsTf(config) + "\n",
       "object_storage.tf": cosTf(config) + "\n",
       "resource_groups.tf": resourceGroupTf(config),

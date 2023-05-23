@@ -39,31 +39,6 @@ provider "ibm" {
 
 #############################################################################
 `,
-  variablesTf: `##############################################################################
-# Variables
-##############################################################################
-
-variable "ibmcloud_api_key" {
-  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
-  type        = string
-  sensitive   = true
-}
-
-variable "region" {
-  description = "IBM Cloud Region where resources will be provisioned"
-  type        = string
-  default     = "$REGION"
-}
-
-variable "prefix" {
-  description = "Name prefix that will be prepended to named resources"
-  type        = string
-  default     = "$PREFIX"
-}
-$ADDITIONAL_VALUES
-##############################################################################
-`,
-
   teleportCloudInitText: `#cloud-config                                                                                      
 # This file is used to install teleport on a bastion host, configure teleport with App ID, and    
 # configure teleport with a COS instance.                                                         

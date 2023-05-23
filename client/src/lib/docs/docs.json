@@ -1044,10 +1044,14 @@
   "cbr": {
     "content": [
       {
-        "text": "nyi"
+        "text": "IBM Cloud Context-Based Restictions give users the ability to define and endorce access retestictions. These restrictions add an extra layer of protection that work with tradiditional IAM Access Policies."
       }
     ],
-    "relatedLinks": [["nyi"]]
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis"
+      ]
+    ]
   },
   "vpn_servers": {
     "content": [

@@ -519,11 +519,11 @@ By default, IBM Event Streams instances are not created but can be if desired.
 
 ## Context Based Restrictions
 
-nyi
+IBM Cloud Context-Based Restictions give users the ability to define and endorce access retestictions. These restrictions add an extra layer of protection that work with tradiditional IAM Access Policies.
 
 ### Related Links
 
-- [Docs](nyi)
+- [Docs](https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis)
 
 -----
 

@@ -61,10 +61,10 @@ export class JSONModal extends React.Component {
             invalidText={this.state.error}
           />
         </IcseFormGroup>
-          <DownloadCopyButtonSet
-            disabled={Boolean(this.state.error)}
-            json={this.state.json}
-          />
+        <DownloadCopyButtonSet
+          disabled={Boolean(this.state.error)}
+          json={this.state.json}
+        />
       </IcseModal>
     );
   }
