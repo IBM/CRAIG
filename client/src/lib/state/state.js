@@ -243,6 +243,14 @@ const {
   dnsResolverDelete,
   dnsResolverSave,
 } = require("./dns");
+const {
+  logdnaInit,
+  logdnaOnStoreUpdate,
+  logdnaSave,
+  sysdigInit,
+  sysdigOnStoreUpdate,
+  sysdigSave,
+} = require("./logging-monitoring");
 
 const state = function () {
   let store = new lazyZstate({
@@ -661,6 +669,18 @@ const state = function () {
         save: dnsResolverSave,
       },
     },
+  });
+
+  store.newField("logdna", {
+    init: logdnaInit,
+    onStoreUpdate: logdnaOnStoreUpdate,
+    save: logdnaSave,
+  });
+
+  store.newField("sysdig", {
+    init: sysdigInit,
+    onStoreUpdate: sysdigOnStoreUpdate,
+    save: sysdigSave,
   });
 
   /**

@@ -5,6 +5,20 @@
     "tags": ["slz", "landing-zone"]
   },
   "dns": [],
+  "logdna": {
+    "enabled": false,
+    "plan": "",
+    "endpoints": "",
+    "platform_logs": false,
+    "resource_group": null,
+    "cos": null,
+    "bucket": null
+  },
+  "sysdig": {
+    "enabled": false,
+    "plan": "",
+    "resource_group":null
+  },
   "resource_groups": [
     {
       "use_prefix": true,

@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - When no Secrets Manager instances are created within the state store, the VPN Server page now shows a tile with an explanation and a link to `/form/secretsManager`
 - Detailed installation instructions have been added to `README.md`
 - Added functionality to allow CRAIG to create LogDNA, Sysdig, Activity Tracker, and needed resources to match the Terraform IBM Modules Obsrvability Module functionality
+- Added functionality for LogDNA and Sysdig in state store
 
 ### Fixes
 

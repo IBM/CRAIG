@@ -915,6 +915,20 @@
     },
     "event_streams": [],
     "load_balancers": [],
+    "logdna": {
+      "enabled": false,
+      "plan": "",
+      "endpoints": "",
+      "platform_logs": false,
+      "resource_group": "",
+      "cos": "",
+      "bucket": ""
+    },
+    "sysdig": {
+      "enabled": false,
+      "plan": "",
+      "resource_group":null
+    },
     "f5_vsi": [],
     "iam_account_settings": {
      "enable": true
