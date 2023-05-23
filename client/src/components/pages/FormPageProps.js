@@ -48,7 +48,7 @@ import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
 import { invalidCrnList } from "../../lib/forms";
-import { NoSecretsManagerTile } from "../utils/NoSecretsManagerTile";
+import { NoSecretsManagerTile } from "../utils";
 
 const pathToFormMap = {
   accessGroups: {

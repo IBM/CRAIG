@@ -1,11 +1,11 @@
 import React from "react";
-import { FolderAdd, Download, Copy, Save } from "@carbon/icons-react";
+import { FolderAdd, Save } from "@carbon/icons-react";
 import { Tile, Button, TextArea } from "@carbon/react";
 import { IcseToggle } from "icse-react-assets";
-import { downloadContent } from "../../page-template";
 import { formatConfig, validate } from "../../../lib";
 import { SummaryErrorText, SummaryText } from "./SummaryContent";
 import { ProjectFormModal } from "../projects/ProjectFormModal";
+import { DownloadCopyButtonSet } from "../../utils";
 import "./summary.css";
 
 class Summary extends React.Component {
@@ -84,30 +84,10 @@ class Summary extends React.Component {
             invalidText={this.state.error}
           />
           <div className="marginBottomXs fitContent">
-            <Button
-              className="marginRightMed"
-              onClick={() => downloadContent(this.props.craig.store.json)}
+            <DownloadCopyButtonSet
               disabled={Boolean(this.state.error)}
-              renderIcon={Download}
-              iconDescription="Download craig.zip Terraform code"
-            >
-              Download Terraform
-            </Button>
-            <Button
-              className="marginRightMed"
-              kind="tertiary"
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  formatConfig(this.props.craig.store.json, true)
-                )
-              }
-              renderIcon={Copy}
-              iconDescription="Copy JSON to clipboard"
-              disabled={Boolean(this.state.error)}
-              tooltipAlignment="end"
-            >
-              Copy JSON
-            </Button>
+              json={this.props.craig.store.json}
+            />
             {this.props.craig.store.project_name ? (
               <Button
                 kind="tertiary"

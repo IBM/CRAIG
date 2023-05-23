@@ -1,6 +1,6 @@
 import { saveAs } from "file-saver";
 import { contains, eachKey, isNullOrEmptyString } from "lazy-z";
-const { configToFilesJson } = require("../../lib");
+const { configToFilesJson } = require("../../../lib");
 const JSZip = require("jszip");
 
 /**

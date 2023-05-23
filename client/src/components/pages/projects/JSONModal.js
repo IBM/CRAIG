@@ -1,16 +1,21 @@
 import React from "react";
 
 import { IcseModal, IcseToggle, IcseFormGroup } from "icse-react-assets";
-import { formatConfig } from "../../../lib";
-import { Download, Copy } from "@carbon/icons-react";
-import { downloadContent } from "../../page-template";
-import { TextArea, Button } from "@carbon/react";
+import { formatConfig, validate } from "../../../lib";
+import { DownloadCopyButtonSet } from "../../utils";
+import { TextArea } from "@carbon/react";
 
 export class JSONModal extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { ...this.props.data, usePrettyJson: true };
+    this.state = { ...this.props.data, usePrettyJson: true, error: "" };
+
+    try {
+      validate(this.state.json);
+    } catch (error) {
+      this.state.error = error.message;
+    }
 
     this.toggleUsePrettyJson = this.toggleUsePrettyJson.bind(this);
   }
@@ -44,7 +49,7 @@ export class JSONModal extends React.Component {
             value={this.state.usePrettyJson}
           />
         </IcseFormGroup>
-        <IcseFormGroup>
+        <IcseFormGroup noMarginBottom>
           <TextArea
             labelText="Preview CRAIG JSON"
             rows={15}
@@ -52,33 +57,14 @@ export class JSONModal extends React.Component {
             className="marginBottomSmall fitContent rightTextAlign codeFont"
             value={formatConfig(this.state.json, !this.state.usePrettyJson)}
             readOnly={true}
-            invalid={false}
+            invalid={Boolean(this.state.error)}
+            invalidText={this.state.error}
           />
         </IcseFormGroup>
-        <div className="marginBottomXs fitContent">
-          <Button
-            kind="tertiary"
-            className="marginRightMed"
-            onClick={() => downloadContent(this.state.json)}
+          <DownloadCopyButtonSet
             disabled={Boolean(this.state.error)}
-            renderIcon={Download}
-            iconDescription="Download craig.zip Terraform code"
-          >
-            Download Terraform
-          </Button>
-          <Button
-            kind="tertiary"
-            onClick={() =>
-              navigator.clipboard.writeText(formatConfig(this.state.json, true))
-            }
-            renderIcon={Copy}
-            iconDescription="Copy JSON to clipboard"
-            disabled={Boolean(this.state.error)}
-            tooltipAlignment="end"
-          >
-            Copy JSON
-          </Button>
-        </div>
+            json={this.state.json}
+          />
       </IcseModal>
     );
   }
