@@ -17,6 +17,7 @@
     "setup": "npm i cdktf cfktf-cli mocha -g && npm i && cd client && npm i",
     "docker-start": "NODE_ENV=production && npm i && node server.js",
     "front-end-test": "cd client && npm test",
+    "i-all": "npm i && cd client && npm i",
     "pretty": "npx prettier --write .",
     "dev-start": "cd client && npm start"
   },

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+echo "Running pre-commit hook..."
+
+# run pretty 
+npm run pretty
+
+# checking if npm install throws any errors or warnings
+if npm run i-all | grep -e 'npm WARN' -e 'npm ERR' >/dev/null; then
+  echo "Commit failed during install" >> /dev/stderr
+  exit 1
+fi
+
+# checking for failed unit tests
+TEST_OUTPUT=$(npm run coverage)
+GREP_OUTPUT=$(echo "$TEST_OUTPUT" | grep failing) >/dev/null
+if [[ -n "$GREP_OUTPUT" ]]; then
+  echo "Failing unit test(s) found"
+  echo "$TEST_OUTPUT" | awk '/'"$GREP_OUTPUT"'/ {flag=1;next} /----------------------------|---------|----------|---------|---------|-------------------/ {flag=0} flag {print}'
+  echo "Commit failed during unit tests" >> /dev/stderr
+  exit 1
+fi
+
+# check for failing build
+if ! npm run build | grep 'Compiled successfully.' >/dev/null; then
+  echo "Commit failed on build" >> /dev/stderr
+  exit 1
+fi
+
+echo "Completed successfully"
