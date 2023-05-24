@@ -87,6 +87,7 @@ class Summary extends React.Component {
             <DownloadCopyButtonSet
               disabled={Boolean(this.state.error)}
               json={this.props.craig.store.json}
+              projectName={this.props.craig.store.project_name}
             />
             {this.props.craig.store.project_name ? (
               <Button

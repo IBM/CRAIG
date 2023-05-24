@@ -7,7 +7,7 @@ const JSZip = require("jszip");
  * Download configuration object
  * @returns (Object|undefined) error
  */
-export const downloadContent = (json) => {
+export const downloadContent = (json, projectName) => {
   const zip = new JSZip();
   try {
     let files = configToFilesJson(json); // get files
@@ -22,9 +22,16 @@ export const downloadContent = (json) => {
         });
       }
     });
+    // File name format: <projectName>-craig-<month>-<day>-<year>-<hour>-<minute>-<PM/AM>.zip
+    let now = new Date();
+    let date = now.toLocaleDateString().replaceAll("/", "-");
+    let time = now.toLocaleTimeString().replace(":", "-");
+    time = time.split(":")[0] + "-" + time.split(" ")[1];
+    let fileName = "craig-" + date + "-" + time + ".zip";
+    fileName = projectName ? projectName + "-" + fileName : fileName;
     zip.generateAsync({ type: "blob" }).then(function (content) {
       // generate zip file
-      saveAs(content, "craig.zip"); // Save zip file
+      saveAs(content, fileName); // Save zip file
     });
     return null;
   } catch (error) {

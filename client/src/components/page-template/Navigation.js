@@ -69,7 +69,7 @@ class Navigation extends React.Component {
       };
     }
     if (validated) {
-      let error = downloadContent(this.props.json);
+      let error = downloadContent(this.props.json, this.props.project?.name);
       if (error) {
         console.error(error);
         notification = {

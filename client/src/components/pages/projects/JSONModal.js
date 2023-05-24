@@ -64,6 +64,7 @@ export class JSONModal extends React.Component {
         <DownloadCopyButtonSet
           disabled={Boolean(this.state.error)}
           json={this.state.json}
+          projectName={this.state.name}
         />
       </IcseModal>
     );

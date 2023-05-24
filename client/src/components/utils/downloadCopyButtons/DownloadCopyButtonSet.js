@@ -10,7 +10,7 @@ export const DownloadCopyButtonSet = (props) => {
     <>
       <Button
         className="marginRightMed"
-        onClick={() => downloadContent(props.json)}
+        onClick={() => downloadContent(props.json, props.projectName)}
         disabled={props.disabled}
         renderIcon={Download}
         iconDescription="Download craig.zip Terraform code"
