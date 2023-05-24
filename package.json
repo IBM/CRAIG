@@ -40,6 +40,7 @@
     "json-to-tf": "^0.2.1",
     "lazy-z": "^1.8.4",
     "nyc": "^15.1.0",
+    "python": "^0.0.4",
     "regex-but-with-words": "^1.5.1"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@ COPY . ./
 RUN npm install react-scripts sass cdktf cdktf-cli@latest -g
 RUN npm run build
 
-FROM node:alpine
+FROM node
 WORKDIR /app
 # allow for env vars to be passed at build time
 ARG api_key=""
