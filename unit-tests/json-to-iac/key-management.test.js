@@ -310,7 +310,6 @@ resource "ibm_kms_key_rings" "kms_ring_ring" {
           root_key: true,
           key_ring: "test-ring",
           force_delete: true,
-          endpoint: "private",
         },
         {
           name: "kms",
@@ -320,6 +319,7 @@ resource "ibm_kms_key_rings" "kms_ring_ring" {
         {
           _options: {
             prefix: "iac",
+            endpoints: "private",
           },
         }
       );
@@ -346,7 +346,6 @@ resource "ibm_kms_key" "kms_key_key" {
           root_key: true,
           key_ring: "test-ring",
           force_delete: true,
-          endpoint: "private",
         },
         {
           name: "kms",
@@ -357,6 +356,7 @@ resource "ibm_kms_key" "kms_key_key" {
         {
           _options: {
             prefix: "iac",
+            endpoints: "private",
           },
         }
       );
@@ -389,7 +389,6 @@ resource "ibm_kms_key" "kms_key_key" {
           root_key: true,
           key_ring: "test-ring",
           force_delete: true,
-          endpoint: "private",
           rotation: 12,
           dual_auth_delete: true,
         },
@@ -397,6 +396,11 @@ resource "ibm_kms_key" "kms_key_key" {
           name: "kms",
           service: "kms",
           resource_group: "slz-service-rg",
+        },
+        {
+          _options: {
+            endpoints: "private",
+          },
         }
       );
       let expectedData = `
@@ -435,7 +439,6 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
               root_key: true,
               key_ring: "test",
               force_delete: true,
-              endpoint: "private",
               rotation: 12,
               dual_auth_delete: true,
             },
@@ -452,6 +455,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
         }
       );
@@ -546,7 +550,6 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
               root_key: true,
               key_ring: "test",
               force_delete: true,
-              endpoint: "private",
               rotation: 12,
               dual_auth_delete: true,
             },
@@ -563,6 +566,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
         }
       );
@@ -624,6 +628,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
           region: "us-south",
           tags: ["hello", "world"],
           prefix: "iac",
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -645,7 +650,6 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
                 root_key: true,
                 key_ring: "test",
                 force_delete: true,
-                endpoint: "private",
                 rotation: 12,
                 dual_auth_delete: true,
               },
@@ -735,6 +739,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
           region: "us-south",
           tags: ["hello", "world"],
           prefix: "iac",
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -756,7 +761,6 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
                 root_key: true,
                 key_ring: "test",
                 force_delete: true,
-                endpoint: "private",
                 rotation: 12,
                 dual_auth_delete: true,
               },
@@ -775,7 +779,6 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
                 root_key: true,
                 key_ring: "test",
                 force_delete: true,
-                endpoint: "private",
                 rotation: 12,
                 dual_auth_delete: true,
               },

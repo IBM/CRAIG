@@ -33,6 +33,7 @@ resource "ibm_resource_instance" "logdna" {
         let actualData = formatLogdnaInstance({
           _options: {
             tags: ["iac", "test"],
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -43,7 +44,6 @@ resource "ibm_resource_instance" "logdna" {
           ],
           logdna: {
             plan: "lite",
-            endpoints: "private",
             resource_group: "service-rg",
           },
         });
@@ -74,6 +74,7 @@ resource "ibm_resource_instance" "logdna" {
         let actualData = formatLogdnaInstance({
           _options: {
             tags: ["iac", "test"],
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -84,7 +85,6 @@ resource "ibm_resource_instance" "logdna" {
           ],
           logdna: {
             plan: "lite",
-            endpoints: "private",
             platform_logs: true,
             resource_group: "service-rg",
           },
@@ -101,6 +101,7 @@ resource "ibm_resource_instance" "logdna" {
         let actualData = formatLogdnaKey({
           _options: {
             tags: ["hello", "world"],
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -111,7 +112,6 @@ resource "ibm_resource_instance" "logdna" {
           ],
           logdna: {
             plan: "lite",
-            endpoints: "private",
             platform_logs: true,
             resource_group: "service-rg",
             role: "Manager",
@@ -140,6 +140,7 @@ resource "ibm_resource_key" "logdna_key" {
         let actualData = formatLogdnaArchive({
           _options: {
             tags: ["hello", "world"],
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -150,7 +151,6 @@ resource "ibm_resource_key" "logdna_key" {
           ],
           logdna: {
             plan: "lite",
-            endpoints: "private",
             platform_logs: true,
             resource_group: "service-rg",
             role: "Manager",
@@ -227,6 +227,7 @@ resource "ibm_resource_key" "sysdig_key" {
         let actualData = formatSysdigInstance({
           _options: {
             tags: ["iac", "test"],
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -237,7 +238,6 @@ resource "ibm_resource_key" "sysdig_key" {
           ],
           sysdig: {
             plan: "lite",
-            endpoints: "private",
             resource_group: "service-rg",
           },
         });
@@ -265,6 +265,7 @@ resource "ibm_resource_instance" "sysdig" {
         let actualData = formatSysdigInstance({
           _options: {
             tags: ["iac", "test"],
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -275,7 +276,6 @@ resource "ibm_resource_instance" "sysdig" {
           ],
           sysdig: {
             plan: "lite",
-            endpoints: "private",
             resource_group: "service-rg",
             platform_logs: true,
           },
@@ -342,10 +342,10 @@ resource "ibm_resource_key" "atracker_key" {
             bucket: "atracker",
             cos_key: "atracker-cos-key",
             plan: "lite",
-            endpoints: "private",
             resource_group: "service-rg",
           },
           _options: {
+            endpoints: "private",
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
@@ -375,6 +375,7 @@ resource "logdna_archive" "atracker_archive" {
         let actualData = formatAtrackerInstance({
           _options: {
             tags: ["iac", "test"],
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -385,7 +386,6 @@ resource "logdna_archive" "atracker_archive" {
           ],
           atracker: {
             plan: "lite",
-            endpoints: "private",
             resource_group: "service-rg",
           },
         });
@@ -416,6 +416,7 @@ resource "ibm_resource_instance" "atracker" {
       let actualData = loggingMonitoringTf({
         _options: {
           tags: ["hello", "world"],
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -427,19 +428,16 @@ resource "ibm_resource_instance" "atracker" {
         logdna: {
           enabled: true,
           plan: "lite",
-          endpoints: "private",
           platform_logs: true,
           resource_group: "service-rg",
           role: "Manager",
           bucket: "atracker",
           cos: "cos",
-          bucket_endpoint: "private",
           archive: true,
         },
         sysdig: {
           enabled: true,
           plan: "lite",
-          endpoints: "private",
           resource_group: "service-rg",
           platform_logs: true,
         },
@@ -451,7 +449,6 @@ resource "ibm_resource_instance" "atracker" {
           bucket: "atracker",
           cos_key: "atracker-cos-key",
           plan: "lite",
-          endpoints: "private",
           resource_group: "service-rg",
           archive: true,
           instance: true,
@@ -555,6 +552,7 @@ resource "ibm_resource_key" "sysdig_key" {
       let actualData = loggingMonitoringTf({
         _options: {
           tags: ["hello", "world"],
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -566,19 +564,16 @@ resource "ibm_resource_key" "sysdig_key" {
         logdna: {
           enabled: true,
           plan: "lite",
-          endpoints: "private",
           platform_logs: true,
           resource_group: "service-rg",
           role: "Manager",
           bucket: "atracker",
           cos: "cos",
-          bucket_endpoint: "private",
           archive: true,
         },
         sysdig: {
           enabled: false,
           plan: "lite",
-          endpoints: "private",
           resource_group: "service-rg",
           platform_logs: true,
         },
@@ -649,6 +644,7 @@ resource "logdna_archive" "logdna_archive" {
       let actualData = loggingMonitoringTf({
         _options: {
           tags: ["hello", "world"],
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -660,7 +656,6 @@ resource "logdna_archive" "logdna_archive" {
         logdna: {
           enabled: true,
           plan: "lite",
-          endpoints: "private",
           platform_logs: true,
           resource_group: "service-rg",
           role: "Manager",
@@ -672,7 +667,6 @@ resource "logdna_archive" "logdna_archive" {
         sysdig: {
           enabled: false,
           plan: "lite",
-          endpoints: "private",
           resource_group: "service-rg",
           platform_logs: true,
         },
@@ -720,6 +714,7 @@ resource "ibm_resource_key" "logdna_key" {
       let actualData = loggingMonitoringTf({
         _options: {
           tags: ["hello", "world"],
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -731,7 +726,6 @@ resource "ibm_resource_key" "logdna_key" {
         logdna: {
           enabled: false,
           plan: "lite",
-          endpoints: "private",
           platform_logs: true,
           resource_group: "service-rg",
           role: "Manager",
@@ -743,7 +737,6 @@ resource "ibm_resource_key" "logdna_key" {
         sysdig: {
           enabled: true,
           plan: "lite",
-          endpoints: "private",
           resource_group: "service-rg",
           platform_logs: true,
         },
@@ -791,6 +784,7 @@ resource "ibm_resource_key" "sysdig_key" {
       let actualData = loggingMonitoringTf({
         _options: {
           tags: ["hello", "world"],
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -802,7 +796,6 @@ resource "ibm_resource_key" "sysdig_key" {
         logdna: {
           enabled: true,
           plan: "lite",
-          endpoints: "private",
           platform_logs: true,
           resource_group: "service-rg",
           role: "Manager",
@@ -814,7 +807,6 @@ resource "ibm_resource_key" "sysdig_key" {
         sysdig: {
           enabled: true,
           plan: "lite",
-          endpoints: "private",
           resource_group: "service-rg",
           platform_logs: true,
         },
@@ -826,7 +818,6 @@ resource "ibm_resource_key" "sysdig_key" {
           bucket: "atracker",
           cos_key: "atracker-cos-key",
           plan: "lite",
-          endpoints: "private",
           resource_group: "service-rg",
           archive: true,
           instance: true,

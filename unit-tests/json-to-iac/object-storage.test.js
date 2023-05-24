@@ -196,6 +196,7 @@ data "ibm_resource_instance" "cos_object_storage" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoint: "private",
           },
           resource_groups: [
             {
@@ -217,7 +218,6 @@ data "ibm_resource_instance" "cos_object_storage" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -249,6 +249,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
           use_random_suffix: false,
           use_data: true,
           kms: "kms",
+          endpoint: "private",
         },
         {
           _options: {
@@ -276,7 +277,6 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -304,7 +304,6 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
     it("should create cos bucket terraform code", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -323,6 +322,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "public",
           },
           resource_groups: [
             {
@@ -344,7 +344,6 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -376,7 +375,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -395,6 +393,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -416,7 +415,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -430,7 +428,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -467,6 +465,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -488,7 +487,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -502,7 +500,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -520,7 +518,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source with random suffix and object versioning", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -540,6 +537,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -561,7 +559,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -575,7 +572,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -596,7 +593,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source with random suffix and archive rule", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -623,6 +619,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -644,7 +641,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -658,7 +654,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -682,7 +678,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source with random suffix and expire rule", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -709,6 +704,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -730,7 +726,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -744,7 +739,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -770,7 +765,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source with random suffix and retention rule", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -795,6 +789,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -816,7 +811,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -830,7 +824,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -854,7 +848,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source with random suffix and allowed ip", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -874,6 +867,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -895,7 +889,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -909,7 +902,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -928,7 +921,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source with random suffix and metrics monitoring", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -947,6 +939,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
         },
         {
           _options: {
+            endpoints: "public",
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
@@ -1008,7 +1001,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
     it("should create cos bucket terraform code from data source with random suffix and activity tracking", () => {
       let actualData = formatCosBucket(
         {
-          endpoint: "public",
           force_delete: true,
           kms_key: "key",
           name: "bucket",
@@ -1030,6 +1022,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "public",
           },
           resource_groups: [
             {
@@ -1051,7 +1044,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -1244,7 +1236,6 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
           ],
           buckets: [
             {
-              endpoint: "public",
               force_delete: true,
               kms_key: "key",
               name: "bucket",
@@ -1257,6 +1248,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
             region: "us-south",
             tags: ["hello", "world"],
             prefix: "iac",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -1278,7 +1270,6 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
                   root_key: true,
                   key_ring: "test",
                   force_delete: true,
-                  endpoint: "private",
                   rotation: 12,
                   dual_auth_delete: true,
                 },
@@ -1324,7 +1315,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -1358,6 +1349,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
           region: "us-south",
           tags: ["hello", "world"],
           prefix: "iac",
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -1379,7 +1371,6 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
                 root_key: true,
                 key_ring: "test",
                 force_delete: true,
-                endpoint: "private",
                 rotation: 12,
                 dual_auth_delete: true,
               },
@@ -1450,7 +1441,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
   resource_instance_id = ibm_resource_instance.cos_object_storage.id
   storage_class        = "standard"
-  endpoint_type        = "public"
+  endpoint_type        = "private"
   force_delete         = true
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
@@ -1482,6 +1473,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
           region: "us-south",
           tags: ["hello", "world"],
           prefix: "iac",
+          endpoints: "public",
         },
         resource_groups: [
           {
@@ -1503,7 +1495,6 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
                 root_key: true,
                 key_ring: "test",
                 force_delete: true,
-                endpoint: "private",
                 rotation: 12,
                 dual_auth_delete: true,
               },
@@ -1527,7 +1518,6 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
             ],
             buckets: [
               {
-                endpoint: "public",
                 force_delete: true,
                 kms_key: "key",
                 name: "bucket",
@@ -1551,7 +1541,6 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
             ],
             buckets: [
               {
-                endpoint: "public",
                 force_delete: true,
                 kms_key: "key",
                 name: "bucket2",

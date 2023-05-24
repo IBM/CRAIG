@@ -412,7 +412,7 @@ function craigToCdktf(craig) {
     // create keys
     kms.keys.forEach((key) => {
       let keyTf = ibmKmsKey(key, kms, craig, true);
-      let policy = ibmKmsKeyPolicy(key, kms);
+      let policy = ibmKmsKeyPolicy(key, kms, craig);
       cdktfValues(cdktfJson, "resource", "ibm_kms_key", keyTf.name, keyTf.data);
       cdktfValues(
         cdktfJson,

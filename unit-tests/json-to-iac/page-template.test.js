@@ -560,6 +560,7 @@ resource "ibm_is_subnet" "management_vpe_zone_3" {
           tags: ["hello", "world"],
           prefix: "iac",
           region: "us-south",
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -583,7 +584,6 @@ resource "ibm_is_subnet" "management_vpe_zone_3" {
             name: "event-streams",
             plan: "enterprise",
             resource_group: "slz-service-rg",
-            endpoints: "private",
             private_ip_allowlist: ["10.0.0.0/32", "10.0.0.1/32"],
             throughput: "150MB/s",
             storage_size: "2TB",

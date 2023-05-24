@@ -265,7 +265,7 @@
         "bucket_name": "${var.prefix}-atracker-cos-atracker-bucket",
         "resource_instance_id": "${ibm_resource_instance.atracker_cos_object_storage.id}",
         "storage_class": "standard",
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "force_delete": true,
         "region_location": "${var.region}",
         "key_protect": "${ibm_kms_key.slz_kms_slz_atracker_key_key.crn}",
@@ -277,7 +277,7 @@
         "bucket_name": "${var.prefix}-cos-management-bucket",
         "resource_instance_id": "${ibm_resource_instance.cos_object_storage.id}",
         "storage_class": "standard",
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "force_delete": true,
         "region_location": "${var.region}",
         "key_protect": "${ibm_kms_key.slz_kms_slz_slz_key_key.crn}",
@@ -289,7 +289,7 @@
         "bucket_name": "${var.prefix}-cos-workload-bucket",
         "resource_instance_id": "${ibm_resource_instance.cos_object_storage.id}",
         "storage_class": "standard",
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "force_delete": true,
         "region_location": "${var.region}",
         "key_protect": "${ibm_kms_key.slz_kms_slz_slz_key_key.crn}",
@@ -319,7 +319,7 @@
         "standard_key": false,
         "key_ring_id": "${ibm_kms_key_rings.slz_kms_slz_slz_ring_ring.key_ring_id}",
         "force_delete": true,
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "depends_on": [
           "ibm_iam_authorization_policy.slz_kms_server_protect_policy",
           "ibm_iam_authorization_policy.slz_kms_block_storage_policy"
@@ -331,7 +331,7 @@
         "standard_key": false,
         "key_ring_id": "${ibm_kms_key_rings.slz_kms_slz_slz_ring_ring.key_ring_id}",
         "force_delete": true,
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "depends_on": [
           "ibm_iam_authorization_policy.slz_kms_server_protect_policy",
           "ibm_iam_authorization_policy.slz_kms_block_storage_policy"
@@ -343,7 +343,7 @@
         "standard_key": false,
         "key_ring_id": "${ibm_kms_key_rings.slz_kms_slz_slz_ring_ring.key_ring_id}",
         "force_delete": true,
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "depends_on": [
           "ibm_iam_authorization_policy.slz_kms_server_protect_policy",
           "ibm_iam_authorization_policy.slz_kms_block_storage_policy"
@@ -353,7 +353,7 @@
     "ibm_kms_key_policies": {
       "slz_kms_slz_slz_key_key_policy": {
         "instance_id": "${ibm_resource_instance.slz_kms.guid}",
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "key_id": "${ibm_kms_key.slz_kms_slz_slz_key_key.key_id}",
         "rotation": [
           {
@@ -368,7 +368,7 @@
       },
       "slz_kms_slz_atracker_key_key_policy": {
         "instance_id": "${ibm_resource_instance.slz_kms.guid}",
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "key_id": "${ibm_kms_key.slz_kms_slz_atracker_key_key.key_id}",
         "rotation": [
           {
@@ -383,7 +383,7 @@
       },
       "slz_kms_slz_vsi_volume_key_key_policy": {
         "instance_id": "${ibm_resource_instance.slz_kms.guid}",
-        "endpoint_type": "public",
+        "endpoint_type": "private",
         "key_id": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id}",
         "rotation": [
           {

@@ -125,7 +125,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_secrets_manager_vpe_g
     module.management_vpc.management_vpe_sg_id
   ]
   target {
-    crn           = "crn:v1:bluemix:public:secrets-manager:\${var.region}:a/1234:\${ibm_resource_instance.secrets_manager_secrets_manager.guid}::"
+    crn           = "crn:v1:bluemix:public:secrets-manager:\${var.region}:a/\${var.account_id}:\${ibm_resource_instance.secrets_manager_secrets_manager.guid}::"
     resource_type = "provider_cloud_service"
   }
 }

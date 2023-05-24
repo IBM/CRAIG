@@ -27,7 +27,7 @@ function ibmResourceInstanceLogdna(config) {
       service: "logdna",
       plan: config.logdna.plan,
       location: "${var.region}",
-      service_endpoints: config.logdna.endpoints,
+      service_endpoints: config._options.endpoints,
       tags: config._options.tags,
     },
   };
@@ -59,7 +59,7 @@ function ibmResourceInstanceSysdig(config) {
       service: "sysdig-monitor",
       plan: config.sysdig.plan,
       location: "${var.region}",
-      service_endpoints: config.sysdig.endpoints,
+      service_endpoints: config._options.endpoints,
       tags: config._options.tags,
     },
   };
@@ -89,7 +89,7 @@ function ibmResourceInstanceAtracker(config) {
       service: "logdnaat",
       plan: config.atracker.plan,
       location: "${var.region}",
-      service_endpoints: config.atracker.endpoints,
+      service_endpoints: config._options.endpoints,
       tags: config._options.tags,
     },
   };
@@ -174,7 +174,6 @@ function formatLogdnaKey(config) {
  * @param {object} config.logdna
  * @param {string} config.logdna.cos
  * @param {string} config.logdna.bucket
- * @param {string} config.logdna.bucket_endpoint
  * @returns {string} terraform
  */
 function formatLogdnaArchive(config) {
@@ -192,7 +191,7 @@ function formatLogdnaArchive(config) {
         endpoint: bucketRef(
           config.logdna.cos,
           config.logdna.bucket,
-          `s3_endpoint_${config.logdna.bucket_endpoint}`
+          `s3_endpoint_${config._options.endpoints}`
         ),
         resourceinstanceid: cosRef(config.logdna.cos),
       },
@@ -220,7 +219,7 @@ function formatAtrackerArchive(config) {
         endpoint: bucketRef(
           config.atracker.target_name,
           config.atracker.bucket,
-          `s3_endpoint_${config.atracker.endpoints}`
+          `s3_endpoint_${config._options.endpoints}`
         ),
         resourceinstanceid: cosRef(config.atracker.target_name),
       },

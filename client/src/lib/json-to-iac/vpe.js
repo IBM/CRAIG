@@ -92,7 +92,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
   };
   if (vpe.service === "secrets-manager") {
     target.crn = target.crn
-      .replace("$ACCOUNT_ID", vpe.account_id)
+      .replace("$ACCOUNT_ID", "${var.account_id}")
       .replace("$SNAKE_NAME", "secrets_manager_" + snakeCase(vpe.instance));
   }
   data.data.target.push(target);

@@ -20,6 +20,9 @@ describe("options", () => {
         region: "us-south",
         tags: ["hello", "world"],
         zones: 3,
+        endpoints: "private",
+        account_id: "",
+        fs_cloud: true,
       };
       assert.deepEqual(
         state.store.json._options,

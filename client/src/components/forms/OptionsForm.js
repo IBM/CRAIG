@@ -7,10 +7,11 @@ import {
   IcseHeading,
   SaveAddButton,
   IcseNumberSelect,
+  IcseToggle,
 } from "icse-react-assets";
 import PropTypes from "prop-types";
 import { Tag, TextArea } from "@carbon/react";
-import { deepEqual } from "lazy-z";
+import { deepEqual, kebabCase, azsort, titleCase } from "lazy-z";
 import { invalidNewResourceName, invalidTagList } from "../../lib";
 
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
@@ -23,6 +24,8 @@ class OptionsForm extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleTags = this.handleTags.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
+    this.disableSave = this.disableSave.bind(this);
     buildFormFunctions(this);
   }
 
@@ -39,7 +42,14 @@ class OptionsForm extends React.Component {
 
   handleChange(event) {
     let { name, value } = event.target;
+    if (name === "endpoints") {
+      value = kebabCase(value);
+    }
     this.setState({ [name]: value });
+  }
+
+  handleToggle() {
+    this.setState({ fs_cloud: !this.state.fs_cloud });
   }
 
   disableSave() {
@@ -79,22 +89,63 @@ class OptionsForm extends React.Component {
               onChange={this.handleChange}
               maxLength={16}
             />
+            <IcseToggle
+              labelText="Use FS Cloud"
+              defaultToggled={this.state.fs_cloud}
+              onToggle={this.handleToggle}
+              id="use-fs-cloud"
+              toggleFieldName="fs_cloud"
+              value={this.state.fs_cloud}
+              tooltip={{
+                content: "Show only FS Cloud validated regions.",
+              }}
+            />
             <IcseSelect
               formName="options"
               name="region"
               labelText={"Region"}
               value={this.state.region}
-              groups={["us-south", "us-east", "eu-db", "eu-gb"]}
+              groups={["us-south", "us-east", "eu-de", "eu-gb"]
+                .concat(
+                  this.state.fs_cloud
+                    ? []
+                    : ["jp-tok", "jp-osa", "au-syd", "ca-tor", "br-sao"]
+                )
+                .sort(azsort)}
               handleInputChange={this.handleChange}
             />
+          </IcseFormGroup>
+          <IcseFormGroup>
             <IcseNumberSelect
               max={3}
               formName="options"
               name="zones"
-              labelText="Zones"
+              labelText="Availability Zones"
               value={this.state.zones}
               handleInputChange={this.handleChange}
               className="fieldWidth"
+            />
+            <IcseSelect
+              formName="options"
+              name="endpoints"
+              labelText="Service Endpoints"
+              value={titleCase(this.state.endpoints)}
+              groups={["Private", "Public", "Public and Private"]}
+              handleInputChange={this.handleChange}
+            />
+            <IcseTextInput
+              id="account_id"
+              field="account_id"
+              value={this.state.account_id}
+              invalid={false}
+              labelText="Account ID"
+              invalidText="Invalid prefix"
+              placeholder="(Optional) Account ID"
+              onChange={this.handleChange}
+              tooltip={{
+                content:
+                  "Account ID is used to create some resources, such as Virtual Private Endpoints for Secrets Manager",
+              }}
             />
           </IcseFormGroup>
           <IcseFormGroup>

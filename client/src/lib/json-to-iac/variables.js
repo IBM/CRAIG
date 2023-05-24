@@ -1,6 +1,6 @@
 const { jsonToTf } = require("json-to-tf");
 const { tfBlock } = require("./utils");
-const { snakeCase, titleCase } = require("lazy-z");
+const { snakeCase, titleCase, isNullOrEmptyString } = require("lazy-z");
 
 function variablesDotTf(config, useF5) {
   let variables = {
@@ -34,7 +34,15 @@ function variablesDotTf(config, useF5) {
         },
       ],
     },
+    account_id: {
+      description: "IBM Account ID where resources will be provisioned",
+      type: "${string}",
+      default: config._options.account_id,
+    },
   };
+  if (isNullOrEmptyString(config._options.account_id)) {
+    delete variables.account_id.default;
+  }
   let newSshKeys = config.ssh_keys.filter((key) => !key.use_data);
   // add ssh keys not from data
   newSshKeys.forEach((key) => {

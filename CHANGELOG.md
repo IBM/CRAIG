@@ -13,11 +13,15 @@ All notable changes to this project will be documented in this file.
 - Detailed installation instructions have been added to `README.md`
 - Added functionality to allow CRAIG to create LogDNA, Sysdig, Activity Tracker, and needed resources to match the Terraform IBM Modules Obsrvability Module functionality
 - Added functionality for LogDNA and Sysdig in state store
+- Endpoints for Cloud Services are now a global option variable instead of being handled at the component level
+- On the options page, users can now choose to use only FS Cloud validated regions or any VPC regions
+- Added account_id Terraform variable, this is used in some VPE deployments
 
 ### Fixes
 
 - DNS subnets now correctly render when list of strings
 - Fixed an issue cauing errors to occur for unfound props on the Options page
+- Fixed an error causing `use_prefix` in resource groups to not correctly change the prefix of the resource group
 
 ## 0.5.0
 

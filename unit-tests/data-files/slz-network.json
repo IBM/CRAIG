@@ -2,7 +2,9 @@
   "_options": {
     "prefix": "slz",
     "region": "us-south",
-    "tags": ["slz", "landing-zone"]
+    "tags": ["slz", "landing-zone"],
+    "endpoints": "private",
+    "account_id": "1234"
   },
   "resource_groups": [
     {

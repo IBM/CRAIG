@@ -262,6 +262,9 @@ const state = function () {
         access_groups: [],
         secrets_manager: [],
         f5_vsi: [],
+        _options: {
+          endpoints: "private",
+        },
       },
       cosBuckets: [],
       cosKeys: [],

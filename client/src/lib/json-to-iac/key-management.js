@@ -167,7 +167,7 @@ function ibmKmsKey(key, kms, config, cdktf) {
       "key_ring_id"
     ),
     force_delete: key.force_delete,
-    endpoint_type: key.endpoint,
+    endpoint_type: config._options.endpoints,
   };
 
   if (kms.authorize_vpc_reader_role) {
@@ -220,12 +220,12 @@ function formatKmsKey(key, kms, config) {
  * @param {string} kms.name name of instance
  * @returns {string} key policy terraform
  */
-function ibmKmsKeyPolicy(key, kms) {
+function ibmKmsKeyPolicy(key, kms, config) {
   return {
     name: `${kms.name}-${key.name}-key-policy`,
     data: {
       instance_id: composedKmsId(kms),
-      endpoint_type: key.endpoint,
+      endpoint_type: config._options.endpoints,
       key_id: encryptionKeyRef(kms.name, key.name),
       rotation: [
         {
@@ -252,8 +252,8 @@ function ibmKmsKeyPolicy(key, kms) {
  * @param {string} kms.name name of instance
  * @returns {string} key policy terraform
  */
-function formatKmsKeyPolicy(key, kms) {
-  let policy = ibmKmsKeyPolicy(key, kms);
+function formatKmsKeyPolicy(key, kms, config) {
+  let policy = ibmKmsKeyPolicy(key, kms, config);
   return jsonToTfPrint(
     "resource",
     "ibm_kms_key_policies",
@@ -282,7 +282,8 @@ function kmsInstanceTf(kms, config) {
     instanceTf += formatKeyRing(ring, kms, config);
   });
   kms.keys.forEach((key) => {
-    instanceTf += formatKmsKey(key, kms, config) + formatKmsKeyPolicy(key, kms);
+    instanceTf +=
+      formatKmsKey(key, kms, config) + formatKmsKeyPolicy(key, kms, config);
   });
   return tfBlock("Key Management Instance " + kms.name, instanceTf);
 }

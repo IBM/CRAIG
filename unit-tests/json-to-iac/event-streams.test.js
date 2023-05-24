@@ -12,7 +12,6 @@ describe("event streams", () => {
           name: "event-streams",
           plan: "enterprise",
           resource_group: "slz-service-rg",
-          endpoints: "private",
           private_ip_allowlist: ["10.0.0.0/32", "10.0.0.1/32"],
           throughput: "150MB/s",
           storage_size: "2TB",
@@ -22,6 +21,7 @@ describe("event streams", () => {
             tags: ["hello", "world"],
             prefix: "iac",
             region: "us-south",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -74,13 +74,13 @@ resource "ibm_resource_instance" "event_streams_es" {
           name: "event-streams",
           plan: "enterprise",
           resource_group: "slz-service-rg",
-          endpoints: "private",
         },
         {
           _options: {
             tags: ["hello", "world"],
             prefix: "iac",
             region: "us-south",
+            endpoints: "private",
           },
           resource_groups: [
             {
@@ -132,6 +132,7 @@ resource "ibm_resource_instance" "event_streams_es" {
           tags: ["hello", "world"],
           prefix: "iac",
           region: "us-south",
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -155,7 +156,6 @@ resource "ibm_resource_instance" "event_streams_es" {
             name: "event-streams",
             plan: "enterprise",
             resource_group: "slz-service-rg",
-            endpoints: "private",
             private_ip_allowlist: ["10.0.0.0/32", "10.0.0.1/32"],
             throughput: "150MB/s",
             storage_size: "2TB",
@@ -199,6 +199,7 @@ resource "ibm_resource_instance" "event_streams_es" {
           tags: ["hello", "world"],
           prefix: "iac",
           region: "us-south",
+          endpoints: "private",
         },
         resource_groups: [
           {
@@ -222,7 +223,6 @@ resource "ibm_resource_instance" "event_streams_es" {
             name: "event-streams",
             plan: "standard",
             resource_group: "slz-service-rg",
-            endpoints: "private",
             private_ip_allowlist: ["10.0.0.0/32", "10.0.0.1/32"],
             throughput: "150MB/s",
             storage_size: "2TB",

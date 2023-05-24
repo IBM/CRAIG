@@ -22,6 +22,8 @@ function formatResourceGroup(group, config) {
     name: dataResourceName(group),
   };
   if (!group.use_data) rgValues.tags = getTags(config);
+  if (group.use_prefix === false)
+    rgValues.name = rgValues.name.replace(/\$\{var\.prefix}-/g, "");
   return jsonToTfPrint(
     getResourceOrData(group),
     "ibm_resource_group",

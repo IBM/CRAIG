@@ -184,7 +184,7 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
     bucket_name: kebabName([cos.name, bucket.name], randomSuffix(cos)),
     resource_instance_id: cosRef(cos.name, "id", cos.use_data),
     storage_class: bucket.storage_class,
-    endpoint_type: bucket.endpoint,
+    endpoint_type: config._options.endpoints,
     force_delete: bucket.force_delete,
     region_location: varDotRegion,
     key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn"),

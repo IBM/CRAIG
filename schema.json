@@ -74,7 +74,6 @@
           "name": "string",
           "root_key": "boolean",
           "force_delete": "boolean",
-          "endpoint": "string",
           "rotation": "number",
           "dual_auth_delete": "boolean"
         }
@@ -93,7 +92,6 @@
         "Array": {
           "name": "string",
           "storage_class": "string",
-          "endpoint": "string",
           "force_delete": "boolean",
           "kms_key": "string",
           "use_random_suffix": "boolean"
@@ -140,7 +138,6 @@
     "instance": "boolean",
     "resource_group": "string",
     "plan": "string",
-    "endpoints": "string",
     "archive": "boolean"
   },
   "event_streams": {
@@ -148,7 +145,6 @@
       "name": "string",
       "plan": "string",
       "resource_group": "string",
-      "endpoints": "string",
       "throughput": "string",
       "storage_size": "string",
       "private_ip_allowlist": "string"

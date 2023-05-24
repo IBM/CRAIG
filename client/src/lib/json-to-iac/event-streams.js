@@ -29,7 +29,7 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
     location: varDotRegion,
     resource_group_id: rgIdRef(eventStreams.resource_group, config),
     parameters: {
-      "service-endpoints": eventStreams.endpoints,
+      "service-endpoints": config._options.endpoints,
     },
     timeouts: timeouts("3h", "1h", "1h"),
   };

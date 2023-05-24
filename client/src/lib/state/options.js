@@ -13,6 +13,9 @@ function optionsInit(config) {
     region: "us-south",
     tags: ["hello", "world"],
     zones: 3,
+    endpoints: "private",
+    account_id: "",
+    fs_cloud: true,
   };
 }
 
