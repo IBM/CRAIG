@@ -29,7 +29,7 @@ goals.md
 .old
 compatibility-tests/templates/*/override.json
 tfxjs.tfvars
-
+toad.*
 
 #production
 /build
