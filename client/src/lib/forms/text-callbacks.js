@@ -301,6 +301,15 @@ function invalidProjectNameText(stateData, componentProps) {
 
   return invalidText;
 }
+/**
+ * return dns description invalid text
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} invalid text
+ */
+function invalidDNSDescriptionText(stateData, componentProps) {
+  return "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.";
+}
 
 module.exports = {
   resourceGroupHelperTextCallback,
@@ -318,4 +327,5 @@ module.exports = {
   invalidCbrRuleText,
   invalidCbrZoneText,
   invalidProjectNameText,
+  invalidDNSDescriptionText,
 };

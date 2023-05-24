@@ -17,7 +17,13 @@ const {
   invalidProjectName,
   invalidCbrRule,
   invalidCbrZone,
+  validRecord,
 } = require("../../client/src/lib/forms");
+const {
+  invalidDNSDescription,
+  nullOrEmptyStringCheckCallback,
+  invalidDnsZoneName,
+} = require("../../client/src/lib/forms/invalid-callbacks");
 
 describe("invalid callbacks", () => {
   describe("invalidNewResourceName", () => {
@@ -1138,6 +1144,101 @@ describe("invalid callbacks", () => {
     it("should return true if invalid field that is typed in", () => {
       assert.isTrue(
         invalidCbrZone("service_instance", { service_instance: "?@?#(#*" })
+      );
+    });
+  });
+  describe("validRecord", () => {
+    let validSRV = {
+      type: "SRV",
+      port: 2,
+      protocol: "TCP",
+      priority: 1,
+      service: "_hi",
+      weight: 2,
+    };
+    it("should be valid if type is MX and preference is between 1 and 65535", () => {
+      assert.isTrue(validRecord({ type: "MX", preference: 2 }, {}));
+    });
+    it("should be true when all values are valid for type SRV", () => {
+      assert.isTrue(validRecord(validSRV, {}));
+    });
+    it("should be false if invalid service when type SRV", () => {
+      validSRV.service = null;
+      assert.isFalse(validRecord(validSRV, {}));
+    });
+    it("should be false when service undefined", () => {
+      validSRV.service = undefined;
+      assert.isFalse(validRecord(validSRV, {}));
+    });
+    it("should be false if any value is invalid when type SRV", () => {
+      validSRV.port = -1;
+      assert.isFalse(validRecord(validSRV, {}));
+    });
+    it("should return true when type is not MX or SRV", () => {
+      assert.isTrue(validRecord({ type: "A" }, {}));
+    });
+  });
+  describe("invalidDNSDescription", () => {
+    it("should return false when description is empty string", () => {
+      assert.isFalse(invalidDNSDescription({ description: "" }, {}));
+    });
+    it("should return true when description has invalid chars", () => {
+      assert.isTrue(invalidDNSDescription({ description: "@" }, {}));
+    });
+  });
+  describe("nullOrEmptyStringCheckCallback", () => {
+    assert.isTrue(nullOrEmptyStringCheckCallback("rdata")({ rdata: "" }, {}));
+  });
+  describe("invalidDnsZoneName", () => {
+    it("should return if string is not valid", () => {
+      assert.isTrue(
+        invalidDnsZoneName(
+          { name: null },
+          {
+            data: { name: "" },
+            craig: {
+              store: {
+                json: {
+                  dns: [{ name: "hi", zones: [{ name: "hi" }] }],
+                },
+              },
+            },
+          }
+        )
+      );
+    });
+    it("should allow periods within the name", () => {
+      assert.isFalse(
+        invalidDnsZoneName(
+          { name: "example.com" },
+          {
+            data: { name: "" },
+            craig: {
+              store: {
+                json: {
+                  dns: [{ name: "hi", zones: [{ name: "hi" }] }],
+                },
+              },
+            },
+          }
+        )
+      );
+    });
+    it("should not allow periods at the end of the name", () => {
+      assert.isTrue(
+        invalidDnsZoneName(
+          { name: "example.com." },
+          {
+            data: { name: "" },
+            craig: {
+              store: {
+                json: {
+                  dns: [{ name: "hi", zones: [{ name: "hi" }] }],
+                },
+              },
+            },
+          }
+        )
       );
     });
   });

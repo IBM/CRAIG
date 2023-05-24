@@ -25,6 +25,7 @@ import {
   Router,
   Folders,
   ServerProxy,
+  DnsServices,
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -57,6 +58,7 @@ import {
   codeMirrorGetDisplay,
   routingTableTf,
   cbrTf,
+  dnsTf,
 } from "../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../images/cbr";
@@ -220,6 +222,13 @@ const navCategories = [
         icon: GatewayVpn,
         toTf: vpnTf,
         jsonField: "vpn_gateways",
+      },
+      {
+        title: "DNS Service",
+        path: "/form/dns",
+        icon: DnsServices,
+        toTf: dnsTf,
+        jsonField: "dns",
       },
     ],
   },

@@ -193,7 +193,7 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
                 instance: "test",
                 description: "test description",
                 label: "test",
-                permitted_networks: ["management"],
+                vpcs: ["management"],
               },
             ],
             records: [
@@ -329,7 +329,7 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
                 instance: "test",
                 description: "test description",
                 label: "test",
-                permitted_networks: ["management"],
+                vpcs: ["management"],
               },
             ],
             records: [

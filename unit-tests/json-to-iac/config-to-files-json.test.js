@@ -679,7 +679,7 @@ terraform {
               instance: "test",
               description: "test description",
               label: "test",
-              permitted_networks: ["management"],
+              vpcs: ["management"],
             },
           ],
           records: [

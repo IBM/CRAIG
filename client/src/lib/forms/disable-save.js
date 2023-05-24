@@ -26,6 +26,10 @@ const {
   isValidUrl,
   invalidCbrRule,
   invalidCbrZone,
+  validRecord,
+  invalidRdataCallback,
+  invalidDNSDescription,
+  invalidDnsZoneName,
 } = require("./invalid-callbacks");
 const { commaSeparatedIpListExp } = require("../constants");
 
@@ -539,6 +543,31 @@ function disableSave(field, stateData, componentProps, craig) {
     return (
       invalidName("vpn_server_routes")(stateData, componentProps) ||
       invalidCidrBlock(stateData.destination)
+    );
+  } else if (field === "dns") {
+    return (
+      invalidName("dns")(stateData, componentProps) ||
+      badField("resource_group", stateData)
+    );
+  } else if (field === "zones") {
+    return (
+      invalidDnsZoneName(stateData, componentProps) ||
+      fieldsAreBad(["vpcs", "label"], stateData) ||
+      isEmpty(stateData.vpcs) ||
+      invalidDNSDescription(stateData, componentProps)
+    );
+  } else if (field === "records") {
+    return (
+      invalidName("records")(stateData, componentProps) ||
+      fieldsAreBad(["type", "dns_zone", "rdata"], stateData) ||
+      !validRecord(stateData, componentProps)
+    );
+  } else if (field === "custom_resolvers") {
+    return (
+      invalidName("custom_resolvers")(stateData, componentProps) ||
+      badField("vpc", stateData) ||
+      isEmpty(stateData.subnets) ||
+      invalidDNSDescription(stateData, componentProps)
     );
   } else return false;
 }

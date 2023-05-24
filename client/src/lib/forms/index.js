@@ -36,6 +36,8 @@ const {
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrZone,
+  validRecord,
+  invalidDnsZoneName,
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -118,4 +120,6 @@ module.exports = {
   invalidCidrBlock,
   setFormSgList,
   invalidProjectNameText,
+  validRecord,
+  invalidDnsZoneName,
 };

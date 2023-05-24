@@ -160,6 +160,26 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "routes",
       "name"
     );
+  } else if (field === "dns") {
+    allOtherNames = splat(componentProps.craig.store.json.dns, "name");
+  } else if (field === "zones") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.dns,
+      "zones",
+      "name"
+    );
+  } else if (field === "records") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.dns,
+      "records",
+      "name"
+    );
+  } else if (field === "custom_resolvers") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.dns,
+      "custom_resolvers",
+      "name"
+    );
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],

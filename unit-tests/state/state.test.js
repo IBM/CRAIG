@@ -373,6 +373,46 @@ describe("state util functions", () => {
         "it should set subnet tiers"
       );
     });
+    it("should convert permitted networks to vpcs on hard set", () => {
+      let state = newState();
+      state.setUpdateCallback(() => {});
+      json.dns.push({
+        name: "dns",
+        resource_group: "management-rg",
+        zones: [],
+        records: [],
+        custom_resolvers: [],
+      });
+      json.dns[0].zones.push({
+        name: "hi",
+        permitted_networks: ["management"],
+      });
+      state.hardSetJson({ ...json });
+      assert.deepEqual(state.store.json.dns[0].zones[0], {
+        name: "hi",
+        vpcs: ["management"],
+      });
+    });
+    it("should not convert anything if permitted networks doesn't exist", () => {
+      let state = newState();
+      state.setUpdateCallback(() => {});
+      json.dns.push({
+        name: "dns",
+        resource_group: "management-rg",
+        zones: [],
+        records: [],
+        custom_resolvers: [],
+      });
+      json.dns[0].zones.push({
+        name: "hi",
+        vpcs: ["management"],
+      });
+      state.hardSetJson({ ...json });
+      assert.deepEqual(state.store.json.dns[0].zones[0], {
+        name: "hi",
+        vpcs: ["management"],
+      });
+    });
   });
   describe("getAllRuleNames", () => {
     it("should return empty array if no params", () => {

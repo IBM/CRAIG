@@ -19,6 +19,8 @@ const {
   crnRegex,
   projectDescriptionRegex,
   ipRangeExpression,
+  sccScopeDescriptionValidation,
+  dnsZoneNameExp,
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -29,6 +31,19 @@ const { hasDuplicateName } = require("./duplicate-name");
  */
 function invalidNewResourceName(str) {
   return str ? str.match(newResourceNameExp) === null : true;
+}
+
+/**
+ * check to see if dns zone name is invalid
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean}
+ */
+function invalidDnsZoneName(stateData, componentProps) {
+  return hasDuplicateName("zones", stateData, componentProps, "name") ||
+    stateData.name
+    ? stateData.name.match(dnsZoneNameExp) === null
+    : true;
 }
 
 /**
@@ -544,6 +559,71 @@ function invalidCbrZone(field, stateData, componentProps) {
   }
 }
 
+/**
+ * checks if specific fields relevant to a record type are valid
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if valid
+ */
+function validRecord(stateData, componentProps) {
+  if (stateData.type === "MX") {
+    return stateData.preference > 0 && stateData.preference <= 65535;
+  } else if (stateData.type === "SRV") {
+    return (
+      stateData.port >= 1 &&
+      stateData.port <= 65535 &&
+      !isNullOrEmptyString(stateData.protocol) &&
+      stateData.protocol !== undefined &&
+      stateData.priority >= 0 &&
+      stateData.priority <= 65535 &&
+      validService(stateData.service) &&
+      stateData.weight >= 0 &&
+      stateData.weight <= 65535
+    );
+  } else {
+    return true;
+  }
+}
+
+/**
+ * checks if service for dns is invalid
+ * @param {string} service
+ * @returns {boolean} true if valid
+ */
+function validService(service) {
+  if (isNullOrEmptyString(service) || service === undefined) {
+    return false;
+  } else {
+    return service.startsWith("_");
+  }
+}
+
+/**
+ * checks if dns description invalid
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidDNSDescription(stateData, componentProps) {
+  if (isNullOrEmptyString(stateData.description)) {
+    return false;
+  } else {
+    return stateData.description.match(sccScopeDescriptionValidation) === null;
+  }
+}
+
+/**
+ * function within function to allow passing of field to the
+ * callback without creating multiple callbacks
+ * @param {string} field
+ * @returns {boolean} if stateData[field] null or empty string
+ */
+function nullOrEmptyStringCheckCallback(field) {
+  function invalidCallback(stateData, componentProps) {
+    return isNullOrEmptyString(stateData[field]);
+  }
+  return invalidCallback;
+}
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -566,4 +646,8 @@ module.exports = {
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrZone,
+  validRecord,
+  invalidDNSDescription,
+  nullOrEmptyStringCheckCallback,
+  invalidDnsZoneName,
 };

@@ -8,7 +8,8 @@
       "When no Secrets Manager instances are created within the state store, the VPN Server page now shows a tile with an explanation and a link to `/form/secretsManager`",
       "Detailed installation instructions have been added to `README.md`",
       "Added functionality to allow CRAIG to create LogDNA, Sysdig, Activity Tracker, and needed resources to match the Terraform IBM Modules Obsrvability Module functionality",
-      "Added functionality for LogDNA and Sysdig in state store"
+      "Added functionality for LogDNA and Sysdig in state store",
+      "Added functionality to create DNS Services, Records, Zones, and Custom Resolvers on /forms/dns/"
     ],
     "fixes": [
       "DNS subnets now correctly render when list of strings",

@@ -24,9 +24,9 @@ function dnsOnStoreUpdate(config) {
   config.store.json.dns.forEach((dns) => {
     setUnfoundResourceGroup(config, dns);
     dns.zones.forEach((zone) => {
-      zone.permitted_networks = deleteUnfoundArrayItems(
+      zone.vpcs = deleteUnfoundArrayItems(
         splat(config.store.json.vpcs, "name"),
-        zone.permitted_networks
+        zone.vpcs
       );
     });
     dns.custom_resolvers.forEach((resolver) => {

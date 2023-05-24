@@ -149,7 +149,7 @@ describe("dns", () => {
       state.dns.zones.create(
         {
           name: "zone",
-          permitted_networks: [],
+          vpcs: [],
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -157,7 +157,7 @@ describe("dns", () => {
       );
       let expectedData = {
         name: "zone",
-        permitted_networks: [],
+        vpcs: [],
       };
       assert.deepEqual(
         state.store.json.dns[0].zones[0],
@@ -169,7 +169,7 @@ describe("dns", () => {
       state.dns.zones.create(
         {
           name: "zone",
-          permitted_networks: [],
+          vpcs: [],
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -178,7 +178,7 @@ describe("dns", () => {
       state.dns.zones.save(
         {
           name: "zzzz",
-          permitted_networks: ["frog", "toad", "moose"],
+          vpcs: ["frog", "toad", "moose"],
         },
         {
           data: { name: "zone" },
@@ -187,7 +187,7 @@ describe("dns", () => {
       );
       let expectedData = {
         name: "zzzz",
-        permitted_networks: [],
+        vpcs: [],
       };
       assert.deepEqual(
         state.store.json.dns[0].zones[0],
@@ -199,7 +199,7 @@ describe("dns", () => {
       state.dns.zones.create(
         {
           name: "zone",
-          permitted_networks: [],
+          vpcs: [],
         },
         {
           innerFormProps: { arrayParentName: "dev" },
@@ -450,7 +450,7 @@ describe("dns", () => {
       state.dns.zones.create(
         {
           name: "zone",
-          permitted_networks: [],
+          vpcs: [],
         },
         {
           innerFormProps: { arrayParentName: "dev" },

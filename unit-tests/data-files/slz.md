@@ -538,3 +538,13 @@ Secrets Manager is required to create VPN Server instances.
 - [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview)
 
 -----
+
+## Dns
+
+nyi
+
+### Related Links
+
+- [Docs](nyi)
+
+-----

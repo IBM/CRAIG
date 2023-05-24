@@ -17,8 +17,9 @@ import {
   RoutingTableForm,
   VsiLoadBalancerForm,
   VpnServerForm,
+  DnsForm,
 } from "icse-react-assets";
-import { getObjectFromArray, splat, transpose } from "lazy-z";
+import { getObjectFromArray, splat, transpose, nestedSplat } from "lazy-z";
 import {
   clusterHelperTestCallback,
   cosResourceHelperTextCallback,
@@ -48,7 +49,13 @@ import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
 import { invalidCrnList } from "../../lib/forms";
-import { NoSecretsManagerTile } from "../utils";
+import { NoSecretsManagerTile } from "../utils/NoSecretsManagerTile";
+import {
+  invalidDNSDescription,
+  invalidDnsZoneName,
+  nullOrEmptyStringCheckCallback,
+} from "../../lib/forms/invalid-callbacks";
+import { invalidDNSDescriptionText } from "../../lib/forms/text-callbacks";
 
 const pathToFormMap = {
   accessGroups: {
@@ -159,6 +166,12 @@ const pathToFormMap = {
     addText: "Create a VPN Server",
     innerForm: VpnServerForm,
   },
+  dns: {
+    jsonField: "dns",
+    name: "DNS Service",
+    addText: "Create DNS",
+    innerForm: DnsForm,
+  },
 };
 /**
  * create form template props for form page
@@ -210,6 +223,60 @@ function formProps(form, craig) {
   setFormSubnetList(form, formTemplate, craig);
   setDeleteDisabledMessage(form, formTemplate);
   setFormSgList(form, formTemplate, craig);
+
+  if (form === "dns") {
+    let dnsProps = {
+      propsMatchState: propsMatchState,
+      invalidNameCallback: invalidName("dns"),
+      invalidNameTextCallback: invalidNameText("dns"),
+      zoneProps: {
+        craig: craig,
+        onSave: craig.dns.zones.save,
+        onDelete: craig.dns.zones.delete,
+        onSubmit: craig.dns.zones.create,
+        disableSave: disableSave,
+        invalidNameCallback: invalidDnsZoneName,
+        invalidNameTextCallback: invalidNameText("zones"),
+        invalidLabelCallback: nullOrEmptyStringCheckCallback("label"),
+        invalidLabelTextCallback: () => {
+          return "Label cannot be null or empty string.";
+        },
+        invalidDescriptionCallback: invalidDNSDescription,
+        invalidDescriptionTextCallback: invalidDNSDescriptionText,
+        vpcList: craig.store.vpcList,
+      },
+      recordProps: {
+        craig: craig,
+        onSave: craig.dns.records.save,
+        onDelete: craig.dns.records.delete,
+        onSubmit: craig.dns.records.create,
+        disableSave: disableSave,
+        invalidCallback: invalidName("records"),
+        invalidTextCallback: invalidNameText("records"),
+        invalidRdata: nullOrEmptyStringCheckCallback("rdata"),
+        invalidRdataText: () => {
+          return "Resource Data cannot be null or empty string.";
+        },
+        dnsZones: nestedSplat(craig.store.json.dns, "zones", "name"),
+      },
+      resolverProps: {
+        craig: craig,
+        onSave: craig.dns.custom_resolvers.save,
+        onDelete: craig.dns.custom_resolvers.delete,
+        onSubmit: craig.dns.custom_resolvers.create,
+        disableSave: disableSave,
+        invalidNameCallback: invalidName("custom_resolvers"),
+        invalidNameTextCallback: invalidNameText("custom_resolvers"),
+        invalidCallback: none, // these are only used on a select which handles its own invalid state
+        invalidTextCallback: none,
+        invalidDescriptionCallback: invalidDNSDescription,
+        invalidDescriptionTextCallback: invalidDNSDescriptionText,
+        subnetList: craig.getAllSubnets(),
+        vpcList: craig.store.vpcList,
+      },
+    };
+    transpose(dnsProps, formTemplate.innerFormProps);
+  }
 
   if (form === "vpe") {
     formTemplate.innerFormProps.secretsManagerInstances = splat(

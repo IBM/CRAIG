@@ -722,6 +722,15 @@ const state = function () {
       });
     });
     store.store.subnetTiers = subnetTiers;
+    // convert permitted networks to vpcs
+    store.store.json.dns.forEach((dns) => {
+      dns.zones.forEach((zone) => {
+        if (zone.permitted_networks) {
+          zone.vpcs = zone.permitted_networks;
+          delete zone.permitted_networks;
+        }
+      });
+    });
     store.update();
   };
 

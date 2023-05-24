@@ -43,6 +43,18 @@ module.exports = {
     .anyNumber()
     .stringEnd()
     .done("s"),
+  dnsZoneNameExp: new RegexButWithWords()
+    .stringBegin()
+    .set("A-z")
+    .group((exp) => {
+      exp
+        .group((exp) => exp.set("a-z0-9-.").or().literal("\\").any())
+        .anyNumber()
+        .set("a-z0-9");
+    })
+    .anyNumber()
+    .stringEnd()
+    .done("s"),
   sshKeyValidationExp: new RegexButWithWords()
     .stringBegin()
     .literal("ssh-rsa AAAA")
@@ -307,6 +319,15 @@ module.exports = {
     })
     .wordBoundary()
     .done("g"),
+  sccScopeDescriptionValidation: new RegexButWithWords()
+    .stringBegin()
+    .set("A-z")
+    .set((exp) => {
+      exp.literal("a-zA-Z0-9-._,").whitespace();
+    })
+    .anyNumber()
+    .stringEnd()
+    .done("i"),
   clusterRules: [
     {
       name: "roks-create-worker-nodes-inbound",
@@ -490,6 +511,7 @@ module.exports = {
     "vsi",
     "lb",
     "vpnServers",
+    "dns",
   ],
   resourceGroupForms: [
     "appID",

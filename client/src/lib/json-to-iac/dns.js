@@ -288,7 +288,7 @@ function dnsTf(config) {
           zoneTf += formatDnsRecord(record);
         }
       });
-      zone.permitted_networks.forEach((nw) => {
+      zone.vpcs.forEach((nw) => {
         zoneTf += formatDnsPermittedNetwork({
           vpc: nw,
           instance: dns.name,

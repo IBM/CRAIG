@@ -1065,5 +1065,13 @@
     "relatedLinks": [
       ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"]
     ]
+  },
+  "dns": {
+    "content": [
+      {
+        "text": "nyi"
+      }
+    ],
+    "relatedLinks": [["nyi"]]
   }
 }

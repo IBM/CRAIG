@@ -17,6 +17,9 @@ const {
   invalidCbrZoneText,
   invalidCbrRuleText,
 } = require("../../client/src/lib/forms");
+const {
+  invalidDNSDescriptionText,
+} = require("../../client/src/lib/forms/text-callbacks");
 
 describe("text callbacks", () => {
   describe("resourceGroupHelperTextCallback", () => {
@@ -752,5 +755,11 @@ describe("text callbacks", () => {
         `Name "test" already in use`
       );
     });
+  });
+  describe("invalidDNSDescriptionText", () => {
+    assert.deepEqual(
+      invalidDNSDescriptionText({}, {}),
+      "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+    );
   });
 });
