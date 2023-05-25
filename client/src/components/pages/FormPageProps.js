@@ -462,7 +462,7 @@ function formProps(form, craig) {
     formTemplate.innerFormProps.invalidCrns = function (stateData) {
       return invalidCrnList(stateData.crns);
     };
-    formTemplate.innerFormProps.invalicCrnText = function (stateData) {
+    formTemplate.innerFormProps.invalidCrnText = function (stateData) {
       return invalidCrnList(stateData.crns)
         ? "Enter a valid comma separated list of CRNs"
         : "";
