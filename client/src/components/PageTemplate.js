@@ -390,16 +390,18 @@ const PageTemplate = (props) => {
               : "leftPanelWidth"
           }
         >
-          {props.notifications.map((notification, index) => (
-            <li className="notification-list" key={index}>
-              <Notification
-                kind={notification.kind}
-                text={notification.text}
-                title={notification.title}
-                timeout={notification.timeout}
-              />
-            </li>
-          ))}
+          <ul className="notification-list">
+            {props.notifications.map((notification, index) => (
+              <li key={index}>
+                <Notification
+                  kind={notification.kind}
+                  text={notification.text}
+                  title={notification.title}
+                  timeout={notification.timeout}
+                />
+              </li>
+            ))}
+          </ul>
           {props.children}
         </div>
         <CraigCodeMirror
