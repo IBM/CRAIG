@@ -36,7 +36,8 @@
     ],
     "relatedLinks": [
       ["https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui"]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "object_storage": {
     "content": [
@@ -78,7 +79,8 @@
       [
         "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-about-cloud-object-storage"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "key_management": {
     "content": [
@@ -140,7 +142,8 @@
         "https://cloud.ibm.com/docs/key-protect?topic=key-protect-about",
         "IBM Cloud Key Protect"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "vpcs": {
     "content": [
@@ -172,9 +175,11 @@
         ]
       }
     ],
-    "relatedLinks": [["https://www.ibm.com/cloud/learn/vpc"]]
+    "relatedLinks": [["https://www.ibm.com/cloud/learn/vpc"]],
+    "last_updated": "2/1/2023"
   },
   "acls": {
+    "last_updated": "5/25/2023",
     "content": [
       {
         "text": "An Access Control List (ACL) is a built-in, virtual firewall. An ACL can be leveraged to control all incoming and outgoing traffic on a VPC.",
@@ -188,8 +193,9 @@
         "table": [
           ["_headers", "Rule Name"],
           ["allow-ibm-inbound"],
+          ["allow-ibm-outbound"],
           ["allow-all-network-inbound"],
-          ["allow-all-outbound"]
+          ["allow-all-network-outbound"]
         ]
       },
       {
@@ -326,7 +332,8 @@
       [
         "https://cloud.ibm.com/docs/vpc?topic=vpc-about-subnets-vpc&interface=ui"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "transit_gateways": {
     "content": [
@@ -348,7 +355,8 @@
     ],
     "relatedLinks": [
       ["https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-about"]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "security_groups": {
     "content": [
@@ -375,7 +383,8 @@
       [
         "https://cloud.ibm.com/docs/security-groups?topic=security-groups-about-ibm-security-groups"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "virtual_private_endpoints": {
     "content": [
@@ -392,7 +401,8 @@
         "VPE Supported Services"
       ],
       ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-vpe"]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "atracker": {
     "relatedLinks": [
@@ -428,7 +438,8 @@
           ]
         ]
       }
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "ssh_keys": {
     "relatedLinks": [
@@ -447,7 +458,8 @@
           ["Mixed", "One SSH key configured."]
         ]
       }
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "vsi": {
     "content": [
@@ -480,7 +492,8 @@
       [
         "https://cloud.ibm.com/docs/vpc?topic=vpc-about-advanced-virtual-servers"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "clusters": {
     "relatedLinks": [
@@ -512,7 +525,8 @@
           ]
         ]
       }
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "vpn_gateways": {
     "content": [
@@ -531,7 +545,8 @@
         ]
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview"]]
+    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview"]],
+    "last_updated": "2/1/2023"
   },
   "appid": {
     "relatedLinks": [
@@ -548,7 +563,8 @@
       {
         "text": "By default, no AppID instances are created."
       }
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "teleport": {
     "content": [
@@ -577,7 +593,8 @@
         "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-vpc-architecture-connectivity-bastion-tutorial-teleport"
       ],
       ["https://goteleport.com/", "Teleport"]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "f5": {
     "content": [
@@ -711,6 +728,14 @@
             "ALL"
           ],
           [
+            "allow-ibm-outbound",
+            "Allow",
+            "Outbound",
+            "10.0.0.0/8",
+            "161.26.0.0/16",
+            "ALL"
+          ],
+          [
             "allow-all-network-inbound",
             "Allow",
             "Inbound",
@@ -719,11 +744,11 @@
             "ALL"
           ],
           [
-            "allow-all-outbound",
+            "allow-all-network-outbound",
             "Allow",
             "Outbound",
-            "0.0.0.0/0",
-            "0.0.0.0/0",
+            "10.0.0.0/8",
+            "10.0.0.0/8",
             "ALL"
           ]
         ]
@@ -833,7 +858,8 @@
         "https://cloud.ibm.com/unifiedsupport/cases/form",
         "Contact IBM Cloud Support"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "iam_account_settings": {
     "content": [
@@ -881,7 +907,8 @@
         "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-account-setup",
         "IAM on IBM Cloud for Financial Services Setup"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "access_groups": {
     "content": [
@@ -925,7 +952,8 @@
     ],
     "relatedLinks": [
       ["https://cloud.ibm.com/docs/account?topic=account-groups&interface=ui"]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "secrets_manager": {
     "relatedLinks": [
@@ -966,7 +994,8 @@
       {
         "text": "Please note, IBM Cloud Secrets Manager is not yet Financial Services Validated. For this reason, no instances are enabled in the initial configuration but can be created if desired."
       }
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "security_compliance_center": {
     "content": [
@@ -995,7 +1024,8 @@
       [
         "https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started"
       ]
-    ]
+    ],
+    "last_updated": "2/1/2023"
   },
   "event_streams": {
     "content": [
@@ -1012,7 +1042,8 @@
         "https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started",
         "Docs"
       ]
-    ]
+    ],
+    "last_updated": "4/1/2023"
   },
   "routing_tables": {
     "content": [
@@ -1023,7 +1054,8 @@
     ],
     "relatedLinks": [
       ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes"]
-    ]
+    ],
+    "last_updated": "4/1/2023"
   },
   "load_balancers": {
     "content": [
@@ -1039,7 +1071,8 @@
         ]
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-nlb-vs-elb"]]
+    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-nlb-vs-elb"]],
+    "last_updated": "4/1/2023"
   },
   "cbr": {
     "content": [
@@ -1051,7 +1084,8 @@
       [
         "https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis"
       ]
-    ]
+    ],
+    "last_updated": "5/1/2023"
   },
   "vpn_servers": {
     "content": [
@@ -1064,7 +1098,8 @@
     ],
     "relatedLinks": [
       ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"]
-    ]
+    ],
+    "last_updated": "5/1/2023"
   },
   "dns": {
     "content": [
@@ -1072,6 +1107,7 @@
         "text": "nyi"
       }
     ],
-    "relatedLinks": [["nyi"]]
+    "relatedLinks": [["nyi"]],
+    "last_updated": "5/1/2023"
   }
 }

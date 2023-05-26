@@ -268,6 +268,251 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
         "it should return correct code"
       );
     });
+    it("should create flow logs terraform when disabled", () => {
+      let actualData = formatFlowLogs(
+        {
+          cos: "cos",
+          bucket: "$disabled",
+          name: "management",
+          resource_group: "slz-management-rg",
+          classic_access: false,
+          manual_address_prefix_management: true,
+          default_network_acl_name: null,
+          default_security_group_name: null,
+          default_routing_table_name: null,
+          address_prefixes: [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.10.20.0/24",
+              name: "vsi-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.10.30.0/24",
+              name: "vsi-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.20.10.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.20.30.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.30.10.0/24",
+              name: "vpn-zone-1",
+            },
+          ],
+          subnets: [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "slz-management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "slz-management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.10.20.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "slz-management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.10.30.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "slz-management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.20.10.0/24",
+              name: "vpe-zone-1",
+              resource_group: "slz-management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "slz-management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.20.30.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "slz-management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ],
+          public_gateways: [],
+          acls: [
+            {
+              resource_group: "slz-management-rg",
+              name: "management",
+              vpc: "management",
+              rules: [
+                {
+                  action: "allow",
+                  destination: "10.0.0.0/8",
+                  direction: "inbound",
+                  name: "allow-ibm-inbound",
+                  source: "161.26.0.0/16",
+                  acl: "management",
+                  vpc: "management",
+                  icmp: {
+                    type: null,
+                    code: null,
+                  },
+                  tcp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                  udp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                },
+                {
+                  action: "allow",
+                  destination: "10.0.0.0/8",
+                  direction: "inbound",
+                  name: "allow-all-network-inbound",
+                  source: "10.0.0.0/8",
+                  acl: "management",
+                  vpc: "management",
+                  icmp: {
+                    type: null,
+                    code: null,
+                  },
+                  tcp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                  udp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                },
+                {
+                  action: "allow",
+                  destination: "0.0.0.0/0",
+                  direction: "outbound",
+                  name: "allow-all-outbound",
+                  source: "0.0.0.0/0",
+                  acl: "management",
+                  vpc: "management",
+                  icmp: {
+                    type: null,
+                    code: null,
+                  },
+                  tcp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                  udp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          _options: {
+            prefix: "iac",
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_prefix: false,
+              name: "slz-service-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: false,
+              name: "slz-management-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: false,
+              name: "slz-workload-rg",
+              use_data: false,
+            },
+          ],
+        }
+      );
+      let expectedData = ``;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct code"
+      );
+    });
     it("should create flow logs terraform when no cos but bucket", () => {
       let actualData = formatFlowLogs(
         {

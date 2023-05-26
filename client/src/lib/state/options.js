@@ -16,6 +16,7 @@ function optionsInit(config) {
     endpoints: "private",
     account_id: "",
     fs_cloud: true,
+    dynamic_subnets: true,
   };
 }
 

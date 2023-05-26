@@ -227,6 +227,72 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
         "it should return correct data"
       );
     });
+    it("should create subnet with dynamic subnets", () => {
+      let actualData = formatSubnet(
+        {
+          vpc: "management",
+          name: "vsi-subnet-1",
+          resource_group: "slz-management-rg",
+          cidr: "1.2.3.4/5",
+          network_acl: "management",
+          public_gateway: true,
+          has_prefix: false,
+          zone: 1,
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+            tags: ["hello", "world"],
+            dynamic_subnets: true,
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-management-rg",
+            },
+          ],
+          vpcs: [
+            {
+              name: "management",
+              address_prefixes: [
+                {
+                  name: "management-zone-1",
+                  cidr: "1.2.3.4/5",
+                  zone: 1,
+                },
+                {
+                  name: "bad",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_is_subnet" "management_vsi_subnet_1" {
+  vpc             = ibm_is_vpc.management_vpc.id
+  name            = "\${var.prefix}-management-vsi-subnet-1"
+  zone            = "\${var.region}-1"
+  resource_group  = var.slz_management_rg_id
+  network_acl     = ibm_is_network_acl.management_management_acl.id
+  ipv4_cidr_block = "1.2.3.4/5"
+  public_gateway  = ibm_is_public_gateway.management_gateway_zone_1.id
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.management_management_zone_1_prefix
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should create subnet with a depends_on when no address_prefix is created", () => {
       let actualData = formatSubnet(
         {

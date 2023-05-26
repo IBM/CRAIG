@@ -99,8 +99,9 @@ By default, the management and workload ACLs are configured to have rules that a
 
 Rule Name
 - `allow-ibm-inbound`
+- `allow-ibm-outbound`
 - `allow-all-network-inbound`
-- `allow-all-outbound`
+- `allow-all-network-outbound`
 
 If you select "Use Cluster Rules", these additional ACL rules will be created to allow cluster provisioning from private service endpoints
 
@@ -374,11 +375,12 @@ F5 Bastion Interface    | Created only when using F5 patterns that supports full
 
 By default, the Edge ACLs are configured to have rules that are FS Cloud compliant within the VPC Access Control section. Removing the below rules may affect FS Cloud compliance for your environment.
 
-Name                      | Action | Direction | Source        | Destination | Protocol
---------------------------|--------|-----------|---------------|-------------|----------
-allow-ibm-inbound         | Allow  | Inbound   | 161.26.0.0/16 | 10.0.0.0/8  | ALL
-allow-all-network-inbound | Allow  | Inbound   | 10.0.0.0/8    | 10.0.0.0/8  | ALL
-allow-all-outbound        | Allow  | Outbound  | 0.0.0.0/0     | 0.0.0.0/0   | ALL
+Name                       | Action | Direction | Source        | Destination   | Protocol
+---------------------------|--------|-----------|---------------|---------------|----------
+allow-ibm-inbound          | Allow  | Inbound   | 161.26.0.0/16 | 10.0.0.0/8    | ALL
+allow-ibm-outbound         | Allow  | Outbound  | 10.0.0.0/8    | 161.26.0.0/16 | ALL
+allow-all-network-inbound  | Allow  | Inbound   | 10.0.0.0/8    | 10.0.0.0/8    | ALL
+allow-all-network-outbound | Allow  | Outbound  | 10.0.0.0/8    | 10.0.0.0/8    | ALL
 
 By default, the F5 and Edge VPE security groups are configured to have rules that are FS Cloud compliant within the Security Groups section. Removing the below rules may affect FS Cloud compliance for your environment.
 

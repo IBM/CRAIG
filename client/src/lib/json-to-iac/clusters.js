@@ -75,7 +75,7 @@ function ibmContainerVpcCluster(cluster, config) {
   });
 
   // add entitlement and cos crn if openshift
-  if (cluster.type === "openshift") {
+  if (cluster.kube_type === "openshift") {
     clusterData.entitlement = cluster.entitlement;
     clusterData.cos_instance_crn = resourceRef(
       cluster.cos + " object storage",
@@ -121,7 +121,7 @@ function ibmContainerVpcWorkerPool(pool, config) {
     worker_count: pool.workers_per_subnet,
     zones: [],
   };
-  if (poolCluster.type === "openshift") {
+  if (poolCluster.kube_type === "openshift") {
     poolData.entitlement = poolCluster.entitlement;
   }
 

@@ -85,10 +85,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "edge-acl",
             "vpc": "edge",
             "tcp": {
@@ -167,10 +167,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "f5-external-acl",
             "vpc": "edge",
             "tcp": {
@@ -518,10 +518,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "edge-acl",
             "vpc": "edge",
             "tcp": {
@@ -600,10 +600,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "f5-external-acl",
             "vpc": "edge",
             "tcp": {
@@ -941,10 +941,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "edge-acl",
             "vpc": "edge",
             "tcp": {
@@ -1023,10 +1023,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "f5-external-acl",
             "vpc": "edge",
             "tcp": {
@@ -1149,11 +1149,15 @@
     "public_gateways": []
   },
   "waf": {
+    "cos": null,
+    "bucket": null,
+    "name": "edge",
+    "resource_group": "edge-rg",
     "classic_access": false,
+    "manual_address_prefix_management": true,
     "default_network_acl_name": null,
     "default_routing_table_name": null,
     "default_security_group_name": null,
-    "publicGateways": [],
     "address_prefixes": [
       {
         "vpc": "edge",
@@ -1171,9 +1175,6 @@
         "cidr": "10.7.0.0/16"
       }
     ],
-    "bucket": null,
-    "cos": null,
-    "manual_address_prefix_management": true,
     "acls": [
       {
         "name": "edge-acl",
@@ -1181,13 +1182,13 @@
         "resource_group": "edge-rg",
         "rules": [
           {
+            "acl": "edge-acl",
+            "vpc": "edge",
             "action": "allow",
             "destination": "10.0.0.0/8",
             "direction": "inbound",
             "name": "allow-ibm-inbound",
             "source": "161.26.0.0/16",
-            "acl": "edge-acl",
-            "vpc": "edge",
             "tcp": {
               "port_max": null,
               "port_min": null,
@@ -1206,13 +1207,13 @@
             }
           },
           {
+            "acl": "edge-acl",
+            "vpc": "edge",
             "action": "allow",
             "destination": "10.0.0.0/8",
             "direction": "inbound",
             "name": "allow-all-network-inbound",
             "source": "10.0.0.0/8",
-            "acl": "edge-acl",
-            "vpc": "edge",
             "tcp": {
               "port_max": null,
               "port_min": null,
@@ -1231,13 +1232,13 @@
             }
           },
           {
-            "action": "allow",
-            "destination": "0.0.0.0/0",
-            "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
             "acl": "edge-acl",
             "vpc": "edge",
+            "action": "allow",
+            "destination": "10.0.0.0/8",
+            "direction": "outbound",
+            "name": "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "tcp": {
               "port_max": null,
               "port_min": null,
@@ -1314,10 +1315,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name": "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "f5-external-acl",
             "vpc": "edge",
             "tcp": {
@@ -1365,131 +1366,130 @@
         ]
       }
     ],
-    "name": "edge",
-    "resource_group": "edge-rg",
     "subnets": [
       {
         "vpc": "edge",
-        "zone": 1,
-        "network_acl": "f5-external-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.5.20.0/24",
         "name": "f5-external-zone-1",
-        "public_gateway": false
+        "zone": 1,
+        "resource_group": "edge-rg",
+        "cidr": "10.5.20.0/24",
+        "network_acl": "f5-external-acl",
+        "public_gateway": false,
+        "has_prefix": true
       },
       {
         "vpc": "edge",
-        "zone": 2,
-        "network_acl": "f5-external-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.6.20.0/24",
         "name": "f5-external-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "edge",
-        "zone": 3,
+        "zone": 2,
+        "resource_group": "edge-rg",
+        "cidr": "10.6.20.0/24",
         "network_acl": "f5-external-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.7.20.0/24",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "edge",
         "name": "f5-external-zone-3",
-        "public_gateway": false
+        "zone": 3,
+        "resource_group": "edge-rg",
+        "cidr": "10.7.20.0/24",
+        "network_acl": "f5-external-acl",
+        "public_gateway": false,
+        "has_prefix": true
       },
       {
         "vpc": "edge",
-        "zone": 1,
-        "network_acl": "edge-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.5.10.0/24",
         "name": "f5-management-zone-1",
-        "public_gateway": false
+        "zone": 1,
+        "resource_group": "edge-rg",
+        "cidr": "10.5.10.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
       },
       {
         "vpc": "edge",
-        "zone": 2,
-        "network_acl": "edge-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.6.10.0/24",
         "name": "f5-management-zone-2",
-        "public_gateway": false
+        "zone": 2,
+        "resource_group": "edge-rg",
+        "cidr": "10.6.10.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
       },
       {
         "vpc": "edge",
-        "zone": 3,
-        "network_acl": "edge-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.7.10.0/24",
         "name": "f5-management-zone-3",
-        "public_gateway": false
+        "zone": 3,
+        "resource_group": "edge-rg",
+        "cidr": "10.7.10.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
       },
       {
         "vpc": "edge",
-        "zone": 1,
-        "network_acl": "edge-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.5.30.0/24",
         "name": "f5-workload-zone-1",
-        "public_gateway": false
-      },
-      {
-        "vpc": "edge",
-        "zone": 2,
-        "network_acl": "edge-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.6.30.0/24",
-        "name": "f5-workload-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "edge",
-        "zone": 3,
-        "network_acl": "edge-acl",
-        "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.7.30.0/24",
-        "name": "f5-workload-zone-3",
-        "public_gateway": false
-      },
-      {
-        "vpc": "edge",
         "zone": 1,
-        "network_acl": "edge-acl",
         "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.5.40.0/24",
-        "name": "vpe-zone-1",
-        "public_gateway": false
+        "cidr": "10.5.30.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
       },
       {
         "vpc": "edge",
+        "name": "f5-workload-zone-2",
         "zone": 2,
-        "network_acl": "edge-acl",
         "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.6.40.0/24",
-        "name": "vpe-zone-2",
-        "public_gateway": false
+        "cidr": "10.6.30.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
       },
       {
         "vpc": "edge",
+        "name": "f5-workload-zone-3",
         "zone": 3,
-        "network_acl": "edge-acl",
         "resource_group": "edge-rg",
-        "has_prefix": true,
-        "cidr": "10.7.40.0/24",
+        "cidr": "10.7.30.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "edge",
+        "name": "vpe-zone-1",
+        "zone": 1,
+        "resource_group": "edge-rg",
+        "cidr": "10.5.40.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "edge",
+        "name": "vpe-zone-2",
+        "zone": 2,
+        "resource_group": "edge-rg",
+        "cidr": "10.6.40.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "edge",
         "name": "vpe-zone-3",
-        "public_gateway": false
+        "zone": 3,
+        "resource_group": "edge-rg",
+        "cidr": "10.7.40.0/24",
+        "network_acl": "edge-acl",
+        "public_gateway": false,
+        "has_prefix": true
       }
     ],
-    "public_gateways": []
+    "public_gateways": [],
+    "publicGateways": []
   },
   "full-tunnel": {
     "classic_access": false,
@@ -1575,10 +1575,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "edge-acl",
             "vpc": "edge",
             "tcp": {
@@ -1657,10 +1657,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name":  "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "f5-external-acl",
             "vpc": "edge",
             "tcp": {
@@ -1895,11 +1895,16 @@
     "public_gateways": []
   },
   "management-vpn-and-waf": {
+    "cos": "cos",
+    "bucket": "management-bucket",
+    "name": "management",
+    "resource_group": "management-rg",
     "classic_access": false,
+    "manual_address_prefix_management": true,
     "default_network_acl_name": null,
-    "default_routing_table_name": null,
     "default_security_group_name": null,
-
+    "default_routing_table_name": null,
+    "publicGateways": [],
     "address_prefixes": [
       {
         "vpc": "management",
@@ -1932,14 +1937,264 @@
         "cidr": "10.30.10.0/16"
       }
     ],
-    "bucket": "management-bucket",
-    "cos": "cos",
-    "manual_address_prefix_management": true,
+    "subnets": [
+      {
+        "vpc": "management",
+        "zone": 1,
+        "cidr": "10.10.10.0/24",
+        "name": "vsi-zone-1",
+        "network_acl": "management",
+        "resource_group": "management-rg",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "zone": 1,
+        "cidr": "10.10.30.0/24",
+        "name": "vpn-zone-1",
+        "network_acl": "management",
+        "resource_group": "management-rg",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "zone": 2,
+        "cidr": "10.20.10.0/24",
+        "name": "vsi-zone-2",
+        "network_acl": "management",
+        "resource_group": "management-rg",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "zone": 3,
+        "cidr": "10.30.10.0/24",
+        "name": "vsi-zone-3",
+        "network_acl": "management",
+        "resource_group": "management-rg",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "zone": 1,
+        "cidr": "10.10.20.0/24",
+        "name": "vpe-zone-1",
+        "resource_group": "management-rg",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "zone": 2,
+        "cidr": "10.20.20.0/24",
+        "name": "vpe-zone-2",
+        "network_acl": "management",
+        "resource_group": "management-rg",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "zone": 3,
+        "cidr": "10.30.20.0/24",
+        "name": "vpe-zone-3",
+        "network_acl": "management",
+        "resource_group": "management-rg",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-bastion-zone-1",
+        "zone": 1,
+        "resource_group": "management-rg",
+        "cidr": "10.5.60.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-bastion-zone-2",
+        "zone": 2,
+        "resource_group": "management-rg",
+        "cidr": "10.6.60.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-bastion-zone-3",
+        "zone": 3,
+        "resource_group": "management-rg",
+        "cidr": "10.7.60.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-external-zone-1",
+        "zone": 1,
+        "resource_group": "management-rg",
+        "cidr": "10.5.40.0/24",
+        "network_acl": "f5-external-acl",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-external-zone-2",
+        "zone": 2,
+        "resource_group": "management-rg",
+        "cidr": "10.6.40.0/24",
+        "network_acl": "f5-external-acl",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-external-zone-3",
+        "zone": 3,
+        "resource_group": "management-rg",
+        "cidr": "10.7.40.0/24",
+        "network_acl": "f5-external-acl",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-management-zone-1",
+        "zone": 1,
+        "resource_group": "management-rg",
+        "cidr": "10.5.30.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-management-zone-2",
+        "zone": 2,
+        "resource_group": "management-rg",
+        "cidr": "10.6.30.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-management-zone-3",
+        "zone": 3,
+        "resource_group": "management-rg",
+        "cidr": "10.7.30.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-workload-zone-1",
+        "zone": 1,
+        "resource_group": "management-rg",
+        "cidr": "10.5.50.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-workload-zone-2",
+        "zone": 2,
+        "resource_group": "management-rg",
+        "cidr": "10.6.50.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "f5-workload-zone-3",
+        "zone": 3,
+        "resource_group": "management-rg",
+        "cidr": "10.7.50.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "vpn-1-zone-1",
+        "zone": 1,
+        "resource_group": "management-rg",
+        "cidr": "10.5.10.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "vpn-1-zone-2",
+        "zone": 2,
+        "resource_group": "management-rg",
+        "cidr": "10.6.10.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "vpn-1-zone-3",
+        "zone": 3,
+        "resource_group": "management-rg",
+        "cidr": "10.7.10.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "vpn-2-zone-1",
+        "zone": 1,
+        "resource_group": "management-rg",
+        "cidr": "10.5.20.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "vpn-2-zone-2",
+        "zone": 2,
+        "resource_group": "management-rg",
+        "cidr": "10.6.20.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      },
+      {
+        "vpc": "management",
+        "name": "vpn-2-zone-3",
+        "zone": 3,
+        "resource_group": "management-rg",
+        "cidr": "10.7.20.0/24",
+        "network_acl": "management",
+        "public_gateway": false,
+        "has_prefix": true
+      }
+    ],
+    "public_gateways": [],
     "acls": [
       {
+        "resource_group": "management-rg",
         "name": "management",
         "vpc": "management",
-        "resource_group": "management-rg",
         "rules": [
           {
             "action": "allow",
@@ -1949,19 +2204,44 @@
             "source": "161.26.0.0/16",
             "acl": "management",
             "vpc": "management",
+            "icmp": {
+              "type": null,
+              "code": null
+            },
             "tcp": {
-              "port_max": null,
               "port_min": null,
+              "port_max": null,
               "source_port_min": null,
               "source_port_max": null
             },
+            "udp": {
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null
+            }
+          },
+          {
+            "action": "allow",
+            "source": "10.0.0.0/8",
+            "direction": "outbound",
+            "name": "allow-ibm-outbound",
+            "destination": "161.26.0.0/16",
+            "acl": "management",
+            "vpc": "management",
             "icmp": {
-              "code": null,
-              "type": null
+              "type": null,
+              "code": null
+            },
+            "tcp": {
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             "udp": {
-              "port_max": null,
               "port_min": null,
+              "port_max": null,
               "source_port_min": null,
               "source_port_max": null
             }
@@ -1974,44 +2254,44 @@
             "source": "10.0.0.0/8",
             "acl": "management",
             "vpc": "management",
+            "icmp": {
+              "type": null,
+              "code": null
+            },
             "tcp": {
-              "port_max": null,
               "port_min": null,
+              "port_max": null,
               "source_port_min": null,
               "source_port_max": null
             },
-            "icmp": {
-              "code": null,
-              "type": null
-            },
             "udp": {
-              "port_max": null,
               "port_min": null,
+              "port_max": null,
               "source_port_min": null,
               "source_port_max": null
             }
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name": "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "management",
             "vpc": "management",
+            "icmp": {
+              "type": null,
+              "code": null
+            },
             "tcp": {
-              "port_max": null,
               "port_min": null,
+              "port_max": null,
               "source_port_min": null,
               "source_port_max": null
             },
-            "icmp": {
-              "code": null,
-              "type": null
-            },
             "udp": {
-              "port_max": null,
               "port_min": null,
+              "port_max": null,
               "source_port_min": null,
               "source_port_max": null
             }
@@ -2020,8 +2300,8 @@
       },
       {
         "name": "f5-external-acl",
-        "resource_group": "management-rg",
         "vpc": "management",
+        "resource_group": "management-rg",
         "rules": [
           {
             "action": "allow",
@@ -2075,10 +2355,10 @@
           },
           {
             "action": "allow",
-            "destination": "0.0.0.0/0",
+            "destination": "10.0.0.0/8",
             "direction": "outbound",
-            "name": "allow-all-outbound",
-            "source": "0.0.0.0/0",
+            "name": "allow-all-network-outbound",
+            "source": "10.0.0.0/8",
             "acl": "f5-external-acl",
             "vpc": "management",
             "tcp": {
@@ -2125,262 +2405,6 @@
           }
         ]
       }
-    ],
-    "name": "management",
-    "resource_group": "management-rg",
-    "subnets": [
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.10.10.0/24",
-        "name": "vsi-zone-1",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.10.30.0/24",
-        "name": "vpn-zone-1",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.20.10.0/24",
-        "name": "vsi-zone-2",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.30.10.0/24",
-        "name": "vsi-zone-3",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.10.20.0/24",
-        "name": "vpe-zone-1",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.20.20.0/24",
-        "name": "vpe-zone-2",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.30.20.0/24",
-        "name": "vpe-zone-3",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "cidr": "10.5.60.0/24",
-        "name": "f5-bastion-zone-1",
-        "public_gateway": false,
-        "has_prefix": true
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.6.60.0/24",
-        "name": "f5-bastion-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.7.60.0/24",
-        "name": "f5-bastion-zone-3",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "f5-external-acl",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.5.40.0/24",
-        "name": "f5-external-zone-1",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "f5-external-acl",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.6.40.0/24",
-        "name": "f5-external-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "f5-external-acl",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.7.40.0/24",
-        "name": "f5-external-zone-3",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.5.30.0/24",
-        "name": "f5-management-zone-1",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.6.30.0/24",
-        "name": "f5-management-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.7.30.0/24",
-        "name": "f5-management-zone-3",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.5.50.0/24",
-        "name": "f5-workload-zone-1",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.6.50.0/24",
-        "name": "f5-workload-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.7.50.0/24",
-        "name": "f5-workload-zone-3",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.5.10.0/24",
-        "name": "vpn-1-zone-1",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.6.10.0/24",
-        "name": "vpn-1-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.7.10.0/24",
-        "name": "vpn-1-zone-3",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 1,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.5.20.0/24",
-        "name": "vpn-2-zone-1",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 2,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.6.20.0/24",
-        "name": "vpn-2-zone-2",
-        "public_gateway": false
-      },
-      {
-        "vpc": "management",
-        "zone": 3,
-        "network_acl": "management",
-        "resource_group": "management-rg",
-        "has_prefix": true,
-        "cidr": "10.7.20.0/24",
-        "name": "vpn-2-zone-3",
-        "public_gateway": false
-      }
-    ],
-    "public_gateways": [],
-    "publicGateways": []
+    ]
   }
 }

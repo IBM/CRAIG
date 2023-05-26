@@ -156,6 +156,7 @@ describe("dns", () => {
         }
       );
       let expectedData = {
+        instance: "dev",
         name: "zone",
         vpcs: [],
       };
@@ -186,6 +187,7 @@ describe("dns", () => {
         }
       );
       let expectedData = {
+        instance: "dev",
         name: "zzzz",
         vpcs: [],
       };
@@ -320,6 +322,7 @@ describe("dns", () => {
         }
       );
       let expectedData = {
+        instance: "dev",
         name: "zone",
         vpc: "management",
         subnets: ["vsi-zone-1"],
@@ -354,6 +357,7 @@ describe("dns", () => {
         }
       );
       let expectedData = {
+        instance: "dev",
         name: "zzzz",
         vpc: "management",
         subnets: ["vsi-zone-1"],
@@ -389,6 +393,7 @@ describe("dns", () => {
         }
       );
       let expectedData = {
+        instance: "dev",
         name: "zzzz",
         vpc: null,
         subnets: [],
@@ -428,6 +433,7 @@ describe("dns", () => {
         vpc: "management",
         subnets: ["vsi-zone-1"],
         zone: null,
+        instance: "dev",
       };
       assert.deepEqual(
         state.store.json.dns[0].custom_resolvers[0],
@@ -469,6 +475,7 @@ describe("dns", () => {
         }
       );
       let expectedData = {
+        instance: "dev",
         name: "zzzz",
         vpc: "management",
         subnets: ["vsi-zone-1"],

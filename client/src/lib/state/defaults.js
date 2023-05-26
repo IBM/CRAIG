@@ -99,7 +99,7 @@ function newDefaultCos() {
   ];
 }
 
-function newDefaultVpcs() {
+function legacyDefaultVpcs() {
   return [
     {
       cos: "cos",
@@ -262,6 +262,31 @@ function newDefaultVpcs() {
             },
             {
               action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "workload",
+              vpc: "workload",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              action: "allow",
               destination: "10.0.0.0/8",
               direction: "inbound",
               name: "allow-all-network-inbound",
@@ -287,10 +312,10 @@ function newDefaultVpcs() {
             },
             {
               action: "allow",
-              destination: "0.0.0.0/0",
+              destination: "10.0.0.0/8",
               direction: "outbound",
-              name: "allow-all-outbound",
-              source: "0.0.0.0/0",
+              name: "allow-all-network-outbound",
+              source: "10.0.0.0/8",
               acl: "management",
               vpc: "management",
               icmp: {
@@ -459,6 +484,31 @@ function newDefaultVpcs() {
             },
             {
               action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "workload",
+              vpc: "workload",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              action: "allow",
               destination: "10.0.0.0/8",
               direction: "inbound",
               name: "allow-all-network-inbound",
@@ -484,10 +534,10 @@ function newDefaultVpcs() {
             },
             {
               action: "allow",
-              destination: "0.0.0.0/0",
+              destination: "10.0.0.0/8",
               direction: "outbound",
-              name: "allow-all-outbound",
-              source: "0.0.0.0/0",
+              name: "allow-all-network-outbound",
+              source: "10.0.0.0/8",
               acl: "workload",
               vpc: "workload",
               icmp: {
@@ -814,7 +864,7 @@ function newDefaultManagementServer() {
   return {
     kms: "kms",
     encryption_key: "vsi-volume-key",
-    image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+    image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
     profile: "cx2-4x8",
     name: "management-server",
     security_groups: ["management-vsi"],
@@ -1930,10 +1980,10 @@ function newDefaultF5ExternalAcl() {
       },
       {
         action: "allow",
-        destination: "0.0.0.0/0",
+        destination: "10.0.0.0/8",
         direction: "outbound",
-        name: "allow-all-outbound",
-        source: "0.0.0.0/0",
+        name: "allow-all-network-outbound",
+        source: "10.0.0.0/8",
         acl: "f5-external-acl",
         vpc: "edge",
         tcp: {
@@ -2039,10 +2089,10 @@ function newDefaultF5ExternalAclManagement() {
       },
       {
         action: "allow",
-        destination: "0.0.0.0/0",
+        destination: "10.0.0.0/8",
         direction: "outbound",
-        name: "allow-all-outbound",
-        source: "0.0.0.0/0",
+        name: "allow-all-network-outbound",
+        source: "10.0.0.0/8",
         acl: "f5-external-acl",
         vpc: "management",
         tcp: {
@@ -2151,10 +2201,10 @@ function newDefaultEdgeAcl() {
         acl: "edge-acl",
         vpc: "edge",
         action: "allow",
-        destination: "0.0.0.0/0",
+        destination: "10.0.0.0/8",
         direction: "outbound",
-        name: "allow-all-outbound",
-        source: "0.0.0.0/0",
+        name: "allow-all-network-outbound",
+        source: "10.0.0.0/8",
         tcp: {
           port_max: null,
           port_min: null,
@@ -2179,7 +2229,6 @@ function newDefaultEdgeAcl() {
 module.exports = {
   newDefaultKms,
   newDefaultCos,
-  newDefaultVpcs,
   newDefaultVpeSecurityGroups,
   newDefaultTg,
   newDefaultWorkloadCluster,
@@ -2195,4 +2244,5 @@ module.exports = {
   newF5WorkloadSg,
   firewallTiers,
   defaultSecurityGroups,
+  legacyDefaultVpcs,
 };

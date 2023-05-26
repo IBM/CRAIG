@@ -13,15 +13,26 @@ All notable changes to this project will be documented in this file.
 - Detailed installation instructions have been added to `README.md`
 - Added functionality to allow CRAIG to create LogDNA, Sysdig, Activity Tracker, and needed resources to match the Terraform IBM Modules Obsrvability Module functionality
 - Added functionality for LogDNA and Sysdig in state store
+- Added functionality to create DNS Services, Records, Zones, and Custom Resolvers on `/forms/dns/`
 - Endpoints for Cloud Services are now a global option variable instead of being handled at the component level
 - On the options page, users can now choose to use only FS Cloud validated regions or any VPC regions
 - Added account_id Terraform variable, this is used in some VPE deployments
+- By default, subnets are now assigned a number of addresses based on resources. The original subnet management is now referred to as `legacy`
+- By default, all outbound traffic rules are no longer created in ACLs
+- The default VSI image has been changed to `ibm-ubuntu-22-04-1-minimal-amd64-1`
+- The Edge Networking form now has a `none` option to allow the user visual feedback on the status of the Edge Network. A tooltip has been added to explain the Edge Networking Zones dropdown.
+- IAM and Access Control Policies have been moved in the navigation bar for a better workflow
+- Components no longer show as `required` in the Left Nav when the user is not using FS Cloud
+- VPCs can now be provisioned with Flow Logs disabled
 
 ### Fixes
 
 - DNS subnets now correctly render when list of strings
 - Fixed an issue cauing errors to occur for unfound props on the Options page
 - Fixed an error causing `use_prefix` in resource groups to not correctly change the prefix of the resource group
+- Fixed an error causing DNS instance resources to have undefined references to parent issue
+- Fixed an error causing `cos_instance_crn` to not be added to OpenShift clusters
+- Fixed an error causing CIDR blocks to be valid entries for routing table `next_hop` value
 
 ## 0.5.0
 

@@ -156,7 +156,7 @@ describe("clusters", () => {
       state.clusters.create({
         cos: "cos",
         entitlement: "cloud_pak",
-        type: "openshift",
+        kube_type: "openshift",
         kube_version: "default",
         flavor: "bx2.16x64",
         name: "frog",
@@ -206,7 +206,7 @@ describe("clusters", () => {
         {
           cos: "cos",
           entitlement: "cloud_pak",
-          type: "openshift",
+          kube_type: "openshift",
           kube_version: "default",
           flavor: "bx2.16x64",
           kms: "kms",

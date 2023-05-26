@@ -27,6 +27,10 @@ const edgePatterns = [
 
 const edgeNetworks = [
   {
+    id: "none",
+    name: "None",
+  },
+  {
     id: "edge",
     name: "Create a new Edge VPC",
   },
@@ -81,7 +85,7 @@ class EdgeNetworkingForm extends React.Component {
     this.state = {
       hideEdgeForm: true,
       edgeType: !this.props.craig.store.edge_pattern
-        ? ""
+        ? "none"
         : this.props.craig.store.edge_vpc_name === "edge"
         ? "edge"
         : "management",
@@ -161,6 +165,7 @@ class EdgeNetworkingForm extends React.Component {
                       <SaveAddButton
                         name="edge-networking"
                         disabled={
+                          this.state.edgeType === "none" ||
                           this.state.zones === this.state.prevZones
                             ? true
                             : this.props.craig.store.edge_vpc_name !== undefined
@@ -195,10 +200,11 @@ class EdgeNetworkingForm extends React.Component {
                       groups={edgePatterns}
                       disabled={
                         this.props.craig.store.edge_vpc_name !== undefined ||
-                        this.state.edgeType === ""
+                        this.state.edgeType === "none"
                       }
                       invalid={
-                        this.state.pattern === "" && this.state.edgeType !== ""
+                        this.state.pattern === "" &&
+                        this.state.edgeType !== "none"
                       }
                       invalidText="Select a pattern to create an edge network"
                       handleRadioChange={this.handleRadioChange}
@@ -216,13 +222,17 @@ class EdgeNetworkingForm extends React.Component {
                       value={this.state.zones.toString()}
                       labelText="Edge Networking Zones"
                       handleInputChange={this.onChange}
-                      disabled={this.state.edgeType === ""}
+                      disabled={this.state.edgeType === "none"}
                       invalid={
-                        this.state.edgeType === ""
+                        this.state.edgeType === "none"
                           ? false
                           : this.state.zones === "0"
                       }
                       invalidText="Select availability zones"
+                      tooltip={{
+                        content:
+                          "The number of Availability Zones where the Edge Network will be created.",
+                      }}
                     />
                   </IcseFormGroup>
                 </div>

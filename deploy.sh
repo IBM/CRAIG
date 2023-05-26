@@ -72,7 +72,7 @@ else
 
   # build docker image and push to icr
   echo "Building Docker image..."
-  docker build -t craig .
+  docker build -t craig . --platform linux/amd64
 
   if ! ibmcloud plugin list | grep code-engine; then
     echo "y" | ibmcloud plugin install code-engine

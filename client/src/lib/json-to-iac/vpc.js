@@ -174,13 +174,17 @@ function ibmIsSubnet(subnet, config, useVarRef) {
     ).address_prefixes;
     data.data.depends_on = [];
     addressPrefixes.forEach((prefix) => {
-      data.data.depends_on.push(
-        cdktfRef(
-          `ibm_is_vpc_address_prefix.${snakeCase(
-            `${subnet.vpc} ${prefix.name}`
-          )}_prefix`
-        )
-      );
+      if (
+        (prefix.zone === subnet.zone && config._options.dynamic_subnets) ||
+        !config._options.dynamic_subnets
+      )
+        data.data.depends_on.push(
+          cdktfRef(
+            `ibm_is_vpc_address_prefix.${snakeCase(
+              `${subnet.vpc} ${prefix.name}`
+            )}_prefix`
+          )
+        );
     });
   }
   return data;

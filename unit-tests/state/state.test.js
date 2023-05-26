@@ -40,8 +40,9 @@ describe("state util functions", () => {
         splat(state.store.json.vpcs[0].acls[0].rules, "name"),
         [
           "allow-ibm-inbound",
+          "allow-ibm-outbound",
           "allow-all-network-inbound",
-          "allow-all-outbound",
+          "allow-all-network-outbound",
           "roks-create-worker-nodes-inbound",
           "roks-create-worker-nodes-outbound",
           "roks-nodes-to-service-inbound",
@@ -86,12 +87,12 @@ describe("state util functions", () => {
       state.copyRule(
         "management",
         "management",
-        "allow-all-outbound",
+        "allow-all-network-outbound",
         "workload"
       );
       assert.deepEqual(
         splat(state.store.json.vpcs[1].acls[0].rules, "name"),
-        ["allow-all-outbound"],
+        ["allow-all-network-outbound"],
         "it should copy"
       );
     });
@@ -114,135 +115,135 @@ describe("state util functions", () => {
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.10.0/24",
+          cidr: "10.10.0.0/29",
           name: "vsi-zone-1",
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.30.0/24",
+          cidr: "10.10.0.8/28",
           name: "vpn-zone-1",
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "management",
           zone: 2,
-          cidr: "10.20.10.0/24",
+          cidr: "10.20.0.0/29",
           name: "vsi-zone-2",
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "management",
           zone: 3,
-          cidr: "10.30.10.0/24",
+          cidr: "10.30.0.0/29",
           name: "vsi-zone-3",
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.20.0/24",
+          cidr: "10.10.0.24/29",
           name: "vpe-zone-1",
           resource_group: "management-rg",
           network_acl: "management",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "management",
           zone: 2,
-          cidr: "10.20.20.0/24",
+          cidr: "10.20.0.8/29",
           name: "vpe-zone-2",
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "management",
           zone: 3,
-          cidr: "10.30.20.0/24",
+          cidr: "10.30.0.8/29",
           name: "vpe-zone-3",
           network_acl: "management",
           resource_group: "management-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.40.10.0/24",
+          cidr: "10.20.0.0/28",
           name: "vsi-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.50.10.0/24",
+          cidr: "10.30.0.0/28",
           name: "vsi-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.60.10.0/24",
+          cidr: "10.40.0.0/28",
           name: "vsi-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.40.20.0/24",
+          cidr: "10.20.0.16/29",
           name: "vpe-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.50.20.0/24",
+          cidr: "10.30.0.16/29",
           name: "vpe-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.60.20.0/24",
+          cidr: "10.40.0.16/29",
           name: "vpe-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",
           public_gateway: false,
-          has_prefix: true,
+          has_prefix: false,
         },
       ];
-      let state = newState();
+      let state = new newState(true);
       let actualData = state.getAllSubnets();
       assert.deepEqual(
         actualData,
@@ -389,12 +390,14 @@ describe("state util functions", () => {
       });
       state.hardSetJson({ ...json });
       assert.deepEqual(state.store.json.dns[0].zones[0], {
+        instance: "dns",
         name: "hi",
         vpcs: ["management"],
       });
     });
     it("should not convert anything if permitted networks doesn't exist", () => {
       let state = newState();
+      json._options.dynamic_subnets = true;
       state.setUpdateCallback(() => {});
       json.dns.push({
         name: "dns",
@@ -409,9 +412,14 @@ describe("state util functions", () => {
       });
       state.hardSetJson({ ...json });
       assert.deepEqual(state.store.json.dns[0].zones[0], {
+        instance: "dns",
         name: "hi",
         vpcs: ["management"],
       });
+      assert.isTrue(
+        state.store.json._options.dynamic_subnets,
+        "it should be true"
+      );
     });
   });
   describe("getAllRuleNames", () => {
@@ -442,8 +450,9 @@ describe("state util functions", () => {
       let actualData = state.getAllRuleNames("management", "management");
       let expectedData = [
         "allow-ibm-inbound",
+        "allow-ibm-outbound",
         "allow-all-network-inbound",
-        "allow-all-outbound",
+        "allow-all-network-outbound",
       ];
       assert.deepEqual(
         actualData,

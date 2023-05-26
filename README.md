@@ -1,6 +1,6 @@
 # Cloud Resource and Infrastructure-as-code Generator (CRAIG)
 
-Cloud Resource and Infrastructure-as-Code Generator (or **CRAIG**) allows users to generate Infrastructure-as-Code (IaC) to create a fully customizable environment on IBM Cloud.
+Cloud Resource and Infrastructure-as-Code Generator (or **CRAIG**) allows users to generate Terraform Deployable Architecures to create a fully customizable environment on IBM Cloud.
 
 CRAIG simplifies the process of creating IaC through its GUI, which manages and updates interconnected resources as they are created.
 

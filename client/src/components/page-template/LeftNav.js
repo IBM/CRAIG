@@ -55,6 +55,7 @@ const LeftNav = (props) => {
                 item={item}
                 key={item.title}
                 expanded={props.expanded}
+                fsCloud={props.fsCloud}
               />
             ))}
           </div>
@@ -66,12 +67,14 @@ const LeftNav = (props) => {
 
 LeftNav.defaultProps = {
   expanded: false,
+  fsCloud: true,
 };
 
 LeftNav.propTypes = {
   expanded: PropTypes.bool.isRequired,
   onOverlayClick: PropTypes.func.isRequired,
   navCategories: PropTypes.array.isRequired,
+  fsCloud: PropTypes.bool.isRequired,
 };
 
 export default LeftNav;

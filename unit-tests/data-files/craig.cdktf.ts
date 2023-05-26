@@ -109,9 +109,9 @@ const ibmTgGatewayTransitGateway = new ibm.tgGateway.TgGateway(
 const dataIbmIsImageIbmUbuntu18046MinimalAmd642 =
   new ibm.dataIbmIsImage.DataIbmIsImage(
     this,
-    "ibm_ubuntu_18_04_6_minimal_amd64_2",
+    "ibm_ubuntu_22_04_1_minimal_amd64_1",
     {
-      name: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+      name: "ibm-ubuntu-22-04-1-minimal-amd64-1",
     }
   );
 new ibm.provider.IbmProvider(this, "ibm", {

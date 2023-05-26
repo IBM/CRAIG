@@ -140,6 +140,7 @@ describe("vpn_servers", () => {
       assert.deepEqual(state.store.json.vpn_servers, expectedData);
     });
     it("should save a vpn server", () => {
+      state.store.json._options.dynamic_subnets = false;
       state.vpn_servers.create({
         name: "vpn-server",
         certificate_crn: "xyz",

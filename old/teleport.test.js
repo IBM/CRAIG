@@ -316,7 +316,7 @@ data "template_cloudinit_config" "test_deployment_cloud_init" {
           name: "test-deployment",
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           security_groups: ["management-vpe-sg"],
           ssh_keys: ["slz-ssh-key"],
@@ -363,7 +363,7 @@ data "template_cloudinit_config" "test_deployment_cloud_init" {
 
 resource "ibm_is_instance" "test_deployment_teleport_vsi" {
   name           = "iac-test-deployment-teleport-vsi"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id
@@ -452,7 +452,7 @@ resource "ibm_is_instance" "test_deployment_teleport_vsi" {
             name: "test-deployment",
             kms: "slz-kms",
             encryption_key: "slz-vsi-volume-key",
-            image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+            image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
             profile: "cx2-4x8",
             security_groups: ["management-vpe-sg"],
             ssh_keys: ["slz-ssh-key"],
@@ -539,7 +539,7 @@ data "template_cloudinit_config" "test_deployment_cloud_init" {
 
 resource "ibm_is_instance" "test_deployment_teleport_vsi" {
   name           = "iac-test-deployment-teleport-vsi"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = ibm_is_vpc.management_vpc.id

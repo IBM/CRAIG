@@ -439,7 +439,7 @@ const validate = function (json) {
   // cluster configuration
   json.clusters.forEach((cluster) => {
     // if cluster is openshift and no cos name, throw error
-    if (cluster.type === "openshift" && cluster.cos === null) {
+    if (cluster.kube_type === "openshift" && cluster.cos === null) {
       throw new Error(simpleErrors.noOpenShiftCosInstance(cluster.name));
     }
 

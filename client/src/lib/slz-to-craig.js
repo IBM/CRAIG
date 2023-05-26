@@ -416,7 +416,7 @@ function slzToCraig(slz, prefix) {
       private_endpoint: true,
       resource_group: cluster.resource_group,
       subnets: cluster.subnet_names,
-      type: cluster.kube_type,
+      kube_type: cluster.kube_type,
       update_all_workers: cluster.update_all_workers,
       vpc: cluster.vpc_name,
       workers_per_subnet: cluster.workers_per_subnet,

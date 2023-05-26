@@ -60,6 +60,7 @@ function ibmIsFlowLog(vpc, config, cdktf) {
  * @returns {string} terraform string
  */
 function formatFlowLogs(vpc, config) {
+  if (vpc.bucket === "$disabled") return "";
   return jsonToTfPrint(
     "resource",
     "ibm_is_flow_log",

@@ -167,22 +167,9 @@ function updateVsi(config, key) {
       }
       config.setUnfound("encryptionKeys", deployment, "encryption_key");
       setUnfoundResourceGroup(config, deployment);
-      // if teleport vsi and vpc is valid
-      if (validVpc && key === "teleport_vsi") {
-        if (
-          !contains(config.store.subnets[deployment.vpc], deployment.subnet)
-        ) {
-          deployment.subnet = null;
-        }
-      } else if (!validVpc) {
+      if (!validVpc) {
         deployment.vpc = null;
-        if (key === "teleport_vsi") deployment.subnet = null;
-        else deployment.subnets = [];
-      }
-
-      if (key === "teleport_vsi") {
-        if (!splatContains(config.store.json.appid, "name", deployment.appid))
-          deployment.appid = null;
+        deployment.subnets = [];
       }
     });
     config.store[camelCase(key + " List")] = splat(data, "name");
@@ -228,10 +215,11 @@ function vsiCreate(config, stateData, componentProps) {
     subnets: stateData.subnets || [],
     volumes: [],
   };
-  if (stateData.image_name)
+  if (stateData.image_name) {
     stateData.image = stateData.image_name
       .replace(/[^\[]+\[/g, "")
       .replace(/]/g, "");
+  }
   // find kms
   config.store.json.key_management.forEach((kms) => {
     kms.keys.forEach((key) => {
@@ -240,22 +228,7 @@ function vsiCreate(config, stateData, componentProps) {
   });
 
   transpose(stateData, defaultVsi);
-
-  // if overriding key
-  if (componentProps.isTeleport) {
-    defaultVsi.subnet = stateData.subnet; // set subnet name to null for teleport / f5
-    // delete vsi only fields and set security group name
-    delete defaultVsi.user_data;
-    delete defaultVsi.override_vsi_name;
-    delete defaultVsi.network_interfaces;
-    delete defaultVsi.vsi_per_subnet;
-    delete defaultVsi.subnets;
-  }
-
-  config.push(
-    ["json", componentProps.isTeleport ? "teleport_vsi" : "vsi"],
-    defaultVsi
-  );
+  config.push(["json", "vsi"], defaultVsi);
 }
 
 /**
@@ -267,12 +240,6 @@ function vsiCreate(config, stateData, componentProps) {
  * @param {boolean} componentProps.isTeleport
  */
 function vsiSave(config, stateData, componentProps) {
-  if (
-    componentProps.isTeleport &&
-    stateData.name !== componentProps.data.name
-  ) {
-    stateData.template.deployment = stateData.name;
-  }
   if (stateData.image_name)
     stateData.image = stateData.image_name
       .replace(/[^\[]+\[/g, "")
@@ -282,11 +249,7 @@ function vsiSave(config, stateData, componentProps) {
       stateData.kms = kms.name;
     }
   });
-  config.updateChild(
-    ["json", componentProps.isTeleport ? "teleport_vsi" : "vsi"],
-    componentProps.data.name,
-    stateData
-  );
+  config.updateChild(["json", "vsi"], componentProps.data.name, stateData);
 }
 
 /**
@@ -297,10 +260,7 @@ function vsiSave(config, stateData, componentProps) {
  * @param {boolean} componentProps.isTeleport
  */
 function vsiDelete(config, stateData, componentProps) {
-  config.carve(
-    ["json", componentProps.isTeleport ? "teleport_vsi" : "vsi"],
-    componentProps.data.name
-  );
+  config.carve(["json", "vsi"], componentProps.data.name);
 }
 
 /**

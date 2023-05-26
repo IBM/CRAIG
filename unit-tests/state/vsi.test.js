@@ -19,6 +19,7 @@ describe("vsi", () => {
         {
           name: "test-vsi",
           vpc: "management",
+          image_name: "frog",
         },
         {
           isTeleport: false,
@@ -29,8 +30,8 @@ describe("vsi", () => {
         {
           kms: null,
           encryption_key: null,
-          image: null,
-          image_name: null,
+          image: "frog",
+          image_name: "frog",
           profile: null,
           name: "test-vsi",
           security_groups: [],
@@ -92,111 +93,6 @@ describe("vsi", () => {
         "it should set vsiList"
       );
     });
-    it("should return the correct teleport vsi deployment", () => {
-      let state = new newState();
-      state.appid.create({
-        name: "test-appid",
-        keys: [],
-      });
-      state.vsi.create(
-        {
-          appid: "test-appid",
-          name: "test-deployment",
-          kms: "slz-kms",
-          encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
-          image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
-          profile: "cx2-4x8",
-          security_groups: ["management-vpe-sg"],
-          ssh_keys: ["slz-ssh-key"],
-          subnet: "vsi-zone-1",
-          vpc: "management",
-          resource_group: "slz-management-rg",
-          template: {
-            deployment: "test-deployment",
-            license: "TELEPORT_LICENSE",
-            https_cert: "HTTPS_CERT",
-            https_key: "HTTPS_KEY",
-            hostname: "HOSTNAME",
-            domain: "DOMAIN",
-            bucket: "COS_BUCKET",
-            bucket_endpoint: "COS_BUCKET_ENDPOINT",
-            hmac_key_id: "HMAC_ACCESS_KEY_ID",
-            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
-            appid: "APPID_CLIENT_ID",
-            appid_secret: "APPID_CLIENT_SECRET",
-            appid_url: "APPID_ISSUER_URL",
-            message_of_the_day: "MESSAGE_OF_THE_DAY",
-            version: "TELEPORT_VERSION",
-            claim_to_roles: [
-              {
-                email: "email@email.email",
-                roles: ["role1", "role2"],
-              },
-              {
-                email: "email2@email.email",
-                roles: ["role1", "role2"],
-              },
-            ],
-          },
-          volumes: [],
-        },
-        {
-          isTeleport: true,
-        }
-      );
-      assert.deepEqual(
-        state.store.json.teleport_vsi[0],
-        {
-          appid: "test-appid",
-          name: "test-deployment",
-          kms: "slz-kms",
-          encryption_key: null,
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
-          image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
-          profile: "cx2-4x8",
-          security_groups: ["management-vpe-sg"],
-          ssh_keys: ["slz-ssh-key"],
-          subnet: "vsi-zone-1",
-          vpc: "management",
-          volumes: [],
-          resource_group: null,
-          template: {
-            deployment: "test-deployment",
-            license: "TELEPORT_LICENSE",
-            https_cert: "HTTPS_CERT",
-            https_key: "HTTPS_KEY",
-            hostname: "HOSTNAME",
-            domain: "DOMAIN",
-            bucket: "COS_BUCKET",
-            bucket_endpoint: "COS_BUCKET_ENDPOINT",
-            hmac_key_id: "HMAC_ACCESS_KEY_ID",
-            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
-            appid: "APPID_CLIENT_ID",
-            appid_secret: "APPID_CLIENT_SECRET",
-            appid_url: "APPID_ISSUER_URL",
-            message_of_the_day: "MESSAGE_OF_THE_DAY",
-            version: "TELEPORT_VERSION",
-            claim_to_roles: [
-              {
-                email: "email@email.email",
-                roles: ["role1", "role2"],
-              },
-              {
-                email: "email2@email.email",
-                roles: ["role1", "role2"],
-              },
-            ],
-          },
-        },
-        "it should return correct server"
-      );
-      assert.deepEqual(
-        state.store.teleportVsiList,
-        ["test-deployment"],
-        "it should set teleportVsiList"
-      );
-    });
   });
   describe("vsi.save", () => {
     it("should update in place with new name", () => {
@@ -229,144 +125,6 @@ describe("vsi", () => {
       );
       assert.deepEqual(
         state.store.json.vsi[1],
-        expectedData,
-        "it should update in place"
-      );
-    });
-    it("should update teleport vsi in place with new name", () => {
-      let state = new newState();
-      state.vsi.create(
-        {
-          appid: "test-appid",
-          name: "test-deployment",
-          kms: "slz-kms",
-          encryption_key: null,
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
-          image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
-          profile: "cx2-4x8",
-          security_groups: ["management-vpe-sg"],
-          ssh_keys: ["slz-ssh-key"],
-          subnet: "vsi-zone-1",
-          vpc: "management",
-          resource_group: null,
-          template: {
-            deployment: "test-deployment",
-            license: "TELEPORT_LICENSE",
-            https_cert: "HTTPS_CERT",
-            https_key: "HTTPS_KEY",
-            hostname: "HOSTNAME",
-            domain: "DOMAIN",
-            bucket: "COS_BUCKET",
-            bucket_endpoint: "COS_BUCKET_ENDPOINT",
-            hmac_key_id: "HMAC_ACCESS_KEY_ID",
-            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
-            appid: "APPID_CLIENT_ID",
-            appid_secret: "APPID_CLIENT_SECRET",
-            appid_url: "APPID_ISSUER_URL",
-            message_of_the_day: "MESSAGE_OF_THE_DAY",
-            version: "TELEPORT_VERSION",
-            claim_to_roles: [
-              {
-                email: "email@email.email",
-                roles: ["role1", "role2"],
-              },
-              {
-                email: "email2@email.email",
-                roles: ["role1", "role2"],
-              },
-            ],
-          },
-        },
-        { isTeleport: true }
-      );
-      let expectedData = {
-        appid: null,
-        name: "todd",
-        kms: "slz-kms",
-        encryption_key: null,
-        image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
-        image_name: "Ubuntu Minimal [ibm-ubuntu-18-04-6-minimal-amd64-2]",
-        profile: "cx2-4x8",
-        security_groups: ["management-vpe-sg"],
-        ssh_keys: ["slz-ssh-key"],
-        subnet: "vsi-zone-1",
-        vpc: "management",
-        volumes: [],
-        resource_group: null,
-        template: {
-          deployment: "todd",
-          license: "TELEPORT_LICENSE",
-          https_cert: "HTTPS_CERT",
-          https_key: "HTTPS_KEY",
-          hostname: "HOSTNAME",
-          domain: "DOMAIN",
-          bucket: "COS_BUCKET",
-          bucket_endpoint: "COS_BUCKET_ENDPOINT",
-          hmac_key_id: "HMAC_ACCESS_KEY_ID",
-          hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
-          appid: "APPID_CLIENT_ID",
-          appid_secret: "APPID_CLIENT_SECRET",
-          appid_url: "APPID_ISSUER_URL",
-          message_of_the_day: "MESSAGE_OF_THE_DAY",
-          version: "TELEPORT_VERSION",
-          claim_to_roles: [
-            {
-              email: "email@email.email",
-              roles: ["role1", "role2"],
-            },
-            {
-              email: "email2@email.email",
-              roles: ["role1", "role2"],
-            },
-          ],
-        },
-      };
-      state.vsi.save(
-        {
-          appid: "test-appid",
-          name: "todd",
-          kms: "slz-kms",
-          encryption_key: null,
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
-          profile: "cx2-4x8",
-          security_groups: ["management-vpe-sg"],
-          ssh_keys: ["slz-ssh-key"],
-          subnet: "vsi-zone-1",
-          vpc: "management",
-          volumes: [],
-          resource_group: null,
-          template: {
-            deployment: "test-deployment",
-            license: "TELEPORT_LICENSE",
-            https_cert: "HTTPS_CERT",
-            https_key: "HTTPS_KEY",
-            hostname: "HOSTNAME",
-            domain: "DOMAIN",
-            bucket: "COS_BUCKET",
-            bucket_endpoint: "COS_BUCKET_ENDPOINT",
-            hmac_key_id: "HMAC_ACCESS_KEY_ID",
-            hmac_secret_key_id: "HMAC_SECRET_ACCESS_KEY_ID",
-            appid: "APPID_CLIENT_ID",
-            appid_secret: "APPID_CLIENT_SECRET",
-            appid_url: "APPID_ISSUER_URL",
-            message_of_the_day: "MESSAGE_OF_THE_DAY",
-            version: "TELEPORT_VERSION",
-            claim_to_roles: [
-              {
-                email: "email@email.email",
-                roles: ["role1", "role2"],
-              },
-              {
-                email: "email2@email.email",
-                roles: ["role1", "role2"],
-              },
-            ],
-          },
-        },
-        { data: { name: "test-deployment" }, isTeleport: true }
-      );
-      assert.deepEqual(
-        state.store.json.teleport_vsi[0],
         expectedData,
         "it should update in place"
       );
@@ -560,22 +318,6 @@ describe("vsi", () => {
       state.vsi.delete({}, { data: { name: "management-server" } });
       assert.deepEqual(state.store.json.vsi, [], "it should have none servers");
     });
-    it("should delete a teleport vsi", () => {
-      let state = new newState();
-      state.vsi.create(
-        {
-          name: "todd",
-          vpc: "management",
-        },
-        { isTeleport: true }
-      );
-      state.vsi.delete({}, { isTeleport: true, data: { name: "todd" } });
-      assert.deepEqual(
-        state.store.json.teleport_vsi,
-        [],
-        "it should have no servers"
-      );
-    });
   });
   describe("vsi.onStoreUpdate", () => {
     it("should set encryption key to null when deleted", () => {
@@ -590,62 +332,6 @@ describe("vsi", () => {
       );
       assert.deepEqual(
         state.store.json.vsi[0].encryption_key,
-        null,
-        "it should be null"
-      );
-    });
-    it("should set subnet to null for teleport vsi if subnet is deleted", () => {
-      let state = new newState();
-      state.vsi.create(
-        {
-          name: "todd",
-          vpc: "management",
-          security_groups: ["management-vsi"],
-          subnet: "vsi-zone-1",
-        },
-        { isTeleport: true }
-      );
-      state.vpcs.subnets.delete(
-        {},
-        {
-          name: "management",
-          data: {
-            name: "vsi-zone-1",
-          },
-        }
-      );
-      assert.deepEqual(
-        state.store.json.teleport_vsi[0].subnet,
-        null,
-        "it should be null"
-      );
-    });
-    it("should set vpc and subnet to null for teleport vsi if vpc is deleted", () => {
-      let state = new newState();
-      state.vsi.create(
-        {
-          name: "todd",
-          vpc: "management",
-          security_groups: ["management-vsi"],
-          subnet: "vsi-zone-1",
-        },
-        { isTeleport: true }
-      );
-      state.vpcs.delete(
-        {},
-        {
-          data: {
-            name: "management",
-          },
-        }
-      );
-      assert.deepEqual(
-        state.store.json.teleport_vsi[0].vpc,
-        null,
-        "it should be null"
-      );
-      assert.deepEqual(
-        state.store.json.teleport_vsi[0].subnet,
         null,
         "it should be null"
       );

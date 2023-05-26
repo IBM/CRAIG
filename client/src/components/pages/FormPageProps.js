@@ -169,7 +169,7 @@ const pathToFormMap = {
   dns: {
     jsonField: "dns",
     name: "DNS Service",
-    addText: "Create DNS",
+    addText: "Create a DNS Service",
     innerForm: DnsForm,
   },
 };

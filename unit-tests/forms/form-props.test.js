@@ -14,8 +14,8 @@ const {
  * initialize store
  * @returns {lazyZState} state store
  */
-function newState() {
-  let store = new state();
+function newState(legacy) {
+  let store = new state(legacy);
   store.setUpdateCallback(() => {});
   return store;
 }
@@ -154,7 +154,8 @@ describe("form props", () => {
   });
   describe("setFormSubnetList", () => {
     it("should set subnet list if creating a form with subnets", () => {
-      let craig = newState();
+      let craig = newState(true);
+      craig.store.json._options.dynamic_subnets = false;
       let form = "vsi";
       let formTemplate = {
         innerFormProps: {},

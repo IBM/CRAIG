@@ -5,10 +5,7 @@ const {
   contains,
   revision,
   arraySplatIndex,
-  containsKeys,
-  numberToZoneList,
   parseIntFromZone,
-  formatCidrBlock,
   buildNetworkingRule,
   eachZone,
   splatContains,
@@ -18,22 +15,27 @@ const {
   newDefaultEdgeAcl,
   newDefaultF5ExternalAcl,
   newF5VpeSg,
-  newDefaultVpcs,
   newF5ManagementSg,
   newF5ExternalSg,
   newF5WorkloadSg,
   newF5BastionSg,
   firewallTiers,
   newDefaultF5ExternalAclManagement,
+  legacyDefaultVpcs,
 } = require("./defaults");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { buildSubnet } = require("../builders");
-const { reservedSubnetNameExp } = require("../constants");
+const { formatNetworkingRule, updateNetworkingRule } = require("./utils");
+const { calculateNeededSubnetIps, getNextCidr } = require("../json-to-iac");
 const {
-  formatNetworkingRule,
-  updateNetworkingRule,
-  saveAdvancedSubnetTier,
-} = require("./utils");
+  getSubnetTierData,
+  getUpdatedTierData,
+  getSubnetRevisionData,
+  deleteAdvancedTier,
+  deleteLegacySubnetTier,
+  updateAdvancedSubnetTier,
+  editSubnets,
+} = require("./subnets");
 
 /**
  * initialize vpc store
@@ -42,7 +44,7 @@ const {
  * @param {object} config.store.json configuration JSON
  */
 function vpcInit(config) {
-  config.store.json.vpcs = newDefaultVpcs();
+  config.store.json.vpcs = legacyDefaultVpcs();
   config.store.subnets = {};
   config.store.subnetTiers = {
     management: [
@@ -155,7 +157,7 @@ function vpcOnStoreUpdate(config) {
   // for each network
   config.store.json.vpcs.forEach((network) => {
     network.cos = getVpcCosName(config, network.bucket);
-    if (network.cos === null) {
+    if (network.cos === null && network.bucket !== "$disabled") {
       network.bucket = null;
     }
     config.store.networkAcls[network.name] = splat(network.acls, "name");
@@ -185,6 +187,56 @@ function vpcOnStoreUpdate(config) {
     network.publicGateways = splat(network.public_gateways, "zone");
   });
   config.store.vpcList = splat(config.store.json.vpcs, "name");
+  if (config.store.json._options.dynamic_subnets) {
+    let dynamicCidrList = calculateNeededSubnetIps(config.store.json);
+    config.store.json.vpcs.forEach((vpc) => {
+      let vpcCidr = dynamicCidrList[vpc.name];
+      vpc.address_prefixes = [];
+      while (vpc.address_prefixes.length < config.store.json._options.zones) {
+        let zone = vpc.address_prefixes.length + 1;
+        vpc.address_prefixes.push({
+          vpc: vpc.name,
+          zone: zone,
+          name: vpc.name + "-zone-" + zone,
+          cidr:
+            "10." +
+            (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) + zone) +
+            "0.0.0/22",
+        });
+      }
+      let newSubnets = [];
+      vpc.subnets.forEach((subnet) => {
+        // get last address for zone from subnet list or zone prefix
+        let lastCidr = // automatically set to first in zone for vpc
+          "10." +
+          (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) +
+            subnet.zone) +
+          "0.0.0/x";
+        // if new subnets has subnets and the zone exists within array
+        if (
+          newSubnets.length > 0 &&
+          splatContains(newSubnets, "zone", subnet.zone)
+        ) {
+          let searchIndex = newSubnets.length - 1;
+          // get index of the zone
+          while (
+            searchIndex >= 0 &&
+            newSubnets[searchIndex].zone !== subnet.zone
+          ) {
+            searchIndex--;
+          }
+          // get cidr
+          lastCidr = newSubnets[searchIndex].cidr;
+        }
+        let nextSubnet = {}; // transpose subnet to get old data
+        transpose(subnet, nextSubnet);
+        nextSubnet.cidr = getNextCidr(lastCidr, vpcCidr[subnet.name]);
+        nextSubnet.has_prefix = false;
+        newSubnets.push(nextSubnet);
+      });
+      vpc.subnets = newSubnets;
+    });
+  }
 }
 
 /**
@@ -431,25 +483,9 @@ function subnetTierCreate(config, stateData, componentProps) {
  * @param {boolean} componentProps.data.advanced
  */
 function subnetTierSave(config, stateData, componentProps) {
-  // set acl to null
-  if (stateData.networkAcl === "") stateData.networkAcl = null;
-  delete stateData.hide; // delete hidden from state
-  delete stateData.showDeleteModal; // remove show delete modal
-  let newTierName = componentProps.data.name,
-    oldTierName = componentProps.data.name,
-    vpcName = componentProps.vpc_name, // vpc name
-    zones = stateData.zones, // zones
-    vpcIndex = arraySplatIndex(
-      // vpc index
-      config.store.json.vpcs,
-      "name",
-      vpcName
-    ),
-    oldTiers = config.store.subnetTiers[componentProps.vpc_name], // old subnet tiers;
-    newTiers = []; // new subnet tiers
-  if (containsKeys(stateData, "name")) {
-    newTierName = stateData.name;
-  }
+  let { newTierName, oldTierName, vpcName, zones, vpcIndex, oldTiers } =
+    getSubnetTierData(config, stateData, componentProps);
+  let newTiers = []; // new subnet tiers
   // for each subnet tier
   oldTiers.forEach((tier) => {
     // if not being deleted
@@ -457,54 +493,22 @@ function subnetTierSave(config, stateData, componentProps) {
       (tier.name === oldTierName && zones !== 0) || // if zones is not 0 and tier name is old name
       tier.name !== oldTierName // or if tiername is different
     ) {
-      let staleTierName = tier.name === oldTierName; // tier name is the same
-      // if the tier name is the old name, and the old name has changed
-      let tierName =
-        staleTierName && oldTierName !== newTierName
-          ? newTierName // new tier name
-          : tier.name; // otherwise old name
-      // if the tier name is old name and zones have changed
-      let tierZones =
-        staleTierName && tier.zones !== zones
-          ? zones // new zones
-          : tier.zones; // otherwise, old zones
-      let tierData = {
-        name: tierName,
-        zones: tierZones,
-      };
-
-      // if is advanced and subnet tier matches data
-      if (stateData.advanced && componentProps.data.name === tier.name) {
-        tierData.advanced = true;
-        saveAdvancedSubnetTier(
-          config,
-          stateData,
-          componentProps,
-          oldTierName,
-          tierData,
-          vpcName,
-          newTierName,
-          vpcIndex,
-          tier.advanced && componentProps.data.name !== tier.name
-        );
+      let tierData = getUpdatedTierData(tier, oldTierName, newTierName, zones);
+      if (config.store.json._options.dynamic_subnets) {
         newTiers.push(tierData);
-        // for each address prefix
-        config.store.json.vpcs[vpcIndex].address_prefixes.forEach((prefix) => {
-          if (
-            !contains(tierData.select_zones, prefix.zone) &&
-            prefix.name.startsWith(oldTierName)
-          ) {
-            // if starts with old tier name and zone not selected remove
-            carve(
-              config.store.json.vpcs[vpcIndex].address_prefixes,
-              "name",
-              prefix.name
-            );
-          } else if (prefix.name.startsWith(oldTierName)) {
-            // otherwise rename
-            prefix.name = prefix.name.replace(oldTierName, newTierName);
-          }
-        });
+      } else if (stateData.advanced && componentProps.data.name === tier.name) {
+        newTiers.push(
+          updateAdvancedSubnetTier(
+            tierData,
+            config,
+            stateData,
+            componentProps,
+            oldTierName,
+            vpcName,
+            newTierName,
+            vpcIndex
+          )
+        );
       } else if (tier.advanced) {
         newTiers.push(tier);
       } else newTiers.push(tierData);
@@ -514,154 +518,40 @@ function subnetTierSave(config, stateData, componentProps) {
   // edit subnets
   new revision(config.store.json)
     .child("vpcs", vpcName, "name") // get vpc
-    .then((data) => {
-      let subnets = data.subnets;
-      let prefixes = data.address_prefixes;
-      // valid zones for subnet tier
-      let validZones = zones === 0 || !zones ? [] : numberToZoneList(zones);
-      // is edge vpc tier
-      let isEdgeVpcTier =
-        config.store.edge_vpc_name === vpcName &&
-        newTierName.match(reservedSubnetNameExp) !== null;
-      // get the current amount of zones a subnet has
-      let currentZones = subnets.filter((subnet) =>
-        subnet.name.startsWith(oldTierName)
-      ).length;
+    .then((vpc) => {
+      let { subnets, isEdgeVpcTier } = getSubnetRevisionData(
+        vpc,
+        newTierName,
+        vpcName,
+        config
+      );
       if (componentProps.data.advanced && stateData.zones === 0) {
-        // when deleting advanced tier
-        let oldTierIndex = arraySplatIndex(
-          oldTiers,
-          "name",
-          componentProps.data.name
-        );
-        let oldTier = oldTiers[oldTierIndex];
-        oldTier.subnets.forEach((name) => {
-          carve(data.subnets, "name", name);
-        });
+        deleteAdvancedTier(oldTiers, componentProps.data.name, vpc);
       } else if (!stateData.advanced) {
         // add subnets until they have the correct number of zones
-        while (currentZones < zones) {
-          // reserve f5 subnet tiers
-          let actualTierIndex = isEdgeVpcTier
-            ? [
-                "vpn-1",
-                "vpn-2",
-                "f5-management",
-                "f5-external",
-                "f5-workload",
-                "f5-bastion",
-              ].indexOf(newTierName)
-            : arraySplatIndex(newTiers, "name", newTierName);
-          // if increasing number of zones, add new subnet
-          currentZones++;
-          subnets.push(
-            buildSubnet(
-              vpcName,
-              vpcIndex,
-              stateData.name,
-              actualTierIndex,
-              stateData?.networkAcl,
-              config.store.json.vpcs[vpcIndex].resource_group,
-              currentZones,
-              false, //public gateway will update later if should be updated
-              stateData.use_prefix, // prefix,
-              isEdgeVpcTier
-            )
-          );
-          let newSubnet = subnets[subnets.length - 1];
-          prefixes.push({
-            name: newSubnet.name,
-            cidr: newSubnet.cidr,
-            vpc: vpcName,
-            zone: newSubnet.zone,
-          });
-        }
-        for (let i = subnets.length - 1; i >= 0; i--) {
-          // start from end and loop backwards so deletions do not error
-          if (subnets[i].name.startsWith(oldTierName)) {
-            // only update the tier being updated
-            let zone = `zone-${subnets[i].zone}`;
-            let zoneSubnetName = `${oldTierName}-${zone}`; // name to search for
-            let tierIndex = arraySplatIndex(
-              // tier subnet index
-              subnets,
-              "name",
-              zoneSubnetName
-            );
-            // if the tier is found and the zone is not valid, remove the subnet
-            if (tierIndex >= 0 && !contains(validZones, zone)) {
-              carve(subnets, "name", zoneSubnetName);
-              carve(prefixes, "name", zoneSubnetName);
-            } else if (tierIndex >= 0 && oldTierName !== newTierName) {
-              // if the tier is found and the old tier name is different from the new one
-              // change name for subnet and address prefix
-              let prefixRef = getObjectFromArray(
-                prefixes,
-                "name",
-                zoneSubnetName
-              );
-              let newName = `${newTierName}-${zone}`;
-              subnets[tierIndex].name = newName;
-              prefixRef.name = newName;
-              // tier not found but zone is valid
-            }
-            // if a subnet is not created
-            if (tierIndex >= 0 && zones > 0 && contains(validZones, zone)) {
-              // optionally change nacl
-              if (stateData.networkAcl !== undefined) {
-                subnets[tierIndex].network_acl = stateData.networkAcl;
-              }
-              // optionally change gateway
-              if (
-                contains(
-                  componentProps.craig.store.json.vpcs[vpcIndex].publicGateways,
-                  subnets[i].zone
-                )
-              ) {
-                subnets[tierIndex].public_gateway =
-                  stateData.addPublicGateway || false;
-              }
-            }
-          }
-        }
+        editSubnets(
+          vpc,
+          zones,
+          isEdgeVpcTier,
+          newTierName,
+          newTiers,
+          vpcName,
+          vpcIndex,
+          oldTierName,
+          config,
+          stateData,
+          componentProps
+        );
       }
       // if deleting a tier
       if (zones === 0) {
-        subnets.forEach((subnet) => {
-          if (
-            // do not replace f5 tiers
-            !contains(
-              [
-                "vpn-1",
-                "vpn-2",
-                "f5-workload",
-                "f5-management",
-                "f5-external",
-                "f5-bastion",
-              ],
-              subnet.name.replace(/-zone-\d/g, "")
-            ) &&
-            !subnet.tier
-          ) {
-            let splatTiers = splat(
-              config.store.subnetTiers[componentProps.vpc_name],
-              "name"
-            );
-            splatTiers.splice(splatTiers.indexOf(oldTierName), 1);
-            let newCidr = formatCidrBlock(
-              vpcIndex,
-              subnet.zone, // zone number
-              splatTiers.indexOf(subnet.name.replace(/-zone-\d/g, ""))
-            );
-            subnet.cidr = newCidr;
-            let subnetAddressPrefix = getObjectFromArray(
-              config.store.json.vpcs[vpcIndex].address_prefixes,
-              "name",
-              subnet.name
-            );
-            subnetAddressPrefix.cidr = newCidr;
-          }
-        });
+        deleteLegacySubnetTier(
+          subnets,
+          config,
+          oldTierName,
+          componentProps.vpc_name,
+          vpcIndex
+        );
       }
     });
 

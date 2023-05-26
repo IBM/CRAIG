@@ -2,7 +2,11 @@
   "_options": {
     "prefix": "slz",
     "region": "us-south",
-    "tags": ["slz", "landing-zone"]
+    "tags": [
+      "slz",
+      "landing-zone"
+    ],
+    "dynamic_subnets": false
   },
   "dns": [],
   "logdna": {
@@ -17,7 +21,7 @@
   "sysdig": {
     "enabled": false,
     "plan": "",
-    "resource_group":null
+    "resource_group": null
   },
   "resource_groups": [
     {
@@ -138,7 +142,10 @@
     "bucket": "atracker-bucket",
     "add_route": true,
     "cos_key": "cos-bind-key",
-    "locations": ["global", "us-south"]
+    "locations": [
+      "global",
+      "us-south"
+    ]
   },
   "vpcs": [
     {
@@ -558,16 +565,28 @@
       "vpc": "management",
       "service": "cos",
       "resource_group": "slz-management-rg",
-      "security_groups": ["management-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "subnets": [
+        "vpe-zone-1",
+        "vpe-zone-2",
+        "vpe-zone-3"
+      ]
     },
     {
       "name": "workload-cos",
       "vpc": "workload",
       "service": "cos",
       "resource_group": "slz-workload-rg",
-      "security_groups": ["workload-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "security_groups": [
+        "workload-vpe-sg"
+      ],
+      "subnets": [
+        "vpe-zone-1",
+        "vpe-zone-2",
+        "vpe-zone-3"
+      ]
     }
   ],
   "security_groups": [
@@ -858,7 +877,11 @@
       "name": "workload",
       "resource_group": "slz-workload-rg",
       "encryption_key": "slz-vsi-volume-key",
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "update_all_workers": false,
       "vpc": "workload",
       "worker_pools": [
@@ -868,7 +891,11 @@
           "flavor": "bx2.16x64",
           "name": "logging-pool",
           "resource_group": "slz-workload-rg",
-          "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          "subnets": [
+            "vsi-zone-1",
+            "vsi-zone-2",
+            "vsi-zone-3"
+          ],
           "vpc": "workload",
           "workers_per_subnet": 2
         }
@@ -881,12 +908,20 @@
     {
       "kms": "slz-kms",
       "encryption_key": "slz-vsi-volume-key",
-      "image": "ibm-ubuntu-18-04-6-minimal-amd64-2",
+      "image": "ibm-ubuntu-22-04-1-minimal-amd64-1",
       "profile": "cx2-4x8",
       "name": "management-server",
-      "security_groups": ["management-vpe-sg"],
-      "ssh_keys": ["slz-ssh-key"],
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "ssh_keys": [
+        "slz-ssh-key"
+      ],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "vpc": "management",
       "vsi_per_subnet": 2,
       "resource_group": "slz-management-rg",

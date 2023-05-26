@@ -27,7 +27,6 @@ const {
   invalidCbrRule,
   invalidCbrZone,
   validRecord,
-  invalidRdataCallback,
   invalidDNSDescription,
   invalidDnsZoneName,
 } = require("./invalid-callbacks");
@@ -403,7 +402,8 @@ function disableSave(field, stateData, componentProps, craig) {
       invalidName("routes")(stateData, componentProps) ||
       fieldsAreBad(["zone", "action", "next_hop", "destination"], stateData) ||
       !isIpv4CidrOrAddress(stateData.destination) ||
-      !isIpv4CidrOrAddress(stateData.next_hop)
+      !isIpv4CidrOrAddress(stateData.next_hop) ||
+      contains(stateData.next_hop, "/")
     );
   } else if (field === "load_balancers") {
     return (

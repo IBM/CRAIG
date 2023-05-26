@@ -48,8 +48,8 @@ class OptionsForm extends React.Component {
     this.setState({ [name]: value });
   }
 
-  handleToggle() {
-    this.setState({ fs_cloud: !this.state.fs_cloud });
+  handleToggle(name) {
+    this.setState({ [name]: !this.state[name] });
   }
 
   disableSave() {
@@ -92,7 +92,7 @@ class OptionsForm extends React.Component {
             <IcseToggle
               labelText="Use FS Cloud"
               defaultToggled={this.state.fs_cloud}
-              onToggle={this.handleToggle}
+              onToggle={() => this.handleToggle("fs_cloud")}
               id="use-fs-cloud"
               toggleFieldName="fs_cloud"
               value={this.state.fs_cloud}
@@ -129,7 +129,7 @@ class OptionsForm extends React.Component {
               formName="options"
               name="endpoints"
               labelText="Service Endpoints"
-              value={titleCase(this.state.endpoints)}
+              value={titleCase(this.state.endpoints).replace(/And/g, "and")}
               groups={["Private", "Public", "Public and Private"]}
               handleInputChange={this.handleChange}
             />
@@ -145,6 +145,19 @@ class OptionsForm extends React.Component {
               tooltip={{
                 content:
                   "Account ID is used to create some resources, such as Virtual Private Endpoints for Secrets Manager",
+              }}
+            />
+          </IcseFormGroup>
+          <IcseFormGroup>
+            <IcseToggle
+              labelText="Dynamic Scalable Subnets"
+              field="dynamic_subnets"
+              defaultToggled={this.state.dynamic_subnets}
+              onToggle={() => this.handleToggle("dynamic_subnets")}
+              id="dynamic-subnets"
+              tooltip={{
+                content:
+                  "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources. Turn off if you want to manage your address prefixes and subnet CIDR addresses manually.",
               }}
             />
           </IcseFormGroup>

@@ -6,7 +6,7 @@ const { state } = require("../../client/src/lib/state");
  * @returns {lazyZState} state store
  */
 function newState() {
-  let store = new state();
+  let store = new state(true);
   store.setUpdateCallback(() => {});
   return store;
 }
@@ -23,6 +23,7 @@ describe("options", () => {
         endpoints: "private",
         account_id: "",
         fs_cloud: true,
+        dynamic_subnets: true,
       };
       assert.deepEqual(
         state.store.json._options,
@@ -34,7 +35,7 @@ describe("options", () => {
   describe("options.save", () => {
     let oState;
     beforeEach(() => {
-      oState = new newState();
+      oState = new newState(true);
     });
     it("should change the prefix when saved", () => {
       oState.options.save({ prefix: "test" }, { data: { prefix: "iac" } });
@@ -86,6 +87,7 @@ describe("options", () => {
       );
     });
     it("should update subnets when saved", () => {
+      oState.store.json._options.dynamic_subnets = false;
       oState.options.save({ zones: 1 }, { data: { prefix: "iac" } });
       let expectedData = [
         {

@@ -37,8 +37,8 @@
   },
   "data": {
     "ibm_is_image": {
-      "ibm_ubuntu_18_04_6_minimal_amd64_2": {
-        "name": "ibm-ubuntu-18-04-6-minimal-amd64-2"
+      "ibm_ubuntu_22_04_1_minimal_amd64_1": {
+        "name": "ibm-ubuntu-22-04-1-minimal-amd64-1"
       }
     }
   },
@@ -522,7 +522,7 @@
     "ibm_is_instance": {
       "management_vpc_management_server_vsi_1_1": {
         "name": "${var.prefix}-management-management-server-vsi-zone-1-1",
-        "image": "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
@@ -546,7 +546,7 @@
       },
       "management_vpc_management_server_vsi_1_2": {
         "name": "${var.prefix}-management-management-server-vsi-zone-1-2",
-        "image": "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
@@ -570,7 +570,7 @@
       },
       "management_vpc_management_server_vsi_2_1": {
         "name": "${var.prefix}-management-management-server-vsi-zone-2-1",
-        "image": "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
@@ -594,7 +594,7 @@
       },
       "management_vpc_management_server_vsi_2_2": {
         "name": "${var.prefix}-management-management-server-vsi-zone-2-2",
-        "image": "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
@@ -618,7 +618,7 @@
       },
       "management_vpc_management_server_vsi_3_1": {
         "name": "${var.prefix}-management-management-server-vsi-zone-3-1",
-        "image": "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",
@@ -642,7 +642,7 @@
       },
       "management_vpc_management_server_vsi_3_2": {
         "name": "${var.prefix}-management-management-server-vsi-zone-3-2",
-        "image": "${data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id}",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
         "profile": "cx2-4x8",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
         "vpc": "${module.management_vpc.id}",

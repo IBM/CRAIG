@@ -6,6 +6,8 @@ const {
   parseIntFromZone,
   isNullOrEmptyString,
   transpose,
+  contains,
+  splat,
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { endComment } = require("./constants");
@@ -364,6 +366,108 @@ function getResourceOrData(resource) {
   return resource.use_data ? "data" : "resource";
 }
 
+/**
+ * get needed ips for each subnet on each vpc
+ * @param {*} config craig config
+ * @returns {Object} map of vpcs
+ */
+function calculateNeededSubnetIps(config) {
+  let ipMap = {};
+  config.vpcs.forEach((vpc) => {
+    ipMap[vpc.name] = {};
+    let vpcRef = ipMap[vpc.name];
+    vpc.subnets.forEach((subnet) => {
+      vpcRef[subnet.name] = 5;
+    });
+  });
+
+  /**
+   * add to ip count if subnet is found this function is designed to
+   * reduce the number of unit tests needed to prevent addition of ips to unfound
+   * subnets resulting in `NaN`
+   * @param {string} vpc
+   * @param {string} subnet
+   * @param {number=} count number of ips to add, defaults to 1
+   */
+  function addIps(vpc, subnet, count) {
+    if (ipMap[vpc]) {
+      let vpcRef = ipMap[vpc];
+      if (vpcRef[subnet]) vpcRef[subnet] += count || 1;
+    }
+  }
+
+  config.clusters.forEach((cluster) => {
+    // add two ips for each worker, allowing for 1 restart
+    cluster.subnets.forEach((subnet) => {
+      addIps(cluster.vpc, subnet, 2 * cluster.workers_per_subnet);
+    });
+    cluster.worker_pools.forEach((pool) => {
+      pool.subnets.forEach((subnet) => {
+        addIps(pool.vpc, subnet, 2 * pool.workers_per_subnet);
+      });
+    });
+  });
+  config.virtual_private_endpoints.forEach((vpe) => {
+    // add one for each vpe reserved ip
+    vpe.subnets.forEach((subnet) => {
+      addIps(vpe.vpc, subnet);
+    });
+  });
+  config.vpn_gateways.forEach((gw) => {
+    // add four for each vpn gw
+    addIps(gw.vpc, gw.subnet, 4);
+  });
+  config.vsi.forEach((vsi) => {
+    if (vsi.subnets) {
+      vsi.subnets.forEach((subnet) => {
+        addIps(vsi.vpc, subnet, vsi.vsi_per_subnet);
+      });
+    }
+  });
+  config.vpn_servers.forEach((server) => {
+    server.subnets.forEach((subnet) => {
+      addIps(server.vpc, subnet);
+    });
+  });
+  return ipMap;
+}
+
+/**
+ * get the next cidr range for a dynamically addressed subnet
+ * @param {string} lastCidr last cidr
+ * @param {number} newIps number of new ips
+ * @returns {string} next cidr block
+ */
+function getNextCidr(lastCidr, newIps) {
+  let rangeMax = 1;
+  let rangeCount = 0;
+  while (rangeMax < newIps) {
+    rangeMax *= 2;
+    rangeCount++;
+  }
+  if (contains(lastCidr, "x")) {
+    return lastCidr.replace("x", 32 - rangeCount);
+  } else {
+    let splitCidr = [];
+    lastCidr.split(/\.|\//).forEach((item) => {
+      splitCidr.push(Number(item));
+    });
+    let range = Number(splitCidr.pop());
+    splitCidr[3] += 2 ** (32 - range);
+    // while next set of ips forces address out of range
+    if (splitCidr[3] >= 255) {
+      // add one to the 256s place until number is in range
+      // not covering greater ranges, it would be wildly impractical and time consuming
+      // for any user to dynamically create more than 65,536 ips using CRAIG
+      while (splitCidr[3] >= 255) {
+        splitCidr[3] -= 255;
+        splitCidr[2]++;
+      }
+    }
+    return splitCidr.join(".") + "/" + (32 - rangeCount);
+  }
+}
+
 module.exports = {
   dataResourceName,
   composedZone,
@@ -391,4 +495,6 @@ module.exports = {
   jsonToTfPrint,
   cdktfValues,
   getResourceOrData,
+  calculateNeededSubnetIps,
+  getNextCidr,
 };

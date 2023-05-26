@@ -105,6 +105,77 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
           "it should return correct terraform"
         );
       });
+      it("should create vpc code mirror terraform with disabled flow logs", () => {
+        let testData = {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "management-rg",
+            },
+          ],
+          vpcs: [
+            {
+              cos: "cos",
+              bucket: "$disabled",
+              name: "management",
+              resource_group: "management-rg",
+              classic_access: false,
+              manual_address_prefix_management: true,
+              default_network_acl_name: null,
+              default_security_group_name: null,
+              default_routing_table_name: null,
+              publicGateways: [1],
+              public_gateways: [
+                {
+                  vpc: "management",
+                  zone: 1,
+                  resource_group: "management-rg",
+                },
+              ],
+            },
+          ],
+        };
+        let expectedData = `##############################################################################
+# Management VPC
+##############################################################################
+
+resource "ibm_is_vpc" "management_vpc" {
+  name                        = "\${var.prefix}-management-vpc"
+  resource_group              = var.management_rg_id
+  address_prefix_management   = "manual"
+  default_network_acl_name    = null
+  default_security_group_name = null
+  default_routing_table_name  = null
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_is_public_gateway" "management_gateway_zone_1" {
+  name           = "\${var.prefix}-management-gateway-zone-1"
+  vpc            = ibm_is_vpc.management_vpc.id
+  resource_group = var.management_rg_id
+  zone           = "\${var.region}-1"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+##############################################################################
+`;
+        assert.deepEqual(
+          codeMirrorVpcTf(testData),
+          expectedData,
+          "it should return correct terraform"
+        );
+      });
       it("should create vpc code mirror terraform without public gateway", () => {
         let testData = {
           _options: {

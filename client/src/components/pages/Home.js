@@ -34,7 +34,9 @@ function Home(props) {
               craig={props.craig}
               data={props.craig.store.json._options}
             />
-            <EdgeNetworkingForm craig={props.craig} />
+            {props.craig.store.json._options.dynamic_subnets === false && (
+              <EdgeNetworkingForm craig={props.craig} />
+            )}
           </TabPanel>
           <TabPanel>
             {/* Import/Export JSON page */}

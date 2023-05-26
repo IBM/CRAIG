@@ -126,7 +126,11 @@ const {
   formatRoutingTableRoute,
   routingTableTf,
 } = require("./routing-tables");
-const { buildTitleComment } = require("./utils");
+const {
+  buildTitleComment,
+  calculateNeededSubnetIps,
+  getNextCidr,
+} = require("./utils");
 const {
   formatCbrZone,
   ibmCbrZone,
@@ -279,4 +283,6 @@ module.exports = {
   formatDnsPermittedNetwork,
   formatDnsCustomResolver,
   dnsTf,
+  calculateNeededSubnetIps,
+  getNextCidr,
 };

@@ -24,12 +24,14 @@ function dnsOnStoreUpdate(config) {
   config.store.json.dns.forEach((dns) => {
     setUnfoundResourceGroup(config, dns);
     dns.zones.forEach((zone) => {
+      zone.instance = dns.name;
       zone.vpcs = deleteUnfoundArrayItems(
         splat(config.store.json.vpcs, "name"),
         zone.vpcs
       );
     });
     dns.custom_resolvers.forEach((resolver) => {
+      resolver.instance = dns.name;
       if (hasUnfoundVpc(config, resolver)) {
         resolver.vpc = null;
         resolver.subnets = [];

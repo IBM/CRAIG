@@ -156,6 +156,29 @@ describe("formatJson", () => {
     },
     {
       "action": "allow",
+      "source": "10.0.0.0/8",
+      "direction": "outbound",
+      "name": "allow-ibm-outbound",
+      "destination": "161.26.0.0/16",
+      "icmp": {
+        "type": null,
+        "code": null
+      },
+      "tcp": {
+        "port_min": null,
+        "port_max": null,
+        "source_port_min": null,
+        "source_port_max": null
+      },
+      "udp": {
+        "port_min": null,
+        "port_max": null,
+        "source_port_min": null,
+        "source_port_max": null
+      }
+    },
+    {
+      "action": "allow",
       "destination": "10.0.0.0/8",
       "direction": "inbound",
       "name": "allow-all-network-inbound",
@@ -179,10 +202,10 @@ describe("formatJson", () => {
     },
     {
       "action": "allow",
-      "destination": "0.0.0.0/0",
+      "destination": "10.0.0.0/8",
       "direction": "outbound",
-      "name": "allow-all-outbound",
-      "source": "0.0.0.0/0",
+      "name": "allow-all-network-outbound",
+      "source": "10.0.0.0/8",
       "icmp": {
         "type": null,
         "code": null

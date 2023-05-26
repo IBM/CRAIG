@@ -4,10 +4,11 @@ const { contains } = require("lazy-z");
 
 /**
  * initialize store
+ * @param {boolean=} legacy
  * @returns {lazyZState} state store
  */
-function newState() {
-  let store = new state();
+function newState(legacy) {
+  let store = new state(legacy);
   store.setUpdateCallback(() => {});
   return store;
 }
@@ -149,6 +150,7 @@ describe("vpcs", () => {
   describe("vpcs.create", () => {
     it("should create a new vpc with a name and resource group", () => {
       let state = new newState();
+      state.store.json._options.dynamic_subnets = false;
       state.vpcs.create({ name: "test" });
       let expectedData = {
         cos: null,
@@ -172,7 +174,8 @@ describe("vpcs", () => {
   });
   describe("vpcs.delete", () => {
     it("should delete a vpc from config", () => {
-      let state = new newState();
+      let state = new newState(true);
+      state.store.json._options.dynamic_subnets = false;
       state.vpcs.delete({}, { data: { name: "management" } });
       let expectedData = [
         {
@@ -320,6 +323,31 @@ describe("vpcs", () => {
                 },
                 {
                   action: "allow",
+                  source: "10.0.0.0/8",
+                  direction: "outbound",
+                  name: "allow-ibm-outbound",
+                  destination: "161.26.0.0/16",
+                  acl: "workload",
+                  vpc: "workload",
+                  icmp: {
+                    type: null,
+                    code: null,
+                  },
+                  tcp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                  udp: {
+                    port_min: null,
+                    port_max: null,
+                    source_port_min: null,
+                    source_port_max: null,
+                  },
+                },
+                {
+                  action: "allow",
                   destination: "10.0.0.0/8",
                   direction: "inbound",
                   name: "allow-all-network-inbound",
@@ -345,10 +373,10 @@ describe("vpcs", () => {
                 },
                 {
                   action: "allow",
-                  destination: "0.0.0.0/0",
+                  destination: "10.0.0.0/8",
                   direction: "outbound",
-                  name: "allow-all-outbound",
-                  source: "0.0.0.0/0",
+                  name: "allow-all-network-outbound",
+                  source: "10.0.0.0/8",
                   acl: "workload",
                   vpc: "workload",
                   icmp: {
@@ -400,7 +428,8 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet in place", () => {
-        let state = new newState();
+        let state = new newState(true);
+        state.store.json._options.dynamic_subnets = false;
         state.vpcs.subnets.save(
           {
             name: "frog",
@@ -418,7 +447,8 @@ describe("vpcs", () => {
         );
       });
       it("should update an advanced subnet in place", () => {
-        let state = new newState();
+        let state = new newState(true);
+        state.store.json._options.dynamic_subnets = false;
         let expectedPrefixes = [
           {
             vpc: "management",
@@ -525,14 +555,15 @@ describe("vpcs", () => {
         );
         assert.deepEqual(
           state.store.json.vpcs[0].subnets[1].cidr,
-          "1.2.3.4/32",
+          "10.10.0.8/28",
           "it should be frog"
         );
       });
     });
     describe("vpcs.subnets.delete", () => {
       it("should delete a subnet from a vpc", () => {
-        let state = new newState();
+        let state = new newState(true);
+        state.store.json._options.dynamic_subnets = false;
         state.setUpdateCallback(() => {});
         state.vpcs.subnets.delete(
           {},
@@ -617,6 +648,7 @@ describe("vpcs", () => {
         let state = new newState();
         let index = state.store.json.vpcs[0].subnets.length; // new vpc should be stored here
         state.setUpdateCallback(() => {});
+        state.store.json._options.dynamic_subnets = false;
         let testData = {
           name: "frog-zone-1",
           cidr: "10.2.3.4/32",
@@ -635,7 +667,8 @@ describe("vpcs", () => {
   describe("vpcs.subnetTiers", () => {
     describe("vpcs.subnetTiers.save", () => {
       it("should update a subnet tier in place", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -727,7 +760,8 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet tier in place and update address prefixes", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -796,7 +830,8 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet tier in place with nacl and gateway", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         vpcState.vpcs.acls.create({ name: "todd" }, { vpc_name: "management" });
         let expectedData = [
           {
@@ -911,62 +946,62 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.10.0/24",
+            cidr: "10.10.0.0/29",
             name: "frog-zone-1",
             network_acl: "todd",
             resource_group: "management-rg",
             public_gateway: true,
-            has_prefix: true,
+            has_prefix: false,
           },
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.30.0/24",
+            cidr: "10.10.0.8/28",
             name: "vpn-zone-1",
             network_acl: "management",
             resource_group: "management-rg",
             public_gateway: false,
-            has_prefix: true,
+            has_prefix: false,
           },
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.20.10.0/24",
+            cidr: "10.20.0.0/29",
             name: "frog-zone-2",
             network_acl: "todd",
             resource_group: "management-rg",
             public_gateway: false,
-            has_prefix: true,
+            has_prefix: false,
           },
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.20.0/24",
+            cidr: "10.10.0.24/29",
             name: "vpe-zone-1",
             resource_group: "management-rg",
             network_acl: "management",
             public_gateway: false,
-            has_prefix: true,
+            has_prefix: false,
           },
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.20.20.0/24",
+            cidr: "10.20.0.8/29",
             name: "vpe-zone-2",
             network_acl: "management",
             resource_group: "management-rg",
             public_gateway: false,
-            has_prefix: true,
+            has_prefix: false,
           },
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.30.20.0/24",
+            cidr: "10.30.0.0/29",
             name: "vpe-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
             public_gateway: false,
-            has_prefix: true,
+            has_prefix: false,
           },
         ];
         vpcState.vpcs.subnetTiers.save(
@@ -1006,7 +1041,8 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet tier in place with additional zones and with no acl", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -1119,7 +1155,8 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet tier address prefixes in place with additional zones and with no acl", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -1200,7 +1237,8 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet tier in place with additional zones and with no acl and 1 zone pgw", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -1320,7 +1358,8 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet tier in place with additional zones and with no acl and 2 zone pgw", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -1444,7 +1483,8 @@ describe("vpcs", () => {
         );
       });
       it("should expand a reserved edge subnet tier in place with additional zones", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -1591,7 +1631,8 @@ describe("vpcs", () => {
         );
       });
       it("should save advanced subnet tier", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -1742,7 +1783,8 @@ describe("vpcs", () => {
         );
       });
       it("should save advanced subnet tier with an existing advanced tier and both should have correct tier data in store", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -1897,7 +1939,8 @@ describe("vpcs", () => {
         );
       });
       it("should save advanced subnet tier when expanding zones", () => {
-        let vpcState = newState();
+        let vpcState = newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -2041,7 +2084,8 @@ describe("vpcs", () => {
     });
     describe("vpcs.subnetTiers.create", () => {
       it("should add a subnet tier to vpc", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         vpcState.vpcs.subnetTiers.create(
           {
             name: "test",
@@ -2159,7 +2203,8 @@ describe("vpcs", () => {
         );
       });
       it("should add a subnet tier to vpc with pgw", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         vpcState.vpcs.subnetTiers.create(
           {
             name: "test",
@@ -2278,7 +2323,8 @@ describe("vpcs", () => {
         );
       });
       it("should add a subnet tier to vpc with no subnet tier", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         vpcState.vpcs.subnetTiers.create(
           {
             name: "test",
@@ -2395,7 +2441,8 @@ describe("vpcs", () => {
         );
       });
       it("should add an advanced subnet tier to vpc", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         vpcState.vpcs.subnetTiers.create(
           {
             name: "test",
@@ -2532,7 +2579,8 @@ describe("vpcs", () => {
     });
     describe("vpcs.subnetTiers.delete", () => {
       it("should delete a subnet tier", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -2586,7 +2634,8 @@ describe("vpcs", () => {
         );
       });
       it("should delete a subnet tier and update address prefixes", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -2624,7 +2673,8 @@ describe("vpcs", () => {
         );
       });
       it("should delete a subnet tier and leave F5 subnets in place", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         // push f5-management to subnets
         vpcState.store.json.vpcs[0].subnets.push({
           cidr: "10.5.60.0/24",
@@ -2739,7 +2789,8 @@ describe("vpcs", () => {
         );
       });
       it("should delete an advanced subnet tier", () => {
-        let vpcState = new newState();
+        let vpcState = new newState(true);
+        vpcState.store.json._options.dynamic_subnets = false;
         let expectedData = [
           {
             vpc: "management",
@@ -2850,7 +2901,8 @@ describe("vpcs", () => {
         );
       });
       it("should set subnet acls to null on delete", () => {
-        let state = newState();
+        let state = newState(true);
+        state.store.json._options.dynamic_subnets = false;
         state.vpcs.acls.delete(
           {},
           { data: { name: "management" }, vpc_name: "management" }
@@ -3014,6 +3066,31 @@ describe("vpcs", () => {
               },
             },
             {
+              action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
               acl: "management",
               vpc: "management",
               action: "allow",
@@ -3042,10 +3119,10 @@ describe("vpcs", () => {
               acl: "management",
               vpc: "management",
               action: "allow",
-              destination: "0.0.0.0/0",
+              destination: "10.0.0.0/8",
               direction: "outbound",
-              name: "allow-all-outbound",
-              source: "0.0.0.0/0",
+              name: "allow-all-network-outbound",
+              source: "10.0.0.0/8",
               icmp: {
                 type: null,
                 code: null,
@@ -3137,6 +3214,31 @@ describe("vpcs", () => {
               },
             },
             {
+              action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
               acl: "management",
               vpc: "management",
               action: "allow",
@@ -3165,10 +3267,10 @@ describe("vpcs", () => {
               acl: "management",
               vpc: "management",
               action: "allow",
-              destination: "0.0.0.0/0",
+              destination: "10.0.0.0/8",
               direction: "outbound",
-              name: "allow-all-outbound",
-              source: "0.0.0.0/0",
+              name: "allow-all-network-outbound",
+              source: "10.0.0.0/8",
               icmp: {
                 type: null,
                 code: null,
@@ -3234,7 +3336,7 @@ describe("vpcs", () => {
             {
               vpc_name: "management",
               parent_name: "management",
-              data: { name: "allow-all-outbound" },
+              data: { name: "allow-all-network-outbound" },
             }
           );
           let expectedData = [
@@ -3246,6 +3348,31 @@ describe("vpcs", () => {
               destination: "10.0.0.0/8",
               name: "allow-ibm-inbound",
               source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
               icmp: {
                 type: null,
                 code: null,
@@ -3338,7 +3465,7 @@ describe("vpcs", () => {
             {
               vpc_name: "management",
               parent_name: "management",
-              data: { name: "allow-all-outbound" },
+              data: { name: "allow-all-network-outbound" },
             }
           );
           let expectedData = [
@@ -3350,6 +3477,31 @@ describe("vpcs", () => {
               destination: "10.0.0.0/8",
               name: "allow-ibm-inbound",
               source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
               icmp: {
                 type: null,
                 code: null,
@@ -3442,7 +3594,7 @@ describe("vpcs", () => {
             {
               vpc_name: "management",
               parent_name: "management",
-              data: { name: "allow-all-outbound" },
+              data: { name: "allow-all-network-outbound" },
             }
           );
           let expectedData = [
@@ -3454,6 +3606,31 @@ describe("vpcs", () => {
               destination: "10.0.0.0/8",
               name: "allow-ibm-inbound",
               source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
               icmp: {
                 type: null,
                 code: null,
@@ -3546,7 +3723,7 @@ describe("vpcs", () => {
             {
               vpc_name: "management",
               parent_name: "management",
-              data: { name: "allow-all-outbound" },
+              data: { name: "allow-all-network-outbound" },
             }
           );
           let expectedData = [
@@ -3558,6 +3735,31 @@ describe("vpcs", () => {
               destination: "10.0.0.0/8",
               name: "allow-ibm-inbound",
               source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
               icmp: {
                 type: null,
                 code: null,
@@ -3641,7 +3843,7 @@ describe("vpcs", () => {
             {
               vpc_name: "management",
               parent_name: "management",
-              data: { name: "allow-all-outbound" },
+              data: { name: "allow-all-network-outbound" },
             }
           );
           let expectedData = [
@@ -3653,6 +3855,31 @@ describe("vpcs", () => {
               destination: "10.0.0.0/8",
               name: "allow-ibm-inbound",
               source: "161.26.0.0/16",
+              icmp: {
+                type: null,
+                code: null,
+              },
+              tcp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+              udp: {
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+              },
+            },
+            {
+              action: "allow",
+              source: "10.0.0.0/8",
+              direction: "outbound",
+              name: "allow-ibm-outbound",
+              destination: "161.26.0.0/16",
+              acl: "management",
+              vpc: "management",
               icmp: {
                 type: null,
                 code: null,
@@ -3703,6 +3930,126 @@ describe("vpcs", () => {
           );
         });
       });
+    });
+  });
+  describe("dynamic subnet addressing", () => {
+    it("should update a subnet tier in place and update address prefixes when using dynamic subnet addressing", () => {
+      let vpcState = newState();
+      let expectedData = [
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.0.0/22",
+          name: "management-zone-1",
+        },
+        {
+          vpc: "management",
+          zone: 2,
+          cidr: "10.20.0.0/22",
+          name: "management-zone-2",
+        },
+        {
+          vpc: "management",
+          zone: 3,
+          cidr: "10.30.0.0/22",
+          name: "management-zone-3",
+        },
+      ];
+      vpcState.vpcs.subnetTiers.save(
+        {
+          name: "frog",
+          zones: 2,
+        },
+        {
+          vpc_name: "management",
+          data: { name: "vsi" },
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "management",
+                    publicGateways: [],
+                  },
+                ],
+              },
+            },
+          },
+        }
+      );
+      let expectedSubnets = [
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.0.0/29",
+          name: "frog-zone-1",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: false,
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.0.8/28",
+          name: "vpn-zone-1",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: false,
+        },
+        {
+          vpc: "management",
+          zone: 2,
+          cidr: "10.20.0.0/29",
+          name: "frog-zone-2",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: false,
+        },
+        {
+          vpc: "management",
+          zone: 1,
+          cidr: "10.10.0.24/29",
+          name: "vpe-zone-1",
+          resource_group: "management-rg",
+          network_acl: "management",
+          public_gateway: false,
+          has_prefix: false,
+        },
+        {
+          vpc: "management",
+          zone: 2,
+          cidr: "10.20.0.8/29",
+          name: "vpe-zone-2",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: false,
+        },
+        {
+          vpc: "management",
+          zone: 3,
+          cidr: "10.30.0.0/29",
+          name: "vpe-zone-3",
+          network_acl: "management",
+          resource_group: "management-rg",
+          public_gateway: false,
+          has_prefix: false,
+        },
+      ];
+
+      assert.deepEqual(
+        vpcState.store.json.vpcs[0].address_prefixes,
+        expectedData,
+        "it should change subnets"
+      );
+      assert.deepEqual(
+        vpcState.store.json.vpcs[0].subnets,
+        expectedSubnets,
+        "it should change subnets"
+      );
     });
   });
 });

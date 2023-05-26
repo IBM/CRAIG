@@ -2981,6 +2981,45 @@ describe("disableSave", () => {
         "it should be true"
       );
     });
+    it("should return true if a routing table route has an invalid next hop as cidr block", () => {
+      assert.isTrue(
+        disableSave(
+          "routes",
+          {
+            name: "aaa",
+            zone: "1",
+            destination: "1.2.3.4",
+            next_hop: "1.2.3.4/5",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                  routing_tables: [
+                    {
+                      name: "frog",
+                      routes: [],
+                    },
+                    {
+                      name: "toad",
+                      routes: [],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+            route: {
+              routes: [],
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
   });
   describe("load_balancers", () => {
     it("should return true if a load balancer has an invalid name", () => {

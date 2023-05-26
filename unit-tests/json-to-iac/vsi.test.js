@@ -16,7 +16,7 @@ describe("virtual server", () => {
         {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           name: "management-server",
           security_groups: ["management-vpe-sg"],
@@ -32,7 +32,7 @@ describe("virtual server", () => {
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -66,7 +66,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
         {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           name: "management-server",
           security_groups: ["management-vpe-sg"],
@@ -82,7 +82,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -117,7 +117,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
         {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           name: "management-server",
           security_groups: ["management-vpe-sg"],
@@ -143,7 +143,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -194,7 +194,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_1_block_storage
         {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           name: "management-server",
           security_groups: ["management-vpe-sg"],
@@ -219,7 +219,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_1_block_storage
       let expectedData = `
 resource "ibm_is_instance" "management_server" {
   name           = "management-server"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -274,7 +274,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_block_storage_1
         {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           name: "management-server",
           security_groups: ["management-vpe-sg", "management-vpe-sg2"],
@@ -289,7 +289,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_block_storage_1
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -325,7 +325,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
         {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           name: "management-server",
           security_groups: ["management-vpe-sg"],
@@ -348,7 +348,7 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_r
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -383,10 +383,10 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   });
   describe("formatVsiImage", () => {
     it("it should create a vsi image data block", () => {
-      let actualData = formatVsiImage("ibm-ubuntu-18-04-6-minimal-amd64-2");
+      let actualData = formatVsiImage("ibm-ubuntu-22-04-1-minimal-amd64-1");
       let expectedData = `
-data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
-  name = "ibm-ubuntu-18-04-6-minimal-amd64-2"
+data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
+  name = "ibm-ubuntu-22-04-1-minimal-amd64-1"
 }
 `;
       assert.deepEqual(
@@ -448,7 +448,7 @@ data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
             {
               kms: "slz-kms",
               encryption_key: "slz-vsi-volume-key",
-              image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+              image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
               profile: "cx2-4x8",
               name: "management-server",
               security_groups: ["management-vpe-sg"],
@@ -613,7 +613,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
             {
               kms: "slz-kms",
               encryption_key: "slz-vsi-volume-key",
-              image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+              image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
               profile: "cx2-4x8",
               name: "management-server",
               security_groups: ["management-vpe-sg"],
@@ -755,7 +755,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
           {
             kms: "slz-kms",
             encryption_key: "slz-vsi-volume-key",
-            image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+            image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
             profile: "cx2-4x8",
             name: "management-server",
             security_groups: ["management-vpe-sg"],
@@ -908,8 +908,8 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
 # Image Data Sources
 ##############################################################################
 
-data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
-  name = "ibm-ubuntu-18-04-6-minimal-amd64-2"
+data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
+  name = "ibm-ubuntu-22-04-1-minimal-amd64-1"
 }
 
 ##############################################################################
@@ -920,7 +920,7 @@ data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -945,7 +945,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-2"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -970,7 +970,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-2-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -995,7 +995,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-2-2"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -1020,7 +1020,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-3-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -1045,7 +1045,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-3-2"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -1083,7 +1083,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
         {
           kms: "slz-kms",
           encryption_key: "slz-vsi-volume-key",
-          image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
           profile: "cx2-4x8",
           name: "management-server",
           security_groups: ["management-vpe-sg"],
@@ -1100,8 +1100,8 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
 # Image Data Sources
 ##############################################################################
 
-data "ibm_is_image" "ibm_ubuntu_18_04_6_minimal_amd64_2" {
-  name = "ibm-ubuntu-18-04-6-minimal-amd64-2"
+data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
+  name = "ibm-ubuntu-22-04-1-minimal-amd64-1"
 }
 
 ##############################################################################
@@ -1118,7 +1118,7 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_r
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -1152,7 +1152,7 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_2_1_r
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-2-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
@@ -1186,7 +1186,7 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_3_1_r
 
 resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-3-1"
-  image          = data.ibm_is_image.ibm_ubuntu_18_04_6_minimal_amd64_2.id
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
   profile        = "cx2-4x8"
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id

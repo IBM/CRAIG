@@ -190,7 +190,6 @@ const {
 } = require("./routing-tables");
 const {
   cbrZonesInit,
-  cbrZonesOnStoreUpdate,
   cbrZoneCreate,
   cbrZoneSave,
   cbrZoneDelete,
@@ -203,7 +202,6 @@ const {
 } = require("./cbr-zones");
 const {
   cbrRulesInit,
-  cbrRulesOnStoreUpdate,
   cbrRuleCreate,
   cbrRuleSave,
   cbrRuleDelete,
@@ -252,7 +250,14 @@ const {
   sysdigSave,
 } = require("./logging-monitoring");
 
-const state = function () {
+/**
+ * get state for craig
+ * @param {boolean=} legacy this param is for unit tests and is not passed in the application
+ * use the `legacy` parameter for the initialization of unit tests that require the SLZ cidr
+ * blocks to function.
+ * @returns {lazyZstate} store
+ */
+const state = function (legacy) {
   let store = new lazyZstate({
     _defaults: {
       json: {
@@ -694,6 +699,8 @@ const state = function () {
   store.hardSetJson = function (json, slz) {
     if (!slz) validate(json);
     let subnetTiers = {};
+    if (!json._options) json._options = {};
+    if (!json._options.dynamic_subnets) json._options.dynamic_subnets = false;
     transpose(json, store.store.json);
     store.store.json.vpcs.forEach((network) => {
       subnetTiers[network.name] = buildSubnetTiers(network);
@@ -816,6 +823,9 @@ const state = function () {
   store.getAllOtherGroups = function (stateData, componentProps) {
     return getAllOtherGroups(store, stateData, componentProps);
   };
+
+  // this line enforces scalable subnets without causing application to rerender
+  if (!legacy) vpcOnStoreUpdate(store);
 
   return store;
 };

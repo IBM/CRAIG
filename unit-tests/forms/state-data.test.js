@@ -2,7 +2,7 @@ const {
   getTierSubnets,
   getSubnetTierStateData,
 } = require("../../client/src/lib/forms/state-data");
-const { newDefaultVpcs } = require("../../client/src/lib/state/defaults");
+const { legacyDefaultVpcs } = require("../../client/src/lib/state/defaults");
 const { assert } = require("chai");
 
 describe("state data", () => {
@@ -10,7 +10,7 @@ describe("state data", () => {
     it("should return subnets from list", () => {
       let actualData = getTierSubnets(
         { name: "vsi", zones: 3 },
-        newDefaultVpcs()[0]
+        legacyDefaultVpcs()[0]
       )({ zones: 2 });
       let expectedData = [
         {
@@ -39,7 +39,7 @@ describe("state data", () => {
       assert.deepEqual(actualData, expectedData, "it should return vpcs");
     });
     it("should return advanced subnets from list", () => {
-      let vpc = newDefaultVpcs()[0];
+      let vpc = legacyDefaultVpcs()[0];
       vpc.subnets.forEach((subnet) => {
         if (subnet.name.indexOf("vsi-zone") !== -1) {
           subnet.tier = "frog";
@@ -99,7 +99,7 @@ describe("state data", () => {
       assert.deepEqual(actualData, expectedData, "it should return vpcs");
     });
     it("should return advanced subnets from list with only zone 3", () => {
-      let vpc = newDefaultVpcs()[0];
+      let vpc = legacyDefaultVpcs()[0];
       vpc.subnets.forEach((subnet) => {
         if (subnet.name.indexOf("vsi-zone") !== -1) {
           subnet.tier = "frog";
@@ -143,7 +143,7 @@ describe("state data", () => {
     it("should return subnets from list", () => {
       let actualData = getSubnetTierStateData(
         { name: "vsi", zones: 3 },
-        newDefaultVpcs()[0]
+        legacyDefaultVpcs()[0]
       );
       let expectedData = {
         hide: true,
@@ -155,7 +155,7 @@ describe("state data", () => {
       assert.deepEqual(actualData, expectedData, "it should return vpcs");
     });
     it("should return subnets from list where vpc", () => {
-      let vpc = newDefaultVpcs()[0];
+      let vpc = legacyDefaultVpcs()[0];
       vpc.subnets.forEach((subnet) => {
         subnet.public_gateway = true;
       });
@@ -170,7 +170,7 @@ describe("state data", () => {
       assert.deepEqual(actualData, expectedData, "it should return vpcs");
     });
     it("should set network acl to - when advanced", () => {
-      let vpc = newDefaultVpcs()[0];
+      let vpc = legacyDefaultVpcs()[0];
       vpc.subnets.forEach((subnet) => {
         subnet.public_gateway = true;
       });

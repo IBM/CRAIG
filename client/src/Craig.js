@@ -243,7 +243,6 @@ class Craig extends React.Component {
     // update store project name and json
     craig.store.project_name = kname;
     craig.store.json = projects[kname].json;
-
     this.saveAndSendNotification(
       message || `Project ${name} successfully imported`
     );

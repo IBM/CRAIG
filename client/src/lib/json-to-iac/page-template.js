@@ -29,8 +29,9 @@ function codeMirrorVpcTf(config) {
     tf +=
       tfBlock(vpc.name + " vpc", blockData) +
       "\n" +
-      tfBlock(vpc.name + " flow logs", formatFlowLogs(vpc, config)) +
-      "\n";
+      (vpc.bucket === "$disabled"
+        ? ""
+        : tfBlock(vpc.name + " flow logs", formatFlowLogs(vpc, config)) + "\n");
   });
   return tfDone(tf);
 }

@@ -70,7 +70,7 @@ function F5Icon() {
 
 const navCategories = [
   {
-    name: "Access",
+    name: "Resource Groups",
     links: [
       {
         title: "Resource Groups",
@@ -79,26 +79,6 @@ const navCategories = [
         toTf: resourceGroupTf,
         jsonField: "resource_groups",
         required: true,
-      },
-      {
-        title: "Access Groups",
-        path: "/form/accessGroups",
-        icon: GroupAccess,
-        toTf: iamTf,
-        jsonField: "access_groups",
-      },
-      {
-        title: "IAM Account Settings",
-        path: "/form/iamAccountSettings",
-        icon: IdManagement,
-        toTf: (json) => codeMirrorFormatIamAccountSettingsTf(json),
-        jsonField: "iam_account_settings",
-      },
-      {
-        title: "Context Based Restrictions",
-        path: "/form/cbr",
-        icon: CBRIcon,
-        toTf: cbrTf,
       },
     ],
   },
@@ -282,6 +262,31 @@ const navCategories = [
         icon: F5Icon,
         jsonField: "f5_vsi",
         toTf: f5Tf,
+      },
+    ],
+  },
+  {
+    name: "IAM and Access",
+    links: [
+      {
+        title: "Access Groups",
+        path: "/form/accessGroups",
+        icon: GroupAccess,
+        toTf: iamTf,
+        jsonField: "access_groups",
+      },
+      {
+        title: "IAM Account Settings",
+        path: "/form/iamAccountSettings",
+        icon: IdManagement,
+        toTf: (json) => codeMirrorFormatIamAccountSettingsTf(json),
+        jsonField: "iam_account_settings",
+      },
+      {
+        title: "Context Based Restrictions",
+        path: "/form/cbr",
+        icon: CBRIcon,
+        toTf: cbrTf,
       },
     ],
   },

@@ -14,7 +14,7 @@ describe("clusters", () => {
           kms: "slz-kms",
           cos: "cos",
           entitlement: "cloud_pak",
-          type: "openshift",
+          kube_type: "openshift",
           kube_version: "default",
           flavor: "bx2.16x64",
           name: "workload-cluster",
@@ -954,7 +954,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
             {
               kms: "slz-kms",
               encryption_key: "slz-vsi-volume-key",
-              image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+              image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
               profile: "cx2-4x8",
               name: "management-server",
               security_groups: ["management-vpe-sg"],
@@ -2017,7 +2017,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
             {
               kms: "slz-kms",
               encryption_key: "slz-vsi-volume-key",
-              image: "ibm-ubuntu-18-04-6-minimal-amd64-2",
+              image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
               profile: "cx2-4x8",
               name: "management-server",
               security_groups: ["management-vpe-sg"],

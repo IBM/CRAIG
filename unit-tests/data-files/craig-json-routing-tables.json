@@ -861,7 +861,7 @@
     {
       "kms": "slz-kms",
       "encryption_key": "slz-vsi-volume-key",
-      "image": "ibm-ubuntu-18-04-6-minimal-amd64-2",
+      "image": "ibm-ubuntu-22-04-1-minimal-amd64-1",
       "profile": "cx2-4x8",
       "name": "management-server",
       "security_groups": ["management-vpe-sg"],

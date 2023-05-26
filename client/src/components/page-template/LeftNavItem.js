@@ -57,7 +57,9 @@ class LeftNavItem extends React.Component {
             onMouseOver={() => this.setHover(true)}
             onMouseOut={() => this.setHover(false)}
             className={
-              (this.props.item.required && this.props.expanded
+              (this.props.item.required &&
+              this.props.expanded &&
+              this.props.fsCloud
                 ? "sideNavLinkRequired "
                 : "") + getClassName(this.props.item.path, this.props.expanded)
             }
@@ -67,7 +69,9 @@ class LeftNavItem extends React.Component {
           <PopoverContent
             className={
               "popover-box navPopoverAlign " +
-              (this.props.item.required ? " sideNavLinkRequired" : "")
+              (this.props.item.required && this.props.fsCloud
+                ? " sideNavLinkRequired"
+                : "")
             }
             key={"popover-content-" + this.props.item.title}
           >
@@ -79,6 +83,10 @@ class LeftNavItem extends React.Component {
   }
 }
 
+LeftNavItem.defaultProps = {
+  fsCloud: true,
+};
+
 LeftNavItem.propTypes = {
   item: PropTypes.shape({
     title: PropTypes.string.isRequired,
@@ -88,6 +96,7 @@ LeftNavItem.propTypes = {
     required: PropTypes.bool,
   }).isRequired,
   expanded: PropTypes.bool.isRequired,
+  fsCloud: PropTypes.bool.isRequired,
 };
 
 export default LeftNavItem;
