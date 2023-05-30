@@ -4,12 +4,12 @@ import {
   SideNavItems,
   SideNavLink,
 } from "@carbon/react";
-import { Home, Help, Bullhorn, Folders } from "@carbon/icons-react";
+import { Home, Help, Bullhorn } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
 import LeftNavItem from "./LeftNavItem";
 import PropTypes from "prop-types";
-import { kebabCase } from "lazy-z";
+import { contains, kebabCase } from "lazy-z";
 
 const LeftNav = (props) => {
   let dividerClass = props.expanded ? "expandedDivider" : "railDivider";
@@ -56,6 +56,10 @@ const LeftNav = (props) => {
                 key={item.title}
                 expanded={props.expanded}
                 fsCloud={props.fsCloud}
+                hasInvalidForm={
+                  contains(props.invalidForms, item.jsonField) ||
+                  contains(props.invalidForms, item.path)
+                }
               />
             ))}
           </div>

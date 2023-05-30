@@ -64,7 +64,9 @@ const {
   setDeleteDisabledMessage,
   setFormSgList,
 } = require("./form-props");
+const { leftNavItemClassName } = require("./class-names");
 module.exports = {
+  leftNavItemClassName,
   hasDuplicateName,
   resourceGroupHelperTextCallback,
   genericNameCallback,

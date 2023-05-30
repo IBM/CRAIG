@@ -7,7 +7,20 @@
       "landing-zone"
     ]
   },
-  "dns": [],
+  "dns": [
+    {
+      "name": "@@@",
+      "zones": [],
+      "custom_resolvers": [],
+      "records": []
+    }
+  ],
+  "vpn_servers": [
+    {
+      "name": "@@@",
+      "routes": []
+    }
+  ],
   "resource_groups": [
     {
       "use_prefix": true,
@@ -28,7 +41,7 @@
   "key_management": [
     {
       "name": "slz-kms",
-      "resource_group": "slz-service-rg",
+      "resource_group": null,
       "use_hs_crypto": false,
       "authorize_vpc_reader_role": true,
       "use_data": false,
@@ -69,7 +82,7 @@
         {
           "endpoint": "public",
           "force_delete": true,
-          "kms_key": "slz-atracker-key",
+          "kms_key": null,
           "name": "atracker-bucket",
           "storage_class": "standard"
         }
@@ -83,7 +96,7 @@
       ],
       "name": "atracker-cos",
       "plan": "standard",
-      "resource_group": "slz-service-rg",
+      "resource_group": null,
       "use_data": false,
       "use_random_suffix": false,
       "kms": "slz-kms"
@@ -114,13 +127,17 @@
       "use_data": false
     }
   ],
-  "secrets_manager": [],
+  "secrets_manager": [
+    {
+      "name": "@@@@"
+    }
+  ],
   "atracker": {
     "enabled": true,
     "type": "cos",
     "name": "slz-atracker",
     "target_name": "atracker-cos",
-    "bucket": "atracker-bucket",
+    "bucket": null,
     "add_route": true,
     "cos_key": "cos-bind-key",
     "locations": [
@@ -133,7 +150,7 @@
       "cos": "cos",
       "bucket": "management-bucket",
       "name": "management",
-      "resource_group": "slz-management-rg",
+      "resource_group": null,
       "classic_access": false,
       "manual_address_prefix_management": true,
       "default_network_acl_name": null,
@@ -394,7 +411,7 @@
           "vpc": "workload",
           "zone": 1,
           "cidr": "10.40.10.0/24",
-          "name": "vsi-zone-1",
+          "name": "@@@",
           "network_acl": "workload",
           "resource_group": "slz-workload-rg",
           "public_gateway": false,
@@ -455,7 +472,7 @@
       "acls": [
         {
           "resource_group": "slz-workload-rg",
-          "name": "workload",
+          "name": "@@@",
           "vpc": "workload",
           "rules": [
             {
@@ -544,9 +561,7 @@
       "vpc": "management",
       "service": "cos",
       "resource_group": "slz-management-rg",
-      "security_groups": [
-        "management-vpe-sg"
-      ],
+      "security_groups": [],
       "subnets": [
         "vpe-zone-1",
         "vpe-zone-2",
@@ -570,7 +585,7 @@
   ],
   "security_groups": [
     {
-      "vpc": "management",
+      "vpc": null,
       "name": "management-vpe-sg",
       "resource_group": "slz-management-rg",
       "rules": [
@@ -817,13 +832,13 @@
       "name": "management-gateway",
       "resource_group": "slz-management-rg",
       "subnet": "vpn-zone-1",
-      "vpc": "management"
+      "vpc": null
     }
   ],
   "ssh_keys": [
     {
       "name": "slz-ssh-key",
-      "public_key": "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+      "public_key": null,
       "resource_group": "slz-management-rg",
       "use_data": false
     }
@@ -831,7 +846,7 @@
   "transit_gateways": [
     {
       "name": "transit-gateway",
-      "resource_group": "slz-service-rg",
+      "resource_group": null,
       "global": false,
       "connections": [
         {
@@ -855,7 +870,7 @@
       "flavor": "bx2.16x64",
       "name": "workload",
       "resource_group": "slz-workload-rg",
-      "encryption_key": "slz-vsi-volume-key",
+      "encryption_key": null,
       "subnets": [
         "vsi-zone-1",
         "vsi-zone-2",
@@ -893,9 +908,7 @@
       "security_groups": [
         "management-vpe-sg"
       ],
-      "ssh_keys": [
-        "slz-ssh-key"
-      ],
+      "ssh_keys": [],
       "subnets": [
         "vsi-zone-1",
         "vsi-zone-2",
@@ -906,45 +919,90 @@
       "resource_group": "slz-management-rg"
     }
   ],
-  "appid": [],
+  "appid": [
+    {
+      "resource_group": null,
+      "keys": []
+    }
+  ],
   "teleport_vsi": [],
   "routing_tables": [
     {
-      "name": "table",
-      "vpc": "management",
-      "routes": [
-        {
-          "vpc": "xxx",
-          "routing_table": "aaa"
-        }
-      ]
+      "name": "@@@@",
+      "routes": []
     }
   ],
   "scc": {
     "name": "scc",
     "enable": true
   },
-  "event_streams": [],
-  "load_balancers": [],
-  "f5_vsi": [],
-  "iam_account_settings": {
-    "enable": true
-  },
-  "access_groups": [],
-  "cbr_zones": [],
-  "cbr_rules": [],
-  "sysdig": {
-    "enabled": false,
-    "plan": "",
-    "resource_group": null
-  },
+  "event_streams": [
+    {
+      "resource_group": null
+    }
+  ],
+  "load_balancers": [
+    {
+      "name": "@@@",
+      "target_vsi": [],
+      "security_groups": []
+    }
+  ],
   "logdna": {
     "enabled": false,
     "plan": "",
     "endpoints": "",
     "platform_logs": false,
-    "resource_group": null,
-    "cos": null,
-    "bucket": null
-  }
+    "resource_group": "",
+    "cos": "",
+    "bucket": ""
+  },
+  "sysdig": {
+    "enabled": false,
+    "plan": "",
+    "resource_group": null
+  },
+  "f5_vsi": [],
+  "iam_account_settings": {
+    "enable": true
+  },
+  "access_groups": [
+    {
+      "name": "@@@",
+      "policies": [],
+      "dynamic_policies": []
+    }
+  ],
+  "cbr_zones": [
+    {
+      "name": "@@@",
+      "description": "",
+      "account_id": "asdfsdf",
+      "addresses": [
+        {
+          "name": "asdfasdf",
+          "account_id": "",
+          "location": "",
+          "service_name": "",
+          "service_instance": "",
+          "service_type": "",
+          "type": "ipAddress",
+          "value": "2.2.2.2"
+        }
+      ],
+      "exclusions": [
+        {
+          "name": "asdf",
+          "account_id": "",
+          "location": "",
+          "service_name": "",
+          "service_instance": "",
+          "service_type": "",
+          "type": "ipAddress",
+          "value": "2.2.2.2"
+        }
+      ]
+    }
+  ],
+  "cbr_rules": []
 }

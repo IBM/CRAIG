@@ -1,11 +1,6 @@
-const { snakeCase, titleCase, prettyJSON } = require("lazy-z");
+const { prettyJSON } = require("lazy-z");
 const { appidTf } = require("./appid");
-const {
-  versionsTf,
-  mainTf,
-  variablesTf,
-  logdnaProviders,
-} = require("./constants");
+const { versionsTf, mainTf, logdnaProviders } = require("./constants");
 const { atrackerTf } = require("./atracker");
 const { clusterTf } = require("./clusters");
 const { eventStreamsTf } = require("./event-streams");

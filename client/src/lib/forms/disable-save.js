@@ -63,7 +63,7 @@ function fieldsAreBad(fields, stateData) {
  * @param {Array} fields list of fields
  * @param {Function} check test fields with this
  * @param {Object} stateData
- * @returns
+ * @returns {boolean}
  */
 function fieldCheck(fields, check, stateData) {
   let hasBadFields = false;

@@ -27,9 +27,6 @@ const simpleErrors = {
   noDeploymentSshKeys: (deploymentName) => {
     return `${deploymentName} must have at least one SSH Key, got 0.`;
   },
-  noDeploymentPrimarySubnet: (deploymentName, subnetField) => {
-    return `${deploymentName} must have a valid subnet at ${subnetField}, got null.`;
-  },
   invalidScc: `If enable is true, location and is_public must have valid values.`,
   invalidObjectStorageBucketKey: (instance, bucket, kms, key) => {
     return `${bucket} must reference a key in the kms service ${kms} used by ${instance}. ${key} is invalid.`;
@@ -46,7 +43,6 @@ const simpleErrors = {
 const validate = function (json) {
   const optionalComponents = [
     "secrets_manager",
-    "teleport_vsi",
     "f5_vsi",
     "access_groups",
     "event_streams",
@@ -55,6 +51,10 @@ const validate = function (json) {
     "cbr_rules",
     "cbr_zones",
     "vpn_servers",
+    "dns",
+    "routing_tables",
+    "logdna",
+    "sysdig",
   ];
   /**
    * validate something
@@ -516,13 +516,6 @@ const validate = function (json) {
       throw new Error(simpleErrors.noDeploymentSshKeys(deploymentName));
     }
 
-    // if not vsi and no valid primary subnet name
-    if (subnetField && deployment[subnetField] === null) {
-      throw new Error(
-        simpleErrors.noDeploymentPrimarySubnet(deploymentName, subnetField)
-      );
-    }
-
     // check security groups in security_groups are in vpc && update rules
     deployment.security_groups.forEach((sg) => {
       let sgObject = getObjectFromArray(json.security_groups, "name", sg);
@@ -534,12 +527,6 @@ const validate = function (json) {
       updateNetworkingRulesForCompatibility(sgObject?.rules);
     });
   }
-
-  // teleport vsi
-  json.teleport_vsi.forEach((deployment) => {
-    instanceTests(deployment, "Teleport");
-  });
-
   // f5 vsi
   json.f5_vsi.forEach((deployment) => {
     instanceTests(deployment, "F5");

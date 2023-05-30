@@ -386,6 +386,7 @@ const PageTemplate = (props) => {
         notify={props.notify}
         isResetState={isResetState}
         formPathNotPresent={formPathNotPresent}
+        invalidForms={props.invalidForms}
       />
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
@@ -445,6 +446,7 @@ PageTemplate.propTypes = {
   hideFooter: PropTypes.bool.isRequired,
   toggleHide: PropTypes.func,
   jsonInCodeMirror: PropTypes.bool.isRequired,
+  invalidForms: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default PageTemplate;

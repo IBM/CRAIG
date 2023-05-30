@@ -412,45 +412,6 @@
       "connection_limit": "number"
     }
   },
-  "teleport_vsi": {
-    "Array": {
-      "appid": "string",
-      "kms": "string",
-      "encryption_key": "string",
-      "image": "string",
-      "profile": "string",
-      "name": "string",
-      "security_groups": "Array<string>",
-      "ssh_keys": "Array<string>",
-      "subnet": "string",
-      "vpc": "string",
-      "vsi_per_subnet": "number",
-      "resource_group": "string",
-      "template": {
-        "deployment": "string",
-        "license": "string",
-        "https_cert": "string",
-        "https_key": "string",
-        "hostname": "string",
-        "domain": "string",
-        "bucket": "string",
-        "bucket_endpoint": "string",
-        "hmac_key_id": "string",
-        "hmac_secret_key_id": "string",
-        "appid": "string",
-        "appid_secret": "string",
-        "appid_url": "string",
-        "message_of_the_day": "string",
-        "version": "string",
-        "claim_to_roles": {
-          "Array": {
-            "email": "string",
-            "roles": "Array<string>"
-          }
-        }
-      }
-    }
-  },
   "f5_vsi": {
     "Array": {
       "kms": "string",

@@ -4708,11 +4708,11 @@ describe("disableSave", () => {
           subnets: [],
           security_groups: ["aaa"],
           certificate_crn: "CHEATER",
+          client_dns_server_ips: "1.2.3.4",
           method: "username",
           port: 1,
           client_ip_pool: "1.2.3.4/23",
           client_ca_crn: "CHEATER",
-          client_dns_server_ips: "1.2.3.4",
         },
         {
           data: {

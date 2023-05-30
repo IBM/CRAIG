@@ -7,7 +7,44 @@
       "landing-zone"
     ]
   },
-  "dns": [],
+  "dns": [
+    {
+      "name": "dev",
+      "resource_group": "slz-service-rg",
+      "zones": [
+        {
+          "name": "hi",
+          "vpcs": []
+        }
+      ],
+      "custom_resolvers": [],
+      "records": []
+    }
+  ],
+  "vpn_servers": [
+    {
+      "name": "aaa",
+      "resource_group": "slz-management-rg",
+      "vpc": "management",
+      "subnets": [
+        "vsi-zone-1"
+      ],
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "certificate_crn": "CHEATER",
+      "client_dns_server_ips": "1.2.3.4",
+      "method": "username",
+      "port": 1,
+      "client_ip_pool": "1.2.3.4/23",
+      "client_ca_crn": "CHEATER",
+      "routes": [
+        {
+          "name": "@@@"
+        }
+      ]
+    }
+  ],
   "resource_groups": [
     {
       "use_prefix": true,
@@ -35,7 +72,7 @@
       "keys": [
         {
           "key_ring": "slz-slz-ring",
-          "name": "slz-slz-key",
+          "name": "@@@",
           "root_key": true,
           "force_delete": true,
           "endpoint": "public",
@@ -69,7 +106,7 @@
         {
           "endpoint": "public",
           "force_delete": true,
-          "kms_key": "slz-atracker-key",
+          "kms_key": "good",
           "name": "atracker-bucket",
           "storage_class": "standard"
         }
@@ -578,7 +615,7 @@
           "vpc": "fff",
           "sg": "sdfsfdsf",
           "direction": "inbound",
-          "name": "allow-ibm-inbound",
+          "name": "@@@@",
           "source": "161.26.0.0/16",
           "tcp": {
             "port_max": null,
@@ -868,7 +905,7 @@
           "entitlement": "cloud_pak",
           "cluster": "workloddddad",
           "flavor": "bx2.16x64",
-          "name": "logging-pool",
+          "name": "@@@@",
           "resource_group": "slz-workload-rg",
           "subnets": [
             "vsi-zone-1",
@@ -903,19 +940,41 @@
       ],
       "vpc": "management",
       "vsi_per_subnet": 2,
-      "resource_group": "slz-management-rg"
+      "resource_group": "slz-management-rg",
+      "volumes": [
+        {
+          "name": "@@@"
+        }
+      ]
     }
   ],
   "appid": [],
-  "teleport_vsi": [],
   "routing_tables": [
     {
-      "name": "table",
+      "name": "aaa",
       "vpc": "management",
+      "service": "debug",
+      "resource_group": "slz-service-rg",
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "subnets": [
+        "vsi-zone-1"
+      ],
       "routes": [
         {
-          "vpc": "xxx",
-          "routing_table": "aaa"
+          "name": "aaa-",
+          "vpc": "capybara",
+          "service": "debug",
+          "resource_group": "what",
+          "security_groups": [
+            "security",
+            "group"
+          ],
+          "subnets": [
+            "sub",
+            "net"
+          ]
         }
       ]
     }
@@ -926,25 +985,66 @@
   },
   "event_streams": [],
   "load_balancers": [],
-  "f5_vsi": [],
-  "iam_account_settings": {
-    "enable": true
-  },
-  "access_groups": [],
-  "cbr_zones": [],
-  "cbr_rules": [],
-  "sysdig": {
-    "enabled": false,
-    "plan": "",
-    "resource_group": null
-  },
   "logdna": {
     "enabled": false,
     "plan": "",
     "endpoints": "",
     "platform_logs": false,
-    "resource_group": null,
-    "cos": null,
-    "bucket": null
-  }
+    "resource_group": "",
+    "cos": "",
+    "bucket": ""
+  },
+  "sysdig": {
+    "enabled": false,
+    "plan": "",
+    "resource_group": null
+  },
+  "f5_vsi": [],
+  "iam_account_settings": {
+    "enable": true
+  },
+  "access_groups": [
+    {
+      "name": "dev",
+      "policies": [
+        {
+          "name": "@@@",
+          "resources": {
+            
+          }
+        }
+      ],
+      "dynamic_policies": []
+    }
+  ],
+  "cbr_zones": [{
+    "name": "hi",
+    "description": "",
+    "account_id": "asdfsdf",
+    "addresses": [
+      {
+        "name": "@@@",
+        "account_id": "",
+        "location": "",
+        "service_name": "",
+        "service_instance": "",
+        "service_type": "",
+        "type": "ipAddress",
+        "value": "2.2.2.2"
+      }
+    ],
+    "exclusions": [
+      {
+        "name": "asdf",
+        "account_id": "",
+        "location": "",
+        "service_name": "",
+        "service_instance": "",
+        "service_type": "",
+        "type": "ipAddress",
+        "value": "2.2.2.2"
+      }
+    ]
+  }],
+  "cbr_rules": []
 }

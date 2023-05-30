@@ -1,11 +1,9 @@
 const {
   revision,
-  contains,
   transpose,
   camelCase,
   splat,
   splatContains,
-  getObjectFromArray,
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -181,7 +179,7 @@ function updateVsi(config, key) {
  * @param {object} config.store state store
  **/
 function vsiOnStoreUpdate(config) {
-  ["teleport_vsi", "vsi"].forEach((key) => {
+  ["vsi"].forEach((key) => {
     updateVsi(config, key);
   });
 }

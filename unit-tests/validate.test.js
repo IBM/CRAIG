@@ -1596,28 +1596,6 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.doesNotThrow(task, "it should not throw");
     });
-    it("should throw an error when no subnet names are provided", () => {
-      let testData = minimumValidJson({
-        teleport_vsi: [
-          {
-            name: "test-vsi",
-            profile: null,
-            image: null,
-            resource_group: "slz-management-rg",
-            security_group: "test-vsi-sg",
-            encryption_key: "test-ek",
-            subnet: null,
-            ssh_keys: ["hi"],
-            vpc: "management",
-          },
-        ],
-      });
-      let task = () => validate(testData);
-      assert.throws(
-        task,
-        "Teleport VSIs must have a valid subnet at subnet, got null."
-      );
-    });
     it("should not throw when valid teleport", () => {
       let testData = minimumValidJson({
         teleport_vsi: [
@@ -2086,16 +2064,6 @@ describe("validate", () => {
       let json = minimumValidJson();
       validate(json);
       assert.deepEqual(json.access_groups, []);
-    });
-    it("should set teleport_vsi if not found", () => {
-      let goodOverride = minimumValidJson();
-      delete goodOverride.teleport_vsi;
-      let actualData = validate(goodOverride);
-      assert.deepEqual(
-        actualData.teleport_vsi,
-        [],
-        "it should set teleport_vsi"
-      );
     });
     it("should set event_streams if not found", () => {
       let goodOverride = minimumValidJson();

@@ -2,25 +2,7 @@ import { Popover, PopoverContent, SideNavLink } from "@carbon/react";
 import React from "react";
 import PropTypes from "prop-types";
 import "./navigation.scss";
-
-/**
- * get classname for nac item
- * @param {string} path
- * @param {boolean=} expanded
- * @returns {string} composed class name
- */
-const getClassName = (path, expanded) => {
-  let className = "";
-  // if our current page is what is in the navbar
-  if (window.location.pathname === path) {
-    className += expanded
-      ? "blueTileExpanded whiteFill "
-      : "blueTileRail whiteFill ";
-  }
-  // if navbar expanded
-  expanded ? (className += "expanded ") : (className += "rail ");
-  return className;
-};
+import { leftNavItemClassName } from "../../lib/forms";
 
 class LeftNavItem extends React.Component {
   constructor(props) {
@@ -37,6 +19,7 @@ class LeftNavItem extends React.Component {
   }
 
   render() {
+    let requiredComponent = this.props.item.required && this.props.fsCloud;
     return (
       <div
         className={this.state.isHovering ? "nav-popover-obj" : ""} // do not overexpand divs
@@ -57,11 +40,16 @@ class LeftNavItem extends React.Component {
             onMouseOver={() => this.setHover(true)}
             onMouseOut={() => this.setHover(false)}
             className={
-              (this.props.item.required &&
-              this.props.expanded &&
-              this.props.fsCloud
+              (requiredComponent && this.props.expanded
                 ? "sideNavLinkRequired "
-                : "") + getClassName(this.props.item.path, this.props.expanded)
+                : "") +
+              leftNavItemClassName(
+                window,
+                this.props.item.path,
+                this.props.expanded,
+                this.props.hasInvalidForm,
+                this.state.isHovering
+              )
             }
           >
             {this.props.expanded ? this.props.item.title : ""}
@@ -69,9 +57,7 @@ class LeftNavItem extends React.Component {
           <PopoverContent
             className={
               "popover-box navPopoverAlign " +
-              (this.props.item.required && this.props.fsCloud
-                ? " sideNavLinkRequired"
-                : "")
+              (requiredComponent ? " sideNavLinkRequired" : "")
             }
             key={"popover-content-" + this.props.item.title}
           >

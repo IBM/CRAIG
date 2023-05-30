@@ -166,6 +166,7 @@ class Navigation extends React.Component {
             onOverlayClick={this.onHamburgerClick}
             navCategories={this.props.navCategories}
             fsCloud={this.props.json._options.fs_cloud}
+            invalidForms={this.props.invalidForms}
           />
           {this.state.showModal && (
             <Modal
@@ -201,6 +202,7 @@ Navigation.propTypes = {
   hideCodeMirror: PropTypes.bool.isRequired,
   navCategories: PropTypes.array.isRequired,
   isResetState: PropTypes.bool.isRequired,
+  invalidForms: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default Navigation;

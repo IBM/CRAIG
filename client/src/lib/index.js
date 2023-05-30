@@ -131,6 +131,7 @@ const {
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
+const { invalidForms } = require("./invalid-forms");
 module.exports = {
   formatAtrackerArchive,
   formatAtrackerKey,
@@ -261,4 +262,5 @@ module.exports = {
   setFormSgList,
   calculateNeededSubnetIps,
   getNextCidr,
+  invalidForms,
 };
