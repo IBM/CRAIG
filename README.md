@@ -113,6 +113,11 @@ Craig uses [nyc](https://www.npmjs.com/package/nyc) for unit test coverage. To g
 npn run coverage
 ```
 
+#### 6. Install Pre-commit Hook
+```shell
+git config --local core.hooksPath .githooks/
+```
+
 ---
 
 ### Building Local Container Image
