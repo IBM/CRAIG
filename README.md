@@ -232,14 +232,16 @@ All files                   |     100 |      100 |     100 |     100 | 🏆
 
 ## Contributing
 
-Found a bug or need an additional feature? File an issue in this repository with the following information.
+Found a bug or need an additional feature? File an issue in this repository with the following information and they will be responded to in a timely manner.
 
 ### Bugs
 
 - A detailed title describing the issue beginning with `[BUG]` and the current release. For sprint one, filing a bug would have the title `[BUG][0.1.0] <issue title>`
 - Steps to recreate said bug (including non-sensitive variables)
 - (optional) Corresponding output logs **as text or as part of a code block**
-- Tag the issue with the `bug` label 
+- Tag bug issues with the `bug` label
+- If you come across a vulnerability that needs to be addressed immediately, use the `vulnerability` label
+
 
 ### Features
 
