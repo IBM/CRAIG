@@ -79,10 +79,39 @@ ul.indent {
   width: 67%;
 }
 
+p .textContainer {
+  width: 80%;
+}
+
 .verticalFlex {
   flex-direction: column;
 }
 
-.center {
+div .center {
   justify-content: center;
+}
+
+@media screen and (min-width: 1800px) {
+  h1 {
+    font-size: 3.5em;
+  }
+
+  h2 {
+    font-size: 2.5em;
+  }
+
+  p,
+  li {
+    font-size: 1.25em !important; // important necessary to raise in hierarchy for prod
+    line-height: 2.5rem !important;
+  }
+
+  p.textContainer {
+    text-align: center;
+  }
+
+  div .cds--accordion__title,
+  .cds--accordion-content {
+    font-size: 1.25em;
+  }
 }

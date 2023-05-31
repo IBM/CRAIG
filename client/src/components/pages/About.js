@@ -25,17 +25,17 @@ const About = () => {
             </div>
           </div>
           <div className="verticalAlign twoThirds verticalFlex infoPadding">
-            <p className="marginBottom">
+            <p className="marginBottom textContainer">
               Cloud Resource and Infrastructure-as-Code Generator (CRAIG) allows
               users to generate Infrastructure-as-Code (IaC) to create a fully
               customizable environment on IBM Cloud.
             </p>
-            <p className="marginBottom">
+            <p className="marginBottom textContainer">
               CRAIG simplifies the process of creating IaC through its GUI,
               which manages and updates interconnected resources as they are
               created.
             </p>
-            <p>
+            <p className="textContainer">
               CRAIG configures infrastructure using JSON to create full VPC
               networks, manage security and networking with VSI deployments, and
               create services, clusters, and manage IAM for an IBM Cloud
@@ -51,8 +51,10 @@ const About = () => {
         <hr />
         <Accordion align="start" size="lg">
           <AccordionItem title="Deploy FS-Cloud Compliant Configuration">
-            The default pattern is an FS Cloud Compliant "mixed" pattern, which
-            creates
+            <p>
+              The default pattern is an FS Cloud Compliant "mixed" pattern,
+              which creates
+            </p>
             <ul className="bullets indent marginBottomSmall">
               <li>A resource group for cloud services and for each VPC</li>
               <li>
@@ -134,12 +136,17 @@ const About = () => {
             </div>
           </AccordionItem>
           <AccordionItem title="Download Configuration">
-            Users can download the configured resources as a terraform
-            directory, including all specified networking and resource settings.
+            <p>
+              Users can download the configured resources as a terraform
+              directory, including all specified networking and resource
+              settings.
+            </p>
           </AccordionItem>
           <AccordionItem title="Import Configuration">
-            Users can import an existing craig JSON configuration to generate
-            IaC from them and edit pre-existing configurations.
+            <p>
+              Users can import an existing craig JSON configuration to generate
+              IaC from them and edit pre-existing configurations.
+            </p>
           </AccordionItem>
         </Accordion>
       </div>
@@ -150,10 +157,10 @@ const About = () => {
         <Accordion size="lg" align="start">
           <AccordionItem title="How is this different from SLZ?">
             <div className="marginBottomSmall">
-              <small>
+              <p>
                 The following features have been added as improvements since the
                 latest version of Secure Landing Zone:
-              </small>
+              </p>
             </div>
             <ul className="bullets indent">
               <li>

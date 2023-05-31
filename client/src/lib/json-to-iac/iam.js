@@ -16,10 +16,11 @@ const { varDotRegion } = require("../constants");
  */
 
 function ibmIamAccountSettings(iamSettings) {
-  delete iamSettings.enable;
+  let iamSettingsCopy = Object.assign({}, iamSettings); // need a copy of iamSettings before deleting,
+  delete iamSettingsCopy.enable; // otherwise unable to see iam code as enable is deleted
   return {
     name: "iam_account_settings",
-    data: iamSettings,
+    data: iamSettingsCopy, // pass iamSettings without enable key
   };
 }
 
