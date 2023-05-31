@@ -81,7 +81,7 @@
   font-style: italic;
 }
 
-.newProjectButton {
+button .newProjectButton {
   margin: 1rem;
   width: 14rem;
   max-width: 14rem;

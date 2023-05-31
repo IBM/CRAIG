@@ -76,6 +76,13 @@ class CbrForm extends React.Component {
                 this.props.disableModal();
               }
             }}
+            data={{
+              name: "",
+              description: "",
+              account_id: this.props.craig.store.json._options.account_id,
+              addresses: [],
+              exclusions: [],
+            }}
             craig={this.props.craig}
           />
         </FormModal>
@@ -171,6 +178,17 @@ class CbrForm extends React.Component {
                         onDelete: this.props.craig.cbr_zones.addresses.delete,
                         onSubmit: this.props.craig.cbr_zones.addresses.create,
                         disableSave: disableSave,
+                        defaultModalValues: {
+                          name: "",
+                          account_id:
+                            this.props.craig.store.json._options.account_id,
+                          location: "",
+                          service_name: "",
+                          service_instance: "",
+                          service_type: "",
+                          type: "ipAddress",
+                          value: "",
+                        },
                       },
                       exclusionProps: {
                         craig: this.props.craig,
@@ -178,6 +196,17 @@ class CbrForm extends React.Component {
                         onDelete: this.props.craig.cbr_zones.exclusions.delete,
                         onSubmit: this.props.craig.cbr_zones.exclusions.create,
                         disableSave: disableSave,
+                        defaultModalValues: {
+                          name: "",
+                          account_id:
+                            this.props.craig.store.json._options.account_id,
+                          location: "",
+                          service_name: "",
+                          service_instance: "",
+                          service_type: "",
+                          type: "ipAddress",
+                          value: "",
+                        },
                       },
                     }}
                   />
