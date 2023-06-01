@@ -7,19 +7,19 @@ const About = () => {
         <div className="displayFlex">
           <div className="displayFlex spaceBetween third verticalLine center">
             <div className="stackedAcronym">
-              <h1>
+              <h1 className="bigger">
                 <strong>C</strong>loud
               </h1>
-              <h1>
+              <h1 className="bigger">
                 <strong>R</strong>esource
               </h1>
-              <h1>
+              <h1 className="bigger">
                 <strong>A</strong>nd
               </h1>
-              <h1>
+              <h1 className="bigger">
                 <strong>I</strong>aC
               </h1>
-              <h1>
+              <h1 className="bigger">
                 <strong>G</strong>enerator
               </h1>
             </div>
@@ -47,11 +47,11 @@ const About = () => {
       </div>
       <hr />
       <div id="features">
-        <h1>Features</h1>
+        <h1 className="bigger">Features</h1>
         <hr />
         <Accordion align="start" size="lg">
           <AccordionItem title="Deploy FS-Cloud Compliant Configuration">
-            <p>
+            <p className="accordionItem">
               The default pattern is an FS Cloud Compliant "mixed" pattern,
               which creates
             </p>
@@ -74,7 +74,7 @@ const About = () => {
               </li>
               <li>A VPN Gateway in the Management VPC</li>
             </ul>
-            <p>Additionally,</p>
+            <p className="accordionItem">Additionally,</p>
             <ul className="bullets indent">
               <li>
                 Identical virtual servers will be deployed across the VSI subnet
@@ -87,18 +87,18 @@ const About = () => {
             </ul>
           </AccordionItem>
           <AccordionItem title="Create & Edit Cloud Resources">
-            <p className="marginBottomSmall">
+            <p className="marginBottomSmall accordionItem">
               CRAIG supports the creation of the following cloud resources:
             </p>
             <div className="displayFlex">
               <div className="half">
-                <small>Access</small>
+                <p className="accordionItem">Access</p>
                 <ul className="bullets indent">
                   <li>Resource Groups</li>
                   <li>Access Groups</li>
                   <li>IAM Account Settings</li>
                 </ul>
-                <small>Services</small>
+                <p className="accordionItem">Services</p>
                 <ul className="bullets indent">
                   <li>Key Management</li>
                   <li>Cloud Object Storage</li>
@@ -110,7 +110,7 @@ const About = () => {
                 </ul>
               </div>
               <div className="half">
-                <small>Network</small>
+                <p className="accordionItem">Network</p>
                 <ul className="bullets indent">
                   <li>Virtual Private Clouds</li>
                   <li>VPC Access Control Lists</li>
@@ -120,11 +120,11 @@ const About = () => {
                   <li>Virtual Private Endpoints</li>
                   <li>VPN Gateways</li>
                 </ul>
-                <small>Clusters</small>
+                <p className="accordionItem">Clusters</p>
                 <ul className="bullets indent">
                   <li>Clusters (IBM Cloud Kubernetes or Red Hat OpenShift)</li>
                 </ul>
-                <small>Virtual Servers</small>
+                <p className="accordionItem">Virtual Servers</p>
                 <ul className="bullets indent">
                   <li>SSH Keys</li>
                   <li>Virtual Server Instances</li>
@@ -136,14 +136,14 @@ const About = () => {
             </div>
           </AccordionItem>
           <AccordionItem title="Download Configuration">
-            <p>
+            <p className="accordionItem">
               Users can download the configured resources as a terraform
               directory, including all specified networking and resource
               settings.
             </p>
           </AccordionItem>
           <AccordionItem title="Import Configuration">
-            <p>
+            <p className="accordionItem">
               Users can import an existing craig JSON configuration to generate
               IaC from them and edit pre-existing configurations.
             </p>
@@ -152,12 +152,12 @@ const About = () => {
       </div>
       <hr />
       <div id="faqs">
-        <h1>FAQs</h1>
+        <h1 className="bigger">FAQs</h1>
         <hr />
         <Accordion size="lg" align="start">
           <AccordionItem title="How is this different from SLZ?">
             <div className="marginBottomSmall">
-              <p>
+              <p className="accordionItem">
                 The following features have been added as improvements since the
                 latest version of Secure Landing Zone:
               </p>

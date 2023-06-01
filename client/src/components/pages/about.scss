@@ -92,18 +92,15 @@ div .center {
 }
 
 @media screen and (min-width: 1800px) {
-  h1 {
+  h1.bigger {
     font-size: 3.5em;
   }
 
-  h2 {
-    font-size: 2.5em;
-  }
-
-  p,
+  p.textContainer,
+  p.accordionItem,
   li {
-    font-size: 1.25em !important; // important necessary to raise in hierarchy for prod
-    line-height: 2.5rem !important;
+    font-size: 1.25em;
+    line-height: 2.5rem;
   }
 
   p.textContainer {
