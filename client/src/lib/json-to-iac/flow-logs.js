@@ -5,7 +5,6 @@ const {
   bucketRef,
   kebabName,
   vpcRef,
-  jsonToIac,
   tfBlock,
   getTags,
   cdktfRef,

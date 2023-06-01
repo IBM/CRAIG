@@ -5,7 +5,7 @@ const craig = require("./data-files/craig-json.json");
 const failingSubComponents = require("./data-files/sub-components-fail.json");
 
 describe("invalidForms", () => {
-  it("should return a list of failing components", () => {
+  it("should return a list of disabled components", () => {
     let updatedState = new state();
     updatedState.store.json = failingComponents;
     updatedState.updateCallback = () => {};
@@ -41,7 +41,7 @@ describe("invalidForms", () => {
       "it should return failing list of forms"
     );
   });
-  it("should return a list of failing components when no components fail", () => {
+  it("should return a list of disabled components when no components fail", () => {
     let updatedState = new state();
     updatedState.store.json = craig;
     craig.vpn_servers = [];
@@ -55,7 +55,7 @@ describe("invalidForms", () => {
       "it should return failing list of forms"
     );
   });
-  it("should return a list of failing components when sub components fail", () => {
+  it("should return a list of disabled components when sub components fail", () => {
     let updatedState = new state();
     updatedState.store.json = failingSubComponents;
     updatedState.updateCallback = () => {};
@@ -78,7 +78,7 @@ describe("invalidForms", () => {
       "it should return failing list of forms"
     );
   });
-  it("should return a list of failing components when sub components fail", () => {
+  it("should return a list of disabled components when sub components fail", () => {
     let updatedState = new state();
     updatedState.store.json = failingSubComponents;
     updatedState.updateCallback = () => {};

@@ -14,7 +14,8 @@ edge-rg       | A resource group containing the compute, storage, and network se
 
 ### Related Links
 
-- [Docs](https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui)
+- [Resource Group Documentation](https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui)
+- [Resource Group Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_group)
 
 -----
 
@@ -37,7 +38,10 @@ cos-bind-key    | A service credential to allow for Activity Tracker to have wri
 
 ### Related Links
 
-- [Docs](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-about-cloud-object-storage)
+- [Cloud Object Storage Documentation](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-about-cloud-object-storage)
+- [Resource Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance)
+- [Object Storage Bucket Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cos_bucket)
+- [Resource Key Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/resource_key)
 
 -----
 
@@ -286,24 +290,6 @@ By default, no AppID instances are created.
 
 - [About App ID](https://cloud.ibm.com/docs/appid?topic=appid-about)
 - [Getting Started With App ID](https://cloud.ibm.com/docs/appid?topic=appid-getting-started)
-
------
-
-## Teleport Bastion Host
-
-A bastion host will provide a secure connection to virtual server instances or Red Hat OpenShift on IBM Cloud clusters within the management and workload VPCs.
-
-By default, a bastion host is not enabled. If enabled, users can specify:
-
-Value                           | Description
---------------------------------|------------------------------------------------------------------------------------------------------------------------------
-Teleport Template Configuration | The specs required for configuring all bastion hosts to use Teleport
-Teleport VSI Deployment         | A VSI deployment that will allow users to deploy multiple instances on a single subnet in a VPC with the same configuration.
-
-### Related Links
-
-- [Docs](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-vpc-architecture-connectivity-bastion-tutorial-teleport)
-- [Teleport](https://goteleport.com/)
 
 -----
 

@@ -17,6 +17,7 @@ import {
 import { buildTitleComment, invalidForms, state } from "./lib";
 import { default as constants } from "./lib/constants";
 import { CbrForm } from "./components/forms";
+import { JsonDocs } from "./components/pages/JsonDocs";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -286,6 +287,8 @@ class Craig extends React.Component {
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
               <About />
+            ) : this.props.params.doc === "json" ? (
+              <JsonDocs />
             ) : (
               <ReleaseNotes />
             )

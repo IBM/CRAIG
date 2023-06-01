@@ -35,9 +35,16 @@
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui"]
+      [
+        "https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui",
+        "Resource Group Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_group",
+        "Resource Group Terraform Documentation"
+      ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "5/31/2023"
   },
   "object_storage": {
     "content": [
@@ -77,10 +84,23 @@
     ],
     "relatedLinks": [
       [
-        "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-about-cloud-object-storage"
+        "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-about-cloud-object-storage",
+        "Cloud Object Storage Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cos_bucket",
+        "Object Storage Bucket Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/resource_key",
+        "Resource Key Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "5/31/2023"
   },
   "key_management": {
     "content": [
@@ -563,36 +583,6 @@
       {
         "text": "By default, no AppID instances are created."
       }
-    ],
-    "last_updated": "2/1/2023"
-  },
-  "teleport": {
-    "content": [
-      {
-        "text": "A bastion host will provide a secure connection to virtual server instances or Red Hat OpenShift on IBM Cloud clusters within the management and workload VPCs."
-      },
-      {
-        "text": "By default, a bastion host is not enabled. If enabled, users can specify:"
-      },
-      {
-        "table": [
-          ["_headers", "Value", "Description"],
-          [
-            "Teleport Template Configuration",
-            "The specs required for configuring all bastion hosts to use Teleport"
-          ],
-          [
-            "Teleport VSI Deployment",
-            "A VSI deployment that will allow users to deploy multiple instances on a single subnet in a VPC with the same configuration."
-          ]
-        ]
-      }
-    ],
-    "relatedLinks": [
-      [
-        "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-vpc-architecture-connectivity-bastion-tutorial-teleport"
-      ],
-      ["https://goteleport.com/", "Teleport"]
     ],
     "last_updated": "2/1/2023"
   },

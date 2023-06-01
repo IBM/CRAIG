@@ -94,7 +94,12 @@
           "storage_class": "string",
           "force_delete": "boolean",
           "kms_key": "string",
-          "use_random_suffix": "boolean"
+          "use_random_suffix": "boolean",
+          "allowed_ip": "Array<string>",
+          "atracker": "string",
+          "read_data_events": "boolean",
+          "write_data_events": "boolean",
+          "object_versioning": "boolean"
         }
       },
       "keys": {

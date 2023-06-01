@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.7.0
+
+### Features
+
+- When a form page is invalid, the title and icon will be rendered in red in the left navigation bar
+- When setting Account ID on the options page, the value will auto populate in some forms where `account_id` is required
+- When downloading Terraform code, the downloaded archive now has a timestamped date as part of the filename
+- Documentation pages now each have a date when the documentation was last updated
+
+### Fixes
+
+- Frixed an error where create button was misaligned on projects page
+- Fixed an issue where `public-and-private` was not a valid value for service endpoints on options page
+- MultiSelects now correctly show full name on hover instead of being cut off
+- Fixed an issue causing toggles on Routing Table page to not set state when toggled
+- Cluster `entitlement` field is no longer displayed when creating an IKS cluster
+- Fixed an error causing notifications to be rendered on top of one another
+
 ## 0.6.0
 
 ### Features

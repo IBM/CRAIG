@@ -4,7 +4,7 @@ import {
   SideNavItems,
   SideNavLink,
 } from "@carbon/react";
-import { Home, Help, Bullhorn } from "@carbon/icons-react";
+import { Home, Help, Bullhorn, JsonReference } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
 import LeftNavItem from "./LeftNavItem";
@@ -40,6 +40,15 @@ const LeftNav = (props) => {
                 title: "Release Notes",
               }}
               key="ReleaseNotes"
+              expanded={props.expanded}
+            />
+            <LeftNavItem
+              item={{
+                path: "/docs/json",
+                icon: JsonReference,
+                title: "JSON Documetation",
+              }}
+              key="json-docs"
               expanded={props.expanded}
             />
           </>
