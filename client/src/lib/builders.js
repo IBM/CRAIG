@@ -26,7 +26,7 @@ function buildNewEncryptionKey(keyParams) {
     key_ring: null,
     force_delete: null,
     endpoint: null,
-    rotation: 12,
+    rotation: 1,
     dual_auth_delete: false,
   };
   if (params?.rotation) {
@@ -84,7 +84,7 @@ function addVsiEncryptionKey(parent) {
     root_key: true,
     force_delete: null,
     endpoint: "public",
-    rotation: 12,
+    rotation: 1,
     dual_auth_delete: false,
   });
 }

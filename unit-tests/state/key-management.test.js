@@ -29,7 +29,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: true,
               endpoint: "public",
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
             {
@@ -38,7 +38,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: true,
               endpoint: "public",
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
             {
@@ -47,7 +47,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: true,
               endpoint: "public",
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
             {
@@ -56,7 +56,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: null,
               endpoint: null,
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
           ],
@@ -153,7 +153,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: true,
               endpoint: "public",
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
             {
@@ -162,7 +162,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: true,
               endpoint: "public",
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
             {
@@ -171,7 +171,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: true,
               endpoint: "public",
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
             {
@@ -180,7 +180,7 @@ describe("key_management", () => {
               root_key: true,
               force_delete: null,
               endpoint: null,
-              rotation: 12,
+              rotation: 1,
               dual_auth_delete: false,
             },
           ],
@@ -237,7 +237,7 @@ describe("key_management", () => {
           key_ring: "all-new-ring",
           force_delete: null,
           endpoint: null,
-          rotation: 12,
+          rotation: 1,
           dual_auth_delete: false,
         };
         assert.deepEqual(
@@ -255,7 +255,7 @@ describe("key_management", () => {
             name: "all-new-key",
             root_key: true,
             key_ring: "all-new-ring",
-            rotation: 12,
+            rotation: 1,
           },
           { arrayParentName: "kms", data: { name: "key" } }
         );
@@ -265,7 +265,7 @@ describe("key_management", () => {
           key_ring: "all-new-ring",
           force_delete: true,
           endpoint: "public",
-          rotation: 12,
+          rotation: 1,
           dual_auth_delete: false,
         };
         assert.deepEqual(

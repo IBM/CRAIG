@@ -13,7 +13,7 @@ function newDefaultKms() {
           root_key: true,
           force_delete: true,
           endpoint: "public",
-          rotation: 12,
+          rotation: 1,
           dual_auth_delete: false,
         },
         {
@@ -22,7 +22,7 @@ function newDefaultKms() {
           root_key: true,
           force_delete: true,
           endpoint: "public",
-          rotation: 12,
+          rotation: 1,
           dual_auth_delete: false,
         },
         {
@@ -31,7 +31,7 @@ function newDefaultKms() {
           root_key: true,
           force_delete: true,
           endpoint: "public",
-          rotation: 12,
+          rotation: 1,
           dual_auth_delete: false,
         },
       ],

@@ -25,7 +25,7 @@ function keyManagementInit(config) {
     root_key: true,
     force_delete: null,
     endpoint: null,
-    rotation: 12,
+    rotation: 1,
     dual_auth_delete: false,
   });
   setEncryptionKeys(config);

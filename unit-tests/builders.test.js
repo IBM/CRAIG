@@ -24,7 +24,7 @@ describe("builders", () => {
         key_ring: null,
         force_delete: null,
         endpoint: null,
-        rotation: 12,
+        rotation: 1,
         dual_auth_delete: false,
       };
       assert.deepEqual(actualData, expectedData, "it should be default key");
