@@ -86,7 +86,11 @@ class Craig extends React.Component {
       window.location.pathname === "/"
         ? "" // options and import json notification should be just successfully updated
         : buildTitleComment(
-            titleCase(window.location.pathname.replace(/\/[A-z]+\//, ""))
+            titleCase(
+              window.location.pathname
+                .replace(/\/[A-z]+\//, "")
+                .replace("I D", "ID")
+            )
           ).replaceAll("#", "");
     let notification = {
       title: "Success",

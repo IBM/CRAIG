@@ -4,12 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## 0.7.0
 
+### Upgrade Notes
+
+- Dynamic subnet tiers and advanced subnet tiers are now mutually exclusive. This prevents the application from crashing when advanced subnet options are used with dynamic subnets
+
 ### Features
 
 - When a form page is invalid, the title and icon will be rendered in red in the left navigation bar
 - When setting Account ID on the options page, the value will auto populate in some forms where `account_id` is required
 - When downloading Terraform code, the downloaded archive now has a timestamped date as part of the filename
 - Documentation pages now each have a date when the documentation was last updated
+- Information on the default template can now be found on the home page
+- Advanced options have been moved to a new tab `Advanced` in the Left Navigation Menu
+- Edge Networking tile now redirects users to the home page when no edge network is found
 
 ### Fixes
 
@@ -19,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing toggles on Routing Table page to not set state when toggled
 - Cluster `entitlement` field is no longer displayed when creating an IKS cluster
 - Fixed an error causing notifications to be rendered on top of one another
+- Fixed an error causing VSI Block Storage volumes to be invalid when no capacity is provided
 
 ## 0.6.0
 

@@ -66,8 +66,10 @@ const LeftNav = (props) => {
                 expanded={props.expanded}
                 fsCloud={props.fsCloud}
                 hasInvalidForm={
-                  contains(props.invalidForms, item.jsonField) ||
-                  contains(props.invalidForms, item.path)
+                  props.isResetState
+                    ? false
+                    : contains(props.invalidForms, item.jsonField) ||
+                      contains(props.invalidForms, item.path)
                 }
               />
             ))}

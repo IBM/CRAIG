@@ -83,11 +83,17 @@ class OptionsForm extends React.Component {
             <IcseTextInput
               id="prefix"
               field="prefix"
+              labelText="Prefix"
               value={this.state.prefix}
               invalid={invalidNewResourceName(this.state.prefix)}
               invalidText="Invalid prefix"
               onChange={this.handleChange}
               maxLength={16}
+              tooltip={{
+                content:
+                  "A prefix of up to 16 characters that will begin the name of each resource provisioned by this template",
+                align: "right",
+              }}
             />
             <IcseToggle
               labelText="Use FS Cloud"
@@ -124,6 +130,10 @@ class OptionsForm extends React.Component {
               value={this.state.zones}
               handleInputChange={this.handleChange}
               className="fieldWidth"
+              tooltip={{
+                content:
+                  "The number of availability zones for VPCs in your template",
+              }}
             />
             <IcseSelect
               formName="options"
@@ -132,6 +142,9 @@ class OptionsForm extends React.Component {
               value={titleCase(this.state.endpoints).replace(/And/g, "and")}
               groups={["Private", "Public", "Public and Private"]}
               handleInputChange={this.handleChange}
+              tooltip={{
+                content: "Type of service endpoints to use for each service",
+              }}
             />
             <IcseTextInput
               id="account_id"
@@ -152,12 +165,14 @@ class OptionsForm extends React.Component {
             <IcseToggle
               labelText="Dynamic Scalable Subnets"
               field="dynamic_subnets"
+              disabled={this.props.craig.store.json._options.advanced_subnets}
               defaultToggled={this.state.dynamic_subnets}
               onToggle={() => this.handleToggle("dynamic_subnets")}
               id="dynamic-subnets"
               tooltip={{
-                content:
-                  "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources. Turn off if you want to manage your address prefixes and subnet CIDR addresses manually.",
+                content: this.props.craig.store.json._options.advanced_subnets
+                  ? "Dynamic subnet addressing cannot be used with advanced subnet tiers"
+                  : "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources. Turn off if you want to manage your address prefixes and subnet CIDR addresses manually.",
               }}
             />
           </IcseFormGroup>

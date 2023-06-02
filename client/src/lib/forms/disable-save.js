@@ -176,8 +176,9 @@ function disableSave(field, stateData, componentProps, craig) {
   } else if (field === "volumes") {
     return (
       invalidName("volume")(stateData, componentProps) ||
-      fieldsAreBad(["encryption_key", "capacity"], stateData) ||
-      !isInRange(Number(stateData.capacity), 10, 16000)
+      fieldsAreBad(["encryption_key"], stateData) ||
+      (!isNullOrEmptyString(stateData.capacity) &&
+        !isInRange(Number(stateData.capacity), 10, 16000))
     );
   } else if (field === "key_management") {
     return (

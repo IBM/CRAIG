@@ -118,7 +118,9 @@ function invalidName(field, craig) {
     return function (stateData, componentProps) {
       let propsCopy = { craig: craig };
       transpose(componentProps, propsCopy);
-      return invalidName("subnet_name")(stateData, propsCopy);
+      if (componentProps.vpc_name)
+        return invalidName("subnet_name")(stateData, propsCopy);
+      else return false;
     };
   } else return nameCheck;
 }

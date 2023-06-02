@@ -30,6 +30,16 @@ const CodeMirrorHeader = (props) => {
   );
 };
 
+CodeMirrorHeader.defaultProps = {
+  jsonInCodeMirror: false,
+};
+
+CodeMirrorHeader.propTypes = {
+  onTabClick: PropTypes.func.isRequired,
+  jsonInCodeMirror: PropTypes.bool.isRequired,
+  code: PropTypes.string,
+};
+
 export const CraigCodeMirror = (props) => {
   return (
     props.hideCodeMirror !== true && (

@@ -1,22 +1,19 @@
 import React from "react";
-
 import { IcseModal, IcseToggle, IcseFormGroup } from "icse-react-assets";
 import { formatConfig, validate } from "../../../lib";
 import { DownloadCopyButtonSet } from "../../utils";
 import { TextArea } from "@carbon/react";
+import PropTypes from "prop-types";
 
 export class JSONModal extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = { ...this.props.data, usePrettyJson: true, error: "" };
-
     try {
       validate(this.state.json);
     } catch (error) {
       this.state.error = error.message;
     }
-
     this.toggleUsePrettyJson = this.toggleUsePrettyJson.bind(this);
   }
 
@@ -70,3 +67,11 @@ export class JSONModal extends React.Component {
     );
   }
 }
+
+JSONModal.defaultProps = {
+  open: false,
+};
+
+JSONModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+};

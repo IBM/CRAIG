@@ -1,23 +1,16 @@
 import React from "react";
-import { ClickableTile, Button } from "@carbon/react";
+import { Button } from "@carbon/react";
 import { DeleteModal } from "icse-react-assets";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
 import { azsort } from "lazy-z";
-import {
-  Edit,
-  TrashCan,
-  StarFilled,
-  Add,
-  View,
-  Star,
-} from "@carbon/icons-react";
+import { Add } from "@carbon/icons-react";
 import "./project.css";
+import { ProjectTile } from "./ProjectTile";
 
 class Projects extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       modalOpen: false,
       viewJSONModalOpen: false,
@@ -26,10 +19,14 @@ class Projects extends React.Component {
 
     /* do not delete, for debugging */
     // this.state.debug = true
-
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleViewJSONModal = this.toggleViewJSONModal.bind(this);
     this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
+    this.newProject = this.newProject.bind(this);
+    this.onProjectSelect = this.onProjectSelect.bind(this);
+    this.onEditClick = this.onEditClick.bind(this);
+    this.onViewClick = this.onViewClick.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -51,7 +48,104 @@ class Projects extends React.Component {
     this.setState({ deleteModalOpen: !this.state.deleteModalOpen });
   }
 
+  newProject() {
+    this.setState(
+      {
+        modalData: this.props.new(),
+      },
+      () => {
+        this.toggleModal();
+      }
+    );
+  }
+
+  /**
+   * on project select
+   * @param {string} keyName project key name
+   * @returns {Function} event function
+   */
+  onProjectSelect(keyName) {
+    return (event) => {
+      if (
+        !event.target.id.startsWith("edit") &&
+        !event.target.id.startsWith("delete") &&
+        !event.target.id.startsWith("view-json")
+      ) {
+        if (
+          // deselection only allowed when debug is true
+          this.props.current_project === keyName &&
+          this.state.debug
+        ) {
+          this.props.deselect();
+        } else if (
+          // not already selected
+          this.props.current_project !== keyName
+        ) {
+          this.props.select(this.props.projects[keyName].name);
+        }
+      }
+    };
+  }
+
+  /**
+   * on edit click
+   * @param {string} keyName project key name
+   * @returns {Function} event function
+   */
+  onEditClick(keyName) {
+    return () => {
+      this.setState(
+        {
+          modalData: this.props.projects[keyName],
+        },
+        () => {
+          this.toggleModal();
+        }
+      );
+    };
+  }
+
+  /**
+   * on view click
+   * @param {string} keyName project key name
+   * @returns {Function} event function
+   */
+  onViewClick(keyName) {
+    return () => {
+      this.setState(
+        {
+          viewJSONModalData: {
+            name: this.props.projects[keyName].name,
+            json: this.props.projects[keyName].json,
+          },
+        },
+        () => {
+          this.toggleViewJSONModal();
+        }
+      );
+    };
+  }
+
+  /**
+   * on delete click
+   * @param {string} keyName project key name
+   * @returns {Function} event function
+   */
+  onDeleteClick(keyName) {
+    return () => {
+      this.setState(
+        {
+          deleteProject: keyName,
+        },
+        () => {
+          this.toggleDeleteModal();
+        }
+      );
+    };
+  }
+
   render() {
+    let projectKeys = Object.keys(this.props.projects).sort(azsort);
     return (
       <div className="projects">
         {this.state.modalOpen && (
@@ -103,15 +197,10 @@ class Projects extends React.Component {
           <div className="marginBottomXs">
             <legend className="cds--label">Create a Project</legend>
             <Button
-              id={"new-project"}
+              id="new-project"
               kind="tertiary"
               className="newProjectButton"
-              onClick={() => {
-                this.setState({
-                  modalData: this.props.new(),
-                });
-                this.toggleModal();
-              }}
+              onClick={this.newProject}
               iconDescription="Create new project"
               renderIcon={Add}
             >
@@ -119,140 +208,23 @@ class Projects extends React.Component {
             </Button>
           </div>
           {/* hide projects section if there are none */}
-          {Object.keys(this.props.projects).length > 0 && (
+          {projectKeys.length > 0 && (
             <div className="projectTiles">
               <legend className="cds--label">Select a Project</legend>
               <div>
                 {/* projects */}
-                {Object.keys(this.props.projects)
-                  .sort(azsort)
-                  .map((kname) => {
-                    return (
-                      <ClickableTile
-                        key={kname}
-                        id={kname}
-                        value={kname}
-                        className={
-                          "projectTile " +
-                          (this.props.current_project === kname
-                            ? "selected"
-                            : "notSelected")
-                        }
-                        onClick={(event) => {
-                          if (
-                            !event.target.id.startsWith("edit") &&
-                            !event.target.id.startsWith("delete") &&
-                            !event.target.id.startsWith("view-json")
-                          ) {
-                            if (
-                              // deselection only allowed when debug is true
-                              this.props.current_project === kname &&
-                              this.state.debug
-                            ) {
-                              this.props.deselect();
-                            } else if (
-                              // not already selected
-                              this.props.current_project !== kname
-                            ) {
-                              this.props.select(
-                                this.props.projects[kname].name
-                              );
-                            }
-                          }
-                        }}
-                      >
-                        {/* name */}
-                        <div className="projectTileHeader marginBottom">
-                          <h4 className="bold">
-                            {this.props.projects[kname].name}
-                          </h4>
-                          {this.props.current_project === kname ? (
-                            <StarFilled />
-                          ) : (
-                            <Star />
-                          )}
-                        </div>
-                        {/* details */}
-                        <div className="projectDetails marginBottom">
-                          {this.props.projects[kname].description && (
-                            <div className="marginBottomSmall">
-                              <h3 className="smallerText marginBottomXs">
-                                Description:
-                              </h3>
-                              <p className="smallerText italic">
-                                {this.props.projects[kname].description}
-                              </p>
-                            </div>
-                          )}
-                          <div className="marginBottomXs">
-                            <h3 className="smallerText marginBottomXs">
-                              Last Saved:
-                            </h3>
-                            <p className="smallerText italic">
-                              {new Date(
-                                this.props.projects[kname].last_save
-                              ).toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                        {/* actions */}
-                        <div>
-                          <hr />
-                          <h3 className="smallerText marginBottom">
-                            Get Started with your project
-                          </h3>
-                          <Button
-                            id={"edit-" + kname}
-                            kind="tertiary"
-                            className="projectTileButton marginBottomSmall"
-                            onClick={() => {
-                              this.setState({
-                                modalData: this.props.projects[kname],
-                              });
-                              this.toggleModal();
-                            }}
-                            iconDescription="Edit Project Details"
-                            renderIcon={Edit}
-                          >
-                            Edit Details
-                          </Button>
-                          <Button
-                            id={"view-json-" + kname}
-                            kind="tertiary"
-                            className="projectTileButton marginBottomSmall"
-                            onClick={() => {
-                              this.setState({
-                                viewJSONModalData: {
-                                  name: this.props.projects[kname].name,
-                                  json: this.props.projects[kname].json,
-                                },
-                              });
-                              this.toggleViewJSONModal();
-                            }}
-                            iconDescription="View JSON"
-                            renderIcon={View}
-                          >
-                            View JSON
-                          </Button>
-                          <Button
-                            id={"delete-" + kname}
-                            kind="danger--tertiary"
-                            className="projectTileButton"
-                            onClick={() => {
-                              this.setState({
-                                deleteProject: kname,
-                              });
-                              this.toggleDeleteModal();
-                            }}
-                            iconDescription="Delete Project"
-                            renderIcon={TrashCan}
-                          >
-                            Delete Project
-                          </Button>
-                        </div>
-                      </ClickableTile>
-                    );
-                  })}
+                {projectKeys.map((keyName) => (
+                  <ProjectTile
+                    key={keyName}
+                    keyName={keyName}
+                    data={this.props.projects[keyName]}
+                    current_project={this.props.current_project}
+                    onProjectSelect={this.onProjectSelect(keyName)}
+                    onEditClick={this.onEditClick(keyName)}
+                    onViewClick={this.onViewClick(keyName)}
+                    onDeleteClick={this.onDeleteClick(keyName)}
+                  />
+                ))}
               </div>
             </div>
           )}

@@ -4,7 +4,6 @@ const { buildNewEncryptionKey } = require("../builders");
 const { newDefaultKms } = require("./defaults");
 const {
   setUnfoundResourceGroup,
-  carveChild,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal,

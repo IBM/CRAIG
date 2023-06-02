@@ -118,192 +118,203 @@ class CbrForm extends React.Component {
           name="Context Based Restrictions"
           about={RenderDocs("cbr")()}
           form={
-            <div className="subForm">
-              <IcseHeading
-                name="Context Based Restriction Zones"
-                className={
-                  this.props.craig.store.json.cbr_zones.length > 0
-                    ? "marginBottomSmall"
-                    : ""
-                }
-                type="subHeading"
-                buttons={
-                  <SaveAddButton
-                    onClick={() => this.handleModalToggle("zones")}
-                    type="add"
-                    noDeleteButton
-                  />
-                }
-              />
-              <EmptyResourceTile
-                name="Zones"
-                showIfEmpty={this.props.craig.store.json.cbr_zones}
-                noMarginTop
-              />
-              {this.props.craig.store.json.cbr_zones.map((zone, index) => {
-                return (
-                  <ToggleForm
-                    key={zone.name + "-" + index}
-                    name={zone.name}
-                    submissionFieldName="cbr_zones"
-                    hideName
-                    onShowToggle={none}
-                    onSave={this.props.craig.cbr_zones.save}
-                    onDelete={this.props.craig.cbr_zones.delete}
-                    disableSave={disableSave}
-                    propsMatchState={propsMatchState}
-                    type="formInSubForm"
-                    innerForm={CbrZoneForm}
-                    tabPanel={{
-                      name: this.props.name,
-                      hideAbout: true, // passed to ignore second tab panel
-                      hasBuiltInHeading: true, // passed to ignore second tabPanel
-                    }}
-                    craig={this.props.craig}
-                    innerFormProps={{
-                      craig: this.props.craig,
-                      data: { ...zone },
-                      invalidCallback: invalidName("cbr_zones"),
-                      invalidTextCallback: invalidNameText("cbr_zones"), // all fields can use default field invalid text
-                      invalidAddressCallback: invalidName("addresses"),
-                      invalidAddressTextCallback: invalidNameText("addresses"),
-                      invalidExclusionCallback: invalidName("exclusions"),
-                      invalidExclusionTextCallback:
-                        invalidNameText("exclusions"),
-                      disableSave: disableSave,
-                      propsMatchState: propsMatchState,
-                      addressProps: {
+            <div>
+              <div className="subForm marginBottomSmall">
+                <IcseHeading
+                  name="Context Based Restriction Zones"
+                  className={
+                    this.props.craig.store.json.cbr_zones.length > 0
+                      ? "marginBottomSmall"
+                      : ""
+                  }
+                  type="subHeading"
+                  buttons={
+                    <SaveAddButton
+                      onClick={() => this.handleModalToggle("zones")}
+                      type="add"
+                      noDeleteButton
+                    />
+                  }
+                />
+                <EmptyResourceTile
+                  name="Zones"
+                  showIfEmpty={this.props.craig.store.json.cbr_zones}
+                  noMarginTop
+                />
+                {this.props.craig.store.json.cbr_zones.map((zone, index) => {
+                  return (
+                    <ToggleForm
+                      key={zone.name + "-" + index}
+                      name={zone.name}
+                      submissionFieldName="cbr_zones"
+                      hideName
+                      onShowToggle={none}
+                      onSave={this.props.craig.cbr_zones.save}
+                      onDelete={this.props.craig.cbr_zones.delete}
+                      disableSave={disableSave}
+                      propsMatchState={propsMatchState}
+                      type="formInSubForm"
+                      innerForm={CbrZoneForm}
+                      tabPanel={{
+                        name: this.props.name,
+                        hideAbout: true, // passed to ignore second tab panel
+                        hasBuiltInHeading: true, // passed to ignore second tabPanel
+                      }}
+                      craig={this.props.craig}
+                      innerFormProps={{
                         craig: this.props.craig,
-                        onSave: this.props.craig.cbr_zones.addresses.save,
-                        onDelete: this.props.craig.cbr_zones.addresses.delete,
-                        onSubmit: this.props.craig.cbr_zones.addresses.create,
+                        data: { ...zone },
+                        invalidCallback: invalidName("cbr_zones"),
+                        invalidTextCallback: invalidNameText("cbr_zones"), // all fields can use default field invalid text
+                        invalidAddressCallback: invalidName("addresses"),
+                        invalidAddressTextCallback:
+                          invalidNameText("addresses"),
+                        invalidExclusionCallback: invalidName("exclusions"),
+                        invalidExclusionTextCallback:
+                          invalidNameText("exclusions"),
                         disableSave: disableSave,
-                        defaultModalValues: {
-                          name: "",
-                          account_id:
-                            this.props.craig.store.json._options.account_id,
-                          location: "",
-                          service_name: "",
-                          service_instance: "",
-                          service_type: "",
-                          type: "ipAddress",
-                          value: "",
+                        propsMatchState: propsMatchState,
+                        addressProps: {
+                          craig: this.props.craig,
+                          onSave: this.props.craig.cbr_zones.addresses.save,
+                          onDelete: this.props.craig.cbr_zones.addresses.delete,
+                          onSubmit: this.props.craig.cbr_zones.addresses.create,
+                          disableSave: disableSave,
+                          defaultModalValues: {
+                            name: "",
+                            account_id:
+                              this.props.craig.store.json._options.account_id,
+                            location: "",
+                            service_name: "",
+                            service_instance: "",
+                            service_type: "",
+                            type: "ipAddress",
+                            value: "",
+                          },
                         },
-                      },
-                      exclusionProps: {
-                        craig: this.props.craig,
-                        onSave: this.props.craig.cbr_zones.exclusions.save,
-                        onDelete: this.props.craig.cbr_zones.exclusions.delete,
-                        onSubmit: this.props.craig.cbr_zones.exclusions.create,
-                        disableSave: disableSave,
-                        defaultModalValues: {
-                          name: "",
-                          account_id:
-                            this.props.craig.store.json._options.account_id,
-                          location: "",
-                          service_name: "",
-                          service_instance: "",
-                          service_type: "",
-                          type: "ipAddress",
-                          value: "",
+                        exclusionProps: {
+                          craig: this.props.craig,
+                          onSave: this.props.craig.cbr_zones.exclusions.save,
+                          onDelete:
+                            this.props.craig.cbr_zones.exclusions.delete,
+                          onSubmit:
+                            this.props.craig.cbr_zones.exclusions.create,
+                          disableSave: disableSave,
+                          defaultModalValues: {
+                            name: "",
+                            account_id:
+                              this.props.craig.store.json._options.account_id,
+                            location: "",
+                            service_name: "",
+                            service_instance: "",
+                            service_type: "",
+                            type: "ipAddress",
+                            value: "",
+                          },
                         },
-                      },
-                    }}
-                  />
-                );
-              })}
-              <IcseHeading
-                name="Context Based Restriction Rules"
-                className={
-                  this.props.craig.store.json.cbr_rules.length > 0
-                    ? "marginBottomSmall"
-                    : ""
-                }
-                type="subHeading"
-                buttons={
-                  <SaveAddButton
-                    onClick={() => this.handleModalToggle("rules")}
-                    type="add"
-                    noDeleteButton
-                  />
-                }
-              />
-              <EmptyResourceTile
-                name="Rules"
-                showIfEmpty={this.props.craig.store.json.cbr_rules}
-                noMarginTop
-              />
-              {this.props.craig.store.json.cbr_rules.map((rule, index) => {
-                return (
-                  <ToggleForm
-                    key={rule.name + "-" + index}
-                    name={rule.name}
-                    submissionFieldName="cbr_rules"
-                    hideName
-                    onShowToggle={none}
-                    onSave={this.props.craig.cbr_rules.save}
-                    onDelete={this.props.craig.cbr_rules.delete}
-                    disableSave={disableSave}
-                    propsMatchState={propsMatchState}
-                    type="formInSubForm"
-                    innerForm={CbrRuleForm}
-                    tabPanel={{
-                      name: this.props.name,
-                      hideAbout: true, // passed to ignore second tab panel
-                      hasBuiltInHeading: true, // passed to ignore second tabPanel
-                    }}
-                    craig={this.props.craig}
-                    innerFormProps={{
-                      craig: this.props.craig,
-                      data: { ...rule },
-                      invalidCallback: invalidCbrRule,
-                      invalidTextCallback: invalidCbrRuleText,
-                      invalidNameCallback: invalidName("cbr_rules"),
-                      invalidNameTextCallback: invalidNameText("cbr_rules"),
-                      disableSave: disableSave,
-                      propsMatchState: propsMatchState,
-                      contextProps: {
+                      }}
+                    />
+                  );
+                })}
+              </div>
+              <div className="subForm">
+                <IcseHeading
+                  name="Context Based Restriction Rules"
+                  className={
+                    this.props.craig.store.json.cbr_rules.length > 0
+                      ? "marginBottomSmall"
+                      : ""
+                  }
+                  type="subHeading"
+                  buttons={
+                    <SaveAddButton
+                      onClick={() => this.handleModalToggle("rules")}
+                      type="add"
+                      noDeleteButton
+                    />
+                  }
+                />
+                <EmptyResourceTile
+                  name="Rules"
+                  showIfEmpty={this.props.craig.store.json.cbr_rules}
+                  noMarginTop
+                />
+                {this.props.craig.store.json.cbr_rules.map((rule, index) => {
+                  return (
+                    <ToggleForm
+                      key={rule.name + "-" + index}
+                      name={rule.name}
+                      submissionFieldName="cbr_rules"
+                      hideName
+                      onShowToggle={none}
+                      onSave={this.props.craig.cbr_rules.save}
+                      onDelete={this.props.craig.cbr_rules.delete}
+                      disableSave={disableSave}
+                      propsMatchState={propsMatchState}
+                      type="formInSubForm"
+                      innerForm={CbrRuleForm}
+                      tabPanel={{
+                        name: this.props.name,
+                        hideAbout: true, // passed to ignore second tab panel
+                        hasBuiltInHeading: true, // passed to ignore second tabPanel
+                      }}
+                      craig={this.props.craig}
+                      innerFormProps={{
                         craig: this.props.craig,
-                        disableSave: disableSave,
-                        onSave: this.props.craig.cbr_rules.contexts.save,
-                        onSubmit: this.props.craig.cbr_rules.contexts.create,
-                        onDelete: this.props.craig.cbr_rules.contexts.delete,
+                        data: { ...rule },
                         invalidCallback: invalidCbrRule,
                         invalidTextCallback: invalidCbrRuleText,
-                        invalidNameCallback: invalidName("contexts"),
-                        invalidNameTextCallback: invalidNameText("contexts"),
-                      },
-                      resourceAttributeProps: {
-                        craig: this.props.craig,
+                        invalidNameCallback: invalidName("cbr_rules"),
+                        invalidNameTextCallback: invalidNameText("cbr_rules"),
                         disableSave: disableSave,
-                        onSave:
-                          this.props.craig.cbr_rules.resource_attributes.save,
-                        onSubmit:
-                          this.props.craig.cbr_rules.resource_attributes.create,
-                        onDelete:
-                          this.props.craig.cbr_rules.resource_attributes.delete,
-                        invalidCallback: invalidCbrRule,
-                        invalidTextCallback: invalidCbrRuleText,
-                        invalidNameCallback: invalidName("resource_attributes"),
-                        invalidNameTextCallback: invalidNameText(
-                          "resource_attributes"
-                        ),
-                      },
-                      tagProps: {
-                        craig: this.props.craig,
-                        disableSave: disableSave,
-                        onSave: this.props.craig.cbr_rules.tags.save,
-                        onSubmit: this.props.craig.cbr_rules.tags.create,
-                        onDelete: this.props.craig.cbr_rules.tags.delete,
-                        invalidCallback: invalidCbrRule,
-                        invalidTextCallback: invalidCbrRuleText,
-                        invalidNameCallback: invalidName("tags"),
-                        invalidNameTextCallback: invalidNameText("tags"),
-                      },
-                    }}
-                  />
-                );
-              })}
+                        propsMatchState: propsMatchState,
+                        contextProps: {
+                          craig: this.props.craig,
+                          disableSave: disableSave,
+                          onSave: this.props.craig.cbr_rules.contexts.save,
+                          onSubmit: this.props.craig.cbr_rules.contexts.create,
+                          onDelete: this.props.craig.cbr_rules.contexts.delete,
+                          invalidCallback: invalidCbrRule,
+                          invalidTextCallback: invalidCbrRuleText,
+                          invalidNameCallback: invalidName("contexts"),
+                          invalidNameTextCallback: invalidNameText("contexts"),
+                        },
+                        resourceAttributeProps: {
+                          craig: this.props.craig,
+                          disableSave: disableSave,
+                          onSave:
+                            this.props.craig.cbr_rules.resource_attributes.save,
+                          onSubmit:
+                            this.props.craig.cbr_rules.resource_attributes
+                              .create,
+                          onDelete:
+                            this.props.craig.cbr_rules.resource_attributes
+                              .delete,
+                          invalidCallback: invalidCbrRule,
+                          invalidTextCallback: invalidCbrRuleText,
+                          invalidNameCallback: invalidName(
+                            "resource_attributes"
+                          ),
+                          invalidNameTextCallback: invalidNameText(
+                            "resource_attributes"
+                          ),
+                        },
+                        tagProps: {
+                          craig: this.props.craig,
+                          disableSave: disableSave,
+                          onSave: this.props.craig.cbr_rules.tags.save,
+                          onSubmit: this.props.craig.cbr_rules.tags.create,
+                          onDelete: this.props.craig.cbr_rules.tags.delete,
+                          invalidCallback: invalidCbrRule,
+                          invalidTextCallback: invalidCbrRuleText,
+                          invalidNameCallback: invalidName("tags"),
+                          invalidNameTextCallback: invalidNameText("tags"),
+                        },
+                      }}
+                    />
+                  );
+                })}
+              </div>
             </div>
           }
         />

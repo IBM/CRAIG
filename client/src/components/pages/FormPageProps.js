@@ -283,17 +283,6 @@ function formProps(form, craig) {
       craig.store.json.secrets_manager,
       "name"
     );
-    // commenting out for now as we do not need to pass yet, but this could get account id into modal state on create
-    // formTemplate.defaultModalValues = {
-    //   name: "",
-    //   vpc: "",
-    //   service: "",
-    //   resource_group: "",
-    //   security_groups: [],
-    //   subnets: [],
-    //   instance: "",
-    //   account_id: craig.store.json._options.account_id
-    // };
   }
 
   if (form === "vpnServers") {

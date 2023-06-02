@@ -132,13 +132,6 @@ const navCategories = [
         toTf: appidTf,
         jsonField: "appid",
       },
-      {
-        title: "Security Compliance Center",
-        path: "/form/securityComplianceCenter",
-        icon: IbmCloudSecurityComplianceCenter,
-        toTf: sccTf,
-        jsonField: "scc",
-      },
     ],
   },
   {
@@ -203,13 +196,6 @@ const navCategories = [
         toTf: vpnTf,
         jsonField: "vpn_gateways",
       },
-      {
-        title: "DNS Service",
-        path: "/form/dns",
-        icon: DnsServices,
-        toTf: dnsTf,
-        jsonField: "dns",
-      },
     ],
   },
   {
@@ -243,18 +229,38 @@ const navCategories = [
         jsonField: "vsi",
       },
       {
-        title: "VPN Servers",
-        path: "/form/vpnServers",
-        toTf: vpnServerTf,
-        jsonField: "vpn_servers",
-        icon: ServerProxy,
-      },
-      {
         title: "Load Balancers",
         path: "/form/lb",
         icon: LoadBalancerVpc,
         toTf: lbTf,
         jsonField: "load_balancers",
+        isLast: true,
+      },
+    ],
+  },
+  {
+    name: "Advanced Features",
+    links: [
+      {
+        title: "Security Compliance Center",
+        path: "/form/securityComplianceCenter",
+        icon: IbmCloudSecurityComplianceCenter,
+        toTf: sccTf,
+        jsonField: "scc",
+      },
+      {
+        title: "DNS Service",
+        path: "/form/dns",
+        icon: DnsServices,
+        toTf: dnsTf,
+        jsonField: "dns",
+      },
+      {
+        title: "VPN Servers",
+        path: "/form/vpnServers",
+        toTf: vpnServerTf,
+        jsonField: "vpn_servers",
+        icon: ServerProxy,
       },
       {
         title: "F5 Big IP",
@@ -263,11 +269,6 @@ const navCategories = [
         jsonField: "f5_vsi",
         toTf: f5Tf,
       },
-    ],
-  },
-  {
-    name: "IAM and Access",
-    links: [
       {
         title: "Access Groups",
         path: "/form/accessGroups",
@@ -365,6 +366,13 @@ const PageTemplate = (props) => {
           // if next index is out of bounds of array, send empty string
           // and no onclick function
           title: "",
+        }
+      : getObjectFromArray(pageOrder, "path", `/form/${props.form}`)?.isLast
+      ? {
+          title: "Summary",
+          onClick: () => {
+            props.nav("/summary");
+          },
         }
       : {
           title: pageOrder[nextPathIndex].title,

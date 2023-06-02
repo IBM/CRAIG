@@ -1781,6 +1781,10 @@ describe("vpcs", () => {
           expectedPrefixes,
           "it should change address prefixes"
         );
+        assert.isTrue(
+          vpcState.store.json._options.advanced_subnets,
+          "it should set advanced subnets"
+        );
       });
       it("should save advanced subnet tier with an existing advanced tier and both should have correct tier data in store", () => {
         let vpcState = newState(true);

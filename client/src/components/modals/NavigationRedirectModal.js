@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Button } from "@carbon/react";
 import PropTypes from "prop-types";
 import "./NavigationRedirectModal.css";
+import { contains } from "lazy-z";
 
 export const NavigationRedirectModal = (props) => {
   let options = props.craig.store.json._options;
@@ -18,8 +19,7 @@ export const NavigationRedirectModal = (props) => {
       alert={true}
       danger={true}
       open={
-        window.location.pathname === "/" ||
-        window.location.pathname === "/resetState"
+        contains(["/", "/resetState"], window.location.pathname)
           ? false
           : unsetOptions.length > 0
       }

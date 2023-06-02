@@ -2,7 +2,6 @@ import React from "react";
 import {
   ToggleForm,
   IcseFormTemplate,
-  EmptyResourceTile,
   StatefulTabPanel,
 } from "icse-react-assets";
 import PropTypes from "prop-types";
@@ -10,6 +9,7 @@ import toggleFormProps from "./ToggleFormPageProps";
 import formProps from "./FormPageProps";
 import { CopyRuleForm } from "../forms";
 import { Docs } from "icse-react-assets";
+import { NoEdgeNetworkTile } from "../utils/NoEdgeNetworkTile";
 const { docs } = require("../../lib");
 
 export const ToggleFormPage = (props) => {
@@ -17,13 +17,7 @@ export const ToggleFormPage = (props) => {
     <StatefulTabPanel
       name="F5 Big IP"
       hideFormTitleButton
-      form={
-        <EmptyResourceTile
-          name="Edge Network"
-          instructions="Go back to the Home page to create one."
-          showIfEmpty={[]}
-        />
-      }
+      form={<NoEdgeNetworkTile />}
       about={RenderDocs("f5")()}
     />
   ) : (

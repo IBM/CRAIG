@@ -47,6 +47,9 @@ class SubnetForm extends React.Component {
           onRequestClose={this.props.handleModalToggle}
         >
           <SubnetTierForm
+            dynamicSubnets={
+              this.props.craig.store.json._options.dynamic_subnets
+            }
             networkAcls={splat(this.props.data.acls, "name")}
             enabledPublicGateways={this.props.data.publicGateways}
             vpc_name={this.props.data.name}
@@ -119,6 +122,9 @@ class SubnetForm extends React.Component {
               vpc_name={this.props.data.name}
               subnetListCallback={getTierSubnets(tier, { ...this.props.data })}
               craig={this.props.craig}
+              dynamicSubnets={
+                this.props.craig.store.json._options.dynamic_subnets
+              }
               disableSubnetSaveCallback={(stateData, componentProps) => {
                 return (
                   propsMatchState("subnet", stateData, componentProps) ||

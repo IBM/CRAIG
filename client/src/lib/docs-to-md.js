@@ -103,8 +103,6 @@ function allDocs() {
           ? "Virtual Server Instance Deployments"
           : heading === "appid"
           ? "App ID"
-          : heading === "teleport"
-          ? "Teleport Bastion Host"
           : heading === "f5"
           ? "F5 Big IP"
           : heading === "atracker"

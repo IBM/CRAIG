@@ -11,6 +11,7 @@ const ResetState = (props) => {
       noFooter
       json={{}}
       notifications={[]}
+      onTabClick={() => {}}
     >
       {/* tabIndex allows for keypress events */}
       <Tile>

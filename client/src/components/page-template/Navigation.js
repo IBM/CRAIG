@@ -165,8 +165,13 @@ class Navigation extends React.Component {
             expanded={this.state.expanded}
             onOverlayClick={this.onHamburgerClick}
             navCategories={this.props.navCategories}
-            fsCloud={this.props.json._options.fs_cloud}
+            fsCloud={
+              this.props.isResetState === false
+                ? this.props.json._options.fs_cloud
+                : false
+            }
             invalidForms={this.props.invalidForms}
+            isResetState={this.props.isResetState}
           />
           {this.state.showModal && (
             <Modal

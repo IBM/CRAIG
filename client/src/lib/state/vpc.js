@@ -409,6 +409,7 @@ function subnetTierCreate(config, stateData, componentProps) {
   // get index of vpc for CIDR calculation
   let vpcIndex = splat(config.store.json.vpcs, "name").indexOf(vpcName);
   if (stateData.advanced) {
+    config.store.json._options.advanced_subnets = true;
     let tier = {
       name: stateData.name,
       zones: undefined,
@@ -497,6 +498,7 @@ function subnetTierSave(config, stateData, componentProps) {
       if (config.store.json._options.dynamic_subnets) {
         newTiers.push(tierData);
       } else if (stateData.advanced && componentProps.data.name === tier.name) {
+        config.store.json._options.advanced_subnets = true;
         newTiers.push(
           updateAdvancedSubnetTier(
             tierData,
@@ -510,6 +512,7 @@ function subnetTierSave(config, stateData, componentProps) {
           )
         );
       } else if (tier.advanced) {
+        config.store.json._options.advanced_subnets = true;
         newTiers.push(tier);
       } else newTiers.push(tierData);
     }

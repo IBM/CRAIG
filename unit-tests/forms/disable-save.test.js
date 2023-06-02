@@ -3946,6 +3946,40 @@ describe("disableSave", () => {
         "it should be true"
       );
     });
+    it("should return false if a vsi volume has no capacity but is valid otherwise", () => {
+      assert.isFalse(
+        disableSave(
+          "volumes",
+          {
+            name: "good-name",
+            encryption_key: "good-key",
+            capacity: "",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vsi: [
+                    {
+                      name: "frog",
+                      volumes: [],
+                    },
+                    {
+                      name: "toad",
+                      volumes: [],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "aaaa",
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
     it("should return true if vsi has invalid name", () => {
       let vsi = Object.assign({}, example_vsi);
       vsi.name = "";

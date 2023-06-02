@@ -289,6 +289,10 @@ describe("invalid callbacks", () => {
       );
       assert.isTrue(actualData, "it should be true");
     });
+    it("should return false if subnet and no vpc_name (unloaded modals)", () => {
+      let actualData = invalidName("subnet")({}, {});
+      assert.isFalse(actualData, "it should be false");
+    });
     it("should return true if vpc security group has a duplicate name", () => {
       let actualData = invalidName("vpcs")(
         "default_security_group_name",
