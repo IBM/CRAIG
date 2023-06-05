@@ -200,7 +200,8 @@ function vpcOnStoreUpdate(config) {
           name: vpc.name + "-zone-" + zone,
           cidr:
             "10." +
-            (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) + zone) +
+            (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) * 3 +
+              zone) +
             "0.0.0/22",
         });
       }

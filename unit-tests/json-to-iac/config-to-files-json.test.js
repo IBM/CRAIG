@@ -221,7 +221,7 @@ variable "slz_ssh_key_public_key" {
   default     = "public-key"
   validation {
     error_message = "Public SSH Key must be a valid ssh rsa public key."
-    condition     = "\${var.ssh_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.ssh_public_key))}"
+    condition     = "\${var.slz_ssh_key_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.slz_ssh_key_public_key))}"
   }
 }
 
@@ -1013,7 +1013,7 @@ variable "slz_ssh_key_public_key" {
   default     = "public-key"
   validation {
     error_message = "Public SSH Key must be a valid ssh rsa public key."
-    condition     = "\${var.ssh_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.ssh_public_key))}"
+    condition     = "\${var.slz_ssh_key_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.slz_ssh_key_public_key))}"
   }
 }
 

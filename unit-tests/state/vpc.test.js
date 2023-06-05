@@ -4043,10 +4043,34 @@ describe("vpcs", () => {
           has_prefix: false,
         },
       ];
-
+      let expectedWorkloadPrefixes = [
+        {
+          vpc: "workload",
+          zone: 1,
+          name: "workload-zone-1",
+          cidr: "10.40.0.0/22",
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          name: "workload-zone-2",
+          cidr: "10.50.0.0/22",
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          name: "workload-zone-3",
+          cidr: "10.60.0.0/22",
+        },
+      ];
       assert.deepEqual(
         vpcState.store.json.vpcs[0].address_prefixes,
         expectedData,
+        "it should change subnets"
+      );
+      assert.deepEqual(
+        vpcState.store.json.vpcs[1].address_prefixes,
+        expectedWorkloadPrefixes,
         "it should change subnets"
       );
       assert.deepEqual(

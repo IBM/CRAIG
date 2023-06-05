@@ -28,7 +28,7 @@ function ibmIsVpnServer(server, craig) {
     client_authentication: [{ method: server.method }],
     client_dns_server_ips: isNullOrEmptyString(server.client_dns_server_ips)
       ? null
-      : server.client_dns_server_ips,
+      : server.client_dns_server_ips.split(","),
     client_idle_timeout: isNullOrEmptyString(server.client_idle_timeout)
       ? null
       : server.client_idle_timeout,

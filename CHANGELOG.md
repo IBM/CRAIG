@@ -27,6 +27,9 @@ All notable changes to this project will be documented in this file.
 - Cluster `entitlement` field is no longer displayed when creating an IKS cluster
 - Fixed an error causing notifications to be rendered on top of one another
 - Fixed an error causing VSI Block Storage volumes to be invalid when no capacity is provided
+- Fixed a bug in the terraform causing SSH Key validation to have incorrect reference
+- Fixed a bug causing vpn server client dns server IPs to not render correctly as a list of strings
+- Fixed an error where dynamically addressed subnets had overlapping VPC address prefixes
 
 ## 0.6.0
 

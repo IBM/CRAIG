@@ -46,7 +46,8 @@ function variablesDotTf(config, useF5) {
   let newSshKeys = config.ssh_keys.filter((key) => !key.use_data);
   // add ssh keys not from data
   newSshKeys.forEach((key) => {
-    variables[snakeCase(key.name + " public key")] = {
+    let snakeKeyName = snakeCase(key.name + " public key");
+    variables[snakeKeyName] = {
       description: `Public SSH Key Value for ${titleCase(key.name).replace(
         /Ssh/g,
         "SSH"
@@ -57,8 +58,7 @@ function variablesDotTf(config, useF5) {
       validation: [
         {
           error_message: "Public SSH Key must be a valid ssh rsa public key.",
-          condition:
-            '${var.ssh_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.ssh_public_key))}',
+          condition: `\${var.${snakeKeyName} == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.${snakeKeyName}))}`,
         },
       ],
     };
