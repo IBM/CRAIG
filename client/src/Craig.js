@@ -12,14 +12,15 @@ import {
   ReleaseNotes,
   Summary,
   Projects,
-  ToggleFormPage,
+  ToggleFormPage
 } from "./components";
 import { buildTitleComment, invalidForms, state } from "./lib";
 import { default as constants } from "./lib/constants";
 import { CbrForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
+import Tutorial from "./components/pages/tutorial/Tutorial";
 
-const withRouter = (Page) => (props) => {
+const withRouter = Page => props => {
   const params = useParams();
   return <Page {...props} params={params} />;
 };
@@ -50,6 +51,7 @@ class Craig extends React.Component {
         storeName: storeName,
         projects: JSON.parse(projectInStorage),
         store: craig.store,
+        visited: window.localStorage.getItem("craigVisited")
       };
     } catch (err) {
       window.location.pathname = "/resetState";
@@ -96,11 +98,11 @@ class Craig extends React.Component {
       title: "Success",
       kind: "success",
       text: message || `Successfully updated ${updatedForm}`,
-      timeout: 3000,
+      timeout: 3000
     };
     this.setState(
       {
-        store: craig.store,
+        store: craig.store
       },
       () => {
         this.notify(notification);
@@ -113,7 +115,7 @@ class Craig extends React.Component {
       title: "Error",
       kind: "error",
       text: "An unexpected error has occurred.",
-      timeout: 3000,
+      timeout: 3000
     };
     this.notify(notification);
   }
@@ -141,8 +143,8 @@ class Craig extends React.Component {
    * @param {*} notification
    */
   notify(notification) {
-    this.setState((prevState) => ({
-      notifications: [...prevState.notifications, notification],
+    this.setState(prevState => ({
+      notifications: [...prevState.notifications, notification]
     }));
   }
 
@@ -159,7 +161,7 @@ class Craig extends React.Component {
     return {
       name: "",
       description: "",
-      json: new state().store.json,
+      json: new state().store.json
     };
   }
 
@@ -178,7 +180,7 @@ class Craig extends React.Component {
       name: stateData.name,
       description: stateData.description,
       json: stateData.json,
-      last_save: now,
+      last_save: now
     };
 
     // if the project name is changing, remove the old key from projects object
@@ -265,7 +267,10 @@ class Craig extends React.Component {
   }
 
   render() {
-    return (
+    window.localStorage.setItem("craigVisited", true);
+    return !this.state.visited ? (
+      <Tutorial />
+    ) : (
       <>
         <NavigationRedirectModal craig={craig} />
         <PageTemplate

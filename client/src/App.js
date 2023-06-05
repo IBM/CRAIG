@@ -5,26 +5,26 @@ import { UnderConstruction } from "icse-react-assets";
 import "./app.scss";
 import { ResetState } from "./components";
 import { Buffer } from "buffer";
+import Tutorial from "./components/pages/tutorial/Tutorial";
 window.Buffer = Buffer;
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      unsaved: false,
+      unsaved: false
     };
     this.nav = this.nav.bind(this);
     this.unsavedChangesCallback = this.unsavedChangesCallback.bind(this);
     // routing functions bundled together to easily pass through to child components
     this.craigRouter = {
       nav: this.nav,
-      unsavedChangesCallback: this.unsavedChangesCallback,
+      unsavedChangesCallback: this.unsavedChangesCallback
     };
   }
 
   /**
    * navigation function
-   *
    * @param {string} path pathname to navigate to
    */
   nav(path) {
@@ -71,6 +71,7 @@ class App extends Component {
             path="/docs/:doc"
             element={<Craig craigRouter={this.craigRouter} />}
           />
+          <Route path="/docs/tutorial" element={<Tutorial />} />
           <Route
             path="/summary"
             element={<Craig craigRouter={this.craigRouter} />}

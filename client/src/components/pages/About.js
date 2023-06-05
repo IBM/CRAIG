@@ -1,50 +1,44 @@
 import "./about.scss";
 import { Accordion, AccordionItem } from "@carbon/react";
+
+export const SplashPage = props => {
+  return (
+    <div id="what-is-craig" className={"section " + props?.className}>
+      <div className="header marginBottom">
+        <div className="headerItem">
+          <h1 className="bold">CRAIG</h1>
+        </div>
+        <div className="headerItem line">
+          <p>Cloud Resource and Infrastructure-as-Code Generator</p>
+        </div>
+      </div>
+      <div className="splash-text-container">
+        <div className="infoPadding">
+          <p className="marginBottom textContainer">
+            Cloud Resource and Infrastructure-as-Code Generator (CRAIG) allows
+            users to generate Infrastructure-as-Code (IaC) to create a fully
+            customizable environment on IBM Cloud.
+          </p>
+          <p className="marginBottom textContainer">
+            CRAIG simplifies the process of creating IaC through its GUI, which
+            manages and updates interconnected resources as they are created.
+          </p>
+          <p className="textContainer">
+            CRAIG configures infrastructure using JSON to create full VPC
+            networks, manage security and networking with VSI deployments, and
+            create services, clusters, and manage IAM for an IBM Cloud Account.
+            This JSON configuration can be imported to quick start environments,
+            and can be downloaded and edited as needed.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 const About = () => {
   return (
     <div className="about">
-      <div id="what-is-craig" className="section">
-        <div className="displayFlex">
-          <div className="displayFlex spaceBetween third verticalLine center">
-            <div className="stackedAcronym">
-              <h1 className="bigger">
-                <strong>C</strong>loud
-              </h1>
-              <h1 className="bigger">
-                <strong>R</strong>esource
-              </h1>
-              <h1 className="bigger">
-                <strong>A</strong>nd
-              </h1>
-              <h1 className="bigger">
-                <strong>I</strong>aC
-              </h1>
-              <h1 className="bigger">
-                <strong>G</strong>enerator
-              </h1>
-            </div>
-          </div>
-          <div className="verticalAlign twoThirds verticalFlex infoPadding">
-            <p className="marginBottom textContainer">
-              Cloud Resource and Infrastructure-as-Code Generator (CRAIG) allows
-              users to generate Infrastructure-as-Code (IaC) to create a fully
-              customizable environment on IBM Cloud.
-            </p>
-            <p className="marginBottom textContainer">
-              CRAIG simplifies the process of creating IaC through its GUI,
-              which manages and updates interconnected resources as they are
-              created.
-            </p>
-            <p className="textContainer">
-              CRAIG configures infrastructure using JSON to create full VPC
-              networks, manage security and networking with VSI deployments, and
-              create services, clusters, and manage IAM for an IBM Cloud
-              Account. This JSON configuration can be imported to quick start
-              environments, and can be downloaded and edited as needed.
-            </p>
-          </div>
-        </div>
-      </div>
+      <SplashPage />
       <hr />
       <div id="features">
         <h1 className="bigger">Features</h1>

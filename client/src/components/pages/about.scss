@@ -35,13 +35,21 @@ li {
 }
 
 .infoPadding {
-  padding: 2rem;
+  padding: 0 4rem 0 4rem;
+  width: 65%;
+}
+
+.splash-text-container {
+  align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: justify;
 }
 
 .section {
-  height: calc(100vh - 5em);
+  height: calc(100vh - 3rem);
   width: 100%;
-  overflow: scroll;
 }
 
 .half {
@@ -75,12 +83,8 @@ ul.indent {
   width: 33%;
 }
 
-.twoThirds {
-  width: 67%;
-}
-
 p .textContainer {
-  width: 80%;
+  width: 100%;
 }
 
 .verticalFlex {
