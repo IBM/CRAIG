@@ -7,6 +7,7 @@ import { azsort } from "lazy-z";
 import { Add } from "@carbon/icons-react";
 import "./project.css";
 import { ProjectTile } from "./ProjectTile";
+import { CraigHeader } from "../SplashPage";
 
 class Projects extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ class Projects extends React.Component {
     this.state = {
       modalOpen: false,
       viewJSONModalOpen: false,
-      deleteModalOpen: false,
+      deleteModalOpen: false
     };
 
     /* do not delete, for debugging */
@@ -51,7 +52,7 @@ class Projects extends React.Component {
   newProject() {
     this.setState(
       {
-        modalData: this.props.new(),
+        modalData: this.props.new()
       },
       () => {
         this.toggleModal();
@@ -65,7 +66,7 @@ class Projects extends React.Component {
    * @returns {Function} event function
    */
   onProjectSelect(keyName) {
-    return (event) => {
+    return event => {
       if (
         !event.target.id.startsWith("edit") &&
         !event.target.id.startsWith("delete") &&
@@ -96,7 +97,7 @@ class Projects extends React.Component {
     return () => {
       this.setState(
         {
-          modalData: this.props.projects[keyName],
+          modalData: this.props.projects[keyName]
         },
         () => {
           this.toggleModal();
@@ -116,8 +117,8 @@ class Projects extends React.Component {
         {
           viewJSONModalData: {
             name: this.props.projects[keyName].name,
-            json: this.props.projects[keyName].json,
-          },
+            json: this.props.projects[keyName].json
+          }
         },
         () => {
           this.toggleViewJSONModal();
@@ -135,7 +136,7 @@ class Projects extends React.Component {
     return () => {
       this.setState(
         {
-          deleteProject: keyName,
+          deleteProject: keyName
         },
         () => {
           this.toggleDeleteModal();
@@ -178,14 +179,7 @@ class Projects extends React.Component {
             }}
           />
         )}
-        <div className="header marginBottom">
-          <div className="headerItem">
-            <h1 className="bold">CRAIG</h1>
-          </div>
-          <div className="headerItem line">
-            <p>Cloud Resource and Infrastructure-as-Code Generator</p>
-          </div>
-        </div>
+        <CraigHeader />
         <div id="projects" className="body">
           <h3 className="marginBottomXs">Projects</h3>
           <p className="marginBottom">
@@ -213,7 +207,7 @@ class Projects extends React.Component {
               <legend className="cds--label">Select a Project</legend>
               <div>
                 {/* projects */}
-                {projectKeys.map((keyName) => (
+                {projectKeys.map(keyName => (
                   <ProjectTile
                     key={keyName}
                     keyName={keyName}

@@ -8,3 +8,4 @@ export { default as Summary } from "./summary/Summary";
 export { default as Projects } from "./projects/Projects";
 export { default as ToggleFormPageProps } from "./ToggleFormPageProps";
 export { ToggleFormPage, FormPage, EdgeNetworkingDocs } from "./SimplePages";
+export { default as SplashPage } from "./SplashPage";

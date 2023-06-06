@@ -18,7 +18,7 @@ class ImportJson extends React.Component {
       showModal: false,
       validJson: null,
       prefix: "",
-      hasInvalidPrefix: true,
+      hasInvalidPrefix: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -58,7 +58,7 @@ class ImportJson extends React.Component {
       textData: data,
       errorList: errorText,
       isValid: isValid,
-      validJson: isValid ? validatedConfigJson : null,
+      validJson: isValid ? validatedConfigJson : null
     });
   }
 
@@ -84,13 +84,11 @@ class ImportJson extends React.Component {
   render() {
     return (
       <div>
-        <IcseHeading
-          name={
-            this.props.slz
-              ? "Import resource configuration from SLZ override.json file."
-              : "Import existing CRAIG.json data for terraform deployment."
-          }
-        />
+        <div className="smallerText">
+          {this.props.slz
+            ? "Import resource configuration from SLZ override.json file."
+            : "Import existing CRAIG.json data for terraform deployment."}
+        </div>
         <div className="subForm">
           {this.props.slz && (
             <IcseFormGroup>
@@ -194,14 +192,14 @@ class ImportJson extends React.Component {
 }
 
 ImportJson.defaultProps = {
-  slz: false,
+  slz: false
 };
 
 ImportJson.propTypes = {
   craig: PropTypes.shape({
-    hardSetJson: PropTypes.func.isRequired,
+    hardSetJson: PropTypes.func.isRequired
   }).isRequired,
-  slz: PropTypes.bool.isRequired,
+  slz: PropTypes.bool.isRequired
 };
 
 export default ImportJson;

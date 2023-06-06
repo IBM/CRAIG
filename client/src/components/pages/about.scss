@@ -116,3 +116,11 @@ div .center {
     font-size: 1.25em;
   }
 }
+
+div .aboutHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+}

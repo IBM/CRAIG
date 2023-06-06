@@ -2,7 +2,7 @@ import React from "react";
 import { Button, ProgressIndicator, ProgressStep } from "@carbon/react";
 import "./tutorial.css";
 import { ChevronLeft, ChevronRight } from "@carbon/icons-react";
-import { SplashPage } from "../About";
+import SplashPage from "../SplashPage";
 import save from "../../../images/save.png";
 import create from "../../../images/create.png";
 import disabledsave from "../../../images/disabledsave.png";
