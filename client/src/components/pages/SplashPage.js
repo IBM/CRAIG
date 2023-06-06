@@ -2,7 +2,7 @@ import React from "react";
 import "./about.scss";
 import PropTypes from "prop-types";
 
-const SplashPage = props => {
+const SplashPage = (props) => {
   return (
     <div id="what-is-craig" className={"section " + props?.className}>
       <CraigHeader />
@@ -32,7 +32,7 @@ const SplashPage = props => {
 
 export default SplashPage;
 
-export const CraigHeader = props => {
+export const CraigHeader = (props) => {
   return (
     <div className={"header marginBottom " + props?.className}>
       <div className="headerItem">
@@ -46,9 +46,9 @@ export const CraigHeader = props => {
 };
 
 CraigHeader.defaultProps = {
-  className: ""
+  className: "",
 };
 
 CraigHeader.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
 };

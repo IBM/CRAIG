@@ -178,4 +178,24 @@ describe("invalidForms", () => {
       "it should return failing list of forms"
     );
   });
+  it("should return a list of disabled components when no components invalid and vpc has default acl name", () => {
+    let updatedState = new state();
+    updatedState.store.json = craig;
+    craig.vpn_servers = [];
+    updatedState.store.json.vpcs[0].default_network_acl_name = "frog";
+    updatedState.store.json.vpcs[0].default_routing_table_name = "frog";
+    updatedState.store.json.vpcs[0].default_security_group_name = "frog";
+    updatedState.updateCallback = () => {};
+    updatedState.update();
+    let expectedData = [];
+    let actualData = invalidForms(updatedState);
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should return failing list of forms"
+    );
+    updatedState.store.json.vpcs[0].default_network_acl_name = null;
+    updatedState.store.json.vpcs[0].default_routing_table_name = null;
+    updatedState.store.json.vpcs[0].default_security_group_name = null;
+  });
 });

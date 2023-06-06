@@ -2,14 +2,14 @@ import {
   SideNav,
   SideNavDivider,
   SideNavItems,
-  SideNavLink
+  SideNavLink,
 } from "@carbon/react";
 import {
   Home,
   Help,
   Bullhorn,
   JsonReference,
-  Compass
+  Compass,
 } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
@@ -17,7 +17,7 @@ import LeftNavItem from "./LeftNavItem";
 import PropTypes from "prop-types";
 import { contains, kebabCase } from "lazy-z";
 
-const LeftNav = props => {
+const LeftNav = (props) => {
   let dividerClass = props.expanded ? "expandedDivider" : "railDivider";
   return (
     <SideNav
@@ -43,7 +43,7 @@ const LeftNav = props => {
               item={{
                 path: "/docs/releaseNotes",
                 icon: Bullhorn,
-                title: "Release Notes"
+                title: "Release Notes",
               }}
               key="ReleaseNotes"
               expanded={props.expanded}
@@ -52,7 +52,7 @@ const LeftNav = props => {
               item={{
                 path: "/docs/json",
                 icon: JsonReference,
-                title: "JSON Documentation"
+                title: "JSON Documentation",
               }}
               key="json-docs"
               expanded={props.expanded}
@@ -61,20 +61,20 @@ const LeftNav = props => {
               item={{
                 path: "/docs/tutorial",
                 icon: Compass,
-                title: "Tutorial"
+                title: "Tutorial",
               }}
               key="tutorial"
               expanded={props.expanded}
             />
           </>
         )}
-        {props.navCategories.map(category => (
+        {props.navCategories.map((category) => (
           <div key={kebabCase(category.name)}>
             <SideNavDivider className={dividerClass} />
             {props.expanded && (
               <SideNavLink href="#">{category.name}</SideNavLink>
             )}
-            {category.links.map(item => (
+            {category.links.map((item) => (
               <LeftNavItem
                 item={item}
                 key={item.title}
@@ -97,14 +97,14 @@ const LeftNav = props => {
 
 LeftNav.defaultProps = {
   expanded: false,
-  fsCloud: true
+  fsCloud: true,
 };
 
 LeftNav.propTypes = {
   expanded: PropTypes.bool.isRequired,
   onOverlayClick: PropTypes.func.isRequired,
   navCategories: PropTypes.array.isRequired,
-  fsCloud: PropTypes.bool.isRequired
+  fsCloud: PropTypes.bool.isRequired,
 };
 
 export default LeftNav;

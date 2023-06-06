@@ -44,10 +44,14 @@ function invalidForms(craig) {
           craig: craig,
           data: {
             name: data.name,
+            default_security_group_name: data.default_security_group_name,
+            default_routing_table_name: data.default_routing_table_name,
+            default_network_acl_name: data.default_network_acl_name,
           },
           route: {
             routes: [],
           },
+          parent_name: "parent_name",
         },
         craig,
       ]

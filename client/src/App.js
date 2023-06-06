@@ -12,14 +12,14 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      unsaved: false
+      unsaved: false,
     };
     this.nav = this.nav.bind(this);
     this.unsavedChangesCallback = this.unsavedChangesCallback.bind(this);
     // routing functions bundled together to easily pass through to child components
     this.craigRouter = {
       nav: this.nav,
-      unsavedChangesCallback: this.unsavedChangesCallback
+      unsavedChangesCallback: this.unsavedChangesCallback,
     };
   }
 

@@ -192,7 +192,6 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         allOtherNames.indexOf(componentProps.data[stateField]),
         1
       );
-
     return contains(allOtherNames, stateData[stateField]);
   } else return false; // prevent order card from crashing
 }
