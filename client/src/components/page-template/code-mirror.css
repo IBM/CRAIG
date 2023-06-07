@@ -66,3 +66,29 @@ button.tabButton {
 .copyButton:hover > svg {
   fill: black;
 }
+
+.cm-editor {
+  overflow-y: scroll;
+  min-height: fit-content;
+  max-height: 100vh;
+}
+
+.cm-editor::-webkit-scrollbar {
+  /* remove the scrollbar for the part that actually overflows */
+  display: none;
+}
+
+.cm-scroller::-webkit-scrollbar {
+  /* remove the scroller display but keep functionality */
+  display: none;
+}
+
+.cm-editor {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.cm-scroller {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
