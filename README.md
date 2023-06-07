@@ -110,7 +110,7 @@ npm run test
 Craig uses [nyc](https://www.npmjs.com/package/nyc) for unit test coverage. To get a report of unit test coverage run the command
 
 ```shell
-npn run coverage
+npm run coverage
 ```
 
 #### 6. Install Pre-commit Hook
