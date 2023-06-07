@@ -4079,5 +4079,91 @@ describe("vpcs", () => {
         "it should change subnets"
       );
     });
+    it("should update address prefixes when changing from scalable to not scalable", () => {
+      let vpcState = newState();
+      let expectedData = [
+        {
+          name: "vsi-zone-1",
+          cidr: "10.10.0.0/29",
+          zone: 1,
+          vpc: "management",
+        },
+        {
+          name: "vpn-zone-1",
+          cidr: "10.10.0.8/28",
+          zone: 1,
+          vpc: "management",
+        },
+        {
+          name: "vsi-zone-2",
+          cidr: "10.20.0.0/29",
+          zone: 2,
+          vpc: "management",
+        },
+        {
+          name: "vsi-zone-3",
+          cidr: "10.30.0.0/29",
+          zone: 3,
+          vpc: "management",
+        },
+        {
+          name: "vpe-zone-1",
+          cidr: "10.10.0.24/29",
+          zone: 1,
+          vpc: "management",
+        },
+        {
+          name: "vpe-zone-2",
+          cidr: "10.20.0.8/29",
+          zone: 2,
+          vpc: "management",
+        },
+        {
+          name: "vpe-zone-3",
+          cidr: "10.30.0.8/29",
+          zone: 3,
+          vpc: "management",
+        },
+        {
+          name: "vpn-zone-2",
+          cidr: "10.20.30.0/24",
+          vpc: "management",
+          zone: 2,
+        },
+        {
+          name: "vpn-zone-3",
+          cidr: "10.30.30.0/24",
+          vpc: "management",
+          zone: 3,
+        },
+      ];
+      vpcState.options.save(
+        { dynamic_subnets: false },
+        {
+          data: {
+            name: undefined,
+            dynamic_subnets: true,
+          },
+        }
+      );
+      let expectedWorkloadPrefixes = [
+        { name: "vsi-zone-1", cidr: "10.20.0.0/28", zone: 1, vpc: "workload" },
+        { name: "vsi-zone-2", cidr: "10.30.0.0/28", zone: 2, vpc: "workload" },
+        { name: "vsi-zone-3", cidr: "10.40.0.0/28", zone: 3, vpc: "workload" },
+        { name: "vpe-zone-1", cidr: "10.20.0.16/29", zone: 1, vpc: "workload" },
+        { name: "vpe-zone-2", cidr: "10.30.0.16/29", zone: 2, vpc: "workload" },
+        { name: "vpe-zone-3", cidr: "10.40.0.16/29", zone: 3, vpc: "workload" },
+      ];
+      assert.deepEqual(
+        vpcState.store.json.vpcs[0].address_prefixes,
+        expectedData,
+        "it should change subnets"
+      );
+      assert.deepEqual(
+        vpcState.store.json.vpcs[1].address_prefixes,
+        expectedWorkloadPrefixes,
+        "it should change subnets"
+      );
+    });
   });
 });

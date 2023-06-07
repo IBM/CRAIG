@@ -8,6 +8,7 @@ const {
   getObjectFromArray,
   formatCidrBlock,
   contains,
+  splatContains,
 } = require("lazy-z");
 const { reservedSubnetNameExp } = require("../constants");
 const { saveAdvancedSubnetTier } = require("./utils");
@@ -319,7 +320,10 @@ function editSubnets(
       if (tierIndex >= 0 && !contains(validZones, zone)) {
         carve(vpc.subnets, "name", zoneSubnetName);
         // only update prefix if not using dynamic scaling
-        if (!config.store.json._options.dynamic_subnets)
+        if (
+          !config.store.json._options.dynamic_subnets &&
+          splatContains(vpc.address_prefixes, "name", zoneSubnetName)
+        )
           carve(vpc.address_prefixes, "name", zoneSubnetName);
       } else if (tierIndex >= 0 && oldTierName !== newTierName) {
         // if the tier is found and the old tier name is different from the new one

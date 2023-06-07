@@ -17,5 +17,5 @@ function notificationText(pathname) {
 }
 
 module.exports = {
-  notificationText
+  notificationText,
 };

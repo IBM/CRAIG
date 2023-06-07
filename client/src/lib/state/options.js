@@ -1,5 +1,6 @@
 const { revision } = require("lazy-z");
 const { subnetTierSave } = require("./vpc");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * initialize options
@@ -27,6 +28,19 @@ function optionsInit(config) {
  * @param {object} componentProps props from component form
  */
 function optionsSave(config, stateData, componentProps) {
+  if (componentProps.data.dynamic_subnets && !stateData.dynamic_subnets) {
+    config.store.json.vpcs.forEach((vpc) => {
+      vpc.address_prefixes = [];
+      vpc.subnets.forEach((subnet) => {
+        vpc.address_prefixes.push({
+          name: subnet.name,
+          cidr: subnet.cidr,
+          zone: subnet.zone,
+          vpc: vpc.name,
+        });
+      });
+    });
+  }
   config.updateChild(["json", "_options"], componentProps.data.name, stateData);
   let zones = config.store.json._options.zones;
   let vpcs = Object.keys(config.store.subnetTiers);
@@ -36,7 +50,21 @@ function optionsSave(config, stateData, componentProps) {
       newSubnetTier.zones = zones; // update zones
       newSubnetTier.networkAcl = new revision(config.store.json)
         .child("vpcs", vpc, "name")
-        .child("subnets", subnetTier.name + "-zone-1", "name").data.network_acl;
+        .data.subnets.forEach((subnet) => {
+          if (
+            subnet.name.match(
+              new RegexButWithWords()
+                .stringBegin()
+                .literal(subnetTier.name)
+                .literal("-zone-")
+                .digit()
+                .stringEnd()
+                .done("g")
+            ) !== null
+          ) {
+            newSubnetTier.networkAcl = subnet.network_acl;
+          }
+        });
       // need to update list of subnets
       subnetTierSave(config, newSubnetTier, {
         data: subnetTier,

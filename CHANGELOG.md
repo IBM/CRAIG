@@ -30,6 +30,8 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug in the terraform causing SSH Key validation to have incorrect reference
 - Fixed a bug causing vpn server client dns server IPs to not render correctly as a list of strings
 - Fixed an error where dynamically addressed subnets had overlapping VPC address prefixes
+- Fixed an error where changing from dynamic subnets to legacy subnets was causing the option page to not be saved
+- Subnet address prefixes no longer dependencies for prefixes in other zones
 
 ## 0.6.0
 

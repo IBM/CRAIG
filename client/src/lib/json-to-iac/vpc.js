@@ -176,7 +176,9 @@ function ibmIsSubnet(subnet, config, useVarRef) {
     addressPrefixes.forEach((prefix) => {
       if (
         (prefix.zone === subnet.zone && config._options.dynamic_subnets) ||
-        !config._options.dynamic_subnets
+        (!subnet.has_prefix &&
+          !config._options.dynamic_subnets &&
+          prefix.zone === subnet.zone)
       )
         data.data.depends_on.push(
           cdktfRef(

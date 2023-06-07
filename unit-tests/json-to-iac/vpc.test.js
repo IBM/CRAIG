@@ -320,9 +320,7 @@ resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
     "landing-zone"
   ]
   depends_on = [
-    ibm_is_vpc_address_prefix.edge_f5_zone_1_prefix,
-    ibm_is_vpc_address_prefix.edge_f5_zone_2_prefix,
-    ibm_is_vpc_address_prefix.edge_f5_zone_3_prefix
+    ibm_is_vpc_address_prefix.edge_f5_zone_1_prefix
   ]
 }
 `;

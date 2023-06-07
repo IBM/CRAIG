@@ -313,6 +313,7 @@ function subnetSave(config, stateData, componentProps) {
     .then((data) => {
       // update advanced tier subnet prefixes
       if (stateData.tier) {
+        stateData.has_prefix = true;
         let prefix = getObjectFromArray(
           data.address_prefixes,
           "name",
@@ -420,6 +421,12 @@ function subnetTierCreate(config, stateData, componentProps) {
     };
     stateData.select_zones.forEach((zone) => {
       tier.subnets.push(stateData.name + "-zone-" + zone);
+      config.store.json.vpcs[vpcIndex].address_prefixes.push({
+        name: stateData.name + "-zone-" + zone,
+        cidr: null,
+        zone: zone,
+        vpc: componentProps.vpc_name,
+      });
       config.store.json.vpcs[vpcIndex].subnets.push({
         name: stateData.name + "-zone-" + zone,
         cidr: null,
