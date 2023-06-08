@@ -42,37 +42,39 @@ function optionsSave(config, stateData, componentProps) {
     });
   }
   config.updateChild(["json", "_options"], componentProps.data.name, stateData);
-  let zones = config.store.json._options.zones;
-  let vpcs = Object.keys(config.store.subnetTiers);
-  vpcs.forEach((vpc) => {
-    config.store.subnetTiers[vpc].forEach((subnetTier) => {
-      let newSubnetTier = subnetTier;
-      newSubnetTier.zones = zones; // update zones
-      newSubnetTier.networkAcl = new revision(config.store.json)
-        .child("vpcs", vpc, "name")
-        .data.subnets.forEach((subnet) => {
-          if (
-            subnet.name.match(
-              new RegexButWithWords()
-                .stringBegin()
-                .literal(subnetTier.name)
-                .literal("-zone-")
-                .digit()
-                .stringEnd()
-                .done("g")
-            ) !== null
-          ) {
-            newSubnetTier.networkAcl = subnet.network_acl;
-          }
+  if (stateData.zones !== componentProps.data.zones) {
+    let zones = config.store.json._options.zones;
+    let vpcs = Object.keys(config.store.subnetTiers);
+    vpcs.forEach((vpc) => {
+      config.store.subnetTiers[vpc].forEach((subnetTier) => {
+        let newSubnetTier = subnetTier;
+        newSubnetTier.zones = zones; // update zones
+        newSubnetTier.networkAcl = new revision(config.store.json)
+          .child("vpcs", vpc, "name")
+          .data.subnets.forEach((subnet) => {
+            if (
+              subnet.name.match(
+                new RegexButWithWords()
+                  .stringBegin()
+                  .literal(subnetTier.name)
+                  .literal("-zone-")
+                  .digit()
+                  .stringEnd()
+                  .done("g")
+              ) !== null
+            ) {
+              newSubnetTier.networkAcl = subnet.network_acl;
+            }
+          });
+        // need to update list of subnets
+        subnetTierSave(config, newSubnetTier, {
+          data: subnetTier,
+          vpc_name: vpc,
+          craig: config,
         });
-      // need to update list of subnets
-      subnetTierSave(config, newSubnetTier, {
-        data: subnetTier,
-        vpc_name: vpc,
-        craig: config,
       });
     });
-  });
+  }
 }
 
 module.exports = {

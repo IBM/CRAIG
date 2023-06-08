@@ -4124,18 +4124,6 @@ describe("vpcs", () => {
           zone: 3,
           vpc: "management",
         },
-        {
-          name: "vpn-zone-2",
-          cidr: "10.20.30.0/24",
-          vpc: "management",
-          zone: 2,
-        },
-        {
-          name: "vpn-zone-3",
-          cidr: "10.30.30.0/24",
-          vpc: "management",
-          zone: 3,
-        },
       ];
       vpcState.options.save(
         { dynamic_subnets: false },
