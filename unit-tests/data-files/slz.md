@@ -507,7 +507,7 @@ By default, IBM Event Streams instances are not created but can be if desired.
 
 ## Context Based Restrictions
 
-IBM Cloud Context-Based Restictions give users the ability to define and endorce access retestictions. These restrictions add an extra layer of protection that work with tradiditional IAM Access Policies.
+IBM Cloud Context-Based Restrictions give users the ability to define and enforce access restrictions. These restrictions add an extra layer of protection that work with traditional IAM Access Policies.
 
 ### Related Links
 
@@ -529,10 +529,29 @@ Secrets Manager is required to create VPN Server instances.
 
 ## Dns
 
-nyi
+IBM Cloud offers public and private authoritative domain name system (DNS) services.
+
+DNS zones are collections for holding domain names. The DNS resolver always looks for a record from the longest matching zone.
+
+DNS resource records are entries in the DNS zone that provide information about the components that support your domain. The following record types are supported:
+
+Record types
+A            | - `An A (IPv4 address) record consists of a hostname and an IP address.`
+AAAA         | - `An AAAA (IPv6 address) record.`
+CNAME        | - `CNAME (canonical name) records point to domain names instead of IP addresses.`
+MX           | - `An MX (mail exchange) record handles the direction of mail.`
+NS           | - `An NS (nameserver) record.`
+PTR          | - `A PTR (pointer/reverse) record.`
+SOA          | - `The SOA (start of authority) record.`
+SPF          | - `An SPF (sender policy framework) record.`
+TXT          | - `A TXT (text) record generally is a record that you can query, and which returns information about a domain.`
+
+A DNS custom resolver enables the resolution of on-premises hostnames from the IBM Cloud.
+
+By default, no DNS services are provisioned.
 
 ### Related Links
 
-- [Docs](nyi)
+- [Docs](https://cloud.ibm.com/docs/dns-svcs)
 
 -----
