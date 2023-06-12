@@ -523,12 +523,17 @@ function disableSave(field, stateData, componentProps, craig) {
           "security_groups",
           "certificate_crn",
           "method",
-          "port",
           "client_ip_pool",
         ],
         stateData
       ) ||
-      validPortRange("port_min", stateData.port) === false ||
+      (!isNullOrEmptyString(stateData.port) &&
+        (isWholeNumber(Number(stateData.port)) === false ||
+          validPortRange("port_min", stateData.port) === false)) ||
+      (!isNullOrEmptyString(stateData.client_idle_timeout) &&
+        (isWholeNumber(Number(stateData.client_idle_timeout)) === false ||
+          isInRange(Number(stateData.client_idle_timeout), 0, 28800) ===
+            false)) ||
       invalidCrnList(
         [stateData.certificate_crn].concat(
           stateData.method === "username" ? [] : stateData.client_ca_crn
