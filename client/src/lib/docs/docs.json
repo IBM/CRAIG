@@ -161,9 +161,25 @@
       [
         "https://cloud.ibm.com/docs/key-protect?topic=key-protect-about",
         "IBM Cloud Key Protect"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key",
+        "Key Management Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_policies",
+        "Key Management Key Policy Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_rings",
+        "Key Management Key Ring Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "vpcs": {
     "content": [
@@ -195,11 +211,25 @@
         ]
       }
     ],
-    "relatedLinks": [["https://www.ibm.com/cloud/learn/vpc"]],
-    "last_updated": "2/1/2023"
+    "relatedLinks": [
+      ["https://www.ibm.com/cloud/learn/vpc"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc",
+        "Virtual Private Cloud Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_flow_log",
+        "VPC Flow Log Terraform Documetation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_public_gateway",
+        "VPC Public Gateway Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
   },
   "acls": {
-    "last_updated": "5/25/2023",
+    "last_updated": "6/9/2023",
     "content": [
       {
         "text": "An Access Control List (ACL) is a built-in, virtual firewall. An ACL can be leveraged to control all incoming and outgoing traffic on a VPC.",
@@ -309,7 +339,13 @@
         ]
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-using-acls"]]
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-using-acls"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_network_acl",
+        "Network Access Control List Terraform Documentation"
+      ]
+    ]
   },
   "subnets": {
     "content": [
@@ -351,9 +387,13 @@
     "relatedLinks": [
       [
         "https://cloud.ibm.com/docs/vpc?topic=vpc-about-subnets-vpc&interface=ui"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet",
+        "VPC Subnet Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "transit_gateways": {
     "content": [
@@ -374,9 +414,19 @@
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-about"]
+      [
+        "https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-about"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/tg_gateway",
+        "Transit Gateway Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/tg_connection",
+        "Transit Gateway Connection Terraform Documentation"
+      ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "security_groups": {
     "content": [
@@ -402,9 +452,17 @@
     "relatedLinks": [
       [
         "https://cloud.ibm.com/docs/security-groups?topic=security-groups-about-ibm-security-groups"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group",
+        "VPC Security Group Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_rule",
+        "VPC Security Group Rule Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "virtual_private_endpoints": {
     "content": [
@@ -420,14 +478,34 @@
         "https://cloud.ibm.com/docs/vpc?topic=vpc-vpe-supported-services",
         "VPE Supported Services"
       ],
-      ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-vpe"]
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-vpe"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet_reserved_ip",
+        "VPC Subnet Reserved IP Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_virtual_endpoint_gateway",
+        "Virtual Endpoint Gateway Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_virtual_endpoint_gateway_ip",
+        "Virtual Endpoint Gateway IP Terraform Documentation"
+      ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "atracker": {
     "relatedLinks": [
       [
         "https://cloud.ibm.com/docs/activity-tracker?topic=activity-tracker-getting-started"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/atracker_target",
+        "Activity Tracker Target Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/atracker_route",
+        "Activity Tracker Route Terraform Documentation"
       ]
     ],
     "content": [
@@ -459,11 +537,19 @@
         ]
       }
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "ssh_keys": {
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-about-ssh-keys"]
+      ["https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-about-ssh-keys"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_ssh_key",
+        "VPC SSH Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_ssh_key",
+        "VPC SSH Key Terraform Data Documentation"
+      ]
     ],
     "content": [
       {
@@ -479,7 +565,7 @@
         ]
       }
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "vsi": {
     "content": [
@@ -511,9 +597,21 @@
     "relatedLinks": [
       [
         "https://cloud.ibm.com/docs/vpc?topic=vpc-about-advanced-virtual-servers"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_image",
+        "VPC Image Terraform Data Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_instance",
+        "VPC Virtual Server Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_volume",
+        "VPC Block Storage Volume Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "clusters": {
     "relatedLinks": [
@@ -524,6 +622,14 @@
       [
         "https://cloud.ibm.com/docs/containers?topic=containers-getting-started",
         "Getting started with IBM Cloud Kubernetes Service"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/container_vpc_cluster",
+        "VPC Cluster Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/container_vpc_worker_pool",
+        "VPC Worker Pool Terraform Documentation"
       ]
     ],
     "content": [
@@ -546,7 +652,7 @@
         ]
       }
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "vpn_gateways": {
     "content": [
@@ -565,8 +671,14 @@
         ]
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview"]],
-    "last_updated": "2/1/2023"
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_gateway",
+        "VPC VPN Gateway Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
   },
   "appid": {
     "relatedLinks": [
@@ -574,6 +686,18 @@
       [
         "https://cloud.ibm.com/docs/appid?topic=appid-getting-started",
         "Getting Started With App ID"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key",
+        "Resource Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/appid_redirect_urls",
+        "AppID Redirect URL Terraform Documentation"
       ]
     ],
     "content": [
@@ -584,7 +708,7 @@
         "text": "By default, no AppID instances are created."
       }
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "f5": {
     "content": [
@@ -847,9 +971,13 @@
       [
         "https://cloud.ibm.com/unifiedsupport/cases/form",
         "Contact IBM Cloud Support"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_instance",
+        "VPC Virtual Server Instance Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "iam_account_settings": {
     "content": [
@@ -896,9 +1024,13 @@
       [
         "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-account-setup",
         "IAM on IBM Cloud for Financial Services Setup"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_account_settings",
+        "IAM Account Settings Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "access_groups": {
     "content": [
@@ -941,9 +1073,13 @@
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/account?topic=account-groups&interface=ui"]
+      ["https://cloud.ibm.com/docs/account?topic=account-groups&interface=ui"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_access_group",
+        "IAM Access Group Terraform Documentation"
+      ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "secrets_manager": {
     "relatedLinks": [
@@ -959,6 +1095,10 @@
       [
         "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-best-practices#best-practices-financial-services-validated-services",
         "FS Cloud Best Practices"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
       ]
     ],
     "content": [
@@ -985,7 +1125,7 @@
         "text": "Please note, IBM Cloud Secrets Manager is not yet Financial Services Validated. For this reason, no instances are enabled in the initial configuration but can be created if desired."
       }
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "security_compliance_center": {
     "content": [
@@ -1013,9 +1153,21 @@
     "relatedLinks": [
       [
         "https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_credential",
+        "SCC Posture Credential Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_account_settings",
+        "SCC Account Settings Terraform Documetation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_scope",
+        "SCC Posture Scope Terraform Documentation"
       ]
     ],
-    "last_updated": "2/1/2023"
+    "last_updated": "6/9/2023"
   },
   "event_streams": {
     "content": [
@@ -1031,9 +1183,13 @@
       [
         "https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started",
         "Docs"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
       ]
     ],
-    "last_updated": "4/1/2023"
+    "last_updated": "6/9/2023"
   },
   "routing_tables": {
     "content": [
@@ -1043,9 +1199,17 @@
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes"]
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc_routing_table",
+        "VPC Routing Table Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc_routing_table_route",
+        "VPC Routing Table Route Terraform Documentation"
+      ]
     ],
-    "last_updated": "4/1/2023"
+    "last_updated": "6/9/2023"
   },
   "load_balancers": {
     "content": [
@@ -1061,8 +1225,26 @@
         ]
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/vpc?topic=vpc-nlb-vs-elb"]],
-    "last_updated": "4/1/2023"
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-nlb-vs-elb"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb",
+        "VPC Load Balancer Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb_pool",
+        "VPC Load Balancer Pool Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb_pool_member",
+        "VPC Load Balancer Pool Member Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb_listener",
+        "VPC Load Balancer Listener Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
   },
   "cbr": {
     "content": [
@@ -1073,9 +1255,17 @@
     "relatedLinks": [
       [
         "https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cbr_zone",
+        "Context-Based Restrictions Zone Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cbr_rule",
+        "Context-Based Restrictions Rule Terraform Documentation"
       ]
     ],
-    "last_updated": "5/1/2023"
+    "last_updated": "6/9/2023"
   },
   "vpn_servers": {
     "content": [
@@ -1087,9 +1277,17 @@
       }
     ],
     "relatedLinks": [
-      ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"]
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_server",
+        "VPN Server Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_server_route",
+        "VPN Server Route Terraform Documentation"
+      ]
     ],
-    "last_updated": "5/1/2023"
+    "last_updated": "6/9/2023"
   },
   "dns": {
     "content": [
@@ -1132,7 +1330,29 @@
         "text": "By default, no DNS services are provisioned."
       }
     ],
-    "relatedLinks": [["https://cloud.ibm.com/docs/dns-svcs"]],
-    "last_updated": "6/8/2023"
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/dns-svcs"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_zone",
+        "DNS Zone Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_resource_record",
+        "DNS Resource Record Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_permitted_network",
+        "DNS Permitted Network Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_custom_resolver",
+        "DNS Custom Resolver Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
   }
 }

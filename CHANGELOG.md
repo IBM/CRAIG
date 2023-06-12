@@ -55,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - IAM and Access Control Policies have been moved in the navigation bar for a better workflow
 - Components no longer show as `required` in the Left Nav when the user is not using FS Cloud
 - VPCs can now be provisioned with Flow Logs disabled
+- Added Terraform documentation in the About tab for each component for each resource created by CRAIG
 
 ### Fixes
 

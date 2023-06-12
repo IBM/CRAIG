@@ -74,6 +74,10 @@ To allow keys from your Key Protect Service to encrypt VSI and VPC Block Storage
 - [Docs](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-encryption-at-rest)
 - [Get Started With HyperProtect Crypto Servies](https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-get-started)
 - [IBM Cloud Key Protect](https://cloud.ibm.com/docs/key-protect?topic=key-protect-about)
+- [Resource Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance)
+- [Key Management Key Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key)
+- [Key Management Key Policy Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_policies)
+- [Key Management Key Ring Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_rings)
 
 -----
 
@@ -92,6 +96,9 @@ edge         | a VPC for edge if you enable edge networking for F5              
 ### Related Links
 
 - [Docs](https://www.ibm.com/cloud/learn/vpc)
+- [Virtual Private Cloud Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc)
+- [VPC Flow Log Terraform Documetation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_flow_log)
+- [VPC Public Gateway Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_public_gateway)
 
 -----
 
@@ -123,6 +130,7 @@ allow-lb-outgoing-traffic-requests  | Allow  | Outbound  | 10.0.0.0/8    | 10.0.
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-using-acls)
+- [Network Access Control List Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_network_acl)
 
 -----
 
@@ -143,6 +151,7 @@ workload   | vpe         | 10.50.10.0/24 | 10.50.20.0/24 | 10.50.30.0/24
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-about-subnets-vpc&interface=ui)
+- [VPC Subnet Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet)
 
 -----
 
@@ -159,6 +168,8 @@ iac-transit-gateway | A transit gateway deployed in the SLZ service resource gro
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-about)
+- [Transit Gateway Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/tg_gateway)
+- [Transit Gateway Connection Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/tg_connection)
 
 -----
 
@@ -179,6 +190,8 @@ Rule Name
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/security-groups?topic=security-groups-about-ibm-security-groups)
+- [VPC Security Group Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group)
+- [VPC Security Group Rule Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_rule)
 
 -----
 
@@ -192,6 +205,9 @@ The default configuration connects the management and workload VPCs to IBM Cloud
 
 - [VPE Supported Services](https://cloud.ibm.com/docs/vpc?topic=vpc-vpe-supported-services)
 - [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-about-vpe)
+- [VPC Subnet Reserved IP Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet_reserved_ip)
+- [Virtual Endpoint Gateway Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_virtual_endpoint_gateway)
+- [Virtual Endpoint Gateway IP Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_virtual_endpoint_gateway_ip)
 
 -----
 
@@ -211,6 +227,8 @@ cos-bind-key           | An IAM API key that has writer access to the Cloud Obje
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/activity-tracker?topic=activity-tracker-getting-started)
+- [Activity Tracker Target Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/atracker_target)
+- [Activity Tracker Route Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/atracker_route)
 
 -----
 
@@ -227,6 +245,8 @@ Mixed                               | One SSH key configured.
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-about-ssh-keys)
+- [VPC SSH Key Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_ssh_key)
+- [VPC SSH Key Terraform Data Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_ssh_key)
 
 -----
 
@@ -245,6 +265,9 @@ Mixed                               | One VSI deployment for three VSIs distribu
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-about-advanced-virtual-servers)
+- [VPC Image Terraform Data Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_image)
+- [VPC Virtual Server Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_instance)
+- [VPC Block Storage Volume Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_volume)
 
 -----
 
@@ -262,6 +285,8 @@ Mixed                               | One OpenShift cluster with three zones in 
 
 - [Getting Started With Red Hat OpenShift Clusters on IBM Cloud](https://cloud.ibm.com/docs/openshift?topic=openshift-getting-started)
 - [Getting started with IBM Cloud Kubernetes Service](https://cloud.ibm.com/docs/containers?topic=containers-getting-started)
+- [VPC Cluster Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/container_vpc_cluster)
+- [VPC Worker Pool Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/container_vpc_worker_pool)
 
 -----
 
@@ -277,6 +302,7 @@ management-gateway | A VPN gateway service deployed in the management resource g
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview)
+- [VPC VPN Gateway Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_gateway)
 
 -----
 
@@ -290,6 +316,9 @@ By default, no AppID instances are created.
 
 - [About App ID](https://cloud.ibm.com/docs/appid?topic=appid-about)
 - [Getting Started With App ID](https://cloud.ibm.com/docs/appid?topic=appid-getting-started)
+- [Resource Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance)
+- [Resource Key Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key)
+- [AppID Redirect URL Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/appid_redirect_urls)
 
 -----
 
@@ -399,6 +428,7 @@ For more information on Networking rules, reference Deploying and configuring F5
 - [F5 Cloud Documentation](https://clouddocs.f5.com/)
 - [CIS global load balancers allowlisted IP addresses](https://cloud.ibm.com/docs/cis?topic=cis-cis-allowlisted-ip-addresses)
 - [Contact IBM Cloud Support](https://cloud.ibm.com/unifiedsupport/cases/form)
+- [VPC Virtual Server Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_instance)
 
 -----
 
@@ -422,6 +452,7 @@ If enabled, the multi-factor authentication should be set to the U2F MFA type fo
 
 - [Setting up MFA Settings](https://cloud.ibm.com/docs/account?topic=account-account-getting-started)
 - [IAM on IBM Cloud for Financial Services Setup](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-account-setup)
+- [IAM Account Settings Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_account_settings)
 
 -----
 
@@ -450,6 +481,7 @@ Resource Type        | Name of the resource type for the policy
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/account?topic=account-groups&interface=ui)
+- [IAM Access Group Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_access_group)
 
 -----
 
@@ -473,6 +505,7 @@ Please note, IBM Cloud Secrets Manager is not yet Financial Services Validated. 
 - [Getting Started with Secrets Manager](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-getting-started)
 - [Handling and Securing Secrets on FS Cloud](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-secrets)
 - [FS Cloud Best Practices](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-best-practices#best-practices-financial-services-validated-services)
+- [Resource Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance)
 
 -----
 
@@ -490,6 +523,9 @@ By default, IBM Cloud Security and Compliance Center is not enabled but can be e
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started)
+- [SCC Posture Credential Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_credential)
+- [SCC Account Settings Terraform Documetation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_account_settings)
+- [SCC Posture Scope Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_scope)
 
 -----
 
@@ -502,6 +538,7 @@ By default, IBM Event Streams instances are not created but can be if desired.
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started)
+- [Resource Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance)
 
 -----
 
@@ -512,6 +549,8 @@ IBM Cloud Context-Based Restrictions give users the ability to define and enforc
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis)
+- [Context-Based Restrictions Zone Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cbr_zone)
+- [Context-Based Restrictions Rule Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cbr_rule)
 
 -----
 
@@ -524,6 +563,8 @@ Secrets Manager is required to create VPN Server instances.
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview)
+- [VPN Server Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_server)
+- [VPN Server Route Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_server_route)
 
 -----
 
@@ -553,5 +594,10 @@ By default, no DNS services are provisioned.
 ### Related Links
 
 - [Docs](https://cloud.ibm.com/docs/dns-svcs)
+- [Resource Instance Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance)
+- [DNS Zone Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_zone)
+- [DNS Resource Record Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_resource_record)
+- [DNS Permitted Network Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_permitted_network)
+- [DNS Custom Resolver Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_custom_resolver)
 
 -----

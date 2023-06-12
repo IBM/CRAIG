@@ -187,7 +187,7 @@ function formProps(form, craig) {
       name: form === "nacls" ? "Network Access Control Lists" : "VPC Subnets",
       innerForm: form === "nacls" ? NaclForm : SubnetForm,
       arrayData: craig.store.json.vpcs,
-      docs: RenderDocs("subnets"),
+      docs: form === "nacls" ? RenderDocs("acls") : RenderDocs("subnets"),
       onSubmit: none,
       onDelete: none,
       onSave: none,
