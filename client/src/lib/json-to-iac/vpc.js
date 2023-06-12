@@ -428,7 +428,7 @@ function vpcTf(config) {
     vpc.subnets.forEach((subnet) => {
       blockData += formatSubnet(subnet, config);
     });
-    tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
+    tf += tfBlock(vpc.name + " VPC", blockData) + "\n";
   });
   return tfDone(tf);
 }
@@ -562,20 +562,17 @@ function vpcModuleTf(files, config) {
     });
 
     files[vpcModule] = {
-      "main.tf": tfBlock(vpc.name + " vpc", main),
+      "main.tf": tfBlock(vpc.name + " VPC", main),
       "versions.tf": versionsTf.replace(/\$ADDITIONAL_PROVIDERS\n/g, ""),
       "variables.tf": tfBlock(
-        vpc.name + " vpc variables",
+        vpc.name + " VPC variables",
         "\n" + jsonToTf(JSON.stringify({ variable: variables })) + "\n"
       ),
     };
 
     vpc.acls.forEach((acl) => {
       let aclData = formatAcl(acl, cloneConfig, true);
-      let data = tfBlock(
-        snakeCase(`${acl.vpc} ${acl.name} acl`),
-        aclData
-      ).replace(/Acl(?=\n)/gs, "ACL");
+      let data = tfBlock(`${acl.vpc} ${acl.name} ACL`, aclData);
       files[vpcModule]["acl_" + snakeCase(`${acl.vpc} ${acl.name}.tf`)] = data;
     });
 
@@ -605,7 +602,7 @@ function vpcModuleTf(files, config) {
     }
 
     files[vpcModule]["outputs.tf"] = tfBlock(
-      vpc.name + " vpc outputs",
+      vpc.name + " VPC outputs",
       "\n" +
         jsonToTf(
           JSON.stringify({
@@ -623,7 +620,7 @@ function vpcModuleTf(files, config) {
         })
       ) +
       "\n";
-    files["main.tf"] += "\n" + tfBlock(`${vpc.name} vpc module`, moduleData);
+    files["main.tf"] += "\n" + tfBlock(`${vpc.name} VPC module`, moduleData);
   });
 }
 

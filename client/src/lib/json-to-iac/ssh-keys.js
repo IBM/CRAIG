@@ -59,7 +59,7 @@ function formatSshKey(key, config) {
 function sshKeyTf(config) {
   let tf = "";
   config.ssh_keys.forEach((key) => (tf += formatSshKey(key, config)));
-  return tfBlock("ssh keys", tf);
+  return tfBlock("SSH keys", tf);
 }
 
 module.exports = {

@@ -312,7 +312,7 @@ function loggingMonitoringTf(config) {
     let sysdigTf = formatSysdigInstance(config) + formatSysdigKey(config);
     tf += tfBlock("Sysdig Instance", sysdigTf);
   }
-  return tf.replace(/ D N A/g, "DNA");
+  return tf;
 }
 
 module.exports = {

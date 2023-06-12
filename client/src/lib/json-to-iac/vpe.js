@@ -179,7 +179,7 @@ function vpeTf(config) {
     vpe.subnets.forEach(
       (subnet) => (blockData += fortmatVpeGatewayIp(vpe, subnet))
     );
-    tf += tfBlock(vpe.vpc + " vpe resources", blockData) + "\n";
+    tf += tfBlock(vpe.vpc + " VPE resources", blockData) + "\n";
   });
   return tfDone(tf);
 }

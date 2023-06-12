@@ -136,7 +136,7 @@ function vpnServerTf(config) {
       tf += formatVpnServerRoute(server, route, config);
     });
   });
-  return tf === "" ? "" : tfBlock("vpn servers", tf);
+  return tf === "" ? "" : tfBlock("VPN servers", tf);
 }
 
 module.exports = {

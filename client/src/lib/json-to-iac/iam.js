@@ -222,7 +222,7 @@ function iamTf(config) {
   if (config.iam_account_settings.enable) {
     tf +=
       tfBlock(
-        "Iam Account Settings",
+        "IAM Account Settings",
         formatIamAccountSettings(config.iam_account_settings)
       ) + "\n";
   }

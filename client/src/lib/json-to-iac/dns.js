@@ -279,7 +279,7 @@ function dnsTf(config) {
   let tf = "";
   config.dns.forEach((dns) => {
     tf +=
-      tfBlock(dns.name + " dns service", formatDnsService(dns, config)) + "\n";
+      tfBlock(dns.name + " DNS service", formatDnsService(dns, config)) + "\n";
     dns.zones.forEach((zone) => {
       let zoneTf = "";
       zoneTf += formatDnsZone(zone);
@@ -295,14 +295,14 @@ function dnsTf(config) {
           dns_zone: zone.name,
         });
       });
-      tf += tfBlock(dns.name + " dns zone " + zone.name, zoneTf) + "\n";
+      tf += tfBlock(dns.name + " DNS zone " + zone.name, zoneTf) + "\n";
     });
     if (dns.custom_resolvers.length > 0) {
       let resolverTf = "";
       dns.custom_resolvers.forEach((resolver) => {
         resolverTf += formatDnsCustomResolver(resolver);
       });
-      tf += tfBlock(dns.name + " dns custom resolvers", resolverTf);
+      tf += tfBlock(dns.name + " DNS custom resolvers", resolverTf);
       tf += "\n";
     }
   });

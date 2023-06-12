@@ -53,7 +53,7 @@ function formatVpn(gw, config) {
 function vpnTf(config) {
   let tf = "";
   config.vpn_gateways.forEach((gw) => (tf += formatVpn(gw, config)));
-  return tfBlock("vpn gateways", tf);
+  return tfBlock("VPN gateways", tf);
 }
 
 module.exports = {

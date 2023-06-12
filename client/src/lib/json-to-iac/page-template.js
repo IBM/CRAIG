@@ -27,7 +27,7 @@ function codeMirrorVpcTf(config) {
       });
     }
     tf +=
-      tfBlock(vpc.name + " vpc", blockData) +
+      tfBlock(vpc.name + " VPC", blockData) +
       "\n" +
       (vpc.bucket === "$disabled"
         ? ""
@@ -48,7 +48,7 @@ function codeMirrorAclTf(config) {
     vpc.acls.forEach((acl) => {
       blockData += formatAcl(acl, config, true);
     });
-    tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
+    tf += tfBlock(vpc.name + " VPC", blockData) + "\n";
   });
   return tfDone(tf);
 }
@@ -65,7 +65,7 @@ function codeMirrorSubnetsTf(config) {
     vpc.subnets.forEach((subnet) => {
       blockData += formatSubnet(subnet, config);
     });
-    tf += tfBlock(vpc.name + " vpc", blockData) + "\n";
+    tf += tfBlock(vpc.name + " VPC", blockData) + "\n";
   });
   return tfDone(tf);
 }

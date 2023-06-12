@@ -77,14 +77,10 @@ function buildTitleComment(name) {
           .done("g"),
         "F5"
       )
-      .replace(/And/i, "and")
-      .replace(/Iam/g, "IAM")
-      .replace(/Vpe/g, "VPE")
-      .replace(/Ssh(?=\s)/g, "SSH")
-      .replace(/Vpc(?=\s)/g, "VPC")
-      .replace(/Vsi(?=\s)/g, "VSI")
-      .replace(/Vpn(?=\s)/g, "VPN")
-      .replace(/Dns(?=\s)/g, "DNS") + "\n"
+      .replace(/\sDNA/g, "DNA") // replace `Log DNA`
+      .replace(/Vpe/g, "VPE") // used for sg names
+      .replace(/Vsi(?=\s)/g, "VSI") + // used for sg
+    "\n"
   );
 }
 
