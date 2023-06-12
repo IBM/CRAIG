@@ -117,6 +117,7 @@ const ControlBar = (props) => {
             hasIconOnly
             iconDescription="Back"
             onClick={() => props.onIndexChange("back")}
+            className="alignItemsCenter"
           />
           <Button
             renderIcon={ChevronRight}
@@ -125,6 +126,7 @@ const ControlBar = (props) => {
             hasIconOnly
             iconDescription={props.index < 2 ? "Next" : "Home"}
             onClick={() => props.onIndexChange("forward")}
+            className="alignItemsCenter"
           />
         </div>
       </div>
