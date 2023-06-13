@@ -93,3 +93,7 @@ a.tile:is(:link, :visited, :hover, :active) {
 .cds--popover-caret {
   display: none !important; // need important to go up multiple levels of priority
 }
+
+.cds--btn {
+  align-items: center; // fix all button
+}
