@@ -315,8 +315,8 @@ function ibmIsNetworkAclRule(rule) {
     if (ruleHasProtocolData && protocol === "icmp") {
       ruleValues.icmp = [
         {
-          type: rule.icmp.type,
-          code: rule.icmp.code,
+          type: rule.icmp.type === "null" ? null : rule.icmp.type,
+          code: rule.icmp.code === "null" ? null : rule.icmp.code,
         },
       ];
     } else if (ruleHasProtocolData) {

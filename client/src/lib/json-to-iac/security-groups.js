@@ -89,8 +89,8 @@ function ibmIsSecurityGroupRule(rule) {
     if (ruleHasProtocolData && protocol === "icmp") {
       sgRule.icmp = [
         {
-          type: rule.icmp.type,
-          code: rule.icmp.code,
+          type: rule.icmp.type === "null" ? null : rule.icmp.type,
+          code: rule.icmp.code === "null" ? null : rule.icmp.code,
         },
       ];
     } else if (ruleHasProtocolData) {

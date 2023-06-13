@@ -100,7 +100,7 @@ function updateNetworkingRule(isAcl, rule, params) {
             rule[params.ruleProtocol][key]
           );
         } else if (allTargetFieldsNull && params.ruleProtocol === "icmp") {
-          rule[params.ruleProtocol][key] = 0;
+          rule[params.ruleProtocol][key] = "null";
         } else if (
           allTargetFieldsNull &&
           contains(["port_min", "source_port_min"], key)

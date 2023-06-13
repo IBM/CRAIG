@@ -270,7 +270,7 @@ describe("utils", () => {
         source: "10.0.0.0/8",
         security_group: "management",
         vpc: "management",
-        icmp: { type: 0, code: 0 },
+        icmp: { type: "null", code: "null" },
         tcp: {
           port_min: null,
           port_max: null,

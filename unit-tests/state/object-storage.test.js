@@ -86,6 +86,7 @@ describe("object_storage", () => {
         resource_group: "default",
         plan: "standard",
         use_random_suffix: true,
+        kms: "kms",
       });
       let expectedData = {
         name: "todd",
@@ -95,6 +96,7 @@ describe("object_storage", () => {
         use_random_suffix: true,
         keys: [],
         buckets: [],
+        kms: "kms",
       };
       assert.deepEqual(
         state.store.json.object_storage[2],
@@ -162,6 +164,21 @@ describe("object_storage", () => {
         state.store.json.object_storage[0].buckets[0].kms_key,
         null,
         "it should have all the keys"
+      );
+    });
+    it("should remove unfound kms instance from cos and buckets after deletion", () => {
+      let state = new newState();
+      state.key_management.delete({}, { data: { name: "kms" } });
+      state.update();
+      assert.deepEqual(
+        state.store.json.object_storage[0].buckets[0].kms_key,
+        null,
+        "it should have all the keys"
+      );
+      assert.deepEqual(
+        state.store.json.object_storage[0].kms,
+        null,
+        "it should have correct kms"
       );
     });
   });

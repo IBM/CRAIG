@@ -113,21 +113,23 @@ function formatCosInstance(cos, config) {
  */
 
 function ibmIamAuthorizationPolicyCos(cos, config) {
-  let kmsInstance = getKmsInstanceData(cos.kms, config);
+  let kmsInstance = cos.kms ? getKmsInstanceData(cos.kms, config) : null;
   let cosRef = resourceRef(
     `${snakeCase(cos.name)} object storage`,
     "guid",
     cos.use_data
   );
   return {
-    name: `${cos.name} cos to ${cos.kms} kms policy`,
+    name: `${cos.name} cos to ${cos.kms ? cos.kms : "UNFOUND"} kms policy`,
     data: {
       source_service_name: `cloud-object-storage`,
       source_resource_instance_id: `\${${cosRef.replace(/\{|}|\$/g, "")}}`,
       roles: ["Reader"],
       description: "Allow COS instance to read from KMS instance",
-      target_service_name: kmsInstance.type,
-      target_resource_instance_id: cdktfRef(kmsInstance.guid),
+      target_service_name: cos.kms ? kmsInstance.type : "ERROR: Unfound Ref",
+      target_resource_instance_id: cos.kms
+        ? cdktfRef(kmsInstance.guid)
+        : "ERROR: Unfound Ref",
     },
   };
 }
@@ -187,7 +189,9 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
     endpoint_type: config._options.endpoints,
     force_delete: bucket.force_delete,
     region_location: varDotRegion,
-    key_protect: encryptionKeyRef(cos.kms, bucket.kms_key, "crn"),
+    key_protect: cos.kms
+      ? encryptionKeyRef(cos.kms, bucket.kms_key, "crn")
+      : "ERROR: Unfound Ref",
   };
   if (bucket.allowed_ip) {
     bucketValues.allowed_ip = JSON.stringify(bucket.allowed_ip).replace(

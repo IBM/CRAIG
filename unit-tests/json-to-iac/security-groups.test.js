@@ -123,7 +123,7 @@ resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
     });
   });
   describe("formatSgRule", () => {
-    it("should format network acl rule with no protocol", () => {
+    it("should format security group rule with no protocol", () => {
       let actualData = formatSgRule(
         {
           sg: "management-vpe-sg",
@@ -177,7 +177,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
         "it should return correct data"
       );
     });
-    it("should format network acl rule with tcp protocol", () => {
+    it("should format security group rule with tcp protocol", () => {
       let actualData = formatSgRule(
         {
           sg: "management-vpe-sg",
@@ -235,7 +235,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
         "it should return correct data"
       );
     });
-    it("should format network acl rule with udp protocol", () => {
+    it("should format security group rule with udp protocol", () => {
       let actualData = formatSgRule(
         {
           sg: "management-vpe-sg",
@@ -293,7 +293,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
         "it should return correct data"
       );
     });
-    it("should format network acl rule with icmp protocol", () => {
+    it("should format security group rule with icmp protocol", () => {
       let actualData = formatSgRule(
         {
           sg: "management-vpe-sg",
@@ -342,6 +342,64 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
   icmp {
     type = 1
     code = 2
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should format security group rule with icmp protocol when null", () => {
+      let actualData = formatSgRule(
+        {
+          sg: "management-vpe-sg",
+          vpc: "management",
+          action: "allow",
+          destination: "10.0.0.0/8",
+          direction: "inbound",
+          name: "allow-ibm-inbound-8080",
+          source: "161.26.0.0/16",
+          icmp: {
+            type: "null",
+            code: "null",
+          },
+          udp: {
+            port_min: null,
+            port_max: null,
+            source_port_min: null,
+            source_port_max: null,
+          },
+          tcp: {
+            port_min: null,
+            port_max: null,
+            source_port_min: null,
+            source_port_max: null,
+          },
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-management-rg",
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound_8080" {
+  group     = ibm_is_security_group.management_vpc_management_vpe_sg_sg.id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
+  icmp {
+    type = null
+    code = null
   }
 }
 `;

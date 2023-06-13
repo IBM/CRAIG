@@ -182,6 +182,64 @@ data "ibm_resource_instance" "cos_object_storage" {
     });
   });
   describe("formatCosToKmsAuth", () => {
+    it("should create an authorization for cos to read from key management when no instance", () => {
+      let actualData = formatCosToKmsAuth(
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: false,
+          kms: null,
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+            endpoint: "private",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: false,
+              use_hs_crypto: false,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_iam_authorization_policy" "cos_cos_to_unfound_kms_policy" {
+  source_service_name         = "cloud-object-storage"
+  source_resource_instance_id = ibm_resource_instance.cos_object_storage.guid
+  description                 = "Allow COS instance to read from KMS instance"
+  target_service_name         = "ERROR: Unfound Ref"
+  target_resource_instance_id = "ERROR: Unfound Ref"
+  roles = [
+    "Reader"
+  ]
+}
+`;
+      assert.deepEqual(actualData, expectedData, "it should return cos tf");
+    });
     it("should create an authorization for cos to read from key management", () => {
       let actualData = formatCosToKmsAuth(
         {
@@ -363,6 +421,77 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   key_protect          = ibm_kms_key.kms_key_key.crn
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code with no kms", () => {
+      let actualData = formatCosBucket(
+        {
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: false,
+          use_data: false,
+          kms: null,
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+            endpoints: "public",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "\${var.prefix}-cos-bucket"
+  resource_instance_id = ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = var.region
+  key_protect          = "ERROR: Unfound Ref"
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_null_kms_policy
   ]
 }
 `;

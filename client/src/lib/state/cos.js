@@ -1,4 +1,4 @@
-const { splat } = require("lazy-z");
+const { splat, splatContains } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultCos } = require("./defaults");
 const {
@@ -66,6 +66,11 @@ function cosOnStoreUpdate(config) {
   config.store.cosInstances = splat(config.store.json.object_storage, "name");
   config.store.cosBuckets = [];
   config.store.cosKeys = [];
+  config.store.json.object_storage.forEach((cos) => {
+    if (!splatContains(config.store.json.key_management, "name", cos.kms)) {
+      cos.kms = null;
+    }
+  });
   cosSetStoreBucketsAndKeys(config, (instance) => {
     setUnfoundResourceGroup(config, instance);
     // for each bucket, if encryption key is not found set to null

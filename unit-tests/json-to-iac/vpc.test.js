@@ -903,6 +903,67 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
         "it should return correct data"
       );
     });
+    it("should format network acl rule with icmp protocol null", () => {
+      let actualData = formatAclRule(
+        {
+          acl: "management",
+          vpc: "management",
+          action: "allow",
+          destination: "10.0.0.0/8",
+          direction: "inbound",
+          name: "allow-ibm-inbound-8080",
+          source: "161.26.0.0/16",
+          icmp: {
+            type: "null",
+            code: "null",
+          },
+          udp: {
+            port_min: null,
+            port_max: null,
+            source_port_min: null,
+            source_port_max: null,
+          },
+          tcp: {
+            port_min: null,
+            port_max: null,
+            source_port_min: null,
+            source_port_max: null,
+          },
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-management-rg",
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
+  source      = "161.26.0.0/16"
+  network_acl = ibm_is_network_acl.management_management_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "inbound"
+  name        = "allow-ibm-inbound-8080"
+  icmp {
+    type = null
+    code = null
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("formatPgw", () => {
     it("should format a public gateway", () => {

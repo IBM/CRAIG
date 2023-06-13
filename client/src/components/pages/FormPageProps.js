@@ -422,12 +422,10 @@ function formProps(form, craig) {
               "name",
               cosName
             );
-            let { keys } = getObjectFromArray(
-              craig.store.json.key_management,
-              "name",
-              kms
-            );
-            return splat(keys, "name");
+            let { keys } = kms
+              ? getObjectFromArray(craig.store.json.key_management, "name", kms)
+              : [];
+            return kms ? splat(keys, "name") : [];
           },
         },
       },
