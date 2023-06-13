@@ -317,6 +317,114 @@ resource "ibm_sm_kv_secret" "secrets_manager_imported_cert" {
 `;
       assert.deepEqual(actualData, expectedData, "it should return secret tf");
     });
+    it("should return correct data for secrets manager secret with reference to local craig cos key", () => {
+      let actualData = formatSecretsManagerSecret(
+        {
+          secrets_manager: "secrets-manager",
+          cos: "atracker-cos",
+          key: "cos-bind-key",
+          ref: "ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key",
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_sm_kv_secret" "secrets_manager_cos_bind_key" {
+  name        = "\${var.prefix}-secrets-manager-cos-bind-key"
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region      = var.region
+  description = "Credentials for COS instance"
+  data = {
+    credentials = ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key.credentials
+  }
+}
+`;
+      assert.deepEqual(actualData, expectedData, "it should return secret tf");
+    });
+    it("should return correct data for secrets manager secret with reference to local craig appid key", () => {
+      let actualData = formatSecretsManagerSecret(
+        {
+          secrets_manager: "secrets-manager",
+          appid: "default",
+          key: "test",
+          ref: "ibm_resource_key.default_key_test",
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_sm_kv_secret" "secrets_manager_appid_default_key_test" {
+  name        = "\${var.prefix}-secrets-manager-appid-default-key-test"
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region      = var.region
+  description = "Credentials for AppID instance"
+  data = {
+    credentials = ibm_resource_key.default_key_test.credentials
+  }
+}
+`;
+      assert.deepEqual(actualData, expectedData, "it should return secret tf");
+    });
+    it("should return correct data for secrets manager secret with reference to local craig logdna key", () => {
+      let actualData = formatSecretsManagerSecret(
+        {
+          secrets_manager: "secrets-manager",
+          ref: "ibm_resource_key.logdna_key",
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_sm_kv_secret" "secrets_manager_logdna_key" {
+  name        = "\${var.prefix}-secrets-manager-logdna-key"
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region      = var.region
+  description = "LogDNA Credentials"
+  data = {
+    credentials = ibm_resource_key.logdna_key.credentials
+  }
+}
+`;
+      assert.deepEqual(actualData, expectedData, "it should return secret tf");
+    });
+    it("should return correct data for secrets manager secret with reference to local craig sysdig key", () => {
+      let actualData = formatSecretsManagerSecret(
+        {
+          secrets_manager: "secrets-manager",
+          ref: "ibm_resource_key.sysdig_key",
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_sm_kv_secret" "secrets_manager_sysdig_key" {
+  name        = "\${var.prefix}-secrets-manager-sysdig-key"
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region      = var.region
+  description = "Sysdig Credentials"
+  data = {
+    credentials = ibm_resource_key.sysdig_key.credentials
+  }
+}
+`;
+      assert.deepEqual(actualData, expectedData, "it should return secret tf");
+    });
   });
   describe("secretsManagerTf", () => {
     it("should create the correct terraform code", () => {

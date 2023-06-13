@@ -492,4 +492,83 @@ describe("state util functions", () => {
       );
     });
   });
+  describe("getAllResourceKeys", () => {
+    it("should get a list of keys from the default pattern", () => {
+      let state = newState();
+      let actualData = state.getAllResourceKeys();
+      assert.deepEqual(
+        actualData,
+        [
+          {
+            cos: "atracker-cos",
+            key: "cos-bind-key",
+            ref: "ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key",
+          },
+        ],
+        "it should return correct data"
+      );
+      state.store.json.appid = [
+        {
+          name: "default",
+          keys: [
+            { name: "test", appid: "default", resource_group: "service-rg" },
+          ],
+          resource_group: null,
+        },
+      ];
+      actualData = state.getAllResourceKeys();
+      assert.deepEqual(
+        actualData,
+        [
+          {
+            cos: "atracker-cos",
+            key: "cos-bind-key",
+            ref: "ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key",
+          },
+          {
+            appid: "default",
+            key: "test",
+            ref: "ibm_resource_key.default_key_test",
+          },
+        ],
+        "it should return correct data with appid"
+      );
+      state.store.json.logdna = {
+        plan: "lite",
+        platform_logs: true,
+        resource_group: "service-rg",
+        enabled: true,
+      };
+      state.store.json.sysdig = {
+        plan: "lite",
+        resource_group: "service-rg",
+        enabled: true,
+      };
+      actualData = state.getAllResourceKeys();
+      assert.deepEqual(
+        actualData,
+        [
+          {
+            cos: "atracker-cos",
+            key: "cos-bind-key",
+            ref: "ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key",
+          },
+          {
+            appid: "default",
+            key: "test",
+            ref: "ibm_resource_key.default_key_test",
+          },
+          {
+            ref: "ibm_resource_key.logdna_key",
+            key: "logdna-key",
+          },
+          {
+            ref: "ibm_resource_key.sysdig_key",
+            key: "sysdig-key",
+          },
+        ],
+        "it should return correct data with appid"
+      );
+    });
+  });
 });

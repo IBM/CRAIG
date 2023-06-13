@@ -1,5 +1,5 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const { contains, typeCheck, transpose } = require("lazy-z");
+const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,
@@ -822,6 +822,43 @@ const state = function (legacy) {
    */
   store.getAllOtherGroups = function (stateData, componentProps) {
     return getAllOtherGroups(store, stateData, componentProps);
+  };
+
+  store.getAllResourceKeys = function () {
+    let allKeys = [];
+    store.store.json.object_storage.forEach((cos) => {
+      cos.keys.forEach((key) => {
+        allKeys.push({
+          cos: cos.name,
+          key: key.name,
+          ref:
+            "ibm_resource_key." +
+            snakeCase(cos.name + "-object-storage-key-" + key.name),
+        });
+      });
+    });
+    store.store.json.appid.forEach((appid) => {
+      appid.keys.forEach((key) => {
+        allKeys.push({
+          appid: appid.name,
+          key: key.name,
+          ref: "ibm_resource_key." + snakeCase(`${key.appid} key ${key.name}`),
+        });
+      });
+    });
+    if (store.store.json.logdna.enabled) {
+      allKeys.push({
+        ref: "ibm_resource_key.logdna_key",
+        key: "logdna-key",
+      });
+    }
+    if (store.store.json.sysdig.enabled) {
+      allKeys.push({
+        ref: "ibm_resource_key.sysdig_key",
+        key: "sysdig-key",
+      });
+    }
+    return allKeys;
   };
 
   // this line enforces scalable subnets without causing application to rerender

@@ -1,4 +1,4 @@
-const { snakeCase, splat, getObjectFromArray } = require("lazy-z");
+const { snakeCase, splat, getObjectFromArray, kebabCase } = require("lazy-z");
 const {
   rgIdRef,
   getKmsInstanceData,
@@ -132,10 +132,15 @@ function formatSecretsManagerInstance(secretsManager, config) {
  * @returns {string} terraform object
  */
 function ibmSmKvSecret(secret) {
+  let secretName = secret?.appid
+    ? kebabCase(`appid ${secret.appid} key ${secret.key}`)
+    : secret.key
+    ? secret.key
+    : secret.name;
   let data = {
-    name: snakeCase(secret.secrets_manager + " " + secret.name),
+    name: snakeCase(secret.secrets_manager + " " + secretName),
     data: {
-      name: kebabName([secret.secrets_manager, secret.name]),
+      name: kebabName([secret.secrets_manager, secretName]),
       instance_id: `\${ibm_resource_instance.${snakeCase(
         secret.secrets_manager
       )}_secrets_manager.guid}`,
@@ -145,6 +150,23 @@ function ibmSmKvSecret(secret) {
   };
   if (secret.type === "imported") {
     data.data.certificate = `\${var.${data.name}_data}`;
+  } else if (secret.ref) {
+    data.data.description = `Credentials for ${
+      secret?.cos ? "COS" : "AppID"
+    } instance`;
+    if (secret.ref === "ibm_resource_key.logdna_key") {
+      data.name = kebabCase(secret.secrets_manager + " logdna key");
+      data.data.description = "LogDNA Credentials";
+      data.data.name = kebabName([secret.secrets_manager, "logdna_key"]);
+    }
+    if (secret.ref === "ibm_resource_key.sysdig_key") {
+      data.name = kebabCase(secret.secrets_manager + " sysdig key");
+      data.data.description = "Sysdig Credentials";
+      data.data.name = kebabName([secret.secrets_manager, "sysdig_key"]);
+    }
+    data.data.data = {
+      credentials: `\${${secret.ref}.credentials}`,
+    };
   } else {
     data.data.data = {
       credentials: `\${ibm_resource_key.${snakeCase(
