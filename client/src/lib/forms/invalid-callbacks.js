@@ -513,7 +513,7 @@ function invalidProjectDescription(description) {
 function invalidCbrRule(field, stateData, componentProps) {
   if (field === "api_type_id")
     return (
-      isNullOrEmptyString(stateData.api_type_id) ||
+      !isNullOrEmptyString(stateData.api_type_id) &&
       stateData.api_type_id.match(/^[a-zA-Z0-9_.\-:]+$/) === null
     );
   else if (field === "description") {

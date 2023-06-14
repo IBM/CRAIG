@@ -1080,8 +1080,8 @@ describe("invalid callbacks", () => {
     });
   });
   describe("invalidCbrRule", () => {
-    it("should return true when api_type_id empty string", () => {
-      assert.isTrue(invalidCbrRule("api_type_id", { api_type_id: "" }));
+    it("should return false when api_type_id empty string", () => {
+      assert.isFalse(invalidCbrRule("api_type_id", { api_type_id: "" }));
     });
     it("should return true when api_type_id is invalid string", () => {
       assert.isTrue(invalidCbrRule("api_type_id", { api_type_id: "?" }));
