@@ -51,11 +51,6 @@
   margin: 4px;
 }
 
-.smallerTextFooter {
-  font-size: 0.8rem;
-  font-weight: 400;
-}
-
 .footerPopoverDismiss {
   right: 450% !important; // important to override auto align
 }
@@ -76,11 +71,6 @@
 // applied to children of transparent divs so they can be clicked
 .pointerEventsAuto {
   pointer-events: auto;
-}
-
-.forceTertiaryButtonStyles {
-  padding-right: 0.4375rem !important;
-  padding-left: 0.4375rem !important;
 }
 
 .leftTextAlign {

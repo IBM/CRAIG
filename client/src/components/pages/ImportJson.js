@@ -18,7 +18,7 @@ class ImportJson extends React.Component {
       showModal: false,
       validJson: null,
       prefix: "",
-      hasInvalidPrefix: true,
+      hasInvalidPrefix: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -58,7 +58,7 @@ class ImportJson extends React.Component {
       textData: data,
       errorList: errorText,
       isValid: isValid,
-      validJson: isValid ? validatedConfigJson : null,
+      validJson: isValid ? validatedConfigJson : null
     });
   }
 
@@ -135,6 +135,7 @@ class ImportJson extends React.Component {
               disabled={this.state.isValid === false ? true : false}
               onClick={this.toggleModal}
               aria-label="json-submit"
+              className="import-btn"
             >
               {this.state.isValid ? (
                 <CheckmarkFilled className="marginRightSmall" />
@@ -192,14 +193,14 @@ class ImportJson extends React.Component {
 }
 
 ImportJson.defaultProps = {
-  slz: false,
+  slz: false
 };
 
 ImportJson.propTypes = {
   craig: PropTypes.shape({
-    hardSetJson: PropTypes.func.isRequired,
+    hardSetJson: PropTypes.func.isRequired
   }).isRequired,
-  slz: PropTypes.bool.isRequired,
+  slz: PropTypes.bool.isRequired
 };
 
 export default ImportJson;

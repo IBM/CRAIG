@@ -15,14 +15,14 @@ import PropTypes from "prop-types";
 const mountedStyle = { animation: "inAnimation 250ms ease-in" };
 const unmountedStyle = {
   animation: "outAnimation 270ms ease-out",
-  animationFillMode: "forwards",
+  animationFillMode: "forwards"
 };
 
 class Tutorial extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      index: 0,
+      index: 0
     };
 
     this.changeIndex = this.changeIndex.bind(this);
@@ -39,7 +39,7 @@ class Tutorial extends React.Component {
       window.location.pathname = "/";
     } else if (this.state.index >= 0 && this.state.index <= 2) {
       this.setState({
-        index: index + changeBy,
+        index: index + changeBy
       });
     }
   }
@@ -105,7 +105,7 @@ class Tutorial extends React.Component {
 
 export default Tutorial;
 
-const ControlBar = (props) => {
+const ControlBar = props => {
   return (
     <div className="control-box-container">
       <div className="controls-container">
@@ -117,7 +117,6 @@ const ControlBar = (props) => {
             hasIconOnly
             iconDescription="Back"
             onClick={() => props.onIndexChange("back")}
-            className="alignItemsCenter"
           />
           <Button
             renderIcon={ChevronRight}
@@ -126,7 +125,6 @@ const ControlBar = (props) => {
             hasIconOnly
             iconDescription={props.index < 2 ? "Next" : "Home"}
             onClick={() => props.onIndexChange("forward")}
-            className="alignItemsCenter"
           />
         </div>
       </div>
@@ -145,10 +143,10 @@ const ControlBar = (props) => {
 
 ControlBar.propTypes = {
   index: PropTypes.number.isRequired,
-  onIndexChange: PropTypes.func.isRequired,
+  onIndexChange: PropTypes.func.isRequired
 };
 
-const TutorialTile = (props) => {
+const TutorialTile = props => {
   return (
     <div className="tutorial-tile-container">
       <div className="tutorial-tile">
@@ -166,5 +164,5 @@ const TutorialTile = (props) => {
 TutorialTile.propTypes = {
   image: PropTypes.string.isRequired, // string for name of src
   title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired
 };
