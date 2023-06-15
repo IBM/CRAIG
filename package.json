@@ -13,7 +13,7 @@
     "changelog": "node lib/changelog-as-markdown",
     "deploy": "./deploy.sh",
     "compatibility-tests": "./compatibility.sh",
-    "tf": "node lib/build-tf.js",
+    "tf": "node lib/cli-json-to-tf.js",
     "setup": "npm i cdktf cdktf-cli mocha -g && npm i && cd client && npm i",
     "docker-start": "NODE_ENV=production && npm i && node server.js",
     "front-end-test": "cd client && npm test",
