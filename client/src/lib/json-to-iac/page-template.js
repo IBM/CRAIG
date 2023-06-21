@@ -117,6 +117,11 @@ function codeMirrorGetDisplay(json, jsonInCodeMirror, path, toTf, jsonField) {
       allCbr = allCbr.concat({ cbr_zones: json.cbr_zones });
       allCbr = allCbr.concat({ cbr_rules: json.cbr_rules });
       return prettyJSON(allCbr);
+    } else if (path === "/form/observability") {
+      let obsrv = {};
+      obsrv.logdna = json.logdna;
+      obsrv.sysdig = json.sysdig;
+      return prettyJSON(obsrv);
     }
     return prettyJSON(json[jsonField] || json) // if pageObj.jsonField is undefined - aka, home page
       .replace(maskFieldsExpStep1ReplacePublicKey, "public_key%%%%")

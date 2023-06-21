@@ -65,7 +65,7 @@ const {
   setFormSgList,
 } = require("./form-props");
 const { leftNavItemClassName } = require("./class-names");
-const { notificationText } = require("./utils");
+const { notificationText, getCosFromBucket } = require("./utils");
 module.exports = {
   leftNavItemClassName,
   notificationText,
@@ -126,4 +126,5 @@ module.exports = {
   invalidProjectNameText,
   validRecord,
   invalidDnsZoneName,
+  getCosFromBucket,
 };

@@ -20,12 +20,12 @@ describe("observability", () => {
           state.store.json.logdna,
           {
             enabled: false,
-            plan: "",
-            endpoints: "",
+            plan: "lite",
+            endpoints: "private",
             platform_logs: false,
-            resource_group: "",
-            cos: "",
-            bucket: "",
+            resource_group: "service-rg",
+            cos: "atracker-cos",
+            bucket: "atracker-bucket",
           },
           "it should set defaults"
         );
@@ -95,10 +95,10 @@ describe("observability", () => {
           state.store.json.logdna,
           {
             enabled: false,
-            plan: "",
-            endpoints: "",
+            plan: "lite",
+            endpoints: "private",
             platform_logs: false,
-            resource_group: null,
+            resource_group: "service-rg",
             cos: null,
             bucket: null,
             name: "aaa",
@@ -116,8 +116,8 @@ describe("observability", () => {
           state.store.json.sysdig,
           {
             enabled: false,
-            plan: "",
-            resource_group: null,
+            plan: "tier-1",
+            resource_group: "service-rg",
           },
           "it should set defaults"
         );
@@ -153,8 +153,8 @@ describe("observability", () => {
           state.store.json.sysdig,
           {
             enabled: false,
-            plan: "",
-            resource_group: null,
+            plan: "tier-1",
+            resource_group: "service-rg",
             name: "aaa",
           },
           "it should set defaults"

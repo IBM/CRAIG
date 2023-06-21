@@ -916,18 +916,18 @@
     "event_streams": [],
     "load_balancers": [],
     "logdna": {
-      "enabled": false,
-      "plan": "",
-      "endpoints": "",
+      "enabled": true,
+      "plan": "lite",
+      "endpoints": "private",
       "platform_logs": false,
-      "resource_group": "",
-      "cos": "",
-      "bucket": ""
+      "resource_group": "slz-service-rg",
+      "cos": "atracker-cos",
+      "bucket": "atracker-bucket"
     },
     "sysdig": {
-      "enabled": false,
-      "plan": "",
-      "resource_group":null
+      "enabled": true,
+      "plan": "tier-1",
+      "resource_group": "slz-service-rg"
     },
     "f5_vsi": [],
     "iam_account_settings": {

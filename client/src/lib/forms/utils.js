@@ -16,6 +16,25 @@ function notificationText(pathname) {
     .replace(/Cbr/, "Context Based Restrictions");
 }
 
+/**
+ *
+ * @param {String} name
+ * @param {Array} objectStoreArray
+ * @returns cos name that is associated with supplied bucket name, or null if no instance found
+ */
+function getCosFromBucket(name, objectStoreArray) {
+  let cos;
+  objectStoreArray.forEach((instance) => {
+    instance.buckets.forEach((bucket) => {
+      if (name === bucket.name) {
+        cos = instance.name;
+      }
+    });
+  });
+  return cos || null;
+}
+
 module.exports = {
   notificationText,
+  getCosFromBucket,
 };

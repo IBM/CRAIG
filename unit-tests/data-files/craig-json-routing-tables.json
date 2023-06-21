@@ -933,18 +933,18 @@
   "access_groups": [],
   "cbr_zones": [],
   "cbr_rules": [],
-  "sysdig": {
-    "enabled": false,
-    "plan": "",
-    "resource_group": null
-  },
   "logdna": {
-    "enabled": false,
-    "plan": "",
-    "endpoints": "",
+    "enabled": true,
+    "plan": "lite",
+    "endpoints": "private",
     "platform_logs": false,
-    "resource_group": null,
-    "cos": null,
-    "bucket": null
+    "resource_group": "slz-service-rg",
+    "cos": "atracker-cos",
+    "bucket": "atracker-bucket"
+  },
+  "sysdig": {
+    "enabled": true,
+    "plan": "tier-1",
+    "resource_group": "slz-service-rg"
   }
 }

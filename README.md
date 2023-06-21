@@ -1,6 +1,6 @@
 # Cloud Resource and Infrastructure-as-code Generator (CRAIG)
 
-Cloud Resource and Infrastructure-as-Code Generator (or **CRAIG**) allows users to generate Terraform Deployable Architecures to create a fully customizable environment on IBM Cloud.
+Cloud Resource and Infrastructure-as-Code Generator (or **CRAIG**) allows users to generate Terraform Deployable Architectures to create a fully customizable environment on IBM Cloud.
 
 CRAIG simplifies the process of creating IaC through its GUI, which manages and updates interconnected resources as they are created.
 
@@ -36,7 +36,7 @@ To install needed dependencies, use the command
 npm run setup
 ```
 
-#### 2. Set envionment variables
+#### 2. Set environment variables
 
 Add you IBM Cloud platform API key to the environment. This API key is used by the back end API server to retrieve Cluster flavors, Cluster versions, VSI instance profiles, and VSI images.
 
@@ -71,7 +71,7 @@ To install needed dependencies, use the command
 npm run setup
 ```
 
-#### 2. Set envionment variables
+#### 2. Set environment variables
 
 Add you IBM Cloud platform API key to the environment. This API key is used by the back end API server to retrieve Cluster flavors, Cluster versions, VSI instance profiles, and VSI images.
 
@@ -99,7 +99,7 @@ npm run dev-start
 
 Congratulations! CRAIG is now running at `localhost:3000`
 
-#### 6. Testing the Development Envionment
+#### 6. Testing the Development Environment
 
 CRAIG uses [mocha](https://mochajs.org/) and [chai](https://www.chaijs.com/) for unit testing. To run unit tests use the command:
 
@@ -182,7 +182,7 @@ After creating a deployment using the GUI, users can download a file called `cra
 - Terraform CLI
 - IBM Cloud Platform API Key
 
-#### 1. Intializing the Directory
+#### 1. Initializing the Directory
 
 After unzipping craig.zip, enter the containing folder from your terminal. In your directory, run the following command to install needed providers and to initialize the directory:
 ```

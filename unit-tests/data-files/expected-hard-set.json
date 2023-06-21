@@ -10,18 +10,18 @@
   },
   "dns": [],
   "logdna": {
-    "enabled": false,
-    "plan": "",
-    "endpoints": "",
+    "enabled": true,
+    "plan": "lite",
+    "endpoints": "private",
     "platform_logs": false,
-    "resource_group": null,
-    "cos": null,
-    "bucket": null
+    "resource_group": "slz-service-rg",
+    "cos": "atracker-cos",
+    "bucket": "atracker-bucket"
   },
   "sysdig": {
-    "enabled": false,
-    "plan": "",
-    "resource_group": null
+    "enabled": true,
+    "plan": "tier-1",
+    "resource_group": "slz-service-rg"
   },
   "resource_groups": [
     {

@@ -575,6 +575,17 @@ function disableSave(field, stateData, componentProps, craig) {
       isEmpty(stateData.subnets) ||
       invalidDNSDescription(stateData, componentProps)
     );
+  } else if (field === "logdna") {
+    return stateData.enabled === false
+      ? false
+      : fieldsAreBad(
+          ["plan", "endpoints", "resource_group", "bucket"],
+          stateData
+        );
+  } else if (field === "sysdig") {
+    return stateData.enabled === false
+      ? false
+      : fieldsAreBad(["resource_group", "plan"], stateData);
   } else return false;
 }
 

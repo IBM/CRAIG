@@ -16,7 +16,7 @@ import {
 } from "./components";
 import { invalidForms, state } from "./lib";
 import { default as constants } from "./lib/constants";
-import { CbrForm } from "./components/forms";
+import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
@@ -321,6 +321,8 @@ class Craig extends React.Component {
             <ToggleFormPage craig={craig} form={this.props.params.form} />
           ) : window.location.pathname === "/form/cbr" ? (
             <CbrForm craig={craig} />
+          ) : window.location.pathname === "/form/observability" ? (
+            <ObservabilityForm craig={craig} />
           ) : (
             // if no form yet, render name
             titleCase(this.props.params.form)

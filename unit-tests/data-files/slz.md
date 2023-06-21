@@ -601,3 +601,20 @@ By default, no DNS services are provisioned.
 - [DNS Custom Resolver Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_custom_resolver)
 
 -----
+
+## Observability
+
+Users can optionally use LogDNA and Sysdig for logging and monitoring metrics. These services are not FS Cloud Validated.
+
+LogDNA can be used to add log management capabilities to your IBM Cloud Architecture such as operating system logs, application logs, and platform logs. Features like filtering, search, alerts, and custom views are possible with LogDNA.
+
+Sysdig can be used to gain visibility into the performance and health of your applications, services, and platforms. Filtering, alerting, and custom dashboards are some of the features available in Sysdig.
+
+### Related Links
+
+- [LogDNA](https://cloud.ibm.com/docs/log-analysis?topic=log-analysis-getting-started)
+- [LogDNA Terraform Provider](https://registry.terraform.io/providers/logdna/logdna/latest/docs)
+- [LogDNA archive resource](https://registry.terraform.io/providers/logdna/logdna/latest/docs/resources/logdna_archive)
+- [Sysdig](https://cloud.ibm.com/docs/monitoring?topic=monitoring-getting-started)
+
+-----

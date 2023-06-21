@@ -1,5 +1,6 @@
 const { splatContains, transpose } = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
+const { getCosFromBucket } = require("../forms");
 
 /**
  * initialize logdna
@@ -8,12 +9,12 @@ const { setUnfoundResourceGroup } = require("./store.utils");
 function logdnaInit(config) {
   config.store.json.logdna = {
     enabled: false,
-    plan: "",
-    endpoints: "",
+    plan: "lite",
+    endpoints: "private",
     platform_logs: false,
-    resource_group: "",
-    cos: "",
-    bucket: "",
+    resource_group: "service-rg",
+    cos: "atracker-cos",
+    bucket: "atracker-bucket",
   };
 }
 
@@ -43,6 +44,10 @@ function logdnaOnStoreUpdate(config) {
  * @param {object} stateData
  */
 function logdnaSave(config, stateData) {
+  stateData.cos = getCosFromBucket(
+    stateData.bucket,
+    config.store.json.object_storage
+  );
   transpose(stateData, config.store.json.logdna);
 }
 
@@ -53,8 +58,8 @@ function logdnaSave(config, stateData) {
 function sysdigInit(config) {
   config.store.json.sysdig = {
     enabled: false,
-    plan: "",
-    resource_group: null,
+    plan: "tier-1",
+    resource_group: "service-rg",
   };
 }
 

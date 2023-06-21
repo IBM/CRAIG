@@ -28,6 +28,7 @@ describe("invalidForms", () => {
       "clusters",
       "ssh_keys",
       "vsi",
+      "/form/observability",
       "load_balancers",
       "dns",
       "vpn_servers",

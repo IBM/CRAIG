@@ -949,7 +949,7 @@
     }
   ],
   "logdna": {
-    "enabled": false,
+    "enabled": true,
     "plan": "",
     "endpoints": "",
     "platform_logs": false,
@@ -958,7 +958,7 @@
     "bucket": ""
   },
   "sysdig": {
-    "enabled": false,
+    "enabled": true,
     "plan": "",
     "resource_group": null
   },

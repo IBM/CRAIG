@@ -26,6 +26,7 @@ function invalidForms(craig) {
     clusters: false,
     ssh_keys: false,
     vsi: false,
+    "/form/observability": false,
   };
   let json = craig.store.json; // shortcut
 
@@ -186,6 +187,9 @@ function invalidForms(craig) {
     },
     "/form/cbr"
   );
+  formsFailing["/form/observability"] =
+    saveShouldBeDisabled("logdna", json.logdna) ||
+    saveShouldBeDisabled("sysdig", json.sysdig);
 
   eachKey(formsFailing, (key) => {
     if (formsFailing[key]) {

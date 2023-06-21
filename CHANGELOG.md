@@ -42,7 +42,7 @@ All notable changes to this project will be documented in this file.
 - Secrets Manager instance objects without a `secrets` array now have one added on store update
 - When no Secrets Manager instances are created within the state store, the VPN Server page now shows a tile with an explanation and a link to `/form/secretsManager`
 - Detailed installation instructions have been added to `README.md`
-- Added functionality to allow CRAIG to create LogDNA, Sysdig, Activity Tracker, and needed resources to match the Terraform IBM Modules Obsrvability Module functionality
+- Added functionality to allow CRAIG to create LogDNA, Sysdig, Activity Tracker, and needed resources to match the Terraform IBM Modules Observability Module functionality
 - Added functionality for LogDNA and Sysdig in state store
 - Added functionality to create DNS Services, Records, Zones, and Custom Resolvers on `/forms/dns/`
 - Endpoints for Cloud Services are now a global option variable instead of being handled at the component level

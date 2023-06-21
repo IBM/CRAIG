@@ -26,6 +26,7 @@ import {
   Folders,
   ServerProxy,
   DnsServices,
+  IbmCloudSysdigSecure,
 } from "@carbon/icons-react";
 import f5 from "../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -59,6 +60,7 @@ import {
   routingTableTf,
   cbrTf,
   dnsTf,
+  loggingMonitoringTf,
 } from "../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../images/cbr";
@@ -109,6 +111,12 @@ const navCategories = [
         icon: IbmCloudSecretsManager,
         jsonField: "secrets_manager",
         toTf: secretsManagerTf,
+      },
+      {
+        title: "Observability",
+        path: "/form/observability",
+        icon: IbmCloudSysdigSecure,
+        toTf: loggingMonitoringTf,
       },
       {
         title: "Activity Tracker",

@@ -5288,6 +5288,15 @@ describe("disableSave", () => {
       });
     });
   });
+  describe("sysdig", () => {
+    it("should be disabled when invalid resource group", () => {
+      let actualData = disableSave("sysdig", {
+        resource_group: "",
+        plan: "tier-2",
+      });
+      assert.isTrue(actualData, "it should be disabled");
+    });
+  });
   describe("invalidCidrBlock", () => {
     it("should return true for null", () => {
       assert.isTrue(invalidCidrBlock(null), "it should be true");

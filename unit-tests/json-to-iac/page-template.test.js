@@ -8,7 +8,7 @@ const {
   codeMirrorGetDisplay,
 } = require("../../client/src/lib/json-to-iac/page-template");
 const resourceGroupTf = require("../../client/src/lib/json-to-iac/resource-groups");
-const { f5Tf, cbrTf } = require("../../client/src/lib");
+const { f5Tf, cbrTf, loggingMonitoringTf } = require("../../client/src/lib");
 
 describe("page template", () => {
   describe("vpc", () => {
@@ -1280,6 +1280,51 @@ resource "ibm_resource_group" "workload_rg" {
 ]`;
     assert.deepEqual(
       codeMirrorGetDisplay(testData, true, "/form/cbr", cbrTf, undefined),
+      expectedData,
+      "should return code mirror display"
+    );
+  });
+  it("should return correct observability json", () => {
+    let testData = {
+      logdna: {
+        enabled: true,
+        plan: "lite",
+        endpoints: "private",
+        platform_logs: false,
+        resource_group: "service-rg",
+        cos: "atracker-cos",
+        bucket: "atracker-bucket",
+      },
+      sysdig: {
+        enabled: true,
+        plan: "tier-1",
+        resource_group: "service-rg",
+      },
+    };
+    let expectedData = `{
+  "logdna": {
+    "enabled": true,
+    "plan": "lite",
+    "endpoints": "private",
+    "platform_logs": false,
+    "resource_group": "service-rg",
+    "cos": "atracker-cos",
+    "bucket": "atracker-bucket"
+  },
+  "sysdig": {
+    "enabled": true,
+    "plan": "tier-1",
+    "resource_group": "service-rg"
+  }
+}`;
+    assert.deepEqual(
+      codeMirrorGetDisplay(
+        testData,
+        true,
+        "/form/observability",
+        loggingMonitoringTf,
+        undefined
+      ),
       expectedData,
       "should return code mirror display"
     );
