@@ -543,7 +543,9 @@ function disableSave(field, stateData, componentProps, craig) {
       (!isNullOrEmptyString(stateData.client_dns_server_ips) &&
         stateData.client_dns_server_ips.match(commaSeparatedIpListExp) ===
           null) ||
-      isEmpty(stateData.subnets)
+      isEmpty(stateData.subnets) ||
+      (!isNullOrEmptyString(stateData.port) &&
+        !validPortRange("port_min", stateData.port))
     );
   } else if (field === "vpn_server_routes") {
     return (

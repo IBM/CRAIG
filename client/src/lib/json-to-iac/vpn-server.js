@@ -37,7 +37,7 @@ function ibmIsVpnServer(server, craig) {
     name: kebabCase(
       `${craig._options.prefix} ${server.vpc} ${server.name} server`
     ),
-    port: server.port,
+    port: isNullOrEmptyString(server.port) ? null : server.port,
     protocol: server.protocol,
     resource_group: rgIdRef(server.resource_group, craig),
     subnets: [],
