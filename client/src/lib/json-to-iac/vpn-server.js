@@ -130,6 +130,20 @@ function formatVpnServerRoute(server, route, config) {
  */
 function vpnServerTf(config) {
   let tf = "";
+  if (config.vpn_servers.length > 0) {
+    tf += jsonToTfPrint(
+      "resource",
+      "ibm_iam_authorization_policy",
+      "vpn_to_secrets_manager_policy",
+      {
+        source_service_name: "is",
+        source_resource_type: "vpn-server",
+        description: "Allow VPN Server instance to read from Secrets Manager",
+        target_service_name: "secrets-manager",
+        roles: ["SecretsReader"],
+      }
+    );
+  }
   config.vpn_servers.forEach((server) => {
     tf += formatVpnServer(server, config);
     server.routes.forEach((route) => {

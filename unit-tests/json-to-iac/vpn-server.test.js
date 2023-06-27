@@ -185,5 +185,79 @@ describe("vpn server", () => {
         "it should return empty string"
       );
     });
+    it("should return correct data when servers are present", () => {
+      let expectedData = `##############################################################################
+# VPN Servers
+##############################################################################
+
+resource "ibm_iam_authorization_policy" "vpn_to_secrets_manager_policy" {
+  source_service_name  = "is"
+  source_resource_type = "vpn-server"
+  description          = "Allow VPN Server instance to read from Secrets Manager"
+  target_service_name  = "secrets-manager"
+  roles = [
+    "SecretsReader"
+  ]
+}
+
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = "xyz"
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "iac-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method            = "username"
+    identity_provider = "iam"
+  }
+  client_dns_server_ips  = null
+  client_idle_timeout    = null
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        vpnServerTf({
+          vpn_servers: [
+            {
+              name: "abc",
+              certificate_crn: "xyz",
+              method: "username",
+              identity_provider: "iam",
+              client_ip_pool: "xyz",
+              client_dns_server_ips: "",
+              client_idle_timeout: "",
+              enable_split_tunneling: true,
+              port: 255,
+              protocol: "udp",
+              resource_group: "slz-management-rg",
+              security_groups: ["management-vpe-sg"],
+              subnets: ["vsi-zone-1"],
+              vpc: "management",
+              routes: [],
+            },
+          ],
+          _options: {
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              name: "slz-management-rg",
+              use_prefix: false,
+            },
+          ],
+        }),
+        expectedData,
+        "it should return empty string"
+      );
+    });
   });
 });

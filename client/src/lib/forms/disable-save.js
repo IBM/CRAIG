@@ -578,10 +578,7 @@ function disableSave(field, stateData, componentProps, craig) {
   } else if (field === "logdna") {
     return stateData.enabled === false
       ? false
-      : fieldsAreBad(
-          ["plan", "endpoints", "resource_group", "bucket"],
-          stateData
-        );
+      : fieldsAreBad(["plan", "resource_group", "bucket"], stateData);
   } else if (field === "sysdig") {
     return stateData.enabled === false
       ? false

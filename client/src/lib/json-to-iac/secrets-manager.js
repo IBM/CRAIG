@@ -1,4 +1,10 @@
-const { snakeCase, splat, getObjectFromArray, kebabCase } = require("lazy-z");
+const {
+  snakeCase,
+  splat,
+  getObjectFromArray,
+  kebabCase,
+  distinct,
+} = require("lazy-z");
 const {
   rgIdRef,
   getKmsInstanceData,
@@ -203,7 +209,7 @@ function formatSecretsManagerSecret(secret, config) {
  */
 function secretsManagerTf(config) {
   let tf = ``;
-  let allKmsServices = splat(config.secrets_manager, "kms");
+  let allKmsServices = distinct(splat(config.secrets_manager, "kms"));
   let kmstf = "";
   let totalKmsInstances = 0;
   allKmsServices.forEach((service) => {

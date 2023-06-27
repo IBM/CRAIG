@@ -106,6 +106,7 @@ describe("configToFilesJson", () => {
       let nw = { ...slzNetwork };
       nw.vpn_servers[0]["routes"] = [];
       let actualData = configToFilesJson(nw);
+
       assert.deepEqual(
         actualData["vpn_servers.tf"],
         slzNetworkFiles["vpn_servers_no_route.tf"],

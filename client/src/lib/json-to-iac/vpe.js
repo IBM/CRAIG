@@ -13,8 +13,8 @@ const {
 const { snakeCase } = require("lazy-z");
 
 const serviceToEndpointMap = {
-  kms: "crn:v1:bluemix:public:kms:$REGION:::endpoint:${var.service_endpoints}.$REGION.kms.cloud.ibm.com",
-  hpcs: "crn:v1:bluemix:public:hs-crypto:$REGION:::endpoint:api.${var.service_endpoints}.$REGION.hs-crypto.cloud.ibm.com",
+  kms: "crn:v1:bluemix:public:kms:$REGION:::endpoint:private.$REGION.kms.cloud.ibm.com",
+  hpcs: "crn:v1:bluemix:public:hs-crypto:$REGION:::endpoint:api.private.$REGION.hs-crypto.cloud.ibm.com",
   cos: "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.$REGION.cloud-object-storage.appdomain.cloud",
   icr: "crn:v1:bluemix:public:container-registry:$REGION:::endpoint:vpe.$REGION.container-registry.cloud.ibm.com",
   "secrets-manager":
