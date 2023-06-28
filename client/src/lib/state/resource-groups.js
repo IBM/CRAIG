@@ -11,18 +11,18 @@ function resourceGroupInit(config) {
     {
       use_prefix: true,
       name: "service-rg",
-      use_data: false,
+      use_data: false
     },
     {
       use_prefix: true,
       name: "management-rg",
-      use_data: false,
+      use_data: false
     },
     {
       use_prefix: true,
       name: "workload-rg",
-      use_data: false,
-    },
+      use_data: false
+    }
   ];
   resourceGroupOnStoreUpdate(config);
 }
@@ -76,15 +76,15 @@ function resourceGroupSave(config, stateData, componentProps) {
       "vsi",
       "vpn_gateways",
       "vpn_servers",
-      "virtual_private_endpoints",
-    ].forEach((item) => {
-      config.store.json[item].forEach((resource) => {
+      "virtual_private_endpoints"
+    ].forEach(item => {
+      config.store.json[item].forEach(resource => {
         if (resource.resource_group === componentProps.data.name) {
           resource.resource_group = stateData.name;
         }
       });
     });
-    ["logdna", "sysdig", "atracker"].forEach((item) => {
+    ["logdna", "sysdig", "atracker"].forEach(item => {
       if (config.store.json[item].resource_group === componentProps.data.name) {
         config.store.json[item].resource_group = stateData.name;
       }
@@ -112,5 +112,5 @@ module.exports = {
   resourceGroupOnStoreUpdate,
   resourceGroupCreate,
   resourceGroupSave,
-  resourceGroupDelete,
+  resourceGroupDelete
 };

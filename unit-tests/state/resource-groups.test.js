@@ -119,7 +119,7 @@ describe("resource_groups", () => {
     });
     it("should change the name of a resource group in place and update", () => {
       let expectedData = ["service-rg", "management-rg", "frog-rg"];
-      ["atracker", "logdna", "sysdig"].forEach((field) => {
+      ["atracker", "logdna", "sysdig"].forEach(field => {
         rgState.store.json[field].resource_group = "workload-rg";
       });
       rgState.resource_groups.save(
@@ -147,7 +147,7 @@ describe("resource_groups", () => {
         rgState.store.json.logdna.resource_group,
         "frog-rg",
         "it should update logdna resource group"
-      );
+      )
     });
     it("should change the name of a resource group in place and update vpcs when not use prefix", () => {
       rgState.store.json.resource_groups[1].use_prefix = false;
