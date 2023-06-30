@@ -20,5 +20,4 @@ export {
   FormPage,
   EdgeNetworkingDocs,
 } from "./pages";
-export { Notification } from "./Notification";
-export { default as PageTemplate } from "./PageTemplate";
+export { PageTemplate } from "./page-template";

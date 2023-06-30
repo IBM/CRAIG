@@ -119,6 +119,18 @@ describe("vsi", () => {
         network_interfaces: [],
         volumes: [],
       };
+      state.store.json.load_balancers.push({
+        name: "lb",
+        target_vsi: ["todd"],
+        subnets: [],
+        security_groups: [],
+      });
+      state.store.json.load_balancers.push({
+        name: "lb2",
+        target_vsi: ["frog"],
+        subnets: [],
+        security_groups: [],
+      });
       state.vsi.save(
         { name: "test-vsi" },
         { data: { name: "todd" }, isTeleport: false }

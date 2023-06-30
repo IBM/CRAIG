@@ -109,6 +109,12 @@ function cosDelete(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function cosSave(config, stateData, componentProps) {
+  config.store.json.vpcs.forEach((vpc) => {
+    if (vpc.cos === componentProps.data.name) vpc.cos = stateData.name;
+  });
+  config.store.json.clusters.forEach((cluster) => {
+    if (cluster.cos === componentProps.data.name) cluster.cos = stateData.name;
+  });
   config.updateChild(
     ["json", "object_storage"],
     componentProps.data.name,
@@ -159,6 +165,12 @@ function cosBucketSave(config, stateData, componentProps) {
         componentProps.data.name
       )
         config.store.json.atracker.collector_bucket_name = stateData.name;
+      if (config.store.json.logdna.bucket === componentProps.data.name)
+        config.store.json.logdna.bucket = stateData.name;
+      config.store.json.vpcs.forEach((vpc) => {
+        if (vpc.bucket === componentProps.data.name)
+          vpc.bucket = stateData.name;
+      });
     }
   );
 }

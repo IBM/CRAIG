@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.0
+
+### Upgrade Notes
+
+- CRAIG now uses `lazy-z` version `1.10.3`, fixing an issues where the `titleCase` function untintentionally added spaces between numbers
+
+### Features
+
+- When renaming resources currently in use, references to renamed resources are now changed to match the new name
+- Added the ability for uses to import existing resource keys into Secrets Manager
+- An authorization policy is now created to allow VPN Servers to read from Secrets Manager instances
+- Users can now generate CRAIG Terraform from JSON via the command line
+
+### Fixes
+
+- VPN Servers now no longer need a port for provision, fixed an error cauing undefined ports to render in terraform as ""
+- Terraform code no longer fails to plan when multiple Secrets Manager instances are used
+- Virtual Private Endpoint for Key Management services now use the correct CRN
+- Object Storage random suffix toggle now correctly changes Terraform code
+
 ## 0.7.0
 
 ### Upgrade Notes
@@ -55,7 +75,6 @@ All notable changes to this project will be documented in this file.
 - IAM and Access Control Policies have been moved in the navigation bar for a better workflow
 - Components no longer show as `required` in the Left Nav when the user is not using FS Cloud
 - VPCs can now be provisioned with Flow Logs disabled
-- Added Terraform documentation in the About tab for each component for each resource created by CRAIG
 
 ### Fixes
 

@@ -138,7 +138,11 @@ const {
   ibmCbrRule,
   cbrTf,
 } = require("./cbr");
-const { ibmIsVpnServer, ibmIsVpnServerRoute } = require("./vpn-server");
+const {
+  ibmIsVpnServer,
+  ibmIsVpnServerRoute,
+  vpnServerTf,
+} = require("./vpn-server");
 const {
   formatDnsService,
   formatDnsZone,
@@ -159,7 +163,9 @@ const {
   formatAtrackerKey,
   formatAtrackerArchive,
 } = require("./logging-monitoring");
+
 module.exports = {
+  vpnServerTf,
   formatLogdnaInstance,
   formatLogdnaKey,
   formatLogdnaArchive,

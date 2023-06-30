@@ -1,7 +1,7 @@
 import { DataError } from "@carbon/icons-react";
 import { Tile, Button } from "@carbon/react";
 import React from "react";
-import PageTemplate from "../PageTemplate";
+import { PageTemplate } from "../page-template";
 
 const ResetState = (props) => {
   return (

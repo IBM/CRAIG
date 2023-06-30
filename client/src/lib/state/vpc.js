@@ -287,6 +287,31 @@ function vpcSave(config, stateData, componentProps) {
       ) {
         config.store.edge_vpc_name = stateData.name;
       }
+      config.store.json.transit_gateways.forEach((tgw) => {
+        tgw.connections.forEach((connection) => {
+          if (connection.vpc === oldName) connection.vpc = stateData.name;
+        });
+      });
+      config.store.json.dns.forEach((dns) => {
+        dns.custom_resolvers.forEach((resolver) => {
+          if (resolver.vpc === oldName) resolver.vpc = stateData.name;
+        });
+      });
+      [
+        "vsi",
+        "vpn_gateways",
+        "vpn_servers",
+        "virtual_private_endpoints",
+        "security_groups",
+        "load_balancers",
+        "f5_vsi",
+        "clusters",
+        "routing_tables",
+      ].forEach((field) => {
+        config.store.json[field].forEach((resource) => {
+          if (resource.vpc === oldName) resource.vpc = stateData.name;
+        });
+      });
     });
 }
 
@@ -341,6 +366,40 @@ function subnetSave(config, stateData, componentProps) {
         });
         tier.subnets = newSubnets;
       }
+      ["vsi", "vpn_servers", "virtual_private_endpoints", "f5_vsi"].forEach(
+        (item) => {
+          config.store.json[item].forEach((resource) => {
+            for (let i = 0; i < resource.subnets.length; i++) {
+              if (resource.subnets[i] === subnetName) {
+                resource.subnets[i] = stateData.name;
+              }
+            }
+          });
+        }
+      );
+      config.store.json.clusters.forEach((cluster) => {
+        for (let i = 0; i < cluster.subnets.length; i++) {
+          if (cluster.subnets[i] === subnetName) {
+            cluster.subnets[i] = stateData.name;
+          }
+        }
+        cluster.worker_pools.forEach((pool) => {
+          for (let i = 0; i < pool.subnets.length; i++) {
+            if (pool.subnets[i] === subnetName) {
+              pool.subnets[i] = stateData.name;
+            }
+          }
+        });
+      });
+      config.store.json.dns.forEach((dns) => {
+        dns.custom_resolvers.forEach((resolver) => {
+          resolver.subnets.forEach((subnet, index) => {
+            if (subnet === subnetName) {
+              resolver.subnets[index] = stateData.name;
+            }
+          });
+        });
+      });
     });
 }
 
@@ -631,6 +690,12 @@ function naclDelete(config, stateData, componentProps) {
 function naclSave(config, stateData, componentProps) {
   new revision(config.store.json)
     .child("vpcs", componentProps.vpc_name, "name")
+    .then((data) => {
+      data.subnets.forEach((subnet) => {
+        if (subnet.network_acl === componentProps.data.name)
+          subnet.network_acl = stateData.name;
+      });
+    })
     .child("acls", componentProps.data.name)
     .then((data) => {
       data.rules.forEach((rule) => {

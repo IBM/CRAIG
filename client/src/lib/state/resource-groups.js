@@ -1,4 +1,4 @@
-const { splat } = require("lazy-z");
+const { splat, revision } = require("lazy-z");
 
 /**
  * initialize resource groups
@@ -56,6 +56,40 @@ function resourceGroupCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function resourceGroupSave(config, stateData, componentProps) {
+  // update resource group name
+  if (stateData.name !== componentProps.data.name) {
+    [
+      "appid",
+      "clusters",
+      "object_storage",
+      "dns",
+      "event_streams",
+      "f5_vsi",
+      "key_management",
+      "load_balancers",
+      "routing_tables",
+      "secrets_manager",
+      "security_groups",
+      "ssh_keys",
+      "vpcs",
+      "transit_gateways",
+      "vsi",
+      "vpn_gateways",
+      "vpn_servers",
+      "virtual_private_endpoints",
+    ].forEach((item) => {
+      config.store.json[item].forEach((resource) => {
+        if (resource.resource_group === componentProps.data.name) {
+          resource.resource_group = stateData.name;
+        }
+      });
+    });
+    ["logdna", "sysdig", "atracker"].forEach((item) => {
+      if (config.store.json[item].resource_group === componentProps.data.name) {
+        config.store.json[item].resource_group = stateData.name;
+      }
+    });
+  }
   config.updateChild(
     ["json", "resource_groups"],
     componentProps.data.name,

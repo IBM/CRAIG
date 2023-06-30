@@ -5,6 +5,7 @@ const {
   revision,
   buildNetworkingRule,
   getObjectFromArray,
+  contains,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultVpeSecurityGroups } = require("./defaults");
@@ -78,6 +79,20 @@ function securityGroupSave(config, stateData, componentProps) {
   if (stateData.name !== componentProps.data.name) {
     stateData.rules.forEach((rule) => {
       rule.sg = stateData.name;
+    });
+    [
+      "load_balancers",
+      "vsi",
+      "virtual_private_endpoints",
+      "vpn_servers",
+    ].forEach((item) => {
+      config.store.json[item].forEach((resource) => {
+        if (contains(resource.security_groups, componentProps.data.name)) {
+          resource.security_groups[
+            resource.security_groups.indexOf(componentProps.data.name)
+          ] = stateData.name;
+        }
+      });
     });
   }
   config.updateChild(

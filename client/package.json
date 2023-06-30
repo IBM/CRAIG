@@ -1,9 +1,7 @@
 {
   "name": "craig",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "private": true,
-  "repository": "git@github.com:carbon-design-system/carbon-tutorial.git",
-  "bugs": "https://github.com/carbon-design-system/carbon-tutorial/issues",
   "license": "Apache-2.0",
   "scripts": {
     "build": "craco build",

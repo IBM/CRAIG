@@ -17,6 +17,19 @@ describe("vpcs", () => {
   describe("vpcs.save", () => {
     it("should rename a vpc", () => {
       let state = new newState();
+      state.store.json.dns = [
+        {
+          name: "frog",
+          resource_group: "frog",
+          custom_resolvers: [
+            {
+              vpc: "management",
+              subnets: [],
+            },
+          ],
+          zones: [],
+        },
+      ];
       state.vpcs.save(
         { name: "todd", default_network_acl_name: "" },
         { data: { name: "management" } }
@@ -28,6 +41,11 @@ describe("vpcs", () => {
       assert.isNull(
         state.store.json.vpcs[0].default_network_acl_name,
         "it should be null"
+      );
+      assert.deepEqual(
+        state.store.json.dns[0].custom_resolvers[0].vpc,
+        "todd",
+        "it should update custom resolvers"
       );
       assert.deepEqual(
         state.store.subnetTiers,
@@ -78,6 +96,19 @@ describe("vpcs", () => {
     it("should change edge vpc name when updating edge vpc", () => {
       let state = new newState();
       state.store.edge_vpc_name = "management";
+      state.store.json.dns = [
+        {
+          name: "frog",
+          resource_group: "frog",
+          custom_resolvers: [
+            {
+              vpc: "egg",
+              subnets: [],
+            },
+          ],
+          zones: [],
+        },
+      ];
       state.vpcs.save({ name: "todd" }, { data: { name: "management" } });
       assert.isTrue(
         contains(state.store.vpcList, "todd"),
@@ -446,6 +477,25 @@ describe("vpcs", () => {
           "it should be null"
         );
       });
+      it("should update a subnet in place", () => {
+        let state = new newState(true);
+        state.store.json._options.dynamic_subnets = false;
+        state.vpcs.subnets.save(
+          {
+            name: "frog",
+            acl_name: "",
+          },
+          {
+            vpc_name: "workload",
+            data: { name: "vsi-zone-1" },
+          }
+        );
+        assert.deepEqual(
+          state.store.json.vpcs[1].subnets[0].acl_name,
+          null,
+          "it should be null"
+        );
+      });
       it("should update an advanced subnet in place", () => {
         let state = new newState(true);
         state.store.json._options.dynamic_subnets = false;
@@ -510,6 +560,26 @@ describe("vpcs", () => {
           }
         );
         state.store.subnetTiers.management[2].subnets.push("lol");
+        state.store.json.dns.push({
+          name: "dns",
+          zones: [],
+          custom_resolvers: [
+            {
+              vpc: "management",
+              subnets: ["vpn-zone-1", "vpe-zone-1"],
+            },
+          ],
+        });
+        state.store.json.dns.push({
+          name: "dns2",
+          zones: [],
+          custom_resolvers: [
+            {
+              vpc: "management",
+              subnets: [],
+            },
+          ],
+        });
         state.vpcs.subnets.save(
           {
             name: "frog",
@@ -531,6 +601,11 @@ describe("vpcs", () => {
         assert.deepEqual(
           state.store.subnetTiers.management[2].subnets,
           ["frog", "lol"],
+          "it should update subnets"
+        );
+        assert.deepEqual(
+          state.store.json.dns[0].custom_resolvers[0].subnets,
+          ["frog", "vpe-zone-1"],
           "it should update subnets"
         );
         assert.deepEqual(
@@ -731,6 +806,16 @@ describe("vpcs", () => {
             has_prefix: true,
           },
         ];
+        vpcState.store.json.dns.push({
+          name: "dns",
+          zones: [],
+          custom_resolvers: [
+            {
+              vpc: "management",
+              subnets: ["vsi-zone-1"],
+            },
+          ],
+        });
         vpcState.vpcs.subnetTiers.save(
           {
             name: "frog",
@@ -757,6 +842,11 @@ describe("vpcs", () => {
           vpcState.store.json.vpcs[0].subnets,
           expectedData,
           "it should change subnets"
+        );
+        assert.deepEqual(
+          vpcState.store.json.dns[0].custom_resolvers[0].subnets,
+          ["frog-zone-1"],
+          "it should replace subnet name"
         );
       });
       it("should update a subnet tier in place and update address prefixes", () => {
@@ -1697,6 +1787,16 @@ describe("vpcs", () => {
             has_prefix: true,
           },
         ];
+        vpcState.store.json.dns.push({
+          name: "dns",
+          zones: [],
+          custom_resolvers: [
+            {
+              vpc: "management",
+              subnets: ["vsi-zone-1"],
+            },
+          ],
+        });
         vpcState.vpcs.subnetTiers.save(
           {
             name: "frog",
@@ -1766,6 +1866,11 @@ describe("vpcs", () => {
             name: "vpn-zone-1",
           },
         ];
+        assert.deepEqual(
+          vpcState.store.json.dns[0].custom_resolvers[0].subnets,
+          ["frog-zone-1"],
+          "it should update dns subnet name"
+        );
         assert.deepEqual(
           vpcState.store.subnetTiers.management[0],
           expectedTier,
@@ -2998,6 +3103,8 @@ describe("vpcs", () => {
     describe("vpcs.network_acls.save", () => {
       it("should update an acl", () => {
         let state = newState();
+        // control for unchanged acls
+        state.store.json.vpcs[0].subnets[1].network_acl = "frog";
         state.vpcs.acls.save(
           { name: "new" },
           { data: { name: "management" }, vpc_name: "management" }
@@ -3009,6 +3116,11 @@ describe("vpcs", () => {
         );
         assert.deepEqual(
           state.store.json.vpcs[0].acls[0].rules[0].acl,
+          "new",
+          "it should have correct acl"
+        );
+        assert.deepEqual(
+          state.store.json.vpcs[0].subnets[0].network_acl,
           "new",
           "it should have correct acl"
         );

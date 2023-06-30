@@ -108,11 +108,33 @@ describe("object_storage", () => {
   describe("object_storage.save", () => {
     it("should update a cos instance in place", () => {
       let state = new newState();
+      state.object_storage.save(
+        { name: "cos", use_data: true },
+        { data: { name: "atracker-cos" } }
+      );
+      assert.deepEqual(
+        state.store.json.object_storage[0].use_data,
+        true,
+        "it should create new cos"
+      );
+    });
+    it("should update a cos instance in place and update vpc and cluster cos names", () => {
+      let state = new newState();
       state.object_storage.save({ name: "todd" }, { data: { name: "cos" } });
       assert.deepEqual(
         state.store.json.object_storage[1].name,
         "todd",
         "it should create new cos"
+      );
+      assert.deepEqual(
+        state.store.json.vpcs[0].cos,
+        "todd",
+        "it should update vpc cos name"
+      );
+      assert.deepEqual(
+        state.store.json.clusters[0].cos,
+        "todd",
+        "it should update cluster cos name"
       );
     });
     it("should update a cos instance in place with same name", () => {

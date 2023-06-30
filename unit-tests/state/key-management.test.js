@@ -82,6 +82,36 @@ describe("key_management", () => {
   describe("key_management.save", () => {
     it("should change the properties of the key management instance", () => {
       let state = new newState();
+      state.store.json.key_management.push({
+        name: "frog",
+        keys: [],
+      });
+      state.key_management.save(
+        {
+          name: "toad",
+          resource_group: null,
+          use_hs_crypto: true,
+          authorize_vpc_reader_role: true,
+        },
+        { data: { name: "frog" } }
+      );
+      state.store.json.key_management[0].keys = [];
+      let expectedData = {
+        name: "toad",
+        resource_group: null,
+        use_hs_crypto: true,
+        use_data: true,
+        authorize_vpc_reader_role: true,
+        keys: [],
+      };
+      assert.deepEqual(
+        state.store.json.key_management[1],
+        expectedData,
+        "it should update everything"
+      );
+    });
+    it("should change the properties of the key management instance", () => {
+      let state = new newState();
       state.key_management.save(
         {
           name: "todd",
@@ -257,19 +287,19 @@ describe("key_management", () => {
             key_ring: "all-new-ring",
             rotation: 1,
           },
-          { arrayParentName: "kms", data: { name: "key" } }
+          { arrayParentName: "kms", data: { name: "roks-key" } }
         );
         let expectedData = {
           name: "all-new-key",
           root_key: true,
           key_ring: "all-new-ring",
-          force_delete: true,
-          endpoint: "public",
+          force_delete: null,
+          endpoint: null,
           rotation: 1,
           dual_auth_delete: false,
         };
         assert.deepEqual(
-          state.store.json.key_management[0].keys[0],
+          state.store.json.key_management[0].keys[3],
           expectedData,
           "it should update key"
         );

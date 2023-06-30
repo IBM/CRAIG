@@ -252,6 +252,56 @@ function saveAdvancedSubnetTier(
           new revision(data).child("subnets", subnet.name).then((data) => {
             data.name = newSubnetName;
             data.tier = stateData.name;
+            [
+              "vsi",
+              "vpn_servers",
+              "virtual_private_endpoints",
+              "f5_vsi",
+            ].forEach((item) => {
+              config.store.json[item].forEach((resource) => {
+                for (let i = 0; i < resource.subnets.length; i++) {
+                  if (resource.subnets[i].startsWith(oldTierName)) {
+                    resource.subnets[i] = resource.subnets[i].replace(
+                      oldTierName,
+                      stateData.name
+                    );
+                  }
+                }
+              });
+            });
+            config.store.json.clusters.forEach((cluster) => {
+              for (let i = 0; i < cluster.subnets.length; i++) {
+                if (cluster.subnets[i].startsWith(oldTierName)) {
+                  cluster.subnets[i] = cluster.subnets[i].replace(
+                    oldTierName,
+                    stateData.name
+                  );
+                }
+              }
+              cluster.worker_pools.forEach((pool) => {
+                for (let i = 0; i < pool.subnets.length; i++) {
+                  if (pool.subnets[i].startsWith(oldTierName)) {
+                    pool.subnets[i] = pool.subnets[i].replace(
+                      oldTierName,
+                      stateData.name
+                    );
+                  }
+                }
+              });
+            });
+            config.store.json.dns.forEach((dns) => {
+              dns.custom_resolvers.forEach((resolver) => {
+                resolver.subnets.forEach((subnet, index) => {
+                  if (subnet.startsWith(oldTierName)) {
+                    console.log(subnet);
+                    resolver.subnets[index] = resolver.subnets[index].replace(
+                      oldTierName,
+                      stateData.name
+                    );
+                  }
+                });
+              });
+            });
           });
         } else {
           // otherwise delete

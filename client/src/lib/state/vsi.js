@@ -247,6 +247,12 @@ function vsiSave(config, stateData, componentProps) {
       stateData.kms = kms.name;
     }
   });
+  config.store.json.load_balancers.forEach((lb) => {
+    for (let i = 0; i < lb.target_vsi.length; i++) {
+      if (lb.target_vsi[i] === componentProps.data.name)
+        lb.target_vsi[i] = stateData.name;
+    }
+  });
   config.updateChild(["json", "vsi"], componentProps.data.name, stateData);
 }
 

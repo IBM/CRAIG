@@ -65,6 +65,16 @@ function keyManagementSave(config, stateData, componentProps) {
     authorize_vpc_reader_role: stateData.authorize_vpc_reader_role,
     use_data: stateData.use_hs_crypto ? true : stateData.use_data || false,
   };
+
+  ["clusters", "vsi", "f5_vsi", "secrets_manager", "object_storage"].forEach(
+    (item) => {
+      config.store.json[item].forEach((resource) => {
+        if (resource.kms === componentProps.data.name)
+          resource.kms = stateData.name;
+      });
+    }
+  );
+
   config.updateChild(
     ["json", "key_management"],
     componentProps.data.name,
@@ -145,6 +155,18 @@ function kmsKeyCreate(config, stateData, componentProps) {
  * @param {string} componentProps.data.name original name
  */
 function kmsKeySave(config, stateData, componentProps) {
+  ["vsi", "clusters"].forEach((item) => {
+    config.store.json[item].forEach((resource) => {
+      if (resource.encryption_key === componentProps.data.name)
+        resource.encryption_key = stateData.name;
+    });
+  });
+  config.store.json.object_storage.forEach((cos) => {
+    cos.buckets.forEach((bucket) => {
+      if (bucket.kms_key === componentProps.data.name)
+        bucket.kms_key = stateData.name;
+    });
+  });
   updateSubChild(config, "key_management", "keys", stateData, componentProps);
 }
 
