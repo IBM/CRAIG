@@ -493,7 +493,6 @@ module.exports = {
   arrayFormPages: [
     "appID",
     "eventStreams",
-    "keyManagement",
     "nacls",
     "accessGroups",
     "objectStorage",

@@ -317,31 +317,6 @@ function formProps(form, craig) {
     };
     formTemplate.innerFormProps.helperTextCallback =
       resourceGroupHelperTextCallback;
-  } else if (form === "keyManagement") {
-    /**
-     * key management
-     */
-    formTemplate.deleteDisabled = () => {
-      return craig.store.json.key_management.length === 1;
-    };
-    transpose(
-      {
-        invalidKeyCallback: invalidName("encryption_keys"),
-        invalidKeyTextCallback: invalidNameText("encryption_keys"),
-        invalidRingCallback: invalidEncryptionKeyRing,
-        invalidRingText:
-          "Invalid Key Ring Name. Must match the regular expression: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-        propsMatchState: propsMatchState,
-        encryptionKeyProps: {
-          onSave: craig.key_management.keys.save,
-          onDelete: craig.key_management.keys.delete,
-          onSubmit: craig.key_management.keys.create,
-          disableSave: disableSave,
-          craig: craig,
-        },
-      },
-      formTemplate.innerFormProps
-    );
   } else if (form === "accessGroups") {
     /* access groups */
     transpose(

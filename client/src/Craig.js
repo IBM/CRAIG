@@ -1,7 +1,7 @@
 /* this file is the main application page */
 
 import React from "react";
-import { kebabCase, splat, contains } from "lazy-z";
+import { kebabCase, splat, contains, titleCase } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -17,14 +17,15 @@ import {
 import {
   clusterHelperTestCallback,
   constants,
-  disableSave,
-  forceShowForm,
   invalidForms,
   invalidName,
   invalidNameText,
   propsMatchState,
   resourceGroupHelperTextCallback,
   state,
+  disableSave,
+  forceShowForm,
+  invalidEncryptionKeyRing,
 } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
@@ -34,6 +35,7 @@ import {
   ClustersTemplate,
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
+  KeyManagementTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./components/pages/SimplePages";
 
@@ -399,6 +401,34 @@ class Craig extends React.Component {
               invalidTextCallback={invalidNameText("secrets_manager")}
               secrets={craig.getAllResourceKeys()}
               docs={RenderDocs("secrets_manager")}
+            />
+          ) : window.location.pathname === "/form/keyManagement" ? (
+            <KeyManagementTemplate
+              docs={RenderDocs("key_management")}
+              key_management={craig.store.json.key_management}
+              disableSave={disableSave}
+              onDelete={craig.key_management.delete}
+              onSave={craig.key_management.save}
+              onSubmit={craig.key_management.create}
+              propsMatchState={propsMatchState}
+              forceOpen={forceShowForm}
+              craig={craig}
+              deleteDisabled={() => {
+                return craig.store.json.key_management.length === 1;
+              }}
+              resourceGroups={splat(craig.store.json.resource_groups, "name")}
+              invalidCallback={invalidName("key_management")}
+              invalidTextCallback={invalidNameText("key_management")}
+              invalidKeyCallback={invalidName("encryption_keys")}
+              invalidKeyTextCallback={invalidNameText("encryption_keys")}
+              invalidRingCallback={invalidEncryptionKeyRing}
+              invalidRingText={
+                "Invalid Key Ring Name. Must match the regular expression: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s"
+              }
+              onKeySave={craig.key_management.keys.save}
+              onKeyDelete={craig.key_management.keys.delete}
+              onKeySubmit={craig.key_management.keys.create}
+              disableKeySave={disableSave}
             />
           ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />
