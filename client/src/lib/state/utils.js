@@ -293,7 +293,6 @@ function saveAdvancedSubnetTier(
               dns.custom_resolvers.forEach((resolver) => {
                 resolver.subnets.forEach((subnet, index) => {
                   if (subnet.startsWith(oldTierName)) {
-                    console.log(subnet);
                     resolver.subnets[index] = resolver.subnets[index].replace(
                       oldTierName,
                       stateData.name

@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
-- VPN Servers now no longer need a port for provision, fixed an error cauing undefined ports to render in terraform as ""
+- VPN Servers now no longer need a port for provision, fixed an error causing undefined ports to render in terraform as ""
 - Terraform code no longer fails to plan when multiple Secrets Manager instances are used
 - Virtual Private Endpoint for Key Management services now use the correct CRN
 - Object Storage random suffix toggle now correctly changes Terraform code
@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Information on the default template can now be found on the home page
 - Advanced options have been moved to a new tab `Advanced` in the Left Navigation Menu
 - Edge Networking tile now redirects users to the home page when no edge network is found
+- Added Terraform documentation in the About tab for each component for each resource created by CRAIG
 
 ### Fixes
 
@@ -79,7 +80,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - DNS subnets now correctly render when list of strings
-- Fixed an issue cauing errors to occur for unfound props on the Options page
+- Fixed an issue causing errors to occur for unfound props on the Options page
 - Fixed an error causing `use_prefix` in resource groups to not correctly change the prefix of the resource group
 - Fixed an error causing DNS instance resources to have undefined references to parent issue
 - Fixed an error causing `cos_instance_crn` to not be added to OpenShift clusters

@@ -64,12 +64,6 @@ const pathToFormMap = {
     addText: "Create an Access Group",
     innerForm: AccessGroupForm,
   },
-  resourceGroups: {
-    jsonField: "resource_groups",
-    name: "Resource Groups",
-    addText: "Create a Resource Group",
-    innerForm: ResourceGroupForm,
-  },
   secretsManager: {
     jsonField: "secrets_manager",
     name: "Secrets Manager",
@@ -135,12 +129,6 @@ const pathToFormMap = {
     name: "Event Streams",
     addText: "Create an Event Streams Service",
     innerForm: EventStreamsForm,
-  },
-  clusters: {
-    jsonField: "clusters",
-    name: "Clusters",
-    addText: "Create a Cluster",
-    innerForm: ClusterForm,
   },
   vpe: {
     jsonField: "virtual_private_endpoints",
@@ -510,31 +498,8 @@ function formProps(form, craig) {
       invalidTextCallback: invalidNameText("event_streams"),
     };
     transpose(esInnerFormProps, formTemplate.innerFormProps);
-  } else if (form === "clusters") {
-    let clusterInnerFormProps = {
-      kubeVersionApiEndpoint: "/api/cluster/versions",
-      flavorApiEndpoint: `/api/cluster/${craig.store.json._options.region}/flavors`,
-      workerPoolProps: {
-        onSave: craig.clusters.worker_pools.save,
-        onDelete: craig.clusters.worker_pools.delete,
-        onSubmit: craig.clusters.worker_pools.create,
-        disableSave: function (field, stateData, componentProps) {
-          // field is clusters, inject worker pools
-          return disableSave("worker_pools", stateData, componentProps);
-        },
-        invalidCallback: invalidName("worker_pools"),
-        invalidTextCallback: invalidNameText("worker_pools"),
-        craig: craig,
-        flavorApiEndpoint: `/api/cluster/${craig.store.json._options.region}/flavors`,
-      },
-      invalidCallback: invalidName("clusters"),
-      invalidTextCallback: invalidNameText("clusters"),
-      helperTextCallback: clusterHelperTestCallback,
-      propsMatchState: propsMatchState,
-      cosNames: splat(craig.store.json.object_storage, "name"),
-    };
-    transpose(clusterInnerFormProps, formTemplate.innerFormProps);
-  } else if (form === "routingTables") {
+  }
+  if (form === "routingTables") {
     let routeFormProps = {
       invalidRouteCallback: invalidName("routes"),
       invalidRouteTextCallback: invalidNameText("routes"),

@@ -1,7 +1,7 @@
 /* this file is the main application page */
 
 import React from "react";
-import { contains, titleCase, kebabCase } from "lazy-z";
+import { kebabCase, splat } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -14,12 +14,23 @@ import {
   Projects,
   ToggleFormPage,
 } from "./components";
-import { invalidForms, state } from "./lib";
-import { default as constants } from "./lib/constants";
+import {
+  clusterHelperTestCallback,
+  disableSave,
+  forceShowForm,
+  invalidForms,
+  invalidName,
+  invalidNameText,
+  propsMatchState,
+  resourceGroupHelperTextCallback,
+  state,
+} from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
+import { ClustersTemplate, ResourceGroupsTemplate } from "icse-react-assets";
+import { RenderDocs } from "./components/pages/SimplePages";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -305,6 +316,9 @@ class Craig extends React.Component {
               delete={this.onProjectDelete}
               select={this.onProjectSelect}
               deselect={this.onProjectDeselect}
+              deleteDisabled={() => {
+                return craig.store.json.resource_groups.length === 1;
+              }}
             />
           ) : window.location.pathname === "/" ? (
             <Home craig={craig} />
@@ -314,6 +328,55 @@ class Craig extends React.Component {
               onProjectSave={this.onProjectSave}
               projects={this.state.projects}
               nav={this.props.craigRouter.nav}
+            />
+          ) : this.props.params.form === "resourceGroups" ? (
+            <ResourceGroupsTemplate
+              resource_groups={craig.store.json.resource_groups}
+              docs={RenderDocs("resource_groups")}
+              disableSave={disableSave}
+              onDelete={craig.resource_groups.delete}
+              onSave={craig.resource_groups.save}
+              onSubmit={craig.resource_groups.create}
+              propsMatchState={propsMatchState}
+              forceOpen={forceShowForm}
+              craig={craig}
+              deleteDisabled={() => {
+                return craig.store.json.resource_groups.length === 1;
+              }}
+              helperTextCallback={resourceGroupHelperTextCallback}
+              invalidCallback={invalidName("resource_groups")}
+              invalidTextCallback={invalidNameText("resource_groups")}
+            />
+          ) : this.props.params.form === "clusters" ? (
+            <ClustersTemplate
+              docs={RenderDocs("clusters")}
+              clusters={craig.store.json.clusters}
+              disableSave={disableSave}
+              onDelete={craig.clusters.delete}
+              onSave={craig.clusters.save}
+              onSubmit={craig.clusters.create}
+              propsMatchState={propsMatchState}
+              forceOpen={forceShowForm}
+              craig={craig}
+              invalidCallback={invalidName("clusters")}
+              invalidTextCallback={invalidNameText("clusters")}
+              invalidPoolCallback={invalidName("worker_pools")}
+              invalidPoolTextCallback={invalidNameText("worker_pools")}
+              resourceGroups={splat(craig.store.json.resource_groups, "name")}
+              vpcList={craig.store.vpcList}
+              encryptionKeys={craig.store.encryptionKeys}
+              subnetList={craig.getAllSubnets()}
+              kubeVersionApiEndpoint="/api/cluster/versions"
+              flavorApiEndpoint={`/api/cluster/${craig.store.json._options.region}/flavors`}
+              helperTextCallback={clusterHelperTestCallback}
+              cosNames={splat(craig.store.json.object_storage, "name")}
+              onPoolSave={craig.clusters.worker_pools.save}
+              onPoolDelete={craig.clusters.worker_pools.delete}
+              onPoolSubmit={craig.clusters.worker_pools.create}
+              disablePoolSave={function (field, stateData, componentProps) {
+                // field is clusters, inject worker pools
+                return disableSave("worker_pools", stateData, componentProps);
+              }}
             />
           ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />
