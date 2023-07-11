@@ -1,7 +1,7 @@
 /* this file is the main application page */
 
 import React from "react";
-import { kebabCase, splat } from "lazy-z";
+import { kebabCase, splat, contains } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -16,6 +16,7 @@ import {
 } from "./components";
 import {
   clusterHelperTestCallback,
+  constants,
   disableSave,
   forceShowForm,
   invalidForms,
@@ -29,7 +30,11 @@ import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
-import { ClustersTemplate, ResourceGroupsTemplate } from "icse-react-assets";
+import {
+  ClustersTemplate,
+  ResourceGroupsTemplate,
+  SecretsManagerTemplate,
+} from "icse-react-assets";
 import { RenderDocs } from "./components/pages/SimplePages";
 
 const withRouter = (Page) => (props) => {
@@ -377,6 +382,23 @@ class Craig extends React.Component {
                 // field is clusters, inject worker pools
                 return disableSave("worker_pools", stateData, componentProps);
               }}
+            />
+          ) : window.location.pathname === "/form/secretsManager" ? (
+            <SecretsManagerTemplate
+              secrets_managers={craig.store.json.secrets_manager}
+              disableSave={disableSave}
+              onDelete={craig.secrets_manager.delete}
+              onSave={craig.secrets_manager.save}
+              onSubmit={craig.secrets_manager.create}
+              propsMatchState={propsMatchState}
+              forceOpen={forceShowForm}
+              craig={craig}
+              resourceGroups={splat(craig.store.json.resource_groups, "name")}
+              encryptionKeys={craig.store.encryptionKeys}
+              invalidCallback={invalidName("secrets_manager")}
+              invalidTextCallback={invalidNameText("secrets_manager")}
+              secrets={craig.getAllResourceKeys()}
+              docs={RenderDocs("secrets_manager")}
             />
           ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />

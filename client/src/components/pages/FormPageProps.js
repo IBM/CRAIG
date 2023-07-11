@@ -515,8 +515,6 @@ function formProps(form, craig) {
     transpose(routeFormProps, formTemplate.innerFormProps);
   } else if (form === "lb") {
     formTemplate.innerFormProps.vsiDeployments = craig.store.json.vsi;
-  } else if (form === "secretsManager") {
-    formTemplate.innerFormProps.secrets = craig.getAllResourceKeys();
   }
 
   return formTemplate;
