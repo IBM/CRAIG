@@ -39,13 +39,20 @@ export class JSONModal extends React.Component {
             labelText="Use Pretty JSON"
             defaultToggled={this.state.usePrettyJson}
             onToggle={this.toggleUsePrettyJson}
-            className="marginBottom displayFlex"
+            className="marginBottomSmall displayFlex"
             id="use-pretty-json"
             disabled={false}
             toggleFieldName="usePrettyJson"
             value={this.state.usePrettyJson}
           />
         </IcseFormGroup>
+        <div className="marginBottomSmall">
+          <DownloadCopyButtonSet
+            disabled={Boolean(this.state.error)}
+            json={this.state.json}
+            projectName={this.state.name}
+          />
+        </div>
         <IcseFormGroup noMarginBottom>
           <TextArea
             labelText="Preview CRAIG JSON"
@@ -58,11 +65,6 @@ export class JSONModal extends React.Component {
             invalidText={this.state.error}
           />
         </IcseFormGroup>
-        <DownloadCopyButtonSet
-          disabled={Boolean(this.state.error)}
-          json={this.state.json}
-          projectName={this.state.name}
-        />
       </IcseModal>
     );
   }
