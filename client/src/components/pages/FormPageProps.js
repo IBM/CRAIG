@@ -349,51 +349,6 @@ function formProps(form, craig) {
       },
       formTemplate.innerFormProps
     );
-  } else if (form === "objectStorage") {
-    /**
-     * cos
-     */
-    transpose(
-      {
-        composedNameCallback: cosResourceHelperTextCallback,
-        kmsList: splat(craig.store.json.key_management, "name"),
-        invalidKeyCallback: invalidName("cos_keys"),
-        invalidKeyTextCallback: invalidNameText("cos_keys"),
-        propsMatchState: propsMatchState,
-        invalidBucketCallback: invalidName("buckets"),
-        invalidBucketTextCallback: invalidNameText("buckets"),
-        keyProps: {
-          onSave: craig.object_storage.keys.save,
-          onDelete: craig.object_storage.keys.delete,
-          onSubmit: craig.object_storage.keys.create,
-          disableSave: disableSave,
-          craig: craig,
-        },
-        bucketProps: {
-          onSave: craig.object_storage.buckets.save,
-          onDelete: craig.object_storage.buckets.delete,
-          onSubmit: craig.object_storage.buckets.create,
-          disableSave: disableSave,
-          craig: craig,
-          encryptionKeys: craig.store.encryptionKeys,
-          encryptionKeyFilter: function (_, componentProps) {
-            let cosName = componentProps.isModal
-              ? componentProps.parent_name
-              : componentProps.arrayParentName;
-            let { kms } = getObjectFromArray(
-              craig.store.json.object_storage,
-              "name",
-              cosName
-            );
-            let { keys } = kms
-              ? getObjectFromArray(craig.store.json.key_management, "name", kms)
-              : [];
-            return kms ? splat(keys, "name") : [];
-          },
-        },
-      },
-      formTemplate.innerFormProps
-    );
   } else if (form === "appID") {
     /**
      * appid

@@ -66,7 +66,9 @@ const {
 } = require("./form-props");
 const { leftNavItemClassName } = require("./class-names");
 const { notificationText, getCosFromBucket } = require("./utils");
+const { encryptionKeyFilter } = require("./filters");
 module.exports = {
+  encryptionKeyFilter,
   leftNavItemClassName,
   notificationText,
   hasDuplicateName,

@@ -19,7 +19,7 @@ const {
  */
 function cosSetStoreBucketsAndKeys(config, instanceCallback) {
   config.store.json.object_storage.forEach((instance) => {
-    instance.plan = instance.plan.toLowerCase();
+    // instance.plan.toLowerCase(); - cannot select other plans right now
     instance.buckets.forEach((bucket) => {
       bucket.use_random_suffix = instance.use_random_suffix;
       bucket.storage_class = bucket.storage_class.toLowerCase();

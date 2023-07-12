@@ -26,6 +26,7 @@ import {
   disableSave,
   forceShowForm,
   invalidEncryptionKeyRing,
+  cosResourceHelperTextCallback,
 } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
@@ -36,8 +37,10 @@ import {
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
   KeyManagementTemplate,
+  ObjectStorageTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./components/pages/SimplePages";
+import { encryptionKeyFilter } from "./lib/forms";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -428,7 +431,35 @@ class Craig extends React.Component {
               onKeySave={craig.key_management.keys.save}
               onKeyDelete={craig.key_management.keys.delete}
               onKeySubmit={craig.key_management.keys.create}
-              disableKeySave={disableSave}
+            />
+          ) : window.location.pathname === "/form/objectStorage" ? (
+            <ObjectStorageTemplate
+              docs={RenderDocs("object_storage")}
+              object_storage={craig.store.json.object_storage}
+              disableSave={disableSave}
+              onDelete={craig.object_storage.delete}
+              onSave={craig.object_storage.save}
+              onSubmit={craig.object_storage.create}
+              propsMatchState={propsMatchState}
+              forceOpen={forceShowForm}
+              craig={craig}
+              resourceGroups={splat(craig.store.json.resource_groups, "name")}
+              encryptionKeys={craig.store.encryptionKeys}
+              kmsList={splat(craig.store.json.key_management, "name")}
+              invalidCallback={invalidName("object_storage")}
+              invalidTextCallback={invalidNameText("object_storage")}
+              invalidKeyCallback={invalidName("cos_keys")}
+              invalidKeyTextCallback={invalidNameText("cos_keys")}
+              invalidBucketCallback={invalidName("buckets")}
+              invalidBucketTextCallback={invalidNameText("buckets")}
+              onKeySave={craig.object_storage.keys.save}
+              onKeyDelete={craig.object_storage.keys.delete}
+              onKeySubmit={craig.object_storage.keys.create}
+              onBucketSave={craig.object_storage.buckets.save}
+              onBucketDelete={craig.object_storage.buckets.delete}
+              onBucketSubmit={craig.object_storage.buckets.create}
+              composedNameCallback={cosResourceHelperTextCallback}
+              encryptionKeyFilter={encryptionKeyFilter}
             />
           ) : contains(constants.arrayFormPages, this.props.params.form) ? (
             <FormPage craig={craig} form={this.props.params.form} />

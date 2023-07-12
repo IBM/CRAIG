@@ -495,7 +495,6 @@ module.exports = {
     "eventStreams",
     "nacls",
     "accessGroups",
-    "objectStorage",
     "routingTables",
     "securityGroups",
     "sshKeys",
