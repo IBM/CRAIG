@@ -23,6 +23,7 @@ const {
   invalidDNSDescription,
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
+  invalidCrns,
 } = require("../../client/src/lib/forms/invalid-callbacks");
 
 describe("invalid callbacks", () => {
@@ -1242,6 +1243,18 @@ describe("invalid callbacks", () => {
               },
             },
           }
+        )
+      );
+    });
+  });
+  describe("invalidCrns", () => {
+    it("should return true if invalid crn list", () => {
+      assert.isTrue(
+        invalidCrns(
+          {
+            crns: ["aaa"],
+          },
+          "it should be true"
         )
       );
     });

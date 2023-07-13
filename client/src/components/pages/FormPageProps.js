@@ -1,11 +1,9 @@
 import {
   AccessGroupForm,
   AppIdForm,
-  ClusterForm,
   EventStreamsForm,
   KeyManagementForm,
   ObjectStorageForm,
-  ResourceGroupForm,
   SecretsManagerForm,
   SecurityGroupForm,
   SshKeyForm,
@@ -19,13 +17,10 @@ import {
   VpnServerForm,
   DnsForm,
 } from "icse-react-assets";
-import { getObjectFromArray, splat, transpose, nestedSplat } from "lazy-z";
+import { splat, transpose, nestedSplat } from "lazy-z";
 import {
-  clusterHelperTestCallback,
-  cosResourceHelperTextCallback,
   disableSave,
   forceShowForm,
-  invalidEncryptionKeyRing,
   invalidName,
   invalidNameText,
   invalidSecurityGroupRuleName,
@@ -373,16 +368,6 @@ function formProps(form, craig) {
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
     formTemplate.deleteDisabled = disableSshKeyDelete;
-  } else if (form === "transitGateways") {
-    formTemplate.innerFormProps.readOnlyName = false;
-    formTemplate.innerFormProps.invalidCrns = function (stateData) {
-      return invalidCrnList(stateData.crns);
-    };
-    formTemplate.innerFormProps.invalidCrnText = function (stateData) {
-      return invalidCrnList(stateData.crns)
-        ? "Enter a valid comma separated list of CRNs"
-        : "";
-    };
   } else if (form === "securityGroups") {
     let sgInnerFormProps = {
       onSubmitCallback: craig.security_groups.rules.create,

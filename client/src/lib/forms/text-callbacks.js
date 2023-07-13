@@ -10,6 +10,7 @@ const {
   invalidNewResourceName,
   invalidSecurityGroupRuleName,
   hasOverlappingCidr,
+  invalidCrns,
 } = require("./invalid-callbacks");
 
 /**
@@ -311,6 +312,12 @@ function invalidDNSDescriptionText(stateData, componentProps) {
   return "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.";
 }
 
+function invalidCrnText(stateData) {
+  return invalidCrns(stateData)
+    ? "Enter a valid comma separated list of CRNs"
+    : "";
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
@@ -328,4 +335,5 @@ module.exports = {
   invalidCbrZoneText,
   invalidProjectNameText,
   invalidDNSDescriptionText,
+  invalidCrnText,
 };

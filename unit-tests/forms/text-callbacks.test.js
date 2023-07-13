@@ -19,6 +19,7 @@ const {
 } = require("../../client/src/lib/forms");
 const {
   invalidDNSDescriptionText,
+  invalidCrnText,
 } = require("../../client/src/lib/forms/text-callbacks");
 
 describe("text callbacks", () => {
@@ -761,5 +762,25 @@ describe("text callbacks", () => {
       invalidDNSDescriptionText({}, {}),
       "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
     );
+  });
+  describe("invalidCrnText", () => {
+    it("should return empty string when not invalid", () => {
+      assert.deepEqual(
+        invalidCrnText({
+          crns: undefined,
+        }),
+        "",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when invalid", () => {
+      assert.deepEqual(
+        invalidCrnText({
+          crns: ["aaa"],
+        }),
+        "Enter a valid comma separated list of CRNs",
+        "it should return correct message"
+      );
+    });
   });
 });

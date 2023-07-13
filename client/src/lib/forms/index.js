@@ -13,6 +13,7 @@ const {
   invalidCbrRuleText,
   invalidCbrZoneText,
   invalidProjectNameText,
+  invalidCrnText,
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -38,6 +39,7 @@ const {
   invalidCbrZone,
   validRecord,
   invalidDnsZoneName,
+  invalidCrns,
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -129,4 +131,6 @@ module.exports = {
   validRecord,
   invalidDnsZoneName,
   getCosFromBucket,
+  invalidCrns,
+  invalidCrnText,
 };

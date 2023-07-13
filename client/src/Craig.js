@@ -27,6 +27,8 @@ import {
   forceShowForm,
   invalidEncryptionKeyRing,
   cosResourceHelperTextCallback,
+  invalidCrns,
+  invalidCrnText,
 } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
@@ -38,6 +40,7 @@ import {
   SecretsManagerTemplate,
   KeyManagementTemplate,
   ObjectStorageTemplate,
+  TransitGatewayTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./components/pages/SimplePages";
 import { encryptionKeyFilter } from "./lib/forms";
@@ -338,6 +341,24 @@ class Craig extends React.Component {
               onProjectSave={this.onProjectSave}
               projects={this.state.projects}
               nav={this.props.craigRouter.nav}
+            />
+          ) : this.props.params.form === "transitGateways" ? (
+            <TransitGatewayTemplate
+              docs={RenderDocs("transit_gateways")}
+              transit_gateways={craig.store.json.transit_gateways}
+              disableSave={disableSave}
+              onDelete={craig.transit_gateways.delete}
+              onSave={craig.transit_gateways.save}
+              onSubmit={craig.transit_gateways.create}
+              propsMatchState={propsMatchState}
+              forceOpen={forceShowForm}
+              craig={craig}
+              invalidCallback={invalidName("transit_gateways")}
+              invalidTextCallback={invalidNameText("transit_gateways")}
+              vpcList={craig.store.vpcList}
+              resourceGroups={splat(craig.store.json.resource_groups, "name")}
+              invalidCrns={invalidCrns}
+              invalidCrnText={invalidCrnText}
             />
           ) : this.props.params.form === "resourceGroups" ? (
             <ResourceGroupsTemplate

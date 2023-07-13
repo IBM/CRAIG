@@ -449,17 +449,20 @@ function invalidCidr(craig) {
  * @returns true if list of crns is valid
  */
 function invalidCrnList(crnList) {
-  if (crnList === undefined || isEmpty(crnList)) {
+  if (crnList === undefined) {
     return false;
-  }
-  let isInvalid = false;
-  crnList.forEach((crn) => {
-    if ((isString(crn) ? crn : "").match(crnRegex) === null) {
-      isInvalid = true;
-    }
-  });
+  } else if (isEmpty(crnList)) {
+    return false;
+  } else {
+    let isInvalid = false;
+    crnList.forEach((crn) => {
+      if ((isString(crn) ? crn : "").match(crnRegex) === null) {
+        isInvalid = true;
+      }
+    });
 
-  return isInvalid;
+    return isInvalid;
+  }
 }
 
 /**
@@ -626,6 +629,16 @@ function nullOrEmptyStringCheckCallback(field) {
   }
   return invalidCallback;
 }
+
+/**
+ * check to see if a transit gateway has invalid crns
+ * @param {object} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidCrns(stateData) {
+  return invalidCrnList(stateData.crns);
+}
+
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -652,4 +665,5 @@ module.exports = {
   invalidDNSDescription,
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
+  invalidCrns,
 };

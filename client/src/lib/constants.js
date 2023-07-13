@@ -499,7 +499,6 @@ module.exports = {
     "securityGroups",
     "sshKeys",
     "subnets",
-    "transitGateways",
     "vpcs",
     "vpe",
     "vpn",
@@ -516,7 +515,6 @@ module.exports = {
     "secretsManager",
     "securityGroups",
     "sshKeys",
-    "transitGateways",
     "vpcs",
     "vpe",
     "vpn",
@@ -526,7 +524,6 @@ module.exports = {
     "dns",
   ],
   vpcForms: [
-    "transitGateways",
     "vpn",
     "securityGroups",
     "vpe",
