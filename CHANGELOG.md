@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - CRAIG now uses `lazy-z` version `1.10.3`, fixing an issues where the `titleCase` function untintentionally added spaces between numbers
+- State and JSON-to-IAC functionality has been added to allow for AppID instance to be encrypted by a key management service
 
 ### Features
 
@@ -21,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Terraform code no longer fails to plan when multiple Secrets Manager instances are used
 - Virtual Private Endpoint for Key Management services now use the correct CRN
 - Object Storage random suffix toggle now correctly changes Terraform code
+- Fixed an issue causing variable validation for `tmos_admin_password` to be incorrectly formatted
 
 ## 0.7.0
 

@@ -2,7 +2,8 @@
   {
     "version": "1.0.0",
     "upgrade_notes": [
-      "CRAIG now uses `lazy-z` version `1.10.3`, fixing an issues where the `titleCase` function untintentionally added spaces between numbers"
+      "CRAIG now uses `lazy-z` version `1.10.3`, fixing an issues where the `titleCase` function untintentionally added spaces between numbers",
+      "State and JSON-to-IAC functionality has been added to allow for AppID instance to be encrypted by a key management service"
     ],
     "features": [
       "When renaming resources currently in use, references to renamed resources are now changed to match the new name",
@@ -14,7 +15,8 @@
       "VPN Servers now no longer need a port for provision, fixed an error causing undefined ports to render in terraform as \"\"",
       "Terraform code no longer fails to plan when multiple Secrets Manager instances are used",
       "Virtual Private Endpoint for Key Management services now use the correct CRN",
-      "Object Storage random suffix toggle now correctly changes Terraform code"
+      "Object Storage random suffix toggle now correctly changes Terraform code",
+      "Fixed an issue causing variable validation for `tmos_admin_password` to be incorrectly formatted"
     ]
   },
   {

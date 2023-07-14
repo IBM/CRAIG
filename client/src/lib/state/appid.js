@@ -1,4 +1,4 @@
-const { transpose } = require("lazy-z");
+const { transpose, splatContains } = require("lazy-z");
 const {
   setUnfoundResourceGroup,
   updateSubChild,
@@ -19,6 +19,15 @@ function appidOnStoreUpdate(config) {
     appid.keys.forEach((key) => {
       key.appid = appid.name;
     });
+    if (appid.kms) {
+      appid.kms = null;
+      config.store.json.key_management.forEach((instance) => {
+        if (splatContains(instance.keys, "name", appid.encryption_key)) {
+          appid.kms = instance.name;
+        }
+      });
+      config.setUnfound("encryptionKeys", appid, "encryption_key");
+    }
   });
 }
 

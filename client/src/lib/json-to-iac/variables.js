@@ -75,7 +75,7 @@ function variablesDotTf(config, useF5) {
           error_message:
             "Value for tmos_password must be at least 15 characters, contain one numeric, one uppercase, and one lowercase character.",
           condition:
-            '${var.tmos_admin_password == null ? true : (length(var.tmos_admin_password) >= 15 && can(regex("[A-Z]", var.tmos_admin_password)) && can(regex("[a-z]", var.tmos_admin_password)) && can(regex("[0-9]", var.tmos_admin_password)))',
+            '${var.tmos_admin_password == null ? true : (length(var.tmos_admin_password) >= 15 && can(regex("[A-Z]", var.tmos_admin_password)) && can(regex("[a-z]", var.tmos_admin_password)) && can(regex("[0-9]", var.tmos_admin_password)))}',
         },
       ],
     };

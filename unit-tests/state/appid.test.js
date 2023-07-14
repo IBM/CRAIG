@@ -28,6 +28,57 @@ describe("appid", () => {
     beforeEach(() => {
       appidState = new newState();
     });
+    describe("appid on store update", () => {
+      beforeEach(() => {
+        appidState = new newState();
+      });
+      it("should set encryption key to null when deleted", () => {
+        appidState.appid.create({
+          name: "default",
+          keys: [],
+          kms: "kms",
+          encryption_key: "key",
+        });
+        appidState.key_management.keys.delete(
+          {},
+          {
+            arrayParentName: "kms",
+            data: { name: "key" },
+            isTeleport: false,
+          }
+        );
+        assert.deepEqual(
+          appidState.store.json.appid[0].encryption_key,
+          null,
+          "it should be null"
+        );
+      });
+      it("should set encryption key and kms to null when kms deleted", () => {
+        appidState.appid.create({
+          name: "default",
+          keys: [],
+          kms: "kms",
+          encryption_key: "key",
+        });
+        appidState.key_management.delete(
+          {},
+          {
+            data: { name: "kms" },
+            isTeleport: false,
+          }
+        );
+        assert.deepEqual(
+          appidState.store.json.appid[0].kms,
+          null,
+          "it should be null"
+        );
+        assert.deepEqual(
+          appidState.store.json.appid[0].encryption_key,
+          null,
+          "it should be null"
+        );
+      });
+    });
     it("should add an appid instance", () => {
       appidState.appid.create({ name: "default", keys: [] });
       assert.deepEqual(
