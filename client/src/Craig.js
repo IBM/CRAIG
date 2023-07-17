@@ -41,6 +41,7 @@ import {
   KeyManagementTemplate,
   ObjectStorageTemplate,
   TransitGatewayTemplate,
+  VpnGatewayTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./components/pages/SimplePages";
 import { encryptionKeyFilter } from "./lib/forms";
@@ -409,7 +410,24 @@ class Craig extends React.Component {
                 return disableSave("worker_pools", stateData, componentProps);
               }}
             />
-          ) : window.location.pathname === "/form/secretsManager" ? (
+          ) : this.props.params.form === "vpn" ? (
+            <VpnGatewayTemplate
+              docs={RenderDocs("vpn_gateways")}
+              vpn_gateways={craig.store.json.vpn_gateways}
+              disableSave={disableSave}
+              onDelete={craig.vpn_gateways.delete}
+              onSave={craig.vpn_gateways.save}
+              onSubmit={craig.vpn_gateways.create}
+              propsMatchState={propsMatchState}
+              forceOpen={forceShowForm}
+              craig={craig}
+              invalidCallback={invalidName("vpn_gateways")}
+              invalidTextCallback={invalidNameText("vpn_gateways")}
+              vpcList={craig.store.vpcList}
+              subnetList={craig.getAllSubnets()}
+              resourceGroups={splat(craig.store.json.resource_groups, "name")}
+            />
+          ) : this.props.params.form === "secretsManager" ? (
             <SecretsManagerTemplate
               secrets_managers={craig.store.json.secrets_manager}
               disableSave={disableSave}
@@ -426,7 +444,7 @@ class Craig extends React.Component {
               secrets={craig.getAllResourceKeys()}
               docs={RenderDocs("secrets_manager")}
             />
-          ) : window.location.pathname === "/form/keyManagement" ? (
+          ) : this.props.params.form === "keyManagement" ? (
             <KeyManagementTemplate
               docs={RenderDocs("key_management")}
               key_management={craig.store.json.key_management}
@@ -453,7 +471,7 @@ class Craig extends React.Component {
               onKeyDelete={craig.key_management.keys.delete}
               onKeySubmit={craig.key_management.keys.create}
             />
-          ) : window.location.pathname === "/form/objectStorage" ? (
+          ) : this.props.params.form === "objectStorage" ? (
             <ObjectStorageTemplate
               docs={RenderDocs("object_storage")}
               object_storage={craig.store.json.object_storage}
