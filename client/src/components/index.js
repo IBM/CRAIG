@@ -19,5 +19,6 @@ export {
   ToggleFormPage,
   FormPage,
   EdgeNetworkingDocs,
+  NewFormPage,
 } from "./pages";
 export { PageTemplate } from "./page-template";

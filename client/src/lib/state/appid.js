@@ -19,7 +19,8 @@ function appidOnStoreUpdate(config) {
     appid.keys.forEach((key) => {
       key.appid = appid.name;
     });
-    if (appid.kms) {
+    // check for kms or encryption key to add kms to object
+    if (appid.kms || appid.encryption_key) {
       appid.kms = null;
       config.store.json.key_management.forEach((instance) => {
         if (splatContains(instance.keys, "name", appid.encryption_key)) {

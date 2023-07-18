@@ -163,8 +163,11 @@ const {
   formatAtrackerKey,
   formatAtrackerArchive,
 } = require("./logging-monitoring");
+const { formatIcd, formatIcdToKmsAuth, icdTf } = require("./icd");
 
 module.exports = {
+  formatIcd,
+  formatIcdToKmsAuth,
   vpnServerTf,
   formatLogdnaInstance,
   formatLogdnaKey,
@@ -291,4 +294,5 @@ module.exports = {
   dnsTf,
   calculateNeededSubnetIps,
   getNextCidr,
+  icdTf,
 };

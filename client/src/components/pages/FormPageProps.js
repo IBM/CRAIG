@@ -2,13 +2,8 @@ import {
   AccessGroupForm,
   AppIdForm,
   EventStreamsForm,
-  KeyManagementForm,
-  ObjectStorageForm,
-  SecretsManagerForm,
   SecurityGroupForm,
   SshKeyForm,
-  TransitGatewayForm,
-  VpcForm,
   VpeForm,
   VpnGatewayForm,
   VsiForm,
@@ -59,35 +54,11 @@ const pathToFormMap = {
     addText: "Create an Access Group",
     innerForm: AccessGroupForm,
   },
-  secretsManager: {
-    jsonField: "secrets_manager",
-    name: "Secrets Manager",
-    addText: "Create a Secrets Manager Instance",
-    innerForm: SecretsManagerForm,
-  },
-  keyManagement: {
-    jsonField: "key_management",
-    name: "Key Management",
-    addText: "Create a Key Management Service",
-    innerForm: KeyManagementForm,
-  },
-  objectStorage: {
-    jsonField: "object_storage",
-    name: "Object Storage",
-    addText: "Create an Object Storage Service",
-    innerForm: ObjectStorageForm,
-  },
   appID: {
     jsonField: "appid",
     name: "AppID",
     addText: "Create an AppID Service",
     innerForm: AppIdForm,
-  },
-  vpcs: {
-    jsonField: "vpcs",
-    name: "Virtual Private Clouds",
-    addText: "Create a VPC",
-    innerForm: VpcForm,
   },
   vsi: {
     jsonField: "vsi",
@@ -100,12 +71,6 @@ const pathToFormMap = {
     name: "SSH Keys",
     addText: "Create an SSH Key",
     innerForm: SshKeyForm,
-  },
-  transitGateways: {
-    jsonField: "transit_gateways",
-    name: "Transit Gateways",
-    addText: "Create a Transit Gateway",
-    innerForm: TransitGatewayForm,
   },
   vpn: {
     jsonField: "vpn_gateways",
@@ -363,8 +328,6 @@ function formProps(form, craig) {
       },
       formTemplate.innerFormProps
     );
-  } else if (form === "vpcs") {
-    formTemplate.innerFormProps.cosBuckets = craig.store.cosBuckets;
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
     formTemplate.deleteDisabled = disableSshKeyDelete;

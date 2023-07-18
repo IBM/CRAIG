@@ -20,7 +20,15 @@ describe("propsMatchState", () => {
           name: "test",
           default_network_acl_name: "",
         },
-        { data: { name: "test", default_network_acl_name: null } }
+        {
+          data: {
+            name: "test",
+            default_network_acl_name: null,
+            acls: [],
+            subnets: [],
+            address_prefixes: [],
+          },
+        }
       ),
       "it should be true"
     );

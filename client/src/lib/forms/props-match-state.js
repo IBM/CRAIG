@@ -18,6 +18,9 @@ function propsMatchState(field, stateData, componentProps) {
         stateData[field] = null;
       }
     });
+    stateData.address_prefixes = componentProps.data.address_prefixes;
+    stateData.subnets = componentProps.data.subnets;
+    stateData.acls = componentProps.data.acls;
   }
   if (field === "subnetTier") {
     componentProps.data.hide = stateData.hide;

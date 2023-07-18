@@ -9,3 +9,4 @@ export { default as Projects } from "./projects/Projects";
 export { default as ToggleFormPageProps } from "./ToggleFormPageProps";
 export { ToggleFormPage, FormPage, EdgeNetworkingDocs } from "./SimplePages";
 export { default as SplashPage } from "./SplashPage";
+export { NewFormPage } from "./FormPages";

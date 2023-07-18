@@ -782,6 +782,38 @@ describe("disableSave", () => {
         "it should be true"
       );
     });
+    it("should return true if a vpc has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "vpcs",
+          {
+            name: "@@@",
+            resource_group: "managment-rg",
+            bucket: "bucket",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "frog",
+                    },
+                    {
+                      name: "toad",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
     it("should return true if a vpc has an invalid default network acl name", () => {
       assert.isTrue(
         disableSave(
