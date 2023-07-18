@@ -10,6 +10,7 @@ import {
   resourceGroupHelperTextCallback,
 } from "../../lib";
 import {
+  AppIdTemplate,
   ClustersTemplate,
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
@@ -26,6 +27,30 @@ import {
   encryptionKeyFilter,
   invalidEncryptionKeyRing,
 } from "../../lib/forms";
+
+const AppIdPage = (craig) => {
+  return (
+    <AppIdTemplate
+      docs={RenderDocs("appid")}
+      appid={craig.store.json.appid}
+      disableSave={disableSave}
+      onDelete={craig.appid.delete}
+      onSave={craig.appid.save}
+      onSubmit={craig.appid.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      craig={craig}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      invalidCallback={invalidName("appid")}
+      invalidTextCallback={invalidNameText("appid")}
+      invalidKeyCallback={invalidName("appid_key")}
+      invalidKeyTextCallback={invalidNameText("appid_key")}
+      onKeySave={craig.appid.keys.save}
+      onKeyDelete={craig.appid.keys.delete}
+      onKeySubmit={craig.appid.keys.create}
+    />
+  );
+};
 
 const ClusterPage = (craig) => {
   return (
@@ -234,7 +259,9 @@ const VpcPage = (craig) => {
 
 export const NewFormPage = (props) => {
   let { form, craig } = props;
-  if (form === "clusters") {
+  if (form === "appID") {
+    return AppIdPage(craig);
+  } else if (form === "clusters") {
     return ClusterPage(craig);
   } else if (form === "keyManagement") {
     return KeyManagementPage(craig);

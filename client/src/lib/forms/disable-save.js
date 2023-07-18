@@ -160,7 +160,7 @@ function disableSave(field, stateData, componentProps, craig) {
       badField("resource_group", stateData)
     );
   } else if (field === "appid_key") {
-    return invalidName("appid_keys")(stateData, componentProps);
+    return invalidName("appid_key")(stateData, componentProps);
   } else if (field === "buckets") {
     return (
       invalidName("buckets")(stateData, componentProps) ||

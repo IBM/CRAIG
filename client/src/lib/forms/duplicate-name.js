@@ -22,7 +22,7 @@ const {
 function hasDuplicateName(field, stateData, componentProps, overrideField) {
   let allOtherNames = [];
   let stateField = overrideField || "name";
-  if (field === "appid_keys") {
+  if (field === "appid_key") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.appid,
       "keys",

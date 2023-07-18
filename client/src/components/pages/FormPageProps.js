@@ -1,6 +1,5 @@
 import {
   AccessGroupForm,
-  AppIdForm,
   EventStreamsForm,
   SecurityGroupForm,
   SshKeyForm,
@@ -53,12 +52,6 @@ const pathToFormMap = {
     name: "Access Groups",
     addText: "Create an Access Group",
     innerForm: AccessGroupForm,
-  },
-  appID: {
-    jsonField: "appid",
-    name: "AppID",
-    addText: "Create an AppID Service",
-    innerForm: AppIdForm,
   },
   vsi: {
     jsonField: "vsi",
@@ -304,25 +297,6 @@ function formProps(form, craig) {
           onDelete: craig.access_groups.dynamic_policies.delete,
           onSubmit: craig.access_groups.dynamic_policies.create,
           disableSave: disableSave,
-          craig: craig,
-        },
-      },
-      formTemplate.innerFormProps
-    );
-  } else if (form === "appID") {
-    /**
-     * appid
-     */
-    transpose(
-      {
-        invalidKeyCallback: invalidName("appid_keys"),
-        invalidKeyTextCallback: invalidNameText("appid_keys"),
-        propsMatchState: propsMatchState,
-        keyProps: {
-          disableSave: disableSave,
-          onSave: craig.appid.keys.save,
-          onDelete: craig.appid.keys.delete,
-          onSubmit: craig.appid.keys.create,
           craig: craig,
         },
       },

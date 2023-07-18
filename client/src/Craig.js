@@ -320,6 +320,7 @@ class Craig extends React.Component {
             />
           ) : contains(
               [
+                "appID",
                 "clusters",
                 "keyManagement",
                 "objectStorage",
