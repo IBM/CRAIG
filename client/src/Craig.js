@@ -322,14 +322,17 @@ class Craig extends React.Component {
               [
                 "appID",
                 "clusters",
+                "dns",
+                "eventStreams",
                 "keyManagement",
                 "objectStorage",
-                "vpnGateways",
                 "resourceGroups",
+                "routingTables",
                 "secretsManager",
                 "securityGroups",
                 "transitGateways",
                 "vpcs",
+                "vpnGateways",
                 "vsi",
               ],
               this.props.params.form

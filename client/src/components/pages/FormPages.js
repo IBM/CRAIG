@@ -12,10 +12,13 @@ import {
 import {
   AppIdTemplate,
   ClustersTemplate,
+  DnsTemplate,
+  EventStreamsTemplate,
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
   KeyManagementTemplate,
+  RoutingTableTemplate,
   ObjectStorageTemplate,
   TransitGatewayTemplate,
   VpnGatewayTemplate,
@@ -23,14 +26,20 @@ import {
   VsiTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { splat } from "lazy-z";
+import { nestedSplat, splat } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   encryptionKeyFilter,
+  invalidDnsZoneName,
   invalidEncryptionKeyRing,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
 } from "../../lib/forms";
+import {
+  invalidDNSDescription,
+  nullOrEmptyStringCheckCallback,
+} from "../../lib/forms/invalid-callbacks";
+import { invalidDNSDescriptionText } from "../../lib/forms/text-callbacks";
 
 const AppIdPage = (craig) => {
   return (
@@ -87,6 +96,68 @@ const ClusterPage = (craig) => {
         // field is clusters, inject worker pools
         return disableSave("worker_pools", stateData, componentProps);
       }}
+    />
+  );
+};
+
+const DnsPage = (craig) => {
+  return (
+    <DnsTemplate
+      craig={craig}
+      docs={RenderDocs("dns")}
+      dns={craig.store.json.dns}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      onDelete={craig.dns.save}
+      onSave={craig.dns.delete}
+      onSubmit={craig.dns.create}
+      forceOpen={forceShowForm}
+      invalidTextCallback={invalidNameText("dns")}
+      invalidCallback={invalidName("dns")}
+      onZoneSave={craig.dns.zones.save}
+      onZoneDelete={craig.dns.zones.delete}
+      onZoneSubmit={craig.dns.zones.create}
+      invalidZoneNameCallback={invalidDnsZoneName}
+      invalidZoneNameTextCallback={invalidNameText("zones")}
+      invalidLabelCallback={nullOrEmptyStringCheckCallback("label")}
+      invalidDescriptionCallback={invalidDNSDescription}
+      invalidDescriptionTextCallback={invalidDNSDescriptionText}
+      vpcList={craig.store.vpcList}
+      onRecordSave={craig.dns.records.save}
+      onRecordDelete={craig.dns.records.delete}
+      onRecordSubmit={craig.dns.records.create}
+      invalidRecordCallback={invalidName("records")}
+      invalidRecordTextCallback={invalidNameText("records")}
+      invalidRdataCallback={nullOrEmptyStringCheckCallback("records")}
+      dnsZones={nestedSplat(craig.store.json.dns, "zones", "name")}
+      onResolverSave={craig.dns.custom_resolvers.save}
+      onResolverSubmit={craig.dns.custom_resolvers.create}
+      onResolverDelete={craig.dns.custom_resolvers.delete}
+      invalidResolverNameCallback={invalidName("custom_resolvers")}
+      invalidResolverNameTextCallback={invalidNameText("custom_resolvers")}
+      invalidResolverDescriptionCallback={invalidDNSDescription}
+      invalidResolverDescriptionTextCallback={invalidDNSDescriptionText}
+      subnetList={craig.getAllSubnets()}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+    />
+  );
+};
+
+const EventStreamsPage = (craig) => {
+  return (
+    <EventStreamsTemplate
+      event_streams={craig.store.json.event_streams}
+      disableSave={disableSave}
+      onDelete={craig.event_streams.delete}
+      onSave={craig.event_streams.save}
+      onSubmit={craig.event_streams.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      invalidCallback={invalidName("event_streams")}
+      invalidTextCallback={invalidNameText("event_streams")}
+      craig={craig}
+      docs={RenderDocs("event_streams")}
     />
   );
 };
@@ -173,6 +244,30 @@ const ResourceGroupPage = (craig) => {
       helperTextCallback={resourceGroupHelperTextCallback}
       invalidCallback={invalidName("resource_groups")}
       invalidTextCallback={invalidNameText("resource_groups")}
+    />
+  );
+};
+
+const RoutingTablesPage = (craig) => {
+  return (
+    <RoutingTableTemplate
+      routing_tables={craig.store.json.routing_tables}
+      disableSave={disableSave}
+      docs={RenderDocs("routing_tables")}
+      propsMatchState={propsMatchState}
+      onDelete={craig.routing_tables.delete}
+      onSave={craig.routing_tables.save}
+      onSubmit={craig.routing_tables.create}
+      forceOpen={forceShowForm}
+      craig={craig}
+      vpcList={craig.store.vpcList}
+      invalidCallback={invalidName("routing_tables")}
+      invalidTextCallback={invalidNameText("routing_tables")}
+      invalidRouteTextCallback={invalidNameText("routes")}
+      invalidRouteCallback={invalidName("routes")}
+      onRouteSave={craig.routing_tables.routes.delete}
+      onRouteDelete={craig.routing_tables.routes.save}
+      onRouteSubmit={craig.routing_tables.routes.create}
     />
   );
 };
@@ -329,6 +424,10 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "clusters") {
     return ClusterPage(craig);
+  } else if (form === "dns") {
+    return DnsPage(craig);
+  } else if (form === "eventStreams") {
+    return EventStreamsPage(craig);
   } else if (form === "keyManagement") {
     return KeyManagementPage(craig);
   } else if (form === "objectStorage") {
@@ -337,6 +436,8 @@ export const NewFormPage = (props) => {
     return ResourceGroupPage(craig);
   } else if (form === "secretsManager") {
     return SecretsManagerPage(craig);
+  } else if (form === "routingTables") {
+    return RoutingTablesPage(craig);
   } else if (form === "securityGroups") {
     return SecurityGroupPage(craig);
   } else if (form === "transitGateways") {

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, TextArea, Modal } from "@carbon/react";
 import { CheckmarkFilled, Misuse } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { IcseFormGroup, IcseHeading, IcseTextInput } from "icse-react-assets";
+import { IcseFormGroup, IcseTextInput } from "icse-react-assets";
 import { isInRange } from "lazy-z";
 import { slzToCraig, validate } from "../../lib";
 import { newResourceNameExp } from "../../lib/constants";

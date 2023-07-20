@@ -1,15 +1,12 @@
 import {
   AccessGroupForm,
-  EventStreamsForm,
   SshKeyForm,
   VpeForm,
   VpnGatewayForm,
-  RoutingTableForm,
   VsiLoadBalancerForm,
   VpnServerForm,
-  DnsForm,
 } from "icse-react-assets";
-import { splat, transpose, nestedSplat } from "lazy-z";
+import { splat, transpose } from "lazy-z";
 import {
   disableSave,
   forceShowForm,
@@ -34,12 +31,6 @@ import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
 import { invalidCrnList } from "../../lib/forms";
 import { NoSecretsManagerTile } from "../utils/NoSecretsManagerTile";
-import {
-  invalidDNSDescription,
-  invalidDnsZoneName,
-  nullOrEmptyStringCheckCallback,
-} from "../../lib/forms/invalid-callbacks";
-import { invalidDNSDescriptionText } from "../../lib/forms/text-callbacks";
 
 const pathToFormMap = {
   accessGroups: {
@@ -54,29 +45,11 @@ const pathToFormMap = {
     addText: "Create an SSH Key",
     innerForm: SshKeyForm,
   },
-  vpn: {
-    jsonField: "vpn_gateways",
-    name: "VPN Gateways",
-    addText: "Create a VPN Gateway",
-    innerForm: VpnGatewayForm,
-  },
-  eventStreams: {
-    jsonField: "event_streams",
-    name: "Event Streams",
-    addText: "Create an Event Streams Service",
-    innerForm: EventStreamsForm,
-  },
   vpe: {
     jsonField: "virtual_private_endpoints",
     name: "Virtual Private Endpoints",
     addText: "Create a VPE",
     innerForm: VpeForm,
-  },
-  routingTables: {
-    jsonField: "routing_tables",
-    name: "Routing Tables",
-    addText: "Create a Routing Table",
-    innerForm: RoutingTableForm,
   },
   lb: {
     jsonField: "load_balancers",
@@ -89,12 +62,6 @@ const pathToFormMap = {
     name: "VPN Servers",
     addText: "Create a VPN Server",
     innerForm: VpnServerForm,
-  },
-  dns: {
-    jsonField: "dns",
-    name: "DNS Service",
-    addText: "Create a DNS Service",
-    innerForm: DnsForm,
   },
 };
 /**
@@ -147,60 +114,6 @@ function formProps(form, craig) {
   setFormSubnetList(form, formTemplate, craig);
   setDeleteDisabledMessage(form, formTemplate);
   setFormSgList(form, formTemplate, craig);
-
-  if (form === "dns") {
-    let dnsProps = {
-      propsMatchState: propsMatchState,
-      invalidNameCallback: invalidName("dns"),
-      invalidNameTextCallback: invalidNameText("dns"),
-      zoneProps: {
-        craig: craig,
-        onSave: craig.dns.zones.save,
-        onDelete: craig.dns.zones.delete,
-        onSubmit: craig.dns.zones.create,
-        disableSave: disableSave,
-        invalidNameCallback: invalidDnsZoneName,
-        invalidNameTextCallback: invalidNameText("zones"),
-        invalidLabelCallback: nullOrEmptyStringCheckCallback("label"),
-        invalidLabelTextCallback: () => {
-          return "Label cannot be null or empty string.";
-        },
-        invalidDescriptionCallback: invalidDNSDescription,
-        invalidDescriptionTextCallback: invalidDNSDescriptionText,
-        vpcList: craig.store.vpcList,
-      },
-      recordProps: {
-        craig: craig,
-        onSave: craig.dns.records.save,
-        onDelete: craig.dns.records.delete,
-        onSubmit: craig.dns.records.create,
-        disableSave: disableSave,
-        invalidCallback: invalidName("records"),
-        invalidTextCallback: invalidNameText("records"),
-        invalidRdata: nullOrEmptyStringCheckCallback("rdata"),
-        invalidRdataText: () => {
-          return "Resource Data cannot be null or empty string.";
-        },
-        dnsZones: nestedSplat(craig.store.json.dns, "zones", "name"),
-      },
-      resolverProps: {
-        craig: craig,
-        onSave: craig.dns.custom_resolvers.save,
-        onDelete: craig.dns.custom_resolvers.delete,
-        onSubmit: craig.dns.custom_resolvers.create,
-        disableSave: disableSave,
-        invalidNameCallback: invalidName("custom_resolvers"),
-        invalidNameTextCallback: invalidNameText("custom_resolvers"),
-        invalidCallback: none, // these are only used on a select which handles its own invalid state
-        invalidTextCallback: none,
-        invalidDescriptionCallback: invalidDNSDescription,
-        invalidDescriptionTextCallback: invalidDNSDescriptionText,
-        subnetList: craig.getAllSubnets(),
-        vpcList: craig.store.vpcList,
-      },
-    };
-    transpose(dnsProps, formTemplate.innerFormProps);
-  }
 
   if (form === "vpe") {
     formTemplate.innerFormProps.secretsManagerInstances = splat(
@@ -282,27 +195,6 @@ function formProps(form, craig) {
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
     formTemplate.deleteDisabled = disableSshKeyDelete;
-  } else if (form === "eventStreams") {
-    let esInnerFormProps = {
-      invalidCallback: invalidName("event_streams"),
-      invalidTextCallback: invalidNameText("event_streams"),
-    };
-    transpose(esInnerFormProps, formTemplate.innerFormProps);
-  }
-  if (form === "routingTables") {
-    let routeFormProps = {
-      invalidRouteCallback: invalidName("routes"),
-      invalidRouteTextCallback: invalidNameText("routes"),
-      propsMatchState: propsMatchState,
-      routeProps: {
-        disableSave: disableSave,
-        onDelete: craig.routing_tables.routes.delete,
-        onSave: craig.routing_tables.routes.save,
-        onSubmit: craig.routing_tables.routes.create,
-        craig: craig,
-      },
-    };
-    transpose(routeFormProps, formTemplate.innerFormProps);
   } else if (form === "lb") {
     formTemplate.innerFormProps.vsiDeployments = craig.store.json.vsi;
   }

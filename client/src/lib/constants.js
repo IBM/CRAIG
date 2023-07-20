@@ -491,17 +491,14 @@ module.exports = {
     },
   ],
   arrayFormPages: [
-    "eventStreams",
     "nacls",
     "accessGroups",
-    "routingTables",
     "sshKeys",
     "subnets",
     "vpe",
     "vpn",
     "lb",
     "vpnServers",
-    "dns",
   ],
   resourceGroupForms: [
     "appID",
