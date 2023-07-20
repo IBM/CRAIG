@@ -327,8 +327,10 @@ class Craig extends React.Component {
                 "vpnGateways",
                 "resourceGroups",
                 "secretsManager",
+                "securityGroups",
                 "transitGateways",
                 "vpcs",
+                "vsi",
               ],
               this.props.params.form
             ) ? (

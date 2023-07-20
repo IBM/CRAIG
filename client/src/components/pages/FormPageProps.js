@@ -1,11 +1,9 @@
 import {
   AccessGroupForm,
   EventStreamsForm,
-  SecurityGroupForm,
   SshKeyForm,
   VpeForm,
   VpnGatewayForm,
-  VsiForm,
   RoutingTableForm,
   VsiLoadBalancerForm,
   VpnServerForm,
@@ -17,12 +15,9 @@ import {
   forceShowForm,
   invalidName,
   invalidNameText,
-  invalidSecurityGroupRuleName,
-  invalidSecurityGroupRuleText,
   invalidSshPublicKey,
   accessGroupPolicyHelperTextCallback,
   propsMatchState,
-  resourceGroupHelperTextCallback,
   invalidIdentityProviderURI,
   disableSshKeyDelete,
   setFormRgList,
@@ -53,12 +48,6 @@ const pathToFormMap = {
     addText: "Create an Access Group",
     innerForm: AccessGroupForm,
   },
-  vsi: {
-    jsonField: "vsi",
-    name: "Virtual Server Instances",
-    addText: "Create a VSI",
-    innerForm: VsiForm,
-  },
   sshKeys: {
     jsonField: "ssh_keys",
     name: "SSH Keys",
@@ -70,12 +59,6 @@ const pathToFormMap = {
     name: "VPN Gateways",
     addText: "Create a VPN Gateway",
     innerForm: VpnGatewayForm,
-  },
-  securityGroups: {
-    jsonField: "security_groups",
-    name: "Security Groups",
-    addText: "Create a Security Group",
-    innerForm: SecurityGroupForm,
   },
   eventStreams: {
     jsonField: "event_streams",
@@ -264,12 +247,6 @@ function formProps(form, craig) {
       },
     };
     transpose(vpnProps, formTemplate.innerFormProps);
-  } else if (form === "resourceGroups") {
-    formTemplate.deleteDisabled = () => {
-      return craig.store.json.resource_groups.length === 1;
-    };
-    formTemplate.innerFormProps.helperTextCallback =
-      resourceGroupHelperTextCallback;
   } else if (form === "accessGroups") {
     /* access groups */
     transpose(
@@ -305,45 +282,6 @@ function formProps(form, craig) {
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
     formTemplate.deleteDisabled = disableSshKeyDelete;
-  } else if (form === "securityGroups") {
-    let sgInnerFormProps = {
-      onSubmitCallback: craig.security_groups.rules.create,
-      onRuleSave: craig.security_groups.rules.save,
-      onRuleDelete: craig.security_groups.rules.delete,
-      disableModalSubmitCallback: none,
-      disableSaveCallback: function (stateData, componentProps) {
-        return (
-          propsMatchState("sg_rules", stateData, componentProps) ||
-          disableSave("sg_rules", stateData, componentProps)
-        );
-      },
-      invalidCallback: invalidName("security_groups"),
-      invalidRuleText: invalidSecurityGroupRuleName,
-      invalidTextCallback: invalidNameText("security_groups"),
-      invalidRuleTextCallback: invalidSecurityGroupRuleText,
-    };
-    formTemplate.isSecurityGroup = true;
-    transpose(sgInnerFormProps, formTemplate.innerFormProps);
-  } else if (form === "vsi") {
-    transpose(
-      {
-        sshKeys: craig.store.sshKeys,
-        apiEndpointImages: `/api/vsi/${craig.store.json._options.region}/images`,
-        apiEndpointInstanceProfiles: `/api/vsi/${craig.store.json._options.region}/instanceProfiles`,
-        invalidVsiVolumeCallback: invalidName("volume"),
-        invalidVsiVolumeTextCallback: invalidNameText("volume"),
-        propsMatchState: propsMatchState,
-        vsiVolumeProps: {
-          onSave: craig.vsi.volumes.save,
-          onDelete: craig.vsi.volumes.delete,
-          onSubmit: craig.vsi.volumes.create,
-          disableSave: disableSave,
-          encryptionKeys: craig.store.encryptionKeys,
-          craig: craig,
-        },
-      },
-      formTemplate.innerFormProps
-    );
   } else if (form === "eventStreams") {
     let esInnerFormProps = {
       invalidCallback: invalidName("event_streams"),

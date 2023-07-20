@@ -14,11 +14,13 @@ import {
   ClustersTemplate,
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
+  SecurityGroupTemplate,
   KeyManagementTemplate,
   ObjectStorageTemplate,
   TransitGatewayTemplate,
   VpnGatewayTemplate,
   VpcTemplate,
+  VsiTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { splat } from "lazy-z";
@@ -26,6 +28,8 @@ import {
   cosResourceHelperTextCallback,
   encryptionKeyFilter,
   invalidEncryptionKeyRing,
+  invalidSecurityGroupRuleName,
+  invalidSecurityGroupRuleText,
 } from "../../lib/forms";
 
 const AppIdPage = (craig) => {
@@ -194,6 +198,37 @@ const SecretsManagerPage = (craig) => {
   );
 };
 
+const SecurityGroupPage = (craig) => {
+  return (
+    <SecurityGroupTemplate
+      docs={RenderDocs("security_groups")}
+      security_groups={craig.store.json.security_groups}
+      disableSave={disableSave}
+      onDelete={craig.security_groups.delete}
+      onSave={craig.security_groups.save}
+      onSubmit={craig.security_groups.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      craig={craig}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      invalidCallback={invalidName("security_groups")}
+      invalidTextCallback={invalidNameText("security_groups")}
+      disableSaveCallback={function (stateData, componentProps) {
+        return (
+          propsMatchState("sg_rules", stateData, componentProps) ||
+          disableSave("sg_rules", stateData, componentProps)
+        );
+      }}
+      invalidRuleText={invalidSecurityGroupRuleName}
+      invalidRuleTextCallback={invalidSecurityGroupRuleText}
+      onSubmitCallback={craig.security_groups.rules.create}
+      onRuleSave={craig.security_groups.rules.save}
+      onRuleDelete={craig.security_groups.rules.delete}
+      vpcList={craig.store.vpcList}
+    />
+  );
+};
+
 const TransitGatewayPage = (craig) => {
   return (
     <TransitGatewayTemplate
@@ -257,6 +292,37 @@ const VpcPage = (craig) => {
   );
 };
 
+const VsiPage = (craig) => {
+  return (
+    <VsiTemplate
+      docs={RenderDocs("vsi")}
+      vsi={craig.store.json.vsi}
+      disableSave={disableSave}
+      onDelete={craig.vsi.delete}
+      onSave={craig.vsi.save}
+      onSubmit={craig.vsi.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      craig={craig}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      encryptionKeys={craig.store.encryptionKeys}
+      sshKeys={craig.store.sshKeys}
+      apiEndpointImages={`/api/vsi/${craig.store.json._options.region}/images`}
+      apiEndpointInstanceProfiles={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
+      invalidCallback={invalidName("vsi")}
+      invalidTextCallback={invalidNameText("vsi")}
+      invalidVolumeCallback={invalidName("volume")}
+      invalidVolumeTextCallback={invalidNameText("volume")}
+      onVolumeSave={craig.vsi.volumes.save}
+      onVolumeDelete={craig.vsi.volumes.delete}
+      onVolumeCreate={craig.vsi.volumes.create}
+      vpcList={craig.store.vpcList}
+      subnetList={craig.getAllSubnets()}
+      securityGroups={craig.store.json.security_groups}
+    />
+  );
+};
+
 export const NewFormPage = (props) => {
   let { form, craig } = props;
   if (form === "appID") {
@@ -271,11 +337,15 @@ export const NewFormPage = (props) => {
     return ResourceGroupPage(craig);
   } else if (form === "secretsManager") {
     return SecretsManagerPage(craig);
+  } else if (form === "securityGroups") {
+    return SecurityGroupPage(craig);
   } else if (form === "transitGateways") {
     return TransitGatewayPage(craig);
   } else if (form === "vpnGateways") {
     return VpnGatewayPage(craig);
   } else if (form === "vpcs") {
     return VpcPage(craig);
+  } else if (form === "vsi") {
+    return VsiPage(craig);
   }
 };

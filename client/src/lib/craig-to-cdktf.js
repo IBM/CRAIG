@@ -202,7 +202,6 @@ function craigToVpcModuleCdktf(craig) {
  */
 function craigToCdktf(craig) {
   let tags = craig._options.tags;
-  let prefix = craig._options.prefix;
   let cdktfJson = {
     provider: {
       ibm: [
@@ -793,6 +792,9 @@ function craigToCdktf(craig) {
       cbrRule.name,
       cbrRule.data
     );
+  });
+  eachKey(cdktfJson.variable, (tfVar) => {
+    delete cdktfJson.variable[tfVar].validation;
   });
 
   return cdktfJson;
