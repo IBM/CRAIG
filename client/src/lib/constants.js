@@ -497,7 +497,6 @@ module.exports = {
     "subnets",
     "vpe",
     "vpn",
-    "lb",
     "vpnServers",
   ],
   resourceGroupForms: [

@@ -2,8 +2,6 @@ import {
   AccessGroupForm,
   SshKeyForm,
   VpeForm,
-  VpnGatewayForm,
-  VsiLoadBalancerForm,
   VpnServerForm,
 } from "icse-react-assets";
 import { splat, transpose } from "lazy-z";
@@ -50,12 +48,6 @@ const pathToFormMap = {
     name: "Virtual Private Endpoints",
     addText: "Create a VPE",
     innerForm: VpeForm,
-  },
-  lb: {
-    jsonField: "load_balancers",
-    name: "VPC Load Balancers",
-    addText: "Create a Load Balancer",
-    innerForm: VsiLoadBalancerForm,
   },
   vpnServers: {
     jsonField: "vpn_servers",
@@ -195,8 +187,6 @@ function formProps(form, craig) {
   } else if (form === "sshKeys") {
     formTemplate.innerFormProps.invalidKeyCallback = invalidSshPublicKey;
     formTemplate.deleteDisabled = disableSshKeyDelete;
-  } else if (form === "lb") {
-    formTemplate.innerFormProps.vsiDeployments = craig.store.json.vsi;
   }
 
   return formTemplate;

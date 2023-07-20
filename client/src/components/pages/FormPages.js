@@ -24,6 +24,7 @@ import {
   VpnGatewayTemplate,
   VpcTemplate,
   VsiTemplate,
+  VsiLoadBalancerTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { nestedSplat, splat } from "lazy-z";
@@ -189,6 +190,28 @@ const KeyManagementPage = (craig) => {
       onKeySave={craig.key_management.keys.save}
       onKeyDelete={craig.key_management.keys.delete}
       onKeySubmit={craig.key_management.keys.create}
+    />
+  );
+};
+
+const LoadBalancerPage = (craig) => {
+  return (
+    <VsiLoadBalancerTemplate
+      docs={RenderDocs("load_balancers")}
+      load_balancers={craig.store.json.load_balancers}
+      disableSave={disableSave}
+      onDelete={craig.load_balancers.delete}
+      onSave={craig.load_balancers.save}
+      onSubmit={craig.load_balancers.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      craig={craig}
+      invalidCallback={invalidName("load_balancers")}
+      invalidTextCallback={invalidNameText("load_balancers")}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      vpcList={craig.store.vpcList}
+      securityGroups={craig.store.json.security_groups}
+      vsiDeployments={craig.store.json.vsi}
     />
   );
 };
@@ -420,6 +443,7 @@ const VsiPage = (craig) => {
 
 export const NewFormPage = (props) => {
   let { form, craig } = props;
+
   if (form === "appID") {
     return AppIdPage(craig);
   } else if (form === "clusters") {
@@ -430,6 +454,8 @@ export const NewFormPage = (props) => {
     return EventStreamsPage(craig);
   } else if (form === "keyManagement") {
     return KeyManagementPage(craig);
+  } else if (form === "lb") {
+    return LoadBalancerPage(craig);
   } else if (form === "objectStorage") {
     return ObjectStoragePage(craig);
   } else if (form === "resourceGroups") {
