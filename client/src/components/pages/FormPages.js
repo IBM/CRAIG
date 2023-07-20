@@ -22,6 +22,7 @@ import {
   SubnetPageTemplate,
   KeyManagementTemplate,
   NetworkAclTemplate,
+  RoutingTableTemplate,
   ObjectStorageTemplate,
   RoutingTableTemplate,
   SshKeysTemplate,
