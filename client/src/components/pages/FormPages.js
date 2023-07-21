@@ -22,6 +22,7 @@ import {
   ObjectStorageTemplate,
   TransitGatewayTemplate,
   VpnGatewayTemplate,
+  VpnServerTemplate,
   VpcTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
@@ -31,12 +32,14 @@ import { nestedSplat, splat } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   encryptionKeyFilter,
+  invalidCidrBlock,
   invalidDnsZoneName,
   invalidEncryptionKeyRing,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
 } from "../../lib/forms";
 import {
+  invalidCrnList,
   invalidDNSDescription,
   nullOrEmptyStringCheckCallback,
 } from "../../lib/forms/invalid-callbacks";
@@ -62,6 +65,7 @@ const AppIdPage = (craig) => {
       onKeySave={craig.appid.keys.save}
       onKeyDelete={craig.appid.keys.delete}
       onKeySubmit={craig.appid.keys.create}
+      encryptionKeys={craig.store.encryptionKeys}
     />
   );
 };
@@ -390,6 +394,36 @@ const VpnGatewayPage = (craig) => {
   );
 };
 
+const VpnServerPage = (craig) => {
+  return (
+    <VpnServerTemplate
+      noSecretsManager={craig.store.json.secrets_manager.length === 0}
+      vpn_servers={craig.store.json.vpn_servers}
+      disableSave={disableSave}
+      onDelete={craig.vpn_servers.delete}
+      onSave={craig.vpn_servers.save}
+      onSubmit={craig.vpn_servers.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      invalidCallback={invalidName("vpn_servers")}
+      invalidTextCallback={invalidNameText("vpn_servers")}
+      craig={craig}
+      docs={RenderDocs("vpn_servers")}
+      invalidCidrBlock={invalidCidrBlock}
+      invalidCrnList={invalidCrnList}
+      onRouteSave={craig.vpn_servers.routes.save}
+      onRouteDelete={craig.vpn_servers.routes.delete}
+      onRouteSubmit={craig.vpn_servers.routes.create}
+      invalidRouteCallback={invalidName("vpn_server_routes")}
+      invalidRouteTextCallback={invalidNameText("vpn_server_routes")}
+      subnetList={craig.getAllSubnets()}
+      vpcList={craig.store.vpcList}
+      securityGroups={craig.store.json.security_groups}
+    />
+  );
+};
+
 const VpcPage = (craig) => {
   return (
     <VpcTemplate
@@ -435,8 +469,8 @@ const VsiPage = (craig) => {
       onVolumeDelete={craig.vsi.volumes.delete}
       onVolumeCreate={craig.vsi.volumes.create}
       vpcList={craig.store.vpcList}
-      subnetList={craig.getAllSubnets()}
       securityGroups={craig.store.json.security_groups}
+      subnetList={craig.getAllSubnets()}
     />
   );
 };
@@ -468,10 +502,12 @@ export const NewFormPage = (props) => {
     return SecurityGroupPage(craig);
   } else if (form === "transitGateways") {
     return TransitGatewayPage(craig);
-  } else if (form === "vpnGateways") {
-    return VpnGatewayPage(craig);
   } else if (form === "vpcs") {
     return VpcPage(craig);
+  } else if (form === "vpn") {
+    return VpnGatewayPage(craig);
+  } else if (form === "vpnServers") {
+    return VpnServerPage(craig);
   } else if (form === "vsi") {
     return VsiPage(craig);
   }

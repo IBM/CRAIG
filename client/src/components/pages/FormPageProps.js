@@ -21,14 +21,11 @@ import {
   setFormEncryptionKeyList,
   setFormSubnetList,
   setDeleteDisabledMessage,
-  invalidCidrBlock,
   setFormSgList,
 } from "../../lib";
 import NaclForm from "../forms/NaclForm";
 import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
-import { invalidCrnList } from "../../lib/forms";
-import { NoSecretsManagerTile } from "../utils/NoSecretsManagerTile";
 
 const pathToFormMap = {
   accessGroups: {
@@ -48,12 +45,6 @@ const pathToFormMap = {
     name: "Virtual Private Endpoints",
     addText: "Create a VPE",
     innerForm: VpeForm,
-  },
-  vpnServers: {
-    jsonField: "vpn_servers",
-    name: "VPN Servers",
-    addText: "Create a VPN Server",
-    innerForm: VpnServerForm,
   },
 };
 /**
@@ -114,45 +105,7 @@ function formProps(form, craig) {
     );
   }
 
-  if (form === "vpnServers") {
-    if (craig.store.json.secrets_manager.length === 0) {
-      formTemplate.hideFormTitleButton = true;
-      formTemplate.overrideTile = <NoSecretsManagerTile />;
-    }
-    let vpnProps = {
-      invalidClientIpPoolTextCallback: function (stateData) {
-        return invalidCidrBlock(stateData.client_ip_pool)
-          ? "Invalid CIDR block"
-          : "";
-      },
-      invalidClientIpPoolCallback: function (stateData) {
-        return invalidCidrBlock(stateData.client_ip_pool);
-      },
-      invalidCrns: function (stateData, componentProps, field) {
-        return invalidCrnList([stateData[field]]);
-      },
-      invalidCrnText: function (stateData, componentProps, field) {
-        return invalidCrnList([stateData[field]])
-          ? "Enter a valid resource CRN"
-          : "";
-      },
-      propsMatchState: propsMatchState,
-      vpnServerRouteProps: {
-        onSave: craig.vpn_servers.routes.save,
-        onSubmit: craig.vpn_servers.routes.create,
-        onDelete: craig.vpn_servers.routes.delete,
-        disableSave: function (field, stateData, componentProps) {
-          // pass through function to change field name
-          return disableSave("vpn_server_routes", stateData, componentProps);
-        },
-        invalidTextCallback: invalidNameText("vpn_server_routes"),
-        invalidCallback: invalidName("vpn_server_routes"),
-        propsMatchState: propsMatchState,
-        craig: craig,
-      },
-    };
-    transpose(vpnProps, formTemplate.innerFormProps);
-  } else if (form === "accessGroups") {
+  if (form === "accessGroups") {
     /* access groups */
     transpose(
       {

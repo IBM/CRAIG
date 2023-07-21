@@ -490,15 +490,7 @@ module.exports = {
       icmp: { code: null, type: null },
     },
   ],
-  arrayFormPages: [
-    "nacls",
-    "accessGroups",
-    "sshKeys",
-    "subnets",
-    "vpe",
-    "vpn",
-    "vpnServers",
-  ],
+  arrayFormPages: ["nacls", "accessGroups", "sshKeys", "subnets", "vpe"],
   resourceGroupForms: [
     "appID",
     "eventStreams",
