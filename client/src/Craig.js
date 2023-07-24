@@ -320,6 +320,7 @@ class Craig extends React.Component {
             />
           ) : contains(
               [
+                "accessGroups",
                 "appID",
                 "clusters",
                 "dns",
@@ -336,6 +337,8 @@ class Craig extends React.Component {
                 "vpnServers",
                 "vsi",
                 "lb",
+                "nacls",
+                "sshKeys",
               ],
               this.props.params.form
             ) ? (

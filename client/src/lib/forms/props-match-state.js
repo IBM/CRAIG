@@ -18,6 +18,9 @@ function propsMatchState(field, stateData, componentProps) {
         stateData[field] = null;
       }
     });
+    // add array items from component props to state data to prevent an issue where
+    // unchanged referenced the following arrays would create a case where
+    // propsMatchState would always be false on the VPC page
     stateData.address_prefixes = componentProps.data.address_prefixes;
     stateData.subnets = componentProps.data.subnets;
     stateData.acls = componentProps.data.acls;

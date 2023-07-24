@@ -7,7 +7,6 @@ import {
 import PropTypes from "prop-types";
 import toggleFormProps from "./ToggleFormPageProps";
 import formProps from "./FormPageProps";
-import { CopyRuleForm } from "../forms";
 import { Docs } from "icse-react-assets";
 import { NoEdgeNetworkTile } from "../utils/NoEdgeNetworkTile";
 const { docs } = require("../../lib");
@@ -30,15 +29,7 @@ ToggleFormPage.propTypes = {
 };
 
 export const FormPage = (props) => {
-  return (
-    <>
-      <IcseFormTemplate {...formProps(props.form, props.craig)} />
-      {props.form === "securityGroups" &&
-        props.craig.store.json.security_groups.length > 0 && (
-          <CopyRuleForm craig={props.craig} isAclForm={false} />
-        )}
-    </>
-  );
+  return <IcseFormTemplate {...formProps(props.form, props.craig)} />;
 };
 
 FormPage.propTypes = {

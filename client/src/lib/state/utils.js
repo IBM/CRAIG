@@ -10,6 +10,24 @@ const {
 } = require("lazy-z");
 
 /**
+ * set kms from encryption key on store update
+ * @param {*} instance
+ * @param {*} config
+ */
+function setKmsFromKeyOnStoreUpdate(serviceInstance, config) {
+  serviceInstance.kms = null;
+  config.store.json.key_management.forEach((instance) => {
+    if (splatContains(instance.keys, "name", serviceInstance.encryption_key)) {
+      serviceInstance.kms = instance.name;
+    }
+  });
+  if (!serviceInstance.kms) {
+    serviceInstance.kms = null;
+    serviceInstance.encryption_key = null;
+  }
+}
+
+/**
  * validate rule
  * @param {Object} networkRule
  * @param {Object} componentProps
@@ -334,4 +352,5 @@ module.exports = {
   eachRuleProtocol,
   buildSubnetTiers,
   saveAdvancedSubnetTier,
+  setKmsFromKeyOnStoreUpdate,
 };

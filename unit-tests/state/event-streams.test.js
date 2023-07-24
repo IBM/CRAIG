@@ -36,6 +36,8 @@ describe("event_streams", () => {
           {
             name: "default",
             resource_group: null,
+            kms: null,
+            encryption_key: null,
           },
         ],
         "it should create event_streams"
@@ -53,6 +55,8 @@ describe("event_streams", () => {
           {
             name: "default",
             resource_group: "service-rg",
+            kms: null,
+            encryption_key: null,
           },
         ],
         "it should create event_streams"

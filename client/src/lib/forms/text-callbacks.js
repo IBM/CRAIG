@@ -141,7 +141,10 @@ function invalidNameText(field, craig) {
 
 /**
  * get cos resource helper text
+ * function only uses stateData and componentProps, can this be moved to
+ * icse-react-assets?
  * @param {*} stateData
+ * @param {*} componentProps
  * @returns {string} composed helper text
  */
 function cosResourceHelperTextCallback(stateData, componentProps) {

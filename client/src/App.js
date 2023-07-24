@@ -6,7 +6,11 @@ import "./app.scss";
 import { ResetState } from "./components";
 import { Buffer } from "buffer";
 import Tutorial from "./components/pages/tutorial/Tutorial";
-window.Buffer = Buffer;
+window.Buffer = Buffer; // Buffer is used to download zip file
+
+/**
+ * This file contains the front-end routing for CRAIG
+ */
 
 class App extends Component {
   constructor(props) {

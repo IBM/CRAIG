@@ -10,6 +10,7 @@ import {
   resourceGroupHelperTextCallback,
 } from "../../lib";
 import {
+  AccessGroupsTemplate,
   AppIdTemplate,
   ClustersTemplate,
   DnsTemplate,
@@ -18,8 +19,10 @@ import {
   SecretsManagerTemplate,
   SecurityGroupTemplate,
   KeyManagementTemplate,
-  RoutingTableTemplate,
+  NetworkAclTemplate,
   ObjectStorageTemplate,
+  RoutingTableTemplate,
+  SshKeysTemplate,
   TransitGatewayTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
@@ -31,6 +34,7 @@ import { RenderDocs } from "./SimplePages";
 import { nestedSplat, splat } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
+  disableSshKeyDelete,
   encryptionKeyFilter,
   invalidCidrBlock,
   invalidDnsZoneName,
@@ -41,9 +45,48 @@ import {
 import {
   invalidCrnList,
   invalidDNSDescription,
+  invalidIdentityProviderURI,
+  invalidSshPublicKey,
   nullOrEmptyStringCheckCallback,
 } from "../../lib/forms/invalid-callbacks";
-import { invalidDNSDescriptionText } from "../../lib/forms/text-callbacks";
+import {
+  accessGroupPolicyHelperTextCallback,
+  aclHelperTextCallback,
+  invalidDNSDescriptionText,
+} from "../../lib/forms/text-callbacks";
+import { CopyRuleForm } from "../forms";
+
+const AccessGroupsPage = (craig) => {
+  return (
+    <AccessGroupsTemplate
+      docs={RenderDocs("access_groups")}
+      access_groups={craig.store.json.access_groups}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      onDelete={craig.access_groups.delete}
+      onSave={craig.access_groups.save}
+      onSubmit={craig.access_groups.create}
+      invalidCallback={invalidName("access_groups")}
+      invalidTextCallback={invalidNameText("access_groups")}
+      invalidPolicyCallback={invalidName("policies")}
+      invalidPolicyTextCallback={invalidNameText("policies")}
+      policyHelperTextCallback={accessGroupPolicyHelperTextCallback}
+      onPolicyDelete={craig.access_groups.policies.delete}
+      onPolicySave={craig.access_groups.policies.save}
+      onPolicySubmit={craig.access_groups.policies.create}
+      craig={craig}
+      forceOpen={forceShowForm}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      invalidDynamicPolicyCallback={invalidName("dynamic_policies")}
+      invalidDynamicPolicyTextCallback={invalidNameText("dynamic_policies")}
+      dynamicPolicyHelperTextCallback={accessGroupPolicyHelperTextCallback}
+      invalidIdentityProviderCallback={invalidIdentityProviderURI}
+      onDynamicPolicyDelete={craig.access_groups.dynamic_policies.delete}
+      onDynamicPolicySave={craig.access_groups.dynamic_policies.save}
+      onDynamicPolicySubmit={craig.access_groups.dynamic_policies.create}
+    />
+  );
+};
 
 const AppIdPage = (craig) => {
   return (
@@ -198,6 +241,32 @@ const KeyManagementPage = (craig) => {
   );
 };
 
+const NetworkAclPage = (craig) => {
+  return (
+    <NetworkAclTemplate
+      vpcs={craig.store.json.vpcs}
+      docs={RenderDocs("acls")}
+      forceOpen={forceShowForm}
+      craig={craig}
+      onAclSubmit={craig.vpcs.acls.create}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      child={CopyRuleForm}
+      invalidTextCallback={invalidNameText("acls")}
+      invalidCallback={invalidName("acls")}
+      invalidRuleTextCallback={invalidNameText("acl_rules")}
+      invalidRuleText={invalidName("acl_rules")}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      helperTextCallback={aclHelperTextCallback}
+      onRuleSave={craig.vpcs.acls.rules.save}
+      onRuleDelete={craig.vpcs.acls.rules.delete}
+      onSubmitCallback={craig.vpcs.acls.rules.create}
+      onSave={craig.vpcs.acls.save}
+      onDelete={craig.vpcs.acls.delete}
+    />
+  );
+};
+
 const LoadBalancerPage = (craig) => {
   return (
     <VsiLoadBalancerTemplate
@@ -322,31 +391,57 @@ const SecretsManagerPage = (craig) => {
 
 const SecurityGroupPage = (craig) => {
   return (
-    <SecurityGroupTemplate
-      docs={RenderDocs("security_groups")}
-      security_groups={craig.store.json.security_groups}
+    <>
+      <SecurityGroupTemplate
+        docs={RenderDocs("security_groups")}
+        security_groups={craig.store.json.security_groups}
+        disableSave={disableSave}
+        onDelete={craig.security_groups.delete}
+        onSave={craig.security_groups.save}
+        onSubmit={craig.security_groups.create}
+        propsMatchState={propsMatchState}
+        forceOpen={forceShowForm}
+        craig={craig}
+        resourceGroups={splat(craig.store.json.resource_groups, "name")}
+        invalidCallback={invalidName("security_groups")}
+        invalidTextCallback={invalidNameText("security_groups")}
+        disableSaveCallback={function (stateData, componentProps) {
+          return (
+            propsMatchState("sg_rules", stateData, componentProps) ||
+            disableSave("sg_rules", stateData, componentProps)
+          );
+        }}
+        invalidRuleText={invalidSecurityGroupRuleName}
+        invalidRuleTextCallback={invalidSecurityGroupRuleText}
+        onSubmitCallback={craig.security_groups.rules.create}
+        onRuleSave={craig.security_groups.rules.save}
+        onRuleDelete={craig.security_groups.rules.delete}
+        vpcList={craig.store.vpcList}
+      />
+      {craig.store.json.security_groups.length > 0 && (
+        <CopyRuleForm craig={craig} isAclForm={false} />
+      )}
+    </>
+  );
+};
+
+const SshKeysPage = (craig) => {
+  return (
+    <SshKeysTemplate
+      ssh_keys={craig.store.json.ssh_keys}
       disableSave={disableSave}
-      onDelete={craig.security_groups.delete}
-      onSave={craig.security_groups.save}
-      onSubmit={craig.security_groups.create}
+      onDelete={craig.ssh_keys.delete}
+      onSave={craig.ssh_keys.save}
+      onSubmit={craig.ssh_keys.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      craig={craig}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("security_groups")}
-      invalidTextCallback={invalidNameText("security_groups")}
-      disableSaveCallback={function (stateData, componentProps) {
-        return (
-          propsMatchState("sg_rules", stateData, componentProps) ||
-          disableSave("sg_rules", stateData, componentProps)
-        );
-      }}
-      invalidRuleText={invalidSecurityGroupRuleName}
-      invalidRuleTextCallback={invalidSecurityGroupRuleText}
-      onSubmitCallback={craig.security_groups.rules.create}
-      onRuleSave={craig.security_groups.rules.save}
-      onRuleDelete={craig.security_groups.rules.delete}
-      vpcList={craig.store.vpcList}
+      invalidCallback={invalidName("ssh_keys")}
+      invalidTextCallback={invalidNameText("ssh_keys")}
+      craig={craig}
+      docs={RenderDocs("ssh_keys")}
+      deleteDisabled={disableSshKeyDelete}
+      invalidKeyCallback={invalidSshPublicKey}
     />
   );
 };
@@ -478,7 +573,9 @@ const VsiPage = (craig) => {
 export const NewFormPage = (props) => {
   let { form, craig } = props;
 
-  if (form === "appID") {
+  if (form === "accessGroups") {
+    return AccessGroupsPage(craig);
+  } else if (form === "appID") {
     return AppIdPage(craig);
   } else if (form === "clusters") {
     return ClusterPage(craig);
@@ -490,6 +587,8 @@ export const NewFormPage = (props) => {
     return KeyManagementPage(craig);
   } else if (form === "lb") {
     return LoadBalancerPage(craig);
+  } else if (form === "nacls") {
+    return NetworkAclPage(craig);
   } else if (form === "objectStorage") {
     return ObjectStoragePage(craig);
   } else if (form === "resourceGroups") {
@@ -500,6 +599,8 @@ export const NewFormPage = (props) => {
     return RoutingTablesPage(craig);
   } else if (form === "securityGroups") {
     return SecurityGroupPage(craig);
+  } else if (form === "sshKeys") {
+    return SshKeysPage(craig);
   } else if (form === "transitGateways") {
     return TransitGatewayPage(craig);
   } else if (form === "vpcs") {

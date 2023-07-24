@@ -6,7 +6,7 @@ const {
   transpose,
   revision,
 } = require("lazy-z");
-const { addVsiEncryptionKey, newF5Vsi } = require("../builders");
+const { newF5Vsi } = require("../builders");
 const {
   hasUnfoundVpc,
   setValidSshKeys,
@@ -67,7 +67,15 @@ function f5VsiCreate(config, stateData) {
   config.store.f5_on_management = useManagement;
   // add encryption key if not
   if (!contains(config.store.encryptionKeys, "vsi-volume-key")) {
-    addVsiEncryptionKey(config);
+    config.store.json.key_management[0].keys.push({
+      key_ring: "ring",
+      name: "vsi-volume-key",
+      root_key: true,
+      force_delete: null,
+      endpoint: "public",
+      rotation: 1,
+      dual_auth_delete: false,
+    });
     config.store.encryptionKeys.push("vsi-volume-key");
   }
   if (isEmpty(config.store.json.ssh_keys)) {

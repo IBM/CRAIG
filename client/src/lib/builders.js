@@ -4,7 +4,6 @@ const {
   azsort,
   parseIntFromZone,
 } = require("lazy-z");
-const { lazyZstate } = require("lazy-z/lib/store");
 const { firewallTiers } = require("./state/defaults");
 
 /**
@@ -71,22 +70,6 @@ function buildSubnet(
     public_gateway: addPublicGateway || false,
     has_prefix: addPrefix || true,
   };
-}
-
-/**
- * add the default vsi encryption key
- * @param {lazyZstate} parent state store
- */
-function addVsiEncryptionKey(parent) {
-  parent.store.json.key_management[0].keys.push({
-    key_ring: "ring",
-    name: "vsi-volume-key",
-    root_key: true,
-    force_delete: null,
-    endpoint: "public",
-    rotation: 1,
-    dual_auth_delete: false,
-  });
 }
 
 /**
@@ -163,6 +146,5 @@ function newF5Vsi(pattern, zone, useManagementVpc, params) {
 module.exports = {
   buildNewEncryptionKey,
   buildSubnet,
-  addVsiEncryptionKey,
   newF5Vsi,
 };

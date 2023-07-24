@@ -132,6 +132,7 @@ function setEncryptionKeys(config) {
  * @param {object} stateData component state data
  */
 function kmsKeyCreate(config, stateData, componentProps) {
+  // buildNewEncryptionKey code can be moved here, not used elsewhere
   let newKey = buildNewEncryptionKey(stateData);
   pushToChildFieldModal(
     config,

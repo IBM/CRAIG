@@ -54,12 +54,7 @@ const {
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
 const { docsToMd, allDocs } = require("./docs-to-md");
-const {
-  buildNewEncryptionKey,
-  buildSubnet,
-  addVsiEncryptionKey,
-  newF5Vsi,
-} = require("./builders");
+const { buildNewEncryptionKey, buildSubnet, newF5Vsi } = require("./builders");
 const changelogToMarkdown = require("./changelog-to-markdown");
 const constants = require("./constants");
 const {
@@ -158,7 +153,6 @@ module.exports = {
   allDocs,
   buildNewEncryptionKey,
   buildSubnet,
-  addVsiEncryptionKey,
   newF5Vsi,
   changelogToMarkdown,
   constants,

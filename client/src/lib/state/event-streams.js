@@ -1,4 +1,6 @@
+const { splatContains } = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
+const { setKmsFromKeyOnStoreUpdate } = require("./utils");
 
 /**
  * event streams on store update
@@ -10,6 +12,7 @@ const { setUnfoundResourceGroup } = require("./store.utils");
 function eventStreamsOnStoreUpdate(config) {
   config.store.json.event_streams.forEach((eventStreams) => {
     setUnfoundResourceGroup(config, eventStreams);
+    setKmsFromKeyOnStoreUpdate(eventStreams, config);
   });
 }
 

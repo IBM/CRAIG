@@ -1,5 +1,6 @@
 const { splatContains } = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
+const { setKmsFromKeyOnStoreUpdate } = require("./utils");
 
 /**
  * event streams on store update
@@ -11,16 +12,7 @@ const { setUnfoundResourceGroup } = require("./store.utils");
 function secretsManagerOnStoreUpdate(config) {
   config.store.json.secrets_manager.forEach((secretsManager) => {
     setUnfoundResourceGroup(config, secretsManager);
-    secretsManager.kms = null;
-    config.store.json.key_management.forEach((instance) => {
-      if (splatContains(instance.keys, "name", secretsManager.encryption_key)) {
-        secretsManager.kms = instance.name;
-      }
-    });
-    if (!secretsManager.kms) {
-      secretsManager.kms = null;
-      secretsManager.encryption_key = null;
-    }
+    setKmsFromKeyOnStoreUpdate(secretsManager, config);
     if (!secretsManager.secrets) {
       secretsManager.secrets = [];
     }

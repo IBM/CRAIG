@@ -17,7 +17,8 @@ function notificationText(pathname) {
 }
 
 /**
- *
+ * get cos instance from bucket name
+ * this function can be moved to `/state/logging-monitoring`, unused elsewhere
  * @param {String} name
  * @param {Array} objectStoreArray
  * @returns cos name that is associated with supplied bucket name, or null if no instance found
