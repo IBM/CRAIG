@@ -333,6 +333,7 @@ class Craig extends React.Component {
                 "securityGroups",
                 "transitGateways",
                 "vpcs",
+                "vpe",
                 "vpn",
                 "vpnServers",
                 "vsi",

@@ -1,5 +1,3 @@
-import { VpeForm } from "icse-react-assets";
-import { splat } from "lazy-z";
 import {
   forceShowForm,
   setFormRgList,
@@ -14,12 +12,6 @@ import SubnetForm from "../forms/SubnetForm";
 import { RenderDocs } from "./SimplePages";
 
 const pathToFormMap = {
-  vpe: {
-    jsonField: "virtual_private_endpoints",
-    name: "Virtual Private Endpoints",
-    addText: "Create a VPE",
-    innerForm: VpeForm,
-  },
 };
 /**
  * create form template props for form page
@@ -72,12 +64,6 @@ function formProps(form, craig) {
   setDeleteDisabledMessage(form, formTemplate);
   setFormSgList(form, formTemplate, craig);
 
-  if (form === "vpe") {
-    formTemplate.innerFormProps.secretsManagerInstances = splat(
-      craig.store.json.secrets_manager,
-      "name"
-    );
-  }
 
   return formTemplate;
 }

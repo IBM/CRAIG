@@ -27,6 +27,7 @@ import {
   VpnGatewayTemplate,
   VpnServerTemplate,
   VpcTemplate,
+  VpeTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
 } from "icse-react-assets";
@@ -539,6 +540,29 @@ const VpcPage = (craig) => {
   );
 };
 
+const VpePage = (craig) => {
+  return (
+    <VpeTemplate
+      docs={RenderDocs("vpe")}
+      vpe={craig.store.json.vpe}
+      disableSave={disableSave}
+      onDelete={craig.vpe.delete}
+      onSave={craig.vpe.save}
+      onSubmit={craig.vpe.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      craig={craig}
+      invalidCallback={invalidName("vpe")}
+      invalidTextCallback={invalidNameText("vpe")}
+      vpcList={craig.store.vpcList}
+      subnetList={craig.getAllSubnets()}
+      securityGroups={craig.store.json.security_groups}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      secretsManagerInstances={splat(craig.store.json.secrets_manager, "name")}
+    />
+  );
+};
+
 const VsiPage = (craig) => {
   return (
     <VsiTemplate
@@ -605,6 +629,8 @@ export const NewFormPage = (props) => {
     return TransitGatewayPage(craig);
   } else if (form === "vpcs") {
     return VpcPage(craig);
+  } else if (form === "vpe") {
+    return VpePage(craig);
   } else if (form === "vpn") {
     return VpnGatewayPage(craig);
   } else if (form === "vpnServers") {
