@@ -21,11 +21,19 @@ fi
 # checking for failed unit tests
 formatted_print "Running Unit Tests"
 TEST_OUTPUT=$(npm run coverage)
-GREP_OUTPUT=$(echo "$TEST_OUTPUT" | tee /dev/tty | grep failing) > /dev/null
-if [[ -n "$GREP_OUTPUT" ]]; then
+TEST_GREP_OUTPUT=$(echo "$TEST_OUTPUT" | tee /dev/tty | grep failing) > /dev/null
+if [[ -n "$TEST_GREP_OUTPUT" ]]; then
   formatted_print "Failing unit test(s) found"
-  echo "$TEST_OUTPUT" | awk '/'"$GREP_OUTPUT"'/ {flag=1;next} /----------------------------|---------|----------|---------|---------|-------------------/ {flag=0} flag {print}'
+  echo "$TEST_OUTPUT" | awk '/'"$TEST_GREP_OUTPUT"'/ {flag=1;next} /----------------------------|---------|----------|---------|---------|-------------------/ {flag=0} flag {print}'
   formatted_print "Commit failed during unit tests" > /dev/stderr
+  exit 1
+fi
+
+COVERAGE_GREP_OUTPUT=$(npm run coverage 2>&1 | grep ERROR)
+if [[ -n "$COVERAGE_GREP_OUTPUT" ]]; then
+  formatted_print "Code coverage does not meet threshold"
+  echo "\n$COVERAGE_GREP_OUTPUT"
+  formatted_print "Commit failed during code coverage" > /dev/stderr
   exit 1
 fi
 

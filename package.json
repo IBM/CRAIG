@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha unit-tests/ --recursive",
-    "coverage": "npx nyc npm run test",
+    "coverage": "npx nyc --check-coverage=true npm run test",
     "build": "npm i && cd client && npm i && npm run build && cp -r build ../",
     "client": "npm run build && open http://localhost:3000",
     "start": "NODE_ENV=production && npm run build && node server.js",
@@ -53,5 +53,11 @@
     "prettier": "^2.8.8",
     "sinon": "^15.0.1",
     "tfxjs": "^1.1.0"
+  },
+  "nyc": {
+    "branches": 100,
+    "lines": 100,
+    "functions": 100,
+    "statements": 100
   }
 }
