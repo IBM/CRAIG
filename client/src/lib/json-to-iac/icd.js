@@ -1,18 +1,8 @@
-const {
-  getObjectFromArray,
-  splat,
-  distinct,
-  contains,
-  eachKey,
-} = require("lazy-z");
+const { contains, eachKey } = require("lazy-z");
 const {
   rgIdRef,
-  kebabName,
-  useData,
-  resourceRef,
   dataResourceName,
   tfBlock,
-  tfDone,
   jsonToTfPrint,
   getResourceOrData,
   encryptionKeyRef,

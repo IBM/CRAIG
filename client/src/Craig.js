@@ -318,34 +318,8 @@ class Craig extends React.Component {
               projects={this.state.projects}
               nav={this.props.craigRouter.nav}
             />
-          ) : contains(
-              [
-                "accessGroups",
-                "appID",
-                "clusters",
-                "dns",
-                "eventStreams",
-                "keyManagement",
-                "objectStorage",
-                "resourceGroups",
-                "routingTables",
-                "secretsManager",
-                "securityGroups",
-                "transitGateways",
-                "vpcs",
-                "vpe",
-                "vpn",
-                "vpnServers",
-                "vsi",
-                "lb",
-                "nacls",
-                "sshKeys",
-              ],
-              this.props.params.form
-            ) ? (
+          ) : this.props.params.form ? (
             <NewFormPage form={this.props.params.form} craig={craig} />
-          ) : contains(constants.arrayFormPages, this.props.params.form) ? (
-            <FormPage craig={craig} form={this.props.params.form} />
           ) : contains(constants.toggleFormPages, this.props.params.form) ? (
             <ToggleFormPage craig={craig} form={this.props.params.form} />
           ) : window.location.pathname === "/form/cbr" ? (

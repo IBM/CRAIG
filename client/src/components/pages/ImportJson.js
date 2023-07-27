@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 import { IcseFormGroup, IcseTextInput } from "icse-react-assets";
 import { isInRange } from "lazy-z";
 import { slzToCraig, validate } from "../../lib";
-import { newResourceNameExp } from "../../lib/constants";
 import "./import-json.css";
+const constants = require("../../lib/constants");
 
 class ImportJson extends React.Component {
   constructor(props) {
@@ -99,7 +99,7 @@ class ImportJson extends React.Component {
                 value={this.state.prefix}
                 invalid={
                   isInRange(this.state.prefix.length, 2, 16) === false ||
-                  this.state.prefix.match(newResourceNameExp) === null
+                  this.state.prefix.match(constants.newResourceNameExp) === null
                 }
                 invalidText="Invalid prefix. Must match the regular expression: /[a-z][a-z0-9-]*[a-z0-9]/"
                 onChange={this.handlePrefix}

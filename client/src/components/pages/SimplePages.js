@@ -1,12 +1,7 @@
 import React from "react";
-import {
-  ToggleForm,
-  IcseFormTemplate,
-  StatefulTabPanel,
-} from "icse-react-assets";
+import { ToggleForm, StatefulTabPanel } from "icse-react-assets";
 import PropTypes from "prop-types";
 import toggleFormProps from "./ToggleFormPageProps";
-import formProps from "./FormPageProps";
 import { Docs } from "icse-react-assets";
 import { NoEdgeNetworkTile } from "../utils/NoEdgeNetworkTile";
 const { docs } = require("../../lib");
@@ -25,14 +20,6 @@ export const ToggleFormPage = (props) => {
 };
 
 ToggleFormPage.propTypes = {
-  form: PropTypes.string.isRequired,
-};
-
-export const FormPage = (props) => {
-  return <IcseFormTemplate {...formProps(props.form, props.craig)} />;
-};
-
-FormPage.propTypes = {
   form: PropTypes.string.isRequired,
 };
 

@@ -7,9 +7,9 @@ import {
   EmptyResourceTile,
   StatefulTabPanel,
   SaveAddButton,
-  IcseHeading,
   FormModal,
   buildFormFunctions,
+  IcseHeading,
 } from "icse-react-assets";
 import { RenderDocs } from "../pages/SimplePages";
 import {

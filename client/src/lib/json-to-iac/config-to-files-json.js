@@ -22,6 +22,7 @@ const { cbrTf } = require("./cbr");
 const { dnsTf } = require("./dns");
 const { loggingMonitoringTf } = require("./logging-monitoring");
 const { variablesDotTf } = require("./variables");
+const { icdTf } = require("./icd");
 
 /**
  * create a json document with file names as keys and text as value
@@ -82,6 +83,7 @@ function configToFilesJson(config) {
           : null,
       "dns.tf": config.dns && config.dns.length > 0 ? dnsTf(config) : null,
       "observability.tf": loggingMonitoringTf(config),
+      "icd.tf": icdTf(config),
     };
     vpcModuleTf(files, config);
     return files;

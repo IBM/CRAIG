@@ -6,12 +6,12 @@ import {
   IcseTextInput,
   IcseModal,
 } from "icse-react-assets";
-import { projectDescriptionRegex } from "../../../lib/constants";
 import {
   invalidProjectName,
   invalidProjectDescription,
   invalidProjectNameText,
 } from "../../../lib";
+const constants = require("../../../lib/constants");
 
 export class ProjectFormModal extends React.Component {
   constructor(props) {
@@ -80,7 +80,7 @@ export class ProjectFormModal extends React.Component {
             invalid={invalidProjectDescription(this.state.description)}
             invalidText={
               "Project description must follow the regex pattern: " +
-              projectDescriptionRegex
+              constants.projectDescriptionRegex
             }
             componentName="project"
             field="description"

@@ -249,6 +249,7 @@ const {
   sysdigOnStoreUpdate,
   sysdigSave,
 } = require("./logging-monitoring");
+const { icdOnStoreUpdate, icdSave, icdCreate, icdDelete } = require("./icd");
 
 /**
  * get state for craig
@@ -689,6 +690,16 @@ const state = function (legacy) {
     init: sysdigInit,
     onStoreUpdate: sysdigOnStoreUpdate,
     save: sysdigSave,
+  });
+
+  store.newField("icd", {
+    init: function (config) {
+      config.store.json.icd = [];
+    },
+    onStoreUpdate: icdOnStoreUpdate,
+    save: icdSave,
+    create: icdCreate,
+    delete: icdDelete,
   });
 
   /**

@@ -949,5 +949,6 @@
   "access_groups": [],
   "cbr_zones": [],
   "cbr_rules": [],
-  "vpn_servers": []
+  "vpn_servers": [],
+  "icd": []
 }

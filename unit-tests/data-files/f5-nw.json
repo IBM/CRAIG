@@ -5,6 +5,7 @@
     "tags": ["slz", "landing-zone"],
     "account_id" : ""
   },
+  "icd": [],
   "resource_groups": [
     {
       "use_prefix": false,

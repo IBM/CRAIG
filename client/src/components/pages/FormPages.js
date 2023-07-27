@@ -1,4 +1,5 @@
 import {
+  buildSubnet,
   clusterHelperTestCallback,
   disableSave,
   forceShowForm,
@@ -18,6 +19,7 @@ import {
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
+  SubnetPageTemplate,
   KeyManagementTemplate,
   NetworkAclTemplate,
   ObjectStorageTemplate,
@@ -32,11 +34,13 @@ import {
   VsiLoadBalancerTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { nestedSplat, splat } from "lazy-z";
+import { keys, nestedSplat, splat } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   disableSshKeyDelete,
   encryptionKeyFilter,
+  getSubnetTierStateData,
+  getTierSubnets,
   invalidCidrBlock,
   invalidDnsZoneName,
   invalidEncryptionKeyRing,
@@ -44,16 +48,20 @@ import {
   invalidSecurityGroupRuleText,
 } from "../../lib/forms";
 import {
+  invalidCidr,
   invalidCrnList,
   invalidDNSDescription,
   invalidIdentityProviderURI,
   invalidSshPublicKey,
+  invalidSubnetTierName,
   nullOrEmptyStringCheckCallback,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
   aclHelperTextCallback,
+  invalidCidrText,
   invalidDNSDescriptionText,
+  invalidSubnetTierText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 
@@ -426,6 +434,53 @@ const SecurityGroupPage = (craig) => {
   );
 };
 
+const SubnetsPage = (craig) => {
+  return (
+    <SubnetPageTemplate
+      vpcs={craig.store.json.vpcs}
+      docs={RenderDocs("subnets")}
+      forceOpen={forceShowForm}
+      subnetTiers={craig.store.subnetTiers}
+      dynamicSubnets={craig.store.json._options.dynamic_subnets}
+      subnetListCallback={(stateData, componentProps) => {
+        let nextTier = [craig.store.subnetTiers[componentProps.data.name]]
+          .length;
+        let subnets = [];
+        while (subnets.length < stateData.zones) {
+          subnets.push(
+            buildSubnet(
+              componentProps.vpc_name,
+              keys(craig.store.subnetTiers).indexOf(componentProps.vpc_name),
+              stateData.name,
+              nextTier,
+              stateData.networkAcl,
+              componentProps.data.resource_group,
+              subnets.length + 1,
+              stateData.addPublicGateway
+            )
+          );
+        }
+        return subnets;
+      }}
+      craig={craig}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
+      invalidSubnetTierText={invalidSubnetTierText}
+      invalidSubnetTierName={invalidSubnetTierName}
+      invalidCidr={invalidCidr}
+      invalidCidrText={invalidCidrText}
+      invalidName={invalidName}
+      invalidNameText={invalidNameText}
+      getSubnetTierStateData={getSubnetTierStateData}
+      getTierSubnets={getTierSubnets}
+      onSubnetSubmit={craig.vpcs.subnetTiers.create}
+      onSubnetSave={craig.vpcs.subnets.save}
+      onSubnetTierSave={craig.vpcs.subnetTiers.save}
+      onSubnetTierDelete={craig.vpcs.subnetTiers.delete}
+    />
+  );
+};
+
 const SshKeysPage = (craig) => {
   return (
     <SshKeysTemplate
@@ -625,6 +680,8 @@ export const NewFormPage = (props) => {
     return SecurityGroupPage(craig);
   } else if (form === "sshKeys") {
     return SshKeysPage(craig);
+  } else if (form === "subnets") {
+    return SubnetsPage(craig);
   } else if (form === "transitGateways") {
     return TransitGatewayPage(craig);
   } else if (form === "vpcs") {

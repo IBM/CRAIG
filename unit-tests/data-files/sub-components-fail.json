@@ -7,6 +7,7 @@
       "landing-zone"
     ]
   },
+  "icd": [],
   "dns": [
     {
       "name": "dev",

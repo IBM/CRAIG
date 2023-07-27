@@ -6,6 +6,7 @@
     "endpoints": "private",
     "account_id": "1234"
   },
+  "icd": [],
   "resource_groups": [
     {
       "use_prefix": true,

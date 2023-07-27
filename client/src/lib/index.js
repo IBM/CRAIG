@@ -33,20 +33,13 @@ const {
   invalidIdentityProviderURI,
   disableSshKeyDelete,
   cidrBlocksOverlap,
-  setFormRgList,
-  setFormVpcList,
-  defaultFormTemplate,
   hasOverlappingCidr,
   invalidCidr,
   invalidCidrText,
-  setFormEncryptionKeyList,
-  setFormSubnetList,
-  setDeleteDisabledMessage,
   invalidProjectName,
   invalidProjectNameText,
   invalidProjectDescription,
   invalidCidrBlock,
-  setFormSgList,
   invalidCrnList,
   invalidCrns,
   invalidCrnText,
@@ -54,7 +47,7 @@ const {
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
 const { docsToMd, allDocs } = require("./docs-to-md");
-const { buildNewEncryptionKey, buildSubnet, newF5Vsi } = require("./builders");
+const { buildSubnet, newF5Vsi } = require("./builders");
 const changelogToMarkdown = require("./changelog-to-markdown");
 const constants = require("./constants");
 const {
@@ -151,7 +144,6 @@ module.exports = {
   validate,
   docsToMd,
   allDocs,
-  buildNewEncryptionKey,
   buildSubnet,
   newF5Vsi,
   changelogToMarkdown,
@@ -237,15 +229,9 @@ module.exports = {
   vpcModuleJson,
   vpcModuleOutputs,
   cidrBlocksOverlap,
-  setFormRgList,
-  defaultFormTemplate,
-  setFormVpcList,
   hasOverlappingCidr,
   invalidCidr,
   invalidCidrText,
-  setFormEncryptionKeyList,
-  setFormSubnetList,
-  setDeleteDisabledMessage,
   invalidProjectName,
   invalidProjectNameText,
   invalidProjectDescription,
@@ -257,7 +243,6 @@ module.exports = {
   formatDnsCustomResolver,
   dnsTf,
   invalidCidrBlock,
-  setFormSgList,
   calculateNeededSubnetIps,
   getNextCidr,
   invalidForms,

@@ -8,7 +8,6 @@ export { NavigationRedirectModal } from "./modals/NavigationRedirectModal";
 export {
   About,
   ImportJson,
-  formProps,
   Home,
   ReleaseNotes,
   ResetState,
@@ -16,7 +15,6 @@ export {
   Projects,
   ToggleFormPageProps,
   ToggleFormPage,
-  FormPage,
   EdgeNetworkingDocs,
   NewFormPage,
 } from "./pages";

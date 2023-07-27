@@ -27,6 +27,7 @@ function invalidForms(craig) {
     ssh_keys: false,
     vsi: false,
     "/form/observability": false,
+    icd: false,
   };
   let json = craig.store.json; // shortcut
 
@@ -104,6 +105,8 @@ function invalidForms(craig) {
   });
   forEachDisabledCheck("secrets_manager");
   forEachDisabledCheck("event_streams");
+  // disableSave for icd not yet implemented
+  // if (craig.store.json.icd) forEachDisabledCheck("icd");
   forEachDisabledCheck("appid");
   forEachDisabledCheck("vpcs", (vpc) => {
     vpc.acls.forEach((acl) => {

@@ -57,15 +57,6 @@ const {
   copyRuleCodeMirrorData,
   copySgModalContent,
 } = require("./format-json");
-const {
-  setFormRgList,
-  defaultFormTemplate,
-  setFormVpcList,
-  setFormEncryptionKeyList,
-  setFormSubnetList,
-  setDeleteDisabledMessage,
-  setFormSgList,
-} = require("./form-props");
 const { leftNavItemClassName } = require("./class-names");
 const { notificationText, getCosFromBucket } = require("./utils");
 const { encryptionKeyFilter } = require("./filters");
@@ -109,16 +100,10 @@ module.exports = {
   isValidUrl,
   disableSshKeyDelete,
   cidrBlocksOverlap,
-  setFormRgList,
-  defaultFormTemplate,
-  setFormVpcList,
   hasOverlappingCidr,
   invalidCidr,
   invalidCidrText,
   invalidCrnList,
-  setFormEncryptionKeyList,
-  setFormSubnetList,
-  setDeleteDisabledMessage,
   invalidProjectName,
   invalidProjectDescription,
   invalidCbrRule,
@@ -126,7 +111,6 @@ module.exports = {
   invalidCbrZone,
   invalidCbrZoneText,
   invalidCidrBlock,
-  setFormSgList,
   invalidProjectNameText,
   validRecord,
   invalidDnsZoneName,

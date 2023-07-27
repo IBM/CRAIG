@@ -1,6 +1,5 @@
-const { nestedSplat } = require("lazy-z");
+const { nestedSplat, transpose } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
-const { buildNewEncryptionKey } = require("../builders");
 const { newDefaultKms } = require("./defaults");
 const {
   setUnfoundResourceGroup,
@@ -132,8 +131,17 @@ function setEncryptionKeys(config) {
  * @param {object} stateData component state data
  */
 function kmsKeyCreate(config, stateData, componentProps) {
-  // buildNewEncryptionKey code can be moved here, not used elsewhere
-  let newKey = buildNewEncryptionKey(stateData);
+  let params = stateData;
+  let newKey = {
+    name: `new-key`,
+    root_key: true,
+    key_ring: null,
+    force_delete: null,
+    endpoint: null,
+    rotation: 1,
+    dual_auth_delete: false,
+  };
+  transpose(params, newKey);
   pushToChildFieldModal(
     config,
     "key_management",
