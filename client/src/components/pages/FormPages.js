@@ -22,7 +22,6 @@ import {
   SubnetPageTemplate,
   KeyManagementTemplate,
   NetworkAclTemplate,
-  RoutingTableTemplate,
   ObjectStorageTemplate,
   RoutingTableTemplate,
   SshKeysTemplate,
@@ -600,11 +599,11 @@ const VpePage = (craig) => {
   return (
     <VpeTemplate
       docs={RenderDocs("vpe")}
-      vpe={craig.store.json.vpe}
+      vpe={craig.store.json.virtual_private_endpoints}
       disableSave={disableSave}
-      onDelete={craig.vpe.delete}
-      onSave={craig.vpe.save}
-      onSubmit={craig.vpe.create}
+      onDelete={craig.virtual_private_endpoints.delete}
+      onSave={craig.virtual_private_endpoints.save}
+      onSubmit={craig.virtual_private_endpoints.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
