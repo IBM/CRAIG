@@ -139,9 +139,6 @@ spec:
       metadata:
         name: pipelinerun-$(uid)-pvc
       spec:
-        resources:
-          requests:
-            storage: 5Gi
         volumeMode: Filesystem
         accessModes:
           - ReadWriteOnce
