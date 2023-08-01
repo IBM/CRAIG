@@ -29,9 +29,10 @@ const { icdTf } = require("./icd");
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.region
+ * @param {boolean} apiMode when true log errors but don't throw them, used for backend functionality
  * @returns {JSON} json data
  */
-function configToFilesJson(config) {
+function configToFilesJson(config, apiMode) {
   try {
     let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
     let files = {
@@ -89,7 +90,9 @@ function configToFilesJson(config) {
     return files;
   } catch (err) {
     console.log(err);
-    throw new Error(err);
+    if (apiMode) {
+      return null;
+    } else throw new Error(err);
   }
 }
 

@@ -7,6 +7,7 @@ const vsiImagesRaw = require("../data-files/vsiImagesRaw.json");
 const clusterFlavorsRaw = require("../data-files/clusterFlavorRaw.json");
 const clusterVersionRaw = require("../data-files/clusterVersionRaw.json");
 const { initMockAxios } = require("lazy-z");
+const testJson = require("../data-files/craig-json.json");
 
 describe("controller", () => {
   beforeEach(() => {
@@ -223,67 +224,39 @@ describe("controller", () => {
       });
     });
   });
-  describe("schematics-upload", () => {
-    let { axios } = initMockAxios(
-      {
-        has_received_file: true,
+  describe("getWorkspaceData", () => {
+    it("should return empty w_id and t_id", () => {
+      let { axios } = initMockAxios({
         workspaces: [
           {
-            name: "frog-workspace",
-            id: "foo-workspace-id",
-            template_data: [{ id: "123abc-id" }],
+            name: "foo-workspace",
+            id: "1234",
+            template_data: [{ id: "5678" }],
           },
         ],
-      },
-      false
-    );
-    it("should return data passed", () => {
-      let testSchematicsController = new controller(axios);
-      return testSchematicsController
-        .uploadTar("frog-workspace", "./fake/file.tar")
-        .then((data) => {
-          assert.deepEqual(
-            data,
-            {
-              data: {
-                has_received_file: true,
-                workspaces: [
-                  {
-                    name: "frog-workspace",
-                    id: "foo-workspace-id",
-                    template_data: [{ id: "123abc-id" }],
-                  },
-                ],
-              },
-            },
-            "it should return correct data"
-          );
-        });
+      });
+      let w_idActual = "";
+      let t_idActual = "";
+      let testController = new controller(axios);
+      testController.getWorkspaceData("frog-workspace").then((data) => {
+        w_idActual = data.w_id;
+        t_idActual = data.t_id;
+      });
+      assert.isEmpty(w_idActual) && assert.isEmpty(t_idActual);
     });
-    it("should return data passed", () => {
-      let testSchematicsController = new controller(axios);
-      return testSchematicsController
-        .uploadTar("wrong-workspace", "./fake/file.tar")
-        .then((data) => {
-          assert.deepEqual(
-            data,
-            {
-              data: {
-                has_received_file: true,
-                workspaces: [
-                  {
-                    name: "frog-workspace",
-                    id: "foo-workspace-id",
-                    template_data: [{ id: "123abc-id" }],
-                  },
-                ],
-              },
-            },
-            "it should return correct data"
-          );
-        });
+    it("should reject error on bad response", () => {
+      let { axios } = initMockAxios({}, true);
+      let testController = new controller(axios);
+      testController.getWorkspaceData("cow-workspace").then(() => {
+        assert.isTrue(res.send.calledOnce);
+      });
     });
-    it("should throw error", () => {
+  });
+  describe("uploadTar", () => {
+    testJson.clusters[0]["kube_type"] = "openshift";
+    testJson.clusters[0].worker_pools[0].cluster = "workload";
+    testJson["vpn_servers"] = [];
+    it("should throw error when craig object is invalid", () => {
       let { axios } = initMockAxios(
         {
           has_received_file: false,
@@ -297,28 +270,122 @@ describe("controller", () => {
         },
         false
       );
-      let testSchematicsController = new controller(axios);
-      return testSchematicsController
-        .uploadTar("wrong-workspace", "./fake/file.tar")
+      let uploadTarController = new controller(axios);
+      return uploadTarController
+        .uploadTar(
+          {
+            params: {
+              workspaceName: "frog-workspace",
+            },
+            body: {},
+          },
+          res
+        )
         .then(() => {
-          assert.isTrue(false);
-        })
-        .catch(() => {
-          assert.isTrue(true);
-        });
-    });
-    it("should reject on error", () => {
-      let { axios } = initMockAxios({ stderr: "promise rejected" }, true);
-      let testSchematicsController = new controller(axios);
-      return testSchematicsController
-        .uploadTar("wrong-workspace", "./fake/file.tar")
-        .catch((data) => {
-          assert.deepEqual(
-            data,
-            { stderr: "promise rejected" },
-            "it should return correct data"
+          assert.isTrue(
+            res.send.calledOnceWith("Error: failed to parse CRAIG data")
           );
         });
     });
+    it("should return an error when packing tar fails", () => {
+      let { axios } = initMockAxios(
+        {
+          has_received_file: true,
+          workspaces: [
+            {
+              name: "frog-workspace",
+              id: "foo-workspace-id",
+              template_data: [{ id: "123abc-id" }],
+            },
+          ],
+        },
+        false
+      );
+      let uploadTarController = new controller(axios);
+      return uploadTarController
+        .uploadTar(
+          {
+            params: {
+              workspaceName: "frog-workspace",
+              forceFail: true,
+            },
+            body: testJson,
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith("Error: failed to pack tar file")
+          );
+        });
+    }).timeout(100000);
+    it("should return correct data on successful file upload", () => {
+      let { axios } = initMockAxios({
+        has_received_file: true,
+        workspaces: [
+          {
+            name: "frog-workspace",
+            id: "foo-workspace-id",
+            template_data: [{ id: "123abc-id" }],
+          },
+        ],
+      });
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .uploadTar(
+          {
+            params: {
+              workspaceName: "frog-workspace",
+            },
+            body: testJson,
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith({
+              has_received_file: true,
+              workspaces: [
+                {
+                  name: "frog-workspace",
+                  id: "foo-workspace-id",
+                  template_data: [{ id: "123abc-id" }],
+                },
+              ],
+            })
+          );
+        });
+    });
+    it("should throw error when has_received_file is false", () => {
+      let { axios } = initMockAxios({
+        has_received_file: false,
+        workspaces: [
+          {
+            name: "frog-workspace",
+            id: "foo-workspace-id",
+            template_data: [{ id: "123abc-id" }],
+          },
+        ],
+      });
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .uploadTar(
+          {
+            params: {
+              workspaceName: "frog-workspace",
+            },
+            body: testJson,
+          },
+          res
+        )
+        .catch(() => {
+          assert.isTrue(
+            res.send.calledOnceWith(
+              "Error: frog-workspace has not received file. In uploadTar response data, has_received_file is false"
+            )
+          );
+        });
+    });
+    delete testJson.clusters[0].kube_type;
   });
 });

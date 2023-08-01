@@ -1,4 +1,11 @@
-const { azsort } = require("lazy-z");
+const { azsort, eachKey } = require("lazy-z");
+const fs = require("fs");
+const path = require("path");
+const tar = require("tar-stream");
+const { packTar } = require("../lib/tar-utils");
+const FormData = require("form-data");
+const { configToFilesJson } = require("../client/src/lib");
+const blobStream = require("blob-stream");
 
 /**
  * controller constructor
@@ -11,6 +18,7 @@ function controller(axios) {
   this.flavors = []; // list of kube flavors
   this.instanceProfiles = []; // list of vsi instance profiles
   this.images = []; // list of vsi images
+  this.uploadResponse = null;
 
   /**
    * check if a token is expired
@@ -285,42 +293,92 @@ function controller(axios) {
   };
 
   /**
-   * uploads given file to specified workspace, see https://cloud.ibm.com/apidocs/schematics/schematics#template-repo-upload
-   * @param {string} workspaceName
-   * @param {ReadableStream} file
+   * pipes the tar content to an in memory Blob which is then used to return a promise of an ArrayBuffer
+   * @param {*} pack tar stream pack object
    * @returns {Promise}
    */
-  this.uploadTar = function (workspaceName, file) {
+  this.createBlob = function (pack) {
+    return new Promise((resolve) => {
+      pack.pipe(blobStream()).on("finish", function () {
+        resolve(this.toBlob("application/x-tar").arrayBuffer());
+      });
+    });
+  };
+
+  /**
+   * uploads given file to specified workspace, see https://cloud.ibm.com/apidocs/schematics/schematics#template-repo-upload
+   * @param {object} req express request object
+   * @param {object} res express resolve object
+   * @returns {Promise}
+   */
+  this.uploadTar = (req, res) => {
+    let workspaceName = req.params["workspaceName"];
+    let craigJson = req.body;
+    let tarFile = "craig.tar";
+    let forceTarPackFail = req.params?.forceFail;
+    let workspaceData;
     return new Promise((resolve, reject) => {
-      return this.getWorkspaceData(workspaceName)
+      this.getWorkspaceData(workspaceName)
         .then((wsData) => {
-          return this.getBearerToken().then(() => {
-            let form = new FormData();
-            form.append("file", "=@" + file);
-            let requestConfig = {
-              method: "put",
-              url: `https://schematics.cloud.ibm.com/v1/workspaces/${wsData.w_id}/template_data/${wsData.t_id}/template_repo_upload`,
-              headers: {
-                Authorization: this.token,
-                "Content-Type": "multipart/form-data",
-              },
-              data: { file: file },
-            };
-            return axios(requestConfig);
+          workspaceData = wsData;
+          return this.getBearerToken();
+        })
+        .then(() => {
+          let fileMap = configToFilesJson(craigJson, true);
+          if (fileMap) {
+            // create tar
+            let pack = tar.pack();
+            try {
+              if (forceTarPackFail) {
+                fileMap = 5;
+              }
+              packTar(pack, tarFile.slice(0, tarFile.length - 4), fileMap);
+              pack.finalize();
+
+              // call create blob to get ArrayBuffer for Blob
+              return this.createBlob(pack);
+            } catch (err) {
+              reject("Error: failed to pack tar file");
+            }
+          } else {
+            reject("Error: failed to parse CRAIG data");
+          }
+        })
+        .then((blob) => {
+          // create FormData from blob ArrayBuffer
+          let data = new FormData();
+          data.append("file", Buffer.from(blob), {
+            filename: tarFile,
           });
+
+          let requestConfig = {
+            method: "put",
+            url: `https://schematics.cloud.ibm.com/v1/workspaces/${workspaceData.w_id}/template_data/${workspaceData.t_id}/template_repo_upload`,
+            headers: {
+              Authorization: this.token,
+              "Content-Type": "multipart/form-data",
+            },
+            data: data,
+          };
+          return axios(requestConfig);
         })
         .then((response) => {
-          if (response.data.has_received_file !== true) {
-            throw new Error(
-              `${workspaceName} has not received file, in uploadTar response data has_received_file is not true`
+          let respData = response.data;
+          if (respData.has_received_file !== true) {
+            respData = Error(
+              `${workspaceName} has not received file. In uploadTar response data, has_received_file is false`
             );
           }
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error);
+          this.uploadResponse = response.data;
+          resolve(respData);
         });
-    });
+    })
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
   };
 }
 

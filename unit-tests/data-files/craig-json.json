@@ -866,7 +866,7 @@
       "worker_pools": [
         {
           "entitlement": "cloud_pak",
-          "cluster": "workloddddad",
+          "cluster": "workload",
           "flavor": "bx2.16x64",
           "name": "logging-pool",
           "resource_group": "slz-workload-rg",
