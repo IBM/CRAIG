@@ -1,10 +1,10 @@
-const { azsort, eachKey } = require("lazy-z");
-const fs = require("fs");
-const path = require("path");
+const { azsort } = require("lazy-z");
 const tar = require("tar-stream");
 const { packTar } = require("../lib/tar-utils");
 const FormData = require("form-data");
-const { configToFilesJson } = require("../client/src/lib");
+const {
+  configToFilesJson,
+} = require("../client/src/lib/json-to-iac/config-to-files-json");
 const blobStream = require("blob-stream");
 
 /**
