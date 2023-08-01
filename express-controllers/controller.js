@@ -2,9 +2,7 @@ const { azsort } = require("lazy-z");
 const tar = require("tar-stream");
 const { packTar } = require("../lib/tar-utils");
 const FormData = require("form-data");
-const {
-  configToFilesJson,
-} = require("../client/src/lib/json-to-iac/config-to-files-json");
+const { configToFilesJson } = require("../client/src/lib");
 const blobStream = require("blob-stream");
 
 /**
