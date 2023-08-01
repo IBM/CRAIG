@@ -14,6 +14,7 @@ WORKDIR /app
 ARG api_key=""
 ENV API_KEY=$api_key
 
+COPY --from=build /app/client/ /app/client
 COPY --from=build /app/package.json /app/package.json
 COPY --from=build /app/build/ /app/build
 COPY --from=build /app/server.js /app/server.js
