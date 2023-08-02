@@ -322,10 +322,10 @@ class Craig extends React.Component {
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
             <ObservabilityForm craig={craig} />
-          ) : this.props.params.form ? (
-            <NewFormPage form={this.props.params.form} craig={craig} />
           ) : contains(constants.toggleFormPages, this.props.params.form) ? (
             <ToggleFormPage craig={craig} form={this.props.params.form} />
+          ) : this.props.params.form ? (
+            <NewFormPage form={this.props.params.form} craig={craig} />
           ) : (
             // if no form yet, render name
             titleCase(this.props.params.form)

@@ -23,4 +23,4 @@ COPY --from=build /app/express-controllers/ /app/express-controllers
 COPY --from=build /app/express-routes/ /app/express-routes
 
 # start application
-cmd ["npm", "run", "docker-start"]
+CMD ["npm", "run", "docker-start"]
