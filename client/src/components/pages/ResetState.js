@@ -22,20 +22,37 @@ const ResetState = (props) => {
           configuration from storage. You will need to reset your state to
           continue to use this application.
         </p>
-        <Button
-          className="marginTop"
-          kind="danger"
-          onClick={() => {
-            window.localStorage.removeItem(
-              process.env.NODE_ENV === "development"
-                ? "craigDevStore"
-                : "craigStore"
-            );
-            window.location.href = "/";
-          }}
-        >
-          Reset State
-        </Button>
+        <div className="marginTop">
+          <Button
+            kind="danger"
+            className="marginRight"
+            onClick={() => {
+              window.localStorage.removeItem(
+                process.env.NODE_ENV === "development"
+                  ? "craigDevStore"
+                  : "craigStore"
+              );
+              window.location.href = "/";
+            }}
+          >
+            Reset State
+          </Button>
+          <Button
+            kind="danger"
+            onClick={() => {
+              window.localStorage.removeItem(
+                process.env.NODE_ENV === "development"
+                  ? "craigDevStore"
+                  : "craigStore"
+              );
+              window.localStorage.removeItem("craigProjects");
+              window.localStorage.removeItem("craigVisited");
+              window.location.href = "/";
+            }}
+          >
+            Reset All Data
+          </Button>
+        </div>
       </Tile>
     </PageTemplate>
   );
