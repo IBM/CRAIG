@@ -490,13 +490,6 @@ module.exports = {
       icmp: { code: null, type: null },
     },
   ],
-  arrayFormPages: ["subnets"],
-  toggleFormPages: [
-    "activityTracker",
-    "securityComplianceCenter",
-    "iamAccountSettings",
-    "f5",
-  ],
   // required fields for json objects
   // these are used to add null values for optional fields on objects that are passed in
   // from a raw json document to ensure that all values are present on all objects in a list

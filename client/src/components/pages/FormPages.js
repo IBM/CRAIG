@@ -7,12 +7,14 @@ import {
   invalidCrns,
   invalidName,
   invalidNameText,
+  newF5Vsi,
   propsMatchState,
   resourceGroupHelperTextCallback,
 } from "../../lib";
 import {
   AccessGroupsTemplate,
   AppIdTemplate,
+  AtrackerPage,
   ClustersTemplate,
   DnsTemplate,
   EventStreamsTemplate,
@@ -32,9 +34,12 @@ import {
   VpeTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
+  IamAccountSettingsPage,
+  SccV1Page,
+  F5BigIpPage,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { keys, nestedSplat, splat } from "lazy-z";
+import { eachKey, keys, nestedSplat, splat } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   disableSshKeyDelete,
@@ -51,6 +56,8 @@ import {
   invalidCidr,
   invalidCrnList,
   invalidDNSDescription,
+  invalidF5Vsi,
+  invalidIamAccountSettings,
   invalidIdentityProviderURI,
   invalidSshPublicKey,
   invalidSubnetTierName,
@@ -59,11 +66,14 @@ import {
 import {
   accessGroupPolicyHelperTextCallback,
   aclHelperTextCallback,
+  genericNameCallback,
+  iamAccountSettingInvalidText,
   invalidCidrText,
   invalidDNSDescriptionText,
   invalidSubnetTierText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
+import { f5Images } from "../../lib/json-to-iac";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -118,6 +128,25 @@ const AppIdPage = (craig) => {
       onKeyDelete={craig.appid.keys.delete}
       onKeySubmit={craig.appid.keys.create}
       encryptionKeys={craig.store.encryptionKeys}
+    />
+  );
+};
+
+const Atracker = (craig) => {
+  return (
+    <AtrackerPage
+      docs={RenderDocs("atracker")()}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
+      craig={craig}
+      prefix={craig.store.json._options.prefix}
+      region={craig.store.json._options.region}
+      data={craig.store.json.atracker}
+      resourceName={`${craig.store.json._options.prefix}-atracker`}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      cosKeys={craig.store.cosKeys}
+      cosBuckets={craig.store.cosBuckets}
+      onSave={craig.atracker.save}
     />
   );
 };
@@ -215,6 +244,73 @@ const EventStreamsPage = (craig) => {
       invalidTextCallback={invalidNameText("event_streams")}
       craig={craig}
       docs={RenderDocs("event_streams")}
+    />
+  );
+};
+
+const F5BigIp = (craig) => {
+  let templateData = {};
+  let vsiData = {};
+  if (craig.store.json.f5_vsi.length > 0) {
+    // pass in defaults if instances exist
+    vsiData = {
+      resource_group: craig.store.json.f5_vsi[0].resource_group,
+      ssh_keys: craig.store.json.f5_vsi[0].ssh_keys,
+      image: /f5-bigip-(15-1-5-1-0-0-14|16-1-2-2-0-0-28)-(ltm|all)-1slot/.exec(
+        craig.store.json.f5_vsi[0].image
+      )[0], // keep only image name in props
+      profile: craig.store.json.f5_vsi[0].profile,
+      zones: craig.store.json.f5_vsi.length,
+    };
+    templateData = craig.store.json.f5_vsi[0].template;
+  } else {
+    vsiData = {
+      zones: craig.store.json.f5_vsi.length,
+    };
+  }
+  return (
+    <F5BigIpPage
+      docs={RenderDocs("f5")()}
+      craig={craig}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
+      invalidTemplateCallback={invalidF5Vsi}
+      vsis={craig.store.json.f5_vsi || []}
+      sshKeys={craig.store.sshKeys}
+      edge_pattern={craig.store.edge_pattern}
+      f5_on_management={craig.store.edge_vpc_name === "management"}
+      instanceProfilesApiEndpoint={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      encryptionKeys={craig.store.encryptionKeys}
+      f5Images={Object.keys(f5Images().public_image_map)}
+      initVsiCallback={newF5Vsi}
+      saveVsiCallback={craig.f5.instance.save}
+      templateData={templateData}
+      deploymentData={vsiData}
+      onTemplateSave={craig.f5.template.save}
+      onVsiSave={craig.f5.vsi.save}
+      noEdgePattern={craig.store.edge_pattern === undefined}
+    />
+  );
+};
+
+const IamAccountSettings = (craig) => {
+  return (
+    <IamAccountSettingsPage
+      craig={craig}
+      onSave={craig.iam_account_settings.save}
+      onDelete={() => {
+        craig.store.json.iam_account_settings.enable = false;
+        craig.update();
+      }}
+      docs={RenderDocs("iam_account_settings")()}
+      data={craig.store.json.iam_account_settings}
+      useAddButton={craig.store.json.iam_account_settings.enable === false}
+      noDeleteButton={craig.store.json.iam_account_settings.enable === false}
+      invalidCallback={invalidIamAccountSettings}
+      invalidTextCallback={iamAccountSettingInvalidText}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
     />
   );
 };
@@ -373,6 +469,36 @@ const RoutingTablesPage = (craig) => {
       onRouteSave={craig.routing_tables.routes.delete}
       onRouteDelete={craig.routing_tables.routes.save}
       onRouteSubmit={craig.routing_tables.routes.create}
+    />
+  );
+};
+
+const SccV1 = (craig) => {
+  let sccData = { ...craig.store.json.scc },
+    sccEnabled = craig.store.json.scc.enable === false;
+  eachKey(sccData, (key) => {
+    if (sccData[key] === null) {
+      sccData[key] = "";
+    }
+  });
+  return (
+    <SccV1Page
+      docs={RenderDocs("security_compliance_center")()}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
+      craig={craig}
+      data={sccData}
+      onSave={craig.scc.save}
+      useAddButton={sccEnabled}
+      invalidCallback={invalidName("scc")}
+      invalidTextCallback={() => {
+        return genericNameCallback();
+      }}
+      noDeleteButton={sccEnabled}
+      onDelete={() => {
+        craig.store.json.scc.enable = false;
+        craig.update();
+      }}
     />
   );
 };
@@ -656,12 +782,18 @@ export const NewFormPage = (props) => {
     return AccessGroupsPage(craig);
   } else if (form === "appID") {
     return AppIdPage(craig);
+  } else if (form === "activityTracker") {
+    return Atracker(craig);
   } else if (form === "clusters") {
     return ClusterPage(craig);
   } else if (form === "dns") {
     return DnsPage(craig);
   } else if (form === "eventStreams") {
     return EventStreamsPage(craig);
+  } else if (form === "f5") {
+    return F5BigIp(craig);
+  } else if (form === "iamAccountSettings") {
+    return IamAccountSettings(craig);
   } else if (form === "keyManagement") {
     return KeyManagementPage(craig);
   } else if (form === "lb") {
@@ -672,6 +804,8 @@ export const NewFormPage = (props) => {
     return ObjectStoragePage(craig);
   } else if (form === "resourceGroups") {
     return ResourceGroupPage(craig);
+  } else if (form === "securityComplianceCenter") {
+    return SccV1(craig);
   } else if (form === "secretsManager") {
     return SecretsManagerPage(craig);
   } else if (form === "routingTables") {

@@ -1,27 +1,6 @@
 import React from "react";
-import { ToggleForm, StatefulTabPanel } from "icse-react-assets";
-import PropTypes from "prop-types";
-import toggleFormProps from "./ToggleFormPageProps";
 import { Docs } from "icse-react-assets";
-import { NoEdgeNetworkTile } from "../utils/NoEdgeNetworkTile";
 const { docs } = require("../../lib");
-
-export const ToggleFormPage = (props) => {
-  return props.form === "f5" && props.craig.store.edge_pattern === undefined ? (
-    <StatefulTabPanel
-      name="F5 Big IP"
-      hideFormTitleButton
-      form={<NoEdgeNetworkTile />}
-      about={RenderDocs("f5")()}
-    />
-  ) : (
-    <ToggleForm {...toggleFormProps(props.form, props.craig)} />
-  );
-};
-
-ToggleFormPage.propTypes = {
-  form: PropTypes.string.isRequired,
-};
 
 /**
  * return render docs function

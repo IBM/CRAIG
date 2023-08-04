@@ -13,8 +13,6 @@ export {
   ResetState,
   Summary,
   Projects,
-  ToggleFormPageProps,
-  ToggleFormPage,
   EdgeNetworkingDocs,
   NewFormPage,
 } from "./pages";

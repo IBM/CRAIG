@@ -1,21 +1,19 @@
 /* this file is the main application page */
 
 import React from "react";
-import { kebabCase, contains, titleCase } from "lazy-z";
+import { kebabCase, titleCase } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
-  FormPage,
   Home,
   NavigationRedirectModal,
   PageTemplate,
   ReleaseNotes,
   Summary,
   Projects,
-  ToggleFormPage,
   NewFormPage,
 } from "./components";
-import { constants, invalidForms, state } from "./lib";
+import { invalidForms, state } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
@@ -322,8 +320,6 @@ class Craig extends React.Component {
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
             <ObservabilityForm craig={craig} />
-          ) : contains(constants.toggleFormPages, this.props.params.form) ? (
-            <ToggleFormPage craig={craig} form={this.props.params.form} />
           ) : this.props.params.form ? (
             <NewFormPage form={this.props.params.form} craig={craig} />
           ) : (
