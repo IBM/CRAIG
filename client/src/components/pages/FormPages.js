@@ -724,7 +724,7 @@ const VpcPage = (craig) => {
 const VpePage = (craig) => {
   return (
     <VpeTemplate
-      docs={RenderDocs("vpe")}
+      docs={RenderDocs("virtual_private_endpoints")}
       vpe={craig.store.json.virtual_private_endpoints}
       disableSave={disableSave}
       onDelete={craig.virtual_private_endpoints.delete}
@@ -733,8 +733,8 @@ const VpePage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("vpe")}
-      invalidTextCallback={invalidNameText("vpe")}
+      invalidCallback={invalidName("virtual_private_endpoints")}
+      invalidTextCallback={invalidNameText("virtual_private_endpoints")}
       vpcList={craig.store.vpcList}
       subnetList={craig.getAllSubnets()}
       securityGroups={craig.store.json.security_groups}

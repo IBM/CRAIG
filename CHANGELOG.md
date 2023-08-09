@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Virtual Private Endpoint for Key Management services now use the correct CRN
 - Object Storage random suffix toggle now correctly changes Terraform code
 - Fixed an issue causing variable validation for `tmos_admin_password` to be incorrectly formatted
+- Fixed an issue causing VPE page to crash
 
 ## 0.7.0
 
