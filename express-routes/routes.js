@@ -19,7 +19,11 @@ router.get("/cluster/versions", controller.clusterVersions);
 // cdktf
 router.post("/cdktf/convert/:language", cdktf.convertPost);
 
-// tar
+// schematics
 router.put("/schematics/:workspaceName", controller.uploadTar);
+router.post(
+  "/schematics/createWorkspace/:workspaceName/:region/:resourceGroup",
+  controller.createWorkspace
+);
 
 module.exports = router;

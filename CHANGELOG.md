@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Added backend functionality to allow users to create schematics workspaces
 
 ### Fixes
 

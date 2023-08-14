@@ -388,4 +388,62 @@ describe("controller", () => {
     });
     delete testJson.clusters[0].kube_type;
   });
+  describe("createWorkspace", () => {
+    it("should return correct data when workspace is created", () => {
+      let { axios } = initMockAxios(
+        {
+          id: "us-south.workspace.testWorkspace",
+          name: "testWorkspace",
+          location: "us-south",
+        },
+        false
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .createWorkspace(
+          {
+            params: {
+              workspaceName: "testWorkspace",
+              region: "us-south",
+              resourceGroup: "foo-rg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith({
+              id: "us-south.workspace.testWorkspace",
+              name: "testWorkspace",
+              location: "us-south",
+            })
+          );
+        });
+    });
+    it("should respond with error", () => {
+      let { axios } = initMockAxios(
+        {
+          id: "us-south.workspace.testWorkspace",
+          name: "testWorkspace",
+          location: "us-south",
+        },
+        true
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .createWorkspace(
+          {
+            params: {
+              workspaceName: "testWorkspace",
+              region: "us-south",
+              resourceGroup: "foo-rg",
+            },
+          },
+          res
+        )
+        .catch(() => {
+          assert.isTrue(res.send.calledOnce);
+        });
+    });
+  });
 });

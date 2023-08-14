@@ -1,4 +1,4 @@
-const { azsort } = require("lazy-z");
+const { azsort, prettyJSON } = require("lazy-z");
 const tar = require("tar-stream");
 const { packTar } = require("../lib/tar-utils");
 const FormData = require("form-data");
@@ -373,6 +373,46 @@ function controller(axios) {
     })
       .then((data) => {
         res.send(data);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  };
+
+  /**
+   * creates schematics workspace https://cloud.ibm.com/apidocs/schematics/schematics#create-workspace
+   * @param {object} req express request object
+   * @param {object} res express resolve object
+   */
+  this.createWorkspace = (req, res) => {
+    let workspaceName = req.params["workspaceName"];
+    let region = req.params["region"];
+    let resourceGroup = req.params["resourceGroup"];
+    return this.getBearerToken()
+      .then(() => {
+        let data = prettyJSON({
+          name: workspaceName,
+          resource_group: resourceGroup,
+          type: ["terraform_v1.3"],
+          location: region,
+          description: "Schematics Workspace for craig.tar uploads",
+          tags: ["craig"],
+          template_data: [{ type: "terraform_v1.3" }],
+        });
+
+        let requestConfig = {
+          method: "post",
+          url: "https://schematics.cloud.ibm.com/v1/workspaces",
+          headers: {
+            Accept: "application/json",
+            Authorization: this.token,
+          },
+          data: data,
+        };
+        return axios(requestConfig);
+      })
+      .then((response) => {
+        res.send(response.data);
       })
       .catch((err) => {
         res.send(err);
