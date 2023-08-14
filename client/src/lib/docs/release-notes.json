@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.1.0",
+    "upgrade_notes": [],
+    "features": [],
+    "fixes": [
+      "Fixed an issue where dynamic subnet CIDR blocks were not being correctly updated for VPCs after the first"
+    ]
+  },
+  {
     "version": "1.0.0",
     "upgrade_notes": [
       "CRAIG now uses `lazy-z` version `1.10.3`, fixing an issues where the `titleCase` function untintentionally added spaces between numbers",

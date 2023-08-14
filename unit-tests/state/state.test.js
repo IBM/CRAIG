@@ -185,7 +185,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.20.0.0/28",
+          cidr: "10.40.0.0/28",
           name: "vsi-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -195,7 +195,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.30.0.0/28",
+          cidr: "10.50.0.0/28",
           name: "vsi-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -205,7 +205,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.40.0.0/28",
+          cidr: "10.60.0.0/28",
           name: "vsi-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -215,7 +215,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.20.0.16/29",
+          cidr: "10.40.0.16/29",
           name: "vpe-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -225,7 +225,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.30.0.16/29",
+          cidr: "10.50.0.16/29",
           name: "vpe-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -235,7 +235,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.40.0.16/29",
+          cidr: "10.60.0.16/29",
           name: "vpe-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.1.0
+
+### Upgrade Notes
+
+
+### Features
+
+
+### Fixes
+
+- Fixed an issue where dynamic subnet CIDR blocks were not being correctly updated for VPCs after the first
+
 ## 1.0.0
 
 ### Upgrade Notes

@@ -1,0 +1,1445 @@
+{
+    "_options": {
+        "prefix": "toshi-poc",
+        "region": "us-east",
+        "tags": [],
+        "zones": 3,
+        "endpoints": "private",
+        "account_id": "",
+        "fs_cloud": false,
+        "dynamic_subnets": true
+    },
+    "access_groups": [],
+    "appid": [],
+    "atracker": {
+        "enabled": true,
+        "type": "cos",
+        "name": "atracker",
+        "target_name": "atracker-cos",
+        "bucket": "atracker-bucket",
+        "add_route": true,
+        "cos_key": "cos-bind-key",
+        "locations": [
+            "us-south",
+            "us-east",
+            "global"
+        ],
+        "instance": false,
+        "resource_group": "service-rg",
+        "plan": "7-day"
+    },
+    "cbr_rules": [],
+    "cbr_zones": [],
+    "clusters": [
+        {
+            "kms": "kms",
+            "cos": "cos",
+            "entitlement": "cloud_pak",
+            "kube_type": "openshift",
+            "kube_version": "default",
+            "flavor": "bx2.16x64",
+            "name": "workload-cluster",
+            "resource_group": "workload-rg",
+            "encryption_key": "roks-key",
+            "subnets": [
+                "vsi-zone-1",
+                "vsi-zone-2",
+                "vsi-zone-3"
+            ],
+            "update_all_workers": false,
+            "vpc": "workload",
+            "worker_pools": [],
+            "workers_per_subnet": 2,
+            "private_endpoint": true
+        }
+    ],
+    "dns": [
+        {
+            "name": "private-dns",
+            "plan": "standard",
+            "resource_group": "service-rg",
+            "zones": [
+                {
+                    "name": "toshi-poc.internal",
+                    "description": "",
+                    "label": "toshi-poc",
+                    "vpcs": [
+                        "management",
+                        "workload"
+                    ],
+                    "instance": "private-dns"
+                }
+            ],
+            "records": [],
+            "custom_resolvers": []
+        }
+    ],
+    "event_streams": [],
+    "f5_vsi": [],
+    "iam_account_settings": {
+        "enable": false,
+        "mfa": null,
+        "allowed_ip_addresses": null,
+        "include_history": false,
+        "if_match": null,
+        "max_sessions_per_identity": null,
+        "restrict_create_service_id": null,
+        "restrict_create_platform_apikey": null,
+        "session_expiration_in_seconds": null,
+        "session_invalidation_in_seconds": null
+    },
+    "icd": [],
+    "key_management": [
+        {
+            "name": "kms",
+            "resource_group": "service-rg",
+            "use_hs_crypto": false,
+            "authorize_vpc_reader_role": true,
+            "use_data": false,
+            "keys": [
+                {
+                    "key_ring": "ring",
+                    "name": "key",
+                    "root_key": true,
+                    "force_delete": true,
+                    "endpoint": "public",
+                    "rotation": 1,
+                    "dual_auth_delete": false
+                },
+                {
+                    "key_ring": "ring",
+                    "name": "atracker-key",
+                    "root_key": true,
+                    "force_delete": true,
+                    "endpoint": "public",
+                    "rotation": 1,
+                    "dual_auth_delete": false
+                },
+                {
+                    "key_ring": "ring",
+                    "name": "vsi-volume-key",
+                    "root_key": true,
+                    "force_delete": true,
+                    "endpoint": "public",
+                    "rotation": 1,
+                    "dual_auth_delete": false
+                },
+                {
+                    "key_ring": "ring",
+                    "name": "roks-key",
+                    "root_key": true,
+                    "force_delete": null,
+                    "endpoint": null,
+                    "rotation": 1,
+                    "dual_auth_delete": false
+                }
+            ]
+        }
+    ],
+    "load_balancers": [],
+    "logdna": {
+        "enabled": true,
+        "plan": "7-day",
+        "endpoints": "private",
+        "platform_logs": false,
+        "resource_group": "service-rg",
+        "cos": "atracker-cos",
+        "bucket": "atracker-bucket",
+        "archive": true
+    },
+    "object_storage": [
+        {
+            "buckets": [
+                {
+                    "endpoint": "public",
+                    "force_delete": true,
+                    "kms_key": "atracker-key",
+                    "name": "atracker-bucket",
+                    "storage_class": "standard",
+                    "use_random_suffix": true
+                }
+            ],
+            "keys": [
+                {
+                    "name": "cos-bind-key",
+                    "role": "Writer",
+                    "enable_hmac": false,
+                    "use_random_suffix": true
+                }
+            ],
+            "name": "atracker-cos",
+            "plan": "standard",
+            "resource_group": "service-rg",
+            "use_data": false,
+            "use_random_suffix": true,
+            "kms": "kms"
+        },
+        {
+            "buckets": [
+                {
+                    "endpoint": "public",
+                    "force_delete": true,
+                    "kms_key": "key",
+                    "name": "management-bucket",
+                    "storage_class": "standard",
+                    "use_random_suffix": true
+                },
+                {
+                    "endpoint": "public",
+                    "force_delete": true,
+                    "kms_key": "key",
+                    "name": "workload-bucket",
+                    "storage_class": "standard",
+                    "use_random_suffix": true
+                }
+            ],
+            "use_random_suffix": true,
+            "keys": [],
+            "name": "cos",
+            "plan": "standard",
+            "resource_group": "service-rg",
+            "use_data": false,
+            "kms": "kms"
+        }
+    ],
+    "resource_groups": [
+        {
+            "use_prefix": true,
+            "name": "service-rg",
+            "use_data": false
+        },
+        {
+            "use_prefix": true,
+            "name": "management-rg",
+            "use_data": false
+        },
+        {
+            "use_prefix": true,
+            "name": "workload-rg",
+            "use_data": false
+        }
+    ],
+    "routing_tables": [],
+    "scc": {
+        "credential_description": null,
+        "id": null,
+        "passphrase": null,
+        "name": "",
+        "location": "us",
+        "collector_description": null,
+        "is_public": false,
+        "scope_description": null,
+        "enable": false
+    },
+    "secrets_manager": [
+        {
+            "name": "secrets-manager",
+            "resource_group": "service-rg",
+            "encryption_key": "key",
+            "kms": "kms",
+            "secrets": []
+        }
+    ],
+    "security_groups": [
+        {
+            "vpc": "management",
+            "name": "management-vpe",
+            "resource_group": "management-rg",
+            "rules": [
+                {
+                    "vpc": "management",
+                    "sg": "management-vpe",
+                    "direction": "inbound",
+                    "name": "allow-ibm-inbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vpe",
+                    "direction": "inbound",
+                    "name": "allow-vpc-inbound",
+                    "source": "10.0.0.0/8",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vpe",
+                    "direction": "outbound",
+                    "name": "allow-vpc-outbound",
+                    "source": "10.0.0.0/8",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vpe",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-53-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 53,
+                        "port_min": 53
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vpe",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-80-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 80,
+                        "port_min": 80
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vpe",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-443-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 443,
+                        "port_min": 443
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                }
+            ]
+        },
+        {
+            "vpc": "workload",
+            "name": "workload-vpe",
+            "resource_group": "workload-rg",
+            "rules": [
+                {
+                    "vpc": "workload",
+                    "sg": "workload-vpe",
+                    "direction": "inbound",
+                    "name": "allow-ibm-inbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "workload",
+                    "sg": "workload-vpe",
+                    "direction": "inbound",
+                    "name": "allow-vpc-inbound",
+                    "source": "10.0.0.0/8",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "workload",
+                    "sg": "workload-vpe",
+                    "direction": "outbound",
+                    "name": "allow-vpc-outbound",
+                    "source": "10.0.0.0/8",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "workload",
+                    "sg": "workload-vpe",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-53-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 53,
+                        "port_min": 53
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "workload",
+                    "sg": "workload-vpe",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-80-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 80,
+                        "port_min": 80
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "workload",
+                    "sg": "workload-vpe",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-443-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 443,
+                        "port_min": 443
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                }
+            ]
+        },
+        {
+            "vpc": "management",
+            "name": "management-vsi",
+            "resource_group": "management-rg",
+            "rules": [
+                {
+                    "vpc": "management",
+                    "sg": "management-vsi",
+                    "direction": "inbound",
+                    "name": "allow-ibm-inbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vsi",
+                    "direction": "inbound",
+                    "name": "allow-vpc-inbound",
+                    "source": "10.0.0.0/8",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vsi",
+                    "direction": "outbound",
+                    "name": "allow-vpc-outbound",
+                    "source": "10.0.0.0/8",
+                    "tcp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vsi",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-53-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 53,
+                        "port_min": 53
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vsi",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-80-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 80,
+                        "port_min": 80
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                },
+                {
+                    "vpc": "management",
+                    "sg": "management-vsi",
+                    "direction": "outbound",
+                    "name": "allow-ibm-tcp-443-outbound",
+                    "source": "161.26.0.0/16",
+                    "tcp": {
+                        "port_max": 443,
+                        "port_min": 443
+                    },
+                    "udp": {
+                        "port_max": null,
+                        "port_min": null
+                    },
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    }
+                }
+            ]
+        },
+        {
+            "resource_group": "management-rg",
+            "rules": [
+                {
+                    "name": "inbound-wireguard",
+                    "direction": "inbound",
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    },
+                    "tcp": {
+                        "port_min": null,
+                        "port_max": null
+                    },
+                    "udp": {
+                        "port_min": 65000,
+                        "port_max": 65000
+                    },
+                    "source": "0.0.0.0/0",
+                    "vpc": "management",
+                    "sg": "wireguard-sg"
+                },
+                {
+                    "name": "all-outbound",
+                    "direction": "outbound",
+                    "icmp": {
+                        "type": null,
+                        "code": null
+                    },
+                    "tcp": {
+                        "port_min": null,
+                        "port_max": null
+                    },
+                    "udp": {
+                        "port_min": null,
+                        "port_max": null
+                    },
+                    "source": "0.0.0.0/0",
+                    "vpc": "management",
+                    "sg": "wireguard-sg"
+                }
+            ],
+            "name": "wireguard-sg",
+            "vpc": "management",
+            "show": false
+        }
+    ],
+    "ssh_keys": [
+        {
+            "name": "ssh-key",
+            "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9X02NNc9BYg0V07oQrGf++AW4+QChQj3mJTyfpFwdeoExg6NSbfSydEHglnQQMKGqlpYu1HucB6BvCDz5BJkV6vlHs2rSLpEfwL9KtjynjPmi3TCneBVizTFucbNzwcWlHXv1/VLt5UJSSdWoryCCR+7GbQlBt/YLja0r6GcceszztUaSa/0e7ZcGHjA+m4XUdhDjFM2O5qJ4qjrUruXDiTyQN68jmuK/Q+ZISIhPuFsEVhZzQMa2Z0T0gAfzS/1YKa84n7C2sqErcZFsO9McSq7GN5Dn0N78N16E1BCNXdqrPFWS8FleLnk6N4Qd3OCl6qz1muYeJO9OwIqKYCWbFzeUmPg337ChAZzKsfXGthAsCmJMGzHm8Avzc083j93qK+jTJSujiC8dGFqaEMTM7MKTNM5/jt5Ygt6RXT6giEZrqHUYNdopFbhXQS7OZoafZtV93IK+0S+DxYdyeXnoJzrQ900Ho7CrEasJ2SahtYPLJfbqEd+2qtTthlkW0nE= root@ibmcloud-jtp",
+            "resource_group": "management-rg",
+            "use_data": false
+        }
+    ],
+    "sysdig": {
+        "enabled": true,
+        "plan": "tier-1",
+        "resource_group": "service-rg"
+    },
+    "teleport_vsi": [],
+    "transit_gateways": [
+        {
+            "name": "transit-gateway",
+            "resource_group": "service-rg",
+            "global": false,
+            "connections": [
+                {
+                    "tgw": "transit-gateway",
+                    "vpc": "management"
+                },
+                {
+                    "tgw": "transit-gateway",
+                    "vpc": "workload"
+                }
+            ]
+        }
+    ],
+    "virtual_private_endpoints": [
+        {
+            "name": "management-cos",
+            "service": "cos",
+            "vpc": "management",
+            "resource_group": "management-rg",
+            "security_groups": [
+                "management-vpe"
+            ],
+            "subnets": [
+                "vpe-zone-1",
+                "vpe-zone-2",
+                "vpe-zone-3"
+            ]
+        },
+        {
+            "name": "workload-cos",
+            "service": "cos",
+            "vpc": "workload",
+            "resource_group": "workload-rg",
+            "security_groups": [
+                "workload-vpe"
+            ],
+            "subnets": [
+                "vpe-zone-1",
+                "vpe-zone-2",
+                "vpe-zone-3"
+            ]
+        }
+    ],
+    "vpcs": [
+        {
+            "cos": "cos",
+            "bucket": "management-bucket",
+            "name": "management",
+            "resource_group": "management-rg",
+            "classic_access": false,
+            "manual_address_prefix_management": true,
+            "default_network_acl_name": null,
+            "default_security_group_name": null,
+            "default_routing_table_name": null,
+            "publicGateways": [],
+            "address_prefixes": [
+                {
+                    "vpc": "management",
+                    "zone": 1,
+                    "name": "management-zone-1",
+                    "cidr": "10.10.0.0/22"
+                },
+                {
+                    "vpc": "management",
+                    "zone": 2,
+                    "name": "management-zone-2",
+                    "cidr": "10.20.0.0/22"
+                },
+                {
+                    "vpc": "management",
+                    "zone": 3,
+                    "name": "management-zone-3",
+                    "cidr": "10.30.0.0/22"
+                }
+            ],
+            "subnets": [
+                {
+                    "vpc": "management",
+                    "zone": 1,
+                    "cidr": "10.10.0.0/29",
+                    "name": "vsi-zone-1",
+                    "network_acl": "management",
+                    "resource_group": "management-rg",
+                    "public_gateway": false,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "management",
+                    "zone": 1,
+                    "cidr": "10.10.0.8/28",
+                    "name": "vpn-zone-1",
+                    "network_acl": "management",
+                    "resource_group": "management-rg",
+                    "public_gateway": false,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "management",
+                    "zone": 2,
+                    "cidr": "10.20.0.0/29",
+                    "name": "vsi-zone-2",
+                    "network_acl": "management",
+                    "resource_group": "management-rg",
+                    "public_gateway": false,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "management",
+                    "zone": 3,
+                    "cidr": "10.30.0.0/29",
+                    "name": "vsi-zone-3",
+                    "network_acl": "management",
+                    "resource_group": "management-rg",
+                    "public_gateway": false,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "management",
+                    "zone": 1,
+                    "cidr": "10.10.0.24/29",
+                    "name": "vpe-zone-1",
+                    "resource_group": "management-rg",
+                    "network_acl": "management",
+                    "public_gateway": false,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "management",
+                    "zone": 2,
+                    "cidr": "10.20.0.8/29",
+                    "name": "vpe-zone-2",
+                    "network_acl": "management",
+                    "resource_group": "management-rg",
+                    "public_gateway": false,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "management",
+                    "zone": 3,
+                    "cidr": "10.30.0.8/29",
+                    "name": "vpe-zone-3",
+                    "network_acl": "management",
+                    "resource_group": "management-rg",
+                    "public_gateway": false,
+                    "has_prefix": false
+                }
+            ],
+            "public_gateways": [],
+            "acls": [
+                {
+                    "resource_group": "management-rg",
+                    "name": "management",
+                    "vpc": "management",
+                    "rules": [
+                        {
+                            "action": "allow",
+                            "destination": "10.0.0.0/8",
+                            "direction": "inbound",
+                            "name": "allow-ibm-inbound",
+                            "source": "161.26.0.0/16",
+                            "acl": "management",
+                            "vpc": "management",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "action": "allow",
+                            "source": "10.0.0.0/8",
+                            "direction": "outbound",
+                            "name": "allow-ibm-outbound",
+                            "destination": "161.26.0.0/16",
+                            "acl": "management",
+                            "vpc": "management",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "action": "allow",
+                            "destination": "10.0.0.0/8",
+                            "direction": "inbound",
+                            "name": "allow-all-network-inbound",
+                            "source": "10.0.0.0/8",
+                            "acl": "management",
+                            "vpc": "management",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "action": "allow",
+                            "destination": "10.0.0.0/8",
+                            "direction": "outbound",
+                            "name": "allow-all-network-outbound",
+                            "source": "10.0.0.0/8",
+                            "acl": "management",
+                            "vpc": "management",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "name": "inbound-wireguard",
+                            "action": "allow",
+                            "direction": "inbound",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": 65000,
+                                "port_max": 65000,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "source": "0.0.0.0/0",
+                            "destination": "10.0.0.0/8",
+                            "acl": "management",
+                            "vpc": "management"
+                        },
+                        {
+                            "name": "outbound-wireguard",
+                            "action": "allow",
+                            "direction": "outbound",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": 65000,
+                                "port_max": 65000,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "source": "10.0.0.0/8",
+                            "destination": "0.0.0.0/0",
+                            "acl": "management",
+                            "vpc": "management"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "cos": "cos",
+            "bucket": "workload-bucket",
+            "name": "workload",
+            "resource_group": "workload-rg",
+            "classic_access": false,
+            "manual_address_prefix_management": true,
+            "default_network_acl_name": null,
+            "default_security_group_name": null,
+            "default_routing_table_name": null,
+            "publicGateways": [
+                1,
+                2,
+                3
+            ],
+            "address_prefixes": [
+                {
+                    "vpc": "workload",
+                    "zone": 1,
+                    "name": "workload-zone-1",
+                    "cidr": "10.40.0.0/22"
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 2,
+                    "name": "workload-zone-2",
+                    "cidr": "10.50.0.0/22"
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 3,
+                    "name": "workload-zone-3",
+                    "cidr": "10.60.0.0/22"
+                }
+            ],
+            "subnets": [
+                {
+                    "vpc": "workload",
+                    "zone": 1,
+                    "cidr": "10.20.0.0/28",
+                    "name": "vsi-zone-1",
+                    "network_acl": "workload",
+                    "resource_group": "workload-rg",
+                    "public_gateway": true,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 2,
+                    "cidr": "10.30.0.0/28",
+                    "name": "vsi-zone-2",
+                    "network_acl": "workload",
+                    "resource_group": "workload-rg",
+                    "public_gateway": true,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 3,
+                    "cidr": "10.40.0.0/28",
+                    "name": "vsi-zone-3",
+                    "network_acl": "workload",
+                    "resource_group": "workload-rg",
+                    "public_gateway": true,
+                    "has_prefix": false
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 1,
+                    "cidr": "10.20.0.16/29",
+                    "name": "vpe-zone-1",
+                    "network_acl": "workload",
+                    "resource_group": "workload-rg",
+                    "public_gateway": false,
+                    "has_prefix": false,
+                    "acl_name": "workload"
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 2,
+                    "cidr": "10.30.0.16/29",
+                    "name": "vpe-zone-2",
+                    "network_acl": "workload",
+                    "resource_group": "workload-rg",
+                    "public_gateway": false,
+                    "has_prefix": false,
+                    "acl_name": "workload"
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 3,
+                    "cidr": "10.40.0.16/29",
+                    "name": "vpe-zone-3",
+                    "network_acl": "workload",
+                    "resource_group": "workload-rg",
+                    "public_gateway": false,
+                    "has_prefix": false,
+                    "acl_name": "workload"
+                }
+            ],
+            "public_gateways": [
+                {
+                    "vpc": "workload",
+                    "zone": 1,
+                    "resource_group": "workload-rg"
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 2,
+                    "resource_group": "workload-rg"
+                },
+                {
+                    "vpc": "workload",
+                    "zone": 3,
+                    "resource_group": "workload-rg"
+                }
+            ],
+            "acls": [
+                {
+                    "resource_group": "workload-rg",
+                    "name": "workload",
+                    "vpc": "workload",
+                    "rules": [
+                        {
+                            "action": "allow",
+                            "destination": "10.0.0.0/8",
+                            "direction": "inbound",
+                            "name": "allow-ibm-inbound",
+                            "source": "161.26.0.0/16",
+                            "acl": "workload",
+                            "vpc": "workload",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "action": "allow",
+                            "source": "10.0.0.0/8",
+                            "direction": "outbound",
+                            "name": "allow-ibm-outbound",
+                            "destination": "161.26.0.0/16",
+                            "acl": "workload",
+                            "vpc": "workload",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "action": "allow",
+                            "destination": "10.0.0.0/8",
+                            "direction": "inbound",
+                            "name": "allow-all-network-inbound",
+                            "source": "10.0.0.0/8",
+                            "acl": "workload",
+                            "vpc": "workload",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "action": "allow",
+                            "destination": "10.0.0.0/8",
+                            "direction": "outbound",
+                            "name": "allow-all-network-outbound",
+                            "source": "10.0.0.0/8",
+                            "acl": "workload",
+                            "vpc": "workload",
+                            "icmp": {
+                                "type": null,
+                                "code": null
+                            },
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "roks-create-worker-nodes-inbound",
+                            "action": "allow",
+                            "source": "161.26.0.0/16",
+                            "destination": "0.0.0.0/0",
+                            "direction": "inbound",
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "roks-create-worker-nodes-outbound",
+                            "action": "allow",
+                            "destination": "161.26.0.0/16",
+                            "source": "0.0.0.0/0",
+                            "direction": "outbound",
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "roks-nodes-to-service-inbound",
+                            "action": "allow",
+                            "source": "166.8.0.0/14",
+                            "destination": "0.0.0.0/0",
+                            "direction": "inbound",
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "roks-nodes-to-service-outbound",
+                            "action": "allow",
+                            "destination": "166.8.0.0/14",
+                            "source": "0.0.0.0/0",
+                            "direction": "outbound",
+                            "tcp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "allow-app-incoming-traffic-requests",
+                            "action": "allow",
+                            "source": "0.0.0.0/0",
+                            "destination": "0.0.0.0/0",
+                            "direction": "inbound",
+                            "tcp": {
+                                "source_port_min": 30000,
+                                "source_port_max": 32767,
+                                "port_min": null,
+                                "port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "allow-app-outgoing-traffic-requests",
+                            "action": "allow",
+                            "source": "0.0.0.0/0",
+                            "destination": "0.0.0.0/0",
+                            "direction": "outbound",
+                            "tcp": {
+                                "source_port_min": null,
+                                "source_port_max": null,
+                                "port_min": 30000,
+                                "port_max": 32767
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "allow-lb-incoming-traffic-requests",
+                            "action": "allow",
+                            "source": "0.0.0.0/0",
+                            "destination": "0.0.0.0/0",
+                            "direction": "inbound",
+                            "tcp": {
+                                "source_port_min": null,
+                                "source_port_max": null,
+                                "port_min": 443,
+                                "port_max": 443
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        },
+                        {
+                            "vpc": "workload",
+                            "acl": "workload",
+                            "name": "allow-lb-outgoing-traffic-requests",
+                            "action": "allow",
+                            "source": "0.0.0.0/0",
+                            "destination": "0.0.0.0/0",
+                            "direction": "outbound",
+                            "tcp": {
+                                "source_port_min": 443,
+                                "source_port_max": 443,
+                                "port_min": null,
+                                "port_max": null
+                            },
+                            "udp": {
+                                "port_min": null,
+                                "port_max": null,
+                                "source_port_min": null,
+                                "source_port_max": null
+                            },
+                            "icmp": {
+                                "code": null,
+                                "type": null
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "vpn_gateways": [
+        {
+            "name": "management-gateway",
+            "resource_group": "management-rg",
+            "subnet": "vpn-zone-1",
+            "vpc": "management"
+        }
+    ],
+    "vpn_servers": [],
+    "vsi": [
+        {
+            "kms": "kms",
+            "encryption_key": "vsi-volume-key",
+            "image": "ibm-ubuntu-22-04-2-minimal-amd64-1",
+            "profile": "cx2-2x4",
+            "name": "management-server",
+            "security_groups": [
+                "management-vsi",
+                "wireguard-sg"
+            ],
+            "ssh_keys": [
+                "ssh-key"
+            ],
+            "subnets": [
+                "vsi-zone-1"
+            ],
+            "vpc": "management",
+            "vsi_per_subnet": 1,
+            "resource_group": "management-rg",
+            "override_vsi_name": null,
+            "user_data": "#!/bin/bash\n\nuntil [[ -f /var/lib/cloud/instance/boot-finished ]]; do\n  sleep 1\ndone\n\n# Install wireguard\napt-get install -y wireguard\napt-get install -y wireguard-dkms wireguard-tools linux-headers-$(uname -r)\n\n\n# Prepare for wireguard\n# Enable Active IP forwarding\ngrep -q \"net.ipv4.ip_forward\" /etc/sysctl.conf && sed -i \"/^[#]*net.ipv4.ip_forward[[:space:]]*=[[:space:]]*1/c\\net.ipv4.ip_forward = 1\" /etc/sysctl.conf || echo \"net.ipv4.ip_forward = 1\" >> /etc/ssh/sshd_config\nsysctl -p\n\nmkdir /root/wireguard\ncd /root/wireguard\n\numask 077\n\n# generate server keys\nwg genkey | tee wg_server_private_key | wg pubkey > wg_server_public_key\n\n# generate client keys\nwg genkey | tee wg_client_private_key | wg pubkey > wg_client_public_key\n\ncd ..\n\n# Fill in the private and public keys in the client and server config files\nsed -i \"s/\\$wg_client_public_key/$(sed 's:/:\\\\/:g' wireguard/wg_client_public_key)/\" wg0.conf\nsed -i \"s/\\$wg_client_private_key/$(sed 's:/:\\\\/:g' wireguard/wg_client_private_key)/\" wireguard.client\n\nsed -i \"s/\\$wg_server_public_key/$(sed 's:/:\\\\/:g' wireguard/wg_server_public_key)/\" wireguard.client\nsed -i \"s/\\$wg_server_private_key/$(sed 's:/:\\\\/:g' wireguard/wg_server_private_key)/\" wg0.conf\n\n# Remove the generated secrets so they're not lying around\nrm -rf wireguard\n\n# Move the server config to where wireguard expects to find it\nmv wg0.conf /etc/wireguard\n\n# start the wireguard server\nwg-quick up wg0\n\n# Enable the Wireguard service to automatically restart after the VSI is stopped and started.\nsystemctl enable wg-quick@wg0\n\n# Note the wireguard.client file should be copied to your local machine and deleted from this machine\n",
+            "network_interfaces": [],
+            "volumes": [],
+            "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-2-minimal-amd64-1]",
+            "enable_floating_ip": true
+        }
+    ]
+}

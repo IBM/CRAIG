@@ -34,6 +34,7 @@
     "stream-browserify": "^3.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "7.5.0",
     "@testing-library/jest-dom": "^5.16.5",

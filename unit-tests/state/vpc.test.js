@@ -4247,12 +4247,12 @@ describe("vpcs", () => {
         }
       );
       let expectedWorkloadPrefixes = [
-        { name: "vsi-zone-1", cidr: "10.20.0.0/28", zone: 1, vpc: "workload" },
-        { name: "vsi-zone-2", cidr: "10.30.0.0/28", zone: 2, vpc: "workload" },
-        { name: "vsi-zone-3", cidr: "10.40.0.0/28", zone: 3, vpc: "workload" },
-        { name: "vpe-zone-1", cidr: "10.20.0.16/29", zone: 1, vpc: "workload" },
-        { name: "vpe-zone-2", cidr: "10.30.0.16/29", zone: 2, vpc: "workload" },
-        { name: "vpe-zone-3", cidr: "10.40.0.16/29", zone: 3, vpc: "workload" },
+        { name: "vsi-zone-1", cidr: "10.40.0.0/28", zone: 1, vpc: "workload" },
+        { name: "vsi-zone-2", cidr: "10.50.0.0/28", zone: 2, vpc: "workload" },
+        { name: "vsi-zone-3", cidr: "10.60.0.0/28", zone: 3, vpc: "workload" },
+        { name: "vpe-zone-1", cidr: "10.40.0.16/29", zone: 1, vpc: "workload" },
+        { name: "vpe-zone-2", cidr: "10.50.0.16/29", zone: 2, vpc: "workload" },
+        { name: "vpe-zone-3", cidr: "10.60.0.16/29", zone: 3, vpc: "workload" },
       ];
       assert.deepEqual(
         vpcState.store.json.vpcs[0].address_prefixes,
@@ -4263,6 +4263,82 @@ describe("vpcs", () => {
         vpcState.store.json.vpcs[1].address_prefixes,
         expectedWorkloadPrefixes,
         "it should change subnets"
+      );
+    });
+    it("should have correct cidr for subnets on update in vpc other than the first", () => {
+      let incorrectData = require("../data-files/craig-subnet-scaling-broken.json");
+      let state = newState();
+      let expectedData = [
+        {
+          vpc: "workload",
+          zone: 1,
+          cidr: "10.40.0.0/28",
+          name: "vsi-zone-1",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: true,
+          has_prefix: false,
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          cidr: "10.50.0.0/28",
+          name: "vsi-zone-2",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: true,
+          has_prefix: false,
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          cidr: "10.60.0.0/28",
+          name: "vsi-zone-3",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: true,
+          has_prefix: false,
+        },
+        {
+          vpc: "workload",
+          zone: 1,
+          cidr: "10.40.0.16/29",
+          name: "vpe-zone-1",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: false,
+          acl_name: "workload",
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          cidr: "10.50.0.16/29",
+          name: "vpe-zone-2",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: false,
+          acl_name: "workload",
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          cidr: "10.60.0.16/29",
+          name: "vpe-zone-3",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: false,
+          has_prefix: false,
+          acl_name: "workload",
+        },
+      ];
+      state.store.json = incorrectData;
+      state.update();
+      assert.deepEqual(
+        state.store.json.vpcs[1].subnets,
+        expectedData,
+        "it should return correct subnets"
       );
     });
   });

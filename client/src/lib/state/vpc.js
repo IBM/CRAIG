@@ -210,7 +210,7 @@ function vpcOnStoreUpdate(config) {
         // get last address for zone from subnet list or zone prefix
         let lastCidr = // automatically set to first in zone for vpc
           "10." +
-          (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) +
+          (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) * 3 +
             subnet.zone) +
           "0.0.0/x";
         // if new subnets has subnets and the zone exists within array
