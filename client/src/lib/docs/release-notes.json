@@ -7,7 +7,8 @@
       "Users can now search for components by using the `Search` box in the left navigation bar"
     ],
     "fixes": [
-      "Fixed an issue where dynamic subnet CIDR blocks were not being correctly updated for VPCs after the first"
+      "Fixed an issue where dynamic subnet CIDR blocks were not being correctly updated for VPCs after the first",
+      "Fixed an issue causing dynamic subnets to unintentionally overlap"
     ]
   },
   {

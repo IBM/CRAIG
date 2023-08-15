@@ -449,7 +449,7 @@ function getNextCidr(lastCidr, newIps) {
       splitCidr.push(Number(item));
     });
     let range = Number(splitCidr.pop());
-    splitCidr[3] += 2 ** (32 - range);
+    splitCidr[3] += 2 ** (32 - range + 1);
     // while next set of ips forces address out of range
     if (splitCidr[3] >= 255) {
       // add one to the 256s place until number is in range

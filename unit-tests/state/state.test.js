@@ -125,7 +125,7 @@ describe("state util functions", () => {
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.0.8/28",
+          cidr: "10.10.0.16/28",
           name: "vpn-zone-1",
           network_acl: "management",
           resource_group: "management-rg",
@@ -155,7 +155,7 @@ describe("state util functions", () => {
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.0.24/29",
+          cidr: "10.10.0.48/29",
           name: "vpe-zone-1",
           resource_group: "management-rg",
           network_acl: "management",
@@ -165,7 +165,7 @@ describe("state util functions", () => {
         {
           vpc: "management",
           zone: 2,
-          cidr: "10.20.0.8/29",
+          cidr: "10.20.0.16/29",
           name: "vpe-zone-2",
           network_acl: "management",
           resource_group: "management-rg",
@@ -175,7 +175,7 @@ describe("state util functions", () => {
         {
           vpc: "management",
           zone: 3,
-          cidr: "10.30.0.8/29",
+          cidr: "10.30.0.16/29",
           name: "vpe-zone-3",
           network_acl: "management",
           resource_group: "management-rg",
@@ -215,7 +215,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.40.0.16/29",
+          cidr: "10.40.0.32/29",
           name: "vpe-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -225,7 +225,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.50.0.16/29",
+          cidr: "10.50.0.32/29",
           name: "vpe-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -235,7 +235,7 @@ describe("state util functions", () => {
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.60.0.16/29",
+          cidr: "10.60.0.32/29",
           name: "vpe-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",

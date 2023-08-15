@@ -181,7 +181,14 @@ describe("rgIdRef", () => {
     it("should return the correct next cidr for a range that is larger than 255", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.254/32", 29),
-        "10.0.1.0/27",
+        "10.0.1.1/27",
+        "it should retun next cidr"
+      );
+    });
+    it("should return the correct next cidr for vpn in zone 1", () => {
+      assert.deepEqual(
+        getNextCidr("10.10.0.0/29", 9),
+        "10.10.0.16/28",
         "it should retun next cidr"
       );
     });

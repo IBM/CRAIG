@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue where dynamic subnet CIDR blocks were not being correctly updated for VPCs after the first
+- Fixed an issue causing dynamic subnets to unintentionally overlap
 
 ## 1.0.0
 
