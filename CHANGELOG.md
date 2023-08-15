@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Added backend functionality to allow users to create schematics workspaces
+- Users can now search for components by using the `Search` box in the left navigation bar
 
 ### Fixes
 

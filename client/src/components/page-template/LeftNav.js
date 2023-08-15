@@ -3,6 +3,7 @@ import {
   SideNavDivider,
   SideNavItems,
   SideNavLink,
+  Search,
 } from "@carbon/react";
 import {
   Home,
@@ -19,6 +20,7 @@ import { contains, kebabCase } from "lazy-z";
 
 const LeftNav = (props) => {
   let dividerClass = props.expanded ? "expandedDivider" : "railDivider";
+
   return (
     <SideNav
       expanded={props.expanded}
@@ -66,6 +68,17 @@ const LeftNav = (props) => {
               key="tutorial"
               expanded={props.expanded}
             />
+            <SideNavDivider className={dividerClass} />
+            <SideNavLink href="#">Search</SideNavLink>
+            <Search
+              size="lg"
+              id="search"
+              placeholder="Find cloud resources"
+              labelText="Search"
+              className="left-nav-search"
+              closeButtonLabelText="Clear"
+              onChange={props.onSearch}
+            />
           </>
         )}
         {props.navCategories.map((category) => (
@@ -105,6 +118,7 @@ LeftNav.propTypes = {
   onOverlayClick: PropTypes.func.isRequired,
   navCategories: PropTypes.array.isRequired,
   fsCloud: PropTypes.bool.isRequired,
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default LeftNav;

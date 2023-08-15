@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
 import { validate } from "../../lib";
+import { splat } from "lazy-z";
 
 class Navigation extends React.Component {
   constructor(props) {
@@ -23,13 +24,17 @@ class Navigation extends React.Component {
       fileDownloadUrl: "",
       showModal: false,
       expanded: false,
+      filteredNavCategories: props.navCategories,
     };
     this.isResetState = this.isResetState.bind(this);
     this.onModalClose = this.onModalClose.bind(this);
     this.onModalShow = this.onModalShow.bind(this);
     this.onHamburgerClick = this.onHamburgerClick.bind(this);
     this.onDownloadClick = this.onDownloadClick.bind(this);
+    this.onSearch = this.onSearch.bind(this);
+    this.resetSearch = this.resetSearch.bind(this);
   }
+
   // Reset state and redirect to home page
   isResetState() {
     window.localStorage.removeItem("craigStore");
@@ -46,6 +51,10 @@ class Navigation extends React.Component {
   };
 
   onHamburgerClick() {
+    // reset search on nav close
+    if (!this.state.expanded == false && this.state.hasSearch) {
+      this.resetSearch();
+    }
     this.setState({ expanded: !this.state.expanded });
   }
 
@@ -80,6 +89,37 @@ class Navigation extends React.Component {
       }
     }
     this.props.notify(notification);
+  }
+
+  resetSearch() {
+    this.setState({
+      hasSearch: false,
+      filteredNavCategories: this.props.navCategories,
+    });
+  }
+
+  onSearch(event) {
+    let { value } = event.target;
+
+    if (!value) {
+      this.resetSearch();
+      return;
+    }
+
+    let links = splat(this.props.navCategories, "links")
+      .flat()
+      .filter((link) => {
+        return (
+          link.title.toLowerCase().includes(value) || link.path.includes(value)
+        );
+      });
+
+    this.setState({
+      hasSearch: true,
+      filteredNavCategories: [
+        { name: `Search Results (${links.length} matches)`, links },
+      ],
+    });
   }
 
   render() {
@@ -164,7 +204,7 @@ class Navigation extends React.Component {
           <LeftNav
             expanded={this.state.expanded}
             onOverlayClick={this.onHamburgerClick}
-            navCategories={this.props.navCategories}
+            navCategories={this.state.filteredNavCategories}
             fsCloud={
               this.props.isResetState === false
                 ? this.props.json._options.fs_cloud
@@ -172,6 +212,7 @@ class Navigation extends React.Component {
             }
             invalidForms={this.props.invalidForms}
             isResetState={this.props.isResetState}
+            onSearch={this.onSearch}
           />
           {this.state.showModal && (
             <Modal

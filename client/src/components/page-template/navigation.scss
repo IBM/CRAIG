@@ -22,6 +22,18 @@
   font-size: 80%;
 }
 
+.left-nav-search > #search {
+  border-width: 0px;
+  background-color: #f4f4f4;
+  height: fit-content;
+  width: fit-content;
+  padding: 0.5rem 0.5rem 0.5rem 3.5rem;
+}
+
+.left-nav-search > .cds--search-close {
+  height: 100%;
+}
+
 // hide scrollbar for chrome, other webkit browsers (safari, opera)
 .cds--side-nav__items::-webkit-scrollbar {
   display: none;
