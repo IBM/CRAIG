@@ -157,7 +157,9 @@ function icdTf(config) {
       authTf += formatIcdToKmsAuth(kms, service, config);
     });
   });
-  tf += tfBlock("Database Authorizations", authTf) + "\n";
+  if (authTf !== "") {
+    tf += tfBlock("Database Authorizations", authTf) + "\n";
+  }
   let instanceTf = "";
   config.icd.forEach((instance) => {
     instanceTf += formatIcd(instance, config);

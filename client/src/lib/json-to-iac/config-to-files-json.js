@@ -84,7 +84,7 @@ function configToFilesJson(config, apiMode) {
           : null,
       "dns.tf": config.dns && config.dns.length > 0 ? dnsTf(config) : null,
       "observability.tf": loggingMonitoringTf(config),
-      "icd.tf": icdTf(config),
+      "icd.tf": config.icd.length > 0 ? icdTf(config) : null,
     };
     vpcModuleTf(files, config);
     return files;

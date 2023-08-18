@@ -799,6 +799,50 @@ terraform {
         "it should create file"
       );
     });
+    it("should return correct icd.tf when no instances present", () => {
+      let noIcdServices = { ...slzNetwork };
+      noIcdServices.icd = [];
+      let actualData = configToFilesJson(noIcdServices);
+      assert.deepEqual(
+        actualData["icd.tf"],
+        null,
+        "it should not create icd file"
+      );
+    });
+    it("should return correct icd.tf", () => {
+      let icdServices = { ...slzNetwork };
+      icdServices.icd = [
+        {
+          kms: "kms",
+          use_data: true,
+          encryption_key: "slz-vsi-volume-key",
+          resource_group: "slz-service-rg",
+          name: "icd-psql",
+          service: "databases-for-postgresql",
+          group_id: "member",
+          memory: 1024,
+          disk: 1024,
+          cpu: 0,
+        },
+      ];
+      let actualData = configToFilesJson(icdServices);
+      assert.deepEqual(
+        actualData["icd.tf"],
+        `##############################################################################
+# Database Services
+##############################################################################
+
+data "ibm_resource_instance" "icd_psql" {
+  name              = "icd-psql"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  service           = "databases-for-postgresql"
+}
+
+##############################################################################
+`,
+        "it should create file"
+      );
+    });
   });
   describe("vpc module", () => {
     it("should return correct management vpc main", () => {
