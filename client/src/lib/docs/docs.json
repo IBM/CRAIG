@@ -353,6 +353,25 @@
         "text": "Subnet Tiers are used to dynamically generate Subnets and reserve space for expansion into other zones. Subnets are networks created within a VPC; they are a fundamental mechanism within a VPC used to allocate addresses to individual resources (such as Virtual Server Instances), and enable various controls to these resources through the use of network ACLs, routing tables, and resource groups. Subnets are bound to a single zone; however, they can reach all other subnets within a VPC, across a region. They are created from a larger address space within the VPC called an address prefix; and you can provision multiple subnets per address prefix."
       },
       {
+        "text": "When dynamic subnets are enabled, there are three main actions that are automatically executed. First, VPC address prefixes are automatically determined based on the zone and resource. Generally, each resource is given an index starting at 0 and the address prefix(es) for that resource is calculated as follows: 10.([index] * 3 + [zone number])0.0.0/(suffix). For example, a VSI with index 2 and 3 subnets would have the following address prefixes: 10.(2 * 3 + 1)0.0.0 = 10.70.0.0, 10.(2*3+2)0.0.0 = 10.80.0.0, and 10.(2*3+3)0.0.0 = 10.90.0.0."
+      },
+      {
+        "text": "Next, the subnets are configured according to the number of resources in order to minimize the number of IP addresses per subnet. By default, each subnet has 5 IPs. Additional IPs are then added according to the following table: "
+      },
+      {
+        "table": [
+          ["_headers", "Resource", "# of IPs"],
+          ["Cluster Worker Node", "2 per worker"],
+          ["Reserved VPE IP", "1"],
+          ["VPN Gateway", "4 per gateway"],
+          ["VPN Server", "1"],
+          ["VSI Network Interface", "1 per VSI"]
+        ]
+      },
+      {
+        "text": "Finally, the CIDR range for each subnet is calculated by the number of needed interfaces. For example, a subnet with a VPN gateway would require, 5 addresses by default, and 4 additional addresses for a total of 9 addresses. This is rounded to the highest exponent of 2. In this example, the number of IPs is rounded up to 16."
+      },
+      {
         "text": "_default_includes"
       },
       {
@@ -393,7 +412,7 @@
         "VPC Subnet Terraform Documentation"
       ]
     ],
-    "last_updated": "6/9/2023"
+    "last_updated": "8/21/2023"
   },
   "transit_gateways": {
     "content": [
