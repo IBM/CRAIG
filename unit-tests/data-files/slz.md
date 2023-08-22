@@ -336,6 +336,29 @@ By default, no AppID instances are created.
 
 -----
 
+## Icd
+
+IBM Cloud Databases are managed databases (and a messaging queue) that are hosted in IBM Cloud and integrated with other IBM Cloud services.
+
+Supported Databases
+- `Databases for PostgreSQL`
+- `Databases for etcd`
+- `Databases for Redis`
+- `Databases for MongoDB`
+- `Databases for MySQL`
+
+Optional Fields
+Memory          | - `The amount of memory in gigabytes for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type.`
+Disk            | - `The amount of disk space for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type.`
+CPU             | - `Enables and allocates the number of specified dedicated cores to your deployment.`
+
+### Related Links
+
+- [Getting Started with IBM Cloud Databases](https://cloud.ibm.com/docs/cloud-databases)
+- [IBM Cloud Databases Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/database)
+
+-----
+
 ## F5 Big IP
 
 The F5 BIG-IP Virtual Edition will enable you to setup a client-to-site full tunnel VPN to connect to your management/edge VPC and/or a web application firewall (WAF) to enable consumers to connect to your workload VPC over the public internet.

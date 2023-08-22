@@ -26,6 +26,7 @@ const {
   codeMirrorFormatIamAccountSettingsTf,
   cbrTf,
   vpnServerTf,
+  icdTf,
 } = require("./json-to-iac");
 
 const navCatagories = [
@@ -97,6 +98,13 @@ const navCatagories = [
         react_icon: "CloudApp",
         toTf: appidTf,
         jsonField: "appid",
+      },
+      {
+        title: "Cloud Databases",
+        path: "/form/icd",
+        react_icon: "IbmDb2",
+        toTf: icdTf,
+        jsonField: "icd",
       },
     ],
   },

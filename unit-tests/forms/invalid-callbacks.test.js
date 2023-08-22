@@ -24,6 +24,7 @@ const {
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
   invalidCrns,
+  invalidCpuCallback,
 } = require("../../client/src/lib/forms/invalid-callbacks");
 
 describe("invalid callbacks", () => {
@@ -1255,6 +1256,90 @@ describe("invalid callbacks", () => {
             crns: ["aaa"],
           },
           "it should be true"
+        )
+      );
+    });
+  });
+  describe("invalidCpuCallback", () => {
+    it("should be true for non integer value", () => {
+      assert.isTrue(
+        invalidCpuCallback(
+          {
+            cpu: 2.5,
+          },
+          {
+            cpuMin: 0,
+            cpuMax: 28,
+          },
+          "it should be true"
+        )
+      );
+    });
+    it("should be true for invalid range", () => {
+      assert.isTrue(
+        invalidCpuCallback(
+          {
+            cpu: 100,
+          },
+          {
+            cpuMin: 0,
+            cpuMax: 28,
+          },
+          "it should be true"
+        )
+      );
+    });
+    it("should be false for valid range", () => {
+      assert.isFalse(
+        invalidCpuCallback(
+          {
+            cpu: 25,
+          },
+          {
+            cpuMin: 0,
+            cpuMax: 28,
+          },
+          "it should be false"
+        )
+      );
+    });
+    it("should be false for value of zero", () => {
+      assert.isFalse(
+        invalidCpuCallback(
+          {
+            cpu: 0,
+          },
+          {
+            cpuMin: 0,
+            cpuMax: 28,
+          },
+          "it should be false"
+        )
+      );
+    });
+    it("should be false for empty string and null", () => {
+      assert.isFalse(
+        invalidCpuCallback(
+          {
+            cpu: "",
+          },
+          {
+            cpuMin: 0,
+            cpuMax: 28,
+          },
+          "it should be false"
+        )
+      );
+      assert.isFalse(
+        invalidCpuCallback(
+          {
+            cpu: null,
+          },
+          {
+            cpuMin: 0,
+            cpuMax: 28,
+          },
+          "it should be false"
         )
       );
     });

@@ -2,6 +2,7 @@ const {
   splat,
   getObjectFromArray,
   isNullOrEmptyString,
+  isWholeNumber,
   contains,
   containsKeys,
   splatContains,
@@ -604,6 +605,21 @@ function validService(service) {
 }
 
 /**
+ * checks if icd cpu input is invalid
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidCpuCallback(stateData, componentProps) {
+  return (
+    !isNullOrEmptyString(stateData.cpu) &&
+    (!isWholeNumber(stateData.cpu) ||
+      (stateData.cpu !== 0 && stateData.cpu < componentProps.cpuMin) ||
+      stateData.cpu > componentProps.cpuMax)
+  );
+}
+
+/**
  * checks if dns description invalid
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -666,4 +682,5 @@ module.exports = {
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
   invalidCrns,
+  invalidCpuCallback,
 };

@@ -729,6 +729,52 @@
     ],
     "last_updated": "6/9/2023"
   },
+  "icd": {
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/cloud-databases",
+        "Getting Started with IBM Cloud Databases"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/database",
+        "IBM Cloud Databases Terraform Documentation"
+      ]
+    ],
+    "content": [
+      {
+        "text": "IBM Cloud Databases are managed databases (and a messaging queue) that are hosted in IBM Cloud and integrated with other IBM Cloud services.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Supported Databases"],
+          ["Databases for PostgreSQL"],
+          ["Databases for etcd"],
+          ["Databases for Redis"],
+          ["Databases for MongoDB"],
+          ["Databases for MySQL"]
+        ]
+      },
+      {
+        "table": [
+          ["_headers", "Optional Fields"],
+          [
+            "Memory",
+            "The amount of memory in gigabytes for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type."
+          ],
+          [
+            "Disk",
+            "The amount of disk space for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type."
+          ],
+          [
+            "CPU",
+            "Enables and allocates the number of specified dedicated cores to your deployment."
+          ]
+        ]
+      }
+    ],
+    "last_updated": "8/22/2023"
+  },
   "f5": {
     "content": [
       {

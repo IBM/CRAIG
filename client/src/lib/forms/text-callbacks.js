@@ -321,6 +321,16 @@ function invalidCrnText(stateData) {
     : "";
 }
 
+/**
+ * return icd cpuinput invalid text
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} invalid text
+ */
+function invalidCpuTextCallback(stateData, componentProps) {
+  return `Using dedicated cores requires a minimum of ${componentProps.cpuMin} cores and a maximum of ${componentProps.cpuMax} cores per member. For shared CPU, select 0 cores.`;
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
@@ -339,4 +349,5 @@ module.exports = {
   invalidProjectNameText,
   invalidDNSDescriptionText,
   invalidCrnText,
+  invalidCpuTextCallback,
 };

@@ -15,6 +15,7 @@ import {
   AccessGroupsTemplate,
   AppIdTemplate,
   AtrackerPage,
+  CloudDatabaseTemplate,
   ClustersTemplate,
   DnsTemplate,
   EventStreamsTemplate,
@@ -62,6 +63,7 @@ import {
   invalidSshPublicKey,
   invalidSubnetTierName,
   nullOrEmptyStringCheckCallback,
+  invalidCpuCallback,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
@@ -71,6 +73,7 @@ import {
   invalidCidrText,
   invalidDNSDescriptionText,
   invalidSubnetTierText,
+  invalidCpuTextCallback,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
@@ -147,6 +150,28 @@ const Atracker = (craig) => {
       cosKeys={craig.store.cosKeys}
       cosBuckets={craig.store.cosBuckets}
       onSave={craig.atracker.save}
+    />
+  );
+};
+
+const CloudDatabasePage = (craig) => {
+  return (
+    <CloudDatabaseTemplate
+      icd={craig.store.json.icd}
+      disableSave={disableSave}
+      onDelete={craig.icd.delete}
+      onSave={craig.icd.save}
+      onSubmit={craig.icd.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      encryptionKeys={craig.store.encryptionKeys}
+      invalidCallback={invalidName("icd")}
+      invalidTextCallback={invalidNameText("icd")}
+      invalidCpuCallback={invalidCpuCallback}
+      invalidCpuTextCallback={invalidCpuTextCallback}
+      craig={craig}
+      docs={RenderDocs("icd")}
     />
   );
 };
@@ -784,6 +809,8 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "activityTracker") {
     return Atracker(craig);
+  } else if (form === "icd") {
+    return CloudDatabasePage(craig);
   } else if (form === "clusters") {
     return ClusterPage(craig);
   } else if (form === "dns") {

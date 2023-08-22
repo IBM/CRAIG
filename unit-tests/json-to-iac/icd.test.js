@@ -334,6 +334,18 @@ data "ibm_resource_instance" "icd_db" {
             disk: 1024,
             cpu: 0,
           },
+          {
+            kms: null,
+            encryption_key: null,
+            resource_group: "slz-service-rg",
+            use_data: false,
+            name: "icd-etcd",
+            service: "databases-for-etcd",
+            group_id: "member",
+            memory: 1024,
+            disk: 1024,
+            cpu: 0,
+          },
         ],
       });
       let expectedData = `##############################################################################
@@ -439,6 +451,35 @@ resource "ibm_resource_instance" "icd_mysql" {
   plan              = "standard"
   location          = var.region
   key_protect_key   = ibm_kms_key.kms_key_key.crn
+  group {
+    group_id = "member"
+    memory {
+      allocation_mb = 1024
+    }
+    disk {
+      allocation_mb = 1024
+    }
+    cpu {
+      allocation_count = 0
+    }
+  }
+  tags = [
+    "hello",
+    "world"
+  ]
+  timeouts {
+    create = "120m"
+    update = "120m"
+    delete = "15m"
+  }
+}
+
+resource "ibm_resource_instance" "icd_etcd" {
+  name              = "\${var.prefix}-icd-etcd"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  service           = "databases-for-etcd"
+  plan              = "standard"
+  location          = var.region
   group {
     group_id = "member"
     memory {
