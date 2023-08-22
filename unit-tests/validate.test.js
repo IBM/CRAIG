@@ -2080,11 +2080,7 @@ describe("validate", () => {
       let goodOverride = minimumValidJson();
       goodOverride.icd = null;
       let actualData = validate(goodOverride);
-      assert.deepEqual(
-        actualData.icd,
-        [],
-        "it should set icd"
-      );
+      assert.deepEqual(actualData.icd, [], "it should set icd");
     });
   });
 });

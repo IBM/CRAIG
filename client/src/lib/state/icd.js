@@ -10,7 +10,7 @@ const { setKmsFromKeyOnStoreUpdate } = require("./utils");
  * @param {Array<Object>} config.store.json.icd
  */
 function icdOnStoreUpdate(config) {
-  if(!config.store.json.icd) {
+  if (!config.store.json.icd) {
     config.store.json.icd = [];
   }
   config.store.json.icd.forEach((icd) => {

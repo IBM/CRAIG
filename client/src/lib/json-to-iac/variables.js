@@ -15,35 +15,49 @@ function variablesDotTf(config, useF5) {
       type: "${string}",
       sensitive: true,
     },
-    region: {
-      description: "IBM Cloud Region where resources will be provisioned",
+  };
+  if (config._options.classic_resources) {
+    variables.iaas_classic_username = {
+      description:
+        "The IBM Cloud username for the creation of classic resources.",
       type: "${string}",
-      default: config._options.region,
-      validation: [
-        {
-          error_message: "Region must be in a supported IBM VPC region.",
-          condition: `\${contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "jp-tok", "jp-osa", "au-syd"], var.region)}`,
-        },
-      ],
-    },
-    prefix: {
-      description: "Name prefix that will be prepended to named resources",
+      sensitive: true,
+    };
+    variables.iaas_classic_api_key = {
+      description:
+        "The IBM Cloud API Key for the creation of classic resources.",
       type: "${string}",
-      default: config._options.prefix,
-      validation: [
-        {
-          error_message:
-            "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters.",
-          condition:
-            '${can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.prefix)) && length(var.prefix) <= 16}',
-        },
-      ],
-    },
-    account_id: {
-      description: "IBM Account ID where resources will be provisioned",
-      type: "${string}",
-      default: config._options.account_id,
-    },
+      sensitive: true,
+    };
+  }
+  variables.region = {
+    description: "IBM Cloud Region where resources will be provisioned",
+    type: "${string}",
+    default: config._options.region,
+    validation: [
+      {
+        error_message: "Region must be in a supported IBM VPC region.",
+        condition: `\${contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "jp-tok", "jp-osa", "au-syd"], var.region)}`,
+      },
+    ],
+  };
+  variables.prefix = {
+    description: "Name prefix that will be prepended to named resources",
+    type: "${string}",
+    default: config._options.prefix,
+    validation: [
+      {
+        error_message:
+          "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters.",
+        condition:
+          '${can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$", var.prefix)) && length(var.prefix) <= 16}',
+      },
+    ],
+  };
+  variables.account_id = {
+    description: "IBM Account ID where resources will be provisioned",
+    type: "${string}",
+    default: config._options.account_id,
   };
   if (isNullOrEmptyString(config._options.account_id)) {
     delete variables.account_id.default;
