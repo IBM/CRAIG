@@ -40,6 +40,41 @@ function ibmIamAuthorizationPolicySecretsManager(kmsName, config) {
 }
 
 /**
+ * format auth for kubernetes to secrets manager
+ * @param {Object} secretsManager secrets manager object
+ * @returns {object} terraform code
+ */
+function ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager) {
+  return {
+    name: `secrets manager ${secretsManager.name} to containers policy`,
+    data: {
+      target_service_name: "secrets-manager",
+      roles: ["Manager"],
+      description: `Allow Secets Manager instance ${secretsManager.name} to encrypt kubernetes service`,
+      target_resource_instance_id: `\${ibm_resource_instance.${snakeCase(
+        secretsManager.name
+      )}_secrets_manager.guid}`,
+      source_service_name: "container-kubernetes",
+    },
+  };
+}
+
+/**
+ * format auth for kubernetes to secrets manager
+ * @param {Object} secretsManager secrets manager object
+ * @returns {object} terraform code
+ */
+function formatK8sToSecretsManagerAuth(secretsManager) {
+  let data = ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_iam_authorization_policy",
+    data.name,
+    data.data
+  );
+}
+
+/**
  * format auth for secrets manager to kms. secrets manager authorization needs to be
  * created prior to instance to allow for the secrets manager service to be encrypted
  * with keys from kms
@@ -56,6 +91,7 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
     auth.data
   );
 }
+
 /**
  * create secrets manager instance terraform
  * @param {Object} secretsManager
@@ -198,6 +234,133 @@ function formatSecretsManagerSecret(secret, config) {
   let data = ibmSmKvSecret(secret, config);
   return jsonToTfPrint("resource", "ibm_sm_kv_secret", data.name, data.data);
 }
+/**
+ * format a secrets manager secret group
+ * @param {*} secret secret object
+ * @param {string} secret.secrets_manager name of instance where secret will be provisioned
+ * @param {string} secret.name name of secret group
+ * @param {string} secret.description description of secret group
+ * @returns {object} terraform string
+ */
+function ibmSmSecretGroup(group) {
+  return {
+    name: snakeCase(group.secrets_manager + "_group_" + group.name),
+    data: {
+      name:
+        "${var.prefix}-" + kebabCase(group.secrets_manager + " " + group.name),
+      instance_id: `\${ibm_resource_instance.${snakeCase(
+        group.secrets_manager
+      )}_secrets_manager.guid}`,
+      description: group.description,
+      region: varDotRegion,
+    },
+  };
+}
+
+/**
+ * format a secrets manager secret group
+ * @param {*} secret secret object
+ * @param {string} secret.secrets_manager name of instance where secret will be provisioned
+ * @param {string} secret.name name of secret group
+ * @param {string} secret.description description of secret group
+ * @returns {string} terraform string
+ */
+function formatSecretsManagerSecretGroup(group) {
+  let data = ibmSmSecretGroup(group);
+  return jsonToTfPrint("resource", "ibm_sm_secret_group", data.name, data.data);
+}
+
+/**
+ * create a secret for integration with kubernetes ingress
+ * @param {*} secret
+ * @param {*} config
+ * @returns {string} terraform for secrets
+ */
+function formatSecretsManagerK8sSecret(secret, config) {
+  /**
+   * function to create ref for variable
+   * @param {string} ref
+   * @returns {string} formatted string
+   */
+  function formatSecretVariableRef(ref) {
+    return `\${var.${snakeCase(
+      `${secret.secrets_manager} ${secret.name} secret ${ref}`
+    )}}`;
+  }
+
+  let arbitrarySecretData = {
+    name: kebabCase(
+      "${var.prefix}-" +
+        secret.secrets_manager +
+        "-" +
+        secret.arbitrary_secret_name
+    ),
+    instance_id: `\${ibm_resource_instance.${snakeCase(
+      secret.secrets_manager
+    )}_secrets_manager.guid}`,
+    secret_group_id: cdktfRef(
+      "ibm_sm_secret_group." +
+        snakeCase(secret.secrets_manager + "_group_" + secret.secret_group) +
+        ".secret_group_id"
+    ),
+    region: varDotRegion,
+    endpoint_type: config._options.endpoints,
+    description: secret.arbitrary_secret_description,
+    expiration_date: secret.expiration_date,
+    labels: secret.labels,
+    payload: formatSecretVariableRef("arbitrary_secret_data"),
+  };
+
+  let usernamePasswordSecret = {
+    name: kebabCase(
+      "${var.prefix}-" +
+        secret.secrets_manager +
+        "-" +
+        secret.username_password_secret_name
+    ),
+    instance_id: `\${ibm_resource_instance.${snakeCase(
+      secret.secrets_manager
+    )}_secrets_manager.guid}`,
+    secret_group_id: cdktfRef(
+      "ibm_sm_secret_group." +
+        snakeCase(secret.secrets_manager + "_group_" + secret.secret_group) +
+        ".secret_group_id"
+    ),
+    region: varDotRegion,
+    endpoint_type: config._options.endpoints,
+    description: secret.username_password_secret_description,
+    expiration_date: secret.expiration_date,
+    labels: secret.labels,
+    username: formatSecretVariableRef("username"),
+    password: formatSecretVariableRef("password"),
+    rotation: [
+      {
+        auto_rotate: secret.auto_rotate,
+        interval: secret.interval,
+        unit: secret.unit,
+      },
+    ],
+  };
+
+  return (
+    jsonToTfPrint(
+      "resource",
+      "ibm_sm_arbitrary_secret",
+      snakeCase(
+        `${secret.secrets_manager} ${secret.arbitrary_secret_name} secret`
+      ),
+      arbitrarySecretData
+    ) +
+    jsonToTfPrint(
+      "resource",
+      "ibm_sm_username_password_secret",
+      snakeCase(
+        `${secret.secrets_manager} ${secret.username_password_secret_name} secret`
+      ),
+      usernamePasswordSecret
+    )
+  );
+}
 
 /**
  * create secrets manager terraform
@@ -248,4 +411,7 @@ module.exports = {
   ibmResourceInstanceSecretsManager,
   ibmIamAuthorizationPolicySecretsManager,
   formatSecretsManagerSecret,
+  formatSecretsManagerSecretGroup,
+  formatK8sToSecretsManagerAuth,
+  formatSecretsManagerK8sSecret,
 };

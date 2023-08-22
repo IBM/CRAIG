@@ -5,6 +5,7 @@
     "features": [
       "Added backend functionality to allow users to create schematics workspaces",
       "Users can now search for components by using the `Search` box in the left navigation bar",
+      "Added JSON-to-IaC functionality to allow for cluster ingress secrets that are managed by Secrets Manager",
       "Updated Docs to explain how dynamic subnets are calculated"
     ],
     "fixes": [

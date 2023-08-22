@@ -4,6 +4,9 @@ const {
   formatSecretsManagerInstance,
   secretsManagerTf,
   formatSecretsManagerSecret,
+  formatSecretsManagerSecretGroup,
+  formatK8sToSecretsManagerAuth,
+  formatSecretsManagerK8sSecret,
 } = require("../../client/src/lib/json-to-iac/secrets-manager");
 
 describe("secrets manager", () => {
@@ -1196,6 +1199,119 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
         expectedData,
         "it should have the correct terraform code"
       );
+    });
+  });
+  describe("formatSecretsManagerSecretGroup", () => {
+    it("should return a secrets manager secrets group", () => {
+      let actualData = formatSecretsManagerSecretGroup(
+        {
+          name: "cos-secret",
+          secrets_manager: "secrets-manager",
+          description: "example",
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_sm_secret_group" "secrets_manager_group_cos_secret" {
+  name        = "\${var.prefix}-secrets-manager-cos-secret"
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  description = "example"
+  region      = var.region
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return group terraform"
+      );
+    });
+  });
+  describe("formatK8sToSecretsManagerAuth", () => {
+    let actualData = formatK8sToSecretsManagerAuth({
+      name: "dev",
+    });
+    let expectedData = `
+resource "ibm_iam_authorization_policy" "secrets_manager_dev_to_containers_policy" {
+  target_service_name         = "secrets-manager"
+  description                 = "Allow Secets Manager instance dev to encrypt kubernetes service"
+  target_resource_instance_id = ibm_resource_instance.dev_secrets_manager.guid
+  source_service_name         = "container-kubernetes"
+  roles = [
+    "Manager"
+  ]
+}
+`;
+    assert.deepEqual(actualData, expectedData, "it should return auth tf");
+  });
+  describe("formatSecretsManagerK8sSecret", () => {
+    it("should return a formatted arbitrary secret", () => {
+      let actualData = formatSecretsManagerK8sSecret(
+        {
+          name: "example",
+          cluster: "example",
+          namespace: "ns",
+          secrets_manager: "secrets-manager",
+          expiration_date: "1234",
+          secret_group: "group",
+          labels: ["my-label"],
+          arbitrary_secret_name: "arbitrary-secret",
+          arbitrary_secret_description: "example",
+          arbitrary_secret_data: "arbitrary",
+          username_password_secret_name: "username-secret",
+          username_password_secret_description: "username-password",
+          username_password_secret_username: "username",
+          username_password_secret_password: "1VeryGoodPasword?",
+          auto_rotate: true,
+          interval: 1,
+          unit: "day",
+        },
+        {
+          _options: {
+            endpoints: "private",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_sm_arbitrary_secret" "secrets_manager_arbitrary_secret_secret" {
+  name            = "\${var.prefix}-secrets-manager-arbitrary-secret"
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  region          = var.region
+  endpoint_type   = "private"
+  description     = "example"
+  expiration_date = "1234"
+  payload         = var.secrets_manager_example_secret_arbitrary_secret_data
+  labels = [
+    "my-label"
+  ]
+}
+
+resource "ibm_sm_username_password_secret" "secrets_manager_username_secret_secret" {
+  name            = "\${var.prefix}-secrets-manager-username-secret"
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  region          = var.region
+  endpoint_type   = "private"
+  description     = "username-password"
+  expiration_date = "1234"
+  username        = var.secrets_manager_example_secret_username
+  password        = var.secrets_manager_example_secret_password
+  labels = [
+    "my-label"
+  ]
+  rotation {
+    auto_rotate = true
+    interval    = 1
+    unit        = "day"
+  }
+}
+`;
+      assert.deepEqual(actualData, expectedData, "it should return secret tf");
     });
   });
 });

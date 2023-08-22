@@ -128,6 +128,23 @@
           "description": "string",
           "type": "string"
         }
+      },
+      "variable_secrets": {
+        "Array": {
+          "name": "string",
+          "secrets_manager": "string",
+          "expiration_date": "string",
+          "description": "string",
+          "arbitrary": "boolean",
+          "username": "string",
+          "password": "string",
+          "labels": "Array<string>",
+          "secret_group": "string",
+          "auto_rotate": "boolean",
+          "interval": "number",
+          "unit": "string",
+          "payload": "string"
+        }
       }
     }
   },
@@ -341,6 +358,28 @@
           "subnets": "Array<string>",
           "vpc": "string",
           "workers_per_subnet": "number"
+        }
+      },
+      "opaque_secrets": {
+        "Array": {
+          "name": "string",
+          "cluster": "string",
+          "namespace": "string",
+          "secrets_manager": "string",
+          "secret_group": "string",
+          "secret_expiration_date": "string",
+          "arbitrary_secret_name": "string",
+          "arbitrary_secret_description": "string",
+          "arbitrary_secret_labels": "string",
+          "arbitrary_secret_data": "string",
+          "username_password_secret_name": "string",
+          "username_password_secret_description": "string",
+          "username_password_secret_labels": "string",
+          "username_password_secret_username": "string",
+          "username_password_secret_password": "string",
+          "username_password_secret_auto_rotate": "boolean",
+          "username_password_secret_interval": "number",
+          "username_password_unit": "string"
         }
       },
       "workers_per_subnet": "number",

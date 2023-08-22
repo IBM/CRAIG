@@ -134,6 +134,11 @@ function formatIcd(instance, config) {
   );
 }
 
+/**
+ * create icd terraform
+ * @param {*} config
+ * @returns {string} terraform string
+ */
 function icdTf(config) {
   let tf = "";
   let icdServiceToKmsMap = {

@@ -1,6 +1,11 @@
 const { jsonToTf } = require("json-to-tf");
 const { tfBlock } = require("./utils");
-const { snakeCase, titleCase, isNullOrEmptyString } = require("lazy-z");
+const {
+  snakeCase,
+  titleCase,
+  isNullOrEmptyString,
+  capitalize,
+} = require("lazy-z");
 
 function variablesDotTf(config, useF5) {
   let variables = {
@@ -97,6 +102,40 @@ function variablesDotTf(config, useF5) {
         });
     });
   }
+
+  config.clusters.forEach((cluster) => {
+    if (cluster.opaque_secrets) {
+      cluster.opaque_secrets.forEach((secret) => {
+        variables[
+          snakeCase(
+            `${secret.secrets_manager} ${secret.name} secret arbitrary_secret_data`
+          )
+        ] = {
+          description: `Data for ${secret.name} secret arbitrary secret data`,
+          type: "${string}",
+          sensitive: true,
+          default: secret.arbitrary_secret_data,
+        };
+        variables[
+          snakeCase(`${secret.secrets_manager} ${secret.name} secret username`)
+        ] = {
+          description: `${capitalize(secret.name)} secret username`,
+          type: "${string}",
+          sensitive: true,
+          default: secret.username_password_secret_username,
+        };
+        variables[
+          snakeCase(`${secret.secrets_manager} ${secret.name} secret password`)
+        ] = {
+          description: `${capitalize(secret.name)} secret password`,
+          type: "${string}",
+          sensitive: true,
+          default: secret.username_password_secret_password,
+        };
+      });
+    }
+  });
+
   return tfBlock(
     "variables",
     "\n" +

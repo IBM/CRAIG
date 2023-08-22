@@ -68,6 +68,8 @@ const {
   ibmResourceInstanceSecretsManager,
   ibmIamAuthorizationPolicySecretsManager,
   formatSecretsManagerSecret,
+  formatSecretsManagerSecretGroup,
+  formatSecretsManagerK8sSecret,
 } = require("./secrets-manager");
 const {
   sgTf,
@@ -295,4 +297,6 @@ module.exports = {
   calculateNeededSubnetIps,
   getNextCidr,
   icdTf,
+  formatSecretsManagerSecretGroup,
+  formatSecretsManagerK8sSecret,
 };

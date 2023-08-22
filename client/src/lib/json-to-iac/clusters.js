@@ -1,4 +1,4 @@
-const { getObjectFromArray, snakeCase } = require("lazy-z");
+const { getObjectFromArray, snakeCase, distinct } = require("lazy-z");
 const {
   rgIdRef,
   getKmsInstanceData,
@@ -15,6 +15,11 @@ const {
   timeouts,
   cdktfRef,
 } = require("./utils");
+const {
+  formatK8sToSecretsManagerAuth,
+  formatSecretsManagerK8sSecret,
+  formatSecretsManagerSecretGroup,
+} = require("./secrets-manager");
 
 /**
  * create tf for cluster
@@ -179,12 +184,75 @@ function formatWorkerPool(pool, config) {
  */
 function clusterTf(config) {
   let tf = "";
+  let secretsManagerAuth = [];
+  // get a list of secrets manager instances
+  config.clusters.forEach((cluster) => {
+    if (cluster.opaque_secrets) {
+      cluster.opaque_secrets.forEach((secret) => {
+        secretsManagerAuth.push(secret.secrets_manager);
+      });
+    }
+  });
+  let secretsManagerAuthTf = "";
+  // for each secrets manager instance create an authorization
+  distinct(secretsManagerAuth).forEach((secretsManager) => {
+    secretsManagerAuthTf += formatK8sToSecretsManagerAuth({
+      name: secretsManager,
+    });
+  });
+  // add code to beginning of clusters.tf if secrets manager instances are found
+  if (secretsManagerAuth.length > 0)
+    tf +=
+      tfBlock("Secrets Manager Authorizations", secretsManagerAuthTf) + "\n";
+
+  // for each cluster
   config.clusters.forEach((cluster) => {
     let blockData = formatCluster(cluster, config);
     cluster.worker_pools.forEach((pool) => {
       blockData += formatWorkerPool(pool, config);
     });
     tf += tfBlock(cluster.name + " Cluster", blockData) + "\n";
+    if (cluster.opaque_secrets) {
+      cluster.opaque_secrets.forEach((secret) => {
+        let ingressData =
+          formatSecretsManagerSecretGroup({
+            secrets_manager: secret.secrets_manager,
+            name: secret.secret_group,
+            description: `Secrets Manager group for ${cluster.name} ingress ${secret.name}`,
+          }) +
+          formatSecretsManagerK8sSecret(secret, config) +
+          jsonToTfPrint(
+            "resource",
+            "ibm_container_ingress_secret_opaque",
+            `${cluster.name} ingress ${secret.name}`,
+            {
+              cluster:
+                "${ibm_container_vpc_cluster." +
+                snakeCase(`${cluster.vpc} vpc ${cluster.name} cluster`) +
+                ".name}",
+              secret_name: `\${var.prefix}-ingress-` + secret.name,
+              secret_namespace: secret.namespace,
+              persistence: true,
+              fields: [
+                {
+                  crn: `\${ibm_sm_arbitrary_secret.${snakeCase(
+                    `${secret.secrets_manager}_${secret.arbitrary_secret_name}_secret`
+                  )}.crn}`,
+                },
+                {
+                  crn: `\${ibm_sm_username_password_secret.${snakeCase(
+                    `${secret.secrets_manager}_${secret.username_password_secret_name}_secret`
+                  )}.crn}`,
+                },
+              ],
+            }
+          );
+        tf += tfBlock(
+          `${cluster.name} Cluster Ingress ${secret.name}`,
+          ingressData
+        );
+      });
+    }
   });
   return tfDone(tf);
 }
