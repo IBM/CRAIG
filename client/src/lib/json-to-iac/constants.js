@@ -27,18 +27,6 @@ $ADDITIONAL_PROVIDERS
       configuration_aliases = [$ALIASES]
     }
 `,
-  mainTf: `##############################################################################
-# IBM Cloud Provider
-##############################################################################
-
-provider "ibm" {
-  ibmcloud_api_key = var.ibmcloud_api_key
-  region           = var.region
-  ibmcloud_timeout = 60
-}
-
-#############################################################################
-`,
   teleportCloudInitText: `#cloud-config                                                                                      
 # This file is used to install teleport on a bastion host, configure teleport with App ID, and    
 # configure teleport with a COS instance.                                                         

@@ -23,6 +23,10 @@ const { dnsTf } = require("./dns");
 const { loggingMonitoringTf } = require("./logging-monitoring");
 const { variablesDotTf } = require("./variables");
 const { icdTf } = require("./icd");
+const { tfBlock } = require("./utils");
+const { jsonToTf } = require("json-to-tf");
+const { varDotRegion } = require("../constants");
+const { ibmCloudProvider } = require("./provider");
 
 /**
  * create a json document with file names as keys and text as value
@@ -36,7 +40,7 @@ function configToFilesJson(config, apiMode) {
   try {
     let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
     let files = {
-      "main.tf": mainTf.replace("$REGION", `"${config._options.region}"`),
+      "main.tf": ibmCloudProvider(config),
       "flow_logs.tf": flowLogsTf(config),
       "transit_gateways.tf":
         config.transit_gateways.length > 0 ? tgwTf(config) : null,

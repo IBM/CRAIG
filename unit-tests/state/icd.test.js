@@ -28,7 +28,7 @@ describe("icd", () => {
       let state = newState();
       state.store.json.icd = null;
       state.update();
-      assert.deepEqual(state.store.json.icd, [], 'it should be an empty array');
+      assert.deepEqual(state.store.json.icd, [], "it should be an empty array");
     });
   });
   describe("icd crud functions", () => {
