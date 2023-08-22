@@ -884,6 +884,7 @@ const minimumValidJson = (data) => {
     load_balancers: [],
     access_groups: [],
     iam_account_settings: [],
+    icd: [],
   };
   eachKey(data || {}, (key) => {
     newData[key] = data[key];
@@ -2073,6 +2074,16 @@ describe("validate", () => {
         actualData.event_streams,
         [],
         "it should set event_streams"
+      );
+    });
+    it("should set icd if null", () => {
+      let goodOverride = minimumValidJson();
+      goodOverride.icd = null;
+      let actualData = validate(goodOverride);
+      assert.deepEqual(
+        actualData.icd,
+        [],
+        "it should set icd"
       );
     });
   });

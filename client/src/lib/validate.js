@@ -55,6 +55,7 @@ const validate = function (json) {
     "routing_tables",
     "logdna",
     "sysdig",
+    "icd",
   ];
   /**
    * validate something

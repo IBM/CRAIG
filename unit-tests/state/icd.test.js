@@ -23,6 +23,14 @@ describe("icd", () => {
       );
     });
   });
+  describe("icd.onStoreUpdate", () => {
+    it("should set unfound icd to empty array", () => {
+      let state = newState();
+      state.store.json.icd = null;
+      state.update();
+      assert.deepEqual(state.store.json.icd, [], 'it should be an empty array');
+    });
+  });
   describe("icd crud functions", () => {
     let icdState;
     beforeEach(() => {
