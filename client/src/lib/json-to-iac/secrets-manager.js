@@ -54,7 +54,7 @@ function ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager) {
       target_resource_instance_id: `\${ibm_resource_instance.${snakeCase(
         secretsManager.name
       )}_secrets_manager.guid}`,
-      source_service_name: "container-kubernetes",
+      source_service_name: "containers-kubernetes",
     },
   };
 }

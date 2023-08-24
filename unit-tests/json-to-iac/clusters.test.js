@@ -1177,7 +1177,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_secrets_manager_to_cont
   target_service_name         = "secrets-manager"
   description                 = "Allow Secets Manager instance secrets-manager to encrypt kubernetes service"
   target_resource_instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
-  source_service_name         = "container-kubernetes"
+  source_service_name         = "containers-kubernetes"
   roles = [
     "Manager"
   ]

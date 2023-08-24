@@ -15,17 +15,17 @@ function ibmCloudProvider(config) {
         {
           ibmcloud_api_key: "${var.ibmcloud_api_key}",
           region: varDotRegion,
-          ibmcloud_timeout: 60
-        }
-      ]
-    }
+          ibmcloud_timeout: 60,
+        },
+      ],
+    },
   };
 
   if (config._options.classic_resources) {
     transpose(
       {
         iaas_classic_username: "${var.iaas_classic_username}",
-        iaas_classic_api_key: "${var.iaas_classic_api_key}"
+        iaas_classic_api_key: "${var.iaas_classic_api_key}",
       },
       data.provider.ibm[0]
     );
@@ -38,5 +38,5 @@ function ibmCloudProvider(config) {
 }
 
 module.exports = {
-  ibmCloudProvider
+  ibmCloudProvider,
 };
