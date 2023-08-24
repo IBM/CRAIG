@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Users can now search for components by using the `Search` box in the left navigation bar
 - Added JSON-to-IaC functionality to allow for cluster ingress secrets that are managed by Secrets Manager
 - Updated Docs to explain how dynamic subnets are calculated
+- Toggling the `Enable Floating IP` for a VSI deployment now creates a Floating IP for the primary interface on each VSI in the deployment
 
 ### Fixes
 

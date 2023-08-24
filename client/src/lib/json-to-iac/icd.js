@@ -175,7 +175,7 @@ function icdTf(config) {
   });
   if (config.icd.length > 0) {
     tf += tfBlock("Database Services", instanceTf);
-  };
+  }
   return tf;
 }
 

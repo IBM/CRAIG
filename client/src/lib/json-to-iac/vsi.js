@@ -425,7 +425,8 @@ function formatLoadBalancer(deployment, config) {
  */
 function vsiTf(config) {
   let tf = "",
-    imageTf = "";
+    imageTf = "",
+    fipTf = "";
   let allImagesNames = distinct(splat(config.vsi, "image"));
   allImagesNames.forEach((name) => {
     imageTf += formatVsiImage(name);
@@ -444,6 +445,9 @@ function vsiTf(config) {
             deployment.reserved_ips[deployment.subnets.indexOf(subnet)][i];
         }
         blockData += formatVsi(instance, config);
+        if (deployment.enable_floating_ip) {
+          fipTf += formatFip(instance);
+        }
       }
     });
     tf +=
@@ -452,6 +456,7 @@ function vsiTf(config) {
         blockData
       ) + "\n";
   });
+  fipTf === "" ? "" : (tf += tfBlock("optionally add floating IPs", fipTf));
   return tfDone(tf);
 }
 
@@ -471,10 +476,49 @@ function lbTf(config) {
   return tfDone(tf);
 }
 
+/**
+ *
+ * @param {Object} vsi vsi instance data on a particular subnet
+ * @returns {Object} returns object for creating terraform formatted string
+ */
+function ibmIsFip(vsi) {
+  let zone = vsi.subnet.replace(/[^]+(?=\d$)/g, "");
+  let fipName = `${snakeCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
+    vsi.index
+  }-fip`;
+  return {
+    name: fipName,
+    data: {
+      name: `${varDotPrefix}-${fipName}`,
+      target: tfRef(
+        "ibm_is_instance",
+        `${snakeCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${vsi.index}`,
+        "primary_network_interface.0.id"
+      ),
+    },
+  };
+}
+
+/**
+ *
+ * @param {Object} instance vsi data on a particular subnet
+ * @returns terraform formatted string
+ */
+function formatFip(instance) {
+  let fipData = ibmIsFip(instance);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_is_floating_ip",
+    fipData.name,
+    fipData.data
+  );
+}
+
 module.exports = {
   formatVsi,
   formatVsiImage,
   formatLoadBalancer,
+  formatFip,
   vsiTf,
   lbTf,
   ibmIsLbPoolMembers,
@@ -483,4 +527,5 @@ module.exports = {
   ibmIsInstance,
   ibmIsLb,
   ibmIsVolume,
+  ibmIsFip,
 };

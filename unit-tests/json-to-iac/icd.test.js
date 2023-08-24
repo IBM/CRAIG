@@ -513,50 +513,51 @@ resource "ibm_resource_instance" "icd_etcd" {
       );
     });
     it("should return nothing when no data is provided", () => {
-      let actualData = icdTf({_options: {
-        prefix: "iac",
-        tags: ["hello", "world"],
-        region: "us-south",
-      },
-      resource_groups: [
-        {
-          use_prefix: false,
-          name: "slz-service-rg",
-          use_data: false,
+      let actualData = icdTf({
+        _options: {
+          prefix: "iac",
+          tags: ["hello", "world"],
+          region: "us-south",
         },
-        {
-          use_prefix: false,
-          name: "slz-management-rg",
-          use_data: false,
-        },
-        {
-          use_prefix: false,
-          name: "slz-workload-rg",
-          use_data: false,
-        },
-      ],
-      key_management: [
-        {
-          name: "kms",
-          service: "kms",
-          resource_group: "slz-service-rg",
-          authorize_vpc_reader_role: true,
-          use_data: false,
-          use_hs_crypto: false,
-          keys: [
-            {
-              name: "key",
-              root_key: true,
-              key_ring: "test",
-              force_delete: true,
-              rotation: 12,
-              dual_auth_delete: true,
-            },
-          ],
-        },
-      ],
-      icd: [],
-    });
+        resource_groups: [
+          {
+            use_prefix: false,
+            name: "slz-service-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: false,
+            name: "slz-management-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: false,
+            name: "slz-workload-rg",
+            use_data: false,
+          },
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+        icd: [],
+      });
       let expectedData = "";
       assert.deepEqual(
         actualData,

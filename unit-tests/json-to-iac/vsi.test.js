@@ -1220,5 +1220,70 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
         "it should return correct data"
       );
     });
+    it("should create floating ip tf block if enabled", () => {
+      let nw = {};
+      transpose(slzNetwork, nw);
+      nw.vsi[0].enable_floating_ip = true;
+      nw.vsi[0].subnets = ["vsi-zone-1"];
+      nw.vsi[0].vsi_per_subnet = 1;
+      let actualData = vsiTf(nw);
+      let expectedData = `##############################################################################
+# Image Data Sources
+##############################################################################
+
+data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
+  name = "ibm-ubuntu-22-04-1-minimal-amd64-1"
+}
+
+##############################################################################
+
+##############################################################################
+# Management VPC Management Server Deployment
+##############################################################################
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+##############################################################################
+
+##############################################################################
+# Optionally Add Floating IPs
+##############################################################################
+
+resource "ibm_is_floating_ip" "management_management_server_vsi_zone_1_1_fip" {
+  name   = "\${var.prefix}-management-management-server-vsi-zone-1-1-fip"
+  target = ibm_is_instance.management_management_server_vsi_zone_1_1.primary_network_interface.0.id
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
 });

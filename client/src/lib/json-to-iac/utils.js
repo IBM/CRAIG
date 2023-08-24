@@ -79,8 +79,8 @@ function buildTitleComment(name) {
       )
       .replace(/\sDNA/g, "DNA") // replace `Log DNA`
       .replace(/Vpe/g, "VPE") // used for sg names
-      .replace(/Vsi(?=\s)/g, "VSI") + // used for sg
-    "\n"
+      .replace(/Vsi(?=\s)/g, "VSI")
+      .replace(/I Ps/g, "IPs") + "\n" // used for sg
   );
 }
 
