@@ -23,7 +23,8 @@
       "When renaming resources currently in use, references to renamed resources are now changed to match the new name",
       "Added the ability for uses to import existing resource keys into Secrets Manager",
       "An authorization policy is now created to allow VPN Servers to read from Secrets Manager instances",
-      "Users can now generate CRAIG Terraform from JSON via the command line"
+      "Users can now generate CRAIG Terraform from JSON via the command line",
+      "Users can now generate Terraform for IBM Cloud Databases using the Cloud Databases page `/icd`"
     ],
     "fixes": [
       "VPN Servers now no longer need a port for provision, fixed an error causing undefined ports to render in terraform as \"\"",

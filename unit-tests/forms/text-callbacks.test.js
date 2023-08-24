@@ -20,6 +20,7 @@ const {
 const {
   invalidDNSDescriptionText,
   invalidCrnText,
+  invalidCpuTextCallback,
 } = require("../../client/src/lib/forms/text-callbacks");
 
 describe("text callbacks", () => {
@@ -782,5 +783,19 @@ describe("text callbacks", () => {
         "it should return correct message"
       );
     });
+  });
+  describe("invalidCpuTextCallback", () => {
+    let minCpu = 0;
+    let maxCpu = 28;
+    assert.deepEqual(
+      invalidCpuTextCallback(
+        {},
+        {
+          cpuMin: minCpu,
+          cpuMax: maxCpu,
+        }
+      ),
+      `Using dedicated cores requires a minimum of ${minCpu} cores and a maximum of ${maxCpu} cores per member. For shared CPU, select 0 cores.`
+    );
   });
 });

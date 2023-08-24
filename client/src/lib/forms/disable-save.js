@@ -29,6 +29,7 @@ const {
   validRecord,
   invalidDNSDescription,
   invalidDnsZoneName,
+  invalidCpuCallback,
 } = require("./invalid-callbacks");
 const { commaSeparatedIpListExp } = require("../constants");
 
@@ -116,6 +117,23 @@ function invalidPort(rule, isSecurityGroup) {
 }
 
 /**
+ * reduct unit test writing check for number input invalidation
+ * @param {*} value
+ * @param {*} minRange
+ * @param {*} maxRange
+ * @returns {boolean} true if any invalid number/range
+ */
+function invalidNumberCheck(value, minRange, maxRange) {
+  let isInvalidNumber = false;
+  if (!isNullOrEmptyString(value)) {
+    if (!isWholeNumber(value) || !isInRange(value, minRange, maxRange)) {
+      isInvalidNumber = true;
+    }
+  }
+  return isInvalidNumber;
+}
+
+/**
  * disable save
  * @param {string} field field name
  * @param {Object} stateData
@@ -153,6 +171,22 @@ function disableSave(field, stateData, componentProps, craig) {
     return (
       invalidName("object_storage")(stateData, componentProps) ||
       fieldsAreBad(["kms", "resource_group"], stateData)
+    );
+  } else if (field === "icd") {
+    return (
+      invalidName("icd")(stateData, componentProps) ||
+      fieldsAreBad(["service", "resource_group"], stateData) ||
+      invalidNumberCheck(
+        stateData.memory,
+        componentProps.memoryMin,
+        componentProps.memoryMax
+      ) ||
+      invalidNumberCheck(
+        stateData.disk,
+        componentProps.diskMin,
+        componentProps.diskMax
+      ) ||
+      invalidCpuCallback(stateData, componentProps)
     );
   } else if (field === "appid") {
     return (

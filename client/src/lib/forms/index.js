@@ -14,6 +14,7 @@ const {
   invalidCbrZoneText,
   invalidProjectNameText,
   invalidCrnText,
+  invalidCpuTextCallback,
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -40,6 +41,7 @@ const {
   validRecord,
   invalidDnsZoneName,
   invalidCrns,
+  invalidCpuCallback,
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -117,4 +119,6 @@ module.exports = {
   getCosFromBucket,
   invalidCrns,
   invalidCrnText,
+  invalidCpuCallback,
+  invalidCpuTextCallback,
 };

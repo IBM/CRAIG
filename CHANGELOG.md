@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - Added the ability for uses to import existing resource keys into Secrets Manager
 - An authorization policy is now created to allow VPN Servers to read from Secrets Manager instances
 - Users can now generate CRAIG Terraform from JSON via the command line
+- Users can now generate Terraform for IBM Cloud Databases using the Cloud Databases page `/icd`
 
 ### Fixes
 

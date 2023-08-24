@@ -1,4 +1,4 @@
-const { contains, eachKey } = require("lazy-z");
+const { contains, eachKey, isNullOrEmptyString } = require("lazy-z");
 const {
   rgIdRef,
   dataResourceName,
@@ -82,11 +82,13 @@ function ibmResourceInstanceIcd(instance, config) {
   if (!instance.use_data) {
     values.plan = "standard"; // dbs only use standard
     values.location = varDotRegion;
-    values.key_protect_key = encryptionKeyRef(
-      instance.kms,
-      instance.encryption_key,
-      "crn"
-    );
+    if (!isNullOrEmptyString(instance.kms)) {
+      values.key_protect_key = encryptionKeyRef(
+        instance.kms,
+        instance.encryption_key,
+        "crn"
+      );
+    }
     values.version = instance.version;
     values.service_endpoints = config._options.endpoints;
     values.group = [
@@ -153,7 +155,9 @@ function icdTf(config) {
       !contains(icdServiceToKmsMap[instance.service], instance.kms) &&
       !instance.use_data
     ) {
-      icdServiceToKmsMap[instance.service].push(instance.kms);
+      if (!isNullOrEmptyString(instance.kms)) {
+        icdServiceToKmsMap[instance.service].push(instance.kms);
+      }
     }
   });
   let authTf = "";
