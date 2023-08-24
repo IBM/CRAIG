@@ -24,7 +24,6 @@ provider "ibm" {
 
 ##############################################################################
 `;
-    console.log(actualData);
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
 });

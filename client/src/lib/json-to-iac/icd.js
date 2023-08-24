@@ -173,7 +173,9 @@ function icdTf(config) {
   config.icd.forEach((instance) => {
     instanceTf += formatIcd(instance, config);
   });
-  tf += tfBlock("Database Services", instanceTf);
+  if (config.icd.length > 0) {
+    tf += tfBlock("Database Services", instanceTf);
+  };
   return tf;
 }
 
