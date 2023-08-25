@@ -67,6 +67,49 @@ describe("secrets_manager", () => {
         "it should create secrets_manager"
       );
     });
+    it("should update cluster.opaque_secrets.secret_manager name when secrets manager is renamed", () => {
+      let state = new newState();
+      state.secrets_manager.create({
+        name: "default",
+        encryption_key: "key",
+      });
+      state.secrets_manager.save( { name: "new-name" },
+      { data: { name: "default" } });
+      assert.deepEqual(
+        state.store.json.clusters[0].opaque_secrets[0].secrets_manager,
+        "new-name",
+        "it should update cluster.opaque_secrets"
+      );
+    });
+    it("should not update cluster.opaque_secrets.secret_manager when unrelated secrets manager is renamed", () => {
+      let state = new newState();
+      state.secrets_manager.create({
+        name: "new-secret-manager",
+        encryption_key: "key",
+      });
+      state.secrets_manager.save( { name: "updated-name" },
+      { data: { name: "new-secret-manager" } });
+      assert.deepEqual(
+        state.store.json.clusters[0].opaque_secrets[0].secrets_manager,
+        "default",
+        "it should not update cluster.opaque_secrets"
+      );
+    });
+    it("should not update empty cluster secrets when secrets manager updates", () => {
+      let state = new newState();
+      state.store.json.clusters[0].opaque_secrets = [];
+      state.secrets_manager.create({
+        name: "new-secret-manager",
+        encryption_key: "key",
+      });
+      state.secrets_manager.save( { name: "updated-name" },
+      { data: { name: "new-secret-manager" } });
+      assert.deepEqual(
+        state.store.json.clusters[0].opaque_secrets,
+        [],
+        "it should not update cluster.opaque_secrets"
+      );
+    });
     it("should delete an secrets_manager instance", () => {
       secrets_managerState.secrets_manager.create({ name: "default" });
       secrets_managerState.secrets_manager.delete(

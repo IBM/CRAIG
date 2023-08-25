@@ -39,6 +39,7 @@ function clusterInit(config) {
  * @param {string} config.store.json.clusters.worker_pools.vpc vpc name for worker pools
  * @param {Array<string>} config.store.json.clusters.worker_pools.subnets name of subnets
  * @param {Array<string>} config.store.vpcList list of VPC names
+ * @param {Array<object>} config.store.json.clusters.opaque_secrets opaque secrets
  */
 function clusterOnStoreUpdate(config) {
   config.store.json.clusters.forEach((cluster) => {
@@ -57,6 +58,11 @@ function clusterOnStoreUpdate(config) {
     if (!cluster.kms) {
       cluster.kms = null;
       cluster.encryption_key = null;
+    }
+    if(cluster.opaque_secrets) {
+      cluster.opaque_secrets.forEach((secret) => {
+        secret.cluster = cluster.name;
+      });
     }
     // update vpc
     if (hasUnfoundVpc(config, cluster)) {
@@ -172,6 +178,50 @@ function clusterWorkerPoolDelete(config, stateData, componentProps) {
   deleteSubChild(config, "clusters", "worker_pools", componentProps);
 }
 
+/**
+ * create cluster opaque secret
+ * @param {lazyZState} config state store
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function clusterOpaqueSecretCreate(config, stateData, componentProps) {
+  let newSecret = {};
+  new revision(config.store.json)
+    .child("clusters", componentProps.innerFormProps.arrayParentName, "name") // get config cluster
+    .then((data) => {
+      newSecret.cluster = data.name;
+      transpose(stateData, newSecret);
+      pushToChildFieldModal(
+        config,
+        "clusters",
+        "opaque_secrets",
+        newSecret,
+        componentProps
+      );
+    });
+}
+
+/**
+ * save cluster opaque secret
+ * @param {lazyZState} config state store
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function clusterOpaqueSecretSave(config, stateData, componentProps) {
+  updateSubChild(config, "clusters", "opaque_secrets", stateData, componentProps);
+}
+
+/**
+ * delete cluster opaque secret
+ * @param {lazyZState} config state store
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function clusterOpaqueSecretDelete(config, stateData, componentProps) {
+  deleteSubChild(config, "clusters", "opaque_secrets", componentProps);
+}
+
+
 module.exports = {
   clusterInit,
   clusterOnStoreUpdate,
@@ -181,4 +231,7 @@ module.exports = {
   clusterWorkerPoolCreate,
   clusterWorkerPoolSave,
   clusterWorkerPoolDelete,
+  clusterOpaqueSecretCreate,
+  clusterOpaqueSecretSave,
+  clusterOpaqueSecretDelete,
 };

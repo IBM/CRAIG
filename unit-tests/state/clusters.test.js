@@ -29,6 +29,13 @@ const defaultManagementCluster = {
       workers_per_subnet: 2,
     },
   ],
+  opaque_secrets: [
+    {
+      name: "secret",
+      cluster: "management-cluster",
+      secrets_manager: "default",
+    },
+  ],
   workers_per_subnet: 2,
   private_endpoint: true,
 };
@@ -234,6 +241,17 @@ describe("clusters", () => {
         "it should save cluster"
       );
     });
+    it("should update opaque_secret.cluster when cluster.name is changed", () => {
+      let state = new newState();
+      state.clusters.create(newDefaultWorkloadCluster());
+      state.clusters.save( { name: "new-name" },
+      { data: { name: "workload-cluster" } });
+      assert.deepEqual(
+        state.store.json.clusters[0].opaque_secrets[0].cluster,
+        "new-name",
+        "it should update opaque secrets cluster name"
+      );
+    });
   });
   describe("clusters.delete", () => {
     it("should delete cluster", () => {
@@ -409,6 +427,68 @@ describe("clusters", () => {
             subnets: [],
             flavor: "bx2.16x64",
           },
+          "it should be empty"
+        );
+      });
+    });
+  });
+  describe("cluster.opaque_secrets", () => {
+    describe("clusters.opaque_secrets.create", () => {
+      it("should create an opaque secret", () => {
+        let state = new newState();
+        state.clusters.create(newDefaultWorkloadCluster());
+        state.clusters.opaque_secrets.create(
+          {
+            name: "super_secret_password",
+          },
+          {
+            innerFormProps: { arrayParentName: "workload-cluster" },
+          }
+        );
+        assert.deepEqual(
+          state.store.json.clusters[0].opaque_secrets[1],
+          {
+            cluster: "workload-cluster",
+            name: "super_secret_password",
+          },
+          "it should create opaque secret"
+        );
+      });
+    });
+    describe("clusters.opaque_secrets.save", () => {
+      it("should update an opaque secret in place", () => {
+        let state = new newState();
+        state.clusters.create(newDefaultWorkloadCluster());
+        state.clusters.opaque_secrets.save(
+          {
+            name: "password",
+          },
+          {
+            arrayParentName: "workload-cluster",
+            data: { name: "secret" },
+          }
+        );
+        assert.deepEqual(
+          state.store.json.clusters[0].opaque_secrets[0].name,
+          "password",
+          "it should update secret name to password"
+        );
+      });
+    });
+    describe("clusters.opaque_secrets.delete", () => {
+      it("should delete an opauqe secret from a cluster object", () => {
+        let state = new newState();
+        state.clusters.create(newDefaultWorkloadCluster());
+        state.clusters.opaque_secrets.delete(
+          {},
+          {
+            data: { name: "secret" },
+            arrayParentName: "workload-cluster",
+          }
+        );
+        assert.deepEqual(
+          state.store.json.clusters[0].opaque_secrets,
+          [],
           "it should be empty"
         );
       });

@@ -855,6 +855,13 @@ function newDefaultWorkloadCluster() {
         workers_per_subnet: 2,
       },
     ],
+    opaque_secrets: [
+      {
+        name: "secret",
+        cluster: "workload-cluster",
+        secrets_manager: "default",
+      }
+    ],
     workers_per_subnet: 2,
     private_endpoint: true,
   };

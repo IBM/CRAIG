@@ -2,7 +2,7 @@ const { setUnfoundResourceGroup } = require("./store.utils");
 const { setKmsFromKeyOnStoreUpdate } = require("./utils");
 
 /**
- * event streams on store update
+ * secrets manager on store update
  * @param {lazyZstate} config state store
  * @param {object} config.store
  * @param {object} config.store.json
@@ -34,6 +34,16 @@ function secretsManagerCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function secretsManagerSave(config, stateData, componentProps) {
+
+    config.store.json.clusters.forEach((cluster) => {
+      if(cluster.opaque_secrets.length > 0){
+        cluster.opaque_secrets.forEach((secret) => {
+          if(secret.secrets_manager == componentProps.data.name){
+            secret.secrets_manager = stateData.name;
+          }
+        });
+      }
+    });
   config.updateChild(
     ["json", "secrets_manager"],
     componentProps.data.name,
@@ -42,7 +52,7 @@ function secretsManagerSave(config, stateData, componentProps) {
 }
 
 /**
- * delete resource group
+ * delete secrets manager
  * @param {lazyZstate} config
  * @param {object} stateData component state data
  * @param {object} componentProps props from component form

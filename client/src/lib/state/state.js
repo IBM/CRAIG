@@ -106,6 +106,9 @@ const {
   clusterWorkerPoolCreate,
   clusterWorkerPoolDelete,
   clusterWorkerPoolSave,
+  clusterOpaqueSecretCreate,
+  clusterOpaqueSecretDelete,
+  clusterOpaqueSecretSave,
 } = require("./clusters");
 const {
   vsiCreate,
@@ -485,6 +488,11 @@ const state = function (legacy) {
         create: clusterWorkerPoolCreate,
         save: clusterWorkerPoolSave,
         delete: clusterWorkerPoolDelete,
+      },
+      opaque_secrets: {
+        create: clusterOpaqueSecretCreate,
+        save: clusterOpaqueSecretSave,
+        delete: clusterOpaqueSecretDelete,
       },
     },
   });
