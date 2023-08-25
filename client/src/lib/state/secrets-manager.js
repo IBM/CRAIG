@@ -34,16 +34,15 @@ function secretsManagerCreate(config, stateData) {
  * @param {object} componentProps props from component form
  */
 function secretsManagerSave(config, stateData, componentProps) {
-
-    config.store.json.clusters.forEach((cluster) => {
-      if(cluster.opaque_secrets.length > 0){
-        cluster.opaque_secrets.forEach((secret) => {
-          if(secret.secrets_manager == componentProps.data.name){
-            secret.secrets_manager = stateData.name;
-          }
-        });
-      }
-    });
+  config.store.json.clusters.forEach((cluster) => {
+    if (cluster.opaque_secrets.length > 0) {
+      cluster.opaque_secrets.forEach((secret) => {
+        if (secret.secrets_manager == componentProps.data.name) {
+          secret.secrets_manager = stateData.name;
+        }
+      });
+    }
+  });
   config.updateChild(
     ["json", "secrets_manager"],
     componentProps.data.name,

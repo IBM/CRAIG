@@ -244,8 +244,10 @@ describe("clusters", () => {
     it("should update opaque_secret.cluster when cluster.name is changed", () => {
       let state = new newState();
       state.clusters.create(newDefaultWorkloadCluster());
-      state.clusters.save( { name: "new-name" },
-      { data: { name: "workload-cluster" } });
+      state.clusters.save(
+        { name: "new-name" },
+        { data: { name: "workload-cluster" } }
+      );
       assert.deepEqual(
         state.store.json.clusters[0].opaque_secrets[0].cluster,
         "new-name",

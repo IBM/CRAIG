@@ -59,7 +59,7 @@ function clusterOnStoreUpdate(config) {
       cluster.kms = null;
       cluster.encryption_key = null;
     }
-    if(cluster.opaque_secrets) {
+    if (cluster.opaque_secrets) {
       cluster.opaque_secrets.forEach((secret) => {
         secret.cluster = cluster.name;
       });
@@ -208,7 +208,13 @@ function clusterOpaqueSecretCreate(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function clusterOpaqueSecretSave(config, stateData, componentProps) {
-  updateSubChild(config, "clusters", "opaque_secrets", stateData, componentProps);
+  updateSubChild(
+    config,
+    "clusters",
+    "opaque_secrets",
+    stateData,
+    componentProps
+  );
 }
 
 /**
@@ -220,7 +226,6 @@ function clusterOpaqueSecretSave(config, stateData, componentProps) {
 function clusterOpaqueSecretDelete(config, stateData, componentProps) {
   deleteSubChild(config, "clusters", "opaque_secrets", componentProps);
 }
-
 
 module.exports = {
   clusterInit,

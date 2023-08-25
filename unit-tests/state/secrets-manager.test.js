@@ -73,8 +73,10 @@ describe("secrets_manager", () => {
         name: "default",
         encryption_key: "key",
       });
-      state.secrets_manager.save( { name: "new-name" },
-      { data: { name: "default" } });
+      state.secrets_manager.save(
+        { name: "new-name" },
+        { data: { name: "default" } }
+      );
       assert.deepEqual(
         state.store.json.clusters[0].opaque_secrets[0].secrets_manager,
         "new-name",
@@ -87,8 +89,10 @@ describe("secrets_manager", () => {
         name: "new-secret-manager",
         encryption_key: "key",
       });
-      state.secrets_manager.save( { name: "updated-name" },
-      { data: { name: "new-secret-manager" } });
+      state.secrets_manager.save(
+        { name: "updated-name" },
+        { data: { name: "new-secret-manager" } }
+      );
       assert.deepEqual(
         state.store.json.clusters[0].opaque_secrets[0].secrets_manager,
         "default",
@@ -102,8 +106,10 @@ describe("secrets_manager", () => {
         name: "new-secret-manager",
         encryption_key: "key",
       });
-      state.secrets_manager.save( { name: "updated-name" },
-      { data: { name: "new-secret-manager" } });
+      state.secrets_manager.save(
+        { name: "updated-name" },
+        { data: { name: "new-secret-manager" } }
+      );
       assert.deepEqual(
         state.store.json.clusters[0].opaque_secrets,
         [],
