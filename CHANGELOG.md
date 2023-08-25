@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Updated IBM Provider version to `1.56.1`
 - Added backend functionality to allow users to create schematics workspaces
 - Users can now search for components by using the `Search` box in the left navigation bar
 - Added JSON-to-IaC functionality to allow for cluster ingress secrets that are managed by Secrets Manager
