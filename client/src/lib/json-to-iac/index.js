@@ -166,7 +166,7 @@ const {
   formatAtrackerArchive,
 } = require("./logging-monitoring");
 const { formatIcd, formatIcdToKmsAuth, icdTf } = require("./icd");
-
+const { formatPowerVsWorkspace } = require("./power-vs");
 module.exports = {
   formatIcd,
   formatIcdToKmsAuth,
@@ -299,4 +299,5 @@ module.exports = {
   icdTf,
   formatSecretsManagerSecretGroup,
   formatSecretsManagerK8sSecret,
+  formatPowerVsWorkspace,
 };

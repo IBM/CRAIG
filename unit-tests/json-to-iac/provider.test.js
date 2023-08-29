@@ -26,4 +26,32 @@ provider "ibm" {
 `;
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
+  it("should return the correct data when power vs is enabled", () => {
+    let actualData = ibmCloudProvider({
+      _options: {
+        enable_power_vs: true,
+      },
+    });
+    let expectedData = `##############################################################################
+# IBM Cloud Provider
+##############################################################################
+
+provider "ibm" {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.power_vs_region
+  zone             = var.power_vs_zone
+  ibmcloud_timeout = 60
+}
+
+##############################################################################
+`;
+    assert.deepEqual(actualData, expectedData, "it should return correct data");
+  });
 });

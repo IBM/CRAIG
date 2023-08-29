@@ -31,6 +31,16 @@ function ibmCloudProvider(config) {
     );
   }
 
+  if (config._options.enable_power_vs) {
+    data.provider.ibm.push({
+      alias: "power_vs",
+      ibmcloud_api_key: "${var.ibmcloud_api_key}",
+      region: "${var.power_vs_region}",
+      zone: "${var.power_vs_zone}",
+      ibmcloud_timeout: 60,
+    });
+  }
+
   return tfBlock(
     "IBM Cloud Provider",
     "\n" + jsonToTf(JSON.stringify(data)) + "\n"
