@@ -13,6 +13,9 @@ const {
   areNotWholeNumbers,
   anyAreEmpty,
   haveValidRanges,
+  nullOrEmptyStringFields,
+  portRangeInvalid,
+  rangeInvalid,
 } = require("lazy-z");
 const {
   invalidName,
@@ -41,22 +44,6 @@ const { commaSeparatedIpListExp } = require("../constants");
  */
 function badField(field, stateData) {
   return isNullOrEmptyString(stateData[field]);
-}
-
-/**
- * reduct unit test writing check if any fields from list are null or empty string
- * @param {*} fields
- * @param {*} stateData
- * @returns {boolean} true if any null or empty string
- */
-function fieldsAreBad(fields, stateData) {
-  let hasBadFields = false;
-  fields.forEach((field) => {
-    if (badField(field, stateData)) {
-      hasBadFields = true;
-    }
-  });
-  return hasBadFields;
 }
 
 /**
@@ -134,6 +121,889 @@ function invalidNumberCheck(value, minRange, maxRange) {
 }
 
 /**
+ * check to see if scc form save should be disabled
+ * @param {Object} stateData
+ * @returns {boolean} true if save should be disabled
+ */
+function disableSccSave(stateData) {
+  return (
+    !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.collector_description) ||
+    !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.scope_description)
+  );
+}
+
+/**
+ * check to see if atracker form save should be disabled
+ * @param {Object} stateData
+ * @returns {boolean} true if should be disabled
+ */
+function disableAtrackerSave(stateData) {
+  return (
+    stateData.enabled &&
+    (nullOrEmptyStringFields(stateData, ["bucket", "cos_key"]) ||
+      isEmpty(stateData.locations))
+  );
+}
+
+/**
+ * check to see if dynamic policies form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableDynamicPoliciesSave(stateData, componentProps) {
+  return (
+    invalidName("dynamic_policies")(stateData, componentProps) ||
+    nullOrEmptyStringFields(
+      stateData,
+      ["identity_provider", "expiration", "conditions"]
+    ) ||
+    invalidIdentityProviderURI(stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if object storage form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableObjectStorageSave(stateData, componentProps) {
+  return (
+    invalidName("object_storage")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData,["kms", "resource_group"])
+  );
+}
+
+/**
+ * check to see if icd form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableIcdSave(stateData, componentProps) {
+  return (
+    invalidName("icd")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["service", "resource_group"]) ||
+    invalidNumberCheck(
+      stateData.memory,
+      componentProps.memoryMin,
+      componentProps.memoryMax
+    ) ||
+    invalidNumberCheck(
+      stateData.disk,
+      componentProps.diskMin,
+      componentProps.diskMax
+    ) ||
+    invalidCpuCallback(stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if appid form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableAppIDSave(stateData,componentProps) {
+  return (
+    invalidName("appid")(stateData, componentProps) ||
+    badField("resource_group", stateData)
+  );
+}
+
+/**
+ * check to see if buckets form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableBucketsSave(stateData, componentProps) {
+  return (
+    invalidName("buckets")(stateData, componentProps) ||
+    badField("kms_key", stateData)
+  );
+}
+
+/**
+ * check to see if encryption keys form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableEncryptionKeysSave(stateData, componentProps){
+  return (
+    invalidName("encryption_keys")(stateData, componentProps) ||
+    invalidEncryptionKeyRing(stateData)
+  );
+}
+
+/**
+ * check to see if volumes form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableVolumesSave(stateData, componentProps){
+  return (
+    invalidName("volume")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["encryption_key"]) ||
+    (!isNullOrEmptyString(stateData.capacity) &&
+      !isInRange(Number(stateData.capacity), 10, 16000))
+  );
+}
+
+/**
+ * check to see if key management form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableKeyManagementSave(stateData, componentProps) {
+  return (
+    invalidName("key_management")(stateData, componentProps) ||
+    badField("resource_group", stateData)
+  );
+}
+
+/**
+ * check to see if secrets manager form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableSecretsManagerSave(stateData, componentProps) {
+  return (
+    invalidName("secrets_manager")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["encryption_key", "resource_group"])
+  );
+}
+
+/**
+ * check to see if vpcs form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableVpcsSave(stateData, componentProps) {
+  return (
+    nullOrEmptyStringFields(stateData, ["bucket", "resource_group"]) ||
+    invalidName("vpcs")("name", stateData, componentProps) ||
+    invalidName("vpcs")(
+      "default_network_acl_name",
+      stateData,
+      componentProps
+    ) ||
+    invalidName("vpcs")(
+      "default_security_group_name",
+      stateData,
+      componentProps
+    ) ||
+    invalidName("vpcs")(
+      "default_routing_table_name",
+      stateData,
+      componentProps
+    )
+  );
+}
+
+/**
+ * check to see if ssh keys form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableSshKeysSave(stateData, componentProps) {
+  return (
+    invalidName("ssh_keys")(stateData, componentProps) ||
+    isNullOrEmptyString(stateData.resource_group) ||
+    (stateData.use_data
+      ? false // do not check invalid public key if using data, return false
+      : invalidSshPublicKey(stateData, componentProps).invalid)
+  );
+}
+
+/**
+ * check to see if transit gateways form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableTransitGatewaysSave(stateData, componentProps) {
+  return (
+    invalidName("transit_gateways")(stateData, componentProps) ||
+    isNullOrEmptyString(stateData.resource_group) ||
+    isEmpty(stateData.connections) ||
+    invalidCrnList(stateData.crns)
+  );
+}
+
+/**
+ * check to see if ACLs form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableAclsSave(stateData, componentProps) {
+  return (
+    !containsKeys(stateData, "resource_group") ||
+    badField("resource_group", stateData) ||
+    invalidName("acls")(stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if ACL rules form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableAclRulesSave(stateData, componentProps) {
+  return (
+    invalidName("acl_rules")(stateData, componentProps) ||
+    !isIpv4CidrOrAddress(stateData.source) ||
+    !isIpv4CidrOrAddress(stateData.destination) ||
+    invalidPort(stateData)
+  );
+}
+
+/**
+ * check to see if sg rules form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableSgRulesSave(stateData, componentProps) {
+  return (
+    invalidSecurityGroupRuleName(stateData, componentProps) ||
+    !isIpv4CidrOrAddress(stateData.source) ||
+    invalidPort(stateData)
+  );
+}
+
+/**
+ * check to see if vpn gateways form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableVpnGatewaysSave(stateData, componentProps) {
+  return (
+    invalidName("vpn_gateways")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["resource_group", "vpc", "subnet"])
+  );
+}
+
+/**
+ * check to see if subnet tier form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableSubnetTierSave(stateData, componentProps) {
+  return (
+    invalidSubnetTierName(stateData, componentProps) ||
+    badField("networkAcl", stateData) ||
+    (stateData.advanced === true && stateData.select_zones.length === 0)
+  );
+}
+
+/**
+ * check to see if subnet form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @param {lazyZstate=} craig used for subnets, component props do not have craig
+ * @returns {boolean} true if should be disabled
+ */
+function disableSubnetSave(stateData, componentProps, craig) {
+  if (stateData.tier && isIpv4CidrOrAddress(stateData.cidr || "") === false) {
+    return true;
+  } else if (stateData.tier) {
+    let invalidCidrRange = Number(stateData.cidr.split("/")[1]) <= 12;
+    return (
+      invalidCidrRange ||
+      stateData.cidr.indexOf("/") === -1 ||
+      invalidName("subnet", craig)(stateData, componentProps) ||
+      badField("network_acl", stateData)
+    );
+  } else return badField("network_acl", stateData);
+}
+
+/**
+ * check to see if iam account settings form save should be disabled
+ * @param {Object} stateData
+ * @returns {boolean} true if should be disabled
+ */
+function disableIamAccountSettingsSave(stateData) {
+  return (
+    nullOrEmptyStringFields(
+      stateData, 
+      [
+        "mfa",
+        "restrict_create_platform_apikey",
+        "restrict_create_service_id",
+        "max_sessions_per_identity",
+      ]
+    ) || invalidIpCommaList(stateData.allowed_ip_addresses)
+  );
+}
+
+/**
+ * check to see if security groups form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableSecurityGroupsSave(stateData, componentProps) {
+  return (
+    invalidName("security_groups")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["resource_group", "vpc"])
+  );
+}
+
+/**
+ * check to see if clusters form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableClustersSave(stateData, componentProps) {
+  if (stateData.kube_type === "openshift") {
+    if (
+      nullOrEmptyStringFields(stateData, ["cos"]) ||
+      stateData.subnets.length * stateData.workers_per_subnet < 2
+    )
+      return true;
+  }
+  return (
+    invalidName("clusters")(stateData, componentProps) ||
+    nullOrEmptyStringFields(
+      stateData, 
+      [
+        "resource_group",
+        "vpc",
+        "subnets",
+        "encryption_key",
+        "flavor",
+        "kube_version",
+      ]
+    ) ||
+    isEmpty(stateData.subnets)
+  );
+}
+
+/**
+ * check to see if worker pools form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableWorkerPoolsSave(stateData, componentProps){
+  return (
+    invalidName("worker_pools")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["flavor"]) ||
+    !stateData.subnets ||
+    isEmpty(stateData.subnets)
+  );
+}
+
+/**
+ * check to see if event streams form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableEventStreamsSave(stateData, componentProps) {
+  if (stateData.plan !== "enterprise") {
+    return (
+      invalidName("event_streams")(stateData, componentProps) ||
+      badField("resource_group", stateData)
+    );
+  } else {
+    return (
+      invalidName("event_streams")(stateData, componentProps) ||
+      nullOrEmptyStringFields(
+        stateData,
+        ["resource_group", "endpoints", "throughput", "storage_size"]
+      ) ||
+      invalidIpCommaList(stateData.private_ip_allowlist)
+    );
+  }
+}
+
+/**
+ * check to see if vpe form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableVpeSave(stateData, componentProps) {
+  return (
+    invalidName("virtual_private_endpoints")(stateData, componentProps) ||
+    nullOrEmptyStringFields(
+      stateData,
+      ["resource_group", "security_groups", "service", "subnets", "vpc"]
+    ) ||
+    anyAreEmpty(stateData.security_groups, stateData.subnets)
+  );
+}
+
+/**
+ * check to see if vsi form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableVsiSave(stateData, componentProps) {
+  return (
+    invalidName("vsi")(stateData, componentProps) ||
+    nullOrEmptyStringFields(
+      stateData,
+      ["resource_group", "vpc", "image_name", "profile", "encryption_key"]
+    ) ||
+    !isInRange(stateData.vsi_per_subnet,1,10) ||
+    anyAreEmpty(
+      stateData.security_groups,
+      stateData.subnets,
+      stateData.ssh_keys
+    )
+  );
+}
+
+/**
+ * check to see if f5 vsi template form save should be disabled
+ * @param {Object} stateData
+ * @returns {boolean} true if should be disabled
+ */
+function disableF5VsiTemplateSave(stateData) {
+  let extraFields = {
+    none: [],
+    byol: ["byol_license_basekey"],
+    regkeypool: ["license_username", "license_host", "license_pool"],
+    utilitypool: [
+      "license_username",
+      "license_host",
+      "license_pool",
+      "license_unit_of_measure",
+      "license_sku_keyword_1",
+      "license_sku_keyword_2",
+    ],
+  };
+  return (
+    nullOrEmptyStringFields(
+      stateData, 
+      ["template_version", "template_source"].concat(
+        extraFields[stateData["license_type"]]
+      )
+    ) ||
+    fieldCheck(
+      [
+        "do_declaration_url",
+        "as3_declaration_url",
+        "ts_declaration_url",
+        "phone_home_url",
+        "tgstandby_url",
+        "tgrefresh_url",
+        "tgactive_url",
+      ],
+      isValidUrl,
+      stateData
+    )
+  );
+}
+
+/**
+ * check to see if f5 vsi form save should be disabled
+ * @param {Object} stateData
+ * @returns {boolean} true if should be disabled
+ */
+function disableF5VsiSave(stateData) {
+  return isEmpty(stateData?.ssh_keys || []);
+}
+
+/**
+ * check to see if routing tables form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableRoutingTablesSave(stateData, componentProps) {
+  return (
+    invalidName("routing_tables")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["vpc"])
+  );
+}
+
+/**
+ * check to see if routes form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableRoutesSave(stateData, componentProps) {
+  return (
+    invalidName("routes")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["zone", "action", "next_hop", "destination"]) ||
+    !isIpv4CidrOrAddress(stateData.destination) ||
+    !isIpv4CidrOrAddress(stateData.next_hop) ||
+    contains(stateData.next_hop, "/")
+  );
+}
+
+/**
+ * check to see if load balancers form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableLoadBalancersSave(stateData, componentProps) {
+  return (
+    invalidName("load_balancers")(stateData, componentProps) ||
+    nullOrEmptyStringFields(
+      stateData,
+      [
+        "resource_group",
+        "type",
+        "vpc",
+        "security_groups",
+        "deployment_vsi",
+        "algorith",
+        "pool_protocol",
+        "pool_health_protocol",
+        "listener_protocol",
+        "listener_port",
+        "health_retries",
+        "health_timeout",
+        "health_delay",
+        "port",
+      ]
+    ) ||
+    areNotWholeNumbers(
+      stateData.listener_port,
+      stateData.health_retries,
+      stateData.health_timeout,
+      stateData.health_delay,
+      stateData.port
+    ) ||
+    stateData.health_delay <= stateData.health_timeout ||
+    (stateData.connection_limit && rangeInvalid(stateData.connection_limit, 1, 15000)) || 
+    !haveValidRanges(
+      [stateData.port, 1, 65535],
+      [stateData.listener_port, 1, 65535],
+      [stateData.health_timeout, 5, 3000],
+      [stateData.health_delay, 5, 3000],
+      [stateData.health_retries, 5, 3000]
+    ) ||
+    anyAreEmpty(stateData.target_vsi, stateData.security_groups)
+  );
+}
+
+/**
+ * check to see if cbr rules form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableCbrRulesSave(stateData, componentProps){
+  return (
+    invalidName("cbr_rules")(stateData, componentProps) ||
+    invalidFieldCheck(
+      ["description", "api_type_id"],
+      invalidCbrRule,
+      stateData
+    )
+  );
+}
+
+/**
+ * check to see if contexts form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableContextsSave(stateData, componentProps) {
+  return (
+    invalidName("contexts")(stateData, componentProps) ||
+    invalidCbrRule("value", stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if resource attributes form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableResourceAttributesSave(stateData, componentProps){
+  return (
+    invalidName("resource_attributes")(stateData, componentProps) ||
+    invalidCbrRule("value", stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if tags form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableTagsSave(stateData, componentProps) {
+  return (
+    invalidName("tags")(stateData, componentProps) ||
+    invalidFieldCheck(["value", "operator"], invalidCbrRule, stateData)
+  );
+}
+
+/**
+ * check to see if cbr zones form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableCbrZonesSave(stateData, componentProps) {
+  return (
+    invalidName("cbr_zones")(stateData, componentProps) ||
+    invalidFieldCheck(
+      ["description", "account_id"],
+      invalidCbrZone,
+      stateData
+    )
+  );
+}
+
+/**
+ * check to see if addresses form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableAddressesSave(stateData, componentProps) {
+  return (
+    invalidName("addresses")(stateData, componentProps) ||
+    invalidFieldCheck(
+      [
+        "account_id",
+        "location",
+        "service_name",
+        "service_type",
+        "service_instance",
+        "value",
+      ],
+      invalidCbrZone,
+      stateData
+    )
+  );
+}
+
+/**
+ * check to see if exclusions form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableExclusionsSave(stateData, componentProps) {
+  return (
+    invalidName("exclusions")(stateData, componentProps) ||
+    invalidFieldCheck(
+      [
+        "account_id",
+        "location",
+        "service_name",
+        "service_type",
+        "service_instance",
+        "value",
+      ],
+      invalidCbrZone,
+      stateData
+    )
+  );
+}
+
+/**
+ * check to see if vpn servers form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableVpnServersSave(stateData, componentProps) {
+  return (
+    invalidName("vpn_servers")(stateData, componentProps) ||
+    nullOrEmptyStringFields(
+      stateData,
+      [
+        "resource_group",
+        "vpc",
+        "security_groups",
+        "certificate_crn",
+        "method",
+        "client_ip_pool",
+      ]
+    ) ||
+    (portRangeInvalid("port_min", stateData.port)) ||
+    (stateData.client_idle_timeout && rangeInvalid(stateData.client_idle_timeout, 0, 28800)) ||
+    invalidCrnList(
+      [stateData.certificate_crn].concat(
+        stateData.method === "username" ? [] : stateData.client_ca_crn
+      )
+    ) ||
+    invalidCidrBlock(stateData.client_ip_pool) ||
+    (!isNullOrEmptyString(stateData.client_dns_server_ips) &&
+      stateData.client_dns_server_ips.match(commaSeparatedIpListExp) ===
+        null) ||
+    isEmpty(stateData.subnets) ||
+    (!isNullOrEmptyString(stateData.port) &&
+      !validPortRange("port_min", stateData.port))
+  );
+}
+
+/**
+ * check to see if vpn server routes form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableVpnServerRoutesSave(stateData, componentProps) {
+  return (
+    invalidName("vpn_server_routes")(stateData, componentProps) ||
+    invalidCidrBlock(stateData.destination)
+  );
+}
+
+/**
+ * check to see if dns form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableDnsSave(stateData, componentProps){
+  return (
+    invalidName("dns")(stateData, componentProps) ||
+    badField("resource_group", stateData)
+  );
+}
+
+/**
+ * check to see if zones form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableZonesSave(stateData, componentProps) {
+  return (
+    invalidDnsZoneName(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["vpcs", "label"]) ||
+    isEmpty(stateData.vpcs) ||
+    invalidDNSDescription(stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if records form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableRecordsSave(stateData, componentProps) {
+  return (
+    invalidName("records")(stateData, componentProps) ||
+    nullOrEmptyStringFields(stateData, ["type", "dns_zone", "rdata"]) ||
+    !validRecord(stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if custom resolvers form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableCustomResolversSave(stateData, componentProps) {
+  return (
+    invalidName("custom_resolvers")(stateData, componentProps) ||
+    badField("vpc", stateData) ||
+    isEmpty(stateData.subnets) ||
+    invalidDNSDescription(stateData, componentProps)
+  );
+}
+
+/**
+ * check to see if logna form save should be disabled
+ * @param {Object} stateData
+ * @returns {boolean} true if should be disabled
+ */
+function disableLogdnaSave(stateData) {
+  return stateData.enabled === false
+    ? false
+    : nullOrEmptyStringFields(stateData, ["plan", "resource_group", "bucket"]);
+}
+
+/**
+ * check to see if sysdig form save should be disabled
+ * @param {Object} stateData
+ * @returns {boolean} true if should be disabled
+ */
+function disableSysdigSave(stateData) {
+  return stateData.enabled === false
+    ? false
+    : nullOrEmptyStringFields(stateData, ["resource_group", "plan"]);
+}
+
+const disableSaveFunctions = {
+  scc: disableSccSave,
+  atracker: disableAtrackerSave,
+  access_groups: invalidName("access_groups"),
+  policies: invalidName("policies"),
+  dynamic_policies: disableDynamicPoliciesSave,
+  object_storage: disableObjectStorageSave,
+  icd: disableIcdSave,
+  appid: disableAppIDSave,
+  appid_key: invalidName("appid_key"),
+  buckets: disableBucketsSave,
+  cos_keys: invalidName("cos_keys"),
+  encryption_keys: disableEncryptionKeysSave,
+  volumes: disableVolumesSave,
+  key_management: disableKeyManagementSave,
+  secrets_manager: disableSecretsManagerSave,
+  resource_groups: invalidName("resource_groups"),
+  vpcs: disableVpcsSave,
+  ssh_keys: disableSshKeysSave,
+  transit_gateways: disableTransitGatewaysSave,
+  acls: disableAclsSave,
+  acl_rules: disableAclRulesSave,
+  sg_rules: disableSgRulesSave,
+  vpn_gateways: disableVpnGatewaysSave,
+  subnetTier: disableSubnetTierSave,
+  subnet: disableSubnetSave,
+  iam_account_settings: disableIamAccountSettingsSave,
+  security_groups: disableSecurityGroupsSave,
+  clusters: disableClustersSave,
+  worker_pools: disableWorkerPoolsSave,
+  event_streams: disableEventStreamsSave,
+  virtual_private_endpoints: disableVpeSave,
+  vsi: disableVsiSave,
+  f5_vsi_template: disableF5VsiTemplateSave,
+  f5_vsi: disableF5VsiSave,
+  routing_tables: disableRoutingTablesSave,
+  routes: disableRoutesSave,
+  load_balancers: disableLoadBalancersSave,
+  cbr_rules: disableCbrRulesSave,
+  contexts: disableContextsSave,
+  resource_attributes: disableResourceAttributesSave,
+  tags: disableTagsSave,
+  cbr_zones: disableCbrZonesSave,
+  addresses: disableAddressesSave,
+  exclusions: disableExclusionsSave,
+  vpn_servers: disableVpnServersSave,
+  vpn_server_routes: disableVpnServerRoutesSave,
+  dns: disableDnsSave,
+  zones: disableZonesSave,
+  records: disableRecordsSave,
+  custom_resolvers: disableCustomResolversSave,
+  logdna: disableLogdnaSave,
+  sysdig: disableSysdigSave,
+};
+
+/**
  * disable save
  * @param {string} field field name
  * @param {Object} stateData
@@ -141,485 +1011,11 @@ function invalidNumberCheck(value, minRange, maxRange) {
  * @param {lazyZstate=} craig used for subnets, component props do not have craig
  * @returns {boolean} true if match
  */
-
 function disableSave(field, stateData, componentProps, craig) {
-  if (field === "scc") {
-    return (
-      !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.collector_description) ||
-      !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.scope_description)
-    );
-  } else if (field === "atracker") {
-    return (
-      stateData.enabled &&
-      (fieldsAreBad(["bucket", "cos_key"], stateData) ||
-        isEmpty(stateData.locations))
-    );
-  } else if (field === "access_groups") {
-    return invalidName("access_groups")(stateData, componentProps);
-  } else if (field === "policies") {
-    return invalidName("policies")(stateData, componentProps);
-  } else if (field === "dynamic_policies") {
-    return (
-      invalidName("dynamic_policies")(stateData, componentProps) ||
-      fieldsAreBad(
-        ["identity_provider", "expiration", "conditions"],
-        stateData
-      ) ||
-      invalidIdentityProviderURI(stateData, componentProps)
-    );
-  } else if (field === "object_storage") {
-    return (
-      invalidName("object_storage")(stateData, componentProps) ||
-      fieldsAreBad(["kms", "resource_group"], stateData)
-    );
-  } else if (field === "icd") {
-    return (
-      invalidName("icd")(stateData, componentProps) ||
-      fieldsAreBad(["service", "resource_group"], stateData) ||
-      invalidNumberCheck(
-        stateData.memory,
-        componentProps.memoryMin,
-        componentProps.memoryMax
-      ) ||
-      invalidNumberCheck(
-        stateData.disk,
-        componentProps.diskMin,
-        componentProps.diskMax
-      ) ||
-      invalidCpuCallback(stateData, componentProps)
-    );
-  } else if (field === "appid") {
-    return (
-      invalidName("appid")(stateData, componentProps) ||
-      badField("resource_group", stateData)
-    );
-  } else if (field === "appid_key") {
-    return invalidName("appid_key")(stateData, componentProps);
-  } else if (field === "buckets") {
-    return (
-      invalidName("buckets")(stateData, componentProps) ||
-      badField("kms_key", stateData)
-    );
-  } else if (field === "cos_keys") {
-    return invalidName("cos_keys")(stateData, componentProps);
-  } else if (field === "encryption_keys") {
-    return (
-      invalidName("encryption_keys")(stateData, componentProps) ||
-      invalidEncryptionKeyRing(stateData)
-    );
-  } else if (field === "volumes") {
-    return (
-      invalidName("volume")(stateData, componentProps) ||
-      fieldsAreBad(["encryption_key"], stateData) ||
-      (!isNullOrEmptyString(stateData.capacity) &&
-        !isInRange(Number(stateData.capacity), 10, 16000))
-    );
-  } else if (field === "key_management") {
-    return (
-      invalidName("key_management")(stateData, componentProps) ||
-      badField("resource_group", stateData)
-    );
-  } else if (field === "secrets_manager") {
-    return (
-      invalidName("secrets_manager")(stateData, componentProps) ||
-      fieldsAreBad(["encryption_key", "resource_group"], stateData)
-    );
-  } else if (field === "resource_groups") {
-    return invalidName("resource_groups")(stateData, componentProps);
-  } else if (field === "vpcs") {
-    return (
-      fieldsAreBad(["bucket", "resource_group"], stateData) ||
-      invalidName("vpcs")("name", stateData, componentProps) ||
-      invalidName("vpcs")(
-        "default_network_acl_name",
-        stateData,
-        componentProps
-      ) ||
-      invalidName("vpcs")(
-        "default_security_group_name",
-        stateData,
-        componentProps
-      ) ||
-      invalidName("vpcs")(
-        "default_routing_table_name",
-        stateData,
-        componentProps
-      )
-    );
-  } else if (field === "ssh_keys") {
-    return (
-      invalidName("ssh_keys")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group) ||
-      (stateData.use_data
-        ? false // do not check invalid public key if using data, return false
-        : invalidSshPublicKey(stateData, componentProps).invalid)
-    );
-  } else if (field === "transit_gateways") {
-    return (
-      invalidName("transit_gateways")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group) ||
-      isEmpty(stateData.connections) ||
-      invalidCrnList(stateData.crns)
-    );
-  } else if (field === "acls") {
-    return (
-      !containsKeys(stateData, "resource_group") ||
-      badField("resource_group", stateData) ||
-      invalidName("acls")(stateData, componentProps)
-    );
-  } else if (field === "acl_rules") {
-    return (
-      invalidName("acl_rules")(stateData, componentProps) ||
-      !isIpv4CidrOrAddress(stateData.source) ||
-      !isIpv4CidrOrAddress(stateData.destination) ||
-      invalidPort(stateData)
-    );
-  } else if (field === "sg_rules") {
-    return (
-      invalidSecurityGroupRuleName(stateData, componentProps) ||
-      !isIpv4CidrOrAddress(stateData.source) ||
-      invalidPort(stateData)
-    );
-  } else if (field === "vpn_gateways") {
-    return (
-      invalidName("vpn_gateways")(stateData, componentProps) ||
-      fieldsAreBad(["resource_group", "vpc", "subnet"], stateData)
-    );
-  } else if (field === "subnetTier") {
-    return (
-      invalidSubnetTierName(stateData, componentProps) ||
-      badField("networkAcl", stateData) ||
-      (stateData.advanced === true && stateData.select_zones.length === 0)
-    );
-  } else if (field === "subnet") {
-    if (stateData.tier && isIpv4CidrOrAddress(stateData.cidr || "") === false) {
-      return true;
-    } else if (stateData.tier) {
-      let invalidCidrRange = Number(stateData.cidr.split("/")[1]) <= 12;
-      return (
-        invalidCidrRange ||
-        stateData.cidr.indexOf("/") === -1 ||
-        invalidName("subnet", craig)(stateData, componentProps) ||
-        badField("network_acl", stateData)
-      );
-    } else return badField("network_acl", stateData);
-  } else if (field === "iam_account_settings") {
-    return (
-      fieldsAreBad(
-        [
-          "mfa",
-          "restrict_create_platform_apikey",
-          "restrict_create_service_id",
-          "max_sessions_per_identity",
-        ],
-        stateData
-      ) || invalidIpCommaList(stateData.allowed_ip_addresses)
-    );
-  } else if (field === "security_groups") {
-    return (
-      invalidName("security_groups")(stateData, componentProps) ||
-      fieldsAreBad(["resource_group", "vpc"], stateData)
-    );
-  } else if (field === "clusters") {
-    if (stateData.kube_type === "openshift") {
-      if (
-        fieldsAreBad(["cos"], stateData) ||
-        stateData.subnets.length * stateData.workers_per_subnet < 2
-      )
-        return true;
-    }
-    return (
-      invalidName("clusters")(stateData, componentProps) ||
-      fieldsAreBad(
-        [
-          "resource_group",
-          "vpc",
-          "subnets",
-          "encryption_key",
-          "flavor",
-          "kube_version",
-        ],
-        stateData
-      ) ||
-      isEmpty(stateData.subnets)
-    );
-  } else if (field === "worker_pools") {
-    return (
-      invalidName("worker_pools")(stateData, componentProps) ||
-      fieldsAreBad(["flavor"], stateData) ||
-      !stateData.subnets ||
-      isEmpty(stateData.subnets)
-    );
-  } else if (field === "event_streams") {
-    if (stateData.plan !== "enterprise") {
-      return (
-        invalidName("event_streams")(stateData, componentProps) ||
-        badField("resource_group", stateData)
-      );
-    } else {
-      return (
-        invalidName("event_streams")(stateData, componentProps) ||
-        fieldsAreBad(
-          ["resource_group", "endpoints", "throughput", "storage_size"],
-          stateData
-        ) ||
-        invalidIpCommaList(stateData.private_ip_allowlist)
-      );
-    }
-  } else if (field === "virtual_private_endpoints") {
-    return (
-      invalidName("virtual_private_endpoints")(stateData, componentProps) ||
-      fieldsAreBad(
-        ["resource_group", "security_groups", "service", "subnets", "vpc"],
-        stateData
-      ) ||
-      anyAreEmpty(stateData.security_groups, stateData.subnets)
-    );
-  } else if (field === "vsi") {
-    return (
-      invalidName(field)(stateData, componentProps) ||
-      fieldsAreBad(
-        ["resource_group", "vpc", "image_name", "profile", "encryption_key"],
-        stateData
-      ) ||
-      stateData.vsi_per_subnet > 10 ||
-      stateData.vsi_per_subnet < 1 ||
-      anyAreEmpty(
-        stateData.security_groups,
-        stateData.subnets,
-        stateData.ssh_keys
-      )
-    );
-  } else if (field === "f5_vsi_template") {
-    let extraFields = {
-      none: [],
-      byol: ["byol_license_basekey"],
-      regkeypool: ["license_username", "license_host", "license_pool"],
-      utilitypool: [
-        "license_username",
-        "license_host",
-        "license_pool",
-        "license_unit_of_measure",
-        "license_sku_keyword_1",
-        "license_sku_keyword_2",
-      ],
-    };
-    return (
-      fieldsAreBad(
-        ["template_version", "template_source"].concat(
-          extraFields[stateData["license_type"]]
-        ),
-        stateData
-      ) ||
-      fieldCheck(
-        [
-          "do_declaration_url",
-          "as3_declaration_url",
-          "ts_declaration_url",
-          "phone_home_url",
-          "tgstandby_url",
-          "tgrefresh_url",
-          "tgactive_url",
-        ],
-        isValidUrl,
-        stateData
-      )
-    );
-  } else if (field === "f5_vsi") {
-    return isEmpty(stateData?.ssh_keys || []);
-  } else if (field === "routing_tables") {
-    return (
-      invalidName("routing_tables")(stateData, componentProps) ||
-      fieldsAreBad(["vpc"], stateData)
-    );
-  } else if (field === "routes") {
-    return (
-      invalidName("routes")(stateData, componentProps) ||
-      fieldsAreBad(["zone", "action", "next_hop", "destination"], stateData) ||
-      !isIpv4CidrOrAddress(stateData.destination) ||
-      !isIpv4CidrOrAddress(stateData.next_hop) ||
-      contains(stateData.next_hop, "/")
-    );
-  } else if (field === "load_balancers") {
-    return (
-      invalidName("load_balancers")(stateData, componentProps) ||
-      fieldsAreBad(
-        [
-          "resource_group",
-          "type",
-          "vpc",
-          "security_groups",
-          "deployment_vsi",
-          "algorith",
-          "pool_protocol",
-          "pool_health_protocol",
-          "listener_protocol",
-          "listener_port",
-          "health_retries",
-          "health_timeout",
-          "health_delay",
-          "port",
-        ],
-        stateData
-      ) ||
-      areNotWholeNumbers(
-        stateData.listener_port,
-        stateData.health_retries,
-        stateData.health_timeout,
-        stateData.health_delay,
-        stateData.port
-      ) ||
-      stateData.health_delay <= stateData.health_timeout ||
-      (!isNullOrEmptyString(stateData.connection_limit) &&
-        (!isWholeNumber(stateData.connection_limit) ||
-          !isInRange(stateData.connection_limit, 1, 15000))) ||
-      !haveValidRanges(
-        [stateData.port, 1, 65535],
-        [stateData.listener_port, 1, 65535],
-        [stateData.health_timeout, 5, 3000],
-        [stateData.health_delay, 5, 3000],
-        [stateData.health_retries, 5, 3000]
-      ) ||
-      anyAreEmpty(stateData.target_vsi, stateData.security_groups)
-    );
-  } else if (field === "cbr_rules") {
-    return (
-      invalidName("cbr_rules")(stateData, componentProps) ||
-      invalidFieldCheck(
-        ["description", "api_type_id"],
-        invalidCbrRule,
-        stateData
-      )
-    );
-  } else if (field === "contexts") {
-    return (
-      invalidName("contexts")(stateData, componentProps) ||
-      invalidCbrRule("value", stateData, componentProps)
-    );
-  } else if (field === "resource_attributes") {
-    return (
-      invalidName("resource_attributes")(stateData, componentProps) ||
-      invalidCbrRule("value", stateData, componentProps)
-    );
-  } else if (field === "tags") {
-    return (
-      invalidName("tags")(stateData, componentProps) ||
-      invalidFieldCheck(["value", "operator"], invalidCbrRule, stateData)
-    );
-  } else if (field == "cbr_zones") {
-    return (
-      invalidName("cbr_zones")(stateData, componentProps) ||
-      invalidFieldCheck(
-        ["description", "account_id"],
-        invalidCbrZone,
-        stateData
-      )
-    );
-  } else if (field === "addresses") {
-    return (
-      invalidName("addresses")(stateData, componentProps) ||
-      invalidFieldCheck(
-        [
-          "account_id",
-          "location",
-          "service_name",
-          "service_type",
-          "service_instance",
-          "value",
-        ],
-        invalidCbrZone,
-        stateData
-      )
-    );
-  } else if (field === "exclusions") {
-    return (
-      invalidName("exclusions")(stateData, componentProps) ||
-      invalidFieldCheck(
-        [
-          "account_id",
-          "location",
-          "service_name",
-          "service_type",
-          "service_instance",
-          "value",
-        ],
-        invalidCbrZone,
-        stateData
-      )
-    );
-  } else if (field === "vpn_servers") {
-    return (
-      invalidName("vpn_servers")(stateData, componentProps) ||
-      fieldsAreBad(
-        [
-          "resource_group",
-          "vpc",
-          "security_groups",
-          "certificate_crn",
-          "method",
-          "client_ip_pool",
-        ],
-        stateData
-      ) ||
-      (!isNullOrEmptyString(stateData.port) &&
-        (isWholeNumber(Number(stateData.port)) === false ||
-          validPortRange("port_min", stateData.port) === false)) ||
-      (!isNullOrEmptyString(stateData.client_idle_timeout) &&
-        (isWholeNumber(Number(stateData.client_idle_timeout)) === false ||
-          isInRange(Number(stateData.client_idle_timeout), 0, 28800) ===
-            false)) ||
-      invalidCrnList(
-        [stateData.certificate_crn].concat(
-          stateData.method === "username" ? [] : stateData.client_ca_crn
-        )
-      ) ||
-      invalidCidrBlock(stateData.client_ip_pool) ||
-      (!isNullOrEmptyString(stateData.client_dns_server_ips) &&
-        stateData.client_dns_server_ips.match(commaSeparatedIpListExp) ===
-          null) ||
-      isEmpty(stateData.subnets) ||
-      (!isNullOrEmptyString(stateData.port) &&
-        !validPortRange("port_min", stateData.port))
-    );
-  } else if (field === "vpn_server_routes") {
-    return (
-      invalidName("vpn_server_routes")(stateData, componentProps) ||
-      invalidCidrBlock(stateData.destination)
-    );
-  } else if (field === "dns") {
-    return (
-      invalidName("dns")(stateData, componentProps) ||
-      badField("resource_group", stateData)
-    );
-  } else if (field === "zones") {
-    return (
-      invalidDnsZoneName(stateData, componentProps) ||
-      fieldsAreBad(["vpcs", "label"], stateData) ||
-      isEmpty(stateData.vpcs) ||
-      invalidDNSDescription(stateData, componentProps)
-    );
-  } else if (field === "records") {
-    return (
-      invalidName("records")(stateData, componentProps) ||
-      fieldsAreBad(["type", "dns_zone", "rdata"], stateData) ||
-      !validRecord(stateData, componentProps)
-    );
-  } else if (field === "custom_resolvers") {
-    return (
-      invalidName("custom_resolvers")(stateData, componentProps) ||
-      badField("vpc", stateData) ||
-      isEmpty(stateData.subnets) ||
-      invalidDNSDescription(stateData, componentProps)
-    );
-  } else if (field === "logdna") {
-    return stateData.enabled === false
-      ? false
-      : fieldsAreBad(["plan", "resource_group", "bucket"], stateData);
-  } else if (field === "sysdig") {
-    return stateData.enabled === false
-      ? false
-      : fieldsAreBad(["resource_group", "plan"], stateData);
-  } else return false;
+  if (containsKeys(disableSaveFunctions, field)) {
+    return disableSaveFunctions[field](stateData, componentProps, craig);
+  }
+  return false;
 }
 
 /**
