@@ -1099,18 +1099,6 @@ describe("validate", () => {
       );
     });
   });
-  describe("object_storage", () => {
-    it("should throw an error if no object storage instances are provisioned", () => {
-      let testData = minimumValidJson({ object_storage: [] });
-      let task = () => {
-        validate(testData);
-      };
-      assert.throws(
-        task,
-        "At least one Object Storage Instance is required. Got 0"
-      );
-    });
-  });
   describe("secrets_manager", () => {
     it("should throw an error if no resource group", () => {
       let testData = minimumValidJson({
@@ -2081,6 +2069,19 @@ describe("validate", () => {
       goodOverride.icd = null;
       let actualData = validate(goodOverride);
       assert.deepEqual(actualData.icd, [], "it should set icd");
+    });
+  });
+  describe("edge use cases", () => {
+    it("should be valid with no cos and vpc flow logs set to disabled", () => {
+      let overrideJson = minimumValidJson();
+      overrideJson.vpcs.forEach((vpc) => {
+        vpc.cos = null;
+        vpc.bucket = null;
+      });
+      let task = () => {
+        validate(overrideJson);
+      };
+      assert.doesNotThrow(task, "it should not throw an error");
     });
   });
 });

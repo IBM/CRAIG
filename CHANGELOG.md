@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
+- Object Storage instances are no longer required for template validation
 
 ### Features
 
@@ -20,6 +21,8 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue where dynamic subnet CIDR blocks were not being correctly updated for VPCs after the first
 - Fixed an issue causing dynamic subnets to unintentionally overlap
+- Fixed an issue causing VPCs with flow logs disabled to incorrectly fail validation
+- Fixed an issue preventing VPC Subnet Tiers from being deleted when Dynamic Addressing is enabled
 
 ## 1.0.0
 

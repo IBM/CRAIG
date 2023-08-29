@@ -4341,5 +4341,57 @@ describe("vpcs", () => {
         "it should return correct subnets"
       );
     });
+    it("should delete dynamically addressed subnet tiers the first", () => {
+      let incorrectData = require("../data-files/craig-subnet-scaling-broken.json");
+      let state = newState();
+      let expectedData = [
+        {
+          vpc: "workload",
+          zone: 1,
+          cidr: "10.40.0.0/28",
+          name: "vsi-zone-1",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: true,
+          has_prefix: false,
+        },
+        {
+          vpc: "workload",
+          zone: 2,
+          cidr: "10.50.0.0/28",
+          name: "vsi-zone-2",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: true,
+          has_prefix: false,
+        },
+        {
+          vpc: "workload",
+          zone: 3,
+          cidr: "10.60.0.0/28",
+          name: "vsi-zone-3",
+          network_acl: "workload",
+          resource_group: "workload-rg",
+          public_gateway: true,
+          has_prefix: false,
+        },
+      ];
+      state.store.json = incorrectData;
+      state.update();
+      state.vpcs.subnetTiers.delete(
+        {},
+        {
+          data: {
+            name: "vpe",
+          },
+          vpc_name: "workload",
+        }
+      );
+      assert.deepEqual(
+        state.store.json.vpcs[1].subnets,
+        expectedData,
+        "it should return correct subnets"
+      );
+    });
   });
 });

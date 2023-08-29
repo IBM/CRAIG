@@ -169,7 +169,7 @@ function deleteLegacySubnetTier(
         "name",
         subnet.name
       );
-      subnetAddressPrefix.cidr = newCidr;
+      if (subnetAddressPrefix) subnetAddressPrefix.cidr = newCidr;
     }
   });
 }

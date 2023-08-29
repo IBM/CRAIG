@@ -1,7 +1,9 @@
 [
   {
     "version": "1.1.0",
-    "upgrade_notes": [],
+    "upgrade_notes": [
+      "Object Storage instances are no longer required for template validation"
+    ],
     "features": [
       "Updated IBM Provider version to `1.56.1`",
       "Added backend functionality to allow users to create schematics workspaces",
@@ -12,7 +14,9 @@
     ],
     "fixes": [
       "Fixed an issue where dynamic subnet CIDR blocks were not being correctly updated for VPCs after the first",
-      "Fixed an issue causing dynamic subnets to unintentionally overlap"
+      "Fixed an issue causing dynamic subnets to unintentionally overlap",
+      "Fixed an issue causing VPCs with flow logs disabled to incorrectly fail validation",
+      "Fixed an issue preventing VPC Subnet Tiers from being deleted when Dynamic Addressing is enabled"
     ]
   },
   {

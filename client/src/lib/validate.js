@@ -342,10 +342,6 @@ const validate = function (json) {
       });
     });
   }
-  // must have cos
-  if (json.object_storage.length === 0) {
-    throw new Error(simpleErrors.noCosInstances);
-  }
 
   // secrets manager
   json.secrets_manager.forEach((instance) => {
@@ -376,10 +372,6 @@ const validate = function (json) {
 
   // vpcs
   json.vpcs.forEach((network) => {
-    validationTest("VPCs", network, "Flow Logs Bucket", "bucket", {
-      overrideNameField: "name",
-    });
-    validationTest("VPCs", network, "COS", "cos");
     nullResourceGroupTest("VPCs", network);
 
     // for each address prefix
@@ -504,8 +496,6 @@ const validate = function (json) {
    */
   function instanceTests(deployment, type) {
     let deploymentName = `${type ? type + " " : ""}VSIs`; // composed name
-    // subnets to check
-    let subnetField = contains(["Teleport", "F5"], type) ? "subnet" : false;
 
     // vsi test
     nullVpcNameTest(deploymentName, deployment);
