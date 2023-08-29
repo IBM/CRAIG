@@ -1272,9 +1272,9 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
 # Optionally Add Floating IPs
 ##############################################################################
 
-resource "ibm_is_floating_ip" "management_management_server_vsi_zone_1_1_fip" {
-  name   = "\${var.prefix}-management-management-server-vsi-zone-1-1-fip"
-  target = ibm_is_instance.management_management_server_vsi_zone_1_1.primary_network_interface.0.id
+resource "ibm_is_floating_ip" "management_vpc_management_server_vsi_1_1_fip" {
+  name   = "\${var.prefix}-management-vpc-management-server-vsi-1-1-fip"
+  target = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.id
 }
 
 ##############################################################################

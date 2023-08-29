@@ -483,7 +483,7 @@ function lbTf(config) {
  */
 function ibmIsFip(vsi) {
   let zone = vsi.subnet.replace(/[^]+(?=\d$)/g, "");
-  let fipName = `${snakeCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
+  let fipName = `${snakeCase(vsi.vpc)}-vpc-${vsi.name}-vsi-${zone}-${
     vsi.index
   }-fip`;
   return {
@@ -492,7 +492,7 @@ function ibmIsFip(vsi) {
       name: `${varDotPrefix}-${fipName}`,
       target: tfRef(
         "ibm_is_instance",
-        `${snakeCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${vsi.index}`,
+        `${snakeCase(vsi.vpc)}-vpc-${vsi.name}-vsi-${zone}-${vsi.index}`,
         "primary_network_interface.0.id"
       ),
     },
