@@ -69,6 +69,10 @@ describe("secrets_manager", () => {
     });
     it("should update cluster.opaque_secrets.secret_manager name when secrets manager is renamed", () => {
       let state = new newState();
+      state.store.json.clusters[0].opaque_secrets[0] = {
+        name: "test",
+        secrets_manager: "default",
+      };
       state.secrets_manager.create({
         name: "default",
         encryption_key: "key",
@@ -83,20 +87,41 @@ describe("secrets_manager", () => {
         "it should update cluster.opaque_secrets"
       );
     });
-    it("should not update cluster.opaque_secrets.secret_manager when unrelated secrets manager is renamed", () => {
+    it("should not update cluster.opaque_secrets.secret_manager name when unrelated secrets manager is renamed", () => {
       let state = new newState();
+      state.store.json.clusters[0].opaque_secrets[0] = {
+        name: "test",
+        secrets_manager: "frog",
+      };
       state.secrets_manager.create({
-        name: "new-secret-manager",
+        name: "default",
         encryption_key: "key",
       });
       state.secrets_manager.save(
-        { name: "updated-name" },
-        { data: { name: "new-secret-manager" } }
+        { name: "new-name" },
+        { data: { name: "default" } }
       );
       assert.deepEqual(
         state.store.json.clusters[0].opaque_secrets[0].secrets_manager,
-        "default",
+        "frog",
         "it should not update cluster.opaque_secrets"
+      );
+    });
+    it("should not update cluster.opaque_secrets.secret_manager when no opaque secrets", () => {
+      let state = new newState();
+      delete state.store.json.clusters[0].opaque_secrets;
+      state.secrets_manager.create({
+        name: "default",
+        encryption_key: "key",
+      });
+      state.secrets_manager.save(
+        { name: "new-name" },
+        { data: { name: "default" } }
+      );
+      assert.deepEqual(
+        state.store.json.clusters[0].opaque_secrets,
+        undefined,
+        "it should update cluster.opaque_secrets"
       );
     });
     it("should not update empty cluster secrets when secrets manager updates", () => {

@@ -9,7 +9,7 @@ const defaultManagementCluster = {
   cos: "cos",
   entitlement: "cloud_pak",
   kube_type: "openshift",
-  kube_version: "default",
+  kube_version: null,
   flavor: "bx2.16x64",
   name: "management-cluster",
   resource_group: "management-rg",
@@ -29,13 +29,7 @@ const defaultManagementCluster = {
       workers_per_subnet: 2,
     },
   ],
-  opaque_secrets: [
-    {
-      name: "secret",
-      cluster: "management-cluster",
-      secrets_manager: "default",
-    },
-  ],
+  opaque_secrets: [],
   workers_per_subnet: 2,
   private_endpoint: true,
 };
@@ -81,7 +75,7 @@ describe("clusters", () => {
         cos: "cos",
         entitlement: "cloud_pak",
         kube_type: "openshift",
-        kube_version: "default",
+        kube_version: "default (Default)",
         flavor: "bx2.16x64",
         name: "frog",
         resource_group: "workload-rg",
@@ -106,6 +100,7 @@ describe("clusters", () => {
       state.clusters.save(
         {
           vpc: "management",
+          kube_version: "default (Default)",
           worker_pools: [
             {
               entitlement: "cloud_pak",
@@ -244,6 +239,11 @@ describe("clusters", () => {
     it("should update opaque_secret.cluster when cluster.name is changed", () => {
       let state = new newState();
       state.clusters.create(newDefaultWorkloadCluster());
+      state.store.json.clusters[0].opaque_secrets[0] = {
+        name: "frog",
+        cluster: "frog",
+        secrets_manager: "frog",
+      };
       state.clusters.save(
         { name: "new-name" },
         { data: { name: "workload-cluster" } }
@@ -439,6 +439,11 @@ describe("clusters", () => {
       it("should create an opaque secret", () => {
         let state = new newState();
         state.clusters.create(newDefaultWorkloadCluster());
+        state.store.json.clusters[0].opaque_secrets[0] = {
+          name: "frog",
+          cluster: "frog",
+          secrets_manager: "frog",
+        };
         state.clusters.opaque_secrets.create(
           {
             name: "super_secret_password",
@@ -460,7 +465,11 @@ describe("clusters", () => {
     describe("clusters.opaque_secrets.save", () => {
       it("should update an opaque secret in place", () => {
         let state = new newState();
-        state.clusters.create(newDefaultWorkloadCluster());
+        state.store.json.clusters[0].opaque_secrets[0] = {
+          name: "secret",
+          cluster: "frog",
+          secrets_manager: "frog",
+        };
         state.clusters.opaque_secrets.save(
           {
             name: "password",
@@ -481,6 +490,12 @@ describe("clusters", () => {
       it("should delete an opauqe secret from a cluster object", () => {
         let state = new newState();
         state.clusters.create(newDefaultWorkloadCluster());
+        state.store.json.clusters[0].opaque_secrets[0] = {
+          name: "secret",
+          cluster: "frog",
+          secrets_manager: "frog",
+        };
+        state.update();
         state.clusters.opaque_secrets.delete(
           {},
           {

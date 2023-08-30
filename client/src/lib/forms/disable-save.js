@@ -154,10 +154,11 @@ function disableAtrackerSave(stateData) {
 function disableDynamicPoliciesSave(stateData, componentProps) {
   return (
     invalidName("dynamic_policies")(stateData, componentProps) ||
-    nullOrEmptyStringFields(
-      stateData,
-      ["identity_provider", "expiration", "conditions"]
-    ) ||
+    nullOrEmptyStringFields(stateData, [
+      "identity_provider",
+      "expiration",
+      "conditions",
+    ]) ||
     invalidIdentityProviderURI(stateData, componentProps)
   );
 }
@@ -171,7 +172,7 @@ function disableDynamicPoliciesSave(stateData, componentProps) {
 function disableObjectStorageSave(stateData, componentProps) {
   return (
     invalidName("object_storage")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData,["kms", "resource_group"])
+    nullOrEmptyStringFields(stateData, ["kms", "resource_group"])
   );
 }
 
@@ -205,7 +206,7 @@ function disableIcdSave(stateData, componentProps) {
  * @param {Object} componentProps
  * @returns {boolean} true if should be disabled
  */
-function disableAppIDSave(stateData,componentProps) {
+function disableAppIDSave(stateData, componentProps) {
   return (
     invalidName("appid")(stateData, componentProps) ||
     badField("resource_group", stateData)
@@ -231,7 +232,7 @@ function disableBucketsSave(stateData, componentProps) {
  * @param {Object} componentProps
  * @returns {boolean} true if should be disabled
  */
-function disableEncryptionKeysSave(stateData, componentProps){
+function disableEncryptionKeysSave(stateData, componentProps) {
   return (
     invalidName("encryption_keys")(stateData, componentProps) ||
     invalidEncryptionKeyRing(stateData)
@@ -244,7 +245,7 @@ function disableEncryptionKeysSave(stateData, componentProps){
  * @param {Object} componentProps
  * @returns {boolean} true if should be disabled
  */
-function disableVolumesSave(stateData, componentProps){
+function disableVolumesSave(stateData, componentProps) {
   return (
     invalidName("volume")(stateData, componentProps) ||
     nullOrEmptyStringFields(stateData, ["encryption_key"]) ||
@@ -299,11 +300,7 @@ function disableVpcsSave(stateData, componentProps) {
       stateData,
       componentProps
     ) ||
-    invalidName("vpcs")(
-      "default_routing_table_name",
-      stateData,
-      componentProps
-    )
+    invalidName("vpcs")("default_routing_table_name", stateData, componentProps)
   );
 }
 
@@ -436,15 +433,12 @@ function disableSubnetSave(stateData, componentProps, craig) {
  */
 function disableIamAccountSettingsSave(stateData) {
   return (
-    nullOrEmptyStringFields(
-      stateData, 
-      [
-        "mfa",
-        "restrict_create_platform_apikey",
-        "restrict_create_service_id",
-        "max_sessions_per_identity",
-      ]
-    ) || invalidIpCommaList(stateData.allowed_ip_addresses)
+    nullOrEmptyStringFields(stateData, [
+      "mfa",
+      "restrict_create_platform_apikey",
+      "restrict_create_service_id",
+      "max_sessions_per_identity",
+    ]) || invalidIpCommaList(stateData.allowed_ip_addresses)
   );
 }
 
@@ -477,17 +471,14 @@ function disableClustersSave(stateData, componentProps) {
   }
   return (
     invalidName("clusters")(stateData, componentProps) ||
-    nullOrEmptyStringFields(
-      stateData, 
-      [
-        "resource_group",
-        "vpc",
-        "subnets",
-        "encryption_key",
-        "flavor",
-        "kube_version",
-      ]
-    ) ||
+    nullOrEmptyStringFields(stateData, [
+      "resource_group",
+      "vpc",
+      "subnets",
+      "encryption_key",
+      "flavor",
+      "kube_version",
+    ]) ||
     isEmpty(stateData.subnets)
   );
 }
@@ -498,7 +489,7 @@ function disableClustersSave(stateData, componentProps) {
  * @param {Object} componentProps
  * @returns {boolean} true if should be disabled
  */
-function disableWorkerPoolsSave(stateData, componentProps){
+function disableWorkerPoolsSave(stateData, componentProps) {
   return (
     invalidName("worker_pools")(stateData, componentProps) ||
     nullOrEmptyStringFields(stateData, ["flavor"]) ||
@@ -522,10 +513,12 @@ function disableEventStreamsSave(stateData, componentProps) {
   } else {
     return (
       invalidName("event_streams")(stateData, componentProps) ||
-      nullOrEmptyStringFields(
-        stateData,
-        ["resource_group", "endpoints", "throughput", "storage_size"]
-      ) ||
+      nullOrEmptyStringFields(stateData, [
+        "resource_group",
+        "endpoints",
+        "throughput",
+        "storage_size",
+      ]) ||
       invalidIpCommaList(stateData.private_ip_allowlist)
     );
   }
@@ -540,10 +533,13 @@ function disableEventStreamsSave(stateData, componentProps) {
 function disableVpeSave(stateData, componentProps) {
   return (
     invalidName("virtual_private_endpoints")(stateData, componentProps) ||
-    nullOrEmptyStringFields(
-      stateData,
-      ["resource_group", "security_groups", "service", "subnets", "vpc"]
-    ) ||
+    nullOrEmptyStringFields(stateData, [
+      "resource_group",
+      "security_groups",
+      "service",
+      "subnets",
+      "vpc",
+    ]) ||
     anyAreEmpty(stateData.security_groups, stateData.subnets)
   );
 }
@@ -557,11 +553,14 @@ function disableVpeSave(stateData, componentProps) {
 function disableVsiSave(stateData, componentProps) {
   return (
     invalidName("vsi")(stateData, componentProps) ||
-    nullOrEmptyStringFields(
-      stateData,
-      ["resource_group", "vpc", "image_name", "profile", "encryption_key"]
-    ) ||
-    !isInRange(stateData.vsi_per_subnet,1,10) ||
+    nullOrEmptyStringFields(stateData, [
+      "resource_group",
+      "vpc",
+      "image_name",
+      "profile",
+      "encryption_key",
+    ]) ||
+    !isInRange(stateData.vsi_per_subnet, 1, 10) ||
     anyAreEmpty(
       stateData.security_groups,
       stateData.subnets,
@@ -591,7 +590,7 @@ function disableF5VsiTemplateSave(stateData) {
   };
   return (
     nullOrEmptyStringFields(
-      stateData, 
+      stateData,
       ["template_version", "template_source"].concat(
         extraFields[stateData["license_type"]]
       )
@@ -643,7 +642,12 @@ function disableRoutingTablesSave(stateData, componentProps) {
 function disableRoutesSave(stateData, componentProps) {
   return (
     invalidName("routes")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["zone", "action", "next_hop", "destination"]) ||
+    nullOrEmptyStringFields(stateData, [
+      "zone",
+      "action",
+      "next_hop",
+      "destination",
+    ]) ||
     !isIpv4CidrOrAddress(stateData.destination) ||
     !isIpv4CidrOrAddress(stateData.next_hop) ||
     contains(stateData.next_hop, "/")
@@ -659,25 +663,22 @@ function disableRoutesSave(stateData, componentProps) {
 function disableLoadBalancersSave(stateData, componentProps) {
   return (
     invalidName("load_balancers")(stateData, componentProps) ||
-    nullOrEmptyStringFields(
-      stateData,
-      [
-        "resource_group",
-        "type",
-        "vpc",
-        "security_groups",
-        "deployment_vsi",
-        "algorith",
-        "pool_protocol",
-        "pool_health_protocol",
-        "listener_protocol",
-        "listener_port",
-        "health_retries",
-        "health_timeout",
-        "health_delay",
-        "port",
-      ]
-    ) ||
+    nullOrEmptyStringFields(stateData, [
+      "resource_group",
+      "type",
+      "vpc",
+      "security_groups",
+      "deployment_vsi",
+      "algorith",
+      "pool_protocol",
+      "pool_health_protocol",
+      "listener_protocol",
+      "listener_port",
+      "health_retries",
+      "health_timeout",
+      "health_delay",
+      "port",
+    ]) ||
     areNotWholeNumbers(
       stateData.listener_port,
       stateData.health_retries,
@@ -686,7 +687,8 @@ function disableLoadBalancersSave(stateData, componentProps) {
       stateData.port
     ) ||
     stateData.health_delay <= stateData.health_timeout ||
-    (stateData.connection_limit && rangeInvalid(stateData.connection_limit, 1, 15000)) || 
+    (stateData.connection_limit &&
+      rangeInvalid(stateData.connection_limit, 1, 15000)) ||
     !haveValidRanges(
       [stateData.port, 1, 65535],
       [stateData.listener_port, 1, 65535],
@@ -704,14 +706,10 @@ function disableLoadBalancersSave(stateData, componentProps) {
  * @param {Object} componentProps
  * @returns {boolean} true if should be disabled
  */
-function disableCbrRulesSave(stateData, componentProps){
+function disableCbrRulesSave(stateData, componentProps) {
   return (
     invalidName("cbr_rules")(stateData, componentProps) ||
-    invalidFieldCheck(
-      ["description", "api_type_id"],
-      invalidCbrRule,
-      stateData
-    )
+    invalidFieldCheck(["description", "api_type_id"], invalidCbrRule, stateData)
   );
 }
 
@@ -734,7 +732,7 @@ function disableContextsSave(stateData, componentProps) {
  * @param {Object} componentProps
  * @returns {boolean} true if should be disabled
  */
-function disableResourceAttributesSave(stateData, componentProps){
+function disableResourceAttributesSave(stateData, componentProps) {
   return (
     invalidName("resource_attributes")(stateData, componentProps) ||
     invalidCbrRule("value", stateData, componentProps)
@@ -763,11 +761,7 @@ function disableTagsSave(stateData, componentProps) {
 function disableCbrZonesSave(stateData, componentProps) {
   return (
     invalidName("cbr_zones")(stateData, componentProps) ||
-    invalidFieldCheck(
-      ["description", "account_id"],
-      invalidCbrZone,
-      stateData
-    )
+    invalidFieldCheck(["description", "account_id"], invalidCbrZone, stateData)
   );
 }
 
@@ -828,19 +822,17 @@ function disableExclusionsSave(stateData, componentProps) {
 function disableVpnServersSave(stateData, componentProps) {
   return (
     invalidName("vpn_servers")(stateData, componentProps) ||
-    nullOrEmptyStringFields(
-      stateData,
-      [
-        "resource_group",
-        "vpc",
-        "security_groups",
-        "certificate_crn",
-        "method",
-        "client_ip_pool",
-      ]
-    ) ||
-    (portRangeInvalid("port_min", stateData.port)) ||
-    (stateData.client_idle_timeout && rangeInvalid(stateData.client_idle_timeout, 0, 28800)) ||
+    nullOrEmptyStringFields(stateData, [
+      "resource_group",
+      "vpc",
+      "security_groups",
+      "certificate_crn",
+      "method",
+      "client_ip_pool",
+    ]) ||
+    portRangeInvalid("port_min", stateData.port) ||
+    (stateData.client_idle_timeout &&
+      rangeInvalid(stateData.client_idle_timeout, 0, 28800)) ||
     invalidCrnList(
       [stateData.certificate_crn].concat(
         stateData.method === "username" ? [] : stateData.client_ca_crn
@@ -875,7 +867,7 @@ function disableVpnServerRoutesSave(stateData, componentProps) {
  * @param {Object} componentProps
  * @returns {boolean} true if should be disabled
  */
-function disableDnsSave(stateData, componentProps){
+function disableDnsSave(stateData, componentProps) {
   return (
     invalidName("dns")(stateData, componentProps) ||
     badField("resource_group", stateData)

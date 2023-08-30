@@ -17,7 +17,8 @@
       "Fixed an issue causing dynamic subnets to unintentionally overlap",
       "Fixed an issue causing VPCs with flow logs disabled to incorrectly fail validation",
       "Fixed an issue preventing VPC Subnet Tiers from being deleted when Dynamic Addressing is enabled",
-      "Fixed an issue where target was incorrect for VSI FIPs"
+      "Fixed an issue where target was incorrect for VSI FIPs",
+      "Fixed an issue where an invalid cluster version is provided as part of the default template"
     ]
   },
   {
@@ -140,9 +141,7 @@
   },
   {
     "version": "0.4.0",
-    "upgrade_notes": [
-      "Support for Teleport has been removed"
-    ],
+    "upgrade_notes": ["Support for Teleport has been removed"],
     "features": [
       "Implemented Routing Tables Page",
       "Implemented Load Balancers Page",

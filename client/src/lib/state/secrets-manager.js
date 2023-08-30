@@ -35,7 +35,7 @@ function secretsManagerCreate(config, stateData) {
  */
 function secretsManagerSave(config, stateData, componentProps) {
   config.store.json.clusters.forEach((cluster) => {
-    if (cluster.opaque_secrets.length > 0) {
+    if (cluster.opaque_secrets) {
       cluster.opaque_secrets.forEach((secret) => {
         if (secret.secrets_manager == componentProps.data.name) {
           secret.secrets_manager = stateData.name;

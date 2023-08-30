@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing VPCs with flow logs disabled to incorrectly fail validation
 - Fixed an issue preventing VPC Subnet Tiers from being deleted when Dynamic Addressing is enabled
 - Fixed an issue where target was incorrect for VSI FIPs
+- Fixed an issue where an invalid cluster version is provided as part of the default template
 
 ## 1.0.0
 

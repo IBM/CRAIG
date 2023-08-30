@@ -835,7 +835,7 @@ function newDefaultWorkloadCluster() {
     cos: "cos",
     entitlement: "cloud_pak",
     kube_type: "openshift",
-    kube_version: "default",
+    kube_version: null,
     flavor: "bx2.16x64",
     name: "workload-cluster",
     resource_group: "workload-rg",
@@ -855,13 +855,7 @@ function newDefaultWorkloadCluster() {
         workers_per_subnet: 2,
       },
     ],
-    opaque_secrets: [
-      {
-        name: "secret",
-        cluster: "workload-cluster",
-        secrets_manager: "default",
-      },
-    ],
+    opaque_secrets: [],
     workers_per_subnet: 2,
     private_endpoint: true,
   };
