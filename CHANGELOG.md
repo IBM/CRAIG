@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
+- `_kubernetes` is no longer incorrectly appended to Cluster versions. To see this change users will need to reselect a chosen version.
 - Object Storage instances are no longer required for template validation
 
 ### Features

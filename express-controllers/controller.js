@@ -229,7 +229,7 @@ function controller(axios) {
             versions[element.default ? "unshift" : "push"](
               // add to front if default
               `${element.major}.${element.minor}.${element.patch}${
-                openshift ? "_openshift" : "_kubernetes" // add type
+                openshift ? "_openshift" : "" // add type
               }${element.default ? " (Default)" : ""}`
             );
           }
