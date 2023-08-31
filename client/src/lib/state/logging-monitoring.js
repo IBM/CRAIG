@@ -58,7 +58,7 @@ function logdnaSave(config, stateData) {
 function sysdigInit(config) {
   config.store.json.sysdig = {
     enabled: false,
-    plan: "tier-1",
+    plan: "graduated-tier",
     resource_group: "service-rg",
   };
 }

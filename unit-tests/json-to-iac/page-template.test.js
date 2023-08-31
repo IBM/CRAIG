@@ -1297,7 +1297,7 @@ resource "ibm_resource_group" "workload_rg" {
       },
       sysdig: {
         enabled: true,
-        plan: "tier-1",
+        plan: "graduated-tier",
         resource_group: "service-rg",
       },
     };
@@ -1313,7 +1313,7 @@ resource "ibm_resource_group" "workload_rg" {
   },
   "sysdig": {
     "enabled": true,
-    "plan": "tier-1",
+    "plan": "graduated-tier",
     "resource_group": "service-rg"
   }
 }`;

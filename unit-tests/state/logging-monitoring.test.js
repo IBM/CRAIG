@@ -116,7 +116,7 @@ describe("observability", () => {
           state.store.json.sysdig,
           {
             enabled: false,
-            plan: "tier-1",
+            plan: "graduated-tier",
             resource_group: "service-rg",
           },
           "it should set defaults"
@@ -153,7 +153,7 @@ describe("observability", () => {
           state.store.json.sysdig,
           {
             enabled: false,
-            plan: "tier-1",
+            plan: "graduated-tier",
             resource_group: "service-rg",
             name: "aaa",
           },

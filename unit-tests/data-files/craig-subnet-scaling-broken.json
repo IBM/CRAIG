@@ -661,7 +661,7 @@
     ],
     "sysdig": {
         "enabled": true,
-        "plan": "tier-1",
+        "plan": "graduated-tier",
         "resource_group": "service-rg"
     },
     "teleport_vsi": [],
