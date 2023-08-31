@@ -42,12 +42,6 @@ function variablesDotTf(config, useF5) {
     ],
   };
   if (config._options.enable_power_vs) {
-    variables.power_vs_region = {
-      description:
-        "IBM Cloud Region where Power VS resources will be provivisioned",
-      type: "${string}",
-      default: "us-south",
-    };
     variables.power_vs_zone = {
       description:
         "IBM Cloud Zone where Power VS resources will be provivisioned",

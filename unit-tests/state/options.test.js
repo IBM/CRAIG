@@ -25,7 +25,6 @@ describe("options", () => {
         fs_cloud: true,
         dynamic_subnets: true,
         enable_power_vs: false,
-        power_vs_region: null,
         power_vs_zone: null,
       };
       assert.deepEqual(

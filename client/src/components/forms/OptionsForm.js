@@ -11,7 +11,14 @@ import {
 } from "icse-react-assets";
 import PropTypes from "prop-types";
 import { Tag, TextArea } from "@carbon/react";
-import { deepEqual, kebabCase, azsort, titleCase } from "lazy-z";
+import {
+  deepEqual,
+  kebabCase,
+  azsort,
+  titleCase,
+  contains,
+  isNullOrEmptyString,
+} from "lazy-z";
 import { invalidNewResourceName, invalidTagList } from "../../lib";
 
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
@@ -45,7 +52,12 @@ class OptionsForm extends React.Component {
     if (name === "endpoints") {
       value = kebabCase(value);
     }
-    this.setState({ [name]: value });
+    if (name === "region") {
+      this.setState({
+        region: value,
+        power_vs_zone: null,
+      });
+    } else this.setState({ [name]: value });
   }
 
   handleToggle(name) {
@@ -56,7 +68,8 @@ class OptionsForm extends React.Component {
     return (
       invalidNewResourceName(this.state.prefix) ||
       invalidTagList(this.state.tags) ||
-      deepEqual(this.state, this.props.craig.store.json._options)
+      deepEqual(this.state, this.props.craig.store.json._options) ||
+      (this.state.enable_power_vs && !this.state.power_vs_zone)
     );
   }
 
@@ -78,7 +91,44 @@ class OptionsForm extends React.Component {
             }
             className="marginBottomSmall"
           />
-
+          <IcseFormGroup>
+            <IcseToggle
+              labelText="Use FS Cloud"
+              defaultToggled={this.state.fs_cloud}
+              onToggle={() => this.handleToggle("fs_cloud")}
+              id="use-fs-cloud"
+              toggleFieldName="fs_cloud"
+              value={this.state.fs_cloud}
+              tooltip={{
+                content: "Show only FS Cloud validated regions.",
+              }}
+            />
+            <IcseToggle
+              labelText="Enable Dynamic Scalable Subnets"
+              field="dynamic_subnets"
+              disabled={this.props.craig.store.json._options.advanced_subnets}
+              defaultToggled={this.state.dynamic_subnets}
+              onToggle={() => this.handleToggle("dynamic_subnets")}
+              id="dynamic-subnets"
+              tooltip={{
+                content: this.props.craig.store.json._options.advanced_subnets
+                  ? "Dynamic subnet addressing cannot be used with advanced subnet tiers"
+                  : "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources. Turn off if you want to manage your address prefixes and subnet CIDR addresses manually.",
+              }}
+            />
+            <IcseToggle
+              labelText="Enable Power Virtual Servers"
+              defaultToggled={this.state.enable_power_vs}
+              onToggle={() => this.handleToggle("enable_power_vs")}
+              id="use-power-vs"
+              toggleFieldName="enable_power_vs"
+              value={this.state.enable_power_vs}
+              tooltip={{
+                content:
+                  "Enable the creation of IBM Power Virtual Servers and related infrastructure. Power VS is not currently enabled in CRAIG, this flag is for upcoming features.",
+              }}
+            />
+          </IcseFormGroup>
           <IcseFormGroup>
             <IcseTextInput
               id="prefix"
@@ -95,17 +145,6 @@ class OptionsForm extends React.Component {
                 align: "right",
               }}
             />
-            <IcseToggle
-              labelText="Use FS Cloud"
-              defaultToggled={this.state.fs_cloud}
-              onToggle={() => this.handleToggle("fs_cloud")}
-              id="use-fs-cloud"
-              toggleFieldName="fs_cloud"
-              value={this.state.fs_cloud}
-              tooltip={{
-                content: "Show only FS Cloud validated regions.",
-              }}
-            />
             <IcseSelect
               formName="options"
               name="region"
@@ -120,8 +159,6 @@ class OptionsForm extends React.Component {
                 .sort(azsort)}
               handleInputChange={this.handleChange}
             />
-          </IcseFormGroup>
-          <IcseFormGroup>
             <IcseNumberSelect
               max={3}
               formName="options"
@@ -135,6 +172,8 @@ class OptionsForm extends React.Component {
                   "The number of availability zones for VPCs in your template",
               }}
             />
+          </IcseFormGroup>
+          <IcseFormGroup>
             <IcseSelect
               formName="options"
               name="endpoints"
@@ -160,21 +199,59 @@ class OptionsForm extends React.Component {
                   "Account ID is used to create some resources, such as Virtual Private Endpoints for Secrets Manager",
               }}
             />
-          </IcseFormGroup>
-          <IcseFormGroup>
-            <IcseToggle
-              labelText="Dynamic Scalable Subnets"
-              field="dynamic_subnets"
-              disabled={this.props.craig.store.json._options.advanced_subnets}
-              defaultToggled={this.state.dynamic_subnets}
-              onToggle={() => this.handleToggle("dynamic_subnets")}
-              id="dynamic-subnets"
-              tooltip={{
-                content: this.props.craig.store.json._options.advanced_subnets
-                  ? "Dynamic subnet addressing cannot be used with advanced subnet tiers"
-                  : "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources. Turn off if you want to manage your address prefixes and subnet CIDR addresses manually.",
-              }}
-            />
+            {this.state.enable_power_vs && (
+              <IcseSelect
+                formName="options"
+                name="power_vs_zone"
+                labelText="Power VS Zone"
+                handleInputChange={this.handleChange}
+                value={this.state.power_vs_zone}
+                groups={
+                  {
+                    "au-syd": ["syd04", "syd05"],
+                    "eu-de": ["eu-de-1", "eu-de-2"],
+                    "eu-gb": ["lon04", "lon06"],
+                    "us-east": ["us-east"],
+                    "us-south": ["us-south", "dal10", "dal12"],
+                    "jp-tok": ["tok04"],
+                    "br-sao": ["sao01"],
+                    "ca-tor": ["tor1"],
+                  }[this.state.region]
+                }
+                invalid={
+                  !contains(
+                    [
+                      "au-syd",
+                      "us-south",
+                      "eu-de",
+                      "eu-gb",
+                      "us-east",
+                      "br-sao",
+                      "jp-tok",
+                      "ca-tor",
+                    ],
+                    this.state.region
+                  ) || isNullOrEmptyString(this.state.zone)
+                }
+                invalidText={
+                  !contains(
+                    [
+                      "au-syd",
+                      "us-south",
+                      "eu-de",
+                      "eu-gb",
+                      "us-east",
+                      "br-sao",
+                      "jp-osa",
+                      "ca-tor",
+                    ],
+                    this.state.region
+                  )
+                    ? `The region ${this.state.region} does not have any available Power VS zones`
+                    : "Select a Zone"
+                }
+              />
+            )}
           </IcseFormGroup>
           <IcseFormGroup>
             <TextArea

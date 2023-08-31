@@ -119,10 +119,7 @@ function clusterSave(config, stateData, componentProps) {
   // if changing vpc name, set cluster pools to new vpc name and
   // remove pool subnet names
   if (stateData.kube_version)
-    stateData.kube_version = stateData.kube_version.replace(
-      /\s.+$/,
-      ""
-    );
+    stateData.kube_version = stateData.kube_version.replace(/\s.+$/, "");
   if (stateData.vpc !== componentProps.data.vpc) {
     stateData.worker_pools.forEach((pool) => {
       pool.vpc = stateData.vpc;

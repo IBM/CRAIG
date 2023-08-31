@@ -221,12 +221,6 @@ variable "region" {
   }
 }
 
-variable "power_vs_region" {
-  description = "IBM Cloud Region where Power VS resources will be provivisioned"
-  type        = string
-  default     = "us-south"
-}
-
 variable "power_vs_zone" {
   description = "IBM Cloud Zone where Power VS resources will be provivisioned"
   type        = string
