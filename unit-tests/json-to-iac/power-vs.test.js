@@ -1,5 +1,8 @@
 const { assert } = require("chai");
 const { formatPowerVsWorkspace } = require("../../client/src/lib/json-to-iac");
+const {
+  formatPowerVsSshKey,
+} = require("../../client/src/lib/json-to-iac/power-vs.js");
 
 describe("power vs terraform", () => {
   describe("formatPowerVsWorkspace", () => {
@@ -38,6 +41,34 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
     update = "5m"
     delete = "10m"
   }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatPowerVsSshKey", () => {
+    it("should return the correct power vs workspace ssh keys", () => {
+      let actualData = formatPowerVsSshKey(
+        {
+          name: "example",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+        },
+        "keyname"
+      );
+      let expectedData = `
+resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
+  provider             = ibm.power_vs
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_key_name          = "\${var.prefix}-power-example-keyname-public-key"
+  pi_ssh_key           = var.power_example_keyname_public_key
 }
 `;
       assert.deepEqual(

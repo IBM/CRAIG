@@ -96,10 +96,7 @@ function clusterOnStoreUpdate(config) {
  */
 function clusterCreate(config, stateData) {
   if (stateData.kube_version)
-    stateData.kube_version = stateData.kube_version.replace(
-      /\s.+$/,
-      ""
-    );
+    stateData.kube_version = stateData.kube_version.replace(/\s.+$/, "");
   config.push(["json", "clusters"], stateData);
 }
 
