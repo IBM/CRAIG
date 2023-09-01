@@ -54,21 +54,21 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
     it("should return the correct power vs workspace ssh keys", () => {
       let actualData = formatPowerVsSshKey(
         {
-          name: "example",
+          workspace: "example",
+          name: "keyname",
         },
         {
           _options: {
             tags: ["hello", "world"],
           },
-        },
-        "keyname"
+        }
       );
       let expectedData = `
 resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
   provider             = ibm.power_vs
   pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
-  pi_key_name          = "\${var.prefix}-power-example-keyname-public-key"
-  pi_ssh_key           = var.power_example_keyname_public_key
+  pi_key_name          = "\${var.prefix}-power-example-keyname-key"
+  pi_ssh_key           = var.power_example_keyname_key
 }
 `;
       assert.deepEqual(

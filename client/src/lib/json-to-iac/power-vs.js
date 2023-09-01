@@ -36,25 +36,30 @@ function formatPowerVsWorkspace(workspace, config) {
 
 /**
  * create terraform for one power vs ssh key
- * @param {*} workspace
- * @param {string} workspace.name
- * @param {string} name ssh key name
- * @param {string} public_key ssh public key
+ * @param {*} key
+ * @param {string} key.workspace
+ * @param {string} key.name ssh key name
+ * @param {string} key.public_key ssh public key
  * @returns {string} terraform formatted resource
  */
-function formatPowerVsSshKey(workspace, config, name) {
-  let fullKeyName = snakeCase(`power ${workspace.name} ${name} public key`);
+function formatPowerVsSshKey(key) {
+  let fullKeyName = snakeCase(`power ${key.workspace} ${key.name} key`);
   let data = {
     provider: "${ibm.power_vs}",
     pi_cloud_instance_id: tfRef(
       "ibm_resource_instance",
-      snakeCase(`power vs workspace ${workspace.name}`),
+      snakeCase(`power vs workspace ${key.workspace}`),
       "guid"
     ),
     pi_key_name: kebabName([fullKeyName]),
     pi_ssh_key: `\${var.${fullKeyName}}`,
   };
-  return jsonToTfPrint("resource", "ibm_pi_key", snakeCase(`power vs ssh key ${name}`), data);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_pi_key",
+    snakeCase(`power vs ssh key ${key.name}`),
+    data
+  );
 }
 
 module.exports = {
