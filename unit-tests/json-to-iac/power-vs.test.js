@@ -3,6 +3,10 @@ const { formatPowerVsWorkspace } = require("../../client/src/lib/json-to-iac");
 const {
   formatPowerVsSshKey,
   formatPowerVsNetwork,
+  formatPowerVsCloudConnection,
+  formatPowerVsImage,
+  formatCloudConnectionDataSource,
+  formatPowerToTransitGatewayConnection,
 } = require("../../client/src/lib/json-to-iac/power-vs.js");
 
 describe("power vs terraform", () => {
@@ -99,6 +103,125 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
   pi_network_jumbo     = true
   pi_dns = [
     "127.0.0.1"
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatPowerVsCloudConnection", () => {
+    it("should format power cloud connection", () => {
+      let actualData = formatPowerVsCloudConnection({
+        name: "dev-connection",
+        workspace: "example",
+        pi_cloud_connection_speed: 50,
+        pi_cloud_connection_global_routing: false,
+        pi_cloud_connection_metered: false,
+        pi_cloud_connection_transit_enabled: true,
+      });
+      let expectedData = `
+resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connection" {
+  provider                            = ibm.power_vs
+  pi_cloud_instance_id                = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_cloud_connection_name            = "\${var.prefix}-power-network-dev-connection-connection"
+  pi_cloud_connection_speed           = 50
+  pi_cloud_connection_global_routing  = false
+  pi_cloud_connection_metered         = false
+  pi_cloud_connection_transit_enabled = true
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatPowerVsImage", () => {
+    it("should format power image", () => {
+      let actualData = formatPowerVsImage({
+        workspace: "example",
+        pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+        name: "SLES15-SP3-SAP",
+      });
+      let expectedData = `
+resource "ibm_pi_image" "power_image_example_sles15_sp3_sap" {
+  provider             = ibm.power_vs
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_image_id          = "e4de6683-2a42-4993-b702-c8613f132d39"
+  pi_image_name        = "SLES15-SP3-SAP"
+  timeouts {
+    create = "9m"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatCloudConnectionDataSource", () => {
+    it("should return data source", () => {
+      let actualData = formatCloudConnectionDataSource({
+        name: "dev-connection",
+        workspace: "example",
+        pi_cloud_connection_speed: 50,
+        pi_cloud_connection_global_routing: false,
+        pi_cloud_connection_metered: false,
+        pi_cloud_connection_transit_enabled: true,
+      });
+      let expectedData = `
+data "ibm_dl_gateway" "power_network_example_connection_dev_connection" {
+  provider = ibm.power_vs
+  name     = "\${var.prefix}-power-network-dev-connection-connection"
+  depends_on = [
+    ibm_pi_cloud_connection.power_network_example_connection_dev_connection
+  ]
+}
+
+resource "time_sleep" "power_network_example_connection_dev_connection_sleep" {
+  create_duration = "120s"
+  triggers = {
+    crn = data.ibm_dl_gateway.power_network_example_connection_dev_connection.crn
+  }
+  depends_on = [
+    data.ibm_dl_gateway.power_network_example_connection_dev_connection
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatPowerToTransitGatewayConnection", () => {
+    it("should return correct transit gateway connection", () => {
+      let actualData = formatPowerToTransitGatewayConnection({
+        name: "dev-connection",
+        workspace: "example",
+        pi_cloud_connection_speed: 50,
+        pi_cloud_connection_global_routing: false,
+        pi_cloud_connection_metered: false,
+        pi_cloud_connection_transit_enabled: true,
+        gateway: "tgw",
+      });
+      let expectedData = `
+resource "ibm_tg_connection" "tgw_connection_power_network_example_connection_dev_connection" {
+  provider     = ibm.power_vs
+  gateway      = ibm_tg_gateway.tgw.id
+  network_type = "directlink"
+  name         = "\${var.prefix}-tgw-to-dev-connection-connection"
+  network_id   = time_sleep.power_network_example_connection_dev_connection_sleep.triggers["crn"]
+  depends_on = [
+    ibm_pi_cloud_connection.power_network_example_connection_dev_connection
   ]
 }
 `;

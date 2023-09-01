@@ -6,6 +6,7 @@ const {
   rgIdRef,
   tfRef
 } = require("./utils");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * create terraform for resource instance for power vs
@@ -73,7 +74,7 @@ function formatPowerVsSshKey(key) {
 
 /**
  * format power vs network
- * @param {*} network 
+ * @param {*} network
  * @param {string} network.name
  * @param {string} network.workspace
  * @param {string} network.pi_cidr
@@ -94,13 +95,147 @@ function formatPowerVsNetwork(network) {
       pi_cidr: network.pi_cidr,
       pi_network_type: network.pi_network_type,
       pi_network_jumbo: network.pi_network_jumbo,
-      pi_dns: network.pi_dns,      
+      pi_dns: network.pi_dns,
     }
-  )
+  );
+}
+
+/**
+ * format power vs cloud connection name
+ * @param {*} connection
+ * @returns {string} name for cloud connection
+ */
+function formatCloudConnectionName(connection) {
+  return kebabName(["power-network", connection.name, "connection"]);
+}
+
+/**
+ * format power vs cloud connection resource name
+ * @param {*} connection
+ * @returns {string} resource name for cloud connection
+ */
+function formatCloudConnectionResourceName(connection) {
+  return snakeCase(
+    `power network ${connection.workspace} connection ${connection.name}`
+  );
+}
+
+/**
+ * create power vs cloud connection
+ * @param {*} connection
+ * @param {string} connection.name
+ * @param {string} connection.workspace
+ * @param {number} connection.pi_cloud_connection_speed
+ * @param {boolean} connection.pi_cloud_connection_global_routing
+ * @param {boolean} connection.pi_cloud_connection_metered
+ * @param {boolean} connection.pi_cloud_connection_transit_enabled
+ * @returns {string} terraform formatted resource
+ */
+function formatPowerVsCloudConnection(connection) {
+  return jsonToTfPrint(
+    "resource",
+    "ibm_pi_cloud_connection",
+    formatCloudConnectionResourceName(connection),
+    {
+      provider: "${ibm.power_vs}",
+      pi_cloud_instance_id: powerVsWorkspaceRef(connection.workspace),
+      pi_cloud_connection_name: formatCloudConnectionName(connection),
+      pi_cloud_connection_speed: connection.pi_cloud_connection_speed,
+      pi_cloud_connection_global_routing:
+        connection.pi_cloud_connection_global_routing,
+      pi_cloud_connection_metered: connection.pi_cloud_connection_metered,
+      pi_cloud_connection_transit_enabled:
+        connection.pi_cloud_connection_transit_enabled,
+    }
+  );
+}
+
+/**
+ * create power vs image
+ * @param {*} image
+ * @param {string} image.workspace
+ * @param {string} image.pi_image_id 
+ * @param {string} image.name
+ * @returns {string} terraform formatted resource
+ */
+function formatPowerVsImage(image) {
+  return jsonToTfPrint(
+    "resource",
+    "ibm_pi_image",
+    snakeCase(
+      `power image ${image.workspace} ${image.name}`
+    ),
+    {
+      provider: "${ibm.power_vs}",
+      pi_cloud_instance_id: powerVsWorkspaceRef(image.workspace),
+      pi_image_id: image.pi_image_id,
+      pi_image_name: image.name,
+      timeouts: timeouts("9m"),
+    }
+  );
+}
+
+/**
+ * create a data source for cloud connection
+ * @param {*} connection
+ * @returns {string} terraform formatted resource
+ */
+function formatCloudConnectionDataSource(connection) {
+  let connectionResourceName = formatCloudConnectionResourceName(connection);
+  let dlConnectionRef = `\${data.ibm_dl_gateway.${connectionResourceName}}`;
+  return (
+    jsonToTfPrint("data", "ibm_dl_gateway", connectionResourceName, {
+      provider: "${ibm.power_vs}",
+      name: formatCloudConnectionName(connection),
+      depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`],
+    }) +
+    jsonToTfPrint("resource", "time_sleep", connectionResourceName + "_sleep", {
+      create_duration: "120s",
+      triggers: {
+        crn: dlConnectionRef.replace(
+          new RegexButWithWords().literal("}").stringEnd().done("g"),
+          ".crn}"
+        ),
+      },
+      depends_on: [dlConnectionRef],
+    })
+  );
+}
+
+/**
+ * create power vs to tgw connection terraform
+ * @param {*} connection
+ * @param {string} connection.gateway
+ * @returns {string} terraform formatted code
+ */
+function formatPowerToTransitGatewayConnection(connection) {
+  let connectionResourceName = formatCloudConnectionResourceName(connection);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_tg_connection",
+    `${connection.gateway}_connection_${connectionResourceName}`,
+    {
+      provider: "${ibm.power_vs}",
+      gateway: `\${ibm_tg_gateway.${snakeCase(connection.gateway)}.id}`,
+      network_type: "directlink",
+      name: kebabName([
+        connection.gateway,
+        "to",
+        connection.name,
+        "connection",
+      ]),
+      network_id: `\${time_sleep.${connectionResourceName}_sleep.triggers["crn"]}`,
+      depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`],
+    }
+  );
 }
 
 module.exports = {
   formatPowerVsWorkspace,
   formatPowerVsSshKey,
-  formatPowerVsNetwork
+  formatPowerVsNetwork,
+  formatPowerVsCloudConnection,
+  formatPowerVsImage,
+  formatCloudConnectionDataSource,
+  formatPowerToTransitGatewayConnection,
 };

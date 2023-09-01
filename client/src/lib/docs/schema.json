@@ -631,5 +631,39 @@
         }
       }
     }
+  },
+  "power": {
+    "Array": {
+      "name": "string",
+      "resource_group": "string",
+      "ssh_keys": {
+        "Array": {
+          "name": "string",
+          "public_key": "string",
+          "workspace": "string"
+        }
+      },
+      "network": {
+        "Array": {
+          "name": "string",
+          "workspace": "string",
+          "pi_cidr": "string",
+          "pi_network_type": "string",
+          "pi_network_jumbo": "boolean",
+          "pi_dns": "Array<string>"
+        }
+      },
+      "cloud_connections": {
+        "Array": {
+          "name": "string",
+          "workspace": "string",
+          "pi_cloud_connection_global_routing": "boolean",
+          "pi_cloud_connection_metered": "boolean",
+          "pi_cloud_connection_transit_enabled": "boolean",
+          "pi_cloud_connection_speed": "number",
+          "gateway": "string"
+        }
+      }
+    }
   }
 }
