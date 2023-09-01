@@ -4,7 +4,7 @@ const {
   kebabName,
   timeouts,
   rgIdRef,
-  tfRef,
+  tfRef
 } = require("./utils");
 
 /**
@@ -24,13 +24,26 @@ function formatPowerVsWorkspace(workspace, config) {
     location: "${var.power_vs_zone}",
     resource_group_id: rgIdRef(workspace.resource_group, config),
     tags: config._options.tags,
-    timeouts: timeouts("6m", "5m", "10m"),
+    timeouts: timeouts("6m", "5m", "10m")
   };
   return jsonToTfPrint(
     "resource",
     "ibm_resource_instance",
     "power vs workspace " + workspace.name,
     data
+  );
+}
+
+/**
+ * create a reference to power vs workspace
+ * @param {*} workspaceName
+ * @returns {string} reference to power vs
+ */
+function powerVsWorkspaceRef(workspaceName) {
+  return tfRef(
+    "ibm_resource_instance",
+    snakeCase(`power vs workspace ${workspaceName}`),
+    "guid"
   );
 }
 
@@ -46,13 +59,9 @@ function formatPowerVsSshKey(key) {
   let fullKeyName = snakeCase(`power ${key.workspace} ${key.name} key`);
   let data = {
     provider: "${ibm.power_vs}",
-    pi_cloud_instance_id: tfRef(
-      "ibm_resource_instance",
-      snakeCase(`power vs workspace ${key.workspace}`),
-      "guid"
-    ),
+    pi_cloud_instance_id: powerVsWorkspaceRef(key.workspace),
     pi_key_name: kebabName([fullKeyName]),
-    pi_ssh_key: `\${var.${fullKeyName}}`,
+    pi_ssh_key: `\${var.${fullKeyName}}`
   };
   return jsonToTfPrint(
     "resource",
@@ -62,7 +71,36 @@ function formatPowerVsSshKey(key) {
   );
 }
 
+/**
+ * format power vs network
+ * @param {*} network 
+ * @param {string} network.name
+ * @param {string} network.workspace
+ * @param {string} network.pi_cidr
+ * @param {Array<string>} network.pi_dns
+ * @param {string} network.pi_network_type
+ * @param {boolean} network.pi_network_jumbo
+ * @returns {string} terrraform formatted resource
+ */
+function formatPowerVsNetwork(network) {
+  return jsonToTfPrint(
+    "resource",
+    "ibm_pi_network",
+    snakeCase(`power network ${network.workspace} ${network.name}`),
+    {
+      provider: "${ibm.power_vs}",
+      pi_cloud_instance_id: powerVsWorkspaceRef(network.workspace),
+      pi_network_name: kebabName(["power-network", network.name]),
+      pi_cidr: network.pi_cidr,
+      pi_network_type: network.pi_network_type,
+      pi_network_jumbo: network.pi_network_jumbo,
+      pi_dns: network.pi_dns,      
+    }
+  )
+}
+
 module.exports = {
   formatPowerVsWorkspace,
   formatPowerVsSshKey,
+  formatPowerVsNetwork
 };

@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const { formatPowerVsWorkspace } = require("../../client/src/lib/json-to-iac");
 const {
   formatPowerVsSshKey,
+  formatPowerVsNetwork,
 } = require("../../client/src/lib/json-to-iac/power-vs.js");
 
 describe("power vs terraform", () => {
@@ -69,6 +70,36 @@ resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
   pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
   pi_key_name          = "\${var.prefix}-power-example-keyname-key"
   pi_ssh_key           = var.power_example_keyname_key
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatPowerVsNetwork", () => {
+    it("should format pi network resource", () => {
+      let actualData = formatPowerVsNetwork({
+        workspace: "example",
+        name: "dev-nw",
+        pi_cidr: "1.2.3.4/5",
+        pi_dns: ["127.0.0.1"],
+        pi_network_type: "vlan",
+        pi_network_jumbo: true,
+      });
+      let expectedData = `
+resource "ibm_pi_network" "power_network_example_dev_nw" {
+  provider             = ibm.power_vs
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_network_name      = "\${var.prefix}-power-network-dev-nw"
+  pi_cidr              = "1.2.3.4/5"
+  pi_network_type      = "vlan"
+  pi_network_jumbo     = true
+  pi_dns = [
+    "127.0.0.1"
+  ]
 }
 `;
       assert.deepEqual(
