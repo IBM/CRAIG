@@ -4,6 +4,7 @@ const {
   formatPowerVsSshKey,
   formatPowerVsNetwork,
   formatPowerVsCloudConnection,
+  formatPowerVsImage,
   formatCloudConnectionDataSource,
   formatPowerToTransitGatewayConnection,
 } = require("../../client/src/lib/json-to-iac/power-vs.js");
@@ -131,6 +132,31 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
   pi_cloud_connection_global_routing  = false
   pi_cloud_connection_metered         = false
   pi_cloud_connection_transit_enabled = true
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatPowerVsImage", () => {
+    it("should format power image", () => {
+      let actualData = formatPowerVsImage({
+        workspace: "example",
+        pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+        name: "SLES15-SP3-SAP",
+      });
+      let expectedData = `
+resource "ibm_pi_image" "power_image_example_sles15_sp3_sap" {
+  provider             = ibm.power_vs
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_image_id          = "e4de6683-2a42-4993-b702-c8613f132d39"
+  pi_image_name        = "SLES15-SP3-SAP"
+  timeouts {
+    create = "9m"
+  }
 }
 `;
       assert.deepEqual(

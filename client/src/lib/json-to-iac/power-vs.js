@@ -151,6 +151,31 @@ function formatPowerVsCloudConnection(connection) {
 }
 
 /**
+ * create power vs image
+ * @param {*} image
+ * @param {string} image.workspace
+ * @param {string} image.pi_image_id 
+ * @param {string} image.name
+ * @returns {string} terraform formatted resource
+ */
+function formatPowerVsImage(image) {
+  return jsonToTfPrint(
+    "resource",
+    "ibm_pi_image",
+    snakeCase(
+      `power image ${image.workspace} ${image.name}`
+    ),
+    {
+      provider: "${ibm.power_vs}",
+      pi_cloud_instance_id: powerVsWorkspaceRef(image.workspace),
+      pi_image_id: image.pi_image_id,
+      pi_image_name: image.name,
+      timeouts: timeouts("9m"),
+    }
+  );
+}
+
+/**
  * create a data source for cloud connection
  * @param {*} connection
  * @returns {string} terraform formatted resource
@@ -210,6 +235,7 @@ module.exports = {
   formatPowerVsSshKey,
   formatPowerVsNetwork,
   formatPowerVsCloudConnection,
+  formatPowerVsImage,
   formatCloudConnectionDataSource,
   formatPowerToTransitGatewayConnection,
 };
