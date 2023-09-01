@@ -4,6 +4,8 @@ const {
   formatPowerVsSshKey,
   formatPowerVsNetwork,
   formatPowerVsCloudConnection,
+  formatCloudConnectionDataSource,
+  formatPowerToTransitGatewayConnection,
 } = require("../../client/src/lib/json-to-iac/power-vs.js");
 
 describe("power vs terraform", () => {
@@ -129,6 +131,72 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
   pi_cloud_connection_global_routing  = false
   pi_cloud_connection_metered         = false
   pi_cloud_connection_transit_enabled = true
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatCloudConnectionDataSource", () => {
+    it("should return data source", () => {
+      let actualData = formatCloudConnectionDataSource({
+        name: "dev-connection",
+        workspace: "example",
+        pi_cloud_connection_speed: 50,
+        pi_cloud_connection_global_routing: false,
+        pi_cloud_connection_metered: false,
+        pi_cloud_connection_transit_enabled: true,
+      });
+      let expectedData = `
+data "ibm_dl_gateway" "power_network_example_connection_dev_connection" {
+  provider = ibm.power_vs
+  name     = "\${var.prefix}-power-network-dev-connection-connection"
+  depends_on = [
+    ibm_pi_cloud_connection.power_network_example_connection_dev_connection
+  ]
+}
+
+resource "time_sleep" "power_network_example_connection_dev_connection_sleep" {
+  create_duration = "120s"
+  triggers = {
+    crn = data.ibm_dl_gateway.power_network_example_connection_dev_connection.crn
+  }
+  depends_on = [
+    data.ibm_dl_gateway.power_network_example_connection_dev_connection
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("formatPowerToTransitGatewayConnection", () => {
+    it("should return correct transit gateway connection", () => {
+      let actualData = formatPowerToTransitGatewayConnection({
+        name: "dev-connection",
+        workspace: "example",
+        pi_cloud_connection_speed: 50,
+        pi_cloud_connection_global_routing: false,
+        pi_cloud_connection_metered: false,
+        pi_cloud_connection_transit_enabled: true,
+        gateway: "tgw",
+      });
+      let expectedData = `
+resource "ibm_tg_connection" "tgw_connection_power_network_example_connection_dev_connection" {
+  provider     = ibm.power_vs
+  gateway      = ibm_tg_gateway.tgw.id
+  network_type = "directlink"
+  name         = "\${var.prefix}-tgw-to-dev-connection-connection"
+  network_id   = time_sleep.power_network_example_connection_dev_connection_sleep.triggers["crn"]
+  depends_on = [
+    ibm_pi_cloud_connection.power_network_example_connection_dev_connection
+  ]
 }
 `;
       assert.deepEqual(

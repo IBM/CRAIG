@@ -660,7 +660,8 @@
           "pi_cloud_connection_global_routing": "boolean",
           "pi_cloud_connection_metered": "boolean",
           "pi_cloud_connection_transit_enabled": "boolean",
-          "pi_cloud_connection_speed": "number"
+          "pi_cloud_connection_speed": "number",
+          "gateway": "string"
         }
       }
     }
