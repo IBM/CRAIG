@@ -950,5 +950,6 @@
   "cbr_zones": [],
   "cbr_rules": [],
   "vpn_servers": [],
-  "icd": []
+  "icd": [],
+  "power": []
 }
