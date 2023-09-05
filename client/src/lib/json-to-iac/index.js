@@ -170,6 +170,7 @@ const {
   formatPowerVsWorkspace,
   formatPowerVsNetwork,
   formatPowerVsCloudConnection,
+  powerVsTf,
 } = require("./power-vs");
 module.exports = {
   formatIcd,
@@ -306,4 +307,5 @@ module.exports = {
   formatPowerVsWorkspace,
   formatPowerVsNetwork,
   formatPowerVsCloudConnection,
+  powerVsTf,
 };

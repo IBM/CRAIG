@@ -119,6 +119,7 @@ const {
   formatAtrackerArchive,
   calculateNeededSubnetIps,
   getNextCidr,
+  powerVsTf,
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
@@ -248,4 +249,5 @@ module.exports = {
   invalidForms,
   invalidCrns,
   invalidCrnText,
+  powerVsTf,
 };
