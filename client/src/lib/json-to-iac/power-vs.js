@@ -4,7 +4,8 @@ const {
   kebabName,
   timeouts,
   rgIdRef,
-  tfRef
+  tfRef,
+  tfBlock,
 } = require("./utils");
 const { RegexButWithWords } = require("regex-but-with-words");
 
@@ -154,7 +155,7 @@ function formatPowerVsCloudConnection(connection) {
  * create power vs image
  * @param {*} image
  * @param {string} image.workspace
- * @param {string} image.pi_image_id 
+ * @param {string} image.pi_image_id
  * @param {string} image.name
  * @returns {string} terraform formatted resource
  */
@@ -162,9 +163,7 @@ function formatPowerVsImage(image) {
   return jsonToTfPrint(
     "resource",
     "ibm_pi_image",
-    snakeCase(
-      `power image ${image.workspace} ${image.name}`
-    ),
+    snakeCase(`power image ${image.workspace} ${image.name}`),
     {
       provider: "${ibm.power_vs}",
       pi_cloud_instance_id: powerVsWorkspaceRef(image.workspace),
@@ -205,29 +204,131 @@ function formatCloudConnectionDataSource(connection) {
 /**
  * create power vs to tgw connection terraform
  * @param {*} connection
- * @param {string} connection.gateway
+ * @param {string} gateway transit gateway
  * @returns {string} terraform formatted code
  */
-function formatPowerToTransitGatewayConnection(connection) {
+function formatPowerToTransitGatewayConnection(connection, gateway) {
   let connectionResourceName = formatCloudConnectionResourceName(connection);
   return jsonToTfPrint(
     "resource",
     "ibm_tg_connection",
-    `${connection.gateway}_connection_${connectionResourceName}`,
+    `${gateway}_connection_${connectionResourceName}`,
     {
       provider: "${ibm.power_vs}",
-      gateway: `\${ibm_tg_gateway.${snakeCase(connection.gateway)}.id}`,
+      gateway: `\${ibm_tg_gateway.${snakeCase(gateway)}.id}`,
       network_type: "directlink",
-      name: kebabName([
-        connection.gateway,
-        "to",
-        connection.name,
-        "connection",
-      ]),
+      name: kebabName([gateway, "to", connection.name, "connection"]),
       network_id: `\${time_sleep.${connectionResourceName}_sleep.triggers["crn"]}`,
       depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`],
     }
   );
+}
+
+/**
+ * create terraform code for power vs network attachment
+ * @param {*} attachment
+ * @param {string} attachment.workspace
+ * @param {string} attachment.connection
+ * @param {string} attachment.network
+ * @returns {string} terraform formatted code
+ */
+function formatPowerVsNetworkAttachment(attachment) {
+  return jsonToTfPrint(
+    "resource",
+    "ibm_pi_cloud_connection_network_attach",
+    `power ${attachment.workspace} ${attachment.connection} connection ${attachment.network} connection`,
+    {
+      provider: "${ibm.power_vs}",
+      pi_cloud_instance_id: powerVsWorkspaceRef(attachment.workspace),
+      pi_cloud_connection_id: `\${ibm_pi_cloud_connection.${formatCloudConnectionResourceName(
+        {
+          name: attachment.connection,
+          workspace: attachment.workspace,
+        }
+      )}.cloud_connection_id}`,
+      pi_network_id: `\${ibm_pi_network.power_network_${snakeCase(
+        `${attachment.workspace} ${attachment.network}`
+      )}.network_id}`,
+    }
+  );
+}
+
+/**
+ * create a power vs terraform template
+ * @param {*} config
+ * @returns {string} terraform formatted code
+ */
+function powerVsTf(config) {
+  let tf = "";
+  config.power.forEach((workspace) => {
+    tf += tfBlock(
+      `Power VS Workspace ${workspace.name}`,
+      formatPowerVsWorkspace(workspace, config)
+    );
+    // ssh keys
+    let sshKeyTf = "";
+    workspace.ssh_keys.forEach((sshKey) => {
+      sshKeyTf += formatPowerVsSshKey(sshKey);
+    });
+    tf += "\n" + tfBlock(`${workspace.name} Workspace SSH Keys`, sshKeyTf);
+    // network
+    let networkTf = "";
+    workspace.network.forEach((nw) => {
+      networkTf += formatPowerVsNetwork(nw);
+    });
+    tf += "\n" + tfBlock(`${workspace.name} Workspace Network`, networkTf);
+    // images
+    let imagesTf = "";
+    workspace.images.forEach((image) => {
+      imagesTf += formatPowerVsImage(image);
+    });
+    tf += "\n" + tfBlock(`${workspace.name} Workspace Images`, imagesTf);
+    // cloud connections
+    workspace.cloud_connections.forEach((connection) => {
+      let connectionTf =
+        formatPowerVsCloudConnection(connection) +
+        formatCloudConnectionDataSource(connection);
+      tf +=
+        "\n" +
+        tfBlock(`${workspace.name} Workspace ${connection.name}`, connectionTf);
+      // if more than one tgw connection, format connection block
+      if (connection.transit_gateways.length > 0) {
+        let tgwConnectionsTf = "";
+        connection.transit_gateways.forEach((tgw) => {
+          tgwConnectionsTf += formatPowerToTransitGatewayConnection(
+            connection,
+            tgw
+          );
+        });
+        tf +=
+          "\n" +
+          tfBlock(
+            `${workspace.name} Workspace ${connection.name} Transit Gateway Connections`,
+            tgwConnectionsTf
+          );
+      }
+      // network attachments
+      let attachmentTf = "";
+      workspace.attachments.forEach((attachment) => {
+        // for each connection
+        attachment.connections.forEach((connection) => {
+          // format the connection
+          attachmentTf += formatPowerVsNetworkAttachment({
+            workspace: attachment.workspace,
+            network: attachment.network,
+            connection: connection,
+          });
+        });
+      });
+      tf +=
+        "\n" +
+        tfBlock(
+          `${workspace.name} Workspace Network Attachments`,
+          attachmentTf
+        );
+    });
+  });
+  return tf;
 }
 
 module.exports = {
@@ -238,4 +339,6 @@ module.exports = {
   formatPowerVsImage,
   formatCloudConnectionDataSource,
   formatPowerToTransitGatewayConnection,
+  formatPowerVsNetworkAttachment,
+  powerVsTf,
 };

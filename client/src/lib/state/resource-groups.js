@@ -67,6 +67,7 @@ function resourceGroupSave(config, stateData, componentProps) {
       "f5_vsi",
       "key_management",
       "load_balancers",
+      "power",
       "routing_tables",
       "secrets_manager",
       "security_groups",

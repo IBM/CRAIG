@@ -122,6 +122,7 @@ describe("resource_groups", () => {
       ["atracker", "logdna", "sysdig"].forEach((field) => {
         rgState.store.json[field].resource_group = "workload-rg";
       });
+      rgState.power.create({ name: "power", resource_group: "workload-rg" });
       rgState.resource_groups.save(
         {
           name: "frog-rg",
@@ -147,6 +148,11 @@ describe("resource_groups", () => {
         rgState.store.json.logdna.resource_group,
         "frog-rg",
         "it should update logdna resource group"
+      );
+      assert.deepEqual(
+        rgState.store.json.power[0].resource_group,
+        "frog-rg",
+        "it should update power resource group"
       );
     });
     it("should change the name of a resource group in place and update vpcs when not use prefix", () => {

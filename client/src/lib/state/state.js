@@ -253,6 +253,19 @@ const {
   sysdigSave,
 } = require("./logging-monitoring");
 const { icdOnStoreUpdate, icdSave, icdCreate, icdDelete } = require("./icd");
+const {
+  powerVsInit,
+  powerVsOnStoreUpdate,
+  powerVsSave,
+  powerVsCreate,
+  powerVsDelete,
+  powerVsSshKeysCreate,
+  powerVsSshKeysSave,
+  powerVsSshKeysDelete,
+  powerVsNetworkCreate,
+  powerVsNetworkSave,
+  powerVsNetworkDelete,
+} = require("./power-vs");
 
 /**
  * get state for craig
@@ -708,6 +721,26 @@ const state = function (legacy) {
     save: icdSave,
     create: icdCreate,
     delete: icdDelete,
+  });
+
+  store.newField("power", {
+    init: powerVsInit,
+    onStoreUpdate: powerVsOnStoreUpdate,
+    save: powerVsSave,
+    create: powerVsCreate,
+    delete: powerVsDelete,
+    subComponents: {
+      ssh_keys: {
+        create: powerVsSshKeysCreate,
+        delete: powerVsSshKeysDelete,
+        save: powerVsSshKeysSave,
+      },
+      network: {
+        create: powerVsNetworkCreate,
+        delete: powerVsNetworkDelete,
+        save: powerVsNetworkSave,
+      },
+    },
   });
 
   /**

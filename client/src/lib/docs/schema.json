@@ -663,6 +663,20 @@
           "pi_cloud_connection_speed": "number",
           "gateway": "string"
         }
+      },
+      "images": {
+        "Array": {
+          "workspace": "string",
+          "pi_image_id": "string",
+          "name": "string"
+        }
+      },
+      "attachments": {
+        "Array": {
+          "connections": "Array<string>",
+          "workspace": "string",
+          "network": "string"
+        }
       }
     }
   }
