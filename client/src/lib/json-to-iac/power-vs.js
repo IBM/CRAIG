@@ -236,7 +236,7 @@ function formatPowerVsNetworkAttachment(attachment) {
   return jsonToTfPrint(
     "resource",
     "ibm_pi_cloud_connection_network_attach",
-    `power_${attachment.workspace}_${attachment.connection}_connection_${attachment.network}_connection`,
+    `power ${attachment.workspace} ${attachment.connection} connection ${attachment.network} connection`,
     {
       provider: "${ibm.power_vs}",
       pi_cloud_instance_id: powerVsWorkspaceRef(attachment.workspace),
@@ -310,7 +310,15 @@ function powerVsTf(config) {
       // network attachments
       let attachmentTf = "";
       workspace.attachments.forEach((attachment) => {
-        attachmentTf += formatPowerVsNetworkAttachment(attachment);
+        // for each connection
+        attachment.connections.forEach((connection) => {
+          // format the connection
+          attachmentTf += formatPowerVsNetworkAttachment({
+            workspace: attachment.workspace,
+            network: attachment.network,
+            connection: connection,
+          });
+        });
       });
       tf +=
         "\n" +

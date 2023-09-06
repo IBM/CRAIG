@@ -673,7 +673,7 @@
       },
       "attachments": {
         "Array": {
-          "connection": "string",
+          "connections": "Array<string>",
           "workspace": "string",
           "network": "string"
         }

@@ -310,7 +310,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
             ],
             attachments: [
               {
-                connection: "dev-connection",
+                connections: ["dev-connection"],
                 workspace: "example",
                 network: "dev-nw",
               },
@@ -522,7 +522,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
             ],
             attachments: [
               {
-                connection: "dev-connection",
+                connections: ["dev-connection"],
                 workspace: "example",
                 network: "dev-nw",
               },
