@@ -19,14 +19,14 @@ const { RegexButWithWords } = require("regex-but-with-words");
  */
 function formatPowerVsWorkspace(workspace, config) {
   let data = {
-    provider: "${ibm.power_vs}",
+    provider: `\${ibm.power_vs${snakeCase("_" + workspace.zone)}}`,
     name: kebabName(["power-workspace", workspace.name]),
     service: "power-iaas",
     plan: "power-virtual-server-group",
     location: "${var.power_vs_zone}",
     resource_group_id: rgIdRef(workspace.resource_group, config),
     tags: config._options.tags,
-    timeouts: timeouts("6m", "5m", "10m")
+    timeouts: timeouts("6m", "5m", "10m"),
   };
   return jsonToTfPrint(
     "resource",
@@ -60,10 +60,10 @@ function powerVsWorkspaceRef(workspaceName) {
 function formatPowerVsSshKey(key) {
   let fullKeyName = snakeCase(`power ${key.workspace} ${key.name} key`);
   let data = {
-    provider: "${ibm.power_vs}",
+    provider: `\${ibm.power_vs${snakeCase("_" + key.zone)}}`,
     pi_cloud_instance_id: powerVsWorkspaceRef(key.workspace),
     pi_key_name: kebabName([fullKeyName]),
-    pi_ssh_key: `\${var.${fullKeyName}}`
+    pi_ssh_key: `\${var.${fullKeyName}}`,
   };
   return jsonToTfPrint(
     "resource",
@@ -90,7 +90,7 @@ function formatPowerVsNetwork(network) {
     "ibm_pi_network",
     snakeCase(`power network ${network.workspace} ${network.name}`),
     {
-      provider: "${ibm.power_vs}",
+      provider: `\${ibm.power_vs${snakeCase("_" + network.zone)}}`,
       pi_cloud_instance_id: powerVsWorkspaceRef(network.workspace),
       pi_network_name: kebabName(["power-network", network.name]),
       pi_cidr: network.pi_cidr,
@@ -138,7 +138,7 @@ function formatPowerVsCloudConnection(connection) {
     "ibm_pi_cloud_connection",
     formatCloudConnectionResourceName(connection),
     {
-      provider: "${ibm.power_vs}",
+      provider: `\${ibm.power_vs${snakeCase("_" + connection.zone)}}`,
       pi_cloud_instance_id: powerVsWorkspaceRef(connection.workspace),
       pi_cloud_connection_name: formatCloudConnectionName(connection),
       pi_cloud_connection_speed: connection.pi_cloud_connection_speed,
@@ -165,7 +165,7 @@ function formatPowerVsImage(image) {
     "ibm_pi_image",
     snakeCase(`power image ${image.workspace} ${image.name}`),
     {
-      provider: "${ibm.power_vs}",
+      provider: `\${ibm.power_vs${snakeCase("_" + image.zone)}}`,
       pi_cloud_instance_id: powerVsWorkspaceRef(image.workspace),
       pi_image_id: image.pi_image_id,
       pi_image_name: image.name,
@@ -184,7 +184,7 @@ function formatCloudConnectionDataSource(connection) {
   let dlConnectionRef = `\${data.ibm_dl_gateway.${connectionResourceName}}`;
   return (
     jsonToTfPrint("data", "ibm_dl_gateway", connectionResourceName, {
-      provider: "${ibm.power_vs}",
+      provider: `\${ibm.power_vs${snakeCase("_" + connection.zone)}}`,
       name: formatCloudConnectionName(connection),
       depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`],
     }) +
@@ -214,7 +214,7 @@ function formatPowerToTransitGatewayConnection(connection, gateway) {
     "ibm_tg_connection",
     `${gateway}_connection_${connectionResourceName}`,
     {
-      provider: "${ibm.power_vs}",
+      provider: `\${ibm.power_vs${snakeCase("_" + connection.zone)}}`,
       gateway: `\${ibm_tg_gateway.${snakeCase(gateway)}.id}`,
       network_type: "directlink",
       name: kebabName([gateway, "to", connection.name, "connection"]),
@@ -238,7 +238,7 @@ function formatPowerVsNetworkAttachment(attachment) {
     "ibm_pi_cloud_connection_network_attach",
     `power ${attachment.workspace} ${attachment.connection} connection ${attachment.network} connection`,
     {
-      provider: "${ibm.power_vs}",
+      provider: `\${ibm.power_vs${snakeCase("_" + attachment.zone)}}`,
       pi_cloud_instance_id: powerVsWorkspaceRef(attachment.workspace),
       pi_cloud_connection_id: `\${ibm_pi_cloud_connection.${formatCloudConnectionResourceName(
         {
@@ -317,6 +317,7 @@ function powerVsTf(config) {
             workspace: attachment.workspace,
             network: attachment.network,
             connection: connection,
+            zone: attachment.zone,
           });
         });
       });

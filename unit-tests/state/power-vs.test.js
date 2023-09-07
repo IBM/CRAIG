@@ -39,10 +39,13 @@ describe("power-vs", () => {
     });
   });
   describe("power.save", () => {
-    it("should save a workapce", () => {
+    it("should save a workspace", () => {
       let state = new newState();
-      state.power.create({ name: "toad" });
-      state.power.save({ name: "frog" }, { data: { name: "toad" } });
+      state.power.create({ name: "toad", zone: "dal10" });
+      state.power.save(
+        { name: "frog", zone: "dal10" },
+        { data: { name: "toad" } }
+      );
       let expectedData = {
         name: "frog",
         resource_group: null,
@@ -51,6 +54,7 @@ describe("power-vs", () => {
         cloud_connections: [],
         images: [],
         attachments: [],
+        zone: "dal10",
       };
       assert.deepEqual(
         state.store.json.power[0],
@@ -81,6 +85,7 @@ describe("power-vs", () => {
         ssh_keys: [],
         network: [],
         cloud_connections: [],
+        zone: "dal10",
       });
     });
     it("should create a ssh key", () => {
@@ -90,7 +95,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].ssh_keys,
-        [{ name: "test-key", workspace: "power-vs" }],
+        [{ name: "test-key", workspace: "power-vs", zone: "dal10" }],
         "it should create a ssh key"
       );
     });
@@ -108,7 +113,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].ssh_keys,
-        [{ name: "new-key-name", workspace: "power-vs" }],
+        [{ name: "new-key-name", workspace: "power-vs", zone: "dal10" }],
         "it should update ssh key name"
       );
     });
@@ -138,6 +143,7 @@ describe("power-vs", () => {
         ssh_keys: [],
         network: [],
         cloud_connections: [],
+        zone: "dal10",
       });
     });
     it("should create a network interface", () => {
@@ -147,7 +153,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "test-network", workspace: "power-vs" }],
+        [{ name: "test-network", workspace: "power-vs", zone: "dal10" }],
         "it should create a network interface"
       );
     });
@@ -165,7 +171,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "new-network-name", workspace: "power-vs" }],
+        [{ name: "new-network-name", workspace: "power-vs", zone: "dal10" }],
         "it should update network name"
       );
     });

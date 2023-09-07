@@ -6,6 +6,7 @@
       "slz",
       "landing-zone"
     ],
+    "power_vs_zones": [],
     "dynamic_subnets": false
   },
   "dns": [],

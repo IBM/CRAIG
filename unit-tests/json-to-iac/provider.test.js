@@ -30,6 +30,7 @@ provider "ibm" {
     let actualData = ibmCloudProvider({
       _options: {
         enable_power_vs: true,
+        power_vs_zones: ["az-1", "az-2"],
       },
     });
     let expectedData = `##############################################################################
@@ -43,10 +44,18 @@ provider "ibm" {
 }
 
 provider "ibm" {
-  alias            = "power_vs"
+  alias            = "power_vs_az_1"
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.region
-  zone             = var.power_vs_zone
+  zone             = "az-1"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_az_2"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  zone             = "az-2"
   ibmcloud_timeout = 60
 }
 

@@ -5,7 +5,8 @@
     "tags": [
       "slz",
       "landing-zone"
-    ]
+    ],
+    "power_vs_zones": []
   },
   "dns": [],
   "resource_groups": [

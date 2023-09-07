@@ -2,6 +2,7 @@ const { jsonToTf } = require("json-to-tf");
 const { tfBlock } = require("./utils");
 const { varDotRegion } = require("../constants");
 const { transpose } = require("lazy-z");
+const { snakeCase } = require("lazy-z");
 
 /**
  * format ibm cloud provider data
@@ -32,12 +33,14 @@ function ibmCloudProvider(config) {
   }
 
   if (config._options.enable_power_vs) {
-    data.provider.ibm.push({
-      alias: "power_vs",
-      ibmcloud_api_key: "${var.ibmcloud_api_key}",
-      region: "${var.region}",
-      zone: "${var.power_vs_zone}",
-      ibmcloud_timeout: 60,
+    config._options.power_vs_zones.forEach((zone) => {
+      data.provider.ibm.push({
+        alias: snakeCase("power_vs_" + zone),
+        ibmcloud_api_key: "${var.ibmcloud_api_key}",
+        region: "${var.region}",
+        zone: zone,
+        ibmcloud_timeout: 60,
+      });
     });
   }
 

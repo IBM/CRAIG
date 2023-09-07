@@ -21,6 +21,7 @@ function powerVsInit(config) {
 function powerVsOnStoreUpdate(config) {
   if (!config.store.json.power) {
     config.store.json.power = [];
+    config.store.json._options.power_vs_zones = [];
   }
   config.store.json.power.forEach((workspace) => {
     setUnfoundResourceGroup(config, workspace);
@@ -33,6 +34,7 @@ function powerVsOnStoreUpdate(config) {
     ].forEach((field) => {
       workspace[field].forEach((item) => {
         item.workspace = workspace.name;
+        item.zone = workspace.zone;
       });
     });
   });

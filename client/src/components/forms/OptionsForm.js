@@ -8,6 +8,7 @@ import {
   SaveAddButton,
   IcseNumberSelect,
   IcseToggle,
+  IcseMultiSelect,
 } from "icse-react-assets";
 import PropTypes from "prop-types";
 import { Tag, TextArea } from "@carbon/react";
@@ -18,6 +19,7 @@ import {
   titleCase,
   contains,
   isNullOrEmptyString,
+  isEmpty,
 } from "lazy-z";
 import { invalidNewResourceName, invalidTagList } from "../../lib";
 
@@ -33,6 +35,7 @@ class OptionsForm extends React.Component {
     this.handleTags = this.handleTags.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.disableSave = this.disableSave.bind(this);
+    this.handlePowerZonesChange = this.handlePowerZonesChange.bind(this);
     buildFormFunctions(this);
   }
 
@@ -55,13 +58,18 @@ class OptionsForm extends React.Component {
     if (name === "region") {
       this.setState({
         region: value,
-        power_vs_zone: null,
+        power_vs_zones: [],
       });
     } else this.setState({ [name]: value });
   }
 
   handleToggle(name) {
-    this.setState({ [name]: !this.state[name] });
+    if (name === "use_power_vs") {
+      this.setState({
+        [name]: !this.state[name],
+        power_vs_zones: [],
+      });
+    } else this.setState({ [name]: !this.state[name] });
   }
 
   disableSave() {
@@ -69,8 +77,13 @@ class OptionsForm extends React.Component {
       invalidNewResourceName(this.state.prefix) ||
       invalidTagList(this.state.tags) ||
       deepEqual(this.state, this.props.craig.store.json._options) ||
-      (this.state.enable_power_vs && !this.state.power_vs_zone)
+      (this.state.use_power_vs &&
+        (!this.state.power_vs_zones || isEmpty(this.state.power_vs_zones)))
     );
+  }
+
+  handlePowerZonesChange(items) {
+    this.setState({ power_vs_zones: items.selectedItems });
   }
 
   render() {
@@ -200,13 +213,12 @@ class OptionsForm extends React.Component {
               }}
             />
             {this.state.enable_power_vs && (
-              <IcseSelect
-                formName="options"
-                name="power_vs_zone"
-                labelText="Power VS Zone"
-                handleInputChange={this.handleChange}
-                value={this.state.power_vs_zone}
-                groups={
+              <IcseMultiSelect
+                id="options-power-zones"
+                titleText="Power VS Zone"
+                onChange={this.handlePowerZonesChange}
+                initialSelectedItems={this.state.power_vs_zones || []}
+                items={
                   {
                     "au-syd": ["syd04", "syd05"],
                     "eu-de": ["eu-de-1", "eu-de-2"],
@@ -231,7 +243,7 @@ class OptionsForm extends React.Component {
                       "ca-tor",
                     ],
                     this.state.region
-                  ) || isNullOrEmptyString(this.state.zone)
+                  ) || isEmpty(this.state.power_vs_zones)
                 }
                 invalidText={
                   !contains(
@@ -248,7 +260,7 @@ class OptionsForm extends React.Component {
                     this.state.region
                   )
                     ? `The region ${this.state.region} does not have any available Power VS zones`
-                    : "Select a Zone"
+                    : "Select at least one Availability Zone"
                 }
               />
             )}
