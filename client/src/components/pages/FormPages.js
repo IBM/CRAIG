@@ -38,6 +38,7 @@ import {
   IamAccountSettingsPage,
   SccV1Page,
   F5BigIpPage,
+  PowerVsWorkspacePage,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { eachKey, keys, nestedSplat, splat } from "lazy-z";
@@ -77,6 +78,8 @@ import {
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
+import { Tile } from "@carbon/react";
+import { CloudAlerting } from "@carbon/icons-react";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -449,6 +452,74 @@ const ObjectStoragePage = (craig) => {
       composedNameCallback={cosResourceHelperTextCallback}
       encryptionKeyFilter={encryptionKeyFilter}
     />
+  );
+};
+
+const PowerInfraPage = (craig) => {
+  return craig.store.json._options.enable_power_vs ? (
+    <PowerVsWorkspacePage
+      power={craig.store.json.power}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      onDelete={craig.power.delete}
+      onSave={craig.power.save}
+      onSubmit={craig.power.create}
+      forceOpen={forceShowForm}
+      craig={craig}
+      docs={RenderDocs("power")}
+      invalidCallback={() => {
+        return true;
+      }}
+      invalidTextCallback={() => {
+        return "uh oh";
+      }}
+      helperTextCallback={() => {
+        return "uh oh";
+      }}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      zones={craig.store.json._options.power_vs_zones}
+      onNetworkDelete={craig.power.network.delete}
+      onNetworkSave={craig.power.network.save}
+      onNetworkSubmit={craig.power.network.create}
+      invalidNetworkNameCallback={() => {
+        return true;
+      }}
+      invalidNetworkNameCallbackText={() => {
+        return "uh oh";
+      }}
+      invalidCidrCallback={() => {
+        return true;
+      }}
+      invalidCidrCallbackText={() => {
+        return "uh oh";
+      }}
+      invalidDnsCallback={() => {
+        return true;
+      }}
+      invalidDnsCallbackText={() => {
+        return "uh oh";
+      }}
+      onConnectionDelete={craig.power.cloud_connections.delete}
+      onConnectionSave={craig.power.cloud_connections.save}
+      onConnectionSubmit={craig.power.cloud_connections.create}
+      onAttachmentSave={() => {}}
+      invalidConnectionNameCallback={() => {
+        return true;
+      }}
+      invalidConnectionNameTextCallback={() => {
+        return "uh oh";
+      }}
+      transitGatewayList={splat(craig.store.json.transit_gateways, "name")}
+    />
+  ) : (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> Power VS is not
+      enabled. Return to the
+      <a className="no-secrets-link" href="/">
+        Options Page
+      </a>{" "}
+      to enable Power VS.
+    </Tile>
   );
 };
 
@@ -829,6 +900,8 @@ export const NewFormPage = (props) => {
     return NetworkAclPage(craig);
   } else if (form === "objectStorage") {
     return ObjectStoragePage(craig);
+  } else if (form === "power") {
+    return PowerInfraPage(craig);
   } else if (form === "resourceGroups") {
     return ResourceGroupPage(craig);
   } else if (form === "securityComplianceCenter") {

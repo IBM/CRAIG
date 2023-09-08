@@ -1451,5 +1451,13 @@
       ]
     ],
     "last_updated": "6/15/2023"
+  },
+  "power": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": [["https://ibm.com", "IBM"]]
   }
 }

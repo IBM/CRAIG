@@ -267,6 +267,61 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
     });
   });
   describe("powerVsTf", () => {
+    it("should return a power vs network configuration with only workspace", () => {
+      let config = {
+        _options: {
+          tags: ["hello", "world"],
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "example",
+          },
+        ],
+        power: [
+          {
+            name: "example",
+            resource_group: "example",
+            zone: "dal10",
+            ssh_keys: [],
+            network: [],
+            cloud_connections: [],
+            images: [],
+            attachments: [],
+          },
+        ],
+      };
+      let actualData = powerVsTf(config);
+      let expectedData = `##############################################################################
+# Power VS Workspace Example
+##############################################################################
+
+resource "ibm_resource_instance" "power_vs_workspace_example" {
+  provider          = ibm.power_vs_dal10
+  name              = "\${var.prefix}-power-workspace-example"
+  service           = "power-iaas"
+  plan              = "power-virtual-server-group"
+  location          = var.power_vs_zone
+  resource_group_id = ibm_resource_group.example.id
+  tags = [
+    "hello",
+    "world"
+  ]
+  timeouts {
+    create = "6m"
+    update = "5m"
+    delete = "10m"
+  }
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
     it("should return a power vs network configuration", () => {
       let config = {
         _options: {

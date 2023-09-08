@@ -740,6 +740,11 @@ const state = function (legacy) {
         delete: powerVsNetworkDelete,
         save: powerVsNetworkSave,
       },
+      // cloud_connections: {
+      //   create: () => {},
+      //   delete: () => {},
+      //   save: () => {},
+      // },
     },
   });
 
