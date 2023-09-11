@@ -155,7 +155,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].attachments,
-        [{ connections: [], workspace: "power-vs", zone: "dal10", network: "test-network" }],
+        [
+          {
+            connections: [],
+            workspace: "power-vs",
+            zone: "dal10",
+            network: "test-network",
+          },
+        ],
         "it should create a network interface"
       );
     });
@@ -178,7 +185,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].attachments,
-        [{ connections: [], workspace: "power-vs", zone: "dal10", network: "new-network-name" }],
+        [
+          {
+            connections: [],
+            workspace: "power-vs",
+            zone: "dal10",
+            network: "new-network-name",
+          },
+        ],
         "it should create a network interface"
       );
     });
@@ -188,7 +202,7 @@ describe("power-vs", () => {
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
       state.power.network.save(
-        { name:"test-network" },
+        { name: "test-network" },
         {
           arrayParentName: "power-vs",
           data: { name: "test-network" },
@@ -196,12 +210,19 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name:"test-network", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "test-network", workspace: "power-vs", zone: "dal10" }],
         "it should update network name"
       );
       assert.deepEqual(
         state.store.json.power[0].attachments,
-        [{ connections: [], workspace: "power-vs", zone: "dal10", network: "test-network"}],
+        [
+          {
+            connections: [],
+            workspace: "power-vs",
+            zone: "dal10",
+            network: "test-network",
+          },
+        ],
         "it should create a network interface"
       );
     });

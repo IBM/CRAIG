@@ -209,7 +209,6 @@ const navCatagories = [
         react_icon: "LoadBalancerVpc",
         toTf: lbTf,
         jsonField: "load_balancers",
-        isLast: true,
       },
     ],
   },
