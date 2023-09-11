@@ -4,6 +4,7 @@ const {
   isNullOrEmptyString,
   nestedSplat,
   revision,
+  getObjectFromArray,
 } = require("lazy-z");
 
 /**
@@ -178,6 +179,24 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.dns,
       "custom_resolvers",
+      "name"
+    );
+  } else if (field === "power_vs_ssh_keys") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.power,
+      "ssh_keys",
+      "name"
+    );
+  } else if (field === "network") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.power,
+      "network",
+      "name"
+    );
+  } else if (field === "cloud_connections") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.power,
+      "cloud_connections",
       "name"
     );
   } else if (componentProps) {

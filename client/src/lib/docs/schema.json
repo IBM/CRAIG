@@ -664,7 +664,7 @@
           "pi_cloud_connection_metered": "boolean",
           "pi_cloud_connection_transit_enabled": "boolean",
           "pi_cloud_connection_speed": "number",
-          "gateway": "string",
+          "transit_gateways": "Array<string>",
           "zone": "string"
         }
       },

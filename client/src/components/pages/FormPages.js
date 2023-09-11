@@ -38,9 +38,18 @@ import {
   IamAccountSettingsPage,
   SccV1Page,
   F5BigIpPage,
+  PowerVsWorkspacePage,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { eachKey, keys, nestedSplat, splat } from "lazy-z";
+import {
+  contains,
+  deepEqual,
+  eachKey,
+  isIpv4CidrOrAddress,
+  keys,
+  nestedSplat,
+  splat,
+} from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   disableSshKeyDelete,
@@ -74,9 +83,12 @@ import {
   invalidDNSDescriptionText,
   invalidSubnetTierText,
   invalidCpuTextCallback,
+  powerVsWorkspaceHelperText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
+import { Tile } from "@carbon/react";
+import { CloudAlerting } from "@carbon/icons-react";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -449,6 +461,93 @@ const ObjectStoragePage = (craig) => {
       composedNameCallback={cosResourceHelperTextCallback}
       encryptionKeyFilter={encryptionKeyFilter}
     />
+  );
+};
+
+const PowerInfraPage = (craig) => {
+  return craig.store.json._options.enable_power_vs ? (
+    <PowerVsWorkspacePage
+      power={[...craig.store.json.power]}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      onDelete={craig.power.delete}
+      onSave={craig.power.save}
+      onSubmit={craig.power.create}
+      forceOpen={forceShowForm}
+      craig={craig}
+      docs={RenderDocs("power")}
+      resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      zones={craig.store.json._options.power_vs_zones}
+      onNetworkDelete={craig.power.network.delete}
+      onNetworkSave={craig.power.network.save}
+      onNetworkSubmit={craig.power.network.create}
+      onConnectionDelete={craig.power.cloud_connections.delete}
+      onConnectionSave={craig.power.cloud_connections.save}
+      onConnectionSubmit={craig.power.cloud_connections.create}
+      transitGatewayList={splat(craig.store.json.transit_gateways, "name")}
+      onSshKeyDelete={craig.power.ssh_keys.delete}
+      onSshKeySave={craig.power.ssh_keys.save}
+      onSshKeySubmit={craig.power.ssh_keys.create}
+      invalidCallback={invalidName("power")}
+      invalidTextCallback={invalidNameText("power")}
+      helperTextCallback={powerVsWorkspaceHelperText}
+      invalidKeyCallback={invalidSshPublicKey}
+      invalidNetworkNameCallback={invalidName("network")}
+      invalidNetworkNameCallbackText={invalidNameText("network")}
+      invalidConnectionNameCallback={invalidName("cloud_connections")}
+      invalidConnectionNameTextCallback={invalidNameText("cloud_connections")}
+      invalidCidrCallback={(stateData, componentProps) => {
+        return invalidCidr(componentProps.craig)(
+          { cidr: stateData.pi_cidr },
+          componentProps
+        );
+      }}
+      sshKeyDeleteDisabled={() => {
+        // currently ssh keys are not in use, this will be updated when they are
+        return false;
+      }}
+      invalidSshKeyCallback={(stateData, componentProps) => {
+        // passthrough function to override field
+        return invalidName("power_vs_ssh_keys")(stateData, componentProps);
+      }}
+      invalidSshKeyCallbackText={(stateData, componentProps) => {
+        // passthrough function to override field
+        return invalidNameText("power_vs_ssh_keys")(stateData, componentProps);
+      }}
+      invalidCidrCallbackText={(stateData, componentProps) => {
+        return invalidCidrText(componentProps.craig)(
+          {
+            cidr: stateData.pi_cidr,
+          },
+          componentProps
+        );
+      }}
+      invalidDnsCallback={(stateData) => {
+        return (
+          contains(stateData.pi_dns[0], "/") ||
+          !isIpv4CidrOrAddress(stateData.pi_dns[0])
+        );
+      }}
+      invalidDnsCallbackText={() => {
+        return "Invalid IP Address";
+      }}
+      onAttachmentSave={() => {
+        // currently disabled
+      }}
+      disableAttachmentSave={(stateData, componentProps) => {
+        // currently disabled
+        return false;
+      }}
+    />
+  ) : (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> Power VS is not
+      enabled. Return to the
+      <a className="no-secrets-link" href="/">
+        Options Page
+      </a>{" "}
+      to enable Power VS.
+    </Tile>
   );
 };
 
@@ -829,6 +928,8 @@ export const NewFormPage = (props) => {
     return NetworkAclPage(craig);
   } else if (form === "objectStorage") {
     return ObjectStoragePage(craig);
+  } else if (form === "power") {
+    return PowerInfraPage(craig);
   } else if (form === "resourceGroups") {
     return ResourceGroupPage(craig);
   } else if (form === "securityComplianceCenter") {

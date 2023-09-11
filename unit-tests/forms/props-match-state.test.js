@@ -99,4 +99,36 @@ describe("propsMatchState", () => {
       "it should be true"
     );
   });
+  describe("power vs", () => {
+    it("should set not zone when field is power", () => {
+      assert.isFalse(
+        propsMatchState(
+          "power",
+          {
+            zone: "frog",
+          },
+          {
+            data: {
+              zone: "toad",
+            },
+          }
+        )
+      );
+    });
+    it("should set zone when field is not power", () => {
+      assert.isTrue(
+        propsMatchState(
+          "test",
+          {
+            zone: "frog",
+          },
+          {
+            data: {
+              zone: "toad",
+            },
+          }
+        )
+      );
+    });
+  });
 });

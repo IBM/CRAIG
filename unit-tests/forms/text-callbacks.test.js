@@ -21,6 +21,7 @@ const {
   invalidDNSDescriptionText,
   invalidCrnText,
   invalidCpuTextCallback,
+  powerVsWorkspaceHelperText,
 } = require("../../client/src/lib/forms/text-callbacks");
 
 describe("text callbacks", () => {
@@ -797,5 +798,27 @@ describe("text callbacks", () => {
       ),
       `Using dedicated cores requires a minimum of ${minCpu} cores and a maximum of ${maxCpu} cores per member. For shared CPU, select 0 cores.`
     );
+  });
+  describe("powerVsWorkspaceHelperText", () => {
+    it("should return correct helper text", () => {
+      assert.deepEqual(
+        powerVsWorkspaceHelperText(
+          { name: "frog" },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "toad",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "toad-power-workspace-frog",
+        "it should return correct helper text"
+      );
+    });
   });
 });

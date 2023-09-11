@@ -27,6 +27,7 @@ const {
   cbrTf,
   vpnServerTf,
   icdTf,
+  powerVsTf,
 } = require("./json-to-iac");
 
 const navCatagories = [
@@ -209,6 +210,18 @@ const navCatagories = [
         toTf: lbTf,
         jsonField: "load_balancers",
         isLast: true,
+      },
+    ],
+  },
+  {
+    name: "Power VS",
+    links: [
+      {
+        title: "Power VS Workspace",
+        path: "/form/power",
+        react_icon: "IbmPowerVs",
+        toTf: powerVsTf,
+        jsonField: "power",
       },
     ],
   },

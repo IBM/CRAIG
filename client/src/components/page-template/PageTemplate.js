@@ -28,6 +28,7 @@ import {
   DnsServices,
   IbmCloudSysdigSecure,
   IbmDb2,
+  IbmPowerVs,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -74,6 +75,7 @@ const navIcons = {
   IbmDb2: IbmDb2,
   CBRIcon: CBRIcon,
   F5Icon: F5Icon,
+  IbmPowerVs: IbmPowerVs,
 };
 
 let pageOrder = [

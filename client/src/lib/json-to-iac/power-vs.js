@@ -270,19 +270,22 @@ function powerVsTf(config) {
     workspace.ssh_keys.forEach((sshKey) => {
       sshKeyTf += formatPowerVsSshKey(sshKey);
     });
-    tf += "\n" + tfBlock(`${workspace.name} Workspace SSH Keys`, sshKeyTf);
+    if (workspace.ssh_keys.length > 0)
+      tf += "\n" + tfBlock(`${workspace.name} Workspace SSH Keys`, sshKeyTf);
     // network
     let networkTf = "";
     workspace.network.forEach((nw) => {
       networkTf += formatPowerVsNetwork(nw);
     });
-    tf += "\n" + tfBlock(`${workspace.name} Workspace Network`, networkTf);
+    if (workspace.network.length > 0)
+      tf += "\n" + tfBlock(`${workspace.name} Workspace Network`, networkTf);
     // images
     let imagesTf = "";
     workspace.images.forEach((image) => {
       imagesTf += formatPowerVsImage(image);
     });
-    tf += "\n" + tfBlock(`${workspace.name} Workspace Images`, imagesTf);
+    if (workspace.images.length > 0)
+      tf += "\n" + tfBlock(`${workspace.name} Workspace Images`, imagesTf);
     // cloud connections
     workspace.cloud_connections.forEach((connection) => {
       let connectionTf =
@@ -321,6 +324,7 @@ function powerVsTf(config) {
           });
         });
       });
+
       tf +=
         "\n" +
         tfBlock(

@@ -168,12 +168,27 @@ function invalidSshPublicKey(stateData, componentProps) {
   } else if (
     // if public key already used
     contains(
-      splat(componentProps.craig.store.json.ssh_keys, "public_key"),
+      splat(
+        componentProps.arrayParentName
+          ? getObjectFromArray(
+              componentProps.craig.store.json.power,
+              "name",
+              componentProps.arrayParentName
+            ).ssh_keys
+          : componentProps.craig.store.json.ssh_keys,
+        "public_key"
+      ),
       stateData.public_key
     )
   ) {
     let key = getObjectFromArray(
-      componentProps.craig.store.json.ssh_keys,
+      componentProps.arrayParentName
+        ? getObjectFromArray(
+            componentProps.craig.store.json.power,
+            "name",
+            componentProps.arrayParentName
+          ).ssh_keys
+        : componentProps.craig.store.json.ssh_keys,
       "public_key",
       stateData.public_key
     );
