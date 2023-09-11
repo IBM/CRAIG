@@ -214,12 +214,12 @@ const navCatagories = [
     ],
   },
   {
-    name: "Power VS Workspaces",
+    name: "Power VS",
     links: [
       {
-        title: "Power Virtual Servers Workspace",
+        title: "Power VS Workspace",
         path: "/form/power",
-        react_icon: "LoadBalancerVpc",
+        react_icon: "IbmPowerVs",
         toTf: powerVsTf,
         jsonField: "power",
       },

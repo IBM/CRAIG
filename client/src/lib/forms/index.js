@@ -15,6 +15,7 @@ const {
   invalidProjectNameText,
   invalidCrnText,
   invalidCpuTextCallback,
+  powerVsWorkspaceHelperText,
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -121,4 +122,5 @@ module.exports = {
   invalidCrnText,
   invalidCpuCallback,
   invalidCpuTextCallback,
+  powerVsWorkspaceHelperText,
 };

@@ -35,6 +35,7 @@ const {
   invalidCpuCallback,
 } = require("./invalid-callbacks");
 const { commaSeparatedIpListExp } = require("../constants");
+const { hasDuplicateName } = require("./duplicate-name");
 
 /**
  * check if a field is null or empty string, reduce unit test writing
@@ -311,13 +312,20 @@ function disableVpcsSave(stateData, componentProps) {
  * @returns {boolean} true if should be disabled
  */
 function disableSshKeysSave(stateData, componentProps) {
-  return (
-    invalidName("ssh_keys")(stateData, componentProps) ||
-    isNullOrEmptyString(stateData.resource_group) ||
-    (stateData.use_data
-      ? false // do not check invalid public key if using data, return false
-      : invalidSshPublicKey(stateData, componentProps).invalid)
-  );
+  if (componentProps.arrayParentName) {
+    return (
+      invalidName("power_vs_ssh_keys")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.resource_group) ||
+      invalidSshPublicKey(stateData, componentProps).invalid
+    );
+  } else
+    return (
+      invalidName("ssh_keys")(stateData, componentProps) ||
+      isNullOrEmptyString(stateData.resource_group) ||
+      (stateData.use_data
+        ? false // do not check invalid public key if using data, return false
+        : invalidSshPublicKey(stateData, componentProps).invalid)
+    );
 }
 
 /**
@@ -940,6 +948,35 @@ function disableSysdigSave(stateData) {
     : nullOrEmptyStringFields(stateData, ["resource_group", "plan"]);
 }
 
+/**
+ * disable power vs network
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if disabled
+ */
+function disablePowerNetworkSave(stateData, componentProps) {
+  return (
+    hasDuplicateName("network", stateData, componentProps) ||
+    invalidCidrBlock(stateData.pi_cidr) ||
+    contains(stateData.pi_dns[0], "/") ||
+    !isIpv4CidrOrAddress(stateData.pi_dns[0])
+  );
+}
+
+/**
+ * disable power vs cloud connection
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if disabled
+ */
+function disablePowerCloudConnectionSave(stateData, componentProps) {
+  return (
+    hasDuplicateName("cloud_connections", stateData, componentProps) ||
+    (stateData.pi_cloud_connection_transit_enabled &&
+      isEmpty(stateData.transit_gateways))
+  );
+}
+
 const disableSaveFunctions = {
   scc: disableSccSave,
   atracker: disableAtrackerSave,
@@ -993,6 +1030,8 @@ const disableSaveFunctions = {
   custom_resolvers: disableCustomResolversSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
+  network: disablePowerNetworkSave,
+  cloud_connections: disablePowerCloudConnectionSave,
 };
 
 /**

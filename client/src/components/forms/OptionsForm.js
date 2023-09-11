@@ -77,7 +77,7 @@ class OptionsForm extends React.Component {
       invalidNewResourceName(this.state.prefix) ||
       invalidTagList(this.state.tags) ||
       deepEqual(this.state, this.props.craig.store.json._options) ||
-      (this.state.use_power_vs &&
+      (this.state.enable_power_vs &&
         (!this.state.power_vs_zones || isEmpty(this.state.power_vs_zones)))
     );
   }

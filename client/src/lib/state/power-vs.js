@@ -5,6 +5,7 @@ const {
   pushToChildFieldModal,
   setUnfoundResourceGroup,
 } = require("./store.utils");
+const { splatContains, getObjectFromArray, revision } = require("lazy-z");
 
 /**
  * initialize power-vs workspace
@@ -36,6 +37,17 @@ function powerVsOnStoreUpdate(config) {
         item.workspace = workspace.name;
         item.zone = workspace.zone;
       });
+    });
+    // add unfound networks to attachments
+    workspace.network.forEach((nw) => {
+      if (!splatContains(workspace.attachments, "network", nw.name)) {
+        workspace.attachments.push({
+          network: nw.name,
+          workspace: workspace.name,
+          zone: workspace.zone,
+          connections: [],
+        });
+      }
     });
   });
 }
@@ -123,6 +135,15 @@ function powerVsNetworkCreate(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function powerVsNetworkSave(config, stateData, componentProps) {
+  if (stateData.name !== componentProps.data.name) {
+    // update attachment name on network change
+    new revision(config.store.json)
+      .child("power", componentProps.arrayParentName)
+      .child("attachments", componentProps.data.name, "network")
+      .then((data) => {
+        data.network = stateData.name;
+      });
+  }
   updateSubChild(config, "power", "network", stateData, componentProps);
 }
 
@@ -134,6 +155,48 @@ function powerVsNetworkSave(config, stateData, componentProps) {
  */
 function powerVsNetworkDelete(config, stateData, componentProps) {
   deleteSubChild(config, "power", "network", componentProps);
+}
+
+/**
+ * create new workspace connection
+ * @param {lazyZstate} config
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function powerVsCloudConnectionCreate(config, stateData, componentProps) {
+  pushToChildFieldModal(
+    config,
+    "power",
+    "cloud_connections",
+    stateData,
+    componentProps
+  );
+}
+
+/**
+ * update workspace connection
+ * @param {lazyZstate} config
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function powerVsCloudConnectionSave(config, stateData, componentProps) {
+  updateSubChild(
+    config,
+    "power",
+    "cloud_connections",
+    stateData,
+    componentProps
+  );
+}
+
+/**
+ * delete a workspace connection
+ * @param {lazyZstate} config
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function powerVsCloudConnectionDelete(config, stateData, componentProps) {
+  deleteSubChild(config, "power", "cloud_connections", componentProps);
 }
 
 module.exports = {
@@ -148,4 +211,7 @@ module.exports = {
   powerVsNetworkCreate,
   powerVsNetworkSave,
   powerVsNetworkDelete,
+  powerVsCloudConnectionCreate,
+  powerVsCloudConnectionDelete,
+  powerVsCloudConnectionSave,
 };

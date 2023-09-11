@@ -1,4 +1,4 @@
-const { deepEqual, isNullOrEmptyString } = require("lazy-z");
+const { deepEqual, isNullOrEmptyString, contains } = require("lazy-z");
 
 /**
  * props match state placeholder
@@ -24,6 +24,14 @@ function propsMatchState(field, stateData, componentProps) {
     stateData.address_prefixes = componentProps.data.address_prefixes;
     stateData.subnets = componentProps.data.subnets;
     stateData.acls = componentProps.data.acls;
+  } else if (
+    stateData.zone !== componentProps.data.zone &&
+    !contains(["subnet", "public_gateway", "power"], field)
+  ) {
+    // prevent open nested power workspace forms from being invalid when open and
+    // parent zone is changed
+    // props are updated but state is not
+    stateData.zone = componentProps.data.zone;
   }
   if (field === "subnetTier") {
     componentProps.data.hide = stateData.hide;
@@ -43,6 +51,7 @@ function propsMatchState(field, stateData, componentProps) {
   } else if (field === "security_groups") {
     componentProps.data.show = stateData.show;
   }
+
   return deepEqual(stateData, componentProps.data);
 }
 

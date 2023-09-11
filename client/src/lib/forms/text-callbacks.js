@@ -331,6 +331,16 @@ function invalidCpuTextCallback(stateData, componentProps) {
   return `Using dedicated cores requires a minimum of ${componentProps.cpuMin} cores and a maximum of ${componentProps.cpuMax} cores per member. For shared CPU, select 0 cores.`;
 }
 
+/**
+ * return helper text for power workspace
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} helper text
+ */
+function powerVsWorkspaceHelperText(stateData, componentProps) {
+  return `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
+}
+
 module.exports = {
   resourceGroupHelperTextCallback,
   genericNameCallback,
@@ -350,4 +360,5 @@ module.exports = {
   invalidDNSDescriptionText,
   invalidCrnText,
   invalidCpuTextCallback,
+  powerVsWorkspaceHelperText,
 };

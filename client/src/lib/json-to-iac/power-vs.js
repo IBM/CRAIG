@@ -5,7 +5,7 @@ const {
   timeouts,
   rgIdRef,
   tfRef,
-  tfBlock
+  tfBlock,
 } = require("./utils");
 const { RegexButWithWords } = require("regex-but-with-words");
 
@@ -26,7 +26,7 @@ function formatPowerVsWorkspace(workspace, config) {
     location: "${var.power_vs_zone}",
     resource_group_id: rgIdRef(workspace.resource_group, config),
     tags: config._options.tags,
-    timeouts: timeouts("6m", "5m", "10m")
+    timeouts: timeouts("6m", "5m", "10m"),
   };
   return jsonToTfPrint(
     "resource",
@@ -63,7 +63,7 @@ function formatPowerVsSshKey(key) {
     provider: `\${ibm.power_vs${snakeCase("_" + key.zone)}}`,
     pi_cloud_instance_id: powerVsWorkspaceRef(key.workspace),
     pi_key_name: kebabName([fullKeyName]),
-    pi_ssh_key: `\${var.${fullKeyName}}`
+    pi_ssh_key: `\${var.${fullKeyName}}`,
   };
   return jsonToTfPrint(
     "resource",
@@ -96,7 +96,7 @@ function formatPowerVsNetwork(network) {
       pi_cidr: network.pi_cidr,
       pi_network_type: network.pi_network_type,
       pi_network_jumbo: network.pi_network_jumbo,
-      pi_dns: network.pi_dns
+      pi_dns: network.pi_dns,
     }
   );
 }
@@ -146,7 +146,7 @@ function formatPowerVsCloudConnection(connection) {
         connection.pi_cloud_connection_global_routing,
       pi_cloud_connection_metered: connection.pi_cloud_connection_metered,
       pi_cloud_connection_transit_enabled:
-        connection.pi_cloud_connection_transit_enabled
+        connection.pi_cloud_connection_transit_enabled,
     }
   );
 }
@@ -169,7 +169,7 @@ function formatPowerVsImage(image) {
       pi_cloud_instance_id: powerVsWorkspaceRef(image.workspace),
       pi_image_id: image.pi_image_id,
       pi_image_name: image.name,
-      timeouts: timeouts("9m")
+      timeouts: timeouts("9m"),
     }
   );
 }
@@ -186,20 +186,17 @@ function formatCloudConnectionDataSource(connection) {
     jsonToTfPrint("data", "ibm_dl_gateway", connectionResourceName, {
       provider: `\${ibm.power_vs${snakeCase("_" + connection.zone)}}`,
       name: formatCloudConnectionName(connection),
-      depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`]
+      depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`],
     }) +
     jsonToTfPrint("resource", "time_sleep", connectionResourceName + "_sleep", {
       create_duration: "120s",
       triggers: {
         crn: dlConnectionRef.replace(
-          new RegexButWithWords()
-            .literal("}")
-            .stringEnd()
-            .done("g"),
+          new RegexButWithWords().literal("}").stringEnd().done("g"),
           ".crn}"
-        )
+        ),
       },
-      depends_on: [dlConnectionRef]
+      depends_on: [dlConnectionRef],
     })
   );
 }
@@ -222,7 +219,7 @@ function formatPowerToTransitGatewayConnection(connection, gateway) {
       network_type: "directlink",
       name: kebabName([gateway, "to", connection.name, "connection"]),
       network_id: `\${time_sleep.${connectionResourceName}_sleep.triggers["crn"]}`,
-      depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`]
+      depends_on: [`\${ibm_pi_cloud_connection.${connectionResourceName}}`],
     }
   );
 }
@@ -246,12 +243,12 @@ function formatPowerVsNetworkAttachment(attachment) {
       pi_cloud_connection_id: `\${ibm_pi_cloud_connection.${formatCloudConnectionResourceName(
         {
           name: attachment.connection,
-          workspace: attachment.workspace
+          workspace: attachment.workspace,
         }
       )}.cloud_connection_id}`,
       pi_network_id: `\${ibm_pi_network.power_network_${snakeCase(
         `${attachment.workspace} ${attachment.network}`
-      )}.network_id}`
+      )}.network_id}`,
     }
   );
 }
@@ -263,34 +260,34 @@ function formatPowerVsNetworkAttachment(attachment) {
  */
 function powerVsTf(config) {
   let tf = "";
-  config.power.forEach(workspace => {
+  config.power.forEach((workspace) => {
     tf += tfBlock(
       `Power VS Workspace ${workspace.name}`,
       formatPowerVsWorkspace(workspace, config)
     );
     // ssh keys
     let sshKeyTf = "";
-    workspace.ssh_keys.forEach(sshKey => {
+    workspace.ssh_keys.forEach((sshKey) => {
       sshKeyTf += formatPowerVsSshKey(sshKey);
     });
     if (workspace.ssh_keys.length > 0)
       tf += "\n" + tfBlock(`${workspace.name} Workspace SSH Keys`, sshKeyTf);
     // network
     let networkTf = "";
-    workspace.network.forEach(nw => {
+    workspace.network.forEach((nw) => {
       networkTf += formatPowerVsNetwork(nw);
     });
     if (workspace.network.length > 0)
       tf += "\n" + tfBlock(`${workspace.name} Workspace Network`, networkTf);
     // images
     let imagesTf = "";
-    workspace.images.forEach(image => {
+    workspace.images.forEach((image) => {
       imagesTf += formatPowerVsImage(image);
     });
     if (workspace.images.length > 0)
       tf += "\n" + tfBlock(`${workspace.name} Workspace Images`, imagesTf);
     // cloud connections
-    workspace.cloud_connections.forEach(connection => {
+    workspace.cloud_connections.forEach((connection) => {
       let connectionTf =
         formatPowerVsCloudConnection(connection) +
         formatCloudConnectionDataSource(connection);
@@ -300,7 +297,7 @@ function powerVsTf(config) {
       // if more than one tgw connection, format connection block
       if (connection.transit_gateways.length > 0) {
         let tgwConnectionsTf = "";
-        connection.transit_gateways.forEach(tgw => {
+        connection.transit_gateways.forEach((tgw) => {
           tgwConnectionsTf += formatPowerToTransitGatewayConnection(
             connection,
             tgw
@@ -315,15 +312,15 @@ function powerVsTf(config) {
       }
       // network attachments
       let attachmentTf = "";
-      workspace.attachments.forEach(attachment => {
+      workspace.attachments.forEach((attachment) => {
         // for each connection
-        attachment.connections.forEach(connection => {
+        attachment.connections.forEach((connection) => {
           // format the connection
           attachmentTf += formatPowerVsNetworkAttachment({
             workspace: attachment.workspace,
             network: attachment.network,
             connection: connection,
-            zone: attachment.zone
+            zone: attachment.zone,
           });
         });
       });
@@ -348,5 +345,5 @@ module.exports = {
   formatCloudConnectionDataSource,
   formatPowerToTransitGatewayConnection,
   formatPowerVsNetworkAttachment,
-  powerVsTf
+  powerVsTf,
 };
