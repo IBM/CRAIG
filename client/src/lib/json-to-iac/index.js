@@ -172,7 +172,15 @@ const {
   formatPowerVsCloudConnection,
   powerVsTf,
 } = require("./power-vs");
+const { formatPowerVsInstance } = require("./power-vs-instances");
+const {
+  formatPowerVsVolume,
+  formatPowerVsVolumeAttachment,
+} = require("./power-vs-volumes");
 module.exports = {
+  formatPowerVsVolumeAttachment,
+  formatPowerVsVolume,
+  formatPowerVsInstance,
   formatIcd,
   formatIcdToKmsAuth,
   vpnServerTf,

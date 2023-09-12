@@ -346,4 +346,5 @@ module.exports = {
   formatPowerToTransitGatewayConnection,
   formatPowerVsNetworkAttachment,
   powerVsTf,
+  powerVsWorkspaceRef,
 };
