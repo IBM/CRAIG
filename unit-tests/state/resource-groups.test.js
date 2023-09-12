@@ -122,7 +122,11 @@ describe("resource_groups", () => {
       ["atracker", "logdna", "sysdig"].forEach((field) => {
         rgState.store.json[field].resource_group = "workload-rg";
       });
-      rgState.power.create({ name: "power", resource_group: "workload-rg" });
+      rgState.power.create({
+        name: "power",
+        resource_group: "workload-rg",
+        imageNames: [],
+      });
       rgState.resource_groups.save(
         {
           name: "frog-rg",

@@ -5,7 +5,8 @@ const {
   pushToChildFieldModal,
   setUnfoundResourceGroup,
 } = require("./store.utils");
-const { splatContains, getObjectFromArray, revision } = require("lazy-z");
+const { splatContains, revision, getObjectFromArray } = require("lazy-z");
+const powerImages = require("../docs/power-image-map.json");
 
 /**
  * initialize power-vs workspace
@@ -36,6 +37,17 @@ function powerVsOnStoreUpdate(config) {
       workspace[field].forEach((item) => {
         item.workspace = workspace.name;
         item.zone = workspace.zone;
+      });
+    });
+    workspace.images = [];
+    let zoneImages = powerImages[workspace.zone];
+    // convert image names to list
+    workspace.imageNames.forEach((name) => {
+      workspace.images.push({
+        name: name,
+        workspace: workspace.name,
+        zone: workspace.zone,
+        pi_image_id: getObjectFromArray(zoneImages, "name", name).imageID,
       });
     });
     // add unfound networks to attachments
@@ -199,6 +211,24 @@ function powerVsCloudConnectionDelete(config, stateData, componentProps) {
   deleteSubChild(config, "power", "cloud_connections", componentProps);
 }
 
+/**
+ * save power vs network attachment
+ * @param {lazyZstate} config
+ * @param {object} stateData
+ * @param {object} componentProps
+ */
+function powerVsNetworkAttachmentSave(config, stateData, componentProps) {
+  // subchild not used here as it points to name and attachments
+  // use network as key
+  new revision(config.store.json)
+    .child("power", componentProps.arrayParentName)
+    .child("attachments", stateData.network, "network")
+    .update(stateData)
+    .then(() => {
+      config.update();
+    });
+}
+
 module.exports = {
   powerVsInit,
   powerVsOnStoreUpdate,
@@ -214,4 +244,5 @@ module.exports = {
   powerVsCloudConnectionCreate,
   powerVsCloudConnectionDelete,
   powerVsCloudConnectionSave,
+  powerVsNetworkAttachmentSave,
 };

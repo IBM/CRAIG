@@ -21,15 +21,28 @@ describe("power-vs", () => {
   describe("power.create", () => {
     it("should create a workspace", () => {
       let state = new newState();
-      state.power.create({ name: "toad" });
+      state.power.create({
+        name: "toad",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
       let expectedData = {
         name: "toad",
         resource_group: null,
         ssh_keys: [],
         network: [],
         cloud_connections: [],
-        images: [],
+        images: [
+          {
+            name: "7100-05-09",
+            pi_image_id: "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
+            workspace: "toad",
+            zone: "dal10",
+          },
+        ],
         attachments: [],
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
       };
       assert.deepEqual(
         state.store.json.power[0],
@@ -41,7 +54,7 @@ describe("power-vs", () => {
   describe("power.save", () => {
     it("should save a workspace", () => {
       let state = new newState();
-      state.power.create({ name: "toad", zone: "dal10" });
+      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
       state.power.save(
         { name: "frog", zone: "dal10" },
         { data: { name: "toad" } }
@@ -53,6 +66,7 @@ describe("power-vs", () => {
         network: [],
         cloud_connections: [],
         images: [],
+        imageNames: [],
         attachments: [],
         zone: "dal10",
       };
@@ -66,7 +80,11 @@ describe("power-vs", () => {
   describe("power.delete", () => {
     it("should delete a workspace", () => {
       let state = new newState();
-      state.power.create({ name: "toad" });
+      state.power.create({
+        name: "toad",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
       state.power.delete({}, { data: { name: "toad" } });
       assert.deepEqual(
         state.store.json.power,
@@ -86,6 +104,7 @@ describe("power-vs", () => {
         network: [],
         cloud_connections: [],
         zone: "dal10",
+        imageNames: ["7100-05-09"],
       });
     });
     it("should create a ssh key", () => {
@@ -141,6 +160,7 @@ describe("power-vs", () => {
         name: "power-vs",
         resource_group: "default",
         zone: "dal10",
+        imageNames: ["7100-05-09"],
       });
     });
     it("should create a network interface", () => {
@@ -250,6 +270,7 @@ describe("power-vs", () => {
         name: "power-vs",
         resource_group: "default",
         zone: "dal10",
+        imageNames: ["7100-05-09"],
       });
     });
     it("should create a cloud connection", () => {
@@ -293,6 +314,50 @@ describe("power-vs", () => {
       assert.deepEqual(
         state.store.json.power[0].cloud_connections,
         [],
+        "it should delete a cloud connection"
+      );
+    });
+  });
+  describe("attachments", () => {
+    it("should save attachment", () => {
+      let state = new newState();
+      state.power.create({
+        name: "power-vs",
+        resource_group: "default",
+        zone: "dal10",
+        imageNames: ["7100-05-09"],
+      });
+      state.power.network.create(
+        { name: "test-network" },
+        { innerFormProps: { arrayParentName: "power-vs" } }
+      );
+      state.power.cloud_connections.create(
+        { name: "test-network" },
+        { innerFormProps: { arrayParentName: "power-vs" } }
+      );
+      state.power.attachments.save(
+        {
+          network: "test-network",
+          connections: ["test-network"],
+        },
+        {
+          arrayParentName: "power-vs",
+          data: {
+            network: "test-network",
+            connections: [],
+          },
+        }
+      );
+      assert.deepEqual(
+        state.store.json.power[0].attachments,
+        [
+          {
+            network: "test-network",
+            workspace: "power-vs",
+            zone: "dal10",
+            connections: ["test-network"],
+          },
+        ],
         "it should delete a cloud connection"
       );
     });

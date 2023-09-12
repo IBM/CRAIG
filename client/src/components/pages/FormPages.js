@@ -531,9 +531,8 @@ const PowerInfraPage = (craig) => {
       invalidDnsCallbackText={() => {
         return "Invalid IP Address";
       }}
-      onAttachmentSave={() => {
-        // currently disabled
-      }}
+      imageMap={require("../../lib/docs/power-image-map.json")}
+      onAttachmentSave={craig.power.attachments.save}
       disableAttachmentSave={(stateData, componentProps) => {
         // currently disabled
         return false;

@@ -268,6 +268,7 @@ const {
   powerVsCloudConnectionCreate,
   powerVsCloudConnectionDelete,
   powerVsCloudConnectionSave,
+  powerVsNetworkAttachmentSave,
 } = require("./power-vs");
 
 /**
@@ -747,6 +748,9 @@ const state = function (legacy) {
         create: powerVsCloudConnectionCreate,
         delete: powerVsCloudConnectionDelete,
         save: powerVsCloudConnectionSave,
+      },
+      attachments: {
+        save: powerVsNetworkAttachmentSave,
       },
     },
   });
