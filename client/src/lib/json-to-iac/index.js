@@ -172,7 +172,10 @@ const {
   formatPowerVsCloudConnection,
   powerVsTf,
 } = require("./power-vs");
-const { formatPowerVsInstance } = require("./power-vs-instances");
+const {
+  formatPowerVsInstance,
+  powerInstanceTf,
+} = require("./power-vs-instances");
 const {
   formatPowerVsVolume,
   formatPowerVsVolumeAttachment,

@@ -16,9 +16,6 @@ router.get("/vsi/:region/images", controller.vsiImages);
 router.get("/cluster/:region/flavors", controller.clusterFlavors);
 router.get("/cluster/versions", controller.clusterVersions);
 
-// cdktf
-router.post("/cdktf/convert/:language", cdktf.convertPost);
-
 // schematics
 router.put("/schematics/:workspaceName", controller.uploadTar);
 router.post(

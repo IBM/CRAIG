@@ -1,6 +1,6 @@
 const { prettyJSON } = require("lazy-z");
 const { appidTf } = require("./appid");
-const { versionsTf, mainTf, logdnaProviders } = require("./constants");
+const { versionsTf, logdnaProviders } = require("./constants");
 const { atrackerTf } = require("./atracker");
 const { clusterTf } = require("./clusters");
 const { eventStreamsTf } = require("./event-streams");
@@ -23,10 +23,9 @@ const { dnsTf } = require("./dns");
 const { loggingMonitoringTf } = require("./logging-monitoring");
 const { variablesDotTf } = require("./variables");
 const { icdTf } = require("./icd");
-const { tfBlock } = require("./utils");
-const { jsonToTf } = require("json-to-tf");
-const { varDotRegion } = require("../constants");
 const { ibmCloudProvider } = require("./provider");
+const { powerVsTf } = require("./power-vs");
+const { powerInstanceTf } = require("./power-vs-instances");
 
 /**
  * create a json document with file names as keys and text as value
@@ -89,6 +88,9 @@ function configToFilesJson(config, apiMode) {
       "dns.tf": config.dns && config.dns.length > 0 ? dnsTf(config) : null,
       "observability.tf": loggingMonitoringTf(config),
       "icd.tf": config.icd.length > 0 ? icdTf(config) : null,
+      "power_infrastructure.tf":
+        config.power.length > 0 ? powerVsTf(config) : null,
+      "power_instances.tf": powerInstanceTf(config),
     };
     vpcModuleTf(files, config);
     return files;

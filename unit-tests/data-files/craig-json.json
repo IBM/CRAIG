@@ -5,9 +5,11 @@
     "tags": [
       "slz",
       "landing-zone"
-    ]
+    ],
+    "power_vs_zones": []
   },
   "dns": [],
+  "power": [],
   "resource_groups": [
     {
       "use_prefix": true,

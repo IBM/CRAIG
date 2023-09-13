@@ -1,8 +1,8 @@
 const { assert } = require("chai");
 const sinon = require("sinon");
-const cdktf = require("../../express-controllers/cdktf");
-const res = require("../mocks/response.mock");
-const craigCdktf = require("../data-files/craig-cdktf.json");
+const cdktf = require("../express-controllers/cdktf");
+const res = require("../unit-tests/mocks/response.mock");
+const craigCdktf = require("../unit-tests/data-files/craig-cdktf.json");
 const fs = require("fs");
 const jsutil = require("util"); // Utils to run child process
 const exec = jsutil.promisify(require("child_process").exec); // Exec from child process

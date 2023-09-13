@@ -7,6 +7,8 @@ const {
   configToFilesJson,
 } = require("../../client/src/lib/json-to-iac/config-to-files-json");
 const { transpose } = require("lazy-z");
+const powerNw = require("../data-files/config-to-files/modules-power-config.json");
+const powerNwFiles = require("../data-files/config-to-files/modules-power-config-to-files.json");
 
 describe("configToFilesJson", () => {
   describe("files", () => {
@@ -1089,5 +1091,23 @@ variable "tmos_admin_password" {
       task,
       "TypeError: Cannot read properties of undefined (reading 'f5_vsi'"
     );
+  });
+  describe("power vs", () => {
+    it("should return power config when provided", () => {
+      let actualData = configToFilesJson(powerNw);
+      assert.deepEqual(
+        actualData["power_infrastructure.tf"],
+        powerNwFiles["power_infrastructure.tf"],
+        "it should create file"
+      );
+    });
+    it("should return power instances config when provided", () => {
+      let actualData = configToFilesJson(powerNw);
+      assert.deepEqual(
+        actualData["power_instances.tf"],
+        powerNwFiles["power_instances.tf"],
+        "it should create file"
+      );
+    });
   });
 });

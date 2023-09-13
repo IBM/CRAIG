@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.2.0
+
+### Upgrade Notes
+
+- CDKTF compatability has been temporarily removed as the code was not currently in use. We will continue to examine this as an option for the future.
+
+### Features
+
+- Users can now create, update, and delete Power VS Network infrastructure
+
+### Fixes
+
+
 ## 1.1.0
 
 ### Upgrade Notes

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.2.0",
+    "upgrade_notes": [
+      "CDKTF compatability has been temporarily removed as the code was not currently in use. We will continue to examine this as an option for the future."
+    ],
+    "features": [
+      "Users can now create, update, and delete Power VS Network infrastructure"
+    ],
+    "fixes": []
+  },
+  {
     "version": "1.1.0",
     "upgrade_notes": [
       "`_kubernetes` is no longer incorrectly appended to Cluster versions. To see this change users will need to reselect a chosen version.",

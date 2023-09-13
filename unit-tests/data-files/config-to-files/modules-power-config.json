@@ -2,13 +2,88 @@
   "_options": {
     "prefix": "slz",
     "region": "us-south",
-    "tags": ["slz", "landing-zone"],
+    "tags": [
+      "slz",
+      "landing-zone"
+    ],
     "endpoints": "private",
     "account_id": "1234"
   },
   "icd": [],
-  "power": [],
-  "power_instances": [],
+  "power": [
+    {
+      "name": "example",
+      "resource_group": "slz-management-rg",
+      "zone": "dal10",
+      "ssh_keys": [
+        {
+          "workspace": "example",
+          "name": "keyname",
+          "zone": "dal10"
+        }
+      ],
+      "network": [
+        {
+          "workspace": "example",
+          "name": "dev-nw",
+          "pi_cidr": "1.2.3.4/5",
+          "pi_dns": [
+            "127.0.0.1"
+          ],
+          "pi_network_type": "vlan",
+          "pi_network_jumbo": true,
+          "zone": "dal10"
+        }
+      ],
+      "cloud_connections": [
+        {
+          "name": "dev-connection",
+          "workspace": "example",
+          "pi_cloud_connection_speed": 50,
+          "pi_cloud_connection_global_routing": false,
+          "pi_cloud_connection_metered": false,
+          "pi_cloud_connection_transit_enabled": true,
+          "transit_gateways": [],
+          "zone": "dal10"
+        }
+      ],
+      "images": [
+        {
+          "workspace": "example",
+          "pi_image_id": "e4de6683-2a42-4993-b702-c8613f132d39",
+          "name": "SLES15-SP3-SAP",
+          "zone": "dal10"
+        }
+      ],
+      "attachments": [
+        {
+          "connections": [
+            "dev-connection"
+          ],
+          "workspace": "example",
+          "network": "dev-nw",
+          "zone": "dal10"
+        }
+      ]
+    }
+  ],
+  "power_instances": [
+    {
+      "zone": "dal12",
+      "workspace": "example",
+      "name": "test",
+      "image": "SLES15-SP3-SAP",
+      "ssh_key": "keyname",
+      "network": ["dev-nw"],
+      "pi_memory": "4",
+      "pi_processors": "2",
+      "pi_proc_type": "shared",
+      "pi_sys_type": "s922",
+      "pi_pin_policy": "none",
+      "pi_health_status": "WARNING",
+      "pi_storage_type": "tier1"
+    }
+  ],
   "resource_groups": [
     {
       "use_prefix": true,
@@ -123,7 +198,10 @@
     "bucket": "atracker-bucket",
     "add_route": true,
     "cos_key": "cos-bind-key",
-    "locations": ["global", "us-south"]
+    "locations": [
+      "global",
+      "us-south"
+    ]
   },
   "vpcs": [
     {
@@ -540,15 +618,27 @@
       "vpc": "management",
       "service": "cos",
       "resource_group": "slz-management-rg",
-      "security_groups": ["management-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "subnets": [
+        "vpe-zone-1",
+        "vpe-zone-2",
+        "vpe-zone-3"
+      ]
     },
     {
       "vpc": "workload",
       "service": "cos",
       "resource_group": "slz-workload-rg",
-      "security_groups": ["workload-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "security_groups": [
+        "workload-vpe-sg"
+      ],
+      "subnets": [
+        "vpe-zone-1",
+        "vpe-zone-2",
+        "vpe-zone-3"
+      ]
     }
   ],
   "security_groups": [
@@ -816,8 +906,14 @@
       "port": 255,
       "protocol": "udp",
       "resource_group": "slz-management-rg",
-      "security_groups": ["management-vpe-sg"],
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "vpc": "management",
       "routes": [
         {
@@ -864,7 +960,11 @@
       "name": "workload",
       "resource_group": "slz-workload-rg",
       "encryption_key": "slz-vsi-volume-key",
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "update_all_workers": false,
       "vpc": "workload",
       "worker_pools": [
@@ -874,7 +974,11 @@
           "flavor": "bx2.16x64",
           "name": "logging-pool",
           "resource_group": "slz-workload-rg",
-          "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          "subnets": [
+            "vsi-zone-1",
+            "vsi-zone-2",
+            "vsi-zone-3"
+          ],
           "vpc": "workload",
           "workers_per_subnet": 2
         }
@@ -890,9 +994,17 @@
       "image": "ibm-ubuntu-22-04-1-minimal-amd64-1",
       "profile": "cx2-4x8",
       "name": "management-server",
-      "security_groups": ["management-vpe-sg"],
-      "ssh_keys": ["slz-ssh-key"],
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "ssh_keys": [
+        "slz-ssh-key"
+      ],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "vpc": "management",
       "vsi_per_subnet": 2,
       "resource_group": "slz-management-rg"
