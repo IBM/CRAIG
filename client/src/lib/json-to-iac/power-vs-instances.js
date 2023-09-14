@@ -1,6 +1,6 @@
 const { powerVsWorkspaceRef } = require("./power-vs");
 const { jsonToTfPrint, tfBlock } = require("./utils");
-const { snakeCase } = require("lazy-z");
+const { snakeCase, isNullOrEmptyString } = require("lazy-z");
 
 /**
  * format power vs instance
@@ -28,11 +28,15 @@ function formatPowerVsInstance(instance) {
     pi_network: [],
   };
   instance.network.forEach((nw) => {
-    data.pi_network.push({
+    let nwData = {
       network_id: `\${ibm_pi_network.power_network_${snakeCase(
         instance.workspace
-      )}_${snakeCase(nw)}.network_id}`,
-    });
+      )}_${snakeCase(nw.name)}.network_id}`,
+    };
+    if (!isNullOrEmptyString(nw.ip_address)) {
+      nwData.ip_address = nw.ip_address;
+    }
+    data.pi_network.push(nwData);
   });
   return jsonToTfPrint(
     "resource",

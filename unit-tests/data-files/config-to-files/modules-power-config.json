@@ -74,7 +74,11 @@
       "name": "test",
       "image": "SLES15-SP3-SAP",
       "ssh_key": "keyname",
-      "network": ["dev-nw"],
+      "network": [
+        {
+          "name": "dev-nw"
+        }
+      ],
       "pi_memory": "4",
       "pi_processors": "2",
       "pi_proc_type": "shared",

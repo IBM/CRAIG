@@ -26,6 +26,7 @@ const { icdTf } = require("./icd");
 const { ibmCloudProvider } = require("./provider");
 const { powerVsTf } = require("./power-vs");
 const { powerInstanceTf } = require("./power-vs-instances");
+const { powerVsVolumeTf } = require("./power-vs-volumes");
 
 /**
  * create a json document with file names as keys and text as value
@@ -91,6 +92,7 @@ function configToFilesJson(config, apiMode) {
       "power_infrastructure.tf":
         config.power.length > 0 ? powerVsTf(config) : null,
       "power_instances.tf": powerInstanceTf(config),
+      "power_volumes.tf": powerVsVolumeTf(config),
     };
     vpcModuleTf(files, config);
     return files;

@@ -179,8 +179,11 @@ const {
 const {
   formatPowerVsVolume,
   formatPowerVsVolumeAttachment,
+  powerVsVolumeTf,
 } = require("./power-vs-volumes");
 module.exports = {
+  powerInstanceTf,
+  powerVsVolumeTf,
   formatPowerVsVolumeAttachment,
   formatPowerVsVolume,
   formatPowerVsInstance,

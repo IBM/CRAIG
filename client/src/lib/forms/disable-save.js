@@ -977,6 +977,46 @@ function disablePowerCloudConnectionSave(stateData, componentProps) {
   );
 }
 
+/**
+ * disable power instance save
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @return {boolean} true if disabled
+ */
+function disablePowerInstanceSave(stateData, componentProps) {
+  let hasInvalidIps = false;
+  if (stateData.network) {
+    stateData.network.forEach((nw) => {
+      if (
+        !isNullOrEmptyString(nw.ip_address) &&
+        !isIpv4CidrOrAddress(nw.ip_address) &&
+        !contains(nw.ip_address, "/")
+      )
+        hasInvalidIps = true;
+    });
+  }
+  return (
+    invalidName("power_instances")(stateData, componentProps) ||
+    invalidFieldCheck(
+      [
+        "workspace",
+        "ssh_key",
+        "image",
+        "pi_sys_type",
+        "pi_health_status",
+        "pi_storage_tier",
+      ],
+      badField,
+      stateData
+    ) ||
+    isEmpty(stateData.network) ||
+    hasInvalidIps ||
+    parseFloat(stateData.pi_processors) < 0.25 ||
+    parseFloat(stateData.pi_processors) > 7 ||
+    !isInRange(parseFloat(stateData.pi_memory), 0, 918)
+  );
+}
+
 const disableSaveFunctions = {
   scc: disableSccSave,
   atracker: disableAtrackerSave,
@@ -1032,6 +1072,7 @@ const disableSaveFunctions = {
   sysdig: disableSysdigSave,
   network: disablePowerNetworkSave,
   cloud_connections: disablePowerCloudConnectionSave,
+  power_instances: disablePowerInstanceSave,
 };
 
 /**

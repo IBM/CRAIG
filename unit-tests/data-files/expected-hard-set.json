@@ -952,5 +952,7 @@
   "cbr_rules": [],
   "vpn_servers": [],
   "icd": [],
-  "power": []
+  "power": [],
+  "power_instances": [],
+  "power_volumes": []
 }

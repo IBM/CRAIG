@@ -1,5 +1,5 @@
 const { snakeCase } = require("lazy-z");
-const { jsonToTfPrint } = require("./utils");
+const { jsonToTfPrint, tfBlock } = require("./utils");
 const { powerVsWorkspaceRef } = require("./power-vs");
 
 /**
@@ -28,28 +28,46 @@ function formatPowerVsVolume(volume) {
 
 /**
  * create volume attachment terraform
- * @param {*} attachment
+ * @param {*} volume
+ * @param {string} instance plaintext instance name
  * @returns {string} terraform formatted string
  */
-function formatPowerVsVolumeAttachment(attachment) {
+function formatPowerVsVolumeAttachment(volume, instance) {
   return jsonToTfPrint(
     "resource",
     "ibm_pi_volume_attach",
-    `${attachment.workspace} attach ${attachment.volume} to ${attachment.instance} instance`,
+    `${volume.workspace} attach ${volume.name} to ${instance} instance`,
     {
-      provider: `\${ibm.power_vs${snakeCase("_" + attachment.zone)}}`,
-      pi_cloud_instance_id: powerVsWorkspaceRef(attachment.workspace),
+      provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
+      pi_cloud_instance_id: powerVsWorkspaceRef(volume.workspace),
       pi_volume_id: `\${ibm_pi_volume.${snakeCase(
-        attachment.workspace + " volume " + attachment.volume
+        volume.workspace + " volume " + volume.name
       )}.volume_id}`,
       pi_instance_id: `\${ibm_pi_instance.${snakeCase(
-        `${attachment.workspace}_workspace_instance_${attachment.instance}`
+        `${volume.workspace}_workspace_instance_${instance}`
       )}.instance_id}`,
     }
   );
 }
 
+/**
+ * create power terraform file
+ * @param {*} config
+ */
+function powerVsVolumeTf(config) {
+  let tf = config.power_volumes && config.power_volumes.length > 0 ? "" : null;
+  (config.power_volumes || []).forEach((volume) => {
+    let volumeTf = formatPowerVsVolume(volume);
+    volume.attachments.forEach((instance) => {
+      volumeTf += formatPowerVsVolumeAttachment(volume, instance);
+    });
+    tf += tfBlock(`Power VS Volume ${volume.name}`, volumeTf);
+  });
+  return tf;
+}
+
 module.exports = {
   formatPowerVsVolume,
   formatPowerVsVolumeAttachment,
+  powerVsVolumeTf,
 };

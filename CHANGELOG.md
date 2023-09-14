@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users can now create, update, and delete Power VS Network infrastructure
+- Users can now create, update, and delete Power VS Instances
 
 ### Fixes
 

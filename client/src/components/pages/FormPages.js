@@ -39,13 +39,15 @@ import {
   SccV1Page,
   F5BigIpPage,
   PowerVsWorkspacePage,
+  PowerVsInstancesPage,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import {
   contains,
-  deepEqual,
+  isInRange,
   eachKey,
   isIpv4CidrOrAddress,
+  isNullOrEmptyString,
   keys,
   nestedSplat,
   splat,
@@ -464,6 +466,19 @@ const ObjectStoragePage = (craig) => {
   );
 };
 
+const NoPowerNetworkTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> Power VS is not
+      enabled. Return to the
+      <a className="no-secrets-link" href="/">
+        Options Page
+      </a>{" "}
+      to enable Power VS.
+    </Tile>
+  );
+};
+
 const PowerInfraPage = (craig) => {
   return craig.store.json._options.enable_power_vs ? (
     <PowerVsWorkspacePage
@@ -539,14 +554,57 @@ const PowerInfraPage = (craig) => {
       }}
     />
   ) : (
+    <NoPowerNetworkTile />
+  );
+};
+
+const PowerVsInstances = (craig) => {
+  return !craig.store.json._options.enable_power_vs ? (
+    <NoPowerNetworkTile />
+  ) : craig.store.json.power.length === 0 ? (
     <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> Power VS is not
-      enabled. Return to the
-      <a className="no-secrets-link" href="/">
-        Options Page
+      <CloudAlerting size="24" className="iconMargin" /> No Power VS Workspaces.
+      Go to the
+      <a className="no-secrets-link" href="/form/power">
+        Power VS Page
       </a>{" "}
-      to enable Power VS.
+      to create one.
     </Tile>
+  ) : (
+    <PowerVsInstancesPage
+      power_instances={craig.store.json.power_instances}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      onSave={craig.power_instances.save}
+      onSubmit={craig.power_instances.create}
+      onDelete={craig.power_instances.delete}
+      craig={craig}
+      power={craig.store.json.power}
+      docs={RenderDocs("power")}
+      invalidCallback={invalidName("power_instances")}
+      invalidTextCallback={invalidNameText("power_instances")}
+      invalidIpCallback={(ip) => {
+        if (isNullOrEmptyString(ip)) {
+          return false;
+        } else return contains(ip, "/") || !isIpv4CidrOrAddress(ip);
+      }}
+      invalidPiProcessorsCallback={(stateData) => {
+        // weird is in range error with decimal numbers and is in range
+        return (
+          parseFloat(stateData.pi_processors) < 0.25 ||
+          parseFloat(stateData.pi_processors) > 7
+        );
+      }}
+      invalidPiMemoryCallback={(stateData) => {
+        return !isInRange(parseFloat(stateData.pi_memory), 0, 918);
+      }}
+      invalidPiProcessorsTextCallback={() => {
+        return "Must be a number between 0.25 and 7.";
+      }}
+      invalidPiMemoryTextCallback={() => {
+        return "Must be a whole number less than 918.";
+      }}
+    />
   );
 };
 
@@ -929,6 +987,8 @@ export const NewFormPage = (props) => {
     return ObjectStoragePage(craig);
   } else if (form === "power") {
     return PowerInfraPage(craig);
+  } else if (form === "powerInstances") {
+    return PowerVsInstances(craig);
   } else if (form === "resourceGroups") {
     return ResourceGroupPage(craig);
   } else if (form === "securityComplianceCenter") {

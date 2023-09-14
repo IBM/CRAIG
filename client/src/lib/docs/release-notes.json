@@ -5,7 +5,8 @@
       "CDKTF compatability has been temporarily removed as the code was not currently in use. We will continue to examine this as an option for the future."
     ],
     "features": [
-      "Users can now create, update, and delete Power VS Network infrastructure"
+      "Users can now create, update, and delete Power VS Network infrastructure",
+      "Users can now create, update, and delete Power VS Instances"
     ],
     "fixes": []
   },

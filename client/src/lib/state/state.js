@@ -270,6 +270,20 @@ const {
   powerVsCloudConnectionSave,
   powerVsNetworkAttachmentSave,
 } = require("./power-vs");
+const {
+  powerVsInstanceInit,
+  powerVsInstanceOnStoreUpdate,
+  powerVsInstanceCreate,
+  powerVsInstanceSave,
+  powerVsInstanceDelete,
+} = require("./power-vs-instances");
+const {
+  powerVsVolumesInit,
+  powerVsVolumesOnStoreUpdate,
+  powerVsVolumeCreate,
+  powerVsVolumeSave,
+  powerVsVolumeDelete,
+} = require("./power-vs-volumes");
 
 /**
  * get state for craig
@@ -753,6 +767,22 @@ const state = function (legacy) {
         save: powerVsNetworkAttachmentSave,
       },
     },
+  });
+
+  store.newField("power_instances", {
+    init: powerVsInstanceInit,
+    onStoreUpdate: powerVsInstanceOnStoreUpdate,
+    create: powerVsInstanceCreate,
+    save: powerVsInstanceSave,
+    delete: powerVsInstanceDelete,
+  });
+
+  store.newField("power_volumes", {
+    init: powerVsVolumesInit,
+    onStoreUpdate: powerVsVolumesOnStoreUpdate,
+    create: powerVsVolumeCreate,
+    save: powerVsVolumeSave,
+    delete: powerVsVolumeDelete,
   });
 
   /**

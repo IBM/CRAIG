@@ -29,6 +29,7 @@ const {
   icdTf,
   powerVsTf,
 } = require("./json-to-iac");
+const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 
 const navCatagories = [
   {
@@ -221,6 +222,13 @@ const navCatagories = [
         react_icon: "IbmPowerVs",
         toTf: powerVsTf,
         jsonField: "power",
+      },
+      {
+        title: "Power VS Instances",
+        path: "/form/powerInstances",
+        react_icon: "IbmPowerVsInstance",
+        toTf: powerInstanceTf,
+        jsonField: "power_instances",
       },
     ],
   },
