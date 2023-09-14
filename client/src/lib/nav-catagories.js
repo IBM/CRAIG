@@ -221,7 +221,9 @@ const navCatagories = [
         title: "Power VS Workspace",
         path: "/form/power",
         react_icon: "IbmPowerVs",
-        toTf: powerVsTf,
+        toTf: () => {
+          return powerVsTf(config) || "";
+        },
         jsonField: "power",
       },
       {
@@ -229,7 +231,7 @@ const navCatagories = [
         path: "/form/powerInstances",
         react_icon: "IbmPowerVsInstance",
         toTf: (config) => {
-          return powerInstanceTf(config) || ""
+          return powerInstanceTf(config) || "";
         },
         jsonField: "power_instances",
       },
