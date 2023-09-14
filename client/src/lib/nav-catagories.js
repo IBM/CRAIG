@@ -1,3 +1,4 @@
+const { config } = require("chai");
 const {
   resourceGroupTf,
   kmsTf,
@@ -227,7 +228,9 @@ const navCatagories = [
         title: "Power VS Instances",
         path: "/form/powerInstances",
         react_icon: "IbmPowerVsInstance",
-        toTf: powerInstanceTf,
+        toTf: (config) => {
+          return powerInstanceTf(config) || ""
+        },
         jsonField: "power_instances",
       },
     ],
