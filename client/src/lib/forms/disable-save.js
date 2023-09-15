@@ -971,7 +971,7 @@ function disablePowerNetworkSave(stateData, componentProps) {
  */
 function disablePowerCloudConnectionSave(stateData, componentProps) {
   return (
-    hasDuplicateName("cloud_connections", stateData, componentProps) ||
+    invalidName("cloud_connections")(stateData, componentProps) ||
     (stateData.pi_cloud_connection_transit_enabled &&
       isEmpty(stateData.transit_gateways))
   );
@@ -1014,6 +1014,19 @@ function disablePowerInstanceSave(stateData, componentProps) {
     parseFloat(stateData.pi_processors) < 0.25 ||
     parseFloat(stateData.pi_processors) > 7 ||
     !isInRange(parseFloat(stateData.pi_memory), 0, 918)
+  );
+}
+
+/**
+ * disable save for power volumes
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean}
+ */
+function disablePowerVolumeSave(stateData, componentProps) {
+  return (
+    invalidName("power_volumes")(stateData, componentProps) ||
+    !isInRange(parseInt(stateData.pi_volume_size), 1, 2000)
   );
 }
 
@@ -1073,6 +1086,7 @@ const disableSaveFunctions = {
   network: disablePowerNetworkSave,
   cloud_connections: disablePowerCloudConnectionSave,
   power_instances: disablePowerInstanceSave,
+  power_volumes: disablePowerVolumeSave,
 };
 
 /**

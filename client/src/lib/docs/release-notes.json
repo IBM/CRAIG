@@ -6,7 +6,8 @@
     ],
     "features": [
       "Users can now create, update, and delete Power VS Network infrastructure",
-      "Users can now create, update, and delete Power VS Instances"
+      "Users can now create, update, and delete Power VS Instances",
+      "Users can now create, update, and delete Power VS Storage Volumes"
     ],
     "fixes": []
   },

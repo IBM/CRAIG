@@ -29,6 +29,7 @@ const {
   vpnServerTf,
   icdTf,
   powerVsTf,
+  powerVsVolumeTf,
 } = require("./json-to-iac");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 
@@ -221,7 +222,7 @@ const navCatagories = [
         title: "Power VS Workspace",
         path: "/form/power",
         react_icon: "IbmPowerVs",
-        toTf: () => {
+        toTf: (config) => {
           return powerVsTf(config) || "";
         },
         jsonField: "power",
@@ -234,6 +235,15 @@ const navCatagories = [
           return powerInstanceTf(config) || "";
         },
         jsonField: "power_instances",
+      },
+      {
+        title: "Power VS Storage",
+        path: "/form/powerVolumes",
+        react_icon: "IbmPowerVsVolumes",
+        toTf: (config) => {
+          return powerVsVolumeTf(config) || "";
+        },
+        jsonField: "power_volumes",
       },
     ],
   },

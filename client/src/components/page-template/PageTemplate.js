@@ -30,6 +30,7 @@ import {
   IbmDb2,
   IbmPowerVs,
   VirtualMachine,
+  FileStorage,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -78,6 +79,7 @@ const navIcons = {
   F5Icon: F5Icon,
   IbmPowerVs: IbmPowerVs,
   IbmPowerVsInstance: VirtualMachine,
+  IbmPowerVsVolumes: FileStorage,
 };
 
 let pageOrder = [

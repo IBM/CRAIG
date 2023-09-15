@@ -40,6 +40,7 @@ import {
   F5BigIpPage,
   PowerVsWorkspacePage,
   PowerVsInstancesPage,
+  PowerVsVolumesPage,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import {
@@ -479,6 +480,19 @@ const NoPowerNetworkTile = () => {
   );
 };
 
+const NoPowerWorkspaceTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> No Power VS Workspaces.
+      Go to the
+      <a className="no-secrets-link" href="/form/power">
+        Power VS Workspace Page
+      </a>{" "}
+      to create one.
+    </Tile>
+  );
+};
+
 const PowerInfraPage = (craig) => {
   return craig.store.json._options.enable_power_vs ? (
     <PowerVsWorkspacePage
@@ -562,14 +576,7 @@ const PowerVsInstances = (craig) => {
   return !craig.store.json._options.enable_power_vs ? (
     <NoPowerNetworkTile />
   ) : craig.store.json.power.length === 0 ? (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> No Power VS Workspaces.
-      Go to the
-      <a className="no-secrets-link" href="/form/power">
-        Power VS Page
-      </a>{" "}
-      to create one.
-    </Tile>
+    <NoPowerWorkspaceTile />
   ) : (
     <PowerVsInstancesPage
       power_instances={craig.store.json.power_instances}
@@ -604,6 +611,30 @@ const PowerVsInstances = (craig) => {
       invalidPiMemoryTextCallback={() => {
         return "Must be a whole number less than 918.";
       }}
+    />
+  );
+};
+
+const PowerVsVolumes = (craig) => {
+  return !craig.store.json._options.enable_power_vs ? (
+    <NoPowerNetworkTile />
+  ) : craig.store.json.power.length === 0 ? (
+    <NoPowerWorkspaceTile />
+  ) : (
+    <PowerVsVolumesPage
+      power_volumes={craig.store.json.power_volumes}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      onDelete={craig.power_volumes.delete}
+      onSave={craig.power_volumes.save}
+      onSubmit={craig.power_volumes.create}
+      forceOpen={forceShowForm}
+      craig={craig}
+      docs={RenderDocs("power")}
+      power={craig.store.json.power}
+      power_instances={craig.store.json.power_instances}
+      invalidCallback={invalidName("power_volumes")}
+      invalidTextCallback={invalidNameText("power_volumes")}
     />
   );
 };
@@ -989,6 +1020,8 @@ export const NewFormPage = (props) => {
     return PowerInfraPage(craig);
   } else if (form === "powerInstances") {
     return PowerVsInstances(craig);
+  } else if (form === "powerVolumes") {
+    return PowerVsVolumes(craig);
   } else if (form === "resourceGroups") {
     return ResourceGroupPage(craig);
   } else if (form === "securityComplianceCenter") {
