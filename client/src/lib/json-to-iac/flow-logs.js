@@ -123,7 +123,11 @@ function formatFlowLogsPolicy(cosName, config) {
  * @returns {string} terraform
  */
 function flowLogsTf(config) {
-  let allFlowLogsCos = distinct(splat(config.vpcs, "cos"));
+  let allFlowLogsCos = distinct(splat(config.vpcs, "cos")).filter((name) => {
+    if (name) {
+      return name;
+    }
+  });
   let blockData = "";
   allFlowLogsCos.forEach(
     (cos) => (blockData += formatFlowLogsPolicy(cos, config))
