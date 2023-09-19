@@ -13,7 +13,9 @@ All notable changes to this project will be documented in this file.
 - Users can now create, update, and delete Power VS Network infrastructure
 - Users can now create, update, and delete Power VS Instances
 - Users can now create, update, and delete Power VS Storage Volumes
+- Users can now create, update, and delete Cluster Opaque Ingress Secrets
 - Users can now create and upload to a Schematics Workspace simultaneously via backend route `/api/schematics/newWorkspaceUpload`
+- Added JSON-to-IaC functionality to create Power Edge Router connections for Transit Gateway
 
 ### Fixes
 

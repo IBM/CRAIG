@@ -60,19 +60,33 @@ function formatTgw(tgw, config) {
  * @returns {string} terraform string
  */
 
-function ibmTgConnection(connection, config) {
-  let vpcName = connection.crn
+function ibmTgConnection(connection) {
+  let connectionName = connection.power
+    ? connection.power
+    : connection.crn
     ? connection.crn.replace(/.+vpc:/g, "")
     : connection.vpc;
+  let connectionResourceName = kebabName(
+    [connection.tgw]
+      .concat(connection.power ? "power" : [])
+      .concat([connectionName, "hub-connection"])
+  );
+  let networkId = connection.power
+    ? `\${ibm_resource_instance.power_vs_workspace_${snakeCase(
+        connection.power
+      )}.resource_crn}`
+    : connection.vpc
+    ? vpcRef(connection.vpc, "crn", true)
+    : connection.crn;
   return {
-    name: `${connection.tgw} to ${vpcName} connection`,
+    name: `${connection.tgw} to ${
+      (connection.power ? "power_workspace_" : "") + connectionName
+    } connection`,
     data: {
       gateway: tfRef("ibm_tg_gateway", snakeCase(connection.tgw)),
-      network_type: "vpc",
-      name: kebabName([connection.tgw, vpcName, "hub-connection"]),
-      network_id: connection.vpc
-        ? vpcRef(connection.vpc, "crn", true)
-        : connection.crn,
+      network_type: connection.power ? "power_virtual_server" : "vpc",
+      name: connectionResourceName,
+      network_id: networkId,
       timeouts: timeouts("30m", "", "30m"),
     },
   };

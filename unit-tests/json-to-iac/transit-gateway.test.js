@@ -107,6 +107,39 @@ resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aa
         "it should return correct data"
       );
     });
+    it("should return correctly formatted transit gateway when connected to power", () => {
+      let actualData = formatTgwConnection(
+        {
+          name: "transit-gateway",
+          resource_group: "slz-service-rg",
+          global: false,
+          connections: [
+            {
+              tgw: "transit-gateway",
+              power: "dev",
+            },
+          ],
+        }.connections[0],
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection" {
+  gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "power_virtual_server"
+  name         = "\${var.prefix}-transit-gateway-power-dev-hub-connection"
+  network_id   = ibm_resource_instance.power_vs_workspace_dev.resource_crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("tgwTf", () => {
     it("should return correctly formatted transit gateway", () => {
