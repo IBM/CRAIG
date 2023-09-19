@@ -623,7 +623,7 @@ const PowerVsInstances = (craig) => {
       onDelete={craig.power_instances.delete}
       craig={craig}
       power={craig.store.json.power}
-      docs={RenderDocs("power")}
+      docs={RenderDocs("power_instances")}
       invalidCallback={invalidName("power_instances")}
       invalidTextCallback={invalidNameText("power_instances")}
       invalidIpCallback={(ip) => {
@@ -666,7 +666,7 @@ const PowerVsVolumes = (craig) => {
       onSubmit={craig.power_volumes.create}
       forceOpen={forceShowForm}
       craig={craig}
-      docs={RenderDocs("power")}
+      docs={RenderDocs("power_volumes")}
       power={craig.store.json.power}
       power_instances={craig.store.json.power_instances}
       invalidCallback={invalidName("power_volumes")}

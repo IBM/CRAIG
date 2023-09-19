@@ -658,6 +658,40 @@ Sysdig can be used to gain visibility into the performance and health of your ap
 
 ## Power
 
+A workspace is a free working environment that acts as a folder for Power Systems Virtual Server resources at a specific geographic location (zone). Compute (e.g., images and VSIs), networking (e.g., subnets and VPN connections), and storage (e.g., volumes and snapshots) resources are deployed within a selected workspace and cannot be moved or shared between workspaces.
+
+Workspaces are a means of grouping and managing related resources deployed in a single location (data location), but otherwise have no functional capabilities. For solutions that span multiple locations, e.g., to implement High Availability or Disaster Recovery, you can create multiple workspaces and connect them over the network (e.g., using a Transit Gateway).
+
+After provisioning a workspace you can create the following:
+
+Additional Fields
+SSH Keys          | - `You can set up one or more Secure Shell (SSH) keys for root login when you create new AIX virtual machines (VM). The keys are loaded into the root's authorized_keys file. SSH keys allow you to securely log in to a VM. You must use the available operating system options to create SSH keys. To generate SSH keys on a Linux or Mac OS system, for example, you can use the standard ssh-keygen tool.`
+Network Interface | - `When you create a Power Systems Virtual Server, you can select a private or public network interface. These network interfaces function like subnets for VPC infrastructure.`
+Cloud Connections | - `You can use IBM Cloud connections to connect your Power Systems Virtual Server instances to IBM Cloud resources on IBM Cloud classic network and Virtual Private Cloud (VPC) infrastructures. IBM Cloud connection creates a Direct Link (2.0) Connect instance to connect your Power Systems Virtual Server instances to the IBM Cloud resources within your account. For cross-account connectivity, use IBM Transit Gateway to interconnect your Power Systems Virtual Server to the IBM Cloud classic and Virtual Private Cloud (VPC) infrastructures. The speed and reliability of the Direct Link connection extends your Power Systems Virtual Server network to the IBM Cloud network and offers more consistent and higher-throughput connectivity, while keeping network traffic within the IBM Cloud. Cloud Connections are not available in zones where Power Edge Router is deployed, see documentation for more information.`
+
+### Related Links
+
+- [Getting started with IBM Power Systems Virtual Servers](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started)
+- [Generating an SSH Key](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-create-vm#ssh-setup)
+- [Public & Private Network on PowerVS](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#public-private-networks)
+- [Network Security](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-network-security)
+- [Managing PowerVS Cloud Connections](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-cloud-connections)
+- [Power Edge Router Docs](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-per)
+
+-----
+
+## Power Instances
+
+NYI
+
+### Related Links
+
+- [IBM](https://ibm.com)
+
+-----
+
+## Power Volumes
+
 NYI
 
 ### Related Links
