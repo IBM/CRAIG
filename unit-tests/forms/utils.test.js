@@ -3,6 +3,7 @@ const {
   notificationText,
   getCosFromBucket,
 } = require("../../client/src/lib/forms");
+const { getAllSecrets } = require("../../client/src/lib/forms/utils");
 
 describe("utils", () => {
   describe("notificationText", () => {
@@ -97,6 +98,72 @@ describe("utils", () => {
         },
       ]);
       assert.strictEqual(result, null);
+    });
+  });
+  describe("getAllSecrets", () => {
+    it("should all secrets currently stored with secrets manager", () => {
+      const result = getAllSecrets(
+        { arbitrary_secret_name: "toad" },
+        {
+          craig: {
+            store: {
+              json: {
+                secrets_manager: [
+                  {
+                    name: "sm",
+                    secrets: [
+                      {
+                        name: "bowser",
+                      },
+                      {
+                        name: "yoshi",
+                      },
+                    ],
+                  },
+                ],
+                clusters: [
+                  {
+                    opaque_secrets: [
+                      {
+                        arbitrary_secret_name: "mario",
+                        username_password_secret_name: "luigi",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        },
+        "username_password_secret_name"
+      );
+      assert.deepEqual(result, ["toad", "bowser", "yoshi", "mario", "luigi"]);
+    });
+    it("should all secrets currently stored without secrets manager", () => {
+      const result = getAllSecrets(
+        { username_password_secret_name: "frog" },
+        {
+          craig: {
+            store: {
+              json: {
+                secrets_manager: [],
+                clusters: [
+                  {
+                    opaque_secrets: [
+                      {
+                        arbitrary_secret_name: "mario",
+                        username_password_secret_name: "luigi",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        },
+        "arbitrary_secret_name"
+      );
+      assert.deepEqual(result, ["frog", "mario", "luigi"]);
     });
   });
 });

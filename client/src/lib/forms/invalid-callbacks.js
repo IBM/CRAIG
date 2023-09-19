@@ -49,11 +49,11 @@ function invalidDnsZoneName(stateData, componentProps) {
 
 /**
  * invalid tags
- * @param {Array<string>} tags
+ * @param {Array<string>} tags list of tags
  * @returns {boolean} true if any tags in list are invalid
  */
 function invalidTagList(tags) {
-  if (tags.length === 0) return false;
+  if (!tags || tags.length === 0) return false;
   let invalid = false;
   tags.forEach((tag) => {
     if (tag.match(newResourceNameExp) === null || tag.length > 128) {
@@ -635,16 +635,16 @@ function invalidCpuCallback(stateData, componentProps) {
 }
 
 /**
- * checks if dns description invalid
+ * checks if description invalid
  * @param {Object} stateData
  * @param {Object} componentProps
  * @returns {boolean} true if invalid
  */
-function invalidDNSDescription(stateData, componentProps) {
-  if (isNullOrEmptyString(stateData.description)) {
+function invalidDescription(description) {
+  if (isNullOrEmptyString(description)) {
     return false;
   } else {
-    return stateData.description.match(sccScopeDescriptionValidation) === null;
+    return description.match(sccScopeDescriptionValidation) === null;
   }
 }
 
@@ -693,7 +693,7 @@ module.exports = {
   invalidCbrRule,
   invalidCbrZone,
   validRecord,
-  invalidDNSDescription,
+  invalidDescription,
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
   invalidCrns,

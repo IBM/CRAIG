@@ -20,7 +20,7 @@ const {
   validRecord,
 } = require("../../client/src/lib/forms");
 const {
-  invalidDNSDescription,
+  invalidDescription,
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
   invalidCrns,
@@ -488,6 +488,128 @@ describe("invalid callbacks", () => {
           },
           data: {
             name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if arbitrary_secret_name has empty string as name", () => {
+      let actualData = invalidName("arbitrary_secret_name")(
+        {
+          arbitrary_secret_name: "",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                secrets_manager: [],
+                clusters: [
+                  {
+                    opaque_secrets: [{ arbitrary_secret_name: "frog" }],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            arbitrary_secret_name: "egg",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if opaque_secrets has a duplicate name", () => {
+      let actualData = invalidName("opaque_secrets")(
+        {
+          name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    opaque_secrets: [{ name: "frog" }],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "egg",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if opaque_secrets has an invalid name", () => {
+      let actualData = invalidName("opaque_secrets")(
+        {
+          name: "AAAA",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    opaque_secrets: [{ name: "frog" }],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "egg",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if secrets_group has is empty", () => {
+      let actualData = invalidName("secrets_group")(
+        {
+          secrets_group: "",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                clusters: [
+                  {
+                    opaque_secrets: [{ secrets_group: "frog" }],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            secerts_group: "egg",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if username_password_secret_name is a duplicate", () => {
+      let actualData = invalidName("username_password_secret_name")(
+        {
+          username_password_secret_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                secrets_manager: [],
+                clusters: [
+                  {
+                    opaque_secrets: [{ username_password_secret_name: "frog" }],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            username_password_secret_name: "egg",
           },
         }
       );
@@ -1184,12 +1306,12 @@ describe("invalid callbacks", () => {
       assert.isTrue(validRecord({ type: "A" }, {}));
     });
   });
-  describe("invalidDNSDescription", () => {
+  describe("invalidDescription", () => {
     it("should return false when description is empty string", () => {
-      assert.isFalse(invalidDNSDescription({ description: "" }, {}));
+      assert.isFalse(invalidDescription("", {}));
     });
     it("should return true when description has invalid chars", () => {
-      assert.isTrue(invalidDNSDescription({ description: "@" }, {}));
+      assert.isTrue(invalidDescription("@", {}));
     });
   });
   describe("nullOrEmptyStringCheckCallback", () => {

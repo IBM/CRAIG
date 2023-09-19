@@ -18,9 +18,10 @@ const {
   invalidCbrRuleText,
 } = require("../../client/src/lib/forms");
 const {
-  invalidDNSDescriptionText,
+  invalidDescriptionText,
   invalidCrnText,
   invalidCpuTextCallback,
+  labelsInvalidText,
   powerVsWorkspaceHelperText,
 } = require("../../client/src/lib/forms/text-callbacks");
 
@@ -406,6 +407,66 @@ describe("text callbacks", () => {
         "it should be true"
       );
     });
+    it("should return correct text if arbitrary_secret_name is invalid", () => {
+      let actualData = invalidNameText("arbitrary_secret_name")(
+        {
+          arbitrary_secret_name: "AAAA",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                secrets_manager: [],
+                clusters: [
+                  {
+                    opaque_secrets: [{ arbitrary_secret_name: "frog" }],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            arbitrary_secret_name: "egg",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+        "it should return the correct text"
+      );
+    });
+    it("should return correct text if arbitrary_secret_name is a duplicate", () => {
+      let actualData = invalidNameText("arbitrary_secret_name")(
+        {
+          name: "frog",
+          secrets_group: "frog",
+          arbitrary_secret_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                secrets_manager: [],
+                clusters: [
+                  {
+                    opaque_secrets: [{ arbitrary_secret_name: "frog" }],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            arbitrary_secret_name: "egg",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        `Name "frog" already in use`,
+        "it should return the correct text"
+      );
+    });
   });
   describe("cosResourceHelperTextCallback", () => {
     it("should return text if using data", () => {
@@ -759,10 +820,16 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("invalidDNSDescriptionText", () => {
+  describe("invalidDescriptionText", () => {
     assert.deepEqual(
-      invalidDNSDescriptionText({}, {}),
+      invalidDescriptionText({}, {}),
       "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+    );
+  });
+  describe("labelsInvalidText", () => {
+    assert.deepEqual(
+      labelsInvalidText({}, {}),
+      `Invalid labels. All labels must match regular expression: /^[A-z][a-zA-Z0-9-\._,\s]*$/i`
     );
   });
   describe("invalidCrnText", () => {

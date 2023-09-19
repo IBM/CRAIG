@@ -68,7 +68,6 @@ import {
 import {
   invalidCidr,
   invalidCrnList,
-  invalidDNSDescription,
   invalidF5Vsi,
   invalidIamAccountSettings,
   invalidIdentityProviderURI,
@@ -76,6 +75,8 @@ import {
   invalidSubnetTierName,
   nullOrEmptyStringCheckCallback,
   invalidCpuCallback,
+  invalidDescription,
+  invalidTagList,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
@@ -83,10 +84,10 @@ import {
   genericNameCallback,
   iamAccountSettingInvalidText,
   invalidCidrText,
-  invalidDNSDescriptionText,
   invalidSubnetTierText,
   invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
+  invalidDescriptionText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
@@ -194,6 +195,7 @@ const CloudDatabasePage = (craig) => {
 const ClusterPage = (craig) => {
   return (
     <ClustersTemplate
+      noSecretsManager={craig.store.json.secrets_manager.length === 0}
       docs={RenderDocs("clusters")}
       clusters={craig.store.json.clusters}
       disableSave={disableSave}
@@ -215,12 +217,46 @@ const ClusterPage = (craig) => {
       flavorApiEndpoint={`/api/cluster/${craig.store.json._options.region}/flavors`}
       helperTextCallback={clusterHelperTestCallback}
       cosNames={splat(craig.store.json.object_storage, "name")}
+      secretsManagerList={splat(craig.store.json.secrets_manager, "name")}
+      secretsManagerGroupCallback={function (stateData, componentProps, field) {
+        return invalidName(field || "secrets_group")(
+          stateData,
+          componentProps,
+          field
+        );
+      }}
+      secretsManagerGroupCallbackText={invalidNameText("secrets_group")}
+      secretCallback={function (stateData, componentProps, field) {
+        return invalidName(field || "opaque_secrets")(
+          stateData,
+          componentProps,
+          field
+        );
+      }}
+      secretCallbackText={function (stateData, componentProps, field) {
+        return invalidNameText(field || "opaque_secrets")(
+          stateData,
+          componentProps,
+          field
+        );
+      }}
+      descriptionInvalid={invalidDescription}
+      descriptionInvalidText={invalidDescriptionText}
+      labelsInvalid={invalidTagList}
+      labelsInvalidText="One or more labels are invalid"
       onPoolSave={craig.clusters.worker_pools.save}
       onPoolDelete={craig.clusters.worker_pools.delete}
       onPoolSubmit={craig.clusters.worker_pools.create}
+      onOpaqueSecretsSave={craig.clusters.opaque_secrets.save}
+      onOpaqueSecretsDelete={craig.clusters.opaque_secrets.delete}
+      onOpaqueSecretsSubmit={craig.clusters.opaque_secrets.create}
       disablePoolSave={function (field, stateData, componentProps) {
         // field is clusters, inject worker pools
         return disableSave("worker_pools", stateData, componentProps);
+      }}
+      disableOpaqueSecretsSave={function (field, stateData, componentProps) {
+        // field is clusters, inject opaque secrets
+        return disableSave("opaque_secrets", stateData, componentProps);
       }}
     />
   );
@@ -246,8 +282,8 @@ const DnsPage = (craig) => {
       invalidZoneNameCallback={invalidDnsZoneName}
       invalidZoneNameTextCallback={invalidNameText("zones")}
       invalidLabelCallback={nullOrEmptyStringCheckCallback("label")}
-      invalidDescriptionCallback={invalidDNSDescription}
-      invalidDescriptionTextCallback={invalidDNSDescriptionText}
+      invalidDescriptionCallback={invalidDescription}
+      invalidDescriptionTextCallback={invalidDescriptionText}
       vpcList={craig.store.vpcList}
       onRecordSave={craig.dns.records.save}
       onRecordDelete={craig.dns.records.delete}
@@ -261,8 +297,8 @@ const DnsPage = (craig) => {
       onResolverDelete={craig.dns.custom_resolvers.delete}
       invalidResolverNameCallback={invalidName("custom_resolvers")}
       invalidResolverNameTextCallback={invalidNameText("custom_resolvers")}
-      invalidResolverDescriptionCallback={invalidDNSDescription}
-      invalidResolverDescriptionTextCallback={invalidDNSDescriptionText}
+      invalidResolverDescriptionCallback={invalidDescription}
+      invalidResolverDescriptionTextCallback={invalidDescriptionText}
       subnetList={craig.getAllSubnets()}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
     />

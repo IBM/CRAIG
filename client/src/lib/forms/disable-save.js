@@ -30,9 +30,10 @@ const {
   invalidCbrRule,
   invalidCbrZone,
   validRecord,
-  invalidDNSDescription,
+  invalidDescription,
   invalidDnsZoneName,
   invalidCpuCallback,
+  invalidTagList,
 } = require("./invalid-callbacks");
 const { commaSeparatedIpListExp } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
@@ -893,7 +894,7 @@ function disableZonesSave(stateData, componentProps) {
     invalidDnsZoneName(stateData, componentProps) ||
     nullOrEmptyStringFields(stateData, ["vpcs", "label"]) ||
     isEmpty(stateData.vpcs) ||
-    invalidDNSDescription(stateData, componentProps)
+    invalidDescription(stateData.description, componentProps)
   );
 }
 
@@ -922,7 +923,7 @@ function disableCustomResolversSave(stateData, componentProps) {
     invalidName("custom_resolvers")(stateData, componentProps) ||
     badField("vpc", stateData) ||
     isEmpty(stateData.subnets) ||
-    invalidDNSDescription(stateData, componentProps)
+    invalidDescription(stateData.description, componentProps)
   );
 }
 
@@ -946,6 +947,38 @@ function disableSysdigSave(stateData) {
   return stateData.enabled === false
     ? false
     : nullOrEmptyStringFields(stateData, ["resource_group", "plan"]);
+}
+/**
+ * check to see if opaque secrets form save should be disabled
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function disableOpaqueSecretsSave(stateData, componentProps) {
+  return (
+    invalidName("opaque_secrets")(stateData, componentProps, "name") ||
+    invalidName("secrets_group")(stateData, componentProps, "secrets_group") ||
+    invalidName("arbitrary_secret_name")(
+      stateData,
+      componentProps,
+      "arbitrary_secret_name"
+    ) ||
+    invalidName("username_password_secret_name")(
+      stateData,
+      componentProps,
+      "username_password_secret_name"
+    ) ||
+    invalidTagList(stateData.labels) ||
+    nullOrEmptyStringFields(stateData, [
+      "secrets_manager",
+      "arbitrary_secret_data",
+      "username_password_secret_username",
+      "username_password_secret_password",
+    ]) ||
+    !stateData.expiration_date ||
+    invalidDescription(stateData.arbitrary_secret_description) ||
+    invalidDescription(stateData.username_password_secret_description)
+  );
 }
 
 /**
@@ -1083,6 +1116,7 @@ const disableSaveFunctions = {
   custom_resolvers: disableCustomResolversSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
+  opaque_secrets: disableOpaqueSecretsSave,
   network: disablePowerNetworkSave,
   cloud_connections: disablePowerCloudConnectionSave,
   power_instances: disablePowerInstanceSave,

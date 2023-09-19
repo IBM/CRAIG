@@ -1,6 +1,6 @@
 const { splatContains, transpose } = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
-const { getCosFromBucket } = require("../forms");
+const { getCosFromBucket } = require("../forms/utils");
 
 /**
  * initialize logdna

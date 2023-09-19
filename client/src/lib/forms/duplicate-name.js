@@ -6,7 +6,7 @@ const {
   revision,
   getObjectFromArray,
 } = require("lazy-z");
-
+const { getAllSecrets } = require("./utils");
 /**
  * check for duplicate name
  * @param {string} field name of the field within store json to check
@@ -47,6 +47,23 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "worker_pools",
       "name"
     );
+  } else if (field === "opaque_secrets") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.clusters,
+      "opaque_secrets",
+      "name"
+    );
+  } else if (field === "secrets_group") {
+    componentProps.craig.store.json.clusters.forEach((cluster) => {
+      cluster.opaque_secrets.forEach((secret) => {
+        allOtherNames.push(secret.secrets_group);
+      });
+    });
+  } else if (
+    field === "arbitrary_secret_name" ||
+    field === "username_password_secret_name"
+  ) {
+    allOtherNames = getAllSecrets(stateData, componentProps, field);
   } else if (field === "access_groups") {
     allOtherNames = splat(
       componentProps.craig.store.json.access_groups,
