@@ -6,13 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
-- CDKTF compatability has been temporarily removed as the code was not currently in use. We will continue to examine this as an option for the future.
+- CDKTF compatibility has been temporarily removed as the code was not currently in use. We will continue to examine this as an option for the future.
 
 ### Features
 
 - Users can now create, update, and delete Power VS Network infrastructure
 - Users can now create, update, and delete Power VS Instances
 - Users can now create, update, and delete Power VS Storage Volumes
+- Users can now create and upload to a Schematics Workspace simultaneously via backend route `/api/schematics/newWorkspaceUpload`
 
 ### Fixes
 
@@ -46,7 +47,7 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
-- CRAIG now uses `lazy-z` version `1.10.3`, fixing an issues where the `titleCase` function untintentionally added spaces between numbers
+- CRAIG now uses `lazy-z` version `1.10.3`, fixing an issues where the `titleCase` function unintentionally added spaces between numbers
 - State and JSON-to-IAC functionality has been added to allow for AppID instance to be encrypted by a key management service
 
 ### Features
@@ -85,7 +86,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
-- Frixed an error where create button was misaligned on projects page
+- Fixed an error where create button was misaligned on projects page
 - Fixed an issue where `public-and-private` was not a valid value for service endpoints on options page
 - MultiSelects now correctly show full name on hover instead of being cut off
 - Fixed an issue causing toggles on Routing Table page to not set state when toggled
@@ -210,9 +211,9 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Removed unneeded props from secrets manager JSON
-- Fixed vulnerabilities in `/client` pagage-lock.json
+- Fixed vulnerabilities in `/client` package-lock.json
 - Better file exports and imports
-- Now uses jsonToTf instead of depricated jsonToTfLegacy
+- Now uses jsonToTf instead of depreciated jsonToTfLegacy
 - F5 Default Route Gateway now has correct CIDR
 - Removed unused event streams parameters when not an enterprise plan
 
@@ -234,7 +235,7 @@ All notable changes to this project will be documented in this file.
 - Implemented VPC page
 - Implemented Network ACLs Page
 - Implemented Subnets Page
-- Implmemented VPE page
+- Implemented VPE page
 - Implemented VPN Gateways page
 - Implemented Secrets Manager page
 - Implemented Summary page
@@ -248,7 +249,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - More consistent css form form/code mirror
-- Popovers on footer are consistant with other popovers
+- Popovers on footer are consistent with other popovers
 - Manual address prefix subnets `depends_on` to force them to wait until the prefixes for those subnets are done creating
 - Teleport instances now have correct template values in Terraform
 - F5 instances now have correct template values in Terraform

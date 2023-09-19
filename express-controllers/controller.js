@@ -315,6 +315,7 @@ function controller(axios) {
     let tarFile = "craig.tar";
     let forceTarPackFail = req.params?.forceFail;
     let workspaceData;
+    let internalCall = req.params["internalCall"];
     return new Promise((resolve, reject) => {
       this.getWorkspaceData(workspaceName)
         .then((wsData) => {
@@ -332,7 +333,6 @@ function controller(axios) {
               }
               packTar(pack, tarFile.slice(0, tarFile.length - 4), fileMap);
               pack.finalize();
-
               // call create blob to get ArrayBuffer for Blob
               return this.createBlob(pack);
             } catch (err) {
@@ -372,7 +372,7 @@ function controller(axios) {
         });
     })
       .then((data) => {
-        res.send(data);
+        if (!internalCall) res.send(data);
       })
       .catch((err) => {
         res.send(err);
@@ -388,31 +388,88 @@ function controller(axios) {
     let workspaceName = req.params["workspaceName"];
     let region = req.params["region"];
     let resourceGroup = req.params["resourceGroup"];
-    return this.getBearerToken()
-      .then(() => {
-        let data = prettyJSON({
-          name: workspaceName,
-          resource_group: resourceGroup,
-          type: ["terraform_v1.3"],
-          location: region,
-          description: "Schematics Workspace for craig.tar uploads",
-          tags: ["craig"],
-          template_data: [{ type: "terraform_v1.3" }],
-        });
+    let internalCall = req.params["internalCall"];
+    return new Promise((resolve, reject) => {
+      return this.getBearerToken()
+        .then(() => {
+          let data = prettyJSON({
+            name: workspaceName,
+            resource_group: resourceGroup,
+            type: ["terraform_v1.3"],
+            location: region,
+            description: "Schematics Workspace for craig.tar uploads",
+            tags: ["craig"],
+            template_data: [{ type: "terraform_v1.3" }],
+          });
 
-        let requestConfig = {
-          method: "post",
-          url: "https://schematics.cloud.ibm.com/v1/workspaces",
-          headers: {
-            Accept: "application/json",
-            Authorization: this.token,
-          },
-          data: data,
-        };
-        return axios(requestConfig);
-      })
-      .then((response) => {
-        res.send(response.data);
+          let requestConfig = {
+            method: "post",
+            url: "https://schematics.cloud.ibm.com/v1/workspaces",
+            headers: {
+              Accept: "application/json",
+              Authorization: this.token,
+            },
+            data: data,
+          };
+          return axios(requestConfig);
+        })
+        .then((response) => {
+          if (!internalCall) res.send(response.data);
+          resolve(response.data);
+        })
+        .catch((err) => {
+          res.send(err);
+          resolve(err);
+        });
+    });
+  };
+
+  /**
+   * creates schematics workspace and uploads tar file of CRAIG data
+   * req.body must contain all needed data for createWorkspace and uploadTar functions
+   * @param {*} req express request object
+   * @param {*} res express resolve object
+   * @returns
+   */
+  this.newWorkspaceUpload = (req, res) => {
+    return new Promise((resolve, reject) => {
+      if (process.env.CRAIG_PROD === "TRUE") {
+        reject("CRAIG_PROD is true");
+        return;
+      }
+      // createWorkspace req
+      let createWorkspaceReq = {
+        params: {
+          workspaceName: req.body["workspaceName"],
+          region: req.body["region"],
+          resourceGroup: req.body["resourceGroup"],
+          internalCall: true,
+        },
+      };
+      return this.createWorkspace(createWorkspaceReq, res).then(
+        (createData) => {
+          // uploadTar req
+          let uploadTarReq = {
+            params: {
+              workspaceName: req.body["workspaceName"],
+              internalCall: true,
+            },
+            body: req.body["craigJson"],
+          };
+          return this.uploadTar(uploadTarReq, res).then(() => {
+            console.log(
+              `Upload successful to workspace with id: ${createData.id}`
+            );
+            resolve({
+              workspaceId: createData.id,
+              schematicsUrl: `https://cloud.ibm.com/schematics/workspaces/${createData.id}`,
+            });
+          });
+        }
+      );
+    })
+      .then((data) => {
+        res.send(data);
       })
       .catch((err) => {
         res.send(err);

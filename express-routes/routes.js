@@ -18,5 +18,6 @@ router.post(
   "/schematics/createWorkspace/:workspaceName/:region/:resourceGroup",
   controller.createWorkspace
 );
+router.post("/schematics/newWorkspaceUpload", controller.newWorkspaceUpload);
 
 module.exports = router;

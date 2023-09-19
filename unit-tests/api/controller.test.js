@@ -13,6 +13,9 @@ describe("controller", () => {
   beforeEach(() => {
     res.send = new sinon.spy();
   });
+  afterEach(() => {
+    delete process.env.CRAIG_PROD;
+  });
   describe("getBearerToken", () => {
     let requestConfig = {
       method: "post",
@@ -443,6 +446,62 @@ describe("controller", () => {
         )
         .catch(() => {
           assert.isTrue(res.send.calledOnce);
+        });
+    });
+  });
+  describe("newWorkspaceUpload", () => {
+    it("should reject with error when CRAIG_PROD is true", () => {
+      process.env.CRAIG_PROD = "TRUE";
+      let { axios } = initMockAxios({}, false);
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .newWorkspaceUpload({}, res)
+        .catch((err) => {
+          assert.deepEqual(
+            err,
+            "CRAIG_PROD is true",
+            "should return rejection message"
+          );
+        });
+    });
+    it("should return correct data when workspace is created and tar file is uploaded", () => {
+      let { axios } = initMockAxios(
+        {
+          id: "us-south.workspace.testWorkspace",
+          name: "testWorkspace",
+          location: "us-south",
+          workspaces: [
+            {
+              name: "testWorkspace",
+              id: "us-south.workspace.testWorkspace",
+              template_data: [{ id: "5678" }],
+            },
+          ],
+          has_received_file: true,
+        },
+        false
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .newWorkspaceUpload(
+          {
+            body: {
+              workspaceName: "testWorkspace",
+              region: "us-south",
+              resourceGroup: "foo-rg",
+              craigJson: testJson,
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith({
+              workspaceId: "us-south.workspace.testWorkspace",
+              schematicsUrl:
+                "https://cloud.ibm.com/schematics/workspaces/us-south.workspace.testWorkspace",
+            })
+          );
         });
     });
   });
