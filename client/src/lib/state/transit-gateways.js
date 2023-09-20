@@ -1,5 +1,12 @@
-const { contains, carve, splatContains } = require("lazy-z");
+const {
+  contains,
+  carve,
+  splatContains,
+  splat,
+  getObjectFromArray,
+} = require("lazy-z");
 const { newDefaultTg } = require("./defaults");
+const { edgeRouterEnabledZones } = require("../constants");
 
 /**
  * initialize transit gateway
@@ -39,6 +46,22 @@ function transitGatewayOnStoreUpdate(config) {
       if (connection.vpc && !contains(config.store.vpcList, connection.vpc)) {
         // if vpc not there
         carve(gateway.connections, "vpc", connection.vpc); // remove from list of connections
+      } else if (
+        connection.power &&
+        !contains(splat(config.store.json.power, "name"), connection.power)
+      ) {
+        // remove if workspace deleted
+        carve(gateway.connections, "power", connection.power);
+      } else if (
+        connection.power &&
+        !contains(
+          edgeRouterEnabledZones,
+          getObjectFromArray(config.store.json.power, "name", connection.power)
+            .zone
+        )
+      ) {
+        // remove if workspace changed into non PER enabled zone
+        carve(gateway.connections, "power", connection.power);
       }
     });
     if (!contains(config.store.resourceGroups, gateway.resource_group)) {

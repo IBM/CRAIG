@@ -49,6 +49,86 @@ describe("transit_gateways", () => {
         "it should only have one connection"
       );
     });
+    it("should remove a connection when a power vs workspace is deleted", () => {
+      let state = new newState();
+      state.power.create({
+        name: "toad",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
+      state.transit_gateways.save(
+        {
+          connections: [
+            { tgw: "todd", vpc: "management" },
+            { tgw: "todd", vpc: "workload" },
+            { tgw: "transit-gateway", power: "toad" },
+          ],
+        },
+        {
+          data: {
+            name: "transit-gateway",
+          },
+        }
+      );
+      state.power.delete(
+        {},
+        {
+          data: {
+            name: "toad",
+          },
+        }
+      );
+      assert.deepEqual(
+        state.store.json.transit_gateways[0].connections,
+        [
+          { tgw: "transit-gateway", vpc: "management" },
+          { tgw: "transit-gateway", vpc: "workload" },
+        ],
+        "it should only have correct connections"
+      );
+    });
+    it("should remove a connection when a power vs workspace is not in an edge enabled zone", () => {
+      let state = new newState();
+      state.power.create({
+        name: "toad",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
+      state.transit_gateways.save(
+        {
+          connections: [
+            { tgw: "todd", vpc: "management" },
+            { tgw: "todd", vpc: "workload" },
+            { tgw: "transit-gateway", power: "toad" },
+          ],
+        },
+        {
+          data: {
+            name: "transit-gateway",
+          },
+        }
+      );
+      state.power.save(
+        {
+          name: "toad",
+          imageNames: ["7100-05-09"],
+          zone: "dal12",
+        },
+        {
+          data: {
+            name: "toad",
+          },
+        }
+      );
+      assert.deepEqual(
+        state.store.json.transit_gateways[0].connections,
+        [
+          { tgw: "transit-gateway", vpc: "management" },
+          { tgw: "transit-gateway", vpc: "workload" },
+        ],
+        "it should only have correct connections"
+      );
+    });
     it("should add a connection when crns is provided", () => {
       let state = new newState();
       state.transit_gateways.save(

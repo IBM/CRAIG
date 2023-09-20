@@ -61,9 +61,9 @@ function powerVsVolumeTf(config) {
     volume.attachments.forEach((instance) => {
       volumeTf += formatPowerVsVolumeAttachment(volume, instance);
     });
-    tf += tfBlock(`Power VS Volume ${volume.name}`, volumeTf);
+    tf += tfBlock(`Power VS Volume ${volume.name}`, volumeTf) + "\n";
   });
-  return tf;
+  return tf ? tf.replace(/\n+$/g, "\n") : tf;
 }
 
 module.exports = {

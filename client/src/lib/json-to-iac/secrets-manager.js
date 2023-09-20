@@ -300,7 +300,7 @@ function formatSecretsManagerK8sSecret(secret, config) {
     )}_secrets_manager.guid}`,
     secret_group_id: cdktfRef(
       "ibm_sm_secret_group." +
-        snakeCase(secret.secrets_manager + "_group_" + secret.secret_group) +
+        snakeCase(secret.secrets_manager + "_group_" + secret.secrets_group) +
         ".secret_group_id"
     ),
     region: varDotRegion,
@@ -323,7 +323,7 @@ function formatSecretsManagerK8sSecret(secret, config) {
     )}_secrets_manager.guid}`,
     secret_group_id: cdktfRef(
       "ibm_sm_secret_group." +
-        snakeCase(secret.secrets_manager + "_group_" + secret.secret_group) +
+        snakeCase(secret.secrets_manager + "_group_" + secret.secrets_group) +
         ".secret_group_id"
     ),
     region: varDotRegion,

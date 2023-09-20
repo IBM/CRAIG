@@ -588,4 +588,5 @@ module.exports = {
       },
     },
   },
+  edgeRouterEnabledZones: ["dal10"],
 };

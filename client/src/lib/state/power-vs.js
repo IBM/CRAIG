@@ -4,8 +4,14 @@ const {
   pushToChildFieldModal,
   setUnfoundResourceGroup,
 } = require("./store.utils");
-const { splatContains, revision, getObjectFromArray } = require("lazy-z");
+const {
+  splatContains,
+  revision,
+  getObjectFromArray,
+  contains,
+} = require("lazy-z");
 const powerImages = require("../docs/power-image-map.json");
+const { edgeRouterEnabledZones } = require("../constants");
 
 /**
  * initialize power-vs workspace
@@ -60,6 +66,10 @@ function powerVsOnStoreUpdate(config) {
         });
       }
     });
+    if (contains(edgeRouterEnabledZones, workspace.zone)) {
+      workspace.cloud_connections = [];
+      workspace.attachments = [];
+    }
   });
 }
 

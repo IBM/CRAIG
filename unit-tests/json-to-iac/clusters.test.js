@@ -1149,23 +1149,22 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       transpose(slzNetwork, nw);
       nw.clusters[0].opaque_secrets = [
         {
+          cluster: "workload-cluster",
           name: "example",
-          cluster: "example",
           namespace: "ns",
-          secrets_manager: "secrets-manager",
-          expiration_date: "1234",
-          secret_group: "group",
+          interval: 1,
+          auto_rotate: true,
           labels: ["my-label"],
           arbitrary_secret_name: "arbitrary-secret",
-          arbitrary_secret_description: "example",
-          arbitrary_secret_data: "arbitrary",
+          arbitrary_secret_description: "username-password",
+          arbitrary_secret_data: "s",
+          secrets_group: "group",
+          secrets_manager: "secrets-manager",
           username_password_secret_name: "username-secret",
-          username_password_secret_description: "username-password",
           username_password_secret_username: "username",
-          username_password_secret_password: "1VeryGoodPasword?",
-          auto_rotate: true,
-          interval: 1,
-          unit: "day",
+          username_password_secret_password: "password",
+          username_password_secret_description: "",
+          expiration_date: "2023-09-20T04:00:00.000Z",
         },
       ];
       let actualData = clusterTf(nw);
@@ -1270,8 +1269,8 @@ resource "ibm_sm_arbitrary_secret" "secrets_manager_arbitrary_secret_secret" {
   secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
   region          = var.region
   endpoint_type   = "private"
-  description     = "example"
-  expiration_date = "1234"
+  description     = "username-password"
+  expiration_date = "2023-09-20T04:00:00.000Z"
   payload         = var.secrets_manager_example_secret_arbitrary_secret_data
   labels = [
     "my-label"
@@ -1284,8 +1283,8 @@ resource "ibm_sm_username_password_secret" "secrets_manager_username_secret_secr
   secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
   region          = var.region
   endpoint_type   = "private"
-  description     = "username-password"
-  expiration_date = "1234"
+  description     = ""
+  expiration_date = "2023-09-20T04:00:00.000Z"
   username        = var.secrets_manager_example_secret_username
   password        = var.secrets_manager_example_secret_password
   labels = [
@@ -1294,7 +1293,6 @@ resource "ibm_sm_username_password_secret" "secrets_manager_username_secret_secr
   rotation {
     auto_rotate = true
     interval    = 1
-    unit        = "day"
   }
 }
 

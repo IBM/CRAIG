@@ -217,7 +217,7 @@ function clusterTf(config) {
         let ingressData =
           formatSecretsManagerSecretGroup({
             secrets_manager: secret.secrets_manager,
-            name: secret.secret_group,
+            name: secret.secrets_group,
             description: `Secrets Manager group for ${cluster.name} ingress ${secret.name}`,
           }) +
           formatSecretsManagerK8sSecret(secret, config) +

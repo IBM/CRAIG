@@ -93,6 +93,7 @@ import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
+import { edgeRouterEnabledZones } from "../../lib/constants";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -532,6 +533,7 @@ const NoPowerWorkspaceTile = () => {
 const PowerInfraPage = (craig) => {
   return craig.store.json._options.enable_power_vs ? (
     <PowerVsWorkspacePage
+      edgeRouterEnabledZones={edgeRouterEnabledZones}
       power={[...craig.store.json.power]}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
@@ -894,6 +896,8 @@ const TransitGatewayPage = (craig) => {
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       invalidCrns={invalidCrns}
       invalidCrnText={invalidCrnText}
+      power={craig.store.json.power}
+      edgeRouterEnabledZones={edgeRouterEnabledZones}
     />
   );
 };

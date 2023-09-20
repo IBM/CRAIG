@@ -57,12 +57,13 @@ function powerInstanceTf(config) {
   let tf =
     config.power_instances && config.power_instances.length > 0 ? "" : null;
   (config.power_instances || []).forEach((instance) => {
-    tf += tfBlock(
-      `${instance.name} Power Instance`,
-      formatPowerVsInstance(instance)
-    );
+    tf +=
+      tfBlock(
+        `${instance.name} Power Instance`,
+        formatPowerVsInstance(instance)
+      ) + "\n";
   });
-  return tf;
+  return tf ? tf.replace(/\n+$/g, "\n") : tf;
 }
 
 module.exports = {

@@ -24,7 +24,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
-        zone: "dal10",
+        zone: "dal12",
       });
       let expectedData = {
         name: "toad",
@@ -35,14 +35,14 @@ describe("power-vs", () => {
         images: [
           {
             name: "7100-05-09",
-            pi_image_id: "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
+            pi_image_id: "35eca797-6599-4597-af1f-d2eb5e292dfc",
             workspace: "toad",
-            zone: "dal10",
+            zone: "dal12",
           },
         ],
         attachments: [],
         imageNames: ["7100-05-09"],
-        zone: "dal10",
+        zone: "dal12",
       };
       assert.deepEqual(
         state.store.json.power[0],
@@ -54,9 +54,9 @@ describe("power-vs", () => {
   describe("power.save", () => {
     it("should save a workspace", () => {
       let state = new newState();
-      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
+      state.power.create({ name: "toad", zone: "dal12", imageNames: [] });
       state.power.save(
-        { name: "frog", zone: "dal10" },
+        { name: "frog", zone: "dal12" },
         { data: { name: "toad" } }
       );
       let expectedData = {
@@ -68,7 +68,7 @@ describe("power-vs", () => {
         images: [],
         imageNames: [],
         attachments: [],
-        zone: "dal10",
+        zone: "dal12",
       };
       assert.deepEqual(
         state.store.json.power[0],
@@ -83,7 +83,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
-        zone: "dal10",
+        zone: "dal12",
       });
       state.power.delete({}, { data: { name: "toad" } });
       assert.deepEqual(
@@ -103,7 +103,7 @@ describe("power-vs", () => {
         ssh_keys: [],
         network: [],
         cloud_connections: [],
-        zone: "dal10",
+        zone: "dal12",
         imageNames: ["7100-05-09"],
       });
     });
@@ -114,7 +114,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].ssh_keys,
-        [{ name: "test-key", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "test-key", workspace: "power-vs", zone: "dal12" }],
         "it should create a ssh key"
       );
     });
@@ -132,7 +132,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].ssh_keys,
-        [{ name: "new-key-name", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "new-key-name", workspace: "power-vs", zone: "dal12" }],
         "it should update ssh key name"
       );
     });
@@ -159,7 +159,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "dal10",
+        zone: "dal12",
         imageNames: ["7100-05-09"],
       });
     });
@@ -170,7 +170,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "test-network", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "test-network", workspace: "power-vs", zone: "dal12" }],
         "it should create a network interface"
       );
       assert.deepEqual(
@@ -179,7 +179,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "dal10",
+            zone: "dal12",
             network: "test-network",
           },
         ],
@@ -200,7 +200,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "new-network-name", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "new-network-name", workspace: "power-vs", zone: "dal12" }],
         "it should update network name"
       );
       assert.deepEqual(
@@ -209,7 +209,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "dal10",
+            zone: "dal12",
             network: "new-network-name",
           },
         ],
@@ -230,7 +230,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "test-network", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "test-network", workspace: "power-vs", zone: "dal12" }],
         "it should update network name"
       );
       assert.deepEqual(
@@ -239,7 +239,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "dal10",
+            zone: "dal12",
             network: "test-network",
           },
         ],
@@ -269,7 +269,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "dal10",
+        zone: "dal12",
         imageNames: ["7100-05-09"],
       });
     });
@@ -280,7 +280,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].cloud_connections,
-        [{ name: "test-network", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "test-network", workspace: "power-vs", zone: "dal12" }],
         "it should create a cloud connection"
       );
     });
@@ -298,7 +298,7 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].cloud_connections,
-        [{ name: "new-network-name", workspace: "power-vs", zone: "dal10" }],
+        [{ name: "new-network-name", workspace: "power-vs", zone: "dal12" }],
         "it should update cloud connection"
       );
     });
@@ -324,7 +324,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "dal10",
+        zone: "dal12",
         imageNames: ["7100-05-09"],
       });
       state.power.network.create(
@@ -354,7 +354,7 @@ describe("power-vs", () => {
           {
             network: "test-network",
             workspace: "power-vs",
-            zone: "dal10",
+            zone: "dal12",
             connections: ["test-network"],
           },
         ],

@@ -1257,7 +1257,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_dev_to_containers_polic
           namespace: "ns",
           secrets_manager: "secrets-manager",
           expiration_date: "1234",
-          secret_group: "group",
+          secrets_group: "group",
           labels: ["my-label"],
           arbitrary_secret_name: "arbitrary-secret",
           arbitrary_secret_description: "example",
