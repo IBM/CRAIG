@@ -77,7 +77,7 @@ class ImportJson extends React.Component {
     let nextState = { ...this.state };
     nextState.prefix = value;
     nextState.hasInvalidPrefix =
-      this.state.prefix.match(newResourceNameExp) === null;
+      this.state.prefix.match(constants.newResourceNameExp) === null;
     this.setState(nextState);
   }
 

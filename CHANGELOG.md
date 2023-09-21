@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+- Fixed an issue causing the Import from SLZ form to crash when a prefix is added
 
 ## 1.1.0
 
