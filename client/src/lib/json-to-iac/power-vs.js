@@ -23,7 +23,7 @@ function formatPowerVsWorkspace(workspace, config) {
     name: kebabName(["power-workspace", workspace.name]),
     service: "power-iaas",
     plan: "power-virtual-server-group",
-    location: "${var.power_vs_zone}",
+    location: workspace.zone,
     resource_group_id: rgIdRef(workspace.resource_group, config),
     tags: config._options.tags,
     timeouts: timeouts("6m", "5m", "10m"),

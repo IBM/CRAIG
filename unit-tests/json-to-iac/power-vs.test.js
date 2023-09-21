@@ -38,7 +38,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
   name              = "\${var.prefix}-power-workspace-example"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
-  location          = var.power_vs_zone
+  location          = "dal10"
   resource_group_id = ibm_resource_group.example.id
   tags = [
     "hello",
@@ -301,7 +301,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
   name              = "\${var.prefix}-power-workspace-example"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
-  location          = var.power_vs_zone
+  location          = "dal10"
   resource_group_id = ibm_resource_group.example.id
   tags = [
     "hello",
@@ -397,7 +397,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
   name              = "\${var.prefix}-power-workspace-example"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
-  location          = var.power_vs_zone
+  location          = "dal10"
   resource_group_id = ibm_resource_group.example.id
   tags = [
     "hello",
@@ -615,7 +615,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
   name              = "\${var.prefix}-power-workspace-example"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
-  location          = var.power_vs_zone
+  location          = "dal10"
   resource_group_id = ibm_resource_group.example.id
   tags = [
     "hello",

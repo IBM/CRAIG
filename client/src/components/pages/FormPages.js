@@ -52,6 +52,7 @@ import {
   keys,
   nestedSplat,
   splat,
+  isEmpty,
 } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
@@ -541,6 +542,13 @@ const PowerInfraPage = (craig) => {
       onSave={craig.power.save}
       onSubmit={craig.power.create}
       forceOpen={forceShowForm}
+      deleteDisabled={() => {
+        return (
+          craig.store.json.power.length === 1 &&
+          (!isEmpty(craig.store.json.power_instances) ||
+            !isEmpty(craig.store.json.power_volumes))
+        );
+      }}
       craig={craig}
       docs={RenderDocs("power")}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
