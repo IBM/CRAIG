@@ -1520,9 +1520,35 @@
   "power_volumes": {
     "content": [
       {
-        "text": "NYI"
+        "text": "Create storage volumes for Power VS and attach them to Power VS Instances. Storage volumes must be a minimum size of 1 GB and can scale up to 2000 GB. These volumes can be set up to allow multiple instances to access the same volume."
+      },
+      {
+        "text": "The storage tier selected determines the number of I/O operations per second (IOPS) the volume is capable of. Users can either choose Tier 1 or Tier 3 storage. Tier 1 storage is capable of 10 IOPS/GB, and Tier 3 is capable of 3 IOPS/GB."
+      },
+      {
+        "text": "Enabling volume replication allows users to create copies of their storage volumes through the Global Mirror Change Volume (GMCV). Through this, users can protect and restore their volumes in the event of a disaster."
+      },
+      {
+        "text": "Enabling volume sharing allows users to attach multiple Power VS instances to their volume."
       }
     ],
-    "relatedLinks": [["https://ibm.com", "IBM"]]
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-modifying-server",
+        "Adding Volumes to a Power VS Instance"
+      ],
+      [
+        "https://www.linkedin.com/pulse/powervs-key-concepts-bogdan-savu/#:~:text=Instances%20%2D%20storage%20configuration-,Storage,-Tiers",
+        "PowerVS Storage Key Concepts"
+      ],
+      [
+        "https://www.ibm.com/docs/en/powervc/2.1.1?topic=volumes-working-shared",
+        "PowerVS Shared Volumes"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started-GRS",
+        "PowerVS Volume Replication"
+      ]
+    ]
   }
 }
