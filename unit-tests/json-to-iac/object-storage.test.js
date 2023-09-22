@@ -53,6 +53,47 @@ resource "ibm_resource_instance" "cos_object_storage" {
         "it should return correct data for cos"
       );
     });
+    it("should create an object storage resource instance with the correct plan when not `standard`", () => {
+      let actualData = formatCosInstance(
+        {
+          name: "cos",
+          plan: "lite",
+          resource_group: "slz-service-rg",
+          use_random_suffix: false,
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_resource_instance" "cos_object_storage" {
+  name              = "\${var.prefix}-cos-object-storage"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  service           = "cloud-object-storage"
+  location          = "global"
+  plan              = "lite"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data for cos"
+      );
+    });
     it("should create an object storage resource instance with random suffix", () => {
       let actualData = formatCosInstance(
         {

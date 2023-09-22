@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.3.0
+
+### Features
+- Users can now access COS plan from json schema
+
 ## 1.2.0
 
 ### Upgrade Notes

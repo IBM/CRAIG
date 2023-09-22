@@ -70,6 +70,9 @@ function cosOnStoreUpdate(config) {
     if (!splatContains(config.store.json.key_management, "name", cos.kms)) {
       cos.kms = null;
     }
+    if (!cos.plan) {
+      cos.plan = "standard";
+    }
   });
   cosSetStoreBucketsAndKeys(config, (instance) => {
     setUnfoundResourceGroup(config, instance);

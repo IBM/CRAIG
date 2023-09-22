@@ -203,6 +203,60 @@ describe("object_storage", () => {
         "it should have correct kms"
       );
     });
+    it("should default cos plan to `standard` on update if none is specified", () => {
+      let state = new newState();
+      state.object_storage.create({
+        name: "todd",
+        use_data: false,
+        resource_group: "default",
+        plan: null,
+        use_random_suffix: true,
+        kms: "kms",
+      });
+      state.update();
+      let expectedData = {
+        name: "todd",
+        use_data: false,
+        resource_group: null,
+        plan: "standard",
+        use_random_suffix: true,
+        keys: [],
+        buckets: [],
+        kms: "kms",
+      };
+      assert.deepEqual(
+        state.store.json.object_storage[2],
+        expectedData,
+        "it should create new cos"
+      );
+    });
+    it("should not automatically change existing cos plans to `standard` on update", () => {
+      let state = new newState();
+      state.object_storage.create({
+        name: "todd",
+        use_data: false,
+        resource_group: "default",
+        plan: "lite",
+        use_random_suffix: true,
+        kms: "kms",
+      });
+      state.update();
+      let expectedData = {
+        name: "todd",
+        use_data: false,
+        resource_group: null,
+        plan: "lite",
+        use_random_suffix: true,
+        keys: [],
+        buckets: [],
+        kms: "kms",
+      };
+      assert.deepEqual(
+        state.store.json.object_storage[2],
+        expectedData,
+        "it should create new cos"
+      );
+    });
   });
   describe("object_storage.buckets", () => {
     describe("object_storage.buckets.create", () => {

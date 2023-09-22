@@ -1,5 +1,9 @@
 [
   {
+    "version": "1.3.0",
+    "features": ["Users can now access COS plan from json schema"]
+  },
+  {
     "version": "1.2.0",
     "upgrade_notes": [
       "CDKTF compatibility has been temporarily removed as the code was not currently in use. We will continue to examine this as an option for the future."
