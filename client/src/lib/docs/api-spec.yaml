@@ -1,0 +1,388 @@
+openapi: 3.0.3
+info:
+  title: CRAIG API
+  description: |-
+    Cloud Resourcse and Infrastructure as Code Generator.
+
+    In order to use the CRAIG API, you must set the environment variable `API_KEY` to your IBM Cloud API Key
+  version: 1.2.0
+externalDocs:
+  description: To get started with CRAIG, visit here
+  url: https://github.ibm.com/craig-automation/CRAIG/blob/main/README.md
+tags:
+  - name: VSI
+    description: Endpoints for Virtual Server Instances
+  - name: Cluster
+    description: Endpoints for Clusters
+  - name: Schematics
+    description: Endpoints for IBM Cloud Schematics
+paths:
+  /api/vsi/{region}/instanceProfiles:
+    get:
+      tags:
+        - VSI
+      summary: Get a list of VSI Instance Profiles in a region for the cloud account linked to the API key
+      description: Get a list of VSI Instance Profiles in a region for the cloud account linked to the API key
+      operationId: getInstanceProfiles
+      parameters:
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region to get instance profiles from
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                example: ["bx2-32x128", "bx2-48x192", "bx2-4x16"]
+                items:
+                  type: string
+        "401":
+          description: Invalid token
+
+  /api/vsi/{region}/images:
+    get:
+      tags:
+        - VSI
+      summary: Returns a list of VSI Images in a region for the cloud account linked to the API key
+      description: Get a list of VSI Images in a region for the cloud account linked to the API key
+      operationId: getImages
+      parameters:
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region to get images from
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  [
+                    "CentOS 7.x - Minimal Install (amd64) [ibm-centos-7-9-minimal-amd64-11]",
+                    "CentOS Stream 8 - Minimal Install (amd64) [ibm-centos-stream-8-amd64-4]",
+                  ]
+                items:
+                  type: string
+        "401":
+          description: Unauthorized
+  /api/cluster/versions:
+    get:
+      tags:
+        - Cluster
+      summary: Returns a list of cluster versions
+      description: Get a list of cluster versions
+      operationId: getVersions
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  [
+                    "1.24.16",
+                    "1.25.12",
+                    "1.27.4",
+                    "4.9.59_openshift",
+                    "4.10.65_openshift",
+                  ]
+                items:
+                  type: string
+        "401":
+          description: Unauthorized
+  /api/cluster/{region}/flavors:
+    get:
+      tags:
+        - Cluster
+      summary: Returns a list of cluster flavors for a region
+      description: Get a list of cluster flavors for a region
+      operationId: getFlavors
+      parameters:
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region to get flavors from
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  [
+                    "bx2.16x64",
+                    "bx2.2x8",
+                    "bx2.32x128",
+                    "bx2.48x192",
+                    "bx2.4x16",
+                  ]
+                items:
+                  type: string
+        "401":
+          description: Unauthorized
+  /api/schematics/{workspaceName}:
+    put:
+      tags:
+        - Schematics
+      summary: Uploads tar file based on CRAIG data to specified workspace
+      description: Uploads craig.tar file to specified workspace.
+      operationId: getOrderById
+      parameters:
+        - in: path
+          name: workspaceName
+          required: true
+          schema:
+            type: string
+          description: Name of workspace to upload tar file into
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                craigJSON:
+                  description: JSON produced by CRAIG
+                  type: object
+                  example: {}
+
+      responses:
+        "200":
+          description: Successfully uploaded tar file to workspace
+        "400":
+          description: Tar file could not be read
+        "401":
+          description: Missing IBM Cloud token
+        "403":
+          description: Unauthorized
+        "404":
+          description: Workspace not found
+        "429":
+          description: Too many requests
+        "500":
+          description: IBM Cloud Schematics currently unavailable
+  /api/schematics/createWorkspace/{workspaceName}/{region}{resourceGroup}:
+    post:
+      tags:
+        - Schematics
+      summary: Creates schematics workspace
+      description: Creates schematics workspace
+      operationId: createUser
+      parameters:
+        - in: path
+          name: workspaceName
+          required: true
+          schema:
+            type: string
+          description: Name of schematics workspace to target
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region of the workspace to target
+        - in: path
+          name: resourceGroup
+          required: true
+          schema:
+            type: string
+          description: Resource group to target
+      responses:
+        "201":
+          description: Successfully created workspace in IBM Cloud Schematics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "400":
+          description: Invalid CRAIG JSON
+        "401":
+          description: Missing IBM Cloud token
+        "403":
+          description: Unauthorized
+        "404":
+          description: Workspace already exists
+        "409":
+          description: Workspace is frozen and disabled
+        "429":
+          description: Too many requests
+        "500":
+          description: IBM Cloud Schematics currently unavailable
+  /api/schematics/newWorkspaceUpload:
+    post:
+      tags:
+        - Schematics
+      summary: Creates schematics workspace and uploads tar file of CRAIG data
+      description: Creates schematics workspace and uploads tar file of CRAIG data
+      operationId: createUsersWithListInput
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                workspaceName:
+                  description: Name or workspace to create
+                  type: string
+                  example: my-workspace
+                region:
+                  description: Region to create workspace in
+                  type: string
+                  example: us-south
+                resourceGroup:
+                  description: Resource group workspace will belong to
+                  type: string
+                  example: defualt
+                craigJSON:
+                  description: JSON produced by CRAIG
+                  type: object
+                  example: {}
+              required:
+                - workspaceName
+                - region
+                - resourceGroup
+      responses:
+        "201":
+          description: Successfully created workspace and uploaded tar file
+        "400":
+          description: Tar file could not be read
+        "401":
+          description: Missing IBM Cloud token
+        "403":
+          description: Unauthorized
+        "404":
+          description: Workspace not found
+        "429":
+          description: Too many requests
+        "500":
+          description: IBM Cloud Schematics currently unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+components:
+  schemas:
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: string
+          example: us-east.workspace.testWorkspaceApi.bb026f5e
+        name:
+          type: string
+          example: testWorkspaceApi
+        crn:
+          type: string
+          example: crn:v1:staging:public:schematics:us-south:a/0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0:00000000-0000-0000-0000-00000000000:workspace:us-east.workspace.testWorkspaceApi.bb026f5e
+        type:
+          type: string
+          example: terraform_v1.0
+        description:
+          type: string
+          example: terraform workspace
+        resource_group:
+          type: string
+          example: ""
+        location:
+          type: string
+          example: us-east
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            ["department:HR", "application:compensation", "environment:staging"]
+        created_at:
+          type: string
+          example: "2021-09-28T11:34:22.881Z"
+        created_by:
+          example: schematics@ibm.com
+        status:
+          example: DRAFT
+        failure_reason:
+          example: ""
+        workspace_status_msg:
+          type: object
+          example: { status_code: "" }
+        workspace_status:
+          type: object
+          example: { frozen: true, frozen_by: schematics@ibm.com }
+        template_repo:
+          type: object
+          example:
+            {
+              url: https://github.com/ptaube/tf_cloudless_sleepy,
+              commit_id: "",
+              full_url: https://github.com/ptaube/tf_cloudless_sleepy,
+              has_uploadedgitrepotar: false,
+            }
+        template_data:
+          type: object
+          example:
+            {
+              id: 6fef745e-dfaa-42,
+              folder: .,
+              compact: false,
+              type: terraform_v1.0,
+              values_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/template_data/6fef745e-dfaa-42/values,
+              values: "",
+              has_githubtoken: false,
+              variablestore:
+                [
+                  {
+                    name: sample_var,
+                    secure: false,
+                    value: THIS IS IBM CLOUD TERRAFORM CLI DEMO,
+                    description: Description of sample_var,
+                  },
+                ],
+            }
+        runtime_data:
+          type: object
+          example:
+            {
+              id: 6fef745e-dfaa-42,
+              engine_name: terraform,
+              engine_version: v0.12.31,
+              state_store_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/runtime_data/6fef745e-dfaa-42/state_store,
+              log_store_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/runtime_data/6fef745e-dfaa-42/log_store,
+            }
+        shared_data:
+          type: object
+          example: { resource_group_id: "" }
+        applied_shareddata_ids:
+          type: string
+          example: null
+        updated_at:
+          type: string
+          example: "1901-01-01T00:00:00.000Z"
+        last_health_check_at:
+          type: string
+          example: "1901-01-01T00:00:00.000Z"
+        cart_id:
+          type: string
+          example: ""
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: "##default"
