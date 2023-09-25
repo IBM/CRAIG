@@ -36,7 +36,7 @@ class Tutorial extends React.Component {
     let index = this.state.index;
     let changeBy = direction === "forward" ? 1 : -1;
     if (index === 2 && direction === "forward") {
-      window.location.pathname = "/";
+      window.location.pathname = "/templates";
     } else if (this.state.index >= 0 && this.state.index <= 2) {
       this.setState({
         index: index + changeBy,

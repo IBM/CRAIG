@@ -40,7 +40,10 @@ describe("options", () => {
       oState = new newState(true);
     });
     it("should change the prefix when saved", () => {
-      oState.options.save({ prefix: "test" }, { data: { prefix: "iac" } });
+      oState.options.save(
+        { prefix: "test", showModal: false },
+        { data: { prefix: "iac" } }
+      );
       assert.deepEqual(oState.store.json._options.prefix, "test");
     });
     it("should update tags when saved", () => {

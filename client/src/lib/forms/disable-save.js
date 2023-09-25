@@ -839,7 +839,7 @@ function disableVpnServersSave(stateData, componentProps) {
       "method",
       "client_ip_pool",
     ]) ||
-    portRangeInvalid("port_min", stateData.port) ||
+    portRangeInvalid("port_min", parseInt(stateData.port)) ||
     (stateData.client_idle_timeout &&
       rangeInvalid(stateData.client_idle_timeout, 0, 28800)) ||
     invalidCrnList(

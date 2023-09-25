@@ -1,7 +1,10 @@
 [
   {
     "version": "1.3.0",
-    "features": ["Users can now access COS plan from json schema"]
+    "features": [
+      "Users can now access COS plan from JSON schema",
+      "Users can now create a project based on a template from the new instance templates page `/templates`."
+    ]
   },
   {
     "version": "1.2.0",

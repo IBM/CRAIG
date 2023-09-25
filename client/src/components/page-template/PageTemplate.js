@@ -30,6 +30,11 @@ import {
   IbmDb2,
   IbmPowerVs,
   VirtualMachine,
+  Template,
+  Home,
+  Help,
+  Bullhorn,
+  JsonReference,
   FileStorage,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
@@ -83,15 +88,18 @@ const navIcons = {
 };
 
 let pageOrder = [
-  { title: "About", path: "/docs/about" },
-  { title: "Release Notes", path: "/docs/releaseNotes" },
-  {
-    title: "JSON Documentation",
-    path: "/docs/json",
-  },
   {
     title: "Options",
     path: "/",
+    icon: Home,
+  },
+  { title: "Infrastructure Template", path: "/templates", icon: Template },
+  { title: "About", path: "/docs/about", icon: Help },
+  { title: "Release Notes", path: "/docs/releaseNotes", icon: Bullhorn },
+  {
+    title: "JSON Documentation",
+    path: "/docs/json",
+    icon: JsonReference,
   },
 ];
 

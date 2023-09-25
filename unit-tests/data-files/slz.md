@@ -708,3 +708,19 @@ Enabling volume sharing allows users to attach multiple Power VS instances to th
 - [PowerVS Volume Replication](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started-GRS)
 
 -----
+
+## Templates
+
+Import infrastructure template with all the needed resources to jump-start your environment customization
+
+Importing a template will override any existing customization changes.
+
+Pattern                    | Description
+---------------------------|---------------------------------------------------------------------------------------------------------------------------------
+Landing Zone Mixed Pattern | Create an FS Cloud Compliant environment with a management VPC, workload VPC, Virtual Servers, and a Red Hat OpenShift cluster.
+
+### Related Links
+
+- [IBM Secure Landing Zone Patterns](https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone/tree/main/.docs/patterns)
+
+-----

@@ -1,4 +1,3 @@
-const { config } = require("chai");
 const {
   resourceGroupTf,
   kmsTf,

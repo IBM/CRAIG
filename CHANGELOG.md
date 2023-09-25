@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 ## 1.3.0
 
 ### Features
-- Users can now access COS plan from json schema
+
+- Users can now access COS plan from JSON schema
+- Users can now create a project based on a template from the new instance templates page `/templates`.
 
 ## 1.2.0
 

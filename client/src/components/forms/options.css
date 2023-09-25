@@ -1,0 +1,26 @@
+.marginTopSmall {
+  margin-top: -1.5rem;
+}
+
+.magnifier {
+  cursor: zoom-in;
+}
+
+.borderGray {
+  border: 0.1px solid #d5d2d2;
+  box-shadow: 0 0.2px 0.2px 0 #d5d2d2;
+}
+
+.imageTileSize {
+  width: 40vw;
+}
+
+.tileStyles {
+  margin: 0rem 1.5rem 0 1rem;
+  text-align: center !important;
+  position: relative;
+}
+
+.rocketIcon {
+  margin-left: 0.6rem;
+}

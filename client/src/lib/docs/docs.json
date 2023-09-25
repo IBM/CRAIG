@@ -1550,5 +1550,30 @@
         "PowerVS Volume Replication"
       ]
     ]
+  },
+  "templates": {
+    "content": [
+      {
+        "text": "Import infrastructure template with all the needed resources to jump-start your environment customization"
+      },
+      {
+        "text": "Importing a template will override any existing customization changes."
+      },
+      {
+        "table": [
+          ["_headers", "Pattern", "Description"],
+          [
+            "Landing Zone Mixed Pattern",
+            "Create an FS Cloud Compliant environment with a management VPC, workload VPC, Virtual Servers, and a Red Hat OpenShift cluster."
+          ]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone/tree/main/.docs/patterns",
+        "IBM Secure Landing Zone Patterns"
+      ]
+    ]
   }
 }

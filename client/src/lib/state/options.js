@@ -43,6 +43,9 @@ function optionsSave(config, stateData, componentProps) {
       });
     });
   }
+  if (stateData.showModal !== undefined) {
+    delete stateData.showModal;
+  }
   config.updateChild(["json", "_options"], componentProps.data.name, stateData);
   if (stateData.zones !== componentProps.data.zones) {
     let zones = config.store.json._options.zones;

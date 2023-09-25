@@ -18,6 +18,7 @@ import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
+import { TemplatePage } from "./components/pages/TemplatePage";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -307,6 +308,8 @@ class Craig extends React.Component {
                 return craig.store.json.resource_groups.length === 1;
               }}
             />
+          ) : window.location.pathname === "/templates" ? (
+            <TemplatePage craig={craig} />
           ) : window.location.pathname === "/" ? (
             <Home craig={craig} />
           ) : window.location.pathname === "/summary" ? (

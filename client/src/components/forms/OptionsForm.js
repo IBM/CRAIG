@@ -9,33 +9,81 @@ import {
   IcseNumberSelect,
   IcseToggle,
   IcseMultiSelect,
+  IcseModal,
 } from "icse-react-assets";
 import PropTypes from "prop-types";
-import { Tag, TextArea } from "@carbon/react";
+import { Button, Tag, TextArea } from "@carbon/react";
 import {
   deepEqual,
   kebabCase,
   azsort,
   titleCase,
   contains,
-  isNullOrEmptyString,
   isEmpty,
 } from "lazy-z";
 import { invalidNewResourceName, invalidTagList } from "../../lib";
+import { Rocket } from "@carbon/icons-react";
+import "./options.css";
 
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
+
+const TemplateAbout = (props) => {
+  return (
+    <div
+      id={"pattern-info-" + props.template.name}
+      className="leftTextAlign marginBottomSmall subForm marginTopSmall displayFlex"
+    >
+      <div className="marginBottomSmaller">
+        <p className="patternDocText marginBottomSmall">
+          {props.template.patternDocText} This pattern includes:
+        </p>
+        <ul className="bullets indent marginBottomSmall">
+          {props.template.includes.map((item) => (
+            <li key={item}>
+              <p>{item}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="tileStyles">
+        <a
+          href={props.template.image}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="magnifier"
+        >
+          <img
+            src={props.template.image}
+            className="borderGray tileStyles imageTileSize"
+          />
+        </a>
+      </div>
+    </div>
+  );
+};
+
+TemplateAbout.propTypes = {
+  template: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    includes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    patternDocText: PropTypes.string.isRequired,
+    image: PropTypes.node.isRequired,
+  }).isRequired,
+};
 
 class OptionsForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       ...this.props.data,
+      showModal: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleTags = this.handleTags.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.disableSave = this.disableSave.bind(this);
     this.handlePowerZonesChange = this.handlePowerZonesChange.bind(this);
+    this.hardTemplateSet = this.hardTemplateSet.bind(this);
     buildFormFunctions(this);
   }
 
@@ -76,7 +124,8 @@ class OptionsForm extends React.Component {
     return (
       invalidNewResourceName(this.state.prefix) ||
       invalidTagList(this.state.tags) ||
-      deepEqual(this.state, this.props.craig.store.json._options) ||
+      (!this.props.template &&
+        deepEqual(this.state, this.props.craig.store.json._options)) ||
       (this.state.enable_power_vs &&
         (!this.state.power_vs_zones || isEmpty(this.state.power_vs_zones)))
     );
@@ -86,21 +135,64 @@ class OptionsForm extends React.Component {
     this.setState({ power_vs_zones: items.selectedItems });
   }
 
+  hardTemplateSet() {
+    let newTemplate = { ...this.props.template.template };
+    newTemplate._options = this.state;
+    this.props.craig.hardSetJson(newTemplate, true);
+    window.location.pathname = "/form/resourceGroups";
+  }
+
   render() {
     return (
       <>
-        <div className="tab-panel subForm">
+        {this.props.template && (
+          <TemplateAbout template={this.props.template} />
+        )}
+        <div
+          className={
+            "tab-panel " + (this.props.template ? "formInSubForm" : "subForm")
+          }
+        >
+          {this.props.template && (
+            <IcseModal
+              open={this.state.showModal}
+              heading={"Import " + this.props.template.name + " Template"}
+              primaryButtonText="Import"
+              onRequestClose={() => {
+                this.handleToggle("showModal");
+              }}
+              onRequestSubmit={this.hardTemplateSet}
+              danger
+            >
+              <p className="marginBottomSmall">
+                Import the current template into CRAIG for customization.
+              </p>
+              <p style={{ fontWeight: "bolder" }}>
+                This will overwrite any changes in your current configuration.
+              </p>
+            </IcseModal>
+          )}
           <IcseHeading
-            name="Environment Options"
+            name={
+              this.props.template
+                ? "Configure " + this.props.template.name + " Template"
+                : "Environment Options"
+            }
+            type={this.props.template ? "subHeading" : null}
             buttons={
-              <SaveAddButton
-                name="options"
-                onClick={() =>
-                  this.props.craig.options.save(this.state, this.props)
-                }
-                disabled={this.disableSave()}
-                type="save"
-              />
+              // don't display buttons when is a template
+              this.props.template ? (
+                ""
+              ) : (
+                <SaveAddButton
+                  name="options"
+                  onClick={() =>
+                    this.props.craig.options.save(this.state, this.props)
+                  }
+                  disabled={this.disableSave()}
+                  type="save"
+                />
+              )
             }
             className="marginBottomSmall"
           />
@@ -289,6 +381,18 @@ class OptionsForm extends React.Component {
               </Tag>
             ))}
           </div>
+          {this.props.template && (
+            <div className="marginBottomSmall">
+              <Button
+                disabled={this.disableSave()}
+                onClick={() => {
+                  this.handleToggle("showModal");
+                }}
+              >
+                Begin Customizing <Rocket className="rocketIcon" />
+              </Button>
+            </div>
+          )}
         </div>
       </>
     );
@@ -307,6 +411,13 @@ OptionsForm.propTypes = {
       }).isRequired,
     }).isRequired,
   }).isRequired,
+  template: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    includes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    patternDocText: PropTypes.string.isRequired,
+    image: PropTypes.node.isRequired,
+    template: PropTypes.shape({}).isRequired,
+  }),
 };
 
 export default OptionsForm;

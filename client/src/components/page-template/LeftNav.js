@@ -11,6 +11,7 @@ import {
   Bullhorn,
   JsonReference,
   Compass,
+  Template,
 } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
@@ -29,6 +30,15 @@ const LeftNav = (props) => {
       className={props.expanded ? "expanded" : "rail"}
     >
       <SideNavItems>
+        <LeftNavItem
+          item={{
+            path: "/templates",
+            icon: Template,
+            title: "Infrastructure Templates",
+          }}
+          key="Template"
+          expanded={props.expanded}
+        />
         <LeftNavItem
           item={{ path: "/", icon: Home, title: "Home" }}
           key="Home"
@@ -81,28 +91,35 @@ const LeftNav = (props) => {
             />
           </>
         )}
-        {props.navCategories.map((category) => (
-          <div key={kebabCase(category.name)}>
-            <SideNavDivider className={dividerClass} />
-            {props.expanded && (
-              <SideNavLink href="#">{category.name}</SideNavLink>
-            )}
-            {category.links.map((item) => (
-              <LeftNavItem
-                item={item}
-                key={item.title}
-                expanded={props.expanded}
-                fsCloud={props.fsCloud}
-                hasInvalidForm={
-                  props.isResetState
-                    ? false
-                    : contains(props.invalidForms, item.jsonField) ||
-                      contains(props.invalidForms, item.path)
+        {props.navCategories.map((category) => {
+          return (
+            <div key={kebabCase(category.name)}>
+              <SideNavDivider className={dividerClass} />
+              {props.expanded && (
+                <SideNavLink href="#">{category.name}</SideNavLink>
+              )}
+              {category.links.map((item) => {
+                if (!item.icon) {
+                  console.log(item);
                 }
-              />
-            ))}
-          </div>
-        ))}
+                return (
+                  <LeftNavItem
+                    item={item}
+                    key={item.title}
+                    expanded={props.expanded}
+                    fsCloud={props.fsCloud}
+                    hasInvalidForm={
+                      props.isResetState
+                        ? false
+                        : contains(props.invalidForms, item.jsonField) ||
+                          contains(props.invalidForms, item.path)
+                    }
+                  />
+                );
+              })}
+            </div>
+          );
+        })}
       </SideNavItems>
     </SideNav>
   );
