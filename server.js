@@ -6,9 +6,7 @@ const app = express();
 const port = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
 const guiBuild = path.join(__dirname, "build");
-const clusterRoutes = require("./express-routes/cluster-api");
-const vsiRoutes = require("./express-routes/vsi-api");
-const schematicsRoutes = require("./express-routes/schematics-api");
+const routes = require("./express-routes/routes");
 
 app.use(express.static(guiBuild));
 app.use(bodyParser.json());
@@ -21,7 +19,7 @@ app.get("/express_backend", (req, res) => {
   res.send({ express: "YOUR EXPRESS BACKEND IS CONNECTED TO CRAIG" });
 });
 
-app.use("/api", clusterRoutes, schematicsRoutes, vsiRoutes);
+app.use("/api", routes);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(guiBuild, "index.html"));
