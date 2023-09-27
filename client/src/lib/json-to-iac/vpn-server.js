@@ -1,5 +1,6 @@
 const { snakeCase, kebabCase, isNullOrEmptyString } = require("lazy-z");
-const { rgIdRef, tfBlock, jsonToTfPrint } = require("./utils");
+const { rgIdRef, tfBlock, jsonToTfPrint, kebabName } = require("./utils");
+const { formatAddressPrefix } = require("./vpc");
 /**
  * format vpn server
  * @param {Object} server
@@ -34,9 +35,7 @@ function ibmIsVpnServer(server, craig) {
       : server.client_idle_timeout,
     client_ip_pool: server.client_ip_pool,
     enable_split_tunneling: server.enable_split_tunneling,
-    name: kebabCase(
-      `${craig._options.prefix} ${server.vpc} ${server.name} server`
-    ),
+    name: kebabName([server.vpc, server.name, "server"]),
     port: isNullOrEmptyString(server.port) ? null : server.port,
     protocol: server.protocol,
     resource_group: rgIdRef(server.resource_group, craig),
@@ -73,15 +72,11 @@ function ibmIsVpnServer(server, craig) {
  * @param {string} route.action
  * @param {string} route.destination
  * @param {string} server.vpc
- * @param {Object} craig
- * @param {string} craig._options.prefix
  * @returns {Object} terraform formatted server
  */
-function ibmIsVpnServerRoute(server, route, craig) {
+function ibmIsVpnServerRoute(server, route) {
   let routeData = {
-    name: `${craig._options.prefix}-${kebabCase(server.vpc)}-${kebabCase(
-      route.name
-    )}-route`,
+    name: kebabName([server.vpc, route.name, "route"]),
     action: route.action,
     destination: route.destination,
     vpn_server: `\${ibm_is_vpn_server.${snakeCase(
@@ -146,6 +141,19 @@ function vpnServerTf(config) {
   }
   config.vpn_servers.forEach((server) => {
     tf += formatVpnServer(server, config);
+    if (server.additional_prefixes) {
+      server.additional_prefixes.forEach((prefix) => {
+        tf += formatAddressPrefix({
+          vpc: server.vpc,
+          zone: server.zone,
+          cidr: prefix,
+          name: `vpn-${kebabCase(server.name)}-on-prem-${prefix.replace(
+            /\.|\//g,
+            "-"
+          )}`,
+        });
+      });
+    }
     server.routes.forEach((route) => {
       tf += formatVpnServerRoute(server, route, config);
     });

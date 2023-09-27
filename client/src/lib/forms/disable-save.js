@@ -35,7 +35,10 @@ const {
   invalidCpuCallback,
   invalidTagList,
 } = require("./invalid-callbacks");
-const { commaSeparatedIpListExp } = require("../constants");
+const {
+  commaSeparatedIpListExp,
+  commaSeparatedCidrListExp,
+} = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
 /**
@@ -853,7 +856,16 @@ function disableVpnServersSave(stateData, componentProps) {
         null) ||
     isEmpty(stateData.subnets) ||
     (!isNullOrEmptyString(stateData.port) &&
-      !validPortRange("port_min", stateData.port))
+      !validPortRange("port_min", stateData.port)) ||
+    // if additional prefixes don't match cidr return true
+    (!isNullOrEmptyString(stateData.additional_prefixes) &&
+      stateData.additional_prefixes
+        .join(",")
+        .replace(/\s*/g, "")
+        .match(commaSeparatedCidrListExp) === null) ||
+    // if additional prefixes is fine but no zone is selected return true
+    (!isEmpty(stateData.additional_prefixes) &&
+      isNullOrEmptyString(stateData.zone))
   );
 }
 

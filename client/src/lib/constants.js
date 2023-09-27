@@ -328,6 +328,101 @@ module.exports = {
     .anyNumber()
     .stringEnd()
     .done("i"),
+  commaSeparatedCidrListExp: new RegexButWithWords()
+    .stringBegin()
+    .group((exp) => {
+      exp.group((exp) => {
+        exp
+          .wordBoundary()
+          .group((exp) => {
+            exp
+              .group((exp) => {
+                exp
+                  .literal("25")
+                  .set("0-5")
+                  .or()
+                  .literal("2")
+                  .set("0-4")
+                  .digit()
+                  .or()
+                  .set("01")
+                  .lazy()
+                  .digit(1, 2);
+              })
+              .literal(".");
+          }, 3)
+          .group((exp) => {
+            exp
+              .literal("25")
+              .set("0-5")
+              .or()
+              .literal("2")
+              .set("0-4")
+              .digit()
+              .or()
+              .set("01")
+              .lazy()
+              .digit(1, 2);
+          })
+          .wordBoundary()
+          .group((exp) => {
+            exp.group((exp) => {
+              exp.literal("/").group((exp) => {
+                exp.literal("3").set("0-2").or().set("012").lazy().digit();
+              });
+            });
+          });
+      });
+    })
+    .anyNumber()
+    .group((exp) => {
+      exp
+        .literal(",")
+        .whitespace()
+        .anyNumber()
+        .wordBoundary()
+        .group((exp) => {
+          exp
+            .group((exp) => {
+              exp
+                .literal("25")
+                .set("0-5")
+                .or()
+                .literal("2")
+                .set("0-4")
+                .digit()
+                .or()
+                .set("01")
+                .lazy()
+                .digit(1, 2);
+            })
+            .literal(".");
+        }, 3)
+        .group((exp) => {
+          exp
+            .literal("25")
+            .set("0-5")
+            .or()
+            .literal("2")
+            .set("0-4")
+            .digit()
+            .or()
+            .set("01")
+            .lazy()
+            .digit(1, 2);
+        })
+        .wordBoundary()
+        .group((exp) => {
+          exp.group((exp) => {
+            exp.literal("/").group((exp) => {
+              exp.literal("3").set("0-2").or().set("012").lazy().digit();
+            });
+          });
+        });
+    })
+    .anyNumber()
+    .stringEnd()
+    .done("gm"),
   clusterRules: [
     {
       name: "roks-create-worker-nodes-inbound",

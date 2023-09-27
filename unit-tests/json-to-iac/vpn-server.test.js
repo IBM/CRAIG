@@ -43,7 +43,53 @@ describe("vpn server", () => {
           client_idle_timeout: 2000,
           client_ip_pool: "xyz",
           enable_split_tunneling: true,
-          name: "slz-management-abc-server",
+          name: "${var.prefix}-management-abc-server",
+          port: 255,
+          protocol: "udp",
+          resource_group: "${ibm_resource_group.slz_management_rg.id}",
+          subnets: ["${module.management_vpc.vsi_zone_1_id}"],
+          security_groups: ["${module.management_vpc.management_vpe_sg_id}"],
+        },
+      };
+      assert.deepEqual(actualData, expectedData, "should return correct data");
+    });
+    it("should return correct json object for vpn server using certificate with additional address prefixes", () => {
+      let actualData = ibmIsVpnServer(
+        {
+          name: "abc",
+          certificate_crn: "xyz",
+          method: "certificate",
+          client_ca_crn: "hij",
+          client_ip_pool: "xyz",
+          client_dns_server_ips: "optional",
+          client_idle_timeout: 2000,
+          enable_split_tunneling: true,
+          port: 255,
+          protocol: "udp",
+          resource_group: "slz-management-rg",
+          security_groups: ["management-vpe-sg"],
+          subnets: ["vsi-zone-1"],
+          vpc: "management",
+          routes: [],
+          additional_prefixes: ["127.0.0.1"],
+        },
+        slzNetwork
+      );
+      let expectedData = {
+        name: "management_vpn_server_abc",
+        data: {
+          certificate_crn: "xyz",
+          client_authentication: [
+            {
+              method: "certificate",
+              client_ca_crn: "hij",
+            },
+          ],
+          client_dns_server_ips: ["optional"],
+          client_idle_timeout: 2000,
+          client_ip_pool: "xyz",
+          enable_split_tunneling: true,
+          name: "${var.prefix}-management-abc-server",
           port: 255,
           protocol: "udp",
           resource_group: "${ibm_resource_group.slz_management_rg.id}",
@@ -88,7 +134,7 @@ describe("vpn server", () => {
           client_idle_timeout: 2000,
           client_ip_pool: "xyz",
           enable_split_tunneling: true,
-          name: "slz-management-abc-server",
+          name: "${var.prefix}-management-abc-server",
           port: null,
           protocol: "udp",
           resource_group: "${ibm_resource_group.slz_management_rg.id}",
@@ -133,7 +179,7 @@ describe("vpn server", () => {
           client_idle_timeout: 2000,
           client_ip_pool: "xyz",
           enable_split_tunneling: true,
-          name: "slz-management-abc-server",
+          name: "${var.prefix}-management-abc-server",
           port: 255,
           protocol: "udp",
           resource_group: "${ibm_resource_group.slz_management_rg.id}",
@@ -178,7 +224,7 @@ describe("vpn server", () => {
           client_idle_timeout: null,
           client_ip_pool: "xyz",
           enable_split_tunneling: true,
-          name: "slz-management-abc-server",
+          name: "${var.prefix}-management-abc-server",
           port: 255,
           protocol: "udp",
           resource_group: "${ibm_resource_group.slz_management_rg.id}",
@@ -213,7 +259,7 @@ describe("vpn server", () => {
       let expectedData = {
         name: "management_vpn_server_route_qwe",
         data: {
-          name: "slz-management-qwe-route",
+          name: "${var.prefix}-management-qwe-route",
           action: "translate",
           destination: "172.16.0.0/16",
           vpn_server: "${ibm_is_vpn_server.management_vpn_server_abc.id}",
@@ -249,7 +295,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   certificate_crn        = "xyz"
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
-  name                   = "iac-management-abc-server"
+  name                   = "\${var.prefix}-management-abc-server"
   port                   = 255
   protocol               = "udp"
   resource_group         = ibm_resource_group.slz_management_rg.id
@@ -267,6 +313,13 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   ]
 }
 
+resource "ibm_is_vpc_address_prefix" "management_vpn_abc_on_prem_127_0_0_1_5_prefix" {
+  name = "\${var.prefix}-management-vpn-abc-on-prem-127-0-0-1-5"
+  vpc  = ibm_is_vpc.management_vpc.id
+  zone = "\${var.region}-1"
+  cidr = "127.0.0.1/5"
+}
+
 ##############################################################################
 `;
       assert.deepEqual(
@@ -281,6 +334,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
               client_dns_server_ips: "",
               client_idle_timeout: "",
               enable_split_tunneling: true,
+              zone: 1,
               port: 255,
               protocol: "udp",
               resource_group: "slz-management-rg",
@@ -288,6 +342,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
               subnets: ["vsi-zone-1"],
               vpc: "management",
               routes: [],
+              additional_prefixes: ["127.0.0.1/5"],
             },
           ],
           _options: {

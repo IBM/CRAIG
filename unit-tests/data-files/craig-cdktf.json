@@ -691,7 +691,7 @@
         "client_dns_server_ips": ["192.168.3.4"],
         "client_idle_timeout": 2000,
         "enable_split_tunneling": true,
-        "name": "slz-management-vpn-server-server",
+        "name": "${var.prefix}-management-vpn-server-server",
         "port": 255,
         "protocol": "udp",
         "resource_group": "${ibm_resource_group.slz_management_rg.id}",
@@ -701,7 +701,7 @@
     },
     "ibm_is_vpn_server_route": {
       "management_vpn_server_route_vpn_route": {
-        "name": "slz-management-vpn-route-route",
+        "name": "${var.prefix}-management-vpn-route-route",
         "action": "translate",
         "destination": "172.16.0.0/16",
         "vpn_server": "${ibm_is_vpn_server.management_vpn_server_vpn_server.id}"

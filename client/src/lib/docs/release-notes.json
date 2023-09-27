@@ -3,7 +3,11 @@
     "version": "1.3.0",
     "features": [
       "Users can now access COS plan from JSON schema",
-      "Users can now create a project based on a template from the new instance templates page `/templates`."
+      "Users can now create a project based on a template from the new instance templates page `/templates`",
+      "Users can now add additional VPC address prefixes from the VPN Server form. This will allow users to connect their on prem network directly to Power VS"
+    ],
+    "fixed": [
+      "Fixed an issue causing the variable `var.prefix` from being added to VPN Server names"
     ]
   },
   {

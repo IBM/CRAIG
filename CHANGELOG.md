@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users can now access COS plan from JSON schema
-- Users can now create a project based on a template from the new instance templates page `/templates`.
+- Users can now create a project based on a template from the new instance templates page `/templates`
+- Users can now add additional VPC address prefixes from the VPN Server form. This will allow users to connect their on prem network directly to Power VS
 
 ## 1.2.0
 

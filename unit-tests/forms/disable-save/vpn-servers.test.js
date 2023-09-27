@@ -340,6 +340,71 @@ describe("vpn_servers", () => {
     );
     assert.isTrue(actualData, "it should be disabled");
   });
+  it("should return true if invalid list of cidr for additional address prefixes", () => {
+    let actualData = disableSave(
+      "vpn_servers",
+      {
+        name: "aaa",
+        resource_group: "aa",
+        vpc: "aaa",
+        subnets: ["aa"],
+        security_groups: ["aaa"],
+        certificate_crn: "CHEATER",
+        client_dns_server_ips: "1.2.3.4",
+        method: "username",
+        port: 1,
+        client_ip_pool: "1.2.3.4/23",
+        client_ca_crn: "CHEATER",
+        additional_prefixes: ["1.2"],
+      },
+      {
+        data: {
+          name: "",
+        },
+        craig: {
+          store: {
+            json: {
+              vpn_servers: [],
+            },
+          },
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
+  it("should return true if valid list of cidr for additional address prefixes but no zone", () => {
+    let actualData = disableSave(
+      "vpn_servers",
+      {
+        name: "aaa",
+        resource_group: "aa",
+        vpc: "aaa",
+        subnets: ["aa"],
+        security_groups: ["aaa"],
+        certificate_crn: "CHEATER",
+        client_dns_server_ips: "1.2.3.4",
+        method: "username",
+        port: 1,
+        client_ip_pool: "1.2.3.4/23",
+        client_ca_crn: "CHEATER",
+        additional_prefixes: ["1.2.3.4/5"],
+        zone: "",
+      },
+      {
+        data: {
+          name: "",
+        },
+        craig: {
+          store: {
+            json: {
+              vpn_servers: [],
+            },
+          },
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
   it("should return false if fields are otherwise valid when method is certificate", () => {
     let actualData = disableSave(
       "vpn_servers",
@@ -357,6 +422,7 @@ describe("vpn_servers", () => {
         client_idle_timeout: 2,
         client_ip_pool: "1.2.3.4/23",
         client_ca_crn: "CHEATER",
+        additional_prefixes: [],
       },
       {
         data: {
@@ -391,6 +457,7 @@ describe("vpn_servers", () => {
         client_idle_timeout: 2,
         client_ip_pool: "1.2.3.4/23",
         client_ca_crn: "",
+        additional_prefixes: [],
       },
       {
         data: {

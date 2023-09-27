@@ -20,6 +20,9 @@ function vpnServerInit(config) {
 function vpnServerOnStoreUpdate(config) {
   config.store.json.vpn_servers.forEach((server) => {
     config.setUnfound("resourceGroups", server, "resource_group");
+    if (!server.additional_prefixes) {
+      server.additional_prefixes = [];
+    }
     // update vpc
     if (hasUnfoundVpc(config, server)) {
       server.vpc = null;

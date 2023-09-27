@@ -86,14 +86,10 @@ function formatVpc(vpc, config, useVarRef) {
  * @param {string} address.cidr
  * @param {string} address.vpc vpc name
  * @param {number} address.zone
- * @param {Object} config
- * @param {Object} config._options
- * @param {string} config._options.prefix
- * @param {string} config._options.region
  * @returns {object} terraform code
  */
 
-function ibmIsVpcAddressPrefix(address, config) {
+function ibmIsVpcAddressPrefix(address) {
   return {
     name: `${address.vpc}-${address.name}-prefix`,
     data: {

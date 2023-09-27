@@ -36,6 +36,7 @@ describe("vpn_servers", () => {
         security_groups: ["management-vpe"],
         subnets: ["vsi-zone-1"],
         vpc: "blah",
+        additional_prefixes: [],
       });
       let expectedData = {
         name: "vpn-server",
@@ -53,6 +54,7 @@ describe("vpn_servers", () => {
         subnets: [],
         vpc: null,
         routes: [],
+        additional_prefixes: [],
       };
       assert.deepEqual(state.store.json.vpn_servers[0], expectedData);
     });
@@ -91,6 +93,7 @@ describe("vpn_servers", () => {
         subnets: ["vsi-zone-1"],
         vpc: "management",
         routes: [],
+        additional_prefixes: [],
       };
       assert.deepEqual(state.store.json.vpn_servers[0], expectedData);
     });
@@ -135,6 +138,7 @@ describe("vpn_servers", () => {
           subnets: ["vsi-zone-1"],
           vpc: "management",
           routes: [],
+          additional_prefixes: [],
         },
       ];
       assert.deepEqual(state.store.json.vpn_servers, expectedData);
@@ -198,6 +202,7 @@ describe("vpn_servers", () => {
         subnets: ["vsi-zone-1"],
         vpc: "management",
         routes: [],
+        additional_prefixes: [],
       };
       assert.deepEqual(state.store.json.vpn_servers[0], expectedData);
     });

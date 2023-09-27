@@ -315,11 +315,11 @@ class OptionsForm extends React.Component {
                     "au-syd": ["syd04", "syd05"],
                     "eu-de": ["eu-de-1", "eu-de-2"],
                     "eu-gb": ["lon04", "lon06"],
-                    "us-east": ["us-east"],
+                    "us-east": ["us-east", "wdc06"],
                     "us-south": ["us-south", "dal10", "dal12"],
                     "jp-tok": ["tok04"],
                     "br-sao": ["sao01"],
-                    "ca-tor": ["tor1"],
+                    "ca-tor": ["tor01"],
                   }[this.state.region]
                 }
                 invalid={

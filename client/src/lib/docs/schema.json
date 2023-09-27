@@ -580,7 +580,8 @@
           "action": "string",
           "destination": "string"
         }
-      }
+      },
+      "additional_prefixes": "Array<string>"
     }
   },
   "dns": {
