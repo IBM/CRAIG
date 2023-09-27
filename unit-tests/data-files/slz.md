@@ -673,20 +673,33 @@ Cloud Connections | - `You can use IBM Cloud connections to connect your Power S
 
 - [Getting started with IBM Power Systems Virtual Servers](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started)
 - [Generating an SSH Key](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-create-vm#ssh-setup)
-- [Public & Private Network on PowerVS](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#public-private-networks)
+- [Public & Private Network on Power VS](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#public-private-networks)
 - [Network Security](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-network-security)
-- [Managing PowerVS Cloud Connections](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-cloud-connections)
+- [Managing Power VS Cloud Connections](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-cloud-connections)
 - [Power Edge Router Docs](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-per)
 
 -----
 
 ## Power Instances
 
-NYI
+To provision a Power Systems Virtual Server instance, first ensure that Power VS is enabled in the Options page, along with the zone(s) you would like to provision Power VS resources in. Then create a Power VS workspace and be sure to import any images you will need for your Power VS instance along with your SSH Keys and Network Interfaces for connectivity. At least one SSH Key and one Network interface are required to create a Power VS Instance in a Power VS workspace.
+
+Refer to the following table for more information on Power Systems Virtual Server instance fields:
+
+Instance Fields
+System Type      | - `Specify the machine type. The machine type that you select determines the number of cores and memory that is available. For more information about machine types, see Hardware Specification documentation.`
+Processor Type   | - `When deploying a VM, customers can choose between dedicated, capped shared, or uncapped shared processors for their virtual CPUs (vCPUs). The following list provides a simplified breakdown of their differences: Dedicated: resources are allocated for a specific client (used for specific third-party considerations). Uncapped shared: shared among other clients. Capped shared: shared, but resources do not expand beyond those that are requested (used mostly for licensing). For more information on processor types, see 'What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?' documentation.`
+Storage Type     | - `For each Power Systems Virtual Server instance, you must select a storage tier - Tier 1 or Tier 3. The storage tiers in Power Systems Virtual Server are based on I/O operations per second (IOPS). It means that the performance of your storage volumes is limited to the maximum number of IOPS based on volume size and storage tier. Although, the exact numbers might change over time, the Tier 3 storage is currently set to 3 IOPS/GB, and the Tier 1 storage is currently set to 10 IOPS/GB. For example, a 100 GB Tier 3 storage volume can receive up to 300 IOPs, and a 100 GB Tier 1 storage volume can receive up to 1000 IOPS. After the IOPS limit is reached for the storage volume, the I/O latency increases. For more information on storage types, see Storage Tiers documentation.`
+Cores/Processors | - `There is a core-to-vCPU ratio of 1:1. For shared processors, fractional cores round up to the nearest whole number. For example, 1.25 cores equals 2 vCPUs. If the system type is S922 and operating system is IBM i, IBM i supports maximum of 4 cores per VM.`
+Memory           | - `Select the amount of memory for the Power Systems Virtual Server. If you choose to use more than 64 GBs of memory per core, you are charged a higher price. For example, when you choose one core with 128 GBs of memory, you are charged the regular price for the first 64 GBs. After the first 64 GBs (64 - 128 GBs), you are charged a higher price.`
 
 ### Related Links
 
-- [IBM](https://ibm.com)
+- [Creating a Power Systems Virtual Server](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-creating-power-virtual-server)
+- [IBM Power Hardware Specifications](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#hardware-specifications)
+- [What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-power-iaas-faqs#processor)
+- [IBM Power Storage Tiers](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#storage-tiers)
+- [Configuring and adding a private network subnet](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-subnet)
 
 -----
 
@@ -703,9 +716,9 @@ Enabling volume sharing allows users to attach multiple Power VS instances to th
 ### Related Links
 
 - [Adding Volumes to a Power VS Instance](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-modifying-server)
-- [PowerVS Storage Key Concepts](https://www.linkedin.com/pulse/powervs-key-concepts-bogdan-savu/#:~:text=Instances%20%2D%20storage%20configuration-,Storage,-Tiers)
-- [PowerVS Shared Volumes](https://www.ibm.com/docs/en/powervc/2.1.1?topic=volumes-working-shared)
-- [PowerVS Volume Replication](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started-GRS)
+- [Power VS Storage Key Concepts](https://www.linkedin.com/pulse/powervs-key-concepts-bogdan-savu/#:~:text=Instances%20%2D%20storage%20configuration-,Storage,-Tiers)
+- [Power VS Shared Volumes](https://www.ibm.com/docs/en/powervc/2.1.1?topic=volumes-working-shared)
+- [Power VS Volume Replication](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started-GRS)
 
 -----
 
