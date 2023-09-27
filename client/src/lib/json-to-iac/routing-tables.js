@@ -21,6 +21,8 @@ function ibmIsVpcRoutingTable(table, config) {
       route_direct_link_ingress: table.route_direct_link_ingress,
       route_transit_gateway_ingress: table.route_transit_gateway_ingress,
       route_vpc_zone_ingress: table.route_vpc_zone_ingress,
+      accept_routes_from_resource_type:
+        table.accept_routes_from_resource_type || undefined,
     },
   };
 }
