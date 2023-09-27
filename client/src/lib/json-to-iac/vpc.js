@@ -105,10 +105,14 @@ function ibmIsVpcAddressPrefix(address) {
  * format vpc address prefix
  * @param {Object} address
  * @param {Object} config
+ * @param {boolean=} isOutsideVpc use module ref instead of vpc ref
  * @returns {string} terraform code
  */
-function formatAddressPrefix(address, config) {
+function formatAddressPrefix(address, config, isOutsideVpc) {
   let prefix = ibmIsVpcAddressPrefix(address, config);
+  if (isOutsideVpc) {
+    prefix.data.vpc = prefix.data.vpc.replace("ibm_is_vpc", "module");
+  }
   return jsonToTfPrint(
     "resource",
     "ibm_is_vpc_address_prefix",

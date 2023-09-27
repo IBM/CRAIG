@@ -143,15 +143,19 @@ function vpnServerTf(config) {
     tf += formatVpnServer(server, config);
     if (server.additional_prefixes) {
       server.additional_prefixes.forEach((prefix) => {
-        tf += formatAddressPrefix({
-          vpc: server.vpc,
-          zone: server.zone,
-          cidr: prefix,
-          name: `vpn-${kebabCase(server.name)}-on-prem-${prefix.replace(
-            /\.|\//g,
-            "-"
-          )}`,
-        });
+        tf += formatAddressPrefix(
+          {
+            vpc: server.vpc,
+            zone: server.zone,
+            cidr: prefix,
+            name: `vpn-${kebabCase(server.name)}-on-prem-${prefix.replace(
+              /\.|\//g,
+              "-"
+            )}`,
+          },
+          config,
+          true
+        );
       });
     }
     server.routes.forEach((route) => {

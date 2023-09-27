@@ -315,7 +315,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
 
 resource "ibm_is_vpc_address_prefix" "management_vpn_abc_on_prem_127_0_0_1_5_prefix" {
   name = "\${var.prefix}-management-vpn-abc-on-prem-127-0-0-1-5"
-  vpc  = ibm_is_vpc.management_vpc.id
+  vpc  = module.management_vpc.id
   zone = "\${var.region}-1"
   cidr = "127.0.0.1/5"
 }
