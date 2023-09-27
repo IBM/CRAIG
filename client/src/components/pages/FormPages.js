@@ -857,7 +857,7 @@ const SubnetsPage = (craig) => {
       invalidNameText={invalidNameText}
       getSubnetTierStateData={getSubnetTierStateData}
       getTierSubnets={getTierSubnets}
-      onSubnetSubmit={craig.vpcs.subnetTiers.create}
+      onSubnetSubmit={craig.vpcs.subnetTiers}
       onSubnetSave={craig.vpcs.subnets.save}
       onSubnetTierSave={craig.vpcs.subnetTiers.save}
       onSubnetTierDelete={craig.vpcs.subnetTiers.delete}

@@ -269,7 +269,7 @@ class OptionsForm extends React.Component {
               formName="options"
               name="zones"
               labelText="Availability Zones"
-              value={this.state.zones}
+              value={this.state.zones || 3}
               handleInputChange={this.handleChange}
               className="fieldWidth"
               tooltip={{

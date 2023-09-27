@@ -572,7 +572,7 @@ function disableVsiSave(stateData, componentProps) {
       "profile",
       "encryption_key",
     ]) ||
-    !isInRange(stateData.vsi_per_subnet, 1, 10) ||
+    !isInRange(parseInt(stateData.vsi_per_subnet), 1, 10) ||
     anyAreEmpty(
       stateData.security_groups,
       stateData.subnets,
