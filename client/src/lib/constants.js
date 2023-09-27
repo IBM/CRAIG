@@ -381,13 +381,13 @@ module.exports = {
     .done("i"),
   commaSeparatedCidrListExp: new RegexButWithWords()
     .stringBegin()
-    .group((exp) => {
-      exp.group((exp) => {
+    .group(exp => {
+      exp.group(exp => {
         exp
           .wordBoundary()
-          .group((exp) => {
+          .group(exp => {
             exp
-              .group((exp) => {
+              .group(exp => {
                 exp
                   .literal("25")
                   .set("0-5")
@@ -402,7 +402,7 @@ module.exports = {
               })
               .literal(".");
           }, 3)
-          .group((exp) => {
+          .group(exp => {
             exp
               .literal("25")
               .set("0-5")
@@ -416,25 +416,31 @@ module.exports = {
               .digit(1, 2);
           })
           .wordBoundary()
-          .group((exp) => {
-            exp.group((exp) => {
-              exp.literal("/").group((exp) => {
-                exp.literal("3").set("0-2").or().set("012").lazy().digit();
+          .group(exp => {
+            exp.group(exp => {
+              exp.literal("/").group(exp => {
+                exp
+                  .literal("3")
+                  .set("0-2")
+                  .or()
+                  .set("012")
+                  .lazy()
+                  .digit();
               });
             });
           });
       });
     })
     .anyNumber()
-    .group((exp) => {
+    .group(exp => {
       exp
         .literal(",")
         .whitespace()
         .anyNumber()
         .wordBoundary()
-        .group((exp) => {
+        .group(exp => {
           exp
-            .group((exp) => {
+            .group(exp => {
               exp
                 .literal("25")
                 .set("0-5")
@@ -449,7 +455,7 @@ module.exports = {
             })
             .literal(".");
         }, 3)
-        .group((exp) => {
+        .group(exp => {
           exp
             .literal("25")
             .set("0-5")
@@ -463,10 +469,16 @@ module.exports = {
             .digit(1, 2);
         })
         .wordBoundary()
-        .group((exp) => {
-          exp.group((exp) => {
-            exp.literal("/").group((exp) => {
-              exp.literal("3").set("0-2").or().set("012").lazy().digit();
+        .group(exp => {
+          exp.group(exp => {
+            exp.literal("/").group(exp => {
+              exp
+                .literal("3")
+                .set("0-2")
+                .or()
+                .set("012")
+                .lazy()
+                .digit();
             });
           });
         });
