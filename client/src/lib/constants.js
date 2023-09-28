@@ -684,6 +684,15 @@ module.exports = {
     },
   },
   edgeRouterEnabledZones: ["dal10"],
+  cosPlans: [
+    "standard",
+    "lite",
+    "cos-one-rate-plan",
+    "cos-satellite-12tb-plan",
+    "cos-satellite-24tb-plan",
+    "cos-satellite-48tb-plan",
+    "cos-satellite-96tb-plan",
+  ],
   powerStoragePoolRegionMap: {
     syd04: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
     syd05: [

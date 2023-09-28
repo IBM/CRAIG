@@ -94,7 +94,7 @@ import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
-import { edgeRouterEnabledZones } from "../../lib/constants";
+import { edgeRouterEnabledZones, cosPlans } from "../../lib/constants";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -272,8 +272,8 @@ const DnsPage = (craig) => {
       dns={craig.store.json.dns}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
-      onDelete={craig.dns.save}
-      onSave={craig.dns.delete}
+      onDelete={craig.dns.delete}
+      onSave={craig.dns.save}
       onSubmit={craig.dns.create}
       forceOpen={forceShowForm}
       invalidTextCallback={invalidNameText("dns")}
@@ -485,6 +485,7 @@ const ObjectStoragePage = (craig) => {
       forceOpen={forceShowForm}
       craig={craig}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      cosPlans={cosPlans}
       encryptionKeys={craig.store.encryptionKeys}
       kmsList={splat(craig.store.json.key_management, "name")}
       invalidCallback={invalidName("object_storage")}

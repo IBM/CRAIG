@@ -1,4 +1,4 @@
-const { splat, splatContains } = require("lazy-z");
+const { splat, splatContains, kebabCase } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultCos } = require("./defaults");
 const {
