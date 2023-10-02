@@ -12,6 +12,12 @@ All notable changes to this project will be documented in this file.
 - Users can now add additional VPC address prefixes from the VPN Server form. This will allow users to connect their on prem network directly to Power VS
 - Users can now provide `accept_routes_from_resource_type` to Routing Tables for `vpn_gateway` and `vpn_server`
 
+### Fixes
+
+- Fixed an issue causing the variable `var.prefix` from being added to VPN Server names
+- Fixed an issue causing DNS services to not save or be deleted correctly
+- Fixed an issue causing the VPN Servers Page to crash when modifying client idle timeout value
+
 ## 1.2.0
 
 ### Upgrade Notes

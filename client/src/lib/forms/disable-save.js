@@ -844,7 +844,7 @@ function disableVpnServersSave(stateData, componentProps) {
     ]) ||
     portRangeInvalid("port_min", parseInt(stateData.port)) ||
     (stateData.client_idle_timeout &&
-      rangeInvalid(stateData.client_idle_timeout, 0, 28800)) ||
+      rangeInvalid(parseInt(stateData.client_idle_timeout), 0, 28800)) ||
     invalidCrnList(
       [stateData.certificate_crn].concat(
         stateData.method === "username" ? [] : stateData.client_ca_crn
