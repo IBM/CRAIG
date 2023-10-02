@@ -724,16 +724,20 @@ Enabling volume sharing allows users to attach multiple Power VS instances to th
 
 ## Templates
 
-Import infrastructure template with all the needed resources to jump-start your environment customization
+Import infrastructure template with all the needed resources to jump-start your environment customization.
 
 Importing a template will override any existing customization changes.
 
-Pattern                    | Description
----------------------------|---------------------------------------------------------------------------------------------------------------------------------
-Landing Zone Mixed Pattern | Create an FS Cloud Compliant environment with a management VPC, workload VPC, Virtual Servers, and a Red Hat OpenShift cluster.
+Pattern                             | Description
+------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Landing Zone Mixed Pattern          | Create an FS Cloud Compliant environment with a management VPC, workload VPC, Virtual Servers, and a Red Hat OpenShift cluster.
+Landing Zone VSI Pattern            | Create an FS Cloud Compliant environment with a management VPC, workload VPC, and an example application server deployment in both the Management and Workload VPC.
+Landing Zone VSI Edge Pattern       | Create an environment with a management VPC, workload VPC, and deploys an edge VPC with an F5 Big IP instance with VPN and WAF.
+Landing Zone Power SAP Hana Pattern | Creates a basic and expandable SAP system landscape that leverages the services from the VPC landing zone and the network connectivity configuration provided by Power Virtual Server with VPC landing zone.
 
 ### Related Links
 
 - [IBM Secure Landing Zone Patterns](https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone/tree/main/.docs/patterns)
+- [PowerVS SAP Hana Pattern](https://github.com/terraform-ibm-modules/terraform-ibm-powervs-sap)
 
 -----
