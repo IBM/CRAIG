@@ -1,15 +1,15 @@
 const { assert } = require("chai");
 const slzNetwork = require("../data-files/slz-network.json");
 const {
-  ibmIsVpnServer,
-  ibmIsVpnServerRoute,
   vpnServerTf,
+  formatVpnServer,
+  formatVpnServerRoute,
 } = require("../../client/src/lib/json-to-iac/vpn-server");
 
 describe("vpn server", () => {
   describe("ibmIsVpnServer", () => {
-    it("should return correct json object for vpn server using certificate", () => {
-      let actualData = ibmIsVpnServer(
+    it("should return correct tf for vpn server using certificate", () => {
+      let actualData = formatVpnServer(
         {
           name: "abc",
           certificate_crn: "xyz",
@@ -29,32 +29,35 @@ describe("vpn server", () => {
         },
         slzNetwork
       );
-      let expectedData = {
-        name: "management_vpn_server_abc",
-        data: {
-          certificate_crn: "xyz",
-          client_authentication: [
-            {
-              method: "certificate",
-              client_ca_crn: "hij",
-            },
-          ],
-          client_dns_server_ips: ["optional"],
-          client_idle_timeout: 2000,
-          client_ip_pool: "xyz",
-          enable_split_tunneling: true,
-          name: "${var.prefix}-management-abc-server",
-          port: 255,
-          protocol: "udp",
-          resource_group: "${ibm_resource_group.slz_management_rg.id}",
-          subnets: ["${module.management_vpc.vsi_zone_1_id}"],
-          security_groups: ["${module.management_vpc.management_vpe_sg_id}"],
-        },
-      };
+      let expectedData = `
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = "xyz"
+  client_idle_timeout    = 2000
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method        = "certificate"
+    client_ca_crn = "hij"
+  }
+  client_dns_server_ips = [
+    "optional"
+  ]
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
-    it("should return correct json object for vpn server using certificate with additional address prefixes", () => {
-      let actualData = ibmIsVpnServer(
+    it("should return correct tf for vpn server using certificate with additional address prefixes", () => {
+      let actualData = formatVpnServer(
         {
           name: "abc",
           certificate_crn: "xyz",
@@ -75,32 +78,35 @@ describe("vpn server", () => {
         },
         slzNetwork
       );
-      let expectedData = {
-        name: "management_vpn_server_abc",
-        data: {
-          certificate_crn: "xyz",
-          client_authentication: [
-            {
-              method: "certificate",
-              client_ca_crn: "hij",
-            },
-          ],
-          client_dns_server_ips: ["optional"],
-          client_idle_timeout: 2000,
-          client_ip_pool: "xyz",
-          enable_split_tunneling: true,
-          name: "${var.prefix}-management-abc-server",
-          port: 255,
-          protocol: "udp",
-          resource_group: "${ibm_resource_group.slz_management_rg.id}",
-          subnets: ["${module.management_vpc.vsi_zone_1_id}"],
-          security_groups: ["${module.management_vpc.management_vpe_sg_id}"],
-        },
-      };
+      let expectedData = `
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = "xyz"
+  client_idle_timeout    = 2000
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method        = "certificate"
+    client_ca_crn = "hij"
+  }
+  client_dns_server_ips = [
+    "optional"
+  ]
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
-    it("should return correct json object for vpn server using certificate and no port", () => {
-      let actualData = ibmIsVpnServer(
+    it("should return correct tf for vpn server using certificate and no port", () => {
+      let actualData = formatVpnServer(
         {
           name: "abc",
           certificate_crn: "xyz",
@@ -120,32 +126,35 @@ describe("vpn server", () => {
         },
         slzNetwork
       );
-      let expectedData = {
-        name: "management_vpn_server_abc",
-        data: {
-          certificate_crn: "xyz",
-          client_authentication: [
-            {
-              method: "certificate",
-              client_ca_crn: "hij",
-            },
-          ],
-          client_dns_server_ips: ["optional"],
-          client_idle_timeout: 2000,
-          client_ip_pool: "xyz",
-          enable_split_tunneling: true,
-          name: "${var.prefix}-management-abc-server",
-          port: null,
-          protocol: "udp",
-          resource_group: "${ibm_resource_group.slz_management_rg.id}",
-          subnets: ["${module.management_vpc.vsi_zone_1_id}"],
-          security_groups: ["${module.management_vpc.management_vpe_sg_id}"],
-        },
-      };
+      let expectedData = `
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = "xyz"
+  client_idle_timeout    = 2000
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method        = "certificate"
+    client_ca_crn = "hij"
+  }
+  client_dns_server_ips = [
+    "optional"
+  ]
+  port                   = null
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
-    it("should return correct json object for vpn server using username", () => {
-      let actualData = ibmIsVpnServer(
+    it("should return correct tf for vpn server using username", () => {
+      let actualData = formatVpnServer(
         {
           name: "abc",
           certificate_crn: "xyz",
@@ -165,32 +174,35 @@ describe("vpn server", () => {
         },
         slzNetwork
       );
-      let expectedData = {
-        name: "management_vpn_server_abc",
-        data: {
-          certificate_crn: "xyz",
-          client_authentication: [
-            {
-              method: "username",
-              identity_provider: "iam",
-            },
-          ],
-          client_dns_server_ips: ["optional"],
-          client_idle_timeout: 2000,
-          client_ip_pool: "xyz",
-          enable_split_tunneling: true,
-          name: "${var.prefix}-management-abc-server",
-          port: 255,
-          protocol: "udp",
-          resource_group: "${ibm_resource_group.slz_management_rg.id}",
-          subnets: ["${module.management_vpc.vsi_zone_1_id}"],
-          security_groups: ["${module.management_vpc.management_vpe_sg_id}"],
-        },
-      };
+      let expectedData = `
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = "xyz"
+  client_idle_timeout    = 2000
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method            = "username"
+    identity_provider = "iam"
+  }
+  client_dns_server_ips = [
+    "optional"
+  ]
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
-    it("should return correct json object for vpn server using username with no optional fields", () => {
-      let actualData = ibmIsVpnServer(
+    it("should return correct tf for vpn server using username with no optional fields", () => {
+      let actualData = formatVpnServer(
         {
           name: "abc",
           certificate_crn: "xyz",
@@ -210,34 +222,35 @@ describe("vpn server", () => {
         },
         slzNetwork
       );
-      let expectedData = {
-        name: "management_vpn_server_abc",
-        data: {
-          certificate_crn: "xyz",
-          client_authentication: [
-            {
-              method: "username",
-              identity_provider: "iam",
-            },
-          ],
-          client_dns_server_ips: null,
-          client_idle_timeout: null,
-          client_ip_pool: "xyz",
-          enable_split_tunneling: true,
-          name: "${var.prefix}-management-abc-server",
-          port: 255,
-          protocol: "udp",
-          resource_group: "${ibm_resource_group.slz_management_rg.id}",
-          subnets: ["${module.management_vpc.vsi_zone_1_id}"],
-          security_groups: ["${module.management_vpc.management_vpe_sg_id}"],
-        },
-      };
+      let expectedData = `
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = "xyz"
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method            = "username"
+    identity_provider = "iam"
+  }
+  client_dns_server_ips  = null
+  client_idle_timeout    = null
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
   });
   describe("ibmIsVpnServerRoute", () => {
-    it("should return correct json object for vpn server route", () => {
-      let actualData = ibmIsVpnServerRoute(
+    it("should return correct tf for vpn server route", () => {
+      let actualData = formatVpnServerRoute(
         {
           name: "abc",
           vpc: "management",
@@ -256,15 +269,14 @@ describe("vpn server", () => {
         },
         slzNetwork
       );
-      let expectedData = {
-        name: "management_vpn_server_route_qwe",
-        data: {
-          name: "${var.prefix}-management-qwe-route",
-          action: "translate",
-          destination: "172.16.0.0/16",
-          vpn_server: "${ibm_is_vpn_server.management_vpn_server_abc.id}",
-        },
-      };
+      let expectedData = `
+resource "ibm_is_vpn_server_route" "management_vpn_server_route_qwe" {
+  name        = "\${var.prefix}-management-qwe-route"
+  action      = "translate"
+  destination = "172.16.0.0/16"
+  vpn_server  = ibm_is_vpn_server.management_vpn_server_abc.id
+}
+`;
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
   });
