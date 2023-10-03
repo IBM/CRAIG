@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.3.0
 
+### Upgrade Notes
+
+- FS Cloud is no longer true in the default configuration
+
 ### Features
 
 - Users can now access COS plan from JSON schema
@@ -11,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Users can now select a COS pricing plan from the Object Storage page 
 - Users can now add additional VPC address prefixes from the VPN Server form. This will allow users to connect their on prem network directly to Power VS
 - Users can now provide `accept_routes_from_resource_type` to Routing Tables for `vpn_gateway` and `vpn_server`
+- When not using FS Cloud, users can now delete the only Key Management resource
 
 ### Fixes
 
@@ -19,6 +24,9 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing the VPN Servers Page to crash when modifying client idle timeout value
 - Fixed an issue where the toggles on the Routing Tables page were not working
 - Fixed an issue where helper text for VPN Servers Page was not being displayed
+- Fixed an issue causing option form save to not be disabled when props match state
+- Fixed an issue causing subnet tier form to crash when editing an invalid CIDR block from the middle
+- Fixed an issue causing valid ssh keys without an email address to fail validation
 
 ## 1.2.0
 

@@ -1,5 +1,5 @@
 import { saveAs } from "file-saver";
-import { contains, eachKey, isNullOrEmptyString } from "lazy-z";
+import { contains, eachKey, isNullOrEmptyString, kebabCase } from "lazy-z";
 const { configToFilesJson } = require("../../../lib");
 const JSZip = require("jszip");
 
@@ -28,7 +28,7 @@ export const downloadContent = (json, projectName) => {
     let time = now.toLocaleTimeString().replace(":", "-");
     time = time.split(":")[0] + "-" + time.split(" ")[1];
     let fileName = "craig-" + date + "-" + time + ".zip";
-    fileName = projectName ? projectName + "-" + fileName : fileName;
+    fileName = projectName ? kebabCase(projectName) + "-" + fileName : fileName;
     zip.generateAsync({ type: "blob" }).then(function (content) {
       // generate zip file
       saveAs(content, fileName); // Save zip file

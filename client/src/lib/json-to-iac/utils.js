@@ -92,6 +92,13 @@ function buildTitleComment(name) {
  * @returns {{name: string, guid: string}} kms references
  */
 function getKmsInstanceData(kmsName, config) {
+  if (!kmsName || config.key_management.length === 0) {
+    return {
+      name: "Error: Key Management Instance not found",
+      guid: "Error: Key Management Instance not found",
+      type: "Error",
+    };
+  }
   let kmsInstance = getObjectFromArray(config.key_management, "name", kmsName);
   let baseName = `${
     kmsInstance.use_data ? "data." : ""
@@ -210,6 +217,9 @@ function subnetRef(vpc, subnet, value, data) {
  * @returns {string}
  */
 function encryptionKeyRef(kms, key, value) {
+  if (!kms || !key) {
+    return "Error: Key Management Instance not found";
+  }
   return tfRef("ibm_kms_key", `${kms} ${key} key`, value || "key_id");
 }
 

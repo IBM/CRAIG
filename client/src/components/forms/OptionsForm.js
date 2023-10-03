@@ -121,11 +121,13 @@ class OptionsForm extends React.Component {
   }
 
   disableSave() {
+    let noModalState = { ...this.state };
+    delete noModalState.showModal;
     return (
+      (!this.props.template &&
+        deepEqual(noModalState, this.props.craig.store.json._options)) ||
       invalidNewResourceName(this.state.prefix) ||
       invalidTagList(this.state.tags) ||
-      (!this.props.template &&
-        deepEqual(this.state, this.props.craig.store.json._options)) ||
       (this.state.enable_power_vs &&
         (!this.state.power_vs_zones || isEmpty(this.state.power_vs_zones)))
     );
@@ -198,17 +200,6 @@ class OptionsForm extends React.Component {
           />
           <IcseFormGroup>
             <IcseToggle
-              labelText="Use FS Cloud"
-              defaultToggled={this.state.fs_cloud}
-              onToggle={() => this.handleToggle("fs_cloud")}
-              id="use-fs-cloud"
-              toggleFieldName="fs_cloud"
-              value={this.state.fs_cloud}
-              tooltip={{
-                content: "Show only FS Cloud validated regions.",
-              }}
-            />
-            <IcseToggle
               labelText="Enable Dynamic Scalable Subnets"
               field="dynamic_subnets"
               disabled={this.props.craig.store.json._options.advanced_subnets}
@@ -231,6 +222,18 @@ class OptionsForm extends React.Component {
               tooltip={{
                 content:
                   "Enable the creation of IBM Power Virtual Servers and related infrastructure. Power VS is not currently enabled in CRAIG, this flag is for upcoming features.",
+              }}
+            />
+            <IcseToggle
+              labelText="Use FS Cloud"
+              defaultToggled={this.state.fs_cloud}
+              onToggle={() => this.handleToggle("fs_cloud")}
+              id="use-fs-cloud"
+              toggleFieldName="fs_cloud"
+              value={this.state.fs_cloud}
+              tooltip={{
+                content:
+                  "Show only Financial Services Cloud validated regions.",
               }}
             />
           </IcseFormGroup>

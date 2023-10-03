@@ -66,8 +66,10 @@ module.exports = {
           .negatedSet("@")
           .oneOrMore()
           .literal("@")
+          .lazy()
           .negatedSet("@")
-          .oneOrMore();
+          .oneOrMore()
+          .lazy();
       });
     })
     .lazy()

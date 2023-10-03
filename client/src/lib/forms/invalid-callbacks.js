@@ -415,7 +415,10 @@ function hasOverlappingCidr(craig) {
           allCidrs.push(subnet.cidr);
       });
     });
-    if (contains(allCidrs, stateData.cidr)) {
+    if (
+      contains(allCidrs, stateData.cidr) ||
+      !isIpv4CidrOrAddress(stateData.cidr)
+    ) {
       cidrData.invalid = true;
     } else {
       allCidrs.forEach((cidr) => {

@@ -1,0 +1,94 @@
+{
+  "_options": {
+    "prefix": "iac",
+    "region": "us-south",
+    "tags": ["hello", "world"],
+    "zones": 3,
+    "endpoints": "private",
+    "account_id": "",
+    "fs_cloud": false,
+    "dynamic_subnets": true,
+    "enable_power_vs": false,
+    "power_vs_zones": []
+  },
+  "access_groups": [],
+  "appid": [],
+  "atracker": {
+    "enabled": false,
+    "type": "cos",
+    "name": "atracker",
+    "target_name": "atracker-cos",
+    "bucket": null,
+    "add_route": true,
+    "cos_key": null,
+    "locations": ["global", "us-south"]
+  },
+  "cbr_rules": [],
+  "cbr_zones": [],
+  "clusters": [],
+  "dns": [],
+  "event_streams": [],
+  "f5_vsi": [],
+  "iam_account_settings": {
+    "enable": false,
+    "mfa": null,
+    "allowed_ip_addresses": null,
+    "include_history": false,
+    "if_match": null,
+    "max_sessions_per_identity": null,
+    "restrict_create_service_id": null,
+    "restrict_create_platform_apikey": null,
+    "session_expiration_in_seconds": null,
+    "session_invalidation_in_seconds": null
+  },
+  "icd": [],
+  "key_management": [],
+  "load_balancers": [],
+  "logdna": {
+    "enabled": false,
+    "plan": "lite",
+    "endpoints": "private",
+    "platform_logs": false,
+    "resource_group": null,
+    "cos": null,
+    "bucket": null
+  },
+  "object_storage": [],
+  "power": [],
+  "power_instances": [],
+  "power_volumes": [],
+  "resource_groups": [
+    {
+      "use_prefix": true,
+      "name": "craig-rg",
+      "use_data": false
+    }
+  ],
+  "routing_tables": [],
+  "scc": {
+    "credential_description": null,
+    "id": null,
+    "passphrase": null,
+    "name": "",
+    "location": "us",
+    "collector_description": null,
+    "is_public": false,
+    "scope_description": null,
+    "enable": false
+  },
+  "secrets_manager": [],
+  "security_groups": [],
+  "ssh_keys": [],
+  "sysdig": {
+    "enabled": false,
+    "plan": "graduated-tier",
+    "resource_group": null
+  },
+  "teleport_vsi": [],
+  "transit_gateways": [],
+  "virtual_private_endpoints": [],
+  "vpcs": [],
+  "vpn_gateways": [],
+  "vpn_servers": [],
+  "vsi": []
+}

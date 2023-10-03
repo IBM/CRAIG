@@ -407,7 +407,10 @@ const KeyManagementPage = (craig) => {
       forceOpen={forceShowForm}
       craig={craig}
       deleteDisabled={() => {
-        return craig.store.json.key_management.length === 1;
+        return (
+          craig.store.json.key_management.length === 1 &&
+          craig.store.json._options.fs_cloud
+        );
       }}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       invalidCallback={invalidName("key_management")}
