@@ -13,7 +13,7 @@ import {
   Projects,
   NewFormPage,
 } from "./components";
-import { invalidForms, state } from "./lib";
+import { invalidForms, state, releaseNotes } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
@@ -286,6 +286,7 @@ class Craig extends React.Component {
           onTabClick={this.onTabClick}
           current_project={craig.store.project_name}
           invalidForms={invalidForms(craig)}
+          craig={craig}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (

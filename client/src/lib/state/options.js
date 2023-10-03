@@ -1,6 +1,7 @@
 const { revision } = require("lazy-z");
 const { subnetTierSave } = require("./vpc");
 const { RegexButWithWords } = require("regex-but-with-words");
+const { releaseNotes } = require("../docs");
 
 /**
  * initialize options
@@ -20,6 +21,7 @@ function optionsInit(config) {
     dynamic_subnets: true,
     enable_power_vs: false,
     power_vs_zones: [],
+    craig_version: releaseNotes[0].version,
   };
 }
 

@@ -3,7 +3,8 @@
     "prefix": "string",
     "region": "string",
     "tags": "Array<string>",
-    "zones": "number"
+    "zones": "number",
+    "craig_version": "string"
   },
   "resource_groups": {
     "Array": {

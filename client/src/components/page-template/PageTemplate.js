@@ -42,9 +42,10 @@ import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
 import { CraigCodeMirror, Navigation, Footer } from ".";
 import PropTypes from "prop-types";
 import "./page-template.css";
-import { codeMirrorGetDisplay } from "../../lib";
+import { codeMirrorGetDisplay, releaseNotes } from "../../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../../images/cbr";
+import { ActionableNotification } from "@carbon/react";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -167,6 +168,16 @@ const PageTemplate = (props) => {
           onClick: onClick,
         };
   }
+
+  /**
+   * updates craig version to newest version in release notes
+   */
+  function updateCraig() {
+    let options = { ...props.json._options };
+    options.craig_version = releaseNotes[0].version;
+    props.craig.options.save(options, { data: props.json._options });
+  }
+
   let pageObj = props.form
     ? getObjectFromArray(pageOrder, "path", `/form/${props.form}`)
     : { toTf: false };
@@ -188,6 +199,19 @@ const PageTemplate = (props) => {
         formPathNotPresent={formPathNotPresent}
         invalidForms={props.invalidForms}
       />
+      {props.json._options.craig_version !== releaseNotes[0].version && (
+        <ActionableNotification
+          className="updateBanner"
+          actionButtonLabel="Update With One Click"
+          onActionButtonClick={updateCraig}
+          inline={true}
+          kind="warning-alt"
+          lowContrast={true}
+          subtitle="Some elements may not function correctly."
+          title="CRAIG version out of date."
+          hideCloseButton={true}
+        />
+      )}
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
           className={
@@ -247,6 +271,7 @@ PageTemplate.propTypes = {
   toggleHide: PropTypes.func,
   jsonInCodeMirror: PropTypes.bool.isRequired,
   invalidForms: PropTypes.arrayOf(PropTypes.string),
+  craig: PropTypes.shape({}).isRequired,
 };
 
 export default PageTemplate;

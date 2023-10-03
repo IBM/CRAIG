@@ -25,3 +25,11 @@
 .fieldPadding {
   padding: 1.5rem 0.5rem 2rem 1rem;
 }
+
+.updateBanner {
+  position: fixed;
+  z-index: 10000;
+  left: 4rem;
+  max-width: 93vw;
+  text-align: center;
+}

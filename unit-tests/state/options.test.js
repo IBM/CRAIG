@@ -1,5 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
+const { releaseNotes } = require("../../client/src/lib/docs");
 
 /**
  * initialize store
@@ -26,6 +27,7 @@ describe("options", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
+        craig_version: releaseNotes[0].version,
       };
       assert.deepEqual(
         state.store.json._options,
@@ -127,6 +129,30 @@ describe("options", () => {
         },
       ];
       assert.deepEqual(oState.store.json.vpcs[0].subnets, expectedData);
+    });
+    it("should update craig version when saved", () => {
+      oState.options.save(
+        { craig_version: "1.3.0" },
+        { data: oState.store.json._options.craig_version }
+      );
+      let expectedData = {
+        prefix: "iac",
+        region: "us-south",
+        tags: ["hello", "world"],
+        zones: 3,
+        endpoints: "private",
+        account_id: "",
+        fs_cloud: true,
+        dynamic_subnets: true,
+        enable_power_vs: false,
+        power_vs_zones: [],
+        craig_version: "1.3.0",
+      };
+      assert.deepEqual(
+        oState.store.json._options,
+        expectedData,
+        "it should have correct craig version"
+      );
     });
   });
 });
