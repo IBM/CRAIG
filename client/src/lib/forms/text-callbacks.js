@@ -350,6 +350,15 @@ function labelsInvalidText(stateData, componentProps) {
 function powerVsWorkspaceHelperText(stateData, componentProps) {
   return `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
 }
+/**
+ * return helper text for vpn servers
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} helper text
+ */
+function vpnServersHelperText(stateData, componentProps) {
+  return `${componentProps.craig.store.json._options.prefix}-vpn-server-${stateData.name}`;
+}
 
 module.exports = {
   resourceGroupHelperTextCallback,
@@ -372,4 +381,5 @@ module.exports = {
   invalidCpuTextCallback,
   labelsInvalidText,
   powerVsWorkspaceHelperText,
+  vpnServersHelperText,
 };

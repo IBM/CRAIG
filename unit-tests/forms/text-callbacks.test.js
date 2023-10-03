@@ -23,6 +23,7 @@ const {
   invalidCpuTextCallback,
   labelsInvalidText,
   powerVsWorkspaceHelperText,
+  vpnServersHelperText,
 } = require("../../client/src/lib/forms/text-callbacks");
 
 describe("text callbacks", () => {
@@ -884,6 +885,28 @@ describe("text callbacks", () => {
           }
         ),
         "toad-power-workspace-frog",
+        "it should return correct helper text"
+      );
+    });
+  });
+  describe("vpnServersWorkspaceHelperText", () => {
+    it("should return correct helper text", () => {
+      assert.deepEqual(
+        vpnServersHelperText(
+          { name: "frog" },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "toad",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "toad-vpn-server-frog",
         "it should return correct helper text"
       );
     });

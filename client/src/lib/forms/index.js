@@ -16,6 +16,7 @@ const {
   invalidCrnText,
   invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
+  vpnServersHelperText,
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -123,4 +124,5 @@ module.exports = {
   invalidCpuCallback,
   invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
+  vpnServersHelperText,
 };

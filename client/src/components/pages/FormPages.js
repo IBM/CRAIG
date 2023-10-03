@@ -65,6 +65,7 @@ import {
   invalidEncryptionKeyRing,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
+  vpnServersHelperText,
 } from "../../lib/forms";
 import {
   invalidCidr,
@@ -958,6 +959,7 @@ const VpnServerPage = (craig) => {
       subnetList={craig.getAllSubnets()}
       vpcList={craig.store.vpcList}
       securityGroups={craig.store.json.security_groups}
+      helperTextCallback={vpnServersHelperText}
     />
   );
 };

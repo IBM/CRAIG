@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing the variable `var.prefix` from being added to VPN Server names
 - Fixed an issue causing DNS services to not save or be deleted correctly
 - Fixed an issue causing the VPN Servers Page to crash when modifying client idle timeout value
+- Fixed an issue where the toggles on the Routing Tables page were not working
+- Fixed an issue where helper text for VPN Servers Page was not being displayed
 
 ## 1.2.0
 
