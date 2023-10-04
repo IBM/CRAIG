@@ -93,3 +93,8 @@ a.tile:is(:link, :visited, :hover, :active) {
 .cds--popover-caret {
   display: none !important; // need important to go up multiple levels of priority
 }
+
+.smallImage {
+  max-width: 90%;
+  max-height: 90%;
+}

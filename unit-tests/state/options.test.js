@@ -142,7 +142,7 @@ describe("options", () => {
         zones: 3,
         endpoints: "private",
         account_id: "",
-        fs_cloud: true,
+        fs_cloud: false,
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],

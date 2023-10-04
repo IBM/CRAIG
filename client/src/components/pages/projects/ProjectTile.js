@@ -19,6 +19,7 @@ export const ProjectTile = (props) => {
         <h4 className="bold">{props.data.name}</h4>
         {isCurrentProject ? <StarFilled /> : <Star />}
       </div>
+
       {/* details */}
       <div className="projectDetails marginBottom">
         {props.data.description && (
@@ -27,6 +28,10 @@ export const ProjectTile = (props) => {
             <p className="smallerText italic">{props.data.description}</p>
           </div>
         )}
+        <div className="marginBottomXs">
+          <h3 className="smallerText marginBottomXs">Template Pattern:</h3>
+          <p className="smallerText italic">{props.data.template}</p>
+        </div>
         <div className="marginBottomXs">
           <h3 className="smallerText marginBottomXs">Last Saved:</h3>
           <p className="smallerText italic">

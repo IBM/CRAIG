@@ -27,7 +27,7 @@ import "./options.css";
 
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
-const TemplateAbout = (props) => {
+export const TemplateAbout = (props) => {
   return (
     <div
       id={"pattern-info-" + props.template.name}
@@ -54,7 +54,11 @@ const TemplateAbout = (props) => {
         >
           <img
             src={props.template.image}
-            className="borderGray tileStyles imageTileSize"
+            className={
+              props.smallImage
+                ? "borderGray tileStyles imageTileSize smallImage"
+                : "borderGray tileStyles imageTileSize"
+            }
           />
         </a>
       </div>

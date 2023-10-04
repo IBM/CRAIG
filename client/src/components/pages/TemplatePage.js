@@ -73,7 +73,7 @@ const templates = [
   },
   {
     template: powerSAPHana,
-    name: "Landing Zone Power SAP Hana Pattern",
+    name: "Power VS SAP Hana Pattern",
     image: PowerSAP_HanaPattern,
     patternDocText:
       "Based on existing SAP Hana solutions, this template creates base infrastructure with SAP system landscape that leverages the services from the VPC landing zone as well as the needed components to get started with a Power VS Virtual Server environment",

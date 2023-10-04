@@ -19,6 +19,19 @@ import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
 import { TemplatePage } from "./components/pages/TemplatePage";
+import { templates } from "./lib/constants";
+
+import mixedJson from "./lib/docs/templates/slz-mixed.json";
+import vsiJson from "./lib/docs/templates/slz-vsi.json";
+import vsiEdgeJson from "./lib/docs/templates/slz-vsi-edge.json";
+import powerJson from "./lib/docs/templates/power-sap-hana.json";
+
+const templateNameToJsonMap = {
+  Mixed: mixedJson,
+  VSI: vsiJson,
+  "VSI Edge": vsiEdgeJson,
+  "Power VS SAP Hana": powerJson,
+};
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -156,6 +169,7 @@ class Craig extends React.Component {
       name: "",
       description: "",
       json: new state().store.json,
+      template: "Mixed",
     };
   }
 
@@ -175,6 +189,7 @@ class Craig extends React.Component {
       description: stateData.description,
       json: stateData.json,
       last_save: now,
+      template: stateData.template,
     };
 
     // if the project name is changing, remove the old key from projects object
@@ -185,6 +200,15 @@ class Craig extends React.Component {
     ) {
       nameChange = true;
       delete projects[kebabCase(componentProps.data.name)];
+    }
+
+    // if template is changing
+    if (
+      componentProps.data.template !== "" &&
+      stateData.template !== componentProps.data.template
+    ) {
+      projects[kname].json = templateNameToJsonMap[stateData.template];
+      projects[kname].template = stateData.template;
     }
 
     window.localStorage.setItem("craigProjects", JSON.stringify(projects));
@@ -202,6 +226,10 @@ class Craig extends React.Component {
         ) {
           craig.store.project_name = kname;
         }
+
+        // hard set store if template changes and is current project
+        // not needed when project is not selected since projects state is update with correct json and is then set when user makes project selection
+        craig.hardSetJson(templateNameToJsonMap[stateData.template], true);
 
         this.saveAndSendNotification(
           `Successfully saved project ${stateData.name}`
@@ -300,6 +328,7 @@ class Craig extends React.Component {
             <Projects
               current_project={craig.store.project_name}
               projects={this.state.projects}
+              templates={templates}
               new={this.newProject}
               save={this.onProjectSave}
               delete={this.onProjectDelete}

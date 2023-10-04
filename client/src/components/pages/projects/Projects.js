@@ -156,6 +156,7 @@ class Projects extends React.Component {
             onClose={this.toggleModal}
             onSubmit={this.props.save}
             projects={this.props.projects}
+            templates={this.props.templates}
           />
         )}
         {this.state.viewJSONModalOpen && (

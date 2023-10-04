@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Users can now select a COS pricing plan from the Object Storage page 
 - Users can now add additional VPC address prefixes from the VPN Server form. This will allow users to connect their on prem network directly to Power VS
 - Users can now provide `accept_routes_from_resource_type` to Routing Tables for `vpn_gateway` and `vpn_server`
+- Users can now create a project based on a template from the projects page `/projects`
 - When not using FS Cloud, users can now delete the only Key Management resource
 
 ### Fixes
