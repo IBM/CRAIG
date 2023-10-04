@@ -67,6 +67,9 @@ spec:
     - name: craig-api-key
       description: API Key for SLZ GUI application
       default: ""
+    - name: no-schematics
+      description: sets property for NO_SCHEMATICS env var to restrict schematics workspace creation in dev
+      default: "true"
   results:
     - name: app-url
       description: The running application's URL (obtained from APP_URL variable set by the executed script)
@@ -179,7 +182,8 @@ spec:
                     -m $(params.memory) \
                     -p $(params.port) \
                     --es $(params.ephemeral-storage) \
-                    --env SLZ_GUI_API_KEY=$(params.craig-api-key)
+                    --env SLZ_GUI_API_KEY=$(params.craig-api-key) \
+                    --env NO_SCHEMATICS=$(params.no-schematics)
             else
                 echo "Code Engine app with name $(params.app-name) not found, creating it"
                 ibmcloud ce app create -n $(params.app-name) \
@@ -192,7 +196,8 @@ spec:
                     -m $(params.memory) \
                     -p $(params.port) \
                     --es $(params.ephemeral-storage) \
-                    --env SLZ_GUI_API_KEY=$(params.craig-api-key)
+                    --env SLZ_GUI_API_KEY=$(params.craig-api-key) \
+                    --env NO_SCHEMATICS=$(params.no-schematics)
             fi
 
             # Bind services, if any

@@ -80,6 +80,9 @@ spec:
     - name: craig-api-key
       description: API Key for SLZ GUI application
       default: ""
+    - name: no-schematics
+      description: sets property for NO_SCHEMATICS env var to restrict schematics workspace creation in dev
+      default: "true"
 
       # For health task
     - name: health-endpoint
@@ -574,6 +577,8 @@ spec:
           value: $(params.maxexecutiontime)
         - name: craig-api-key
           value: $(params.craig-api-key)
+        - name: no-schematics
+          value: $(params.no-schematics)
       workspaces:
         - name: artifacts
           workspace: pipeline-ws

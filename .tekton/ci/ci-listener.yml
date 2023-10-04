@@ -79,6 +79,9 @@ spec:
     - name: craig-api-key
       description: API Key for CRAIG application
       default: ""
+    - name: no-schematics
+      description: sets property for NO_SCHEMATICS env var to restrict schematics workspace creation in dev
+      default: "true"
 
       #For health task
     - name: health-endpoint
@@ -281,6 +284,9 @@ spec:
             value: $(params.ephemeral-storage)
           - name: craig-api-key
             value: $(params.craig-api-key)
+          - name: no-schematics
+            value: $(params.no-schematics)
+            
           #cra specific
           - name: ibmcloud-region
             value: $(params.ibmcloud-region)
