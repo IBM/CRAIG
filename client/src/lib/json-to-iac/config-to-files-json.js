@@ -97,7 +97,7 @@ function configToFilesJson(config, apiMode) {
     vpcModuleTf(files, config);
     return files;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (apiMode) {
       return null;
     } else throw new Error(err);

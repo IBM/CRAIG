@@ -65,7 +65,10 @@ function controller(axios) {
    */
   this.getBearerToken = () => {
     return new Promise((resolve, reject) => {
-      if (this.tokenIsExpired()) {
+      if (!process.env.API_KEY) {
+        let error = new Error("No API_KEY defined");
+        reject(error);
+      } else if (this.tokenIsExpired()) {
         // send request to IBM Cloud IAM endpoint to get access token if no token present or if expired
         let requestConfig = {
           method: "post",
@@ -88,6 +91,8 @@ function controller(axios) {
         // token present and not expired
         resolve(this.token);
       }
+    }).catch((err) => {
+      return err;
     });
   };
 }

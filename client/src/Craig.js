@@ -19,6 +19,7 @@ import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
 import { TemplatePage } from "./components/pages/TemplatePage";
+import { isNullOrEmptyString } from "lazy-z/lib/shortcuts";
 import { templates } from "./lib/constants";
 
 import mixedJson from "./lib/docs/templates/slz-mixed.json";
@@ -117,11 +118,11 @@ class Craig extends React.Component {
     );
   }
 
-  onError() {
+  onError(msg) {
     let notification = {
       title: "Error",
       kind: "error",
-      text: "An unexpected error has occurred.",
+      text: msg || "An unexpected error has occurred.",
       timeout: 3000,
     };
     this.notify(notification);
@@ -168,6 +169,8 @@ class Craig extends React.Component {
     return {
       name: "",
       description: "",
+      use_template: false,
+      use_schematics: false,
       json: new state().store.json,
       template: "Mixed",
     };
@@ -184,13 +187,19 @@ class Craig extends React.Component {
     let kname = kebabCase(stateData.name);
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
 
-    projects[kname] = {
+    if (!projects[kname]) {
+      projects[kname] = {};
+    }
+
+    Object.assign(projects[kname], {
       name: stateData.name,
       description: stateData.description,
+      use_template: stateData.use_template,
+      template: stateData.template,
+      use_schematics: stateData.use_schematics,
       json: stateData.json,
       last_save: now,
-      template: stateData.template,
-    };
+    });
 
     // if the project name is changing, remove the old key from projects object
     let nameChange = false;
@@ -211,31 +220,98 @@ class Craig extends React.Component {
       projects[kname].template = stateData.template;
     }
 
-    window.localStorage.setItem("craigProjects", JSON.stringify(projects));
-    this.setState({ projects: { ...projects } }, () => {
-      if (setCurrentProject) {
-        this.onProjectSelect(
-          stateData.name,
-          `Successfully saved project ${stateData.name}`
-        );
-      } else {
-        // if the project name changed and that was our current project, update name
-        if (
-          nameChange &&
-          craig.store.project_name === componentProps.data.name
-        ) {
-          craig.store.project_name = kname;
-        }
+    return new Promise((resolve, reject) => {
+      if (!stateData.use_schematics) {
+        delete projects[kname].workspace_name;
+        delete projects[kname].workspace_url;
+        delete projects[kname].workspace_region;
+        delete projects[kname].workspace_resource_group;
+        return resolve();
+      }
 
-        // hard set store if template changes and is current project
-        // not needed when project is not selected since projects state is update with correct json and is then set when user makes project selection
-        craig.hardSetJson(templateNameToJsonMap[stateData.template], true);
+      let shouldCreateWorkspace = false;
 
+      if (projects[kname].workspace_name !== stateData.workspace_name) {
+        projects[kname].workspace_name = stateData.workspace_name;
+        shouldCreateWorkspace = true;
+      }
+
+      if (projects[kname].workspace_region !== stateData.workspace_region) {
+        projects[kname].workspace_region = stateData.workspace_region;
+        shouldCreateWorkspace = true;
+      }
+
+      if (
+        projects[kname].workspace_resource_group !==
+        stateData.workspace_resource_group
+      ) {
+        projects[kname].workspace_resource_group =
+          stateData.workspace_resource_group;
+        shouldCreateWorkspace = true;
+      }
+
+      if (!shouldCreateWorkspace) {
+        return resolve();
+      }
+
+      let { workspace_name, workspace_region, workspace_resource_group } =
+        projects[kname];
+
+      fetch(
+        `/api/schematics/${workspace_name}` +
+          (workspace_region ? "/" + workspace_region : "") +
+          (workspace_resource_group ? "/" + workspace_resource_group : ""),
+        { method: "POST" }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            reject(data.error);
+          } else if (isNullOrEmptyString(data.id)) {
+            reject("Workspace did not create. Missing ID.");
+          } else {
+            projects[
+              kname
+            ].workspace_url = `https://cloud.ibm.com/schematics/workspaces/${data.id}`;
+            resolve();
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          reject(err);
+        });
+    })
+      .then(() => {
         this.saveAndSendNotification(
           `Successfully saved project ${stateData.name}`
         );
-      }
-    });
+
+        window.localStorage.setItem("craigProjects", JSON.stringify(projects));
+        this.setState({ projects: { ...projects } }, () => {
+          if (setCurrentProject) {
+            this.onProjectSelect(
+              stateData.name,
+              `Successfully saved project ${stateData.name}`
+            );
+          } else {
+            // if the project name changed and that was our current project, update name
+            if (
+              nameChange &&
+              craig.store.project_name === componentProps.data.name
+            ) {
+              craig.store.project_name = kname;
+            }
+
+            this.saveAndSendNotification(
+              `Successfully saved project ${stateData.name}`
+            );
+          }
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        this.onError(`Create failed with error: ${err}`);
+      });
   }
 
   /**
@@ -334,6 +410,7 @@ class Craig extends React.Component {
               delete={this.onProjectDelete}
               select={this.onProjectSelect}
               deselect={this.onProjectDeselect}
+              notify={this.notify}
               deleteDisabled={() => {
                 return craig.store.json.resource_groups.length === 1;
               }}

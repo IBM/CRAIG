@@ -1,5 +1,10 @@
 import React from "react";
-import { IcseModal, IcseToggle, IcseFormGroup } from "icse-react-assets";
+import {
+  IcseModal,
+  IcseToggle,
+  IcseFormGroup,
+  IcseNameInput,
+} from "icse-react-assets";
 import { formatConfig, validate } from "../../../lib";
 import { DownloadCopyButtonSet } from "../../utils";
 import { TextArea } from "@carbon/react";
@@ -25,7 +30,7 @@ export class JSONModal extends React.Component {
     return (
       <IcseModal
         open={this.props.open}
-        heading={`View JSON for Project "${this.state.name}"`}
+        heading={`View Configuration`}
         primaryButtonText={"Done"}
         primaryButtonDisabled={false}
         secondaryButtonText={"Back"}
@@ -34,25 +39,40 @@ export class JSONModal extends React.Component {
           this.props.onClose();
         }}
       >
-        <IcseFormGroup noMarginBottom>
+        {this.state.name && (
+          <IcseFormGroup>
+            <IcseNameInput
+              labelText={"Project Name"}
+              invalid={false}
+              invalidText=""
+              id="project-name"
+              componentName="project"
+              value={this.state.name}
+              onChange={() => {}}
+              helperTextCallback={() => {}}
+              readOnly={true}
+            />
+          </IcseFormGroup>
+        )}
+        <IcseFormGroup className="noMarginBottom">
           <IcseToggle
             labelText="Use Pretty JSON"
             defaultToggled={this.state.usePrettyJson}
             onToggle={this.toggleUsePrettyJson}
-            className="marginBottomSmall displayFlex"
+            className="displayFlex"
             id="use-pretty-json"
             disabled={false}
             toggleFieldName="usePrettyJson"
             value={this.state.usePrettyJson}
           />
         </IcseFormGroup>
-        <div className="marginBottomSmall">
+        <IcseFormGroup>
           <DownloadCopyButtonSet
             disabled={Boolean(this.state.error)}
             json={this.state.json}
             projectName={this.state.name}
           />
-        </div>
+        </IcseFormGroup>
         <IcseFormGroup noMarginBottom>
           <TextArea
             labelText="Preview CRAIG JSON"

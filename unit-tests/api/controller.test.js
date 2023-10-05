@@ -67,6 +67,21 @@ describe("controller", () => {
         assert.deepEqual(data, "token", "it should return correct data");
       });
     });
+    it("should reject on no api key error", () => {
+      let { axios } = initMockAxios({ stderr: "No API_KEY defined" }, true);
+      let testController = new controller(axios);
+      let API_KEY = process.env.API_KEY;
+      delete process.env.API_KEY;
+      return testController.getBearerToken(requestConfig).catch((data) => {
+        assert.deepEqual(
+          data,
+          { stderr: "No API_KEY defined" },
+          "it should return correct data"
+        );
+
+        process.env.API_KEY = API_KEY;
+      });
+    });
   });
   describe("vsiInstanceProfiles", () => {
     it("should respond with the correct data", () => {
@@ -259,6 +274,41 @@ describe("controller", () => {
     testJson.clusters[0]["kube_type"] = "openshift";
     testJson.clusters[0].worker_pools[0].cluster = "workload";
     testJson["vpn_servers"] = [];
+    it("should throw error if NO_SCHEMATICS is true", () => {
+      process.env.NO_SCHEMATICS = true;
+      let { axios } = initMockAxios(
+        {
+          has_received_file: false,
+          workspaces: [
+            {
+              name: "frog-workspace",
+              id: "foo-workspace-id",
+              template_data: [{ id: "123abc-id" }],
+            },
+          ],
+        },
+        false
+      );
+      let uploadTarController = new controller(axios);
+      return uploadTarController
+        .uploadTar(
+          {
+            params: {
+              workspaceName: "frog-workspace",
+            },
+            body: {},
+          },
+          res
+        )
+        .then(() => {
+          delete process.env.NO_SCHEMATICS;
+          assert.isTrue(
+            res.send.calledOnceWith({
+              error: "Schematics feature not supported on development.",
+            })
+          );
+        });
+    });
     it("should throw error when craig object is invalid", () => {
       let { axios } = initMockAxios(
         {
@@ -286,7 +336,9 @@ describe("controller", () => {
         )
         .then(() => {
           assert.isTrue(
-            res.send.calledOnceWith("Error: failed to parse CRAIG data")
+            res.send.calledOnceWith({
+              error: "Error: failed to parse CRAIG data",
+            })
           );
         });
     });
@@ -318,7 +370,7 @@ describe("controller", () => {
         )
         .then(() => {
           assert.isTrue(
-            res.send.calledOnceWith("Error: failed to pack tar file")
+            res.send.calledOnceWith({ error: "Error: failed to pack tar file" })
           );
         });
     }).timeout(100000);
@@ -389,15 +441,17 @@ describe("controller", () => {
           );
         });
     });
+
     delete testJson.clusters[0].kube_type;
   });
   describe("createWorkspace", () => {
-    it("should return correct data when workspace is created", () => {
+    it("should throw error if NO_SCHEMATICS is true", () => {
+      process.env.NO_SCHEMATICS = true;
       let { axios } = initMockAxios(
         {
           id: "us-south.workspace.testWorkspace",
           name: "testWorkspace",
-          location: "us-south",
+          region: "us-south",
         },
         false
       );
@@ -407,7 +461,35 @@ describe("controller", () => {
           {
             params: {
               workspaceName: "testWorkspace",
-              region: "us-south",
+              resourceGroup: "foo-rg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          delete process.env.NO_SCHEMATICS;
+          assert.isTrue(
+            res.send.calledOnceWith({
+              error: "Schematics feature not supported on development.",
+            })
+          );
+        });
+    });
+    it("should return correct data when workspace is created", () => {
+      let { axios } = initMockAxios(
+        {
+          id: "us-south.workspace.testWorkspace",
+          name: "testWorkspace",
+          region: "us-south",
+        },
+        false
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .createWorkspace(
+          {
+            params: {
+              workspaceName: "testWorkspace",
               resourceGroup: "foo-rg",
             },
           },
@@ -418,7 +500,7 @@ describe("controller", () => {
             res.send.calledOnceWith({
               id: "us-south.workspace.testWorkspace",
               name: "testWorkspace",
-              location: "us-south",
+              region: "us-south",
             })
           );
         });
@@ -446,62 +528,6 @@ describe("controller", () => {
         )
         .catch(() => {
           assert.isTrue(res.send.calledOnce);
-        });
-    });
-  });
-  describe("newWorkspaceUpload", () => {
-    it("should reject with error when CRAIG_PROD is true", () => {
-      process.env.CRAIG_PROD = "TRUE";
-      let { axios } = initMockAxios({}, false);
-      let testSchematicsController = new controller(axios);
-      return testSchematicsController
-        .newWorkspaceUpload({}, res)
-        .catch((err) => {
-          assert.deepEqual(
-            err,
-            "CRAIG_PROD is true",
-            "should return rejection message"
-          );
-        });
-    });
-    it("should return correct data when workspace is created and tar file is uploaded", () => {
-      let { axios } = initMockAxios(
-        {
-          id: "us-south.workspace.testWorkspace",
-          name: "testWorkspace",
-          location: "us-south",
-          workspaces: [
-            {
-              name: "testWorkspace",
-              id: "us-south.workspace.testWorkspace",
-              template_data: [{ id: "5678" }],
-            },
-          ],
-          has_received_file: true,
-        },
-        false
-      );
-      let testSchematicsController = new controller(axios);
-      return testSchematicsController
-        .newWorkspaceUpload(
-          {
-            body: {
-              workspaceName: "testWorkspace",
-              region: "us-south",
-              resourceGroup: "foo-rg",
-              craigJson: testJson,
-            },
-          },
-          res
-        )
-        .then(() => {
-          assert.isTrue(
-            res.send.calledOnceWith({
-              workspaceId: "us-south.workspace.testWorkspace",
-              schematicsUrl:
-                "https://cloud.ibm.com/schematics/workspaces/us-south.workspace.testWorkspace",
-            })
-          );
         });
     });
   });

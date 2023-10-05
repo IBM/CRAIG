@@ -28,6 +28,8 @@ class Projects extends React.Component {
     this.onEditClick = this.onEditClick.bind(this);
     this.onViewClick = this.onViewClick.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.onSchematicsUploadClick = this.onSchematicsUploadClick.bind(this);
+    this.onCreateWorkspaceClick = this.onCreateWorkspaceClick.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -68,9 +70,11 @@ class Projects extends React.Component {
   onProjectSelect(keyName) {
     return (event) => {
       if (
-        !event.target.id.startsWith("edit") &&
-        !event.target.id.startsWith("delete") &&
-        !event.target.id.startsWith("view-json")
+        !event.target.id.includes("edit-proj") &&
+        !event.target.id.includes("delete-proj") &&
+        !event.target.id.includes("view-json") &&
+        !event.target.id.includes("schematics-upload") &&
+        !event.target.id.includes("schematics-create")
       ) {
         if (
           // deselection only allowed when debug is true
@@ -145,6 +149,77 @@ class Projects extends React.Component {
     };
   }
 
+  /**
+   * on upload to schematics click
+   * @param {string} keyName project key name
+   * @returns {Function} event function
+   */
+  onSchematicsUploadClick(keyName) {
+    return () => {
+      let notification = {
+        title: "Success",
+        kind: "success",
+        text: `Starting upload to ${this.props.projects[keyName].workspace_name}`,
+        timeout: 3000,
+      };
+      this.props.notify(notification);
+
+      return fetch(
+        `/api/schematics/tar/${this.props.projects[keyName].workspace_name}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.props.projects[keyName].json),
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            throw data.error;
+          } else {
+            let notification = {
+              title: "Success",
+              kind: "success",
+              text: `Successfully uploaded to Schematics`,
+              timeout: 3000,
+            };
+            this.props.notify(notification);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          let notification = {
+            title: "Error",
+            kind: "error",
+            text: "Upload failed with error: " + err || err.message,
+            timeout: 3000,
+          };
+          this.props.notify(notification);
+        });
+    };
+  }
+
+  /**
+   * on create workspace click
+   * @param {string} keyName project key name
+   * @returns {Function} event function
+   */
+  onCreateWorkspaceClick(keyName) {
+    return () => {
+      let modalData = Object.assign({}, this.props.projects[keyName]);
+      modalData.use_schematics = true;
+
+      this.setState(
+        {
+          modalData,
+        },
+        () => {
+          this.toggleModal();
+        }
+      );
+    };
+  }
+
   render() {
     let projectKeys = Object.keys(this.props.projects).sort(azsort);
     return (
@@ -190,23 +265,27 @@ class Projects extends React.Component {
             it as a Project to work on later.
           </p>
           <div className="marginBottomXs">
-            <legend className="cds--label">Create a Project</legend>
+            <legend className="cds--label marginBottomSmall">
+              Create a Project
+            </legend>
             <Button
               id="new-project"
               kind="tertiary"
-              className="newProjectButton"
+              className="projectButton marginLeftMed"
               onClick={this.newProject}
               iconDescription="Create new project"
               renderIcon={Add}
             >
-              Create New Project
+              Create a New Project
             </Button>
           </div>
           {/* hide projects section if there are none */}
           {projectKeys.length > 0 && (
-            <div className="projectTiles">
-              <legend className="cds--label">Select a Project</legend>
-              <div>
+            <div className="projectSelect">
+              <legend className="cds--label marginBottomSmall">
+                Select a Project
+              </legend>
+              <div className="projectTiles marginLeftMed">
                 {/* projects */}
                 {projectKeys.map((keyName) => (
                   <ProjectTile
@@ -218,6 +297,12 @@ class Projects extends React.Component {
                     onEditClick={this.onEditClick(keyName)}
                     onViewClick={this.onViewClick(keyName)}
                     onDeleteClick={this.onDeleteClick(keyName)}
+                    onSchematicsUploadClick={this.onSchematicsUploadClick(
+                      keyName
+                    )}
+                    onCreateWorkspaceClick={this.onCreateWorkspaceClick(
+                      keyName
+                    )}
                   />
                 ))}
               </div>

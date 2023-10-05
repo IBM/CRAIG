@@ -30,14 +30,22 @@ function schematicsRoutes(axios, controller) {
         })
         .then((response) => {
           let workspaces = response.data.workspaces;
+          let didFindMatch = false;
           let data = { w_id: "", t_id: "" };
+
           workspaces.forEach((workspace) => {
             if (workspace.name === workspaceName) {
+              didFindMatch = true;
               data.w_id = workspace.id;
               data.t_id = workspace.template_data[0].id;
             }
           });
-          resolve(data);
+
+          if (!didFindMatch) {
+            reject(`No workspace found with name ${workspaceName}`);
+          } else {
+            resolve(data);
+          }
         })
         .catch((error) => {
           reject(error);
@@ -70,9 +78,14 @@ function schematicsRoutes(axios, controller) {
     let tarFile = "craig.tar";
     let forceTarPackFail = req.params?.forceFail;
     let workspaceData;
-    let internalCall = req.params["internalCall"];
+
     return new Promise((resolve, reject) => {
-      controller
+      if (process.env.NO_SCHEMATICS) {
+        reject("Schematics feature not supported on development.");
+        return;
+      }
+
+      return controller
         .getWorkspaceData(workspaceName)
         .then((wsData) => {
           workspaceData = wsData;
@@ -92,10 +105,10 @@ function schematicsRoutes(axios, controller) {
               // call create blob to get ArrayBuffer for Blob
               return controller.createBlob(pack);
             } catch (err) {
-              reject("Error: failed to pack tar file");
+              return reject("Error: failed to pack tar file");
             }
           } else {
-            reject("Error: failed to parse CRAIG data");
+            return reject("Error: failed to parse CRAIG data");
           }
         })
         .then((blob) => {
@@ -125,13 +138,17 @@ function schematicsRoutes(axios, controller) {
           }
           controller.uploadResponse = response.data;
           resolve(respData);
+        })
+        .catch((err) => {
+          reject(err);
         });
     })
-      .then((data) => {
-        if (!internalCall) res.send(data);
+      .then((response) => {
+        res.send(response);
       })
-      .catch((err) => {
-        res.send(err);
+      .catch((error) => {
+        console.error(error);
+        res.send({ error });
       });
   };
 
@@ -142,10 +159,15 @@ function schematicsRoutes(axios, controller) {
    */
   controller.createWorkspace = function (req, res) {
     let workspaceName = req.params["workspaceName"];
-    let region = req.params["region"];
+    let region = req.params["region"] || "us-south";
     let resourceGroup = req.params["resourceGroup"];
-    let internalCall = req.params["internalCall"];
+
     return new Promise((resolve, reject) => {
+      if (process.env.NO_SCHEMATICS) {
+        reject("Schematics feature not supported on development.");
+        return;
+      }
+
       return controller
         .getBearerToken()
         .then(() => {
@@ -171,65 +193,18 @@ function schematicsRoutes(axios, controller) {
           return axios(requestConfig);
         })
         .then((response) => {
-          if (!internalCall) res.send(response.data);
           resolve(response.data);
         })
         .catch((err) => {
-          res.send(err);
-          resolve(err);
-        });
-    });
-  };
-
-  /**
-   * creates schematics workspace and uploads tar file of CRAIG data
-   * req.body must contain all needed data for createWorkspace and uploadTar functions
-   * @param {*} req express request object
-   * @param {*} res express resolve object
-   * @returns
-   */
-  controller.newWorkspaceUpload = function (req, res) {
-    return new Promise((resolve, reject) => {
-      if (process.env.CRAIG_PROD === "TRUE") {
-        reject("CRAIG_PROD is true");
-        return;
-      }
-      // createWorkspace req
-      let createWorkspaceReq = {
-        params: {
-          workspaceName: req.body["workspaceName"],
-          region: req.body["region"],
-          resourceGroup: req.body["resourceGroup"],
-          internalCall: true,
-        },
-      };
-      return controller
-        .createWorkspace(createWorkspaceReq, res)
-        .then((createData) => {
-          // uploadTar req
-          let uploadTarReq = {
-            params: {
-              workspaceName: req.body["workspaceName"],
-              internalCall: true,
-            },
-            body: req.body["craigJson"],
-          };
-          return controller.uploadTar(uploadTarReq, res).then(() => {
-            console.log(
-              `Upload successful to workspace with id: ${createData.id}`
-            );
-            resolve({
-              workspaceId: createData.id,
-              schematicsUrl: `https://cloud.ibm.com/schematics/workspaces/${createData.id}`,
-            });
-          });
+          reject(err);
         });
     })
-      .then((data) => {
-        res.send(data);
+      .then((response) => {
+        res.send(response);
       })
-      .catch((err) => {
-        res.send(err);
+      .catch((error) => {
+        console.error(error);
+        res.send({ error });
       });
   };
 }

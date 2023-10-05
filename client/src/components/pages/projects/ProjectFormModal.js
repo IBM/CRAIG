@@ -12,6 +12,10 @@ import {
   invalidProjectDescription,
   invalidProjectNameText,
 } from "../../../lib";
+import { invalidNewResourceName } from "../../../lib/forms";
+import { azsort, isNullOrEmptyString } from "lazy-z";
+import { Launch } from "@carbon/icons-react";
+import { Button } from "@carbon/react";
 import { TemplateAbout } from "../../forms/OptionsForm";
 import MixedPattern from "../../../images/mixed.png";
 import VsiPattern from "../../../images/VsiPattern.png";
@@ -52,19 +56,25 @@ export class ProjectFormModal extends React.Component {
   }
 
   render() {
-    let invalidName = invalidProjectName(this.state, this.props);
+    let invalidProjectNameVal = invalidProjectName(this.state, this.props);
     let invalidDescription = invalidProjectDescription(this.state.description);
+    let invalidSchematicsName = this.state.use_schematics
+      ? invalidNewResourceName(this.state.workspace_name)
+      : false;
+
     return (
       <IcseModal
         size={this.state.use_template ? "lg" : "md"}
         open={this.props.open}
         heading={
           this.state.last_save === undefined
-            ? "Create New Project"
+            ? "Create a New Project"
             : "Edit Project Details"
         }
         primaryButtonText={
-          this.state.last_save === undefined ? "Create Project" : "Save Project"
+          this.state.last_save === undefined
+            ? "Create Project"
+            : "Save Project" + (this.state.use_schematics ? " & Workspace" : "")
         }
         onRequestClose={this.props.onClose}
         onRequestSubmit={() => {
@@ -79,11 +89,13 @@ export class ProjectFormModal extends React.Component {
             this.props.nav("/projects");
           }
         }}
-        primaryButtonDisabled={invalidName || invalidDescription}
+        primaryButtonDisabled={
+          invalidProjectNameVal || invalidDescription || invalidSchematicsName
+        }
       >
         <IcseFormGroup>
           <IcseNameInput
-            invalid={invalidName}
+            invalid={invalidProjectNameVal}
             invalidText={invalidProjectNameText(this.state, this.props)}
             id="project-name"
             componentName="project"
@@ -99,37 +111,43 @@ export class ProjectFormModal extends React.Component {
         </IcseFormGroup>
         <IcseFormGroup>
           <IcseTextInput
-            invalid={invalidProjectDescription(this.state.description)}
+            invalid={invalidDescription}
             invalidText={
               "Project description must follow the regex pattern: " +
               constants.projectDescriptionRegex
             }
             componentName="project"
             field="description"
-            placeholder="(Optional) Brief project description"
+            placeholder="Brief project description"
             id="project-description"
             onChange={this.handleTextInput}
             value={this.state.description || ""}
             className="textInputWide"
+            optional={true}
           />
-          {this.props.data.name === "" && (
-            <IcseToggle
-              labelText="Use a Project Template"
-              defaultToggled={this.state.use_template}
-              onToggle={() => this.handleToggle("use_template")}
-              id="use-template"
-              toggleFieldName="use_template"
-              value={this.state.use_template}
-              tooltip={{
-                content:
-                  "Create a new project based on a preconfigured quick start template",
-              }}
-            />
-          )}
+        </IcseFormGroup>
+        <IcseFormGroup>
+          <IcseToggle
+            labelText="Use a Project Template"
+            defaultToggled={this.state.use_template}
+            disabled={
+              this.props.data.use_template &&
+              !isNullOrEmptyString(this.props.data.last_save) &&
+              !isNullOrEmptyString(this.props.data.template)
+            } // do not allow removal of template once saved with template
+            onToggle={() => this.handleToggle("use_template")}
+            id="use-template"
+            toggleFieldName="use_template"
+            value={this.state.use_template}
+            tooltip={{
+              content:
+                "Create a new project based on a preconfigured quick start template",
+            }}
+          />
         </IcseFormGroup>
         {this.state.use_template && (
-          <>
-            <IcseFormGroup>
+          <div className="marginBottom formInSubForm">
+            <IcseFormGroup noMarginBottom>
               <IcseSelect
                 name="template"
                 formName="project"
@@ -137,16 +155,97 @@ export class ProjectFormModal extends React.Component {
                 groups={this.props.templates}
                 value={this.state.template || "Mixed"}
                 handleInputChange={this.handleTextInput}
+                disabled={
+                  this.props.data.use_template &&
+                  !isNullOrEmptyString(this.props.data.last_save) &&
+                  !isNullOrEmptyString(this.props.data.template)
+                } // do not allow removal of template once saved with template
               />
-            </IcseFormGroup>
-            <IcseFormGroup>
               <TemplateAbout
                 smallImage
-                template={constants.template_dropdown_map[this.state.template]}
+                template={
+                  constants.template_dropdown_map[
+                    this.state.template || "Mixed"
+                  ]
+                }
               />
             </IcseFormGroup>
-          </>
+          </div>
         )}
+        <>
+          <IcseFormGroup>
+            <IcseToggle
+              labelText="Integrate with Schematics"
+              defaultToggled={this.state.use_schematics}
+              onToggle={() => this.handleToggle("use_schematics")}
+              id="use-schematics"
+              toggleFieldName="use_schematics"
+              value={this.state.use_schematics}
+            />
+          </IcseFormGroup>
+          {this.state.use_schematics && (
+            <div className="formInSubForm">
+              <IcseFormGroup>
+                <IcseTextInput
+                  invalid={invalidNewResourceName(this.state.workspace_name)}
+                  invalidText={"Invalid Name"}
+                  componentName="workspace"
+                  field="workspace_name"
+                  id="workspace-name"
+                  onChange={this.handleTextInput}
+                  value={this.state.workspace_name || ""}
+                />
+              </IcseFormGroup>
+              <IcseFormGroup>
+                <IcseTextInput
+                  invalid={false}
+                  componentName="workspace"
+                  field="workspace_resource_group"
+                  id="workspace-resource-group"
+                  onChange={this.handleTextInput}
+                  value={this.state.workspace_resource_group}
+                  placeholder={"default"}
+                  optional={true}
+                  tooltip={{
+                    content: `Must correspond to an existing resource group. If not provided, the workspace will be deployed to the "default" resource group in the account.`,
+                    link: "https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui",
+                  }}
+                />
+              </IcseFormGroup>
+              <IcseFormGroup>
+                <IcseSelect
+                  name="workspace_region"
+                  labelText={"Workspace Region"}
+                  formName={"projects"}
+                  value={this.state.workspace_region || "us-south"}
+                  groups={["us-south", "eu-de", "eu-gb"].sort(azsort)}
+                  handleInputChange={this.handleTextInput}
+                />
+              </IcseFormGroup>
+              {this.state.workspace_url && (
+                <div className="displayFlex alignItemsEnd">
+                  <IcseTextInput
+                    invalid={false}
+                    readOnly={true}
+                    componentName="project"
+                    field="workspace_url"
+                    id="workspace-url"
+                    value={this.state.workspace_url || ""}
+                    className="textInputWide marginRightSmall"
+                  />
+                  <Button
+                    kind="ghost"
+                    onClick={() => {
+                      window.open(this.state.workspace_url, "_blank");
+                    }}
+                    renderIcon={Launch}
+                    iconDescription="Launch workspace in new tab"
+                  ></Button>
+                </div>
+              )}
+            </div>
+          )}
+        </>
       </IcseModal>
     );
   }

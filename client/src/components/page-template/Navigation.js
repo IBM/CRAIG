@@ -153,9 +153,11 @@ class Navigation extends React.Component {
                     Description: {this.props.project.description}
                   </p>
                 )}
-                <p className="smallerText marginBottomXs headerMenuBoxItemText">
-                  Template Pattern: {this.props.project.template}
-                </p>
+                {this.props.project.template && (
+                  <p className="smallerText marginBottomXs headerMenuBoxItemText">
+                    Template Pattern: {this.props.project.template}
+                  </p>
+                )}
                 <p className="smallerText headerMenuBoxItemText marginBottomXs">
                   Last Saved:{" "}
                   {new Date(this.props.project.last_save).toLocaleString()}

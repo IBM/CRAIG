@@ -31,13 +31,14 @@ export const TemplateAbout = (props) => {
   return (
     <div
       id={"pattern-info-" + props.template.name}
-      className="leftTextAlign marginBottomSmall subForm marginTopSmall displayFlex"
+      className={
+        "leftTextAlign displayFlex" + (props.smallImage ? "" : " marginBottom")
+      }
     >
-      <div className="marginBottomSmaller">
-        <p className="patternDocText marginBottomSmall">
-          {props.template.patternDocText} This pattern includes:
-        </p>
-        <ul className="bullets indent marginBottomSmall">
+      <div>
+        <p className="marginBottomXs">{props.template.patternDocText}</p>
+        <p className="marginBottomXs">This pattern includes:</p>
+        <ul className="bullets indent">
           {props.template.includes.map((item) => (
             <li key={item}>
               <p>{item}</p>

@@ -13,11 +13,10 @@ router.get("/cluster/:region/flavors", controller.clusterFlavors);
 router.get("/cluster/versions", controller.clusterVersions);
 
 // schematics
-router.put("/schematics/:workspaceName", controller.uploadTar);
+router.put("/schematics/tar/:workspaceName", controller.uploadTar);
 router.post(
-  "/schematics/createWorkspace/:workspaceName/:region/:resourceGroup",
+  "/schematics/:workspaceName/:region?/:resourceGroup?",
   controller.createWorkspace
 );
-router.post("/schematics/newWorkspaceUpload", controller.newWorkspaceUpload);
 
 module.exports = router;

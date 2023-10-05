@@ -33,6 +33,10 @@ p {
   margin-right: 1rem;
 }
 
+.marginRightSmall {
+  margin-right: 0.5rem;
+}
+
 .hidden {
   display: none;
 }
