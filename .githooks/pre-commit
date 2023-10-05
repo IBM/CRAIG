@@ -38,9 +38,19 @@ if [[ -n "$COVERAGE_GREP_OUTPUT" ]]; then
 fi
 
 # check for failing build
-formatted_print Running Build
+formatted_print "Running Build"
 if ! npm run pre-commit-build | tee /dev/tty | grep 'Compiled successfully.' > /dev/null; then
   formatted_print "Commit failed on build" > /dev/stderr
+  exit 1
+fi
+
+formatted_print "Running Server"
+export PRE_COMMIT=true
+SERVER_GREP_OUTPUT=$(node server.js 2>&1 | grep -i error)
+if [[ -n "$SERVER_GREP_OUTPUT" ]]; then
+  formatted_print "Failed to start server"
+  echo "\n$SERVER_GREP_OUTPUT"
+  formatted_print "Commit failed on server start" > /dev/stderr
   exit 1
 fi
 

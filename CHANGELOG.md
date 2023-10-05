@@ -7,9 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - FS Cloud is no longer true in the default configuration
+- The pre-commit hook now checks the server for errors before committing
 
 ### Features
 
+- When the users' CRAIG version is out of date, a banner now appears to notify them to update
 - Users can now access COS plan from JSON schema
 - Users can now create a project based on a template from the new instance templates page `/templates`.
 - Users can now select a COS pricing plan from the Object Storage page 

@@ -11,9 +11,6 @@ const routes = require("./express-routes/routes");
 app.use(express.static(guiBuild));
 app.use(bodyParser.json());
 
-// This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
 // create a GET route
 app.get("/express_backend", (req, res) => {
   res.send({ express: "YOUR EXPRESS BACKEND IS CONNECTED TO CRAIG" });
@@ -24,3 +21,7 @@ app.use("/api", routes);
 app.get("*", (req, res) => {
   res.sendFile(path.join(guiBuild, "index.html"));
 });
+
+// This displays message that the server running and listening to specified port
+if (process.env.PRE_COMMIT !== "true")
+  app.listen(port, () => console.log(`Listening on port ${port}`));

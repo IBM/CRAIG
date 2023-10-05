@@ -2,6 +2,7 @@
   {
     "version": "1.3.0",
     "features": [
+      "When the users' CRAIG version is out of date, a banner now appears to notify them to update",
       "Users can now access COS plan from JSON schema",
       "Users can now create a project based on a template from the new instance templates page `/templates`.",
       "Users can now select a COS pricing plan from the Object Storage page",
@@ -20,7 +21,10 @@
       "Fixed an issue causing subnet tier form to crash when editing an invalid CIDR block from the middle",
       "Fixed an issue causing valid ssh keys without an email address to fail validation"
     ],
-    "upgrade_notes": ["FS Cloud is no longer true in the default configuration"]
+    "upgrade_notes": [
+      "FS Cloud is no longer true in the default configuration",
+      "The pre-commit hook now checks the server for errors before committing"
+    ]
   },
   {
     "version": "1.2.0",
