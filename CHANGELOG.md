@@ -20,6 +20,10 @@ All notable changes to this project will be documented in this file.
 - Users can now create a project based on a template from the projects page `/projects`
 - When not using FS Cloud, users can now delete the only Key Management resource
 - Users can now upload CRAIG Terraform directly to Schematics from the Projects page
+- When enabling Power VS from the options page, users can now enable high availability / disaster recovery
+- Images for Power VS region `wdc06` have been added to support high availability
+- Users can now able affinity and anti-affinity policies for Power VS instances and volumes
+- Users can now provision Power VS resources in region `wdc07`
 
 ### Fixes
 

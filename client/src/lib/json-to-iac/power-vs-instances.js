@@ -1,6 +1,6 @@
 const { powerVsWorkspaceRef } = require("./power-vs");
 const { jsonToTfPrint, tfBlock } = require("./utils");
-const { snakeCase, isNullOrEmptyString } = require("lazy-z");
+const { snakeCase, isNullOrEmptyString, transpose } = require("lazy-z");
 
 /**
  * format power vs instance
@@ -18,15 +18,10 @@ function formatPowerVsInstance(instance) {
     )}.pi_key_name}`,
     pi_cloud_instance_id: powerVsWorkspaceRef(instance.workspace),
     pi_instance_name: "${var.prefix}-" + instance.name,
-    pi_memory: instance.pi_memory,
-    pi_processors: instance.pi_processors,
-    pi_proc_type: instance.pi_proc_type,
-    pi_sys_type: instance.pi_sys_type,
-    pi_pin_policy: instance.pi_pin_policy,
-    pi_health_status: instance.pi_health_status,
-    pi_storage_type: instance.pi_storage_type,
-    pi_network: [],
   };
+  transpose(instance, data);
+  // add pi network here to have the items at the bottom of the terraform code
+  data.pi_network = [];
   instance.network.forEach((nw) => {
     let nwData = {
       network_id: `\${ibm_pi_network.power_network_${snakeCase(
@@ -38,6 +33,66 @@ function formatPowerVsInstance(instance) {
     }
     data.pi_network.push(nwData);
   });
+  [
+    "network",
+    "zone",
+    "workspace",
+    "image",
+    "ssh_key",
+    "name",
+    "storage_option",
+  ].forEach((field) => {
+    delete data[field];
+  });
+  if (data.pi_affinity_policy) {
+    delete data.pi_storage_type;
+    delete data.pi_storage_pool;
+    if (data.pi_affinity_policy === "affinity") {
+      delete data.pi_anti_affinity_instance;
+      delete data.pi_anti_affinity_volume;
+      if (data.affinity_type === "Instance") {
+        // affinity instance
+        delete data.pi_affinity_volume;
+        data.pi_affinity_instance = `\${ibm_pi_instance.${snakeCase(
+          `${instance.workspace}_workspace_instance_${instance.pi_affinity_instance}`
+        )}.instance_id}`;
+      } else {
+        // affinity volume
+        delete data.pi_affinity_instance;
+        data.pi_affinity_volume = `\${ibm_pi_volume.${snakeCase(
+          instance.workspace + " volume " + instance.pi_affinity_volume
+        )}.volume_id}`;
+      }
+    } else {
+      delete data.pi_affinity_instance;
+      delete data.pi_affinity_volume;
+      if (data.affinity_type === "Instance") {
+        // anti affinity instance
+        delete data.pi_anti_affinity_volume;
+        data.pi_anti_affinity_instance = `\${ibm_pi_instance.${snakeCase(
+          `${instance.workspace}_workspace_instance_${instance.pi_anti_affinity_instance}`
+        )}.instance_id}`;
+      } else {
+        // anti affinity volume
+        delete data.pi_anti_affinity_instance;
+        data.pi_anti_affinity_volume = `\${ibm_pi_volume.${snakeCase(
+          instance.workspace + " volume " + instance.pi_anti_affinity_volume
+        )}.volume_id}`;
+      }
+    }
+    delete data.affinity_type;
+  } else {
+    // remove extra fields for storage pool / type
+    delete data.pi_affinity_policy;
+    delete data.pi_affinity_volume;
+    delete data.pi_affinity_instance;
+    delete data.affinity_type;
+    delete data.pi_anti_affinity_instance;
+    delete data.pi_anti_affinity_volume;
+    if (!data.pi_storage_type) {
+      delete data.pi_storage_type;
+    }
+  }
   return jsonToTfPrint(
     "resource",
     "ibm_pi_instance",

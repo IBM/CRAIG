@@ -13,26 +13,14 @@ import {
   Projects,
   NewFormPage,
 } from "./components";
-import { invalidForms, state, releaseNotes } from "./lib";
+import { invalidForms, state } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
 import { TemplatePage } from "./components/pages/TemplatePage";
 import { isNullOrEmptyString } from "lazy-z/lib/shortcuts";
-import { templates } from "./lib/constants";
-
-import mixedJson from "./lib/docs/templates/slz-mixed.json";
-import vsiJson from "./lib/docs/templates/slz-vsi.json";
-import vsiEdgeJson from "./lib/docs/templates/slz-vsi-edge.json";
-import powerJson from "./lib/docs/templates/power-sap-hana.json";
-
-const templateNameToJsonMap = {
-  Mixed: mixedJson,
-  VSI: vsiJson,
-  "VSI Edge": vsiEdgeJson,
-  "Power VS SAP Hana": powerJson,
-};
+import { template_dropdown_map } from "./lib/constants";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -216,7 +204,7 @@ class Craig extends React.Component {
       componentProps.data.template !== "" &&
       stateData.template !== componentProps.data.template
     ) {
-      projects[kname].json = templateNameToJsonMap[stateData.template];
+      projects[kname].json = template_dropdown_map[stateData.template].template;
       projects[kname].template = stateData.template;
     }
 
@@ -404,7 +392,6 @@ class Craig extends React.Component {
             <Projects
               current_project={craig.store.project_name}
               projects={this.state.projects}
-              templates={templates}
               new={this.newProject}
               save={this.onProjectSave}
               delete={this.onProjectDelete}

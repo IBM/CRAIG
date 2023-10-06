@@ -13,26 +13,12 @@ import {
   invalidProjectNameText,
 } from "../../../lib";
 import { invalidNewResourceName } from "../../../lib/forms";
-import { azsort, isNullOrEmptyString } from "lazy-z";
+import { azsort, isNullOrEmptyString, keys } from "lazy-z";
 import { Launch } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
 import { TemplateAbout } from "../../forms/OptionsForm";
-import MixedPattern from "../../../images/mixed.png";
-import VsiPattern from "../../../images/VsiPattern.png";
-import VsiEdgePattern from "../../../images/VsiEdgePattern.png";
-import PowerSAP_HanaPattern from "../../../images/PowerSAP_HanaPattern.png";
-
-const constants = require("../../../lib/constants");
-const templateImages = {
-  Mixed: MixedPattern,
-  VSI: VsiPattern,
-  "VSI Edge": VsiEdgePattern,
-  "Power VS SAP Hana": PowerSAP_HanaPattern,
-};
-
-constants.templates.forEach((template) => {
-  constants.template_dropdown_map[template].image = templateImages[template];
-});
+import { templates } from "../../utils";
+import { projectDescriptionRegex } from "../../../lib/constants";
 
 export class ProjectFormModal extends React.Component {
   constructor(props) {
@@ -114,7 +100,7 @@ export class ProjectFormModal extends React.Component {
             invalid={invalidDescription}
             invalidText={
               "Project description must follow the regex pattern: " +
-              constants.projectDescriptionRegex
+              projectDescriptionRegex
             }
             componentName="project"
             field="description"
@@ -152,7 +138,7 @@ export class ProjectFormModal extends React.Component {
                 name="template"
                 formName="project"
                 labelText="Select a Project Template"
-                groups={this.props.templates}
+                groups={keys(this.props.templates)}
                 value={this.state.template || "Mixed"}
                 handleInputChange={this.handleTextInput}
                 disabled={
@@ -163,11 +149,7 @@ export class ProjectFormModal extends React.Component {
               />
               <TemplateAbout
                 smallImage
-                template={
-                  constants.template_dropdown_map[
-                    this.state.template || "Mixed"
-                  ]
-                }
+                template={templates[this.state.template]}
               />
             </IcseFormGroup>
           </div>

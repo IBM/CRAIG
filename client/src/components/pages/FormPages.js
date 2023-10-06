@@ -95,7 +95,11 @@ import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
-import { edgeRouterEnabledZones, cosPlans } from "../../lib/constants";
+import {
+  edgeRouterEnabledZones,
+  cosPlans,
+  powerStoragePoolRegionMap,
+} from "../../lib/constants";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -631,6 +635,8 @@ const PowerVsInstances = (craig) => {
   ) : (
     <PowerVsInstancesPage
       power_instances={craig.store.json.power_instances}
+      storage_pool_map={powerStoragePoolRegionMap}
+      power_volumes={craig.store.json.power_volumes}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
       onSave={craig.power_instances.save}
@@ -662,6 +668,10 @@ const PowerVsInstances = (craig) => {
       invalidPiMemoryTextCallback={() => {
         return "Must be a whole number less than 918.";
       }}
+      storageChangesDisabledCallback={() => {
+        // placeholder
+        return false;
+      }}
     />
   );
 };
@@ -686,6 +696,11 @@ const PowerVsVolumes = (craig) => {
       power_instances={craig.store.json.power_instances}
       invalidCallback={invalidName("power_volumes")}
       invalidTextCallback={invalidNameText("power_volumes")}
+      affinityChangesDisabled={() => {
+        // placeholder
+        return false;
+      }}
+      storage_pool_map={powerStoragePoolRegionMap}
     />
   );
 };

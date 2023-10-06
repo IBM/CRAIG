@@ -3,6 +3,8 @@ const mixedTemplate = require("./docs/templates/slz-mixed.json");
 const vsiTemplate = require("./docs/templates/slz-vsi.json");
 const vsiEdgeTemplate = require("./docs/templates/slz-vsi-edge.json");
 const powerTemplate = require("./docs/templates/power-sap-hana.json");
+const oracleRac = require("./docs/templates/oracle-rac.json");
+const emptyProject = require("./docs/templates/from-scratch.json");
 
 module.exports = {
   varDotRegion: "${var.region}",
@@ -797,13 +799,12 @@ module.exports = {
       "Tier1-Flash-3",
     ],
     tor01: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
+    wdc07: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
   },
-  templates: ["Mixed", "VSI", "VSI Edge", "Power VS SAP Hana"],
   template_dropdown_map: {
     Mixed: {
       template: mixedTemplate,
       name: "Landing Zone Mixed Pattern",
-      image: "",
       patternDocText:
         "A default template based on the IBM Landing Zone Mixed Pattern. This is the default pattern for CRAIG.",
       includes: [
@@ -822,7 +823,6 @@ module.exports = {
     VSI: {
       template: vsiTemplate,
       name: "Landing Zone VSI Pattern",
-      image: "",
       patternDocText:
         "Based on the IBM Landing Zone VSI Pattern, deploys an example application server deployment in both the Management and Workload VPC.",
       includes: [
@@ -841,7 +841,6 @@ module.exports = {
     "VSI Edge": {
       template: vsiEdgeTemplate,
       name: "Landing Zone VSI Edge Pattern",
-      image: "",
       patternDocText:
         "Based on the IBM Landing Zone VSI Edge Pattern, deploys an Edge VPC with one VSI and an F5 Big IP instance with VPN and WAF.",
       includes: [
@@ -861,14 +860,13 @@ module.exports = {
     "Power VS SAP Hana": {
       template: powerTemplate,
       name: "Power VS SAP Hana Pattern",
-      image: "",
       patternDocText:
         "Based on existing SAP Hana solutions, this template creates base infrastructure with SAP system landscape that leverages the services from the VPC landing zone as well as the needed components to get started with a Power VS Virtual Server environment",
       includes: [
         "A resource group for cloud services and for each VPC",
         "A management and workload VPC connected by a transit gateway",
         "An Edge VPC with F5 Big IP and needed network interfaces",
-        "A Power VS Instances for SAP Hana, SAP Netweaver, and Secure File Share.",
+        "Power VS Instances for SAP Hana, SAP Netweaver, and Secure File Share.",
         "A flow log collector for each VPC",
         "Object storage instances for flow logs and activity tracker",
         "Encryption keys in either a Key Protect or Hyper Protect Crypto Services instance",
@@ -877,6 +875,31 @@ module.exports = {
         "An example Virtual Server instance deployment in the management VPC",
         "A VPN Gateway in the Management VPC",
       ],
+    },
+    "Power VS Oracle Ready": {
+      template: oracleRac,
+      name: "Power VS AIX Oracle Ready",
+      patternDocText:
+        "This template creates an environment with VPC and Power VS resources to allow users to create Oracle Real Application Clusters (Oracle RAC) on IBM Cloud",
+      includes: [
+        "A resource group for cloud services and for each VPC, and Power Virtuall Servers",
+        "A management and workload VPC connected by a transit gateway",
+        "One public and two private network interfaces for Power VS with cloud connections to a transit gateway",
+        "Two AIX Power Virtual Server instances and needed volumes for Oracle RAC implemententation",
+        "A flow log collector for each VPC",
+        "Object storage instances for flow logs and activity tracker",
+        "Encryption keys in either a Key Protect or Hyper Protect Crypto Services instance",
+        "Virtual Private endpoints for Cloud Object storage in each VPC",
+        "An example Virtual Server instance deployment in the management and workload VPCs",
+        "A VPN Gateway in the Management VPC",
+      ],
+    },
+    "Empty Project": {
+      template: emptyProject,
+      name: "Empty Project",
+      patternDocText:
+        "This template allows uers to start from scratch and create a fully customized environment with no presets",
+      includes: ["A resource group for CRAIG generated resources"],
     },
   },
 };

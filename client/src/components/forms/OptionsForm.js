@@ -10,6 +10,8 @@ import {
   IcseToggle,
   IcseMultiSelect,
   IcseModal,
+  IcseToolTip,
+  ToolTipWrapper,
 } from "icse-react-assets";
 import PropTypes from "prop-types";
 import { Button, Tag, TextArea } from "@carbon/react";
@@ -122,15 +124,21 @@ class OptionsForm extends React.Component {
         [name]: !this.state[name],
         power_vs_zones: [],
       });
+    } else if (name === "power_vs_high_availability" && !this.state[name]) {
+      this.setState({
+        [name]: !this.state.name,
+        power_vs_zones: ["dal12", "wdc06"],
+      });
     } else this.setState({ [name]: !this.state[name] });
   }
 
   disableSave() {
-    let noModalState = { ...this.state };
-    delete noModalState.showModal;
+    let inheritModalState = { ...this.state };
+    inheritModalState.showModal =
+      this.props.craig.store.json._options.showModal;
     return (
       (!this.props.template &&
-        deepEqual(noModalState, this.props.craig.store.json._options)) ||
+        deepEqual(inheritModalState, this.props.craig.store.json._options)) ||
       invalidNewResourceName(this.state.prefix) ||
       invalidTagList(this.state.tags) ||
       (this.state.enable_power_vs &&
@@ -204,31 +212,6 @@ class OptionsForm extends React.Component {
             className="marginBottomSmall"
           />
           <IcseFormGroup>
-            <IcseToggle
-              labelText="Enable Dynamic Scalable Subnets"
-              field="dynamic_subnets"
-              disabled={this.props.craig.store.json._options.advanced_subnets}
-              defaultToggled={this.state.dynamic_subnets}
-              onToggle={() => this.handleToggle("dynamic_subnets")}
-              id="dynamic-subnets"
-              tooltip={{
-                content: this.props.craig.store.json._options.advanced_subnets
-                  ? "Dynamic subnet addressing cannot be used with advanced subnet tiers"
-                  : "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources. Turn off if you want to manage your address prefixes and subnet CIDR addresses manually.",
-              }}
-            />
-            <IcseToggle
-              labelText="Enable Power Virtual Servers"
-              defaultToggled={this.state.enable_power_vs}
-              onToggle={() => this.handleToggle("enable_power_vs")}
-              id="use-power-vs"
-              toggleFieldName="enable_power_vs"
-              value={this.state.enable_power_vs}
-              tooltip={{
-                content:
-                  "Enable the creation of IBM Power Virtual Servers and related infrastructure. Power VS is not currently enabled in CRAIG, this flag is for upcoming features.",
-              }}
-            />
             <IcseToggle
               labelText="Use FS Cloud"
               defaultToggled={this.state.fs_cloud}
@@ -312,23 +295,63 @@ class OptionsForm extends React.Component {
                   "Account ID is used to create some resources, such as Virtual Private Endpoints for Secrets Manager",
               }}
             />
+            <IcseToggle
+              labelText="Enable Dynamic Scalable Subnets"
+              field="dynamic_subnets"
+              disabled={this.props.craig.store.json._options.advanced_subnets}
+              defaultToggled={this.state.dynamic_subnets}
+              onToggle={() => this.handleToggle("dynamic_subnets")}
+              id="dynamic-subnets"
+              tooltip={{
+                content: this.props.craig.store.json._options.advanced_subnets
+                  ? "Dynamic subnet addressing cannot be used with advanced subnet tiers"
+                  : "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources. Turn off if you want to manage your address prefixes and subnet CIDR addresses manually.",
+              }}
+            />
+          </IcseFormGroup>
+          <IcseFormGroup>
+            <IcseToggle
+              labelText="Enable Power Virtual Servers"
+              defaultToggled={this.state.enable_power_vs}
+              onToggle={() => this.handleToggle("enable_power_vs")}
+              id="use-power-vs"
+              toggleFieldName="enable_power_vs"
+              value={this.state.enable_power_vs}
+            />
+            {this.state.enable_power_vs && (
+              <IcseToggle
+                labelText="High Availability"
+                defaultToggled={this.state.power_vs_high_availability}
+                onToggle={() => this.handleToggle("power_vs_high_availability")}
+                id="use-power-vs-hadr"
+                toggleFieldName="power_vs_high_availability"
+                value={this.state.power_vs_high_availability}
+                tooltip={{
+                  content:
+                    "Enable High Availability and Disaster Recovery for Power VS by using enabled zones Dallas 12 and Washington DC 6",
+                }}
+              />
+            )}
             {this.state.enable_power_vs && (
               <IcseMultiSelect
                 id="options-power-zones"
                 titleText="Power VS Zone"
+                key={JSON.stringify(this.state.power_vs_zones)}
                 onChange={this.handlePowerZonesChange}
                 initialSelectedItems={this.state.power_vs_zones || []}
                 items={
-                  {
-                    "au-syd": ["syd04", "syd05"],
-                    "eu-de": ["eu-de-1", "eu-de-2"],
-                    "eu-gb": ["lon04", "lon06"],
-                    "us-east": ["us-east", "wdc06"],
-                    "us-south": ["us-south", "dal10", "dal12"],
-                    "jp-tok": ["tok04"],
-                    "br-sao": ["sao01"],
-                    "ca-tor": ["tor01"],
-                  }[this.state.region]
+                  this.state.power_vs_high_availability
+                    ? ["dal12", "wdc06"]
+                    : {
+                        "au-syd": ["syd04", "syd05"],
+                        "eu-de": ["eu-de-1", "eu-de-2"],
+                        "eu-gb": ["lon04", "lon06"],
+                        "us-east": ["us-east", "wdc06", "wdc07"],
+                        "us-south": ["us-south", "dal10", "dal12"],
+                        "jp-tok": ["tok04"],
+                        "br-sao": ["sao01"],
+                        "ca-tor": ["tor01"],
+                      }[this.state.region]
                 }
                 invalid={
                   !contains(
@@ -366,17 +389,27 @@ class OptionsForm extends React.Component {
             )}
           </IcseFormGroup>
           <IcseFormGroup>
-            <TextArea
-              className="wide"
-              id="tags"
+            <ToolTipWrapper
+              id="tags-wrapper"
               labelText="Tags"
-              placeholder="hello,world"
-              value={String(this.state.tags)}
-              onChange={this.handleTags}
-              invalid={invalidTagList(this.state.tags)}
-              invalidText="One or more tags are invalid"
-              helperText="Enter a comma separated list of tags"
-            />
+              tooltip={{
+                content:
+                  "Tags are used to identify resources. These tags will be added to each resource in your configuration that supports tags",
+                align: "right",
+              }}
+            >
+              <TextArea
+                className="wide"
+                id="tags"
+                labelText="Tags"
+                placeholder="hello,world"
+                value={String(this.state.tags)}
+                onChange={this.handleTags}
+                invalid={invalidTagList(this.state.tags)}
+                invalidText="One or more tags are invalid"
+                helperText="Enter a comma separated list of tags"
+              />
+            </ToolTipWrapper>
           </IcseFormGroup>
           <div className="marginBottomSmall">
             {this.state.tags.map((tag, i) => (

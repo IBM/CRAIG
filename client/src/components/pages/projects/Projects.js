@@ -8,6 +8,7 @@ import { Add } from "@carbon/icons-react";
 import "./project.css";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
+import { templates } from "../../utils";
 
 class Projects extends React.Component {
   constructor(props) {
@@ -231,7 +232,7 @@ class Projects extends React.Component {
             onClose={this.toggleModal}
             onSubmit={this.props.save}
             projects={this.props.projects}
-            templates={this.props.templates}
+            templates={templates}
           />
         )}
         {this.state.viewJSONModalOpen && (

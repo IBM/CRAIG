@@ -10,7 +10,11 @@
       "Users can now provide `accept_routes_from_resource_type` to Routing Tables for `vpn_gateway` and `vpn_server`",
       "Users can now create a project based on a template from the projects page `/projects`",
       "When not using FS Cloud, users can now delete the only Key Management resource",
-      "Users can now upload CRAIG Terraform directly to Schematics from the Projects page"
+      "Users can now upload CRAIG Terraform directly to Schematics from the Projects page",
+      "When enabling Power VS from the options page, users can now enable high availability / disaster recovery",
+      "Images for Power VS region `wdc06` have been added to support high availability",
+      "Users can now able affinity and anti-affinity policies for Power VS instances and volumes",
+      "Users can now provision Power VS resources in region `wdc07`"
     ],
     "fixes": [
       "Fixed an issue causing the variable `var.prefix` from being added to VPN Server names",

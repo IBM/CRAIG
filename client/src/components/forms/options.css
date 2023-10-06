@@ -8,7 +8,7 @@
 }
 
 .imageTileSize {
-  width: 40vw;
+  max-width: 40vw;
 }
 
 .tileStyles {
