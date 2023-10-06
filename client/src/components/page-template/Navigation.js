@@ -133,13 +133,17 @@ class Navigation extends React.Component {
             isActive={this.state.expanded}
           />
           <HeaderName href="/" prefix="">
-            CRAIG
+            CRAIG {this.props.json._options.craig_version}
           </HeaderName>
           {this.props.project && (
             <HeaderMenu
               aria-label="Open current project menu"
               className="no-marker projectMenu"
-              menuLinkName={`Project: ${this.props.project.name}`}
+              menuLinkName={`Project: ${this.props.project.name}${
+                this.props.project.use_template
+                  ? `, Template: ${this.props.project.template}`
+                  : ""
+              }`}
             >
               <div className="headerMenuBox">
                 <p className="smallerText marginTopXs marginBottomSmall headerMenuBoxItemText bold">
@@ -153,7 +157,7 @@ class Navigation extends React.Component {
                     Description: {this.props.project.description}
                   </p>
                 )}
-                {this.props.project.template && (
+                {this.props.project.use_template && (
                   <p className="smallerText marginBottomXs headerMenuBoxItemText">
                     Template Pattern: {this.props.project.template}
                   </p>

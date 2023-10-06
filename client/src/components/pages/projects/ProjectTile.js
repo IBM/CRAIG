@@ -45,7 +45,7 @@ export const ProjectTile = (props) => {
             <p className="smallerText">{props.data.description}</p>
           </div>
         )}
-        {props.data.template && (
+        {props.data.use_template && (
           <div className="marginBottomSmall">
             <h6 className="marginBottomXs">Template Pattern</h6>
             <p className="smallerText">{props.data.template}</p>
