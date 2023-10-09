@@ -199,19 +199,20 @@ const PageTemplate = (props) => {
         formPathNotPresent={formPathNotPresent}
         invalidForms={props.invalidForms}
       />
-      {props.json._options.craig_version !== releaseNotes[0].version && (
-        <ActionableNotification
-          className="updateBanner"
-          actionButtonLabel="Update With One Click"
-          onActionButtonClick={updateCraig}
-          inline={true}
-          kind="warning-alt"
-          lowContrast={true}
-          subtitle="Some elements may not function correctly."
-          title="CRAIG version out of date."
-          hideCloseButton={true}
-        />
-      )}
+      {!isResetState &&
+        props.json._options.craig_version !== releaseNotes[0].version && (
+          <ActionableNotification
+            className="updateBanner"
+            actionButtonLabel="Update With One Click"
+            onActionButtonClick={updateCraig}
+            inline={true}
+            kind="warning-alt"
+            lowContrast={true}
+            subtitle="Some elements may not function correctly."
+            title="CRAIG version out of date."
+            hideCloseButton={true}
+          />
+        )}
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
           className={
