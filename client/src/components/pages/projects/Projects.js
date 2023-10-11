@@ -250,6 +250,13 @@ class Projects extends React.Component {
             modalOpen={this.state.deleteModalOpen}
             name={this.state.deleteProject}
             onModalClose={this.toggleDeleteModal}
+            additionalText={
+              this.props.projects[this.state.deleteProject].use_schematics
+                ? `The Schematics Workspace '${
+                    this.props.projects[this.state.deleteProject].workspace_name
+                  }' for this project will not be deleted.`
+                : ""
+            }
             onModalSubmit={() => {
               this.props.delete(this.state.deleteProject);
               this.toggleDeleteModal();
