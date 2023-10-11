@@ -289,6 +289,7 @@ class Craig extends React.Component {
           projects[
             projectKeyName
           ].workspace_url = `https://cloud.ibm.com/schematics/workspaces/${data.id}`;
+          this.setItem("craigProjects", projects);
           resolve();
         }
       })
