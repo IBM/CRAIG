@@ -89,7 +89,12 @@ class Summary extends React.Component {
               json={this.props.craig.store.json}
               projectName={this.props.craig.store.project_name}
             />
-            {this.props.craig.store.project_name ? (
+            {/*
+            
+            content here is from a version where projects were not implemented first
+            code is retained here for removal and removal of references
+
+            this.props.craig.store.project_name ? (
               <Button
                 kind="tertiary"
                 onClick={() => {
@@ -117,7 +122,7 @@ class Summary extends React.Component {
               >
                 Save as Project
               </Button>
-            )}
+            )*/}
           </div>
         </Tile>
       </>

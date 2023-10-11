@@ -65,6 +65,7 @@ import {
   invalidEncryptionKeyRing,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
+  storageChangeDisabledCallback,
   vpnServersHelperText,
 } from "../../lib/forms";
 import {
@@ -617,10 +618,7 @@ const PowerInfraPage = (craig) => {
       }}
       imageMap={require("../../lib/docs/power-image-map.json")}
       onAttachmentSave={craig.power.attachments.save}
-      disableAttachmentSave={(stateData, componentProps) => {
-        // currently disabled
-        return false;
-      }}
+      disableAttachmentSave={storageChangeDisabledCallback}
     />
   ) : (
     <NoPowerNetworkTile />
@@ -668,10 +666,7 @@ const PowerVsInstances = (craig) => {
       invalidPiMemoryTextCallback={() => {
         return "Must be a whole number less than 918.";
       }}
-      storageChangesDisabledCallback={() => {
-        // placeholder
-        return false;
-      }}
+      storageChangesDisabledCallback={storageChangeDisabledCallback}
     />
   );
 };

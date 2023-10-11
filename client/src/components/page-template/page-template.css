@@ -33,3 +33,11 @@
   max-width: 93vw;
   text-align: center;
 }
+
+.buttonIcon {
+  margin-left: 0.5rem;
+}
+
+.modalButtonLeft {
+  margin-right: 0.5rem;
+}

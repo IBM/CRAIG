@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 
 - FS Cloud is no longer true in the default configuration
 - The pre-commit hook now checks the server for errors before committing
+- When using a project, the CRAIG project data is now automatically updated when making changes to the state data
+- The projects page is now the default landing page, the Projects icon has been moved to the first one in the left nav menu
+- If you are not using a project to manage your CRAIG store, you will need to download your configuration JSON and import back into CRAIG
 
 ### Features
 
@@ -35,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing option form save to not be disabled when props match state
 - Fixed an issue causing subnet tier form to crash when editing an invalid CIDR block from the middle
 - Fixed an issue causing valid ssh keys without an email address to fail validation
+- Fixed an issue causing imported clusters to crash the page when `opaque_secrets` is not found. It is now added to clusters on import
 
 ## 1.2.0
 

@@ -9,8 +9,6 @@ import {
   IcseNumberSelect,
   IcseToggle,
   IcseMultiSelect,
-  IcseModal,
-  IcseToolTip,
   ToolTipWrapper,
 } from "icse-react-assets";
 import PropTypes from "prop-types";
@@ -29,68 +27,17 @@ import "./options.css";
 
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
-export const TemplateAbout = (props) => {
-  return (
-    <div
-      id={"pattern-info-" + props.template.name}
-      className={
-        "leftTextAlign displayFlex" + (props.smallImage ? "" : " marginBottom")
-      }
-    >
-      <div>
-        <p className="marginBottomXs">{props.template.patternDocText}</p>
-        <p className="marginBottomXs">This pattern includes:</p>
-        <ul className="bullets indent">
-          {props.template.includes.map((item) => (
-            <li key={item}>
-              <p>{item}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="tileStyles">
-        <a
-          href={props.template.image}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="magnifier"
-        >
-          <img
-            src={props.template.image}
-            className={
-              props.smallImage
-                ? "borderGray tileStyles imageTileSize smallImage"
-                : "borderGray tileStyles imageTileSize"
-            }
-          />
-        </a>
-      </div>
-    </div>
-  );
-};
-
-TemplateAbout.propTypes = {
-  template: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    includes: PropTypes.arrayOf(PropTypes.string).isRequired,
-    patternDocText: PropTypes.string.isRequired,
-    image: PropTypes.node.isRequired,
-  }).isRequired,
-};
-
 class OptionsForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       ...this.props.data,
-      showModal: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleTags = this.handleTags.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.disableSave = this.disableSave.bind(this);
     this.handlePowerZonesChange = this.handlePowerZonesChange.bind(this);
-    this.hardTemplateSet = this.hardTemplateSet.bind(this);
     buildFormFunctions(this);
   }
 
@@ -133,12 +80,8 @@ class OptionsForm extends React.Component {
   }
 
   disableSave() {
-    let inheritModalState = { ...this.state };
-    inheritModalState.showModal =
-      this.props.craig.store.json._options.showModal;
     return (
-      (!this.props.template &&
-        deepEqual(inheritModalState, this.props.craig.store.json._options)) ||
+      deepEqual(this.state, this.props.craig.store.json._options) ||
       invalidNewResourceName(this.state.prefix) ||
       invalidTagList(this.state.tags) ||
       (this.state.enable_power_vs &&
@@ -150,64 +93,21 @@ class OptionsForm extends React.Component {
     this.setState({ power_vs_zones: items.selectedItems });
   }
 
-  hardTemplateSet() {
-    let newTemplate = { ...this.props.template.template };
-    newTemplate._options = this.state;
-    this.props.craig.hardSetJson(newTemplate, true);
-    window.location.pathname = "/form/resourceGroups";
-  }
-
   render() {
     return (
       <>
-        {this.props.template && (
-          <TemplateAbout template={this.props.template} />
-        )}
-        <div
-          className={
-            "tab-panel " + (this.props.template ? "formInSubForm" : "subForm")
-          }
-        >
-          {this.props.template && (
-            <IcseModal
-              open={this.state.showModal}
-              heading={"Import " + this.props.template.name + " Template"}
-              primaryButtonText="Import"
-              onRequestClose={() => {
-                this.handleToggle("showModal");
-              }}
-              onRequestSubmit={this.hardTemplateSet}
-              danger
-            >
-              <p className="marginBottomSmall">
-                Import the current template into CRAIG for customization.
-              </p>
-              <p style={{ fontWeight: "bolder" }}>
-                This will overwrite any changes in your current configuration.
-              </p>
-            </IcseModal>
-          )}
+        <div className={"tab-panel subForm"}>
           <IcseHeading
-            name={
-              this.props.template
-                ? "Configure " + this.props.template.name + " Template"
-                : "Environment Options"
-            }
-            type={this.props.template ? "subHeading" : null}
+            name="Environment Options"
             buttons={
-              // don't display buttons when is a template
-              this.props.template ? (
-                ""
-              ) : (
-                <SaveAddButton
-                  name="options"
-                  onClick={() =>
-                    this.props.craig.options.save(this.state, this.props)
-                  }
-                  disabled={this.disableSave()}
-                  type="save"
-                />
-              )
+              <SaveAddButton
+                name="options"
+                onClick={() =>
+                  this.props.craig.options.save(this.state, this.props)
+                }
+                disabled={this.disableSave()}
+                type="save"
+              />
             }
             className="marginBottomSmall"
           />
@@ -452,13 +352,6 @@ OptionsForm.propTypes = {
       }).isRequired,
     }).isRequired,
   }).isRequired,
-  template: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    includes: PropTypes.arrayOf(PropTypes.string).isRequired,
-    patternDocText: PropTypes.string.isRequired,
-    image: PropTypes.node.isRequired,
-    template: PropTypes.shape({}).isRequired,
-  }),
 };
 
 export default OptionsForm;

@@ -87,7 +87,7 @@ class Projects extends React.Component {
           // not already selected
           this.props.current_project !== keyName
         ) {
-          this.props.select(this.props.projects[keyName].name);
+          this.props.select(this.props.projects[keyName].project_name);
         }
       }
     };

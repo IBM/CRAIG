@@ -6,10 +6,9 @@ import {
   View,
   Star,
   Rocket,
-  Warning,
   Add,
 } from "@carbon/icons-react";
-import { ClickableTile, Button, Tooltip } from "@carbon/react";
+import { ClickableTile, Button } from "@carbon/react";
 import { validate } from "../../../lib";
 import PropTypes from "prop-types";
 
@@ -21,7 +20,6 @@ export const ProjectTile = (props) => {
   } catch (error) {
     isValid = false;
   }
-
   return (
     <ClickableTile
       id={props.keyName}
@@ -33,7 +31,7 @@ export const ProjectTile = (props) => {
     >
       {/* name */}
       <div className="projectTileHeader marginBottom">
-        <h4 className="bold">{props.data.name}</h4>
+        <h4 className="bold">{props.data.project_name}</h4>
         {isCurrentProject ? <StarFilled /> : <Star />}
       </div>
 

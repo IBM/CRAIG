@@ -1,7 +1,13 @@
 /* this file is the main application page */
 
 import React from "react";
-import { kebabCase, titleCase } from "lazy-z";
+import {
+  kebabCase,
+  titleCase,
+  keys,
+  isEmpty,
+  isNullOrEmptyString,
+} from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -18,8 +24,6 @@ import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
-import { TemplatePage } from "./components/pages/TemplatePage";
-import { isNullOrEmptyString } from "lazy-z/lib/shortcuts";
 import { template_dropdown_map } from "./lib/constants";
 
 const withRouter = (Page) => (props) => {
@@ -33,18 +37,24 @@ class Craig extends React.Component {
   constructor(props) {
     super(props);
     try {
+      // set store name to separate dev and prod environments
       let storeName =
         process.env.NODE_ENV === "development" ? "craigDevStore" : "craigStore";
+      // get state based on environment
       let stateInStorage = window.localStorage.getItem(storeName);
+      // get map of projects
       let projectInStorage = window.localStorage.getItem("craigProjects");
       // If there is a state in browser local storage, use it instead.
       if (stateInStorage) {
         craig.store = JSON.parse(stateInStorage);
       }
+      // if there are no projects, set projects to be empty json
       if (!projectInStorage) {
         projectInStorage = "{}";
         window.localStorage.setItem("craigProjects", projectInStorage);
       }
+
+      // set state for application
       this.state = {
         hideCodeMirror: craig.store.hideCodeMirror,
         hideFooter: craig.store.hideFooter,
@@ -56,6 +66,8 @@ class Craig extends React.Component {
         visited: window.localStorage.getItem("craigVisited"),
       };
     } catch (err) {
+      // if there are initialization errors, redirect user to reset state path
+      // this is probably caused by an incorrectly configured state
       window.location.pathname = "/resetState";
     }
     this.toggleHide = this.toggleHide.bind(this);
@@ -68,12 +80,16 @@ class Craig extends React.Component {
     this.onProjectDelete = this.onProjectDelete.bind(this);
     this.onProjectSelect = this.onProjectSelect.bind(this);
     this.onProjectDeselect = this.onProjectDeselect.bind(this);
+    this.getProject = this.getProject.bind(this);
+    this.projectFetch = this.projectFetch.bind(this);
+    this.saveProject = this.saveProject.bind(this);
   }
 
   // when react component mounts, set update callback for store
   // to update components
   componentDidMount() {
     craig.setUpdateCallback(() => {
+      // save state
       this.saveAndSendNotification();
     });
     craig.setErrorCallback(() => {
@@ -81,8 +97,12 @@ class Craig extends React.Component {
     });
   }
 
-  // update components
-  saveAndSendNotification(message) {
+  /**
+   * update components
+   * @param {string} message
+   * @param {boolean=} noProjectSave no project save
+   */
+  saveAndSendNotification(message, noProjectSave) {
     // Save state to local storage
     this.setItem(this.state.storeName, craig.store);
     // Show a notification when state is updated successfully
@@ -101,16 +121,28 @@ class Craig extends React.Component {
         store: craig.store,
       },
       () => {
+        let projectData = JSON.parse(
+          window.localStorage.getItem("craigProjects")
+        );
+        if (!noProjectSave && !isEmpty(keys(projectData))) {
+          let projectKeyName = kebabCase(craig.store.project_name);
+          projectData[projectKeyName].json = { ...craig.store.json };
+          this.setItem("craigProjects", projectData);
+        }
         this.notify(notification);
       }
     );
   }
 
-  onError(msg) {
+  /**
+   * display errors to user
+   * @param {string=} message error text
+   */
+  onError(message) {
     let notification = {
       title: "Error",
       kind: "error",
-      text: msg || "An unexpected error has occurred.",
+      text: message || "An unexpected error has occurred.",
       timeout: 3000,
     };
     this.notify(notification);
@@ -118,8 +150,8 @@ class Craig extends React.Component {
 
   /**
    * calls window.localStore.setItem
-   * @param {*} storeName
-   * @param {*} store
+   * @param {string} storeName name of store
+   * @param {object} store store data
    */
   setItem(storeName, store) {
     window.localStorage.setItem(storeName, JSON.stringify(store));
@@ -144,6 +176,10 @@ class Craig extends React.Component {
     }));
   }
 
+  /**
+   * handle click between code mirror values
+   * @param {string} tab tab name
+   */
   onTabClick(tab) {
     let value = tab === "Terraform" ? false : true;
     craig.setStoreValue("jsonInCodeMirror", value);
@@ -159,9 +195,144 @@ class Craig extends React.Component {
       description: "",
       use_template: false,
       use_schematics: false,
-      json: new state().store.json,
+      json: template_dropdown_map["Empty Project"].template,
       template: "Mixed",
     };
+  }
+
+  /**
+   * get project from data
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @returns Projects and project key name
+   */
+  getProject(stateData, componentProps) {
+    let now = Date.now();
+    let projectKeyName = kebabCase(stateData.name);
+    let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
+    let shouldCreateWorkspace = false;
+    let nameChange = false;
+
+    if (!projects[projectKeyName]) {
+      projects[projectKeyName] = {};
+    }
+
+    Object.assign(projects[projectKeyName], {
+      name: stateData.name,
+      project_name: stateData.name,
+      description: stateData.description,
+      use_template: stateData.use_template,
+      template: stateData.template,
+      use_schematics: stateData.use_schematics,
+      json: stateData.json,
+      last_save: now,
+    });
+
+    if (!stateData.use_schematics) {
+      delete projects[projectKeyName].workspace_name;
+      delete projects[projectKeyName].workspace_url;
+      delete projects[projectKeyName].workspace_region;
+      delete projects[projectKeyName].workspace_resource_group;
+    }
+
+    // if the project name is changing, remove the old key from projects object
+    if (
+      componentProps.data.name !== "" &&
+      projectKeyName !== kebabCase(componentProps.data.name)
+    ) {
+      nameChange = true;
+      delete projects[kebabCase(componentProps.data.name)];
+    }
+
+    // set unfound project data
+    ["workspace_name", "workspace_region", "workspace_resource_group"].forEach(
+      (field) => {
+        if (projects[projectKeyName][field] !== stateData[field]) {
+          projects[projectKeyName][field] = stateData[field];
+          shouldCreateWorkspace = true;
+        }
+      }
+    );
+
+    return {
+      projectKeyName,
+      projects,
+      nameChange,
+      shouldCreateWorkspace,
+    };
+  }
+
+  /**
+   * handle fetch for projects
+   * @param {*} projects
+   * @param {string} projectKeyName
+   * @param {*} resolve
+   * @param {*} reject
+   * @returns {Promise} fetch promise
+   */
+  projectFetch(projects, projectKeyName, resolve, reject) {
+    let { workspace_name, workspace_region, workspace_resource_group } =
+      projects[projectKeyName];
+    return fetch(
+      `/api/schematics/${workspace_name}` +
+        (workspace_region ? "/" + workspace_region : "") +
+        (workspace_resource_group ? "/" + workspace_resource_group : ""),
+      { method: "POST" }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          reject(data.error);
+        } else if (isNullOrEmptyString(data.id)) {
+          reject("Workspace did not create. Missing ID.");
+        } else {
+          projects[
+            projectKeyName
+          ].workspace_url = `https://cloud.ibm.com/schematics/workspaces/${data.id}`;
+          resolve();
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        reject(err);
+      });
+  }
+
+  /**
+   * handle project save in state
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @param {boolean} setCurrentProject
+   */
+  saveProject(stateData, componentProps, setCurrentProject) {
+    let { projects, projectKeyName, nameChange } = this.getProject(
+      stateData,
+      componentProps
+    );
+    this.saveAndSendNotification(
+      `Successfully saved project ${stateData.name}`,
+      true
+    );
+
+    window.localStorage.setItem("craigProjects", JSON.stringify(projects));
+    this.setState({ projects: { ...projects } }, () => {
+      if (setCurrentProject) {
+        this.onProjectSelect(
+          stateData.project_name,
+          `Successfully saved project ${stateData.name}`
+        );
+      } else {
+        // if the project name changed and that was our current project, update name
+        if (nameChange) {
+          craig.store.project_name = projectKeyName;
+        }
+
+        this.saveAndSendNotification(
+          `Successfully saved project ${stateData.name}`,
+          true
+        );
+      }
+    });
   }
 
   /**
@@ -171,130 +342,19 @@ class Craig extends React.Component {
    * @param {boolean} setCurrentProject if true, set project as current project
    */
   onProjectSave(stateData, componentProps, setCurrentProject) {
-    let now = Date.now();
-    let kname = kebabCase(stateData.name);
-    let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
-
-    if (!projects[kname]) {
-      projects[kname] = {};
-    }
-
-    Object.assign(projects[kname], {
-      name: stateData.name,
-      description: stateData.description,
-      use_template: stateData.use_template,
-      template: stateData.template,
-      use_schematics: stateData.use_schematics,
-      json: stateData.json,
-      last_save: now,
-    });
-
-    // if the project name is changing, remove the old key from projects object
-    let nameChange = false;
-    if (
-      componentProps.data.name !== "" &&
-      kname !== kebabCase(componentProps.data.name)
-    ) {
-      nameChange = true;
-      delete projects[kebabCase(componentProps.data.name)];
-    }
-
-    // if template is changing
-    if (
-      componentProps.data.template !== "" &&
-      stateData.template !== componentProps.data.template
-    ) {
-      projects[kname].json = template_dropdown_map[stateData.template].template;
-      projects[kname].template = stateData.template;
-    }
+    let { projects, projectKeyName, shouldCreateWorkspace } = this.getProject(
+      stateData,
+      componentProps
+    );
 
     return new Promise((resolve, reject) => {
-      if (!stateData.use_schematics) {
-        delete projects[kname].workspace_name;
-        delete projects[kname].workspace_url;
-        delete projects[kname].workspace_region;
-        delete projects[kname].workspace_resource_group;
+      if (!stateData.use_schematics || !shouldCreateWorkspace) {
         return resolve();
-      }
-
-      let shouldCreateWorkspace = false;
-
-      if (projects[kname].workspace_name !== stateData.workspace_name) {
-        projects[kname].workspace_name = stateData.workspace_name;
-        shouldCreateWorkspace = true;
-      }
-
-      if (projects[kname].workspace_region !== stateData.workspace_region) {
-        projects[kname].workspace_region = stateData.workspace_region;
-        shouldCreateWorkspace = true;
-      }
-
-      if (
-        projects[kname].workspace_resource_group !==
-        stateData.workspace_resource_group
-      ) {
-        projects[kname].workspace_resource_group =
-          stateData.workspace_resource_group;
-        shouldCreateWorkspace = true;
-      }
-
-      if (!shouldCreateWorkspace) {
-        return resolve();
-      }
-
-      let { workspace_name, workspace_region, workspace_resource_group } =
-        projects[kname];
-
-      fetch(
-        `/api/schematics/${workspace_name}` +
-          (workspace_region ? "/" + workspace_region : "") +
-          (workspace_resource_group ? "/" + workspace_resource_group : ""),
-        { method: "POST" }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            reject(data.error);
-          } else if (isNullOrEmptyString(data.id)) {
-            reject("Workspace did not create. Missing ID.");
-          } else {
-            projects[
-              kname
-            ].workspace_url = `https://cloud.ibm.com/schematics/workspaces/${data.id}`;
-            resolve();
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          reject(err);
-        });
+      } else
+        return this.projectFetch(projects, projectKeyName, resolve, reject);
     })
       .then(() => {
-        this.saveAndSendNotification(
-          `Successfully saved project ${stateData.name}`
-        );
-
-        window.localStorage.setItem("craigProjects", JSON.stringify(projects));
-        this.setState({ projects: { ...projects } }, () => {
-          if (setCurrentProject) {
-            this.onProjectSelect(
-              stateData.name,
-              `Successfully saved project ${stateData.name}`
-            );
-          } else {
-            // if the project name changed and that was our current project, update name
-            if (
-              nameChange &&
-              craig.store.project_name === componentProps.data.name
-            ) {
-              craig.store.project_name = kname;
-            }
-
-            this.saveAndSendNotification(
-              `Successfully saved project ${stateData.name}`
-            );
-          }
-        });
+        this.saveProject(stateData, componentProps, setCurrentProject);
       })
       .catch((err) => {
         console.error(err);
@@ -307,18 +367,18 @@ class Craig extends React.Component {
    * @param {string} name project name
    */
   onProjectDelete(name) {
-    let kname = kebabCase(name);
+    let projectKeyName = kebabCase(name);
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
 
     // remove from projects
-    delete projects[kname];
+    delete projects[projectKeyName];
 
     window.localStorage.setItem("craigProjects", JSON.stringify(projects));
     this.setState({ projects }, () => {
       this.saveAndSendNotification(`Successfully deleted project ${name}`);
 
       // deselect if project being deleted is currently selected
-      if (craig.store.project_name === kname) {
+      if (craig.store.project_name === projectKeyName) {
         this.onProjectDeselect();
       }
     });
@@ -330,14 +390,21 @@ class Craig extends React.Component {
    * @param {string=} message message to be display in notification
    */
   onProjectSelect(name, message) {
-    let kname = kebabCase(name);
+    let projectKeyName = kebabCase(name);
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
-
     // update store project name and json
-    craig.store.project_name = kname;
-    craig.store.json = projects[kname].json;
-    this.saveAndSendNotification(
-      message || `Project ${name} successfully imported`
+    craig.store.project_name = projectKeyName;
+    craig.store.json = projects[projectKeyName].json;
+    this.setState(
+      {
+        store: craig.store,
+      },
+      () => {
+        this.saveAndSendNotification(
+          message || `Project ${name} successfully imported`,
+          true
+        );
+      }
     );
   }
 
@@ -349,7 +416,10 @@ class Craig extends React.Component {
     craig.store.project_name = "";
     craig.store.json = new state().store.json;
 
-    this.saveAndSendNotification(`Successfully cleared project selection`);
+    this.saveAndSendNotification(
+      `Successfully cleared project selection`,
+      true
+    );
   }
 
   render() {
@@ -361,7 +431,9 @@ class Craig extends React.Component {
         <NavigationRedirectModal craig={craig} />
         <PageTemplate
           hideCodeMirror={
-            this.props.params.doc || window.location.pathname === "/summary"
+            this.props.params.doc ||
+            window.location.pathname === "/summary" ||
+            window.location.pathname === "/projects"
               ? true
               : this.state.hideCodeMirror
           } // always hide if about
@@ -402,8 +474,6 @@ class Craig extends React.Component {
                 return craig.store.json.resource_groups.length === 1;
               }}
             />
-          ) : window.location.pathname === "/templates" ? (
-            <TemplatePage craig={craig} />
           ) : window.location.pathname === "/" ? (
             <Home craig={craig} />
           ) : window.location.pathname === "/summary" ? (

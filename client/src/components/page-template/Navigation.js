@@ -14,7 +14,7 @@ import { Reset, Download, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
-import { validate } from "../../lib";
+import { releaseNotes, validate } from "../../lib";
 import { splat } from "lazy-z";
 
 class Navigation extends React.Component {
@@ -133,13 +133,13 @@ class Navigation extends React.Component {
             isActive={this.state.expanded}
           />
           <HeaderName href="/" prefix="">
-            CRAIG {this.props.json._options.craig_version}
+            CRAIG v{releaseNotes[0].version}
           </HeaderName>
           {this.props.project && (
             <HeaderMenu
               aria-label="Open current project menu"
               className="no-marker projectMenu"
-              menuLinkName={`Project: ${this.props.project.name}${
+              menuLinkName={`Project: ${this.props.project.project_name}${
                 this.props.project.use_template
                   ? `, Template: ${this.props.project.template}`
                   : ""

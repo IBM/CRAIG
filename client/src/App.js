@@ -66,10 +66,6 @@ class App extends Component {
       <BrowserRouter>
         <Routes>
           <Route path="/resetState" element={<ResetState />} />
-          <Route
-            path="/templates"
-            element={<Craig craigRouter={this.craigRouter} />}
-          />
           <Route path="/" element={<Craig craigRouter={this.craigRouter} />} />
           <Route
             path="/form/:form"

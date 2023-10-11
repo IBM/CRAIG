@@ -107,3 +107,7 @@
 .alignItemsEnd {
   align-items: end;
 }
+
+.projectSelectMarginBottom {
+  margin-bottom: -1.5rem;
+}

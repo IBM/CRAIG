@@ -6,12 +6,12 @@ import {
   Search,
 } from "@carbon/react";
 import {
-  Home,
   Help,
   Bullhorn,
   JsonReference,
   Compass,
-  Template,
+  Folders,
+  Settings,
 } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
@@ -32,16 +32,16 @@ const LeftNav = (props) => {
       <SideNavItems>
         <LeftNavItem
           item={{
-            path: "/templates",
-            icon: Template,
-            title: "Infrastructure Templates",
+            path: "/projects",
+            icon: Folders,
+            title: "Projects",
           }}
-          key="Template"
+          key="Projects"
           expanded={props.expanded}
         />
         <LeftNavItem
-          item={{ path: "/", icon: Home, title: "Home" }}
-          key="Home"
+          item={{ path: "/", icon: Settings, title: "Options" }}
+          key="Options"
           expanded={props.expanded}
         />
         {props.expanded && (

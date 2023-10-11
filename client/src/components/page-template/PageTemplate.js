@@ -30,12 +30,11 @@ import {
   IbmDb2,
   IbmPowerVs,
   VirtualMachine,
-  Template,
-  Home,
   Help,
   Bullhorn,
   JsonReference,
   FileStorage,
+  Settings,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -46,6 +45,7 @@ import { codeMirrorGetDisplay, releaseNotes } from "../../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../../images/cbr";
 import { ActionableNotification } from "@carbon/react";
+import { NoProjectModal } from "./NoProjectModal";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -89,18 +89,22 @@ const navIcons = {
 };
 
 let pageOrder = [
-  {
-    title: "Options",
-    path: "/",
-    icon: Home,
-  },
-  { title: "Infrastructure Template", path: "/templates", icon: Template },
   { title: "About", path: "/docs/about", icon: Help },
   { title: "Release Notes", path: "/docs/releaseNotes", icon: Bullhorn },
   {
     title: "JSON Documentation",
     path: "/docs/json",
     icon: JsonReference,
+  },
+  {
+    title: "Projects",
+    path: "/projects",
+    icon: Folders,
+  },
+  {
+    title: "Options",
+    path: "/",
+    icon: Settings,
   },
 ];
 
@@ -124,16 +128,6 @@ const PageTemplate = (props) => {
    */
   function navigate(isBackward) {
     let currentPath = window.location.pathname;
-
-    if (currentPath === "/projects" && props.current_project && !isBackward) {
-      if (pageOrder[pageOrder.length - 1].path === "/") {
-        pageOrder.pop();
-      }
-      pageOrder.push({
-        title: "Configure " + props.current_project,
-        path: "/",
-      });
-    }
 
     let nextPathIndex = isBackward // get next path based on direction
       ? arraySplatIndex(pageOrder, "path", currentPath) - 1
@@ -199,20 +193,24 @@ const PageTemplate = (props) => {
         formPathNotPresent={formPathNotPresent}
         invalidForms={props.invalidForms}
       />
-      {!isResetState &&
-        props.json._options.craig_version !== releaseNotes[0].version && (
-          <ActionableNotification
-            className="updateBanner"
-            actionButtonLabel="Update With One Click"
-            onActionButtonClick={updateCraig}
-            inline={true}
-            kind="warning-alt"
-            lowContrast={true}
-            subtitle="Some elements may not function correctly."
-            title="CRAIG version out of date."
-            hideCloseButton={true}
-          />
-        )}
+      {!isResetState && (
+        <>
+          {props.json._options.craig_version !== releaseNotes[0].version && (
+            <ActionableNotification
+              className="updateBanner"
+              actionButtonLabel="Update With One Click"
+              onActionButtonClick={updateCraig}
+              inline={true}
+              kind="warning-alt"
+              lowContrast={true}
+              subtitle="Some elements may not function correctly."
+              title="CRAIG version out of date."
+              hideCloseButton={true}
+            />
+          )}
+        </>
+      )}
+
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
           className={
@@ -233,6 +231,14 @@ const PageTemplate = (props) => {
               </li>
             ))}
           </ul>
+          {!isResetState && (
+            <>
+              {window.location.pathname !== "/projects" &&
+                !props.craig.store.project_name && (
+                  <NoProjectModal craig={props.craig} />
+                )}
+            </>
+          )}
           {props.children}
         </div>
         <CraigCodeMirror

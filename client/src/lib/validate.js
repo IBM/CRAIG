@@ -459,6 +459,10 @@ const validate = function (json) {
       );
     }
 
+    if (!containsKeys(cluster, "opaque_secrets")) {
+      cluster.opaque_secrets = [];
+    }
+
     // test for empty pool subnets
     cluster.worker_pools.forEach((pool) => {
       emptySubnetNamesTest("Worker Pools", pool, {

@@ -16,8 +16,7 @@ import { invalidNewResourceName } from "../../../lib/forms";
 import { azsort, isNullOrEmptyString, keys } from "lazy-z";
 import { Launch } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
-import { TemplateAbout } from "../../forms/OptionsForm";
-import { templates } from "../../utils";
+import { templates, TemplateAbout } from "../../utils";
 import { projectDescriptionRegex } from "../../../lib/constants";
 
 export class ProjectFormModal extends React.Component {
@@ -25,7 +24,7 @@ export class ProjectFormModal extends React.Component {
     super(props);
 
     if (this.props.data) {
-      this.state = { ...this.props.data };
+      this.state = { ...this.props.data, use_template: true };
     }
 
     this.handleTextInput = this.handleTextInput.bind(this);
@@ -34,7 +33,17 @@ export class ProjectFormModal extends React.Component {
 
   handleTextInput(event) {
     let { name, value } = event.target;
-    this.setState({ [name]: value });
+    if (name === "template") {
+      this.setState({
+        template: value,
+        json: templates[value].template,
+      });
+    } else if (name === "name") {
+      this.setState({
+        project_name: value,
+        name: value,
+      });
+    } else this.setState({ [name]: value });
   }
 
   handleToggle(name) {
@@ -47,7 +56,6 @@ export class ProjectFormModal extends React.Component {
     let invalidSchematicsName = this.state.use_schematics
       ? invalidNewResourceName(this.state.workspace_name)
       : false;
-
     return (
       <IcseModal
         size={this.state.use_template ? "lg" : "md"}
@@ -112,48 +120,23 @@ export class ProjectFormModal extends React.Component {
             optional={true}
           />
         </IcseFormGroup>
-        <IcseFormGroup>
-          <IcseToggle
-            labelText="Use a Project Template"
-            defaultToggled={this.state.use_template}
+        <IcseFormGroup className="formInSubForm">
+          <IcseSelect
+            name="template"
+            formName="project"
+            labelText="Select a Project Template"
+            groups={keys(this.props.templates)}
+            value={this.state.template || "Mixed"}
+            handleInputChange={this.handleTextInput}
             disabled={
               this.props.data.use_template &&
               !isNullOrEmptyString(this.props.data.last_save) &&
               !isNullOrEmptyString(this.props.data.template)
             } // do not allow removal of template once saved with template
-            onToggle={() => this.handleToggle("use_template")}
-            id="use-template"
-            toggleFieldName="use_template"
-            value={this.state.use_template}
-            tooltip={{
-              content:
-                "Create a new project based on a preconfigured quick start template",
-            }}
+            className="projectSelectMarginBottom"
           />
+          <TemplateAbout smallImage template={templates[this.state.template]} />
         </IcseFormGroup>
-        {this.state.use_template && (
-          <div className="marginBottom formInSubForm">
-            <IcseFormGroup noMarginBottom>
-              <IcseSelect
-                name="template"
-                formName="project"
-                labelText="Select a Project Template"
-                groups={keys(this.props.templates)}
-                value={this.state.template || "Mixed"}
-                handleInputChange={this.handleTextInput}
-                disabled={
-                  this.props.data.use_template &&
-                  !isNullOrEmptyString(this.props.data.last_save) &&
-                  !isNullOrEmptyString(this.props.data.template)
-                } // do not allow removal of template once saved with template
-              />
-              <TemplateAbout
-                smallImage
-                template={templates[this.state.template]}
-              />
-            </IcseFormGroup>
-          </div>
-        )}
         <>
           <IcseFormGroup>
             <IcseToggle

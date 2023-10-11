@@ -307,7 +307,6 @@ const navCatagories = [
         path: "/summary",
         react_icon: "Report",
       },
-      { title: "Projects", path: "/projects", react_icon: "Folders" },
     ],
   },
 ];

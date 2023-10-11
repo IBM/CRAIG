@@ -1848,6 +1848,7 @@ describe("validate", () => {
               },
             ],
             workers_per_subnet: 2,
+            opaque_secrets: [],
           },
           {
             kms: "slz-kms",
@@ -1876,6 +1877,7 @@ describe("validate", () => {
               },
             ],
             workers_per_subnet: 2,
+            opaque_secrets: [],
           },
         ],
         "it should set kms config"

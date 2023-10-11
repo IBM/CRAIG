@@ -43,6 +43,7 @@ const {
   invalidCrnList,
   invalidCrns,
   invalidCrnText,
+  storageChangeDisabledCallback,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -250,4 +251,5 @@ module.exports = {
   invalidCrns,
   invalidCrnText,
   powerVsTf,
+  storageChangeDisabledCallback,
 };
