@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Images for Power VS region `wdc06` have been added to support high availability
 - Users can now able affinity and anti-affinity policies for Power VS instances and volumes
 - Users can now provision Power VS resources in region `wdc07`
+- Added functionality to prevent parallel provisioning of Power VS network interfaces and images
 
 ### Fixes
 

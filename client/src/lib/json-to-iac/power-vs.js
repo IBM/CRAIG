@@ -97,6 +97,7 @@ function formatPowerVsNetwork(network) {
       pi_network_type: network.pi_network_type,
       pi_network_jumbo: network.pi_network_jumbo,
       pi_dns: network.pi_dns,
+      depends_on: network.depends_on,
     }
   );
 }
@@ -170,6 +171,7 @@ function formatPowerVsImage(image) {
       pi_image_id: image.pi_image_id,
       pi_image_name: image.name,
       timeouts: timeouts("9m"),
+      depends_on: image.depends_on,
     }
   );
 }
@@ -274,14 +276,28 @@ function powerVsTf(config) {
       tf += "\n" + tfBlock(`${workspace.name} Workspace SSH Keys`, sshKeyTf);
     // network
     let networkTf = "";
-    workspace.network.forEach((nw) => {
+    workspace.network.forEach((nw, index) => {
+      if (index > 0) {
+        nw.depends_on = [
+          `\${ibm_pi_network.${snakeCase(
+            `power network ${nw.workspace} ${workspace.network[index - 1].name}`
+          )}}`,
+        ];
+      }
       networkTf += formatPowerVsNetwork(nw);
     });
     if (workspace.network.length > 0)
       tf += "\n" + tfBlock(`${workspace.name} Workspace Network`, networkTf);
     // images
     let imagesTf = "";
-    workspace.images.forEach((image) => {
+    workspace.images.forEach((image, index) => {
+      if (index > 0) {
+        image.depends_on = [
+          `\${ibm_pi_image.${snakeCase(
+            `power image ${image.workspace} ${workspace.images[index - 1].name}`
+          )}}`,
+        ];
+      }
       imagesTf += formatPowerVsImage(image);
     });
     if (workspace.images.length > 0)

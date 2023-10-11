@@ -14,7 +14,8 @@
       "When enabling Power VS from the options page, users can now enable high availability / disaster recovery",
       "Images for Power VS region `wdc06` have been added to support high availability",
       "Users can now able affinity and anti-affinity policies for Power VS instances and volumes",
-      "Users can now provision Power VS resources in region `wdc07`"
+      "Users can now provision Power VS resources in region `wdc07`",
+      "Added functionality to prevent parallel provisioning of Power VS network interfaces and images"
     ],
     "fixes": [
       "Fixed an issue causing the variable `var.prefix` from being added to VPN Server names",
