@@ -96,4 +96,6 @@ JSONModal.defaultProps = {
 
 JSONModal.propTypes = {
   open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  data: PropTypes.shape({}).isRequired,
 };

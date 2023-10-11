@@ -18,6 +18,7 @@ import { Launch } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
 import { templates, TemplateAbout } from "../../utils";
 import { projectDescriptionRegex } from "../../../lib/constants";
+import PropTypes from "prop-types";
 
 export class ProjectFormModal extends React.Component {
   constructor(props) {
@@ -56,9 +57,11 @@ export class ProjectFormModal extends React.Component {
     let invalidSchematicsName = this.state.use_schematics
       ? invalidNewResourceName(this.state.workspace_name)
       : false;
+    let primaryButtonDisabled =
+      invalidProjectNameVal || invalidDescription || invalidSchematicsName;
     return (
       <IcseModal
-        size={this.state.use_template ? "lg" : "md"}
+        size="lg" // template no longer optional
         open={this.props.open}
         heading={
           this.state.last_save === undefined
@@ -72,20 +75,14 @@ export class ProjectFormModal extends React.Component {
         }
         onRequestClose={this.props.onClose}
         onRequestSubmit={() => {
-          this.props.onSubmit(
-            this.state,
-            this.props,
-            this.props.setCurrentProject
-          );
+          this.props.onSubmit(this.state, this.props, true);
           this.props.onClose();
 
           if (this.props.nav !== undefined) {
             this.props.nav("/projects");
           }
         }}
-        primaryButtonDisabled={
-          invalidProjectNameVal || invalidDescription || invalidSchematicsName
-        }
+        primaryButtonDisabled={primaryButtonDisabled}
       >
         <IcseFormGroup>
           <IcseNameInput
@@ -215,3 +212,15 @@ export class ProjectFormModal extends React.Component {
     );
   }
 }
+
+ProjectFormModal.propTypes = {
+  data: PropTypes.shape({
+    last_save: PropTypes.string,
+    template: PropTypes.string,
+  }).isRequired,
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  nav: PropTypes.func,
+  templates: PropTypes.shape({}).isRequired,
+};

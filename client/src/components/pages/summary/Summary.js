@@ -52,7 +52,6 @@ class Summary extends React.Component {
             }}
             onClose={this.toggleShowSaveModal}
             onSubmit={this.props.onProjectSave}
-            setCurrentProject={true}
             projects={this.props.projects}
             nav={this.props.nav}
           />

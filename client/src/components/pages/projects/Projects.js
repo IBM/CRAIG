@@ -9,6 +9,8 @@ import "./project.css";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
 import { templates } from "../../utils";
+import { template_dropdown_map } from "../../../lib/constants";
+import PropTypes from "prop-types";
 
 class Projects extends React.Component {
   constructor(props) {
@@ -53,14 +55,17 @@ class Projects extends React.Component {
   }
 
   newProject() {
-    this.setState(
-      {
-        modalData: this.props.new(),
+    this.setState({
+      modalData: {
+        name: "",
+        description: "",
+        use_template: false,
+        use_schematics: false,
+        json: template_dropdown_map["Empty Project"].template,
+        template: "Mixed",
       },
-      () => {
-        this.toggleModal();
-      }
-    );
+      modalOpen: true,
+    });
   }
 
   /**
@@ -82,12 +87,12 @@ class Projects extends React.Component {
           this.props.current_project === keyName &&
           this.state.debug
         ) {
-          this.props.deselect();
+          this.props.onProjectDeselect();
         } else if (
           // not already selected
           this.props.current_project !== keyName
         ) {
-          this.props.select(this.props.projects[keyName].project_name);
+          this.props.onProjectSelect(this.props.projects[keyName].project_name);
         }
       }
     };
@@ -100,14 +105,10 @@ class Projects extends React.Component {
    */
   onEditClick(keyName) {
     return () => {
-      this.setState(
-        {
-          modalData: this.props.projects[keyName],
-        },
-        () => {
-          this.toggleModal();
-        }
-      );
+      this.setState({
+        modalData: this.props.projects[keyName],
+        modalOpen: true,
+      });
     };
   }
 
@@ -118,17 +119,13 @@ class Projects extends React.Component {
    */
   onViewClick(keyName) {
     return () => {
-      this.setState(
-        {
-          viewJSONModalData: {
-            name: this.props.projects[keyName].name,
-            json: this.props.projects[keyName].json,
-          },
+      this.setState({
+        viewJSONModalData: {
+          name: this.props.projects[keyName].name,
+          json: this.props.projects[keyName].json,
         },
-        () => {
-          this.toggleViewJSONModal();
-        }
-      );
+        viewJSONModalOpen: true,
+      });
     };
   }
 
@@ -139,14 +136,10 @@ class Projects extends React.Component {
    */
   onDeleteClick(keyName) {
     return () => {
-      this.setState(
-        {
-          deleteProject: keyName,
-        },
-        () => {
-          this.toggleDeleteModal();
-        }
-      );
+      this.setState({
+        deleteProject: keyName,
+        deleteModalOpen: true,
+      });
     };
   }
 
@@ -210,14 +203,10 @@ class Projects extends React.Component {
       let modalData = Object.assign({}, this.props.projects[keyName]);
       modalData.use_schematics = true;
 
-      this.setState(
-        {
-          modalData,
-        },
-        () => {
-          this.toggleModal();
-        }
-      );
+      this.setState({
+        modalData,
+        modalOpen: true,
+      });
     };
   }
 
@@ -230,7 +219,7 @@ class Projects extends React.Component {
             open={this.state.modalOpen}
             data={this.state.modalData}
             onClose={this.toggleModal}
-            onSubmit={this.props.save}
+            onSubmit={this.props.onProjectSave}
             projects={this.props.projects}
             templates={templates}
           />
@@ -258,7 +247,7 @@ class Projects extends React.Component {
                 : ""
             }
             onModalSubmit={() => {
-              this.props.delete(this.state.deleteProject);
+              this.props.onProjectDelete(this.state.deleteProject);
               this.toggleDeleteModal();
             }}
           />
@@ -321,5 +310,15 @@ class Projects extends React.Component {
     );
   }
 }
+
+Projects.propTypes = {
+  current_project: PropTypes.string,
+  projects: PropTypes.shape({}).isRequired,
+  onProjectSelect: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired,
+  onProjectSave: PropTypes.func.isRequired,
+  onProjectDelete: PropTypes.func.isRequired,
+  onProjectDeselect: PropTypes.func.isRequired,
+};
 
 export default Projects;

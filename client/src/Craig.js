@@ -126,8 +126,10 @@ class Craig extends React.Component {
         );
         if (!noProjectSave && !isEmpty(keys(projectData))) {
           let projectKeyName = kebabCase(craig.store.project_name);
-          projectData[projectKeyName].json = { ...craig.store.json };
-          this.setItem("craigProjects", projectData);
+          if (projectKeyName) {
+            projectData[projectKeyName].json = { ...craig.store.json };
+            this.setItem("craigProjects", projectData);
+          }
         }
         this.notify(notification);
       }
@@ -184,20 +186,6 @@ class Craig extends React.Component {
     let value = tab === "Terraform" ? false : true;
     craig.setStoreValue("jsonInCodeMirror", value);
     this.setState({ jsonInCodeMirror: value });
-  }
-
-  /**
-   * project with brand new state
-   */
-  newProject() {
-    return {
-      name: "",
-      description: "",
-      use_template: false,
-      use_schematics: false,
-      json: template_dropdown_map["Empty Project"].template,
-      template: "Mixed",
-    };
   }
 
   /**
@@ -465,10 +453,9 @@ class Craig extends React.Component {
             <Projects
               current_project={craig.store.project_name}
               projects={this.state.projects}
-              new={this.newProject}
-              save={this.onProjectSave}
-              delete={this.onProjectDelete}
-              select={this.onProjectSelect}
+              onProjectSave={this.onProjectSave}
+              onProjectDelete={this.onProjectDelete}
+              onProjectSelect={this.onProjectSelect}
               deselect={this.onProjectDeselect}
               notify={this.notify}
               deleteDisabled={() => {

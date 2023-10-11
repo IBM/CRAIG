@@ -31,7 +31,7 @@ export const ProjectTile = (props) => {
     >
       {/* name */}
       <div className="projectTileHeader marginBottom">
-        <h4 className="bold">{props.data.project_name}</h4>
+        <h4 className="bold">{props.data.project_name || props.data.name}</h4>
         {isCurrentProject ? <StarFilled /> : <Star />}
       </div>
 
@@ -43,12 +43,14 @@ export const ProjectTile = (props) => {
             <p className="smallerText">{props.data.description}</p>
           </div>
         )}
-        {props.data.use_template && (
-          <div className="marginBottomSmall">
-            <h6 className="marginBottomXs">Template Pattern</h6>
-            <p className="smallerText">{props.data.template}</p>
-          </div>
-        )}
+
+        <div className="marginBottomSmall">
+          <h6 className="marginBottomXs">Template Pattern</h6>
+          <p className="smallerText">
+            {props.data.template || "Empty Project"}
+          </p>
+        </div>
+
         {props.data.workspace_url && props.data.workspace_name && (
           <div className="marginBottomSmall">
             <h6 className="marginBottomXs">Schematics Workspace</h6>
