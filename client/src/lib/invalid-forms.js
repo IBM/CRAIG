@@ -1,5 +1,6 @@
 const { eachKey } = require("lazy-z");
 const { disableSave } = require("./forms");
+const { isEmpty } = require("lazy-z");
 
 /**
  * get a list of invalid forms based on disable save
@@ -28,6 +29,9 @@ function invalidForms(craig) {
     vsi: false,
     "/form/observability": false,
     icd: false,
+    power: false,
+    power_instances: false,
+    power_volumes: false,
   };
   let json = craig.store.json; // shortcut
 
@@ -193,13 +197,20 @@ function invalidForms(craig) {
   formsFailing["/form/observability"] =
     saveShouldBeDisabled("logdna", json.logdna) ||
     saveShouldBeDisabled("sysdig", json.sysdig);
-
+  forEachDisabledCheck("power", (workspace) => {
+    if (!isEmpty(workspace.ssh_keys)) {
+      workspace.ssh_keys.forEach((key) => {
+        setFormFieldIfFailing("ssh_keys", key, "power");
+      });
+    }
+  });
+  forEachDisabledCheck("power_instances");
+  forEachDisabledCheck("power_volumes");
   eachKey(formsFailing, (key) => {
     if (formsFailing[key]) {
       forms.push(key);
     }
   });
-
   return forms;
 }
 

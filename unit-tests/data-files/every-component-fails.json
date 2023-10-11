@@ -1009,5 +1009,126 @@
       ]
     }
   ],
-  "cbr_rules": []
+  "cbr_rules": [],
+  "power": [
+    {
+      "name": "@@@",
+      "resource_group": "service-rg",
+      "zone": "us-south",
+      "ssh_keys": [],
+      "network": [
+        {
+          "name": "test-ni",
+          "pi_network_type": "vlan",
+          "pi_cidr": "1.1.1.1/18",
+          "pi_dns": [
+            "127.0.0.1"
+          ],
+          "pi_network_jumbo": false,
+          "workspace": "test",
+          "zone": "us-south"
+        }
+      ],
+      "cloud_connections": [],
+      "images": [
+        {
+          "name": "7200-05-05",
+          "workspace": "test",
+          "zone": "us-south",
+          "pi_image_id": "21418607-2298-4c09-b367-0544d0fc4030"
+        }
+      ],
+      "attachments": [
+        {
+          "network": "test-ni",
+          "workspace": "test",
+          "zone": "us-south",
+          "connections": []
+        }
+      ],
+      "imageNames": [
+        "7200-05-05"
+      ]
+    },
+    {
+      "name": "test",
+      "resource_group": "service-rg",
+      "zone": "us-south",
+      "ssh_keys": [
+        {
+          "name": "test-key",
+          "public_key": "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          "use_data": false,
+          "resource_group": "service-rg",
+          "workspace": "test",
+          "zone": "us-south"
+        }
+      ],
+      "network": [
+        {
+          "name": "test-ni",
+          "pi_network_type": "vlan",
+          "pi_cidr": "1.1.1.1/18",
+          "pi_dns": [
+            "127.0.0.1"
+          ],
+          "pi_network_jumbo": false,
+          "workspace": "test",
+          "zone": "us-south"
+        }
+      ],
+      "cloud_connections": [],
+      "images": [
+        {
+          "name": "7200-05-05",
+          "workspace": "test",
+          "zone": "us-south",
+          "pi_image_id": "21418607-2298-4c09-b367-0544d0fc4030"
+        }
+      ],
+      "attachments": [
+        {
+          "network": "test-ni",
+          "workspace": "test",
+          "zone": "us-south",
+          "connections": []
+        }
+      ],
+      "imageNames": [
+        "7200-05-05"
+      ]
+    }
+  ],
+  "power_instances": [
+    {
+      "name": "@@@",
+      "workspace": "test",
+      "image": "7200-05-03",
+      "network": [
+        {
+          "name": "test-ni",
+          "ip_address": ""
+        }
+      ],
+      "zone": "us-south",
+      "pi_health_status": "OK",
+      "pi_proc_type": "shared",
+      "pi_storage_type": "tier1",
+      "ssh_key": "test-key",
+      "pi_sys_type": "e880",
+      "pi_memory": "1"
+    }
+  ],
+  "power_volumes": [
+    {
+      "name": "@@@",
+      "workspace": "test",
+      "pi_volume_shareable": false,
+      "pi_replication_enabled": false,
+      "pi_volume_type": "tier1",
+      "attachments": [],
+      "zone": "us-south",
+      "pi_volume_size": "1"
+    }
+  ]
 }

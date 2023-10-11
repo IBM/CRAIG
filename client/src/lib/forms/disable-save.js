@@ -994,6 +994,19 @@ function disableOpaqueSecretsSave(stateData, componentProps) {
 }
 
 /**
+ * disable power vs workspace
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if disabled
+ */
+function disablePowerWorkspaceSave(stateData, componentProps) {
+  return (
+    invalidName("power")(stateData, componentProps) ||
+    isEmpty(stateData.imageNames)
+  );
+}
+
+/**
  * disable power vs network
  * @param {*} stateData
  * @param {*} componentProps
@@ -1071,6 +1084,7 @@ function disablePowerInstanceSave(stateData, componentProps) {
 function disablePowerVolumeSave(stateData, componentProps) {
   return (
     invalidName("power_volumes")(stateData, componentProps) ||
+    badField("workspace", stateData) ||
     !isInRange(parseInt(stateData.pi_volume_size), 1, 2000)
   );
 }
@@ -1131,6 +1145,7 @@ const disableSaveFunctions = {
   opaque_secrets: disableOpaqueSecretsSave,
   network: disablePowerNetworkSave,
   cloud_connections: disablePowerCloudConnectionSave,
+  power: disablePowerWorkspaceSave,
   power_instances: disablePowerInstanceSave,
   power_volumes: disablePowerVolumeSave,
 };

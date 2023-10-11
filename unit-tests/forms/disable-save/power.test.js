@@ -2,6 +2,150 @@ const { assert } = require("chai");
 const { disableSave } = require("../../../client/src/lib");
 
 describe("power", () => {
+  it("should be disabled when invalid power workspace name", () => {
+    let actualData = disableSave(
+      "power",
+      {
+        name: "@@@",
+        ssh_keys: [],
+        imageNames: [],
+      },
+      {
+        arrayParentName: "workspace",
+        craig: {
+          store: {
+            json: {
+              power: [
+                {
+                  name: "workspace",
+                  ssh_keys: [],
+                  imageNames: [],
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "test",
+          ssh_keys: [],
+          imageNames: [],
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
+  it("should be disabled when invalid duplicate power workspace name", () => {
+    let actualData = disableSave(
+      "power",
+      {
+        name: "workspace",
+        ssh_keys: [],
+      },
+      {
+        arrayParentName: "workspace",
+        data: {
+          name: "test",
+          ssh_keys: [],
+          imageNames: [],
+        },
+        craig: {
+          store: {
+            json: {
+              power: [
+                {
+                  name: "workspace",
+                },
+                {
+                  name: "test",
+                },
+              ],
+            },
+          },
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
+  it("should be disabled when no images selected for workspace", () => {
+    let actualData = disableSave(
+      "power",
+      {
+        name: "workspace",
+        imageNames: [],
+        ssh_keys: [],
+      },
+      {
+        arrayParentName: "workspace",
+        craig: {
+          store: {
+            json: {
+              power: [
+                {
+                  name: "workspace",
+                  imageNames: ["7200-05-05"],
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "test",
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
+  it("should be not be disabled when everything is valid", () => {
+    let actualData = disableSave(
+      "power",
+      {
+        name: "workspace",
+        ssh_keys: [
+          {
+            name: "power-ssh",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+            use_data: false,
+            resource_group: "management-rg",
+            workspace: "oracle-template",
+            zone: "dal12",
+          },
+        ],
+        imageNames: ["7200-05-05"],
+      },
+      {
+        arrayParentName: "workspace",
+        craig: {
+          store: {
+            json: {
+              power: [
+                {
+                  name: "workspace",
+                  ssh_keys: [
+                    {
+                      name: "power-ssh",
+                      public_key: "good",
+                      use_data: false,
+                      resource_group: "management-rg",
+                      workspace: "oracle-template",
+                      zone: "dal12",
+                    },
+                  ],
+                  imageNames: ["7200-05-05"],
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "workspace",
+          ssh_keys: [],
+          imageNames: [],
+        },
+      }
+    );
+    assert.isFalse(actualData, "it should be disabled");
+  });
   describe("network", () => {
     it("should be disabled when invalid duplicate power network name", () => {
       let actualData = disableSave(

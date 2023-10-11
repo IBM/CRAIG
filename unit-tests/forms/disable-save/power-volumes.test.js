@@ -25,6 +25,32 @@ describe("power vs volumes", () => {
       "it should be disabled"
     );
   });
+  it("should be disabled when valid name and no workspace", () => {
+    let actualData = disableSave(
+      "power_volumes",
+      {
+        name: "toad",
+        workspace: "",
+      },
+      {
+        data: {
+          name: "egg",
+        },
+        craig: {
+          store: {
+            json: {
+              power_volumes: [
+                {
+                  name: "frog",
+                },
+              ],
+            },
+          },
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
   it("should disable save for volume with an invalid capacity", () => {
     assert.isTrue(
       disableSave(
