@@ -43,6 +43,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+- Fixed an issue causing placeholder text to have additional hyphens
 - Fixed an issue causing the variable `var.prefix` from being added to VPN Server names
 - Fixed an issue causing DNS services to not save or be deleted correctly
 - Fixed an issue causing the VPN Servers Page to crash when modifying client idle timeout value
