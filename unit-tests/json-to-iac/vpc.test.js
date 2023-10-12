@@ -7,6 +7,7 @@ const {
   formatAclRule,
   formatPgw,
   vpcTf,
+  vpcModuleJson,
 } = require("../../client/src/lib/json-to-iac/vpc");
 const f5Nw = require("../data-files/f5-nw.json");
 
@@ -1509,6 +1510,37 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
         actualData,
         expectedData,
         "it should return correct data"
+      );
+    });
+  });
+  describe("vpcModuleJson", () => {
+    it("should return correct module for vpcs with hyphenate names", () => {
+      let actualData = vpcModuleJson(
+        {
+          name: "test-case",
+        },
+        [],
+        {
+          _options: {
+            tags: [],
+          },
+        }
+      );
+      let expectedData = {
+        test_case_vpc: {
+          "//": {
+            metadata: { uniqueId: "test_case_vpc", path: "./test_case_vpc" },
+          },
+          source: "./test_case_vpc",
+          region: "${var.region}",
+          prefix: "${var.prefix}",
+          tags: [],
+        },
+      };
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted module"
       );
     });
   });

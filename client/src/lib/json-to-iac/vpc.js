@@ -441,7 +441,7 @@ function vpcTf(config) {
  * @returns {Object} cdktf module object
  */
 function vpcModuleJson(vpc, rgs, config) {
-  let vpcModule = vpc.name + "_vpc";
+  let vpcModule = snakeCase(vpc.name) + "_vpc";
   let moduleObject = {};
   moduleObject[vpcModule] = {
     "//": {
@@ -539,7 +539,7 @@ function vpcModuleTf(files, config) {
         ],
       },
     };
-    let vpcModule = vpc.name + "_vpc";
+    let vpcModule = snakeCase(vpc.name + "_vpc");
     let allRgs = [vpc.resource_group];
     vpc.address_prefixes.forEach((prefix) => {
       main += formatAddressPrefix(prefix, cloneConfig);

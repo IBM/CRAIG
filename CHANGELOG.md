@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.4.0
+
+### Upgrade Notes
+
+
+### Features
+
+
+### Fixes
+
+- Fixed an issues causing vpc modules to be formatted incorrectly when vpc name contains a hyphen
+
 ## 1.3.0
 
 ### Upgrade Notes
