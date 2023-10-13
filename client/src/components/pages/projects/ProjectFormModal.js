@@ -136,14 +136,16 @@ export class ProjectFormModal extends React.Component {
         </IcseFormGroup>
         <>
           <IcseFormGroup>
-            <IcseToggle
-              labelText="Integrate with Schematics"
-              defaultToggled={this.state.use_schematics}
-              onToggle={() => this.handleToggle("use_schematics")}
-              id="use-schematics"
-              toggleFieldName="use_schematics"
-              value={this.state.use_schematics}
-            />
+            {this.props.noProjectSave === false && (
+              <IcseToggle
+                labelText="Integrate with Schematics"
+                defaultToggled={this.state.use_schematics}
+                onToggle={() => this.handleToggle("use_schematics")}
+                id="use-schematics"
+                toggleFieldName="use_schematics"
+                value={this.state.use_schematics}
+              />
+            )}
           </IcseFormGroup>
           {this.state.use_schematics && (
             <div className="formInSubForm">
@@ -213,6 +215,10 @@ export class ProjectFormModal extends React.Component {
   }
 }
 
+ProjectFormModal.defaultProps = {
+  noProjectSave: false,
+};
+
 ProjectFormModal.propTypes = {
   data: PropTypes.shape({
     last_save: PropTypes.string,
@@ -223,4 +229,5 @@ ProjectFormModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   nav: PropTypes.func,
   templates: PropTypes.shape({}).isRequired,
+  noProjectSave: PropTypes.bool.isRequired,
 };

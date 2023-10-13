@@ -13,6 +13,7 @@ export const DownloadCopyButtonSet = (props) => {
         onClick={() => downloadContent(props.json, props.projectName)}
         disabled={props.disabled}
         renderIcon={Download}
+        kind={props.tertiaryDownload ? "tertiary" : undefined}
         iconDescription="Download craig.zip Terraform code"
       >
         Download Terraform
@@ -37,9 +38,11 @@ export const DownloadCopyButtonSet = (props) => {
 DownloadCopyButtonSet.defaultProps = {
   json: {},
   disabled: true,
+  tertiaryDownload: false,
 };
 
 DownloadCopyButtonSet.propTypes = {
   json: PropTypes.object.isRequired,
   disabled: PropTypes.bool.isRequired,
+  tertiaryDownload: PropTypes.bool.isRequired,
 };

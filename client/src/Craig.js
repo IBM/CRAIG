@@ -24,7 +24,6 @@ import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { notificationText } from "./lib/forms/utils";
-import { template_dropdown_map } from "./lib/constants";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -440,6 +439,7 @@ class Craig extends React.Component {
           current_project={craig.store.project_name}
           invalidForms={invalidForms(craig)}
           craig={craig}
+          onProjectSave={this.onProjectSave}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
@@ -456,7 +456,7 @@ class Craig extends React.Component {
               onProjectSave={this.onProjectSave}
               onProjectDelete={this.onProjectDelete}
               onProjectSelect={this.onProjectSelect}
-              deselect={this.onProjectDeselect}
+              onProjectDeselect={this.onProjectDeselect}
               notify={this.notify}
               deleteDisabled={() => {
                 return craig.store.json.resource_groups.length === 1;

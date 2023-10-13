@@ -45,7 +45,7 @@ import { codeMirrorGetDisplay, releaseNotes } from "../../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../../images/cbr";
 import { ActionableNotification } from "@carbon/react";
-import { NoProjectModal } from "./NoProjectModal";
+import NoProjectModal from "./NoProjectModal";
 
 function F5Icon() {
   return <img src={f5} />;
@@ -235,7 +235,10 @@ const PageTemplate = (props) => {
             <>
               {window.location.pathname !== "/projects" &&
                 !props.craig.store.project_name && (
-                  <NoProjectModal craig={props.craig} />
+                  <NoProjectModal
+                    craig={props.craig}
+                    onProjectSave={props.onProjectSave}
+                  />
                 )}
             </>
           )}
@@ -278,7 +281,8 @@ PageTemplate.propTypes = {
   toggleHide: PropTypes.func,
   jsonInCodeMirror: PropTypes.bool.isRequired,
   invalidForms: PropTypes.arrayOf(PropTypes.string),
-  craig: PropTypes.shape({}).isRequired,
+  craig: PropTypes.shape({}),
+  onProjectSave: PropTypes.func,
 };
 
 export default PageTemplate;

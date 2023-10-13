@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- When loading an unsaved configuration, users can convert existing data to a project from the no project modal
 
 ### Fixes
 

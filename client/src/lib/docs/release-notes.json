@@ -1,7 +1,9 @@
 [
   {
     "version": "1.4.0",
-    "features": [],
+    "features": [
+      "When loading an unsaved configuration, users can convert existing data to a project from the no project modal"
+    ],
     "fixes": [
       "Fixed an issues causing vpc modules to be formatted incorrectly when vpc name contains a hyphen"
     ],
