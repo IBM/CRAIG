@@ -58,12 +58,6 @@ variable "prefix" {
   }
 }
 
-variable "account_id" {
-  description = "IBM Account ID where resources will be provisioned"
-  type        = string
-  default     = "1234"
-}
-
 variable "slz_ssh_key_public_key" {
   description = "Public SSH Key Value for Slz SSH Key"
   type        = string
@@ -150,12 +144,6 @@ variable "prefix" {
   }
 }
 
-variable "account_id" {
-  description = "IBM Account ID where resources will be provisioned"
-  type        = string
-  default     = "1234"
-}
-
 variable "slz_ssh_key_public_key" {
   description = "Public SSH Key Value for Slz SSH Key"
   type        = string
@@ -229,12 +217,6 @@ variable "prefix" {
     error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
     condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16
   }
-}
-
-variable "account_id" {
-  description = "IBM Account ID where resources will be provisioned"
-  type        = string
-  default     = "1234"
 }
 
 variable "slz_ssh_key_public_key" {
@@ -386,12 +368,6 @@ variable "prefix" {
     error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
     condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16
   }
-}
-
-variable "account_id" {
-  description = "IBM Account ID where resources will be provisioned"
-  type        = string
-  default     = "1234"
 }
 
 variable "slz_ssh_key_public_key" {

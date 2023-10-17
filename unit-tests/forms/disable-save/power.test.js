@@ -34,6 +34,37 @@ describe("power", () => {
     );
     assert.isTrue(actualData, "it should be disabled");
   });
+  it("should be disabled when valid power workspace name and image maps is not found", () => {
+    let actualData = disableSave(
+      "power",
+      {
+        name: "aaa",
+        ssh_keys: [],
+      },
+      {
+        arrayParentName: "workspace",
+        craig: {
+          store: {
+            json: {
+              power: [
+                {
+                  name: "workspace",
+                  ssh_keys: [],
+                  imageNames: [],
+                },
+              ],
+            },
+          },
+        },
+        data: {
+          name: "test",
+          ssh_keys: [],
+          imageNames: [],
+        },
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
   it("should be disabled when invalid duplicate power workspace name", () => {
     let actualData = disableSave(
       "power",

@@ -4,13 +4,14 @@ import { DeleteModal } from "icse-react-assets";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
 import { azsort } from "lazy-z";
-import { Add } from "@carbon/icons-react";
+import { Add, MagicWandFilled } from "@carbon/icons-react";
 import "./project.css";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
 import { templates } from "../../utils";
 import { template_dropdown_map } from "../../../lib/constants";
 import PropTypes from "prop-types";
+import Wizard from "./Wizard";
 
 class Projects extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class Projects extends React.Component {
       modalOpen: false,
       viewJSONModalOpen: false,
       deleteModalOpen: false,
+      wizardModal: false,
     };
 
     /* do not delete, for debugging */
@@ -33,6 +35,7 @@ class Projects extends React.Component {
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.onSchematicsUploadClick = this.onSchematicsUploadClick.bind(this);
     this.onCreateWorkspaceClick = this.onCreateWorkspaceClick.bind(this);
+    this.toggleWizard = this.toggleWizard.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -40,6 +43,10 @@ class Projects extends React.Component {
       JSON.stringify(nextProps) !== JSON.stringify(this.props) ||
       JSON.stringify(nextState) !== JSON.stringify(this.state)
     );
+  }
+
+  toggleWizard() {
+    this.setState({ wizardModal: !this.state.wizardModal });
   }
 
   toggleModal() {
@@ -214,6 +221,12 @@ class Projects extends React.Component {
     let projectKeys = Object.keys(this.props.projects).sort(azsort);
     return (
       <div className="projects">
+        <Wizard
+          show={this.state.wizardModal}
+          onRequestClose={this.toggleWizard}
+          projects={this.props.projects}
+          onProjectSave={this.props.onProjectSave}
+        />
         {this.state.modalOpen && (
           <ProjectFormModal
             open={this.state.modalOpen}
@@ -253,6 +266,7 @@ class Projects extends React.Component {
           />
         )}
         <CraigHeader />
+
         <div id="projects" className="body">
           <h3 className="marginBottomXs">Projects</h3>
           <p className="marginBottom">
@@ -265,15 +279,26 @@ class Projects extends React.Component {
             <legend className="cds--label marginBottomSmall">
               Create a Project
             </legend>
+
             <Button
               id="new-project"
-              kind="tertiary"
+              kind="primary"
               className="projectButton marginLeftMed"
               onClick={this.newProject}
               iconDescription="Create new project"
               renderIcon={Add}
             >
               Create a New Project
+            </Button>
+            <Button
+              id="project-wizard"
+              kind="tertiary"
+              className="projectButton marginLeftMed"
+              onClick={this.toggleWizard}
+              iconDescription="Create new project"
+              renderIcon={MagicWandFilled}
+            >
+              Setup Wizard
             </Button>
           </div>
           {/* hide projects section if there are none */}

@@ -645,6 +645,7 @@ const PowerVsInstances = (craig) => {
       docs={RenderDocs("power_instances")}
       invalidCallback={invalidName("power_instances")}
       invalidTextCallback={invalidNameText("power_instances")}
+      forceOpen={forceShowForm}
       invalidIpCallback={(ip) => {
         if (isNullOrEmptyString(ip)) {
           return false;

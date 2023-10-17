@@ -54,11 +54,21 @@ function variablesDotTf(config, useF5) {
       },
     ],
   };
-  variables.account_id = {
-    description: "IBM Account ID where resources will be provisioned",
-    type: "${string}",
-    default: config._options.account_id,
-  };
+  let useAccountId = false;
+  // only add account id when in use
+  ["virtual_private_endpoints", "cbr_zones"].forEach((field) => {
+    config[field].forEach((item) => {
+      if (item.account_id && !isNullOrEmptyString(item.account_id)) {
+        useAccountId = true;
+      }
+    });
+  });
+  if (useAccountId)
+    variables.account_id = {
+      description: "IBM Account ID where resources will be provisioned",
+      type: "${string}",
+      default: config._options.account_id,
+    };
   if (isNullOrEmptyString(config._options.account_id)) {
     delete variables.account_id.default;
   }

@@ -824,8 +824,9 @@ function getCidrOrder() {
  * @param {string} pattern name of pattern can be vpn-and-waf, waf, or full-tunnel
  * @param {boolean=} useManagementVpc create edge data on management vpc
  * @param {number} zones number of deployment zones
+ * @param {boolean=} noUpdate prevent store from updating for wizard
  */
-function createEdgeVpc(config, pattern, useManagementVpc, zones) {
+function createEdgeVpc(config, pattern, useManagementVpc, zones, noUpdate) {
   let edgeTiers = firewallTiers[pattern]();
   let edgeTiersExist = config.store.edge_pattern !== undefined;
   let cidrOrder = getCidrOrder();
@@ -982,7 +983,7 @@ function createEdgeVpc(config, pattern, useManagementVpc, zones) {
       config.store.json.security_groups
     );
 
-  config.update();
+  if (!noUpdate) config.update();
 }
 
 module.exports = {

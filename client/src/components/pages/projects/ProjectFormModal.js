@@ -25,7 +25,11 @@ export class ProjectFormModal extends React.Component {
     super(props);
 
     if (this.props.data) {
-      this.state = { ...this.props.data, use_template: true };
+      let formModalState = { ...this.props.data, use_template: true };
+      if (!formModalState.template) {
+        formModalState.template = "Empty Project";
+      }
+      this.state = formModalState;
     }
 
     this.handleTextInput = this.handleTextInput.bind(this);

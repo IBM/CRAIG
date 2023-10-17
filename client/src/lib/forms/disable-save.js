@@ -34,6 +34,7 @@ const {
   invalidDnsZoneName,
   invalidCpuCallback,
   invalidTagList,
+  validSshKey,
 } = require("./invalid-callbacks");
 const {
   commaSeparatedIpListExp,
@@ -318,9 +319,9 @@ function disableVpcsSave(stateData, componentProps) {
 function disableSshKeysSave(stateData, componentProps) {
   if (componentProps.arrayParentName) {
     return (
+      invalidSshPublicKey(stateData, componentProps).invalid ||
       invalidName("power_vs_ssh_keys")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group) ||
-      invalidSshPublicKey(stateData, componentProps).invalid
+      isNullOrEmptyString(stateData.resource_group)
     );
   } else
     return (
@@ -1002,7 +1003,7 @@ function disableOpaqueSecretsSave(stateData, componentProps) {
 function disablePowerWorkspaceSave(stateData, componentProps) {
   return (
     invalidName("power")(stateData, componentProps) ||
-    isEmpty(stateData.imageNames)
+    isEmpty(stateData.imageNames || [])
   );
 }
 
@@ -1182,14 +1183,28 @@ function invalidCidrBlock(value) {
  * @returns {boolean} true if should show
  */
 function forceShowForm(stateData, componentProps) {
+  let openForm = false;
   if (componentProps.innerFormProps.data.enable === false) {
-    return false;
+    return openForm;
   }
-  return disableSave(
-    componentProps.submissionFieldName,
-    componentProps.innerFormProps.data,
-    componentProps.innerFormProps
-  );
+
+  if (componentProps.submissionFieldName === "power") {
+    componentProps.innerFormProps.data.ssh_keys.forEach((key) => {
+      if (!openForm) {
+        openForm = !validSshKey(key.public_key);
+      }
+    });
+  }
+
+  if (!openForm) {
+    openForm = disableSave(
+      componentProps.submissionFieldName,
+      componentProps.innerFormProps.data,
+      componentProps.innerFormProps
+    );
+  }
+
+  return openForm;
 }
 
 /**

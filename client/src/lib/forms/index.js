@@ -65,8 +65,10 @@ const { leftNavItemClassName } = require("./class-names");
 const { notificationText, getCosFromBucket } = require("./utils");
 const { encryptionKeyFilter } = require("./filters");
 const { storageChangeDisabledCallback } = require("./power-affinity");
+const wizard = require("./wizard");
 
 module.exports = {
+  wizard,
   storageChangeDisabledCallback,
   encryptionKeyFilter,
   leftNavItemClassName,

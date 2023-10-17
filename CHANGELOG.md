@@ -10,10 +10,15 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - When loading an unsaved configuration, users can convert existing data to a project from the no project modal
+- When child components are invalid, Power VS Workspace forms are now forced open
+- Account ID variable is no longer populated in variables.tf when not in use
 
 ### Fixes
 
-- Fixed an issues causing vpc modules to be formatted incorrectly when vpc name contains a hyphen
+- Fixed an issues causing VPC modules to be formatted incorrectly when VPC name contains a hyphen
+- Fixed an issues causing the Power VS Instance form to not be open on load with an invalid configuration
+- Fixed an issue causing Power VS workspace form to crash when entering a name with no other fields selected
+- Fixed an issue causing options page to incorrectly unset craig version on update
 
 ## 1.3.0
 

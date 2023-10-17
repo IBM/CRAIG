@@ -212,12 +212,6 @@ variable "prefix" {
   }
 }
 
-variable "account_id" {
-  description = "IBM Account ID where resources will be provisioned"
-  type        = string
-  default     = "1234"
-}
-
 variable "slz_ssh_key_public_key" {
   description = "Public SSH Key Value for Slz SSH Key"
   type        = string

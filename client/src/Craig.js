@@ -23,7 +23,16 @@ import { invalidForms, state } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
-import { notificationText } from "./lib/forms/utils";
+import {
+  getAndUpdateProjects,
+  onProjectDeleteCallback,
+  onProjectDeselect,
+  onProjectSelectCallback,
+  projectShouldCreateWorkspace,
+  saveAndSendNotificationCallback,
+  saveProjectCallback,
+  updateNotification,
+} from "./lib/craig-app";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -102,36 +111,19 @@ class Craig extends React.Component {
    * @param {boolean=} noProjectSave no project save
    */
   saveAndSendNotification(message, noProjectSave) {
-    // Save state to local storage
     this.setItem(this.state.storeName, craig.store);
-    // Show a notification when state is updated successfully
-    let updatedForm =
-      window.location.pathname === "/"
-        ? "" // options and import json notification should be just successfully updated
-        : notificationText(window.location.pathname);
-    let notification = {
-      title: "Success",
-      kind: "success",
-      text: message || `Successfully updated ${updatedForm}`,
-      timeout: 3000,
-    };
+    let projectData = JSON.parse(window.localStorage.getItem("craigProjects"));
     this.setState(
       {
         store: craig.store,
       },
-      () => {
-        let projectData = JSON.parse(
-          window.localStorage.getItem("craigProjects")
-        );
-        if (!noProjectSave && !isEmpty(keys(projectData))) {
-          let projectKeyName = kebabCase(craig.store.project_name);
-          if (projectKeyName) {
-            projectData[projectKeyName].json = { ...craig.store.json };
-            this.setItem("craigProjects", projectData);
-          }
-        }
-        this.notify(notification);
-      }
+      saveAndSendNotificationCallback(
+        this,
+        craig,
+        projectData,
+        updateNotification(window.location.pathname, message),
+        noProjectSave
+      )
     );
   }
 
@@ -194,59 +186,13 @@ class Craig extends React.Component {
    * @returns Projects and project key name
    */
   getProject(stateData, componentProps) {
-    let now = Date.now();
-    let projectKeyName = kebabCase(stateData.name);
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
-    let shouldCreateWorkspace = false;
-    let nameChange = false;
-
-    if (!projects[projectKeyName]) {
-      projects[projectKeyName] = {};
-    }
-
-    Object.assign(projects[projectKeyName], {
-      name: stateData.name,
-      project_name: stateData.name,
-      description: stateData.description,
-      use_template: stateData.use_template,
-      template: stateData.template,
-      use_schematics: stateData.use_schematics,
-      json: stateData.json,
-      last_save: now,
-    });
-
-    if (!stateData.use_schematics) {
-      delete projects[projectKeyName].workspace_name;
-      delete projects[projectKeyName].workspace_url;
-      delete projects[projectKeyName].workspace_region;
-      delete projects[projectKeyName].workspace_resource_group;
-    }
-
-    // if the project name is changing, remove the old key from projects object
-    if (
-      componentProps.data.name !== "" &&
-      projectKeyName !== kebabCase(componentProps.data.name)
-    ) {
-      nameChange = true;
-      delete projects[kebabCase(componentProps.data.name)];
-    }
-
-    // set unfound project data
-    ["workspace_name", "workspace_region", "workspace_resource_group"].forEach(
-      (field) => {
-        if (projects[projectKeyName][field] !== stateData[field]) {
-          projects[projectKeyName][field] = stateData[field];
-          shouldCreateWorkspace = true;
-        }
-      }
-    );
-
-    return {
-      projectKeyName,
+    return getAndUpdateProjects(
       projects,
-      nameChange,
-      shouldCreateWorkspace,
-    };
+      stateData,
+      componentProps,
+      Date.now()
+    );
   }
 
   /**
@@ -293,34 +239,23 @@ class Craig extends React.Component {
    * @param {boolean} setCurrentProject
    */
   saveProject(stateData, componentProps, setCurrentProject) {
-    let { projects, projectKeyName, nameChange } = this.getProject(
-      stateData,
-      componentProps
-    );
+    let projects = this.getProject(stateData, componentProps);
     this.saveAndSendNotification(
       `Successfully saved project ${stateData.name}`,
       true
     );
-
     window.localStorage.setItem("craigProjects", JSON.stringify(projects));
-    this.setState({ projects: { ...projects } }, () => {
-      if (setCurrentProject) {
-        this.onProjectSelect(
-          stateData.project_name,
-          `Successfully saved project ${stateData.name}`
-        );
-      } else {
-        // if the project name changed and that was our current project, update name
-        if (nameChange) {
-          craig.store.project_name = projectKeyName;
-        }
 
-        this.saveAndSendNotification(
-          `Successfully saved project ${stateData.name}`,
-          true
-        );
-      }
-    });
+    this.setState(
+      { projects: { ...projects } },
+      saveProjectCallback(
+        this,
+        craig,
+        stateData,
+        componentProps,
+        setCurrentProject
+      )
+    );
   }
 
   /**
@@ -330,13 +265,14 @@ class Craig extends React.Component {
    * @param {boolean} setCurrentProject if true, set project as current project
    */
   onProjectSave(stateData, componentProps, setCurrentProject) {
-    let { projects, projectKeyName, shouldCreateWorkspace } = this.getProject(
-      stateData,
-      componentProps
-    );
+    let projects = this.getProject(stateData, componentProps);
+    let projectKeyName = kebabCase(stateData.name);
 
     return new Promise((resolve, reject) => {
-      if (!stateData.use_schematics || !shouldCreateWorkspace) {
+      if (
+        !stateData.use_schematics ||
+        projectShouldCreateWorkspace(projects, stateData)
+      ) {
         return resolve();
       } else
         return this.projectFetch(projects, projectKeyName, resolve, reject);
@@ -355,21 +291,13 @@ class Craig extends React.Component {
    * @param {string} name project name
    */
   onProjectDelete(name) {
+    // get project data
     let projectKeyName = kebabCase(name);
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
-
     // remove from projects
     delete projects[projectKeyName];
-
     window.localStorage.setItem("craigProjects", JSON.stringify(projects));
-    this.setState({ projects }, () => {
-      this.saveAndSendNotification(`Successfully deleted project ${name}`);
-
-      // deselect if project being deleted is currently selected
-      if (craig.store.project_name === projectKeyName) {
-        this.onProjectDeselect();
-      }
-    });
+    this.setState({ projects }, onProjectDeleteCallback(this, craig, name));
   }
 
   /**
@@ -378,21 +306,17 @@ class Craig extends React.Component {
    * @param {string=} message message to be display in notification
    */
   onProjectSelect(name, message) {
-    let projectKeyName = kebabCase(name);
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
+    let projectKeyName = kebabCase(name);
     // update store project name and json
     craig.store.project_name = projectKeyName;
     craig.store.json = projects[projectKeyName].json;
+
     this.setState(
       {
         store: craig.store,
       },
-      () => {
-        this.saveAndSendNotification(
-          message || `Project ${name} successfully imported`,
-          true
-        );
-      }
+      onProjectSelectCallback(projects, this, craig, name, message)
     );
   }
 
@@ -400,14 +324,7 @@ class Craig extends React.Component {
    * deselect function for when project selection is to be cleared
    */
   onProjectDeselect() {
-    // reset store project name and json
-    craig.store.project_name = "";
-    craig.store.json = new state().store.json;
-
-    this.saveAndSendNotification(
-      `Successfully cleared project selection`,
-      true
-    );
+    onProjectDeselect(this, craig);
   }
 
   render() {

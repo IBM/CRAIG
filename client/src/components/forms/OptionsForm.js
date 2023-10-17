@@ -21,7 +21,11 @@ import {
   contains,
   isEmpty,
 } from "lazy-z";
-import { invalidNewResourceName, invalidTagList } from "../../lib";
+import {
+  invalidNewResourceName,
+  invalidTagList,
+  releaseNotes,
+} from "../../lib";
 import { Rocket } from "@carbon/icons-react";
 import "./options.css";
 
@@ -32,6 +36,7 @@ class OptionsForm extends React.Component {
     super(props);
     this.state = {
       ...this.props.data,
+      craig_version: releaseNotes[0].version,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleTags = this.handleTags.bind(this);
