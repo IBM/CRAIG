@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   Header,
   HeaderGlobalAction,
   HeaderGlobalBar,
@@ -10,7 +11,7 @@ import {
   Modal,
   Theme,
 } from "@carbon/react";
-import { Reset, Download, Code, CodeHide } from "@carbon/icons-react";
+import { Reset, Download, Debug, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
@@ -201,6 +202,16 @@ class Navigation extends React.Component {
                 <Download />
               </HeaderGlobalAction>
             )}
+            <HeaderGlobalAction
+              aria-label="Report Bug"
+              isActive
+              tooltipAlignment="end"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://github.ibm.com/platinum-developer-tools/CRAIG/issues/new"
+            >
+              <Debug />
+            </HeaderGlobalAction>
             <HeaderGlobalAction
               aria-label="Reset State"
               isActive
