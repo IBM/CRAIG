@@ -178,7 +178,8 @@ class OptionsForm extends React.Component {
               groups={["Private", "Public", "Public and Private"]}
               handleInputChange={this.handleChange}
               tooltip={{
-                content: "Type of service endpoints to use for each service",
+                content:
+                  "Type of service endpoints to use for each service. Private endpoints are only supported for use with IBM Schematics.",
               }}
             />
             <IcseTextInput
