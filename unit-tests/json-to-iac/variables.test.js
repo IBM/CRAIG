@@ -100,7 +100,14 @@ variable "secrets_manager_example_secret_password" {
   });
   it("should return correct variable when classic resources are enabled", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
-    slzNetwork._options.classic_resources = true;
+    slzNetwork._options.classic = true;
+    slzNetwork.classic_ssh_keys = [
+      {
+        name: "example-classic",
+        public_key: "1234",
+        datacenter: "dal10",
+      },
+    ];
     let actualData = variablesDotTf(slzNetwork, false);
     let expectedData = `##############################################################################
 # Variables
@@ -176,6 +183,12 @@ variable "secrets_manager_example_secret_password" {
   default     = "1VeryGoodPasword?"
 }
 
+variable "classic_example_classic_public_key" {
+  description = "Public SSH Key Value for classic SSH Key example classic"
+  type        = string
+  default     = "1234"
+}
+
 ##############################################################################
 `;
     assert.deepEqual(
@@ -187,7 +200,7 @@ variable "secrets_manager_example_secret_password" {
   it("should return correct variable when power vs is enabled", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
     slzNetwork._options.enable_power_vs = true;
-    slzNetwork._options.classic_resources = false;
+    slzNetwork._options.classic = false;
     let actualData = variablesDotTf(slzNetwork, false);
     let expectedData = `##############################################################################
 # Variables
@@ -262,7 +275,7 @@ variable "secrets_manager_example_secret_password" {
   it("should return correct variable when power vs is enabled with ssh keys", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
     slzNetwork._options.enable_power_vs = true;
-    slzNetwork._options.classic_resources = false;
+    slzNetwork._options.classic = false;
     slzNetwork.power = [
       {
         name: "oracle-template",

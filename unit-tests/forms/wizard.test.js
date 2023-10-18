@@ -780,6 +780,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
 
     assert.deepEqual(
@@ -1557,6 +1559,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
 
     assert.deepEqual(
@@ -1987,6 +1991,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
 
     assert.deepEqual(
@@ -2408,6 +2414,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
 
     assert.deepEqual(
@@ -2905,6 +2913,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
 
     assert.deepEqual(
@@ -3055,6 +3065,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
 
     assert.deepEqual(
@@ -3545,6 +3557,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
 
     assert.deepEqual(
@@ -4010,6 +4024,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
     assert.deepEqual(
       actualData,
@@ -4474,6 +4490,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
     assert.deepEqual(
       actualData,
@@ -4886,6 +4904,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
     assert.deepEqual(
       actualData,
@@ -5299,6 +5319,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
     assert.deepEqual(
       actualData,
@@ -6314,6 +6336,8 @@ describe("setup wizard", () => {
       power: [],
       power_instances: [],
       power_volumes: [],
+      classic_ssh_keys: [],
+      classic_vlans: [],
     };
     assert.deepEqual(
       actualData,

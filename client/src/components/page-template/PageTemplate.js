@@ -259,8 +259,12 @@ const PageTemplate = (props) => {
       </div>
       {isResetState !== true && (
         <Footer
-          toggleFooter={() => props.toggleHide("hideFooter")}
-          hideFooter={props.hideFooter}
+          toggleFooter={() => {
+            props.craig.store.json._options.hideFooter =
+              !props.craig.store.json._options.hideFooter;
+            props.saveAndSendNotification("updating footer", false, true);
+          }}
+          hideFooter={props.craig.store.json._options.hideFooter || false}
           navigate={navigate}
         />
       )}
@@ -283,6 +287,7 @@ PageTemplate.propTypes = {
   invalidForms: PropTypes.arrayOf(PropTypes.string),
   craig: PropTypes.shape({}),
   onProjectSave: PropTypes.func,
+  saveAndSendNotification: PropTypes.func,
 };
 
 export default PageTemplate;

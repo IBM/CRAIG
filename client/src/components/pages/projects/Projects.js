@@ -68,8 +68,6 @@ class Projects extends React.Component {
         description: "",
         use_template: false,
         use_schematics: false,
-        json: template_dropdown_map["Empty Project"].template,
-        template: "Mixed",
       },
       modalOpen: true,
     });

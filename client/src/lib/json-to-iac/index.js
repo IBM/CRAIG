@@ -181,7 +181,15 @@ const {
   formatPowerVsVolumeAttachment,
   powerVsVolumeTf,
 } = require("./power-vs-volumes");
+const {
+  formatClassicSshKey,
+  formatClassicNetworkVlan,
+  classicInfraTf,
+} = require("./classic");
 module.exports = {
+  formatClassicSshKey,
+  formatClassicNetworkVlan,
+  classicInfraTf,
   powerInstanceTf,
   powerVsVolumeTf,
   formatPowerVsVolumeAttachment,

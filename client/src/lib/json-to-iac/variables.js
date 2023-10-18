@@ -16,7 +16,7 @@ function variablesDotTf(config, useF5) {
       sensitive: true,
     },
   };
-  if (config._options.classic_resources) {
+  if (config._options.classic) {
     variables.iaas_classic_username = {
       description:
         "The IBM Cloud username for the creation of classic resources.",
@@ -69,9 +69,7 @@ function variablesDotTf(config, useF5) {
       type: "${string}",
       default: config._options.account_id,
     };
-  if (isNullOrEmptyString(config._options.account_id)) {
-    delete variables.account_id.default;
-  }
+
   let newSshKeys = config.ssh_keys.filter((key) => !key.use_data);
   // add ssh keys not from data
   newSshKeys.forEach((key) => {
@@ -172,6 +170,17 @@ function variablesDotTf(config, useF5) {
         default: key.public_key,
       };
     });
+  });
+
+  (config.classic_ssh_keys || []).forEach((sshKey) => {
+    variables[snakeCase(`classic ${sshKey.name} public key`)] = {
+      description: `Public SSH Key Value for classic SSH Key ${sshKey.name.replace(
+        /-/g,
+        " "
+      )}`,
+      type: "${string}",
+      default: sshKey.public_key,
+    };
   });
 
   return tfBlock(

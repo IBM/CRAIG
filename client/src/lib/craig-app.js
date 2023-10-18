@@ -85,6 +85,7 @@ function updateNotification(pathName, message) {
  * @param {*} projectData
  * @param {*} notification
  * @param {*} noProjectSave
+ * @param {boolean=} footerToggle
  * @returns {Function} callback function
  */
 function saveAndSendNotificationCallback(
@@ -92,7 +93,8 @@ function saveAndSendNotificationCallback(
   craig,
   projectData,
   notification,
-  noProjectSave
+  noProjectSave,
+  footerToggle
 ) {
   return function () {
     if (noProjectSave !== true && !isEmpty(keys(projectData))) {
@@ -102,7 +104,7 @@ function saveAndSendNotificationCallback(
         component.setItem("craigProjects", projectData);
       }
     }
-    component.notify(notification);
+    if (!footerToggle) component.notify(notification);
   };
 }
 

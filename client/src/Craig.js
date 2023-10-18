@@ -109,8 +109,9 @@ class Craig extends React.Component {
    * update components
    * @param {string} message
    * @param {boolean=} noProjectSave no project save
+   * @param {boolean=} footerToggle hide notification when toggling footer
    */
-  saveAndSendNotification(message, noProjectSave) {
+  saveAndSendNotification(message, noProjectSave, footerToggle) {
     this.setItem(this.state.storeName, craig.store);
     let projectData = JSON.parse(window.localStorage.getItem("craigProjects"));
     this.setState(
@@ -122,7 +123,8 @@ class Craig extends React.Component {
         craig,
         projectData,
         updateNotification(window.location.pathname, message),
-        noProjectSave
+        noProjectSave,
+        footerToggle
       )
     );
   }
@@ -271,7 +273,7 @@ class Craig extends React.Component {
     return new Promise((resolve, reject) => {
       if (
         !stateData.use_schematics ||
-        projectShouldCreateWorkspace(projects, stateData)
+        !projectShouldCreateWorkspace(projects, stateData)
       ) {
         return resolve();
       } else
@@ -357,6 +359,7 @@ class Craig extends React.Component {
           invalidForms={invalidForms(craig)}
           craig={craig}
           onProjectSave={this.onProjectSave}
+          saveAndSendNotification={this.saveAndSendNotification}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (

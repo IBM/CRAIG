@@ -22,14 +22,14 @@ function ibmCloudProvider(config) {
     },
   };
 
-  if (config._options.classic_resources) {
-    transpose(
-      {
-        iaas_classic_username: "${var.iaas_classic_username}",
-        iaas_classic_api_key: "${var.iaas_classic_api_key}",
-      },
-      data.provider.ibm[0]
-    );
+  if (config._options.classic) {
+    data.provider.ibm.push({
+      alias: "classic",
+      ibmcloud_timeout: 60,
+      region: varDotRegion,
+      iaas_classic_username: "${var.iaas_classic_username}",
+      iaas_classic_api_key: "${var.iaas_classic_api_key}",
+    });
   }
 
   if (config._options.enable_power_vs) {

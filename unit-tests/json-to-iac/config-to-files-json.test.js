@@ -1046,6 +1046,7 @@ variable "prefix" {
 variable "account_id" {
   description = "IBM Account ID where resources will be provisioned"
   type        = string
+  default     = ""
 }
 
 variable "slz_ssh_key_public_key" {
@@ -1531,6 +1532,14 @@ variable "tmos_admin_password" {
           ],
         });
       assert.doesNotThrow(task, "it should not throw");
+    });
+    it("should not throw when empty project is used", () => {
+      let overrideJson = require("../../client/src/lib/docs/templates/from-scratch.json");
+
+      let task = () => {
+        configToFilesJson(overrideJson);
+      };
+      assert.doesNotThrow(task, "it should not throw an error");
     });
   });
 });

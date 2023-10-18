@@ -1367,7 +1367,7 @@
       },
       {
         "table": [
-          ["_headers", "Record types"],
+          ["_headers", "Record types", "Description"],
           [
             "A",
             "An A (IPv4 address) record consists of a hostname and an IP address."
@@ -1491,7 +1491,7 @@
       },
       {
         "table": [
-          ["_headers", "Additional Fields"],
+          ["_headers", "Additional Fields", "Description"],
           [
             "SSH Keys",
             "You can set up one or more Secure Shell (SSH) keys for root login when you create new AIX virtual machines (VM). The keys are loaded into the root's authorized_keys file. SSH keys allow you to securely log in to a VM. You must use the available operating system options to create SSH keys. To generate SSH keys on a Linux or Mac OS system, for example, you can use the standard ssh-keygen tool."
@@ -1541,7 +1541,7 @@
       },
       {
         "table": [
-          ["_headers", "Instance Fields"],
+          ["_headers", "Instance Fields", "Description"],
           [
             "System Type",
             "Specify the machine type. The machine type that you select determines the number of cores and memory that is available. For more information about machine types, see Hardware Specification documentation."

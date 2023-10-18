@@ -183,6 +183,24 @@ describe("craig app", () => {
         "it should send notification"
       );
     });
+    it("should call not notify if footerToggle is true", () => {
+      let craigApp = newMockCraig();
+      let craigState = new state();
+      let callback = saveAndSendNotificationCallback(
+        craigApp,
+        craigState,
+        {},
+        "hi",
+        true,
+        true
+      );
+      callback();
+      assert.deepEqual(
+        craigApp.lastNotification,
+        undefined,
+        "it should send notification"
+      );
+    });
     it("should call notify if noProjetSave is false and no projects", () => {
       let craigApp = newMockCraig();
       let craigState = new state();

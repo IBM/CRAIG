@@ -938,5 +938,7 @@
   "access_groups": [],
   "cbr_zones": [],
   "cbr_rules": [],
-  "icd": []
+  "icd": [],
+  "classic_ssh_keys": [],
+  "classic_vlans": []
 }

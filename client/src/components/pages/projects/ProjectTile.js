@@ -136,7 +136,7 @@ ProjectTile.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
-    last_save: PropTypes.number,
+    last_save: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }).isRequired,
   onEditClick: PropTypes.func.isRequired,
   onViewClick: PropTypes.func.isRequired,

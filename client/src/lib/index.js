@@ -122,11 +122,17 @@ const {
   calculateNeededSubnetIps,
   getNextCidr,
   powerVsTf,
+  formatClassicSshKey,
+  formatClassicNetworkVlan,
+  classicInfraTf,
 } = require("./json-to-iac");
 const { docs, releaseNotes } = require("./docs");
 const { state } = require("./state");
 const { invalidForms } = require("./invalid-forms");
 module.exports = {
+  formatClassicSshKey,
+  formatClassicNetworkVlan,
+  classicInfraTf,
   wizard,
   invalidCrnList,
   formatAtrackerArchive,

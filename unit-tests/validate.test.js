@@ -2085,5 +2085,12 @@ describe("validate", () => {
       };
       assert.doesNotThrow(task, "it should not throw an error");
     });
+    it("should return empty project valid as is", () => {
+      let overrideJson = require("../client/src/lib/docs/templates/from-scratch.json");
+      let task = () => {
+        validate(overrideJson);
+      };
+      assert.doesNotThrow(task, "it should not throw an error");
+    });
   });
 });

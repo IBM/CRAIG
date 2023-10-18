@@ -292,6 +292,18 @@ const {
   powerVsVolumeSave,
   powerVsVolumeDelete,
 } = require("./power-vs-volumes");
+const {
+  classicSshKeyInit,
+  classicSshKeyOnStoreUpdate,
+  classicSshKeyCreate,
+  classicSshKeyUpdate,
+  classicSshKeyDelete,
+  classicVlanInit,
+  classicVlanOnStoreUpdate,
+  classicVlanCreate,
+  classicVlanUpdate,
+  classicVlanDelete,
+} = require("./classic");
 
 /**
  * get state for craig
@@ -791,6 +803,22 @@ const state = function (legacy) {
     create: powerVsVolumeCreate,
     save: powerVsVolumeSave,
     delete: powerVsVolumeDelete,
+  });
+
+  store.newField("classic_ssh_keys", {
+    init: classicSshKeyInit,
+    onStoreUpdate: classicSshKeyOnStoreUpdate,
+    create: classicSshKeyCreate,
+    save: classicSshKeyUpdate,
+    delete: classicSshKeyDelete,
+  });
+
+  store.newField("classic_vlans", {
+    init: classicVlanInit,
+    onStoreUpdate: classicVlanOnStoreUpdate,
+    create: classicVlanCreate,
+    save: classicVlanUpdate,
+    delete: classicVlanDelete,
   });
 
   /**

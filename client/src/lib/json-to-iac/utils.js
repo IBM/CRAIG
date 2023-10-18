@@ -77,6 +77,7 @@ function buildTitleComment(name) {
           .done("g"),
         "F5"
       )
+      .replace(/VLA\sN/g, "VLAN")
       .replace(/\sDNA/g, "DNA") // replace `Log DNA`
       .replace(/Vpe/g, "VPE") // used for sg names
       .replace(/Vsi(?=\s)/g, "VSI")

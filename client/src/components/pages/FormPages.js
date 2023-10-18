@@ -542,8 +542,13 @@ const NoPowerWorkspaceTile = () => {
 };
 
 const PowerInfraPage = (craig) => {
-  return craig.store.json._options.enable_power_vs ? (
+  return (
     <PowerVsWorkspacePage
+      overrideTile={
+        craig.store.json._options.enable_power_vs ? undefined : (
+          <NoPowerNetworkTile />
+        )
+      }
       edgeRouterEnabledZones={edgeRouterEnabledZones}
       power={[...craig.store.json.power]}
       disableSave={disableSave}
@@ -620,18 +625,19 @@ const PowerInfraPage = (craig) => {
       onAttachmentSave={craig.power.attachments.save}
       disableAttachmentSave={storageChangeDisabledCallback}
     />
-  ) : (
-    <NoPowerNetworkTile />
   );
 };
 
 const PowerVsInstances = (craig) => {
-  return !craig.store.json._options.enable_power_vs ? (
-    <NoPowerNetworkTile />
-  ) : craig.store.json.power.length === 0 ? (
-    <NoPowerWorkspaceTile />
-  ) : (
+  return (
     <PowerVsInstancesPage
+      overrideTile={
+        !craig.store.json._options.enable_power_vs ? (
+          <NoPowerNetworkTile />
+        ) : craig.store.json.power.length === 0 ? (
+          <NoPowerWorkspaceTile />
+        ) : undefined
+      }
       power_instances={craig.store.json.power_instances}
       storage_pool_map={powerStoragePoolRegionMap}
       power_volumes={craig.store.json.power_volumes}
@@ -673,12 +679,15 @@ const PowerVsInstances = (craig) => {
 };
 
 const PowerVsVolumes = (craig) => {
-  return !craig.store.json._options.enable_power_vs ? (
-    <NoPowerNetworkTile />
-  ) : craig.store.json.power.length === 0 ? (
-    <NoPowerWorkspaceTile />
-  ) : (
+  return (
     <PowerVsVolumesPage
+      overrideTile={
+        !craig.store.json._options.enable_power_vs ? (
+          <NoPowerNetworkTile />
+        ) : craig.store.json.power.length === 0 ? (
+          <NoPowerNetworkTile />
+        ) : undefined
+      }
       power_volumes={craig.store.json.power_volumes}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
@@ -997,7 +1006,6 @@ const VpcPage = (craig) => {
     />
   );
 };
-
 
 const VpePage = (craig) => {
   return (

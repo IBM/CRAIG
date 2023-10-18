@@ -17,7 +17,10 @@ import { azsort, isNullOrEmptyString, keys } from "lazy-z";
 import { Launch } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
 import { templates, TemplateAbout } from "../../utils";
-import { projectDescriptionRegex } from "../../../lib/constants";
+import {
+  projectDescriptionRegex,
+  template_dropdown_map,
+} from "../../../lib/constants";
 import PropTypes from "prop-types";
 
 export class ProjectFormModal extends React.Component {
@@ -25,7 +28,13 @@ export class ProjectFormModal extends React.Component {
     super(props);
 
     if (this.props.data) {
-      let formModalState = { ...this.props.data, use_template: true };
+      let formModalState = {
+        ...this.props.data,
+        json: !this.props.data.json
+          ? template_dropdown_map["Mixed"].template
+          : this.props.data.json,
+        use_template: true,
+      };
       if (!formModalState.template) {
         formModalState.template = "Empty Project";
       }
@@ -127,7 +136,7 @@ export class ProjectFormModal extends React.Component {
             formName="project"
             labelText="Select a Project Template"
             groups={keys(this.props.templates)}
-            value={this.state.template || "Mixed"}
+            value={this.state.template || ""}
             handleInputChange={this.handleTextInput}
             disabled={
               this.props.data.use_template &&

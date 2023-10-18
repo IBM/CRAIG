@@ -7,7 +7,8 @@ describe("provider terraform", () => {
   it("should return the correct data when classic is enabled", () => {
     let actualData = ibmCloudProvider({
       _options: {
-        classic_resources: true,
+        classic: true,
+        classic_zones: ["dal10", "dal12"],
       },
     });
     let expectedData = `##############################################################################
@@ -15,9 +16,15 @@ describe("provider terraform", () => {
 ##############################################################################
 
 provider "ibm" {
-  ibmcloud_api_key      = var.ibmcloud_api_key
-  region                = var.region
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias                 = "classic"
   ibmcloud_timeout      = 60
+  region                = var.region
   iaas_classic_username = var.iaas_classic_username
   iaas_classic_api_key  = var.iaas_classic_api_key
 }
