@@ -380,6 +380,48 @@ resource "ibm_kms_key" "kms_key_key" {
         "it should return the correct key"
       );
     });
+    it("should create correct encryption key with correct endpoint", () => {
+      let actualData = formatKmsKey(
+        {
+          name: "key",
+          root_key: true,
+          key_ring: "test-ring",
+          force_delete: true,
+          endpoint: "public",
+        },
+        {
+          name: "kms",
+          service: "kms",
+          resource_group: "slz-service-rg",
+          authorize_vpc_reader_role: true,
+        },
+        {
+          _options: {
+            prefix: "iac",
+            endpoints: "private",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_kms_key" "kms_key_key" {
+  instance_id   = ibm_resource_instance.kms.guid
+  key_name      = "\${var.prefix}-kms-key"
+  standard_key  = false
+  key_ring_id   = ibm_kms_key_rings.kms_test_ring_ring.key_ring_id
+  force_delete  = true
+  endpoint_type = "public"
+  depends_on = [
+    ibm_iam_authorization_policy.kms_server_protect_policy,
+    ibm_iam_authorization_policy.kms_block_storage_policy
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return the correct key"
+      );
+    });
   });
   describe("formatKmsKeyPolicy", () => {
     it("should create a key policy", () => {

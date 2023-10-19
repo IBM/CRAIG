@@ -39,7 +39,6 @@
           "name": "slz-slz-key",
           "root_key": true,
           "force_delete": true,
-          "endpoint": "public",
           "rotation": 12,
           "dual_auth_delete": false
         },
@@ -48,7 +47,6 @@
           "name": "slz-atracker-key",
           "root_key": true,
           "force_delete": true,
-          "endpoint": "public",
           "rotation": 12,
           "dual_auth_delete": false
         },
@@ -57,7 +55,6 @@
           "name": "slz-vsi-volume-key",
           "root_key": true,
           "force_delete": true,
-          "endpoint": "public",
           "rotation": 12,
           "dual_auth_delete": false
         }

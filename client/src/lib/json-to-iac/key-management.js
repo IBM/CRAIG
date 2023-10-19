@@ -167,7 +167,7 @@ function ibmKmsKey(key, kms, config, cdktf) {
       "key_ring_id"
     ),
     force_delete: key.force_delete,
-    endpoint_type: config._options.endpoints,
+    endpoint_type: key.endpoint ? key.endpoint : config._options.endpoints,
   };
 
   if (kms.authorize_vpc_reader_role) {
