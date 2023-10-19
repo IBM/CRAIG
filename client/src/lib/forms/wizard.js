@@ -21,7 +21,7 @@ function wizard(wizardJson, json) {
       prefix: "wizard",
       tags: ["craig", "wizard"],
       fs_cloud: wizardJson.fs_cloud,
-      enable_power_vs: wizardJson.use_power_vs,
+      enable_power_vs: wizardJson.enable_power_vs,
       power_vs_zones: wizardJson.power_vs_zones || [],
       dynamic_subnets: !wizardJson.use_f5,
     },

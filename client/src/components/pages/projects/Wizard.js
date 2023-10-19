@@ -45,6 +45,7 @@ class Wizard extends React.Component {
       craig_version: releaseNotes[0].version,
       key_management_service: "",
       template: "Empty Project",
+      enable_power_vs: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
