@@ -3,63 +3,63 @@
 # Power VS Outputs
 ##############################################################################
 
-output "wdc07" {
+output "WDC07" {
   value = ibm_resource_instance.power_vs_workspace_craig_wdc07.guid
 }
 
-output "tor01" {
+output "TOR01" {
   value = ibm_resource_instance.power_vs_workspace_craig_tor01.guid
 }
 
-output "sao01" {
+output "SAO01" {
   value = ibm_resource_instance.power_vs_workspace_craig_sao01.guid
 }
 
-output "tok04" {
+output "TOK04" {
   value = ibm_resource_instance.power_vs_workspace_craig_tok04.guid
 }
 
-output "dal12" {
+output "DAL12" {
   value = ibm_resource_instance.power_vs_workspace_craig_dal12.guid
 }
 
-output "dal10" {
+output "DAL10" {
   value = ibm_resource_instance.power_vs_workspace_craig_dal10.guid
 }
 
-output "us-south" {
+output "US_SOUTH" {
   value = ibm_resource_instance.power_vs_workspace_craig_us_south.guid
 }
 
-output "wdc06" {
+output "WDC06" {
   value = ibm_resource_instance.power_vs_workspace_craig_wdc06.guid
 }
 
-output "us-east" {
+output "US_EAST" {
   value = ibm_resource_instance.power_vs_workspace_craig_us_east.guid
 }
 
-output "lon06" {
+output "LON06" {
   value = ibm_resource_instance.power_vs_workspace_craig_lon06.guid
 }
 
-output "lon04" {
+output "LON04" {
   value = ibm_resource_instance.power_vs_workspace_craig_lon04.guid
 }
 
-output "eu-de-2" {
+output "EU_DE_2" {
   value = ibm_resource_instance.power_vs_workspace_craig_eu_de_2.guid
 }
 
-output "eu-de-1" {
+output "EU_DE_1" {
   value = ibm_resource_instance.power_vs_workspace_craig_eu_de_1.guid
 }
 
-output "syd05" {
+output "SYD05" {
   value = ibm_resource_instance.power_vs_workspace_craig_syd05.guid
 }
 
-output "syd04" {
+output "SYD04" {
   value = ibm_resource_instance.power_vs_workspace_craig_syd04.guid
 }
 

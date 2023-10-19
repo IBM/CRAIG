@@ -46,16 +46,18 @@ if [ $API_KEY == "NOT-SET" ]; then
 fi
 
 export TF_VAR_ibmcloud_api_key=$API_KEY
+CRAIG_PATH=$(pwd)
 TF_PATH=$(pwd)/deploy/power_vs_workspaces
 cd $TF_PATH
 formatted_print "Initializing Terraform"
-SHH=$(terraform init)
+FORCE_QUIET=$(terraform init)
 echo \\nTerraform Initialized!
 formatted_print "Planning Terraform"
-SHH=$(terraform plan)
+FORCE_QUIET=$(terraform plan)
 echo \\nTerraform Plan Successful!
 formatted_print "Creating Workspaces"
-SHH=$(echo "yes" | terraform apply)
+FORCE_QUIET=$(echo "yes" | terraform apply)
 echo \\nWorkspace Creation Successful!
 
-echo $(terraform output --json)
+# for local deployments convert to list of workspace environment variables
+terraform output --json | jq -r 'keys[] as $k | "POWER_WORKSPACE_\($k)=\"\(.[$k] | .value)\""' > $CRAIG_PATH/.env
