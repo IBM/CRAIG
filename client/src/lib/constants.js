@@ -882,7 +882,7 @@ module.exports = {
       patternDocText:
         "This template creates an environment with VPC and Power VS resources to allow users to create Oracle Real Application Clusters (Oracle RAC) on IBM Cloud",
       includes: [
-        "A resource group for cloud services and for each VPC, and Power Virtuall Servers",
+        "A resource group for cloud services and for each VPC, and Power Virtual Servers",
         "A management and workload VPC connected by a transit gateway",
         "One public and two private network interfaces for Power VS with cloud connections to a transit gateway",
         "Two AIX Power Virtual Server instances and needed volumes for Oracle RAC implemententation",
