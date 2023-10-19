@@ -23,6 +23,7 @@ import { invalidForms, state } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
+import { LoadingModal } from "./components/pages/projects/LoadingModal";
 import {
   getAndUpdateProjects,
   onProjectDeleteCallback,
@@ -72,6 +73,12 @@ class Craig extends React.Component {
         projects: JSON.parse(projectInStorage),
         store: craig.store,
         visited: window.localStorage.getItem("craigVisited"),
+        loadingModalOpen: false,
+        loadingDone: false,
+        schematicsFailed: false,
+        clickedProject: "",
+        clickedWorkspace: "",
+        clickedWorkspaceUrl: "",
       };
     } catch (err) {
       // if there are initialization errors, redirect user to reset state path
@@ -88,6 +95,7 @@ class Craig extends React.Component {
     this.onProjectDelete = this.onProjectDelete.bind(this);
     this.onProjectSelect = this.onProjectSelect.bind(this);
     this.onProjectDeselect = this.onProjectDeselect.bind(this);
+    this.toggleLoadingModal = this.toggleLoadingModal.bind(this);
     this.getProject = this.getProject.bind(this);
     this.projectFetch = this.projectFetch.bind(this);
     this.saveProject = this.saveProject.bind(this);
@@ -208,30 +216,52 @@ class Craig extends React.Component {
   projectFetch(projects, projectKeyName, resolve, reject) {
     let { workspace_name, workspace_region, workspace_resource_group } =
       projects[projectKeyName];
-    return fetch(
-      `/api/schematics/${workspace_name}` +
-        (workspace_region ? "/" + workspace_region : "") +
-        (workspace_resource_group ? "/" + workspace_resource_group : ""),
-      { method: "POST" }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          reject(data.error);
-        } else if (isNullOrEmptyString(data.id)) {
-          reject("Workspace did not create. Missing ID.");
-        } else {
-          projects[
-            projectKeyName
-          ].workspace_url = `https://cloud.ibm.com/schematics/workspaces/${data.id}`;
-          this.setItem("craigProjects", projects);
-          resolve();
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        reject(err);
-      });
+    this.setState(
+      {
+        clickedProject: projects[projectKeyName].name,
+        clickedWorkspace: workspace_name,
+        // fix data before retry
+        loadingModalOpen: false,
+        loadingDone: false,
+        schematicsFailed: false,
+      },
+      () => {
+        this.toggleLoadingModal();
+        return fetch(
+          `/api/schematics/${workspace_name}` +
+            (workspace_region ? "/" + workspace_region : "") +
+            (workspace_resource_group ? "/" + workspace_resource_group : ""),
+          { method: "POST" }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              reject(data.error);
+            } else if (isNullOrEmptyString(data.id)) {
+              reject("Workspace did not create. Missing ID.");
+            } else {
+              projects[
+                projectKeyName
+              ].workspace_url = `https://cloud.ibm.com/schematics/workspaces/${data.id}`;
+              this.setState(
+                {
+                  loadingDone: true,
+                  clickedWorkspaceUrl: projects[projectKeyName].workspace_url,
+                },
+                () => {
+                  this.setItem("craigProjects", projects);
+                  resolve();
+                }
+              );
+            }
+          })
+          .catch((err) => {
+            this.setState({ schematicsFailed: true, loadingDone: true });
+            console.error(err);
+            reject(err);
+          });
+      }
+    );
   }
 
   /**
@@ -283,8 +313,17 @@ class Craig extends React.Component {
         this.saveProject(stateData, componentProps, setCurrentProject);
       })
       .catch((err) => {
-        console.error(err);
-        this.onError(`Create failed with error: ${err}`);
+        this.setState(
+          {
+            loadingModalOpen: true,
+            loadingDone: true,
+            schematicsFailed: true,
+          },
+          () => {
+            console.error(err);
+            this.onError(`Create failed with error: ${err}`);
+          }
+        );
       });
   }
 
@@ -327,6 +366,14 @@ class Craig extends React.Component {
    */
   onProjectDeselect() {
     onProjectDeselect(this, craig);
+  }
+
+  toggleLoadingModal() {
+    this.setState({
+      loadingModalOpen: !this.state.loadingModalOpen,
+      loadingDone: false,
+      schematicsFailed: false,
+    });
   }
 
   render() {
@@ -402,6 +449,22 @@ class Craig extends React.Component {
             titleCase(this.props.params.form)
           )}
         </PageTemplate>
+        {this.state.loadingModalOpen && (
+          <LoadingModal
+            className="alignItemsCenter"
+            action="create"
+            project={this.state.clickedProject}
+            workspace={this.state.clickedWorkspace}
+            open={this.state.loadingModalOpen}
+            completed={this.state.loadingDone}
+            workspace_url={this.state.clickedWorkspaceUrl}
+            toggleModal={this.toggleLoadingModal}
+            failed={this.state.schematicsFailed}
+            // props for retry
+            projects={this.state.projects}
+            retryCallback={this.onProjectSave}
+          />
+        )}
       </>
     );
   }

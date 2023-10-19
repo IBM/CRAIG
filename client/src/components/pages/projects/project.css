@@ -108,6 +108,29 @@
   align-items: end;
 }
 
+.loadingWheel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexDirectionColumn {
+  flex-direction: column;
+}
+
+.warningText {
+  font-weight: bold;
+  text-align: center;
+}
+
+.yellowText {
+  color: #c7ab19;
+}
+
 .projectSelectMarginBottom {
   margin-bottom: -1.5rem;
+}
+
+#inline-p {
+  display: inline;
 }

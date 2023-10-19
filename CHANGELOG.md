@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Users are now shown a loading modal after a creating a schematics workspace or uploading to an existing workspace.
 - When loading an unsaved configuration, users can convert existing data to a project from the no project modal
 - When no VPC instances are created, all pages dependent on a VPC now show a tile with an explanation and a link to `/form/vpcs`
 - When child components are invalid, Power VS Workspace forms are now forced open

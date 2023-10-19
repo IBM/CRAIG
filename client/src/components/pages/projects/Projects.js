@@ -9,6 +9,7 @@ import "./project.css";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
 import { templates } from "../../utils";
+import { LoadingModal } from "./LoadingModal";
 import { template_dropdown_map } from "../../../lib/constants";
 import PropTypes from "prop-types";
 import Wizard from "./Wizard";
@@ -20,6 +21,12 @@ class Projects extends React.Component {
       modalOpen: false,
       viewJSONModalOpen: false,
       deleteModalOpen: false,
+      loadingModalOpen: false,
+      loadingDone: false,
+      schematicsFailed: false,
+      clickedProject: "",
+      clickedWorkspace: "",
+      clickedWorkspaceUrl: "",
       wizardModal: false,
     };
 
@@ -28,6 +35,7 @@ class Projects extends React.Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleViewJSONModal = this.toggleViewJSONModal.bind(this);
     this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
+    this.toggleLoadingModal = this.toggleLoadingModal.bind(this);
     this.newProject = this.newProject.bind(this);
     this.onProjectSelect = this.onProjectSelect.bind(this);
     this.onEditClick = this.onEditClick.bind(this);
@@ -59,6 +67,14 @@ class Projects extends React.Component {
 
   toggleDeleteModal() {
     this.setState({ deleteModalOpen: !this.state.deleteModalOpen });
+  }
+
+  toggleLoadingModal() {
+    this.setState({
+      loadingModalOpen: !this.state.loadingModalOpen,
+      loadingDone: false,
+      schematicsFailed: false,
+    });
   }
 
   newProject() {
@@ -155,46 +171,68 @@ class Projects extends React.Component {
    */
   onSchematicsUploadClick(keyName) {
     return () => {
-      let notification = {
-        title: "Success",
-        kind: "success",
-        text: `Starting upload to ${this.props.projects[keyName].workspace_name}`,
-        timeout: 3000,
-      };
-      this.props.notify(notification);
-
-      return fetch(
-        `/api/schematics/tar/${this.props.projects[keyName].workspace_name}`,
+      this.setState(
         {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.props.projects[keyName].json),
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            throw data.error;
-          } else {
-            let notification = {
-              title: "Success",
-              kind: "success",
-              text: `Successfully uploaded to Schematics`,
-              timeout: 3000,
-            };
-            this.props.notify(notification);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
+          clickedProject: this.props.projects[keyName].name,
+          clickedWorkspace: this.props.projects[keyName].workspace_name,
+          // fix data before retry
+          loadingModalOpen: false,
+          loadingDone: false,
+          schematicsFailed: false,
+        },
+        () => {
+          this.toggleLoadingModal();
           let notification = {
-            title: "Error",
-            kind: "error",
-            text: "Upload failed with error: " + err || err.message,
+            title: "Success",
+            kind: "success",
+            text: `Starting upload to ${this.props.projects[keyName].workspace_name}`,
             timeout: 3000,
           };
           this.props.notify(notification);
-        });
+
+          return fetch(
+            `/api/schematics/tar/${this.props.projects[keyName].workspace_name}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(this.props.projects[keyName].json),
+            }
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.error) {
+                throw data.error;
+              } else {
+                let notification = {
+                  title: "Success",
+                  kind: "success",
+                  text: `Successfully uploaded to Schematics`,
+                  timeout: 3000,
+                };
+                this.setState({
+                  loadingDone: true,
+                  clickedWorkspaceUrl:
+                    this.props.projects[keyName].workspace_url,
+                });
+                this.props.notify(notification);
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              let notification = {
+                title: "Error",
+                kind: "error",
+                text: "Upload failed with error: " + err || err.message,
+                timeout: 3000,
+              };
+              this.setState({
+                loadingDone: true,
+                schematicsFailed: true,
+              });
+              this.props.notify(notification);
+            });
+        }
+      );
     };
   }
 
@@ -261,6 +299,25 @@ class Projects extends React.Component {
               this.props.onProjectDelete(this.state.deleteProject);
               this.toggleDeleteModal();
             }}
+          />
+        )}
+        {this.state.loadingModalOpen && (
+          <LoadingModal
+            className="alignItemsCenter"
+            action="upload"
+            project={this.state.clickedProject}
+            workspace={this.state.clickedWorkspace}
+            open={this.state.loadingModalOpen}
+            completed={this.state.loadingDone}
+            workspace_url={this.state.clickedWorkspaceUrl}
+            toggleModal={this.toggleLoadingModal}
+            failed={this.state.schematicsFailed}
+            // props for retry
+            projects={this.props.projects}
+            retryCallback={this.onSchematicsUploadClick(
+              this.state.clickedProject
+            )}
+            lastWorkspaceName={this.state.clickedWorkspace}
           />
         )}
         <CraigHeader />
