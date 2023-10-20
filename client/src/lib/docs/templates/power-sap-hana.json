@@ -9,7 +9,8 @@
     "fs_cloud": true,
     "dynamic_subnets": false,
     "enable_power_vs": true,
-    "power_vs_zones": ["us-south"]
+    "power_vs_zones": ["us-south"],
+    "craig_version": "1.4.0"
   },
   "access_groups": [],
   "appid": [],

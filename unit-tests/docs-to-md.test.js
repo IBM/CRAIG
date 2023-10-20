@@ -1,8 +1,37 @@
 const { assert } = require("chai");
 const fs = require("fs");
 const { docsToMd, allDocs } = require("../client/src/lib/docs-to-md");
+const docs = require("../client/src/lib/docs/docs.json");
+const { eachKey, contains, distinct } = require("lazy-z");
 
 describe("docs to markdown", () => {
+  describe("doc tests", () => {
+    it("should test docs to make sure that each table has an equal number of rows", () => {
+      let pagesWithInvalidTables = [];
+      eachKey({ ...docs }, (key) => {
+        let content = docs[key].content;
+        content.forEach((item) => {
+          if (item.table) {
+            let headerLength = item.table[0].length - 1;
+            item.table.forEach((line) => {
+              if (!contains(line, "_headers")) {
+                if (line.length !== headerLength) {
+                  pagesWithInvalidTables.push(key);
+                }
+              }
+            });
+          }
+        });
+      });
+
+      assert.deepEqual(
+        distinct(pagesWithInvalidTables),
+        [],
+        "no pages should have invalid tables"
+      );
+    });
+  });
+
   describe("docsToMd", () => {
     it("should return correct markdown for component content", () => {
       let componentData = {

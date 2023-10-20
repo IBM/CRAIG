@@ -46,6 +46,7 @@ class Wizard extends React.Component {
       key_management_service: "",
       template: "Empty Project",
       enable_power_vs: false,
+      power_vs_high_availability: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);

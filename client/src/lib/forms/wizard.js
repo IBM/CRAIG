@@ -24,6 +24,8 @@ function wizard(wizardJson, json) {
       enable_power_vs: wizardJson.enable_power_vs,
       power_vs_zones: wizardJson.power_vs_zones || [],
       dynamic_subnets: !wizardJson.use_f5,
+      power_vs_high_availability:
+        wizardJson.power_vs_high_availability || false,
     },
     json._options
   );

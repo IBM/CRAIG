@@ -683,6 +683,7 @@
       },
       {
         "table": [
+          ["_headers", "Resource Name", "Description"],
           [
             "management-gateway",
             "A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC."
@@ -757,7 +758,7 @@
       },
       {
         "table": [
-          ["_headers", "Optional Fields"],
+          ["_headers", "Optional Fields", "Description"],
           [
             "Memory",
             "The amount of memory in gigabytes for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type."
@@ -1054,6 +1055,7 @@
       },
       {
         "table": [
+          ["_headers", "Value", "Description"],
           ["NONE", "MFA Disabled"],
           [
             "TOTP",

@@ -310,8 +310,9 @@ VPN Gateway service for VPC provides secure, encrypted connectivity from a user'
 
 The default configuration includes:
 
-management-gateway | A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC.
+Resource Name      | Description
 -------------------|---------------------------------------------------------------------------------------------------------------
+management-gateway | A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC.
 
 ### Related Links
 
@@ -347,10 +348,11 @@ Supported Databases
 - `Databases for MongoDB`
 - `Databases for MySQL`
 
-Optional Fields
-Memory          | - `The amount of memory in gigabytes for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type.`
-Disk            | - `The amount of disk space for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type.`
-CPU             | - `Enables and allocates the number of specified dedicated cores to your deployment.`
+Optional Fields | Description
+----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Memory          | The amount of memory in gigabytes for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type.
+Disk            | The amount of disk space for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type.
+CPU             | Enables and allocates the number of specified dedicated cores to your deployment.
 
 ### Related Links
 
@@ -475,8 +477,9 @@ Identity and Access Management (IAM) settings can be configured account-wide. By
 
 MFA types include:
 
-NONE            | MFA Disabled
+Value           | Description
 ----------------|--------------------------------------------------------------------------------------------------------------------------------------------------
+NONE            | MFA Disabled
 TOTP            | All non-federated IBMid users are required to authenticate by using an IBMid, password, and time-based one-time passcode (TOTP)
 TOTP4ALL        | All users are required to authenticate by using an IBMid, password, and time-based one-time passcode (TOTP)
 Email-based MFA | Users authenticate by using a security password that's sent by email

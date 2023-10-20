@@ -32,10 +32,7 @@ function docsToMd(docsJson) {
           ? "The default configuration includes:" // default includes text
           : item.text) + "\n\n";
     } else if (item.table) {
-      // remove headers from md table
-      if (item.table[0][0] === "_headers") {
-        item.table[0].shift();
-      }
+      item.table[0].shift();
       // list of longest value for each column
       let allLongest = [];
       // for each column, get the longest

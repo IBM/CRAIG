@@ -24,6 +24,7 @@ describe("setup wizard", () => {
         zones: 3,
         use_atracker: false,
         cos_vpe: true,
+        power_vs_high_availability: false,
       },
       wizardState.store.json
     );
@@ -55,6 +56,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -834,6 +836,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -1612,6 +1615,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -2044,6 +2048,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -2467,6 +2472,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -2955,6 +2961,7 @@ describe("setup wizard", () => {
       secrets_manager: [],
       f5_vsi: [],
       _options: {
+        power_vs_high_availability: false,
         prefix: "wizard",
         region: "us-south",
         tags: ["craig", "wizard"],
@@ -3118,6 +3125,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -3610,6 +3618,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -4076,6 +4085,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -4531,6 +4541,7 @@ describe("setup wizard", () => {
       secrets_manager: [],
       f5_vsi: [],
       _options: {
+        power_vs_high_availability: false,
         prefix: "wizard",
         region: "us-south",
         tags: ["craig", "wizard"],
@@ -4957,6 +4968,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         power_vs_zones: ["dal10"],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -5373,6 +5385,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         power_vs_zones: ["dal10"],
         craig_version: "1.4.0",
+        power_vs_high_availability: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
