@@ -10,5 +10,6 @@ export {
   Projects,
   EdgeNetworkingDocs,
   NewFormPage,
+  PageNotFound,
 } from "./pages";
 export { PageTemplate } from "./page-template";

@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Craig from "./Craig";
-import { UnderConstruction } from "icse-react-assets";
 import "./app.scss";
-import { ResetState } from "./components";
+import { ResetState, PageNotFound } from "./components";
 import { Buffer } from "buffer";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 window.Buffer = Buffer; // Buffer is used to download zip file
@@ -84,7 +83,7 @@ class App extends Component {
             path="/projects"
             element={<Craig craigRouter={this.craigRouter} />}
           />
-          <Route path="*" element={<UnderConstruction />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     );

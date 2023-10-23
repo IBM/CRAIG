@@ -8,3 +8,4 @@ export { default as Projects } from "./projects/Projects";
 export { EdgeNetworkingDocs } from "./SimplePages";
 export { default as SplashPage } from "./SplashPage";
 export { NewFormPage } from "./FormPages";
+export { PageNotFound } from "./PageNotFound";
