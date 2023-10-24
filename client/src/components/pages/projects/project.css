@@ -61,8 +61,12 @@
 
 .projectTileHeader {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
+}
+
+.starMinWidth {
+  min-width: 2rem;
 }
 
 .selected {

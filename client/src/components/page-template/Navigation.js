@@ -142,7 +142,7 @@ class Navigation extends React.Component {
               className="no-marker projectMenu"
               menuLinkName={`Project: ${this.props.project.project_name}${
                 this.props.project.use_template
-                  ? `, Template: ${this.props.project.template}`
+                  ? `, Initial Template: ${this.props.project.template}`
                   : ""
               }`}
             >
@@ -160,7 +160,7 @@ class Navigation extends React.Component {
                 )}
                 {this.props.project.use_template && (
                   <p className="smallerText marginBottomXs headerMenuBoxItemText">
-                    Template Pattern: {this.props.project.template}
+                    Initial Template: {this.props.project.template}
                   </p>
                 )}
                 <p className="smallerText headerMenuBoxItemText marginBottomXs">

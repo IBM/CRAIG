@@ -806,7 +806,7 @@ module.exports = {
       template: mixedTemplate,
       name: "Landing Zone Mixed Pattern",
       patternDocText:
-        "A default template based on the IBM Landing Zone Mixed Pattern. This is the default pattern for CRAIG.",
+        "This template initializes an environment with resources based on the IBM Landing Zone Mixed Pattern. This is the default pattern for CRAIG.",
       includes: [
         "A resource group for cloud services and for each VPC",
         "A management and workload VPC connected by a transit gateway",
@@ -824,7 +824,7 @@ module.exports = {
       template: vsiTemplate,
       name: "Landing Zone VSI Pattern",
       patternDocText:
-        "Based on the IBM Landing Zone VSI Pattern, deploys an example application server deployment in both the Management and Workload VPC.",
+        "Based on the IBM Landing Zone VSI Pattern, this template initializes an environment with an example application server deployment in both the Management and Workload VPC.",
       includes: [
         "A resource group for cloud services and for each VPC",
         "A management and workload VPC connected by a transit gateway",
@@ -842,7 +842,7 @@ module.exports = {
       template: vsiEdgeTemplate,
       name: "Landing Zone VSI Edge Pattern",
       patternDocText:
-        "Based on the IBM Landing Zone VSI Edge Pattern, deploys an Edge VPC with one VSI and an F5 Big IP instance with VPN and WAF.",
+        "Based on the IBM Landing Zone VSI Edge Pattern, this template initializes an environment with an Edge VPC, an F5 Big IP Virtual Server and the required networking components.",
       includes: [
         "A resource group for cloud services and for each VPC",
         "A management and workload VPC connected by a transit gateway",
@@ -861,7 +861,7 @@ module.exports = {
       template: powerTemplate,
       name: "Power VS SAP Hana Pattern",
       patternDocText:
-        "Based on existing SAP Hana solutions, this template creates base infrastructure with SAP system landscape that leverages the services from the VPC landing zone as well as the needed components to get started with a Power VS Virtual Server environment",
+        "Based on existing SAP Hana solutions, this template initializes an environment with the base infrastructure for a SAP system landscape that leverages the services from the VPC landing zone as well as the needed components to get started with a Power VS Virtual Server environment.",
       includes: [
         "A resource group for cloud services and for each VPC",
         "A management and workload VPC connected by a transit gateway",
@@ -880,7 +880,7 @@ module.exports = {
       template: oracleRac,
       name: "Power VS AIX Oracle Ready",
       patternDocText:
-        "This template creates an environment with VPC and Power VS resources to allow users to create Oracle Real Application Clusters (Oracle RAC) on IBM Cloud",
+        "This template initializes an environment with VPC and Power VS resources to allow users to create Oracle Real Application Clusters (Oracle RAC) on IBM Cloud.",
       includes: [
         "A resource group for cloud services and for each VPC, and Power Virtual Servers",
         "A management and workload VPC connected by a transit gateway",
@@ -898,7 +898,7 @@ module.exports = {
       template: emptyProject,
       name: "Empty Project",
       patternDocText:
-        "This template allows uers to start from scratch and create a fully customized environment with no presets",
+        "This template allows users to start from scratch and create a fully customized environment with no presets.",
       includes: ["A resource group for CRAIG generated resources"],
     },
   },

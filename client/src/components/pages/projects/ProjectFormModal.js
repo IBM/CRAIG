@@ -133,8 +133,12 @@ export class ProjectFormModal extends React.Component {
         <IcseFormGroup className="formInSubForm">
           <IcseSelect
             name="template"
+            tooltip={{
+              content:
+                "Choose a Project Template to initialize this Project with. Projects can be edited to deviate from the configuration of the Initial Project Template.",
+            }}
             formName="project"
-            labelText="Select a Project Template"
+            labelText="Choose an Initial Project Template"
             groups={keys(this.props.templates)}
             value={this.state.template || ""}
             handleInputChange={this.handleTextInput}

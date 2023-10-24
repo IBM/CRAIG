@@ -32,7 +32,11 @@ export const ProjectTile = (props) => {
       {/* name */}
       <div className="projectTileHeader marginBottom">
         <h4 className="bold">{props.data.project_name || props.data.name}</h4>
-        {isCurrentProject ? <StarFilled /> : <Star />}
+        {isCurrentProject ? (
+          <StarFilled className="starMinWidth" />
+        ) : (
+          <Star className="starMinWidth" />
+        )}
       </div>
 
       {/* details */}
@@ -45,7 +49,7 @@ export const ProjectTile = (props) => {
         )}
 
         <div className="marginBottomSmall">
-          <h6 className="marginBottomXs">Template Pattern</h6>
+          <h6 className="marginBottomXs">Initial Template</h6>
           <p className="smallerText">
             {props.data.template || "Empty Project"}
           </p>
