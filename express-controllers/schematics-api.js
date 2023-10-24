@@ -4,7 +4,6 @@ const { packTar } = require("../lib/tar-utils");
 const FormData = require("form-data");
 const { configToFilesJson } = require("../client/src/lib");
 const blobStream = require("blob-stream");
-const axios = require("axios");
 
 function schematicsRoutes(axios, controller) {
   /**

@@ -17,6 +17,28 @@ tags:
   - name: Schematics
     description: Endpoints for IBM Cloud Schematics
 paths:
+  /api/craig/tar:
+    post:
+      tags:
+        - CRAIG
+      summary: Get a craig.tar file containing Terraform files based on CRAIG JSON schema
+      description: Get a craig.tar file containing Terraform files based on CRAIG JSON schema
+      operationId: craigTar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                craigJSON:
+                  description: JSON produced by CRAIG
+                  type: object
+                  example: {}
+      responses:
+        "200":
+          description: Successfully created tar file
+        "400":
+          description: Invalid craig.json file
   /api/vsi/{region}/instanceProfiles:
     get:
       tags:

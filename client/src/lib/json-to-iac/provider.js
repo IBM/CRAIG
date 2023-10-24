@@ -1,7 +1,6 @@
 const { jsonToTf } = require("json-to-tf");
 const { tfBlock } = require("./utils");
 const { varDotRegion } = require("../constants");
-const { transpose } = require("lazy-z");
 const { snakeCase } = require("lazy-z");
 
 /**
@@ -22,7 +21,7 @@ function ibmCloudProvider(config) {
     },
   };
 
-  if (config._options.classic) {
+  if (config._options?.classic) {
     data.provider.ibm.push({
       alias: "classic",
       ibmcloud_timeout: 60,

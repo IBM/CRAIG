@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - When no VPC instances are created, all pages dependent on a VPC now show a tile with an explanation and a link to `/form/vpcs`
 - When child components are invalid, Power VS Workspace forms are now forced open
 - Account ID variable is no longer populated in variables.tf when not in use
+- Users can now generate craig.tar files by using the API endpoint `/api/craig/tar`
 
 ### Fixes
 
