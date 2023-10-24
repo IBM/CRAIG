@@ -236,7 +236,7 @@ Found a bug or need an additional feature? File an issue in this repository with
 
 ### Bugs
 
-- A detailed title describing the issue beginning with `[BUG]` and the current release. For sprint one, filing a bug would have the title `[BUG][0.1.0] <issue title>`
+- A detailed title describing the issue with the current release and the tag `[BUG]`. For sprint one, filing a bug would have the title `[0.1.0][BUG] <issue title>`
 - Steps to recreate said bug (including non-sensitive variables)
 - (optional) Corresponding output logs **as text or as part of a code block**
 - Tag bug issues with the `bug` label

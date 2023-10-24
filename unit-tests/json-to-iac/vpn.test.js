@@ -38,7 +38,9 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
   });
   describe("vpnTf", () => {
     it("should create tf code for vpn gateway", () => {
-      let actualData = vpnTf(slzNetwork);
+      let nw = { ...slzNetwork };
+      nw.vpn_gateways[0].additional_prefixes = ["127.0.0.1/5"];
+      let actualData = vpnTf(nw);
       let expectedData = `##############################################################################
 # VPN Gateways
 ##############################################################################
@@ -54,6 +56,13 @@ resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
   timeouts {
     delete = "1h"
   }
+}
+
+resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_127_0_0_1_5_prefix" {
+  name = "\${var.prefix}-management-management-gateway-on-prem-127-0-0-1-5"
+  vpc  = module.management_vpc.id
+  zone = "\${var.region}-1"
+  cidr = "127.0.0.1/5"
 }
 
 ##############################################################################

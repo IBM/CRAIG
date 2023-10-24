@@ -13,7 +13,7 @@ describe("routing table", () => {
           vpc: "management",
           name: "routing-table",
           route_direct_link_ingress: true,
-          route_transit_gateway_ingress: true,
+          transit_gateway_ingress: true,
           route_vpc_zone_ingress: true,
         },
         {
@@ -126,7 +126,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
             vpc: "management",
             name: "routing-table",
             route_direct_link_ingress: true,
-            route_transit_gateway_ingress: true,
+            transit_gateway_ingress: true,
             route_vpc_zone_ingress: true,
             routes: [
               {

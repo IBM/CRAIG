@@ -889,7 +889,7 @@ data "ibm_resource_instance" "icd_psql" {
           vpc: "management",
           name: "routing-table",
           route_direct_link_ingress: true,
-          route_transit_gateway_ingress: true,
+          transit_gateway_ingress: true,
           route_vpc_zone_ingress: true,
           routes: [
             {

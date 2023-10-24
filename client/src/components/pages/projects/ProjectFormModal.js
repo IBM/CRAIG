@@ -31,7 +31,7 @@ export class ProjectFormModal extends React.Component {
       let formModalState = {
         ...this.props.data,
         json: !this.props.data.json
-          ? template_dropdown_map["Mixed"].template
+          ? template_dropdown_map["Empty Project"].template
           : this.props.data.json,
         use_template: true,
       };

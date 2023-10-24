@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing options page to incorrectly unset craig version on update
 - Fixed an issue causing the template setup wizard to not persist High Availability for Power VS
 - Fixed an issue causing Docs to have invalid tables when converted to markdown
+- Fixed an issue causing the Transit Gateway toggle on the Routing Table to not form correct TF
 
 ## 1.3.0
 

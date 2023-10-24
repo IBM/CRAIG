@@ -7,19 +7,19 @@ const { kebabName, vpcRef, jsonToTfPrint, tfRef, tfBlock } = require("./utils");
  * @param {string} table.vpc
  * @param {string} table.name
  * @param {boolean} table.route_direct_link_ingress
- * @param {boolean} table.route_transit_gateway_ingress
+ * @param {boolean} table.transit_gateway_ingress
  * @param {boolean} table.route_vpc_zone_ingress
  * @param {*} config
  * @returns {object} terraform
  */
-function ibmIsVpcRoutingTable(table, config) {
+function ibmIsVpcRoutingTable(table) {
   return {
     name: `${table.vpc}-vpc-${table.name}-table`,
     data: {
       name: kebabName([table.vpc, "vpc", table.name, "table"]),
       vpc: vpcRef(table.vpc),
       route_direct_link_ingress: table.route_direct_link_ingress,
-      route_transit_gateway_ingress: table.route_transit_gateway_ingress,
+      route_transit_gateway_ingress: table.transit_gateway_ingress,
       route_vpc_zone_ingress: table.route_vpc_zone_ingress,
       accept_routes_from_resource_type:
         table.accept_routes_from_resource_type || undefined,

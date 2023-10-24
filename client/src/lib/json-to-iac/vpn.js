@@ -5,7 +5,8 @@ const {
   timeouts,
   jsonToTfPrint,
 } = require("./utils");
-const { snakeCase } = require("lazy-z");
+const { snakeCase, kebabCase } = require("lazy-z");
+const { formatAddressPrefix } = require("./vpc");
 
 /**
  * format vpn gateway terraform
@@ -52,7 +53,27 @@ function formatVpn(gw, config) {
  */
 function vpnTf(config) {
   let tf = "";
-  config.vpn_gateways.forEach((gw) => (tf += formatVpn(gw, config)));
+  config.vpn_gateways.forEach((gw) => {
+    tf += formatVpn(gw, config);
+    if (gw.additional_prefixes) {
+      gw.additional_prefixes.forEach((prefix) => {
+        tf += formatAddressPrefix(
+          {
+            name: `${kebabCase(gw.name)}-on-prem-${prefix.replace(
+              /\.|\//g,
+              "-"
+            )}`,
+            vpc: gw.vpc,
+            zone: gw.subnet.replace(/.+(?=\d$)/g, ""),
+            cidr: prefix,
+            prefix: prefix,
+          },
+          config,
+          true
+        );
+      });
+    }
+  });
   return tfBlock("VPN gateways", tf);
 }
 

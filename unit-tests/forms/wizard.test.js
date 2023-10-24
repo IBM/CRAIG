@@ -784,6 +784,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
 
     assert.deepEqual(
@@ -1564,6 +1565,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
 
     assert.deepEqual(
@@ -1997,6 +1999,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
 
     assert.deepEqual(
@@ -2421,6 +2424,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
 
     assert.deepEqual(
@@ -2921,6 +2925,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
 
     assert.deepEqual(
@@ -3074,6 +3079,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
 
     assert.deepEqual(
@@ -3567,6 +3573,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
 
     assert.deepEqual(
@@ -4035,6 +4042,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
     assert.deepEqual(
       actualData,
@@ -4502,6 +4510,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
     assert.deepEqual(
       actualData,
@@ -4917,6 +4926,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
     assert.deepEqual(
       actualData,
@@ -5333,6 +5343,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
     assert.deepEqual(
       actualData,
@@ -6351,6 +6362,7 @@ describe("setup wizard", () => {
       power_volumes: [],
       classic_ssh_keys: [],
       classic_vlans: [],
+      classic_gateways: [],
     };
     assert.deepEqual(
       actualData,

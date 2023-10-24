@@ -304,6 +304,13 @@ const {
   classicVlanUpdate,
   classicVlanDelete,
 } = require("./classic");
+const {
+  classicGatewayInit,
+  classicGatewayOnStoreUpdate,
+  classicGatewayCreate,
+  classicGatewaySave,
+  classicGatewayDelete,
+} = require("./classic-gateways");
 
 /**
  * get state for craig
@@ -819,6 +826,14 @@ const state = function (legacy) {
     create: classicVlanCreate,
     save: classicVlanUpdate,
     delete: classicVlanDelete,
+  });
+
+  store.newField("classic_gateways", {
+    init: classicGatewayInit,
+    onStoreUpdate: classicGatewayOnStoreUpdate,
+    create: classicGatewayCreate,
+    save: classicGatewaySave,
+    delete: classicGatewayDelete,
   });
 
   /**
