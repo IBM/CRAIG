@@ -208,7 +208,7 @@ class Navigation extends React.Component {
               tooltipAlignment="end"
               target="_blank"
               rel="noopener noreferrer"
-              href="https://github.ibm.com/platinum-developer-tools/CRAIG/issues/new"
+              href="https://github.ibm.com/platinum-developer-tools/CRAIG/issues/new/choose"
             >
               <Debug />
             </HeaderGlobalAction>
