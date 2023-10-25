@@ -70,4 +70,49 @@ provider "ibm" {
 `;
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
+  it("should return the correct data when power vs is enabled in tok, lon, and syd", () => {
+    let actualData = ibmCloudProvider({
+      _options: {
+        enable_power_vs: true,
+        power_vs_zones: ["lon04", "tok01", "syd05"],
+      },
+    });
+    let expectedData = `##############################################################################
+# IBM Cloud Provider
+##############################################################################
+
+provider "ibm" {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_lon04"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "lon"
+  zone             = "lon04"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_tok01"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "tok"
+  zone             = "tok01"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_syd05"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "syd"
+  zone             = "syd05"
+  ibmcloud_timeout = 60
+}
+
+##############################################################################
+`;
+    assert.deepEqual(actualData, expectedData, "it should return correct data");
+  });
 });

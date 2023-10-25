@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing the template setup wizard to not persist High Availability for Power VS
 - Fixed an issue causing Docs to have invalid tables when converted to markdown
 - Fixed an issue causing the Transit Gateway toggle on the Routing Table to not form correct TF
+- Fixed an issue causing provider for Power VS workspaces in London, Tokyo, and Sydnet to not have correct region
 
 ## 1.3.0
 

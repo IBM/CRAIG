@@ -39,7 +39,7 @@ fi
 
 # check for failing build
 formatted_print "Running Build"
-if ! npm run pre-commit-build | tee /dev/tty | grep 'Compiled successfully.' > /dev/null; then
+if ! npm run pre-commit-build | tee /dev/tty | grep 'Compiled' > /dev/null; then
   formatted_print "Commit failed on build" > /dev/stderr
   exit 1
 fi

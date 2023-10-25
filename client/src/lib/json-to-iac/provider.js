@@ -2,6 +2,7 @@ const { jsonToTf } = require("json-to-tf");
 const { tfBlock } = require("./utils");
 const { varDotRegion } = require("../constants");
 const { snakeCase } = require("lazy-z");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * format ibm cloud provider data
@@ -36,7 +37,17 @@ function ibmCloudProvider(config) {
       data.provider.ibm.push({
         alias: snakeCase("power_vs_" + zone),
         ibmcloud_api_key: "${var.ibmcloud_api_key}",
-        region: "${var.region}",
+        region: zone.match(
+          new RegexButWithWords()
+            .group((exp) => {
+              exp.literal("lon").or().literal("syd").or().literal("tok");
+            })
+            .digit()
+            .oneOrMore()
+            .done("g")
+        )
+          ? zone.replace(/\d+/g, "")
+          : "${var.region}",
         zone: zone,
         ibmcloud_timeout: 60,
       });

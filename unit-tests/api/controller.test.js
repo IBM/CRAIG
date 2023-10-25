@@ -370,7 +370,9 @@ describe("controller", () => {
         )
         .then(() => {
           assert.isTrue(
-            res.send.calledOnceWith({ error: "Error: failed to pack tar file" })
+            res.send.calledOnceWith({
+              error: "Error: failed to pack tar file",
+            })
           );
         });
     }).timeout(100000);
