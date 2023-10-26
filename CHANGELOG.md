@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.5.0
+
+### Upgrade Notes
+
+### Features
+
+- Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.
+
+### Fixes
+
 ## 1.4.0
 
 ### Upgrade Notes

@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.5.0",
+    "features": [
+      "Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace."
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.4.0",
     "features": [
       "Users are now shown a loading modal after a creating a schematics workspace or uploading to an existing workspace.",

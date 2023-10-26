@@ -1,6 +1,6 @@
 {
   "_options": {
-    "craig_version": "1.4.0",
+    "craig_version": "1.5.0",
     "prefix": "slz",
     "region": "us-south",
     "tags": ["slz", "landing-zone"],

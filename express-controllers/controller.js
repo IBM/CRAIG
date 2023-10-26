@@ -1,6 +1,7 @@
 const { clusterRoutes } = require("./cluster-api");
 const { schematicsRoutes } = require("./schematics-api");
 const { vsiRoutes } = require("./vsi-api");
+const { powerRoutes } = require("./power-api");
 
 /**
  * controller constructor
@@ -17,6 +18,7 @@ function controller(axios) {
   this.clusterRoutes = clusterRoutes(axios, this);
   this.vsiRoutes = vsiRoutes(axios, this);
   this.schematicsRoutes = schematicsRoutes(axios, this);
+  this.powerRoutes = powerRoutes(axios, this);
 
   /**
    * check if a token is expired

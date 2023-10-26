@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: CRAIG API
   description: |-
-    Cloud Resourcse and Infrastructure as Code Generator.
+    Cloud Resources and Infrastructure as Code Generator.
 
     In order to use the CRAIG API, you must set the environment variable `API_KEY` to your IBM Cloud API Key
   version: 1.2.0
@@ -17,6 +17,63 @@ tags:
   - name: Schematics
     description: Endpoints for IBM Cloud Schematics
 paths:
+  /api/power/{region}/{component}:
+    get:
+      tags:
+        - Power VS
+      summary: Returns a list of images or storage pools
+      description: >-
+        Get a list of images or storage pools based on the value passed to
+        component
+      operationId: getPowerComponent
+      parameters:
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region to get flavors from
+        - in: path
+          name: component
+          required: true
+          schema:
+            type: string
+          description: Type of data to return
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                images:
+                  value: |-
+                    [
+                      {
+                        "imageID": "e94dc1b3-b108-4fc5-b7d5-47d3bd686b6f",
+                        "name": "7100-05-09",
+                        "specifications": {
+                          "architecture": "ppc64",
+                          "containerFormat": "bare",
+                          "diskFormat": "raw",
+                          "endianness": "big-endian",
+                          "hypervisorType": "phyp",
+                          "operatingSystem": "aix"
+                        },
+                        "state": "active",
+                        "storagePool": "Tier3-Flash-1",
+                        "storageType": "tier3"
+                      }
+                    ]
+                storage-pools:
+                  value:
+                    [
+                      "Tier1-Flash-1",
+                      "Tier1-Flash-2",
+                      "Tier3-Flash-1",
+                      "Tier1-Flash-2",
+                    ]
+        "401":
+          description: Unauthorized
   /api/craig/tar:
     post:
       tags:

@@ -55,7 +55,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -836,7 +836,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -1616,7 +1616,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2050,7 +2050,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2475,7 +2475,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2977,7 +2977,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -3130,7 +3130,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -3624,7 +3624,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4092,7 +4092,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4561,7 +4561,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         power_vs_zones: [],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -4977,7 +4977,7 @@ describe("setup wizard", () => {
         dynamic_subnets: true,
         enable_power_vs: true,
         power_vs_zones: ["dal10"],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -5395,7 +5395,7 @@ describe("setup wizard", () => {
         dynamic_subnets: false,
         enable_power_vs: true,
         power_vs_zones: ["dal10"],
-        craig_version: "1.4.0",
+        craig_version: "1.5.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
