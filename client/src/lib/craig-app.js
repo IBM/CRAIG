@@ -1,4 +1,4 @@
-const { kebabCase, isEmpty, keys } = require("lazy-z");
+const { kebabCase, isEmpty, keys, isNullOrEmptyString } = require("lazy-z");
 const { state } = require("./state");
 const { notificationText } = require("./forms");
 
@@ -211,6 +211,48 @@ function getAndUpdateProjects(projects, stateData, componentProps, now) {
   return projects;
 }
 
+/**
+ * allow project fetch to be unit tested
+ * @param {*} reactFetch react fetch
+ * @param {*} workspace object describing workspace
+ * @param {*} reject promise reject callback
+ * @param {*} resolveCallback callback to run when resolve
+ * @param {*} rejectCallback callback to run on reject
+ * @returns {Promise} fetch promise
+ */
+function projectFetch(
+  reactFetch,
+  workspace,
+  reject,
+  resolveCallback,
+  rejectCallback
+) {
+  let { workspace_name, workspace_region, workspace_resource_group } =
+    workspace;
+  return reactFetch(
+    `/api/schematics/${workspace_name}` +
+      (workspace_region ? "/" + workspace_region : "") +
+      (workspace_resource_group ? "/" + workspace_resource_group : ""),
+    { method: "POST" }
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.error) {
+        reject(data.error);
+      } else if (isNullOrEmptyString(data.id)) {
+        reject("Workspace did not create. Missing ID.");
+      } else {
+        resolveCallback(
+          `https://cloud.ibm.com/schematics/workspaces/${data.id}`
+        );
+      }
+    })
+    .catch((err) => {
+      rejectCallback();
+      reject(err);
+    });
+}
+
 module.exports = {
   onProjectDeselect,
   onProjectSelectCallback,
@@ -220,4 +262,5 @@ module.exports = {
   saveProjectCallback,
   projectShouldCreateWorkspace,
   getAndUpdateProjects,
+  projectFetch,
 };

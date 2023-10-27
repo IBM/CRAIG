@@ -11,6 +11,8 @@ service-rg    | A resource group containing all IBM Cloud Services              
 management-rg | A resource group containing the compute, storage, and network services to enable the application provider's administrators to monitor, operation, and maintain the environment | 
 workload-rg   | A resource group containing the compute, storage, and network services to support hosted applications and operations that deliver services to the consumer                     | 
 edge-rg       | A resource group containing the compute, storage, and network services necessary for edge networking                                                                           | true
+craig-rg      | An example resource group                                                                                                                                                      | 
+power-rg      | A resource group for Power VS resources                                                                                                                                        | 
 
 ### Related Links
 
@@ -175,9 +177,9 @@ A Transit Gateway provides connectivity between two or more VPCs which allows di
 
 The default configuration includes:
 
-Service Name        | Description
---------------------|-----------------------------------------------------------------------------------------------------------
-iac-transit-gateway | A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs.
+Service Name    | Description
+----------------|-----------------------------------------------------------------------------------------------------------
+transit-gateway | A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs.
 
 ### Related Links
 
@@ -213,7 +215,12 @@ Rule Name
 
 A Virtual Private Endpoint (VPE) gateway enables users to connect to supported IBM Cloud Services from their VPC network via an IP address allocated from a subnet within the VPC. The VPE gateway is a virtualized function that scales horizontally, is redundant and highly available, and spans all availability zones of the specified VPC.
 
-The default configuration connects the management and workload VPCs to IBM Cloud Object Storage by creating a VPE subnet in each zone of the VPC, then creating a VPE gateway for each VPE subnet.
+The default configuration includes:
+
+VPC        | Endpoint Gateway Name | Service
+-----------|-----------------------|----------------
+management | management-vpe        | Object Storage
+workload   | workload-vpe          | Object Storage
 
 ### Related Links
 
@@ -231,12 +238,12 @@ The Activity Tracker service can be used to capture and monitor activities perfo
 
 The default configuration includes:
 
-Service Name           | Description
------------------------|-----------------------------------------------------------------------------
-<your prefix>-atracker | An Activity Tracker instance deployed in the service resource group.
-atracker-cos           | A Cloud Object Storage instance deployed in the service resource group.
-atracker-bucket        | A Cloud Object Storage bucket where Activity Tracker logs will be stored.
-cos-bind-key           | An IAM API key that has writer access to the Cloud Object Storage instance.
+Service Name    | Description
+----------------|-----------------------------------------------------------------------------
+atracker        | An Activity Tracker instance deployed in the service resource group.
+atracker-cos    | A Cloud Object Storage instance deployed in the service resource group.
+atracker-bucket | A Cloud Object Storage bucket where Activity Tracker logs will be stored.
+cos-bind-key    | An IAM API key that has writer access to the Cloud Object Storage instance.
 
 ### Related Links
 
@@ -250,11 +257,11 @@ cos-bind-key           | An IAM API key that has writer access to the Cloud Obje
 
 SSH keys identify a user or device through public-key cryptography and allow access to a device without using a password. At least one SSH Key is required to create virtual server instances. Based on the pattern selected, an SSH key may or may not be configured automatically.
 
-Pattern                             | Configuration
-------------------------------------|-------------------------
-Virtual Server Instance (VSI)       | One SSH key configured.
-Red Hat OpenShift Kubernetes (ROKS) | No SSH key configured.
-Mixed                               | One SSH key configured.
+The default configuration includes:
+
+SSH Key | Description
+--------|------------------------------------------------------
+ssh-key | An SSH key to use when provisioning VSI deployments.
 
 ### Related Links
 
@@ -270,11 +277,10 @@ IBM Cloud Virtual Servers for VPC allow users to deploy fast, flexible, and secu
 
 The default configuration includes:
 
-Pattern                             | Configuration
-------------------------------------|---------------------------------------------------------------------------------------------------------------------
-Virtual Server Instance (VSI)       | Two VSI deployments for three VSIs distributed across the VSI subnet tier of both the management and workload VPCs.
-Red Hat OpenShift Kubernetes (ROKS) | No VSI deployments configured.
-Mixed                               | One VSI deployment for three VSIs distributed across the VSI subnet tier of the management VPC.
+Name              | Description
+------------------|-------------------------------------------------
+management-server | An example VSI deployment in the Management VPC
+workload-server   | An example VSI deployment in the Workload VPC
 
 ### Related Links
 
@@ -289,11 +295,11 @@ Mixed                               | One VSI deployment for three VSIs distribu
 
 IBM Cloud provides users with the ability to deploy highly available, containerized apps on Red Hat OpenShift clusters and Kubernetes clusters. Based on the pattern selected, a cluster may or may not be configured automatically.
 
-Pattern                             | Configuration
-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------
-Virtual Server Instance (VSI)       | No clusters configured.
-Red Hat OpenShift Kubernetes (ROKS) | Two OpenShift clusters with three zones in VSI Subnet Tier with a worker pool dedicated to logging deployed in both management and workload VPCs.
-Mixed                               | One OpenShift cluster with three zones in VSI Subnet Tier with a worker pool dedicated to logging deployed in the workload VPC.
+The default configuration includes:
+
+Name             | Description
+-----------------|--------------------------------------------------
+workload-cluster | A Red Hat OpenShift cluster on the Workload VPC.
 
 ### Related Links
 
@@ -666,13 +672,53 @@ A workspace is a free working environment that acts as a folder for Power System
 
 Workspaces are a means of grouping and managing related resources deployed in a single location (data location), but otherwise have no functional capabilities. For solutions that span multiple locations, e.g., to implement High Availability or Disaster Recovery, you can create multiple workspaces and connect them over the network (e.g., using a Transit Gateway).
 
-After provisioning a workspace you can create the following:
+After adding a workspace you can create the following:
 
 Additional Fields | Description
 ------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SSH Keys          | You can set up one or more Secure Shell (SSH) keys for root login when you create new AIX virtual machines (VM). The keys are loaded into the root's authorized_keys file. SSH keys allow you to securely log in to a VM. You must use the available operating system options to create SSH keys. To generate SSH keys on a Linux or Mac OS system, for example, you can use the standard ssh-keygen tool.
 Network Interface | When you create a Power Systems Virtual Server, you can select a private or public network interface. These network interfaces function like subnets for VPC infrastructure.
 Cloud Connections | You can use IBM Cloud connections to connect your Power Systems Virtual Server instances to IBM Cloud resources on IBM Cloud classic network and Virtual Private Cloud (VPC) infrastructures. IBM Cloud connection creates a Direct Link (2.0) Connect instance to connect your Power Systems Virtual Server instances to the IBM Cloud resources within your account. For cross-account connectivity, use IBM Transit Gateway to interconnect your Power Systems Virtual Server to the IBM Cloud classic and Virtual Private Cloud (VPC) infrastructures. The speed and reliability of the Direct Link connection extends your Power Systems Virtual Server network to the IBM Cloud network and offers more consistent and higher-throughput connectivity, while keeping network traffic within the IBM Cloud. Cloud Connections are not available in zones where Power Edge Router is deployed, see documentation for more information.
+
+### Power VS Workspaces
+
+The default configuration includes:
+
+Name            | Description
+----------------|--------------------------------------------------------
+oracle-template | A workspace where Oracle RAC infrastructure is created
+workspace       | An example Power VS Workspace
+secure-powervs  | A workspace where SAP Hana infrastructure is created
+
+### Power VS SSH Keys
+
+The default configuration includes:
+
+Name          | Description
+--------------|-------------------------------------------
+power-ssh-key | Power VS SSH Key used to create instances
+power-ssh     | Power VS SSH Key used to create instances
+
+### Power VS SSH Networks
+
+The default configuration includes:
+
+Name             | Description
+-----------------|-------------------------------------------------------
+oracle-public    | A public network interface for Oracle RAC resources
+oracle-private-1 | A private network interface for Oracle RAC resources
+oracle-private-2 | A private network interface for Oracle RAC resources
+management       | A management network interface for SAP Hana resources
+backup           | A backup network interface for SAP Hana resources
+sap              | A private network interface for SAP resources
+
+### Power VS Cloud Connections
+
+The default configuration includes:
+
+Name              | Description
+------------------|-------------------------------------------
+oracle-connection | Connects all VLANs to the Transit Gateway
 
 ### Related Links
 

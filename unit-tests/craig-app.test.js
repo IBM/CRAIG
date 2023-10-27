@@ -8,6 +8,7 @@ const {
   saveProjectCallback,
   projectShouldCreateWorkspace,
   getAndUpdateProjects,
+  projectFetch,
 } = require("../client/src/lib/craig-app");
 const { state } = require("../client/src/lib");
 const sinon = require("sinon");
@@ -30,6 +31,27 @@ function mockCraig() {
 
 function newMockCraig() {
   return new mockCraig();
+}
+
+/**
+ * create a mock react fetch
+ * @param {boolean} shouldReject function should reject
+ * @param {*} data arbitrary data to return if shouldReject is false
+ */
+function mockFetch(shouldReject, data) {
+  this.fetchPromise = function (url, options) {
+    return new Promise((resove, reject) => {
+      if (shouldReject) {
+        reject("This is an error!");
+      } else {
+        resove({
+          json: function () {
+            return data;
+          },
+        });
+      }
+    });
+  };
 }
 
 describe("craig app", () => {
@@ -500,6 +522,87 @@ describe("craig app", () => {
         },
         "it should set data"
       );
+    });
+  });
+  describe("projectFetch", () => {
+    it("should reject and call rejectCallback on a failure", () => {
+      let rejectSpy = new sinon.spy();
+      let rejectCallbackSpy = new sinon.spy();
+      let reactFetch = new mockFetch(true);
+      return projectFetch(
+        reactFetch.fetchPromise,
+        {
+          workspace_region: "region",
+          workspace_name: "name",
+          workspace_resource_group: null,
+        },
+        rejectSpy,
+        () => {},
+        rejectCallbackSpy
+      ).catch(() => {
+        assert.isTrue(rejectSpy.calledOnce, "it should be called once");
+        assert.isTrue(rejectCallbackSpy.calledOnce, "it should call spy once");
+      });
+    });
+    it("should reject when there is an error in the json", () => {
+      let rejectSpy = new sinon.spy();
+      let reactFetch = new mockFetch(false, {
+        error: "this is an error",
+      });
+      return projectFetch(
+        reactFetch.fetchPromise,
+        {
+          workspace_region: "region",
+          workspace_name: "name",
+          workspace_resource_group: null,
+        },
+        rejectSpy,
+        () => {},
+        () => {}
+      ).then(() => {
+        assert.isTrue(rejectSpy.calledOnce, "it should be called once");
+      });
+    });
+    it("should reject when json is returned where id is null", () => {
+      let rejectSpy = new sinon.spy();
+      let reactFetch = new mockFetch(false, {
+        id: null,
+      });
+      return projectFetch(
+        reactFetch.fetchPromise,
+        {
+          workspace_region: "region",
+          workspace_name: "name",
+          workspace_resource_group: null,
+        },
+        rejectSpy,
+        () => {},
+        () => {}
+      ).then(() => {
+        assert.isTrue(rejectSpy.calledOnce, "it should be called once");
+      });
+    });
+    it("should otherwise call resolve callback with workspace url", () => {
+      let reactFetch = new mockFetch(false, {
+        id: "yes",
+      });
+      let resolveCallbackSpy = new sinon.spy();
+      return projectFetch(
+        reactFetch.fetchPromise,
+        {
+          workspace_region: null,
+          workspace_name: "name",
+          workspace_resource_group: "rg",
+        },
+        () => {},
+        resolveCallbackSpy,
+        () => {}
+      ).then(() => {
+        assert.isTrue(
+          resolveCallbackSpy.calledOnce,
+          "it should be called once"
+        );
+      });
     });
   });
 });

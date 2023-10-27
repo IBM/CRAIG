@@ -163,6 +163,12 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
   pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
   pi_volume_id         = ibm_pi_volume.example_volume_test_volume.volume_id
   pi_instance_id       = ibm_pi_instance.example_workspace_instance_test.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
 }
 `;
       assert.deepEqual(
@@ -207,6 +213,12 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_instance_1_instan
   pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
   pi_volume_id         = ibm_pi_volume.example_volume_test_volume.volume_id
   pi_instance_id       = ibm_pi_instance.example_workspace_instance_instance_1.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
 }
 
 resource "ibm_pi_volume_attach" "example_attach_test_volume_to_instance_2_instance" {
@@ -214,6 +226,12 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_instance_2_instan
   pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
   pi_volume_id         = ibm_pi_volume.example_volume_test_volume.volume_id
   pi_instance_id       = ibm_pi_instance.example_workspace_instance_instance_2.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
 }
 
 ##############################################################################

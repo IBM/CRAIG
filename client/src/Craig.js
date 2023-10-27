@@ -1,13 +1,7 @@
 /* this file is the main application page */
 
 import React from "react";
-import {
-  kebabCase,
-  titleCase,
-  keys,
-  isEmpty,
-  isNullOrEmptyString,
-} from "lazy-z";
+import { kebabCase, titleCase, isNullOrEmptyString } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -29,6 +23,7 @@ import {
   onProjectDeleteCallback,
   onProjectDeselect,
   onProjectSelectCallback,
+  projectFetch,
   projectShouldCreateWorkspace,
   saveAndSendNotificationCallback,
   saveProjectCallback,
@@ -216,6 +211,7 @@ class Craig extends React.Component {
   projectFetch(projects, projectKeyName, resolve, reject) {
     let { workspace_name, workspace_region, workspace_resource_group } =
       projects[projectKeyName];
+
     this.setState(
       {
         clickedProject: projects[projectKeyName].name,
@@ -227,39 +223,34 @@ class Craig extends React.Component {
       },
       () => {
         this.toggleLoadingModal();
-        return fetch(
-          `/api/schematics/${workspace_name}` +
-            (workspace_region ? "/" + workspace_region : "") +
-            (workspace_resource_group ? "/" + workspace_resource_group : ""),
-          { method: "POST" }
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.error) {
-              reject(data.error);
-            } else if (isNullOrEmptyString(data.id)) {
-              reject("Workspace did not create. Missing ID.");
-            } else {
-              projects[
-                projectKeyName
-              ].workspace_url = `https://cloud.ibm.com/schematics/workspaces/${data.id}`;
-              this.setState(
-                {
-                  loadingDone: true,
-                  clickedWorkspaceUrl: projects[projectKeyName].workspace_url,
-                },
-                () => {
-                  this.setItem("craigProjects", projects);
-                  resolve();
-                }
-              );
-            }
-          })
-          .catch((err) => {
+        return projectFetch(
+          fetch,
+          {
+            workspace_name,
+            workspace_region,
+            workspace_resource_group,
+          },
+          reject,
+          // project resolve callback
+          (url) => {
+            projects[projectKeyName].workspace_url = url;
+            this.setState(
+              {
+                loadingDone: true,
+                clickedWorkspaceUrl: projects[projectKeyName].workspace_url,
+              },
+              () => {
+                this.setItem("craigProjects", projects);
+                resolve();
+              }
+            );
+          },
+          // project reject callback
+          () => {
             this.setState({ schematicsFailed: true, loadingDone: true });
             console.error(err);
-            reject(err);
-          });
+          }
+        );
       }
     );
   }

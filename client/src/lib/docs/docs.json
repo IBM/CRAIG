@@ -9,6 +9,20 @@
         "className": "marginBottomXs"
       },
       {
+        "templates": {
+          "Empty Project": ["craig-rg"],
+          "Power VS Quick Start": ["management-rg", "service-rg"],
+          "Power VS Oracle Ready": [
+            "management-rg",
+            "service-rg",
+            "workload-rg",
+            "power-rg"
+          ],
+          "Mixed": ["management-rg", "service-rg", "workload-rg"],
+          "Power VS SAP Hana": ["management-rg", "service-rg", "workload-rg"],
+          "VSI Edge": ["management-rg", "service-rg", "workload-rg", "edge-rg"],
+          "VSI": ["management-rg", "service-rg", "workload-rg"]
+        },
         "table": [
           ["_headers", "Group Name", "Description", "Optional"],
           [
@@ -30,7 +44,9 @@
             "edge-rg",
             "A resource group containing the compute, storage, and network services necessary for edge networking",
             "true"
-          ]
+          ],
+          ["craig-rg", "An example resource group", ""],
+          ["power-rg", "A resource group for Power VS resources", ""]
         ]
       }
     ],
@@ -56,6 +72,15 @@
         "className": "marginBottomXs"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["cos", "atracker-cos"],
+          "Power VS Oracle Ready": ["cos", "atracker-cos"],
+          "Mixed": ["cos", "atracker-cos"],
+          "Power VS SAP Hana": ["cos", "atracker-cos"],
+          "VSI Edge": ["cos", "atracker-cos"],
+          "VSI": ["cos", "atracker-cos"]
+        },
         "table": [
           ["_headers", "Instance Name", "Description"],
           [
@@ -73,6 +98,15 @@
         "className": "marginBottomXs"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["cos-bind-key"],
+          "Power VS Oracle Ready": ["cos-bind-key"],
+          "Mixed": ["cos-bind-key"],
+          "Power VS SAP Hana": ["cos-bind-key"],
+          "VSI Edge": ["cos-bind-key"],
+          "VSI": ["cos-bind-key"]
+        },
         "table": [
           ["_headers", "Credential Name", "Description"],
           [
@@ -132,6 +166,15 @@
         "className": "marginBottomSmall"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["key", "vsi-volume-key"],
+          "Power VS Oracle Ready": ["key", "vsi-volume-key"],
+          "Mixed": ["key", "vsi-volume-key", "roks-key"],
+          "Power VS SAP Hana": ["key", "vsi-volume-key", "roks-key"],
+          "VSI Edge": ["key", "vsi-volume-key"],
+          "VSI": ["key", "vsi-volume-key"]
+        },
         "table": [
           ["_headers", "Key Name", "Description"],
           ["key", "An encryption key for service instances"],
@@ -191,6 +234,15 @@
         "className": "marginBottomXs"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management"],
+          "Power VS Oracle Ready": ["management", "workload"],
+          "Mixed": ["management", "workload"],
+          "Power VS SAP Hana": ["management", "workload"],
+          "VSI Edge": ["management", "workload"],
+          "VSI": ["management", "workload"]
+        },
         "table": [
           ["_headers", "Network Name", "Description", "Optional"],
           [
@@ -375,6 +427,15 @@
         "text": "_default_includes"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management"],
+          "Power VS Oracle Ready": ["management", "workload"],
+          "Mixed": ["management", "workload"],
+          "Power VS SAP Hana": ["management", "workload"],
+          "VSI Edge": ["management", "workload"],
+          "VSI": ["management", "workload"]
+        },
         "table": [
           ["_headers", "VPC", "Subnet Tier", "Zone 1", "Zone 2", "Zone 3"],
           [
@@ -423,10 +484,19 @@
         "text": "_default_includes"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["transit-gateway"],
+          "Power VS Oracle Ready": ["transit-gateway"],
+          "Mixed": ["transit-gateway"],
+          "Power VS SAP Hana": ["transit-gateway"],
+          "VSI Edge": ["transit-gateway"],
+          "VSI": ["transit-gateway"]
+        },
         "table": [
           ["_headers", "Service Name", "Description"],
           [
-            "iac-transit-gateway",
+            "transit-gateway",
             "A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs."
           ]
         ]
@@ -489,7 +559,23 @@
         "text": "A Virtual Private Endpoint (VPE) gateway enables users to connect to supported IBM Cloud Services from their VPC network via an IP address allocated from a subnet within the VPC. The VPE gateway is a virtualized function that scales horizontally, is redundant and highly available, and spans all availability zones of the specified VPC."
       },
       {
-        "text": "The default configuration connects the management and workload VPCs to IBM Cloud Object Storage by creating a VPE subnet in each zone of the VPC, then creating a VPE gateway for each VPE subnet."
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management"],
+          "Power VS Oracle Ready": ["management", "workload"],
+          "Mixed": ["management", "workload"],
+          "Power VS SAP Hana": ["management", "workload"],
+          "VSI Edge": ["management", "workload"],
+          "VSI": ["management", "workload"]
+        },
+        "table": [
+          ["_headers", "VPC", "Endpoint Gateway Name", "Service"],
+          ["management", "management-vpe", "Object Storage"],
+          ["workload", "workload-vpe", "Object Storage"]
+        ]
       }
     ],
     "relatedLinks": [
@@ -535,10 +621,44 @@
         "text": "_default_includes"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "Power VS Oracle Ready": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "Mixed": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "Power VS SAP Hana": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "VSI Edge": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "VSI": ["atracker", "atracker-cos", "atracker-bucket", "cos-bind-key"]
+        },
         "table": [
           ["_headers", "Service Name", "Description"],
           [
-            "<your prefix>-atracker",
+            "atracker",
             "An Activity Tracker instance deployed in the service resource group."
           ],
           [
@@ -576,11 +696,21 @@
         "className": "marginBottomSmall"
       },
       {
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["ssh-key"],
+          "Power VS Oracle Ready": ["ssh-key"],
+          "Mixed": ["ssh-key"],
+          "Power VS SAP Hana": ["ssh-key"],
+          "VSI Edge": ["ssh-key"],
+          "VSI": ["ssh-key"]
+        },
         "table": [
-          ["_headers", "Pattern", "Configuration"],
-          ["Virtual Server Instance (VSI)", "One SSH key configured."],
-          ["Red Hat OpenShift Kubernetes (ROKS)", "No SSH key configured."],
-          ["Mixed", "One SSH key configured."]
+          ["_headers", "SSH Key", "Description"],
+          ["ssh-key", "An SSH key to use when provisioning VSI deployments."]
         ]
       }
     ],
@@ -596,20 +726,22 @@
         "className": "marginBottomXs"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management-server"],
+          "Power VS Oracle Ready": ["management-server", "workload-server"],
+          "Mixed": ["management-server"],
+          "Power VS SAP Hana": ["management-server", "workload-server"],
+          "VSI Edge": ["management-server", "workload-server"],
+          "VSI": ["management-server", "workload-server"]
+        },
         "table": [
-          ["_headers", "Pattern", "Configuration"],
+          ["_headers", "Name", "Description"],
           [
-            "Virtual Server Instance (VSI)",
-            "Two VSI deployments for three VSIs distributed across the VSI subnet tier of both the management and workload VPCs."
+            "management-server",
+            "An example VSI deployment in the Management VPC"
           ],
-          [
-            "Red Hat OpenShift Kubernetes (ROKS)",
-            "No VSI deployments configured."
-          ],
-          [
-            "Mixed",
-            "One VSI deployment for three VSIs distributed across the VSI subnet tier of the management VPC."
-          ]
+          ["workload-server", "An example VSI deployment in the Workload VPC"]
         ]
       }
     ],
@@ -657,16 +789,24 @@
         "className": "marginBottomSmall"
       },
       {
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [],
+          "Mixed": ["workload-cluster"],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
         "table": [
-          ["_headers", "Pattern", "Configuration"],
-          ["Virtual Server Instance (VSI)", "No clusters configured."],
+          ["_headers", "Name", "Description"],
           [
-            "Red Hat OpenShift Kubernetes (ROKS)",
-            "Two OpenShift clusters with three zones in VSI Subnet Tier with a worker pool dedicated to logging deployed in both management and workload VPCs."
-          ],
-          [
-            "Mixed",
-            "One OpenShift cluster with three zones in VSI Subnet Tier with a worker pool dedicated to logging deployed in the workload VPC."
+            "workload-cluster",
+            "A Red Hat OpenShift cluster on the Workload VPC."
           ]
         ]
       }
@@ -682,6 +822,15 @@
         "text": "_default_includes"
       },
       {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management-gateway"],
+          "Power VS Oracle Ready": ["management-gateway"],
+          "Mixed": ["management-gateway"],
+          "Power VS SAP Hana": ["management-gateway"],
+          "VSI Edge": ["management-gateway"],
+          "VSI": ["management-gateway"]
+        },
         "table": [
           ["_headers", "Resource Name", "Description"],
           [
@@ -1489,7 +1638,7 @@
         "text": "Workspaces are a means of grouping and managing related resources deployed in a single location (data location), but otherwise have no functional capabilities. For solutions that span multiple locations, e.g., to implement High Availability or Disaster Recovery, you can create multiple workspaces and connect them over the network (e.g., using a Transit Gateway)."
       },
       {
-        "text": "After provisioning a workspace you can create the following:"
+        "text": "After adding a workspace you can create the following:"
       },
       {
         "table": [
@@ -1506,6 +1655,204 @@
             "Cloud Connections",
             "You can use IBM Cloud connections to connect your Power Systems Virtual Server instances to IBM Cloud resources on IBM Cloud classic network and Virtual Private Cloud (VPC) infrastructures. IBM Cloud connection creates a Direct Link (2.0) Connect instance to connect your Power Systems Virtual Server instances to the IBM Cloud resources within your account. For cross-account connectivity, use IBM Transit Gateway to interconnect your Power Systems Virtual Server to the IBM Cloud classic and Virtual Private Cloud (VPC) infrastructures. The speed and reliability of the Direct Link connection extends your Power Systems Virtual Server network to the IBM Cloud network and offers more consistent and higher-throughput connectivity, while keeping network traffic within the IBM Cloud. Cloud Connections are not available in zones where Power Edge Router is deployed, see documentation for more information."
           ]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["workspace"],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["secure-powervs"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS Workspaces"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["workspace"],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["secure-powervs"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["workspace"],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["secure-powervs"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          [
+            "oracle-template",
+            "A workspace where Oracle RAC infrastructure is created"
+          ],
+          ["workspace", "An example Power VS Workspace"],
+          [
+            "secure-powervs",
+            "A workspace where SAP Hana infrastructure is created"
+          ]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["power-ssh-key"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS SSH Keys"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["power-ssh-key"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["power-ssh-key"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          ["power-ssh-key", "Power VS SSH Key used to create instances"],
+          ["power-ssh", "Power VS SSH Key used to create instances"]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [
+            "oracle-public",
+            "oracle-private-1",
+            "oracle-private-2"
+          ],
+          "Mixed": [],
+          "Power VS SAP Hana": ["management", "sap", "backup"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS SSH Networks"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [
+            "oracle-public",
+            "oracle-private-1",
+            "oracle-private-2"
+          ],
+          "Mixed": [],
+          "Power VS SAP Hana": ["management", "sap", "backup"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [
+            "oracle-public",
+            "oracle-private-1",
+            "oracle-private-2"
+          ],
+          "Mixed": [],
+          "Power VS SAP Hana": ["management", "sap", "backup"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          [
+            "oracle-public",
+            "A public network interface for Oracle RAC resources"
+          ],
+          [
+            "oracle-private-1",
+            "A private network interface for Oracle RAC resources"
+          ],
+          [
+            "oracle-private-2",
+            "A private network interface for Oracle RAC resources"
+          ],
+          [
+            "management",
+            "A management network interface for SAP Hana resources"
+          ],
+          ["backup", "A backup network interface for SAP Hana resources"],
+          ["sap", "A private network interface for SAP resources"]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-connection"],
+          "Mixed": [],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS Cloud Connections"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-connection"],
+          "Mixed": [],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-connection"],
+          "Mixed": [],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          ["oracle-connection", "Connects all VLANs to the Transit Gateway"]
         ]
       }
     ],

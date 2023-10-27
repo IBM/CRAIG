@@ -4,6 +4,8 @@ const {
   getObjectFromArray,
   splat,
 } = require("lazy-z");
+const { getSapVolumeList } = require("../forms/sap");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * init store for power instances
@@ -65,11 +67,66 @@ function powerVsInstanceOnStoreUpdate(config) {
 }
 
 /**
+ * add sap volumes
+ * @param {*} config
+ * @param {*} stateData
+ */
+function addSapVolumes(config, stateData) {
+  if (stateData.sap) {
+    config.store.json.power_volumes = config.store.json.power_volumes.concat(
+      getSapVolumeList(
+        stateData.sap_profile,
+        stateData.workspace,
+        stateData.name,
+        stateData.zone
+      )
+    );
+  }
+}
+
+/**
+ * delete sap volumes
+ * @param {*} config
+ * @param {*} componentProps
+ */
+function deleteSapVolumes(config, componentProps) {
+  if (componentProps.data.sap) {
+    let newVolumes = [];
+    config.store.json.power_volumes.forEach((volume) => {
+      if (
+        volume.name.match(
+          new RegexButWithWords()
+            .stringBegin()
+            .literal(componentProps.data.name)
+            .literal("-sap-")
+            .group((exp) => {
+              exp.literal("shared");
+            })
+            .or()
+            .group((exp) => {
+              exp
+                .group((exp) => exp.literal("log").or().literal("data"))
+                .literal("-")
+                .set("1-4");
+            })
+            .stringEnd()
+            .done("g")
+        ) === null
+      ) {
+        newVolumes.push(volume);
+      }
+    });
+    config.store.json.power_volumes = newVolumes;
+  }
+}
+
+/**
  * on power vs instance create
  * @param {lazyZstate} config
  * @param {*} stateData
  */
 function powerVsInstanceCreate(config, stateData) {
+  addSapVolumes(config, stateData);
   config.push(["json", "power_instances"], stateData);
 }
 
@@ -80,6 +137,64 @@ function powerVsInstanceCreate(config, stateData) {
  * @param {*} componentProps
  */
 function powerVsInstanceSave(config, stateData, componentProps) {
+  if (
+    componentProps.data.sap &&
+    stateData.sap &&
+    (stateData.sap_profile !== componentProps.data.sap_profile ||
+      stateData.workspace !== componentProps.workspace)
+  ) {
+    let newVolumes = getSapVolumeList(
+      stateData.sap_profile,
+      stateData.workspace,
+      stateData.name,
+      stateData.zone
+    );
+    newVolumes.forEach((volume) => {
+      let volumeData = getObjectFromArray(
+        config.store.json.power_volumes,
+        "name",
+        volume.name.replace(stateData.name, componentProps.data.name)
+      );
+      volumeData.name = volume.name;
+      volumeData.pi_volume_size = volume.pi_volume_size;
+      volumeData.workspace = volume.workspace;
+      volumeData.attachments = [stateData.name];
+    });
+  } else if (componentProps.data.sap !== true && stateData.sap) {
+    addSapVolumes(config, stateData);
+  } else if (componentProps.data.sap && !stateData.sap) {
+    deleteSapVolumes(config, componentProps);
+  } else if (stateData.sap) {
+    config.store.json.power_volumes.forEach((volume) => {
+      if (
+        volume.name.match(
+          new RegexButWithWords()
+            .stringBegin()
+            .literal(componentProps.data.name)
+            .literal("-sap-")
+            .group((exp) => {
+              exp.literal("shared");
+            })
+            .or()
+            .group((exp) => {
+              exp
+                .group((exp) => exp.literal("log").or().literal("data"))
+                .literal("-")
+                .set("1-4");
+            })
+            .stringEnd()
+            .done("g")
+        ) !== null
+      ) {
+        volume.name = volume.name.replace(
+          componentProps.data.name,
+          stateData.name
+        );
+        volume.zone = stateData.zone;
+        volume.attachments = [stateData.name];
+      }
+    });
+  }
   config.updateChild(
     ["json", "power_instances"],
     componentProps.data.name,
@@ -94,6 +209,7 @@ function powerVsInstanceSave(config, stateData, componentProps) {
  * @param {*} componentProps
  */
 function powerVsInstanceDelete(config, stateData, componentProps) {
+  deleteSapVolumes(config, componentProps);
   config.carve(["json", "power_instances"], componentProps.data.name);
 }
 

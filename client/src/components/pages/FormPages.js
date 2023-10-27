@@ -100,6 +100,7 @@ import {
   edgeRouterEnabledZones,
   cosPlans,
   powerStoragePoolRegionMap,
+  sapProfiles,
 } from "../../lib/constants";
 
 const AccessGroupsPage = (craig) => {
@@ -638,6 +639,19 @@ const PowerVsInstances = (craig) => {
           <NoPowerWorkspaceTile />
         ) : undefined
       }
+      sapProfiles={sapProfiles.filter((profile) => {
+        if (
+          // this is a placeholder, need to find out more information on
+          // power sizing, as sizing is based on zone, processor type
+          // and instance type. it does not seem as though we would be able
+          // to support all options in all regions
+          //
+          // we should aim to support all instance profiles if needed
+          parseInt(profile.replace(/^[^-]+-/g, "").replace(/x\d+$/g, "")) <= 7
+        ) {
+          return profile;
+        }
+      })}
       power_instances={craig.store.json.power_instances}
       storage_pool_map={powerStoragePoolRegionMap}
       power_volumes={craig.store.json.power_volumes}
@@ -665,13 +679,13 @@ const PowerVsInstances = (craig) => {
         );
       }}
       invalidPiMemoryCallback={(stateData) => {
-        return !isInRange(parseFloat(stateData.pi_memory), 0, 918);
+        return parseFloat(stateData.pi_memory) > 0;
       }}
       invalidPiProcessorsTextCallback={() => {
         return "Must be a number between 0.25 and 7.";
       }}
       invalidPiMemoryTextCallback={() => {
-        return "Must be a whole number less than 918.";
+        return "Must be a whole number greater than 0.";
       }}
       storageChangesDisabledCallback={storageChangeDisabledCallback}
     />
@@ -695,6 +709,10 @@ const PowerVsVolumes = (craig) => {
       onSave={craig.power_volumes.save}
       onSubmit={craig.power_volumes.create}
       forceOpen={forceShowForm}
+      deleteDisabled={(componentProps) => {
+        if (componentProps.data.sap) return true;
+        else return false;
+      }}
       craig={craig}
       docs={RenderDocs("power_volumes")}
       power={craig.store.json.power}

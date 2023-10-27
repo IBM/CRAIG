@@ -17,10 +17,13 @@ function powerVsVolumesOnStoreUpdate(config) {
     config.store.json.power_volumes = [];
   }
   config.store.json.power_volumes.forEach((volume) => {
-    if (!splatContains(config.store.json.power, "name", volume.workspace)) {
+    if (
+      !splatContains(config.store.json.power, "name", volume.workspace) &&
+      !volume.sap
+    ) {
       volume.workspace = null;
       volume.attachments = [];
-    } else {
+    } else if (!volume.sap) {
       let newAttachments = [];
       volume.attachments.forEach((attachment) => {
         if (

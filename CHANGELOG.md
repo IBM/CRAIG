@@ -6,11 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
+- Default template description and corresponding tab have been removed from Options page
+
 ### Features
 
 - Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.
 
 ### Fixes
+
 
 ## 1.4.0
 
@@ -25,6 +28,8 @@ All notable changes to this project will be documented in this file.
 - When child components are invalid, Power VS Workspace forms are now forced open
 - Account ID variable is no longer populated in variables.tf when not in use
 - Users can now generate craig.tar files by using the API endpoint `/api/craig/tar`
+- Power VS Volume attachments no longer force lifecycle updates when instance or volume ids change
+- Added Power VS Quick Start template
 
 ### Fixes
 

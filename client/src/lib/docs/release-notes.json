@@ -5,7 +5,9 @@
       "Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace."
     ],
     "fixes": [],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "Default template description and corresponding tab have been removed from Options page"
+    ]
   },
   {
     "version": "1.4.0",
@@ -15,7 +17,9 @@
       "When no VPC instances are created, all pages dependent on a VPC now show a tile with an explanation and a link to `/form/vpcs`",
       "When child components are invalid, Power VS Workspace forms are now forced open",
       "Account ID variable is no longer populated in variables.tf when not in use",
-      "Users can now generate craig.tar files by using the API endpoint `/api/craig/tar`"
+      "Users can now generate craig.tar files by using the API endpoint `/api/craig/tar`",
+      "Power VS Volume attachments no longer force lifecycle updates when instance or volume ids change",
+      "Added Power VS Quick Start template"
     ],
     "fixes": [
       "Fixed an issues causing VPC modules to be formatted incorrectly when VPC name contains a hyphen",

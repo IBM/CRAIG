@@ -6,3 +6,6 @@ unit-tests/data-files/
 old/
 *.yml
 *.md
+terraform.*
+.terraform/
+terraform/

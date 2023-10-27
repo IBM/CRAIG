@@ -66,6 +66,11 @@ function formatPowerVsVolumeAttachment(volume, instance) {
       pi_instance_id: `\${ibm_pi_instance.${snakeCase(
         `${volume.workspace}_workspace_instance_${instance}`
       )}.instance_id}`,
+      lifecycle: [
+        {
+          ignore_changes: ["${pi_cloud_instance_id}", "${pi_volume_id}"],
+        },
+      ],
     }
   );
 }

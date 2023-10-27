@@ -522,15 +522,7 @@
     "scope_description": null,
     "enable": false
   },
-  "secrets_manager": [
-    {
-      "name": "frog",
-      "resource_group": "service-rg",
-      "encryption_key": "key",
-      "kms": "kms",
-      "secrets": []
-    }
-  ],
+  "secrets_manager": [],
   "security_groups": [
     {
       "vpc": "management",

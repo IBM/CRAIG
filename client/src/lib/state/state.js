@@ -1,13 +1,5 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const {
-  contains,
-  typeCheck,
-  transpose,
-  snakeCase,
-  carve,
-  splatContains,
-  kebabCase,
-} = require("lazy-z");
+const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,

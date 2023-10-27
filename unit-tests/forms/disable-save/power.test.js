@@ -553,7 +553,7 @@ describe("power", () => {
             network: [
               {
                 name: "good",
-                ip_address: "/",
+                ip_address: "ssss",
               },
             ],
           },
@@ -673,7 +673,7 @@ describe("power", () => {
               },
             ],
             pi_processors: "7",
-            pi_memory: "100000",
+            pi_memory: "0",
           },
           {
             data: {
