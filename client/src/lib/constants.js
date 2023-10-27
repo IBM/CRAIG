@@ -703,13 +703,7 @@ module.exports = {
   ],
   powerStoragePoolRegionMap: {
     syd04: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
-    syd05: [
-      "Tier3-Flash-2",
-      "Tier3-Flash-1",
-      "Tier1-Flash-2",
-      "Tier1-Flash-1",
-      "Tier3-Flash-3",
-    ],
+    syd05: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
     "eu-de-1": [
       "Tier1-Flash-2",
       "Tier1-Flash-1",
@@ -800,6 +794,12 @@ module.exports = {
     ],
     tor01: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
     wdc07: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
+  },
+  replicationEnabledStoragePoolMap: {
+    "us-east": ["Tier1-Flash-8"],
+    wdc06: ["Tier1-Flash-1", "Tier3-Flash-2", "Tier3-Flash-1"],
+    "us-south": ["Tier1-Flash-6"],
+    dal12: ["Tier1-Flash-3", "Tier3-Flash-4", "Tier3-Flash-3"],
   },
   template_dropdown_map: {
     Mixed: {
