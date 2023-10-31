@@ -219,24 +219,26 @@ function formatGroupMembers(invite) {
 
 function iamTf(config) {
   let tf = "";
-  if (config.iam_account_settings.enable) {
+  if (config.iam_account_settings && config.iam_account_settings.enable) {
     tf +=
       tfBlock(
         "IAM Account Settings",
         formatIamAccountSettings(config.iam_account_settings)
       ) + "\n";
   }
-  config.access_groups.forEach((group) => {
-    let blockData = formatAccessGroup(group, config);
-    group.policies.forEach(
-      (policy) => (blockData += formatAccessGroupPolicy(policy))
-    );
-    group.dynamic_policies.forEach(
-      (policy) => (blockData += formatAccessGroupDynamicRule(policy))
-    );
-    if (group.has_invites) blockData += formatGroupMembers(group.invites);
-    tf += tfBlock(`${group.name} access group`, blockData);
-  });
+  if (config.access_groups)
+    config.access_groups.forEach((group) => {
+      let blockData = formatAccessGroup(group, config);
+      group.policies.forEach(
+        (policy) => (blockData += formatAccessGroupPolicy(policy))
+      );
+      group.dynamic_policies.forEach(
+        (policy) => (blockData += formatAccessGroupDynamicRule(policy))
+      );
+      if (group.has_invites) blockData += formatGroupMembers(group.invites);
+      tf += tfBlock(`${group.name} access group`, blockData) + "\n";
+    });
+  tf = tf.replace(/\n\n(?=$)/g, "\n");
   return tf;
 }
 

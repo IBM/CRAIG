@@ -41,7 +41,7 @@ import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
 import { CraigCodeMirror, Navigation, Footer } from ".";
 import PropTypes from "prop-types";
 import "./page-template.css";
-import { codeMirrorGetDisplay, releaseNotes } from "../../lib";
+import { codeMirrorGetDisplay } from "../../lib";
 import { Notification } from "./Notification";
 import CBRIcon from "../../images/cbr";
 import { ActionableNotification } from "@carbon/react";
@@ -51,6 +51,7 @@ function F5Icon() {
   return <img src={f5} />;
 }
 
+const releaseNotes = require("../../lib/docs/release-notes.json");
 const navCategories = require("../../lib/nav-catagories");
 const navIcons = {
   IbmCloudKeyProtect: IbmCloudKeyProtect,
@@ -104,6 +105,12 @@ let pageOrder = [
   {
     title: "Options",
     path: "/",
+    icon: Settings,
+  },
+  {
+    // temporary to get page to render
+    title: "Cloud Services",
+    path: "/beta/services",
     icon: Settings,
   },
 ];
@@ -177,8 +184,11 @@ const PageTemplate = (props) => {
     : { toTf: false };
 
   // if path is undefined or "form" is not present in path then hide the code mirror
-  let formPathNotPresent =
-    pageObj.path === undefined ? true : !contains(pageObj.path, "form");
+  let formPathNotPresent = props.beta
+    ? false
+    : pageObj.path === undefined
+    ? true
+    : !contains(pageObj.path, "form");
 
   return (
     <>
@@ -249,7 +259,7 @@ const PageTemplate = (props) => {
           code={codeMirrorGetDisplay(
             props.json,
             props.jsonInCodeMirror,
-            pageObj.path,
+            props.beta ? "/beta/services" : pageObj.path,
             pageObj.toTf,
             pageObj.jsonField
           )}

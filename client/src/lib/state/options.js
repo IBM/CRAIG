@@ -1,7 +1,7 @@
 const { revision } = require("lazy-z");
 const { subnetTierSave } = require("./vpc");
 const { RegexButWithWords } = require("regex-but-with-words");
-const { releaseNotes } = require("../docs");
+const releaseNotes = require("../docs/release-notes.json");
 
 /**
  * initialize options

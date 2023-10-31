@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
-const { releaseNotes } = require("../../client/src/lib/docs");
+const releaseNotes = require("../../client/src/lib/docs/release-notes.json");
 
 /**
  * initialize store

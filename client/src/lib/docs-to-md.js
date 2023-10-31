@@ -1,5 +1,5 @@
 const { matchLength, eachKey, titleCase } = require("lazy-z");
-const { docs } = require("./docs");
+const docs = require("./docs/docs.json");
 
 /**
  * get longest entry from col index

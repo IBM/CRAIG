@@ -16,6 +16,9 @@ const {
 function appidOnStoreUpdate(config) {
   config.store.json.appid.forEach((appid) => {
     setUnfoundResourceGroup(config, appid);
+    if (!appid.keys) {
+      appid.keys = [];
+    }
     appid.keys.forEach((key) => {
       key.appid = appid.name;
     });

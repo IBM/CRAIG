@@ -30,6 +30,7 @@ import {
   saveProjectCallback,
   updateNotification,
 } from "./lib/craig-app";
+import { CloudServicesPage } from "./components/pages/cloud-services";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -399,6 +400,7 @@ class Craig extends React.Component {
           craig={craig}
           onProjectSave={this.onProjectSave}
           saveAndSendNotification={this.saveAndSendNotification}
+          beta={this.props.params.betaPage}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
@@ -432,6 +434,8 @@ class Craig extends React.Component {
               projects={this.state.projects}
               nav={this.props.craigRouter.nav}
             />
+          ) : window.location.pathname === "/beta/services" ? (
+            <CloudServicesPage craig={craig} />
           ) : window.location.pathname === "/form/cbr" ? (
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
