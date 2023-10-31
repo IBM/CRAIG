@@ -10,10 +10,12 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.
+- Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace
+- Added Oracle Single Instance template
 
 ### Fixes
 
+- Fixed an issue causing underscores to incorrectly be added to Power VS Volume names when the workspace contains a hyphen
 
 ## 1.4.0
 

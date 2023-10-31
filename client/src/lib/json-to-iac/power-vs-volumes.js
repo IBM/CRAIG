@@ -1,5 +1,5 @@
 const { snakeCase, contains } = require("lazy-z");
-const { jsonToTfPrint, tfBlock } = require("./utils");
+const { jsonToTfPrint, tfBlock, kebabName } = require("./utils");
 const { powerVsWorkspaceRef } = require("./power-vs");
 
 /**
@@ -12,9 +12,7 @@ function formatPowerVsVolume(volume) {
     provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
     pi_cloud_instance_id: powerVsWorkspaceRef(volume.workspace),
     pi_volume_size: volume.pi_volume_size,
-    pi_volume_name: `\${var.prefix}-${snakeCase(volume.workspace)}-${
-      volume.name
-    }`,
+    pi_volume_name: kebabName([volume.workspace, volume.name]),
     pi_volume_shareable: volume.pi_volume_shareable,
     pi_replication_enabled: volume.pi_replication_enabled,
   };

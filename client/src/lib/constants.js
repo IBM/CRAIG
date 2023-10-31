@@ -6,6 +6,7 @@ const powerTemplate = require("./docs/templates/power-sap-hana.json");
 const oracleRac = require("./docs/templates/oracle-rac.json");
 const emptyProject = require("./docs/templates/from-scratch.json");
 const powerVsQuickStart = require("./docs/templates/quick-start-power.json");
+const oracleSi = require("./docs/templates/oracle-si.json");
 
 module.exports = {
   varDotRegion: "${var.region}",
@@ -887,6 +888,24 @@ module.exports = {
         "A management and workload VPC connected by a transit gateway",
         "One public and two private network interfaces for Power VS with cloud connections to a transit gateway",
         "Two AIX Power Virtual Server instances and needed volumes for Oracle RAC implemententation",
+        "A flow log collector for each VPC",
+        "Object storage instances for flow logs and activity tracker",
+        "Encryption keys in either a Key Protect or Hyper Protect Crypto Services instance",
+        "Virtual Private endpoints for Cloud Object storage in each VPC",
+        "An example Virtual Server instance deployment in the management and workload VPCs",
+        "A VPN Gateway in the Management VPC",
+      ],
+    },
+    "Power VS Oracle Single Instance": {
+      template: oracleSi,
+      name: "Power VS AIX Oracle Single Instance",
+      patternDocText:
+        "This template initializes an environment with VPC and Power VS resources to allow users to create Oracle Real Application Clusters (Oracle RAC) on IBM Cloud.",
+      includes: [
+        "A resource group for cloud services and for each VPC, and Power Virtual Servers",
+        "A management and workload VPC connected by a transit gateway",
+        "One network interface for Power VS with cloud connections to a transit gateway",
+        "One AIX Power Virtual Server instances and needed volumes for Oracle instance implemententation",
         "A flow log collector for each VPC",
         "Object storage instances for flow logs and activity tracker",
         "Encryption keys in either a Key Protect or Hyper Protect Crypto Services instance",

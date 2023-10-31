@@ -5,6 +5,7 @@ import PowerSAP_HanaPattern from "../../images/PowerSAP_HanaPattern.png";
 import OracleRac from "../../images/oracle-rac.png";
 import Empty from "../../images/empty.png";
 import PowerVsQuickStart from "../../images/quick-start-power.png";
+import OracleSI from "../../images/oracle-si.png";
 import { keys } from "lazy-z";
 const { template_dropdown_map } = require("../../lib/constants");
 
@@ -16,6 +17,7 @@ const templateImages = {
   "Power VS Oracle Ready": OracleRac,
   "Empty Project": Empty,
   "Power VS Quick Start": PowerVsQuickStart,
+  "Power VS Oracle Single Instance": OracleSI,
 };
 
 keys(template_dropdown_map).forEach((template) => {
