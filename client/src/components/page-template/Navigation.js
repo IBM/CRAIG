@@ -15,8 +15,9 @@ import { Reset, Download, Debug, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
-import { releaseNotes, validate } from "../../lib";
+import { validate } from "../../lib";
 import { splat } from "lazy-z";
+const releaseNotes = require("../../lib/docs/release-notes.json");
 
 class Navigation extends React.Component {
   constructor(props) {

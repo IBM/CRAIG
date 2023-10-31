@@ -59,7 +59,6 @@ function invalidForms(craig) {
           },
           parent_name: "parent_name",
         },
-        craig,
       ]
     );
   }

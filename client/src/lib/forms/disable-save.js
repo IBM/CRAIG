@@ -946,9 +946,9 @@ function disableCustomResolversSave(stateData, componentProps) {
  * @returns {boolean} true if should be disabled
  */
 function disableLogdnaSave(stateData) {
-  return stateData.enabled === false
-    ? false
-    : nullOrEmptyStringFields(stateData, ["plan", "resource_group", "bucket"]);
+  return stateData.enabled === true
+    ? nullOrEmptyStringFields(stateData, ["plan", "resource_group", "bucket"])
+    : false;
 }
 
 /**

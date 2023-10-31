@@ -126,7 +126,8 @@ const {
   formatClassicNetworkVlan,
   classicInfraTf,
 } = require("./json-to-iac");
-const { docs, releaseNotes } = require("./docs");
+const releaseNotes = require("./docs/release-notes.json");
+const docs = require("./docs/docs.json");
 const { state } = require("./state");
 const { invalidForms } = require("./invalid-forms");
 module.exports = {

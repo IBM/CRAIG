@@ -12,6 +12,7 @@ import {
   Summary,
   Projects,
   NewFormPage,
+  PageNotFound,
 } from "./components";
 import { invalidForms, state } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
@@ -29,6 +30,7 @@ import {
   saveProjectCallback,
   updateNotification,
 } from "./lib/craig-app";
+import { CloudServicesPage } from "./components/pages/cloud-services";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -398,14 +400,17 @@ class Craig extends React.Component {
           craig={craig}
           onProjectSave={this.onProjectSave}
           saveAndSendNotification={this.saveAndSendNotification}
+          beta={this.props.params.betaPage}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
               <About />
             ) : this.props.params.doc === "json" ? (
               <JsonDocs />
-            ) : (
+            ) : this.props.params.doc === "releaseNotes" ? (
               <ReleaseNotes />
+            ) : (
+              <PageNotFound />
             )
           ) : window.location.pathname === "/projects" ? (
             <Projects
@@ -429,6 +434,8 @@ class Craig extends React.Component {
               projects={this.state.projects}
               nav={this.props.craigRouter.nav}
             />
+          ) : window.location.pathname === "/beta/services" ? (
+            <CloudServicesPage craig={craig} />
           ) : window.location.pathname === "/form/cbr" ? (
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (

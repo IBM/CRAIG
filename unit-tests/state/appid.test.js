@@ -32,6 +32,16 @@ describe("appid", () => {
       beforeEach(() => {
         appidState = new newState();
       });
+      it("should add keys to object when unfound", () => {
+        appidState.appid.create({
+          name: "frog",
+        });
+        assert.deepEqual(
+          appidState.store.json.appid,
+          [{ name: "frog", keys: [], resource_group: null }],
+          "it should set keys"
+        );
+      });
       it("should set encryption key to null when deleted", () => {
         appidState.appid.create({
           name: "default",
