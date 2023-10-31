@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace
 - Added Oracle Single Instance template
+- Users can now watch a tutorial on how to get started on CRAIG by navigating to the video from the About page
 
 ### Fixes
 

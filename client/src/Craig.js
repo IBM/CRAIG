@@ -12,6 +12,7 @@ import {
   Summary,
   Projects,
   NewFormPage,
+  PageNotFound,
 } from "./components";
 import { invalidForms, state } from "./lib";
 import { CbrForm, ObservabilityForm } from "./components/forms";
@@ -404,8 +405,10 @@ class Craig extends React.Component {
               <About />
             ) : this.props.params.doc === "json" ? (
               <JsonDocs />
-            ) : (
+            ) : this.props.params.doc === "releaseNotes" ? (
               <ReleaseNotes />
+            ) : (
+              <PageNotFound />
             )
           ) : window.location.pathname === "/projects" ? (
             <Projects
