@@ -143,7 +143,7 @@ const About = () => {
                 on how to get started with CRAIG:
                 <br />{" "}
                 <a
-                  href="https://github.ibm.com/platinum-developer-tools/CRAIG/docs/craigTutorial.mp4"
+                  href="https://github.ibm.com/platinum-developer-tools/CRAIG/blob/main/docs/craigTutorial.mp4"
                   target="_blank"
                 >
                   CRAIG Tutorial Video

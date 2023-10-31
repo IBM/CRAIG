@@ -27,7 +27,7 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 
 ## Tutorial Video
 
-[Follow this tutorial](https://github.ibm.com/platinum-developer-tools/CRAIG/docs/craigTutorial.mp4) for step-by-step instructions on how to get started with CRAIG.
+[Follow this tutorial](https://github.ibm.com/platinum-developer-tools/CRAIG/blob/main/docs/craigTutorial.mp4) for step-by-step instructions on how to get started with CRAIG.
 
 ---
 
