@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 - Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.
 - Users can now use a beta version of a new cloud services page at `/beta/services`
 - Added Oracle Single Instance template
-- Users can now watch a tutorial on how to get started on CRAIG by navigating to the video from the About page
+- Users can now create policy-based VPN Gateways using the VPN Gateway form
 
 ### Fixes
 

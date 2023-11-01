@@ -10,9 +10,6 @@ RUN npm run build
 
 FROM node
 WORKDIR /app
-# allow for env vars to be passed at build time
-ARG api_key=""
-ENV API_KEY=$api_key
 
 COPY --from=build /app/client/ /app/client
 COPY --from=build /app/package.json /app/package.json
