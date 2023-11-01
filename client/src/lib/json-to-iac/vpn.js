@@ -22,15 +22,20 @@ const { formatAddressPrefix } = require("./vpc");
  */
 
 function ibmIsVpnGateway(gw, config) {
+  let gwData = {
+    name: kebabName([gw.vpc, gw.name, "vpn-gw"]),
+    subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(gw.subnet)}_id}`,
+    resource_group: rgIdRef(gw.resource_group, config),
+    mode: gw.policy_mode ? "policy" : undefined,
+    tags: config._options.tags,
+    timeouts: timeouts("", "", "1h"),
+  };
+  if (!gwData.mode) {
+    delete gwData.mode;
+  }
   return {
     name: `${gw.vpc} ${gw.name} vpn gw`,
-    data: {
-      name: kebabName([gw.vpc, gw.name, "vpn-gw"]),
-      subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(gw.subnet)}_id}`,
-      resource_group: rgIdRef(gw.resource_group, config),
-      tags: config._options.tags,
-      timeouts: timeouts("", "", "1h"),
-    },
+    data: gwData,
   };
 }
 

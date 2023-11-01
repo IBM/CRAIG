@@ -332,7 +332,8 @@
       "name": "string",
       "resource_group": "string",
       "subnet": "string",
-      "vpc": "string"
+      "vpc": "string",
+      "policy_mode": "boolean"
     }
   },
   "clusters": {

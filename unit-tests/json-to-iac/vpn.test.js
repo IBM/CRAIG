@@ -35,6 +35,39 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
         "it should return correct data"
       );
     });
+    it("should create tf code for vpn gateway with policy", () => {
+      let actualData = formatVpn(
+        {
+          name: "management",
+          resource_group: "slz-management-rg",
+          subnet: "vpn-zone-1",
+          vpc: "management",
+          policy_mode: true,
+        },
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
+  name           = "\${var.prefix}-management-management-vpn-gw"
+  subnet         = module.management_vpc.vpn_zone_1_id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  mode           = "policy"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  timeouts {
+    delete = "1h"
+  }
+}
+`;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("vpnTf", () => {
     it("should create tf code for vpn gateway", () => {
