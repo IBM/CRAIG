@@ -679,7 +679,7 @@ const PowerVsInstances = (craig) => {
         );
       }}
       invalidPiMemoryCallback={(stateData) => {
-        return parseFloat(stateData.pi_memory) > 0;
+        return !(parseInt(stateData.pi_memory) > 0);
       }}
       invalidPiProcessorsTextCallback={() => {
         return "Must be a number between 0.25 and 7.";
