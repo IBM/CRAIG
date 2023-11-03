@@ -468,7 +468,10 @@
       "ssh_key": "power-ssh-key",
       "pi_sys_type": "s922",
       "pi_memory": "2",
-      "pi_processors": ".5"
+      "pi_processors": ".5",
+      "storage_option": "Storage Type",
+      "pi_storage_pool_affinity": false,
+      "sap": false
     },
     {
       "name": "sap-hana",
@@ -494,8 +497,16 @@
       "pi_storage_type": "tier3",
       "ssh_key": "power-ssh-key",
       "pi_sys_type": "e880",
-      "pi_memory": "50",
-      "pi_processors": "0.55"
+      "pi_memory": "256",
+      "pi_processors": "4",
+      "pi_affinity_volume": null,
+      "pi_affinity_instance": null,
+      "pi_anti_affinity_instance": null,
+      "pi_anti_affinity_volume": null,
+      "storage_option": "Storage Type",
+      "pi_storage_pool_affinity": false,
+      "sap": true,
+      "sap_profile": "ush1-4x256"
     },
     {
       "name": "sap-netweaver",
@@ -522,7 +533,10 @@
       "ssh_key": "power-ssh-key",
       "pi_sys_type": "e880",
       "pi_processors": "3",
-      "pi_memory": "50"
+      "pi_memory": "50",
+      "storage_option": "Storage Type",
+      "pi_storage_pool_affinity": false,
+      "sap": false
     }
   ],
   "power_volumes": [
@@ -545,6 +559,114 @@
       "attachments": ["sap-hana", "sap-netweaver"],
       "zone": "us-south",
       "pi_volume_size": "50"
+    },
+    {
+      "name": "sap-hana-sap-data-1",
+      "mount": "/hana/data",
+      "pi_volume_size": 71,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-data-2",
+      "mount": "/hana/data",
+      "pi_volume_size": 71,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-data-3",
+      "mount": "/hana/data",
+      "pi_volume_size": 71,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-data-4",
+      "mount": "/hana/data",
+      "pi_volume_size": 71,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-log-1",
+      "mount": "/hana/log",
+      "pi_volume_size": 33,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-log-2",
+      "mount": "/hana/log",
+      "pi_volume_size": 33,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-log-3",
+      "mount": "/hana/log",
+      "pi_volume_size": 33,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-log-4",
+      "mount": "/hana/log",
+      "pi_volume_size": 33,
+      "pi_volume_type": "tier1",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
+    },
+    {
+      "name": "sap-hana-sap-shared",
+      "mount": "/hana/shared",
+      "pi_volume_size": 256,
+      "pi_volume_type": "tier3",
+      "workspace": "secure-powervs",
+      "sap": true,
+      "attachments": ["sap-hana"],
+      "zone": "us-south",
+      "storage_option": "Storage Type",
+      "affinity_type": null
     }
   ],
   "resource_groups": [
