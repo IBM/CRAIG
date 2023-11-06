@@ -937,6 +937,162 @@ describe("invalid callbacks", () => {
         ).invalid;
         assert.isTrue(actualData);
       });
+      it("should return true when creating duplicate public key in same workspace", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "power-key",
+            resource_group: "craig-rg",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            powerVs: true,
+            arrayParentName: "workspace",
+            craig: {
+              store: {
+                json: {
+                  power: [
+                    {
+                      name: "workspace",
+                      resource_group: "craig-rg",
+                      ssh_keys: [
+                        {
+                          name: "power-key",
+                          public_key:
+                            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                          workspace: "workspace",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isTrue(actualData);
+      });
+      it("should return false when creating duplicate public key in another workspace", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "power-key-2",
+            resource_group: "craig-rg",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            powerVs: true,
+            arrayParentName: "other-workspace",
+            craig: {
+              store: {
+                json: {
+                  power: [
+                    {
+                      name: "workspace",
+                      resource_group: "craig-rg",
+                      ssh_keys: [
+                        {
+                          name: "power-key",
+                          public_key:
+                            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                          workspace: "workspace",
+                        },
+                      ],
+                    },
+                    {
+                      name: "other-workspace",
+                      resource_group: "craig-rg",
+                      ssh_keys: [],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isFalse(actualData);
+      });
+      it("should return false when creating power key using the same public key as in regular ssh keys", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "power-key",
+            resource_group: "craig-rg",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            powerVs: true,
+            arrayParentName: "workspace",
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [
+                    {
+                      name: "ssh-key",
+                      resource_group: "management-rg",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                  power: [
+                    {
+                      name: "workspace",
+                      ssh_keys: [],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isFalse(actualData);
+      });
+      it("should return false when creating power key with props passed from invalid-forms", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "power-key",
+            resource_group: "craig-rg",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+            workspace: "power-workspace",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [
+                    {
+                      name: "ssh-key",
+                      resource_group: "management-rg",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                  power: [
+                    {
+                      name: "workspace",
+                      ssh_keys: [],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isFalse(actualData);
+      });
     });
   });
   describe("invalidIamAccountSettings", () => {
