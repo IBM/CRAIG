@@ -6,6 +6,12 @@ const apiController = require("../express-controllers/controller");
 const { craigApi } = require("../express-controllers/craig-api");
 const controller = new apiController(axios);
 const craigRoutes = new craigApi(controller, tar);
+const swaggerUi = require("swagger-ui-express");
+const yaml = require("js-yaml");
+const fs = require("fs");
+const apiSpec = yaml.load(
+  fs.readFileSync("./client/src/lib/docs/api-spec.yaml", "utf8")
+);
 
 // vsi
 router.get("/vsi/:region/instanceProfiles", controller.vsiInstanceProfiles);
@@ -27,5 +33,9 @@ router.get("/power/:region/:component", controller.getPowerComponent);
 
 // craig
 router.post("/craig/tar", craigRoutes.craigTar);
+
+//swagger api spec
+router.use("/swagger", swaggerUi.serve);
+router.get("/swagger", swaggerUi.setup(apiSpec));
 
 module.exports = router;
