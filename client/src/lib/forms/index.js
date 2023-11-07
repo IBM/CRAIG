@@ -21,6 +21,7 @@ const {
 const {
   invalidName,
   invalidEncryptionKeyRing,
+  invalidEncryptionKeyEndpoint,
   invalidSshPublicKey,
   validSshKey,
   invalidIamAccountSettings,
@@ -66,6 +67,7 @@ const { notificationText, getCosFromBucket } = require("./utils");
 const { encryptionKeyFilter } = require("./filters");
 const { storageChangeDisabledCallback } = require("./power-affinity");
 const wizard = require("./wizard");
+const { powerImageFetch, powerStoragePoolFetch } = require("./power-utils.js");
 
 module.exports = {
   wizard,
@@ -82,6 +84,7 @@ module.exports = {
   clusterHelperTestCallback,
   invalidNameText,
   invalidEncryptionKeyRing,
+  invalidEncryptionKeyEndpoint,
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
   validSshKey,
@@ -130,4 +133,6 @@ module.exports = {
   invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
   vpnServersHelperText,
+  powerImageFetch,
+  powerStoragePoolFetch,
 };

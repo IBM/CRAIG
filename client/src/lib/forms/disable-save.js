@@ -35,6 +35,7 @@ const {
   invalidCpuCallback,
   invalidTagList,
   validSshKey,
+  invalidEncryptionKeyEndpoint,
 } = require("./invalid-callbacks");
 const {
   commaSeparatedIpListExp,
@@ -207,19 +208,6 @@ function disableIcdSave(stateData, componentProps) {
 }
 
 /**
- * check to see if appid form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableAppIDSave(stateData, componentProps) {
-  return (
-    invalidName("appid")(stateData, componentProps) ||
-    badField("resource_group", stateData)
-  );
-}
-
-/**
  * check to see if buckets form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -241,7 +229,8 @@ function disableBucketsSave(stateData, componentProps) {
 function disableEncryptionKeysSave(stateData, componentProps) {
   return (
     invalidName("encryption_keys")(stateData, componentProps) ||
-    invalidEncryptionKeyRing(stateData)
+    invalidEncryptionKeyRing(stateData) ||
+    invalidEncryptionKeyEndpoint(stateData)
   );
 }
 
@@ -1131,7 +1120,6 @@ const disableSaveFunctions = {
   dynamic_policies: disableDynamicPoliciesSave,
   object_storage: disableObjectStorageSave,
   icd: disableIcdSave,
-  appid: disableAppIDSave,
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
@@ -1265,5 +1253,6 @@ module.exports = {
   invalidPort,
   forceShowForm,
   disableSshKeyDelete,
+  disableEncryptionKeysSave,
   invalidCidrBlock,
 };

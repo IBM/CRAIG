@@ -1,6 +1,10 @@
 const { assert } = require("chai");
 const { disableSave } = require("../../../client/src/lib");
 
+/**
+ * this file intentionally left here as disable save is handled for all three components
+ * with only the disableSave function. this should be moved in the future
+ */
 describe("object storage", () => {
   it("should return true if a object storage instance has an invalid name", () => {
     assert.isTrue(

@@ -223,7 +223,13 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     );
   }
   if (stateData && componentProps) {
-    if (contains(allOtherNames, componentProps.data[stateField]))
+    if (
+      // component props.data is not available on load, this line
+      // allows for disable save function to be passed directly into
+      // force open
+      componentProps.data &&
+      contains(allOtherNames, componentProps.data[stateField])
+    )
       allOtherNames.splice(
         allOtherNames.indexOf(componentProps.data[stateField]),
         1

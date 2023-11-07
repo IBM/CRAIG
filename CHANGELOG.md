@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - Default template description and corresponding tab have been removed from Options page
+- Users can no longer generate encryption keys with the invalid endpoint type `public-and-private`. Endpoint types can be managed from the Encryption keys page
 
 ### Features
 
@@ -15,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - Added Oracle Single Instance template
 - Users can now create a Power VS SSH key with the same public key as a VPC SSH key
 - Users can now create policy-based VPN Gateways using the VPN Gateway form
+- Users can now dynamically fetch Power VS Instance images from their account using the CRAIG API
+- Users can now dynamically fetch Power VS storage pools from their account using the CRAIG API 
 
 ### Fixes
 

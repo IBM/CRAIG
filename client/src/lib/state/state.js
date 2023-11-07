@@ -1,5 +1,11 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
+const {
+  contains,
+  typeCheck,
+  transpose,
+  snakeCase,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,
@@ -30,6 +36,9 @@ const {
   cosKeyCreate,
   cosKeySave,
   cosKeyDelete,
+  cosShouldDisableSave,
+  cosBucketShouldDisableSave,
+  cosKeyShouldDisableSave,
 } = require("./cos");
 const {
   atrackerInit,
@@ -44,6 +53,7 @@ const {
   appidKeyCreate,
   appidKeySave,
   appidKeyDelete,
+  appidShouldDisableSave,
 } = require("./appid");
 const {
   vpcCreate,
@@ -303,6 +313,22 @@ const {
   classicGatewaySave,
   classicGatewayDelete,
 } = require("./classic-gateways");
+const {
+  invalidName,
+  invalidNameText,
+  invalidEncryptionKeyRing,
+} = require("../forms");
+
+/**
+ * shortcut for field is null or empty string
+ * @param {*} fieldName
+ * @returns {Function}
+ */
+function fieldIsNullOrEmptyString(fieldName) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[fieldName]);
+  };
+}
 
 /**
  * get state for craig
@@ -410,19 +436,59 @@ const state = function (legacy) {
   store.newField("object_storage", {
     init: cosInit,
     onStoreUpdate: cosOnStoreUpdate,
+    shouldDisableSave: cosShouldDisableSave,
     create: cosCreate,
     save: cosSave,
     delete: cosDelete,
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("object_storage"),
+        invalidText: invalidNameText("object_storage"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      kms: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("kms"),
+      },
+    },
     subComponents: {
       buckets: {
         create: cosBucketCreate,
         save: cosBucketSave,
         delete: cosBucketDelete,
+        shouldDisableSave: cosBucketShouldDisableSave,
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("buckets"),
+            invalidText: invalidNameText("buckets"),
+          },
+          kms_key: {
+            default: null,
+            invalid: fieldIsNullOrEmptyString("kms_key"),
+          },
+        },
       },
       keys: {
         create: cosKeyCreate,
         save: cosKeySave,
         delete: cosKeyDelete,
+        shouldDisableSave: cosKeyShouldDisableSave,
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("cos_keys"),
+            invalidText: invalidNameText("cos_keys"),
+          },
+          key_ring: {
+            default: "",
+            invalid: invalidEncryptionKeyRing,
+          },
+        },
       },
     },
   });
@@ -470,14 +536,33 @@ const state = function (legacy) {
       config.store.json.appid = [];
     },
     onStoreUpdate: appidOnStoreUpdate,
+    shouldDisableSave: appidShouldDisableSave,
     create: appidCreate,
     save: appidSave,
     delete: appidDelete,
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("appid"),
+        invalidText: invalidNameText("appid"),
+      },
+      resource_group: {
+        default: null,
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+    },
     subComponents: {
       keys: {
         create: appidKeyCreate,
         save: appidKeySave,
         delete: appidKeyDelete,
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("appid_key"),
+            invalidText: invalidNameText("appid_key"),
+          },
+        },
       },
     },
   });
