@@ -32,6 +32,10 @@ function powerVsOnStoreUpdate(config) {
   }
   config.store.json.power.forEach((workspace) => {
     setUnfoundResourceGroup(config, workspace);
+    if (!contains(config.store.json._options.power_vs_zones, workspace.zone)) {
+      workspace.zone = null;
+    }
+
     [
       "ssh_keys",
       "cloud_connections",
@@ -52,7 +56,9 @@ function powerVsOnStoreUpdate(config) {
         name: name,
         workspace: workspace.name,
         zone: workspace.zone,
-        pi_image_id: getObjectFromArray(zoneImages, "name", name).imageID,
+        pi_image_id: workspace.zone
+          ? getObjectFromArray(zoneImages, "name", name).imageID
+          : "ERROR: ZONE UNDEFINED",
       });
     });
     // add unfound networks to attachments

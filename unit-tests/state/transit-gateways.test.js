@@ -51,6 +51,7 @@ describe("transit_gateways", () => {
     });
     it("should remove a connection when a power vs workspace is deleted", () => {
       let state = new newState();
+      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
       state.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
@@ -89,6 +90,7 @@ describe("transit_gateways", () => {
     });
     it("should remove a connection when a power vs workspace is not in an edge enabled zone", () => {
       let state = new newState();
+      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
       state.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],

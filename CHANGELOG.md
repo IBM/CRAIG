@@ -14,16 +14,18 @@ All notable changes to this project will be documented in this file.
 - Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.
 - Users can now use a beta version of a new cloud services page at `/beta/services`
 - Added Oracle Single Instance template
-- Users can now create a Power VS SSH key with the same public key as a VPC SSH key
 - Users can now create policy-based VPN Gateways using the VPN Gateway form
+- Users can now create a Power VS SSH key with the same public key as a VPC SSH key
 - Users can now dynamically fetch Power VS Instance images from their account using the CRAIG API
-- Users can now dynamically fetch Power VS storage pools from their account using the CRAIG API 
+- Users can now dynamically fetch Power VS storage pools from their account using the CRAIG API
 
 ### Fixes
 
 - IAM Account Settings and Access Groups are now correctly rendered when downloading CRAIG Terraform
 - Fixed an issue causing Access Groups page to incorrectly show as invalid when valid
 - Fixed an issue causing underscores to incorrectly be added to Power VS Volume names when the workspace contains a hyphen
+- Fixed an issue causing Power VS Workspaces to have an invalid region when changing workspace regions
+- Fixed an issue causing unwanted spacing between multiple VPC Routing Tables
 
 ## 1.4.0
 
@@ -50,7 +52,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing the template setup wizard to not persist High Availability for Power VS
 - Fixed an issue causing Docs to have invalid tables when converted to markdown
 - Fixed an issue causing the Transit Gateway toggle on the Routing Table to not form correct TF
-- Fixed an issue causing provider for Power VS workspaces in London, Tokyo, and Sydnet to not have correct region
+- Fixed an issue causing provider for Power VS workspaces in London, Tokyo, and Sydney to not have correct region
 
 ## 1.3.0
 

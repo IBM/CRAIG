@@ -13,7 +13,9 @@
     "fixes": [
       "IAM Account Settings and Access Groups are now correctly rendered when downloading CRAIG Terraform",
       "Fixed an issue causing Access Groups page to incorrectly show as invalid when valid",
-      "Fixed an issue causing underscores to incorrectly be added to Power VS Volume names when the workspace contains a hyphen"
+      "Fixed an issue causing underscores to incorrectly be added to Power VS Volume names when the workspace contains a hyphen",
+      "Fixed an issue causing Power VS Workspaces to have an invalid region when changing workspace regions",
+      "Fixed an issue causing unwanted spacing between multiple VPC Routing Tables"
     ],
     "upgrade_notes": [
       "Default template description and corresponding tab have been removed from Options page",
@@ -243,9 +245,7 @@
   },
   {
     "version": "0.4.0",
-    "upgrade_notes": [
-      "Support for Teleport has been removed"
-    ],
+    "upgrade_notes": ["Support for Teleport has been removed"],
     "features": [
       "Implemented Routing Tables Page",
       "Implemented Load Balancers Page",

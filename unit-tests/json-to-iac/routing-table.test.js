@@ -139,6 +139,23 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
               },
             ],
           },
+          {
+            vpc: "management",
+            name: "routing-table2",
+            route_direct_link_ingress: true,
+            transit_gateway_ingress: true,
+            route_vpc_zone_ingress: true,
+            routes: [
+              {
+                vpc: "management",
+                routing_table: "routing-table",
+                name: "test-route2",
+                zone: 1,
+                destination: "1.2.3.4/5",
+                action: "delegate",
+              },
+            ],
+          },
         ],
       });
       let expectedData = `##############################################################################
@@ -158,6 +175,30 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
   routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
   zone          = "\${var.region}-1"
   name          = "\${var.prefix}-management-routing-table-test-route-route"
+  destination   = "1.2.3.4/5"
+  action        = "delegate"
+  next_hop      = "0.0.0.0"
+}
+
+##############################################################################
+
+##############################################################################
+# Routing Table 2 Routing Table
+##############################################################################
+
+resource "ibm_is_vpc_routing_table" "management_vpc_routing_table2_table" {
+  name                          = "\${var.prefix}-management-vpc-routing-table2-table"
+  vpc                           = ibm_is_vpc.management_vpc.id
+  route_direct_link_ingress     = true
+  route_transit_gateway_ingress = true
+  route_vpc_zone_ingress        = true
+}
+
+resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route2_route" {
+  vpc           = ibm_is_vpc.management_vpc.id
+  routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
+  zone          = "\${var.region}-1"
+  name          = "\${var.prefix}-management-routing-table-test-route2-route"
   destination   = "1.2.3.4/5"
   action        = "delegate"
   next_hop      = "0.0.0.0"

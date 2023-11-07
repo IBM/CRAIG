@@ -120,9 +120,9 @@ function routingTableTf(config) {
       table.routes.forEach((route) => {
         blockText += formatRoutingTableRoute(route, config);
       });
-      tf += tfBlock(`${table.name} routing table`, blockText);
+      tf += tfBlock(`${table.name} routing table`, blockText) + "\n";
     });
-  return tf;
+  return tf.replace(/\n\n(?=$)/i, "\n");
 }
 
 module.exports = {
