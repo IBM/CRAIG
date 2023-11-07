@@ -1,4 +1,4 @@
-const { transpose, splatContains } = require("lazy-z");
+const { transpose, splatContains, isNullOrEmptyString } = require("lazy-z");
 const {
   setUnfoundResourceGroup,
   updateSubChild,
@@ -33,6 +33,23 @@ function appidOnStoreUpdate(config) {
       config.setUnfound("encryptionKeys", appid, "encryption_key");
     }
   });
+}
+
+/**
+ * check if appid form should be disabled
+ * @param {*} config
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if should be disabled
+ */
+function appidShouldDisableSave(config, stateData, componentProps) {
+  let shouldBeDisabled = false;
+  ["name", "resource_group"].forEach((field) => {
+    if (!shouldBeDisabled) {
+      shouldBeDisabled = config.appid[field].invalid(stateData, componentProps);
+    }
+  });
+  return shouldBeDisabled;
 }
 
 /**
@@ -99,6 +116,7 @@ function appidKeySave(config, stateData, componentProps) {
 
 module.exports = {
   appidOnStoreUpdate,
+  appidShouldDisableSave,
   appidCreate,
   appidSave,
   appidDelete,

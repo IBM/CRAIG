@@ -238,6 +238,64 @@ function cosKeyDelete(config, stateData, componentProps) {
   deleteSubChild(config, "object_storage", "keys", componentProps);
 }
 
+/**
+ * should disable cos save
+ * @param {lazyZstate} config state store
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function cosShouldDisableSave(config, stateData, componentProps) {
+  let shouldBeDisabled = false;
+  ["name", "resource_group", "kms"].forEach((formField) => {
+    if (!shouldBeDisabled) {
+      shouldBeDisabled = config.object_storage[formField].invalid(
+        stateData,
+        componentProps
+      );
+    }
+  });
+  return shouldBeDisabled;
+}
+
+/**
+ * should disable cos bucket save
+ * @param {lazyZstate} config state store
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+
+function cosBucketShouldDisableSave(config, stateData, componentProps) {
+  let shouldBeDisabled = false;
+  ["name", "kms_key"].forEach((formField) => {
+    if (!shouldBeDisabled) {
+      shouldBeDisabled = config.object_storage.buckets[formField].invalid(
+        stateData,
+        componentProps
+      );
+    }
+  });
+  return shouldBeDisabled;
+}
+
+/**
+ * should disable cos key save
+ * @param {lazyZstate} config state store
+ * @param {object} stateData component state data
+ * @param {object} componentProps props from component form
+ */
+function cosKeyShouldDisableSave(config, stateData, componentProps) {
+  let shouldBeDisabled = false;
+  ["name", "key_ring"].forEach((formField) => {
+    if (!shouldBeDisabled) {
+      shouldBeDisabled = config.object_storage.keys[formField].invalid(
+        stateData,
+        componentProps
+      );
+    }
+  });
+  return shouldBeDisabled;
+}
+
 module.exports = {
   cosKeyCreate,
   cosKeySave,
@@ -250,4 +308,7 @@ module.exports = {
   cosSave,
   cosOnStoreUpdate,
   cosInit,
+  cosShouldDisableSave,
+  cosBucketShouldDisableSave,
+  cosKeyShouldDisableSave,
 };

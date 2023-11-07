@@ -140,18 +140,26 @@ const AppIdPage = (craig) => {
     <AppIdTemplate
       docs={RenderDocs("appid")}
       appid={craig.store.json.appid}
-      disableSave={disableSave}
+      disableSave={function (field, stateData, componentProps) {
+        // field is passed here but the goal is to be able to ignore the
+        // parameter entirely
+        return craig.appid.shouldDisableSave(stateData, componentProps);
+      }}
+      forceOpen={function (stateData, componentProps) {
+        // goal here is to be able to pass one param `shouldDisableSave`
+        // and handle both disable and force Open
+        return craig.appid.shouldDisableSave(stateData, componentProps);
+      }}
       onDelete={craig.appid.delete}
       onSave={craig.appid.save}
       onSubmit={craig.appid.create}
       propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
       craig={craig}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("appid")}
-      invalidTextCallback={invalidNameText("appid")}
-      invalidKeyCallback={invalidName("appid_key")}
-      invalidKeyTextCallback={invalidNameText("appid_key")}
+      invalidCallback={craig.appid.name.invalid}
+      invalidTextCallback={craig.appid.name.invalidText}
+      invalidKeyCallback={craig.appid.keys.name.invalid}
+      invalidKeyTextCallback={craig.appid.keys.name.invalidText}
       onKeySave={craig.appid.keys.save}
       onKeyDelete={craig.appid.keys.delete}
       onKeySubmit={craig.appid.keys.create}
@@ -493,17 +501,17 @@ const ObjectStoragePage = (craig) => {
       onSubmit={craig.object_storage.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      craig={craig}
+      kmsList={splat(craig.store.json.key_management, "name")}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
+      craig={craig}
       cosPlans={cosPlans}
       encryptionKeys={craig.store.encryptionKeys}
-      kmsList={splat(craig.store.json.key_management, "name")}
-      invalidCallback={invalidName("object_storage")}
-      invalidTextCallback={invalidNameText("object_storage")}
-      invalidKeyCallback={invalidName("cos_keys")}
-      invalidKeyTextCallback={invalidNameText("cos_keys")}
-      invalidBucketCallback={invalidName("buckets")}
-      invalidBucketTextCallback={invalidNameText("buckets")}
+      invalidCallback={craig.object_storage.name.invalid}
+      invalidTextCallback={craig.object_storage.name.invalidText}
+      invalidKeyCallback={craig.object_storage.keys.name.invalid}
+      invalidKeyTextCallback={craig.object_storage.keys.name.invalidText}
+      invalidBucketCallback={craig.object_storage.buckets.name.invalid}
+      invalidBucketTextCallback={craig.object_storage.buckets.name.invalidText}
       onKeySave={craig.object_storage.keys.save}
       onKeyDelete={craig.object_storage.keys.delete}
       onKeySubmit={craig.object_storage.keys.create}

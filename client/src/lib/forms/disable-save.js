@@ -207,19 +207,6 @@ function disableIcdSave(stateData, componentProps) {
 }
 
 /**
- * check to see if appid form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableAppIDSave(stateData, componentProps) {
-  return (
-    invalidName("appid")(stateData, componentProps) ||
-    badField("resource_group", stateData)
-  );
-}
-
-/**
  * check to see if buckets form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -1131,7 +1118,6 @@ const disableSaveFunctions = {
   dynamic_policies: disableDynamicPoliciesSave,
   object_storage: disableObjectStorageSave,
   icd: disableIcdSave,
-  appid: disableAppIDSave,
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),

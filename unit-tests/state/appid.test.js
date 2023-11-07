@@ -222,4 +222,194 @@ describe("appid", () => {
       );
     });
   });
+  describe("appid form functions", () => {
+    describe("appid form", () => {
+      describe("appid.shouldDisableSave", () => {
+        it("should return true if the name is invalid", () => {
+          let state = newState();
+          let actualData = state.appid.shouldDisableSave(
+            {
+              name: "@@@",
+              resource_group: null,
+            },
+            {
+              craig: state,
+              data: {
+                name: "",
+              },
+            }
+          );
+          assert.isTrue(actualData, "it should be disabled");
+        });
+        it("should return true if name is valid and resource group is invalid", () => {
+          let state = newState();
+          let actualData = state.appid.shouldDisableSave(
+            {
+              name: "valid",
+              resource_group: null,
+            },
+            {
+              craig: state,
+              data: {
+                name: "",
+              },
+            }
+          );
+          assert.isTrue(actualData, "it should be disabled");
+        });
+      });
+      describe("name", () => {
+        it("should return true if appid has invalid name", () => {
+          let state = newState();
+          let actualData = state.appid.name.invalid(
+            { name: "@@@" },
+            {
+              craig: state,
+              data: {
+                name: "",
+              },
+            }
+          );
+          assert.isTrue(actualData, "it should return true if name is invalid");
+        });
+        it("should return correct invalid text when appid has invalid name", () => {
+          let state = newState();
+          let actualData = state.appid.name.invalidText(
+            { name: "@@@" },
+            {
+              craig: state,
+              data: {
+                name: "",
+              },
+            }
+          );
+          assert.deepEqual(
+            actualData,
+            "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+            "it should return correct text"
+          );
+        });
+        it("should return true if appid has invalid duplicate name", () => {
+          let state = newState();
+          state.appid.create({ name: "egg" });
+          let actualData = state.appid.name.invalid(
+            { name: "egg" },
+            {
+              craig: state,
+              data: {
+                name: "",
+              },
+            }
+          );
+          assert.isTrue(actualData, "it should return true if name is invalid");
+        });
+        it("should return correct text if appid has invalid duplicate name", () => {
+          let state = newState();
+          state.appid.create({ name: "egg" });
+          let actualData = state.appid.name.invalidText(
+            { name: "egg" },
+            {
+              craig: state,
+              data: {
+                name: "",
+              },
+            }
+          );
+          assert.deepEqual(
+            actualData,
+            'Name "egg" already in use',
+            "it should return correct text"
+          );
+        });
+      });
+      describe("keys subform", () => {
+        describe("name", () => {
+          it("should return true if appid key has invalid name", () => {
+            let state = newState();
+            let actualData = state.appid.keys.name.invalid(
+              { name: "@@@" },
+              {
+                craig: state,
+                data: {
+                  name: "",
+                },
+              }
+            );
+            assert.isTrue(
+              actualData,
+              "it should return true if name is invalid"
+            );
+          });
+          it("should return correct text if appid key has invalid name", () => {
+            let state = newState();
+            let actualData = state.appid.keys.name.invalidText(
+              { name: "@@@" },
+              {
+                craig: state,
+                data: {
+                  name: "",
+                },
+              }
+            );
+            assert.deepEqual(
+              actualData,
+              "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+              "it should return correct text"
+            );
+          });
+          it("should return true if appid key has invalid duplicate name", () => {
+            let state = newState();
+            state.appid.create({ name: "egg" });
+            state.appid.keys.create(
+              { name: "egg" },
+              {
+                innerFormProps: {
+                  arrayParentName: "egg",
+                },
+              }
+            );
+            let actualData = state.appid.keys.name.invalid(
+              { name: "egg" },
+              {
+                craig: state,
+                data: {
+                  name: "",
+                },
+              }
+            );
+            assert.isTrue(
+              actualData,
+              "it should return true if name is invalid"
+            );
+          });
+          it("should return correct text if appid key has invalid duplicate name", () => {
+            let state = newState();
+            state.appid.create({ name: "egg" });
+            state.appid.keys.create(
+              { name: "egg" },
+              {
+                innerFormProps: {
+                  arrayParentName: "egg",
+                },
+              }
+            );
+            let actualData = state.appid.keys.name.invalidText(
+              { name: "egg" },
+              {
+                craig: state,
+                data: {
+                  name: "aa",
+                },
+              }
+            );
+            assert.deepEqual(
+              actualData,
+              'Name "egg" already in use',
+              "it should return correct text"
+            );
+          });
+        });
+      });
+    });
+  });
 });
