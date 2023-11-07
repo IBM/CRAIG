@@ -67,6 +67,8 @@ import {
   invalidSecurityGroupRuleText,
   storageChangeDisabledCallback,
   vpnServersHelperText,
+  powerImageFetch,
+  powerStoragePoolFetch,
 } from "../../lib/forms";
 import {
   invalidCidr,
@@ -554,6 +556,12 @@ const NoPowerWorkspaceTile = () => {
 };
 
 const PowerInfraPage = (craig) => {
+  let powerImageMap = {};
+  craig.store.json._options.power_vs_zones.forEach((zone) => {
+    powerImageFetch(zone, fetch).then((zoneImages) => {
+      powerImageMap[zone] = zoneImages;
+    });
+  });
   return (
     <PowerVsWorkspacePage
       overrideTile={
@@ -633,7 +641,7 @@ const PowerInfraPage = (craig) => {
       invalidDnsCallbackText={() => {
         return "Invalid IP Address";
       }}
-      imageMap={require("../../lib/docs/power-image-map.json")}
+      imageMap={powerImageMap}
       onAttachmentSave={craig.power.attachments.save}
       disableAttachmentSave={storageChangeDisabledCallback}
     />
@@ -641,6 +649,12 @@ const PowerInfraPage = (craig) => {
 };
 
 const PowerVsInstances = (craig) => {
+  let powerStoragePoolMap = {};
+  craig.store.json._options.power_vs_zones.forEach((zone) => {
+    powerStoragePoolFetch(zone, fetch).then((zonePools) => {
+      powerStoragePoolMap[zone] = zonePools;
+    });
+  });
   return (
     <PowerVsInstancesPage
       overrideTile={
@@ -664,7 +678,7 @@ const PowerVsInstances = (craig) => {
         }
       })}
       power_instances={craig.store.json.power_instances}
-      storage_pool_map={powerStoragePoolRegionMap}
+      storage_pool_map={powerStoragePoolMap}
       power_volumes={craig.store.json.power_volumes}
       disableSave={disableSave}
       propsMatchState={propsMatchState}

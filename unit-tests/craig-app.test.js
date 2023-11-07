@@ -40,11 +40,11 @@ function newMockCraig() {
  */
 function mockFetch(shouldReject, data) {
   this.fetchPromise = function (url, options) {
-    return new Promise((resove, reject) => {
+    return new Promise((resolve, reject) => {
       if (shouldReject) {
         reject("This is an error!");
       } else {
-        resove({
+        resolve({
           json: function () {
             return data;
           },

@@ -6,7 +6,7 @@ const { initMockAxios } = require("lazy-z");
 
 const powerImageJson = require("../../client/src/lib/docs/power-image-map.json");
 
-describe("controller", () => {
+describe("power api", () => {
   beforeEach(() => {
     res.send = new sinon.spy();
   });

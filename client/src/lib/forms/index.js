@@ -67,6 +67,7 @@ const { notificationText, getCosFromBucket } = require("./utils");
 const { encryptionKeyFilter } = require("./filters");
 const { storageChangeDisabledCallback } = require("./power-affinity");
 const wizard = require("./wizard");
+const { powerImageFetch, powerStoragePoolFetch } = require("./power-utils.js");
 
 module.exports = {
   wizard,
@@ -132,4 +133,6 @@ module.exports = {
   invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
   vpnServersHelperText,
+  powerImageFetch,
+  powerStoragePoolFetch,
 };

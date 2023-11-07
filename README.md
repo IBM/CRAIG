@@ -24,6 +24,19 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 4. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
 
 ---
+## Power VS Workspace Deployment
+
+### Automated Deployment
+The `terraform.sh` script found in `/deploy` provisions a Power VS Workspace in each zone and sets the needed environment variables with the format of `POWER_WORKSPACE_<zone>=<workspace-guid>`.
+
+### Bring Your Own Workspace
+To bring your own Power VS Workspace into CRAIG you will need to set a field in your `.env` with the following format
+
+```
+POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
+```
+
+---
 
 ## Tutorial Video
 
@@ -42,13 +55,11 @@ To install needed dependencies, use the command
 npm run setup
 ```
 
-#### 2. Set environment variables
+#### 2. Creating .env file
 
-Add you IBM Cloud platform API key to the environment. This API key is used by the back end API server to retrieve Cluster flavors, Cluster versions, VSI instance profiles, and VSI images.
+Make sure to set the following fields in a `.env` file to be used as environment variables by the backend API server. These fields are used to populate dynamic information to the frontend from cloud account where the API key originates. To automatically deploy the CRAIG Power VS workspaces and set the appropriate environment variables run the `terraform.sh` script in `/deploy`.
 
-```
-export API_KEY="<your ibm cloud platform API key>"
-```
+see `.env.example` found [here](./.env.example)
 
 #### 3. Start the application
 
@@ -77,13 +88,11 @@ To install needed dependencies, use the command
 npm run setup
 ```
 
-#### 2. Set environment variables
+#### 2. Creating .env file
 
-Add you IBM Cloud platform API key to the environment. This API key is used by the back end API server to retrieve Cluster flavors, Cluster versions, VSI instance profiles, and VSI images.
+Make sure to set the following fields in a `.env` file to be used as environment variables by the backend API server. These fields are used to populate dynamic information to the frontend from cloud account where the API key originates. To automatically deploy the CRAIG Power VS workspaces and set the appropriate environment variables run the `terraform.sh` script in `/deploy`.
 
-```shell
-export API_KEY="<your ibm cloud platform API key>"
-```
+see `.env.example` found [here](./.env.example)
 
 #### 3. Starting the Back-End Server
 
