@@ -22,9 +22,7 @@ paths:
       tags:
         - Power VS
       summary: Returns a list of images or storage pools
-      description: >-
-        Get a list of images or storage pools based on the value passed to
-        component
+      description: Get a list of images or storage pools based on the value passed to component
       operationId: getPowerComponent
       parameters:
         - in: path
@@ -66,12 +64,10 @@ paths:
                     ]
                 storage-pools:
                   value:
-                    [
-                      "Tier1-Flash-1",
-                      "Tier1-Flash-2",
-                      "Tier3-Flash-1",
-                      "Tier1-Flash-2",
-                    ]
+                    - Tier1-Flash-1
+                    - Tier1-Flash-2
+                    - Tier3-Flash-1
+                    - Tier1-Flash-2
         "401":
           description: Unauthorized
   /api/craig/tar:
@@ -96,6 +92,18 @@ paths:
           description: Successfully created tar file
         "400":
           description: Invalid craig.json file
+  /api/swagger:
+    get:
+      tags:
+        - Swagger
+      summary: Renders an interactive swagger API Spec containing information on all CRAIG API Endpoints
+      description: Renders an interactive swagger API Spec containing information on all CRAIG API Endpoints
+      operationId: swagger
+      responses:
+        "200":
+          description: Successfully rendered CRAIG API Spec
+        "404":
+          description: Page not found
   /api/vsi/{region}/instanceProfiles:
     get:
       tags:
@@ -117,12 +125,14 @@ paths:
             application/json:
               schema:
                 type: array
-                example: ["bx2-32x128", "bx2-48x192", "bx2-4x16"]
+                example:
+                  - bx2-32x128
+                  - bx2-48x192
+                  - bx2-4x16
                 items:
                   type: string
         "401":
           description: Invalid token
-
   /api/vsi/{region}/images:
     get:
       tags:
@@ -145,10 +155,8 @@ paths:
               schema:
                 type: array
                 example:
-                  [
-                    "CentOS 7.x - Minimal Install (amd64) [ibm-centos-7-9-minimal-amd64-11]",
-                    "CentOS Stream 8 - Minimal Install (amd64) [ibm-centos-stream-8-amd64-4]",
-                  ]
+                  - CentOS 7.x - Minimal Install (amd64) [ibm-centos-7-9-minimal-amd64-11]
+                  - CentOS Stream 8 - Minimal Install (amd64) [ibm-centos-stream-8-amd64-4]
                 items:
                   type: string
         "401":
@@ -168,13 +176,11 @@ paths:
               schema:
                 type: array
                 example:
-                  [
-                    "1.24.16",
-                    "1.25.12",
-                    "1.27.4",
-                    "4.9.59_openshift",
-                    "4.10.65_openshift",
-                  ]
+                  - 1.24.16
+                  - 1.25.12
+                  - 1.27.4
+                  - 4.9.59_openshift
+                  - 4.10.65_openshift
                 items:
                   type: string
         "401":
@@ -201,13 +207,11 @@ paths:
               schema:
                 type: array
                 example:
-                  [
-                    "bx2.16x64",
-                    "bx2.2x8",
-                    "bx2.32x128",
-                    "bx2.48x192",
-                    "bx2.4x16",
-                  ]
+                  - bx2.16x64
+                  - bx2.2x8
+                  - bx2.32x128
+                  - bx2.48x192
+                  - bx2.4x16
                 items:
                   type: string
         "401":
@@ -236,7 +240,6 @@ paths:
                   description: JSON produced by CRAIG
                   type: object
                   example: {}
-
       responses:
         "200":
           description: Successfully uploaded tar file to workspace
@@ -382,7 +385,9 @@ components:
           items:
             type: string
           example:
-            ["department:HR", "application:compensation", "environment:staging"]
+            - department:HR
+            - application:compensation
+            - environment:staging
         created_at:
           type: string
           example: "2021-09-28T11:34:22.881Z"
@@ -394,53 +399,47 @@ components:
           example: ""
         workspace_status_msg:
           type: object
-          example: { status_code: "" }
+          example:
+            status_code: ""
         workspace_status:
           type: object
-          example: { frozen: true, frozen_by: schematics@ibm.com }
+          example:
+            frozen: true
+            frozen_by: schematics@ibm.com
         template_repo:
           type: object
           example:
-            {
-              url: https://github.com/ptaube/tf_cloudless_sleepy,
-              commit_id: "",
-              full_url: https://github.com/ptaube/tf_cloudless_sleepy,
-              has_uploadedgitrepotar: false,
-            }
+            url: https://github.com/ptaube/tf_cloudless_sleepy
+            commit_id: ""
+            full_url: https://github.com/ptaube/tf_cloudless_sleepy
+            has_uploadedgitrepotar: false
         template_data:
           type: object
           example:
-            {
-              id: 6fef745e-dfaa-42,
-              folder: .,
-              compact: false,
-              type: terraform_v1.0,
-              values_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/template_data/6fef745e-dfaa-42/values,
-              values: "",
-              has_githubtoken: false,
-              variablestore:
-                [
-                  {
-                    name: sample_var,
-                    secure: false,
-                    value: THIS IS IBM CLOUD TERRAFORM CLI DEMO,
-                    description: Description of sample_var,
-                  },
-                ],
-            }
+            id: 6fef745e-dfaa-42
+            folder: .
+            compact: false
+            type: terraform_v1.0
+            values_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/template_data/6fef745e-dfaa-42/values
+            values: ""
+            has_githubtoken: false
+            variablestore:
+              - name: sample_var
+                secure: false
+                value: THIS IS IBM CLOUD TERRAFORM CLI DEMO
+                description: Description of sample_var
         runtime_data:
           type: object
           example:
-            {
-              id: 6fef745e-dfaa-42,
-              engine_name: terraform,
-              engine_version: v0.12.31,
-              state_store_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/runtime_data/6fef745e-dfaa-42/state_store,
-              log_store_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/runtime_data/6fef745e-dfaa-42/log_store,
-            }
+            id: 6fef745e-dfaa-42
+            engine_name: terraform
+            engine_version: v0.12.31
+            state_store_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/runtime_data/6fef745e-dfaa-42/state_store
+            log_store_url: https://schematics.cloud.ibm.com/v1/workspaces/us-east.workspace.testWorkspaceApi.bb026f5e/runtime_data/6fef745e-dfaa-42/log_store
         shared_data:
           type: object
-          example: { resource_group_id: "" }
+          example:
+            resource_group_id: ""
         applied_shareddata_ids:
           type: string
           example: null
