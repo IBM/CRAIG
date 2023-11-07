@@ -21,6 +21,7 @@ const {
 const {
   invalidName,
   invalidEncryptionKeyRing,
+  invalidEncryptionKeyEndpoint,
   invalidSshPublicKey,
   validSshKey,
   invalidIamAccountSettings,
@@ -82,6 +83,7 @@ module.exports = {
   clusterHelperTestCallback,
   invalidNameText,
   invalidEncryptionKeyRing,
+  invalidEncryptionKeyEndpoint,
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
   validSshKey,

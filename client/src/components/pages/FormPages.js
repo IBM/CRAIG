@@ -426,6 +426,9 @@ const KeyManagementPage = (craig) => {
           craig.store.json._options.fs_cloud
         );
       }}
+      selectEndpoint={
+        craig.store.json._options.endpoints === "public-and-private"
+      }
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       invalidCallback={invalidName("key_management")}
       invalidTextCallback={invalidNameText("key_management")}

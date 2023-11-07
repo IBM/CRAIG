@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - Default template description and corresponding tab have been removed from Options page
+- Users can no longer generate encryption keys with the invalid endpoint type `public-and-private`. Endpoint types can be managed from the Encryption keys page
 
 ### Features
 

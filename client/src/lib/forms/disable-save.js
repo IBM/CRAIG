@@ -35,6 +35,7 @@ const {
   invalidCpuCallback,
   invalidTagList,
   validSshKey,
+  invalidEncryptionKeyEndpoint,
 } = require("./invalid-callbacks");
 const {
   commaSeparatedIpListExp,
@@ -228,7 +229,8 @@ function disableBucketsSave(stateData, componentProps) {
 function disableEncryptionKeysSave(stateData, componentProps) {
   return (
     invalidName("encryption_keys")(stateData, componentProps) ||
-    invalidEncryptionKeyRing(stateData)
+    invalidEncryptionKeyRing(stateData) ||
+    invalidEncryptionKeyEndpoint(stateData)
   );
 }
 
@@ -1251,5 +1253,6 @@ module.exports = {
   invalidPort,
   forceShowForm,
   disableSshKeyDelete,
+  disableEncryptionKeysSave,
   invalidCidrBlock,
 };
