@@ -1992,5 +1992,57 @@
       ]
     ],
     "last_updated": "9/28/2023"
+  },
+  "classic_vlans": {
+    "content": [
+      {
+        "text": "Classic Virtual Local Area Networks (VLANs) are used by IBM Cloud to isolate broadcast traffic on public and private networks. VLANs are central in directing traffic to your resources. You might never need to interact directly with any VLANs because they are managed automatically; they are assigned as needed and removed when not.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "By default, no Classic VLANs are created."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/vlans?topic=vlans-getting-started",
+        "Getting started with Classic VLANs"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/network_vlan",
+        "Classic VLAN Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/network_vlan",
+        "Classic VLAN Terraform Data Documentation"
+      ]
+    ],
+    "last_updated": "11/8/2023"
+  },
+  "classic_ssh_keys": {
+    "content": [
+      {
+        "text": "SSH keys identify a user or device through public-key cryptography and allow access to a device without using a password. Classic SSH keys are used to provision virtual servers, such as Classic Gateway Appliances.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "By default, no Classic SSH Keys are created."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-getting-started-tutorial",
+        "Getting started with Classic SSH Keys"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/compute_ssh_key",
+        "Classic SSH Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/compute_ssh_key",
+        "Classic SSH Key Data Documentation"
+      ]
+    ],
+    "last_updated": "11/8/2023"
   }
 }
