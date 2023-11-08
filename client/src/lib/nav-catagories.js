@@ -29,6 +29,7 @@ const {
   icdTf,
   powerVsTf,
   powerVsVolumeTf,
+  classicInfraTf,
 } = require("./json-to-iac");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 
@@ -211,6 +212,20 @@ const navCatagories = [
         react_icon: "LoadBalancerVpc",
         toTf: lbTf,
         jsonField: "load_balancers",
+      },
+    ],
+  },
+  {
+    name: "Classic",
+    links: [
+      {
+        title: "Classic VLANs",
+        path: "/form/classicVlans",
+        react_icon: "VlanIbm",
+        toTf: (config) => {
+          return classicInfraTf(config);
+        },
+        jsonField: "classic_vlans",
       },
     ],
   },

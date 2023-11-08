@@ -15,6 +15,7 @@ import {
   AccessGroupsTemplate,
   AppIdTemplate,
   AtrackerPage,
+  ClassicVlanTemplate,
   CloudDatabaseTemplate,
   ClustersTemplate,
   DnsTemplate,
@@ -103,6 +104,7 @@ import {
   cosPlans,
   powerStoragePoolRegionMap,
   sapProfiles,
+  datacenters,
 } from "../../lib/constants";
 
 const AccessGroupsPage = (craig) => {
@@ -185,6 +187,30 @@ const Atracker = (craig) => {
       cosKeys={craig.store.cosKeys}
       cosBuckets={craig.store.cosBuckets}
       onSave={craig.atracker.save}
+    />
+  );
+};
+
+const ClassicVlanPage = (craig) => {
+  return (
+    <ClassicVlanTemplate
+      overrideTile={
+        craig.store.json._options.enable_classic ? undefined : (
+          <ClassicDisabledTile />
+        )
+      }
+      docs={RenderDocs("classic_vlans")}
+      vlans={craig.store.json.classic_vlans}
+      disableSave={disableSave}
+      onDelete={craig.classic_vlans.delete}
+      onSave={craig.classic_vlans.save}
+      onSubmit={craig.classic_vlans.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      invalidCallback={invalidName("classic_vlans")}
+      invalidTextCallback={invalidNameText("classic_vlans")}
+      craig={craig}
+      datacenters={datacenters}
     />
   );
 };
@@ -526,6 +552,19 @@ const ObjectStoragePage = (craig) => {
       composedNameCallback={cosResourceHelperTextCallback}
       encryptionKeyFilter={encryptionKeyFilter}
     />
+  );
+};
+
+const ClassicDisabledTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> Classic is not enabled.
+      Return to the
+      <a className="no-secrets-link" href="/">
+        Options Page
+      </a>{" "}
+      to enable Classic.
+    </Tile>
   );
 };
 
@@ -1113,6 +1152,8 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "activityTracker") {
     return Atracker(craig);
+  } else if (form === "classicVlans") {
+    return ClassicVlanPage(craig);
   } else if (form === "icd") {
     return CloudDatabasePage(craig);
   } else if (form === "clusters") {

@@ -7,6 +7,7 @@
     "endpoints": "private",
     "account_id": "",
     "fs_cloud": false,
+    "enable_classic": false,
     "dynamic_subnets": true,
     "enable_power_vs": false,
     "craig_version": "1.5.0",
@@ -91,5 +92,6 @@
   "vpcs": [],
   "vpn_gateways": [],
   "vpn_servers": [],
-  "vsi": []
+  "vsi": [],
+  "classic_vlans": []
 }

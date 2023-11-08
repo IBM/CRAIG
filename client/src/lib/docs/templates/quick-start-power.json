@@ -8,6 +8,7 @@
     "account_id": "",
     "dynamic_subnets": true,
     "enable_power_vs": true,
+    "enable_classic": false,
     "power_vs_zones": ["dal12"],
     "craig_version": "1.5.0",
     "power_vs_high_availability": false
@@ -650,5 +651,6 @@
       "subnet": "",
       "enable_floating_ip": false
     }
-  ]
+  ],
+  "classic_vlans": []
 }

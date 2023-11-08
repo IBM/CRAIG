@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.6.0
+
+### Features
+
+- Users can now enable Classic Infrastructure in the Options page
+- Users can now create, update, and delete Classic VLANs
+
 ## 1.5.0
 
 ### Upgrade Notes

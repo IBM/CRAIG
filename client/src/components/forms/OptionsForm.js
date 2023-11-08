@@ -295,6 +295,16 @@ class OptionsForm extends React.Component {
             )}
           </IcseFormGroup>
           <IcseFormGroup>
+            <IcseToggle
+              labelText="Enable Classic Resources"
+              defaultToggled={this.state.enable_classic}
+              onToggle={() => this.handleToggle("enable_classic")}
+              id="use-classic"
+              toggleFieldName="enable_classic"
+              value={this.state.enable_classic}
+            />
+          </IcseFormGroup>
+          <IcseFormGroup>
             <ToolTipWrapper
               id="tags-wrapper"
               labelText="Tags"

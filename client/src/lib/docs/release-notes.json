@@ -1,5 +1,12 @@
 [
   {
+    "version": "1.6.0",
+    "features": [
+      "Users can now enable Classic Infrastructure in the Options page",
+      "Users can now create, update, and delete Classic VLANs"
+    ]
+  },
+  {
     "version": "1.5.0",
     "features": [
       "Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.",

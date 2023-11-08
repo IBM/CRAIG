@@ -22,6 +22,7 @@
     "endpoints": "private",
     "account_id": "",
     "fs_cloud": true,
+    "enable_classic": false,
     "dynamic_subnets": true,
     "enable_power_vs": false,
     "power_vs_zones": []
@@ -874,5 +875,6 @@
   "icd": [],
   "power": [],
   "power_instances": [],
-  "power_volumes": []
+  "power_volumes": [],
+  "classic_vlans": []
 }

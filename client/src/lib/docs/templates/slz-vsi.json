@@ -1165,5 +1165,6 @@
       "subnet": "",
       "enable_floating_ip": false
     }
-  ]
+  ],
+  "classic_vlans": []
 }

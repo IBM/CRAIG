@@ -1112,6 +1112,14 @@ function disablePowerVolumeSave(stateData, componentProps) {
   );
 }
 
+function disableClassicVlanSave(stateData, componentProps) {
+  return (
+    invalidName("classic_vlans")(stateData, componentProps) ||
+    badField("datacenter", stateData) ||
+    badField("type", stateData)
+  );
+}
+
 const disableSaveFunctions = {
   scc: disableSccSave,
   atracker: disableAtrackerSave,
@@ -1170,6 +1178,7 @@ const disableSaveFunctions = {
   power: disablePowerWorkspaceSave,
   power_instances: disablePowerInstanceSave,
   power_volumes: disablePowerVolumeSave,
+  classic_vlans: disableClassicVlanSave,
 };
 
 /**
