@@ -2,9 +2,12 @@
   {
     "version": "1.6.0",
     "features": [
+      "Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template",
       "Users can now enable Classic Infrastructure in the Options page",
       "Users can now create, update, and delete Classic VLANs"
-    ]
+    ],
+    "fixes": [],
+    "upgrade_notes": []
   },
   {
     "version": "1.5.0",

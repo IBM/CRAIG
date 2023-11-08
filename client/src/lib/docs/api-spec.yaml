@@ -17,6 +17,25 @@ tags:
   - name: Schematics
     description: Endpoints for IBM Cloud Schematics
 paths:
+  /api/craig/template-tar/{template}:
+    get:
+      tags:
+        - CRAIG
+      summary: Get a tar file containing Terraform files based on CRAIG project template
+      description: Get a tar file containing Terraform files based on CRAIG project template
+      operationId: templateTar
+      parameters:
+        - in: path
+          name: template
+          required: true
+          schema:
+            type: string
+          description: Name of template to crete tar file for. Possible values `from-scratch`, `oracle-rac`, `power-vs-sap-hana`, `quick-start-power`, `mixed`, `vsi-edge`, and `vsi`
+      responses:
+        "200":
+          description: Successfully created tar file
+        "404":
+          description: Supplied template does not exist or not found
   /api/power/{region}/{component}:
     get:
       tags:

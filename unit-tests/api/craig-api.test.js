@@ -169,7 +169,253 @@ describe("craig api", () => {
           res
         )
         .then(() => {
-          console.log(tar.files);
+          assert.deepEqual(
+            tar.files,
+            expectedFiles,
+            "it should set correct files"
+          );
+        });
+    });
+  });
+  describe("templateTar", () => {
+    it("should respond with 404 if no template provided or template not found", () => {
+      res.send = new sinon.spy();
+      res.status = new sinon.spy();
+      let api = new craigApi({}, new mockPackTar());
+
+      return api
+        .templateTar(
+          {
+            params: { template: "fake-template" },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith("No template found with name fake-template")
+          );
+        });
+    }).timeout(100000);
+    it("it should have correct data in tar when finalized", () => {
+      let expectedFiles = [
+        { name: "from-scratch", data: "" },
+        {
+          name: "from-scratch/main.tf",
+          data:
+            "##############################################################################\n" +
+            "# IBM Cloud Provider\n" +
+            "##############################################################################\n" +
+            "\n" +
+            'provider "ibm" {\n' +
+            "  ibmcloud_api_key = var.ibmcloud_api_key\n" +
+            "  region           = var.region\n" +
+            "  ibmcloud_timeout = 60\n" +
+            "}\n" +
+            "\n" +
+            "##############################################################################\n",
+        },
+        {
+          name: "from-scratch/flow_logs.tf",
+          data:
+            "##############################################################################\n" +
+            "# Flow Logs Resources\n" +
+            "##############################################################################\n" +
+            "\n" +
+            "##############################################################################\n",
+        },
+        {
+          name: "from-scratch/variables.tf",
+          data:
+            "##############################################################################\n" +
+            "# Variables\n" +
+            "##############################################################################\n" +
+            "\n" +
+            'variable "ibmcloud_api_key" {\n' +
+            '  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."\n' +
+            "  type        = string\n" +
+            "  sensitive   = true\n" +
+            "}\n" +
+            "\n" +
+            'variable "region" {\n' +
+            '  description = "IBM Cloud Region where resources will be provisioned"\n' +
+            "  type        = string\n" +
+            '  default     = "us-south"\n' +
+            "  validation {\n" +
+            '    error_message = "Region must be in a supported IBM VPC region."\n' +
+            '    condition     = contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "jp-tok", "jp-osa", "au-syd"], var.region)\n' +
+            "  }\n" +
+            "}\n" +
+            "\n" +
+            'variable "prefix" {\n' +
+            '  description = "Name prefix that will be prepended to named resources"\n' +
+            "  type        = string\n" +
+            '  default     = "iac"\n' +
+            "  validation {\n" +
+            '    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."\n' +
+            '    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16\n' +
+            "  }\n" +
+            "}\n" +
+            "\n" +
+            "##############################################################################\n",
+        },
+        { name: "from-scratch/key_management.tf", data: "\n" },
+        { name: "from-scratch/object_storage.tf", data: "\n" },
+        {
+          name: "from-scratch/resource_groups.tf",
+          data:
+            "##############################################################################\n" +
+            "# Resource Groups\n" +
+            "##############################################################################\n" +
+            "\n" +
+            'resource "ibm_resource_group" "craig_rg" {\n' +
+            '  name = "${var.prefix}-craig-rg"\n' +
+            "  tags = [\n" +
+            '    "hello",\n' +
+            '    "world"\n' +
+            "  ]\n" +
+            "}\n" +
+            "\n" +
+            "##############################################################################\n",
+        },
+        {
+          name: "from-scratch/versions.tf",
+          data:
+            "##############################################################################\n" +
+            "# Terraform Providers\n" +
+            "##############################################################################\n" +
+            "\n" +
+            "terraform {\n" +
+            "  required_providers {\n" +
+            "    ibm = {\n" +
+            '      source  = "IBM-Cloud/ibm"\n' +
+            '      version = "~>1.56.1"\n' +
+            "    }\n" +
+            "  }\n" +
+            '  required_version = ">=1.3"\n' +
+            "}\n" +
+            "\n" +
+            "##############################################################################\n",
+        },
+        {
+          name: "from-scratch/craig.json",
+          data:
+            "{\n" +
+            '  "_options": {\n' +
+            '    "prefix": "iac",\n' +
+            '    "region": "us-south",\n' +
+            '    "tags": [\n' +
+            '      "hello",\n' +
+            '      "world"\n' +
+            "    ],\n" +
+            '    "zones": 3,\n' +
+            '    "endpoints": "private",\n' +
+            '    "account_id": "",\n' +
+            '    "fs_cloud": false,\n' +
+            '    "enable_classic": false,\n' +
+            '    "dynamic_subnets": true,\n' +
+            '    "enable_power_vs": false,\n' +
+            '    "craig_version": "1.5.0",\n' +
+            '    "power_vs_zones": []\n' +
+            "  },\n" +
+            '  "access_groups": [],\n' +
+            '  "appid": [],\n' +
+            '  "atracker": {\n' +
+            '    "enabled": false,\n' +
+            '    "type": "cos",\n' +
+            '    "name": "atracker",\n' +
+            '    "target_name": "atracker-cos",\n' +
+            '    "bucket": null,\n' +
+            '    "add_route": true,\n' +
+            '    "cos_key": null,\n' +
+            '    "locations": [\n' +
+            '      "global",\n' +
+            '      "us-south"\n' +
+            "    ]\n" +
+            "  },\n" +
+            '  "cbr_rules": [],\n' +
+            '  "cbr_zones": [],\n' +
+            '  "clusters": [],\n' +
+            '  "dns": [],\n' +
+            '  "event_streams": [],\n' +
+            '  "f5_vsi": [],\n' +
+            '  "iam_account_settings": {\n' +
+            '    "enable": false,\n' +
+            '    "mfa": null,\n' +
+            '    "allowed_ip_addresses": null,\n' +
+            '    "include_history": false,\n' +
+            '    "if_match": null,\n' +
+            '    "max_sessions_per_identity": null,\n' +
+            '    "restrict_create_service_id": null,\n' +
+            '    "restrict_create_platform_apikey": null,\n' +
+            '    "session_expiration_in_seconds": null,\n' +
+            '    "session_invalidation_in_seconds": null\n' +
+            "  },\n" +
+            '  "icd": [],\n' +
+            '  "key_management": [],\n' +
+            '  "load_balancers": [],\n' +
+            '  "logdna": {\n' +
+            '    "enabled": false,\n' +
+            '    "plan": "lite",\n' +
+            '    "endpoints": "private",\n' +
+            '    "platform_logs": false,\n' +
+            '    "resource_group": null,\n' +
+            '    "cos": null,\n' +
+            '    "bucket": null\n' +
+            "  },\n" +
+            '  "object_storage": [],\n' +
+            '  "power": [],\n' +
+            '  "power_instances": [],\n' +
+            '  "power_volumes": [],\n' +
+            '  "resource_groups": [\n' +
+            "    {\n" +
+            '      "use_prefix": true,\n' +
+            '      "name": "craig-rg",\n' +
+            '      "use_data": false\n' +
+            "    }\n" +
+            "  ],\n" +
+            '  "routing_tables": [],\n' +
+            '  "scc": {\n' +
+            '    "credential_description": null,\n' +
+            '    "id": null,\n' +
+            '    "passphrase": null,\n' +
+            '    "name": "",\n' +
+            '    "location": "us",\n' +
+            '    "collector_description": null,\n' +
+            '    "is_public": false,\n' +
+            '    "scope_description": null,\n' +
+            '    "enable": false\n' +
+            "  },\n" +
+            '  "secrets_manager": [],\n' +
+            '  "security_groups": [],\n' +
+            '  "ssh_keys": [],\n' +
+            '  "sysdig": {\n' +
+            '    "enabled": false,\n' +
+            '    "plan": "graduated-tier",\n' +
+            '    "resource_group": null\n' +
+            "  },\n" +
+            '  "teleport_vsi": [],\n' +
+            '  "transit_gateways": [],\n' +
+            '  "virtual_private_endpoints": [],\n' +
+            '  "vpcs": [],\n' +
+            '  "vpn_gateways": [],\n' +
+            '  "vpn_servers": [],\n' +
+            '  "vsi": [],\n' +
+            '  "classic_vlans": []\n' +
+            "}",
+        },
+      ];
+
+      let mockController = {
+        createBlob: function () {
+          return new ArrayBuffer(5);
+        },
+      };
+      let tar = new mockPackTar();
+      let api = new craigApi(mockController, tar);
+
+      return api
+        .templateTar({ params: { template: "from-scratch" } }, res)
+        .then(() => {
           assert.deepEqual(
             tar.files,
             expectedFiles,

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template
 - Users can now enable Classic Infrastructure in the Options page
 - Users can now create, update, and delete Classic VLANs
 
