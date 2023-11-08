@@ -18,6 +18,7 @@
     "@apollo/client": "^3.4.10",
     "@carbon/icons-react": "^11.8.1",
     "@carbon/react": "^1.13.0",
+    "buffer": "^6.0.3",
     "carbon-react-code-mirror": "^0.2.0",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
@@ -34,9 +35,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@craco/craco": "^7.1.0",
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "7.5.0",
+    "@craco/craco": "^7.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
