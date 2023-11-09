@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed a bug causing the fields within security groups for the VSI and Load Balancer Terraform to not be correctly formatted
+- Fixed a bug causing the cidr field within a subnet tier to be null
 
 ## 1.5.0
 
