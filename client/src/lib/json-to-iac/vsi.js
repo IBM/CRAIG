@@ -47,7 +47,7 @@ const { varDotPrefix } = require("../constants");
 function ibmIsInstance(vsi, config) {
   let zone = vsi.subnet.replace(/[^]+(?=\d$)/g, "");
   let vsiName = vsi.index
-    ? `${varDotPrefix}-${snakeCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
+    ? `${varDotPrefix}-${kebabCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
         vsi.index
       }`
     : vsi.name;
