@@ -101,7 +101,9 @@ function ibmIsInstance(vsi, config) {
   }
   // add security groups
   vsi.security_groups.forEach((group) => {
-    allSgIds.push(`\${module.${vsi.vpc}_vpc.${snakeCase(group)}_id}`);
+    allSgIds.push(
+      `\${module.${snakeCase(vsi.vpc)}_vpc.${snakeCase(group)}_id}`
+    );
   });
   vsiData.primary_network_interface[0].security_groups = allSgIds;
   // add ssh keys
@@ -373,7 +375,7 @@ function ibmIsLb(deployment, config) {
   };
   deployment.security_groups.forEach((group) => {
     data.data.security_groups.push(
-      `\${module.${deployment.vpc}_vpc.${snakeCase(group)}_id}`
+      `\${module.${snakeCase(deployment.vpc)}_vpc.${snakeCase(group)}_id}`
     );
   });
   deployment.subnets.forEach((subnet) => {

@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - Users can now enable Classic Infrastructure in the Options page
 - Users can now create, update, and delete Classic VLANs
 
+### Fixes
+
+- Fixed a bug causing the fields within security groups for the VSI and Load Balancer Terraform to not be correctly formatted
+
 ## 1.5.0
 
 ### Upgrade Notes

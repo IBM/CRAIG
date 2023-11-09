@@ -6,7 +6,9 @@
       "Users can now enable Classic Infrastructure in the Options page",
       "Users can now create, update, and delete Classic VLANs"
     ],
-    "fixes": [],
+    "fixes": [
+      "Fixed a bug causing the fields within security groups for the VSI and Load Balancer Terraform to not be correctly formatted"
+    ],
     "upgrade_notes": []
   },
   {
