@@ -115,4 +115,52 @@ provider "ibm" {
 `;
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
+  it("should return the correct data when power vs is enabled in dal10 and wdc07 and region is us-south", () => {
+    let actualData = ibmCloudProvider({
+      _options: {
+        prefix: "iac",
+        region: "us-south",
+        tags: ["hello", "world"],
+        zones: 3,
+        endpoints: "private",
+        account_id: "",
+        fs_cloud: false,
+        enable_classic: true,
+        dynamic_subnets: true,
+        enable_power_vs: true,
+        craig_version: "1.6.0",
+        power_vs_zones: ["dal10", "wdc07"],
+        power_vs_high_availability: true,
+      },
+    });
+    let expectedData = `##############################################################################
+# IBM Cloud Provider
+##############################################################################
+
+provider "ibm" {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_dal10"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  zone             = "dal10"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_wdc07"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "us-east"
+  zone             = "wdc07"
+  ibmcloud_timeout = 60
+}
+
+##############################################################################
+`;
+    assert.deepEqual(actualData, expectedData, "it should return correct data");
+  });
 });

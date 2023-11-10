@@ -7,6 +7,7 @@ const {
   arraySplatIndex,
   carve,
   revision,
+  isNullOrEmptyString,
 } = require("lazy-z");
 
 /**
@@ -346,6 +347,17 @@ function saveAdvancedSubnetTier(
     });
 }
 
+/**
+ * shortcut for field is null or empty string
+ * @param {*} fieldName
+ * @returns {Function}
+ */
+function fieldIsNullOrEmptyString(fieldName) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[fieldName]);
+  };
+}
+
 module.exports = {
   formatNetworkingRule,
   updateNetworkingRule,
@@ -353,4 +365,5 @@ module.exports = {
   buildSubnetTiers,
   saveAdvancedSubnetTier,
   setKmsFromKeyOnStoreUpdate,
+  fieldIsNullOrEmptyString,
 };

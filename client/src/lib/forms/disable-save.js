@@ -14,7 +14,6 @@ const {
   anyAreEmpty,
   haveValidRanges,
   nullOrEmptyStringFields,
-  portRangeInvalid,
   rangeInvalid,
 } = require("lazy-z");
 const {
@@ -25,7 +24,6 @@ const {
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
-  invalidCrnList,
   isValidUrl,
   invalidCbrRule,
   invalidCbrZone,
@@ -37,10 +35,6 @@ const {
   validSshKey,
   invalidEncryptionKeyEndpoint,
 } = require("./invalid-callbacks");
-const {
-  commaSeparatedIpListExp,
-  commaSeparatedCidrListExp,
-} = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
 /**
@@ -325,21 +319,6 @@ function disableSshKeysSave(stateData, componentProps) {
         ? false // do not check invalid public key if using data, return false
         : invalidSshPublicKey(stateData, componentProps).invalid)
     );
-}
-
-/**
- * check to see if transit gateways form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableTransitGatewaysSave(stateData, componentProps) {
-  return (
-    invalidName("transit_gateways")(stateData, componentProps) ||
-    isNullOrEmptyString(stateData.resource_group) ||
-    isEmpty(stateData.connections) ||
-    invalidCrnList(stateData.crns)
-  );
 }
 
 /**
@@ -821,63 +800,6 @@ function disableExclusionsSave(stateData, componentProps) {
 }
 
 /**
- * check to see if vpn servers form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpnServersSave(stateData, componentProps) {
-  return (
-    invalidName("vpn_servers")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "resource_group",
-      "vpc",
-      "security_groups",
-      "certificate_crn",
-      "method",
-      "client_ip_pool",
-    ]) ||
-    portRangeInvalid("port_min", parseInt(stateData.port)) ||
-    (stateData.client_idle_timeout &&
-      rangeInvalid(parseInt(stateData.client_idle_timeout), 0, 28800)) ||
-    invalidCrnList(
-      [stateData.certificate_crn].concat(
-        stateData.method === "username" ? [] : stateData.client_ca_crn
-      )
-    ) ||
-    invalidCidrBlock(stateData.client_ip_pool) ||
-    (!isNullOrEmptyString(stateData.client_dns_server_ips) &&
-      stateData.client_dns_server_ips.match(commaSeparatedIpListExp) ===
-        null) ||
-    isEmpty(stateData.subnets) ||
-    (!isNullOrEmptyString(stateData.port) &&
-      !validPortRange("port_min", stateData.port)) ||
-    // if additional prefixes don't match cidr return true
-    (!isNullOrEmptyString(stateData.additional_prefixes) &&
-      stateData.additional_prefixes
-        .join(",")
-        .replace(/\s*/g, "")
-        .match(commaSeparatedCidrListExp) === null) ||
-    // if additional prefixes is fine but no zone is selected return true
-    (!isEmpty(stateData.additional_prefixes) &&
-      isNullOrEmptyString(stateData.zone))
-  );
-}
-
-/**
- * check to see if vpn server routes form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpnServerRoutesSave(stateData, componentProps) {
-  return (
-    invalidName("vpn_server_routes")(stateData, componentProps) ||
-    invalidCidrBlock(stateData.destination)
-  );
-}
-
-/**
  * check to see if dns form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -1143,8 +1065,6 @@ const disableSaveFunctions = {
   resource_groups: invalidName("resource_groups"),
   vpcs: disableVpcsSave,
   ssh_keys: disableSshKeysSave,
-  classic_ssh_keys: disableSshKeysSave,
-  transit_gateways: disableTransitGatewaysSave,
   acls: disableAclsSave,
   acl_rules: disableAclRulesSave,
   sg_rules: disableSgRulesSave,
@@ -1170,8 +1090,6 @@ const disableSaveFunctions = {
   cbr_zones: disableCbrZonesSave,
   addresses: disableAddressesSave,
   exclusions: disableExclusionsSave,
-  vpn_servers: disableVpnServersSave,
-  vpn_server_routes: disableVpnServerRoutesSave,
   dns: disableDnsSave,
   zones: disableZonesSave,
   records: disableRecordsSave,
@@ -1196,10 +1114,20 @@ const disableSaveFunctions = {
  * @returns {boolean} true if match
  */
 function disableSave(field, stateData, componentProps, craig) {
+  let stateDisableSaveComponents = [
+    "vpn_servers",
+    "vpn_server_routes",
+    "transit_gateways",
+  ];
   if (containsKeys(disableSaveFunctions, field)) {
     return disableSaveFunctions[field](stateData, componentProps, craig);
-  }
-  return false;
+  } else if (contains(stateDisableSaveComponents, field)) {
+    return (
+      field === "vpn_server_routes"
+        ? componentProps.craig.vpn_servers.routes
+        : componentProps.craig[field]
+    ).shouldDisableSave(stateData, componentProps);
+  } else return false;
 }
 
 /**

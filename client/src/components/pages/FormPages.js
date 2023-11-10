@@ -3,8 +3,6 @@ import {
   clusterHelperTestCallback,
   disableSave,
   forceShowForm,
-  invalidCrnText,
-  invalidCrns,
   invalidName,
   invalidNameText,
   newF5Vsi,
@@ -46,7 +44,6 @@ import {
 import { RenderDocs } from "./SimplePages";
 import {
   contains,
-  isInRange,
   eachKey,
   isIpv4CidrOrAddress,
   isNullOrEmptyString,
@@ -106,6 +103,7 @@ import {
   sapProfiles,
   datacenters,
 } from "../../lib/constants";
+import { tgwVpcFilter } from "../../lib/forms/filters";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -737,19 +735,7 @@ const PowerVsInstances = (craig) => {
           <NoPowerWorkspaceTile />
         ) : undefined
       }
-      sapProfiles={sapProfiles.filter((profile) => {
-        if (
-          // this is a placeholder, need to find out more information on
-          // power sizing, as sizing is based on zone, processor type
-          // and instance type. it does not seem as though we would be able
-          // to support all options in all regions
-          //
-          // we should aim to support all instance profiles if needed
-          parseInt(profile.replace(/^[^-]+-/g, "").replace(/x\d+$/g, "")) <= 7
-        ) {
-          return profile;
-        }
-      })}
+      sapProfiles={sapProfiles}
       power_instances={craig.store.json.power_instances}
       storage_pool_map={powerStoragePoolMap}
       power_volumes={craig.store.json.power_volumes}
@@ -1039,12 +1025,12 @@ const TransitGatewayPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("transit_gateways")}
-      invalidTextCallback={invalidNameText("transit_gateways")}
-      vpcList={craig.store.vpcList}
+      invalidCallback={craig.transit_gateways.name.invalid}
+      invalidTextCallback={craig.transit_gateways.name.invalidText}
+      invalidCrns={craig.transit_gateways.crns.invalid}
+      invalidCrnText={craig.transit_gateways.crns.invalidText}
+      vpcList={tgwVpcFilter(craig)}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCrns={invalidCrns}
-      invalidCrnText={invalidCrnText}
       power={craig.store.json.power}
       edgeRouterEnabledZones={edgeRouterEnabledZones}
     />
@@ -1084,8 +1070,8 @@ const VpnServerPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("vpn_servers")}
-      invalidTextCallback={invalidNameText("vpn_servers")}
+      invalidCallback={craig.vpn_servers.name.invalid}
+      invalidTextCallback={craig.vpn_servers.name.invalidText}
       craig={craig}
       docs={RenderDocs("vpn_servers")}
       invalidCidrBlock={invalidCidrBlock}
@@ -1093,12 +1079,13 @@ const VpnServerPage = (craig) => {
       onRouteSave={craig.vpn_servers.routes.save}
       onRouteDelete={craig.vpn_servers.routes.delete}
       onRouteSubmit={craig.vpn_servers.routes.create}
-      invalidRouteCallback={invalidName("vpn_server_routes")}
-      invalidRouteTextCallback={invalidNameText("vpn_server_routes")}
+      invalidRouteCallback={craig.vpn_servers.routes.name.invalid}
+      invalidRouteTextCallback={craig.vpn_servers.routes.name.invalidText}
       subnetList={craig.getAllSubnets()}
       vpcList={craig.store.vpcList}
       securityGroups={craig.store.json.security_groups}
       helperTextCallback={vpnServersHelperText}
+      secretsManagerList={splat(craig.store.json.secrets_manager, "name")}
     />
   );
 };

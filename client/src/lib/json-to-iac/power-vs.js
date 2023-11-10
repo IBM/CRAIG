@@ -348,8 +348,9 @@ function powerVsTf(config) {
           attachmentTf
         );
     });
+    tf += "\n";
   });
-  return tf;
+  return tf.replace(/\n\n(?=$)/g, "\n");
 }
 
 module.exports = {

@@ -13,11 +13,17 @@ All notable changes to this project will be documented in this file.
 - Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template
 - Users can now enable Classic Infrastructure in the Options page
 - Users can now create, update, and delete Classic VLANs
+- Users can now create certificates for a VPN Server for developer use only
+- Users can now import PEM files as certificates for VPN Server
+- Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS
 
 ### Fixes
 
-- Fixed a bug causing the fields within security groups for the VSI and Load Balancer Terraform to not be correctly formatted
-- Fixed a bug causing the cidr field within a subnet tier to be null
+- Fixed an issue causing the fields within security groups for the VSI and Load Balancer Terraform to not be correctly formatted
+- Fixed an issue causing the cidr field within a subnet tier to be null
+- Fixed an issue causing Activity Tracker Object Storage target to not be updated when saving
+- Fixed an issue causing VPE security groups to incorrectly have a hyphen in VPC module name
+- Fixed an error allowing users to incorrectly create multiple transit gateway connections to a single VPC
 
 ## 1.5.0
 

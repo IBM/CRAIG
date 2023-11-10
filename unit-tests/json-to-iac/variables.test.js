@@ -429,4 +429,116 @@ variable "power_oracle_template_power_ssh_key" {
       "it should return correct variables"
     );
   });
+  it("should return correct variable when power vs is enabled with ssh keys", () => {
+    let slzNetwork = { ...require("../data-files/slz-network.json") };
+    slzNetwork.vpn_servers = [
+      {
+        name: "abc",
+        certificate_crn: "xyz",
+        method: "certificate",
+        client_ca_crn: "hij",
+        client_ip_pool: "xyz",
+        client_dns_server_ips: "optional",
+        client_idle_timeout: 2000,
+        enable_split_tunneling: true,
+        port: 255,
+        protocol: "udp",
+        resource_group: "slz-management-rg",
+        security_groups: ["management-vpe-sg"],
+        subnets: ["vsi-zone-1"],
+        vpc: "management",
+        routes: [],
+        bring_your_own_cert: true,
+        secrets_manager: "secrets-manager",
+      },
+    ];
+    let actualData = variablesDotTf(slzNetwork, false);
+    let expectedData = `##############################################################################
+# Variables
+##############################################################################
+
+variable "ibmcloud_api_key" {
+  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
+  type        = string
+  sensitive   = true
+}
+
+variable "region" {
+  description = "IBM Cloud Region where resources will be provisioned"
+  type        = string
+  default     = "us-south"
+  validation {
+    error_message = "Region must be in a supported IBM VPC region."
+    condition     = contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "jp-tok", "jp-osa", "au-syd"], var.region)
+  }
+}
+
+variable "prefix" {
+  description = "Name prefix that will be prepended to named resources"
+  type        = string
+  default     = "slz"
+  validation {
+    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
+    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16
+  }
+}
+
+variable "slz_ssh_key_public_key" {
+  description = "Public SSH Key Value for Slz SSH Key"
+  type        = string
+  sensitive   = true
+  default     = "public-key"
+  validation {
+    error_message = "Public SSH Key must be a valid ssh rsa public key."
+    condition     = "\${var.slz_ssh_key_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.slz_ssh_key_public_key))}"
+  }
+}
+
+variable "secrets_manager_example_secret_arbitrary_secret_data" {
+  description = "Data for example secret arbitrary secret data"
+  type        = string
+  sensitive   = true
+  default     = "arbitrary"
+}
+
+variable "secrets_manager_example_secret_username" {
+  description = "Example secret username"
+  type        = string
+  sensitive   = true
+  default     = "username"
+}
+
+variable "secrets_manager_example_secret_password" {
+  description = "Example secret password"
+  type        = string
+  sensitive   = true
+  default     = "1VeryGoodPasword?"
+}
+
+variable "management_vpn_server_abc_cert_pem" {
+  description = "Imported certificate PEM for Management Vpn Server Abc. Certificate will be stored in Secrets Manager"
+  type        = string
+  sensitive   = true
+}
+
+variable "management_vpn_server_abc_private_key_pem" {
+  description = "Imported certificate private key PEM for Management Vpn Server Abc. Certificate will be stored in Secrets Manager"
+  type        = string
+  sensitive   = true
+}
+
+variable "management_vpn_server_abc_intermediate_pem" {
+  description = "Imported certificate intermediate PEM for Management Vpn Server Abc. Certificate will be stored in Secrets Manager"
+  type        = string
+  sensitive   = true
+}
+
+##############################################################################
+`;
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should return correct variables"
+    );
+  });
 });

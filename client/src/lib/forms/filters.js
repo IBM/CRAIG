@@ -1,4 +1,4 @@
-const { getObjectFromArray, splat } = require("lazy-z");
+const { getObjectFromArray, splat, distinct, contains } = require("lazy-z");
 
 /**
  * filter encryption keys
@@ -25,4 +25,28 @@ function encryptionKeyFilter(_, componentProps) {
   return kms ? splat(keys, "name") : [];
 }
 
-module.exports = { encryptionKeyFilter };
+/**
+ * filter vpcs with connections to extant tgws
+ * @param {*} craig
+ * @returns {Array<string>} list of vpcs not currently
+ */
+function tgwVpcFilter(craig) {
+  let unconnectedVpcs = [];
+  let allTgwVpcs = [];
+  craig.store.json.transit_gateways.forEach((tgw) => {
+    let connectionVpcs = [];
+    tgw.connections.forEach((connection) => {
+      if (connection.vpc) {
+        // not using splat to avoid picking up `null` for crn connections
+        connectionVpcs.push(connection.vpc);
+      }
+    });
+    allTgwVpcs = distinct(allTgwVpcs.concat(connectionVpcs));
+  });
+  craig.store.vpcList.forEach((vpc) => {
+    if (!contains(allTgwVpcs, vpc)) unconnectedVpcs.push(vpc);
+  });
+  return unconnectedVpcs;
+}
+
+module.exports = { encryptionKeyFilter, tgwVpcFilter };

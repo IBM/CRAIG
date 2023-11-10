@@ -296,4 +296,18 @@ describe("transit_gateways", () => {
       );
     });
   });
+  describe("transit_gateways.schema", () => {
+    describe("crns", () => {
+      describe("invalidText", () => {
+        it("should return true when invalid crn in list", () => {
+          let state = new newState();
+          assert.isTrue(
+            state.transit_gateways.crns.invalidText({
+              crns: ["crn:v1:bluemix:public:abcdf", "mooseeeeeeeeeeeeeeeeee"],
+            })
+          );
+        });
+      });
+    });
+  });
 });
