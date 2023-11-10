@@ -191,6 +191,53 @@ const Atracker = (craig) => {
   );
 };
 
+const ClassicDisabledTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> Classic Infrastructure
+      is not enabled. Enable Classic Infrastructure from the
+      <a className="no-secrets-link" href="/">
+        Options Page.
+      </a>{" "}
+    </Tile>
+  );
+};
+
+const ClassicSshKeyPage = (craig) => {
+  return (
+    <SshKeysTemplate
+      classic
+      overrideTile={
+        craig.store.json._options.enable_classic ? undefined : (
+          <ClassicDisabledTile />
+        )
+      }
+      ssh_keys={craig.store.json.classic_ssh_keys}
+      disableSave={disableSave}
+      onDelete={craig.classic_ssh_keys.delete}
+      onSave={craig.classic_ssh_keys.save}
+      onSubmit={craig.classic_ssh_keys.create}
+      propsMatchState={propsMatchState}
+      forceOpen={forceShowForm}
+      invalidCallback={(stateData, componentProps) => {
+        // passthrough function to override field
+        return invalidName("classic_ssh_keys")(stateData, componentProps);
+      }}
+      invalidTextCallback={(stateData, componentProps) => {
+        // passthrough function to override field
+        return invalidNameText("classic_ssh_keys")(stateData, componentProps);
+      }}
+      deleteDisabled={() => {
+        // currently ssh keys are not in use, this will be updated when they are
+        return false;
+      }}
+      invalidKeyCallback={invalidSshPublicKey}
+      craig={craig}
+      docs={RenderDocs("classic_ssh_keys")}
+    />
+  );
+};
+
 const ClassicVlanPage = (craig) => {
   return (
     <ClassicVlanTemplate
@@ -552,19 +599,6 @@ const ObjectStoragePage = (craig) => {
       composedNameCallback={cosResourceHelperTextCallback}
       encryptionKeyFilter={encryptionKeyFilter}
     />
-  );
-};
-
-const ClassicDisabledTile = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> Classic is not enabled.
-      Return to the
-      <a className="no-secrets-link" href="/">
-        Options Page
-      </a>{" "}
-      to enable Classic.
-    </Tile>
   );
 };
 
@@ -1152,6 +1186,8 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "activityTracker") {
     return Atracker(craig);
+  } else if (form === "classicSshKeys") {
+    return ClassicSshKeyPage(craig);
   } else if (form === "classicVlans") {
     return ClassicVlanPage(craig);
   } else if (form === "icd") {

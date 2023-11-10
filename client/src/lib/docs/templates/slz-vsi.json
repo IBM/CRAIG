@@ -1166,5 +1166,6 @@
       "enable_floating_ip": false
     }
   ],
+  "classic_ssh_keys": [],
   "classic_vlans": []
 }

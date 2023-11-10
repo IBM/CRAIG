@@ -93,5 +93,6 @@
   "vpn_gateways": [],
   "vpn_servers": [],
   "vsi": [],
+  "classic_ssh_keys": [],
   "classic_vlans": []
 }

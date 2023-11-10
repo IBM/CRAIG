@@ -876,5 +876,6 @@
   "power": [],
   "power_instances": [],
   "power_volumes": [],
+  "classic_ssh_keys": [],
   "classic_vlans": []
 }

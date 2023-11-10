@@ -216,20 +216,6 @@ const navCatagories = [
     ],
   },
   {
-    name: "Classic",
-    links: [
-      {
-        title: "Classic VLANs",
-        path: "/form/classicVlans",
-        react_icon: "VlanIbm",
-        toTf: (config) => {
-          return classicInfraTf(config);
-        },
-        jsonField: "classic_vlans",
-      },
-    ],
-  },
-  {
     name: "Power VS",
     links: [
       {
@@ -258,6 +244,29 @@ const navCatagories = [
           return powerVsVolumeTf(config) || "";
         },
         jsonField: "power_volumes",
+      },
+    ],
+  },
+  {
+    name: "Classic",
+    links: [
+      {
+        title: "Classic SSH Keys",
+        path: "/form/classicSshKeys",
+        react_icon: "IBMClassicSshKeys",
+        toTf: (config) => {
+          return classicInfraTf(config);
+        },
+        jsonField: "classic_ssh_keys",
+      },
+      {
+        title: "Classic VLANs",
+        path: "/form/classicVlans",
+        react_icon: "VlanIbm",
+        toTf: (config) => {
+          return classicInfraTf(config);
+        },
+        jsonField: "classic_vlans",
       },
     ],
   },

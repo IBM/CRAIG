@@ -1093,6 +1093,66 @@ describe("invalid callbacks", () => {
         ).invalid;
         assert.isFalse(actualData);
       });
+      it("should return false when creating classic key using the same public key as in regular ssh keys", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "classic-key",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            classic: true,
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [
+                    {
+                      name: "ssh-key",
+                      resource_group: "management-rg",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                  classic_ssh_keys: [],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isFalse(actualData);
+      });
+      it("should return true when creating duplicate classic key using the same public key as in classic ssh keys", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "classic-key-2",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            classic: true,
+            craig: {
+              store: {
+                json: {
+                  classic_ssh_keys: [
+                    {
+                      name: "classic-key",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isTrue(actualData);
+      });
     });
   });
   describe("invalidIamAccountSettings", () => {

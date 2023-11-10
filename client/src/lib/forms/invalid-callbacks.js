@@ -185,6 +185,8 @@ function invalidSshPublicKey(stateData, componentProps) {
               "name",
               componentProps.arrayParentName
             ).ssh_keys
+          : componentProps.classic
+          ? componentProps.craig.store.json.classic_ssh_keys
           : componentProps.craig.store.json.ssh_keys,
         "public_key"
       ),
@@ -198,6 +200,8 @@ function invalidSshPublicKey(stateData, componentProps) {
             "name",
             componentProps.arrayParentName
           ).ssh_keys
+        : componentProps.classic
+        ? componentProps.craig.store.json.classic_ssh_keys
         : componentProps.craig.store.json.ssh_keys,
       "public_key",
       stateData.public_key

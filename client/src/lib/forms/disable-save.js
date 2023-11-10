@@ -312,6 +312,11 @@ function disableSshKeysSave(stateData, componentProps) {
       invalidName("power_vs_ssh_keys")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.resource_group)
     );
+  } else if (componentProps.classic) {
+    return (
+      invalidName("classic_ssh_keys")(stateData, componentProps) ||
+      invalidSshPublicKey(stateData, componentProps).invalid
+    );
   } else
     return (
       invalidName("ssh_keys")(stateData, componentProps) ||
@@ -1138,6 +1143,7 @@ const disableSaveFunctions = {
   resource_groups: invalidName("resource_groups"),
   vpcs: disableVpcsSave,
   ssh_keys: disableSshKeysSave,
+  classic_ssh_keys: disableSshKeysSave,
   transit_gateways: disableTransitGatewaysSave,
   acls: disableAclsSave,
   acl_rules: disableAclRulesSave,
@@ -1261,6 +1267,7 @@ module.exports = {
   disableSave,
   invalidPort,
   forceShowForm,
+  disableSshKeysSave,
   disableSshKeyDelete,
   disableEncryptionKeysSave,
   invalidCidrBlock,
