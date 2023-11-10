@@ -5,6 +5,7 @@
       "Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template",
       "Users can now enable Classic Infrastructure in the Options page",
       "Users can now create, update, and delete Classic VLANs",
+      "Users can now create, update, and delete Classic SSH Keys",
       "Users can now create certificates for a VPN Server for developer use only",
       "Users can now import PEM files as certificates for VPN Server",
       "Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS"
