@@ -25,6 +25,7 @@ const {
   invalidDnsZoneName,
   invalidCrns,
   invalidCpuCallback,
+  replicationDisabledCallback,
 } = require("../../client/src/lib/forms/invalid-callbacks");
 
 describe("invalid callbacks", () => {
@@ -1680,6 +1681,28 @@ describe("invalid callbacks", () => {
           "it should be false"
         )
       );
+    });
+    describe("replicationDisabledCallback", () => {
+      it("should be false for when the storage pool is replication enabled", () => {
+        let data = {
+          pi_volume_pool: "Tier1-Flash-8",
+          zone: "us-east",
+        };
+        assert.isFalse(replicationDisabledCallback(data, {}));
+      });
+      it("should be true for when the storage pool is not replication enabled", () => {
+        let data = {
+          pi_volume_pool: "Tier1-Flash-1",
+          zone: "us-east",
+        };
+        assert.isTrue(replicationDisabledCallback(data, {}));
+      });
+      it("should be false for when the storage pool has no zone (no workspace selected)", () => {
+        let data = {
+          pi_volume_pool: "Tier1-Flash-8",
+        };
+        assert.isTrue(replicationDisabledCallback(data, {}));
+      });
     });
   });
 });

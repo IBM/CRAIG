@@ -80,6 +80,7 @@ import {
   invalidCpuCallback,
   invalidDescription,
   invalidTagList,
+  replicationDisabledCallback,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
@@ -803,6 +804,7 @@ const PowerVsVolumes = (craig) => {
       power_instances={craig.store.json.power_instances}
       invalidCallback={invalidName("power_volumes")}
       invalidTextCallback={invalidNameText("power_volumes")}
+      replicationDisabledCallback={replicationDisabledCallback}
       affinityChangesDisabled={() => {
         // placeholder
         return false;
