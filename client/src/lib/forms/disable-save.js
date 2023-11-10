@@ -1048,6 +1048,7 @@ function disableClassicVlanSave(stateData, componentProps) {
 }
 
 const disableSaveFunctions = {
+  classic_ssh_keys: disableSshKeysSave,
   scc: disableSccSave,
   atracker: disableAtrackerSave,
   access_groups: invalidName("access_groups"),
