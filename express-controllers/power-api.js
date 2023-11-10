@@ -1,4 +1,6 @@
 const { kebabCase, contains, snakeCase } = require("lazy-z");
+const powerImageMap = require("../client/src/lib/docs/power-image-map.json");
+const { powerStoragePoolRegionMap } = require("../client/src/lib/constants");
 
 /**
  *
@@ -75,19 +77,27 @@ function powerRoutes(axios, controller) {
         return reject(
           `Error: environment variable POWER_WORKSPACE_${snakeCase(
             zone
-          ).toUpperCase()} has no value`
+          ).toUpperCase()} has no value.`
         );
       }
       return controller.getBearerToken().then(() => {
         return controller
           .getPowerDetails(guid)
           .then((powerWorkspaceData) => {
+            if (powerWorkspaceData === undefined) {
+              return reject(
+                `Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables are exist and are correct.`
+              );
+            }
+
+            let specificEndpoint = "";
+            if (componentType === "images")
+              specificEndpoint = `stock-images?sap=true&vtl=true`;
+            else specificEndpoint = `storage-capacity/${componentType}`;
+
             let requestConfig = {
               method: "get",
-              url:
-                `https://${region}.power-iaas.cloud.ibm.com/pcloud/v1/cloud-instances/${powerWorkspaceData["guid"]}` +
-                `${componentType === "images" ? "" : "/storage-capacity"}` +
-                `/${componentType}`,
+              url: `https://${region}.power-iaas.cloud.ibm.com/pcloud/v1/cloud-instances/${powerWorkspaceData["guid"]}/${specificEndpoint}`,
               headers: {
                 Accept: "application/json",
                 CRN: `${powerWorkspaceData["crn"]}`,
@@ -116,8 +126,10 @@ function powerRoutes(axios, controller) {
         }
       })
       .catch((error) => {
-        console.error(error);
-        res.send({ error });
+        console.error(error + " Sending hardcoded zone images.");
+        componentType === "images"
+          ? res.send(powerImageMap[zone])
+          : res.send(powerStoragePoolRegionMap[zone]);
       });
   };
 }
