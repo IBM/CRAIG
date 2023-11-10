@@ -71,7 +71,7 @@ describe("atracker", () => {
         enabled: true,
         type: "cos",
         name: "atracker",
-        target_name: "atracker-cos",
+        target_name: "cos",
         bucket: "management-bucket",
         add_route: false,
         cos_key: "frog",
@@ -81,6 +81,45 @@ describe("atracker", () => {
         state.store.json.atracker,
         expectedData,
         "it should update"
+      );
+    });
+    it("should update atracker target name when saving new bucket in different cos instance", () => {
+      let state = new newState();
+      state.store.json.object_storage.push({
+        name: "atracker",
+        use_data: false,
+        resource_group: "service-rg",
+        plan: "standard",
+        use_random_suffix: true,
+        kms: "kms",
+        buckets: [
+          {
+            force_delete: false,
+            name: "test-atracker-bucket",
+            storage_class: "standard",
+            kms_key: "atracker",
+            endpoint: "public",
+            use_random_suffix: true,
+          },
+        ],
+        keys: [
+          {
+            name: "atracker-key",
+            role: "Writer",
+            enable_hmac: false,
+            use_random_suffix: true,
+          },
+        ],
+      });
+      state.atracker.save({
+        bucket: "test-atracker-bucket",
+        add_route: false,
+        cos_key: "frog",
+      });
+      assert.deepEqual(
+        state.store.json.atracker.target_name,
+        "atracker",
+        "it should set target name"
       );
     });
   });

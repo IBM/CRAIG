@@ -1,5 +1,6 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+const craig = state();
 
 describe("vpn_servers", () => {
   it("should return true if vpn server has invalid name", () => {
@@ -10,13 +11,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -29,13 +24,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -58,13 +47,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -87,13 +70,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -117,13 +94,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -147,13 +118,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -177,13 +142,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -207,13 +166,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -237,13 +190,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -267,13 +214,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -298,13 +239,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -329,13 +264,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -361,13 +290,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -394,13 +317,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -428,13 +345,7 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isFalse(actualData, "it should not be disabled");
@@ -463,16 +374,75 @@ describe("vpn_servers", () => {
         data: {
           name: "",
         },
-        craig: {
-          store: {
-            json: {
-              vpn_servers: [],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isFalse(actualData, "it should not be disabled");
+  });
+  it("should return true when no secrets manager is provided for BYO cert", () => {
+    let actualData = disableSave(
+      "vpn_servers",
+      {
+        name: "abc",
+        certificate_crn: "",
+        method: "certificate",
+        client_ca_crn: "",
+        client_ip_pool: "10.20.30.40/24",
+        client_dns_server_ips: "",
+        client_idle_timeout: 2000,
+        enable_split_tunneling: true,
+        port: 255,
+        protocol: "tcp",
+        resource_group: "slz-management-rg",
+        security_groups: ["management-vpe-sg"],
+        subnets: ["vsi-zone-1"],
+        vpc: "management",
+        routes: [],
+        bring_your_own_cert: true,
+        secrets_manager: "",
+        additional_prefixes: [],
+      },
+      {
+        data: {
+          name: "",
+        },
+        craig: craig,
+      }
+    );
+    assert.isTrue(actualData, "it should be true");
+  });
+  it("should return true when no secrets manager is provided for dev cert", () => {
+    let actualData = disableSave(
+      "vpn_servers",
+      {
+        name: "abc",
+        certificate_crn: "",
+        method: "certificate",
+        client_ca_crn: "",
+        client_ip_pool: "10.20.30.40/24",
+        client_dns_server_ips: "",
+        client_idle_timeout: 2000,
+        enable_split_tunneling: true,
+        port: 255,
+        protocol: "tcp",
+        resource_group: "slz-management-rg",
+        security_groups: ["management-vpe-sg"],
+        subnets: ["vsi-zone-1"],
+        vpc: "management",
+        routes: [],
+        bring_your_own_cert: false,
+        secrets_manager: "",
+        additional_prefixes: [],
+        DANGER_developer_certificate: true,
+      },
+      {
+        data: {
+          name: "",
+        },
+        craig: craig,
+      }
+    );
+    assert.isTrue(actualData, "it should be true");
   });
   describe("vpn server routes", () => {
     it("should return true if route has invalid name", () => {
@@ -483,13 +453,7 @@ describe("vpn_servers", () => {
           data: {
             name: "",
           },
-          craig: {
-            store: {
-              json: {
-                vpn_servers: [],
-              },
-            },
-          },
+          craig: craig,
         }
       );
       assert.isTrue(actualData, "it should be disabled");
@@ -502,13 +466,7 @@ describe("vpn_servers", () => {
           data: {
             name: "",
           },
-          craig: {
-            store: {
-              json: {
-                vpn_servers: [],
-              },
-            },
-          },
+          craig: craig,
         }
       );
       assert.isTrue(actualData, "it should be disabled");

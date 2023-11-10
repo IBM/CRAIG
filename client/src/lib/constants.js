@@ -7,6 +7,7 @@ const oracleRac = require("./docs/templates/oracle-rac.json");
 const emptyProject = require("./docs/templates/from-scratch.json");
 const powerVsQuickStart = require("./docs/templates/quick-start-power.json");
 const oracleSi = require("./docs/templates/oracle-si.json");
+const vpnaas = require("./docs/templates/vpn-as-a-service.json");
 
 module.exports = {
   varDotRegion: "${var.region}",
@@ -932,6 +933,23 @@ module.exports = {
         "An empty Power VS workspace",
       ],
     },
+    "VPN as a Service": {
+      template: vpnaas,
+      name: "VPN as a Service",
+      patternDocText:
+        "This template creates a basic environment with required services to set up a VPN connection from VPC to Power VS on IBM Cloud.",
+      includes: [
+        "A resource group for cloud services and infrastructure management",
+        "Encryption keys in either a Key Protect or Hyper Protect Crypto Services instance",
+        "A Cloud Object Storage instance for Flow Logs",
+        "A Secrets Manager instance",
+        "A VPC and a transit gateway",
+        "A VPC flow log collector",
+        "An Power VS workspace with a cloud connection to the Transit Gateway",
+        "A site-to-site VPN Gateway in the VPC",
+        "A client-to-site VPN Server in the VPC",
+      ],
+    },
     "Empty Project": {
       template: emptyProject,
       name: "Empty Project",
@@ -994,5 +1012,22 @@ module.exports = {
     "umh-40x9600",
     "umh-50x12000",
     "umh-60x14400",
+  ],
+  datacenters: [
+    "syd04",
+    "syd05",
+    "eu-de-1",
+    "eu-de-2",
+    "lon04",
+    "lon06",
+    "us-east",
+    "wdc06",
+    "us-south",
+    "dal10",
+    "dal12",
+    "tok04",
+    "sao01",
+    "tor01",
+    "wdc07",
   ],
 };

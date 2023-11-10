@@ -22,6 +22,7 @@ const {
   ipRangeExpression,
   sccScopeDescriptionValidation,
   dnsZoneNameExp,
+  replicationEnabledStoragePoolMap,
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 
@@ -185,6 +186,8 @@ function invalidSshPublicKey(stateData, componentProps) {
               "name",
               componentProps.arrayParentName
             ).ssh_keys
+          : componentProps.classic
+          ? componentProps.craig.store.json.classic_ssh_keys
           : componentProps.craig.store.json.ssh_keys,
         "public_key"
       ),
@@ -198,6 +201,8 @@ function invalidSshPublicKey(stateData, componentProps) {
             "name",
             componentProps.arrayParentName
           ).ssh_keys
+        : componentProps.classic
+        ? componentProps.craig.store.json.classic_ssh_keys
         : componentProps.craig.store.json.ssh_keys,
       "public_key",
       stateData.public_key
@@ -686,6 +691,22 @@ function invalidCrns(stateData) {
   return invalidCrnList(stateData.crns);
 }
 
+/**
+ * check to see if a storage pool is replication disabled
+ * @param {object} stateData
+ * @param {object} componentProps
+ * @returns {boolean} true if replication is disabled
+ */
+function replicationDisabledCallback(stateData, componentProps) {
+  let pool = stateData.pi_volume_pool;
+  if (!stateData.zone) {
+    return true;
+  }
+  let replicationEnabledPools =
+    replicationEnabledStoragePoolMap[stateData.zone];
+  return !contains(replicationEnabledPools, pool);
+}
+
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -715,4 +736,5 @@ module.exports = {
   invalidDnsZoneName,
   invalidCrns,
   invalidCpuCallback,
+  replicationDisabledCallback,
 };

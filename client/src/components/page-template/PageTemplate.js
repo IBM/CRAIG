@@ -35,6 +35,8 @@ import {
   JsonReference,
   FileStorage,
   Settings,
+  DocumentSigned,
+  VlanIbm,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -87,6 +89,8 @@ const navIcons = {
   IbmPowerVs: IbmPowerVs,
   IbmPowerVsInstance: VirtualMachine,
   IbmPowerVsVolumes: FileStorage,
+  IBMClassicSshKeys: DocumentSigned,
+  VlanIbm: VlanIbm,
 };
 
 let pageOrder = [

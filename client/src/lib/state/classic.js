@@ -11,8 +11,9 @@ function classicSshKeyInit(config) {
  * @param {*} config
  */
 function classicSshKeyOnStoreUpdate(config) {
-  // this space intentionally left blank
-  // currently no updates are needed
+  if (!config.store.json.classic_ssh_keys) {
+    config.store.json.classic_ssh_keys = [];
+  }
 }
 
 /**
@@ -62,8 +63,9 @@ function classicVlanInit(config) {
  * @param {*} config
  */
 function classicVlanOnStoreUpdate(config) {
-  // this space intentionally left blank
-  // currently no updates are needed
+  if (!config.store.json.classic_vlans) {
+    config.store.json.classic_vlans = [];
+  }
 }
 
 /**

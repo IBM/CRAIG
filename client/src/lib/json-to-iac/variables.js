@@ -6,6 +6,7 @@ const {
   isNullOrEmptyString,
   capitalize,
 } = require("lazy-z");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 function variablesDotTf(config, useF5) {
   let variables = {
@@ -181,6 +182,28 @@ function variablesDotTf(config, useF5) {
       type: "${string}",
       default: sshKey.public_key,
     };
+  });
+
+  config.vpn_servers.forEach((server) => {
+    if (server.bring_your_own_cert) {
+      ["cert_pem", "private_key_pem", "intermediate_pem"].forEach((certVar) => {
+        variables[
+          snakeCase(`${server.vpc} vpn_server ${server.name} ${certVar}`)
+        ] = {
+          description:
+            "Imported certificate " +
+            titleCase(certVar)
+              .toLowerCase()
+              .replace("pem", "PEM")
+              .replace("cert PEM", "PEM") +
+            " for " +
+            titleCase(`${server.vpc} vpn server ${server.name}.`) +
+            " Certificate will be stored in Secrets Manager",
+          type: "${string}",
+          sensitive: "${true}",
+        };
+      });
+    }
   });
 
   return tfBlock(

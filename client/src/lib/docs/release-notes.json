@@ -1,5 +1,26 @@
 [
   {
+    "version": "1.6.0",
+    "features": [
+      "Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template",
+      "Users can now enable Classic Infrastructure in the Options page",
+      "Users can now create, update, and delete Classic VLANs",
+      "Users can now create certificates for a VPN Server for developer use only",
+      "Users can now import PEM files as certificates for VPN Server",
+      "Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS"
+    ],
+    "fixes": [
+      "Fixed an issue causing the fields within security groups for the VSI and Load Balancer Terraform to not be correctly formatted",
+      "Fixed an issue causing the cidr field within a subnet tier to be null",
+      "Fixed an issue causing Activity Tracker Object Storage target to not be updated when saving",
+      "Fixed an issue causing VPE security groups to incorrectly have a hyphen in VPC module name",
+      "Fixed an error allowing users to incorrectly create multiple transit gateway connections to a single VPC"
+    ],
+    "upgrade_notes": [
+      "Apache 2.0 license is now included with all Terraform downloads"
+    ]
+  },
+  {
     "version": "1.5.0",
     "features": [
       "Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.",
@@ -13,7 +34,9 @@
     "fixes": [
       "IAM Account Settings and Access Groups are now correctly rendered when downloading CRAIG Terraform",
       "Fixed an issue causing Access Groups page to incorrectly show as invalid when valid",
-      "Fixed an issue causing underscores to incorrectly be added to Power VS Volume names when the workspace contains a hyphen"
+      "Fixed an issue causing underscores to incorrectly be added to Power VS Volume names when the workspace contains a hyphen",
+      "Fixed an issue causing Power VS Workspaces to have an invalid region when changing workspace regions",
+      "Fixed an issue causing unwanted spacing between multiple VPC Routing Tables"
     ],
     "upgrade_notes": [
       "Default template description and corresponding tab have been removed from Options page",
@@ -243,9 +266,7 @@
   },
   {
     "version": "0.4.0",
-    "upgrade_notes": [
-      "Support for Teleport has been removed"
-    ],
+    "upgrade_notes": ["Support for Teleport has been removed"],
     "features": [
       "Implemented Routing Tables Page",
       "Implemented Load Balancers Page",

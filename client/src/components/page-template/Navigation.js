@@ -101,7 +101,7 @@ class Navigation extends React.Component {
   }
 
   onSearch(event) {
-    let { value } = event.target;
+    let value = event.target.value.toLowerCase();
 
     if (!value) {
       this.resetSearch();

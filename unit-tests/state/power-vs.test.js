@@ -8,6 +8,7 @@ const { state } = require("../../client/src/lib/state");
 function newState() {
   let store = new state(true);
   store.setUpdateCallback(() => {});
+  store.store.json._options.power_vs_zones = ["dal12", "dal10"];
   return store;
 }
 
@@ -16,6 +17,42 @@ describe("power-vs", () => {
     it("should initialize power-vs", () => {
       let state = new newState();
       assert.deepEqual(state.store.json.power, []);
+    });
+  });
+  describe("power.onStoreUpdate", () => {
+    it("should set unfound workspaces to null on change of power vs zones", () => {
+      let state = new newState();
+      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
+      state.power.create({
+        name: "toad",
+        imageNames: ["7100-05-09"],
+        zone: "dal12",
+      });
+      state.store.json._options.power_vs_zones = [];
+      state.update();
+      let expectedData = {
+        name: "toad",
+        resource_group: null,
+        ssh_keys: [],
+        network: [],
+        cloud_connections: [],
+        images: [
+          {
+            name: "7100-05-09",
+            pi_image_id: "ERROR: ZONE UNDEFINED",
+            workspace: "toad",
+            zone: null,
+          },
+        ],
+        attachments: [],
+        imageNames: ["7100-05-09"],
+        zone: null,
+      };
+      assert.deepEqual(
+        state.store.json.power[0],
+        expectedData,
+        "it should create a new power vs"
+      );
     });
   });
   describe("power.create", () => {

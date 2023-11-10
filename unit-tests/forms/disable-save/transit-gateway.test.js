@@ -1,5 +1,6 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+const craig = state();
 
 describe("tgw", () => {
   it("should return true if tgw has invalid name", () => {
@@ -12,15 +13,7 @@ describe("tgw", () => {
           connections: [{ tgw: "@@@", vpc: "management" }],
         },
         {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              vpcs: ["management"],
-              json: {
-                transit_gateways: [],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -39,45 +32,10 @@ describe("tgw", () => {
           connections: [{ tgw: "hi", vpc: "management" }],
         },
         {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              vpcs: ["management"],
-              json: {
-                transit_gateways: [],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if tgw enabled with no vpcs", () => {
-    assert.isTrue(
-      disableSave(
-        "transit_gateways",
-        {
-          name: "hi",
-          resource_group: "what",
-          connections: [],
-        },
-        {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              json: {
-                transit_gateways: [],
-              },
-            },
-          },
-          data: {
-            name: "frog",
-          },
-          parent_name: "frog",
         }
       ),
       "it should be true"
@@ -98,14 +56,8 @@ describe("tgw", () => {
           ],
         },
         {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              json: {
-                transit_gateways: [],
-              },
-            },
-          },
+          craig: craig,
+
           data: {
             name: "frog",
           },

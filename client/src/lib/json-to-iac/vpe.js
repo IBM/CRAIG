@@ -98,7 +98,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
   data.data.target.push(target);
   vpe.security_groups.forEach((group) => {
     data.data.security_groups.push(
-      `\${module.${vpe.vpc}_vpc.${snakeCase(group)}_id}`
+      `\${module.${snakeCase(vpe.vpc)}_vpc.${snakeCase(group)}_id}`
     );
   });
   return data;

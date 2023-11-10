@@ -110,7 +110,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
         "it should return correct data"
       );
     });
-    it("should format volume terraform with storage pool for volume", () => {
+    it("should format volume terraform with storage pool passed in as pi_volume_pool", () => {
       let actualData = formatPowerVsVolume({
         name: "oracle-1-db-1",
         workspace: "oracle-template",
@@ -127,7 +127,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
         pi_affinity_instance: null,
         pi_anti_affinity_volume: null,
         pi_anti_affinity_instance: null,
-        pi_storage_pool: "Tier1-Flash-4",
+        pi_volume_pool: "Tier1-Flash-4",
       });
       let expectedData = `
 resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {

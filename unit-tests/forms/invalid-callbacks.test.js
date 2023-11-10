@@ -25,6 +25,7 @@ const {
   invalidDnsZoneName,
   invalidCrns,
   invalidCpuCallback,
+  replicationDisabledCallback,
 } = require("../../client/src/lib/forms/invalid-callbacks");
 
 describe("invalid callbacks", () => {
@@ -1093,6 +1094,66 @@ describe("invalid callbacks", () => {
         ).invalid;
         assert.isFalse(actualData);
       });
+      it("should return false when creating classic key using the same public key as in regular ssh keys", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "classic-key",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            classic: true,
+            craig: {
+              store: {
+                json: {
+                  ssh_keys: [
+                    {
+                      name: "ssh-key",
+                      resource_group: "management-rg",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                  classic_ssh_keys: [],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isFalse(actualData);
+      });
+      it("should return true when creating duplicate classic key using the same public key as in classic ssh keys", () => {
+        let actualData = invalidSshPublicKey(
+          {
+            name: "classic-key-2",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+          {
+            classic: true,
+            craig: {
+              store: {
+                json: {
+                  classic_ssh_keys: [
+                    {
+                      name: "classic-key",
+                      public_key:
+                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "hi",
+            },
+          }
+        ).invalid;
+        assert.isTrue(actualData);
+      });
     });
   });
   describe("invalidIamAccountSettings", () => {
@@ -1620,6 +1681,28 @@ describe("invalid callbacks", () => {
           "it should be false"
         )
       );
+    });
+    describe("replicationDisabledCallback", () => {
+      it("should be false for when the storage pool is replication enabled", () => {
+        let data = {
+          pi_volume_pool: "Tier1-Flash-8",
+          zone: "us-east",
+        };
+        assert.isFalse(replicationDisabledCallback(data, {}));
+      });
+      it("should be true for when the storage pool is not replication enabled", () => {
+        let data = {
+          pi_volume_pool: "Tier1-Flash-1",
+          zone: "us-east",
+        };
+        assert.isTrue(replicationDisabledCallback(data, {}));
+      });
+      it("should be false for when the storage pool has no zone (no workspace selected)", () => {
+        let data = {
+          pi_volume_pool: "Tier1-Flash-8",
+        };
+        assert.isTrue(replicationDisabledCallback(data, {}));
+      });
     });
   });
 });

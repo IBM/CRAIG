@@ -793,3 +793,31 @@ Landing Zone Power SAP Hana Pattern | Creates a basic and expandable SAP system 
 - [PowerVS SAP Hana Pattern](https://github.com/terraform-ibm-modules/terraform-ibm-powervs-sap)
 
 -----
+
+## Classic Vlans
+
+Classic Virtual Local Area Networks (VLANs) are used by IBM Cloud to isolate broadcast traffic on public and private networks. VLANs are central in directing traffic to your resources. You might never need to interact directly with any VLANs because they are managed automatically; they are assigned as needed and removed when not.
+
+By default, no Classic VLANs are created.
+
+### Related Links
+
+- [Getting started with Classic VLANs](https://cloud.ibm.com/docs/vlans?topic=vlans-getting-started)
+- [Classic VLAN Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/network_vlan)
+- [Classic VLAN Terraform Data Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/network_vlan)
+
+-----
+
+## Classic SSH Keys
+
+SSH keys identify a user or device through public-key cryptography and allow access to a device without using a password. Classic SSH keys are used to provision virtual servers, such as Classic Gateway Appliances.
+
+By default, no Classic SSH Keys are created.
+
+### Related Links
+
+- [Getting started with Classic SSH Keys](https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-getting-started-tutorial)
+- [Classic SSH Key Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/compute_ssh_key)
+- [Classic SSH Key Data Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/compute_ssh_key)
+
+-----

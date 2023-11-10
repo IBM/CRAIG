@@ -18,6 +18,7 @@ function optionsInit(config) {
     endpoints: "private",
     account_id: "",
     fs_cloud: false,
+    enable_classic: false,
     dynamic_subnets: true,
     enable_power_vs: false,
     power_vs_zones: [],

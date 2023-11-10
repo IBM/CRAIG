@@ -414,7 +414,7 @@ function vpcTf(config) {
   config.vpcs.forEach((vpc) => {
     let blockData = formatVpc(vpc, config);
     vpc.address_prefixes.forEach((prefix) => {
-      blockData += formatAddressPrefix(prefix, config);
+      if (prefix.cidr) blockData += formatAddressPrefix(prefix, config);
     });
     vpc.acls.forEach((acl) => {
       blockData += formatAcl(acl, config);
@@ -542,7 +542,7 @@ function vpcModuleTf(files, config) {
     let vpcModule = snakeCase(vpc.name + "_vpc");
     let allRgs = [vpc.resource_group];
     vpc.address_prefixes.forEach((prefix) => {
-      main += formatAddressPrefix(prefix, cloneConfig);
+      if (prefix.cidr) main += formatAddressPrefix(prefix, cloneConfig);
     });
     vpc.public_gateways.forEach((gateway) => {
       main += formatPgw(gateway, cloneConfig, true);

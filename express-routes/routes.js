@@ -33,6 +33,7 @@ router.get("/power/:region/:component", controller.getPowerComponent);
 
 // craig
 router.post("/craig/tar", craigRoutes.craigTar);
+router.get("/craig/template-tar/:template", craigRoutes.templateTar);
 
 //swagger api spec
 router.use("/swagger", swaggerUi.serve);

@@ -26,6 +26,7 @@ describe("power_instances", () => {
       let state = newState();
       state.power_instances.create({
         name: "frog",
+        zone: "dal12",
       });
       assert.deepEqual(
         state.store.json.power_instances,
@@ -771,7 +772,7 @@ describe("power_instances", () => {
             workspace: "toad",
             sap: true,
             sap_profile: "ush1-4x128",
-            zone: "dal12",
+            zone: null,
           },
         ],
         "it should create instance"
@@ -1132,7 +1133,7 @@ describe("power_instances", () => {
               },
             ],
             workspace: "toad",
-            zone: "dal10",
+            zone: null,
           },
         ],
         "it should initialize data"
@@ -1183,7 +1184,7 @@ describe("power_instances", () => {
               },
             ],
             workspace: "toad",
-            zone: "dal10",
+            zone: null,
           },
         ],
         "it should initialize data"
@@ -1230,7 +1231,7 @@ describe("power_instances", () => {
               },
             ],
             workspace: "toad",
-            zone: "dal10",
+            zone: null,
           },
         ],
         "it should initialize data"

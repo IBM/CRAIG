@@ -34,7 +34,7 @@ function formatPowerVsVolume(volume) {
       )}.volume_id}`;
     }
   } else {
-    data.pi_storage_pool = volume.pi_storage_pool;
+    data.pi_storage_pool = volume.pi_volume_pool;
   }
   return jsonToTfPrint(
     "resource",

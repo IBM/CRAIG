@@ -7,6 +7,8 @@ const {
 } = require("lazy-z");
 const { newDefaultTg } = require("./defaults");
 const { edgeRouterEnabledZones } = require("../constants");
+const { invalidName, invalidNameText, invalidCrnList } = require("../forms");
+const { fieldIsNullOrEmptyString } = require("./utils");
 
 /**
  * initialize transit gateway
@@ -106,10 +108,66 @@ function transitGatewayDelete(config, stateData, componentProps) {
   config.carve(["json", "transit_gateways"], componentProps.data.name);
 }
 
+/**
+ * tgw component should be disabled
+ * @param {*} config
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {bool} true if should be disabled
+ */
+function transitGatewayShouldDisableSave(config, stateData, componentProps) {
+  let saveShouldBeDisabled = false;
+  ["name", "resource_group", "crns"].forEach((field) => {
+    if (!saveShouldBeDisabled) {
+      saveShouldBeDisabled = config.transit_gateways[field].invalid(
+        stateData,
+        componentProps
+      );
+    }
+  });
+  return saveShouldBeDisabled;
+}
+
+/**
+ * initialize store field for tgw
+ * @param {*} store
+ */
+function initTransitGateway(store) {
+  store.newField("transit_gateways", {
+    init: transitGatewayInit,
+    onStoreUpdate: transitGatewayOnStoreUpdate,
+    create: transitGatewayCreate,
+    save: transitGatewaySave,
+    delete: transitGatewayDelete,
+    shouldDisableSave: transitGatewayShouldDisableSave,
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("transit_gateways"),
+        invalidText: invalidNameText("transit_gateways"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      crns: {
+        default: "",
+        invalid: function (stateData) {
+          return invalidCrnList(stateData.crns);
+        },
+        invalidText: function (stateData) {
+          return invalidCrnList(stateData.crns);
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   transitGatewayInit,
   transitGatewayOnStoreUpdate,
   transitGatewaySave,
   transitGatewayCreate,
   transitGatewayDelete,
+  initTransitGateway,
 };

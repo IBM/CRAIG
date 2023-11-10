@@ -1,11 +1,5 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const {
-  contains,
-  typeCheck,
-  transpose,
-  snakeCase,
-  isNullOrEmptyString,
-} = require("lazy-z");
+const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
 const {
   keyManagementInit,
@@ -93,13 +87,7 @@ const {
   securityGroupRulesSave,
   securityGroupRulesDelete,
 } = require("./security-groups");
-const {
-  transitGatewayInit,
-  transitGatewayOnStoreUpdate,
-  transitGatewayCreate,
-  transitGatewayDelete,
-  transitGatewaySave,
-} = require("./transit-gateways");
+const { initTransitGateway } = require("./transit-gateways");
 const {
   vpnInit,
   vpnCreate,
@@ -181,7 +169,7 @@ const {
 } = require("./iam");
 
 const validate = require("../validate");
-const { buildSubnetTiers } = require("./utils");
+const { buildSubnetTiers, fieldIsNullOrEmptyString } = require("./utils");
 const {
   addClusterRules,
   copySecurityGroup,
@@ -228,16 +216,7 @@ const {
   cbrRuleTagSave,
   cbrRuleTagDelete,
 } = require("./cbr-rules");
-const {
-  vpnServerInit,
-  vpnServerCreate,
-  vpnServerSave,
-  vpnServerDelete,
-  vpnServerOnStoreUpdate,
-  vpnServerRouteCreate,
-  vpnServerRouteSave,
-  vpnServerRouteDelete,
-} = require("./vpn-servers");
+const { initVpnState } = require("./vpn-servers");
 const {
   dnsInit,
   dnsCreate,
@@ -317,18 +296,13 @@ const {
   invalidName,
   invalidNameText,
   invalidEncryptionKeyRing,
+  invalidCidrBlock,
+  invalidCrnList,
 } = require("../forms");
-
-/**
- * shortcut for field is null or empty string
- * @param {*} fieldName
- * @returns {Function}
- */
-function fieldIsNullOrEmptyString(fieldName) {
-  return function (stateData) {
-    return isNullOrEmptyString(stateData[fieldName]);
-  };
-}
+const {
+  commaSeparatedIpListExp,
+  commaSeparatedCidrListExp,
+} = require("../constants");
 
 /**
  * get state for craig
@@ -596,13 +570,7 @@ const state = function (legacy) {
     },
   });
 
-  store.newField("transit_gateways", {
-    init: transitGatewayInit,
-    onStoreUpdate: transitGatewayOnStoreUpdate,
-    create: transitGatewayCreate,
-    save: transitGatewaySave,
-    delete: transitGatewayDelete,
-  });
+  initTransitGateway(store);
 
   store.newField("vpn_gateways", {
     init: vpnInit,
@@ -783,20 +751,7 @@ const state = function (legacy) {
     },
   });
 
-  store.newField("vpn_servers", {
-    init: vpnServerInit,
-    onStoreUpdate: vpnServerOnStoreUpdate,
-    create: vpnServerCreate,
-    save: vpnServerSave,
-    delete: vpnServerDelete,
-    subComponents: {
-      routes: {
-        create: vpnServerRouteCreate,
-        save: vpnServerRouteSave,
-        delete: vpnServerRouteDelete,
-      },
-    },
-  });
+  initVpnState(store);
 
   store.newField("dns", {
     init: dnsInit,

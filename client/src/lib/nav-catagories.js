@@ -29,6 +29,7 @@ const {
   icdTf,
   powerVsTf,
   powerVsVolumeTf,
+  classicInfraTf,
 } = require("./json-to-iac");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 
@@ -243,6 +244,29 @@ const navCatagories = [
           return powerVsVolumeTf(config) || "";
         },
         jsonField: "power_volumes",
+      },
+    ],
+  },
+  {
+    name: "Classic",
+    links: [
+      {
+        title: "Classic SSH Keys",
+        path: "/form/classicSshKeys",
+        react_icon: "IBMClassicSshKeys",
+        toTf: (config) => {
+          return classicInfraTf(config);
+        },
+        jsonField: "classic_ssh_keys",
+      },
+      {
+        title: "Classic VLANs",
+        path: "/form/classicVlans",
+        react_icon: "VlanIbm",
+        toTf: (config) => {
+          return classicInfraTf(config);
+        },
+        jsonField: "classic_vlans",
       },
     ],
   },

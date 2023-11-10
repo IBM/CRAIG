@@ -7,6 +7,7 @@
     "endpoints": "private",
     "account_id": "",
     "fs_cloud": false,
+    "enable_classic": false,
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal12", "dal10", "us-south"],
@@ -1446,5 +1447,7 @@
       "subnet": "",
       "enable_floating_ip": false
     }
-  ]
+  ],
+  "classic_ssh_keys": [],
+  "classic_vlans": []
 }

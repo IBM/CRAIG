@@ -1,4 +1,5 @@
 const { transpose } = require("lazy-z");
+const { splatContains } = require("lazy-z/lib/objects");
 
 /**
  * initialize atracker
@@ -43,6 +44,12 @@ function atrackerOnStoreUpdate(config) {
  * @param {string} stateData.atracker_key
  */
 function atrackerSave(config, stateData) {
+  config.store.json.object_storage.forEach((cos) => {
+    if (splatContains(cos.buckets, "name", stateData.bucket)) {
+      stateData.target_name = cos.name;
+    }
+  });
+
   transpose(stateData, config.store.json.atracker);
 }
 

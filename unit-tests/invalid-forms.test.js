@@ -90,8 +90,9 @@ describe("invalidForms", () => {
     updatedState.store.json = failingSubComponents;
     updatedState.updateCallback = () => {};
     updatedState.update();
-    updatedState.store.json.key_management[0].keys[0].name = "good";
+    updatedState.store.json._options.power_vs_zones = ["dal10"];
     let expectedData = [
+      "key_management",
       "object_storage",
       "routing_tables",
       "clusters",

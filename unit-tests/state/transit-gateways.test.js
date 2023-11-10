@@ -51,6 +51,7 @@ describe("transit_gateways", () => {
     });
     it("should remove a connection when a power vs workspace is deleted", () => {
       let state = new newState();
+      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
       state.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
@@ -89,6 +90,7 @@ describe("transit_gateways", () => {
     });
     it("should remove a connection when a power vs workspace is not in an edge enabled zone", () => {
       let state = new newState();
+      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
       state.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
@@ -292,6 +294,20 @@ describe("transit_gateways", () => {
         [],
         "it should be empty"
       );
+    });
+  });
+  describe("transit_gateways.schema", () => {
+    describe("crns", () => {
+      describe("invalidText", () => {
+        it("should return true when invalid crn in list", () => {
+          let state = new newState();
+          assert.isTrue(
+            state.transit_gateways.crns.invalidText({
+              crns: ["crn:v1:bluemix:public:abcdf", "mooseeeeeeeeeeeeeeeeee"],
+            })
+          );
+        });
+      });
     });
   });
 });

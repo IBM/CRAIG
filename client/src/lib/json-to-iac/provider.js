@@ -1,7 +1,7 @@
 const { jsonToTf } = require("json-to-tf");
 const { tfBlock } = require("./utils");
 const { varDotRegion } = require("../constants");
-const { snakeCase } = require("lazy-z");
+const { snakeCase, contains } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
@@ -47,6 +47,9 @@ function ibmCloudProvider(config) {
             .done("g")
         )
           ? zone.replace(/\d+/g, "")
+          : config._options.region !== "us-east" &&
+            contains(["us-east", "wdc06", "wdc07"], zone)
+          ? "us-east"
           : "${var.region}",
         zone: zone,
         ibmcloud_timeout: 60,

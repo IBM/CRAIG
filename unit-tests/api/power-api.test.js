@@ -120,5 +120,38 @@ describe("power api", () => {
           assert.isTrue(res.send.calledOnce);
         });
     });
+    it("should respond with error when powerWorkspaceData is undefined", () => {
+      process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
+      let { axios } = initMockAxios(
+        {
+          resources: [undefined],
+          storagePoolsCapacity: [
+            { poolName: "Tier1-Flash-1" },
+            { poolName: "Tier1-Flash-2" },
+            { poolName: "Tier3-Flash-1" },
+            { poolName: "Tier1-Flash-2" },
+          ],
+        },
+        false
+      );
+      let testPowerController = new controller(axios);
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { region: "us-south", component: "storage_pools" },
+          },
+          res
+        )
+        .catch(() => {
+          assert.isTrue(
+            res.send.calledOnceWith([
+              "Tier1-Flash-1",
+              "Tier1-Flash-2",
+              "Tier3-Flash-1",
+              "Tier1-Flash-2",
+            ])
+          );
+        });
+    });
   });
 });
