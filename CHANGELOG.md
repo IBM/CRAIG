@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.6.0
 
+### Upgrade Notes
+
+- Apache 2.0 license is now included with all Terraform downloads
+
 ### Features
 
 - Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template

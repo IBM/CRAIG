@@ -13,7 +13,10 @@ export const downloadContent = (json, projectName) => {
     let files = configToFilesJson(json); // get files
     eachKey(files, (file) => {
       // add each file's contents to the zip if it is not null or empty string
-      if (isNullOrEmptyString(files[file]) === false && contains(file, "."))
+      if (
+        isNullOrEmptyString(files[file]) === false &&
+        (contains(file, ".") || contains(file, "LICENSE"))
+      )
         zip.file(file, files[file]);
       else if (isNullOrEmptyString(files[file]) === false) {
         zip.folder(file);
