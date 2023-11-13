@@ -9,6 +9,7 @@ describe("network gatway json to tf", () => {
     it("should return a network gateway with one member", () => {
       let actualData = formatNetworkGateway({
         name: "gw",
+        domain: "test.com",
         hostname: "gw-host",
         datacenter: "dal10",
         network_speed: "1000",
@@ -33,6 +34,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
   name = "\${var.prefix}-gw"
   members {
     hostname             = "gw-host-1"
+    domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
     private_network_only = false
@@ -42,8 +44,8 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     memory               = 64
     notes                = "Notes"
     ipv6_enabled         = false
-    private_vlan         = ibm_network_vlan.classic_vlan_example_classic_private.id
-    public_vlan          = ibm_network_vlan.classic_vlan_example_classic_public.id
+    private_vlan_id      = ibm_network_vlan.classic_vlan_example_classic_private.id
+    public_vlan_id       = ibm_network_vlan.classic_vlan_example_classic_public.id
     package_key_name     = "VIRTUAL_ROUTER_APPLIANCE_1_GPBS"
     os_key_name          = "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV"
     process_key_name     = "INTEL_XEON_4210_2_20"
@@ -65,6 +67,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     it("should return a network gateway with two members", () => {
       let actualData = formatNetworkGateway({
         name: "gw",
+        domain: "test.com",
         hostname: "gw-host",
         datacenter: "dal10",
         network_speed: "1000",
@@ -89,6 +92,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
   name = "\${var.prefix}-gw"
   members {
     hostname             = "gw-host-1"
+    domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
     private_network_only = false
@@ -98,8 +102,8 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     memory               = 64
     notes                = "Notes"
     ipv6_enabled         = false
-    private_vlan         = ibm_network_vlan.classic_vlan_example_classic_private.id
-    public_vlan          = ibm_network_vlan.classic_vlan_example_classic_public.id
+    private_vlan_id      = ibm_network_vlan.classic_vlan_example_classic_private.id
+    public_vlan_id       = ibm_network_vlan.classic_vlan_example_classic_public.id
     package_key_name     = "VIRTUAL_ROUTER_APPLIANCE_1_GPBS"
     os_key_name          = "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV"
     process_key_name     = "INTEL_XEON_4210_2_20"
@@ -112,6 +116,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
   }
   members {
     hostname             = "gw-host-2"
+    domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
     private_network_only = false
@@ -121,8 +126,8 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     memory               = 64
     notes                = "Notes"
     ipv6_enabled         = false
-    private_vlan         = ibm_network_vlan.classic_vlan_example_classic_private.id
-    public_vlan          = ibm_network_vlan.classic_vlan_example_classic_public.id
+    private_vlan_id      = ibm_network_vlan.classic_vlan_example_classic_private.id
+    public_vlan_id       = ibm_network_vlan.classic_vlan_example_classic_public.id
     package_key_name     = "VIRTUAL_ROUTER_APPLIANCE_1_GPBS"
     os_key_name          = "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV"
     process_key_name     = "INTEL_XEON_4210_2_20"
@@ -152,6 +157,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
       let actualData = classicGatewayTf({
         classic_gateways: [
           {
+            domain: "test.com",
             name: "gw",
             hostname: "gw-host",
             datacenter: "dal10",
@@ -182,6 +188,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
   name = "\${var.prefix}-gw"
   members {
     hostname             = "gw-host-1"
+    domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
     private_network_only = false
@@ -191,8 +198,8 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     memory               = 64
     notes                = "Notes"
     ipv6_enabled         = false
-    private_vlan         = ibm_network_vlan.classic_vlan_example_classic_private.id
-    public_vlan          = ibm_network_vlan.classic_vlan_example_classic_public.id
+    private_vlan_id      = ibm_network_vlan.classic_vlan_example_classic_private.id
+    public_vlan_id       = ibm_network_vlan.classic_vlan_example_classic_public.id
     package_key_name     = "VIRTUAL_ROUTER_APPLIANCE_1_GPBS"
     os_key_name          = "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV"
     process_key_name     = "INTEL_XEON_4210_2_20"
@@ -205,6 +212,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
   }
   members {
     hostname             = "gw-host-2"
+    domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
     private_network_only = false
@@ -214,8 +222,8 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     memory               = 64
     notes                = "Notes"
     ipv6_enabled         = false
-    private_vlan         = ibm_network_vlan.classic_vlan_example_classic_private.id
-    public_vlan          = ibm_network_vlan.classic_vlan_example_classic_public.id
+    private_vlan_id      = ibm_network_vlan.classic_vlan_example_classic_private.id
+    public_vlan_id       = ibm_network_vlan.classic_vlan_example_classic_public.id
     package_key_name     = "VIRTUAL_ROUTER_APPLIANCE_1_GPBS"
     os_key_name          = "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV"
     process_key_name     = "INTEL_XEON_4210_2_20"

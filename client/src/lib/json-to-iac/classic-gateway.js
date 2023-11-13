@@ -18,6 +18,7 @@ function formatNetworkGateway(gateway) {
         /\$\{var.prefix\}-/g,
         ""
       ),
+      domain: gateway.domain,
       datacenter: gateway.datacenter,
       network_speed: gateway.network_speed,
       private_network_only: gateway.private_network_only,
@@ -27,10 +28,10 @@ function formatNetworkGateway(gateway) {
       memory: gateway.memory,
       notes: gateway.notes,
       ipv6_enabled: gateway.ipv6_enabled,
-      private_vlan: `\${ibm_network_vlan.classic_vlan_${snakeCase(
+      private_vlan_id: `\${ibm_network_vlan.classic_vlan_${snakeCase(
         gateway.private_vlan
       )}.id}`,
-      public_vlan: `\${ibm_network_vlan.classic_vlan_${snakeCase(
+      public_vlan_id: `\${ibm_network_vlan.classic_vlan_${snakeCase(
         gateway.public_vlan
       )}.id}`,
       package_key_name: gateway.package_key_name,

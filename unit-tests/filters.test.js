@@ -1,4 +1,4 @@
-const assert = require("assert");
+const { assert } = require("chai");
 const { encryptionKeyFilter } = require("../client/src/lib/forms");
 
 describe("encryptionKeyFilter", () => {
@@ -14,11 +14,14 @@ describe("encryptionKeyFilter", () => {
           key_management: [
             {
               name: "kms1",
-              keys: [{ name: "key1" }, { name: "key2" }],
+              keys: [
+                { name: "key1", root_key: true },
+                { name: "key2", root_key: false },
+              ],
             },
             {
               name: "kms2",
-              keys: [{ name: "key3" }],
+              keys: [{ name: "key3", root_key: false }],
             },
           ],
         },
@@ -36,7 +39,7 @@ describe("encryptionKeyFilter", () => {
     assert.deepEqual(result, []);
   });
 
-  it("should return an array of key names if kms is truthy", () => {
+  it("should return an array of key names for root keys when kmd is selected", () => {
     const componentProps = {
       isModal: true,
       parent_name: "cosName1",
@@ -45,6 +48,6 @@ describe("encryptionKeyFilter", () => {
 
     const result = encryptionKeyFilter({}, componentProps);
 
-    assert.deepEqual(result, ["key1", "key2"]);
+    assert.deepEqual(result, ["key1"]);
   });
 });

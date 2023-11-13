@@ -467,16 +467,19 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
                   vpc: "edge",
                   zone: 1,
                   cidr: "10.5.0.0/16",
+                  name: "edge-zone-1",
                 },
                 {
                   vpc: "edge",
                   zone: 2,
                   cidr: "10.6.0.0/16",
+                  name: "edge-zone-2",
                 },
                 {
                   vpc: "edge",
                   zone: 3,
                   cidr: "10.7.0.0/16",
+                  name: "edge-zone-3",
                 },
               ],
               acls: [
@@ -957,16 +960,19 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
                   vpc: "edge",
                   zone: 1,
                   cidr: "10.5.0.0/16",
+                  name: "edge-zone-1",
                 },
                 {
                   vpc: "edge",
                   zone: 2,
                   cidr: "10.6.0.0/16",
+                  name: "edge-zone-2",
                 },
                 {
                   vpc: "edge",
                   zone: 3,
                   cidr: "10.7.0.0/16",
+                  name: "edge-zone-3",
                 },
               ],
               acls: [

@@ -283,7 +283,8 @@ function kmsInstanceTf(kms, config) {
   });
   kms.keys.forEach((key) => {
     instanceTf +=
-      formatKmsKey(key, kms, config) + formatKmsKeyPolicy(key, kms, config);
+      formatKmsKey(key, kms, config) +
+      (key.root_key ? formatKmsKeyPolicy(key, kms, config) : "");
   });
   return tfBlock("Key Management Instance " + kms.name, instanceTf);
 }

@@ -15,14 +15,19 @@ function encryptionKeyFilter(_, componentProps) {
     "name",
     cosName
   );
-  let { keys } = kms
-    ? getObjectFromArray(
-        componentProps.craig.store.json.key_management,
-        "name",
-        kms
-      )
-    : [];
-  return kms ? splat(keys, "name") : [];
+  let validKeys = [];
+  if (kms) {
+    getObjectFromArray(
+      componentProps.craig.store.json.key_management,
+      "name",
+      kms
+    ).keys.forEach((key) => {
+      if (key.root_key) {
+        validKeys.push(key.name);
+      }
+    });
+  }
+  return kms ? validKeys : [];
 }
 
 /**

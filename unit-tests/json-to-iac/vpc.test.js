@@ -322,7 +322,9 @@ resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
     "landing-zone"
   ]
   depends_on = [
-    ibm_is_vpc_address_prefix.edge_f5_zone_1_prefix
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
   ]
 }
 `;
@@ -1502,6 +1504,1207 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
   tags = [
     "hello",
     "world"
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct data for f5 nw", () => {
+      let actualData = vpcTf({
+        _options: {
+          prefix: "iac",
+          region: "us-south",
+          tags: ["hello", "world"],
+          zones: 3,
+          endpoints: "private",
+          account_id: "",
+          fs_cloud: true,
+          enable_classic: false,
+          dynamic_subnets: false,
+          enable_power_vs: true,
+          power_vs_zones: ["us-south"],
+          craig_version: "1.6.0",
+        },
+        access_groups: [],
+        appid: [],
+        atracker: {
+          enabled: true,
+          type: "cos",
+          name: "atracker",
+          target_name: "atracker-cos",
+          bucket: "atracker-bucket",
+          add_route: true,
+          cos_key: "cos-bind-key",
+          locations: ["global", "us-south"],
+        },
+        cbr_rules: [],
+        cbr_zones: [],
+        clusters: [],
+        dns: [],
+        event_streams: [],
+        f5_vsi: [
+          {
+            kms: "kms",
+            subnet: "f5-management-zone-1",
+            vpc: "edge",
+            resource_group: "edge-rg",
+            ssh_keys: ["ssh-key"],
+            security_groups: ["f5-management-sg"],
+            encryption_key: "vsi-volume-key",
+            profile: "cx2-4x8",
+            name: "f5-zone-1",
+            image: "f5-bigip-15-1-5-1-0-0-14-all-1slot",
+            network_interfaces: [
+              {
+                security_groups: ["f5-bastion-sg"],
+                subnet: "f5-bastion-zone-1",
+              },
+              {
+                security_groups: ["f5-external-sg"],
+                subnet: "f5-external-zone-1",
+              },
+            ],
+            template: {
+              hostname: "f5-ve-01",
+              domain: "local",
+              default_route_gateway_cidr: "10.10.10.10/24",
+              zone: 1,
+              vpc: "edge",
+              do_declaration_url: "null",
+              as3_declaration_url: "null",
+              ts_declaration_url: "null",
+              phone_home_url: "null",
+              tgstandby_url: "null",
+              tgrefresh_url: "null",
+              tgactive_url: "null",
+              template_version: "20210201",
+              template_source:
+                "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
+              app_id: "null",
+              license_type: "none",
+              license_host: "null",
+              license_username: "null",
+              license_password: "null",
+              license_pool: "null",
+              license_sku_keyword_1: "null",
+              license_sku_keyword_2: "null",
+              tmos_admin_password: null,
+            },
+          },
+          {
+            kms: "kms",
+            subnet: "f5-management-zone-2",
+            vpc: "edge",
+            resource_group: "edge-rg",
+            ssh_keys: ["ssh-key"],
+            security_groups: ["f5-management-sg"],
+            encryption_key: "vsi-volume-key",
+            profile: "cx2-4x8",
+            name: "f5-zone-2",
+            image: "f5-bigip-15-1-5-1-0-0-14-all-1slot",
+            network_interfaces: [
+              {
+                security_groups: ["f5-bastion-sg"],
+                subnet: "f5-bastion-zone-2",
+              },
+              {
+                security_groups: ["f5-external-sg"],
+                subnet: "f5-external-zone-2",
+              },
+            ],
+            template: {
+              hostname: "f5-ve-01",
+              domain: "local",
+              default_route_gateway_cidr: "10.10.10.10/24",
+              zone: 2,
+              vpc: "edge",
+              do_declaration_url: "null",
+              as3_declaration_url: "null",
+              ts_declaration_url: "null",
+              phone_home_url: "null",
+              tgstandby_url: "null",
+              tgrefresh_url: "null",
+              tgactive_url: "null",
+              template_version: "20210201",
+              template_source:
+                "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
+              app_id: "null",
+              license_type: "none",
+              license_host: "null",
+              license_username: "null",
+              license_password: "null",
+              license_pool: "null",
+              license_sku_keyword_1: "null",
+              license_sku_keyword_2: "null",
+              tmos_admin_password: null,
+            },
+          },
+          {
+            kms: "kms",
+            subnet: "f5-management-zone-3",
+            vpc: "edge",
+            resource_group: "edge-rg",
+            ssh_keys: ["ssh-key"],
+            security_groups: ["f5-management-sg"],
+            encryption_key: "vsi-volume-key",
+            profile: "cx2-4x8",
+            name: "f5-zone-3",
+            image: "f5-bigip-15-1-5-1-0-0-14-all-1slot",
+            network_interfaces: [
+              {
+                security_groups: ["f5-bastion-sg"],
+                subnet: "f5-bastion-zone-3",
+              },
+              {
+                security_groups: ["f5-external-sg"],
+                subnet: "f5-external-zone-3",
+              },
+            ],
+            template: {
+              hostname: "f5-ve-01",
+              domain: "local",
+              default_route_gateway_cidr: "10.10.10.10/24",
+              zone: 3,
+              vpc: "edge",
+              do_declaration_url: "null",
+              as3_declaration_url: "null",
+              ts_declaration_url: "null",
+              phone_home_url: "null",
+              tgstandby_url: "null",
+              tgrefresh_url: "null",
+              tgactive_url: "null",
+              template_version: "20210201",
+              template_source:
+                "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
+              app_id: "null",
+              license_type: "none",
+              license_host: "null",
+              license_username: "null",
+              license_password: "null",
+              license_pool: "null",
+              license_sku_keyword_1: "null",
+              license_sku_keyword_2: "null",
+              tmos_admin_password: null,
+            },
+          },
+        ],
+        iam_account_settings: {
+          enable: false,
+          mfa: null,
+          allowed_ip_addresses: null,
+          include_history: false,
+          if_match: null,
+          max_sessions_per_identity: null,
+          restrict_create_service_id: null,
+          restrict_create_platform_apikey: null,
+          session_expiration_in_seconds: null,
+          session_invalidation_in_seconds: null,
+        },
+        icd: [],
+        key_management: [
+          {
+            name: "kms",
+            resource_group: "service-rg",
+            use_hs_crypto: false,
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            keys: [],
+          },
+        ],
+        load_balancers: [],
+        logdna: {
+          enabled: false,
+          plan: "lite",
+          endpoints: "private",
+          platform_logs: false,
+          resource_group: "service-rg",
+          cos: "atracker-cos",
+          bucket: "atracker-bucket",
+        },
+        object_storage: [
+          {
+            buckets: [
+              {
+                endpoint: "public",
+                force_delete: true,
+                kms_key: "atracker-key",
+                name: "atracker-bucket",
+                storage_class: "standard",
+                use_random_suffix: true,
+              },
+            ],
+            keys: [
+              {
+                name: "cos-bind-key",
+                role: "Writer",
+                enable_hmac: false,
+                use_random_suffix: true,
+              },
+            ],
+            name: "atracker-cos",
+            plan: "standard",
+            resource_group: "service-rg",
+            use_data: false,
+            use_random_suffix: true,
+            kms: "kms",
+          },
+          {
+            buckets: [
+              {
+                endpoint: "public",
+                force_delete: true,
+                kms_key: "key",
+                name: "management-bucket",
+                storage_class: "standard",
+                use_random_suffix: true,
+              },
+              {
+                endpoint: "public",
+                force_delete: true,
+                kms_key: "key",
+                name: "workload-bucket",
+                storage_class: "standard",
+                use_random_suffix: true,
+              },
+              {
+                force_delete: false,
+                name: "edge-bucket",
+                storage_class: "standard",
+                kms_key: "key",
+                endpoint: "public",
+                use_random_suffix: true,
+              },
+            ],
+            use_random_suffix: true,
+            keys: [],
+            name: "cos",
+            plan: "standard",
+            resource_group: "service-rg",
+            use_data: false,
+            kms: "kms",
+          },
+        ],
+        power: [],
+        power_instances: [],
+        power_volumes: [],
+        resource_groups: [
+          {
+            use_prefix: true,
+            name: "service-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: true,
+            name: "management-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: true,
+            name: "workload-rg",
+            use_data: false,
+          },
+          {
+            use_data: false,
+            use_prefix: true,
+            name: "edge-rg",
+          },
+          {
+            use_data: false,
+            name: "powervs-rg",
+            use_prefix: true,
+          },
+        ],
+        routing_tables: [],
+        scc: {
+          credential_description: null,
+          id: null,
+          passphrase: null,
+          name: "",
+          location: "us",
+          collector_description: null,
+          is_public: false,
+          scope_description: null,
+          enable: false,
+        },
+        secrets_manager: [],
+        security_groups: [],
+        ssh_keys: [],
+        sysdig: {
+          enabled: false,
+          plan: "graduated-tier",
+          resource_group: "service-rg",
+        },
+        teleport_vsi: [],
+        transit_gateways: [],
+        virtual_private_endpoints: [],
+        vpcs: [
+          {
+            cos: "cos",
+            bucket: "edge-bucket",
+            name: "edge",
+            resource_group: "edge-rg",
+            classic_access: false,
+            manual_address_prefix_management: true,
+            default_network_acl_name: null,
+            default_routing_table_name: null,
+            default_security_group_name: null,
+            address_prefixes: [
+              {
+                vpc: "edge",
+                zone: 1,
+                cidr: "10.5.0.0/16",
+                name: "edge-zone-1",
+              },
+              {
+                vpc: "edge",
+                zone: 2,
+                cidr: "10.6.0.0/16",
+                name: "edge-zone-2",
+              },
+              {
+                vpc: "edge",
+                zone: 3,
+                cidr: "10.7.0.0/16",
+                name: "edge-zone-3",
+              },
+            ],
+            acls: [
+              {
+                name: "edge-acl",
+                vpc: "edge",
+                resource_group: "edge-rg",
+                rules: [
+                  {
+                    acl: "edge-acl",
+                    vpc: "edge",
+                    action: "allow",
+                    destination: "10.0.0.0/8",
+                    direction: "inbound",
+                    name: "allow-ibm-inbound",
+                    source: "161.26.0.0/16",
+                    tcp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    icmp: {
+                      code: null,
+                      type: null,
+                    },
+                    udp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                  },
+                  {
+                    acl: "edge-acl",
+                    vpc: "edge",
+                    action: "allow",
+                    destination: "10.0.0.0/8",
+                    direction: "inbound",
+                    name: "allow-all-network-inbound",
+                    source: "10.0.0.0/8",
+                    tcp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    icmp: {
+                      code: null,
+                      type: null,
+                    },
+                    udp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                  },
+                  {
+                    acl: "edge-acl",
+                    vpc: "edge",
+                    action: "allow",
+                    destination: "10.0.0.0/8",
+                    direction: "outbound",
+                    name: "allow-all-network-outbound",
+                    source: "10.0.0.0/8",
+                    tcp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    icmp: {
+                      code: null,
+                      type: null,
+                    },
+                    udp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                  },
+                ],
+              },
+              {
+                name: "f5-external-acl",
+                vpc: "edge",
+                resource_group: "edge-rg",
+                rules: [
+                  {
+                    action: "allow",
+                    destination: "10.0.0.0/8",
+                    direction: "inbound",
+                    name: "allow-ibm-inbound",
+                    source: "161.26.0.0/16",
+                    acl: "f5-external-acl",
+                    vpc: "edge",
+                    tcp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    icmp: {
+                      code: null,
+                      type: null,
+                    },
+                    udp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                  },
+                  {
+                    action: "allow",
+                    destination: "10.0.0.0/8",
+                    direction: "inbound",
+                    name: "allow-all-network-inbound",
+                    source: "10.0.0.0/8",
+                    acl: "f5-external-acl",
+                    vpc: "edge",
+                    tcp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    icmp: {
+                      code: null,
+                      type: null,
+                    },
+                    udp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                  },
+                  {
+                    action: "allow",
+                    destination: "10.0.0.0/8",
+                    direction: "outbound",
+                    name: "allow-all-network-outbound",
+                    source: "10.0.0.0/8",
+                    acl: "f5-external-acl",
+                    vpc: "edge",
+                    tcp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    icmp: {
+                      code: null,
+                      type: null,
+                    },
+                    udp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                  },
+                  {
+                    action: "allow",
+                    destination: "10.0.0.0/8",
+                    direction: "inbound",
+                    name: "allow-f5-external-443-inbound",
+                    source: "0.0.0.0/0",
+                    acl: "f5-external-acl",
+                    vpc: "edge",
+                    tcp: {
+                      port_max: 443,
+                      port_min: 443,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    icmp: {
+                      code: null,
+                      type: null,
+                    },
+                    udp: {
+                      port_max: null,
+                      port_min: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                  },
+                ],
+              },
+            ],
+            subnets: [
+              {
+                vpc: "edge",
+                name: "f5-bastion-zone-1",
+                zone: 1,
+                resource_group: "edge-rg",
+                cidr: "10.5.50.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-bastion-zone-2",
+                zone: 2,
+                resource_group: "edge-rg",
+                cidr: "10.6.50.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-bastion-zone-3",
+                zone: 3,
+                resource_group: "edge-rg",
+                cidr: "10.7.50.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-external-zone-1",
+                zone: 1,
+                resource_group: "edge-rg",
+                cidr: "10.5.40.0/24",
+                network_acl: "f5-external-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-external-zone-2",
+                zone: 2,
+                resource_group: "edge-rg",
+                cidr: "10.6.40.0/24",
+                network_acl: "f5-external-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-external-zone-3",
+                zone: 3,
+                resource_group: "edge-rg",
+                cidr: "10.7.40.0/24",
+                network_acl: "f5-external-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-management-zone-1",
+                zone: 1,
+                resource_group: "edge-rg",
+                cidr: "10.5.30.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-management-zone-2",
+                zone: 2,
+                resource_group: "edge-rg",
+                cidr: "10.6.30.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "f5-management-zone-3",
+                zone: 3,
+                resource_group: "edge-rg",
+                cidr: "10.7.30.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpe-zone-1",
+                zone: 1,
+                resource_group: "edge-rg",
+                cidr: "10.5.60.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpe-zone-2",
+                zone: 2,
+                resource_group: "edge-rg",
+                cidr: "10.6.60.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpe-zone-3",
+                zone: 3,
+                resource_group: "edge-rg",
+                cidr: "10.7.60.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpn-1-zone-1",
+                zone: 1,
+                resource_group: "edge-rg",
+                cidr: "10.5.10.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpn-1-zone-2",
+                zone: 2,
+                resource_group: "edge-rg",
+                cidr: "10.6.10.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpn-1-zone-3",
+                zone: 3,
+                resource_group: "edge-rg",
+                cidr: "10.7.10.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpn-2-zone-1",
+                zone: 1,
+                resource_group: "edge-rg",
+                cidr: "10.5.20.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpn-2-zone-2",
+                zone: 2,
+                resource_group: "edge-rg",
+                cidr: "10.6.20.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+              {
+                vpc: "edge",
+                name: "vpn-2-zone-3",
+                zone: 3,
+                resource_group: "edge-rg",
+                cidr: "10.7.20.0/24",
+                network_acl: "edge-acl",
+                public_gateway: false,
+                has_prefix: true,
+              },
+            ],
+            public_gateways: [],
+            publicGateways: [],
+          },
+        ],
+        vpn_gateways: [],
+        vpn_servers: [],
+        vsi: [],
+        classic_ssh_keys: [],
+        classic_vlans: [],
+      });
+      let expectedData = `##############################################################################
+# Edge VPC
+##############################################################################
+
+resource "ibm_is_vpc" "edge_vpc" {
+  name                        = "\${var.prefix}-edge-vpc"
+  resource_group              = var.edge_rg_id
+  address_prefix_management   = "manual"
+  default_network_acl_name    = null
+  default_security_group_name = null
+  default_routing_table_name  = null
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_is_vpc_address_prefix" "edge_edge_zone_1_prefix" {
+  name = "\${var.prefix}-edge-edge-zone-1"
+  vpc  = ibm_is_vpc.edge_vpc.id
+  zone = "\${var.region}-1"
+  cidr = "10.5.0.0/16"
+}
+
+resource "ibm_is_vpc_address_prefix" "edge_edge_zone_2_prefix" {
+  name = "\${var.prefix}-edge-edge-zone-2"
+  vpc  = ibm_is_vpc.edge_vpc.id
+  zone = "\${var.region}-2"
+  cidr = "10.6.0.0/16"
+}
+
+resource "ibm_is_vpc_address_prefix" "edge_edge_zone_3_prefix" {
+  name = "\${var.prefix}-edge-edge-zone-3"
+  vpc  = ibm_is_vpc.edge_vpc.id
+  zone = "\${var.region}-3"
+  cidr = "10.7.0.0/16"
+}
+
+resource "ibm_is_network_acl" "edge_edge_acl_acl" {
+  name           = "\${var.prefix}-edge-edge-acl-acl"
+  vpc            = ibm_is_vpc.edge_vpc.id
+  resource_group = var.edge_rg_id
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_is_network_acl_rule" "edge_edge_acl_acl_rule_allow_ibm_inbound" {
+  source      = "161.26.0.0/16"
+  network_acl = ibm_is_network_acl.edge_edge_acl_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "inbound"
+  name        = "allow-ibm-inbound"
+}
+
+resource "ibm_is_network_acl_rule" "edge_edge_acl_acl_rule_allow_all_network_inbound" {
+  source      = "10.0.0.0/8"
+  network_acl = ibm_is_network_acl.edge_edge_acl_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "inbound"
+  name        = "allow-all-network-inbound"
+}
+
+resource "ibm_is_network_acl_rule" "edge_edge_acl_acl_rule_allow_all_network_outbound" {
+  source      = "10.0.0.0/8"
+  network_acl = ibm_is_network_acl.edge_edge_acl_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "outbound"
+  name        = "allow-all-network-outbound"
+}
+
+resource "ibm_is_network_acl" "edge_f5_external_acl_acl" {
+  name           = "\${var.prefix}-edge-f5-external-acl-acl"
+  vpc            = ibm_is_vpc.edge_vpc.id
+  resource_group = var.edge_rg_id
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_is_network_acl_rule" "edge_f5_external_acl_acl_rule_allow_ibm_inbound" {
+  source      = "161.26.0.0/16"
+  network_acl = ibm_is_network_acl.edge_f5_external_acl_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "inbound"
+  name        = "allow-ibm-inbound"
+}
+
+resource "ibm_is_network_acl_rule" "edge_f5_external_acl_acl_rule_allow_all_network_inbound" {
+  source      = "10.0.0.0/8"
+  network_acl = ibm_is_network_acl.edge_f5_external_acl_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "inbound"
+  name        = "allow-all-network-inbound"
+}
+
+resource "ibm_is_network_acl_rule" "edge_f5_external_acl_acl_rule_allow_all_network_outbound" {
+  source      = "10.0.0.0/8"
+  network_acl = ibm_is_network_acl.edge_f5_external_acl_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "outbound"
+  name        = "allow-all-network-outbound"
+}
+
+resource "ibm_is_network_acl_rule" "edge_f5_external_acl_acl_rule_allow_f5_external_443_inbound" {
+  source      = "0.0.0.0/0"
+  network_acl = ibm_is_network_acl.edge_f5_external_acl_acl.id
+  action      = "allow"
+  destination = "10.0.0.0/8"
+  direction   = "inbound"
+  name        = "allow-f5-external-443-inbound"
+  tcp {
+    port_min        = 443
+    port_max        = 443
+    source_port_min = null
+    source_port_max = null
+  }
+}
+
+resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-bastion-zone-1"
+  zone            = "\${var.region}-1"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.5.50.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_bastion_zone_2" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-bastion-zone-2"
+  zone            = "\${var.region}-2"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.6.50.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_bastion_zone_3" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-bastion-zone-3"
+  zone            = "\${var.region}-3"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.7.50.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_external_zone_1" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-external-zone-1"
+  zone            = "\${var.region}-1"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_f5_external_acl_acl.id
+  ipv4_cidr_block = "10.5.40.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_external_zone_2" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-external-zone-2"
+  zone            = "\${var.region}-2"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_f5_external_acl_acl.id
+  ipv4_cidr_block = "10.6.40.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_external_zone_3" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-external-zone-3"
+  zone            = "\${var.region}-3"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_f5_external_acl_acl.id
+  ipv4_cidr_block = "10.7.40.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_management_zone_1" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-management-zone-1"
+  zone            = "\${var.region}-1"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.5.30.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_management_zone_2" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-management-zone-2"
+  zone            = "\${var.region}-2"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.6.30.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_f5_management_zone_3" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-f5-management-zone-3"
+  zone            = "\${var.region}-3"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.7.30.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpe_zone_1" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpe-zone-1"
+  zone            = "\${var.region}-1"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.5.60.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpe_zone_2" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpe-zone-2"
+  zone            = "\${var.region}-2"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.6.60.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpe_zone_3" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpe-zone-3"
+  zone            = "\${var.region}-3"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.7.60.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpn_1_zone_1" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpn-1-zone-1"
+  zone            = "\${var.region}-1"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.5.10.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpn_1_zone_2" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpn-1-zone-2"
+  zone            = "\${var.region}-2"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.6.10.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpn_1_zone_3" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpn-1-zone-3"
+  zone            = "\${var.region}-3"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.7.10.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpn_2_zone_1" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpn-2-zone-1"
+  zone            = "\${var.region}-1"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.5.20.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpn_2_zone_2" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpn-2-zone-2"
+  zone            = "\${var.region}-2"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.6.20.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
+  ]
+}
+
+resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
+  vpc             = ibm_is_vpc.edge_vpc.id
+  name            = "\${var.prefix}-edge-vpn-2-zone-3"
+  zone            = "\${var.region}-3"
+  resource_group  = var.edge_rg_id
+  network_acl     = ibm_is_network_acl.edge_edge_acl_acl.id
+  ipv4_cidr_block = "10.7.20.0/24"
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_is_vpc_address_prefix.edge_zone_1_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_2_prefix,
+    ibm_is_vpc_address_prefix.edge_zone_3_prefix
   ]
 }
 

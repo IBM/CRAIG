@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template
+- Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template`. When using the endpoint, ssh keys will not have default values.
 - Users can now enable Classic Infrastructure in the Options page
 - Users can now create, update, and delete Classic VLANs
 - Users can now create certificates for a VPN Server for developer use only
@@ -24,6 +24,10 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Activity Tracker Object Storage target to not be updated when saving
 - Fixed an issue causing VPE security groups to incorrectly have a hyphen in VPC module name
 - Fixed an error allowing users to incorrectly create multiple transit gateway connections to a single VPC
+- Fixed an issue causing key rotation policies to be incorrectly created for standard keys
+- Fixed an error causing Edge VPC address prefixes to not have a `name` field
+- Fixed an issue allowing Object Storage buckets to incorrectly be provisioned using standard encryption keys
+- Fixed an error causing incorrect fields to be added to SAP Power VS instances
 
 ## 1.5.0
 

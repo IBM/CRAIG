@@ -557,8 +557,8 @@ const LoadBalancerPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("load_balancers")}
-      invalidTextCallback={invalidNameText("load_balancers")}
+      invalidCallback={craig.load_balancers.name.invalid}
+      invalidTextCallback={craig.load_balancers.name.invalidText}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       vpcList={craig.store.vpcList}
       securityGroups={craig.store.json.security_groups}

@@ -239,7 +239,7 @@ limitations under the License.
  * @param {boolean} apiMode when true log errors but don't throw them, used for backend functionality
  * @returns {JSON} json data
  */
-function configToFilesJson(config, apiMode) {
+function configToFilesJson(config, apiMode, templateTarMode) {
   try {
     let useF5 = config.f5_vsi && config.f5_vsi.length > 0;
     let files = {
@@ -253,7 +253,7 @@ function configToFilesJson(config, apiMode) {
       "vpn_gateways.tf": config.vpn_gateways.length > 0 ? vpnTf(config) : null,
       "vpn_servers.tf":
         config.vpn_servers.length > 0 ? vpnServerTf(config) : null,
-      "variables.tf": variablesDotTf(config, useF5),
+      "variables.tf": variablesDotTf(config, useF5, templateTarMode),
       "key_management.tf": kmsTf(config) + "\n",
       "object_storage.tf": cosTf(config) + "\n",
       "resource_groups.tf": resourceGroupTf(config),

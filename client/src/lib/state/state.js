@@ -133,13 +133,7 @@ const {
   f5OnStoreUpdate,
   f5TemplateSave,
 } = require("./f5");
-const {
-  loadBalancerInit,
-  loadBalancerOnStoreUpdate,
-  loadBalancerCreate,
-  loadBalancerSave,
-  loadBalancerDelete,
-} = require("./load-balancers");
+const { initLoadBalancers } = require("./load-balancers");
 const {
   eventStreamsOnStoreUpdate,
   eventStreamsCreate,
@@ -640,13 +634,7 @@ const state = function (legacy) {
     },
   });
 
-  store.newField("load_balancers", {
-    init: loadBalancerInit,
-    onStoreUpdate: loadBalancerOnStoreUpdate,
-    create: loadBalancerCreate,
-    save: loadBalancerSave,
-    delete: loadBalancerDelete,
-  });
+  initLoadBalancers(store);
 
   store.newField("event_streams", {
     init: (config) => {

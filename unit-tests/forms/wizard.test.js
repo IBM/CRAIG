@@ -5512,7 +5512,9 @@ describe("setup wizard", () => {
           default_network_acl_name: null,
           default_routing_table_name: null,
           default_security_group_name: null,
-          address_prefixes: [{ vpc: "edge", zone: 1, cidr: "10.5.0.0/16" }],
+          address_prefixes: [
+            { vpc: "edge", zone: 1, cidr: "10.5.0.0/16", name: "edge-zone-1" },
+          ],
           acls: [
             {
               name: "edge-acl",

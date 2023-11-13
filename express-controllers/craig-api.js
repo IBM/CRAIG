@@ -69,7 +69,11 @@ function craigApi(controller, tar) {
 
       // no try catch needed here if json exists,
       // then template json should always be correct
-      let craigData = configToFilesJson(templateNameToJson[template]);
+      let craigData = configToFilesJson(
+        templateNameToJson[template],
+        false,
+        true
+      );
       let tarFile = `${template}.tar`;
       packTar(pack, tarFile.slice(0, tarFile.length - 4), craigData);
       pack.finalize();

@@ -156,9 +156,14 @@ function ibmIsSubnet(subnet, config, useVarRef) {
     },
   };
 
-  data.data.ipv4_cidr_block = subnet.has_prefix
-    ? `\${ibm_is_vpc_address_prefix.${snakeCase(subnetName)}_prefix.cidr}`
-    : subnet.cidr;
+  let isEdgeSubnet = config.f5_vsi
+    ? config.f5_vsi.length > 0 && subnet.vpc === "edge"
+    : false;
+
+  data.data.ipv4_cidr_block =
+    subnet.has_prefix && !isEdgeSubnet
+      ? `\${ibm_is_vpc_address_prefix.${snakeCase(subnetName)}_prefix.cidr}`
+      : subnet.cidr;
 
   if (subnet.public_gateway) {
     data.data.public_gateway = tfRef(
@@ -166,7 +171,7 @@ function ibmIsSubnet(subnet, config, useVarRef) {
       `${subnet.vpc} gateway zone ${subnet.zone}`
     );
   }
-  if (!subnet.has_prefix) {
+  if (!subnet.has_prefix || isEdgeSubnet) {
     let addressPrefixes = getObjectFromArray(
       config.vpcs,
       "name",
@@ -178,12 +183,15 @@ function ibmIsSubnet(subnet, config, useVarRef) {
         (prefix.zone === subnet.zone && config._options.dynamic_subnets) ||
         (!subnet.has_prefix &&
           !config._options.dynamic_subnets &&
-          prefix.zone === subnet.zone)
+          prefix.zone === subnet.zone) ||
+        isEdgeSubnet
       )
         data.data.depends_on.push(
           cdktfRef(
             `ibm_is_vpc_address_prefix.${snakeCase(
-              `${subnet.vpc} ${prefix.name}`
+              isEdgeSubnet
+                ? `edge_zone_${prefix.name.replace(/\D|5*/g, "")}`
+                : `${subnet.vpc} ${prefix.name}`
             )}_prefix`
           )
         );

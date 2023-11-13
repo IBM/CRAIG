@@ -8,7 +8,14 @@ const {
 } = require("lazy-z");
 const { RegexButWithWords } = require("regex-but-with-words");
 
-function variablesDotTf(config, useF5) {
+/**
+ * create variables dot tf
+ * @param {*} config
+ * @param {*} useF5
+ * @param {boolean=} templateTarMode delete ssh key defaults for tar packages of default templates
+ * @returns {string} terraform template string
+ */
+function variablesDotTf(config, useF5, templateTarMode) {
   let variables = {
     ibmcloud_api_key: {
       description:
@@ -82,7 +89,7 @@ function variablesDotTf(config, useF5) {
       )}`,
       type: "${string}",
       sensitive: true,
-      default: key.public_key,
+      default: templateTarMode ? undefined : key.public_key,
       validation: [
         {
           error_message: "Public SSH Key must be a valid ssh rsa public key.",
@@ -168,7 +175,7 @@ function variablesDotTf(config, useF5) {
           ).toLowerCase()
         ),
         type: "${string}",
-        default: key.public_key,
+        default: templateTarMode ? undefined : key.public_key,
       };
     });
   });
@@ -180,7 +187,7 @@ function variablesDotTf(config, useF5) {
         " "
       )}`,
       type: "${string}",
-      default: sshKey.public_key,
+      default: templateTarMode ? undefined : sshKey.public_key,
     };
   });
 

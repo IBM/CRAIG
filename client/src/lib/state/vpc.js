@@ -879,17 +879,47 @@ function createEdgeVpc(config, pattern, useManagementVpc, zones, noUpdate) {
         };
 
   let managementPrefixes = [
-      { vpc: "management", zone: 1, cidr: "10.5.0.0/16" },
-      { vpc: "management", zone: 1, cidr: "10.10.10.0/16" },
-      { vpc: "management", zone: 2, cidr: "10.6.0.0/16" },
-      { vpc: "management", zone: 2, cidr: "10.20.10.0/16" },
-      { vpc: "management", zone: 3, cidr: "10.7.0.0/16" },
-      { vpc: "management", zone: 3, cidr: "10.30.10.0/16" },
+      {
+        vpc: "management",
+        zone: 1,
+        cidr: "10.5.0.0/16",
+        name: "management-edge-zone-1",
+      },
+      {
+        vpc: "management",
+        zone: 1,
+        cidr: "10.10.10.0/16",
+        name: "management-zone-1",
+      },
+      {
+        vpc: "management",
+        zone: 2,
+        cidr: "10.6.0.0/16",
+        name: "management-edge-zone-2",
+      },
+      {
+        vpc: "management",
+        zone: 2,
+        cidr: "10.20.10.0/16",
+        name: "management-zone-2",
+      },
+      {
+        vpc: "management",
+        zone: 3,
+        cidr: "10.7.0.0/16",
+        name: "management-edge-zone-3",
+      },
+      {
+        vpc: "management",
+        zone: 3,
+        cidr: "10.30.10.0/16",
+        name: "management-zone-3",
+      },
     ],
     edgePrefixes = [
-      { vpc: "edge", zone: 1, cidr: "10.5.0.0/16" },
-      { vpc: "edge", zone: 2, cidr: "10.6.0.0/16" },
-      { vpc: "edge", zone: 3, cidr: "10.7.0.0/16" },
+      { vpc: "edge", zone: 1, cidr: "10.5.0.0/16", name: "edge-zone-1" },
+      { vpc: "edge", zone: 2, cidr: "10.6.0.0/16", name: "edge-zone-2" },
+      { vpc: "edge", zone: 3, cidr: "10.7.0.0/16", name: "edge-zone-3" },
     ];
 
   // set address prefixes

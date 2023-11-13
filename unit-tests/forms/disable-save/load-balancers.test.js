@@ -1,5 +1,6 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+const craig = state();
 
 describe("load_balancers", () => {
   it("should return true if a load balancer has an invalid name", () => {
@@ -15,21 +16,7 @@ describe("load_balancers", () => {
           subnets: ["sub", "net"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -63,21 +50,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -111,21 +84,41 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
+          craig: craig,
+          data: {
+            name: "frog",
           },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a load balancer with an invalid health delay", () => {
+    assert.isTrue(
+      disableSave(
+        "load_balancers",
+        {
+          name: "aaa",
+          vpc: "management",
+          type: "private",
+          security_groups: ["management-vpe", "management-vsi"],
+          algorithm: "round_robin",
+          protocol: "http",
+          proxy_protocol: "",
+          health_type: "http",
+          session_persistence_app_cookie_name: "",
+          target_vsi: ["vsi"],
+          listener_protocol: "http",
+          connection_limit: null,
+          port: 456,
+          health_timeout: 5,
+          health_delay: 50000,
+          health_retries: 5,
+          listener_port: 443,
+          subnets: ["subnet-1"],
+        },
+        {
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -159,21 +152,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -207,21 +186,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -255,21 +220,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -303,21 +254,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -351,21 +288,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -399,21 +322,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -447,21 +356,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -495,21 +390,7 @@ describe("load_balancers", () => {
           subnets: ["subnet-1"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [],
-                load_balancers: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },

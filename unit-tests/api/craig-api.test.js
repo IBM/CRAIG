@@ -3,6 +3,7 @@ const res = require("../mocks/response.mock");
 const { craigApi } = require("../../express-controllers/craig-api");
 const sinon = require("sinon");
 const slz = require("../../client/src/lib/docs/templates/slz-mixed.json");
+const { getObjectFromArray } = require("lazy-z");
 
 function mockPackTar() {
   this.files = [];
@@ -427,6 +428,29 @@ describe("craig api", () => {
         .then(() => {
           assert.deepEqual(
             tar.files,
+            expectedFiles,
+            "it should set correct files"
+          );
+        });
+    });
+    it("it should have correct data in tar when finalized", () => {
+      let expectedFiles = {
+        name: "mixed/variables.tf",
+        data: '##############################################################################\n# Variables\n##############################################################################\n\nvariable "ibmcloud_api_key" {\n  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."\n  type        = string\n  sensitive   = true\n}\n\nvariable "region" {\n  description = "IBM Cloud Region where resources will be provisioned"\n  type        = string\n  default     = "us-south"\n  validation {\n    error_message = "Region must be in a supported IBM VPC region."\n    condition     = contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "jp-tok", "jp-osa", "au-syd"], var.region)\n  }\n}\n\nvariable "prefix" {\n  description = "Name prefix that will be prepended to named resources"\n  type        = string\n  default     = "iac"\n  validation {\n    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."\n    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16\n  }\n}\n\nvariable "ssh_key_public_key" {\n  description = "Public SSH Key Value for SSH Key"\n  type        = string\n  sensitive   = true\n  validation {\n    error_message = "Public SSH Key must be a valid ssh rsa public key."\n    condition     = "${var.ssh_key_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.ssh_key_public_key))}"\n  }\n}\n\n##############################################################################\n',
+      };
+      let mockController = {
+        createBlob: function () {
+          return new ArrayBuffer(5);
+        },
+      };
+      let tar = new mockPackTar();
+      let api = new craigApi(mockController, tar);
+
+      return api
+        .templateTar({ params: { template: "mixed" } }, res)
+        .then(() => {
+          assert.deepEqual(
+            getObjectFromArray(tar.files, "name", "mixed/variables.tf"),
             expectedFiles,
             "it should set correct files"
           );

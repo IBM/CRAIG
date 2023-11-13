@@ -93,6 +93,8 @@ function formatPowerVsInstance(instance) {
       delete data.pi_storage_type;
     }
   }
+  delete data.sap;
+  delete data.sap_profile;
   return jsonToTfPrint(
     "resource",
     "ibm_pi_instance",

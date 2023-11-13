@@ -641,52 +641,6 @@ function disableRoutesSave(stateData, componentProps) {
 }
 
 /**
- * check to see if load balancers form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableLoadBalancersSave(stateData, componentProps) {
-  return (
-    invalidName("load_balancers")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "resource_group",
-      "type",
-      "vpc",
-      "security_groups",
-      "deployment_vsi",
-      "algorith",
-      "pool_protocol",
-      "pool_health_protocol",
-      "listener_protocol",
-      "listener_port",
-      "health_retries",
-      "health_timeout",
-      "health_delay",
-      "port",
-    ]) ||
-    areNotWholeNumbers(
-      stateData.listener_port,
-      stateData.health_retries,
-      stateData.health_timeout,
-      stateData.health_delay,
-      stateData.port
-    ) ||
-    stateData.health_delay <= stateData.health_timeout ||
-    (stateData.connection_limit &&
-      rangeInvalid(stateData.connection_limit, 1, 15000)) ||
-    !haveValidRanges(
-      [stateData.port, 1, 65535],
-      [stateData.listener_port, 1, 65535],
-      [stateData.health_timeout, 5, 3000],
-      [stateData.health_delay, 5, 3000],
-      [stateData.health_retries, 5, 3000]
-    ) ||
-    anyAreEmpty(stateData.target_vsi, stateData.security_groups)
-  );
-}
-
-/**
  * check to see if cbr rules form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -1083,7 +1037,6 @@ const disableSaveFunctions = {
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
   routes: disableRoutesSave,
-  load_balancers: disableLoadBalancersSave,
   cbr_rules: disableCbrRulesSave,
   contexts: disableContextsSave,
   resource_attributes: disableResourceAttributesSave,
@@ -1119,6 +1072,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpn_servers",
     "vpn_server_routes",
     "transit_gateways",
+    "load_balancers",
   ];
   if (containsKeys(disableSaveFunctions, field)) {
     return disableSaveFunctions[field](stateData, componentProps, craig);
