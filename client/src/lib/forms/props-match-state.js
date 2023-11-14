@@ -15,7 +15,12 @@ function propsMatchState(field, stateData, componentProps) {
       "default_security_group_name",
     ].forEach((field) => {
       if (isNullOrEmptyString(stateData[field])) {
-        stateData[field] = null;
+        if (componentProps.data[field] === "") {
+          stateData[field] = "";
+        }
+        if (componentProps.data[field] === null) {
+          stateData[field] = null;
+        }
       }
     });
     // add array items from component props to state data to prevent an issue where
@@ -51,7 +56,6 @@ function propsMatchState(field, stateData, componentProps) {
   } else if (field === "security_groups") {
     componentProps.data.show = stateData.show;
   }
-
   return deepEqual(stateData, componentProps.data);
 }
 

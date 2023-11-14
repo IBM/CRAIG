@@ -33,6 +33,67 @@ describe("propsMatchState", () => {
       "it should be true"
     );
   });
+  it("should return true if vpc and default_routing_table_name is null", () => {
+    assert.isTrue(
+      propsMatchState(
+        "vpcs",
+        {
+          name: "test",
+          default_routing_table_name: "",
+        },
+        {
+          data: {
+            name: "test",
+            default_routing_table_name: null,
+            acls: [],
+            subnets: [],
+            address_prefixes: [],
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if vpc and default_security_group_name is empty string", () => {
+    assert.isTrue(
+      propsMatchState(
+        "vpcs",
+        {
+          default_security_group_name: "",
+        },
+        {
+          data: {
+            default_security_group_name: null,
+            acls: [],
+            subnets: [],
+            address_prefixes: [],
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if vpc and default_network_acl_name is null", () => {
+    assert.isTrue(
+      propsMatchState(
+        "vpcs",
+        {
+          name: "test",
+          default_network_acl_name: null,
+        },
+        {
+          data: {
+            name: "test",
+            default_network_acl_name: "",
+            acls: [],
+            subnets: [],
+            address_prefixes: [],
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
   it("should set component props data show to statedata show when checking if props match for security group", () => {
     assert.isTrue(
       propsMatchState("security_groups", { show: false }, { data: {} }),
