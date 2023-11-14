@@ -1,0 +1,48 @@
+.big-icon {
+  height: 80px;
+  width: 80px;
+}
+
+.border-none {
+  border: none;
+  margin: 1rem;
+}
+
+.none-right {
+  margin-right: 0px !important;
+}
+
+.icon-div {
+  width: 100px;
+}
+
+.icon-text {
+  width: 120px;
+}
+
+.manageService {
+  background-color: white;
+  padding: 0.9rem;
+  border-radius: 5px;
+  color: #0f62fe;
+  box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.manageService:hover {
+  cursor: pointer;
+}
+
+.noRgService {
+  color: #da1e28;
+}
+
+.serviceOpen {
+  color: #8d8d8d;
+  box-shadow: none;
+}
+
+.overrideGap {
+  gap: 1.5rem;
+  margin-bottom: 0px !important;
+}

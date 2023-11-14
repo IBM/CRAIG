@@ -1,0 +1,731 @@
+{
+  "provider": {
+    "ibm": [
+      {
+        "ibmcloud_api_key": "${var.ibmcloud_api_key}",
+        "region": "${var.region}"
+      }
+    ]
+  },
+  "module": {
+    "management_vpc": {
+      "//": {
+        "metadata": {
+          "uniqueId": "management_vpc",
+          "path": "./management_vpc"
+        }
+      },
+      "prefix": "${var.prefix}",
+      "region": "${var.region}",
+      "source": "./management_vpc",
+      "tags": ["slz", "landing-zone"],
+      "slz_management_rg_id": "${ibm_resource_group.slz_management_rg.id}"
+    },
+    "workload_vpc": {
+      "//": {
+        "metadata": {
+          "uniqueId": "workload_vpc",
+          "path": "./workload_vpc"
+        }
+      },
+      "prefix": "${var.prefix}",
+      "region": "${var.region}",
+      "source": "./workload_vpc",
+      "tags": ["slz", "landing-zone"],
+      "slz_workload_rg_id": "${ibm_resource_group.slz_workload_rg.id}"
+    }
+  },
+  "data": {
+    "ibm_is_image": {
+      "ibm_ubuntu_22_04_1_minimal_amd64_1": {
+        "name": "ibm-ubuntu-22-04-1-minimal-amd64-1"
+      }
+    }
+  },
+  "resource": {
+    "ibm_atracker_target": {
+      "slz_atracker_cos_target": {
+        "name": "${var.prefix}-slz-atracker-cos",
+        "cos_endpoint": [
+          {
+            "endpoint": "s3.private.${var.region}.cloud-object-storage.appdomain.cloud",
+            "target_crn": "${ibm_resource_instance.atracker_cos_object_storage.id}",
+            "bucket": "${ibm_cos_bucket.atracker_cos_object_storage_atracker_bucket_bucket.bucket_name}",
+            "api_key": "${ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key.credentials.apikey}"
+          }
+        ],
+        "region": "${var.region}",
+        "target_type": "cloud_object_storage"
+      }
+    },
+    "ibm_atracker_route": {
+      "slz_atracker_cos_route": {
+        "name": "${var.prefix}-slz-atracker-cos-route",
+        "rules": [
+          {
+            "locations": [
+              "global",
+              "${var.region}"
+            ],
+            "target_ids": [
+              "${ibm_atracker_target.slz_atracker_cos_target.id}"
+            ]
+          }
+        ]
+      }
+    },
+    "ibm_container_vpc_cluster": {
+      "workload_vpc_workload_cluster": {
+        "name": "${var.prefix}-workload-cluster",
+        "vpc_id": "${module.workload_vpc.id}",
+        "resource_group_id": "${ibm_resource_group.slz_workload_rg.id}",
+        "flavor": "bx2.16x64",
+        "worker_count": 2,
+        "kube_version": "default",
+        "update_all_workers": null,
+        "tags": ["slz", "landing-zone"],
+        "wait_till": "IngressReady",
+        "disable_public_service_endpoint": false,
+        "zones": [
+          {
+            "name": "${var.region}-1",
+            "subnet_id": "${module.workload_vpc.vsi_zone_1_id}"
+          },
+          {
+            "name": "${var.region}-2",
+            "subnet_id": "${module.workload_vpc.vsi_zone_2_id}"
+          },
+          {
+            "name": "${var.region}-3",
+            "subnet_id": "${module.workload_vpc.vsi_zone_3_id}"
+          }
+        ],
+        "timeouts": [
+          {
+            "create": "3h",
+            "update": "3h",
+            "delete": "2h"
+          }
+        ],
+        "kms_config": [
+          {
+            "crk_id": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id}",
+            "instance_id": "${ibm_resource_instance.slz_kms.guid}",
+            "private_endpoint": false
+          }
+        ],
+        "entitlement": "cloud_pak",
+        "cos_instance_crn": "${ibm_resource_instance.cos_object_storage.crn}"
+      }
+    },
+    "ibm_container_vpc_worker_pool": {
+      "workload_vpc_workload_cluster_logging_pool_pool": {
+        "worker_pool_name": "${var.prefix}-workload-cluster-logging-pool",
+        "vpc_id": "${module.workload_vpc.id}",
+        "resource_group_id": "${ibm_resource_group.slz_workload_rg.id}",
+        "cluster": "${ibm_container_vpc_cluster.workload_vpc_workload_cluster.id}",
+        "flavor": "bx2.16x64",
+        "worker_count": 2,
+        "zones": [
+          {
+            "name": "${var.region}-1",
+            "subnet_id": "${module.workload_vpc.vsi_zone_1_id}"
+          },
+          {
+            "name": "${var.region}-2",
+            "subnet_id": "${module.workload_vpc.vsi_zone_2_id}"
+          },
+          {
+            "name": "${var.region}-3",
+            "subnet_id": "${module.workload_vpc.vsi_zone_3_id}"
+          }
+        ],
+        "entitlement": "cloud_pak"
+      }
+    },
+    "ibm_iam_authorization_policy": {
+      "flow_logs_to_cos_object_storage_policy": {
+        "source_service_name": "is",
+        "source_resource_type": "flow-log-collector",
+        "description": "Allow flow logs write access cloud object storage instance",
+        "roles": ["Writer"],
+        "target_service_name": "cloud-object-storage",
+        "target_resource_instance_id": "${ibm_resource_instance.cos_object_storage.guid}"
+      },
+      "atracker_cos_cos_to_slz_kms_kms_policy": {
+        "source_service_name": "cloud-object-storage",
+        "source_resource_instance_id": "${ibm_resource_instance.atracker_cos_object_storage.guid}",
+        "roles": ["Reader"],
+        "description": "Allow COS instance to read from KMS instance",
+        "target_service_name": "kms",
+        "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}"
+      },
+      "cos_cos_to_slz_kms_kms_policy": {
+        "source_service_name": "cloud-object-storage",
+        "source_resource_instance_id": "${ibm_resource_instance.cos_object_storage.guid}",
+        "roles": ["Reader"],
+        "description": "Allow COS instance to read from KMS instance",
+        "target_service_name": "kms",
+        "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}"
+      },
+      "slz_kms_block_storage_policy": {
+        "source_service_name": "is",
+        "target_service_name": "kms",
+        "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "roles": ["Reader", "Authorization Delegator"],
+        "description": "Allow block storage volumes to be encrypted by Key Management instance.",
+        "source_resource_type": "share"
+      },
+      "slz_kms_server_protect_policy": {
+        "source_service_name": "server-protect",
+        "target_service_name": "kms",
+        "target_resource_instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "roles": ["Reader"],
+        "description": "Allow block storage volumes to be encrypted by Key Management instance."
+      }
+    },
+    "ibm_is_flow_log": {
+      "management_flow_log_collector": {
+        "name": "${var.prefix}-management-vpc-logs",
+        "target": "${module.management_vpc.id}",
+        "active": true,
+        "storage_bucket": "${ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name}",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "tags": ["slz", "landing-zone"],
+        "depends_on": [
+          "ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy"
+        ]
+      },
+      "workload_flow_log_collector": {
+        "name": "${var.prefix}-workload-vpc-logs",
+        "target": "${module.workload_vpc.id}",
+        "active": true,
+        "storage_bucket": "${ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name}",
+        "resource_group": "${ibm_resource_group.slz_workload_rg.id}",
+        "tags": ["slz", "landing-zone"],
+        "depends_on": [
+          "ibm_iam_authorization_policy.flow_logs_to_cos_object_storage_policy"
+        ]
+      }
+    },
+    "ibm_resource_group": {
+      "slz_service_rg": {
+        "name": "${var.prefix}-slz-service-rg",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ]
+      },
+      "slz_management_rg": {
+        "name": "${var.prefix}-slz-management-rg",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ]
+      },
+      "slz_workload_rg": {
+        "name": "${var.prefix}-slz-workload-rg",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ]
+      }
+    },
+    "ibm_resource_instance": {
+      "atracker_cos_object_storage": {
+        "name": "${var.prefix}-atracker-cos-object-storage",
+        "resource_group_id": "${ibm_resource_group.slz_service_rg.id}",
+        "service": "cloud-object-storage",
+        "location": "global",
+        "plan": "standard",
+        "tags": ["slz", "landing-zone"]
+      },
+      "cos_object_storage": {
+        "name": "${var.prefix}-cos-object-storage",
+        "resource_group_id": "${ibm_resource_group.slz_service_rg.id}",
+        "service": "cloud-object-storage",
+        "location": "global",
+        "plan": "standard",
+        "tags": ["slz", "landing-zone"]
+      },
+      "slz_kms": {
+        "name": "${var.prefix}-slz-kms",
+        "resource_group_id": "${ibm_resource_group.slz_service_rg.id}",
+        "service": "kms",
+        "plan": "tiered-pricing",
+        "location": "${var.region}",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ]
+      }
+    },
+    "ibm_cos_bucket": {
+      "atracker_cos_object_storage_atracker_bucket_bucket": {
+        "bucket_name": "${var.prefix}-atracker-cos-atracker-bucket",
+        "resource_instance_id": "${ibm_resource_instance.atracker_cos_object_storage.id}",
+        "storage_class": "standard",
+        "endpoint_type": "private",
+        "force_delete": true,
+        "region_location": "${var.region}",
+        "key_protect": "${ibm_kms_key.slz_kms_slz_atracker_key_key.crn}",
+        "depends_on": [
+          "ibm_iam_authorization_policy.atracker_cos_cos_to_slz_kms_kms_policy"
+        ]
+      },
+      "cos_object_storage_management_bucket_bucket": {
+        "bucket_name": "${var.prefix}-cos-management-bucket",
+        "resource_instance_id": "${ibm_resource_instance.cos_object_storage.id}",
+        "storage_class": "standard",
+        "endpoint_type": "private",
+        "force_delete": true,
+        "region_location": "${var.region}",
+        "key_protect": "${ibm_kms_key.slz_kms_slz_slz_key_key.crn}",
+        "depends_on": [
+          "ibm_iam_authorization_policy.cos_cos_to_slz_kms_kms_policy"
+        ]
+      },
+      "cos_object_storage_workload_bucket_bucket": {
+        "bucket_name": "${var.prefix}-cos-workload-bucket",
+        "resource_instance_id": "${ibm_resource_instance.cos_object_storage.id}",
+        "storage_class": "standard",
+        "endpoint_type": "private",
+        "force_delete": true,
+        "region_location": "${var.region}",
+        "key_protect": "${ibm_kms_key.slz_kms_slz_slz_key_key.crn}",
+        "depends_on": [
+          "ibm_iam_authorization_policy.cos_cos_to_slz_kms_kms_policy"
+        ]
+      }
+    },
+    "ibm_resource_key": {
+      "atracker_cos_object_storage_key_cos_bind_key": {
+        "name": "${var.prefix}-atracker-cos-key-cos-bind-key",
+        "resource_instance_id": "${ibm_resource_instance.atracker_cos_object_storage.id}",
+        "role": "Writer",
+        "tags": ["slz", "landing-zone"]
+      }
+    },
+    "ibm_kms_key_rings": {
+      "slz_kms_slz_slz_ring_ring": {
+        "key_ring_id": "${var.prefix}-slz-kms-slz-slz-ring",
+        "instance_id": "${ibm_resource_instance.slz_kms.guid}"
+      }
+    },
+    "ibm_kms_key": {
+      "slz_kms_slz_slz_key_key": {
+        "instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "key_name": "${var.prefix}-slz-kms-slz-slz-key",
+        "standard_key": false,
+        "key_ring_id": "${ibm_kms_key_rings.slz_kms_slz_slz_ring_ring.key_ring_id}",
+        "force_delete": true,
+        "endpoint_type": "private",
+        "depends_on": [
+          "ibm_iam_authorization_policy.slz_kms_server_protect_policy",
+          "ibm_iam_authorization_policy.slz_kms_block_storage_policy"
+        ]
+      },
+      "slz_kms_slz_atracker_key_key": {
+        "instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "key_name": "${var.prefix}-slz-kms-slz-atracker-key",
+        "standard_key": false,
+        "key_ring_id": "${ibm_kms_key_rings.slz_kms_slz_slz_ring_ring.key_ring_id}",
+        "force_delete": true,
+        "endpoint_type": "private",
+        "depends_on": [
+          "ibm_iam_authorization_policy.slz_kms_server_protect_policy",
+          "ibm_iam_authorization_policy.slz_kms_block_storage_policy"
+        ]
+      },
+      "slz_kms_slz_vsi_volume_key_key": {
+        "instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "key_name": "${var.prefix}-slz-kms-slz-vsi-volume-key",
+        "standard_key": false,
+        "key_ring_id": "${ibm_kms_key_rings.slz_kms_slz_slz_ring_ring.key_ring_id}",
+        "force_delete": true,
+        "endpoint_type": "private",
+        "depends_on": [
+          "ibm_iam_authorization_policy.slz_kms_server_protect_policy",
+          "ibm_iam_authorization_policy.slz_kms_block_storage_policy"
+        ]
+      }
+    },
+    "ibm_kms_key_policies": {
+      "slz_kms_slz_slz_key_key_policy": {
+        "instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "endpoint_type": "private",
+        "key_id": "${ibm_kms_key.slz_kms_slz_slz_key_key.key_id}",
+        "rotation": [
+          {
+            "interval_month": 12
+          }
+        ],
+        "dual_auth_delete": [
+          {
+            "enabled": false
+          }
+        ]
+      },
+      "slz_kms_slz_atracker_key_key_policy": {
+        "instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "endpoint_type": "private",
+        "key_id": "${ibm_kms_key.slz_kms_slz_atracker_key_key.key_id}",
+        "rotation": [
+          {
+            "interval_month": 12
+          }
+        ],
+        "dual_auth_delete": [
+          {
+            "enabled": false
+          }
+        ]
+      },
+      "slz_kms_slz_vsi_volume_key_key_policy": {
+        "instance_id": "${ibm_resource_instance.slz_kms.guid}",
+        "endpoint_type": "private",
+        "key_id": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id}",
+        "rotation": [
+          {
+            "interval_month": 12
+          }
+        ],
+        "dual_auth_delete": [
+          {
+            "enabled": false
+          }
+        ]
+      }
+    },
+    "ibm_is_ssh_key": {
+      "slz_ssh_key": {
+        "name": "${var.prefix}-slz-ssh-key",
+        "public_key": "${var.slz_ssh_key_public_key}",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "tags": ["slz", "landing-zone"]
+      }
+    },
+    "ibm_tg_gateway": {
+      "transit_gateway": {
+        "name": "${var.prefix}-transit-gateway",
+        "location": "${var.region}",
+        "global": false,
+        "resource_group": "${ibm_resource_group.slz_service_rg.id}",
+        "timeouts": [
+          {
+            "create": "30m",
+            "delete": "30m"
+          }
+        ]
+      }
+    },
+    "ibm_tg_connection": {
+      "transit_gateway_to_management_connection": {
+        "gateway": "${ibm_tg_gateway.transit_gateway.id}",
+        "network_type": "vpc",
+        "name": "${var.prefix}-transit-gateway-management-hub-connection",
+        "network_id": "${module.management_vpc.crn}",
+        "timeouts": [
+          {
+            "create": "30m",
+            "delete": "30m"
+          }
+        ]
+      },
+      "transit_gateway_to_workload_connection": {
+        "gateway": "${ibm_tg_gateway.transit_gateway.id}",
+        "network_type": "vpc",
+        "name": "${var.prefix}-transit-gateway-workload-hub-connection",
+        "network_id": "${module.workload_vpc.crn}",
+        "timeouts": [
+          {
+            "create": "30m",
+            "delete": "30m"
+          }
+        ]
+      }
+    },
+    "ibm_is_subnet_reserved_ip": {
+      "management_vpc_vpe_zone_1_subnet_vpe_ip": {
+        "subnet": "${module.management_vpc.vpe_zone_1_id}"
+      },
+      "management_vpc_vpe_zone_2_subnet_vpe_ip": {
+        "subnet": "${module.management_vpc.vpe_zone_2_id}"
+      },
+      "management_vpc_vpe_zone_3_subnet_vpe_ip": {
+        "subnet": "${module.management_vpc.vpe_zone_3_id}"
+      },
+      "workload_vpc_vpe_zone_1_subnet_vpe_ip": {
+        "subnet": "${module.workload_vpc.vpe_zone_1_id}"
+      },
+      "workload_vpc_vpe_zone_2_subnet_vpe_ip": {
+        "subnet": "${module.workload_vpc.vpe_zone_2_id}"
+      },
+      "workload_vpc_vpe_zone_3_subnet_vpe_ip": {
+        "subnet": "${module.workload_vpc.vpe_zone_3_id}"
+      }
+    },
+    "ibm_is_virtual_endpoint_gateway_ip": {
+      "management_vpc_cos_gw_vpe_zone_1_gateway_ip": {
+        "gateway": "${ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id}",
+        "reserved_ip": "${ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_1_subnet_vpe_ip.reserved_ip}"
+      },
+      "management_vpc_cos_gw_vpe_zone_2_gateway_ip": {
+        "gateway": "${ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id}",
+        "reserved_ip": "${ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_2_subnet_vpe_ip.reserved_ip}"
+      },
+      "management_vpc_cos_gw_vpe_zone_3_gateway_ip": {
+        "gateway": "${ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id}",
+        "reserved_ip": "${ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_3_subnet_vpe_ip.reserved_ip}"
+      },
+      "workload_vpc_cos_gw_vpe_zone_1_gateway_ip": {
+        "gateway": "${ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id}",
+        "reserved_ip": "${ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_1_subnet_vpe_ip.reserved_ip}"
+      },
+      "workload_vpc_cos_gw_vpe_zone_2_gateway_ip": {
+        "gateway": "${ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id}",
+        "reserved_ip": "${ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_2_subnet_vpe_ip.reserved_ip}"
+      },
+      "workload_vpc_cos_gw_vpe_zone_3_gateway_ip": {
+        "gateway": "${ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id}",
+        "reserved_ip": "${ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_3_subnet_vpe_ip.reserved_ip}"
+      }
+    },
+    "ibm_is_virtual_endpoint_gateway": {
+      "management_vpc_cos_vpe_gateway": {
+        "name": "${var.prefix}-management-cos-vpe-gw",
+        "vpc": "${module.management_vpc.id}",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "tags": ["slz", "landing-zone"],
+        "security_groups": ["${module.management_vpc.management_vpe_sg_id}"],
+        "target": [
+          {
+            "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.${var.region}.cloud-object-storage.appdomain.cloud",
+            "resource_type": "provider_cloud_service"
+          }
+        ]
+      },
+      "workload_vpc_cos_vpe_gateway": {
+        "name": "${var.prefix}-workload-cos-vpe-gw",
+        "vpc": "${module.workload_vpc.id}",
+        "resource_group": "${ibm_resource_group.slz_workload_rg.id}",
+        "tags": ["slz", "landing-zone"],
+        "security_groups": ["${module.workload_vpc.workload_vpe_sg_id}"],
+        "target": [
+          {
+            "crn": "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.${var.region}.cloud-object-storage.appdomain.cloud",
+            "resource_type": "provider_cloud_service"
+          }
+        ]
+      }
+    },
+    "ibm_is_instance": {
+      "management_vpc_management_server_vsi_1_1": {
+        "name": "${var.prefix}-management-management-server-vsi-zone-1-1",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
+        "profile": "cx2-4x8",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "vpc": "${module.management_vpc.id}",
+        "zone": "${var.region}-1",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ],
+        "primary_network_interface": [
+          {
+            "subnet": "${module.management_vpc.vsi_zone_1_id}",
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
+          }
+        ],
+        "boot_volume": [
+          {
+            "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
+          }
+        ],
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
+      },
+      "management_vpc_management_server_vsi_1_2": {
+        "name": "${var.prefix}-management-management-server-vsi-zone-1-2",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
+        "profile": "cx2-4x8",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "vpc": "${module.management_vpc.id}",
+        "zone": "${var.region}-1",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ],
+        "primary_network_interface": [
+          {
+            "subnet": "${module.management_vpc.vsi_zone_1_id}",
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
+          }
+        ],
+        "boot_volume": [
+          {
+            "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
+          }
+        ],
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
+      },
+      "management_vpc_management_server_vsi_2_1": {
+        "name": "${var.prefix}-management-management-server-vsi-zone-2-1",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
+        "profile": "cx2-4x8",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "vpc": "${module.management_vpc.id}",
+        "zone": "${var.region}-2",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ],
+        "primary_network_interface": [
+          {
+            "subnet": "${module.management_vpc.vsi_zone_2_id}",
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
+          }
+        ],
+        "boot_volume": [
+          {
+            "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
+          }
+        ],
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
+      },
+      "management_vpc_management_server_vsi_2_2": {
+        "name": "${var.prefix}-management-management-server-vsi-zone-2-2",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
+        "profile": "cx2-4x8",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "vpc": "${module.management_vpc.id}",
+        "zone": "${var.region}-2",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ],
+        "primary_network_interface": [
+          {
+            "subnet": "${module.management_vpc.vsi_zone_2_id}",
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
+          }
+        ],
+        "boot_volume": [
+          {
+            "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
+          }
+        ],
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
+      },
+      "management_vpc_management_server_vsi_3_1": {
+        "name": "${var.prefix}-management-management-server-vsi-zone-3-1",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
+        "profile": "cx2-4x8",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "vpc": "${module.management_vpc.id}",
+        "zone": "${var.region}-3",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ],
+        "primary_network_interface": [
+          {
+            "subnet": "${module.management_vpc.vsi_zone_3_id}",
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
+          }
+        ],
+        "boot_volume": [
+          {
+            "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
+          }
+        ],
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
+      },
+      "management_vpc_management_server_vsi_3_2": {
+        "name": "${var.prefix}-management-management-server-vsi-zone-3-2",
+        "image": "${data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id}",
+        "profile": "cx2-4x8",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "vpc": "${module.management_vpc.id}",
+        "zone": "${var.region}-3",
+        "tags": [
+          "slz",
+          "landing-zone"
+        ],
+        "primary_network_interface": [
+          {
+            "subnet": "${module.management_vpc.vsi_zone_3_id}",
+            "security_groups": ["${module.management_vpc.management_vpe_sg_id}"]
+          }
+        ],
+        "boot_volume": [
+          {
+            "encryption": "${ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn}"
+          }
+        ],
+        "keys": ["${ibm_is_ssh_key.slz_ssh_key.id}"]
+      }
+    },
+    "ibm_is_vpn_gateway": {
+      "management_management_gateway_vpn_gw": {
+        "name": "${var.prefix}-management-management-gateway-vpn-gw",
+        "subnet": "${module.management_vpc.vpn_zone_1_id}",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "tags": ["slz", "landing-zone"],
+        "timeouts": [
+          {
+            "delete": "1h"
+          }
+        ]
+      }
+    },
+    "ibm_is_vpn_server": {
+      "management_vpn_server_vpn_server": {
+        "certificate_crn": "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083",
+        "client_authentication": [
+          {
+            "method": "certificate",
+            "client_ca_crn": "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+          }
+        ],
+        "client_ip_pool": "10.5.0.0/21",
+        "client_dns_server_ips": ["192.168.3.4"],
+        "client_idle_timeout": 2000,
+        "enable_split_tunneling": true,
+        "name": "${var.prefix}-management-vpn-server-server",
+        "port": 255,
+        "protocol": "udp",
+        "resource_group": "${ibm_resource_group.slz_management_rg.id}",
+        "security_groups": ["${module.management_vpc.management_vpe_sg_id}"],
+        "subnets": ["${module.management_vpc.vsi_zone_1_id}"]
+      }
+    },
+    "ibm_is_vpn_server_route": {
+      "management_vpn_server_route_vpn_route": {
+        "name": "${var.prefix}-management-vpn-route-route",
+        "action": "translate",
+        "destination": "172.16.0.0/16",
+        "vpn_server": "${ibm_is_vpn_server.management_vpn_server_vpn_server.id}"
+      }
+    }
+  },
+  "variable": {
+    "ibmcloud_api_key": {
+      "description": "The IBM Cloud platform API key needed to deploy IAM enabled resources.",
+      "sensitive": true
+    },
+    "slz_ssh_key_public_key": {
+      "default": "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+      "description": "Public SSH Key Value for Slz SSH Key",
+      "type": "string",
+      "sensitive": true
+    }
+  },
+  "terraform": {
+    "required_providers": {
+      "ibm": {
+        "source": "IBM-Cloud/ibm",
+        "version": "1.44.1"
+      }
+    }
+  }
+}

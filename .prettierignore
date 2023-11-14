@@ -1,0 +1,11 @@
+node_modules/
+build/
+.nyc_output/
+.tekton/
+unit-tests/data-files/
+old/
+*.yml
+*.md
+terraform.*
+.terraform/
+terraform/

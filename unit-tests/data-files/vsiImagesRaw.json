@@ -1,0 +1,101 @@
+{
+  "first": {
+    "href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=50"
+  },
+  "images": [
+    {
+      "catalog_offering": {
+        "managed": false
+      },
+      "created_at": "2019-03-15T21:31:37Z",
+      "crn": "crn:[...]",
+      "encryption": "none",
+      "file": {},
+      "href": "https://us-south.iaas.cloud.ibm.com/v1/images/5ccbc579-dc22-0def-46a8-9c2e9b502d37",
+      "id": "5ccbc579-dc22-0def-46a8-9c2e9b502d37",
+      "minimum_provisioned_size": 100,
+      "name": "windows-2016-amd64",
+      "operating_system": {
+        "architecture": "amd64",
+        "dedicated_host_only": false,
+        "display_name": "Windows Server 2016 Standard Edition (amd64)",
+        "family": "Windows Server",
+        "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/windows-2016-amd64",
+        "name": "windows-2016-amd64",
+        "vendor": "Microsoft",
+        "version": "2016 Standard Edition"
+      },
+      "resource_group": {
+        "href": "https://us-south.iaas.cloud.ibm.com/v1/resource_groups/3fad3f2204eb4998c3964d254ffcd771",
+        "id": "3fad3f2204eb4998c3964d254ffcd771",
+        "name": "Default"
+      },
+      "status": "available",
+      "status_reasons": [],
+      "visibility": "public"
+    },
+    {
+      "catalog_offering": {
+        "managed": false
+      },
+      "created_at": "2018-10-04T04:04:25Z",
+      "crn": "crn:[...]",
+      "encryption": "none",
+      "file": {},
+      "href": "https://us-south.iaas.cloud.ibm.com/v1/images/e15b69f1-c701-f621-e752-70eda3df5695",
+      "id": "e15b69f1-c701-f621-e752-70eda3df5695",
+      "minimum_provisioned_size": 100,
+      "name": "debian-9-amd64",
+      "operating_system": {
+        "architecture": "amd64",
+        "dedicated_host_only": false,
+        "display_name": "Debian GNU/Linux 9.x Stretch/Stable - Minimal Install (amd64)",
+        "family": "Debian GNU/Linux",
+        "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/debian-9-amd64",
+        "name": "debian-9-amd64",
+        "vendor": "Debian",
+        "version": "9.x Stretch/Stable - Minimal Install"
+      },
+      "resource_group": {
+        "href": "https://us-south.iaas.cloud.ibm.com/v1/resource_groups/3fad3f2204eb4998c3964d254ffcd771",
+        "id": "3fad3f2204eb4998c3964d254ffcd771",
+        "name": "Default"
+      },
+      "status": "available",
+      "status_reasons": [],
+      "visibility": "public"
+    },
+    {
+      "catalog_offering": {
+        "managed": false
+      },
+      "created_at": "2018-12-12T18:22:51Z",
+      "crn": "crn:[...]",
+      "encryption": "none",
+      "file": {},
+      "href": "https://eu-de.iaas.cloud.ibm.com/v1/images/7eb4e35b-4257-56f8-d7da-326d85452591",
+      "id": "7eb4e35b-4257-56f8-d7da-326d85452591",
+      "minimum_provisioned_size": 100,
+      "name": "my-image",
+      "operating_system": {
+        "architecture": "amd64",
+        "dedicated_host_only": false,
+        "display_name": "Ubuntu Linux 16.04 LTS Xenial Xerus Minimal Install (amd64)",
+        "family": "Ubuntu Linux",
+        "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-04-amd64",
+        "name": "ubuntu-16-04-amd64",
+        "vendor": "Canonical",
+        "version": "16.04 LTS Xenial Xerus Minimal Install"
+      },
+      "resource_group": {
+        "href": "https://us-south.iaas.cloud.ibm.com/v1/resource_groups/3fad3f2204eb4998c3964d254ffcd771",
+        "id": "3fad3f2204eb4998c3964d254ffcd771",
+        "name": "Default"
+      },
+      "status": "available",
+      "status_reasons": [],
+      "visibility": "public"
+    }
+  ],
+  "limit": 50
+}

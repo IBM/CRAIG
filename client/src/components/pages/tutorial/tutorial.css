@@ -1,0 +1,135 @@
+.tutorial-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.splash-tutorial {
+  margin-top: 4rem;
+}
+
+/* controls */
+.control-box-container {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.controls-container {
+  width: 100%;
+  height: 1rem;
+}
+
+.controls {
+  height: fit-content;
+  overflow: hidden; /* hide overflow on hover over next button */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  z-index: 1000;
+}
+
+/* indicator */
+.progress-indicator {
+  padding-right: 3rem;
+  padding-left: 3rem;
+  height: 3rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.marginRight {
+  margin-right: 2rem;
+}
+
+/* text classes for tile */
+.bold {
+  font-weight: bold;
+}
+
+.center {
+  text-align: center;
+}
+
+.justify {
+  text-align: justify;
+}
+
+/* tile */
+.tile-container {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 0 3rem 0 3rem;
+  justify-content: center;
+}
+
+.tutorial-tile-container {
+  display: flex;
+  align-items: center;
+  width: 33%;
+  height: 100vh;
+}
+
+.tutorial-tile {
+  border-left: 1px solid var(--subForm);
+  border-right: 1px solid var(--subForm);
+  width: 100%;
+  padding: 1rem;
+  height: 65%;
+}
+
+.image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: var(--subForm);
+  margin-bottom: 1rem;
+}
+
+.fit-images {
+  object-fit: cover;
+  width: 50%;
+  height: 50%;
+}
+
+/* add css to center within progress bar */
+.cds--progress-step > button {
+  justify-content: center;
+  display: flex;
+}
+
+li.cds--progress-step > button > svg {
+  margin-top: 1.11rem;
+}
+
+li.cds--progress-step > button > div.cds--progress-text {
+  margin-top: 0.5rem;
+}
+
+/* animations */
+@keyframes inAnimation {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes outAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

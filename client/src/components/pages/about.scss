@@ -1,0 +1,126 @@
+strong {
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+p {
+  font-size: 1.25em;
+  line-height: 2.5rem;
+}
+
+li {
+  font-size: 14px;
+}
+
+.about {
+  background-color: #f4f4f4;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.verticalAlign {
+  height: calc(100vh - 7.5em);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.infoPadding {
+  padding: 0 4rem 0 4rem;
+  width: 65%;
+}
+
+.splash-text-container {
+  align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: justify;
+}
+
+.section {
+  height: calc(100vh - 3rem);
+  width: 100%;
+}
+
+.half {
+  width: 50%;
+}
+
+ul.bullets {
+  list-style-type: circle;
+}
+
+ul.indent {
+  margin-left: 2rem;
+}
+
+// do not allow the accordion title to go over the footer
+.cds--accordion__title {
+  z-index: 0;
+}
+
+.stackedAcronym {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.verticalLine {
+  border-right: 2px solid black;
+}
+
+.third {
+  width: 33%;
+}
+
+p .textContainer {
+  width: 100%;
+}
+
+.verticalFlex {
+  flex-direction: column;
+}
+
+div .center {
+  justify-content: center;
+}
+
+@media screen and (min-width: 1800px) {
+  h1.bigger {
+    font-size: 3.5em;
+  }
+
+  p.textContainer,
+  p.accordionItem,
+  li {
+    font-size: 1.25em;
+    line-height: 2.5rem;
+  }
+
+  p.textContainer {
+    text-align: center;
+  }
+
+  div .cds--accordion__title,
+  .cds--accordion-content {
+    font-size: 1.25em;
+  }
+}
+
+div .aboutHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+}

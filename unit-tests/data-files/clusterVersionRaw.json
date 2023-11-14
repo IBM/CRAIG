@@ -1,0 +1,69 @@
+{
+  "kubernetes": [
+    {
+      "major": 1,
+      "minor": 22,
+      "patch": 17,
+      "default": false,
+      "end_of_service": "2023-01-18T23:59:59+0000"
+    },
+    {
+      "major": 1,
+      "minor": 23,
+      "patch": 15,
+      "default": false,
+      "end_of_service": ""
+    },
+    {
+      "major": 1,
+      "minor": 24,
+      "patch": 9,
+      "default": true,
+      "end_of_service": ""
+    },
+    {
+      "major": 1,
+      "minor": 25,
+      "patch": 5,
+      "default": false,
+      "end_of_service": ""
+    }
+  ],
+  "openshift": [
+    {
+      "major": 4,
+      "minor": 7,
+      "patch": 60,
+      "default": false,
+      "end_of_service": "2023-01-18T23:59:59+0000"
+    },
+    {
+      "major": 4,
+      "minor": 8,
+      "patch": 54,
+      "default": false,
+      "end_of_service": ""
+    },
+    {
+      "major": 4,
+      "minor": 9,
+      "patch": 52,
+      "default": false,
+      "end_of_service": ""
+    },
+    {
+      "major": 4,
+      "minor": 10,
+      "patch": 43,
+      "default": true,
+      "end_of_service": ""
+    },
+    {
+      "major": 4,
+      "minor": 11,
+      "patch": 17,
+      "default": false,
+      "end_of_service": ""
+    }
+  ]
+}

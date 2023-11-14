@@ -1,0 +1,2048 @@
+{
+  "resource_groups": {
+    "content": [
+      {
+        "text": "Resource groups aid in the organization of account resources in an IBM Cloud account."
+      },
+      {
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": ["craig-rg"],
+          "Power VS Quick Start": ["management-rg", "service-rg"],
+          "Power VS Oracle Ready": [
+            "management-rg",
+            "service-rg",
+            "workload-rg",
+            "power-rg"
+          ],
+          "Mixed": ["management-rg", "service-rg", "workload-rg"],
+          "Power VS SAP Hana": ["management-rg", "service-rg", "workload-rg"],
+          "VSI Edge": ["management-rg", "service-rg", "workload-rg", "edge-rg"],
+          "VSI": ["management-rg", "service-rg", "workload-rg"]
+        },
+        "table": [
+          ["_headers", "Group Name", "Description", "Optional"],
+          [
+            "service-rg",
+            "A resource group containing all IBM Cloud Services",
+            ""
+          ],
+          [
+            "management-rg",
+            "A resource group containing the compute, storage, and network services to enable the application provider's administrators to monitor, operation, and maintain the environment",
+            ""
+          ],
+          [
+            "workload-rg",
+            "A resource group containing the compute, storage, and network services to support hosted applications and operations that deliver services to the consumer",
+            ""
+          ],
+          [
+            "edge-rg",
+            "A resource group containing the compute, storage, and network services necessary for edge networking",
+            "true"
+          ],
+          ["craig-rg", "An example resource group", ""],
+          ["power-rg", "A resource group for Power VS resources", ""]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui",
+        "Resource Group Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_group",
+        "Resource Group Terraform Documentation"
+      ]
+    ],
+    "last_updated": "5/31/2023"
+  },
+  "object_storage": {
+    "content": [
+      {
+        "text": "IBM Cloud Object Storage (COS) is a highly available, durable, and secure platform for storing unstructured data. PDFs, media files, database backups, disk images, large structured datasets can be uploaded as objects and then organized into containers named Buckets."
+      },
+      {
+        "text": "The initial configuration includes two COS instances:",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["cos", "atracker-cos"],
+          "Power VS Oracle Ready": ["cos", "atracker-cos"],
+          "Mixed": ["cos", "atracker-cos"],
+          "Power VS SAP Hana": ["cos", "atracker-cos"],
+          "VSI Edge": ["cos", "atracker-cos"],
+          "VSI": ["cos", "atracker-cos"]
+        },
+        "table": [
+          ["_headers", "Instance Name", "Description"],
+          [
+            "cos",
+            "A COS instance with two buckets, a management bucket and a workload bucket, where respective objects can be stored"
+          ],
+          [
+            "atracker-cos",
+            "A COS instance with a bucket where Activity Tracker logs will be stored"
+          ]
+        ]
+      },
+      {
+        "text": "The initial configuration also includes a service credential to allow for Activity Tracker to connect to COS.",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["cos-bind-key"],
+          "Power VS Oracle Ready": ["cos-bind-key"],
+          "Mixed": ["cos-bind-key"],
+          "Power VS SAP Hana": ["cos-bind-key"],
+          "VSI Edge": ["cos-bind-key"],
+          "VSI": ["cos-bind-key"]
+        },
+        "table": [
+          ["_headers", "Credential Name", "Description"],
+          [
+            "cos-bind-key",
+            "A service credential to allow for Activity Tracker to have write access to an Object Storage Instance"
+          ]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-about-cloud-object-storage",
+        "Cloud Object Storage Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cos_bucket",
+        "Object Storage Bucket Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/resource_key",
+        "Resource Key Terraform Documentation"
+      ]
+    ],
+    "last_updated": "5/31/2023"
+  },
+  "key_management": {
+    "content": [
+      {
+        "text": "A key management service is used to create, import, rotate, and manage encryption keys. By default a single instance is created, but users can add additional instances as needed."
+      },
+      {
+        "text": "IBM Cloud offers two solutions for key management:",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Service Name", "Description"],
+          [
+            "IBM Cloud Hyper Protect Crypto Services (HPCS)",
+            "A dedicated key management service and hardware security module (HSM) based on IBM Cloud. Built on FIPS 140-2 Level 4-certified hardware, this service allows users to take the ownership of the cloud HSM to fully manage encryption keys and perform cryptographic operations. Users cannot use SLZ to initialize HPCS. In order to use HPCS with Secure Landing Zone users will need to bring an existing instance."
+          ],
+          [
+            "IBM Cloud Key Protect",
+            "A full-service encryption solution that allows data to be secured and stored in IBM Cloud using the latest envelope encryption techniques that leverage FIPS 140-2 Level 3 certified cloud-based hardware security modules."
+          ]
+        ]
+      },
+      {
+        "text": "To be FS Cloud compliant, data at rest is to always be encrypted using your keys."
+      },
+      {
+        "text": "_default_includes",
+        "className": "marginBottomSmall"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["key", "vsi-volume-key"],
+          "Power VS Oracle Ready": ["key", "vsi-volume-key"],
+          "Mixed": ["key", "vsi-volume-key", "roks-key"],
+          "Power VS SAP Hana": ["key", "vsi-volume-key", "roks-key"],
+          "VSI Edge": ["key", "vsi-volume-key"],
+          "VSI": ["key", "vsi-volume-key"]
+        },
+        "table": [
+          ["_headers", "Key Name", "Description"],
+          ["key", "An encryption key for service instances"],
+          [
+            "vsi-volume-key",
+            "An encryption key for Virtual Server Instance (VSI) deployments"
+          ],
+          [
+            "roks-key",
+            "An encryption key for Red Hat OpenShift Kubernetes (ROKS) cluster deployments"
+          ],
+          ["atracker-key", "An encryption key for Activity Tracker"]
+        ]
+      },
+      {
+        "text": "To allow keys from your Key Protect Service to encrypt VSI and VPC Block Storage Volumes. The creation of these service authorizations can be enabled and disabled with the Authorize VPC Reader Role toggle."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-encryption-at-rest"
+      ],
+      [
+        "https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-get-started",
+        "Get Started With HyperProtect Crypto Servies"
+      ],
+      [
+        "https://cloud.ibm.com/docs/key-protect?topic=key-protect-about",
+        "IBM Cloud Key Protect"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key",
+        "Key Management Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_policies",
+        "Key Management Key Policy Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_rings",
+        "Key Management Key Ring Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "vpcs": {
+    "content": [
+      {
+        "text": "A Virtual Private Cloud (VPC) is a public cloud offering that lets an enterprise establish its own private cloud-like computing environment on shared public cloud infrastructure. A VPC gives an enterprise the ability to define and control a virtual network that is logically isolated from all other public cloud tenants, creating a private, secure place on the public cloud."
+      },
+      {
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management"],
+          "Power VS Oracle Ready": ["management", "workload"],
+          "Mixed": ["management", "workload"],
+          "Power VS SAP Hana": ["management", "workload"],
+          "VSI Edge": ["management", "workload"],
+          "VSI": ["management", "workload"]
+        },
+        "table": [
+          ["_headers", "Network Name", "Description", "Optional"],
+          [
+            "management",
+            "A VPC for management to enable the application provider's administrators to monitor, operation, and maintain the environment",
+            ""
+          ],
+          [
+            "workload",
+            "A VPC for workload to support hosted applications and operations that deliver services to the consumer",
+            ""
+          ],
+          [
+            "edge",
+            "a VPC for edge if you enable edge networking for F5",
+            "true"
+          ]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      ["https://www.ibm.com/cloud/learn/vpc"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc",
+        "Virtual Private Cloud Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_flow_log",
+        "VPC Flow Log Terraform Documetation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_public_gateway",
+        "VPC Public Gateway Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "acls": {
+    "last_updated": "6/9/2023",
+    "content": [
+      {
+        "text": "An Access Control List (ACL) is a built-in, virtual firewall. An ACL can be leveraged to control all incoming and outgoing traffic on a VPC.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "By default, the management and workload ACLs are configured to have rules that are FS Cloud compliant. Removing the below rules may affect FS Cloud compliance for your environment.",
+        "className": "marginBottomXs"
+      },
+      {
+        "table": [
+          ["_headers", "Rule Name"],
+          ["allow-ibm-inbound"],
+          ["allow-ibm-outbound"],
+          ["allow-all-network-inbound"],
+          ["allow-all-network-outbound"]
+        ]
+      },
+      {
+        "text": "If you select \"Use Cluster Rules\", these additional ACL rules will be created to allow cluster provisioning from private service endpoints",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          [
+            "_headers",
+            "Rule Name",
+            "Action",
+            "Direction",
+            "Source",
+            "Destination",
+            "Protocol",
+            "Port"
+          ],
+          [
+            "roks-create-worker-nodes-inbound",
+            "Allow",
+            "Inbound",
+            "161.26.0.0/16",
+            "10.0.0.0/8",
+            "All",
+            ""
+          ],
+          [
+            "roks-create-worker-nodes-outbound",
+            "Allow",
+            "Outbound",
+            "10.0.0.0/8",
+            "161.26.0.0/16",
+            "All",
+            ""
+          ],
+          [
+            "roks-nodes-to-service-inbound",
+            "Allow",
+            "Inbound",
+            "166.8.0.0/14",
+            "10.0.0.0/8",
+            "All",
+            ""
+          ],
+          [
+            "roks-nodes-to-service-outbound",
+            "Allow",
+            "Outbound",
+            "166.8.0.0/14",
+            "10.0.0.0/8",
+            "All",
+            ""
+          ],
+          [
+            "allow-app-incoming-traffic-requests",
+            "Allow",
+            "Inbound",
+            "10.0.0.0/8",
+            "10.0.0.0/8",
+            "TCP",
+            "30000-32767"
+          ],
+          [
+            "allow-app-outgoing-traffic-requests",
+            "Allow",
+            "Outbound",
+            "10.0.0.0/8",
+            "10.0.0.0/8",
+            "TCP",
+            "30000-32767"
+          ],
+          [
+            "allow-lb-incoming-traffic-requests",
+            "Allow",
+            "Inbound",
+            "10.0.0.0/8",
+            "10.0.0.0/8",
+            "TCP",
+            "443"
+          ],
+          [
+            "allow-lb-outgoing-traffic-requests",
+            "Allow",
+            "Outbound",
+            "10.0.0.0/8",
+            "10.0.0.0/8",
+            "TCP",
+            "443"
+          ]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-using-acls"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_network_acl",
+        "Network Access Control List Terraform Documentation"
+      ]
+    ]
+  },
+  "subnets": {
+    "content": [
+      {
+        "text": "Subnet Tiers are used to dynamically generate Subnets and reserve space for expansion into other zones. Subnets are networks created within a VPC; they are a fundamental mechanism within a VPC used to allocate addresses to individual resources (such as Virtual Server Instances), and enable various controls to these resources through the use of network ACLs, routing tables, and resource groups. Subnets are bound to a single zone; however, they can reach all other subnets within a VPC, across a region. They are created from a larger address space within the VPC called an address prefix; and you can provision multiple subnets per address prefix."
+      },
+      {
+        "text": "When dynamic subnets are enabled, there are three main actions that are automatically executed. First, VPC address prefixes are automatically determined based on the zone and resource. Generally, each resource is given an index starting at 0 and the address prefix(es) for that resource is calculated as follows: 10.([index] * 3 + [zone number])0.0.0/(suffix). For example, a VSI with index 2 and 3 subnets would have the following address prefixes: 10.(2 * 3 + 1)0.0.0 = 10.70.0.0, 10.(2*3+2)0.0.0 = 10.80.0.0, and 10.(2*3+3)0.0.0 = 10.90.0.0."
+      },
+      {
+        "text": "Next, the subnets are configured according to the number of resources in order to minimize the number of IP addresses per subnet. By default, each subnet has 5 IPs. Additional IPs are then added according to the following table: "
+      },
+      {
+        "table": [
+          ["_headers", "Resource", "# of IPs"],
+          ["Cluster Worker Node", "2 per worker"],
+          ["Reserved VPE IP", "1"],
+          ["VPN Gateway", "4 per gateway"],
+          ["VPN Server", "1"],
+          ["VSI Network Interface", "1 per VSI"]
+        ]
+      },
+      {
+        "text": "Finally, the CIDR range for each subnet is calculated by the number of needed interfaces. For example, a subnet with a VPN gateway would require, 5 addresses by default, and 4 additional addresses for a total of 9 addresses. This is rounded to the highest exponent of 2. In this example, the number of IPs is rounded up to 16."
+      },
+      {
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management"],
+          "Power VS Oracle Ready": ["management", "workload"],
+          "Mixed": ["management", "workload"],
+          "Power VS SAP Hana": ["management", "workload"],
+          "VSI Edge": ["management", "workload"],
+          "VSI": ["management", "workload"]
+        },
+        "table": [
+          ["_headers", "VPC", "Subnet Tier", "Zone 1", "Zone 2", "Zone 3"],
+          [
+            "management",
+            "vsi",
+            "10.10.10.0/24",
+            "10.10.20.0/24",
+            "10.10.30.0/24"
+          ],
+          [
+            "management",
+            "vpe",
+            "10.20.10.0/24",
+            "10.20.20.0/24",
+            "10.20.30.0/24"
+          ],
+          ["management", "vpn", "10.30.10.0/24", "-", "-"],
+          [
+            "workload",
+            "vsi",
+            "10.40.10.0/24",
+            "10.40.20.0/24",
+            "10.40.30.0/24"
+          ],
+          ["workload", "vpe", "10.50.10.0/24", "10.50.20.0/24", "10.50.30.0/24"]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/vpc?topic=vpc-about-subnets-vpc&interface=ui"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet",
+        "VPC Subnet Terraform Documentation"
+      ]
+    ],
+    "last_updated": "8/21/2023"
+  },
+  "transit_gateways": {
+    "content": [
+      {
+        "text": "A Transit Gateway provides connectivity between two or more VPCs which allows distributed resources to communicate with each other. By default, a single transit gateway is created connecting the management and workload VPCs. Additional connections can be made to specific VPCs by providing the CRN."
+      },
+      {
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["transit-gateway"],
+          "Power VS Oracle Ready": ["transit-gateway"],
+          "Mixed": ["transit-gateway"],
+          "Power VS SAP Hana": ["transit-gateway"],
+          "VSI Edge": ["transit-gateway"],
+          "VSI": ["transit-gateway"]
+        },
+        "table": [
+          ["_headers", "Service Name", "Description"],
+          [
+            "transit-gateway",
+            "A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs."
+          ]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/transit-gateway?topic=transit-gateway-about"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/tg_gateway",
+        "Transit Gateway Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/tg_connection",
+        "Transit Gateway Connection Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "security_groups": {
+    "content": [
+      {
+        "text": "An IBM Cloud Security Group is a set of IP filter rules that define how to handle incoming and outgoing traffic to both the public and private interfaces of a virtual server instance (VSI)."
+      },
+      {
+        "text": "By default, the management and workload VPE security groups are configured to have rules that are FS Cloud compliant. Removing the below rules may affect FS Cloud compliance for your environment.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Rule Name"],
+          ["allow-ibm-inbound"],
+          ["allow-vpc-inbound"],
+          ["allow-vpc-outbound"],
+          ["allow-ibm-tcp-53-outbound"],
+          ["allow-ibm-tcp-80-outbound"],
+          ["allow-ibm-tcp-433-outbound"]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/security-groups?topic=security-groups-about-ibm-security-groups"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group",
+        "VPC Security Group Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_security_group_rule",
+        "VPC Security Group Rule Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "virtual_private_endpoints": {
+    "content": [
+      {
+        "text": "A Virtual Private Endpoint (VPE) gateway enables users to connect to supported IBM Cloud Services from their VPC network via an IP address allocated from a subnet within the VPC. The VPE gateway is a virtualized function that scales horizontally, is redundant and highly available, and spans all availability zones of the specified VPC."
+      },
+      {
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management"],
+          "Power VS Oracle Ready": ["management", "workload"],
+          "Mixed": ["management", "workload"],
+          "Power VS SAP Hana": ["management", "workload"],
+          "VSI Edge": ["management", "workload"],
+          "VSI": ["management", "workload"]
+        },
+        "table": [
+          ["_headers", "VPC", "Endpoint Gateway Name", "Service"],
+          ["management", "management-vpe", "Object Storage"],
+          ["workload", "workload-vpe", "Object Storage"]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/vpc?topic=vpc-vpe-supported-services",
+        "VPE Supported Services"
+      ],
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-vpe"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_subnet_reserved_ip",
+        "VPC Subnet Reserved IP Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_virtual_endpoint_gateway",
+        "Virtual Endpoint Gateway Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_virtual_endpoint_gateway_ip",
+        "Virtual Endpoint Gateway IP Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "atracker": {
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/activity-tracker?topic=activity-tracker-getting-started"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/atracker_target",
+        "Activity Tracker Target Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/atracker_route",
+        "Activity Tracker Route Terraform Documentation"
+      ]
+    ],
+    "content": [
+      {
+        "text": "The Activity Tracker service can be used to capture and monitor activities performed on the IBM Cloud account by users."
+      },
+      {
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "Power VS Oracle Ready": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "Mixed": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "Power VS SAP Hana": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "VSI Edge": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "VSI": ["atracker", "atracker-cos", "atracker-bucket", "cos-bind-key"]
+        },
+        "table": [
+          ["_headers", "Service Name", "Description"],
+          [
+            "atracker",
+            "An Activity Tracker instance deployed in the service resource group."
+          ],
+          [
+            "atracker-cos",
+            "A Cloud Object Storage instance deployed in the service resource group."
+          ],
+          [
+            "atracker-bucket",
+            "A Cloud Object Storage bucket where Activity Tracker logs will be stored."
+          ],
+          [
+            "cos-bind-key",
+            "An IAM API key that has writer access to the Cloud Object Storage instance."
+          ]
+        ]
+      }
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "ssh_keys": {
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-about-ssh-keys"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_ssh_key",
+        "VPC SSH Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_ssh_key",
+        "VPC SSH Key Terraform Data Documentation"
+      ]
+    ],
+    "content": [
+      {
+        "text": "SSH keys identify a user or device through public-key cryptography and allow access to a device without using a password. At least one SSH Key is required to create virtual server instances. Based on the pattern selected, an SSH key may or may not be configured automatically.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["ssh-key"],
+          "Power VS Oracle Ready": ["ssh-key"],
+          "Mixed": ["ssh-key"],
+          "Power VS SAP Hana": ["ssh-key"],
+          "VSI Edge": ["ssh-key"],
+          "VSI": ["ssh-key"]
+        },
+        "table": [
+          ["_headers", "SSH Key", "Description"],
+          ["ssh-key", "An SSH key to use when provisioning VSI deployments."]
+        ]
+      }
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "vsi": {
+    "content": [
+      {
+        "text": "IBM Cloud Virtual Servers for VPC allow users to deploy fast, flexible, and secure instances. The SLZ Virtual Server Instance (VSI) Deployment allows users to create multiple instances with the same configuration on various subnets across a single VPC. Based on the pattern selected, a deployment may or may not be configured automatically."
+      },
+      {
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management-server"],
+          "Power VS Oracle Ready": ["management-server", "workload-server"],
+          "Mixed": ["management-server"],
+          "Power VS SAP Hana": ["management-server", "workload-server"],
+          "VSI Edge": ["management-server", "workload-server"],
+          "VSI": ["management-server", "workload-server"]
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          [
+            "management-server",
+            "An example VSI deployment in the Management VPC"
+          ],
+          ["workload-server", "An example VSI deployment in the Workload VPC"]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/vpc?topic=vpc-about-advanced-virtual-servers"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_image",
+        "VPC Image Terraform Data Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_instance",
+        "VPC Virtual Server Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_volume",
+        "VPC Block Storage Volume Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "clusters": {
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/openshift?topic=openshift-getting-started",
+        "Getting Started With Red Hat OpenShift Clusters on IBM Cloud"
+      ],
+      [
+        "https://cloud.ibm.com/docs/containers?topic=containers-getting-started",
+        "Getting started with IBM Cloud Kubernetes Service"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/container_vpc_cluster",
+        "VPC Cluster Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/container_vpc_worker_pool",
+        "VPC Worker Pool Terraform Documentation"
+      ]
+    ],
+    "content": [
+      {
+        "text": "IBM Cloud provides users with the ability to deploy highly available, containerized apps on Red Hat OpenShift clusters and Kubernetes clusters. Based on the pattern selected, a cluster may or may not be configured automatically.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [],
+          "Mixed": ["workload-cluster"],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          [
+            "workload-cluster",
+            "A Red Hat OpenShift cluster on the Workload VPC."
+          ]
+        ]
+      }
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "vpn_gateways": {
+    "content": [
+      {
+        "text": "VPN Gateway service for VPC provides secure, encrypted connectivity from a user's on-premise network to the IBM Cloud VPC network."
+      },
+      {
+        "text": "_default_includes"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["management-gateway"],
+          "Power VS Oracle Ready": ["management-gateway"],
+          "Mixed": ["management-gateway"],
+          "Power VS SAP Hana": ["management-gateway"],
+          "VSI Edge": ["management-gateway"],
+          "VSI": ["management-gateway"]
+        },
+        "table": [
+          ["_headers", "Resource Name", "Description"],
+          [
+            "management-gateway",
+            "A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC."
+          ]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-overview"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_gateway",
+        "VPC VPN Gateway Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "appid": {
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/appid?topic=appid-about", "About App ID"],
+      [
+        "https://cloud.ibm.com/docs/appid?topic=appid-getting-started",
+        "Getting Started With App ID"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_key",
+        "Resource Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/appid_redirect_urls",
+        "AppID Redirect URL Terraform Documentation"
+      ]
+    ],
+    "content": [
+      {
+        "text": "IBM Cloud App ID allows user to easily add authentication to web and mobile applications. Keys can be added to connect an application to an IBM Cloud service. Please note, at least one App ID instance with at least one key is required to create a Teleport Bastion Host."
+      },
+      {
+        "text": "By default, no AppID instances are created."
+      }
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "icd": {
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/cloud-databases",
+        "Getting Started with IBM Cloud Databases"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/database",
+        "IBM Cloud Databases Terraform Documentation"
+      ]
+    ],
+    "content": [
+      {
+        "text": "IBM Cloud Databases are managed databases (and a messaging queue) that are hosted in IBM Cloud and integrated with other IBM Cloud services.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Supported Databases"],
+          ["Databases for PostgreSQL"],
+          ["Databases for etcd"],
+          ["Databases for Redis"],
+          ["Databases for MongoDB"],
+          ["Databases for MySQL"]
+        ]
+      },
+      {
+        "table": [
+          ["_headers", "Optional Fields", "Description"],
+          [
+            "Memory",
+            "The amount of memory in gigabytes for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type."
+          ],
+          [
+            "Disk",
+            "The amount of disk space for the database, split across all members. If not specified, the default setting of the database service is used, which can vary by database type."
+          ],
+          [
+            "CPU",
+            "Enables and allocates the number of specified dedicated cores to your deployment."
+          ]
+        ]
+      }
+    ],
+    "last_updated": "8/22/2023"
+  },
+  "f5": {
+    "content": [
+      {
+        "text": "The F5 BIG-IP Virtual Edition will enable you to setup a client-to-site full tunnel VPN to connect to your management/edge VPC and/or a web application firewall (WAF) to enable consumers to connect to your workload VPC over the public internet."
+      },
+      {
+        "text": "Through Secure Landing Zone, users can optionally provision the F5 BIG-IP so that one can either setup the implemented solution of a client-to-site VPN or web application firewall (WAF)."
+      },
+      {
+        "text": "F5 BIG-IP can be provisioned in a separate edge VPC or in the existing management VPC. Best practice is to configure F5 in the edge VPC. To enable edge networking, return to the home page."
+      },
+      {
+        "subHeading": "Subnet Tier/CIDR Blocks"
+      },
+      {
+        "text": "The chart below shows the total subnets needed for F5 BIG-IP and other services (VPE) within the VPC. IBM Cloud has a quota of 15 Subnets per VPC, contact support to increase the quota for subnets per VPC.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          [
+            "_headers",
+            "Edge Networking Pattern",
+            "Number of subnets without f5-bastion",
+            "Number of subnets with f5-bastion"
+          ],
+          ["WAF", "15", "18"],
+          ["VPN", "18", "21"],
+          ["VPN-and-WAF", "21", "24"]
+        ]
+      },
+      {
+        "text": "The chart below notes the CIDR blocks and the zones that each F5 BIG-IP deployment is deployed and can be modified in the Subnets section.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "subHeading": "F5 Subnet CIDR Blocks"
+      },
+      {
+        "table": [
+          ["_headers", "CIDR", "Zone", "WAF", "VPN", "VPN-and-WAF"],
+          ["10.5.10.0/24", "zone-1", "✔", "✔", "✔"],
+          ["10.5.20.0/24", "zone-1", "✔", "✔", "✔"],
+          ["10.5.30.0/24", "zone-1", "✔", "✔", "✔"],
+          ["10.5.40.0/24", "zone-1", "", "✔", "✔"],
+          ["10.5.50.0/24", "zone-1", "", "✔", "✔"],
+          ["10.5.60.0/24", "zone-1", "", "", "✔"],
+          ["10.6.10.0/24", "zone-2", "✔", "✔", "✔"],
+          ["10.6.20.0/24", "zone-2", "✔", "✔", "✔"],
+          ["10.6.30.0/24", "zone-2", "✔", "✔", "✔"],
+          ["10.6.40.0/24", "zone-2", "", "✔", "✔"],
+          ["10.6.50.0/24", "zone-2", "", "✔", "✔"],
+          ["10.6.60.0/24", "zone-2", "", "", "✔"],
+          ["10.7.10.0/24", "zone-3", "✔", "✔", "✔"],
+          ["10.7.20.0/24", "zone-3", "✔", "✔", "✔"],
+          ["10.7.30.0/24", "zone-3", "✔", "✔", "✔"],
+          ["10.7.50.0/24", "zone-3", "", "✔", "✔"],
+          ["10.7.60.0/24", "zone-3", "", "", "✔"]
+        ]
+      },
+      {
+        "subHeading": "Deployment Configuration"
+      },
+      {
+        "text": "F5 BIG-IP can be deployed with up to four interfaces within 4 different VPC subnets: management, external, workload, and f5-bastion. Each interface refers to the ports on the BIG-IP system, and secondary interfaces are included based on the Edge Networking pattern selected.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "The following chart shows the number of subnets/F5 interfaces provisioned for each Edge Networking pattern:",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "F5 Interface", "WAF", "VPN", "VPN-and-WAF"],
+          ["F5 Management Interface", "✔", "✔", "✔"],
+          ["F5 External Interface", "✔", "✔", "✔"],
+          ["F5 Workload Interface", "✔", "", "✔"],
+          ["F5 Bastion Interface", "", "✔", "✔"]
+        ]
+      },
+      {
+        "text": " Each interface has the following different functions:",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Interface", "Description"],
+          [
+            "F5 Management Interface",
+            "A special interface dedicated to performing a specific set of system management functions."
+          ],
+          [
+            "F5 External Interface",
+            "The external interface is used by the BIG-IP system to send or receive application traffic."
+          ],
+          [
+            "F5 Workload Interface",
+            "Created only when using F5 patterns that supports WAF."
+          ],
+          [
+            "F5 Bastion Interface",
+            "Created only when using F5 patterns that supports full tunnel VPN service"
+          ]
+        ]
+      },
+      {
+        "subHeading": "Networking Rules"
+      },
+      {
+        "text": "By default, the Edge ACLs are configured to have rules that are FS Cloud compliant within the VPC Access Control section. Removing the below rules may affect FS Cloud compliance for your environment.",
+        "className": "marginBottomXs"
+      },
+      {
+        "table": [
+          [
+            "_headers",
+            "Name",
+            "Action",
+            "Direction",
+            "Source",
+            "Destination",
+            "Protocol"
+          ],
+          [
+            "allow-ibm-inbound",
+            "Allow",
+            "Inbound",
+            "161.26.0.0/16",
+            "10.0.0.0/8",
+            "ALL"
+          ],
+          [
+            "allow-ibm-outbound",
+            "Allow",
+            "Outbound",
+            "10.0.0.0/8",
+            "161.26.0.0/16",
+            "ALL"
+          ],
+          [
+            "allow-all-network-inbound",
+            "Allow",
+            "Inbound",
+            "10.0.0.0/8",
+            "10.0.0.0/8",
+            "ALL"
+          ],
+          [
+            "allow-all-network-outbound",
+            "Allow",
+            "Outbound",
+            "10.0.0.0/8",
+            "10.0.0.0/8",
+            "ALL"
+          ]
+        ]
+      },
+      {
+        "text": "By default, the F5 and Edge VPE security groups are configured to have rules that are FS Cloud compliant within the Security Groups section. Removing the below rules may affect FS Cloud compliance for your environment.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "Security groups are split up between the primary subnet tier, which contains the Management Interface Security Group, and three secondary subnet tiers, which contain the External Interface, Workload Interface , and F5 Bastion Interface Security Groups within each respectively.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Interface", "Direction", "Protocol", "Source", "Port"],
+          [
+            "F5 Management",
+            "Inbound",
+            "TCP",
+            "CIDR Block value from Bastion host subnet (for example, 10.5.70.0/24)",
+            "Ports 22-22"
+          ],
+          [
+            "F5 Management",
+            "Inbound",
+            "TCP",
+            "CIDR Block value from Bastion host subnet (for example, 10.5.70.0/24)",
+            "Ports 443-443"
+          ],
+          [
+            "F5 External",
+            "Inbound",
+            "TCP",
+            "CIS global load balancers allowlisted IP addresses",
+            "Ports 443-443"
+          ],
+          ["F5 External", "Inbound", "TCP", "Any", "Ports 4443-4443"],
+          [
+            "F5 Workload",
+            "Outbound",
+            "TCP",
+            "CIDR block of the subnet your workload or application is located (for example, 10.40.0.0/18)",
+            "Ports 443-443"
+          ],
+          [
+            "F5 Workload",
+            "Outbound",
+            "TCP",
+            "CIDR block of the subnet your workload or application is located (for example, 10.50.0.0/18)",
+            "Ports 443-443"
+          ],
+          [
+            "F5 Workload",
+            "Outbound",
+            "TCP",
+            "CIDR block of the subnet your workload or application is located (for example, 10.60.0.0/18)",
+            "Ports 443-443"
+          ],
+          [
+            "F5 Bastion",
+            "Outbound",
+            "TCP",
+            "CIDR Block value from Bastion subnet (for example, 10.5.70.0/24)",
+            "Ports 3023-3025"
+          ],
+          [
+            "F5 Bastion",
+            "Outbound",
+            "TCP",
+            "CIDR Block value from Bastion subnet (for example, 10.5.70.0/24)",
+            "Ports 3080-3080"
+          ]
+        ]
+      },
+      {
+        "text": "Note:",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "• Restrict SSH port 22 and F5 configuration utility port 443 into the BIG-IP to the Bastion host.",
+        "className": "marginLeft marginBottomSmall"
+      },
+      {
+        "text": "• Restrict incoming traffic on port 443 to CIS global load balancers allowlisted IP addresses. The allowlisted IP addresses might periodically change and should be updated.",
+        "className": "marginLeft marginBottomSmall"
+      },
+      {
+        "text": "For more information on Networking rules, reference Deploying and configuring F5 BIG-IP on FS Cloud.",
+        "className": "marginBottomSmall"
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-vpc-architecture-connectivity-f5-tutorial",
+        "Deploying and configuring F5 BIG-IP on FS Cloud"
+      ],
+      [
+        "https://github.com/open-toolchain/landing-zone/blob/main/.docs/f5-big-ip/f5-big-ip.md",
+        "Landing Zone Documentation"
+      ],
+      ["https://clouddocs.f5.com/", "F5 Cloud Documentation"],
+      [
+        "https://cloud.ibm.com/docs/cis?topic=cis-cis-allowlisted-ip-addresses",
+        "CIS global load balancers allowlisted IP addresses"
+      ],
+      [
+        "https://cloud.ibm.com/unifiedsupport/cases/form",
+        "Contact IBM Cloud Support"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_instance",
+        "VPC Virtual Server Instance Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "iam_account_settings": {
+    "content": [
+      {
+        "text": "Identity and Access Management (IAM) settings can be configured account-wide. By default, users in your account verify themselves by logging in with a username and password. To require all users to use more secure authentication factors, enable the type of multifactor authentication (MFA) desired for the account."
+      },
+      {
+        "text": "MFA types include:"
+      },
+      {
+        "table": [
+          ["_headers", "Value", "Description"],
+          ["NONE", "MFA Disabled"],
+          [
+            "TOTP",
+            "All non-federated IBMid users are required to authenticate by using an IBMid, password, and time-based one-time passcode (TOTP)"
+          ],
+          [
+            "TOTP4ALL",
+            "All users are required to authenticate by using an IBMid, password, and time-based one-time passcode (TOTP)"
+          ],
+          [
+            "Email-based MFA",
+            "Users authenticate by using a security password that's sent by email"
+          ],
+          [
+            "TOTP MFA",
+            "Users authenticate by using a time-based one-time passcode (TOTP) with an authenticator app, such as IBM Security Verify or Google Authenticator"
+          ],
+          [
+            "U2F MFA",
+            "Users authentication by using a hardware security key that generates a six-digit numerical code."
+          ]
+        ]
+      },
+      {
+        "text": "If enabled, the multi-factor authentication should be set to the U2F MFA type for all users in your account. Based on the FIDO U2F standard, this method offers the highest level of security. This security is needed because the IBM Cloud Framework for Financial Services requires a smart card or hardware token that is designed and operated to FIPS 140-2 level 2 or higher or equivalent (for example, ANSI X9.24 or ISO 13491-1:2007)."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/account?topic=account-account-getting-started",
+        "Setting up MFA Settings"
+      ],
+      [
+        "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-account-setup",
+        "IAM on IBM Cloud for Financial Services Setup"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_account_settings",
+        "IAM Account Settings Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "access_groups": {
+    "content": [
+      {
+        "text": "Users can manage access on IBM Cloud by setting up Access Groups. An access group can be created to organize a set of users, service IDs, and trusted profiles into a single entity that makes it easy to assign access. A single policy can be assigned to the group instead of assigning the same policy multiple times to each individual users or service ID."
+      },
+      {
+        "subHeading": "Policies"
+      },
+      {
+        "text": "Access groups are assigned policies that grant roles and permissions to the members of that group. Members of an access group can include multiple identity types, like users, service IDs, and trusted profiles. The members inherit the policies, roles, and permissions that are assigned to the access group, and also keep the roles that they are assigned individually."
+      },
+      {
+        "subHeading": "Dynamic Rules and Policies"
+      },
+      {
+        "text": "You can create dynamic rules and policies to automatically add federated users to access groups based on specific identity attributes. When your users log in with a federated ID, the data from the identity provider (IdP) dynamically maps your users to an access group based on the rules that you set."
+      },
+      {
+        "subHeading": "Resource Parameters"
+      },
+      {
+        "table": [
+          ["_headers", "Parameter", "Description"],
+          ["Resource", "The resource of the policy definition"],
+          [
+            "Resource Group",
+            "Name of the resource group the policy will apply to"
+          ],
+          [
+            "Resource Instance ID",
+            "ID of a service instance to give permissions"
+          ],
+          [
+            "Service",
+            "Name of the service type of the policy ex. \"cloud-object-storage\""
+          ],
+          ["Resource Type", "Name of the resource type for the policy"]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/account?topic=account-groups&interface=ui"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/iam_access_group",
+        "IAM Access Group Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "secrets_manager": {
+    "relatedLinks": [
+      ["https://www.vaultproject.io/", "HashiCorp Vault"],
+      [
+        "https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-getting-started",
+        "Getting Started with Secrets Manager"
+      ],
+      [
+        "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-secrets",
+        "Handling and Securing Secrets on FS Cloud"
+      ],
+      [
+        "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-best-practices#best-practices-financial-services-validated-services",
+        "FS Cloud Best Practices"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ]
+    ],
+    "content": [
+      {
+        "text": "IBM Cloud Secrets Manager allows users to create, lease, and centrally manage secrets on a dedicated instance built on open source HashiCorp Vault.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Secret Types"],
+          [
+            "Passwords of any type (database logins, OS accounts, functional IDs, etc.)"
+          ],
+          ["API keys"],
+          ["Long-lived authentication tokens (OAuth2, GitHub, IAM, etc.)"],
+          ["SSH keys"],
+          ["Encryption keys"],
+          [
+            "Other private keys (PKI/TLS certificates, HMAC keys, signing keys, etc.)"
+          ]
+        ]
+      },
+      {
+        "text": "Please note, IBM Cloud Secrets Manager is not yet Financial Services Validated. For this reason, no instances are enabled in the initial configuration but can be created if desired."
+      }
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "security_compliance_center": {
+    "content": [
+      {
+        "text": "IBM Cloud Security and Compliance Center (SCC) is comprised of two components: Posture Management and Configuration Governance.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "table": [
+          ["_headers", "Component Name", "Description"],
+          [
+            "Posture Manager",
+            "Prevents the misconfiguration of resources by allowing users to standardize how resources should be provisioned and configured according to the organization's security policies."
+          ],
+          [
+            "Configuration Governance",
+            "Ensures all teams in the organization are adhering to best practices and external regulations/laws at all times. It will routinely scan all available resources in the account and output a report for review."
+          ]
+        ]
+      },
+      {
+        "text": "By default, IBM Cloud Security and Compliance Center is not enabled but can be enabled if desired."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_credential",
+        "SCC Posture Credential Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_account_settings",
+        "SCC Account Settings Terraform Documetation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_scope",
+        "SCC Posture Scope Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "event_streams": {
+    "content": [
+      {
+        "text": "IBM Cloud Event Streams is an event-streaming platform that helps you build smart apps that can react to events as they happen.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "By default, IBM Event Streams instances are not created but can be if desired."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/EventStreams/index.html?topic=EventStreams-getting-started#getting_started",
+        "Docs"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "routing_tables": {
+    "content": [
+      {
+        "text": "Routing Tables can be used to to control Egress and Ingress traffic to VPC subnets. This service allows the use of Network Functions Virtualization (NFV) for advanced networking services.",
+        "className": "marginBottomSmall"
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-about-custom-routes"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc_routing_table",
+        "VPC Routing Table Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpc_routing_table_route",
+        "VPC Routing Table Route Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "load_balancers": {
+    "content": [
+      {
+        "text": "IBM Cloud provides two types of Load Balancers, an Application Load Balancer (ALB) and a Network Load Balancer (NLB). Currently only Application Load Balancers are supported in CRAIG."
+      },
+      {
+        "table": [
+          ["_headers", "", "NLB", "ALB"],
+          ["Security Group Support", "", "✔"],
+          ["SSL Offloading", "", "✔"],
+          ["Supported Protocols", "TCP, UDP", "HTTPS, HTTP, TCP"]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-nlb-vs-elb"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb",
+        "VPC Load Balancer Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb_pool",
+        "VPC Load Balancer Pool Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb_pool_member",
+        "VPC Load Balancer Pool Member Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_lb_listener",
+        "VPC Load Balancer Listener Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "cbr": {
+    "content": [
+      {
+        "text": "IBM Cloud Context-Based Restrictions give users the ability to define and enforce access restrictions. These restrictions add an extra layer of protection that work with traditional IAM Access Policies."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/account?topic=account-context-restrictions-whatis"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cbr_zone",
+        "Context-Based Restrictions Zone Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cbr_rule",
+        "Context-Based Restrictions Rule Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "vpn_servers": {
+    "content": [
+      {
+        "text": "VPN Servers create client-to-site connectivity that allows remote devices to securely connect to a VPN network using an OpenVPN client."
+      },
+      {
+        "text": "Secrets Manager is required to create VPN Server instances."
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-client-to-site-overview"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_server",
+        "VPN Server Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_vpn_server_route",
+        "VPN Server Route Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "dns": {
+    "content": [
+      {
+        "text": "IBM Cloud offers public and private authoritative domain name system (DNS) services."
+      },
+      {
+        "text": "DNS zones are collections for holding domain names. The DNS resolver always looks for a record from the longest matching zone."
+      },
+      {
+        "text": "DNS resource records are entries in the DNS zone that provide information about the components that support your domain. The following record types are supported:"
+      },
+      {
+        "table": [
+          ["_headers", "Record types", "Description"],
+          [
+            "A",
+            "An A (IPv4 address) record consists of a hostname and an IP address."
+          ],
+          ["AAAA", "An AAAA (IPv6 address) record."],
+          [
+            "CNAME",
+            "CNAME (canonical name) records point to domain names instead of IP addresses."
+          ],
+          ["MX", "An MX (mail exchange) record handles the direction of mail."],
+          ["NS", "An NS (nameserver) record."],
+          ["PTR", "A PTR (pointer/reverse) record."],
+          ["SOA", "The SOA (start of authority) record."],
+          ["SPF", "An SPF (sender policy framework) record."],
+          [
+            "TXT",
+            "A TXT (text) record generally is a record that you can query, and which returns information about a domain."
+          ]
+        ]
+      },
+      {
+        "text": "A DNS custom resolver enables the resolution of on-premises hostnames from the IBM Cloud."
+      },
+      {
+        "text": "By default, no DNS services are provisioned."
+      }
+    ],
+    "relatedLinks": [
+      ["https://cloud.ibm.com/docs/dns-svcs"],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+        "Resource Instance Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_zone",
+        "DNS Zone Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_resource_record",
+        "DNS Resource Record Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_permitted_network",
+        "DNS Permitted Network Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/dns_custom_resolver",
+        "DNS Custom Resolver Terraform Documentation"
+      ]
+    ],
+    "last_updated": "6/9/2023"
+  },
+  "observability": {
+    "content": [
+      {
+        "text": "Users can optionally use LogDNA and Sysdig for logging and monitoring metrics. These services are not FS Cloud Validated."
+      },
+      {
+        "text": "LogDNA can be used to add log management capabilities to your IBM Cloud Architecture such as operating system logs, application logs, and platform logs. Features like filtering, search, alerts, and custom views are possible with LogDNA."
+      },
+      {
+        "text": "Sysdig can be used to gain visibility into the performance and health of your applications, services, and platforms. Filtering, alerting, and custom dashboards are some of the features available in Sysdig."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/log-analysis?topic=log-analysis-getting-started",
+        "LogDNA"
+      ],
+      [
+        "https://registry.terraform.io/providers/logdna/logdna/latest/docs",
+        "LogDNA Terraform Provider"
+      ],
+      [
+        "https://registry.terraform.io/providers/logdna/logdna/latest/docs/resources/logdna_archive",
+        "LogDNA archive resource"
+      ],
+      [
+        "https://cloud.ibm.com/docs/monitoring?topic=monitoring-getting-started",
+        "Sysdig"
+      ]
+    ],
+    "last_updated": "6/15/2023"
+  },
+  "power": {
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started",
+        "Getting started with IBM Power Systems Virtual Servers"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-create-vm#ssh-setup",
+        "Generating an SSH Key"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#public-private-networks",
+        "Public & Private Network on Power VS"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-network-security",
+        "Network Security"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-cloud-connections",
+        "Managing Power VS Cloud Connections"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-per",
+        "Power Edge Router Docs"
+      ]
+    ],
+    "content": [
+      {
+        "text": "A workspace is a free working environment that acts as a folder for Power Systems Virtual Server resources at a specific geographic location (zone). Compute (e.g., images and VSIs), networking (e.g., subnets and VPN connections), and storage (e.g., volumes and snapshots) resources are deployed within a selected workspace and cannot be moved or shared between workspaces."
+      },
+      {
+        "text": "Workspaces are a means of grouping and managing related resources deployed in a single location (data location), but otherwise have no functional capabilities. For solutions that span multiple locations, e.g., to implement High Availability or Disaster Recovery, you can create multiple workspaces and connect them over the network (e.g., using a Transit Gateway)."
+      },
+      {
+        "text": "After adding a workspace you can create the following:"
+      },
+      {
+        "table": [
+          ["_headers", "Additional Fields", "Description"],
+          [
+            "SSH Keys",
+            "You can set up one or more Secure Shell (SSH) keys for root login when you create new AIX virtual machines (VM). The keys are loaded into the root's authorized_keys file. SSH keys allow you to securely log in to a VM. You must use the available operating system options to create SSH keys. To generate SSH keys on a Linux or Mac OS system, for example, you can use the standard ssh-keygen tool."
+          ],
+          [
+            "Network Interface",
+            "When you create a Power Systems Virtual Server, you can select a private or public network interface. These network interfaces function like subnets for VPC infrastructure."
+          ],
+          [
+            "Cloud Connections",
+            "You can use IBM Cloud connections to connect your Power Systems Virtual Server instances to IBM Cloud resources on IBM Cloud classic network and Virtual Private Cloud (VPC) infrastructures. IBM Cloud connection creates a Direct Link (2.0) Connect instance to connect your Power Systems Virtual Server instances to the IBM Cloud resources within your account. For cross-account connectivity, use IBM Transit Gateway to interconnect your Power Systems Virtual Server to the IBM Cloud classic and Virtual Private Cloud (VPC) infrastructures. The speed and reliability of the Direct Link connection extends your Power Systems Virtual Server network to the IBM Cloud network and offers more consistent and higher-throughput connectivity, while keeping network traffic within the IBM Cloud. Cloud Connections are not available in zones where Power Edge Router is deployed, see documentation for more information."
+          ]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["workspace"],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["secure-powervs"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS Workspaces"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["workspace"],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["secure-powervs"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": ["workspace"],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["secure-powervs"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          [
+            "oracle-template",
+            "A workspace where Oracle RAC infrastructure is created"
+          ],
+          ["workspace", "An example Power VS Workspace"],
+          [
+            "secure-powervs",
+            "A workspace where SAP Hana infrastructure is created"
+          ]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["power-ssh-key"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS SSH Keys"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["power-ssh-key"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-template"],
+          "Mixed": [],
+          "Power VS SAP Hana": ["power-ssh-key"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          ["power-ssh-key", "Power VS SSH Key used to create instances"],
+          ["power-ssh", "Power VS SSH Key used to create instances"]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [
+            "oracle-public",
+            "oracle-private-1",
+            "oracle-private-2"
+          ],
+          "Mixed": [],
+          "Power VS SAP Hana": ["management", "sap", "backup"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS SSH Networks"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [
+            "oracle-public",
+            "oracle-private-1",
+            "oracle-private-2"
+          ],
+          "Mixed": [],
+          "Power VS SAP Hana": ["management", "sap", "backup"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": [
+            "oracle-public",
+            "oracle-private-1",
+            "oracle-private-2"
+          ],
+          "Mixed": [],
+          "Power VS SAP Hana": ["management", "sap", "backup"],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          [
+            "oracle-public",
+            "A public network interface for Oracle RAC resources"
+          ],
+          [
+            "oracle-private-1",
+            "A private network interface for Oracle RAC resources"
+          ],
+          [
+            "oracle-private-2",
+            "A private network interface for Oracle RAC resources"
+          ],
+          [
+            "management",
+            "A management network interface for SAP Hana resources"
+          ],
+          ["backup", "A backup network interface for SAP Hana resources"],
+          ["sap", "A private network interface for SAP resources"]
+        ]
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-connection"],
+          "Mixed": [],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "subHeading": "Power VS Cloud Connections"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-connection"],
+          "Mixed": [],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "text": "_default_includes",
+        "className": "marginBottomXs"
+      },
+      {
+        "templates": {
+          "Empty Project": [],
+          "Power VS Quick Start": [],
+          "Power VS Oracle Ready": ["oracle-connection"],
+          "Mixed": [],
+          "Power VS SAP Hana": [],
+          "VSI Edge": [],
+          "VSI": []
+        },
+        "table": [
+          ["_headers", "Name", "Description"],
+          ["oracle-connection", "Connects all VLANs to the Transit Gateway"]
+        ]
+      }
+    ],
+    "last_updated": "9/19/2023"
+  },
+  "power_instances": {
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-creating-power-virtual-server",
+        "Creating a Power Systems Virtual Server"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#hardware-specifications",
+        "IBM Power Hardware Specifications"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-power-iaas-faqs#processor",
+        "What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#storage-tiers",
+        "IBM Power Storage Tiers"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-subnet",
+        "Configuring and adding a private network subnet"
+      ]
+    ],
+    "content": [
+      {
+        "text": "To provision a Power Systems Virtual Server instance, first ensure that Power VS is enabled in the Options page, along with the zone(s) you would like to provision Power VS resources in. Then create a Power VS workspace and be sure to import any images you will need for your Power VS instance along with your SSH Keys and Network Interfaces for connectivity. At least one SSH Key and one Network interface are required to create a Power VS Instance in a Power VS workspace."
+      },
+      {
+        "text": "Refer to the following table for more information on Power Systems Virtual Server instance fields:"
+      },
+      {
+        "table": [
+          ["_headers", "Instance Fields", "Description"],
+          [
+            "System Type",
+            "Specify the machine type. The machine type that you select determines the number of cores and memory that is available. For more information about machine types, see Hardware Specification documentation."
+          ],
+          [
+            "Processor Type",
+            "When deploying a VM, customers can choose between dedicated, capped shared, or uncapped shared processors for their virtual CPUs (vCPUs). The following list provides a simplified breakdown of their differences: Dedicated: resources are allocated for a specific client (used for specific third-party considerations). Uncapped shared: shared among other clients. Capped shared: shared, but resources do not expand beyond those that are requested (used mostly for licensing). For more information on processor types, see 'What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?' documentation."
+          ],
+          [
+            "Storage Type",
+            "For each Power Systems Virtual Server instance, you must select a storage tier - Tier 1 or Tier 3. The storage tiers in Power Systems Virtual Server are based on I/O operations per second (IOPS). It means that the performance of your storage volumes is limited to the maximum number of IOPS based on volume size and storage tier. Although, the exact numbers might change over time, the Tier 3 storage is currently set to 3 IOPS/GB, and the Tier 1 storage is currently set to 10 IOPS/GB. For example, a 100 GB Tier 3 storage volume can receive up to 300 IOPs, and a 100 GB Tier 1 storage volume can receive up to 1000 IOPS. After the IOPS limit is reached for the storage volume, the I/O latency increases. For more information on storage types, see Storage Tiers documentation."
+          ],
+          [
+            "Cores/Processors",
+            "There is a core-to-vCPU ratio of 1:1. For shared processors, fractional cores round up to the nearest whole number. For example, 1.25 cores equals 2 vCPUs. If the system type is S922 and operating system is IBM i, IBM i supports maximum of 4 cores per VM."
+          ],
+          [
+            "Memory",
+            "Select the amount of memory for the Power Systems Virtual Server. If you choose to use more than 64 GBs of memory per core, you are charged a higher price. For example, when you choose one core with 128 GBs of memory, you are charged the regular price for the first 64 GBs. After the first 64 GBs (64 - 128 GBs), you are charged a higher price."
+          ]
+        ]
+      }
+    ],
+    "last_updated": "9/25/2023"
+  },
+  "power_volumes": {
+    "content": [
+      {
+        "text": "Create storage volumes for Power VS and attach them to Power VS Instances. Storage volumes must be a minimum size of 1 GB and can scale up to 2000 GB. These volumes can be set up to allow multiple instances to access the same volume."
+      },
+      {
+        "text": "The storage tier selected determines the number of I/O operations per second (IOPS) the volume is capable of. Users can either choose Tier 1 or Tier 3 storage. Tier 1 storage is capable of 10 IOPS/GB, and Tier 3 is capable of 3 IOPS/GB."
+      },
+      {
+        "text": "Enabling volume replication allows users to create copies of their storage volumes through the Global Mirror Change Volume (GMCV). Through this, users can protect and restore their volumes in the event of a disaster."
+      },
+      {
+        "text": "Enabling volume sharing allows users to attach multiple Power VS instances to their volume."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-modifying-server",
+        "Adding Volumes to a Power VS Instance"
+      ],
+      [
+        "https://www.linkedin.com/pulse/powervs-key-concepts-bogdan-savu/#:~:text=Instances%20%2D%20storage%20configuration-,Storage,-Tiers",
+        "Power VS Storage Key Concepts"
+      ],
+      [
+        "https://www.ibm.com/docs/en/powervc/2.1.1?topic=volumes-working-shared",
+        "Power VS Shared Volumes"
+      ],
+      [
+        "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-getting-started-GRS",
+        "Power VS Volume Replication"
+      ]
+    ],
+    "last_updated": "9/21/2023"
+  },
+  "templates": {
+    "content": [
+      {
+        "text": "Import infrastructure template with all the needed resources to jump-start your environment customization."
+      },
+      {
+        "text": "Importing a template will override any existing customization changes."
+      },
+      {
+        "table": [
+          ["_headers", "Pattern", "Description"],
+          [
+            "Landing Zone Mixed Pattern",
+            "Create an FS Cloud Compliant environment with a management VPC, workload VPC, Virtual Servers, and a Red Hat OpenShift cluster."
+          ],
+          [
+            "Landing Zone VSI Pattern",
+            "Create an FS Cloud Compliant environment with a management VPC, workload VPC, and an example application server deployment in both the Management and Workload VPC."
+          ],
+          [
+            "Landing Zone VSI Edge Pattern",
+            "Create an environment with a management VPC, workload VPC, and deploys an edge VPC with an F5 Big IP instance with VPN and WAF."
+          ],
+          [
+            "Landing Zone Power SAP Hana Pattern",
+            "Creates a basic and expandable SAP system landscape that leverages the services from the VPC landing zone and the network connectivity configuration provided by Power Virtual Server with VPC landing zone."
+          ]
+        ]
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone/tree/main/.docs/patterns",
+        "IBM Secure Landing Zone Patterns"
+      ],
+      [
+        "https://github.com/terraform-ibm-modules/terraform-ibm-powervs-sap",
+        "PowerVS SAP Hana Pattern"
+      ]
+    ],
+    "last_updated": "9/28/2023"
+  },
+  "classic_vlans": {
+    "content": [
+      {
+        "text": "Classic Virtual Local Area Networks (VLANs) are used by IBM Cloud to isolate broadcast traffic on public and private networks. VLANs are central in directing traffic to your resources. You might never need to interact directly with any VLANs because they are managed automatically; they are assigned as needed and removed when not.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "By default, no Classic VLANs are created."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/vlans?topic=vlans-getting-started",
+        "Getting started with Classic VLANs"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/network_vlan",
+        "Classic VLAN Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/network_vlan",
+        "Classic VLAN Terraform Data Documentation"
+      ]
+    ],
+    "last_updated": "11/8/2023"
+  },
+  "classic_ssh_keys": {
+    "content": [
+      {
+        "text": "SSH keys identify a user or device through public-key cryptography and allow access to a device without using a password. Classic SSH keys are used to provision virtual servers, such as Classic Gateway Appliances.",
+        "className": "marginBottomSmall"
+      },
+      {
+        "text": "By default, no Classic SSH Keys are created."
+      }
+    ],
+    "relatedLinks": [
+      [
+        "https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-getting-started-tutorial",
+        "Getting started with Classic SSH Keys"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/compute_ssh_key",
+        "Classic SSH Key Terraform Documentation"
+      ],
+      [
+        "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/compute_ssh_key",
+        "Classic SSH Key Data Documentation"
+      ]
+    ],
+    "last_updated": "11/8/2023"
+  }
+}

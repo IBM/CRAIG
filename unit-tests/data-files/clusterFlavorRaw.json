@@ -1,0 +1,114 @@
+[
+  {
+    "id": "bx2.16x64",
+    "name": "bx2.16x64",
+    "provider": "vpc-gen2",
+    "memory": "64GB",
+    "networkSpeed": "24Gbps",
+    "cores": 16,
+    "os": "UBUNTU_18_64",
+    "serverType": "virtual",
+    "primaryStorage": {
+      "Count": 1,
+      "Size": 100,
+      "DeviceType": "BLOCK",
+      "RAIDConfiguration": "none"
+    },
+    "secondaryStorage": {
+      "Count": 0,
+      "Size": 0,
+      "DeviceType": "",
+      "RAIDConfiguration": ""
+    },
+    "secondaryStorageOptions": null,
+    "additionalStorage": null,
+    "secondaryStorageEncrypted": false,
+    "sgxEnabled": false,
+    "gpus": null,
+    "deprecated": false,
+    "ocp_unsupported": false,
+    "supported_isolation": [
+      "public",
+      "private"
+    ],
+    "flavor_class": "bx2",
+    "supportedOperatingSystems": {
+      "kubernetes": [
+        {
+          "name": "UBUNTU_18_64",
+          "isDefault": true
+        },
+        {
+          "name": "UBUNTU_20_64",
+          "isDefault": false
+        }
+      ],
+      "openshift": [
+        {
+          "name": "REDHAT_7_64",
+          "isDefault": true
+        },
+        {
+          "name": "REDHAT_8_64",
+          "isDefault": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "bx2.2x8",
+    "name": "bx2.2x8",
+    "provider": "vpc-gen2",
+    "memory": "8GB",
+    "networkSpeed": "4Gbps",
+    "cores": 2,
+    "os": "UBUNTU_18_64",
+    "serverType": "virtual",
+    "primaryStorage": {
+      "Count": 1,
+      "Size": 100,
+      "DeviceType": "BLOCK",
+      "RAIDConfiguration": "none"
+    },
+    "secondaryStorage": {
+      "Count": 0,
+      "Size": 0,
+      "DeviceType": "",
+      "RAIDConfiguration": ""
+    },
+    "secondaryStorageOptions": null,
+    "additionalStorage": null,
+    "secondaryStorageEncrypted": false,
+    "sgxEnabled": false,
+    "gpus": null,
+    "deprecated": false,
+    "ocp_unsupported": true,
+    "supported_isolation": [
+      "public",
+      "private"
+    ],
+    "flavor_class": "bx2",
+    "supportedOperatingSystems": {
+      "kubernetes": [
+        {
+          "name": "UBUNTU_18_64",
+          "isDefault": true
+        },
+        {
+          "name": "UBUNTU_20_64",
+          "isDefault": false
+        }
+      ],
+      "openshift": [
+        {
+          "name": "REDHAT_7_64",
+          "isDefault": true
+        },
+        {
+          "name": "REDHAT_8_64",
+          "isDefault": false
+        }
+      ]
+    }
+  }
+]

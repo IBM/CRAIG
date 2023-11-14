@@ -1,0 +1,100 @@
+:root {
+  --background: #ffffff;
+  --subForm: #f4f4f4;
+  --formInSubForm: #fffdfd;
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-field: #f4f4f4;
+  --cds-border-strong: #8d8d8d;
+  --blue: #0f62fe;
+  --red: #da1e28;
+  --white: #ffffff;
+  --gray: #8d8d8d;
+}
+
+.cds--popover-content.cds--tooltip-content {
+  position: absolute !important;
+}
+
+.widthOneHundredPercent {
+  width: 100%;
+}
+
+.notification-list {
+  z-index: 10000;
+  position: fixed;
+  list-style: none;
+  top: 1rem;
+  right: 1rem;
+}
+
+.notification-item {
+  margin-bottom: 1rem;
+}
+
+.cds--list-box__menu {
+  width: fit-content !important;
+  text-align: left;
+}
+
+/* text area font for import json */
+.cds--form-item.codeFont div.cds--text-area__wrapper {
+  font-family: monospace, monospace; // workaround for some browsers with how they handle monospace
+}
+
+.smallerText {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+div .marginBottom {
+  margin-bottom: 2rem;
+}
+
+div .marginBottomSmall {
+  margin-bottom: 1rem;
+}
+
+.marginBottom {
+  margin-bottom: 2rem;
+}
+
+.marginBottomSmall {
+  margin-bottom: 1rem;
+}
+
+.subForm {
+  background: var(--subForm);
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+a.tile:is(:link, :visited, :hover, :active) {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.alignItemsCenter {
+  align-items: center;
+}
+
+.edgeFormWidth {
+  width: 95%;
+}
+
+@media screen and (max-width: 1024px) {
+  .displayFlex.edgeFormWidth {
+    flex-direction: column; // place in column when width small
+  }
+}
+
+.cds--popover-caret {
+  display: none !important; // need important to go up multiple levels of priority
+}
+
+.smallImage {
+  max-width: 90%;
+  max-height: 90%;
+}
