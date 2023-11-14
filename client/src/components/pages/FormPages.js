@@ -109,7 +109,7 @@ import { tgwVpcFilter } from "../../lib/forms/filters";
 const AccessGroupsPage = (craig) => {
   return (
     <AccessGroupsTemplate
-      docs={RenderDocs("access_groups")}
+      docs={RenderDocs("access_groups", craig.store.json._options.template)}
       access_groups={craig.store.json.access_groups}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
@@ -141,7 +141,7 @@ const AccessGroupsPage = (craig) => {
 const AppIdPage = (craig) => {
   return (
     <AppIdTemplate
-      docs={RenderDocs("appid")}
+      docs={RenderDocs("appid", craig.store.json._options.template)}
       appid={craig.store.json.appid}
       disableSave={function (field, stateData, componentProps) {
         // field is passed here but the goal is to be able to ignore the
@@ -174,7 +174,7 @@ const AppIdPage = (craig) => {
 const Atracker = (craig) => {
   return (
     <AtrackerPage
-      docs={RenderDocs("atracker")()}
+      docs={RenderDocs("atracker", craig.store.json._options.template)()}
       propsMatchState={propsMatchState}
       disableSave={disableSave}
       craig={craig}
@@ -232,7 +232,7 @@ const ClassicSshKeyPage = (craig) => {
       }}
       invalidKeyCallback={invalidSshPublicKey}
       craig={craig}
-      docs={RenderDocs("classic_ssh_keys")}
+      docs={RenderDocs("classic_ssh_keys", craig.store.json._options.template)}
     />
   );
 };
@@ -245,7 +245,7 @@ const ClassicVlanPage = (craig) => {
           <ClassicDisabledTile />
         )
       }
-      docs={RenderDocs("classic_vlans")}
+      docs={RenderDocs("classic_vlans", craig.store.json._options.template)}
       vlans={craig.store.json.classic_vlans}
       disableSave={disableSave}
       onDelete={craig.classic_vlans.delete}
@@ -278,7 +278,7 @@ const CloudDatabasePage = (craig) => {
       invalidCpuCallback={invalidCpuCallback}
       invalidCpuTextCallback={invalidCpuTextCallback}
       craig={craig}
-      docs={RenderDocs("icd")}
+      docs={RenderDocs("icd", craig.store.json._options.template)}
     />
   );
 };
@@ -287,7 +287,7 @@ const ClusterPage = (craig) => {
   return (
     <ClustersTemplate
       noSecretsManager={craig.store.json.secrets_manager.length === 0}
-      docs={RenderDocs("clusters")}
+      docs={RenderDocs("clusters", craig.store.json._options.template)}
       clusters={craig.store.json.clusters}
       disableSave={disableSave}
       onDelete={craig.clusters.delete}
@@ -357,7 +357,7 @@ const DnsPage = (craig) => {
   return (
     <DnsTemplate
       craig={craig}
-      docs={RenderDocs("dns")}
+      docs={RenderDocs("dns", craig.store.json._options.template)}
       dns={craig.store.json.dns}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
@@ -410,7 +410,7 @@ const EventStreamsPage = (craig) => {
       invalidCallback={invalidName("event_streams")}
       invalidTextCallback={invalidNameText("event_streams")}
       craig={craig}
-      docs={RenderDocs("event_streams")}
+      docs={RenderDocs("event_streams", craig.store.json._options.template)}
     />
   );
 };
@@ -437,7 +437,7 @@ const F5BigIp = (craig) => {
   }
   return (
     <F5BigIpPage
-      docs={RenderDocs("f5")()}
+      docs={RenderDocs("f5", craig.store.json._options.template)()}
       craig={craig}
       propsMatchState={propsMatchState}
       disableSave={disableSave}
@@ -470,7 +470,10 @@ const IamAccountSettings = (craig) => {
         craig.store.json.iam_account_settings.enable = false;
         craig.update();
       }}
-      docs={RenderDocs("iam_account_settings")()}
+      docs={RenderDocs(
+        "iam_account_settings",
+        craig.store.json._options.template
+      )()}
       data={craig.store.json.iam_account_settings}
       useAddButton={craig.store.json.iam_account_settings.enable === false}
       noDeleteButton={craig.store.json.iam_account_settings.enable === false}
@@ -485,7 +488,7 @@ const IamAccountSettings = (craig) => {
 const KeyManagementPage = (craig) => {
   return (
     <KeyManagementTemplate
-      docs={RenderDocs("key_management")}
+      docs={RenderDocs("key_management", craig.store.json._options.template)}
       key_management={craig.store.json.key_management}
       disableSave={disableSave}
       onDelete={craig.key_management.delete}
@@ -523,7 +526,7 @@ const NetworkAclPage = (craig) => {
   return (
     <NetworkAclTemplate
       vpcs={craig.store.json.vpcs}
-      docs={RenderDocs("acls")}
+      docs={RenderDocs("acls", craig.store.json._options.template)}
       forceOpen={forceShowForm}
       craig={craig}
       onAclSubmit={craig.vpcs.acls.create}
@@ -548,7 +551,7 @@ const NetworkAclPage = (craig) => {
 const LoadBalancerPage = (craig) => {
   return (
     <VsiLoadBalancerTemplate
-      docs={RenderDocs("load_balancers")}
+      docs={RenderDocs("load_balancers", craig.store.json._options.template)}
       load_balancers={craig.store.json.load_balancers}
       disableSave={disableSave}
       onDelete={craig.load_balancers.delete}
@@ -570,7 +573,7 @@ const LoadBalancerPage = (craig) => {
 const ObjectStoragePage = (craig) => {
   return (
     <ObjectStorageTemplate
-      docs={RenderDocs("object_storage")}
+      docs={RenderDocs("object_storage", craig.store.json._options.template)}
       object_storage={craig.store.json.object_storage}
       disableSave={disableSave}
       onDelete={craig.object_storage.delete}
@@ -657,7 +660,7 @@ const PowerInfraPage = (craig) => {
         );
       }}
       craig={craig}
-      docs={RenderDocs("power")}
+      docs={RenderDocs("power", craig.store.json._options.template)}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       zones={craig.store.json._options.power_vs_zones}
       onNetworkDelete={craig.power.network.delete}
@@ -747,7 +750,7 @@ const PowerVsInstances = (craig) => {
       onDelete={craig.power_instances.delete}
       craig={craig}
       power={craig.store.json.power}
-      docs={RenderDocs("power_instances")}
+      docs={RenderDocs("power_instances", craig.store.json._options.template)}
       invalidCallback={invalidName("power_instances")}
       invalidTextCallback={invalidNameText("power_instances")}
       forceOpen={forceShowForm}
@@ -799,7 +802,7 @@ const PowerVsVolumes = (craig) => {
         else return false;
       }}
       craig={craig}
-      docs={RenderDocs("power_volumes")}
+      docs={RenderDocs("power_volumes", craig.store.json._options.template)}
       power={craig.store.json.power}
       power_instances={craig.store.json.power_instances}
       invalidCallback={invalidName("power_volumes")}
@@ -818,7 +821,7 @@ const ResourceGroupPage = (craig) => {
   return (
     <ResourceGroupsTemplate
       resource_groups={craig.store.json.resource_groups}
-      docs={RenderDocs("resource_groups")}
+      docs={RenderDocs("resource_groups", craig.store.json._options.template)}
       disableSave={disableSave}
       onDelete={craig.resource_groups.delete}
       onSave={craig.resource_groups.save}
@@ -841,7 +844,7 @@ const RoutingTablesPage = (craig) => {
     <RoutingTableTemplate
       routing_tables={craig.store.json.routing_tables}
       disableSave={disableSave}
-      docs={RenderDocs("routing_tables")}
+      docs={RenderDocs("routing_tables", craig.store.json._options.template)}
       propsMatchState={propsMatchState}
       onDelete={craig.routing_tables.delete}
       onSave={craig.routing_tables.save}
@@ -870,7 +873,10 @@ const SccV1 = (craig) => {
   });
   return (
     <SccV1Page
-      docs={RenderDocs("security_compliance_center")()}
+      docs={RenderDocs(
+        "security_compliance_center",
+        craig.store.json._options.template
+      )()}
       propsMatchState={propsMatchState}
       disableSave={disableSave}
       craig={craig}
@@ -906,7 +912,7 @@ const SecretsManagerPage = (craig) => {
       invalidCallback={invalidName("secrets_manager")}
       invalidTextCallback={invalidNameText("secrets_manager")}
       secrets={craig.getAllResourceKeys()}
-      docs={RenderDocs("secrets_manager")}
+      docs={RenderDocs("secrets_manager", craig.store.json._options.template)}
     />
   );
 };
@@ -915,7 +921,7 @@ const SecurityGroupPage = (craig) => {
   return (
     <>
       <SecurityGroupTemplate
-        docs={RenderDocs("security_groups")}
+        docs={RenderDocs("security_groups", craig.store.json._options.template)}
         security_groups={craig.store.json.security_groups}
         disableSave={disableSave}
         onDelete={craig.security_groups.delete}
@@ -951,7 +957,7 @@ const SubnetsPage = (craig) => {
   return (
     <SubnetPageTemplate
       vpcs={craig.store.json.vpcs}
-      docs={RenderDocs("subnets")}
+      docs={RenderDocs("subnets", craig.store.json._options.template)}
       forceOpen={forceShowForm}
       subnetTiers={craig.store.subnetTiers}
       dynamicSubnets={craig.store.json._options.dynamic_subnets}
@@ -1008,7 +1014,7 @@ const SshKeysPage = (craig) => {
       invalidCallback={invalidName("ssh_keys")}
       invalidTextCallback={invalidNameText("ssh_keys")}
       craig={craig}
-      docs={RenderDocs("ssh_keys")}
+      docs={RenderDocs("ssh_keys", craig.store.json._options.template)}
       deleteDisabled={disableSshKeyDelete}
       invalidKeyCallback={invalidSshPublicKey}
     />
@@ -1018,7 +1024,7 @@ const SshKeysPage = (craig) => {
 const TransitGatewayPage = (craig) => {
   return (
     <TransitGatewayTemplate
-      docs={RenderDocs("transit_gateways")}
+      docs={RenderDocs("transit_gateways", craig.store.json._options.template)}
       transit_gateways={craig.store.json.transit_gateways}
       disableSave={disableSave}
       onDelete={craig.transit_gateways.delete}
@@ -1042,7 +1048,7 @@ const TransitGatewayPage = (craig) => {
 const VpnGatewayPage = (craig) => {
   return (
     <VpnGatewayTemplate
-      docs={RenderDocs("vpn_gateways")}
+      docs={RenderDocs("vpn_gateways", craig.store.json._options.template)}
       vpn_gateways={craig.store.json.vpn_gateways}
       disableSave={disableSave}
       onDelete={craig.vpn_gateways.delete}
@@ -1075,7 +1081,7 @@ const VpnServerPage = (craig) => {
       invalidCallback={craig.vpn_servers.name.invalid}
       invalidTextCallback={craig.vpn_servers.name.invalidText}
       craig={craig}
-      docs={RenderDocs("vpn_servers")}
+      docs={RenderDocs("vpn_servers", craig.store.json._options.template)}
       invalidCidrBlock={invalidCidrBlock}
       invalidCrnList={invalidCrnList}
       onRouteSave={craig.vpn_servers.routes.save}
@@ -1095,7 +1101,7 @@ const VpnServerPage = (craig) => {
 const VpcPage = (craig) => {
   return (
     <VpcTemplate
-      docs={RenderDocs("vpcs")}
+      docs={RenderDocs("vpcs", craig.store.json._options.template)}
       vpcs={craig.store.json.vpcs}
       disableSave={disableSave}
       onDelete={craig.vpcs.delete}
@@ -1115,7 +1121,10 @@ const VpcPage = (craig) => {
 const VpePage = (craig) => {
   return (
     <VpeTemplate
-      docs={RenderDocs("virtual_private_endpoints")}
+      docs={RenderDocs(
+        "virtual_private_endpoints",
+        craig.store.json._options.template
+      )}
       vpe={craig.store.json.virtual_private_endpoints}
       disableSave={disableSave}
       onDelete={craig.virtual_private_endpoints.delete}
@@ -1138,7 +1147,7 @@ const VpePage = (craig) => {
 const VsiPage = (craig) => {
   return (
     <VsiTemplate
-      docs={RenderDocs("vsi")}
+      docs={RenderDocs("vsi", craig.store.json._options.template)}
       vsi={craig.store.json.vsi}
       disableSave={disableSave}
       onDelete={craig.vsi.delete}

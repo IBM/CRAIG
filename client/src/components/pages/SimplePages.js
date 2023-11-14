@@ -1,15 +1,17 @@
 import React from "react";
 import { Docs } from "icse-react-assets";
 const { docs } = require("../../lib");
+const { filterDocs } = require("../../lib/forms/filters");
 
 /**
  * return render docs function
  * @param {string} field json field name
+ * @param {string} template selected project template
  * @returns {Function} function to display docs
  */
-export function RenderDocs(field) {
+export function RenderDocs(field, template) {
   return function () {
-    return Docs(docs[field]);
+    return Docs(filterDocs(template, field, docs));
   };
 }
 

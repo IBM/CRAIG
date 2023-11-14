@@ -31,6 +31,38 @@ function encryptionKeyFilter(_, componentProps) {
 }
 
 /**
+ * Filters docs obj to render defaults for specific template only.
+ * If no template specified, return all docs for field
+ * @param {string} template template name
+ * @param {string} field field name
+ * @param {Object} docs json docs object
+ * @returns {Object} filtered doc
+ */
+function filterDocs(template, field, docs) {
+  let doc = docs[field];
+  if (!template) {
+    return doc;
+  }
+  let tableHeader = [];
+  doc.content.forEach((section) => {
+    if (section.templates && section.table) {
+      let defaultsForTemplate = section.templates[template];
+      if(!defaultsForTemplate) { // doc does not have template, skip filter, return all of docs
+        return
+      }
+      tableHeader = section.table[0];
+      section.table = section.table.filter(
+        (
+          defaultResource // Removes all defaults in table not in that template
+        ) => contains(defaultsForTemplate, defaultResource[0])
+      );
+      section.table = [tableHeader, ...section.table]; // Insert headers back into table
+    }
+  });
+  return doc;
+}
+
+/*
  * filter vpcs with connections to extant tgws
  * @param {*} craig
  * @returns {Array<string>} list of vpcs not currently
@@ -54,4 +86,4 @@ function tgwVpcFilter(craig) {
   return unconnectedVpcs;
 }
 
-module.exports = { encryptionKeyFilter, tgwVpcFilter };
+module.exports = { encryptionKeyFilter, filterDocs, tgwVpcFilter };
