@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Activity Tracker Object Storage target to not be updated when saving
 - Fixed an issue causing VPE security groups to incorrectly have a hyphen in VPC module name
 - Fixed an error allowing users to incorrectly create multiple transit gateway connections to a single VPC
+- Fixed an issue causing save button to be enabled on Power VS Workspace form after adding a subnet
 - Fixed an issue causing key rotation policies to be incorrectly created for standard keys
 - Fixed an error causing Edge VPC address prefixes to not have a `name` field
 - Fixed an issue allowing Object Storage buckets to incorrectly be provisioned using standard encryption keys

@@ -56,6 +56,17 @@ function propsMatchState(field, stateData, componentProps) {
   } else if (field === "security_groups") {
     componentProps.data.show = stateData.show;
   }
+  if (field === "power") {
+    if (
+      stateData.name === componentProps.data.name &&
+      stateData.resource_group === componentProps.data.resource_group &&
+      stateData.zone === componentProps.data.zone &&
+      deepEqual(stateData.images, componentProps.data.images)
+    ) {
+      return true;
+    } else return false;
+  }
+
   return deepEqual(stateData, componentProps.data);
 }
 

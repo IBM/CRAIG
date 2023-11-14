@@ -191,5 +191,23 @@ describe("propsMatchState", () => {
         )
       );
     });
+    it("should remove attachments when field is power and attachments is non-empty", () => {
+      assert.isTrue(
+        propsMatchState(
+          "power",
+          { attachments: ["foo"] },
+          { data: { attachments: [] } }
+        )
+      );
+    });
+    it("should do nothing to attachments when field is power and attachments is empty", () => {
+      assert.isTrue(
+        propsMatchState(
+          "power",
+          { attachments: [] },
+          { data: { attachments: [] } }
+        )
+      );
+    });
   });
 });
