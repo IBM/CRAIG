@@ -47,8 +47,9 @@ function filterDocs(template, field, docs) {
   doc.content.forEach((section) => {
     if (section.templates && section.table) {
       let defaultsForTemplate = section.templates[template];
-      if(!defaultsForTemplate) { // doc does not have template, skip filter, return all of docs
-        return
+      if (!defaultsForTemplate) {
+        // doc does not have template, skip filter, return all of docs
+        return;
       }
       tableHeader = section.table[0];
       section.table = section.table.filter(

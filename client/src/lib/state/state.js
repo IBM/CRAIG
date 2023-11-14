@@ -285,6 +285,7 @@ const {
   classicGatewayCreate,
   classicGatewaySave,
   classicGatewayDelete,
+  initClassicGateways,
 } = require("./classic-gateways");
 const {
   invalidName,
@@ -848,13 +849,7 @@ const state = function (legacy) {
     delete: classicVlanDelete,
   });
 
-  store.newField("classic_gateways", {
-    init: classicGatewayInit,
-    onStoreUpdate: classicGatewayOnStoreUpdate,
-    create: classicGatewayCreate,
-    save: classicGatewaySave,
-    delete: classicGatewayDelete,
-  });
+  initClassicGateways(store);
 
   /**
    * hard set config dot json in state store

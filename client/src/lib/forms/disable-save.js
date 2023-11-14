@@ -1073,6 +1073,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpn_server_routes",
     "transit_gateways",
     "load_balancers",
+    "classic_gateways",
+    "load_balancers",
   ];
   if (containsKeys(disableSaveFunctions, field)) {
     return disableSaveFunctions[field](stateData, componentProps, craig);

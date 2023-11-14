@@ -31,6 +31,7 @@ const {
   powerVsVolumeTf,
   classicInfraTf,
 } = require("./json-to-iac");
+const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 
 const navCatagories = [
@@ -267,6 +268,15 @@ const navCatagories = [
           return classicInfraTf(config);
         },
         jsonField: "classic_vlans",
+      },
+      {
+        title: "Classic Gateways",
+        path: "/form/classicGateways",
+        react_icon: "FirewallClassic",
+        toTf: (config) => {
+          return classicGatewayTf(config) || "";
+        },
+        jsonField: "classic_gateways",
       },
     ],
   },

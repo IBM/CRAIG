@@ -40,6 +40,7 @@ import {
   PowerVsWorkspacePage,
   PowerVsInstancesPage,
   PowerVsVolumesPage,
+  ClassicGatewaysPage,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import {
@@ -199,6 +200,66 @@ const ClassicDisabledTile = () => {
         Options Page.
       </a>{" "}
     </Tile>
+  );
+};
+
+const NoClassicSshKeys = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> No Classic SSH Keys
+      have been created. Create one from the
+      <a className="no-secrets-link" href="/form/classicSshKeys">
+        Classic SSH Keys Page.
+      </a>{" "}
+    </Tile>
+  );
+};
+
+const NoClassicVlans = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> No Classic VLANs have
+      been created. Create one from the
+      <a className="no-secrets-link" href="/form/classicVlans">
+        Classic VLANs Page.
+      </a>{" "}
+    </Tile>
+  );
+};
+
+const ClassicGateways = (craig) => {
+  return (
+    <ClassicGatewaysPage
+      overrideTile={
+        !craig.store.json._options.enable_classic ? (
+          <ClassicDisabledTile />
+        ) : craig.store.json.classic_ssh_keys.length === 0 ? (
+          <NoClassicSshKeys />
+        ) : craig.store.json.classic_vlans.length === 0 ? (
+          <NoClassicVlans />
+        ) : undefined
+      }
+      classic_gateways={craig.store.json.classic_gateways || []}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      onSave={craig.classic_gateways.save}
+      onSubmit={craig.classic_gateways.create}
+      onDelete={craig.classic_gateways.delete}
+      craig={craig}
+      docs={RenderDocs("classic_gateways", craig.store.json._options.template)}
+      composedNameCallback={function (stateData) {
+        return `${craig.store.json._options.prefix}-gateway-${stateData.name}`;
+      }}
+      invalidCallback={craig.classic_gateways.name.invalid}
+      invalidTextCallback={craig.classic_gateways.name.invalidText}
+      datacenterList={datacenters}
+      classicSshKeyList={splat(craig.store.json.classic_ssh_keys, "name")}
+      classic_vlans={craig.store.json.classic_vlans}
+      invalidMemoryCallback={craig.classic_gateways.memory.invalid}
+      invalidMemoryTextCallback={craig.classic_gateways.memory.invalidText}
+      invalidDomainCallback={craig.classic_gateways.domain.invalid}
+      invalidDomainTextCallback={craig.classic_gateways.domain.invalidText}
+    />
   );
 };
 
@@ -1184,6 +1245,8 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "activityTracker") {
     return Atracker(craig);
+  } else if (form === "classicGateways") {
+    return ClassicGateways(craig);
   } else if (form === "classicSshKeys") {
     return ClassicSshKeyPage(craig);
   } else if (form === "classicVlans") {

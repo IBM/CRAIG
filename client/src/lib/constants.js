@@ -8,6 +8,7 @@ const emptyProject = require("./docs/templates/from-scratch.json");
 const powerVsQuickStart = require("./docs/templates/quick-start-power.json");
 const oracleSi = require("./docs/templates/oracle-si.json");
 const vpnaas = require("./docs/templates/vpn-as-a-service.json");
+const { azsort } = require("lazy-z");
 
 module.exports = {
   varDotRegion: "${var.region}",
@@ -1029,5 +1030,5 @@ module.exports = {
     "sao01",
     "tor01",
     "wdc07",
-  ],
+  ].sort(azsort),
 };
