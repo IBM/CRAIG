@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.6.1",
+    "features": [],
+    "fixes": [
+      "Fixed an issue causing DNS Terraform resources to have invalid plan values"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.6.0",
     "features": [
       "Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template`. When using the endpoint, ssh keys will not have default values.",
