@@ -18,37 +18,13 @@ const {
   resourceGroupSave,
   resourceGroupDelete,
 } = require("./resource-groups");
-const {
-  cosInit,
-  cosOnStoreUpdate,
-  cosCreate,
-  cosSave,
-  cosDelete,
-  cosBucketCreate,
-  cosBucketSave,
-  cosBucketDelete,
-  cosKeyCreate,
-  cosKeySave,
-  cosKeyDelete,
-  cosShouldDisableSave,
-  cosBucketShouldDisableSave,
-  cosKeyShouldDisableSave,
-} = require("./cos");
+const { initObjectStorageStore } = require("./cos");
 const {
   atrackerInit,
   atrackerOnStoreUpdate,
   atrackerSave,
 } = require("./atracker");
-const {
-  appidCreate,
-  appidOnStoreUpdate,
-  appidSave,
-  appidDelete,
-  appidKeyCreate,
-  appidKeySave,
-  appidKeyDelete,
-  appidShouldDisableSave,
-} = require("./appid");
+const { initAppIdStore } = require("./appid");
 const {
   vpcCreate,
   vpcDelete,
@@ -95,19 +71,7 @@ const {
   vpnSave,
   vpnOnStoreUpdate,
 } = require("./vpn");
-const {
-  clusterInit,
-  clusterCreate,
-  clusterDelete,
-  clusterOnStoreUpdate,
-  clusterSave,
-  clusterWorkerPoolCreate,
-  clusterWorkerPoolDelete,
-  clusterWorkerPoolSave,
-  clusterOpaqueSecretCreate,
-  clusterOpaqueSecretDelete,
-  clusterOpaqueSecretSave,
-} = require("./clusters");
+const { initClusterStore } = require("./clusters");
 const {
   vsiCreate,
   vsiInit,
@@ -161,7 +125,6 @@ const {
   accessGroupDynamicPolicySave,
   accessGroupDynamicPolicyDelete,
 } = require("./iam");
-
 const validate = require("../validate");
 const { buildSubnetTiers, fieldIsNullOrEmptyString } = require("./utils");
 const {
@@ -235,7 +198,7 @@ const {
   sysdigOnStoreUpdate,
   sysdigSave,
 } = require("./logging-monitoring");
-const { icdOnStoreUpdate, icdSave, icdCreate, icdDelete } = require("./icd");
+const { initIcdStore } = require("./icd");
 const {
   powerVsInit,
   powerVsOnStoreUpdate,
@@ -267,37 +230,8 @@ const {
   powerVsVolumeSave,
   powerVsVolumeDelete,
 } = require("./power-vs-volumes");
-const {
-  classicSshKeyInit,
-  classicSshKeyOnStoreUpdate,
-  classicSshKeyCreate,
-  classicSshKeyUpdate,
-  classicSshKeyDelete,
-  classicVlanInit,
-  classicVlanOnStoreUpdate,
-  classicVlanCreate,
-  classicVlanUpdate,
-  classicVlanDelete,
-} = require("./classic");
-const {
-  classicGatewayInit,
-  classicGatewayOnStoreUpdate,
-  classicGatewayCreate,
-  classicGatewaySave,
-  classicGatewayDelete,
-  initClassicGateways,
-} = require("./classic-gateways");
-const {
-  invalidName,
-  invalidNameText,
-  invalidEncryptionKeyRing,
-  invalidCidrBlock,
-  invalidCrnList,
-} = require("../forms");
-const {
-  commaSeparatedIpListExp,
-  commaSeparatedCidrListExp,
-} = require("../constants");
+const { intiClassicInfrastructure } = require("./classic");
+const { initClassicGateways } = require("./classic-gateways");
 
 /**
  * get state for craig
@@ -402,65 +336,7 @@ const state = function (legacy) {
   });
 
   // next, update cos
-  store.newField("object_storage", {
-    init: cosInit,
-    onStoreUpdate: cosOnStoreUpdate,
-    shouldDisableSave: cosShouldDisableSave,
-    create: cosCreate,
-    save: cosSave,
-    delete: cosDelete,
-    schema: {
-      name: {
-        default: "",
-        invalid: invalidName("object_storage"),
-        invalidText: invalidNameText("object_storage"),
-      },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
-      kms: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("kms"),
-      },
-    },
-    subComponents: {
-      buckets: {
-        create: cosBucketCreate,
-        save: cosBucketSave,
-        delete: cosBucketDelete,
-        shouldDisableSave: cosBucketShouldDisableSave,
-        schema: {
-          name: {
-            default: "",
-            invalid: invalidName("buckets"),
-            invalidText: invalidNameText("buckets"),
-          },
-          kms_key: {
-            default: null,
-            invalid: fieldIsNullOrEmptyString("kms_key"),
-          },
-        },
-      },
-      keys: {
-        create: cosKeyCreate,
-        save: cosKeySave,
-        delete: cosKeyDelete,
-        shouldDisableSave: cosKeyShouldDisableSave,
-        schema: {
-          name: {
-            default: "",
-            invalid: invalidName("cos_keys"),
-            invalidText: invalidNameText("cos_keys"),
-          },
-          key_ring: {
-            default: "",
-            invalid: invalidEncryptionKeyRing,
-          },
-        },
-      },
-    },
-  });
+  initObjectStorageStore(store);
 
   store.newField("vpcs", {
     init: vpcInit,
@@ -500,41 +376,7 @@ const state = function (legacy) {
     save: atrackerSave,
   });
 
-  store.newField("appid", {
-    init: (config) => {
-      config.store.json.appid = [];
-    },
-    onStoreUpdate: appidOnStoreUpdate,
-    shouldDisableSave: appidShouldDisableSave,
-    create: appidCreate,
-    save: appidSave,
-    delete: appidDelete,
-    schema: {
-      name: {
-        default: "",
-        invalid: invalidName("appid"),
-        invalidText: invalidNameText("appid"),
-      },
-      resource_group: {
-        default: null,
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
-    },
-    subComponents: {
-      keys: {
-        create: appidKeyCreate,
-        save: appidKeySave,
-        delete: appidKeyDelete,
-        schema: {
-          name: {
-            default: "",
-            invalid: invalidName("appid_key"),
-            invalidText: invalidNameText("appid_key"),
-          },
-        },
-      },
-    },
-  });
+  initAppIdStore(store);
 
   store.newField("scc", {
     init: sccInit,
@@ -575,25 +417,7 @@ const state = function (legacy) {
     delete: vpnDelete,
   });
 
-  store.newField("clusters", {
-    init: clusterInit,
-    onStoreUpdate: clusterOnStoreUpdate,
-    create: clusterCreate,
-    save: clusterSave,
-    delete: clusterDelete,
-    subComponents: {
-      worker_pools: {
-        create: clusterWorkerPoolCreate,
-        save: clusterWorkerPoolSave,
-        delete: clusterWorkerPoolDelete,
-      },
-      opaque_secrets: {
-        create: clusterOpaqueSecretCreate,
-        save: clusterOpaqueSecretSave,
-        delete: clusterOpaqueSecretDelete,
-      },
-    },
-  });
+  initClusterStore(store);
 
   store.newField("vsi", {
     init: vsiInit,
@@ -779,15 +603,7 @@ const state = function (legacy) {
     save: sysdigSave,
   });
 
-  store.newField("icd", {
-    init: function (config) {
-      config.store.json.icd = [];
-    },
-    onStoreUpdate: icdOnStoreUpdate,
-    save: icdSave,
-    create: icdCreate,
-    delete: icdDelete,
-  });
+  initIcdStore(store);
 
   store.newField("power", {
     init: powerVsInit,
@@ -833,22 +649,7 @@ const state = function (legacy) {
     delete: powerVsVolumeDelete,
   });
 
-  store.newField("classic_ssh_keys", {
-    init: classicSshKeyInit,
-    onStoreUpdate: classicSshKeyOnStoreUpdate,
-    create: classicSshKeyCreate,
-    save: classicSshKeyUpdate,
-    delete: classicSshKeyDelete,
-  });
-
-  store.newField("classic_vlans", {
-    init: classicVlanInit,
-    onStoreUpdate: classicVlanOnStoreUpdate,
-    create: classicVlanCreate,
-    save: classicVlanUpdate,
-    delete: classicVlanDelete,
-  });
-
+  intiClassicInfrastructure(store);
   initClassicGateways(store);
 
   /**

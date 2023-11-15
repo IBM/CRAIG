@@ -279,18 +279,13 @@ const ClassicSshKeyPage = (craig) => {
       onSubmit={craig.classic_ssh_keys.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      invalidCallback={(stateData, componentProps) => {
-        // passthrough function to override field
-        return invalidName("classic_ssh_keys")(stateData, componentProps);
-      }}
-      invalidTextCallback={(stateData, componentProps) => {
-        // passthrough function to override field
-        return invalidNameText("classic_ssh_keys")(stateData, componentProps);
-      }}
+      invalidCallback={craig.classic_ssh_keys.name.invalid}
+      invalidTextCallback={craig.classic_ssh_keys.name.invalidText}
       deleteDisabled={() => {
         // currently ssh keys are not in use, this will be updated when they are
         return false;
       }}
+      // sends both invalid and invalidText, should change when we move to dynamic forms
       invalidKeyCallback={invalidSshPublicKey}
       craig={craig}
       docs={RenderDocs("classic_ssh_keys", craig.store.json._options.template)}
@@ -314,8 +309,8 @@ const ClassicVlanPage = (craig) => {
       onSubmit={craig.classic_vlans.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      invalidCallback={invalidName("classic_vlans")}
-      invalidTextCallback={invalidNameText("classic_vlans")}
+      invalidCallback={craig.classic_vlans.name.invalid}
+      invalidTextCallback={craig.classic_vlans.name.invalidText}
       craig={craig}
       datacenters={datacenters}
     />
@@ -334,10 +329,10 @@ const CloudDatabasePage = (craig) => {
       forceOpen={forceShowForm}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={invalidName("icd")}
-      invalidTextCallback={invalidNameText("icd")}
-      invalidCpuCallback={invalidCpuCallback}
-      invalidCpuTextCallback={invalidCpuTextCallback}
+      invalidCallback={craig.icd.name.invalid}
+      invalidTextCallback={craig.icd.name.invalidText}
+      invalidCpuCallback={craig.icd.cpu.invalid}
+      invalidCpuTextCallback={craig.icd.cpu.invalidText}
       craig={craig}
       docs={RenderDocs("icd", craig.store.json._options.template)}
     />
@@ -354,11 +349,11 @@ const ClusterPage = (craig) => {
       onDelete={craig.clusters.delete}
       onSave={craig.clusters.save}
       onSubmit={craig.clusters.create}
+      invalidCallback={craig.clusters.name.invalid}
+      invalidTextCallback={craig.clusters.name.invalidText}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("clusters")}
-      invalidTextCallback={invalidNameText("clusters")}
       invalidPoolCallback={invalidName("worker_pools")}
       invalidPoolTextCallback={invalidNameText("worker_pools")}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
@@ -394,7 +389,7 @@ const ClusterPage = (craig) => {
       }}
       descriptionInvalid={invalidDescription}
       descriptionInvalidText={invalidDescriptionText}
-      labelsInvalid={invalidTagList}
+      labelsInvalid={craig.clusters.opaque_secrets.labels.invalid}
       labelsInvalidText="One or more labels are invalid"
       onPoolSave={craig.clusters.worker_pools.save}
       onPoolDelete={craig.clusters.worker_pools.delete}

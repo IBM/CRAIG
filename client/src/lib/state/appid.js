@@ -5,6 +5,11 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
 } = require("./store.utils");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const { invalidName, invalidNameText } = require("../forms");
 
 /**
  * atracker on store update
@@ -34,24 +39,6 @@ function appidOnStoreUpdate(config) {
     }
   });
 }
-
-/**
- * check if appid form should be disabled
- * @param {*} config
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {boolean} true if should be disabled
- */
-function appidShouldDisableSave(config, stateData, componentProps) {
-  let shouldBeDisabled = false;
-  ["name", "resource_group"].forEach((field) => {
-    if (!shouldBeDisabled) {
-      shouldBeDisabled = config.appid[field].invalid(stateData, componentProps);
-    }
-  });
-  return shouldBeDisabled;
-}
-
 /**
  * create a new appid instance
  * @param {lazyZstate} config
@@ -114,13 +101,58 @@ function appidKeySave(config, stateData, componentProps) {
   updateSubChild(config, "appid", "keys", stateData, componentProps);
 }
 
+/**
+ * intialize appid store
+ * @param {*} store
+ */
+function initAppIdStore(store) {
+  store.newField("appid", {
+    init: (config) => {
+      config.store.json.appid = [];
+    },
+    onStoreUpdate: appidOnStoreUpdate,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "resource_group"],
+      "appid"
+    ),
+    create: appidCreate,
+    save: appidSave,
+    delete: appidDelete,
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("appid"),
+        invalidText: invalidNameText("appid"),
+      },
+      resource_group: {
+        default: null,
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+    },
+    subComponents: {
+      keys: {
+        create: appidKeyCreate,
+        save: appidKeySave,
+        delete: appidKeyDelete,
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("appid_key"),
+            invalidText: invalidNameText("appid_key"),
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   appidOnStoreUpdate,
-  appidShouldDisableSave,
   appidCreate,
   appidSave,
   appidDelete,
   appidKeyCreate,
   appidKeyDelete,
   appidKeySave,
+  initAppIdStore,
 };

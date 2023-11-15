@@ -19,7 +19,6 @@ terraform.tfvars
 tfplan.json
 example-tests/acceptance-tests/package-lock.json
 example-tests/acceptance-tests/node_modules
-client/package-lock.json
 package-lock.json
 goals.md
 .vscode

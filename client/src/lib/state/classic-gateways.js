@@ -1,7 +1,10 @@
 const { splatContains, isEmpty, isWholeNumber, isInRange } = require("lazy-z");
 const { invalidName, invalidNameText } = require("../forms");
 const { RegexButWithWords } = require("regex-but-with-words");
-const { fieldIsNullOrEmptyString } = require("./utils");
+const {
+  fieldIsNullOrEmptyString,
+  shouldDisableComponentSave,
+} = require("./utils");
 
 /**
  * init store
@@ -76,40 +79,6 @@ function classicGatewayDelete(config, stateData, componentProps) {
 }
 
 /**
- * classic gateway should be disabled
- * @param {*} config
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {boolean} true if should be disabled
- */
-function classicGatewayShouldDisableSave(config, stateData, componentProps) {
-  let shouldBeDisabled = false;
-  [
-    "name",
-    "domain",
-    "datacenter",
-    "network_speed",
-    "public_bandwidth",
-    "package_key_name",
-    "os_key_name",
-    "process_key_name",
-    "public_vlan",
-    "private_vlan",
-    "ssh_key",
-    "disk_key_names",
-    "memory",
-  ].forEach((field) => {
-    if (!shouldBeDisabled) {
-      shouldBeDisabled = config.classic_gateways[field].invalid(
-        stateData,
-        componentProps
-      );
-    }
-  });
-  return shouldBeDisabled;
-}
-
-/**
  * init classic gateway store
  * @param {*} store
  */
@@ -120,7 +89,24 @@ function initClassicGateways(store) {
     create: classicGatewayCreate,
     save: classicGatewaySave,
     delete: classicGatewayDelete,
-    shouldDisableSave: classicGatewayShouldDisableSave,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "name",
+        "domain",
+        "datacenter",
+        "network_speed",
+        "public_bandwidth",
+        "package_key_name",
+        "os_key_name",
+        "process_key_name",
+        "public_vlan",
+        "private_vlan",
+        "ssh_key",
+        "disk_key_names",
+        "memory",
+      ],
+      "classic_gateways"
+    ),
     schema: {
       name: {
         default: "",
