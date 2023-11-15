@@ -37,6 +37,7 @@ import {
   Settings,
   DocumentSigned,
   VlanIbm,
+  FirewallClassic,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -91,6 +92,7 @@ const navIcons = {
   IbmPowerVsVolumes: FileStorage,
   IBMClassicSshKeys: DocumentSigned,
   VlanIbm: VlanIbm,
+  FirewallClassic: FirewallClassic,
 };
 
 let pageOrder = [

@@ -14,7 +14,7 @@ describe("dns service", () => {
       let actualData = formatDnsService(
         {
           name: "test",
-          plan: "standard-dns",
+          plan: "free",
           resource_group: "service-rg",
         },
         {
@@ -46,7 +46,7 @@ resource "ibm_resource_instance" "test_dns_instance" {
   resource_group_id = ibm_resource_group.service_rg.id
   location          = "global"
   service           = "dns-svcs"
-  plan              = "standard-dns"
+  plan              = "free-plan"
 }
 `;
       assert.deepEqual(actualData, expectedData, "it should return terraform");
@@ -185,7 +185,7 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
         dns: [
           {
             name: "test",
-            plan: "standard-dns",
+            plan: "standard",
             resource_group: "service-rg",
             zones: [
               {
@@ -321,7 +321,7 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
         dns: [
           {
             name: "test",
-            plan: "standard-dns",
+            plan: "standard",
             resource_group: "service-rg",
             zones: [
               {

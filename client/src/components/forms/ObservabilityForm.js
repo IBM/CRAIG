@@ -17,7 +17,10 @@ const ObservabilityForm = (props) => {
     <>
       <StatefulTabPanel
         name="Observability"
-        about={RenderDocs("observability")()}
+        about={RenderDocs(
+          "observability",
+          props.craig.store.json._options.template
+        )()}
         form={
           <div>
             <ToggleForm

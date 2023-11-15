@@ -14,7 +14,7 @@ function formatNetworkGateway(gateway) {
 
   (gateway.hadr ? ["1", "2"] : ["1"]).forEach((member) => {
     let newGatewayMember = {
-      hostname: kebabName([gateway.hostname, member]).replace(
+      hostname: kebabName([gateway.domain.replace(/\./g, "-"), member]).replace(
         /\$\{var.prefix\}-/g,
         ""
       ),

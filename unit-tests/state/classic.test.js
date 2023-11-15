@@ -102,6 +102,32 @@ describe("classic", () => {
         );
       });
     });
+    describe("classic_ssh_keys.schema", () => {
+      describe("classic_ssh_keys.public_key", () => {
+        describe("classic_ssh_keys.public_key.invalidText", () => {
+          it("should return correct invalid text for ssh key with invalid public key", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_ssh_keys.public_key.invalidText(
+                {
+                  name: "classic-key",
+                  public_key: "wrong",
+                },
+                {
+                  classic: true,
+                  craig: craig,
+                  data: {
+                    name: "hi",
+                  },
+                }
+              ),
+              "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region",
+              "it should return correct invalid text"
+            );
+          });
+        });
+      });
+    });
   });
   describe("classic vlans", () => {
     describe("classic_vlans.init", () => {

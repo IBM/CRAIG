@@ -9,7 +9,10 @@ const {
   isEmpty,
 } = require("lazy-z");
 const { invalidNameText, invalidName } = require("../forms");
-const { fieldIsNullOrEmptyString } = require("./utils");
+const {
+  fieldIsNullOrEmptyString,
+  shouldDisableComponentSave,
+} = require("./utils");
 
 /**
  * initialize loadBalancer
@@ -122,36 +125,6 @@ function loadBalancerDelete(config, stateData, componentProps) {
   config.carve(["json", "load_balancers"], componentProps.data.name);
 }
 
-function loadBalancerShouldDisableSave(config, stateData, componentProps) {
-  let shouldBeDisabled = false;
-  [
-    "name",
-    "resource_group",
-    "type",
-    "vpc",
-    "security_groups",
-    "target_vsi",
-    "algorithm",
-    "pool_protocol",
-    "pool_health_protocol",
-    "listener_protocol",
-    "listener_port",
-    "health_retries",
-    "health_timeout",
-    "connection_limit",
-    "health_delay",
-    "port",
-  ].forEach((field) => {
-    if (!shouldBeDisabled) {
-      shouldBeDisabled = config.load_balancers[field].invalid(
-        stateData,
-        componentProps
-      );
-    }
-  });
-  return shouldBeDisabled;
-}
-
 /**
  * disable a value in load baalancer within a range
  * @param {*} field field name
@@ -180,7 +153,27 @@ function initLoadBalancers(store) {
     create: loadBalancerCreate,
     save: loadBalancerSave,
     delete: loadBalancerDelete,
-    shouldDisableSave: loadBalancerShouldDisableSave,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "name",
+        "resource_group",
+        "type",
+        "vpc",
+        "security_groups",
+        "target_vsi",
+        "algorithm",
+        "pool_protocol",
+        "pool_health_protocol",
+        "listener_protocol",
+        "listener_port",
+        "health_retries",
+        "health_timeout",
+        "connection_limit",
+        "health_delay",
+        "port",
+      ],
+      "load_balancers"
+    ),
     schema: {
       name: {
         default: "",

@@ -89,7 +89,43 @@ describe("craig app", () => {
         "it should have correct message"
       );
     });
-    it("should update project name, json, projects when fount, and call save and send notification with correct text", () => {
+    it("should update project name, json, projects when found, and call save and send notification with correct text", () => {
+      let craigApp = newMockCraig();
+      let craigState = new state();
+      let callback = onProjectSelectCallback(
+        {
+          "project-name": {},
+        }, // projects
+        craigApp,
+        craigState,
+        "project-name"
+      );
+      callback();
+      assert.deepEqual(
+        craigApp.lastSaveAndSend,
+        `Project project-name successfully imported`,
+        "it should have correct message"
+      );
+    });
+    it("should update project name, json, projects when found with json data, and call save and send notification with correct text", () => {
+      let craigApp = newMockCraig();
+      let craigState = new state();
+      let callback = onProjectSelectCallback(
+        {
+          "project-name": { json: { _options: {} } },
+        }, // projects
+        craigApp,
+        craigState,
+        "project-name"
+      );
+      callback();
+      assert.deepEqual(
+        craigApp.lastSaveAndSend,
+        `Project project-name successfully imported`,
+        "it should have correct message"
+      );
+    });
+    it("should update project name, json, projects when found with project info, and call save and send notification with correct text", () => {
       let craigApp = newMockCraig();
       let craigState = new state();
       let callback = onProjectSelectCallback(

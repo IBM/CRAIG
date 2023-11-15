@@ -5,6 +5,8 @@ const {
   transpose,
   deleteUnfoundArrayItems,
   splatContains,
+  isEmpty,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const { newDefaultWorkloadCluster } = require("./defaults");
 const {
@@ -15,6 +17,12 @@ const {
   deleteSubChild,
   hasUnfoundVpc,
 } = require("./store.utils");
+const {
+  fieldIsNullOrEmptyString,
+  shouldDisableComponentSave,
+} = require("./utils");
+const { invalidName, invalidNameText, invalidTagList } = require("../forms");
+const { invalidDescription } = require("../forms/invalid-callbacks");
 
 /**
  * initialize cluster
@@ -231,6 +239,232 @@ function clusterOpaqueSecretDelete(config, stateData, componentProps) {
   deleteSubChild(config, "clusters", "opaque_secrets", componentProps);
 }
 
+/**
+ * initialize cluster store
+ * @param {*} store
+ */
+function initClusterStore(store) {
+  store.newField("clusters", {
+    init: clusterInit,
+    onStoreUpdate: clusterOnStoreUpdate,
+    create: clusterCreate,
+    save: clusterSave,
+    delete: clusterDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "kube_type",
+        "name",
+        "cos",
+        "vpc",
+        "subnets",
+        "encryption_key",
+        "resource_group",
+        "flavor",
+        "kube_version",
+        "workers_per_subnet",
+      ],
+      "clusters"
+    ),
+    schema: {
+      kube_type: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("kube_type"),
+      },
+      name: {
+        default: "",
+        invalid: invalidName("clusters"),
+        invalidText: invalidNameText("clusters"),
+      },
+      cos: {
+        default: "",
+        invalid: function (stateData) {
+          if (stateData.kube_type === "openshift") {
+            return fieldIsNullOrEmptyString("cos")(stateData);
+          } else {
+            return false;
+          }
+        },
+      },
+      vpc: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("vpc"),
+      },
+      subnets: {
+        default: [],
+        invalid: function (stateData) {
+          if (stateData.kube_type === "openshift") {
+            return stateData.subnets.length * stateData.workers_per_subnet < 2;
+          } else {
+            return isEmpty(stateData.subnets);
+          }
+        },
+      },
+      workers_per_subnet: {
+        default: "",
+        invalid: isNullOrEmptyString("workers_per_subnet"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      flavor: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("flavor"),
+      },
+      encryption_key: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("encryption_key"),
+      },
+      kube_version: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("kube_version"),
+      },
+    },
+    subComponents: {
+      worker_pools: {
+        create: clusterWorkerPoolCreate,
+        save: clusterWorkerPoolSave,
+        delete: clusterWorkerPoolDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "flavor", "subnets"],
+          "clusters",
+          "worker_pools"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("worker_pools"),
+            invalidText: invalidNameText("worker_pools"),
+          },
+          flavor: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("flavor"),
+          },
+          subnets: {
+            default: [],
+            invalid: function (stateData) {
+              if (!stateData.subnets) {
+                return true;
+              } else return isEmpty(stateData.subnets);
+            },
+          },
+        },
+      },
+      opaque_secrets: {
+        create: clusterOpaqueSecretCreate,
+        save: clusterOpaqueSecretSave,
+        delete: clusterOpaqueSecretDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          [
+            "name",
+            "secrets_group",
+            "arbitrary_secret_name",
+            "username_password_secret_name",
+            "secrets_manager",
+            "labels",
+            "arbitrary_secret_data",
+            "username_password_secret_username",
+            "username_password_secret_password",
+            "expiration_date",
+            "username_password_secret_description",
+            "arbitrary_secret_description",
+          ],
+          "clusters",
+          "opaque_secrets"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              return invalidName("opaque_secrets")(
+                stateData,
+                componentProps,
+                "name"
+              );
+            },
+          },
+          secrets_group: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              return invalidName("secrets_group")(
+                stateData,
+                componentProps,
+                "secrets_group"
+              );
+            },
+          },
+          arbitrary_secret_name: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              return invalidName("arbitrary_secret_name")(
+                stateData,
+                componentProps,
+                "arbitrary_secret_name"
+              );
+            },
+          },
+          username_password_secret_name: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              return invalidName("username_password_secret_name")(
+                stateData,
+                componentProps,
+                "username_password_secret_name"
+              );
+            },
+          },
+          labels: {
+            default: [],
+            invalid: function (stateData) {
+              return !stateData.labels || invalidTagList(stateData.labels);
+            },
+          },
+          secrets_manager: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("secrets_manager"),
+          },
+          arbitrary_secret_data: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("arbitrary_secret_data"),
+          },
+          username_password_secret_username: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString(
+              "username_password_secret_username"
+            ),
+          },
+          username_password_secret_password: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString(
+              "username_password_secret_password"
+            ),
+          },
+          expiration_date: {
+            default: null,
+            invalid: function (stateData) {
+              return !stateData.expiration_date;
+            },
+          },
+          username_password_secret_description: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidDescription(
+                stateData.username_password_secret_description
+              );
+            },
+          },
+          arbitrary_secret_description: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidDescription(stateData.arbitrary_secret_description);
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   clusterInit,
   clusterOnStoreUpdate,
@@ -243,4 +477,5 @@ module.exports = {
   clusterOpaqueSecretCreate,
   clusterOpaqueSecretSave,
   clusterOpaqueSecretDelete,
+  initClusterStore,
 };

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.6.1
+
+### Upgrade Notes
+
+
+### Features
+
+
+### Fixes
+
+- Fixed an issue causing DNS Terraform resources to have invalid plan values
+
 ## 1.6.0
 
 ### Upgrade Notes
@@ -13,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Users can now create tar file for an existing CRAIG template using the API endpoint `/api/craig/template-tar/:template`. When using the endpoint, ssh keys will not have default values.
 - Users can now enable Classic Infrastructure in the Options page
 - Users can now create, update, and delete Classic VLANs
+- Users can now create, update, and delete Classic SSH Keys
 - Users can now create certificates for a VPN Server for developer use only
 - Users can now import PEM files as certificates for VPN Server
 - Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS

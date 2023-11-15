@@ -33,7 +33,7 @@ describe("network gatway json to tf", () => {
 resource "ibm_network_gateway" "classic_gateway_gw" {
   name = "\${var.prefix}-gw"
   members {
-    hostname             = "gw-host-1"
+    hostname             = "test-com-1"
     domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
@@ -91,7 +91,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
 resource "ibm_network_gateway" "classic_gateway_gw" {
   name = "\${var.prefix}-gw"
   members {
-    hostname             = "gw-host-1"
+    hostname             = "test-com-1"
     domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
@@ -115,7 +115,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     ]
   }
   members {
-    hostname             = "gw-host-2"
+    hostname             = "test-com-2"
     domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
@@ -187,7 +187,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
 resource "ibm_network_gateway" "classic_gateway_gw" {
   name = "\${var.prefix}-gw"
   members {
-    hostname             = "gw-host-1"
+    hostname             = "test-com-1"
     domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"
@@ -211,7 +211,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
     ]
   }
   members {
-    hostname             = "gw-host-2"
+    hostname             = "test-com-2"
     domain               = "test.com"
     datacenter           = "dal10"
     network_speed        = "1000"

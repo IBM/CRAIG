@@ -8,6 +8,15 @@ const {
   setUnfoundEncryptionKey,
   pushToChildFieldModal,
 } = require("./store.utils");
+const {
+  invalidName,
+  invalidNameText,
+  invalidEncryptionKeyRing,
+} = require("../forms");
+const {
+  fieldIsNullOrEmptyString,
+  shouldDisableComponentSave,
+} = require("./utils");
 
 /**
  * set cosBuckets and cosKeys in slz store
@@ -239,61 +248,80 @@ function cosKeyDelete(config, stateData, componentProps) {
 }
 
 /**
- * should disable cos save
- * @param {lazyZstate} config state store
- * @param {object} stateData component state data
- * @param {object} componentProps props from component form
+ * initialize object storage store
+ * @param {*} store
  */
-function cosShouldDisableSave(config, stateData, componentProps) {
-  let shouldBeDisabled = false;
-  ["name", "resource_group", "kms"].forEach((formField) => {
-    if (!shouldBeDisabled) {
-      shouldBeDisabled = config.object_storage[formField].invalid(
-        stateData,
-        componentProps
-      );
-    }
+function initObjectStorageStore(store) {
+  store.newField("object_storage", {
+    init: cosInit,
+    onStoreUpdate: cosOnStoreUpdate,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "resource_group", "kms"],
+      "object_storage"
+    ),
+    create: cosCreate,
+    save: cosSave,
+    delete: cosDelete,
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("object_storage"),
+        invalidText: invalidNameText("object_storage"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      kms: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("kms"),
+      },
+    },
+    subComponents: {
+      buckets: {
+        create: cosBucketCreate,
+        save: cosBucketSave,
+        delete: cosBucketDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "kms_key"],
+          "object_storage",
+          "buckets"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("buckets"),
+            invalidText: invalidNameText("buckets"),
+          },
+          kms_key: {
+            default: null,
+            invalid: fieldIsNullOrEmptyString("kms_key"),
+          },
+        },
+      },
+      keys: {
+        create: cosKeyCreate,
+        save: cosKeySave,
+        delete: cosKeyDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "key_ring"],
+          "object_storage",
+          "keys"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("cos_keys"),
+            invalidText: invalidNameText("cos_keys"),
+          },
+          key_ring: {
+            default: "",
+            invalid: invalidEncryptionKeyRing,
+          },
+        },
+      },
+    },
   });
-  return shouldBeDisabled;
-}
-
-/**
- * should disable cos bucket save
- * @param {lazyZstate} config state store
- * @param {object} stateData component state data
- * @param {object} componentProps props from component form
- */
-
-function cosBucketShouldDisableSave(config, stateData, componentProps) {
-  let shouldBeDisabled = false;
-  ["name", "kms_key"].forEach((formField) => {
-    if (!shouldBeDisabled) {
-      shouldBeDisabled = config.object_storage.buckets[formField].invalid(
-        stateData,
-        componentProps
-      );
-    }
-  });
-  return shouldBeDisabled;
-}
-
-/**
- * should disable cos key save
- * @param {lazyZstate} config state store
- * @param {object} stateData component state data
- * @param {object} componentProps props from component form
- */
-function cosKeyShouldDisableSave(config, stateData, componentProps) {
-  let shouldBeDisabled = false;
-  ["name", "key_ring"].forEach((formField) => {
-    if (!shouldBeDisabled) {
-      shouldBeDisabled = config.object_storage.keys[formField].invalid(
-        stateData,
-        componentProps
-      );
-    }
-  });
-  return shouldBeDisabled;
 }
 
 module.exports = {
@@ -308,7 +336,5 @@ module.exports = {
   cosSave,
   cosOnStoreUpdate,
   cosInit,
-  cosShouldDisableSave,
-  cosBucketShouldDisableSave,
-  cosKeyShouldDisableSave,
+  initObjectStorageStore,
 };

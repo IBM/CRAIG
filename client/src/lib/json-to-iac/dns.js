@@ -19,6 +19,7 @@ const { snakeCase } = require("lazy-z");
  */
 
 function ibmResourceInstanceDnsServices(dns, config) {
+  let suffix = dns.plan === "free" ? "-plan" : "-dns";
   return {
     name: dns.name + "_dns_instance",
     data: {
@@ -26,7 +27,7 @@ function ibmResourceInstanceDnsServices(dns, config) {
       resource_group_id: rgIdRef(dns.resource_group, config),
       location: "global",
       service: "dns-svcs",
-      plan: dns.plan,
+      plan: dns.plan + suffix,
     },
   };
 }

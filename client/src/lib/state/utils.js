@@ -358,6 +358,27 @@ function fieldIsNullOrEmptyString(fieldName) {
   };
 }
 
+/**
+ * util function for component save to be disabled
+ * @param {*} fields
+ * @param {string} component
+ * @param {string=} subComponent name of subcomponent
+ * @returns {Function} should disable save function
+ */
+function shouldDisableComponentSave(fields, component, subComponent) {
+  return function (config, stateData, componentProps) {
+    let shouldBeDisabled = false;
+    fields.forEach((field) => {
+      if (!shouldBeDisabled) {
+        shouldBeDisabled = (
+          subComponent ? config[component][subComponent] : config[component]
+        )[field].invalid(stateData, componentProps);
+      }
+    });
+    return shouldBeDisabled;
+  };
+}
+
 module.exports = {
   formatNetworkingRule,
   updateNetworkingRule,
@@ -366,4 +387,5 @@ module.exports = {
   saveAdvancedSubnetTier,
   setKmsFromKeyOnStoreUpdate,
   fieldIsNullOrEmptyString,
+  shouldDisableComponentSave,
 };

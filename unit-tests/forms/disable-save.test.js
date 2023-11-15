@@ -3,7 +3,6 @@ const {
   disableSave,
   invalidPort,
   forceShowForm,
-  disableSshKeysSave,
   disableSshKeyDelete,
   invalidCidrBlock,
 } = require("../../client/src/lib");
@@ -229,55 +228,7 @@ describe("disableSave", () => {
       );
     });
   });
-  describe("disableSshKeysSave", () => {
-    it("should return true if classic ssh key is in use and has invalid name", () => {
-      assert.isTrue(
-        disableSshKeysSave(
-          {
-            name: "classic----",
-            public_key:
-              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-          },
-          {
-            classic: true,
-            craig: {
-              store: {
-                json: {
-                  classic_ssh_keys: [],
-                },
-              },
-            },
-            data: {
-              name: "hi",
-            },
-          }
-        )
-      );
-    });
-    it("should return true if classic ssh key is in use and has invalid ssh public key", () => {
-      assert.isTrue(
-        disableSshKeysSave(
-          {
-            name: "classic-key",
-            public_key: "wrong",
-          },
-          {
-            classic: true,
-            craig: {
-              store: {
-                json: {
-                  classic_ssh_keys: [],
-                },
-              },
-            },
-            data: {
-              name: "hi",
-            },
-          }
-        )
-      );
-    });
-  });
+
   describe("disableSshKeyDelete", () => {
     it("should return true if ssh key is in use", () => {
       assert.isTrue(

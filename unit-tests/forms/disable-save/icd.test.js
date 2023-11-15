@@ -1,5 +1,7 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+
+const craig = state();
 
 describe("icd", () => {
   it("should return true if a database instance has an invalid name", () => {
@@ -11,20 +13,7 @@ describe("icd", () => {
           resource_group: "managment-rg",
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -34,6 +23,19 @@ describe("icd", () => {
     );
   });
   it("should return true if a database instance has an duplicate name", () => {
+    let tempCraig = state();
+    tempCraig.store = {
+      json: {
+        icd: [
+          {
+            name: "frog",
+          },
+          {
+            name: "toad",
+          },
+        ],
+      },
+    };
     assert.isTrue(
       disableSave(
         "icd",
@@ -42,20 +44,7 @@ describe("icd", () => {
           resource_group: "managment-rg",
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: tempCraig,
           data: {
             name: "frog",
           },
@@ -70,17 +59,7 @@ describe("icd", () => {
         "icd",
         { name: "frog", resource_group: null, use_data: false },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -95,17 +74,7 @@ describe("icd", () => {
         "icd",
         { name: "frog", resource_group: "managment-rg", service: null },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -124,20 +93,7 @@ describe("icd", () => {
           memory: 1.1,
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -158,20 +114,7 @@ describe("icd", () => {
           memory: -100,
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -193,20 +136,7 @@ describe("icd", () => {
           disk: 1.1,
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -230,20 +160,7 @@ describe("icd", () => {
           disk: 2,
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -268,20 +185,7 @@ describe("icd", () => {
           cpu: 1.1,
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -308,20 +212,7 @@ describe("icd", () => {
           cpu: -100,
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },
@@ -354,20 +245,7 @@ describe("icd", () => {
           cpu: 0,
         },
         {
-          craig: {
-            store: {
-              json: {
-                icd: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
           data: {
             name: "frog",
           },

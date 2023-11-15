@@ -1,6 +1,16 @@
-const { splatContains } = require("lazy-z");
+const {
+  invalidName,
+  invalidCpuCallback,
+  invalidNameText,
+  invalidCpuTextCallback,
+} = require("../forms");
+const { invalidNumberCheck } = require("../forms/disable-save");
 const { setUnfoundResourceGroup } = require("./store.utils");
-const { setKmsFromKeyOnStoreUpdate } = require("./utils");
+const {
+  setKmsFromKeyOnStoreUpdate,
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
 
 /**
  * icd on store update
@@ -48,9 +58,70 @@ function icdDelete(config, stateData, componentProps) {
   config.carve(["json", "icd"], componentProps.data.name);
 }
 
+/**
+ * init icd store
+ * @param {*} store
+ */
+function initIcdStore(store) {
+  store.newField("icd", {
+    init: function (config) {
+      config.store.json.icd = [];
+    },
+    onStoreUpdate: icdOnStoreUpdate,
+    save: icdSave,
+    create: icdCreate,
+    delete: icdDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "service", "resource_group", "memory", "disk", "cpu"],
+      "icd"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("icd"),
+        invalidText: invalidNameText("icd"),
+      },
+      service: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("service"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      memory: {
+        default: null,
+        invalid: function (stateData, componentProps) {
+          return invalidNumberCheck(
+            stateData.memory,
+            componentProps.memoryMin,
+            componentProps.memoryMax
+          );
+        },
+      },
+      disk: {
+        default: null,
+        invalid: function (stateData, componentProps) {
+          return invalidNumberCheck(
+            stateData.disk,
+            componentProps.diskMin,
+            componentProps.diskMax
+          );
+        },
+      },
+      cpu: {
+        default: null,
+        invalid: invalidCpuCallback,
+        invalidText: invalidCpuTextCallback,
+      },
+    },
+  });
+}
+
 module.exports = {
   icdOnStoreUpdate,
   icdCreate,
   icdSave,
   icdDelete,
+  initIcdStore,
 };

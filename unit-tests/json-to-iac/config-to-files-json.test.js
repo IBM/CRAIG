@@ -668,7 +668,7 @@ terraform {
       nw.dns = [
         {
           name: "test",
-          plan: "standard-dns",
+          plan: "standard",
           resource_group: "service-rg",
           zones: [
             {

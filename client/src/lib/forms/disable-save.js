@@ -10,11 +10,8 @@ const {
   flatten,
   splat,
   isWholeNumber,
-  areNotWholeNumbers,
   anyAreEmpty,
-  haveValidRanges,
   nullOrEmptyStringFields,
-  rangeInvalid,
 } = require("lazy-z");
 const {
   invalidName,
@@ -30,8 +27,6 @@ const {
   validRecord,
   invalidDescription,
   invalidDnsZoneName,
-  invalidCpuCallback,
-  invalidTagList,
   validSshKey,
   invalidEncryptionKeyEndpoint,
 } = require("./invalid-callbacks");
@@ -178,30 +173,6 @@ function disableObjectStorageSave(stateData, componentProps) {
 }
 
 /**
- * check to see if icd form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableIcdSave(stateData, componentProps) {
-  return (
-    invalidName("icd")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["service", "resource_group"]) ||
-    invalidNumberCheck(
-      stateData.memory,
-      componentProps.memoryMin,
-      componentProps.memoryMax
-    ) ||
-    invalidNumberCheck(
-      stateData.disk,
-      componentProps.diskMin,
-      componentProps.diskMax
-    ) ||
-    invalidCpuCallback(stateData, componentProps)
-  );
-}
-
-/**
  * check to see if buckets form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -305,11 +276,6 @@ function disableSshKeysSave(stateData, componentProps) {
       invalidSshPublicKey(stateData, componentProps).invalid ||
       invalidName("power_vs_ssh_keys")(stateData, componentProps) ||
       isNullOrEmptyString(stateData.resource_group)
-    );
-  } else if (componentProps.classic) {
-    return (
-      invalidName("classic_ssh_keys")(stateData, componentProps) ||
-      invalidSshPublicKey(stateData, componentProps).invalid
     );
   } else
     return (
@@ -438,49 +404,6 @@ function disableSecurityGroupsSave(stateData, componentProps) {
   return (
     invalidName("security_groups")(stateData, componentProps) ||
     nullOrEmptyStringFields(stateData, ["resource_group", "vpc"])
-  );
-}
-
-/**
- * check to see if clusters form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableClustersSave(stateData, componentProps) {
-  if (stateData.kube_type === "openshift") {
-    if (
-      nullOrEmptyStringFields(stateData, ["cos"]) ||
-      stateData.subnets.length * stateData.workers_per_subnet < 2
-    )
-      return true;
-  }
-  return (
-    invalidName("clusters")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "resource_group",
-      "vpc",
-      "subnets",
-      "encryption_key",
-      "flavor",
-      "kube_version",
-    ]) ||
-    isEmpty(stateData.subnets)
-  );
-}
-
-/**
- * check to see if worker pools form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableWorkerPoolsSave(stateData, componentProps) {
-  return (
-    invalidName("worker_pools")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["flavor"]) ||
-    !stateData.subnets ||
-    isEmpty(stateData.subnets)
   );
 }
 
@@ -831,38 +754,6 @@ function disableSysdigSave(stateData) {
     ? false
     : nullOrEmptyStringFields(stateData, ["resource_group", "plan"]);
 }
-/**
- * check to see if opaque secrets form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableOpaqueSecretsSave(stateData, componentProps) {
-  return (
-    invalidName("opaque_secrets")(stateData, componentProps, "name") ||
-    invalidName("secrets_group")(stateData, componentProps, "secrets_group") ||
-    invalidName("arbitrary_secret_name")(
-      stateData,
-      componentProps,
-      "arbitrary_secret_name"
-    ) ||
-    invalidName("username_password_secret_name")(
-      stateData,
-      componentProps,
-      "username_password_secret_name"
-    ) ||
-    invalidTagList(stateData.labels) ||
-    nullOrEmptyStringFields(stateData, [
-      "secrets_manager",
-      "arbitrary_secret_data",
-      "username_password_secret_username",
-      "username_password_secret_password",
-    ]) ||
-    !stateData.expiration_date ||
-    invalidDescription(stateData.arbitrary_secret_description) ||
-    invalidDescription(stateData.username_password_secret_description)
-  );
-}
 
 /**
  * disable power vs workspace
@@ -993,23 +884,13 @@ function disablePowerVolumeSave(stateData, componentProps) {
   );
 }
 
-function disableClassicVlanSave(stateData, componentProps) {
-  return (
-    invalidName("classic_vlans")(stateData, componentProps) ||
-    badField("datacenter", stateData) ||
-    badField("type", stateData)
-  );
-}
-
 const disableSaveFunctions = {
-  classic_ssh_keys: disableSshKeysSave,
   scc: disableSccSave,
   atracker: disableAtrackerSave,
   access_groups: invalidName("access_groups"),
   policies: invalidName("policies"),
   dynamic_policies: disableDynamicPoliciesSave,
   object_storage: disableObjectStorageSave,
-  icd: disableIcdSave,
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
@@ -1028,8 +909,6 @@ const disableSaveFunctions = {
   subnet: disableSubnetSave,
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
-  clusters: disableClustersSave,
-  worker_pools: disableWorkerPoolsSave,
   event_streams: disableEventStreamsSave,
   virtual_private_endpoints: disableVpeSave,
   vsi: disableVsiSave,
@@ -1050,13 +929,11 @@ const disableSaveFunctions = {
   custom_resolvers: disableCustomResolversSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
-  opaque_secrets: disableOpaqueSecretsSave,
   network: disablePowerNetworkSave,
   cloud_connections: disablePowerCloudConnectionSave,
   power: disablePowerWorkspaceSave,
   power_instances: disablePowerInstanceSave,
   power_volumes: disablePowerVolumeSave,
-  classic_vlans: disableClassicVlanSave,
 };
 
 /**
@@ -1072,7 +949,14 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpn_servers",
     "vpn_server_routes",
     "transit_gateways",
+    "classic_gateways",
     "load_balancers",
+    "classic_vlans",
+    "classic_ssh_keys",
+    "clusters",
+    "worker_pools",
+    "opaque_secrets",
+    "icd",
   ];
   if (containsKeys(disableSaveFunctions, field)) {
     return disableSaveFunctions[field](stateData, componentProps, craig);
@@ -1080,6 +964,8 @@ function disableSave(field, stateData, componentProps, craig) {
     return (
       field === "vpn_server_routes"
         ? componentProps.craig.vpn_servers.routes
+        : contains(["worker_pools", "opaque_secrets"], field)
+        ? componentProps.craig.clusters[field]
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;
@@ -1154,4 +1040,5 @@ module.exports = {
   disableSshKeyDelete,
   disableEncryptionKeysSave,
   invalidCidrBlock,
+  invalidNumberCheck,
 };

@@ -1,5 +1,6 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+const craig = state();
 
 describe("classic vlans", () => (
   it("should disable save for vlan with an invalid name", () => {
@@ -13,13 +14,7 @@ describe("classic vlans", () => (
           data: {
             name: "test",
           },
-          craig: {
-            store: {
-              json: {
-                classic_vlans: [{}],
-              },
-            },
-          },
+          craig: craig,
         }
       ),
       "it should be disabled"
@@ -36,17 +31,7 @@ describe("classic vlans", () => (
         data: {
           name: "egg",
         },
-        craig: {
-          store: {
-            json: {
-              classic_vlans: [
-                {
-                  name: "frog",
-                },
-              ],
-            },
-          },
-        },
+        craig: craig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -63,13 +48,7 @@ describe("classic vlans", () => (
           data: {
             name: "test",
           },
-          craig: {
-            store: {
-              json: {
-                classic_vlans: [{}],
-              },
-            },
-          },
+          craig: craig,
         }
       ),
       "it should be disabled"

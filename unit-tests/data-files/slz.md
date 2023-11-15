@@ -821,3 +821,12 @@ By default, no Classic SSH Keys are created.
 - [Classic SSH Key Data Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/compute_ssh_key)
 
 -----
+
+## Classic Gateways
+
+NYI
+
+### Related Links
+
+
+-----
