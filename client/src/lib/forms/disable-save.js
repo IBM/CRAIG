@@ -15,7 +15,6 @@ const {
 } = require("lazy-z");
 const {
   invalidName,
-  invalidEncryptionKeyRing,
   invalidSshPublicKey,
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
@@ -28,9 +27,7 @@ const {
   invalidDescription,
   invalidDnsZoneName,
   validSshKey,
-  invalidEncryptionKeyEndpoint,
 } = require("./invalid-callbacks");
-const { hasDuplicateName } = require("./duplicate-name");
 
 /**
  * check if a field is null or empty string, reduce unit test writing
@@ -186,20 +183,6 @@ function disableBucketsSave(stateData, componentProps) {
 }
 
 /**
- * check to see if encryption keys form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableEncryptionKeysSave(stateData, componentProps) {
-  return (
-    invalidName("encryption_keys")(stateData, componentProps) ||
-    invalidEncryptionKeyRing(stateData) ||
-    invalidEncryptionKeyEndpoint(stateData)
-  );
-}
-
-/**
  * check to see if volumes form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -211,19 +194,6 @@ function disableVolumesSave(stateData, componentProps) {
     nullOrEmptyStringFields(stateData, ["encryption_key"]) ||
     (!isNullOrEmptyString(stateData.capacity) &&
       !isInRange(Number(stateData.capacity), 10, 16000))
-  );
-}
-
-/**
- * check to see if key management form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableKeyManagementSave(stateData, componentProps) {
-  return (
-    invalidName("key_management")(stateData, componentProps) ||
-    badField("resource_group", stateData)
   );
 }
 
@@ -271,20 +241,13 @@ function disableVpcsSave(stateData, componentProps) {
  * @returns {boolean} true if should be disabled
  */
 function disableSshKeysSave(stateData, componentProps) {
-  if (componentProps.arrayParentName) {
-    return (
-      invalidSshPublicKey(stateData, componentProps).invalid ||
-      invalidName("power_vs_ssh_keys")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group)
-    );
-  } else
-    return (
-      invalidName("ssh_keys")(stateData, componentProps) ||
-      isNullOrEmptyString(stateData.resource_group) ||
-      (stateData.use_data
-        ? false // do not check invalid public key if using data, return false
-        : invalidSshPublicKey(stateData, componentProps).invalid)
-    );
+  return (
+    invalidName("ssh_keys")(stateData, componentProps) ||
+    isNullOrEmptyString(stateData.resource_group) ||
+    (stateData.use_data
+      ? false // do not check invalid public key if using data, return false
+      : invalidSshPublicKey(stateData, componentProps).invalid)
+  );
 }
 
 /**
@@ -756,48 +719,6 @@ function disableSysdigSave(stateData) {
 }
 
 /**
- * disable power vs workspace
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {boolean} true if disabled
- */
-function disablePowerWorkspaceSave(stateData, componentProps) {
-  return (
-    invalidName("power")(stateData, componentProps) ||
-    isEmpty(stateData.imageNames || [])
-  );
-}
-
-/**
- * disable power vs network
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {boolean} true if disabled
- */
-function disablePowerNetworkSave(stateData, componentProps) {
-  return (
-    hasDuplicateName("network", stateData, componentProps) ||
-    invalidCidrBlock(stateData.pi_cidr) ||
-    contains(stateData.pi_dns[0], "/") ||
-    !isIpv4CidrOrAddress(stateData.pi_dns[0])
-  );
-}
-
-/**
- * disable power vs cloud connection
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {boolean} true if disabled
- */
-function disablePowerCloudConnectionSave(stateData, componentProps) {
-  return (
-    invalidName("cloud_connections")(stateData, componentProps) ||
-    (stateData.pi_cloud_connection_transit_enabled &&
-      isEmpty(stateData.transit_gateways))
-  );
-}
-
-/**
  * disable power instance save
  * @param {*} stateData
  * @param {*} componentProps
@@ -894,11 +815,8 @@ const disableSaveFunctions = {
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
-  encryption_keys: disableEncryptionKeysSave,
   volumes: disableVolumesSave,
-  key_management: disableKeyManagementSave,
   secrets_manager: disableSecretsManagerSave,
-  resource_groups: invalidName("resource_groups"),
   vpcs: disableVpcsSave,
   ssh_keys: disableSshKeysSave,
   acls: disableAclsSave,
@@ -929,9 +847,6 @@ const disableSaveFunctions = {
   custom_resolvers: disableCustomResolversSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
-  network: disablePowerNetworkSave,
-  cloud_connections: disablePowerCloudConnectionSave,
-  power: disablePowerWorkspaceSave,
   power_instances: disablePowerInstanceSave,
   power_volumes: disablePowerVolumeSave,
 };
@@ -957,13 +872,32 @@ function disableSave(field, stateData, componentProps, craig) {
     "worker_pools",
     "opaque_secrets",
     "icd",
+    "resource_groups",
+    "key_management",
+    "encryption_keys",
+    "power",
+    "network",
+    "cloud_connections",
   ];
-  if (containsKeys(disableSaveFunctions, field)) {
+  let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
+  if (
+    containsKeys(disableSaveFunctions, field) &&
+    !isPowerSshKey &&
+    !componentProps?.classic
+  ) {
     return disableSaveFunctions[field](stateData, componentProps, craig);
-  } else if (contains(stateDisableSaveComponents, field)) {
+  } else if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
     return (
-      field === "vpn_server_routes"
+      contains(["network", "cloud_connections"], field)
+        ? componentProps.craig.power[field]
+        : isPowerSshKey
+        ? componentProps.craig.power.ssh_keys
+        : field === "classic_ssh_keys"
+        ? componentProps.craig.classic_ssh_keys
+        : field === "vpn_server_routes"
         ? componentProps.craig.vpn_servers.routes
+        : field === "encryption_keys"
+        ? componentProps.craig.key_management.keys
         : contains(["worker_pools", "opaque_secrets"], field)
         ? componentProps.craig.clusters[field]
         : componentProps.craig[field]
@@ -1038,7 +972,6 @@ module.exports = {
   forceShowForm,
   disableSshKeysSave,
   disableSshKeyDelete,
-  disableEncryptionKeysSave,
   invalidCidrBlock,
   invalidNumberCheck,
 };

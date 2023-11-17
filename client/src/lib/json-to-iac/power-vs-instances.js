@@ -3,11 +3,11 @@ const { jsonToTfPrint, tfBlock } = require("./utils");
 const { snakeCase, isNullOrEmptyString, transpose } = require("lazy-z");
 
 /**
- * format power vs instance
+ * get power vs instance data
  * @param {*} instance
- * @returns {string} terraform formatted json
+ * @returns {object} data object
  */
-function formatPowerVsInstance(instance) {
+function powerVsInstanceData(instance) {
   let data = {
     provider: `\${ibm.power_vs${snakeCase("_" + instance.zone)}}`,
     pi_image_id: `\${ibm_pi_image.power_image_${snakeCase(
@@ -95,10 +95,34 @@ function formatPowerVsInstance(instance) {
   }
   delete data.sap;
   delete data.sap_profile;
+  return data;
+}
+
+/**
+ * format power vs instance
+ * @param {*} instance
+ * @returns {string} terraform formatted json
+ */
+function formatPowerVsInstance(instance) {
   return jsonToTfPrint(
     "resource",
     "ibm_pi_instance",
     `${instance.workspace}_workspace_instance_${instance.name}`,
+    powerVsInstanceData(instance)
+  );
+}
+
+/**
+ * create flaconstor
+ * @param {*} instance
+ * @returns {string} terraform formatted json
+ */
+function formatFalconStorInstance(instance) {
+  let data = powerVsInstanceData(instance);
+  return jsonToTfPrint(
+    "resource",
+    "ibm_pi_instance",
+    `${instance.workspace}_falconstor_vtl_${instance.name}`,
     data
   );
 }
@@ -126,4 +150,5 @@ function powerInstanceTf(config) {
 module.exports = {
   formatPowerVsInstance,
   powerInstanceTf,
+  formatFalconStorInstance,
 };

@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 describe("power", () => {
   it("should be disabled when invalid power workspace name", () => {
@@ -12,19 +12,7 @@ describe("power", () => {
       },
       {
         arrayParentName: "workspace",
-        craig: {
-          store: {
-            json: {
-              power: [
-                {
-                  name: "workspace",
-                  ssh_keys: [],
-                  imageNames: [],
-                },
-              ],
-            },
-          },
-        },
+        craig: state(),
         data: {
           name: "test",
           ssh_keys: [],
@@ -43,19 +31,7 @@ describe("power", () => {
       },
       {
         arrayParentName: "workspace",
-        craig: {
-          store: {
-            json: {
-              power: [
-                {
-                  name: "workspace",
-                  ssh_keys: [],
-                  imageNames: [],
-                },
-              ],
-            },
-          },
-        },
+        craig: state(),
         data: {
           name: "test",
           ssh_keys: [],
@@ -66,6 +42,19 @@ describe("power", () => {
     assert.isTrue(actualData, "it should be disabled");
   });
   it("should be disabled when invalid duplicate power workspace name", () => {
+    let tempCraig = state();
+    tempCraig.store = {
+      json: {
+        power: [
+          {
+            name: "workspace",
+          },
+          {
+            name: "test",
+          },
+        ],
+      },
+    };
     let actualData = disableSave(
       "power",
       {
@@ -79,20 +68,7 @@ describe("power", () => {
           ssh_keys: [],
           imageNames: [],
         },
-        craig: {
-          store: {
-            json: {
-              power: [
-                {
-                  name: "workspace",
-                },
-                {
-                  name: "test",
-                },
-              ],
-            },
-          },
-        },
+        craig: tempCraig,
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -107,18 +83,7 @@ describe("power", () => {
       },
       {
         arrayParentName: "workspace",
-        craig: {
-          store: {
-            json: {
-              power: [
-                {
-                  name: "workspace",
-                  imageNames: ["7200-05-05"],
-                },
-              ],
-            },
-          },
-        },
+        craig: state(),
         data: {
           name: "test",
         },
@@ -146,28 +111,7 @@ describe("power", () => {
       },
       {
         arrayParentName: "workspace",
-        craig: {
-          store: {
-            json: {
-              power: [
-                {
-                  name: "workspace",
-                  ssh_keys: [
-                    {
-                      name: "power-ssh",
-                      public_key: "good",
-                      use_data: false,
-                      resource_group: "management-rg",
-                      workspace: "oracle-template",
-                      zone: "dal12",
-                    },
-                  ],
-                  imageNames: ["7200-05-05"],
-                },
-              ],
-            },
-          },
-        },
+        craig: state(),
         data: {
           name: "workspace",
           ssh_keys: [],
@@ -179,6 +123,24 @@ describe("power", () => {
   });
   describe("network", () => {
     it("should be disabled when invalid duplicate power network name", () => {
+      let tempCraig = state();
+      tempCraig.store = {
+        json: {
+          power: [
+            {
+              name: "workspace",
+              network: [
+                {
+                  name: "frog",
+                },
+                {
+                  name: "horse",
+                },
+              ],
+            },
+          ],
+        },
+      };
       let actualData = disableSave(
         "network",
         {
@@ -189,25 +151,7 @@ describe("power", () => {
           data: {
             name: "toad",
           },
-          craig: {
-            store: {
-              json: {
-                power: [
-                  {
-                    name: "workspace",
-                    network: [
-                      {
-                        name: "frog",
-                      },
-                      {
-                        name: "horse",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: tempCraig,
         }
       );
       assert.isTrue(actualData, "it should be disabled");
@@ -224,25 +168,7 @@ describe("power", () => {
           data: {
             name: "toad",
           },
-          craig: {
-            store: {
-              json: {
-                power: [
-                  {
-                    name: "workspace",
-                    network: [
-                      {
-                        name: "frog",
-                      },
-                      {
-                        name: "horse",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
         }
       );
       assert.isTrue(actualData, "it should be disabled");
@@ -260,25 +186,7 @@ describe("power", () => {
           data: {
             name: "toad",
           },
-          craig: {
-            store: {
-              json: {
-                power: [
-                  {
-                    name: "workspace",
-                    network: [
-                      {
-                        name: "frog",
-                      },
-                      {
-                        name: "horse",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
         }
       );
       assert.isTrue(actualData, "it should be disabled");
@@ -296,25 +204,7 @@ describe("power", () => {
           data: {
             name: "toad",
           },
-          craig: {
-            store: {
-              json: {
-                power: [
-                  {
-                    name: "workspace",
-                    network: [
-                      {
-                        name: "frog",
-                      },
-                      {
-                        name: "horse",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
         }
       );
       assert.isFalse(actualData, "it should be disabled");
@@ -322,6 +212,24 @@ describe("power", () => {
   });
   describe("cloud_connections", () => {
     it("should be disabled when invalid duplicate power connection name", () => {
+      let tempCraig = state();
+      tempCraig.store = {
+        json: {
+          power: [
+            {
+              name: "workspace",
+              cloud_connections: [
+                {
+                  name: "frog",
+                },
+                {
+                  name: "horse",
+                },
+              ],
+            },
+          ],
+        },
+      };
       let actualData = disableSave(
         "cloud_connections",
         {
@@ -332,25 +240,7 @@ describe("power", () => {
           data: {
             name: "toad",
           },
-          craig: {
-            store: {
-              json: {
-                power: [
-                  {
-                    name: "workspace",
-                    cloud_connections: [
-                      {
-                        name: "frog",
-                      },
-                      {
-                        name: "horse",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: tempCraig,
         }
       );
       assert.isTrue(actualData, "it should be disabled");
@@ -368,25 +258,7 @@ describe("power", () => {
           data: {
             name: "toad",
           },
-          craig: {
-            store: {
-              json: {
-                power: [
-                  {
-                    name: "workspace",
-                    cloud_connections: [
-                      {
-                        name: "frog",
-                      },
-                      {
-                        name: "egg",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
         }
       );
       assert.isTrue(actualData, "it should be disabled");
@@ -737,6 +609,23 @@ describe("power", () => {
   });
   describe("power vs ssh keys", () => {
     it("should return true when the ssh key name already exists", () => {
+      let tempCraig = state();
+      tempCraig.store = {
+        resourceGroups: ["hi"],
+        json: {
+          ssh_keys: [],
+          power: [
+            {
+              name: "workspace",
+              ssh_keys: [
+                {
+                  name: "honk",
+                },
+              ],
+            },
+          ],
+        },
+      };
       assert.isTrue(
         disableSave(
           "ssh_keys",
@@ -751,24 +640,7 @@ describe("power", () => {
               data: "test",
             },
             arrayParentName: "workspace",
-            craig: {
-              store: {
-                resourceGroups: ["hi"],
-                json: {
-                  ssh_keys: [],
-                  power: [
-                    {
-                      name: "workspace",
-                      ssh_keys: [
-                        {
-                          name: "honk",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
+            craig: tempCraig,
           }
         ),
         "it should be disabled"
@@ -789,30 +661,38 @@ describe("power", () => {
               data: "test",
             },
             arrayParentName: "workspace",
-            craig: {
-              store: {
-                resourceGroups: ["hi"],
-                json: {
-                  ssh_keys: [],
-                  power: [
-                    {
-                      name: "workspace",
-                      ssh_keys: [
-                        {
-                          name: "ddd",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         ),
         "it should be disabled"
       );
     });
     it("should return true when the public key value already exists", () => {
+      let tempCraig = state();
+      tempCraig.store = {
+        resourceGroups: ["hi"],
+        json: {
+          ssh_keys: [
+            {
+              name: "honk",
+              public_key:
+                "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+            },
+          ],
+          power: [
+            {
+              name: "workspace",
+              ssh_keys: [
+                {
+                  name: "ddd",
+                  public_key:
+                    "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                },
+              ],
+            },
+          ],
+        },
+      };
       assert.isTrue(
         disableSave(
           "ssh_keys",
@@ -827,32 +707,7 @@ describe("power", () => {
               data: "test",
             },
             arrayParentName: "workspace",
-            craig: {
-              store: {
-                resourceGroups: ["hi"],
-                json: {
-                  ssh_keys: [
-                    {
-                      name: "honk",
-                      public_key:
-                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                    },
-                  ],
-                  power: [
-                    {
-                      name: "workspace",
-                      ssh_keys: [
-                        {
-                          name: "ddd",
-                          public_key:
-                            "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
+            craig: tempCraig,
           }
         ),
         "it should be disabled"

@@ -61,7 +61,6 @@ import {
   getTierSubnets,
   invalidCidrBlock,
   invalidDnsZoneName,
-  invalidEncryptionKeyRing,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   storageChangeDisabledCallback,
@@ -78,9 +77,7 @@ import {
   invalidSshPublicKey,
   invalidSubnetTierName,
   nullOrEmptyStringCheckCallback,
-  invalidCpuCallback,
   invalidDescription,
-  invalidTagList,
   replicationDisabledCallback,
 } from "../../lib/forms/invalid-callbacks";
 import {
@@ -90,7 +87,6 @@ import {
   iamAccountSettingInvalidText,
   invalidCidrText,
   invalidSubnetTierText,
-  invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
   invalidDescriptionText,
 } from "../../lib/forms/text-callbacks";
@@ -273,7 +269,9 @@ const ClassicSshKeyPage = (craig) => {
         )
       }
       ssh_keys={craig.store.json.classic_ssh_keys}
-      disableSave={disableSave}
+      disableSave={(field, stateData, componentProps) => {
+        return disableSave("classic_ssh_keys", stateData, componentProps);
+      }}
       onDelete={craig.classic_ssh_keys.delete}
       onSave={craig.classic_ssh_keys.save}
       onSubmit={craig.classic_ssh_keys.create}
@@ -563,11 +561,11 @@ const KeyManagementPage = (craig) => {
         craig.store.json._options.endpoints === "public-and-private"
       }
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("key_management")}
-      invalidTextCallback={invalidNameText("key_management")}
-      invalidKeyCallback={invalidName("encryption_keys")}
-      invalidKeyTextCallback={invalidNameText("encryption_keys")}
-      invalidRingCallback={invalidEncryptionKeyRing}
+      invalidCallback={craig.key_management.name.invalid}
+      invalidTextCallback={craig.key_management.name.invalidText}
+      invalidKeyCallback={craig.key_management.keys.name.invalid}
+      invalidKeyTextCallback={craig.key_management.keys.name.invalidText}
+      invalidRingCallback={craig.key_management.keys.key_ring.invalid}
       invalidRingText={
         "Invalid Key Ring Name. Must match the regular expression: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s"
       }
@@ -729,49 +727,26 @@ const PowerInfraPage = (craig) => {
       onSshKeyDelete={craig.power.ssh_keys.delete}
       onSshKeySave={craig.power.ssh_keys.save}
       onSshKeySubmit={craig.power.ssh_keys.create}
-      invalidCallback={invalidName("power")}
-      invalidTextCallback={invalidNameText("power")}
+      invalidCallback={craig.power.name.invalid}
+      invalidTextCallback={craig.power.name.invalidText}
       helperTextCallback={powerVsWorkspaceHelperText}
       invalidKeyCallback={invalidSshPublicKey}
-      invalidNetworkNameCallback={invalidName("network")}
-      invalidNetworkNameCallbackText={invalidNameText("network")}
-      invalidConnectionNameCallback={invalidName("cloud_connections")}
-      invalidConnectionNameTextCallback={invalidNameText("cloud_connections")}
-      invalidCidrCallback={(stateData, componentProps) => {
-        return invalidCidr(componentProps.craig)(
-          { cidr: stateData.pi_cidr },
-          componentProps
-        );
-      }}
+      invalidNetworkNameCallback={craig.power.network.name.invalid}
+      invalidNetworkNameCallbackText={craig.power.network.name.invalidText}
+      invalidConnectionNameCallback={craig.power.cloud_connections.name.invalid}
+      invalidConnectionNameTextCallback={
+        craig.power.cloud_connections.name.invalidText
+      }
       sshKeyDeleteDisabled={() => {
         // currently ssh keys are not in use, this will be updated when they are
         return false;
       }}
-      invalidSshKeyCallback={(stateData, componentProps) => {
-        // passthrough function to override field
-        return invalidName("power_vs_ssh_keys")(stateData, componentProps);
-      }}
-      invalidSshKeyCallbackText={(stateData, componentProps) => {
-        // passthrough function to override field
-        return invalidNameText("power_vs_ssh_keys")(stateData, componentProps);
-      }}
-      invalidCidrCallbackText={(stateData, componentProps) => {
-        return invalidCidrText(componentProps.craig)(
-          {
-            cidr: stateData.pi_cidr,
-          },
-          componentProps
-        );
-      }}
-      invalidDnsCallback={(stateData) => {
-        return (
-          contains(stateData.pi_dns[0], "/") ||
-          !isIpv4CidrOrAddress(stateData.pi_dns[0])
-        );
-      }}
-      invalidDnsCallbackText={() => {
-        return "Invalid IP Address";
-      }}
+      invalidCidrCallback={craig.power.network.pi_cidr.invalid}
+      invalidSshKeyCallback={craig.power.ssh_keys.name.invalid}
+      invalidSshKeyCallbackText={craig.power.ssh_keys.name.invalidText}
+      invalidCidrCallbackText={craig.power.network.pi_cidr.invalidText}
+      invalidDnsCallback={craig.power.network.pi_dns.invalid}
+      invalidDnsCallbackText={craig.power.network.pi_dns.invalidText}
       imageMap={powerImageMap}
       onAttachmentSave={craig.power.attachments.save}
       disableAttachmentSave={storageChangeDisabledCallback}
@@ -889,8 +864,8 @@ const ResourceGroupPage = (craig) => {
         return craig.store.json.resource_groups.length === 1;
       }}
       helperTextCallback={resourceGroupHelperTextCallback}
-      invalidCallback={invalidName("resource_groups")}
-      invalidTextCallback={invalidNameText("resource_groups")}
+      invalidCallback={craig.resource_groups.name.invalid}
+      invalidTextCallback={craig.resource_groups.name.invalidText}
     />
   );
 };

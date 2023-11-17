@@ -33,7 +33,6 @@ describe("power-utils", () => {
     it("should reject and return error", async () => {
       let reactFetch = new mockFetch(true, {});
       return powerImageFetch("DAL10", reactFetch.fetchPromise).catch((err) => {
-        console.log(err);
         assert.deepEqual(
           err,
           "This is an error!",

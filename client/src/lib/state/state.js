@@ -1,23 +1,8 @@
 const { lazyZstate } = require("lazy-z/lib/store");
 const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
 const { optionsInit, optionsSave } = require("./options");
-const {
-  keyManagementInit,
-  keyManagementOnStoreUpdate,
-  keyManagementSave,
-  kmsKeyCreate,
-  kmsKeyDelete,
-  kmsKeySave,
-  keyManagementCreate,
-  keyManagementDelete,
-} = require("./key-management");
-const {
-  resourceGroupInit,
-  resourceGroupOnStoreUpdate,
-  resourceGroupCreate,
-  resourceGroupSave,
-  resourceGroupDelete,
-} = require("./resource-groups");
+const { initKeyManagement } = require("./key-management");
+const { initResourceGroup } = require("./resource-groups");
 const { initObjectStorageStore } = require("./cos");
 const {
   atrackerInit,
@@ -126,7 +111,7 @@ const {
   accessGroupDynamicPolicyDelete,
 } = require("./iam");
 const validate = require("../validate");
-const { buildSubnetTiers, fieldIsNullOrEmptyString } = require("./utils");
+const { buildSubnetTiers } = require("./utils");
 const {
   addClusterRules,
   copySecurityGroup,
@@ -199,23 +184,7 @@ const {
   sysdigSave,
 } = require("./logging-monitoring");
 const { initIcdStore } = require("./icd");
-const {
-  powerVsInit,
-  powerVsOnStoreUpdate,
-  powerVsSave,
-  powerVsCreate,
-  powerVsDelete,
-  powerVsSshKeysCreate,
-  powerVsSshKeysSave,
-  powerVsSshKeysDelete,
-  powerVsNetworkCreate,
-  powerVsNetworkSave,
-  powerVsNetworkDelete,
-  powerVsCloudConnectionCreate,
-  powerVsCloudConnectionDelete,
-  powerVsCloudConnectionSave,
-  powerVsNetworkAttachmentSave,
-} = require("./power-vs");
+const { initPowerVsStore } = require("./power-vs");
 const {
   powerVsInstanceInit,
   powerVsInstanceOnStoreUpdate,
@@ -311,30 +280,9 @@ const state = function (legacy) {
     save: optionsSave,
   });
 
-  store.newField("resource_groups", {
-    init: resourceGroupInit,
-    onStoreUpdate: resourceGroupOnStoreUpdate,
-    create: resourceGroupCreate,
-    save: resourceGroupSave,
-    delete: resourceGroupDelete,
-  });
-
+  initResourceGroup(store);
   // components must check for key management second
-  store.newField("key_management", {
-    init: keyManagementInit,
-    onStoreUpdate: keyManagementOnStoreUpdate,
-    save: keyManagementSave,
-    create: keyManagementCreate,
-    delete: keyManagementDelete,
-    subComponents: {
-      keys: {
-        create: kmsKeyCreate,
-        delete: kmsKeyDelete,
-        save: kmsKeySave,
-      },
-    },
-  });
-
+  initKeyManagement(store);
   // next, update cos
   initObjectStorageStore(store);
 
@@ -604,34 +552,7 @@ const state = function (legacy) {
   });
 
   initIcdStore(store);
-
-  store.newField("power", {
-    init: powerVsInit,
-    onStoreUpdate: powerVsOnStoreUpdate,
-    save: powerVsSave,
-    create: powerVsCreate,
-    delete: powerVsDelete,
-    subComponents: {
-      ssh_keys: {
-        create: powerVsSshKeysCreate,
-        delete: powerVsSshKeysDelete,
-        save: powerVsSshKeysSave,
-      },
-      network: {
-        create: powerVsNetworkCreate,
-        delete: powerVsNetworkDelete,
-        save: powerVsNetworkSave,
-      },
-      cloud_connections: {
-        create: powerVsCloudConnectionCreate,
-        delete: powerVsCloudConnectionDelete,
-        save: powerVsCloudConnectionSave,
-      },
-      attachments: {
-        save: powerVsNetworkAttachmentSave,
-      },
-    },
-  });
+  initPowerVsStore(store);
 
   store.newField("power_instances", {
     init: powerVsInstanceInit,

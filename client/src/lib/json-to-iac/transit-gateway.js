@@ -63,6 +63,8 @@ function formatTgw(tgw, config) {
 function ibmTgConnection(connection) {
   let connectionName = connection.power
     ? connection.power
+    : connection.gateway
+    ? connection.gateway + " unbound gre"
     : connection.crn
     ? connection.crn.replace(/.+vpc:/g, "")
     : connection.vpc;
@@ -78,18 +80,37 @@ function ibmTgConnection(connection) {
     : connection.vpc
     ? vpcRef(connection.vpc, "crn", true)
     : connection.crn;
-  return {
+  let connectionData = {
     name: `${connection.tgw} to ${
       (connection.power ? "power_workspace_" : "") + connectionName
     } connection`,
     data: {
       gateway: tfRef("ibm_tg_gateway", snakeCase(connection.tgw)),
-      network_type: connection.power ? "power_virtual_server" : "vpc",
+      network_type: connection.gateway
+        ? "unbound_gre_tunnel"
+        : connection.power
+        ? "power_virtual_server"
+        : "vpc",
       name: connectionResourceName,
       network_id: networkId,
       timeouts: timeouts("30m", "", "30m"),
     },
   };
+  if (connection.gateway) {
+    connectionData.data.base_network_type = "classic";
+    connectionData.data.remote_bgp_asn = connection.remote_bgp_asn;
+    connectionData.data.zone = "${var.region}-" + connection.zone;
+    ["local_gateway_ip", "remote_gateway_ip"].forEach((field) => {
+      connectionData.data[
+        field
+      ] = `\${ibm_network_gateway.classic_gateway_${snakeCase(
+        connection.gateway
+      )}.${field === "local_gateway_ip" ? "private" : "public"}_ipv4_address}`;
+    });
+    connectionData.data.local_tunnel_ip = connection.local_tunnel_ip;
+    connectionData.data.remote_tunnel_ip = connection.remote_tunnel_ip;
+  }
+  return connectionData;
 }
 /**
  * configure transit gateway connection

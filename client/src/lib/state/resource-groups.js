@@ -1,4 +1,6 @@
 const { splat, revision } = require("lazy-z");
+const { shouldDisableComponentSave } = require("./utils");
+const { invalidName, invalidNameText } = require("../forms");
 
 /**
  * initialize resource groups
@@ -108,10 +110,33 @@ function resourceGroupDelete(config, stateData, componentProps) {
   config.carve(["json", "resource_groups"], componentProps.data.name);
 }
 
+/**
+ * init rg store
+ * @param {*} store
+ */
+function initResourceGroup(store) {
+  store.newField("resource_groups", {
+    init: resourceGroupInit,
+    onStoreUpdate: resourceGroupOnStoreUpdate,
+    create: resourceGroupCreate,
+    save: resourceGroupSave,
+    delete: resourceGroupDelete,
+    shouldDisableSave: shouldDisableComponentSave(["name"], "resource_groups"),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("resource_groups"),
+        invalidText: invalidNameText("resource_groups"),
+      },
+    },
+  });
+}
+
 module.exports = {
   resourceGroupInit,
   resourceGroupOnStoreUpdate,
   resourceGroupCreate,
   resourceGroupSave,
   resourceGroupDelete,
+  initResourceGroup,
 };

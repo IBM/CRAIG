@@ -188,6 +188,58 @@ describe("power-vs", () => {
         "it should be empty"
       );
     });
+    describe("power.ssh_keys.schema", () => {
+      describe("public_key", () => {
+        describe("invalidText", () => {
+          it("should return correct invalid text when a duplicate ssh key is added", () => {
+            let tempState = newState();
+            tempState.store = {
+              resourceGroups: ["hi"],
+              json: {
+                ssh_keys: [
+                  {
+                    name: "honk",
+                    public_key:
+                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                  },
+                ],
+                power: [
+                  {
+                    name: "workspace",
+                    ssh_keys: [
+                      {
+                        name: "ddd",
+                        public_key:
+                          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                      },
+                    ],
+                  },
+                ],
+              },
+            };
+            assert.deepEqual(
+              tempState.power.ssh_keys.public_key.invalidText(
+                {
+                  name: "test",
+                  resource_group: "hi",
+                  public_key:
+                    "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                },
+                {
+                  data: {
+                    data: "test",
+                  },
+                  arrayParentName: "workspace",
+                  craig: tempState,
+                }
+              ),
+              "SSH Public Key in use",
+              "it should return correct text"
+            );
+          });
+        });
+      });
+    });
   });
   describe("power.network crud", () => {
     let state;
@@ -297,6 +349,39 @@ describe("power-vs", () => {
         [],
         "it should delete a network interface"
       );
+    });
+    describe("power.network.schema", () => {
+      describe("pi_cidr", () => {
+        describe("invalidText", () => {
+          it("should return correct invalid text for invalid pi cidr", () => {
+            assert.deepEqual(
+              state.power.network.pi_cidr.invalidText(
+                {
+                  pi_cidr: "aaaa",
+                },
+                {
+                  data: {
+                    cidr: "",
+                  },
+                }
+              ),
+              "Invalid CIDR block",
+              "it should return correct data"
+            );
+          });
+        });
+      });
+      describe("pi_dns", () => {
+        describe("invalidText", () => {
+          it("should return correct invalid text", () => {
+            assert.deepEqual(
+              state.power.network.pi_dns.invalidText(),
+              "Invalid IP Address",
+              "it should return correct invalid text"
+            );
+          });
+        });
+      });
     });
   });
   describe("power.cloud_connections crud", () => {

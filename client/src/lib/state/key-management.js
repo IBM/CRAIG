@@ -7,6 +7,16 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
 } = require("./store.utils");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const {
+  invalidName,
+  invalidNameText,
+  invalidEncryptionKeyRing,
+  invalidEncryptionKeyEndpoint,
+} = require("../forms");
 
 /**
  * initialize key management in slz store
@@ -194,6 +204,62 @@ function kmsKeyDelete(config, stateData, componentProps) {
   deleteSubChild(config, "key_management", "keys", componentProps);
 }
 
+/**
+ * init key management store
+ * @param {*} store
+ */
+function initKeyManagement(store) {
+  store.newField("key_management", {
+    init: keyManagementInit,
+    onStoreUpdate: keyManagementOnStoreUpdate,
+    save: keyManagementSave,
+    create: keyManagementCreate,
+    delete: keyManagementDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "resource_group"],
+      "key_management"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("key_management"),
+        invalidText: invalidNameText("key_management"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+    },
+    subComponents: {
+      keys: {
+        create: kmsKeyCreate,
+        delete: kmsKeyDelete,
+        save: kmsKeySave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "key_ring", "endpoint"],
+          "key_management",
+          "keys"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("encryption_keys"),
+            invalidText: invalidNameText("encryption_keys"),
+          },
+          key_ring: {
+            default: "",
+            invalid: invalidEncryptionKeyRing,
+          },
+          endpoint: {
+            default: "",
+            invalid: invalidEncryptionKeyEndpoint,
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   keyManagementInit,
   keyManagementOnStoreUpdate,
@@ -203,4 +269,5 @@ module.exports = {
   kmsKeyCreate,
   kmsKeySave,
   kmsKeyDelete,
+  initKeyManagement,
 };
