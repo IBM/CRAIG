@@ -1703,6 +1703,13 @@ describe("invalid callbacks", () => {
         };
         assert.isTrue(replicationDisabledCallback(data, {}));
       });
+      it("should be true for when the workspace's zone does not have replication enabled", () => {
+        let data = {
+          pi_volume_pool: "Tier1-Flash-8",
+          zone: "dal10",
+        };
+        assert.isTrue(replicationDisabledCallback(data, {}));
+      });
     });
   });
 });

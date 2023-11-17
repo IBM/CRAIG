@@ -703,7 +703,7 @@ function replicationDisabledCallback(stateData, componentProps) {
     return true;
   }
   let replicationEnabledPools =
-    replicationEnabledStoragePoolMap[stateData.zone];
+    replicationEnabledStoragePoolMap[stateData.zone] || [];
   return !contains(replicationEnabledPools, pool);
 }
 

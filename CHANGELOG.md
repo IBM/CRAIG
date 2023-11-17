@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue causing DNS Terraform resources to have invalid plan values
+- Fixed an issue causing Power VS Volumes form to crash when selecting a workspace without storage pool replication
 
 ## 1.6.0
 

@@ -3,7 +3,8 @@
     "version": "1.6.1",
     "features": [],
     "fixes": [
-      "Fixed an issue causing DNS Terraform resources to have invalid plan values"
+      "Fixed an issue causing DNS Terraform resources to have invalid plan values",
+      "Fixed an issue causing Power VS Volumes form to crash when selecting a workspace without storage pool replication"
     ],
     "upgrade_notes": []
   },
