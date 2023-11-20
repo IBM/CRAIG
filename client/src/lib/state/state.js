@@ -194,6 +194,7 @@ const {
   powerVsVolumeCreate,
   powerVsVolumeSave,
   powerVsVolumeDelete,
+  initPowerVsVolumeStore,
 } = require("./power-vs-volumes");
 const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");
@@ -554,14 +555,7 @@ const state = function (legacy) {
     delete: powerVsInstanceDelete,
   });
 
-  store.newField("power_volumes", {
-    init: powerVsVolumesInit,
-    onStoreUpdate: powerVsVolumesOnStoreUpdate,
-    create: powerVsVolumeCreate,
-    save: powerVsVolumeSave,
-    delete: powerVsVolumeDelete,
-  });
-
+  initPowerVsVolumeStore(store);
   intiClassicInfrastructure(store);
   initClassicGateways(store);
 

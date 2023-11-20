@@ -1,4 +1,9 @@
-const { splatContains } = require("lazy-z");
+const { splatContains, isInRange } = require("lazy-z");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const { invalidName, invalidNameText } = require("../forms");
 
 /**
  * initialize power vs volumes
@@ -71,10 +76,46 @@ function powerVsVolumeDelete(config, stateData, componentProps) {
   config.carve(["json", "power_volumes"], componentProps.data.name);
 }
 
+/**
+ * init power vs volume store
+ * @param {*} store
+ */
+function initPowerVsVolumeStore(store) {
+  store.newField("power_volumes", {
+    init: powerVsVolumesInit,
+    onStoreUpdate: powerVsVolumesOnStoreUpdate,
+    create: powerVsVolumeCreate,
+    save: powerVsVolumeSave,
+    delete: powerVsVolumeDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "workspace", "pi_volume_size"],
+      "power_volumes"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("power_volumes"),
+        invalidText: invalidNameText("power_volumes"),
+      },
+      workspace: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("workspace"),
+      },
+      pi_volume_size: {
+        default: null,
+        invalid: function (stateData, componentProps) {
+          return !isInRange(parseInt(stateData.pi_volume_size), 1, 2000);
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   powerVsVolumesInit,
   powerVsVolumesOnStoreUpdate,
   powerVsVolumeCreate,
   powerVsVolumeSave,
   powerVsVolumeDelete,
+  initPowerVsVolumeStore,
 };

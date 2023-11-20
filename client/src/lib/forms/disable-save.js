@@ -778,20 +778,6 @@ function disablePowerInstanceSave(stateData, componentProps) {
   );
 }
 
-/**
- * disable save for power volumes
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {boolean}
- */
-function disablePowerVolumeSave(stateData, componentProps) {
-  return (
-    invalidName("power_volumes")(stateData, componentProps) ||
-    badField("workspace", stateData) ||
-    !isInRange(parseInt(stateData.pi_volume_size), 1, 2000)
-  );
-}
-
 const disableSaveFunctions = {
   scc: disableSccSave,
   access_groups: invalidName("access_groups"),
@@ -834,7 +820,6 @@ const disableSaveFunctions = {
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
   power_instances: disablePowerInstanceSave,
-  power_volumes: disablePowerVolumeSave,
 };
 
 /**
@@ -865,6 +850,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "power",
     "network",
     "cloud_connections",
+    "power_volumes",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (

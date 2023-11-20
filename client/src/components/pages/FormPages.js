@@ -836,8 +836,8 @@ const PowerVsVolumes = (craig) => {
       docs={RenderDocs("power_volumes", craig.store.json._options.template)}
       power={craig.store.json.power}
       power_instances={craig.store.json.power_instances}
-      invalidCallback={invalidName("power_volumes")}
-      invalidTextCallback={invalidNameText("power_volumes")}
+      invalidCallback={craig.power_volumes.name.invalid}
+      invalidTextCallback={craig.power_volumes.name.invalidText}
       replicationDisabledCallback={replicationDisabledCallback}
       affinityChangesDisabled={() => {
         // placeholder
