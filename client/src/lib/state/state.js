@@ -4,11 +4,7 @@ const { optionsInit, optionsSave } = require("./options");
 const { initKeyManagement } = require("./key-management");
 const { initResourceGroup } = require("./resource-groups");
 const { initObjectStorageStore } = require("./cos");
-const {
-  atrackerInit,
-  atrackerOnStoreUpdate,
-  atrackerSave,
-} = require("./atracker");
+const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
 const {
   vpcCreate,
@@ -318,11 +314,7 @@ const state = function (legacy) {
     },
   });
 
-  store.newField("atracker", {
-    init: atrackerInit,
-    onStoreUpdate: atrackerOnStoreUpdate,
-    save: atrackerSave,
-  });
+  initAtracker(store);
 
   initAppIdStore(store);
 

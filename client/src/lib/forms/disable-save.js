@@ -126,19 +126,6 @@ function disableSccSave(stateData) {
 }
 
 /**
- * check to see if atracker form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableAtrackerSave(stateData) {
-  return (
-    stateData.enabled &&
-    (nullOrEmptyStringFields(stateData, ["bucket", "cos_key"]) ||
-      isEmpty(stateData.locations))
-  );
-}
-
-/**
  * check to see if dynamic policies form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -807,7 +794,6 @@ function disablePowerVolumeSave(stateData, componentProps) {
 
 const disableSaveFunctions = {
   scc: disableSccSave,
-  atracker: disableAtrackerSave,
   access_groups: invalidName("access_groups"),
   policies: invalidName("policies"),
   dynamic_policies: disableDynamicPoliciesSave,
@@ -872,6 +858,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "worker_pools",
     "opaque_secrets",
     "icd",
+    "atracker",
     "resource_groups",
     "key_management",
     "encryption_keys",
