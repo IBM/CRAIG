@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue causing DNS Terraform resources to have invalid plan values
 - Fixed an issue causing Power VS Volumes form to crash when selecting a workspace without storage pool replication
+- Fixed an issue causing JSON to IaC to crash when Key Management service has an invalid name
 
 ## 1.6.0
 

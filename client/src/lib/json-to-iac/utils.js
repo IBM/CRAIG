@@ -66,9 +66,15 @@ function getCosId(cos, getGuid) {
  * @returns {string} title comment block
  */
 function buildTitleComment(name) {
+  let titleCaseName = "";
+  try {
+    titleCaseName = titleCase(name);
+  } catch (err) {
+    titleCaseName = "ERROR: Unable to Format Name";
+  }
   return (
     constants.titleComment
-      .replace("TITLE", titleCase(name))
+      .replace("TITLE", titleCaseName)
       .replace(
         new RegexButWithWords()
           .literal("F")

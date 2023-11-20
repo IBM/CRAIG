@@ -5,6 +5,7 @@ const {
   timeouts,
   calculateNeededSubnetIps,
   getNextCidr,
+  buildTitleComment,
 } = require("../../client/src/lib/json-to-iac/utils");
 const { transpose } = require("lazy-z");
 
@@ -190,6 +191,20 @@ describe("rgIdRef", () => {
         getNextCidr("10.10.0.0/29", 9),
         "10.10.0.16/28",
         "it should retun next cidr"
+      );
+    });
+  });
+  describe("buildTitleComment", () => {
+    it("should format title comment correctly when cannot uppercase name", () => {
+      let actualData = buildTitleComment("   ---@@@");
+      let expectedData = `##############################################################################
+# ERROR: Unable to Format Name
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return title comment"
       );
     });
   });
