@@ -3,7 +3,17 @@ const {
   splatContains,
   getObjectFromArray,
   splat,
+  isEmpty,
+  isIpv4CidrOrAddress,
+  isNullOrEmptyString,
+  isWholeNumber,
+  isInRange,
 } = require("lazy-z");
+const { invalidNameText, invalidName } = require("../forms");
+const {
+  fieldIsNullOrEmptyString,
+  shouldDisableComponentSave,
+} = require("./utils");
 const { getSapVolumeList } = require("../forms/sap");
 const { RegexButWithWords } = require("regex-but-with-words");
 
@@ -213,10 +223,266 @@ function powerVsInstanceDelete(config, stateData, componentProps) {
   config.carve(["json", "power_instances"], componentProps.data.name);
 }
 
+/**
+ * Processor invalidation for powerVs instance
+ * @returns {boolean} function will evaluate to true if should be disabled
+ */
+function powerVsCoresInvalid(stateData) {
+  let isDedicated = stateData.pi_proc_type === "dedicated";
+  let coreMax =
+    stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
+  let coreMin = isDedicated ? 1 : 0.25;
+  let processorsFloat = parseFloat(stateData.pi_processors);
+  return (
+    stateData.pi_processors === "" ||
+    (coreMin === 1 && !isWholeNumber(processorsFloat)) ||
+    processorsFloat < coreMin ||
+    processorsFloat > coreMax
+  );
+}
+
+/**
+ * Memory invalidation for powerVs instance
+ * @returns {boolean} function will evaluate to true if should be disabled
+ */
+function powerVsMemoryInvalid(stateData) {
+  let memoryFloat = parseFloat(stateData.pi_memory);
+  let memoryMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
+  return !isWholeNumber(memoryFloat) || !isInRange(memoryFloat, 2, memoryMax);
+}
+
+/**
+ * return power_instances processor input invalid text
+ * @param {Object} stateData
+ * @returns {string} invalid text
+ */
+function invalidPowerVsProcessorTextCallback(stateData) {
+  let isDedicated = stateData.pi_proc_type === "dedicated";
+  let coreMin = isDedicated ? 1 : 0.25;
+  let coreMax =
+    stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
+  return `Must be a ${
+    isDedicated ? "whole " : ""
+  }number between ${coreMin} and ${coreMax}.`;
+}
+
+/**
+ * return power_instances memory input invalid text
+ * @param {Object} stateData
+ * @returns {string} invalid text
+ */
+function invalidPowerVsMemoryTextCallback(stateData) {
+  let memMin = 2;
+  let memMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
+  return `Must be a whole number between ${memMin} and ${memMax}.`;
+}
+
+/**
+ * Network invalidation for powerVs instance
+ * @returns {boolean} function will evaluate to true if should be disabled
+ */
+function powerVsNetworkInvalid(stateData) {
+  let hasInvalidNetwork = false;
+  if (stateData.network && !isEmpty(stateData.network)) {
+    stateData.network.forEach((nw) => {
+      if (
+        (!isNullOrEmptyString(nw.ip_address) &&
+          !isIpv4CidrOrAddress(nw.ip_address)) ||
+        contains(nw.ip_address, "/")
+      )
+        hasInvalidNetwork = true;
+    });
+  }
+  return hasInvalidNetwork;
+}
+
+/**
+ * Affinity invalidation for powerVs instance
+ * @returns {boolean} function will evaluate to true if should be disabled
+ */
+function powerAffinityInvalid(stateData, option, type, field) {
+  return (
+    (stateData.storage_option === option && !stateData.affinity_type) ||
+    (stateData.storage_option === option &&
+      stateData.affinity_type &&
+      stateData.affinity_type === type &&
+      isNullOrEmptyString(stateData[field]))
+  );
+}
+
+/**
+ * initialize powerVs instance
+ * @param {*} config
+ */
+function initPowerVsInstance(store) {
+  store.newField("power_instances", {
+    init: powerVsInstanceInit,
+    onStoreUpdate: powerVsInstanceOnStoreUpdate,
+    create: powerVsInstanceCreate,
+    save: powerVsInstanceSave,
+    delete: powerVsInstanceDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "name",
+        "sap",
+        "sap_profile",
+        "workspace",
+        "network",
+        "ssh_key",
+        "image",
+        "pi_sys_type",
+        "pi_proc_type",
+        "pi_processors",
+        "pi_memory",
+        "pi_health_status",
+        "pi_storage_type",
+        "pi_storage_pool",
+        "pi_affinity_volume",
+        "pi_affinity_instance",
+        "pi_anti_affinity_instance",
+        "pi_anti_affinity_volume",
+      ],
+      "power_instances"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("power_instances"),
+        invalidText: invalidNameText("power_instances"),
+      },
+      sap: {
+        default: false,
+      },
+      sap_profile: {
+        default: "",
+        invalid: function (stateData) {
+          return stateData.sap && isNullOrEmptyString(stateData.sap_profile);
+        },
+      },
+      workspace: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("workspace"),
+      },
+      network: {
+        default: null,
+        invalid: powerVsNetworkInvalid,
+      },
+      ssh_key: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("ssh_key"),
+      },
+      image: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("image"),
+      },
+      pi_sys_type: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("pi_sys_type"),
+      },
+      pi_proc_type: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("pi_proc_type"),
+      },
+      pi_processors: {
+        default: "",
+        invalid: powerVsCoresInvalid,
+        invalidText: invalidPowerVsProcessorTextCallback,
+      },
+      pi_memory: {
+        default: "",
+        invalid: powerVsMemoryInvalid,
+        invalidText: invalidPowerVsMemoryTextCallback,
+      },
+      pi_health_status: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("pi_health_status"),
+      },
+      pi_storage_pool_affinity: {
+        default: false,
+      },
+      storage_option: {
+        default: "",
+      },
+      pi_storage_type: {
+        default: "",
+        invalid: function (stateData) {
+          return (
+            stateData.storage_option === "Storage Type" &&
+            isNullOrEmptyString(stateData.pi_storage_type)
+          );
+        },
+      },
+      pi_storage_pool: {
+        default: "",
+        invalid: function (stateData) {
+          return (
+            stateData.storage_option === "Storage Pool" &&
+            (!stateData.pi_storage_pool ||
+              isNullOrEmptyString(stateData.pi_storage_pool))
+          );
+        },
+      },
+      affinity_type: {
+        default: null,
+      },
+      pi_affinity_policy: {
+        default: null,
+      },
+      pi_affinity_volume: {
+        default: null,
+        invalid: function (stateData) {
+          return powerAffinityInvalid(
+            stateData,
+            "Affinity",
+            "Volume",
+            "pi_affinity_volume"
+          );
+        },
+      },
+      pi_affinity_instance: {
+        default: null,
+        invalid: function (stateData) {
+          return powerAffinityInvalid(
+            stateData,
+            "Affinity",
+            "Instance",
+            "pi_affinity_instance"
+          );
+        },
+      },
+      pi_anti_affinity_volume: {
+        default: null,
+        invalid: function (stateData) {
+          return powerAffinityInvalid(
+            stateData,
+            "Anti-Affinity",
+            "Volume",
+            "pi_anti_affinity_volume"
+          );
+        },
+      },
+      pi_anti_affinity_instance: {
+        default: null,
+        invalid: function (stateData) {
+          return powerAffinityInvalid(
+            stateData,
+            "Anti-Affinity",
+            "Instance",
+            "pi_anti_affinity_instance"
+          );
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   powerVsInstanceInit,
   powerVsInstanceOnStoreUpdate,
   powerVsInstanceSave,
   powerVsInstanceCreate,
   powerVsInstanceDelete,
+  invalidPowerVsProcessorTextCallback,
+  invalidPowerVsMemoryTextCallback,
+  initPowerVsInstance,
 };

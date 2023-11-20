@@ -679,79 +679,6 @@ function disableSysdigSave(stateData) {
     : nullOrEmptyStringFields(stateData, ["resource_group", "plan"]);
 }
 
-/**
- * disable power instance save
- * @param {*} stateData
- * @param {*} componentProps
- * @return {boolean} true if disabled
- */
-function disablePowerInstanceSave(stateData, componentProps) {
-  let hasInvalidIps = false;
-  if (stateData.network) {
-    stateData.network.forEach((nw) => {
-      if (
-        (!isNullOrEmptyString(nw.ip_address) &&
-          !isIpv4CidrOrAddress(nw.ip_address)) ||
-        contains(nw.ip_address, "/")
-      )
-        hasInvalidIps = true;
-    });
-  }
-
-  /**
-   *
-   */
-  function disableWhenStorageInvalid() {
-    let shouldDisableBasedOnStorage = false;
-    [
-      "pi_affinity_volume",
-      "pi_affinity_instance",
-      "pi_anti_affinity_instance",
-      "pi_anti_affinity_volume",
-    ].forEach((item) => {
-      if (!stateData[item]) stateData[item] = null;
-    });
-    if (stateData.storage_option === "Affinity") {
-      shouldDisableBasedOnStorage =
-        isNullOrEmptyString(stateData.pi_affinity_volume) &&
-        isNullOrEmptyString(stateData.pi_affinity_instance);
-    } else if (stateData.storage_option === "Anti-Affinity") {
-      shouldDisableBasedOnStorage =
-        isNullOrEmptyString(stateData.pi_anti_affinity_volume) &&
-        isNullOrEmptyString(stateData.pi_anti_affinity_instance);
-    }
-    return shouldDisableBasedOnStorage;
-  }
-
-  return (
-    invalidName("power_instances")(stateData, componentProps) ||
-    invalidFieldCheck(
-      [
-        "workspace",
-        "ssh_key",
-        "image",
-        "pi_sys_type",
-        "pi_health_status",
-        "pi_storage_tier",
-      ],
-      badField,
-      stateData
-    ) ||
-    isEmpty(stateData.network) ||
-    hasInvalidIps ||
-    Number.isNaN(parseFloat(stateData.pi_processors)) ||
-    Number.isNaN(parseFloat(stateData.pi_memory)) ||
-    parseFloat(stateData.pi_processors) < 0.25 ||
-    parseFloat(stateData.pi_processors) > 7 ||
-    parseFloat(stateData.pi_memory) <= 0 ||
-    (stateData.storage_option === "Storage Type" &&
-      isNullOrEmptyString(stateData.pi_storage_type)) ||
-    (stateData.storage_option === "Storage Pool" &&
-      isNullOrEmptyString(stateData.pi_storage_pool)) ||
-    disableWhenStorageInvalid()
-  );
-}
-
 const disableSaveFunctions = {
   scc: disableSccSave,
   access_groups: invalidName("access_groups"),
@@ -792,7 +719,6 @@ const disableSaveFunctions = {
   custom_resolvers: disableCustomResolversSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
-  power_instances: disablePowerInstanceSave,
 };
 
 /**
@@ -824,6 +750,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "network",
     "cloud_connections",
     "event_streams",
+    "power_instances",
     "power_volumes",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;

@@ -176,13 +176,7 @@ const {
 } = require("./logging-monitoring");
 const { initIcdStore } = require("./icd");
 const { initPowerVsStore } = require("./power-vs");
-const {
-  powerVsInstanceInit,
-  powerVsInstanceOnStoreUpdate,
-  powerVsInstanceCreate,
-  powerVsInstanceSave,
-  powerVsInstanceDelete,
-} = require("./power-vs-instances");
+const { initPowerVsInstance } = require("./power-vs-instances");
 const {
   powerVsVolumesInit,
   powerVsVolumesOnStoreUpdate,
@@ -534,13 +528,7 @@ const state = function (legacy) {
   initIcdStore(store);
   initPowerVsStore(store);
 
-  store.newField("power_instances", {
-    init: powerVsInstanceInit,
-    onStoreUpdate: powerVsInstanceOnStoreUpdate,
-    create: powerVsInstanceCreate,
-    save: powerVsInstanceSave,
-    delete: powerVsInstanceDelete,
-  });
+  initPowerVsInstance(store);
 
   initPowerVsVolumeStore(store);
   intiClassicInfrastructure(store);

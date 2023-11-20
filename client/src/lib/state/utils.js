@@ -9,7 +9,7 @@ const {
   revision,
   isNullOrEmptyString,
 } = require("lazy-z");
-const { commaSeparatedIpListExp } = require("../constants")
+const { commaSeparatedIpListExp } = require("../constants");
 const { RegexButWithWords } = require("regex-but-with-words");
 /**
  * set kms from encryption key on store update

@@ -98,6 +98,7 @@ import {
   edgeRouterEnabledZones,
   cosPlans,
   powerStoragePoolRegionMap,
+  systemTypes,
   sapProfiles,
   datacenters,
 } from "../../lib/constants";
@@ -770,6 +771,7 @@ const PowerVsInstances = (craig) => {
           <NoPowerWorkspaceTile />
         ) : undefined
       }
+      systemTypes={systemTypes}
       sapProfiles={sapProfiles}
       power_instances={craig.store.json.power_instances}
       storage_pool_map={powerStoragePoolMap}
@@ -782,30 +784,16 @@ const PowerVsInstances = (craig) => {
       craig={craig}
       power={craig.store.json.power}
       docs={RenderDocs("power_instances", craig.store.json._options.template)}
-      invalidCallback={invalidName("power_instances")}
-      invalidTextCallback={invalidNameText("power_instances")}
+      invalidCallback={craig.power_instances.name.invalid}
+      invalidTextCallback={craig.power_instances.name.invalidText}
       forceOpen={forceShowForm}
-      invalidIpCallback={(ip) => {
-        if (isNullOrEmptyString(ip)) {
-          return false;
-        } else return contains(ip, "/") || !isIpv4CidrOrAddress(ip);
-      }}
-      invalidPiProcessorsCallback={(stateData) => {
-        // weird is in range error with decimal numbers and is in range
-        return (
-          parseFloat(stateData.pi_processors) < 0.25 ||
-          parseFloat(stateData.pi_processors) > 7
-        );
-      }}
-      invalidPiMemoryCallback={(stateData) => {
-        return !(parseInt(stateData.pi_memory) > 0);
-      }}
-      invalidPiProcessorsTextCallback={() => {
-        return "Must be a number between 0.25 and 7.";
-      }}
-      invalidPiMemoryTextCallback={() => {
-        return "Must be a whole number greater than 0.";
-      }}
+      invalidIpCallback={craig.power_instances.network.invalid}
+      invalidPiProcessorsCallback={craig.power_instances.pi_processors.invalid}
+      invalidPiProcessorsTextCallback={
+        craig.power_instances.pi_processors.invalidText
+      }
+      invalidPiMemoryCallback={craig.power_instances.pi_memory.invalid}
+      invalidPiMemoryTextCallback={craig.power_instances.pi_memory.invalidText}
       storageChangesDisabledCallback={storageChangeDisabledCallback}
     />
   );

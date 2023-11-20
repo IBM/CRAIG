@@ -264,27 +264,17 @@ describe("power", () => {
       assert.isTrue(actualData, "it should be disabled");
     });
     describe("power vs instances", () => {
-      it("should be disabled when invalid duplicate power instance name", () => {
+      it("should be disabled when invalid power instance name", () => {
         let actualData = disableSave(
           "power_instances",
           {
-            name: "frog",
+            name: "aaa---",
           },
           {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isTrue(actualData, "it should be disabled");
@@ -300,17 +290,7 @@ describe("power", () => {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isTrue(actualData, "it should be disabled");
@@ -322,22 +302,18 @@ describe("power", () => {
             name: "toad",
             workspace: "good",
             ssh_key: "",
+            network: [
+              {
+                name: "good",
+                ip_address: "",
+              },
+            ],
           },
           {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isTrue(actualData, "it should be disabled");
@@ -352,24 +328,14 @@ describe("power", () => {
             image: "good",
             pi_sys_type: "good",
             pi_health_status: "good",
-            pi_storage_tier: "good",
+            pi_storage_type: "good",
             network: [],
           },
           {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isTrue(actualData, "it should be disabled");
@@ -384,7 +350,7 @@ describe("power", () => {
             image: "good",
             pi_sys_type: "good",
             pi_health_status: "good",
-            pi_storage_tier: "good",
+            pi_storage_type: "good",
             network: [
               {
                 name: "good",
@@ -396,17 +362,7 @@ describe("power", () => {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isTrue(actualData, "it should be disabled");
@@ -421,7 +377,7 @@ describe("power", () => {
             image: "good",
             pi_sys_type: "good",
             pi_health_status: "good",
-            pi_storage_tier: "good",
+            pi_storage_type: "good",
             network: [
               {
                 name: "good",
@@ -433,17 +389,7 @@ describe("power", () => {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isTrue(actualData, "it should be disabled");
@@ -458,7 +404,7 @@ describe("power", () => {
             image: "good",
             pi_sys_type: "good",
             pi_health_status: "good",
-            pi_storage_tier: "good",
+            pi_storage_type: "good",
             network: [
               {
                 name: "good",
@@ -474,94 +420,7 @@ describe("power", () => {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
-          }
-        );
-        assert.isTrue(actualData, "it should be disabled");
-      });
-      it("should not be disabled when processors is invalid", () => {
-        let actualData = disableSave(
-          "power_instances",
-          {
-            name: "toad",
-            workspace: "good",
-            ssh_key: "good",
-            image: "good",
-            pi_sys_type: "good",
-            pi_health_status: "good",
-            pi_storage_tier: "good",
-            network: [
-              {
-                name: "good",
-                ip_address: "",
-              },
-            ],
-            pi_processors: "8",
-          },
-          {
-            data: {
-              name: "egg",
-            },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
-          }
-        );
-        assert.isTrue(actualData, "it should be disabled");
-      });
-      it("should not be disabled when invalid memory", () => {
-        let actualData = disableSave(
-          "power_instances",
-          {
-            name: "toad",
-            workspace: "good",
-            ssh_key: "good",
-            image: "good",
-            pi_sys_type: "good",
-            pi_health_status: "good",
-            pi_storage_tier: "good",
-            network: [
-              {
-                name: "good",
-                ip_address: "",
-              },
-            ],
-            pi_processors: "7",
-            pi_memory: "0",
-          },
-          {
-            data: {
-              name: "egg",
-            },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isTrue(actualData, "it should be disabled");
@@ -576,7 +435,8 @@ describe("power", () => {
             image: "good",
             pi_sys_type: "good",
             pi_health_status: "good",
-            pi_storage_tier: "good",
+            storage_option: "Storage Type",
+            pi_storage_type: "good",
             network: [
               {
                 name: "good",
@@ -590,20 +450,67 @@ describe("power", () => {
             data: {
               name: "egg",
             },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      name: "frog",
-                    },
-                  ],
-                },
-              },
-            },
+            craig: state(),
           }
         );
         assert.isFalse(actualData, "it should not be disabled");
+      });
+      it("should be disabled when processors is invalid", () => {
+        let actualData = disableSave(
+          "power_instances",
+          {
+            name: "toad",
+            workspace: "good",
+            ssh_key: "good",
+            image: "good",
+            pi_sys_type: "good",
+            pi_health_status: "good",
+            pi_storage_type: "good",
+            network: [
+              {
+                name: "good",
+                ip_address: "",
+              },
+            ],
+            pi_processors: "800",
+          },
+          {
+            data: {
+              name: "egg",
+            },
+            craig: state(),
+          }
+        );
+        assert.isTrue(actualData, "it should be disabled");
+      });
+      it("should be disabled when invalid memory", () => {
+        let actualData = disableSave(
+          "power_instances",
+          {
+            name: "toad",
+            workspace: "good",
+            ssh_key: "good",
+            image: "good",
+            pi_sys_type: "good",
+            pi_health_status: "good",
+            pi_storage_type: "good",
+            network: [
+              {
+                name: "good",
+                ip_address: "",
+              },
+            ],
+            pi_processors: "7",
+            pi_memory: "0",
+          },
+          {
+            data: {
+              name: "egg",
+            },
+            craig: state(),
+          }
+        );
+        assert.isTrue(actualData, "it should be disabled");
       });
     });
   });
