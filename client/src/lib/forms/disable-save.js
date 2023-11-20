@@ -358,32 +358,6 @@ function disableSecurityGroupsSave(stateData, componentProps) {
 }
 
 /**
- * check to see if event streams form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableEventStreamsSave(stateData, componentProps) {
-  if (stateData.plan !== "enterprise") {
-    return (
-      invalidName("event_streams")(stateData, componentProps) ||
-      badField("resource_group", stateData)
-    );
-  } else {
-    return (
-      invalidName("event_streams")(stateData, componentProps) ||
-      nullOrEmptyStringFields(stateData, [
-        "resource_group",
-        "endpoints",
-        "throughput",
-        "storage_size",
-      ]) ||
-      invalidIpCommaList(stateData.private_ip_allowlist)
-    );
-  }
-}
-
-/**
  * check to see if vpe form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -799,7 +773,6 @@ const disableSaveFunctions = {
   subnet: disableSubnetSave,
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
-  event_streams: disableEventStreamsSave,
   virtual_private_endpoints: disableVpeSave,
   vsi: disableVsiSave,
   f5_vsi_template: disableF5VsiTemplateSave,
@@ -850,6 +823,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "power",
     "network",
     "cloud_connections",
+    "event_streams",
     "power_volumes",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;

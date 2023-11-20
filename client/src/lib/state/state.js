@@ -79,12 +79,7 @@ const {
   f5TemplateSave,
 } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
-const {
-  eventStreamsOnStoreUpdate,
-  eventStreamsCreate,
-  eventStreamsSave,
-  eventStreamsDelete,
-} = require("./event-streams");
+const { initEventStreams } = require("./event-streams");
 const {
   secretsManagerOnStoreUpdate,
   secretsManagerCreate,
@@ -402,15 +397,7 @@ const state = function (legacy) {
 
   initLoadBalancers(store);
 
-  store.newField("event_streams", {
-    init: (config) => {
-      config.store.json.event_streams = [];
-    },
-    onStoreUpdate: eventStreamsOnStoreUpdate,
-    create: eventStreamsCreate,
-    save: eventStreamsSave,
-    delete: eventStreamsDelete,
-  });
+  initEventStreams(store);
 
   store.newField("secrets_manager", {
     init: (config) => {

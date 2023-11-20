@@ -9,7 +9,8 @@ const {
   revision,
   isNullOrEmptyString,
 } = require("lazy-z");
-
+const { commaSeparatedIpListExp } = require("../constants")
+const { RegexButWithWords } = require("regex-but-with-words");
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -379,6 +380,21 @@ function shouldDisableComponentSave(fields, component, subComponent) {
   };
 }
 
+/**
+ * test for invalid IP string/CIDR
+ * @param {string} value
+ * @returns {boolean} true if invalid
+ */
+function isIpStringInvalid(value) {
+  if (
+    !isNullOrEmptyString(value) &&
+    value.match(commaSeparatedIpListExp) === null
+  ) {
+    return true;
+  }
+  return false;
+}
+
 module.exports = {
   formatNetworkingRule,
   updateNetworkingRule,
@@ -388,4 +404,5 @@ module.exports = {
   setKmsFromKeyOnStoreUpdate,
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
+  isIpStringInvalid,
 };

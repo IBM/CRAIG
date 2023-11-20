@@ -461,8 +461,8 @@ const EventStreamsPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("event_streams")}
-      invalidTextCallback={invalidNameText("event_streams")}
+      invalidCallback={craig.event_streams.name.invalid}
+      invalidTextCallback={craig.event_streams.name.invalidText}
       craig={craig}
       docs={RenderDocs("event_streams", craig.store.json._options.template)}
     />
