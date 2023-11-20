@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- When using the search bar in the hamburger menu, results will be returned based on documentation text
 
 ### Fixes
 

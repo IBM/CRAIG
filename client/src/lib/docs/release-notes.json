@@ -1,7 +1,9 @@
 [
   {
     "version": "1.6.1",
-    "features": [],
+    "features": [
+      "When using the search bar in the hamburger menu, results will be returned based on documentation text"
+    ],
     "fixes": [
       "Fixed an issue causing DNS Terraform resources to have invalid plan values",
       "Fixed an issue causing Power VS Volumes form to crash when selecting a workspace without storage pool replication",

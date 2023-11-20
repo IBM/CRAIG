@@ -9,21 +9,22 @@ const docs = require("./docs/docs.json");
 function allDocText(fieldName) {
   let fieldData = docs[fieldName];
   let allText = "";
-  fieldData.content.forEach((item) => {
-    eachKey(item, (key) => {
-      if (key === "text" && item[key] !== "_default_includes") {
-        allText += item[key] + " ";
-      } else if (key === "table") {
-        item[key].forEach((row) => {
-          row.forEach((col) => {
-            if (!isNullOrEmptyString(col) && col !== "_headers") {
-              allText += col + " ";
-            }
+  if (fieldData)
+    fieldData.content.forEach((item) => {
+      eachKey(item, (key) => {
+        if (key === "text" && item[key] !== "_default_includes") {
+          allText += item[key] + " ";
+        } else if (key === "table") {
+          item[key].forEach((row) => {
+            row.forEach((col) => {
+              if (!isNullOrEmptyString(col) && col !== "_headers") {
+                allText += col + " ";
+              }
+            });
           });
-        });
-      }
+        }
+      });
     });
-  });
   return allText;
 }
 

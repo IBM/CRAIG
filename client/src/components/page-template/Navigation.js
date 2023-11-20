@@ -16,6 +16,7 @@ import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
 import { validate } from "../../lib";
 import { splat } from "lazy-z";
+import { allDocText } from "../../lib/docs";
 const releaseNotes = require("../../lib/docs/release-notes.json");
 
 class Navigation extends React.Component {
@@ -111,7 +112,9 @@ class Navigation extends React.Component {
       .flat()
       .filter((link) => {
         return (
-          link.title.toLowerCase().includes(value) || link.path.includes(value)
+          link.title.toLowerCase().includes(value) ||
+          link.path.includes(value) ||
+          (link.jsonField ? allDocText(link.jsonField).includes(value) : false)
         );
       });
 
