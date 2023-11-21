@@ -832,6 +832,12 @@ const PowerVsVolumes = (craig) => {
         return false;
       }}
       storage_pool_map={powerStoragePoolRegionMap}
+      disableCapacityCallback={function (stateData, componentProps) {
+        if (stateData.sap === true && contains(stateData.name, "-sap-log-")) {
+          return false;
+        }
+        return true;
+      }}
     />
   );
 };
