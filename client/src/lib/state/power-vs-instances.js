@@ -236,8 +236,7 @@ function powerVsCoresInvalid(stateData) {
   return (
     stateData.pi_processors === "" ||
     (coreMin === 1 && !isWholeNumber(processorsFloat)) ||
-    processorsFloat < coreMin ||
-    processorsFloat > coreMax
+    (!stateData.sap && (processorsFloat < coreMin || processorsFloat > coreMax))
   );
 }
 
@@ -248,7 +247,10 @@ function powerVsCoresInvalid(stateData) {
 function powerVsMemoryInvalid(stateData) {
   let memoryFloat = parseFloat(stateData.pi_memory);
   let memoryMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
-  return !isWholeNumber(memoryFloat) || !isInRange(memoryFloat, 2, memoryMax);
+  return (
+    !isWholeNumber(memoryFloat) ||
+    (!stateData.sap && !isInRange(memoryFloat, 2, memoryMax))
+  );
 }
 
 /**

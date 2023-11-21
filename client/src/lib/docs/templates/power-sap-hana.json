@@ -30,149 +30,7 @@
   "clusters": [],
   "dns": [],
   "event_streams": [],
-  "f5_vsi": [
-    {
-      "kms": "kms",
-      "subnet": "f5-management-zone-1",
-      "vpc": "edge",
-      "resource_group": "edge-rg",
-      "ssh_keys": ["ssh-key"],
-      "security_groups": ["f5-management-sg"],
-      "encryption_key": "vsi-volume-key",
-      "profile": "cx2-4x8",
-      "name": "f5-zone-1",
-      "image": "f5-bigip-15-1-5-1-0-0-14-all-1slot",
-      "network_interfaces": [
-        {
-          "security_groups": ["f5-bastion-sg"],
-          "subnet": "f5-bastion-zone-1"
-        },
-        {
-          "security_groups": ["f5-external-sg"],
-          "subnet": "f5-external-zone-1"
-        }
-      ],
-      "template": {
-        "hostname": "f5-ve-01",
-        "domain": "local",
-        "default_route_gateway_cidr": "10.10.10.10/24",
-        "zone": 1,
-        "vpc": "edge",
-        "do_declaration_url": "null",
-        "as3_declaration_url": "null",
-        "ts_declaration_url": "null",
-        "phone_home_url": "null",
-        "tgstandby_url": "null",
-        "tgrefresh_url": "null",
-        "tgactive_url": "null",
-        "template_version": "20210201",
-        "template_source": "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
-        "app_id": "null",
-        "license_type": "none",
-        "license_host": "null",
-        "license_username": "null",
-        "license_password": "null",
-        "license_pool": "null",
-        "license_sku_keyword_1": "null",
-        "license_sku_keyword_2": "null",
-        "tmos_admin_password": null
-      }
-    },
-    {
-      "kms": "kms",
-      "subnet": "f5-management-zone-2",
-      "vpc": "edge",
-      "resource_group": "edge-rg",
-      "ssh_keys": ["ssh-key"],
-      "security_groups": ["f5-management-sg"],
-      "encryption_key": "vsi-volume-key",
-      "profile": "cx2-4x8",
-      "name": "f5-zone-2",
-      "image": "f5-bigip-15-1-5-1-0-0-14-all-1slot",
-      "network_interfaces": [
-        {
-          "security_groups": ["f5-bastion-sg"],
-          "subnet": "f5-bastion-zone-2"
-        },
-        {
-          "security_groups": ["f5-external-sg"],
-          "subnet": "f5-external-zone-2"
-        }
-      ],
-      "template": {
-        "hostname": "f5-ve-01",
-        "domain": "local",
-        "default_route_gateway_cidr": "10.10.10.10/24",
-        "zone": 2,
-        "vpc": "edge",
-        "do_declaration_url": "null",
-        "as3_declaration_url": "null",
-        "ts_declaration_url": "null",
-        "phone_home_url": "null",
-        "tgstandby_url": "null",
-        "tgrefresh_url": "null",
-        "tgactive_url": "null",
-        "template_version": "20210201",
-        "template_source": "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
-        "app_id": "null",
-        "license_type": "none",
-        "license_host": "null",
-        "license_username": "null",
-        "license_password": "null",
-        "license_pool": "null",
-        "license_sku_keyword_1": "null",
-        "license_sku_keyword_2": "null",
-        "tmos_admin_password": null
-      }
-    },
-    {
-      "kms": "kms",
-      "subnet": "f5-management-zone-3",
-      "vpc": "edge",
-      "resource_group": "edge-rg",
-      "ssh_keys": ["ssh-key"],
-      "security_groups": ["f5-management-sg"],
-      "encryption_key": "vsi-volume-key",
-      "profile": "cx2-4x8",
-      "name": "f5-zone-3",
-      "image": "f5-bigip-15-1-5-1-0-0-14-all-1slot",
-      "network_interfaces": [
-        {
-          "security_groups": ["f5-bastion-sg"],
-          "subnet": "f5-bastion-zone-3"
-        },
-        {
-          "security_groups": ["f5-external-sg"],
-          "subnet": "f5-external-zone-3"
-        }
-      ],
-      "template": {
-        "hostname": "f5-ve-01",
-        "domain": "local",
-        "default_route_gateway_cidr": "10.10.10.10/24",
-        "zone": 3,
-        "vpc": "edge",
-        "do_declaration_url": "null",
-        "as3_declaration_url": "null",
-        "ts_declaration_url": "null",
-        "phone_home_url": "null",
-        "tgstandby_url": "null",
-        "tgrefresh_url": "null",
-        "tgactive_url": "null",
-        "template_version": "20210201",
-        "template_source": "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
-        "app_id": "null",
-        "license_type": "none",
-        "license_host": "null",
-        "license_username": "null",
-        "license_password": "null",
-        "license_pool": "null",
-        "license_sku_keyword_1": "null",
-        "license_sku_keyword_2": "null",
-        "tmos_admin_password": null
-      }
-    }
-  ],
+  "f5_vsi": [],
   "iam_account_settings": {
     "enable": false,
     "mfa": null,
@@ -495,7 +353,7 @@
       "zone": "us-south",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
-      "pi_storage_type": "tier3",
+      "pi_storage_type": "tier1",
       "ssh_key": "power-ssh-key",
       "pi_sys_type": "e880",
       "pi_memory": "256",
@@ -532,9 +390,9 @@
       "pi_proc_type": "shared",
       "pi_storage_type": "tier3",
       "ssh_key": "power-ssh-key",
-      "pi_sys_type": "e880",
+      "pi_sys_type": "s922",
       "pi_processors": "3",
-      "pi_memory": "50",
+      "pi_memory": "32",
       "storage_option": "Storage Type",
       "pi_storage_pool_affinity": false,
       "sap": false

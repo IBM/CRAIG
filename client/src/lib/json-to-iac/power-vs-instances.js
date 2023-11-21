@@ -93,6 +93,12 @@ function powerVsInstanceData(instance) {
       delete data.pi_storage_type;
     }
   }
+  if (data.sap_profile) {
+    data.pi_sap_profile_id = data.sap_profile;
+    delete data.pi_proc_type;
+    delete data.pi_processors;
+    delete data.pi_memory;
+  }
   delete data.sap;
   delete data.sap_profile;
   return data;
