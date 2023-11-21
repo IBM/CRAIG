@@ -826,8 +826,9 @@ const PowerVsVolumes = (craig) => {
       disableCapacityCallback={function (stateData, componentProps) {
         if (stateData.sap === true && contains(stateData.name, "-sap-log-")) {
           return false;
-        }
-        return true;
+        } else if (stateData.sap) {
+          return true;
+        } else return false;
       }}
     />
   );
