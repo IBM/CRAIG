@@ -100,7 +100,7 @@ variable "secrets_manager_example_secret_password" {
   });
   it("should return correct variable when classic resources are enabled", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
-    slzNetwork._options.classic = true;
+    slzNetwork._options.enable_classic = true;
     slzNetwork.classic_ssh_keys = [
       {
         name: "example-classic",
@@ -199,7 +199,7 @@ variable "classic_example_classic_public_key" {
   });
   it("should return correct variable when classic resources are enabled for template tar mode", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
-    slzNetwork._options.classic = true;
+    slzNetwork._options.enable_classic = true;
     slzNetwork.classic_ssh_keys = [
       {
         name: "example-classic",
@@ -297,7 +297,7 @@ variable "classic_example_classic_public_key" {
   it("should return correct variable when power vs is enabled", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
     slzNetwork._options.enable_power_vs = true;
-    slzNetwork._options.classic = false;
+    slzNetwork._options.enable_classic = false;
     let actualData = variablesDotTf(slzNetwork, false);
     let expectedData = `##############################################################################
 # Variables
@@ -372,7 +372,7 @@ variable "secrets_manager_example_secret_password" {
   it("should return correct variable when power vs is enabled with ssh keys", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
     slzNetwork._options.enable_power_vs = true;
-    slzNetwork._options.classic = false;
+    slzNetwork._options.enable_classic = false;
     slzNetwork.power = [
       {
         name: "oracle-template",
@@ -529,7 +529,7 @@ variable "power_oracle_template_power_ssh_key" {
   it("should return correct variable when power vs is enabled with ssh keys in template tar mode", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
     slzNetwork._options.enable_power_vs = true;
-    slzNetwork._options.classic = false;
+    slzNetwork._options.enable_classic = false;
     slzNetwork.power = [
       {
         name: "oracle-template",

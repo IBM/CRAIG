@@ -100,6 +100,14 @@ function invalidNameText(field, craig) {
   function nameText(stateData, componentProps, overrideField) {
     if (hasDuplicateName(field, stateData, componentProps, overrideField)) {
       return duplicateNameCallback(stateData[overrideField || "name"]);
+    } else if (
+      field === "classic_vlans" &&
+      stateData.name.length +
+        1 +
+        componentProps.craig.store.json._options.prefix.length >
+        20
+    ) {
+      return "Classic VLAN names must be 20 or fewer characters including the environment prefix";
     } else return genericNameCallback();
   }
   if (field === "vpcs") {

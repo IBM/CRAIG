@@ -7,7 +7,7 @@ describe("provider terraform", () => {
   it("should return the correct data when classic is enabled", () => {
     let actualData = ibmCloudProvider({
       _options: {
-        classic: true,
+        enable_classic: true,
         classic_zones: ["dal10", "dal12"],
       },
     });
@@ -24,7 +24,6 @@ provider "ibm" {
 provider "ibm" {
   alias                 = "classic"
   ibmcloud_timeout      = 60
-  region                = var.region
   iaas_classic_username = var.iaas_classic_username
   iaas_classic_api_key  = var.iaas_classic_api_key
 }
@@ -144,9 +143,16 @@ provider "ibm" {
 }
 
 provider "ibm" {
+  alias                 = "classic"
+  ibmcloud_timeout      = 60
+  iaas_classic_username = var.iaas_classic_username
+  iaas_classic_api_key  = var.iaas_classic_api_key
+}
+
+provider "ibm" {
   alias            = "power_vs_dal10"
   ibmcloud_api_key = var.ibmcloud_api_key
-  region           = var.region
+  region           = "us-south"
   zone             = "dal10"
   ibmcloud_timeout = 60
 }

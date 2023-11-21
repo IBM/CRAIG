@@ -256,7 +256,7 @@ const navCatagories = [
         path: "/form/classicSshKeys",
         react_icon: "IBMClassicSshKeys",
         toTf: (config) => {
-          return classicInfraTf(config);
+          return classicInfraTf(config) || "";
         },
         jsonField: "classic_ssh_keys",
       },
@@ -265,7 +265,7 @@ const navCatagories = [
         path: "/form/classicVlans",
         react_icon: "VlanIbm",
         toTf: (config) => {
-          return classicInfraTf(config);
+          return classicInfraTf(config) || "";
         },
         jsonField: "classic_vlans",
       },

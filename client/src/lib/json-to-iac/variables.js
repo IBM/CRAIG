@@ -24,7 +24,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
       sensitive: true,
     },
   };
-  if (config._options.classic) {
+  if (config._options.enable_classic) {
     variables.iaas_classic_username = {
       description:
         "The IBM Cloud username for the creation of classic resources.",

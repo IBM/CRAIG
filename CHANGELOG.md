@@ -19,6 +19,11 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing JSON to IaC to crash when Key Management service has an invalid name
 - Fixed an issue causing F5 VPC address prefixes to not be created with the correct name
 - Fixed an issue causing F5 Big IP template to be generated with an incorrect reference to subnet CIDR
+- Fixed an issue causing Classic Network Gateways with `private_network_only` to be incorrectly created with a `public_vlan`
+- Fixed an issue causing Classic IBM Cloud provider to not be created when classic is enabled
+- Fixed an issue causing Classic Provider required variables to not be created when classic is enabled
+- Fixed an issue causing Classic Infrastructure resources to not be added to CRAIG output archive
+- Fixed an issue allowing users to create invalid Classic VLAN names with more than 20 characters
 
 ## 1.6.0
 
