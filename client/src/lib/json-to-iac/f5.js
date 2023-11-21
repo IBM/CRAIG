@@ -1,12 +1,6 @@
 const { jsonToTf } = require("json-to-tf");
 const { snakeCase, getObjectFromArray, contains } = require("lazy-z");
-const {
-  composedZone,
-  vpcRef,
-  tfBlock,
-  subnetRef,
-  jsonToTfPrint,
-} = require("./utils");
+const { composedZone, vpcRef, tfBlock, jsonToTfPrint } = require("./utils");
 const { formatVsi } = require("./vsi");
 
 /**
@@ -255,7 +249,7 @@ function f5TemplateFile(template, config) {
     edgeVpc.subnets,
     "name",
     `f5-management-zone-1`
-  ).name;
+  );
   return {
     data: {
       template: "${local.template_file}",
@@ -265,11 +259,7 @@ function f5TemplateFile(template, config) {
         hostname: template.hostname,
         domain: template.domain,
         default_route_interface: "1.1",
-        default_route_gateway: `\${cidrhost(${subnetRef(
-          "edge",
-          workloadSubnet,
-          "cidr"
-        ).replace(/\{|\}|\$/g, "")}, 1)}`,
+        default_route_gateway: `\${cidrhost("${workloadSubnet.cidr}", 1)}`,
         do_local_declaration: "${local.do_local_declaration}",
         do_declaration_url: template.do_declaration_url || "null",
         as3_declaration_url: template.as3_declaration_url || "null",
@@ -312,13 +302,16 @@ function f5TemplateFile(template, config) {
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.region
+ * @param {string} instanceName
  * @returns {string} terraform formatted template file
  */
-function f5TemplateUserData(template, config) {
+function f5TemplateUserData(template, config, instanceName) {
   return jsonToTfPrint(
     "data",
     "template_file",
-    `user_data_${snakeCase(`${template.hostname} zone ${template.zone}`)}`,
+    `user_data_${snakeCase(
+      instanceName ? instanceName : `${template.hostname} zone ${template.zone}`
+    )}`,
     f5TemplateFile(template, config).data
   );
 }
@@ -361,11 +354,11 @@ function f5Tf(config) {
       "\n";
     config.f5_vsi.forEach((instance) => {
       let blockData =
-        f5TemplateUserData(instance.template, config) +
+        f5TemplateUserData(instance.template, config, instance.name) +
         formatF5Vsi(instance, config);
-      tf += tfBlock(`${instance.name} Vsi`, blockData);
+      tf += tfBlock(`${instance.name} Vsi`, blockData) + "\n";
     });
-    return tf;
+    return tf.replace(/\n\n$/g, "\n");
   }
 }
 

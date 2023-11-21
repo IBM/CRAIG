@@ -24,15 +24,20 @@ const { varDotRegion } = require("../constants");
  * @returns {object} terraform string
  */
 function ibmTgGateway(tgw, config) {
+  let data = tgw.use_data
+    ? {
+        name: tgw.name,
+      }
+    : {
+        name: kebabName([tgw.name]),
+        location: varDotRegion,
+        global: tgw.global,
+        resource_group: rgIdRef(tgw.resource_group, config),
+        timeouts: timeouts("30m", "", "30m"),
+      };
   return {
-    name: tgw.name,
-    data: {
-      name: kebabName([tgw.name]),
-      location: varDotRegion,
-      global: tgw.global,
-      resource_group: rgIdRef(tgw.resource_group, config),
-      timeouts: timeouts("30m", "", "30m"),
-    },
+    name: (tgw.use_data ? "data_" : "") + tgw.name,
+    data: data,
   };
 }
 
@@ -50,7 +55,12 @@ function ibmTgGateway(tgw, config) {
  */
 function formatTgw(tgw, config) {
   let tf = ibmTgGateway(tgw, config);
-  return jsonToTfPrint("resource", "ibm_tg_gateway", tf.name, tf.data);
+  return jsonToTfPrint(
+    tgw.use_data ? "data" : "resource",
+    "ibm_tg_gateway",
+    tf.name,
+    tf.data
+  );
 }
 
 /**
@@ -60,7 +70,7 @@ function formatTgw(tgw, config) {
  * @returns {string} terraform string
  */
 
-function ibmTgConnection(connection) {
+function ibmTgConnection(connection, tgw) {
   let connectionName = connection.power
     ? connection.power
     : connection.gateway
@@ -85,7 +95,12 @@ function ibmTgConnection(connection) {
       (connection.power ? "power_workspace_" : "") + connectionName
     } connection`,
     data: {
-      gateway: tfRef("ibm_tg_gateway", snakeCase(connection.tgw)),
+      gateway: tfRef(
+        "ibm_tg_gateway",
+        snakeCase((tgw.use_data ? "data_" : "") + connection.tgw),
+        "id",
+        tgw.use_data
+      ),
       network_type: connection.gateway
         ? "unbound_gre_tunnel"
         : connection.power
@@ -115,11 +130,11 @@ function ibmTgConnection(connection) {
 /**
  * configure transit gateway connection
  * @param {Object} connection
- * @param {Object} config
+ * @param {Object} tgw
  * @returns {string} terraform string
  */
-function formatTgwConnection(connection, config) {
-  let tf = ibmTgConnection(connection, config);
+function formatTgwConnection(connection, tgw) {
+  let tf = ibmTgConnection(connection, tgw);
   return jsonToTfPrint("resource", "ibm_tg_connection", tf.name, tf.data);
 }
 
@@ -134,7 +149,7 @@ function tgwTf(config) {
   config.transit_gateways.forEach((gw, index) => {
     let blockData = formatTgw(gw, config);
     gw.connections.forEach(
-      (connection) => (blockData += formatTgwConnection(connection, config))
+      (connection) => (blockData += formatTgwConnection(connection, gw))
     );
     tf += tfBlock(gw.name + " Transit Gateway", blockData);
     if (index !== config.transit_gateways.length - 1) {

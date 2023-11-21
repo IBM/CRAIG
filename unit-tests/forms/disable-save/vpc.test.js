@@ -1,21 +1,43 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+/**
+ * create a temporary state
+ * @param {*} store
+ * @returns {lazyZstate} craig state store
+ */
+function setTempCraig(store) {
+  let tempCraig = state();
+  tempCraig.store = store;
+  return tempCraig;
+}
 
 describe("vpc", () => {
   it("should return true if vpc does not have bucket", () => {
     assert.isTrue(
-      disableSave("vpcs", {
-        bucket: null,
-      }),
+      disableSave(
+        "vpcs",
+        {
+          bucket: null,
+        },
+        {
+          craig: state(),
+        }
+      ),
       "it should be true"
     );
   });
   it("should return true if vpc does not have resource group", () => {
     assert.isTrue(
-      disableSave("vpcs", {
-        bucket: "bucket",
-        resource_group: null,
-      }),
+      disableSave(
+        "vpcs",
+        {
+          bucket: "bucket",
+          resource_group: null,
+        },
+        {
+          craig: state(),
+        }
+      ),
       "it should be true"
     );
   });
@@ -29,20 +51,7 @@ describe("vpc", () => {
           bucket: "bucket",
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "frog",
           },
@@ -61,20 +70,18 @@ describe("vpc", () => {
           bucket: "bucket",
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
+          craig: setTempCraig({
+            json: {
+              vpcs: [
+                {
+                  name: "frog",
+                },
+                {
+                  name: "toad",
+                },
+              ],
             },
-          },
+          }),
           data: {
             name: "frog",
           },
@@ -94,22 +101,20 @@ describe("vpc", () => {
           bucket: "bucket",
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [
-                  {
-                    name: "frog",
-                    acls: [],
-                  },
-                  {
-                    name: "toad",
-                    acls: [],
-                  },
-                ],
-              },
+          craig: setTempCraig({
+            json: {
+              vpcs: [
+                {
+                  name: "frog",
+                  acls: [],
+                },
+                {
+                  name: "toad",
+                  acls: [],
+                },
+              ],
             },
-          },
+          }),
           data: {
             name: "frog",
           },
@@ -130,23 +135,21 @@ describe("vpc", () => {
           bucket: "bucket",
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [
-                  {
-                    name: "frog",
-                    acls: [],
-                  },
-                  {
-                    name: "toad",
-                    acls: [],
-                  },
-                ],
-                security_groups: [],
-              },
+          craig: setTempCraig({
+            json: {
+              vpcs: [
+                {
+                  name: "frog",
+                  acls: [],
+                },
+                {
+                  name: "toad",
+                  acls: [],
+                },
+              ],
+              security_groups: [],
             },
-          },
+          }),
           data: {
             name: "frog",
           },
@@ -168,23 +171,21 @@ describe("vpc", () => {
           bucket: "bucket",
         },
         {
-          craig: {
-            store: {
-              json: {
-                vpcs: [
-                  {
-                    name: "frog",
-                    acls: [],
-                  },
-                  {
-                    name: "toad",
-                    acls: [],
-                  },
-                ],
-                security_groups: [],
-              },
+          craig: setTempCraig({
+            json: {
+              vpcs: [
+                {
+                  name: "frog",
+                  acls: [],
+                },
+                {
+                  name: "toad",
+                  acls: [],
+                },
+              ],
+              security_groups: [],
             },
-          },
+          }),
           data: {
             name: "frog",
           },

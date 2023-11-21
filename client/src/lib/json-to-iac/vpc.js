@@ -91,7 +91,10 @@ function formatVpc(vpc, config, useVarRef) {
 
 function ibmIsVpcAddressPrefix(address) {
   return {
-    name: `${address.vpc}-${address.name}-prefix`,
+    name: `${address.vpc}-${address.name}-prefix`.replace(
+      "edge-edge-",
+      "edge-"
+    ),
     data: {
       name: kebabName([address.vpc, address.name]),
       vpc: vpcRef(address.vpc),

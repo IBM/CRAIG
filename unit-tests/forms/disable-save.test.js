@@ -5,6 +5,7 @@ const {
   forceShowForm,
   disableSshKeyDelete,
   invalidCidrBlock,
+  state,
 } = require("../../client/src/lib");
 
 describe("disableSave", () => {
@@ -69,6 +70,7 @@ describe("disableSave", () => {
                 name: "management",
                 bucket: null,
               },
+              craig: state(),
             },
           }
         ),

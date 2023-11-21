@@ -35,9 +35,30 @@ resource "ibm_tg_gateway" "transit_gateway" {
         "it should return correct data"
       );
     });
+    it("should return correctly formatted transit gateway from data", () => {
+      let actualData = formatTgw(
+        {
+          name: "transit-gateway",
+          resource_group: "slz-service-rg",
+          global: false,
+          use_data: true,
+        },
+        slzNetwork
+      );
+      let expectedData = `
+data "ibm_tg_gateway" "data_transit_gateway" {
+  name = "transit-gateway"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("formatTgwConnection", () => {
-    it("should return correctly formatted transit gateway", () => {
+    it("should return correctly formatted transit gateway connection", () => {
       let actualData = formatTgwConnection(
         {
           name: "transit-gateway",
@@ -55,6 +76,45 @@ resource "ibm_tg_gateway" "transit_gateway" {
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "vpc"
+  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
+  network_id   = module.management_vpc.crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correctly formatted transit gateway connection with tgw from data", () => {
+      let actualData = formatTgwConnection(
+        {
+          name: "transit-gateway",
+          resource_group: "slz-service-rg",
+          global: false,
+          use_data: true,
+          connections: [
+            {
+              tgw: "transit-gateway",
+              vpc: "management",
+            },
+          ],
+        }.connections[0],
+        {
+          name: "transit-gateway",
+          resource_group: "slz-service-rg",
+          global: false,
+          use_data: true,
+        }
+      );
+      let expectedData = `
+resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
+  gateway      = data.ibm_tg_gateway.data_transit_gateway.id
   network_type = "vpc"
   name         = "\${var.prefix}-transit-gateway-management-hub-connection"
   network_id   = module.management_vpc.crn

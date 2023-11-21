@@ -1,7 +1,6 @@
 const { varDotRegion } = require("../constants");
 const {
   rgIdRef,
-  subnetRef,
   kebabName,
   vpcRef,
   tfRef,

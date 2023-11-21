@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing DNS Terraform resources to have invalid plan values
 - Fixed an issue causing Power VS Volumes form to crash when selecting a workspace without storage pool replication
 - Fixed an issue causing JSON to IaC to crash when Key Management service has an invalid name
+- Fixed an issue causing F5 VPC address prefixes to not be created with the correct name
+- Fixed an issue causing F5 Big IP template to be generated with an incorrect reference to subnet CIDR
 
 ## 1.6.0
 

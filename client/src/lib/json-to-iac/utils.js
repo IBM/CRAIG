@@ -205,18 +205,6 @@ function bucketRef(cos, bucket, value, data) {
 }
 
 /**
- * shortcut for references to `ibm_is_subnet`
- * @param {string} subnet name of resource ex `slz-management-rg`
- * @param {string} vpc vpc name
- * @param {string=} value value to get from reference ex `guid`. defaults to `id`
- * @param {boolean=} useData is data reference
- * @returns {string}
- */
-function subnetRef(vpc, subnet, value, data) {
-  return tfRef("ibm_is_subnet", `${vpc} ${subnet}`, value, data);
-}
-
-/**
  * shortcut for references to `ibm_kms_key`
  * @param {string} key name of resource ex `slz-management-rg`
  * @param {string} kms vpc name
@@ -495,7 +483,6 @@ module.exports = {
   vpcRef,
   kebabName,
   useData,
-  subnetRef,
   cosRef,
   encryptionKeyRef,
   bucketRef,

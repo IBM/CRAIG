@@ -43,16 +43,7 @@ import {
   ClassicGatewaysPage,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import {
-  contains,
-  eachKey,
-  isIpv4CidrOrAddress,
-  isNullOrEmptyString,
-  keys,
-  nestedSplat,
-  splat,
-  isEmpty,
-} from "lazy-z";
+import { contains, eachKey, keys, nestedSplat, splat, isEmpty } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   disableSshKeyDelete,
@@ -587,10 +578,10 @@ const NetworkAclPage = (craig) => {
       onAclSubmit={craig.vpcs.acls.create}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       child={CopyRuleForm}
-      invalidTextCallback={invalidNameText("acls")}
-      invalidCallback={invalidName("acls")}
-      invalidRuleTextCallback={invalidNameText("acl_rules")}
-      invalidRuleText={invalidName("acl_rules")}
+      invalidTextCallback={craig.vpcs.acls.name.invalidText}
+      invalidCallback={craig.vpcs.acls.name.invalid}
+      invalidRuleTextCallback={craig.vpcs.acls.rules.name.invalidText}
+      invalidRuleText={craig.vpcs.acls.rules.name.invalid}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
       helperTextCallback={aclHelperTextCallback}
@@ -1009,11 +1000,13 @@ const SubnetsPage = (craig) => {
       craig={craig}
       propsMatchState={propsMatchState}
       disableSave={disableSave}
-      invalidSubnetTierText={invalidSubnetTierText}
-      invalidSubnetTierName={invalidSubnetTierName}
+      invalidSubnetTierText={craig.vpcs.subnetTiers.name.invalidText}
+      invalidSubnetTierName={craig.vpcs.subnetTiers.name.invalid}
       invalidCidr={invalidCidr}
+      invalidName={craig.vpcs.subnets.name.invalid}
+      // not changing below invalid name text for now due to complexity, likely
+      // these forms will be easier to manage whem moving to dynamic forms
       invalidCidrText={invalidCidrText}
-      invalidName={invalidName}
       invalidNameText={invalidNameText}
       getSubnetTierStateData={getSubnetTierStateData}
       getTierSubnets={getTierSubnets}
@@ -1135,6 +1128,8 @@ const VpcPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
+      // vpc name and callbacks take in extra param, so for now
+      // these will remain unchanged
       invalidCallback={invalidName("vpcs")}
       invalidTextCallback={invalidNameText("vpcs")}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}

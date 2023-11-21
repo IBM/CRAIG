@@ -16,7 +16,6 @@ const {
 const {
   invalidName,
   invalidSshPublicKey,
-  invalidSubnetTierName,
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
@@ -198,30 +197,6 @@ function disableSecretsManagerSave(stateData, componentProps) {
 }
 
 /**
- * check to see if vpcs form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpcsSave(stateData, componentProps) {
-  return (
-    nullOrEmptyStringFields(stateData, ["bucket", "resource_group"]) ||
-    invalidName("vpcs")("name", stateData, componentProps) ||
-    invalidName("vpcs")(
-      "default_network_acl_name",
-      stateData,
-      componentProps
-    ) ||
-    invalidName("vpcs")(
-      "default_security_group_name",
-      stateData,
-      componentProps
-    ) ||
-    invalidName("vpcs")("default_routing_table_name", stateData, componentProps)
-  );
-}
-
-/**
  * check to see if ssh keys form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -234,35 +209,6 @@ function disableSshKeysSave(stateData, componentProps) {
     (stateData.use_data
       ? false // do not check invalid public key if using data, return false
       : invalidSshPublicKey(stateData, componentProps).invalid)
-  );
-}
-
-/**
- * check to see if ACLs form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableAclsSave(stateData, componentProps) {
-  return (
-    !containsKeys(stateData, "resource_group") ||
-    badField("resource_group", stateData) ||
-    invalidName("acls")(stateData, componentProps)
-  );
-}
-
-/**
- * check to see if ACL rules form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableAclRulesSave(stateData, componentProps) {
-  return (
-    invalidName("acl_rules")(stateData, componentProps) ||
-    !isIpv4CidrOrAddress(stateData.source) ||
-    !isIpv4CidrOrAddress(stateData.destination) ||
-    invalidPort(stateData)
   );
 }
 
@@ -291,41 +237,6 @@ function disableVpnGatewaysSave(stateData, componentProps) {
     invalidName("vpn_gateways")(stateData, componentProps) ||
     nullOrEmptyStringFields(stateData, ["resource_group", "vpc", "subnet"])
   );
-}
-
-/**
- * check to see if subnet tier form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSubnetTierSave(stateData, componentProps) {
-  return (
-    invalidSubnetTierName(stateData, componentProps) ||
-    badField("networkAcl", stateData) ||
-    (stateData.advanced === true && stateData.select_zones.length === 0)
-  );
-}
-
-/**
- * check to see if subnet form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @param {lazyZstate=} craig used for subnets, component props do not have craig
- * @returns {boolean} true if should be disabled
- */
-function disableSubnetSave(stateData, componentProps, craig) {
-  if (stateData.tier && isIpv4CidrOrAddress(stateData.cidr || "") === false) {
-    return true;
-  } else if (stateData.tier) {
-    let invalidCidrRange = Number(stateData.cidr.split("/")[1]) <= 12;
-    return (
-      invalidCidrRange ||
-      stateData.cidr.indexOf("/") === -1 ||
-      invalidName("subnet", craig)(stateData, componentProps) ||
-      badField("network_acl", stateData)
-    );
-  } else return badField("network_acl", stateData);
 }
 
 /**
@@ -690,14 +601,9 @@ const disableSaveFunctions = {
   cos_keys: invalidName("cos_keys"),
   volumes: disableVolumesSave,
   secrets_manager: disableSecretsManagerSave,
-  vpcs: disableVpcsSave,
   ssh_keys: disableSshKeysSave,
-  acls: disableAclsSave,
-  acl_rules: disableAclRulesSave,
   sg_rules: disableSgRulesSave,
   vpn_gateways: disableVpnGatewaysSave,
-  subnetTier: disableSubnetTierSave,
-  subnet: disableSubnetSave,
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
   virtual_private_endpoints: disableVpeSave,
@@ -752,6 +658,11 @@ function disableSave(field, stateData, componentProps, craig) {
     "event_streams",
     "power_instances",
     "power_volumes",
+    "acl_rules",
+    "acls",
+    "subnetTier",
+    "subnet",
+    "vpcs",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (
@@ -768,6 +679,16 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.power.ssh_keys
         : field === "classic_ssh_keys"
         ? componentProps.craig.classic_ssh_keys
+        : field === "acl_rules" && componentProps.isModal
+        ? componentProps.craig.vpcs.acls.rules
+        : field === "acl_rules"
+        ? componentProps.innerFormProps.craig.vpcs.acls.rules
+        : field === "subnet"
+        ? craig.vpcs.subnets
+        : field === "subnetTier"
+        ? componentProps.craig.vpcs.subnetTiers
+        : field === "acls"
+        ? componentProps.craig.vpcs[field]
         : field === "vpn_server_routes"
         ? componentProps.craig.vpn_servers.routes
         : field === "encryption_keys"

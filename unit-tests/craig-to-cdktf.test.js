@@ -940,8 +940,7 @@ describe("craigToCdktf", () => {
                 hostname: "f5-ve-01",
                 domain: "local",
                 default_route_interface: "1.1",
-                default_route_gateway:
-                  "${cidrhost(ibm_is_subnet.edge_f5_management_zone_1.cidr, 1)}",
+                default_route_gateway: '${cidrhost("10.5.30.0/24", 1)}',
                 do_local_declaration: "${local.do_local_declaration}",
                 do_declaration_url: "hi",
                 as3_declaration_url: "hi",

@@ -6,26 +6,7 @@ const { initResourceGroup } = require("./resource-groups");
 const { initObjectStorageStore } = require("./cos");
 const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
-const {
-  vpcCreate,
-  vpcDelete,
-  vpcInit,
-  vpcOnStoreUpdate,
-  vpcSave,
-  subnetCreate,
-  subnetSave,
-  subnetDelete,
-  subnetTierCreate,
-  subnetTierSave,
-  subnetTierDelete,
-  naclCreate,
-  naclSave,
-  naclDelete,
-  naclRuleCreate,
-  naclRuleSave,
-  naclRuleDelete,
-  createEdgeVpc,
-} = require("./vpc");
+const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc");
 const { sccInit, sccSave, sccDelete } = require("./scc");
 const {
   sshKeyCreate,
@@ -177,14 +158,7 @@ const {
 const { initIcdStore } = require("./icd");
 const { initPowerVsStore } = require("./power-vs");
 const { initPowerVsInstance } = require("./power-vs-instances");
-const {
-  powerVsVolumesInit,
-  powerVsVolumesOnStoreUpdate,
-  powerVsVolumeCreate,
-  powerVsVolumeSave,
-  powerVsVolumeDelete,
-  initPowerVsVolumeStore,
-} = require("./power-vs-volumes");
+const { initPowerVsVolumeStore } = require("./power-vs-volumes");
 const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");
 
@@ -271,38 +245,8 @@ const state = function (legacy) {
   initKeyManagement(store);
   // next, update cos
   initObjectStorageStore(store);
-
-  store.newField("vpcs", {
-    init: vpcInit,
-    onStoreUpdate: vpcOnStoreUpdate,
-    create: vpcCreate,
-    save: vpcSave,
-    delete: vpcDelete,
-    subComponents: {
-      acls: {
-        create: naclCreate,
-        save: naclSave,
-        delete: naclDelete,
-        subComponents: {
-          rules: {
-            create: naclRuleCreate,
-            save: naclRuleSave,
-            delete: naclRuleDelete,
-          },
-        },
-      },
-      subnets: {
-        create: subnetCreate,
-        save: subnetSave,
-        delete: subnetDelete,
-      },
-      subnetTiers: {
-        create: subnetTierCreate,
-        save: subnetTierSave,
-        delete: subnetTierDelete,
-      },
-    },
-  });
+  // next vpcs
+  initVpcStore(store);
 
   initAtracker(store);
 
