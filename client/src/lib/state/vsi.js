@@ -4,6 +4,9 @@ const {
   camelCase,
   splat,
   splatContains,
+  isInRange,
+  isNullOrEmptyString,
+  contains,
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -13,6 +16,12 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
 } = require("./store.utils");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+  fieldIsEmpty,
+} = require("./utils");
+const { invalidNameText, invalidName } = require("../forms");
 
 /**
  * initialize vsi
@@ -308,6 +317,113 @@ function vsiVolumeDelete(config, stateData, componentProps) {
   deleteSubChild(config, "vsi", "volumes", componentProps);
 }
 
+/**
+ * init vsi store
+ * @param {*} store
+ */
+function initVsiStore(store) {
+  store.newField("vsi", {
+    init: vsiInit,
+    onStoreUpdate: vsiOnStoreUpdate,
+    create: vsiCreate,
+    save: vsiSave,
+    delete: vsiDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "name",
+        "resource_group",
+        "vpc",
+        "image_name",
+        "profile",
+        "encryption_key",
+        "vsi_per_subnet",
+        "security_groups",
+        "subnets",
+        "ssh_keys",
+      ],
+      "vsi"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("vsi"),
+        invalidText: invalidNameText("vsi"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      vpc: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("vpc"),
+      },
+      image_name: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("image_name"),
+      },
+      profile: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("profile"),
+      },
+      encryption_key: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("encryption_key"),
+      },
+      vsi_per_subnet: {
+        default: "",
+        invalid: function (stateData) {
+          return !isInRange(parseInt(stateData.vsi_per_subnet), 1, 10);
+        },
+      },
+      security_groups: {
+        default: [],
+        invalid: fieldIsEmpty("security_groups"),
+      },
+      subnets: {
+        default: [],
+        invalid: fieldIsEmpty("subnets"),
+      },
+      ssh_keys: {
+        default: [],
+        invalid: fieldIsEmpty("ssh_keys"),
+      },
+    },
+    subComponents: {
+      volumes: {
+        create: vsiVolumeCreate,
+        save: vsiVolumeSave,
+        delete: vsiVolumeDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "encryption_key", "capacity"],
+          "vsi",
+          "volumes"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("volume"),
+            invalidText: invalidNameText("volume"),
+          },
+          encryption_key: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("encryption_key"),
+          },
+          capacity: {
+            default: "",
+            invalid: function (stateData) {
+              return (
+                !isNullOrEmptyString(stateData.capacity) &&
+                (stateData.capacity.indexOf(".") !== -1 ||
+                  !isInRange(Number(stateData.capacity), 10, 16000))
+              );
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   vsiOnStoreUpdate,
   vsiSave,
@@ -317,4 +433,5 @@ module.exports = {
   vsiVolumeCreate,
   vsiVolumeSave,
   vsiVolumeDelete,
+  initVsiStore,
 };

@@ -43,6 +43,7 @@ const {
   vsiVolumeCreate,
   vsiVolumeDelete,
   vsiVolumeSave,
+  initVsiStore,
 } = require("./vsi");
 const {
   vpeInit,
@@ -247,9 +248,7 @@ const state = function (legacy) {
   initObjectStorageStore(store);
   // next vpcs
   initVpcStore(store);
-
   initAtracker(store);
-
   initAppIdStore(store);
 
   store.newField("scc", {
@@ -292,21 +291,7 @@ const state = function (legacy) {
   });
 
   initClusterStore(store);
-
-  store.newField("vsi", {
-    init: vsiInit,
-    onStoreUpdate: vsiOnStoreUpdate,
-    create: vsiCreate,
-    save: vsiSave,
-    delete: vsiDelete,
-    subComponents: {
-      volumes: {
-        create: vsiVolumeCreate,
-        save: vsiVolumeSave,
-        delete: vsiVolumeDelete,
-      },
-    },
-  });
+  initVsiStore(store);
 
   store.newField("virtual_private_endpoints", {
     init: vpeInit,

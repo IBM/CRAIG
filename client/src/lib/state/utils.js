@@ -8,6 +8,7 @@ const {
   carve,
   revision,
   isNullOrEmptyString,
+  isEmpty,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const { RegexButWithWords } = require("regex-but-with-words");
@@ -360,6 +361,17 @@ function fieldIsNullOrEmptyString(fieldName) {
 }
 
 /**
+ * shortcut for form field is empty
+ * @param {*} fieldName
+ * @returns {Function}
+ */
+function fieldIsEmpty(fieldName) {
+  return function (stateData) {
+    return isEmpty(stateData[fieldName]);
+  };
+}
+
+/**
  * util function for component save to be disabled
  * @param {*} fields
  * @param {string} component
@@ -405,4 +417,5 @@ module.exports = {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
   isIpStringInvalid,
+  fieldIsEmpty,
 };

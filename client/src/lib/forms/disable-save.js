@@ -169,21 +169,6 @@ function disableBucketsSave(stateData, componentProps) {
 }
 
 /**
- * check to see if volumes form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVolumesSave(stateData, componentProps) {
-  return (
-    invalidName("volume")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["encryption_key"]) ||
-    (!isNullOrEmptyString(stateData.capacity) &&
-      !isInRange(Number(stateData.capacity), 10, 16000))
-  );
-}
-
-/**
  * check to see if secrets manager form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -285,31 +270,6 @@ function disableVpeSave(stateData, componentProps) {
       "vpc",
     ]) ||
     anyAreEmpty(stateData.security_groups, stateData.subnets)
-  );
-}
-
-/**
- * check to see if vsi form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVsiSave(stateData, componentProps) {
-  return (
-    invalidName("vsi")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "resource_group",
-      "vpc",
-      "image_name",
-      "profile",
-      "encryption_key",
-    ]) ||
-    !isInRange(parseInt(stateData.vsi_per_subnet), 1, 10) ||
-    anyAreEmpty(
-      stateData.security_groups,
-      stateData.subnets,
-      stateData.ssh_keys
-    )
   );
 }
 
@@ -599,7 +559,6 @@ const disableSaveFunctions = {
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
-  volumes: disableVolumesSave,
   secrets_manager: disableSecretsManagerSave,
   ssh_keys: disableSshKeysSave,
   sg_rules: disableSgRulesSave,
@@ -607,7 +566,6 @@ const disableSaveFunctions = {
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
   virtual_private_endpoints: disableVpeSave,
-  vsi: disableVsiSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
@@ -663,6 +621,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "subnetTier",
     "subnet",
     "vpcs",
+    "vsi",
+    "volumes",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (
@@ -679,6 +639,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.power.ssh_keys
         : field === "classic_ssh_keys"
         ? componentProps.craig.classic_ssh_keys
+        : field === "volumes"
+        ? componentProps.craig.vsi.volumes
         : field === "acl_rules" && componentProps.isModal
         ? componentProps.craig.vpcs.acls.rules
         : field === "acl_rules"

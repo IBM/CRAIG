@@ -1182,10 +1182,10 @@ const VsiPage = (craig) => {
       sshKeys={craig.store.sshKeys}
       apiEndpointImages={`/api/vsi/${craig.store.json._options.region}/images`}
       apiEndpointInstanceProfiles={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
-      invalidCallback={invalidName("vsi")}
-      invalidTextCallback={invalidNameText("vsi")}
-      invalidVolumeCallback={invalidName("volume")}
-      invalidVolumeTextCallback={invalidNameText("volume")}
+      invalidCallback={craig.vsi.name.invalid}
+      invalidTextCallback={craig.vsi.name.invalidText}
+      invalidVolumeCallback={craig.vsi.volumes.name.invalid}
+      invalidVolumeTextCallback={craig.vsi.volumes.name.invalidText}
       onVolumeSave={craig.vsi.volumes.save}
       onVolumeDelete={craig.vsi.volumes.delete}
       onVolumeCreate={craig.vsi.volumes.create}
