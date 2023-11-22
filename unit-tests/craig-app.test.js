@@ -76,12 +76,14 @@ describe("craig app", () => {
     it("should update project name, json, projects when unfound, and call save and send notification with correct text", () => {
       let craigApp = newMockCraig();
       let craigState = new state();
+      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {}, // projects
         craigApp,
         craigState,
         "project-name"
       );
+
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
@@ -92,6 +94,7 @@ describe("craig app", () => {
     it("should update project name, json, projects when found, and call save and send notification with correct text", () => {
       let craigApp = newMockCraig();
       let craigState = new state();
+      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {
           "project-name": {},
@@ -110,6 +113,7 @@ describe("craig app", () => {
     it("should update project name, json, projects when found with json data, and call save and send notification with correct text", () => {
       let craigApp = newMockCraig();
       let craigState = new state();
+      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {
           "project-name": { json: { _options: {} } },
@@ -128,6 +132,7 @@ describe("craig app", () => {
     it("should update project name, json, projects when found with project info, and call save and send notification with correct text", () => {
       let craigApp = newMockCraig();
       let craigState = new state();
+      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {
           "project-name": {},

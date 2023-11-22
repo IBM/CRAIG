@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Classic Provider required variables to not be created when classic is enabled
 - Fixed an issue causing Classic Infrastructure resources to not be added to CRAIG output archive
 - Fixed an issue allowing users to create invalid Classic VLAN names with more than 20 characters
+- Fixed an issue causing Subnets page to crash when switching projects
 
 ## 1.6.0
 
