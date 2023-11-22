@@ -31,10 +31,9 @@ function onProjectSelectCallback(projects, component, craig, name, message) {
   if (!projects[projectKeyName]) {
     projects[projectKeyName] = {};
   }
-  craig.store.json = projects[projectKeyName].json;
-  if (craig.store.json) {
-    craig.store.json._options.template = projects[projectKeyName].template;
-  }
+  craig.hardSetJson(projects[projectKeyName].json, true);
+  craig.store.json._options.template = projects[projectKeyName].template;
+
   return function () {
     component.saveAndSendNotification(
       message || `Project ${name} successfully imported`,

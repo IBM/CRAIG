@@ -34,17 +34,7 @@ const {
   vpnOnStoreUpdate,
 } = require("./vpn");
 const { initClusterStore } = require("./clusters");
-const {
-  vsiCreate,
-  vsiInit,
-  vsiDelete,
-  vsiOnStoreUpdate,
-  vsiSave,
-  vsiVolumeCreate,
-  vsiVolumeDelete,
-  vsiVolumeSave,
-  initVsiStore,
-} = require("./vsi");
+const { initVsiStore } = require("./vsi");
 const {
   vpeInit,
   vpeCreate,
@@ -471,6 +461,7 @@ const state = function (legacy) {
   store.hardSetJson = function (json, slz) {
     if (!slz) validate(json);
     let subnetTiers = {};
+    if (!json) json = {};
     if (!json._options) json._options = {};
     if (!json._options.dynamic_subnets) json._options.dynamic_subnets = false;
     transpose(json, store.store.json);

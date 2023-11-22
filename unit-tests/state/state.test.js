@@ -3,6 +3,7 @@ const { state } = require("../../client/src/lib/state");
 const { splat } = require("lazy-z");
 const json = require("../data-files/craig-json.json");
 const hardSetData = require("../data-files/expected-hard-set.json");
+const brokenSubnets = require("../data-files/broken-subnets.json");
 
 /**
  * initialize store
@@ -255,6 +256,9 @@ describe("state util functions", () => {
   describe("hardSetJson", () => {
     it("should set JSON data if valid", () => {
       let state = newState();
+      state.store = {
+        json: {},
+      };
       state.setUpdateCallback(() => {});
       delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
       state.hardSetJson({ ...json });
@@ -419,6 +423,24 @@ describe("state util functions", () => {
       assert.isTrue(
         state.store.json._options.dynamic_subnets,
         "it should be true"
+      );
+    });
+    it("should set JSON data if valid", () => {
+      let state = newState();
+      state.store = {
+        json: {},
+      };
+      state.setUpdateCallback(() => {});
+      state.hardSetJson({ ...brokenSubnets });
+      assert.deepEqual(
+        state.store.subnetTiers,
+        {
+          vpc: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+          ],
+        },
+        "it should set subnet tiers"
       );
     });
   });

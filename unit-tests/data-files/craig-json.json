@@ -941,5 +941,7 @@
   "icd": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
-  "classic_gateways": []
+  "classic_gateways": [],
+  "power_instances": [],
+  "power_volumes": []
 }

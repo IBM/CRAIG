@@ -176,6 +176,9 @@ function vpcOnStoreUpdate(config) {
     if (network.cos === null && network.bucket !== "$disabled") {
       network.bucket = null;
     }
+    if (!config.store.networkAcls) {
+      config.store.networkAcls = {};
+    }
     config.store.networkAcls[network.name] = splat(network.acls, "name");
     let subnetList = []; // create a new list
     // for each zone
@@ -196,6 +199,9 @@ function vpcOnStoreUpdate(config) {
         rule.vpc = network.name;
       });
     });
+    if (!config.store.subnets) {
+      config.store.subnets = {};
+    }
     // set subnets object vpc name to list
     config.store.subnets[network.name] = subnetList;
     // set acls object to the list of acls
