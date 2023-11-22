@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 - Users can now edit the size of SAP log volumes for Power VS
 - When using the search bar in the hamburger menu, results will be returned based on documentation text
+- Users can now choose a router hostname from an existing Classic VLAN on the Classic VLAN page
 
 ### Fixes
 

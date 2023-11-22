@@ -60,6 +60,40 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public" {
         "it should return correct vlan"
       );
     });
+    it("should create a vlan with hostname reference", () => {
+      let expectedData = `
+resource "ibm_network_vlan" "classic_vlan_vsrx_public" {
+  provider        = ibm.classic
+  name            = "\${var.prefix}-vsrx-public"
+  datacenter      = "dal10"
+  type            = "PUBLIC"
+  router_hostname = replace(ibm_network_vlan.classic_vlan_another_one.router_hostname, "b", "f")
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+`;
+      let actualData = formatClassicNetworkVlan(
+        {
+          name: "vsrx-public",
+          datacenter: "dal10",
+          type: "PUBLIC",
+          router_hostname: "another-one",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+        }
+      );
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct vlan"
+      );
+    });
   });
   describe("classicInfraTf", () => {
     it("should return correct classic vlans and ssh keys", () => {

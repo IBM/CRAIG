@@ -44,9 +44,6 @@ function dynamicSelectProps(props) {
     "props.field.invalidText",
     "Function",
     props.field.invalidText,
-    "props.field.helperText",
-    "Function",
-    props.field.helperText,
     "props.handleInputChange",
     "Function",
     props.handleInputChange
@@ -82,8 +79,6 @@ function dynamicSelectProps(props) {
     "invalidText"
   );
   return {
-    popoverHoverText: stateValue || "",
-    popoverWrapperClassName: props.field.tooltip ? "tooltip select" : "select",
     id: dynamicFieldId(props),
     name: props.name,
     labelText: labelText,

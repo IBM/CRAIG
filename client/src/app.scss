@@ -98,3 +98,7 @@ a.tile:is(:link, :visited, :hover, :active) {
   max-width: 90%;
   max-height: 90%;
 }
+
+.cds--label.labelRow {
+  margin-bottom: 0;
+}

@@ -1,4 +1,10 @@
-const { snakeCase, distinct, splat, azsort } = require("lazy-z");
+const {
+  snakeCase,
+  distinct,
+  splat,
+  azsort,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const { jsonToTfPrint, getTags, kebabName, tfBlock } = require("./utils");
 
 /**
@@ -36,6 +42,12 @@ function formatClassicNetworkVlan(vlan, config) {
       datacenter: vlan.datacenter,
       type: vlan.type,
       tags: getTags(config),
+      router_hostname:
+        vlan.router_hostname && !isNullOrEmptyString(vlan.router_hostname)
+          ? `\${replace(ibm_network_vlan.classic_vlan_${snakeCase(
+              vlan.router_hostname
+            )}.router_hostname, "b", "f")}`
+          : undefined,
     }
   );
 }

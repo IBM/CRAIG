@@ -1,3 +1,5 @@
+const { titleCase, splatContains, isNullOrEmptyString } = require("lazy-z");
+const { datacenters } = require("../constants");
 const {
   invalidNameText,
   invalidName,
@@ -75,6 +77,18 @@ function classicVlanInit(config) {
 function classicVlanOnStoreUpdate(config) {
   if (!config.store.json.classic_vlans) {
     config.store.json.classic_vlans = [];
+  } else {
+    config.store.json.classic_vlans.forEach((vlan) => {
+      if (
+        !splatContains(
+          config.store.json.classic_vlans,
+          "name",
+          vlan.router_hostname
+        )
+      ) {
+        vlan.router_hostname = "";
+      }
+    });
   }
 }
 
@@ -160,14 +174,56 @@ function intiClassicInfrastructure(store) {
         default: "",
         invalid: invalidName("classic_vlans"),
         invalidText: invalidNameText("classic_vlans"),
+        helperText: function (stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-${stateData.name}`;
+        },
       },
       type: {
         default: "",
         invalid: fieldIsNullOrEmptyString("type"),
+        type: "select",
+        groups: ["Public", "Private"],
+        onRender: function (stateData) {
+          return titleCase(stateData.type.toLowerCase());
+        },
+        onInputChange: function (stateData) {
+          return stateData.type.toUpperCase();
+        },
+        invalidText: function () {
+          return "Select a type";
+        },
       },
       datacenter: {
         default: "",
         invalid: fieldIsNullOrEmptyString("datacenter"),
+        invalidText: function () {
+          return "Select a datacenter";
+        },
+        groups: datacenters,
+        type: "select",
+      },
+      router_hostname: {
+        type: "select",
+        tooltip: {
+          content:
+            "To create a Classic Gateway using multiple VLANS, each VLAN must be in the same zone and have the same router hostname (calculated at runtime)",
+          alignModal: "left",
+        },
+        invalid: function () {
+          return false;
+        },
+        groups: function (stateData, componentProps) {
+          let allOtherVlansInZone = [];
+          componentProps.craig.store.json.classic_vlans.forEach((vlan) => {
+            if (
+              vlan.datacenter === stateData.datacenter &&
+              (componentProps.isModal || vlan.name !== componentProps.data.name)
+            ) {
+              allOtherVlansInZone.push(vlan.name);
+            }
+          });
+          return allOtherVlansInZone;
+        },
       },
     },
   });
