@@ -3,14 +3,20 @@
     "version": "1.6.1",
     "features": [
       "Users can now edit the size of SAP log volumes for Power VS",
-      "When using the search bar in the hamburger menu, results will be returned based on documentation text"
+      "When using the search bar in the hamburger menu, results will be returned based on documentation text",
+      "Users can now choose a router hostname from an existing Classic VLAN on the Classic VLAN page"
     ],
     "fixes": [
       "Fixed an issue causing DNS Terraform resources to have invalid plan values",
       "Fixed an issue causing Power VS Volumes form to crash when selecting a workspace without storage pool replication",
       "Fixed an issue causing JSON to IaC to crash when Key Management service has an invalid name",
       "Fixed an issue causing F5 VPC address prefixes to not be created with the correct name",
-      "Fixed an issue causing F5 Big IP template to be generated with an incorrect reference to subnet CIDR"
+      "Fixed an issue causing F5 Big IP template to be generated with an incorrect reference to subnet CIDR",
+      "Fixed an issue causing Classic Network Gateways with `private_network_only` to be incorrectly created with a `public_vlan`",
+      "Fixed an issue causing Classic IBM Cloud provider to not be created when classic is enabled",
+      "Fixed an issue causing Classic Provider required variables to not be created when classic is enabled",
+      "Fixed an issue causing Classic Infrastructure resources to not be added to CRAIG output archive",
+      "Fixed an issue allowing users to create invalid Classic VLAN names with more than 20 characters"
     ],
     "upgrade_notes": []
   },

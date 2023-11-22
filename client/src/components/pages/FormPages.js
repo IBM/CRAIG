@@ -41,6 +41,7 @@ import {
   PowerVsInstancesPage,
   PowerVsVolumesPage,
   ClassicGatewaysPage,
+  IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { contains, eachKey, keys, nestedSplat, splat, isEmpty } from "lazy-z";
@@ -77,7 +78,6 @@ import {
   genericNameCallback,
   iamAccountSettingInvalidText,
   invalidCidrText,
-  invalidSubnetTierText,
   powerVsWorkspaceHelperText,
   invalidDescriptionText,
 } from "../../lib/forms/text-callbacks";
@@ -94,6 +94,7 @@ import {
   datacenters,
 } from "../../lib/constants";
 import { tgwVpcFilter } from "../../lib/forms/filters";
+import DynamicForm from "../forms/DynamicForm";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -285,24 +286,49 @@ const ClassicSshKeyPage = (craig) => {
 
 const ClassicVlanPage = (craig) => {
   return (
-    <ClassicVlanTemplate
-      overrideTile={
-        craig.store.json._options.enable_classic ? undefined : (
-          <ClassicDisabledTile />
-        )
-      }
+    <IcseFormTemplate
+      name="Classic VLANs"
+      addText="Create a VLAN"
       docs={RenderDocs("classic_vlans", craig.store.json._options.template)}
-      vlans={craig.store.json.classic_vlans}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.classic_vlans}
       disableSave={disableSave}
       onDelete={craig.classic_vlans.delete}
       onSave={craig.classic_vlans.save}
       onSubmit={craig.classic_vlans.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      invalidCallback={craig.classic_vlans.name.invalid}
-      invalidTextCallback={craig.classic_vlans.name.invalidText}
-      craig={craig}
-      datacenters={datacenters}
+      hideFormTitleButton={
+        craig.store.json._options.enable_classic ? false : true
+      }
+      overrideTile={
+        craig.store.json._options.enable_classic ? undefined : (
+          <ClassicDisabledTile />
+        )
+      }
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        form: {
+          groups: [
+            {
+              name: craig.classic_vlans.name,
+              datacenter: craig.classic_vlans.datacenter,
+            },
+            {
+              type: craig.classic_vlans.type,
+              router_hostname: craig.classic_vlans.router_hostname,
+            },
+          ],
+        },
+        formName: "classic-vlan",
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "classic_vlans",
+        hideName: true,
+      }}
     />
   );
 };
@@ -1182,10 +1208,10 @@ const VsiPage = (craig) => {
       sshKeys={craig.store.sshKeys}
       apiEndpointImages={`/api/vsi/${craig.store.json._options.region}/images`}
       apiEndpointInstanceProfiles={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
-      invalidCallback={invalidName("vsi")}
-      invalidTextCallback={invalidNameText("vsi")}
-      invalidVolumeCallback={invalidName("volume")}
-      invalidVolumeTextCallback={invalidNameText("volume")}
+      invalidCallback={craig.vsi.name.invalid}
+      invalidTextCallback={craig.vsi.name.invalidText}
+      invalidVolumeCallback={craig.vsi.volumes.name.invalid}
+      invalidVolumeTextCallback={craig.vsi.volumes.name.invalidText}
       onVolumeSave={craig.vsi.volumes.save}
       onVolumeDelete={craig.vsi.volumes.delete}
       onVolumeCreate={craig.vsi.volumes.create}

@@ -29,6 +29,7 @@ const { powerInstanceTf } = require("./power-vs-instances");
 const { powerVsVolumeTf } = require("./power-vs-volumes");
 const { iamTf } = require("./iam");
 const { classicGatewayTf } = require("./classic-gateway");
+const { classicInfraTf } = require("./classic");
 const apacheLicense = `                                 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -300,6 +301,7 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "iam.tf": iamTf(config),
       LICENSE: apacheLicense,
       "classic_gateways.tf": classicGatewayTf(config),
+      "classic_infrastructure.tf": classicInfraTf(config),
     };
     vpcModuleTf(files, config);
     return files;

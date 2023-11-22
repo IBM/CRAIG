@@ -90,6 +90,12 @@ function invalidName(field, craig) {
     } else {
       return (
         hasDuplicateName(field, stateData, componentProps, overrideField) ||
+        // prevent classic vlans with names that include prefix longer than 20 characters
+        (field === "classic_vlans" &&
+          stateData.name.length +
+            1 +
+            componentProps.craig.store.json._options.prefix.length >
+            20) ||
         stateData[stateField] === "" ||
         (!stateData.use_data && invalidNewResourceName(stateData[stateField]))
       );

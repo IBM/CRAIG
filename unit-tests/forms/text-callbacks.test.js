@@ -110,6 +110,33 @@ describe("text callbacks", () => {
         "it should return correct message"
       );
     });
+    it("should return the correct text when a classic vlan that has a name greater than 20 characters is passed", () => {
+      let actualData = invalidNameText("classic_vlans")(
+        {
+          name: "sixteencharacters",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                _options: {
+                  prefix: "iac",
+                },
+                classic_vlans: [],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        "Classic VLAN names must be 20 or fewer characters including the environment prefix",
+        "it should return correct message"
+      );
+    });
     it("should return the correct text when an otherwise invalid name is passed", () => {
       let actualData = invalidNameText("resource_groups")(
         {

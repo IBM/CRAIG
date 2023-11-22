@@ -1,4 +1,10 @@
-const { snakeCase, distinct, splat, azsort } = require("lazy-z");
+const {
+  snakeCase,
+  distinct,
+  splat,
+  azsort,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const { jsonToTfPrint, getTags, kebabName, tfBlock } = require("./utils");
 
 /**
@@ -36,6 +42,12 @@ function formatClassicNetworkVlan(vlan, config) {
       datacenter: vlan.datacenter,
       type: vlan.type,
       tags: getTags(config),
+      router_hostname:
+        vlan.router_hostname && !isNullOrEmptyString(vlan.router_hostname)
+          ? `\${replace(ibm_network_vlan.classic_vlan_${snakeCase(
+              vlan.router_hostname
+            )}.router_hostname, "b", "f")}`
+          : undefined,
     }
   );
 }
@@ -46,32 +58,34 @@ function formatClassicNetworkVlan(vlan, config) {
  * @returns {string} terraform formatted classic code
  */
 function classicInfraTf(config) {
-  // get list of distinct alphabetically sorted zones
-  let classicZones = distinct(
-    splat(config.classic_ssh_keys, "datacenter").concat(
-      splat(config.classic_vlans, "datacenter")
-    )
-  ).sort(azsort);
   let tf = "";
+  if (config.classic_ssh_keys) {
+    // get list of distinct alphabetically sorted zones
+    let classicZones = distinct(
+      splat(config.classic_ssh_keys, "datacenter").concat(
+        splat(config.classic_vlans, "datacenter")
+      )
+    ).sort(azsort);
 
-  classicZones.forEach((zone) => {
-    let sshKeyTf = "";
-    config.classic_ssh_keys.forEach((key) => {
-      if (key.datacenter === zone) {
-        sshKeyTf += formatClassicSshKey(key);
-      }
+    classicZones.forEach((zone) => {
+      let sshKeyTf = "";
+      config.classic_ssh_keys.forEach((key) => {
+        if (key.datacenter === zone) {
+          sshKeyTf += formatClassicSshKey(key);
+        }
+      });
+      if (sshKeyTf !== "") tf += tfBlock(zone + " SSH Keys", sshKeyTf) + "\n";
+      let vlanTf = "";
+      config.classic_vlans.forEach((vlan) => {
+        if (vlan.datacenter === zone) {
+          vlanTf += formatClassicNetworkVlan(vlan, config);
+        }
+      });
+      if (vlanTf !== "") tf += tfBlock(zone + " VLANs", vlanTf) + "\n";
     });
-    if (sshKeyTf !== "") tf += tfBlock(zone + " SSH Keys", sshKeyTf) + "\n";
-    let vlanTf = "";
-    config.classic_vlans.forEach((vlan) => {
-      if (vlan.datacenter === zone) {
-        vlanTf += formatClassicNetworkVlan(vlan, config);
-      }
-    });
-    if (vlanTf !== "") tf += tfBlock(zone + " VLANs", vlanTf) + "\n";
-  });
+  }
 
-  return tf.replace(/\n$/, "");
+  return tf.length === 0 ? null : tf.replace(/\n$/, "");
 }
 
 module.exports = {

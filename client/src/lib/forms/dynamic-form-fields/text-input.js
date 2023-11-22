@@ -1,4 +1,4 @@
-const { paramTest, titleCase } = require("lazy-z");
+const { paramTest, titleCase, kebabCase, isFunction } = require("lazy-z");
 const {
   disabledReturnsBooleanCheck,
   invalidReturnsBooleanCheck,
@@ -52,9 +52,6 @@ function dynamicTextInputProps(props) {
     "props.field.invalidText",
     "Function",
     props.field.invalidText,
-    "props.field.helperText",
-    "Function",
-    props.field.helperText,
     "props.handleInputChange",
     "Function",
     props.handleInputChange,
@@ -78,7 +75,7 @@ function dynamicTextInputProps(props) {
 
   let placeholder =
     (props.field.optional ? "(Optional) " : "") +
-    `my-${props.parentProps.formName}-${props.name}`;
+    `my-${kebabCase(props.parentProps.formName)}-${props.name}`;
   let labelText = props.field.tooltip
     ? ""
     : props.field.labelText
@@ -102,7 +99,9 @@ function dynamicTextInputProps(props) {
       ? disabledText
       : props.field.onRender
       ? props.field.onRender(props.parentState, props.parentProps)
-      : props.field.helperText(props.parentState, props.parentProps),
+      : isFunction(props.field.helperText)
+      ? props.field.helperText(props.parentState, props.parentProps)
+      : null,
     readOnly: props.field.readOnly || false,
   };
 }

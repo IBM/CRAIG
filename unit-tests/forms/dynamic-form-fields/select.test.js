@@ -210,8 +210,6 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
-        popoverHoverText: "",
-        popoverWrapperClassName: "select",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
@@ -264,8 +262,6 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
-        popoverHoverText: "",
-        popoverWrapperClassName: "select",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
@@ -319,8 +315,6 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
-        popoverHoverText: "",
-        popoverWrapperClassName: "tooltip select",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
@@ -371,8 +365,6 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
-        popoverHoverText: "",
-        popoverWrapperClassName: "select",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
