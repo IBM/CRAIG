@@ -29,13 +29,7 @@ const { initTransitGateway } = require("./transit-gateways");
 const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
 const { initVsiStore } = require("./vsi");
-const {
-  vpeInit,
-  vpeCreate,
-  vpeDelete,
-  vpeSave,
-  vpeOnStoreUpdate,
-} = require("./vpe");
+const { initVpe } = require("./vpe");
 const {
   f5Init,
   f5VsiSave,
@@ -268,14 +262,7 @@ const state = function (legacy) {
   initVpnGatewayStore(store);
   initClusterStore(store);
   initVsiStore(store);
-
-  store.newField("virtual_private_endpoints", {
-    init: vpeInit,
-    onStoreUpdate: vpeOnStoreUpdate,
-    create: vpeCreate,
-    save: vpeSave,
-    delete: vpeDelete,
-  });
+  initVpe(store);
 
   store.newField("f5", {
     init: f5Init,

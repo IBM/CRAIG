@@ -241,26 +241,6 @@ function disableSecurityGroupsSave(stateData, componentProps) {
 }
 
 /**
- * check to see if vpe form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpeSave(stateData, componentProps) {
-  return (
-    invalidName("virtual_private_endpoints")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "resource_group",
-      "security_groups",
-      "service",
-      "subnets",
-      "vpc",
-    ]) ||
-    anyAreEmpty(stateData.security_groups, stateData.subnets)
-  );
-}
-
-/**
  * check to see if f5 vsi template form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -551,7 +531,6 @@ const disableSaveFunctions = {
   sg_rules: disableSgRulesSave,
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
-  virtual_private_endpoints: disableVpeSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
@@ -609,6 +588,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpcs",
     "vsi",
     "volumes",
+    "virtual_private_endpoints",
     "vpn_gateways",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;

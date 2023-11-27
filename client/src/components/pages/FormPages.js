@@ -1180,8 +1180,8 @@ const VpePage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("virtual_private_endpoints")}
-      invalidTextCallback={invalidNameText("virtual_private_endpoints")}
+      invalidCallback={craig.virtual_private_endpoints.name.invalid}
+      invalidTextCallback={craig.virtual_private_endpoints.name.invalidText}
       vpcList={craig.store.vpcList}
       subnetList={craig.getAllSubnets()}
       securityGroups={craig.store.json.security_groups}
