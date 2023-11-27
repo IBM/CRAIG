@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 describe("vpn gateway", () => {
   it("should return true if vpn gateway with invalid name", () => {
@@ -13,14 +13,7 @@ describe("vpn gateway", () => {
           vpc: "hi",
         },
         {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              json: {
-                vpn_gateways: [],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "@@@",
           },
@@ -40,14 +33,7 @@ describe("vpn gateway", () => {
           vpc: "hi",
         },
         {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              json: {
-                vpn_gateways: [],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "hi",
           },
@@ -67,14 +53,7 @@ describe("vpn gateway", () => {
           vpc: "",
         },
         {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              json: {
-                vpn_gateways: [],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "hi",
           },
@@ -94,14 +73,7 @@ describe("vpn gateway", () => {
           vpc: "hi",
         },
         {
-          craig: {
-            store: {
-              resourceGroups: ["what"],
-              json: {
-                vpn_gateways: [],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "hi",
           },

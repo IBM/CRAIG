@@ -212,19 +212,6 @@ function disableSgRulesSave(stateData, componentProps) {
 }
 
 /**
- * check to see if vpn gateways form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpnGatewaysSave(stateData, componentProps) {
-  return (
-    invalidName("vpn_gateways")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["resource_group", "vpc", "subnet"])
-  );
-}
-
-/**
  * check to see if iam account settings form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -250,26 +237,6 @@ function disableSecurityGroupsSave(stateData, componentProps) {
   return (
     invalidName("security_groups")(stateData, componentProps) ||
     nullOrEmptyStringFields(stateData, ["resource_group", "vpc"])
-  );
-}
-
-/**
- * check to see if vpe form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpeSave(stateData, componentProps) {
-  return (
-    invalidName("virtual_private_endpoints")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "resource_group",
-      "security_groups",
-      "service",
-      "subnets",
-      "vpc",
-    ]) ||
-    anyAreEmpty(stateData.security_groups, stateData.subnets)
   );
 }
 
@@ -562,10 +529,8 @@ const disableSaveFunctions = {
   secrets_manager: disableSecretsManagerSave,
   ssh_keys: disableSshKeysSave,
   sg_rules: disableSgRulesSave,
-  vpn_gateways: disableVpnGatewaysSave,
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
-  virtual_private_endpoints: disableVpeSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
@@ -623,6 +588,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpcs",
     "vsi",
     "volumes",
+    "virtual_private_endpoints",
+    "vpn_gateways",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (
