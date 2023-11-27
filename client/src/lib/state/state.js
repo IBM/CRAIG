@@ -26,13 +26,7 @@ const {
   securityGroupRulesDelete,
 } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways");
-const {
-  vpnInit,
-  vpnCreate,
-  vpnDelete,
-  vpnSave,
-  vpnOnStoreUpdate,
-} = require("./vpn");
+const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
 const { initVsiStore } = require("./vsi");
 const {
@@ -271,15 +265,7 @@ const state = function (legacy) {
   });
 
   initTransitGateway(store);
-
-  store.newField("vpn_gateways", {
-    init: vpnInit,
-    onStoreUpdate: vpnOnStoreUpdate,
-    create: vpnCreate,
-    save: vpnSave,
-    delete: vpnDelete,
-  });
-
+  initVpnGatewayStore(store);
   initClusterStore(store);
   initVsiStore(store);
 

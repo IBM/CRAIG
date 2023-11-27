@@ -1102,8 +1102,8 @@ const VpnGatewayPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("vpn_gateways")}
-      invalidTextCallback={invalidNameText("vpn_gateways")}
+      invalidCallback={craig.vpn_gateways.name.invalid}
+      invalidTextCallback={craig.vpn_gateways.name.invalidText}
       vpcList={craig.store.vpcList}
       subnetList={craig.getAllSubnets()}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}

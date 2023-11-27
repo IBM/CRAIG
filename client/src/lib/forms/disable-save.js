@@ -212,19 +212,6 @@ function disableSgRulesSave(stateData, componentProps) {
 }
 
 /**
- * check to see if vpn gateways form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpnGatewaysSave(stateData, componentProps) {
-  return (
-    invalidName("vpn_gateways")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["resource_group", "vpc", "subnet"])
-  );
-}
-
-/**
  * check to see if iam account settings form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -562,7 +549,6 @@ const disableSaveFunctions = {
   secrets_manager: disableSecretsManagerSave,
   ssh_keys: disableSshKeysSave,
   sg_rules: disableSgRulesSave,
-  vpn_gateways: disableVpnGatewaysSave,
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
   virtual_private_endpoints: disableVpeSave,
@@ -623,6 +609,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpcs",
     "vsi",
     "volumes",
+    "vpn_gateways",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (
