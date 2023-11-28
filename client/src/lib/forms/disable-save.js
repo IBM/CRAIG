@@ -165,22 +165,6 @@ function disableSecretsManagerSave(stateData, componentProps) {
 }
 
 /**
- * check to see if ssh keys form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSshKeysSave(stateData, componentProps) {
-  return (
-    invalidName("ssh_keys")(stateData, componentProps) ||
-    isNullOrEmptyString(stateData.resource_group) ||
-    (stateData.use_data
-      ? false // do not check invalid public key if using data, return false
-      : invalidSshPublicKey(stateData, componentProps).invalid)
-  );
-}
-
-/**
  * check to see if sg rules form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -397,7 +381,6 @@ const disableSaveFunctions = {
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
   secrets_manager: disableSecretsManagerSave,
-  ssh_keys: disableSshKeysSave,
   sg_rules: disableSgRulesSave,
   iam_account_settings: disableIamAccountSettingsSave,
   security_groups: disableSecurityGroupsSave,
@@ -451,6 +434,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpcs",
     "vsi",
     "volumes",
+    "ssh_keys",
     "cbr_zones",
     "addresses",
     "exclusions",
@@ -462,11 +446,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpn_gateways",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
-  if (
-    containsKeys(disableSaveFunctions, field) &&
-    !isPowerSshKey &&
-    !componentProps?.classic
-  ) {
+  if (containsKeys(disableSaveFunctions, field)) {
     return disableSaveFunctions[field](stateData, componentProps, craig);
   } else if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
     return (
@@ -568,7 +548,6 @@ module.exports = {
   disableSave,
   invalidPort,
   forceShowForm,
-  disableSshKeysSave,
   disableSshKeyDelete,
   invalidCidrBlock,
   invalidNumberCheck,

@@ -8,13 +8,7 @@ const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc");
 const { sccInit, sccSave, sccDelete } = require("./scc");
-const {
-  sshKeyCreate,
-  sshKeyDelete,
-  sshKeySave,
-  sshKeyInit,
-  sshKeyOnStoreUpdate,
-} = require("./ssh-keys.js");
+const { initSshKeyStore } = require("./ssh-keys.js");
 const {
   securityGroupInit,
   securityGroupOnStoreUpdate,
@@ -210,13 +204,7 @@ const state = function (legacy) {
     delete: sccDelete,
   });
 
-  store.newField("ssh_keys", {
-    init: sshKeyInit,
-    onStoreUpdate: sshKeyOnStoreUpdate,
-    create: sshKeyCreate,
-    save: sshKeySave,
-    delete: sshKeyDelete,
-  });
+  initSshKeyStore(store);
 
   store.newField("security_groups", {
     init: securityGroupInit,
@@ -257,7 +245,6 @@ const state = function (legacy) {
   });
 
   initLoadBalancers(store);
-
   initEventStreams(store);
 
   store.newField("secrets_manager", {
@@ -355,9 +342,7 @@ const state = function (legacy) {
 
   initIcdStore(store);
   initPowerVsStore(store);
-
   initPowerVsInstance(store);
-
   initPowerVsVolumeStore(store);
   intiClassicInfrastructure(store);
   initClassicGateways(store);
