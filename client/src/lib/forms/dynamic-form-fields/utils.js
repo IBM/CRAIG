@@ -98,8 +98,12 @@ function groupsEvaluatesToArrayCheck(props, functionName, stateValue) {
         : props.field.groups)}`
     );
   }
+  // prevent multiselect from adding invalid param ""
   let groups = (
-    isNullOrEmptyString(stateValue) || !stateValue ? [""] : []
+    functionName !== "dynamicMultiSelectProps" &&
+    (isNullOrEmptyString(stateValue) || !stateValue)
+      ? [""]
+      : []
   ).concat(
     isArray(props.field.groups)
       ? props.field.groups

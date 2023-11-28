@@ -93,7 +93,6 @@ import {
   sapProfiles,
   datacenters,
 } from "../../lib/constants";
-import { tgwVpcFilter } from "../../lib/forms/filters";
 import DynamicForm from "../forms/DynamicForm";
 
 const AccessGroupsPage = (craig) => {
@@ -974,14 +973,17 @@ const SecurityGroupPage = (craig) => {
         forceOpen={forceShowForm}
         craig={craig}
         resourceGroups={splat(craig.store.json.resource_groups, "name")}
-        invalidCallback={invalidName("security_groups")}
-        invalidTextCallback={invalidNameText("security_groups")}
+        invalidCallback={craig.security_groups.name.invalid}
+        invalidTextCallback={craig.security_groups.name.invalidText}
         disableSaveCallback={function (stateData, componentProps) {
           return (
             propsMatchState("sg_rules", stateData, componentProps) ||
             disableSave("sg_rules", stateData, componentProps)
           );
         }}
+        // due to the complex table and the way these are rendered it is
+        // unlikely that a dynamic form is practical to use for the creation
+        // of sg rules, so I'm fine leaving these as is
         invalidRuleText={invalidSecurityGroupRuleName}
         invalidRuleTextCallback={invalidSecurityGroupRuleText}
         onSubmitCallback={craig.security_groups.rules.create}
@@ -1068,24 +1070,63 @@ const SshKeysPage = (craig) => {
 
 const TransitGatewayPage = (craig) => {
   return (
-    <TransitGatewayTemplate
+    <IcseFormTemplate
+      name="Transit Gateways"
+      addText="Create a Transit Gateway"
       docs={RenderDocs("transit_gateways", craig.store.json._options.template)}
-      transit_gateways={craig.store.json.transit_gateways}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.transit_gateways}
       disableSave={disableSave}
       onDelete={craig.transit_gateways.delete}
       onSave={craig.transit_gateways.save}
       onSubmit={craig.transit_gateways.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.transit_gateways.name.invalid}
-      invalidTextCallback={craig.transit_gateways.name.invalidText}
-      invalidCrns={craig.transit_gateways.crns.invalid}
-      invalidCrnText={craig.transit_gateways.crns.invalidText}
-      vpcList={tgwVpcFilter(craig)}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      power={craig.store.json.power}
-      edgeRouterEnabledZones={edgeRouterEnabledZones}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        form: {
+          setDefault: {
+            connections: [],
+          },
+          groups: [
+            {
+              use_data: craig.transit_gateways.use_data,
+            },
+            {
+              name: craig.transit_gateways.name,
+              resource_group: craig.transit_gateways.resource_group,
+            },
+            {
+              hideWhen: function (stateData) {
+                return stateData.use_data;
+              },
+              global: craig.transit_gateways.global,
+            },
+            {
+              heading: {
+                name: "Connections",
+                type: "subHeading",
+              },
+            },
+            {
+              vpc_connections: craig.transit_gateways.vpc_connections,
+              power_connections: craig.transit_gateways.power_connections,
+            },
+            // the patterns where existing infrastructure exists are more likely
+            // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
+            // is still supported, but will not be displayed. If we have a request
+            // for that functionality, we should implement
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "transit_gateways",
+        hide: false,
+        hideName: true,
+      }}
     />
   );
 };

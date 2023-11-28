@@ -18,6 +18,7 @@ const {
   securityGroupRulesCreate,
   securityGroupRulesSave,
   securityGroupRulesDelete,
+  initSecurityGroupStore,
 } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways");
 const { initVpnGatewayStore } = require("./vpn");
@@ -206,21 +207,7 @@ const state = function (legacy) {
 
   initSshKeyStore(store);
 
-  store.newField("security_groups", {
-    init: securityGroupInit,
-    onStoreUpdate: securityGroupOnStoreUpdate,
-    create: securityGroupCreate,
-    save: securityGroupSave,
-    delete: securityGroupDelete,
-    subComponents: {
-      rules: {
-        create: securityGroupRulesCreate,
-        save: securityGroupRulesSave,
-        delete: securityGroupRulesDelete,
-      },
-    },
-  });
-
+  initSecurityGroupStore(store);
   initTransitGateway(store);
   initVpnGatewayStore(store);
   initClusterStore(store);

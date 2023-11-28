@@ -50,6 +50,7 @@ describe("filterable multiselect", () => {
         label: "Name",
         titleText: "Name",
         useTitleInItem: false,
+        initialSelectedItems: [],
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -131,6 +132,7 @@ describe("filterable multiselect", () => {
         label: "Name",
         titleText: "Name",
         useTitleInItem: false,
+        initialSelectedItems: [],
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -210,6 +212,7 @@ describe("filterable multiselect", () => {
         label: null,
         titleText: "Name",
         useTitleInItem: false,
+        initialSelectedItems: [],
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -291,6 +294,7 @@ describe("filterable multiselect", () => {
         label: "Name",
         titleText: "Name",
         useTitleInItem: false,
+        initialSelectedItems: ["egg", "salad"],
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -370,6 +374,7 @@ describe("filterable multiselect", () => {
         label: "Name",
         titleText: "Name",
         useTitleInItem: false,
+        initialSelectedItems: [],
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -449,6 +454,7 @@ describe("filterable multiselect", () => {
         label: "Name",
         titleText: "Name",
         useTitleInItem: false,
+        initialSelectedItems: ["oops"],
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });

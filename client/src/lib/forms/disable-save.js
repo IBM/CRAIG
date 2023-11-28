@@ -3,7 +3,6 @@ const {
   isEmpty,
   isIpv4CidrOrAddress,
   containsKeys,
-  validPortRange,
   isInRange,
   distinct,
   contains,
@@ -16,7 +15,6 @@ const {
 const {
   invalidName,
   invalidSshPublicKey,
-  invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
   isValidUrl,
@@ -53,29 +51,6 @@ function fieldCheck(fields, check, stateData) {
     }
   });
   return hasBadFields;
-}
-
-/**
- * test if a rule has an invalid port
- * @param {*} rule
- * @param {boolean=} isSecurityGroup
- * @returns {boolean} true if port is invalid
- */
-function invalidPort(rule, isSecurityGroup) {
-  let hasInvalidPort = false;
-  if (rule.ruleProtocol !== "all") {
-    (rule.ruleProtocol === "icmp"
-      ? ["type", "code"]
-      : isSecurityGroup
-      ? ["port_min", "port_max"]
-      : ["port_min", "port_max", "source_port_min", "source_port_max"]
-    ).forEach((type) => {
-      if (rule.rule[type] && !hasInvalidPort) {
-        hasInvalidPort = !validPortRange(type, rule.rule[type]);
-      }
-    });
-  }
-  return hasInvalidPort;
 }
 
 /**
@@ -165,20 +140,6 @@ function disableSecretsManagerSave(stateData, componentProps) {
 }
 
 /**
- * check to see if sg rules form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSgRulesSave(stateData, componentProps) {
-  return (
-    invalidSecurityGroupRuleName(stateData, componentProps) ||
-    !isIpv4CidrOrAddress(stateData.source) ||
-    invalidPort(stateData)
-  );
-}
-
-/**
  * check to see if iam account settings form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -191,19 +152,6 @@ function disableIamAccountSettingsSave(stateData) {
       "restrict_create_service_id",
       "max_sessions_per_identity",
     ]) || invalidIpCommaList(stateData.allowed_ip_addresses)
-  );
-}
-
-/**
- * check to see if security groups form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSecurityGroupsSave(stateData, componentProps) {
-  return (
-    invalidName("security_groups")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["resource_group", "vpc"])
   );
 }
 
@@ -381,9 +329,7 @@ const disableSaveFunctions = {
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
   secrets_manager: disableSecretsManagerSave,
-  sg_rules: disableSgRulesSave,
   iam_account_settings: disableIamAccountSettingsSave,
-  security_groups: disableSecurityGroupsSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
@@ -434,6 +380,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpcs",
     "vsi",
     "volumes",
+    "sg_rules",
+    "security_groups",
     "ssh_keys",
     "cbr_zones",
     "addresses",
@@ -474,6 +422,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.key_management.keys
         : contains(["worker_pools", "opaque_secrets"], field)
         ? componentProps.craig.clusters[field]
+        : field === "sg_rules"
+        ? componentProps.craig.security_groups.rules
         : contains(["addresses", "exclusions"], field)
         ? componentProps.craig.cbr_zones[field]
         : contains(["contexts", "resource_attributes", "tags"], field)
@@ -546,7 +496,6 @@ function disableSshKeyDelete(componentProps) {
 
 module.exports = {
   disableSave,
-  invalidPort,
   forceShowForm,
   disableSshKeyDelete,
   invalidCidrBlock,

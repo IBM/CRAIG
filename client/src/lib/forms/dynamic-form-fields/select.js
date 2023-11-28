@@ -78,6 +78,7 @@ function dynamicSelectProps(props) {
     "dynamicSelectProps",
     "invalidText"
   );
+
   return {
     id: dynamicFieldId(props),
     name: props.name,
