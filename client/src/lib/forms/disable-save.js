@@ -56,23 +56,6 @@ function fieldCheck(fields, check, stateData) {
 }
 
 /**
- * check multiple fields against the same invalidating regex expression
- * @param {Array} fields  list of fields to check
- * @param {function} check the check to run
- * @param {Object} stateData
- * @returns {boolean} true if any are invalid
- */
-function invalidFieldCheck(fields, check, stateData) {
-  let hasBadFields = false;
-  fields.forEach((field) => {
-    if (check(field, stateData)) {
-      hasBadFields = true;
-    }
-  });
-  return hasBadFields;
-}
-
-/**
  * test if a rule has an invalid port
  * @param {*} rule
  * @param {boolean=} isSecurityGroup
@@ -326,119 +309,6 @@ function disableRoutesSave(stateData, componentProps) {
 }
 
 /**
- * check to see if cbr rules form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableCbrRulesSave(stateData, componentProps) {
-  return (
-    invalidName("cbr_rules")(stateData, componentProps) ||
-    invalidFieldCheck(["description", "api_type_id"], invalidCbrRule, stateData)
-  );
-}
-
-/**
- * check to see if contexts form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableContextsSave(stateData, componentProps) {
-  return (
-    invalidName("contexts")(stateData, componentProps) ||
-    invalidCbrRule("value", stateData, componentProps)
-  );
-}
-
-/**
- * check to see if resource attributes form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableResourceAttributesSave(stateData, componentProps) {
-  return (
-    invalidName("resource_attributes")(stateData, componentProps) ||
-    invalidCbrRule("value", stateData, componentProps)
-  );
-}
-
-/**
- * check to see if tags form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableTagsSave(stateData, componentProps) {
-  return (
-    invalidName("tags")(stateData, componentProps) ||
-    invalidFieldCheck(["value", "operator"], invalidCbrRule, stateData)
-  );
-}
-
-/**
- * check to see if cbr zones form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableCbrZonesSave(stateData, componentProps) {
-  return (
-    invalidName("cbr_zones")(stateData, componentProps) ||
-    invalidFieldCheck(["description", "account_id"], invalidCbrZone, stateData)
-  );
-}
-
-/**
- * check to see if addresses form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableAddressesSave(stateData, componentProps) {
-  return (
-    invalidName("addresses")(stateData, componentProps) ||
-    invalidFieldCheck(
-      [
-        "account_id",
-        "location",
-        "service_name",
-        "service_type",
-        "service_instance",
-        "value",
-      ],
-      invalidCbrZone,
-      stateData
-    )
-  );
-}
-
-/**
- * check to see if exclusions form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableExclusionsSave(stateData, componentProps) {
-  return (
-    invalidName("exclusions")(stateData, componentProps) ||
-    invalidFieldCheck(
-      [
-        "account_id",
-        "location",
-        "service_name",
-        "service_type",
-        "service_instance",
-        "value",
-      ],
-      invalidCbrZone,
-      stateData
-    )
-  );
-}
-
-/**
  * check to see if dns form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -535,13 +405,6 @@ const disableSaveFunctions = {
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
   routes: disableRoutesSave,
-  cbr_rules: disableCbrRulesSave,
-  contexts: disableContextsSave,
-  resource_attributes: disableResourceAttributesSave,
-  tags: disableTagsSave,
-  cbr_zones: disableCbrZonesSave,
-  addresses: disableAddressesSave,
-  exclusions: disableExclusionsSave,
   dns: disableDnsSave,
   zones: disableZonesSave,
   records: disableRecordsSave,
@@ -588,6 +451,13 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpcs",
     "vsi",
     "volumes",
+    "cbr_zones",
+    "addresses",
+    "exclusions",
+    "cbr_rules",
+    "contexts",
+    "resource_attributes",
+    "tags",
     "virtual_private_endpoints",
     "vpn_gateways",
   ];
@@ -624,6 +494,10 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.key_management.keys
         : contains(["worker_pools", "opaque_secrets"], field)
         ? componentProps.craig.clusters[field]
+        : contains(["addresses", "exclusions"], field)
+        ? componentProps.craig.cbr_zones[field]
+        : contains(["contexts", "resource_attributes", "tags"], field)
+        ? componentProps.craig.cbr_rules[field]
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;

@@ -1,5 +1,11 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+
+function setTempCraig(store) {
+  let tempCraig = state();
+  tempCraig.store = store;
+  return tempCraig;
+}
 
 describe("cbr", () => {
   let example_cbr_zone = {
@@ -64,7 +70,7 @@ describe("cbr", () => {
     cbr_rule.account_id = "?>@<";
     assert.isTrue(
       disableSave("cbr_rules", cbr_rule, {
-        craig: { store: { json: { cbr_rules: [{ name: "hi" }] } } },
+        craig: setTempCraig({ json: { cbr_rules: [{ name: "hi" }] } }),
         data: { name: "hi" },
       })
     );
@@ -73,7 +79,7 @@ describe("cbr", () => {
     let cbr_rule = Object.assign({}, example_cbr_rule);
     assert.isFalse(
       disableSave("cbr_rules", cbr_rule, {
-        craig: { store: { json: { cbr_rules: [{ name: "hi" }] } } },
+        craig: setTempCraig({ json: { cbr_rules: [{ name: "hi" }] } }),
         data: { name: "hi" },
       })
     );
@@ -84,11 +90,9 @@ describe("cbr", () => {
     cbr_context.value = "";
     assert.isTrue(
       disableSave("contexts", cbr_context, {
-        craig: {
-          store: {
-            json: { cbr_rules: [{ name: "hi", contexts: [{ name: "hi" }] }] },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_rules: [{ name: "hi", contexts: [{ name: "hi" }] }] },
+        }),
         data: { name: "hi" },
       })
     );
@@ -97,11 +101,9 @@ describe("cbr", () => {
     let cbr_context = Object.assign({}, example_cbr_rule.contexts[0]);
     assert.isFalse(
       disableSave("contexts", cbr_context, {
-        craig: {
-          store: {
-            json: { cbr_rules: [{ name: "hi", contexts: [{ name: "hi" }] }] },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_rules: [{ name: "hi", contexts: [{ name: "hi" }] }] },
+        }),
         data: { name: "hi" },
       })
     );
@@ -115,15 +117,11 @@ describe("cbr", () => {
     cbr_attribute.value = "";
     assert.isTrue(
       disableSave("resource_attributes", cbr_attribute, {
-        craig: {
-          store: {
-            json: {
-              cbr_rules: [
-                { name: "hi", resource_attributes: [{ name: "hey" }] },
-              ],
-            },
+        craig: setTempCraig({
+          json: {
+            cbr_rules: [{ name: "hi", resource_attributes: [{ name: "hey" }] }],
           },
-        },
+        }),
         data: { name: "hey" },
       })
     );
@@ -135,15 +133,11 @@ describe("cbr", () => {
     );
     assert.isFalse(
       disableSave("resource_attributes", cbr_attribute, {
-        craig: {
-          store: {
-            json: {
-              cbr_rules: [
-                { name: "hi", resource_attributes: [{ name: "hey" }] },
-              ],
-            },
+        craig: setTempCraig({
+          json: {
+            cbr_rules: [{ name: "hi", resource_attributes: [{ name: "hey" }] }],
           },
-        },
+        }),
         data: { name: "hey" },
       })
     );
@@ -155,13 +149,9 @@ describe("cbr", () => {
     cbr_tag.value = "";
     assert.isTrue(
       disableSave("tags", cbr_tag, {
-        craig: {
-          store: {
-            json: {
-              cbr_rules: [{ name: "hi", tags: [{ name: "hello" }] }],
-            },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_rules: [{ name: "hi", tags: [{ name: "hello" }] }] },
+        }),
         data: { name: "hello" },
       })
     );
@@ -170,13 +160,9 @@ describe("cbr", () => {
     let cbr_tag = Object.assign({}, example_cbr_rule.tags[0]);
     assert.isFalse(
       disableSave("tags", cbr_tag, {
-        craig: {
-          store: {
-            json: {
-              cbr_rules: [{ name: "hi", tags: [{ name: "hello" }] }],
-            },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_rules: [{ name: "hi", tags: [{ name: "hello" }] }] },
+        }),
         data: { name: "hello" },
       })
     );
@@ -188,7 +174,7 @@ describe("cbr", () => {
     cbr_zone.account_id = "?>@<";
     assert.isTrue(
       disableSave("cbr_zones", cbr_zone, {
-        craig: { store: { json: { cbr_zones: [{ name: "hi" }] } } },
+        craig: setTempCraig({ json: { cbr_zones: [{ name: "hi" }] } }),
         data: { name: "hi" },
       })
     );
@@ -197,7 +183,7 @@ describe("cbr", () => {
     let cbr_zone = Object.assign({}, example_cbr_zone);
     assert.isFalse(
       disableSave("cbr_zones", cbr_zone, {
-        craig: { store: { json: { cbr_zones: [{ name: "hi" }] } } },
+        craig: setTempCraig({ json: { cbr_zones: [{ name: "hi" }] } }),
         data: { name: "hi" },
       })
     );
@@ -212,13 +198,9 @@ describe("cbr", () => {
 
     assert.isTrue(
       disableSave("addresses", cbr_address, {
-        craig: {
-          store: {
-            json: {
-              cbr_zones: [{ name: "hi", addresses: [{ name: "hi" }] }],
-            },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_zones: [{ name: "hi", addresses: [{ name: "hi" }] }] },
+        }),
         data: { name: "hi" },
       })
     );
@@ -227,13 +209,9 @@ describe("cbr", () => {
     let cbr_address = Object.assign({}, example_cbr_zone.addresses[0]);
     assert.isFalse(
       disableSave("addresses", cbr_address, {
-        craig: {
-          store: {
-            json: {
-              cbr_zones: [{ name: "hi", addresses: [{ name: "hi" }] }],
-            },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_zones: [{ name: "hi", addresses: [{ name: "hi" }] }] },
+        }),
         data: { name: "hi" },
       })
     );
@@ -249,13 +227,9 @@ describe("cbr", () => {
 
     assert.isTrue(
       disableSave("exclusions", cbr_exclusion, {
-        craig: {
-          store: {
-            json: {
-              cbr_zones: [{ name: "hi", exclusions: [{ name: "hi" }] }],
-            },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_zones: [{ name: "hi", exclusions: [{ name: "hi" }] }] },
+        }),
         data: { name: "hi" },
       })
     );
@@ -264,13 +238,9 @@ describe("cbr", () => {
     let cbr_exclusion = Object.assign({}, example_cbr_zone.exclusions[0]);
     assert.isFalse(
       disableSave("exclusions", cbr_exclusion, {
-        craig: {
-          store: {
-            json: {
-              cbr_zones: [{ name: "hi", exclusions: [{ name: "hi" }] }],
-            },
-          },
-        },
+        craig: setTempCraig({
+          json: { cbr_zones: [{ name: "hi", exclusions: [{ name: "hi" }] }] },
+        }),
         data: { name: "hi" },
       })
     );

@@ -82,33 +82,8 @@ const {
   routingTableRouteSave,
   routingTableRouteDelete,
 } = require("./routing-tables");
-const {
-  cbrZonesInit,
-  cbrZoneCreate,
-  cbrZoneSave,
-  cbrZoneDelete,
-  cbrZoneAddressCreate,
-  cbrZoneAddressSave,
-  cbrZoneAddressDelete,
-  cbrZoneExclusionCreate,
-  cbrZoneExclusionSave,
-  cbrZoneExclusionDelete,
-} = require("./cbr-zones");
-const {
-  cbrRulesInit,
-  cbrRuleCreate,
-  cbrRuleSave,
-  cbrRuleDelete,
-  cbrRuleContextCreate,
-  cbrRuleContextSave,
-  cbrRuleContextDelete,
-  cbrRuleAttributeCreate,
-  cbrRuleAttributeSave,
-  cbrRuleAttributeDelete,
-  cbrRuleTagCreate,
-  cbrRuleTagSave,
-  cbrRuleTagDelete,
-} = require("./cbr-rules");
+const { initCbrZones } = require("./cbr-zones");
+const { initCbrRules } = require("./cbr-rules");
 const { initVpnState } = require("./vpn-servers");
 const {
   dnsInit,
@@ -335,48 +310,9 @@ const state = function (legacy) {
     },
   });
 
-  store.newField("cbr_zones", {
-    init: cbrZonesInit,
-    create: cbrZoneCreate,
-    save: cbrZoneSave,
-    delete: cbrZoneDelete,
-    subComponents: {
-      addresses: {
-        create: cbrZoneAddressCreate,
-        save: cbrZoneAddressSave,
-        delete: cbrZoneAddressDelete,
-      },
-      exclusions: {
-        create: cbrZoneExclusionCreate,
-        save: cbrZoneExclusionSave,
-        delete: cbrZoneExclusionDelete,
-      },
-    },
-  });
+  initCbrZones(store);
 
-  store.newField("cbr_rules", {
-    init: cbrRulesInit,
-    create: cbrRuleCreate,
-    save: cbrRuleSave,
-    delete: cbrRuleDelete,
-    subComponents: {
-      contexts: {
-        create: cbrRuleContextCreate,
-        save: cbrRuleContextSave,
-        delete: cbrRuleContextDelete,
-      },
-      resource_attributes: {
-        create: cbrRuleAttributeCreate,
-        save: cbrRuleAttributeSave,
-        delete: cbrRuleAttributeDelete,
-      },
-      tags: {
-        create: cbrRuleTagCreate,
-        save: cbrRuleTagSave,
-        delete: cbrRuleTagDelete,
-      },
-    },
-  });
+  initCbrRules(store);
 
   initVpnState(store);
 

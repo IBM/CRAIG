@@ -63,8 +63,8 @@ class CbrForm extends React.Component {
           onRequestClose={this.onModalClose}
         >
           <CbrZoneForm
-            invalidCallback={invalidName("cbr_zones")}
-            invalidTextCallback={invalidNameText("cbr_zones")}
+            invalidCallback={this.props.craig.cbr_zones.name.invalid}
+            invalidTextCallback={this.props.craig.cbr_zones.name.invalidText}
             disableSave={disableSave}
             propsMatchState={propsMatchState}
             isModal
@@ -94,8 +94,10 @@ class CbrForm extends React.Component {
         >
           <CbrRuleForm
             isModal
-            invalidNameCallback={invalidName("cbr_rules")}
-            invalidNameTextCallback={invalidNameText("cbr_rules")}
+            invalidNameCallback={this.props.craig.cbr_rules.name.invalid}
+            invalidNameTextCallback={
+              this.props.craig.cbr_rules.name.invalidText
+            }
             invalidCallback={invalidCbrRule}
             invalidTextCallback={invalidCbrRuleText}
             disableSave={disableSave}
@@ -167,14 +169,19 @@ class CbrForm extends React.Component {
                       innerFormProps={{
                         craig: this.props.craig,
                         data: { ...zone },
-                        invalidCallback: invalidName("cbr_zones"),
-                        invalidTextCallback: invalidNameText("cbr_zones"), // all fields can use default field invalid text
-                        invalidAddressCallback: invalidName("addresses"),
+                        invalidCallback:
+                          this.props.craig.cbr_zones.name.invalid,
+                        invalidTextCallback:
+                          this.props.craig.cbr_zones.name.invalidText, // all fields can use default field invalid text
+                        invalidAddressCallback:
+                          this.props.craig.cbr_zones.addresses.name.invalid,
                         invalidAddressTextCallback:
-                          invalidNameText("addresses"),
-                        invalidExclusionCallback: invalidName("exclusions"),
+                          this.props.craig.cbr_zones.addresses.name.invalidText,
+                        invalidExclusionCallback:
+                          this.props.craig.cbr_zones.exclusions.name.invalid,
                         invalidExclusionTextCallback:
-                          invalidNameText("exclusions"),
+                          this.props.craig.cbr_zones.exclusions.name
+                            .invalidText,
                         disableSave: disableSave,
                         propsMatchState: propsMatchState,
                         addressProps: {
@@ -267,8 +274,10 @@ class CbrForm extends React.Component {
                         data: { ...rule },
                         invalidCallback: invalidCbrRule,
                         invalidTextCallback: invalidCbrRuleText,
-                        invalidNameCallback: invalidName("cbr_rules"),
-                        invalidNameTextCallback: invalidNameText("cbr_rules"),
+                        invalidNameCallback:
+                          this.props.craig.cbr_rules.name.invalid,
+                        invalidNameTextCallback:
+                          this.props.craig.cbr_rules.name.invalidText,
                         disableSave: disableSave,
                         propsMatchState: propsMatchState,
                         contextProps: {
@@ -279,8 +288,11 @@ class CbrForm extends React.Component {
                           onDelete: this.props.craig.cbr_rules.contexts.delete,
                           invalidCallback: invalidCbrRule,
                           invalidTextCallback: invalidCbrRuleText,
-                          invalidNameCallback: invalidName("contexts"),
-                          invalidNameTextCallback: invalidNameText("contexts"),
+                          invalidNameCallback:
+                            this.props.craig.cbr_rules.contexts.name.invalid,
+                          invalidNameTextCallback:
+                            this.props.craig.cbr_rules.contexts.name
+                              .invalidText,
                         },
                         resourceAttributeProps: {
                           craig: this.props.craig,
@@ -295,12 +307,12 @@ class CbrForm extends React.Component {
                               .delete,
                           invalidCallback: invalidCbrRule,
                           invalidTextCallback: invalidCbrRuleText,
-                          invalidNameCallback: invalidName(
-                            "resource_attributes"
-                          ),
-                          invalidNameTextCallback: invalidNameText(
-                            "resource_attributes"
-                          ),
+                          invalidNameCallback:
+                            this.props.craig.cbr_rules.resource_attributes.name
+                              .invalid,
+                          invalidNameTextCallback:
+                            this.props.craig.cbr_rules.resource_attributes.name
+                              .invalidText,
                         },
                         tagProps: {
                           craig: this.props.craig,
@@ -310,8 +322,10 @@ class CbrForm extends React.Component {
                           onDelete: this.props.craig.cbr_rules.tags.delete,
                           invalidCallback: invalidCbrRule,
                           invalidTextCallback: invalidCbrRuleText,
-                          invalidNameCallback: invalidName("tags"),
-                          invalidNameTextCallback: invalidNameText("tags"),
+                          invalidNameCallback:
+                            this.props.craig.cbr_rules.tags.name.invalid,
+                          invalidNameTextCallback:
+                            this.props.craig.cbr_rules.tags.name.invalidText,
                         },
                       }}
                     />
