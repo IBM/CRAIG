@@ -1,4 +1,13 @@
 const { splat } = require("lazy-z");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const {
+  invalidName,
+  invalidNameText,
+  invalidSshPublicKey,
+} = require("../forms");
 
 /**
  * set config store ssh keys
@@ -101,10 +110,48 @@ function sshKeyDelete(config, stateData, componentProps) {
   config.carve(["json", "ssh_keys"], componentProps.data.name);
 }
 
+/**
+ * init ssh key store
+ * @param {*} store
+ */
+function initSshKeyStore(store) {
+  store.newField("ssh_keys", {
+    init: sshKeyInit,
+    onStoreUpdate: sshKeyOnStoreUpdate,
+    create: sshKeyCreate,
+    save: sshKeySave,
+    delete: sshKeyDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "resource_group", "public_key"],
+      "ssh_keys"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("ssh_keys"),
+        invalidText: invalidNameText("ssh_keys"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      public_key: {
+        default: "",
+        invalid: function (stateData, componentProps) {
+          return stateData.use_data
+            ? false
+            : invalidSshPublicKey(stateData, componentProps).invalid;
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   sshKeyCreate,
   sshKeyDelete,
   sshKeySave,
   sshKeyInit,
   sshKeyOnStoreUpdate,
+  initSshKeyStore,
 };

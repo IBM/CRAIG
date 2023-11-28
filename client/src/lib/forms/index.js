@@ -51,7 +51,6 @@ const {
   disableSave,
   invalidPort,
   forceShowForm,
-  disableSshKeysSave,
   disableSshKeyDelete,
   invalidCidrBlock,
 } = require("./disable-save");
@@ -111,7 +110,6 @@ module.exports = {
   invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl,
-  disableSshKeysSave,
   disableSshKeyDelete,
   cidrBlocksOverlap,
   hasOverlappingCidr,

@@ -1,8 +1,20 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
+
+function newTempCraig(store) {
+  let craig = state();
+  craig.store = store;
+  return craig;
+}
 
 describe("ssh keys", () => {
   it("should return true when the ssh key name already exists", () => {
+    let craig = newTempCraig({
+      resourceGroups: ["hi"],
+      json: {
+        ssh_keys: [{ name: "honk", public_key: "1234" }],
+      },
+    });
     assert.isTrue(
       disableSave(
         "ssh_keys",
@@ -16,14 +28,7 @@ describe("ssh keys", () => {
           data: {
             data: "test",
           },
-          craig: {
-            store: {
-              resourceGroups: ["hi"],
-              json: {
-                ssh_keys: [{ name: "honk", public_key: "1234" }],
-              },
-            },
-          },
+          craig: craig,
         }
       ),
       "it should be disabled"
@@ -43,20 +48,25 @@ describe("ssh keys", () => {
           data: {
             data: "test",
           },
-          craig: {
-            store: {
-              resourceGroups: ["hi"],
-              json: {
-                ssh_keys: [],
-              },
-            },
-          },
+          craig: state(),
         }
       ),
       "it should be disabled"
     );
   });
   it("should return true when the public key value already exists", () => {
+    let craig = newTempCraig({
+      resourceGroups: ["hi"],
+      json: {
+        ssh_keys: [
+          {
+            name: "honk",
+            public_key:
+              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+          },
+        ],
+      },
+    });
     assert.isTrue(
       disableSave(
         "ssh_keys",
@@ -70,20 +80,7 @@ describe("ssh keys", () => {
           data: {
             data: "test",
           },
-          craig: {
-            store: {
-              resourceGroups: ["hi"],
-              json: {
-                ssh_keys: [
-                  {
-                    name: "honk",
-                    public_key:
-                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                  },
-                ],
-              },
-            },
-          },
+          craig: craig,
         }
       ),
       "it should be disabled"
@@ -103,20 +100,7 @@ describe("ssh keys", () => {
           data: {
             data: "test",
           },
-          craig: {
-            store: {
-              resourceGroups: ["hi"],
-              json: {
-                ssh_keys: [
-                  {
-                    name: "honk",
-                    public_key:
-                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
         }
       ),
       "it should be enabled"
