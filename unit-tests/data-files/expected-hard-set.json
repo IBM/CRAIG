@@ -852,6 +852,7 @@
   ],
   "transit_gateways": [
     {
+      "use_data": false,
       "name": "transit-gateway",
       "resource_group": "slz-service-rg",
       "global": false,

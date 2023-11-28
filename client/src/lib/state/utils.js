@@ -9,10 +9,12 @@ const {
   revision,
   isNullOrEmptyString,
   isEmpty,
+  splat,
   validPortRange,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
-
+const { invalidName } = require("../forms/invalid-callbacks");
+const { invalidNameText } = require("../forms/text-callbacks");
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -409,6 +411,63 @@ function isIpStringInvalid(value) {
 }
 
 /**
+ * name helper text
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} composed name with prefix prepended
+ */
+function nameHelperText(stateData, componentProps) {
+  return `${
+    stateData.use_data
+      ? ""
+      : componentProps.craig.store.json._options.prefix + "-"
+  }${stateData.name}`;
+}
+
+/**
+ * default for select
+ * @param {*} field
+ * @returns {string} select text
+ */
+function selectInvalidText(field) {
+  return function () {
+    return `Select a ${field}`;
+  };
+}
+
+/**
+ * name field
+ * @param {*} jsonField
+ * @returns {Object} name field
+ */
+function nameField(jsonField) {
+  return {
+    default: "",
+    invalid: invalidName(jsonField),
+    invalidText: invalidNameText(jsonField),
+    helperText: nameHelperText,
+  };
+}
+
+/**
+ * resource group
+ * @param {Function=} hideWhen
+ * @returns {object} object for resource groups page
+ */
+function resourceGroupsField(hideWhen) {
+  return {
+    default: "",
+    invalid: fieldIsNullOrEmptyString("resource_group"),
+    invalidText: selectInvalidText("resource_group"),
+    type: "select",
+    groups: function (stateData, componentProps) {
+      return splat(componentProps.craig.store.json.resource_groups, "name");
+    },
+    hideWhen: hideWhen,
+  };
+}
+
+/*
  * test if a rule has an invalid port
  * @param {*} rule
  * @param {boolean=} isSecurityGroup
@@ -464,6 +523,10 @@ module.exports = {
   shouldDisableComponentSave,
   isIpStringInvalid,
   fieldIsEmpty,
+  nameHelperText,
+  selectInvalidText,
+  resourceGroupsField,
+  nameField,
   invalidTcpOrUdpPort,
   invalidIcmpCodeOrType,
   invalidPort,

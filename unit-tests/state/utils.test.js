@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const {
   formatNetworkingRule,
   updateNetworkingRule,
+  nameHelperText,
   invalidPort,
 } = require("../../client/src/lib/state/utils");
 
@@ -340,6 +341,24 @@ describe("utils", () => {
       };
       updateNetworkingRule(false, data, networkRule);
       assert.deepEqual(data, expectedData, "it should be equal");
+    });
+  });
+  describe("nameHelperText", () => {
+    it("should return correct helper text when use data", () => {
+      assert.deepEqual(
+        nameHelperText(
+          { use_data: true, name: "tgw" },
+          {
+            craig: {
+              store: {
+                json: {},
+              },
+            },
+          }
+        ),
+        "tgw",
+        "it should return name"
+      );
     });
   });
   describe("invalidPort", () => {

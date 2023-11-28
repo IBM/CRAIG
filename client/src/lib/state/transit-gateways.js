@@ -4,11 +4,12 @@ const {
   splatContains,
   splat,
   getObjectFromArray,
+  distinct,
 } = require("lazy-z");
 const { newDefaultTg } = require("./defaults");
 const { edgeRouterEnabledZones } = require("../constants");
-const { invalidName, invalidNameText, invalidCrnList } = require("../forms");
-const { fieldIsNullOrEmptyString } = require("./utils");
+const { invalidCrnList } = require("../forms");
+const { resourceGroupsField, nameField } = require("./utils");
 
 /**
  * initialize transit gateway
@@ -29,6 +30,9 @@ function transitGatewayInit(config) {
  */
 function transitGatewayOnStoreUpdate(config) {
   config.store.json.transit_gateways.forEach((gateway) => {
+    if (gateway.use_data === undefined) {
+      gateway.use_data = false;
+    }
     if (gateway.crns) {
       gateway.crns.forEach((crn) => {
         if (!splatContains(gateway.connections, "crn", crn)) {
@@ -129,6 +133,35 @@ function transitGatewayShouldDisableSave(config, stateData, componentProps) {
 }
 
 /**
+ * handle connection state changes for tgw
+ * @param {string} field field to search for ex. vpc
+ * @param {string} fieldName name on state object ex. vpc_connections
+ * @return {Function} on state change function
+ */
+function onConnectionStateChange(field, fieldName) {
+  return function (stateData, componentProps) {
+    let newConnections = [];
+    stateData.connections.forEach((connection) => {
+      if (!connection[field]) newConnections.push(connection);
+    });
+    stateData[fieldName].forEach((item) => {
+      newConnections.push({ tgw: stateData.name, [field]: item });
+    });
+    stateData.connections = newConnections;
+    delete stateData[fieldName];
+  };
+}
+
+/**
+ * hide when use data
+ * @param {*} stateData
+ * @returns
+ */
+function hideWhenUseData(stateData) {
+  return stateData.use_data;
+}
+
+/**
  * initialize store field for tgw
  * @param {*} store
  */
@@ -141,14 +174,22 @@ function initTransitGateway(store) {
     delete: transitGatewayDelete,
     shouldDisableSave: transitGatewayShouldDisableSave,
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("transit_gateways"),
-        invalidText: invalidNameText("transit_gateways"),
+      use_data: {
+        default: false,
+        type: "toggle",
+        labelText: "Use Exsiting Transit Gateway",
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
+      name: nameField("transit_gateways"),
+      resource_group: resourceGroupsField(hideWhenUseData),
+      global: {
+        default: true,
+        type: "toggle",
+        labelText: "Global Routing",
+        tooltip: {
+          align: "right",
+          content:
+            "Must be enabled in order to connect your IBM Cloud and on-premises networks in all IBM Cloud multizone regions.",
+        },
       },
       crns: {
         default: "",
@@ -158,6 +199,85 @@ function initTransitGateway(store) {
         invalidText: function (stateData) {
           return invalidCrnList(stateData.crns);
         },
+      },
+      connections: {
+        default: [],
+      },
+      vpc_connections: {
+        labelText: "VPC Connections",
+        type: "multiselect",
+        optional: true,
+        groups: function (stateData, componentProps) {
+          let vpcList = splat(componentProps.craig.store.json.vpcs, "name");
+          // for each transit gateway
+          componentProps.craig.store.json.transit_gateways.forEach((tgw) => {
+            // for each connection
+            tgw.connections.forEach((connection) => {
+              // remove vpc from list if the VPC is found in another transit gateway
+              // with the same global value
+              if (
+                contains(vpcList, connection.vpc) &&
+                tgw.global === stateData.global &&
+                (componentProps.isModal ||
+                  tgw.name !== componentProps.data.name)
+              ) {
+                vpcList.splice(vpcList.indexOf(connection.vpc), 1);
+              }
+            });
+          });
+          return vpcList;
+        },
+        onRender: function (stateData, componentProps) {
+          return splat(
+            stateData.connections.filter((connection) => {
+              if (connection.vpc) return connection;
+            }),
+            "vpc"
+          );
+        },
+        onStateChange: onConnectionStateChange("vpc", "vpc_connections"),
+      },
+      power_connections: {
+        optional: true,
+        labelText: "Connected Power Workspaces",
+        type: "multiselect",
+        groups: function (stateData, componentProps) {
+          let foundPowerConnections = [];
+          componentProps.craig.store.json.transit_gateways.forEach(
+            (gateway) => {
+              gateway.connections.forEach((connection) => {
+                if (
+                  gateway.global === stateData.global &&
+                  connection.power &&
+                  (componentProps.isModal ||
+                    componentProps.data.name !== gateway.name)
+                ) {
+                  foundPowerConnections.push(connection.power);
+                }
+              });
+            }
+          );
+
+          return splat(
+            componentProps.craig.store.json.power.filter((workspace) => {
+              if (
+                contains(edgeRouterEnabledZones, workspace.zone) &&
+                !contains(foundPowerConnections, workspace.name)
+              )
+                return workspace;
+            }),
+            "name"
+          );
+        },
+        onRender: function (stateData) {
+          return splat(
+            stateData.connections.filter((connection) => {
+              if (connection.power) return connection;
+            }),
+            "power"
+          );
+        },
+        onStateChange: onConnectionStateChange("power", "power_connections"),
       },
     },
   });

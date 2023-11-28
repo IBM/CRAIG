@@ -8,6 +8,9 @@ const {
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
+  nameHelperText,
+  selectInvalidText,
+  nameField,
 } = require("./utils");
 
 /**
@@ -170,14 +173,7 @@ function intiClassicInfrastructure(store) {
       "classic_vlans"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("classic_vlans"),
-        invalidText: invalidNameText("classic_vlans"),
-        helperText: function (stateData, componentProps) {
-          return `${componentProps.craig.store.json._options.prefix}-${stateData.name}`;
-        },
-      },
+      name: nameField("classic_vlans"),
       type: {
         default: "",
         invalid: fieldIsNullOrEmptyString("type"),
@@ -189,16 +185,12 @@ function intiClassicInfrastructure(store) {
         onInputChange: function (stateData) {
           return stateData.type.toUpperCase();
         },
-        invalidText: function () {
-          return "Select a type";
-        },
+        invalidText: selectInvalidText("type"),
       },
       datacenter: {
         default: "",
         invalid: fieldIsNullOrEmptyString("datacenter"),
-        invalidText: function () {
-          return "Select a datacenter";
-        },
+        invalidText: selectInvalidText("datacenter"),
         groups: datacenters,
         type: "select",
       },

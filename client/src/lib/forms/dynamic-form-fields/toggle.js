@@ -30,9 +30,6 @@ function dynamicToggleProps(props) {
     "props.parentState",
     "object",
     props.parentState,
-    "props.field.labelText",
-    "string",
-    props.field.labelText,
     "props.parentProps",
     "object",
     props.parentProps,
@@ -48,7 +45,7 @@ function dynamicToggleProps(props) {
     labelText = props.field.tooltip ? " " : props.field.labelText,
     id = kebabCase(props.name) + "-toggle-" + props.propsName,
     className =
-      addClassName("leftTextAlign fitContent", props) +
+      addClassName("leftTextAlign fitContent", props.field) +
       (props.field.tooltip ? " cds--form-item tooltip" : " cds--form-item");
 
   return {

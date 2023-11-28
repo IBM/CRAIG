@@ -46,7 +46,7 @@ const DynamicFormSelect = (props) => {
   return (
     <PopoverWrapper
       hoverText={selectProps.value || ""}
-      className={props.field.tooltip ? " tooltip select" : "select"}
+      className={props.field.tooltip ? " tooltip" : "select"}
     >
       <Select {...selectProps}>
         {selectProps.groups.map((value) => (
@@ -88,7 +88,6 @@ const DynamicFormToggle = (props) => {
 };
 
 DynamicFormToggle.propTypes = {
-  useOnOff: PropTypes.bool.isRequired,
   tooltip: PropTypes.shape({
     content: PropTypes.string.isRequired,
     link: PropTypes.string,
