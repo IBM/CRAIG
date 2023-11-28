@@ -13,7 +13,6 @@ import {
   AccessGroupsTemplate,
   AppIdTemplate,
   AtrackerPage,
-  ClassicVlanTemplate,
   CloudDatabaseTemplate,
   ClustersTemplate,
   DnsTemplate,
@@ -27,7 +26,6 @@ import {
   ObjectStorageTemplate,
   RoutingTableTemplate,
   SshKeysTemplate,
-  TransitGatewayTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
   VpcTemplate,
@@ -951,8 +949,8 @@ const SecretsManagerPage = (craig) => {
       craig={craig}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={invalidName("secrets_manager")}
-      invalidTextCallback={invalidNameText("secrets_manager")}
+      invalidCallback={craig.secrets_manager.name.invalid}
+      invalidTextCallback={craig.secrets_manager.name.invalidText}
       secrets={craig.getAllResourceKeys()}
       docs={RenderDocs("secrets_manager", craig.store.json._options.template)}
     />

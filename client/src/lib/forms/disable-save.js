@@ -9,7 +9,6 @@ const {
   flatten,
   splat,
   isWholeNumber,
-  anyAreEmpty,
   nullOrEmptyStringFields,
 } = require("lazy-z");
 const {
@@ -123,19 +122,6 @@ function disableBucketsSave(stateData, componentProps) {
   return (
     invalidName("buckets")(stateData, componentProps) ||
     badField("kms_key", stateData)
-  );
-}
-
-/**
- * check to see if secrets manager form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSecretsManagerSave(stateData, componentProps) {
-  return (
-    invalidName("secrets_manager")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["encryption_key", "resource_group"])
   );
 }
 
@@ -328,7 +314,6 @@ const disableSaveFunctions = {
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
-  secrets_manager: disableSecretsManagerSave,
   iam_account_settings: disableIamAccountSettingsSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
@@ -392,6 +377,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "tags",
     "virtual_private_endpoints",
     "vpn_gateways",
+    "secrets_manager",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (containsKeys(disableSaveFunctions, field)) {

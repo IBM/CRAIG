@@ -35,12 +35,7 @@ const {
 } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
-const {
-  secretsManagerOnStoreUpdate,
-  secretsManagerCreate,
-  secretsManagerSave,
-  secretsManagerDelete,
-} = require("./secrets-manager");
+const { initSecretsManagerStore } = require("./secrets-manager");
 const {
   iamInit,
   iamSave,
@@ -233,16 +228,7 @@ const state = function (legacy) {
 
   initLoadBalancers(store);
   initEventStreams(store);
-
-  store.newField("secrets_manager", {
-    init: (config) => {
-      config.store.json.secrets_manager = [];
-    },
-    onStoreUpdate: secretsManagerOnStoreUpdate,
-    create: secretsManagerCreate,
-    save: secretsManagerSave,
-    delete: secretsManagerDelete,
-  });
+  initSecretsManagerStore(store);
 
   store.newField("iam_account_settings", {
     init: iamInit,

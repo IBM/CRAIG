@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 describe("secrets manager", () => {
   it("should return true if a secrets manager instance has an invalid name", () => {
@@ -12,20 +12,7 @@ describe("secrets manager", () => {
           encryption_key: "key",
         },
         {
-          craig: {
-            store: {
-              json: {
-                secrets_manager: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "frog",
           },
@@ -40,17 +27,7 @@ describe("secrets manager", () => {
         "secrets_manager",
         { name: "frog", resource_group: null, use_data: false },
         {
-          craig: {
-            store: {
-              json: {
-                secrets_manager: [
-                  {
-                    name: "frog",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
@@ -70,17 +47,7 @@ describe("secrets manager", () => {
           use_data: false,
         },
         {
-          craig: {
-            store: {
-              json: {
-                secrets_manager: [
-                  {
-                    name: "frog",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
