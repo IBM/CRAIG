@@ -9,9 +9,10 @@ const {
   revision,
   isNullOrEmptyString,
   isEmpty,
+  validPortRange,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
-const { RegexButWithWords } = require("regex-but-with-words");
+
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -407,6 +408,51 @@ function isIpStringInvalid(value) {
   return false;
 }
 
+/**
+ * test if a rule has an invalid port
+ * @param {*} rule
+ * @param {boolean=} isSecurityGroup
+ * @returns {boolean} true if port is invalid
+ */
+function invalidPort(rule, isSecurityGroup) {
+  let hasInvalidPort = false;
+  if (rule.ruleProtocol !== "all") {
+    (rule.ruleProtocol === "icmp"
+      ? ["type", "code"]
+      : isSecurityGroup
+      ? ["port_min", "port_max"]
+      : ["port_min", "port_max", "source_port_min", "source_port_max"]
+    ).forEach((type) => {
+      if (rule.rule[type] && !hasInvalidPort) {
+        hasInvalidPort = !validPortRange(type, rule.rule[type]);
+      }
+    });
+  }
+  return hasInvalidPort;
+}
+
+/**
+ * invalid tcp or udp callback function
+ * @param {*} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidTcpOrUdpPort(stateData) {
+  return contains(["all", "icmp"], stateData.ruleProtocol)
+    ? false
+    : invalidPort(stateData);
+}
+
+/**
+ * invalid icmp code or type callback
+ * @param {*} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidIcmpCodeOrType(stateData) {
+  return contains(["all", "tcp", "udp"], stateData.ruleProtocol)
+    ? false
+    : invalidPort(stateData);
+}
+
 module.exports = {
   formatNetworkingRule,
   updateNetworkingRule,
@@ -418,4 +464,7 @@ module.exports = {
   shouldDisableComponentSave,
   isIpStringInvalid,
   fieldIsEmpty,
+  invalidTcpOrUdpPort,
+  invalidIcmpCodeOrType,
+  invalidPort,
 };

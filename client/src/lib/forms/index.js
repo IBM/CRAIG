@@ -49,7 +49,6 @@ const {
 const { propsMatchState } = require("./props-match-state");
 const {
   disableSave,
-  invalidPort,
   forceShowForm,
   disableSshKeyDelete,
   invalidCidrBlock,
@@ -88,7 +87,6 @@ module.exports = {
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
   validSshKey,
-  invalidPort,
   invalidTagList,
   aclHelperTextCallback,
   invalidSubnetTierName,

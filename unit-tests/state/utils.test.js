@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const {
   formatNetworkingRule,
   updateNetworkingRule,
+  invalidPort,
 } = require("../../client/src/lib/state/utils");
 
 describe("utils", () => {
@@ -339,6 +340,52 @@ describe("utils", () => {
       };
       updateNetworkingRule(false, data, networkRule);
       assert.deepEqual(data, expectedData, "it should be equal");
+    });
+  });
+  describe("invalidPort", () => {
+    it("should return false if rule protocol all", () => {
+      assert.isFalse(
+        invalidPort({
+          ruleProtocol: "all",
+        }),
+        "it should be false"
+      );
+    });
+    it("should return true if rule protocol is icmp and invalid field", () => {
+      assert.isTrue(
+        invalidPort({
+          ruleProtocol: "icmp",
+          rule: {
+            code: 10000,
+          },
+        }),
+        "it should be false"
+      );
+    });
+    it("should return true if rule protocol is not icmp and invalid field", () => {
+      assert.isTrue(
+        invalidPort({
+          ruleProtocol: "udp",
+          rule: {
+            port_min: 1000000,
+          },
+        }),
+        "it should be false"
+      );
+    });
+    it("should return true if rule protocol is not icmp and invalid field and security group", () => {
+      assert.isTrue(
+        invalidPort(
+          {
+            ruleProtocol: "udp",
+            rule: {
+              port_min: 1000000,
+            },
+          },
+          true
+        ),
+        "it should be false"
+      );
     });
   });
 });

@@ -974,14 +974,17 @@ const SecurityGroupPage = (craig) => {
         forceOpen={forceShowForm}
         craig={craig}
         resourceGroups={splat(craig.store.json.resource_groups, "name")}
-        invalidCallback={invalidName("security_groups")}
-        invalidTextCallback={invalidNameText("security_groups")}
+        invalidCallback={craig.security_groups.name.invalid}
+        invalidTextCallback={craig.security_groups.name.invalidText}
         disableSaveCallback={function (stateData, componentProps) {
           return (
             propsMatchState("sg_rules", stateData, componentProps) ||
             disableSave("sg_rules", stateData, componentProps)
           );
         }}
+        // due to the complex table and the way these are rendered it is
+        // unlikely that a dynamic form is practical to use for the creation
+        // of sg rules, so I'm fine leaving these as is
         invalidRuleText={invalidSecurityGroupRuleName}
         invalidRuleTextCallback={invalidSecurityGroupRuleText}
         onSubmitCallback={craig.security_groups.rules.create}

@@ -12,52 +12,6 @@ describe("disableSave", () => {
   it("should otherwise return false", () => {
     assert.isFalse(disableSave("pretend_field", {}, {}), "it should be false");
   });
-  describe("invalidPort", () => {
-    it("should return false if rule protocol all", () => {
-      assert.isFalse(
-        invalidPort({
-          ruleProtocol: "all",
-        }),
-        "it should be false"
-      );
-    });
-    it("should return true if rule protocol is icmp and invalid field", () => {
-      assert.isTrue(
-        invalidPort({
-          ruleProtocol: "icmp",
-          rule: {
-            code: 10000,
-          },
-        }),
-        "it should be false"
-      );
-    });
-    it("should return true if rule protocol is not icmp and invalid field", () => {
-      assert.isTrue(
-        invalidPort({
-          ruleProtocol: "udp",
-          rule: {
-            port_min: 1000000,
-          },
-        }),
-        "it should be false"
-      );
-    });
-    it("should return true if rule protocol is not icmp and invalid field and security group", () => {
-      assert.isTrue(
-        invalidPort(
-          {
-            ruleProtocol: "udp",
-            rule: {
-              port_min: 1000000,
-            },
-          },
-          true
-        ),
-        "it should be false"
-      );
-    });
-  });
   describe("forceShowForm", () => {
     it("should force forms open if save is disabled and data does not have field of enable", () => {
       assert.isTrue(
