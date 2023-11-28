@@ -348,6 +348,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "worker_pools",
     "opaque_secrets",
     "icd",
+    "options",
     "atracker",
     "resource_groups",
     "key_management",

@@ -1,6 +1,6 @@
 const { lazyZstate } = require("lazy-z/lib/store");
 const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
-const { optionsInit, optionsSave } = require("./options");
+const { initOptions } = require("./options");
 const { initKeyManagement } = require("./key-management");
 const { initResourceGroup } = require("./resource-groups");
 const { initObjectStorageStore } = require("./cos");
@@ -9,17 +9,7 @@ const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc");
 const { sccInit, sccSave, sccDelete } = require("./scc");
 const { initSshKeyStore } = require("./ssh-keys.js");
-const {
-  securityGroupInit,
-  securityGroupOnStoreUpdate,
-  securityGroupCreate,
-  securityGroupSave,
-  securityGroupDelete,
-  securityGroupRulesCreate,
-  securityGroupRulesSave,
-  securityGroupRulesDelete,
-  initSecurityGroupStore,
-} = require("./security-groups");
+const { initSecurityGroupStore } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways");
 const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
@@ -179,10 +169,7 @@ const state = function (legacy) {
     createEdgeVpc(store, pattern, managementVpc, zones);
   };
 
-  store.newField("options", {
-    init: optionsInit,
-    save: optionsSave,
-  });
+  initOptions(store);
 
   initResourceGroup(store);
   // components must check for key management second
