@@ -1,6 +1,6 @@
 const { lazyZstate } = require("lazy-z/lib/store");
 const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
-const { optionsInit, optionsSave } = require("./options");
+const { initOptions } = require("./options");
 const { initKeyManagement } = require("./key-management");
 const { initResourceGroup } = require("./resource-groups");
 const { initObjectStorageStore } = require("./cos");
@@ -9,17 +9,7 @@ const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc");
 const { sccInit, sccSave, sccDelete } = require("./scc");
 const { initSshKeyStore } = require("./ssh-keys.js");
-const {
-  securityGroupInit,
-  securityGroupOnStoreUpdate,
-  securityGroupCreate,
-  securityGroupSave,
-  securityGroupDelete,
-  securityGroupRulesCreate,
-  securityGroupRulesSave,
-  securityGroupRulesDelete,
-  initSecurityGroupStore,
-} = require("./security-groups");
+const { initSecurityGroupStore } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways");
 const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
@@ -35,12 +25,7 @@ const {
 } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
-const {
-  secretsManagerOnStoreUpdate,
-  secretsManagerCreate,
-  secretsManagerSave,
-  secretsManagerDelete,
-} = require("./secrets-manager");
+const { initSecretsManagerStore } = require("./secrets-manager");
 const {
   iamInit,
   iamSave,
@@ -184,10 +169,7 @@ const state = function (legacy) {
     createEdgeVpc(store, pattern, managementVpc, zones);
   };
 
-  store.newField("options", {
-    init: optionsInit,
-    save: optionsSave,
-  });
+  initOptions(store);
 
   initResourceGroup(store);
   // components must check for key management second
@@ -233,16 +215,7 @@ const state = function (legacy) {
 
   initLoadBalancers(store);
   initEventStreams(store);
-
-  store.newField("secrets_manager", {
-    init: (config) => {
-      config.store.json.secrets_manager = [];
-    },
-    onStoreUpdate: secretsManagerOnStoreUpdate,
-    create: secretsManagerCreate,
-    save: secretsManagerSave,
-    delete: secretsManagerDelete,
-  });
+  initSecretsManagerStore(store);
 
   store.newField("iam_account_settings", {
     init: iamInit,

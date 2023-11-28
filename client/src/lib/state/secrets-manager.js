@@ -1,5 +1,10 @@
+const { invalidName, invalidNameText } = require("../forms");
 const { setUnfoundResourceGroup } = require("./store.utils");
-const { setKmsFromKeyOnStoreUpdate } = require("./utils");
+const {
+  setKmsFromKeyOnStoreUpdate,
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
 
 /**
  * secrets manager on store update
@@ -60,9 +65,45 @@ function secretsManagerDelete(config, stateData, componentProps) {
   config.carve(["json", "secrets_manager"], componentProps.data.name);
 }
 
+/**
+ * create secrets manager store
+ * @param {*} store
+ */
+function initSecretsManagerStore(store) {
+  store.newField("secrets_manager", {
+    init: (config) => {
+      config.store.json.secrets_manager = [];
+    },
+    onStoreUpdate: secretsManagerOnStoreUpdate,
+    create: secretsManagerCreate,
+    save: secretsManagerSave,
+    delete: secretsManagerDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "resource_group", "encryption_key"],
+      "secrets_manager"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("secrets_manager"),
+        invalidText: invalidNameText("secrets_manager"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      encryption_key: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("encryption_key"),
+      },
+    },
+  });
+}
+
 module.exports = {
   secretsManagerOnStoreUpdate,
   secretsManagerCreate,
   secretsManagerSave,
   secretsManagerDelete,
+  initSecretsManagerStore,
 };
