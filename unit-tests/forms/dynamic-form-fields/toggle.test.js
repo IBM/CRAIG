@@ -77,6 +77,49 @@ describe("dynamic toggle", () => {
         "it should return correct props"
       );
     });
+    it("should return props form properly formatted toggle with on render", () => {
+      let toggleData;
+      let actualData = dynamicToggleProps({
+        parentProps: {},
+        parentState: {},
+        name: "use_data",
+        propsName: "data-name",
+        field: {
+          disabled: function () {
+            return false;
+          },
+          labelText: "Use Data",
+          onRender: function () {
+            return true;
+          },
+        },
+        handleInputChange: function (name) {
+          toggleData = name;
+        },
+      });
+      let expectedData = {
+        className: "leftTextAlign fitContent fieldWidth cds--form-item",
+        defaultToggled: true,
+        id: "use-data-toggle-data-name",
+        labelA: "False",
+        labelB: "True",
+        labelText: "Use Data",
+        disabled: false,
+      };
+      assert.isFunction(actualData.onToggle, "it should be a function");
+      actualData.onToggle();
+      assert.deepEqual(
+        toggleData,
+        "use_data",
+        "it should return name to parent function"
+      );
+      delete actualData.onToggle;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct props"
+      );
+    });
     it("should return props form properly formatted toggle with tooltip", () => {
       let toggleData;
       let actualData = dynamicToggleProps({
