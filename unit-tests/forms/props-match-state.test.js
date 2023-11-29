@@ -225,7 +225,7 @@ describe("propsMatchState", () => {
             enable_classic: false,
             enable_power_vs: false,
             power_vs_zones: [],
-            craig_version: "1.6.1",
+            craig_version: "1.7.0",
           },
           {
             craig: {
@@ -243,7 +243,7 @@ describe("propsMatchState", () => {
                     enable_classic: false,
                     enable_power_vs: false,
                     power_vs_zones: [],
-                    craig_version: "1.6.1",
+                    craig_version: "1.7.0",
                   },
                 },
               },

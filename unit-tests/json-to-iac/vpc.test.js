@@ -3654,7 +3654,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           dynamic_subnets: false,
           enable_power_vs: true,
           power_vs_zones: ["us-south"],
-          craig_version: "1.6.1",
+          craig_version: "1.7.0",
           template: "Power VS SAP Hana",
         },
         access_groups: [],

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.0
+
+### Upgrade Notes
+
+- Transit Gateways require the field `gre_tunnels`. To update existing JSON use the update banner at the top of the screen.
+
+### Features
+
+- Users can now create GRE Tunnels for Classic Gateways from the Transit Gateways page.
+
+### Fixes
+
+
 ## 1.6.1
 
 ### Upgrade Notes

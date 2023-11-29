@@ -3,6 +3,7 @@ import {
   buildFormFunctions,
   DynamicToolTipWrapper,
   IcseFormGroup,
+  IcseFormTemplate,
   IcseHeading,
   RenderForm,
 } from "icse-react-assets";
@@ -14,6 +15,11 @@ import {
   DynamicMultiSelect,
 } from "./dynamic-form/components";
 import { titleCase, eachKey, kebabCase, isBoolean, contains } from "lazy-z";
+import { propsMatchState } from "../../lib";
+import {
+  ClassicDisabledTile,
+  NoClassicGatewaysTile,
+} from "./dynamic-form/tiles";
 
 const doNotRenderFields = [
   "heading",
@@ -156,6 +162,64 @@ class DynamicForm extends React.Component {
             </IcseFormGroup>
           )
         )}
+        {this.props.isModal === true || !this.props.form.subForms
+          ? ""
+          : this.props.form.subForms.map((subForm) => (
+              <IcseFormTemplate
+                key={subForm.name}
+                overrideTile={
+                  // this is currently messy, we'll need to figure out a better solution
+                  subForm.jsonField === "gre_tunnels" &&
+                  !this.props.craig.store.json._options.enable_classic ? (
+                    ClassicDisabledTile(true)
+                  ) : subForm.jsonField === "gre_tunnels" &&
+                    this.props.craig.store.json.classic_gateways.length ===
+                      0 ? (
+                    <NoClassicGatewaysTile />
+                  ) : undefined
+                }
+                hideFormTitleButton={
+                  subForm.hideFormTitleButton
+                    ? subForm.hideFormTitleButton(this.state, this.props)
+                    : false
+                }
+                name={subForm.name}
+                subHeading
+                addText={subForm.createText}
+                arrayData={this.props.data[subForm.jsonField]}
+                innerForm={DynamicForm}
+                disableSave={this.props.disableSave}
+                onDelete={
+                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
+                    .delete
+                }
+                onSave={
+                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
+                    .save
+                }
+                onSubmit={
+                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
+                    .create
+                }
+                propsMatchState={propsMatchState}
+                innerFormProps={{
+                  formName: subForm.name,
+                  craig: this.props.craig,
+                  form: subForm.form,
+                  disableSave: this.props.disableSave,
+                  arrayParentName: this.props.data.name,
+                  propsMatchState: propsMatchState,
+                }}
+                toggleFormFieldName={subForm.toggleFormFieldName}
+                hideAbout
+                toggleFormProps={{
+                  hideName: true,
+                  submissionFieldName: subForm.jsonField,
+                  disableSave: this.props.disableSave,
+                  type: "formInSubForm",
+                }}
+              />
+            ))}
       </div>
     );
   }

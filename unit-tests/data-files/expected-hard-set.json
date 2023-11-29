@@ -865,7 +865,8 @@
           "tgw": "transit-gateway",
           "vpc": "workload"
         }
-      ]
+      ],
+      "gre_tunnels": []
     }
   ],
   "clusters": [

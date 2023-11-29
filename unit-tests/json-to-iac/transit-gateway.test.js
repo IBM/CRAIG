@@ -206,7 +206,8 @@ resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection"
           name: "transit-gateway",
           resource_group: "slz-service-rg",
           global: false,
-          connections: [
+          connections: [],
+          gre_tunnels: [
             {
               tgw: "transit-gateway",
               remote_bgp_asn: 12345,
@@ -216,7 +217,7 @@ resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection"
               remote_tunnel_ip: "1.2.3.4",
             },
           ],
-        }.connections[0],
+        }.gre_tunnels[0],
         slzNetwork
       );
       let expectedData = `
@@ -226,6 +227,49 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
   name              = "\${var.prefix}-transit-gateway-gw-unbound-gre-hub-connection"
   base_network_type = "classic"
   remote_bgp_asn    = 12345
+  zone              = "\${var.region}-1"
+  local_gateway_ip  = ibm_network_gateway.classic_gateway_gw.private_ipv4_address
+  remote_gateway_ip = ibm_network_gateway.classic_gateway_gw.public_ipv4_address
+  local_tunnel_ip   = "1.2.3.4"
+  remote_tunnel_ip  = "1.2.3.4"
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should correctly format a tgw connection with a GRE tunnel with empty string asn", () => {
+      let actualData = formatTgwConnection(
+        {
+          name: "transit-gateway",
+          resource_group: "slz-service-rg",
+          global: false,
+          connections: [],
+          gre_tunnels: [
+            {
+              tgw: "transit-gateway",
+              remote_bgp_asn: "",
+              zone: 1,
+              gateway: "gw",
+              local_tunnel_ip: "1.2.3.4",
+              remote_tunnel_ip: "1.2.3.4",
+            },
+          ],
+        }.gre_tunnels[0],
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
+  gateway           = ibm_tg_gateway.transit_gateway.id
+  network_type      = "unbound_gre_tunnel"
+  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre-hub-connection"
+  base_network_type = "classic"
   zone              = "\${var.region}-1"
   local_gateway_ip  = ibm_network_gateway.classic_gateway_gw.private_ipv4_address
   remote_gateway_ip = ibm_network_gateway.classic_gateway_gw.public_ipv4_address
@@ -310,6 +354,16 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
               vpc: "workload",
             },
           ],
+          gre_tunnels: [
+            {
+              tgw: "transit-gateway",
+              remote_bgp_asn: 12345,
+              zone: 1,
+              gateway: "gw",
+              local_tunnel_ip: "1.2.3.4",
+              remote_tunnel_ip: "1.2.3.4",
+            },
+          ],
         },
         {
           global: true,
@@ -356,6 +410,23 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
   network_type = "vpc"
   name         = "\${var.prefix}-transit-gateway-workload-hub-connection"
   network_id   = module.workload_vpc.crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
+  gateway           = ibm_tg_gateway.transit_gateway.id
+  network_type      = "unbound_gre_tunnel"
+  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre-hub-connection"
+  base_network_type = "classic"
+  remote_bgp_asn    = 12345
+  zone              = "\${var.region}-1"
+  local_gateway_ip  = ibm_network_gateway.classic_gateway_gw.private_ipv4_address
+  remote_gateway_ip = ibm_network_gateway.classic_gateway_gw.public_ipv4_address
+  local_tunnel_ip   = "1.2.3.4"
+  remote_tunnel_ip  = "1.2.3.4"
   timeouts {
     create = "30m"
     delete = "30m"
