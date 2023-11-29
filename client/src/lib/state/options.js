@@ -1,7 +1,9 @@
-const { revision } = require("lazy-z");
+const { revision, deepEqual, isEmpty } = require("lazy-z");
 const { subnetTierSave } = require("./vpc");
 const { RegexButWithWords } = require("regex-but-with-words");
+const { invalidNewResourceName, invalidTagList } = require("../forms");
 const releaseNotes = require("../docs/release-notes.json");
+const { shouldDisableComponentSave } = require("./utils");
 
 /**
  * initialize options
@@ -85,7 +87,42 @@ function optionsSave(config, stateData, componentProps) {
   }
 }
 
+function initOptions(store) {
+  store.newField("options", {
+    init: optionsInit,
+    save: optionsSave,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["prefix", "tags", "power_vs_zones"],
+      "options"
+    ),
+    schema: {
+      prefix: {
+        default: "iac",
+        invalid: function (stateData, componentProps) {
+          return invalidNewResourceName(stateData.prefix);
+        },
+      },
+      tags: {
+        default: ["hello", "world"],
+        invalid: function (stateData, componentProps) {
+          return invalidTagList(stateData.tags);
+        },
+      },
+      power_vs_zones: {
+        default: [],
+        invalid: function (stateData) {
+          return (
+            stateData.enable_power_vs &&
+            (!stateData.power_vs_zones || isEmpty(stateData.power_vs_zones))
+          );
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   optionsInit,
   optionsSave,
+  initOptions,
 };

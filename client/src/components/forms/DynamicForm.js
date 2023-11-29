@@ -3,6 +3,8 @@ import {
   buildFormFunctions,
   DynamicToolTipWrapper,
   IcseFormGroup,
+  IcseFormTemplate,
+  IcseHeading,
   RenderForm,
 } from "icse-react-assets";
 import {
@@ -12,7 +14,19 @@ import {
   DynamicTextArea,
   DynamicMultiSelect,
 } from "./dynamic-form/components";
-import { titleCase, eachKey, kebabCase } from "lazy-z";
+import { titleCase, eachKey, kebabCase, isBoolean, contains } from "lazy-z";
+import { propsMatchState } from "../../lib";
+import {
+  ClassicDisabledTile,
+  NoClassicGatewaysTile,
+} from "./dynamic-form/tiles";
+
+const doNotRenderFields = [
+  "heading",
+  "vpc_connections",
+  "power_connections",
+  "hideWhen",
+];
 
 class DynamicForm extends React.Component {
   constructor(props) {
@@ -20,31 +34,66 @@ class DynamicForm extends React.Component {
     this.state = {
       ...this.props.data,
     };
+
+    // set unfound parameters to data
     this.props.form.groups.forEach((group) => {
       eachKey(group, (field) => {
-        if (!this.state[field]) this.state[field] = group[field].default || "";
+        // prevent `false` boolean values from populating
+        if (
+          !this.state[field] &&
+          !isBoolean(this.state[field]) &&
+          !contains(doNotRenderFields, field)
+        )
+          this.state[field] = group[field].default || "";
       });
     });
+
+    // set default for fields that are not explicitly declared
+    // ex. transit gateway connections
+    if (this.props.form.setDefault) {
+      eachKey(this.props.form.setDefault, (defaultKey) => {
+        if (!this.state[defaultKey] && !isBoolean(this.state[defaultKey])) {
+          this.state[defaultKey] = this.props.form.setDefault[defaultKey];
+        }
+      });
+    }
+
+    // import functionality to allow form to work with form template
     buildFormFunctions(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
   }
 
+  /**
+   * handle input change
+   * @param {*} event
+   */
   handleInputChange(event) {
     let nextState = { ...this.state };
     let { name, value } = event.target;
     nextState[name] = value;
+    // for each form group
     this.props.form.groups.forEach((group) => {
+      // for each item in that group
       eachKey(group, (field) => {
-        // run only when field is name
         if (group[field].onInputChange && name === field) {
+          // if the item has onInputChange function, set field on next state
+          // to that value
           nextState[field] = group[field].onInputChange(nextState);
+        } else if (group[field].onStateChange && name === field) {
+          // if the item has onStateChange function, run against whole
+          // state copy
+          group[field].onStateChange(nextState);
         }
       });
     });
     this.setState(nextState);
   }
 
+  /**
+   * handle toggle
+   * @param {string} toggleName field name for toggle
+   */
   handleToggle(toggleName) {
     this.setState({ [toggleName]: !this.state[toggleName] });
   }
@@ -58,6 +107,12 @@ class DynamicForm extends React.Component {
         {this.props.form.groups.map((group, index) =>
           group.hideWhen && group.hideWhen(this.state) ? (
             ""
+          ) : group.heading ? (
+            <IcseHeading
+              name={group.heading.name}
+              type={group.heading.type}
+              key={"heading-" + group.heading.name}
+            />
           ) : (
             <IcseFormGroup key={propsName + "-group-" + index}>
               {Object.keys(group).map((key, keyIndex) => {
@@ -76,7 +131,6 @@ class DynamicForm extends React.Component {
                     labelText={
                       field.labelText ? field.labelText : titleCase(key)
                     }
-                    className="labelRow marginBottomSelectTooltipWrapper"
                   >
                     {RenderForm(
                       field.type === "select"
@@ -108,6 +162,64 @@ class DynamicForm extends React.Component {
             </IcseFormGroup>
           )
         )}
+        {this.props.isModal === true || !this.props.form.subForms
+          ? ""
+          : this.props.form.subForms.map((subForm) => (
+              <IcseFormTemplate
+                key={subForm.name}
+                overrideTile={
+                  // this is currently messy, we'll need to figure out a better solution
+                  subForm.jsonField === "gre_tunnels" &&
+                  !this.props.craig.store.json._options.enable_classic ? (
+                    ClassicDisabledTile(true)
+                  ) : subForm.jsonField === "gre_tunnels" &&
+                    this.props.craig.store.json.classic_gateways.length ===
+                      0 ? (
+                    <NoClassicGatewaysTile />
+                  ) : undefined
+                }
+                hideFormTitleButton={
+                  subForm.hideFormTitleButton
+                    ? subForm.hideFormTitleButton(this.state, this.props)
+                    : false
+                }
+                name={subForm.name}
+                subHeading
+                addText={subForm.createText}
+                arrayData={this.props.data[subForm.jsonField]}
+                innerForm={DynamicForm}
+                disableSave={this.props.disableSave}
+                onDelete={
+                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
+                    .delete
+                }
+                onSave={
+                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
+                    .save
+                }
+                onSubmit={
+                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
+                    .create
+                }
+                propsMatchState={propsMatchState}
+                innerFormProps={{
+                  formName: subForm.name,
+                  craig: this.props.craig,
+                  form: subForm.form,
+                  disableSave: this.props.disableSave,
+                  arrayParentName: this.props.data.name,
+                  propsMatchState: propsMatchState,
+                }}
+                toggleFormFieldName={subForm.toggleFormFieldName}
+                hideAbout
+                toggleFormProps={{
+                  hideName: true,
+                  submissionFieldName: subForm.jsonField,
+                  disableSave: this.props.disableSave,
+                  type: "formInSubForm",
+                }}
+              />
+            ))}
       </div>
     );
   }

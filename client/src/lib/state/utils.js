@@ -9,9 +9,13 @@ const {
   revision,
   isNullOrEmptyString,
   isEmpty,
+  splat,
+  validPortRange,
+  isIpv4CidrOrAddress,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
-const { RegexButWithWords } = require("regex-but-with-words");
+const { invalidName } = require("../forms/invalid-callbacks");
+const { invalidNameText } = require("../forms/text-callbacks");
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -407,7 +411,127 @@ function isIpStringInvalid(value) {
   return false;
 }
 
+/**
+ * name helper text
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} composed name with prefix prepended
+ */
+function nameHelperText(stateData, componentProps) {
+  return `${
+    stateData.use_data
+      ? ""
+      : componentProps.craig.store.json._options.prefix + "-"
+  }${stateData.name}`;
+}
+
+/**
+ * default for select
+ * @param {*} field
+ * @returns {string} select text
+ */
+function selectInvalidText(field) {
+  return function () {
+    return `Select a ${field}`;
+  };
+}
+
+/**
+ * name field
+ * @param {*} jsonField
+ * @returns {Object} name field
+ */
+function nameField(jsonField) {
+  return {
+    default: "",
+    invalid: invalidName(jsonField),
+    invalidText: invalidNameText(jsonField),
+    helperText: nameHelperText,
+  };
+}
+
+/**
+ * resource group
+ * @param {Function=} hideWhen
+ * @returns {object} object for resource groups page
+ */
+function resourceGroupsField(hideWhen) {
+  return {
+    default: "",
+    invalid: fieldIsNullOrEmptyString("resource_group"),
+    invalidText: selectInvalidText("resource_group"),
+    type: "select",
+    groups: function (stateData, componentProps) {
+      return splat(componentProps.craig.store.json.resource_groups, "name");
+    },
+    hideWhen: hideWhen,
+  };
+}
+
+/*
+ * test if a rule has an invalid port
+ * @param {*} rule
+ * @param {boolean=} isSecurityGroup
+ * @returns {boolean} true if port is invalid
+ */
+function invalidPort(rule, isSecurityGroup) {
+  let hasInvalidPort = false;
+  if (rule.ruleProtocol !== "all") {
+    (rule.ruleProtocol === "icmp"
+      ? ["type", "code"]
+      : isSecurityGroup
+      ? ["port_min", "port_max"]
+      : ["port_min", "port_max", "source_port_min", "source_port_max"]
+    ).forEach((type) => {
+      if (rule.rule[type] && !hasInvalidPort) {
+        hasInvalidPort = !validPortRange(type, rule.rule[type]);
+      }
+    });
+  }
+  return hasInvalidPort;
+}
+
+/**
+ * invalid tcp or udp callback function
+ * @param {*} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidTcpOrUdpPort(stateData) {
+  return contains(["all", "icmp"], stateData.ruleProtocol)
+    ? false
+    : invalidPort(stateData);
+}
+
+/**
+ * invalid icmp code or type callback
+ * @param {*} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidIcmpCodeOrType(stateData) {
+  return contains(["all", "tcp", "udp"], stateData.ruleProtocol)
+    ? false
+    : invalidPort(stateData);
+}
+
+/**
+ * return validation function if value is not a valid IPV4 IP address
+ * @param {*} field
+ */
+function invalidIpv4Address(field) {
+  return function (stateData) {
+    return (
+      !isIpv4CidrOrAddress(stateData[field]) || contains(stateData[field], "/")
+    );
+  };
+}
+
+function invalidIpv4AddressText() {
+  return "Enter a valid IP address";
+}
+
 module.exports = {
+  invalidIpv4Address,
+  invalidIpv4AddressText,
   formatNetworkingRule,
   updateNetworkingRule,
   eachRuleProtocol,
@@ -418,4 +542,11 @@ module.exports = {
   shouldDisableComponentSave,
   isIpStringInvalid,
   fieldIsEmpty,
+  nameHelperText,
+  selectInvalidText,
+  resourceGroupsField,
+  nameField,
+  invalidTcpOrUdpPort,
+  invalidIcmpCodeOrType,
+  invalidPort,
 };

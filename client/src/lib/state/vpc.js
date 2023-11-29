@@ -32,6 +32,8 @@ const {
   updateNetworkingRule,
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  invalidTcpOrUdpPort,
+  invalidIcmpCodeOrType,
 } = require("./utils");
 const { calculateNeededSubnetIps, getNextCidr } = require("../json-to-iac");
 const {
@@ -1090,51 +1092,27 @@ function naclRuleSubComponents() {
         },
         port_min: {
           default: "",
-          invalid: function (stateData) {
-            return contains(["all", "icmp"], stateData.ruleProtocol)
-              ? false
-              : invalidPort(stateData);
-          },
+          invalid: invalidTcpOrUdpPort,
         },
         port_max: {
           default: "",
-          invalid: function (stateData) {
-            return contains(["all", "icmp"], stateData.ruleProtocol)
-              ? false
-              : invalidPort(stateData);
-          },
+          invalid: invalidTcpOrUdpPort,
         },
         source_port_min: {
           default: "",
-          invalid: function (stateData) {
-            return contains(["all", "icmp"], stateData.ruleProtocol)
-              ? false
-              : invalidPort(stateData);
-          },
+          invalid: invalidTcpOrUdpPort,
         },
         source_port_max: {
           default: "",
-          invalid: function (stateData) {
-            return contains(["all", "icmp"], stateData.ruleProtocol)
-              ? false
-              : invalidPort(stateData);
-          },
+          invalid: invalidTcpOrUdpPort,
         },
         type: {
           default: "",
-          invalid: function (stateData) {
-            return contains(["all", "tcp", "udp"], stateData.ruleProtocol)
-              ? false
-              : invalidPort(stateData);
-          },
+          invalid: invalidIcmpCodeOrType,
         },
         code: {
           default: "",
-          invalid: function (stateData) {
-            return contains(["all", "tcp", "udp"], stateData.ruleProtocol)
-              ? false
-              : invalidPort(stateData);
-          },
+          invalid: invalidIcmpCodeOrType,
         },
       },
     },

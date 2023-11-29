@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 describe("vpe", () => {
   it("should return true if a vpe has an invalid name", () => {
@@ -15,60 +15,9 @@ describe("vpe", () => {
           subnets: ["sub", "net"],
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "frog",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vpe has an invalid duplicate name", () => {
-    assert.isTrue(
-      disableSave(
-        "virtual_private_endpoints",
-        {
-          name: "aaa",
-          vpc: "capybara",
-          service: "debug",
-          resource_group: "what",
-          security_groups: ["security", "group"],
-          subnets: ["sub", "net"],
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                  {
-                    name: "aaa",
-                  },
-                ],
-              },
-            },
-          },
-          data: {
-            name: "hi",
           },
         }
       ),
@@ -88,20 +37,30 @@ describe("vpe", () => {
           service: null,
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
+          craig: state(),
+          data: {
+            name: "frog",
           },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if a vpe has secrets manager as service but no instance selected", () => {
+    assert.isTrue(
+      disableSave(
+        "virtual_private_endpoints",
+        {
+          name: "aaa",
+          vpc: "capybara",
+          resource_group: "what",
+          security_groups: ["security", "group"],
+          subnets: ["sub", "net"],
+          service: "secrets-manager",
+          instance: "",
+        },
+        {
+          craig: state(),
           data: {
             name: "frog",
           },
@@ -123,20 +82,7 @@ describe("vpe", () => {
           resource_group: null,
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "frog",
           },
@@ -158,20 +104,8 @@ describe("vpe", () => {
           vpc: null,
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
+
           data: {
             name: "frog",
           },
@@ -193,20 +127,8 @@ describe("vpe", () => {
           security_groups: null,
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
+
           data: {
             name: "frog",
           },
@@ -228,20 +150,7 @@ describe("vpe", () => {
           security_groups: [],
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "frog",
           },
@@ -263,20 +172,8 @@ describe("vpe", () => {
           subnets: null,
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
+
           data: {
             name: "frog",
           },
@@ -298,20 +195,8 @@ describe("vpe", () => {
           subnets: [],
         },
         {
-          craig: {
-            store: {
-              json: {
-                virtual_private_endpoints: [
-                  {
-                    name: "frog",
-                  },
-                  {
-                    name: "toad",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
+
           data: {
             name: "frog",
           },

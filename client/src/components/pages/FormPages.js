@@ -13,7 +13,6 @@ import {
   AccessGroupsTemplate,
   AppIdTemplate,
   AtrackerPage,
-  ClassicVlanTemplate,
   CloudDatabaseTemplate,
   ClustersTemplate,
   DnsTemplate,
@@ -27,7 +26,6 @@ import {
   ObjectStorageTemplate,
   RoutingTableTemplate,
   SshKeysTemplate,
-  TransitGatewayTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
   VpcTemplate,
@@ -52,7 +50,6 @@ import {
   getSubnetTierStateData,
   getTierSubnets,
   invalidCidrBlock,
-  invalidDnsZoneName,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   storageChangeDisabledCallback,
@@ -67,7 +64,6 @@ import {
   invalidIamAccountSettings,
   invalidIdentityProviderURI,
   invalidSshPublicKey,
-  invalidSubnetTierName,
   nullOrEmptyStringCheckCallback,
   invalidDescription,
   replicationDisabledCallback,
@@ -93,8 +89,8 @@ import {
   sapProfiles,
   datacenters,
 } from "../../lib/constants";
-import { tgwVpcFilter } from "../../lib/forms/filters";
 import DynamicForm from "../forms/DynamicForm";
+import { ClassicDisabledTile } from "../forms/dynamic-form/tiles";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -177,18 +173,6 @@ const Atracker = (craig) => {
       cosBuckets={craig.store.cosBuckets}
       onSave={craig.atracker.save}
     />
-  );
-};
-
-const ClassicDisabledTile = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> Classic Infrastructure
-      is not enabled. Enable Classic Infrastructure from the
-      <a className="no-secrets-link" href="/">
-        Options Page.
-      </a>{" "}
-    </Tile>
   );
 };
 
@@ -437,30 +421,32 @@ const DnsPage = (craig) => {
       onSave={craig.dns.save}
       onSubmit={craig.dns.create}
       forceOpen={forceShowForm}
-      invalidTextCallback={invalidNameText("dns")}
-      invalidCallback={invalidName("dns")}
+      invalidCallback={craig.dns.name.invalid}
+      invalidTextCallback={craig.dns.name.invalidText}
       onZoneSave={craig.dns.zones.save}
       onZoneDelete={craig.dns.zones.delete}
       onZoneSubmit={craig.dns.zones.create}
-      invalidZoneNameCallback={invalidDnsZoneName}
-      invalidZoneNameTextCallback={invalidNameText("zones")}
-      invalidLabelCallback={nullOrEmptyStringCheckCallback("label")}
-      invalidDescriptionCallback={invalidDescription}
+      invalidZoneNameCallback={craig.dns.zones.name.invalid}
+      invalidZoneNameTextCallback={craig.dns.zones.name.invalidText}
+      invalidLabelCallback={craig.dns.zones.label.invalid}
+      invalidDescriptionCallback={craig.dns.zones.description.invalid}
       invalidDescriptionTextCallback={invalidDescriptionText}
       vpcList={craig.store.vpcList}
       onRecordSave={craig.dns.records.save}
       onRecordDelete={craig.dns.records.delete}
       onRecordSubmit={craig.dns.records.create}
-      invalidRecordCallback={invalidName("records")}
-      invalidRecordTextCallback={invalidNameText("records")}
-      invalidRdataCallback={nullOrEmptyStringCheckCallback("records")}
+      invalidRecordCallback={craig.dns.records.name.invalid}
+      invalidRecordTextCallback={craig.dns.records.name.invalidText}
+      invalidRdataCallback={craig.dns.records.rdata.invalid}
       dnsZones={nestedSplat(craig.store.json.dns, "zones", "name")}
       onResolverSave={craig.dns.custom_resolvers.save}
       onResolverSubmit={craig.dns.custom_resolvers.create}
       onResolverDelete={craig.dns.custom_resolvers.delete}
-      invalidResolverNameCallback={invalidName("custom_resolvers")}
-      invalidResolverNameTextCallback={invalidNameText("custom_resolvers")}
-      invalidResolverDescriptionCallback={invalidDescription}
+      invalidResolverNameCallback={craig.dns.custom_resolvers.name.invalid}
+      invalidResolverNameTextCallback={
+        craig.dns.custom_resolvers.name.invalidText
+      }
+      invalidResolverDescriptionCallback={craig.dns.custom_resolvers.description.invalid}
       invalidResolverDescriptionTextCallback={invalidDescriptionText}
       subnetList={craig.getAllSubnets()}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
@@ -952,8 +938,8 @@ const SecretsManagerPage = (craig) => {
       craig={craig}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={invalidName("secrets_manager")}
-      invalidTextCallback={invalidNameText("secrets_manager")}
+      invalidCallback={craig.secrets_manager.name.invalid}
+      invalidTextCallback={craig.secrets_manager.name.invalidText}
       secrets={craig.getAllResourceKeys()}
       docs={RenderDocs("secrets_manager", craig.store.json._options.template)}
     />
@@ -974,14 +960,17 @@ const SecurityGroupPage = (craig) => {
         forceOpen={forceShowForm}
         craig={craig}
         resourceGroups={splat(craig.store.json.resource_groups, "name")}
-        invalidCallback={invalidName("security_groups")}
-        invalidTextCallback={invalidNameText("security_groups")}
+        invalidCallback={craig.security_groups.name.invalid}
+        invalidTextCallback={craig.security_groups.name.invalidText}
         disableSaveCallback={function (stateData, componentProps) {
           return (
             propsMatchState("sg_rules", stateData, componentProps) ||
             disableSave("sg_rules", stateData, componentProps)
           );
         }}
+        // due to the complex table and the way these are rendered it is
+        // unlikely that a dynamic form is practical to use for the creation
+        // of sg rules, so I'm fine leaving these as is
         invalidRuleText={invalidSecurityGroupRuleName}
         invalidRuleTextCallback={invalidSecurityGroupRuleText}
         onSubmitCallback={craig.security_groups.rules.create}
@@ -1068,24 +1057,97 @@ const SshKeysPage = (craig) => {
 
 const TransitGatewayPage = (craig) => {
   return (
-    <TransitGatewayTemplate
+    <IcseFormTemplate
+      name="Transit Gateways"
+      addText="Create a Transit Gateway"
       docs={RenderDocs("transit_gateways", craig.store.json._options.template)}
-      transit_gateways={craig.store.json.transit_gateways}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.transit_gateways}
       disableSave={disableSave}
       onDelete={craig.transit_gateways.delete}
       onSave={craig.transit_gateways.save}
       onSubmit={craig.transit_gateways.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.transit_gateways.name.invalid}
-      invalidTextCallback={craig.transit_gateways.name.invalidText}
-      invalidCrns={craig.transit_gateways.crns.invalid}
-      invalidCrnText={craig.transit_gateways.crns.invalidText}
-      vpcList={tgwVpcFilter(craig)}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      power={craig.store.json.power}
-      edgeRouterEnabledZones={edgeRouterEnabledZones}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        formName: "Transit Gateway",
+        form: {
+          jsonField: "transit_gateways",
+          setDefault: {
+            connections: [],
+          },
+          groups: [
+            {
+              use_data: craig.transit_gateways.use_data,
+            },
+            {
+              name: craig.transit_gateways.name,
+              resource_group: craig.transit_gateways.resource_group,
+            },
+            {
+              hideWhen: function (stateData) {
+                return stateData.use_data;
+              },
+              global: craig.transit_gateways.global,
+            },
+            {
+              heading: {
+                name: "Connections",
+                type: "subHeading",
+              },
+            },
+            {
+              vpc_connections: craig.transit_gateways.vpc_connections,
+              power_connections: craig.transit_gateways.power_connections,
+            },
+            // the patterns where existing infrastructure exists are more likely
+            // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
+            // is still supported, but will not be displayed. If we have a request
+            // for that functionality, we should implement
+          ],
+          subForms: [
+            {
+              name: "GRE Tunnels",
+              createText: "Create a GRE Tunnel",
+              jsonField: "gre_tunnels",
+              toggleFormFieldName: "gateway",
+              hideFormTitleButton: function (stateData, componentProps) {
+                return (
+                  !componentProps.craig.store.json._options.enable_classic ||
+                  componentProps.craig.store.json.classic_gateways.length === 0
+                );
+              },
+              form: {
+                groups: [
+                  {
+                    gateway: craig.transit_gateways.gre_tunnels.gateway,
+                    zone: craig.transit_gateways.gre_tunnels.zone,
+                  },
+                  {
+                    local_tunnel_ip:
+                      craig.transit_gateways.gre_tunnels.local_tunnel_ip,
+                    remote_tunnel_ip:
+                      craig.transit_gateways.gre_tunnels.remote_tunnel_ip,
+                  },
+                  {
+                    remote_bgp_asn:
+                      craig.transit_gateways.gre_tunnels.remote_bgp_asn,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "transit_gateways",
+        hide: false,
+        hideName: true,
+      }}
     />
   );
 };
@@ -1180,8 +1242,8 @@ const VpePage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("virtual_private_endpoints")}
-      invalidTextCallback={invalidNameText("virtual_private_endpoints")}
+      invalidCallback={craig.virtual_private_endpoints.name.invalid}
+      invalidTextCallback={craig.virtual_private_endpoints.name.invalidText}
       vpcList={craig.store.vpcList}
       subnetList={craig.getAllSubnets()}
       securityGroups={craig.store.json.security_groups}

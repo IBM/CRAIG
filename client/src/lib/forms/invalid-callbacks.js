@@ -608,45 +608,6 @@ function invalidCbrZone(field, stateData, componentProps) {
 }
 
 /**
- * checks if specific fields relevant to a record type are valid
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if valid
- */
-function validRecord(stateData, componentProps) {
-  if (stateData.type === "MX") {
-    return stateData.preference > 0 && stateData.preference <= 65535;
-  } else if (stateData.type === "SRV") {
-    return (
-      stateData.port >= 1 &&
-      stateData.port <= 65535 &&
-      !isNullOrEmptyString(stateData.protocol) &&
-      stateData.protocol !== undefined &&
-      stateData.priority >= 0 &&
-      stateData.priority <= 65535 &&
-      validService(stateData.service) &&
-      stateData.weight >= 0 &&
-      stateData.weight <= 65535
-    );
-  } else {
-    return true;
-  }
-}
-
-/**
- * checks if service for dns is invalid
- * @param {string} service
- * @returns {boolean} true if valid
- */
-function validService(service) {
-  if (isNullOrEmptyString(service) || service === undefined) {
-    return false;
-  } else {
-    return service.startsWith("_");
-  }
-}
-
-/**
  * checks if icd cpu input is invalid
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -668,7 +629,7 @@ function invalidCpuCallback(stateData, componentProps) {
  * @returns {boolean} true if invalid
  */
 function invalidDescription(description) {
-  if (isNullOrEmptyString(description)) {
+  if (isNullOrEmptyString(description, true)) {
     return false;
   } else {
     return description.match(sccScopeDescriptionValidation) === null;
@@ -736,7 +697,6 @@ module.exports = {
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrZone,
-  validRecord,
   invalidDescription,
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,

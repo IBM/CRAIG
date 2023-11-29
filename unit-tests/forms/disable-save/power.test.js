@@ -620,38 +620,5 @@ describe("power", () => {
         "it should be disabled"
       );
     });
-    it("should not check invalidSshKey when using data", () => {
-      assert.isFalse(
-        disableSave(
-          "ssh_keys",
-          {
-            name: "test",
-            resource_group: "hi",
-            public_key: "honk",
-            use_data: true,
-          },
-          {
-            data: {
-              data: "test",
-            },
-            craig: {
-              store: {
-                resourceGroups: ["hi"],
-                json: {
-                  ssh_keys: [
-                    {
-                      name: "honk",
-                      public_key:
-                        "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                    },
-                  ],
-                },
-              },
-            },
-          }
-        ),
-        "it should be enabled"
-      );
-    });
   });
 });

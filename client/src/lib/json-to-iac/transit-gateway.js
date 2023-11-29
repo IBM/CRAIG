@@ -1,4 +1,4 @@
-const { snakeCase } = require("lazy-z");
+const { snakeCase, isNullOrEmptyString } = require("lazy-z");
 const {
   rgIdRef,
   kebabName,
@@ -113,7 +113,12 @@ function ibmTgConnection(connection, tgw) {
   };
   if (connection.gateway) {
     connectionData.data.base_network_type = "classic";
-    connectionData.data.remote_bgp_asn = connection.remote_bgp_asn;
+    connectionData.data.remote_bgp_asn = isNullOrEmptyString(
+      connection.remote_bgp_asn,
+      true
+    )
+      ? undefined
+      : connection.remote_bgp_asn;
     connectionData.data.zone = "${var.region}-" + connection.zone;
     ["local_gateway_ip", "remote_gateway_ip"].forEach((field) => {
       connectionData.data[
@@ -151,6 +156,11 @@ function tgwTf(config) {
     gw.connections.forEach(
       (connection) => (blockData += formatTgwConnection(connection, gw))
     );
+    if (gw.gre_tunnels) {
+      gw.gre_tunnels.forEach(
+        (tunnel) => (blockData += formatTgwConnection(tunnel, gw))
+      );
+    }
     tf += tfBlock(gw.name + " Transit Gateway", blockData);
     if (index !== config.transit_gateways.length - 1) {
       tf += "\n";

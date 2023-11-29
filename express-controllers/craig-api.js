@@ -50,6 +50,7 @@ function craigApi(controller, tar) {
     })
       .then((data) => {
         let dataFromBuffer = Buffer.from(data);
+        res.type("tar");
         res.send(dataFromBuffer);
       })
       .catch((err) => {
@@ -81,6 +82,7 @@ function craigApi(controller, tar) {
     })
       .then((data) => {
         let dataFromBuffer = Buffer.from(data);
+        res.type("tar");
         res.send(dataFromBuffer);
       })
       .catch((err) => {

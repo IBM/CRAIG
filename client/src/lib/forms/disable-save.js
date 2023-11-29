@@ -3,28 +3,19 @@ const {
   isEmpty,
   isIpv4CidrOrAddress,
   containsKeys,
-  validPortRange,
   isInRange,
   distinct,
   contains,
   flatten,
   splat,
   isWholeNumber,
-  anyAreEmpty,
   nullOrEmptyStringFields,
 } = require("lazy-z");
 const {
   invalidName,
-  invalidSshPublicKey,
-  invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
   isValidUrl,
-  invalidCbrRule,
-  invalidCbrZone,
-  validRecord,
-  invalidDescription,
-  invalidDnsZoneName,
   validSshKey,
 } = require("./invalid-callbacks");
 
@@ -53,46 +44,6 @@ function fieldCheck(fields, check, stateData) {
     }
   });
   return hasBadFields;
-}
-
-/**
- * check multiple fields against the same invalidating regex expression
- * @param {Array} fields  list of fields to check
- * @param {function} check the check to run
- * @param {Object} stateData
- * @returns {boolean} true if any are invalid
- */
-function invalidFieldCheck(fields, check, stateData) {
-  let hasBadFields = false;
-  fields.forEach((field) => {
-    if (check(field, stateData)) {
-      hasBadFields = true;
-    }
-  });
-  return hasBadFields;
-}
-
-/**
- * test if a rule has an invalid port
- * @param {*} rule
- * @param {boolean=} isSecurityGroup
- * @returns {boolean} true if port is invalid
- */
-function invalidPort(rule, isSecurityGroup) {
-  let hasInvalidPort = false;
-  if (rule.ruleProtocol !== "all") {
-    (rule.ruleProtocol === "icmp"
-      ? ["type", "code"]
-      : isSecurityGroup
-      ? ["port_min", "port_max"]
-      : ["port_min", "port_max", "source_port_min", "source_port_max"]
-    ).forEach((type) => {
-      if (rule.rule[type] && !hasInvalidPort) {
-        hasInvalidPort = !validPortRange(type, rule.rule[type]);
-      }
-    });
-  }
-  return hasInvalidPort;
 }
 
 /**
@@ -169,49 +120,6 @@ function disableBucketsSave(stateData, componentProps) {
 }
 
 /**
- * check to see if secrets manager form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSecretsManagerSave(stateData, componentProps) {
-  return (
-    invalidName("secrets_manager")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["encryption_key", "resource_group"])
-  );
-}
-
-/**
- * check to see if ssh keys form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSshKeysSave(stateData, componentProps) {
-  return (
-    invalidName("ssh_keys")(stateData, componentProps) ||
-    isNullOrEmptyString(stateData.resource_group) ||
-    (stateData.use_data
-      ? false // do not check invalid public key if using data, return false
-      : invalidSshPublicKey(stateData, componentProps).invalid)
-  );
-}
-
-/**
- * check to see if sg rules form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSgRulesSave(stateData, componentProps) {
-  return (
-    invalidSecurityGroupRuleName(stateData, componentProps) ||
-    !isIpv4CidrOrAddress(stateData.source) ||
-    invalidPort(stateData)
-  );
-}
-
-/**
  * check to see if iam account settings form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -224,39 +132,6 @@ function disableIamAccountSettingsSave(stateData) {
       "restrict_create_service_id",
       "max_sessions_per_identity",
     ]) || invalidIpCommaList(stateData.allowed_ip_addresses)
-  );
-}
-
-/**
- * check to see if security groups form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableSecurityGroupsSave(stateData, componentProps) {
-  return (
-    invalidName("security_groups")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["resource_group", "vpc"])
-  );
-}
-
-/**
- * check to see if vpe form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableVpeSave(stateData, componentProps) {
-  return (
-    invalidName("virtual_private_endpoints")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "resource_group",
-      "security_groups",
-      "service",
-      "subnets",
-      "vpc",
-    ]) ||
-    anyAreEmpty(stateData.security_groups, stateData.subnets)
   );
 }
 
@@ -346,176 +221,6 @@ function disableRoutesSave(stateData, componentProps) {
 }
 
 /**
- * check to see if cbr rules form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableCbrRulesSave(stateData, componentProps) {
-  return (
-    invalidName("cbr_rules")(stateData, componentProps) ||
-    invalidFieldCheck(["description", "api_type_id"], invalidCbrRule, stateData)
-  );
-}
-
-/**
- * check to see if contexts form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableContextsSave(stateData, componentProps) {
-  return (
-    invalidName("contexts")(stateData, componentProps) ||
-    invalidCbrRule("value", stateData, componentProps)
-  );
-}
-
-/**
- * check to see if resource attributes form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableResourceAttributesSave(stateData, componentProps) {
-  return (
-    invalidName("resource_attributes")(stateData, componentProps) ||
-    invalidCbrRule("value", stateData, componentProps)
-  );
-}
-
-/**
- * check to see if tags form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableTagsSave(stateData, componentProps) {
-  return (
-    invalidName("tags")(stateData, componentProps) ||
-    invalidFieldCheck(["value", "operator"], invalidCbrRule, stateData)
-  );
-}
-
-/**
- * check to see if cbr zones form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableCbrZonesSave(stateData, componentProps) {
-  return (
-    invalidName("cbr_zones")(stateData, componentProps) ||
-    invalidFieldCheck(["description", "account_id"], invalidCbrZone, stateData)
-  );
-}
-
-/**
- * check to see if addresses form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableAddressesSave(stateData, componentProps) {
-  return (
-    invalidName("addresses")(stateData, componentProps) ||
-    invalidFieldCheck(
-      [
-        "account_id",
-        "location",
-        "service_name",
-        "service_type",
-        "service_instance",
-        "value",
-      ],
-      invalidCbrZone,
-      stateData
-    )
-  );
-}
-
-/**
- * check to see if exclusions form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableExclusionsSave(stateData, componentProps) {
-  return (
-    invalidName("exclusions")(stateData, componentProps) ||
-    invalidFieldCheck(
-      [
-        "account_id",
-        "location",
-        "service_name",
-        "service_type",
-        "service_instance",
-        "value",
-      ],
-      invalidCbrZone,
-      stateData
-    )
-  );
-}
-
-/**
- * check to see if dns form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableDnsSave(stateData, componentProps) {
-  return (
-    invalidName("dns")(stateData, componentProps) ||
-    badField("resource_group", stateData)
-  );
-}
-
-/**
- * check to see if zones form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableZonesSave(stateData, componentProps) {
-  return (
-    invalidDnsZoneName(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["vpcs", "label"]) ||
-    isEmpty(stateData.vpcs) ||
-    invalidDescription(stateData.description, componentProps)
-  );
-}
-
-/**
- * check to see if records form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableRecordsSave(stateData, componentProps) {
-  return (
-    invalidName("records")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["type", "dns_zone", "rdata"]) ||
-    !validRecord(stateData, componentProps)
-  );
-}
-
-/**
- * check to see if custom resolvers form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableCustomResolversSave(stateData, componentProps) {
-  return (
-    invalidName("custom_resolvers")(stateData, componentProps) ||
-    badField("vpc", stateData) ||
-    isEmpty(stateData.subnets) ||
-    invalidDescription(stateData.description, componentProps)
-  );
-}
-
-/**
  * check to see if logna form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -546,27 +251,11 @@ const disableSaveFunctions = {
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
-  secrets_manager: disableSecretsManagerSave,
-  ssh_keys: disableSshKeysSave,
-  sg_rules: disableSgRulesSave,
   iam_account_settings: disableIamAccountSettingsSave,
-  security_groups: disableSecurityGroupsSave,
-  virtual_private_endpoints: disableVpeSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
   routes: disableRoutesSave,
-  cbr_rules: disableCbrRulesSave,
-  contexts: disableContextsSave,
-  resource_attributes: disableResourceAttributesSave,
-  tags: disableTagsSave,
-  cbr_zones: disableCbrZonesSave,
-  addresses: disableAddressesSave,
-  exclusions: disableExclusionsSave,
-  dns: disableDnsSave,
-  zones: disableZonesSave,
-  records: disableRecordsSave,
-  custom_resolvers: disableCustomResolversSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
 };
@@ -592,6 +281,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "worker_pools",
     "opaque_secrets",
     "icd",
+    "options",
     "atracker",
     "resource_groups",
     "key_management",
@@ -609,14 +299,27 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpcs",
     "vsi",
     "volumes",
+    "sg_rules",
+    "security_groups",
+    "ssh_keys",
+    "cbr_zones",
+    "addresses",
+    "exclusions",
+    "cbr_rules",
+    "contexts",
+    "resource_attributes",
+    "tags",
+    "virtual_private_endpoints",
     "vpn_gateways",
+    "secrets_manager",
+    "gre_tunnels",
+    "dns",
+    "zones",
+    "records",
+    "custom_resolvers",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
-  if (
-    containsKeys(disableSaveFunctions, field) &&
-    !isPowerSshKey &&
-    !componentProps?.classic
-  ) {
+  if (containsKeys(disableSaveFunctions, field)) {
     return disableSaveFunctions[field](stateData, componentProps, craig);
   } else if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
     return (
@@ -638,12 +341,22 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.vpcs.subnetTiers
         : field === "acls"
         ? componentProps.craig.vpcs[field]
+        : contains(["zones", "records", "custom_resolvers"], field)
+        ? componentProps.craig.dns[field]
         : field === "vpn_server_routes"
         ? componentProps.craig.vpn_servers.routes
         : field === "encryption_keys"
         ? componentProps.craig.key_management.keys
         : contains(["worker_pools", "opaque_secrets"], field)
         ? componentProps.craig.clusters[field]
+        : field === "sg_rules"
+        ? componentProps.craig.security_groups.rules
+        : contains(["addresses", "exclusions"], field)
+        ? componentProps.craig.cbr_zones[field]
+        : contains(["contexts", "resource_attributes", "tags"], field)
+        ? componentProps.craig.cbr_rules[field]
+        : field === "gre_tunnels"
+        ? componentProps.craig.transit_gateways.gre_tunnels
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;
@@ -712,9 +425,7 @@ function disableSshKeyDelete(componentProps) {
 
 module.exports = {
   disableSave,
-  invalidPort,
   forceShowForm,
-  disableSshKeysSave,
   disableSshKeyDelete,
   invalidCidrBlock,
   invalidNumberCheck,

@@ -1,6 +1,6 @@
 const { lazyZstate } = require("lazy-z/lib/store");
 const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
-const { optionsInit, optionsSave } = require("./options");
+const { initOptions } = require("./options");
 const { initKeyManagement } = require("./key-management");
 const { initResourceGroup } = require("./resource-groups");
 const { initObjectStorageStore } = require("./cos");
@@ -8,34 +8,13 @@ const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc");
 const { sccInit, sccSave, sccDelete } = require("./scc");
-const {
-  sshKeyCreate,
-  sshKeyDelete,
-  sshKeySave,
-  sshKeyInit,
-  sshKeyOnStoreUpdate,
-} = require("./ssh-keys.js");
-const {
-  securityGroupInit,
-  securityGroupOnStoreUpdate,
-  securityGroupCreate,
-  securityGroupSave,
-  securityGroupDelete,
-  securityGroupRulesCreate,
-  securityGroupRulesSave,
-  securityGroupRulesDelete,
-} = require("./security-groups");
+const { initSshKeyStore } = require("./ssh-keys.js");
+const { initSecurityGroupStore } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways");
 const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
 const { initVsiStore } = require("./vsi");
-const {
-  vpeInit,
-  vpeCreate,
-  vpeDelete,
-  vpeSave,
-  vpeOnStoreUpdate,
-} = require("./vpe");
+const { initVpe } = require("./vpe");
 const {
   f5Init,
   f5VsiSave,
@@ -46,12 +25,7 @@ const {
 } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
-const {
-  secretsManagerOnStoreUpdate,
-  secretsManagerCreate,
-  secretsManagerSave,
-  secretsManagerDelete,
-} = require("./secrets-manager");
+const { initSecretsManagerStore } = require("./secrets-manager");
 const {
   iamInit,
   iamSave,
@@ -88,50 +62,10 @@ const {
   routingTableRouteSave,
   routingTableRouteDelete,
 } = require("./routing-tables");
-const {
-  cbrZonesInit,
-  cbrZoneCreate,
-  cbrZoneSave,
-  cbrZoneDelete,
-  cbrZoneAddressCreate,
-  cbrZoneAddressSave,
-  cbrZoneAddressDelete,
-  cbrZoneExclusionCreate,
-  cbrZoneExclusionSave,
-  cbrZoneExclusionDelete,
-} = require("./cbr-zones");
-const {
-  cbrRulesInit,
-  cbrRuleCreate,
-  cbrRuleSave,
-  cbrRuleDelete,
-  cbrRuleContextCreate,
-  cbrRuleContextSave,
-  cbrRuleContextDelete,
-  cbrRuleAttributeCreate,
-  cbrRuleAttributeSave,
-  cbrRuleAttributeDelete,
-  cbrRuleTagCreate,
-  cbrRuleTagSave,
-  cbrRuleTagDelete,
-} = require("./cbr-rules");
+const { initCbrZones } = require("./cbr-zones");
+const { initCbrRules } = require("./cbr-rules");
 const { initVpnState } = require("./vpn-servers");
-const {
-  dnsInit,
-  dnsCreate,
-  dnsSave,
-  dnsDelete,
-  dnsOnStoreUpdate,
-  dnsZoneCreate,
-  dnsZoneDelete,
-  dnsZoneSave,
-  dnsRecordCreate,
-  dnsRecordSave,
-  dnsRecordDelete,
-  dnsResolverCreate,
-  dnsResolverDelete,
-  dnsResolverSave,
-} = require("./dns");
+const { initDnsStore } = require("./dns");
 const {
   logdnaInit,
   logdnaOnStoreUpdate,
@@ -220,10 +154,7 @@ const state = function (legacy) {
     createEdgeVpc(store, pattern, managementVpc, zones);
   };
 
-  store.newField("options", {
-    init: optionsInit,
-    save: optionsSave,
-  });
+  initOptions(store);
 
   initResourceGroup(store);
   // components must check for key management second
@@ -241,41 +172,14 @@ const state = function (legacy) {
     delete: sccDelete,
   });
 
-  store.newField("ssh_keys", {
-    init: sshKeyInit,
-    onStoreUpdate: sshKeyOnStoreUpdate,
-    create: sshKeyCreate,
-    save: sshKeySave,
-    delete: sshKeyDelete,
-  });
+  initSshKeyStore(store);
 
-  store.newField("security_groups", {
-    init: securityGroupInit,
-    onStoreUpdate: securityGroupOnStoreUpdate,
-    create: securityGroupCreate,
-    save: securityGroupSave,
-    delete: securityGroupDelete,
-    subComponents: {
-      rules: {
-        create: securityGroupRulesCreate,
-        save: securityGroupRulesSave,
-        delete: securityGroupRulesDelete,
-      },
-    },
-  });
-
+  initSecurityGroupStore(store);
   initTransitGateway(store);
   initVpnGatewayStore(store);
   initClusterStore(store);
   initVsiStore(store);
-
-  store.newField("virtual_private_endpoints", {
-    init: vpeInit,
-    onStoreUpdate: vpeOnStoreUpdate,
-    create: vpeCreate,
-    save: vpeSave,
-    delete: vpeDelete,
-  });
+  initVpe(store);
 
   store.newField("f5", {
     init: f5Init,
@@ -295,18 +199,8 @@ const state = function (legacy) {
   });
 
   initLoadBalancers(store);
-
   initEventStreams(store);
-
-  store.newField("secrets_manager", {
-    init: (config) => {
-      config.store.json.secrets_manager = [];
-    },
-    onStoreUpdate: secretsManagerOnStoreUpdate,
-    create: secretsManagerCreate,
-    save: secretsManagerSave,
-    delete: secretsManagerDelete,
-  });
+  initSecretsManagerStore(store);
 
   store.newField("iam_account_settings", {
     init: iamInit,
@@ -348,75 +242,13 @@ const state = function (legacy) {
     },
   });
 
-  store.newField("cbr_zones", {
-    init: cbrZonesInit,
-    create: cbrZoneCreate,
-    save: cbrZoneSave,
-    delete: cbrZoneDelete,
-    subComponents: {
-      addresses: {
-        create: cbrZoneAddressCreate,
-        save: cbrZoneAddressSave,
-        delete: cbrZoneAddressDelete,
-      },
-      exclusions: {
-        create: cbrZoneExclusionCreate,
-        save: cbrZoneExclusionSave,
-        delete: cbrZoneExclusionDelete,
-      },
-    },
-  });
+  initCbrZones(store);
 
-  store.newField("cbr_rules", {
-    init: cbrRulesInit,
-    create: cbrRuleCreate,
-    save: cbrRuleSave,
-    delete: cbrRuleDelete,
-    subComponents: {
-      contexts: {
-        create: cbrRuleContextCreate,
-        save: cbrRuleContextSave,
-        delete: cbrRuleContextDelete,
-      },
-      resource_attributes: {
-        create: cbrRuleAttributeCreate,
-        save: cbrRuleAttributeSave,
-        delete: cbrRuleAttributeDelete,
-      },
-      tags: {
-        create: cbrRuleTagCreate,
-        save: cbrRuleTagSave,
-        delete: cbrRuleTagDelete,
-      },
-    },
-  });
+  initCbrRules(store);
 
   initVpnState(store);
 
-  store.newField("dns", {
-    init: dnsInit,
-    onStoreUpdate: dnsOnStoreUpdate,
-    create: dnsCreate,
-    save: dnsSave,
-    delete: dnsDelete,
-    subComponents: {
-      zones: {
-        create: dnsZoneCreate,
-        delete: dnsZoneDelete,
-        save: dnsZoneSave,
-      },
-      records: {
-        create: dnsRecordCreate,
-        save: dnsRecordSave,
-        delete: dnsRecordDelete,
-      },
-      custom_resolvers: {
-        create: dnsResolverCreate,
-        delete: dnsResolverDelete,
-        save: dnsResolverSave,
-      },
-    },
-  });
+  initDnsStore(store);
 
   store.newField("logdna", {
     init: logdnaInit,
@@ -432,9 +264,7 @@ const state = function (legacy) {
 
   initIcdStore(store);
   initPowerVsStore(store);
-
   initPowerVsInstance(store);
-
   initPowerVsVolumeStore(store);
   intiClassicInfrastructure(store);
   initClassicGateways(store);

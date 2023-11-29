@@ -1,6 +1,6 @@
 {
   "name": "craig",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "private": true,
   "license": "Apache-2.0",
   "scripts": {
@@ -22,10 +22,10 @@
     "carbon-react-code-mirror": "^0.2.0",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
-    "icse-react-assets": "1.2.33",
+    "icse-react-assets": "1.2.36",
     "json-to-tf": "^0.3.1",
     "jszip": "^3.10.1",
-    "lazy-z": "^1.11.6",
+    "lazy-z": "^1.11.13",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.3.0",

@@ -41,7 +41,6 @@ const {
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrZone,
-  validRecord,
   invalidDnsZoneName,
   invalidCrns,
   invalidCpuCallback,
@@ -49,9 +48,7 @@ const {
 const { propsMatchState } = require("./props-match-state");
 const {
   disableSave,
-  invalidPort,
   forceShowForm,
-  disableSshKeysSave,
   disableSshKeyDelete,
   invalidCidrBlock,
 } = require("./disable-save");
@@ -89,7 +86,6 @@ module.exports = {
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
   validSshKey,
-  invalidPort,
   invalidTagList,
   aclHelperTextCallback,
   invalidSubnetTierName,
@@ -111,7 +107,6 @@ module.exports = {
   invalidIdentityProviderURI,
   invalidF5Vsi,
   isValidUrl,
-  disableSshKeysSave,
   disableSshKeyDelete,
   cidrBlocksOverlap,
   hasOverlappingCidr,
@@ -126,7 +121,6 @@ module.exports = {
   invalidCbrZoneText,
   invalidCidrBlock,
   invalidProjectNameText,
-  validRecord,
   invalidDnsZoneName,
   getCosFromBucket,
   invalidCrns,

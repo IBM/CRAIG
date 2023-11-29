@@ -25,7 +25,8 @@ function dynamicMultiSelectProps(props) {
 
   // should always be invalid when no selection is made
   let invalid =
-    stateValue.length === 0 && props.field.optional
+    (stateValue && stateValue.length === 0 && props.field.optional) ||
+    props.name === "power_connections"
       ? false
       : stateValue.length > 0
       ? invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps")
@@ -33,7 +34,7 @@ function dynamicMultiSelectProps(props) {
 
   let groups = groupsEvaluatesToArrayCheck(
     props,
-    "dynamicMultiSelecrProps",
+    "dynamicMultiSelectProps",
     stateValue
   );
 
@@ -48,7 +49,7 @@ function dynamicMultiSelectProps(props) {
     key: dynamicKeyProp,
     id: dynamicFieldId(props),
     className: addClassName("leftTextAlign", props.field),
-    titleText: titleCase(props.name),
+    titleText: labelText || titleCase(props.name),
     itemToString: (item) => (item ? item : ""),
     invalid: invalid,
     onChange: (selectEvent) => {
@@ -64,6 +65,7 @@ function dynamicMultiSelectProps(props) {
     useTitleInItem: props.field.useTitleInItem || false,
     label: labelText,
     disabled: isDisabled,
+    initialSelectedItems: stateValue,
   };
 }
 

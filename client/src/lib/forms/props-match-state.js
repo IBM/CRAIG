@@ -66,6 +66,9 @@ function propsMatchState(field, stateData, componentProps) {
       return true;
     } else return false;
   }
+  if (field === "options") {
+    return deepEqual(stateData, componentProps.craig.store.json._options);
+  }
 
   return deepEqual(stateData, componentProps.data);
 }

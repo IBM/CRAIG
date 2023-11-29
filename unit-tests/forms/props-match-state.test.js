@@ -209,5 +209,51 @@ describe("propsMatchState", () => {
         )
       );
     });
+    it("should return true when field is options and state matches props.craig.store.json._options", () => {
+      assert.isTrue(
+        propsMatchState(
+          "options",
+          {
+            prefix: "",
+            region: "us-south",
+            tags: ["hello", "world"],
+            zones: 3,
+            endpoints: "private",
+            account_id: "",
+            fs_cloud: false,
+            dynamic_subnets: true,
+            enable_classic: false,
+            enable_power_vs: false,
+            power_vs_zones: [],
+            craig_version: "1.7.0",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "",
+                    region: "us-south",
+                    tags: ["hello", "world"],
+                    zones: 3,
+                    endpoints: "private",
+                    account_id: "",
+                    fs_cloud: false,
+                    dynamic_subnets: true,
+                    enable_classic: false,
+                    enable_power_vs: false,
+                    power_vs_zones: [],
+                    craig_version: "1.7.0",
+                  },
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        )
+      );
+    });
   });
 });
