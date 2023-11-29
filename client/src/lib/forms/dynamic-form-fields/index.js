@@ -12,8 +12,14 @@ const {
   addClassName,
 } = require("./utils");
 const { dynamicTextAreaProps } = require("./text-area");
+const { dynamicIcseHeadingProps } = require("./icse-heading");
+const { dynamicIcseFormGroupsProps } = require("./icse-form-group");
+const { dynamicToolTipWrapperProps } = require("./dynamic-tooltip-wrapper");
 
 module.exports = {
+  dynamicToolTipWrapperProps,
+  dynamicIcseFormGroupsProps,
+  dynamicIcseHeadingProps,
   dynamicTextAreaProps,
   dynamicSelectProps,
   dynamicMultiSelectProps,

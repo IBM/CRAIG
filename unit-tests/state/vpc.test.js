@@ -439,6 +439,105 @@ describe("vpcs", () => {
       );
     });
   });
+  describe("vpcs.schema", () => {
+    describe("vpcs.schema.name", () => {
+      describe("vpcs.schema.name.invalidText", () => {
+        it("should return vpc invalid name text", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.vpcs.name.invalidText({ name: "" }, { craig: craig }),
+            "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+            "it should return invalid text"
+          );
+        });
+      });
+    });
+    describe("vpcs.schema public gateway toggles", () => {
+      it("should add a zone number to publicGateways if it is not present", () => {
+        let craig = newState();
+        let stateData = {
+          publicGateways: [2, 3],
+        };
+        let expectedData = {
+          publicGateways: [2, 3, 1],
+        };
+        craig.vpcs.pgw_zone_1.onStateChange(stateData);
+        assert.deepEqual(
+          stateData,
+          expectedData,
+          "it should return correct data"
+        );
+      });
+      it("should remove a zone number from publicGateways if it is already present", () => {
+        let craig = newState();
+        let stateData = {
+          publicGateways: [2, 3, 1],
+        };
+        let expectedData = {
+          publicGateways: [2, 3],
+        };
+        craig.vpcs.pgw_zone_1.onStateChange(stateData);
+        assert.deepEqual(
+          stateData,
+          expectedData,
+          "it should return correct data"
+        );
+      });
+    });
+    describe("vpcs.schema.buckets", () => {
+      describe("vpcs.schema.buckets.groups", () => {
+        it("should return groups for vpc", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.vpcs.bucket.groups({}, { craig: craig }),
+            [
+              "atracker-bucket",
+              "management-bucket",
+              "workload-bucket",
+              "Disabled",
+            ],
+            "it should return buckets"
+          );
+        });
+      });
+      describe("vpcs.schema.buckets.onRender", () => {
+        it("should render the correct bucket when disabled", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.vpcs.bucket.onRender({ bucket: "$disabled" }),
+            "Disabled",
+            "it should return correct name"
+          );
+        });
+        it("should render the correct bucket when not disabled", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.vpcs.bucket.onRender({ bucket: "management-bucket" }),
+            "management-bucket",
+            "it should return correct name"
+          );
+        });
+      });
+      describe("vpcs.schema.buckets.onInputChange", () => {
+        it("should send the correct bucket when disabled", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.vpcs.bucket.onInputChange({ bucket: "Disabled" }),
+            "$disabled",
+            "it should return correct name"
+          );
+        });
+        it("should render the correct bucket when not disabled", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.vpcs.bucket.onInputChange({ bucket: "management-bucket" }),
+            "management-bucket",
+            "it should return correct name"
+          );
+        });
+      });
+    });
+  });
   describe("vpcs.subnets", () => {
     describe("vpcs.subnets.save", () => {
       it("should update a subnet in place", () => {

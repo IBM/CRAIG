@@ -1062,11 +1062,11 @@ const TransitGatewayPage = (craig) => {
       docs={RenderDocs("transit_gateways", craig.store.json._options.template)}
       innerForm={DynamicForm}
       arrayData={craig.store.json.transit_gateways}
-      disableSave={disableSave}
       onDelete={craig.transit_gateways.delete}
       onSave={craig.transit_gateways.save}
       onSubmit={craig.transit_gateways.create}
       propsMatchState={propsMatchState}
+      disableSave={disableSave}
       forceOpen={forceShowForm}
       innerFormProps={{
         craig: craig,
@@ -1206,23 +1206,84 @@ const VpnServerPage = (craig) => {
 
 const VpcPage = (craig) => {
   return (
-    <VpcTemplate
+    <IcseFormTemplate
+      name="Virtual Private Clouds"
+      addText="Create a VPC"
       docs={RenderDocs("vpcs", craig.store.json._options.template)}
-      vpcs={craig.store.json.vpcs}
-      disableSave={disableSave}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.vpcs}
       onDelete={craig.vpcs.delete}
       onSave={craig.vpcs.save}
       onSubmit={craig.vpcs.create}
       propsMatchState={propsMatchState}
+      disableSave={disableSave}
       forceOpen={forceShowForm}
-      craig={craig}
-      // vpc name and callbacks take in extra param, so for now
-      // these will remain unchanged
-      invalidCallback={invalidName("vpcs")}
-      invalidTextCallback={invalidNameText("vpcs")}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      cosBuckets={craig.store.cosBuckets}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        formName: "VPC",
+        form: {
+          groups: [
+            {
+              name: craig.vpcs.name,
+              resource_group: craig.vpcs.resource_group,
+              bucket: craig.vpcs.bucket,
+            },
+            {
+              default_network_acl_name: craig.vpcs.default_network_acl_name,
+              default_security_group_name:
+                craig.vpcs.default_security_group_name,
+              default_routing_table_name: craig.vpcs.default_routing_table_name,
+            },
+            {
+              heading: {
+                name: "Public Gateways",
+                type: "subHeading",
+                tooltip: {
+                  content:
+                    "Public Gateways allow for all resources in a zone to communicate with the public internet. Public Gateways are not needed for subnets where a VPN gateway is created.",
+                },
+              },
+            },
+            {
+              pgw_zone_1: craig.vpcs.pgw_zone_1,
+              pgw_zone_2: craig.vpcs.pgw_zone_2,
+              pgw_zone_3: craig.vpcs.pgw_zone_3,
+            },
+            {
+              heading: {
+                name: "Classic Access",
+                type: "subHeading",
+              },
+            },
+            {
+              classic_access: craig.vpcs.classic_access,
+            },
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "vpcs",
+        hide: false,
+        hideName: true,
+      }}
     />
+    // <VpcTemplate
+    //   docs={RenderDocs("vpcs", craig.store.json._options.template)}
+    //   vpcs={craig.store.json.vpcs}
+    //   disableSave={disableSave}
+    //   propsMatchState={propsMatchState}
+    //   forceOpen={forceShowForm}
+    //   craig={craig}
+    //   // vpc name and callbacks take in extra param, so for now
+    //   // these will remain unchanged
+    //   invalidCallback={invalidName("vpcs")}
+    //   invalidTextCallback={invalidNameText("vpcs")}
+    //   resourceGroups={splat(craig.store.json.resource_groups, "name")}
+    //   cosBuckets={craig.store.cosBuckets}
+    // />
   );
 };
 

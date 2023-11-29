@@ -20,12 +20,20 @@ import {
   ClassicDisabledTile,
   NoClassicGatewaysTile,
 } from "./dynamic-form/tiles";
+import {
+  dynamicIcseFormGroupsProps,
+  dynamicIcseHeadingProps,
+  dynamicToolTipWrapperProps,
+} from "../../lib/forms/dynamic-form-fields";
 
 const doNotRenderFields = [
   "heading",
   "vpc_connections",
   "power_connections",
   "hideWhen",
+  "pgw_zone_1",
+  "pgw_zone_2",
+  "pgw_zone_3",
 ];
 
 class DynamicForm extends React.Component {
@@ -62,6 +70,34 @@ class DynamicForm extends React.Component {
     buildFormFunctions(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+    this.handleOverrideInputChange = this.handleOverrideInputChange.bind(this);
+  }
+
+  /**
+   * handle override input changes
+   * @param {*} nextState shallow copy of state
+   * @returns {boolean} true if changes were made
+   */
+  handleOverrideInputChange(nextState, targetName) {
+    let madeChanges = false;
+    this.props.form.groups.forEach((group) => {
+      // for each item in that group
+      eachKey(group, (field) => {
+        if (group[field].onInputChange && targetName === field) {
+          // if the item has onInputChange function, set field on next state
+          // to that value
+          nextState[field] = group[field].onInputChange(nextState);
+          madeChanges = true;
+        } else if (group[field].onStateChange && targetName === field) {
+          // if the item has onStateChange function, run against whole
+          // state copy
+          group[field].onStateChange(nextState);
+          madeChanges = true;
+        }
+      });
+    });
+    // return to override toggle setstate
+    return madeChanges;
   }
 
   /**
@@ -72,21 +108,7 @@ class DynamicForm extends React.Component {
     let nextState = { ...this.state };
     let { name, value } = event.target;
     nextState[name] = value;
-    // for each form group
-    this.props.form.groups.forEach((group) => {
-      // for each item in that group
-      eachKey(group, (field) => {
-        if (group[field].onInputChange && name === field) {
-          // if the item has onInputChange function, set field on next state
-          // to that value
-          nextState[field] = group[field].onInputChange(nextState);
-        } else if (group[field].onStateChange && name === field) {
-          // if the item has onStateChange function, run against whole
-          // state copy
-          group[field].onStateChange(nextState);
-        }
-      });
-    });
+    this.handleOverrideInputChange(nextState, name);
     this.setState(nextState);
   }
 
@@ -95,7 +117,11 @@ class DynamicForm extends React.Component {
    * @param {string} toggleName field name for toggle
    */
   handleToggle(toggleName) {
-    this.setState({ [toggleName]: !this.state[toggleName] });
+    let nextState = { ...this.state };
+    let madeChanges = this.handleOverrideInputChange(nextState, toggleName);
+    if (madeChanges) {
+      this.setState(nextState);
+    } else this.setState({ [toggleName]: !this.state[toggleName] });
   }
 
   render() {
@@ -108,13 +134,9 @@ class DynamicForm extends React.Component {
           group.hideWhen && group.hideWhen(this.state) ? (
             ""
           ) : group.heading ? (
-            <IcseHeading
-              name={group.heading.name}
-              type={group.heading.type}
-              key={"heading-" + group.heading.name}
-            />
+            <IcseHeading {...dynamicIcseHeadingProps(group)} />
           ) : (
-            <IcseFormGroup key={propsName + "-group-" + index}>
+            <IcseFormGroup {...dynamicIcseFormGroupsProps(this.props, index)}>
               {Object.keys(group).map((key, keyIndex) => {
                 let field = group[key];
                 return (field.hideWhen && field.hideWhen(this.state)) ||
@@ -122,15 +144,12 @@ class DynamicForm extends React.Component {
                   ""
                 ) : (
                   <DynamicToolTipWrapper
-                    isModal={this.props.isModal}
-                    id={kebabCase(
-                      `${propsName} input ${key} ${keyIndex} tooltip`
+                    {...dynamicToolTipWrapperProps(
+                      this.props,
+                      key,
+                      keyIndex,
+                      field
                     )}
-                    tooltip={field.tooltip}
-                    key={`${propsName} input ${key} ${keyIndex}`}
-                    labelText={
-                      field.labelText ? field.labelText : titleCase(key)
-                    }
                   >
                     {RenderForm(
                       field.type === "select"
