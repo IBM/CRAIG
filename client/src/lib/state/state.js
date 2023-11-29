@@ -65,22 +65,7 @@ const {
 const { initCbrZones } = require("./cbr-zones");
 const { initCbrRules } = require("./cbr-rules");
 const { initVpnState } = require("./vpn-servers");
-const {
-  dnsInit,
-  dnsCreate,
-  dnsSave,
-  dnsDelete,
-  dnsOnStoreUpdate,
-  dnsZoneCreate,
-  dnsZoneDelete,
-  dnsZoneSave,
-  dnsRecordCreate,
-  dnsRecordSave,
-  dnsRecordDelete,
-  dnsResolverCreate,
-  dnsResolverDelete,
-  dnsResolverSave,
-} = require("./dns");
+const { initDnsStore } = require("./dns");
 const {
   logdnaInit,
   logdnaOnStoreUpdate,
@@ -263,30 +248,7 @@ const state = function (legacy) {
 
   initVpnState(store);
 
-  store.newField("dns", {
-    init: dnsInit,
-    onStoreUpdate: dnsOnStoreUpdate,
-    create: dnsCreate,
-    save: dnsSave,
-    delete: dnsDelete,
-    subComponents: {
-      zones: {
-        create: dnsZoneCreate,
-        delete: dnsZoneDelete,
-        save: dnsZoneSave,
-      },
-      records: {
-        create: dnsRecordCreate,
-        save: dnsRecordSave,
-        delete: dnsRecordDelete,
-      },
-      custom_resolvers: {
-        create: dnsResolverCreate,
-        delete: dnsResolverDelete,
-        save: dnsResolverSave,
-      },
-    },
-  });
+  initDnsStore(store);
 
   store.newField("logdna", {
     init: logdnaInit,

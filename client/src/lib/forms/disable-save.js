@@ -13,15 +13,9 @@ const {
 } = require("lazy-z");
 const {
   invalidName,
-  invalidSshPublicKey,
   invalidIpCommaList,
   invalidIdentityProviderURI,
   isValidUrl,
-  invalidCbrRule,
-  invalidCbrZone,
-  validRecord,
-  invalidDescription,
-  invalidDnsZoneName,
   validSshKey,
 } = require("./invalid-callbacks");
 
@@ -227,63 +221,6 @@ function disableRoutesSave(stateData, componentProps) {
 }
 
 /**
- * check to see if dns form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableDnsSave(stateData, componentProps) {
-  return (
-    invalidName("dns")(stateData, componentProps) ||
-    badField("resource_group", stateData)
-  );
-}
-
-/**
- * check to see if zones form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableZonesSave(stateData, componentProps) {
-  return (
-    invalidDnsZoneName(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["vpcs", "label"]) ||
-    isEmpty(stateData.vpcs) ||
-    invalidDescription(stateData.description, componentProps)
-  );
-}
-
-/**
- * check to see if records form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableRecordsSave(stateData, componentProps) {
-  return (
-    invalidName("records")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["type", "dns_zone", "rdata"]) ||
-    !validRecord(stateData, componentProps)
-  );
-}
-
-/**
- * check to see if custom resolvers form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableCustomResolversSave(stateData, componentProps) {
-  return (
-    invalidName("custom_resolvers")(stateData, componentProps) ||
-    badField("vpc", stateData) ||
-    isEmpty(stateData.subnets) ||
-    invalidDescription(stateData.description, componentProps)
-  );
-}
-
-/**
  * check to see if logna form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -319,10 +256,6 @@ const disableSaveFunctions = {
   f5_vsi: disableF5VsiSave,
   routing_tables: disableRoutingTablesSave,
   routes: disableRoutesSave,
-  dns: disableDnsSave,
-  zones: disableZonesSave,
-  records: disableRecordsSave,
-  custom_resolvers: disableCustomResolversSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
 };
@@ -380,6 +313,10 @@ function disableSave(field, stateData, componentProps, craig) {
     "vpn_gateways",
     "secrets_manager",
     "gre_tunnels",
+    "dns",
+    "zones",
+    "records",
+    "custom_resolvers",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (containsKeys(disableSaveFunctions, field)) {
@@ -404,6 +341,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.vpcs.subnetTiers
         : field === "acls"
         ? componentProps.craig.vpcs[field]
+        : contains(["zones", "records", "custom_resolvers"], field)
+        ? componentProps.craig.dns[field]
         : field === "vpn_server_routes"
         ? componentProps.craig.vpn_servers.routes
         : field === "encryption_keys"

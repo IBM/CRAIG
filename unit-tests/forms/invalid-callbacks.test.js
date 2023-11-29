@@ -17,7 +17,6 @@ const {
   invalidProjectName,
   invalidCbrRule,
   invalidCbrZone,
-  validRecord,
 } = require("../../client/src/lib/forms");
 const {
   invalidDescription,
@@ -1490,37 +1489,6 @@ describe("invalid callbacks", () => {
       assert.isTrue(
         invalidCbrZone("service_instance", { service_instance: "?@?#(#*" })
       );
-    });
-  });
-  describe("validRecord", () => {
-    let validSRV = {
-      type: "SRV",
-      port: 2,
-      protocol: "TCP",
-      priority: 1,
-      service: "_hi",
-      weight: 2,
-    };
-    it("should be valid if type is MX and preference is between 1 and 65535", () => {
-      assert.isTrue(validRecord({ type: "MX", preference: 2 }, {}));
-    });
-    it("should be true when all values are valid for type SRV", () => {
-      assert.isTrue(validRecord(validSRV, {}));
-    });
-    it("should be false if invalid service when type SRV", () => {
-      validSRV.service = null;
-      assert.isFalse(validRecord(validSRV, {}));
-    });
-    it("should be false when service undefined", () => {
-      validSRV.service = undefined;
-      assert.isFalse(validRecord(validSRV, {}));
-    });
-    it("should be false if any value is invalid when type SRV", () => {
-      validSRV.port = -1;
-      assert.isFalse(validRecord(validSRV, {}));
-    });
-    it("should return true when type is not MX or SRV", () => {
-      assert.isTrue(validRecord({ type: "A" }, {}));
     });
   });
   describe("invalidDescription", () => {
