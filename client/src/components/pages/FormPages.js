@@ -50,7 +50,6 @@ import {
   getSubnetTierStateData,
   getTierSubnets,
   invalidCidrBlock,
-  invalidDnsZoneName,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   storageChangeDisabledCallback,
@@ -422,30 +421,32 @@ const DnsPage = (craig) => {
       onSave={craig.dns.save}
       onSubmit={craig.dns.create}
       forceOpen={forceShowForm}
-      invalidTextCallback={invalidNameText("dns")}
-      invalidCallback={invalidName("dns")}
+      invalidCallback={craig.dns.name.invalid}
+      invalidTextCallback={craig.dns.name.invalidText}
       onZoneSave={craig.dns.zones.save}
       onZoneDelete={craig.dns.zones.delete}
       onZoneSubmit={craig.dns.zones.create}
-      invalidZoneNameCallback={invalidDnsZoneName}
-      invalidZoneNameTextCallback={invalidNameText("zones")}
-      invalidLabelCallback={nullOrEmptyStringCheckCallback("label")}
-      invalidDescriptionCallback={invalidDescription}
+      invalidZoneNameCallback={craig.dns.zones.name.invalid}
+      invalidZoneNameTextCallback={craig.dns.zones.name.invalidText}
+      invalidLabelCallback={craig.dns.zones.label.invalid}
+      invalidDescriptionCallback={craig.dns.zones.description.invalid}
       invalidDescriptionTextCallback={invalidDescriptionText}
       vpcList={craig.store.vpcList}
       onRecordSave={craig.dns.records.save}
       onRecordDelete={craig.dns.records.delete}
       onRecordSubmit={craig.dns.records.create}
-      invalidRecordCallback={invalidName("records")}
-      invalidRecordTextCallback={invalidNameText("records")}
-      invalidRdataCallback={nullOrEmptyStringCheckCallback("records")}
+      invalidRecordCallback={craig.dns.records.name.invalid}
+      invalidRecordTextCallback={craig.dns.records.name.invalidText}
+      invalidRdataCallback={craig.dns.records.rdata.invalid}
       dnsZones={nestedSplat(craig.store.json.dns, "zones", "name")}
       onResolverSave={craig.dns.custom_resolvers.save}
       onResolverSubmit={craig.dns.custom_resolvers.create}
       onResolverDelete={craig.dns.custom_resolvers.delete}
-      invalidResolverNameCallback={invalidName("custom_resolvers")}
-      invalidResolverNameTextCallback={invalidNameText("custom_resolvers")}
-      invalidResolverDescriptionCallback={invalidDescription}
+      invalidResolverNameCallback={craig.dns.custom_resolvers.name.invalid}
+      invalidResolverNameTextCallback={
+        craig.dns.custom_resolvers.name.invalidText
+      }
+      invalidResolverDescriptionCallback={craig.dns.custom_resolvers.description.invalid}
       invalidResolverDescriptionTextCallback={invalidDescriptionText}
       subnetList={craig.getAllSubnets()}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
