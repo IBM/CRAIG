@@ -61,6 +61,13 @@ function classicGatewayCreate(config, stateData, componentProps) {
  * @param {*} componentProps
  */
 function classicGatewaySave(config, stateData, componentProps) {
+  config.store.json.transit_gateways.forEach((tgw) => {
+    tgw.gre_tunnels.forEach((tunnel) => {
+      if (tunnel.gateway === componentProps.data.name) {
+        tunnel.gateway = stateData.name;
+      }
+    });
+  });
   config.updateChild(
     ["json", "classic_gateways"],
     componentProps.data.name,

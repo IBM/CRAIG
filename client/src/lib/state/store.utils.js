@@ -1,4 +1,4 @@
-const { revision, carve, contains } = require("lazy-z");
+const { revision, contains } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 
 /**

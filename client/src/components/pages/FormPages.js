@@ -65,7 +65,6 @@ import {
   invalidIamAccountSettings,
   invalidIdentityProviderURI,
   invalidSshPublicKey,
-  invalidSubnetTierName,
   nullOrEmptyStringCheckCallback,
   invalidDescription,
   replicationDisabledCallback,
@@ -92,6 +91,7 @@ import {
   datacenters,
 } from "../../lib/constants";
 import DynamicForm from "../forms/DynamicForm";
+import { ClassicDisabledTile } from "../forms/dynamic-form/tiles";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -174,18 +174,6 @@ const Atracker = (craig) => {
       cosBuckets={craig.store.cosBuckets}
       onSave={craig.atracker.save}
     />
-  );
-};
-
-const ClassicDisabledTile = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> Classic Infrastructure
-      is not enabled. Enable Classic Infrastructure from the
-      <a className="no-secrets-link" href="/">
-        Options Page.
-      </a>{" "}
-    </Tile>
   );
 };
 
@@ -1083,7 +1071,9 @@ const TransitGatewayPage = (craig) => {
       innerFormProps={{
         craig: craig,
         disableSave: disableSave,
+        formName: "Transit Gateway",
         form: {
+          jsonField: "transit_gateways",
           setDefault: {
             connections: [],
           },
@@ -1115,6 +1105,38 @@ const TransitGatewayPage = (craig) => {
             // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
             // is still supported, but will not be displayed. If we have a request
             // for that functionality, we should implement
+          ],
+          subForms: [
+            {
+              name: "GRE Tunnels",
+              createText: "Create a GRE Tunnel",
+              jsonField: "gre_tunnels",
+              toggleFormFieldName: "gateway",
+              hideFormTitleButton: function (stateData, componentProps) {
+                return (
+                  !componentProps.craig.store.json._options.enable_classic ||
+                  componentProps.craig.store.json.classic_gateways.length === 0
+                );
+              },
+              form: {
+                groups: [
+                  {
+                    gateway: craig.transit_gateways.gre_tunnels.gateway,
+                    zone: craig.transit_gateways.gre_tunnels.zone,
+                  },
+                  {
+                    local_tunnel_ip:
+                      craig.transit_gateways.gre_tunnels.local_tunnel_ip,
+                    remote_tunnel_ip:
+                      craig.transit_gateways.gre_tunnels.remote_tunnel_ip,
+                  },
+                  {
+                    remote_bgp_asn:
+                      craig.transit_gateways.gre_tunnels.remote_bgp_asn,
+                  },
+                ],
+              },
+            },
           ],
         },
       }}

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.7.0",
+    "features": [
+      "Users can now create GRE Tunnels for Classic Gateways from the Transit Gateways page."
+    ],
+    "fixes": [],
+    "upgrade_notes": [
+      "Transit Gateways require the field `gre_tunnels`. To update existing JSON use the update banner at the top of the screen."
+    ]
+  },
+  {
     "version": "1.6.1",
     "features": [
       "Users can now edit the size of SAP log volumes for Power VS",

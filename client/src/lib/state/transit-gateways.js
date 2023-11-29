@@ -4,12 +4,21 @@ const {
   splatContains,
   splat,
   getObjectFromArray,
-  distinct,
+  revision,
 } = require("lazy-z");
 const { newDefaultTg } = require("./defaults");
 const { edgeRouterEnabledZones } = require("../constants");
 const { invalidCrnList } = require("../forms");
-const { resourceGroupsField, nameField } = require("./utils");
+const {
+  resourceGroupsField,
+  nameField,
+  fieldIsNullOrEmptyString,
+  selectInvalidText,
+  invalidIpv4Address,
+  invalidIpv4AddressText,
+  shouldDisableComponentSave,
+} = require("./utils");
+const { pushToChildFieldModal } = require("./store.utils");
 
 /**
  * initialize transit gateway
@@ -70,6 +79,21 @@ function transitGatewayOnStoreUpdate(config) {
         carve(gateway.connections, "power", connection.power);
       }
     });
+    if (!gateway.gre_tunnels) {
+      gateway.gre_tunnels = [];
+    } else {
+      gateway.gre_tunnels.forEach((tunnel) => {
+        if (
+          !splatContains(
+            config.store.json.classic_gateways,
+            "name",
+            tunnel.gateway
+          )
+        )
+          tunnel.gateway = null;
+        tunnel.tgw = gateway.name;
+      });
+    }
     if (!contains(config.store.resourceGroups, gateway.resource_group)) {
       // if unfound rg set to null
       gateway.resource_group = null;
@@ -162,6 +186,127 @@ function hideWhenUseData(stateData) {
 }
 
 /**
+ * get vpc connection groups
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Array<string>}
+ */
+function vpcConnectionGroups(stateData, componentProps) {
+  let vpcList = splat(componentProps.craig.store.json.vpcs, "name");
+  // for each transit gateway
+  componentProps.craig.store.json.transit_gateways.forEach((tgw) => {
+    // for each connection
+    tgw.connections.forEach((connection) => {
+      // remove vpc from list if the VPC is found in another transit gateway
+      // with the same global value
+      if (
+        contains(vpcList, connection.vpc) &&
+        tgw.global === stateData.global &&
+        (componentProps.isModal || tgw.name !== componentProps.data.name)
+      ) {
+        vpcList.splice(vpcList.indexOf(connection.vpc), 1);
+      }
+    });
+  });
+  return vpcList;
+}
+
+/**
+ * get power connection groups
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Array<string>}
+ */
+function powerConnectionGroups(stateData, componentProps) {
+  let foundPowerConnections = [];
+  componentProps.craig.store.json.transit_gateways.forEach((gateway) => {
+    gateway.connections.forEach((connection) => {
+      if (
+        gateway.global === stateData.global &&
+        connection.power &&
+        (componentProps.isModal || componentProps.data.name !== gateway.name)
+      ) {
+        foundPowerConnections.push(connection.power);
+      }
+    });
+  });
+
+  return splat(
+    componentProps.craig.store.json.power.filter((workspace) => {
+      if (
+        contains(edgeRouterEnabledZones, workspace.zone) &&
+        !contains(foundPowerConnections, workspace.name)
+      )
+        return workspace;
+    }),
+    "name"
+  );
+}
+
+/**
+ * create gre tunnel
+ * @param {*} config
+ * @param {*} stateData
+ * @param {*} componentProps
+ */
+function greTunnelCreate(config, stateData, componentProps) {
+  pushToChildFieldModal(
+    config,
+    "transit_gateways",
+    "gre_tunnels",
+    stateData,
+    componentProps
+  );
+}
+
+/**
+ * save gre tunnel
+ * @param {*} config
+ * @param {*} stateData
+ * @param {*} componentProps
+ */
+function greTunnelSave(config, stateData, componentProps) {
+  new revision(config.store.json)
+    .child("transit_gateways", componentProps.arrayParentName)
+    // need to look up by gw since name is not added to gre connections
+    .updateChild(
+      "gre_tunnels",
+      componentProps.data.gateway,
+      "gateway",
+      stateData
+    );
+}
+
+/**
+ * delete gre tunnel
+ * @param {*} config
+ * @param {*} stateData
+ * @param {*} componentProps
+ */
+function greTunnelDelete(config, stateData, componentProps) {
+  if (componentProps.data.gateway) {
+    new revision(config.store.json)
+      .child("transit_gateways", componentProps.arrayParentName)
+      .child("gre_tunnels")
+      .deleteArrChild(componentProps.data.gateway, "gateway");
+  } else {
+    // use new revision here to allow for delete arr child
+    new revision(config.store.json)
+      .child("transit_gateways", componentProps.arrayParentName)
+      .child("gre_tunnels")
+      .then((data) => {
+        let nullTunnelIndex = false;
+        data.forEach((tunnel, index) => {
+          if (tunnel.gateway === null) {
+            nullTunnelIndex = index;
+          }
+        });
+        data.splice(nullTunnelIndex, 1);
+      });
+  }
+}
+
+/**
  * initialize store field for tgw
  * @param {*} store
  */
@@ -207,26 +352,7 @@ function initTransitGateway(store) {
         labelText: "VPC Connections",
         type: "multiselect",
         optional: true,
-        groups: function (stateData, componentProps) {
-          let vpcList = splat(componentProps.craig.store.json.vpcs, "name");
-          // for each transit gateway
-          componentProps.craig.store.json.transit_gateways.forEach((tgw) => {
-            // for each connection
-            tgw.connections.forEach((connection) => {
-              // remove vpc from list if the VPC is found in another transit gateway
-              // with the same global value
-              if (
-                contains(vpcList, connection.vpc) &&
-                tgw.global === stateData.global &&
-                (componentProps.isModal ||
-                  tgw.name !== componentProps.data.name)
-              ) {
-                vpcList.splice(vpcList.indexOf(connection.vpc), 1);
-              }
-            });
-          });
-          return vpcList;
-        },
+        groups: vpcConnectionGroups,
         onRender: function (stateData, componentProps) {
           return splat(
             stateData.connections.filter((connection) => {
@@ -241,34 +367,7 @@ function initTransitGateway(store) {
         optional: true,
         labelText: "Connected Power Workspaces",
         type: "multiselect",
-        groups: function (stateData, componentProps) {
-          let foundPowerConnections = [];
-          componentProps.craig.store.json.transit_gateways.forEach(
-            (gateway) => {
-              gateway.connections.forEach((connection) => {
-                if (
-                  gateway.global === stateData.global &&
-                  connection.power &&
-                  (componentProps.isModal ||
-                    componentProps.data.name !== gateway.name)
-                ) {
-                  foundPowerConnections.push(connection.power);
-                }
-              });
-            }
-          );
-
-          return splat(
-            componentProps.craig.store.json.power.filter((workspace) => {
-              if (
-                contains(edgeRouterEnabledZones, workspace.zone) &&
-                !contains(foundPowerConnections, workspace.name)
-              )
-                return workspace;
-            }),
-            "name"
-          );
-        },
+        groups: powerConnectionGroups,
         onRender: function (stateData) {
           return splat(
             stateData.connections.filter((connection) => {
@@ -278,6 +377,90 @@ function initTransitGateway(store) {
           );
         },
         onStateChange: onConnectionStateChange("power", "power_connections"),
+      },
+    },
+    subComponents: {
+      gre_tunnels: {
+        create: greTunnelCreate,
+        save: greTunnelSave,
+        delete: greTunnelDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["gateway", "remote_tunnel_ip", "local_tunnel_ip", "zone"],
+          "transit_gateways",
+          "gre_tunnels"
+        ),
+        schema: {
+          gateway: {
+            type: "select",
+            default: "",
+            invalid: fieldIsNullOrEmptyString("gateway"),
+            invalidText: selectInvalidText("gateway"),
+            groups: function (stateData, componentProps) {
+              let allGws = splat(
+                componentProps.craig.store.json.classic_gateways,
+                "name"
+              );
+              let tgwType = new revision(componentProps.craig.store.json).child(
+                "transit_gateways",
+                componentProps.arrayParentName
+              ).data.global;
+              let matchingConnections = [];
+              componentProps.craig.store.json.transit_gateways.forEach((gw) => {
+                if (gw.global === tgwType) {
+                  gw.gre_tunnels.forEach((tunnel) => {
+                    matchingConnections.push(tunnel.gateway);
+                  });
+                }
+              });
+              return allGws
+                .filter((gw) => {
+                  if (!contains(matchingConnections, gw)) {
+                    return gw;
+                  }
+                })
+                .concat(
+                  componentProps.data?.gateway
+                    ? [componentProps.data.gateway]
+                    : []
+                );
+            },
+          },
+          zone: {
+            labelText: "VPC Zone",
+            type: "select",
+            default: "",
+            invalid: fieldIsNullOrEmptyString("zone"),
+            invalidText: selectInvalidText("zone"),
+            groups: ["1", "2", "3"],
+            tooltip: {
+              content: "Availability Zone where the tunnel will be connected",
+              alignModal: "bottom-left",
+            },
+          },
+          local_tunnel_ip: {
+            default: "",
+            labelText: "Local Tunnel IP",
+            placeholder: "X.X.X.X",
+            invalid: invalidIpv4Address("local_tunnel_ip"),
+            invalidText: invalidIpv4AddressText,
+          },
+          remote_tunnel_ip: {
+            default: "",
+            labelText: "Remote Tunnel IP",
+            placeholder: "X.X.X.X",
+            invalid: invalidIpv4Address("remote_tunnel_ip"),
+            invalidText: invalidIpv4AddressText,
+          },
+          remote_bgp_asn: {
+            default: "",
+            labelText: "Remote BGP ASN",
+            placeholder: "12345",
+            tooltip: {
+              content:
+                "The remote network BGP ASN. If not added, one will be assigned automatically.",
+            },
+          },
+        },
       },
     },
   });

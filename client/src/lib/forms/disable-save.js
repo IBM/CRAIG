@@ -379,6 +379,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "virtual_private_endpoints",
     "vpn_gateways",
     "secrets_manager",
+    "gre_tunnels",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (containsKeys(disableSaveFunctions, field)) {
@@ -415,6 +416,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.cbr_zones[field]
         : contains(["contexts", "resource_attributes", "tags"], field)
         ? componentProps.craig.cbr_rules[field]
+        : field === "gre_tunnels"
+        ? componentProps.craig.transit_gateways.gre_tunnels
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;

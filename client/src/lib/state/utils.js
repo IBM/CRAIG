@@ -11,6 +11,7 @@ const {
   isEmpty,
   splat,
   validPortRange,
+  isIpv4CidrOrAddress,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const { invalidName } = require("../forms/invalid-callbacks");
@@ -512,7 +513,25 @@ function invalidIcmpCodeOrType(stateData) {
     : invalidPort(stateData);
 }
 
+/**
+ * return validation function if value is not a valid IPV4 IP address
+ * @param {*} field
+ */
+function invalidIpv4Address(field) {
+  return function (stateData) {
+    return (
+      !isIpv4CidrOrAddress(stateData[field]) || contains(stateData[field], "/")
+    );
+  };
+}
+
+function invalidIpv4AddressText() {
+  return "Enter a valid IP address";
+}
+
 module.exports = {
+  invalidIpv4Address,
+  invalidIpv4AddressText,
   formatNetworkingRule,
   updateNetworkingRule,
   eachRuleProtocol,
