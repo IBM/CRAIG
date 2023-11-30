@@ -28,7 +28,6 @@ import {
   SshKeysTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
-  VpcTemplate,
   VpeTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
@@ -64,7 +63,6 @@ import {
   invalidIamAccountSettings,
   invalidIdentityProviderURI,
   invalidSshPublicKey,
-  nullOrEmptyStringCheckCallback,
   invalidDescription,
   replicationDisabledCallback,
 } from "../../lib/forms/invalid-callbacks";
@@ -446,7 +444,9 @@ const DnsPage = (craig) => {
       invalidResolverNameTextCallback={
         craig.dns.custom_resolvers.name.invalidText
       }
-      invalidResolverDescriptionCallback={craig.dns.custom_resolvers.description.invalid}
+      invalidResolverDescriptionCallback={
+        craig.dns.custom_resolvers.description.invalid
+      }
       invalidResolverDescriptionTextCallback={invalidDescriptionText}
       subnetList={craig.getAllSubnets()}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
@@ -1224,6 +1224,10 @@ const VpcPage = (craig) => {
         disableSave: disableSave,
         formName: "VPC",
         form: {
+          setDefault: {
+            public_gateways: [],
+            publicGateways: [],
+          },
           groups: [
             {
               name: craig.vpcs.name,

@@ -483,6 +483,26 @@ describe("vpcs", () => {
           "it should return correct data"
         );
       });
+      it("should render an unfound public gateway as false", () => {
+        let craig = newState();
+        let stateData = {
+          publicGateways: [2, 3],
+        };
+        assert.isFalse(
+          craig.vpcs.pgw_zone_1.onRender(stateData),
+          "it should return false"
+        );
+      });
+      it("should render a found public gateway as true", () => {
+        let craig = newState();
+        let stateData = {
+          publicGateways: [1, 2, 3],
+        };
+        assert.isTrue(
+          craig.vpcs.pgw_zone_1.onRender(stateData),
+          "it should return false"
+        );
+      });
     });
     describe("vpcs.schema.buckets", () => {
       describe("vpcs.schema.buckets.groups", () => {

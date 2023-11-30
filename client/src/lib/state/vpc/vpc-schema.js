@@ -63,6 +63,9 @@ function pgwToggle(zone) {
     type: "toggle",
     labelText: "Create in Zone " + zone,
     onStateChange: togglePgw(zone),
+    onRender: function (stateData) {
+      return contains(stateData.publicGateways, zone);
+    },
   };
 }
 
