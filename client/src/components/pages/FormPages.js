@@ -1138,6 +1138,31 @@ const TransitGatewayPage = (craig) => {
                 ],
               },
             },
+            {
+              name: "Prefix Filters",
+              createText: "Create a Prefix Filter",
+              jsonField: "prefix_filters",
+              form: {
+                groups: [
+                  {
+                    name: craig.transit_gateways.prefix_filters.name,
+                  },
+                  {
+                    connection_type:
+                      craig.transit_gateways.prefix_filters.connection_type,
+                    target: craig.transit_gateways.prefix_filters.target,
+                  },
+                  {
+                    action: craig.transit_gateways.prefix_filters.action,
+                    prefix: craig.transit_gateways.prefix_filters.prefix,
+                  },
+                  {
+                    le: craig.transit_gateways.prefix_filters.le,
+                    ge: craig.transit_gateways.prefix_filters.ge,
+                  },
+                ],
+              },
+            },
           ],
         },
       }}

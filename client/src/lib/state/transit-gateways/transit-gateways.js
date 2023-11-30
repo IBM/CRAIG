@@ -6,19 +6,21 @@ const {
   getObjectFromArray,
   revision,
 } = require("lazy-z");
-const { newDefaultTg } = require("./defaults");
-const { edgeRouterEnabledZones } = require("../constants");
-const { invalidCrnList } = require("../forms");
+const { newDefaultTg } = require("../defaults");
+const { edgeRouterEnabledZones } = require("../../constants");
+const { invalidCrnList } = require("../../forms");
 const {
   resourceGroupsField,
   nameField,
-  fieldIsNullOrEmptyString,
-  selectInvalidText,
-  invalidIpv4Address,
-  invalidIpv4AddressText,
   shouldDisableComponentSave,
-} = require("./utils");
-const { pushToChildFieldModal } = require("./store.utils");
+} = require("../utils");
+const {
+  pushToChildFieldModal,
+  updateSubChild,
+  deleteSubChild,
+} = require("../store.utils");
+const { greTunnelSchema } = require("./gre-tunnel-schema");
+const { prefixFiltersSchema } = require("./prefix-filters-schema");
 
 /**
  * initialize transit gateway
@@ -79,6 +81,13 @@ function transitGatewayOnStoreUpdate(config) {
         carve(gateway.connections, "power", connection.power);
       }
     });
+    if (!gateway.prefix_filters) {
+      gateway.prefix_filters = [];
+    } else {
+      gateway.prefix_filters.forEach((filter) => {
+        filter.tgw = gateway.name;
+      });
+    }
     if (!gateway.gre_tunnels) {
       gateway.gre_tunnels = [];
     } else {
@@ -389,78 +398,41 @@ function initTransitGateway(store) {
           "transit_gateways",
           "gre_tunnels"
         ),
-        schema: {
-          gateway: {
-            type: "select",
-            default: "",
-            invalid: fieldIsNullOrEmptyString("gateway"),
-            invalidText: selectInvalidText("gateway"),
-            groups: function (stateData, componentProps) {
-              let allGws = splat(
-                componentProps.craig.store.json.classic_gateways,
-                "name"
-              );
-              let tgwType = new revision(componentProps.craig.store.json).child(
-                "transit_gateways",
-                componentProps.arrayParentName
-              ).data.global;
-              let matchingConnections = [];
-              componentProps.craig.store.json.transit_gateways.forEach((gw) => {
-                if (gw.global === tgwType) {
-                  gw.gre_tunnels.forEach((tunnel) => {
-                    matchingConnections.push(tunnel.gateway);
-                  });
-                }
-              });
-              return allGws
-                .filter((gw) => {
-                  if (!contains(matchingConnections, gw)) {
-                    return gw;
-                  }
-                })
-                .concat(
-                  componentProps.data?.gateway
-                    ? [componentProps.data.gateway]
-                    : []
-                );
-            },
-          },
-          zone: {
-            labelText: "VPC Zone",
-            type: "select",
-            default: "",
-            invalid: fieldIsNullOrEmptyString("zone"),
-            invalidText: selectInvalidText("zone"),
-            groups: ["1", "2", "3"],
-            tooltip: {
-              content: "Availability Zone where the tunnel will be connected",
-              alignModal: "bottom-left",
-            },
-          },
-          local_tunnel_ip: {
-            default: "",
-            labelText: "Local Tunnel IP",
-            placeholder: "X.X.X.X",
-            invalid: invalidIpv4Address("local_tunnel_ip"),
-            invalidText: invalidIpv4AddressText,
-          },
-          remote_tunnel_ip: {
-            default: "",
-            labelText: "Remote Tunnel IP",
-            placeholder: "X.X.X.X",
-            invalid: invalidIpv4Address("remote_tunnel_ip"),
-            invalidText: invalidIpv4AddressText,
-          },
-          remote_bgp_asn: {
-            default: "",
-            labelText: "Remote BGP ASN",
-            placeholder: "12345",
-            tooltip: {
-              content:
-                "The remote network BGP ASN. If not added, one will be assigned automatically.",
-            },
-          },
+        schema: greTunnelSchema(),
+      },
+      prefix_filters: {
+        create: function (config, stateData, componentProps) {
+          pushToChildFieldModal(
+            config,
+            "transit_gateways",
+            "prefix_filters",
+            stateData,
+            componentProps
+          );
         },
+        save: function (config, stateData, componentProps) {
+          updateSubChild(
+            config,
+            "transit_gateways",
+            "prefix_filters",
+            stateData,
+            componentProps
+          );
+        },
+        delete: function (config, stateData, componentProps) {
+          deleteSubChild(
+            config,
+            "transit_gateways",
+            "prefix_filters",
+            componentProps
+          );
+        },
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "connection_type", "target", "action", "prefix"],
+          "transit_gateways",
+          "prefix_filters"
+        ),
+        schema: prefixFiltersSchema(),
       },
     },
   });

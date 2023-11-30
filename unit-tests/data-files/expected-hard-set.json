@@ -866,7 +866,8 @@
           "vpc": "workload"
         }
       ],
-      "gre_tunnels": []
+      "gre_tunnels": [],
+      "prefix_filters": []
     }
   ],
   "clusters": [

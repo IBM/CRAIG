@@ -281,6 +281,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "zones",
     "records",
     "custom_resolvers",
+    "prefix_filters",
     "routing_tables",
     "routes",
   ];
@@ -321,8 +322,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.cbr_zones[field]
         : contains(["contexts", "resource_attributes", "tags"], field)
         ? componentProps.craig.cbr_rules[field]
-        : field === "gre_tunnels"
-        ? componentProps.craig.transit_gateways.gre_tunnels
+        : contains(["gre_tunnels", "prefix_filters"], field)
+        ? componentProps.craig.transit_gateways[field]
         : contains(["routes"], field)
         ? componentProps.craig.routing_tables[field]
         : componentProps.craig[field]

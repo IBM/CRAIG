@@ -12,6 +12,7 @@ const {
   splat,
   validPortRange,
   isIpv4CidrOrAddress,
+  isWholeNumber,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const { invalidName } = require("../forms/invalid-callbacks");
@@ -527,8 +528,33 @@ function invalidIpv4Address(field) {
   };
 }
 
+/**
+ * invalid ipv4 address text
+ * @returns {string} invalid text
+ */
 function invalidIpv4AddressText() {
   return "Enter a valid IP address";
+}
+
+/**
+ * return a validation function to check if a value is a whole number
+ * @param {*} field
+ * @returns {Function} validation function
+ */
+function wholeNumberField(field) {
+  return function (stateData) {
+    return (
+      !isWholeNumber(parseInt(stateData[field])) ||
+      stateData[field].match(/\D/g) !== null
+    );
+  };
+}
+
+/**
+ * return invalid text for not whole number
+ */
+function wholeNumberText() {
+  return "Enter a whole number";
 }
 
 module.exports = {
@@ -551,4 +577,6 @@ module.exports = {
   invalidTcpOrUdpPort,
   invalidIcmpCodeOrType,
   invalidPort,
+  wholeNumberField,
+  wholeNumberText,
 };

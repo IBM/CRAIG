@@ -144,6 +144,45 @@ function formatTgwConnection(connection, tgw) {
 }
 
 /**
+ * create prefix filter
+ * @param {*} filter
+ * @param {*} tgw
+ * @returns {string} filter terraform
+ */
+function formatTgwPrefixFilter(filter, tgw) {
+  return jsonToTfPrint(
+    "resource",
+    "ibm_tg_connection_prefix_filter",
+    `${filter.name} ${filter.tgw} to ${
+      filter.connection_type === "power" ? "power workspace " : ""
+    }${filter.target} ${
+      filter.connection_type === "gre" ? "unbound gre " : ""
+    }connection filter`,
+    {
+      gateway: tfRef(
+        "ibm_tg_gateway",
+        snakeCase((tgw.use_data ? "data_" : "") + filter.tgw),
+        "id",
+        tgw.use_data
+      ),
+      connection_id: tfRef(
+        "ibm_tg_connection",
+        `${filter.tgw} to ${
+          filter.connection_type === "power" ? "power workspace " : ""
+        }${filter.target} ${
+          filter.connection_type === "gre" ? "unbound gre " : ""
+        }connection`,
+        "connection_id"
+      ),
+      action: filter.action,
+      prefix: filter.prefix,
+      le: filter.le,
+      ge: filter.ge,
+    }
+  );
+}
+
+/**
  * create transit gateway terraform
  * @param {Object} config
  * @param {Array<Object>} config.transit_gateways
@@ -161,6 +200,11 @@ function tgwTf(config) {
         (tunnel) => (blockData += formatTgwConnection(tunnel, gw))
       );
     }
+    if (gw.prefix_filters) {
+      gw.prefix_filters.forEach((filter) => {
+        blockData += formatTgwPrefixFilter(filter, gw);
+      });
+    }
     tf += tfBlock(gw.name + " Transit Gateway", blockData);
     if (index !== config.transit_gateways.length - 1) {
       tf += "\n";
@@ -175,4 +219,5 @@ module.exports = {
   tgwTf,
   ibmTgConnection,
   ibmTgGateway,
+  formatTgwPrefixFilter,
 };

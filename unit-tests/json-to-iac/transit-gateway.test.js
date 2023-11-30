@@ -3,6 +3,7 @@ const {
   formatTgw,
   formatTgwConnection,
   tgwTf,
+  formatTgwPrefixFilter,
 } = require("../../client/src/lib/json-to-iac/transit-gateway");
 const slzNetwork = require("../data-files/slz-network.json");
 
@@ -288,6 +289,128 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
       );
     });
   });
+  describe("formatTgwPrefixFilter", () => {
+    it("should return a vpc prefix filter", () => {
+      let actualData = formatTgwPrefixFilter(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        { use_data: false }
+      );
+      let expectedData = `
+resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_management_connection_filter" {
+  gateway       = ibm_tg_gateway.transit_gateway.id
+  connection_id = ibm_tg_connection.transit_gateway_to_management_connection.connection_id
+  action        = "permit"
+  prefix        = "10.10.10.10/10"
+  le            = 0
+  ge            = 32
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct filter"
+      );
+    });
+    it("should return a vpc prefix filter with tgw from data", () => {
+      let actualData = formatTgwPrefixFilter(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        { use_data: true }
+      );
+      let expectedData = `
+resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_management_connection_filter" {
+  gateway       = data.ibm_tg_gateway.data_transit_gateway.id
+  connection_id = ibm_tg_connection.transit_gateway_to_management_connection.connection_id
+  action        = "permit"
+  prefix        = "10.10.10.10/10"
+  le            = 0
+  ge            = 32
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct filter"
+      );
+    });
+    it("should return a power prefix filter", () => {
+      let actualData = formatTgwPrefixFilter(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "power",
+          target: "dev",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        { use_data: false }
+      );
+      let expectedData = `
+resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_power_workspace_dev_connection_filter" {
+  gateway       = ibm_tg_gateway.transit_gateway.id
+  connection_id = ibm_tg_connection.transit_gateway_to_power_workspace_dev_connection.connection_id
+  action        = "permit"
+  prefix        = "10.10.10.10/10"
+  le            = 0
+  ge            = 32
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct filter"
+      );
+    });
+    it("should return a gre tunnel filter", () => {
+      let actualData = formatTgwPrefixFilter(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "gre",
+          target: "gw",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        { use_data: false }
+      );
+      let expectedData = `
+resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_gw_unbound_gre_connection_filter" {
+  gateway       = ibm_tg_gateway.transit_gateway.id
+  connection_id = ibm_tg_connection.transit_gateway_to_gw_unbound_gre_connection.connection_id
+  action        = "permit"
+  prefix        = "10.10.10.10/10"
+  le            = 0
+  ge            = 32
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct filter"
+      );
+    });
+  });
   describe("tgwTf", () => {
     it("should return correctly formatted transit gateway", () => {
       let actualData = tgwTf(slzNetwork);
@@ -336,7 +459,113 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
         "it should return correct data"
       );
     });
+    it("should return correctly formatted transit gateway with prefix filters", () => {
+      let nw = { ...slzNetwork };
+      nw.transit_gateways[0].prefix_filters = [
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          name: "my-cool-filter-1",
+          tgw: "transit-gateway",
+          connection_type: "power",
+          target: "dev",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          name: "my-cool-filter-2",
+          tgw: "transit-gateway",
+          connection_type: "gre",
+          target: "gw",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+      ];
+      let actualData = tgwTf(slzNetwork);
+      let expectedData = `##############################################################################
+# Transit Gateway Transit Gateway
+##############################################################################
 
+resource "ibm_tg_gateway" "transit_gateway" {
+  name           = "\${var.prefix}-transit-gateway"
+  location       = var.region
+  global         = false
+  resource_group = ibm_resource_group.slz_service_rg.id
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
+  gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "vpc"
+  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
+  network_id   = module.management_vpc.crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
+  gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "vpc"
+  name         = "\${var.prefix}-transit-gateway-workload-hub-connection"
+  network_id   = module.workload_vpc.crn
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
+resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_management_connection_filter" {
+  gateway       = ibm_tg_gateway.transit_gateway.id
+  connection_id = ibm_tg_connection.transit_gateway_to_management_connection.connection_id
+  action        = "permit"
+  prefix        = "10.10.10.10/10"
+  le            = 0
+  ge            = 32
+}
+
+resource "ibm_tg_connection_prefix_filter" "my_cool_filter_1_transit_gateway_to_power_workspace_dev_connection_filter" {
+  gateway       = ibm_tg_gateway.transit_gateway.id
+  connection_id = ibm_tg_connection.transit_gateway_to_power_workspace_dev_connection.connection_id
+  action        = "permit"
+  prefix        = "10.10.10.10/10"
+  le            = 0
+  ge            = 32
+}
+
+resource "ibm_tg_connection_prefix_filter" "my_cool_filter_2_transit_gateway_to_gw_unbound_gre_connection_filter" {
+  gateway       = ibm_tg_gateway.transit_gateway.id
+  connection_id = ibm_tg_connection.transit_gateway_to_gw_unbound_gre_connection.connection_id
+  action        = "permit"
+  prefix        = "10.10.10.10/10"
+  le            = 0
+  ge            = 32
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should return terraform for multiple transit gateways", () => {
       let config = { ...slzNetwork };
       config.transit_gateways = [

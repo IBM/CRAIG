@@ -23,7 +23,13 @@ const { getAllSecrets } = require("./utils");
 function hasDuplicateName(field, stateData, componentProps, overrideField) {
   let allOtherNames = [];
   let stateField = overrideField || "name";
-  if (field === "appid_key") {
+  if (field === "prefix_filters") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.transit_gateways,
+      "prefix_filters",
+      "name"
+    );
+  } else if (field === "appid_key") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.appid,
       "keys",
