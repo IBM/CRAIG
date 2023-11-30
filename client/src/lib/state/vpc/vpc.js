@@ -24,9 +24,9 @@ const {
   firewallTiers,
   newDefaultF5ExternalAclManagement,
   legacyDefaultVpcs,
-} = require("./defaults");
+} = require("../defaults");
 const { lazyZstate } = require("lazy-z/lib/store");
-const { buildSubnet } = require("../builders");
+const { buildSubnet } = require("../../builders");
 const {
   formatNetworkingRule,
   updateNetworkingRule,
@@ -34,8 +34,10 @@ const {
   fieldIsNullOrEmptyString,
   invalidTcpOrUdpPort,
   invalidIcmpCodeOrType,
-} = require("./utils");
-const { calculateNeededSubnetIps, getNextCidr } = require("../json-to-iac");
+  resourceGroupsField,
+  selectInvalidText,
+} = require("../utils");
+const { calculateNeededSubnetIps, getNextCidr } = require("../../json-to-iac");
 const {
   getSubnetTierData,
   getUpdatedTierData,
@@ -44,16 +46,16 @@ const {
   deleteLegacySubnetTier,
   updateAdvancedSubnetTier,
   editSubnets,
-} = require("./subnets");
+} = require("../subnets");
 const {
   invalidName,
   invalidSubnetTierName,
-} = require("../forms/invalid-callbacks");
+} = require("../../forms/invalid-callbacks");
 const {
   invalidNameText,
   invalidSubnetTierText,
-} = require("../forms/text-callbacks");
-const { invalidPort } = require("../forms/disable-save");
+} = require("../../forms/text-callbacks");
+const { vpcSchema } = require("./vpc-schema");
 
 /**
  * initialize vpc store
@@ -1120,17 +1122,6 @@ function naclRuleSubComponents() {
 }
 
 /**
- * check if vpc name field is invalid
- * @param {*} field
- * @returns {Function} evaluates to boolean
- */
-function invalidVpcName(field) {
-  return function (stateData, componentProps) {
-    return invalidName("vpcs")(field, stateData, componentProps);
-  };
-}
-
-/**
  * init vpc store
  * @param {*} store
  */
@@ -1152,32 +1143,7 @@ function initVpcStore(store) {
       ],
       "vpcs"
     ),
-    schema: {
-      name: {
-        default: "",
-        invalid: invalidVpcName("name"),
-      },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
-      bucket: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("bucket"),
-      },
-      default_network_acl_name: {
-        default: "",
-        invalid: invalidVpcName("default_network_acl_name"),
-      },
-      default_security_group_name: {
-        default: "",
-        invalid: invalidVpcName("default_security_group_name"),
-      },
-      default_routing_table_name: {
-        default: "",
-        invalid: invalidVpcName("default_routing_table_name"),
-      },
-    },
+    schema: vpcSchema(),
     subComponents: {
       acls: {
         create: naclCreate,

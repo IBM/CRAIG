@@ -453,9 +453,10 @@ function nameField(jsonField) {
 /**
  * resource group
  * @param {Function=} hideWhen
+ * @param {boolean=} small make small
  * @returns {object} object for resource groups page
  */
-function resourceGroupsField(hideWhen) {
+function resourceGroupsField(hideWhen, small) {
   return {
     default: "",
     invalid: fieldIsNullOrEmptyString("resource_group"),
@@ -465,6 +466,7 @@ function resourceGroupsField(hideWhen) {
       return splat(componentProps.craig.store.json.resource_groups, "name");
     },
     hideWhen: hideWhen,
+    size: small ? "small" : undefined,
   };
 }
 

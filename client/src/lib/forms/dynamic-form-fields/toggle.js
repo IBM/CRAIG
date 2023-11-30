@@ -57,7 +57,9 @@ function dynamicToggleProps(props) {
     onToggle: () => {
       props.handleInputChange(props.name);
     },
-    defaultToggled: props.parentState[props.name],
+    defaultToggled: props.field.onRender
+      ? props.field.onRender(props.parentState, props.parentProps)
+      : props.parentState[props.name],
     disabled: isDisabled,
   };
 }
