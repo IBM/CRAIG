@@ -45,8 +45,7 @@ const ReleaseNote = (props) => {
 const ReleaseNotes = () => {
   return (
     <div>
-      <h4>Release Notes</h4>
-      <br />
+      <h1 className="marginBottomXs">Release Notes</h1>
       <Accordion align="start" size="lg">
         {releaseNotes.map((note) => (
           <ReleaseNote key={note.version} note={note} />

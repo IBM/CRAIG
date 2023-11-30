@@ -58,6 +58,7 @@ All notable changes to this project will be documented in this file.
 - Users can now create certificates for a VPN Server for developer use only
 - Users can now import PEM files as certificates for VPN Server
 - Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS
+- Users can now import from the Projects page
 
 ### Fixes
 

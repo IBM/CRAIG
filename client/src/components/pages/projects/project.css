@@ -1,13 +1,10 @@
-.projects {
-  background-color: #f4f4f4;
-}
-
 .header {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 4rem;
+  padding-top: 2rem;
+  text-align: center;
 }
 
 .line {

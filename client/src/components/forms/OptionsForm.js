@@ -92,7 +92,7 @@ class OptionsForm extends React.Component {
   render() {
     return (
       <>
-        <div className={"tab-panel subForm"}>
+        <div className="subForm">
           <IcseHeading
             name="Environment Options"
             buttons={

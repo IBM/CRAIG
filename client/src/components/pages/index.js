@@ -1,5 +1,4 @@
 export { default as About } from "./About";
-export { default as ImportJson } from "./ImportJson";
 export { default as Home } from "./Home";
 export { default as ReleaseNotes } from "./ReleaseNotes";
 export { default as ResetState } from "./ResetState";

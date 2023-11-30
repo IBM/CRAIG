@@ -44,7 +44,8 @@
       "Users can now create, update, and delete Classic SSH Keys",
       "Users can now create certificates for a VPN Server for developer use only",
       "Users can now import PEM files as certificates for VPN Server",
-      "Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS"
+      "Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS",
+      "Users can now import from the Projects page"
     ],
     "fixes": [
       "Fixed an issue causing the fields within security groups for the VSI and Load Balancer Terraform to not be correctly formatted",
