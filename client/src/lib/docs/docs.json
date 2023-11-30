@@ -1879,6 +1879,30 @@
       [
         "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-subnet",
         "Configuring and adding a private network subnet"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_linux_sap/docs/",
+        "Ansible Content for Power LPAR Configuration - SAP HANA and SAP NetWeaver"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_aix/",
+        "Ansible Content for IBM Power Systems - AIX"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_aix_oracle/docs/",
+        "Ansible Content for IBM Power Systems - AIX Oracle"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_aix_sap/",
+        "Ansible Content for IBM Power Systems - AIX with SAP Software"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_ibmi/docs/",
+        "Ansible Content for IBM Power Systems - IBM i"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_ibmi_sap/",
+        "Ansible Content for IBM Power Systems - IBM i with SAP Software"
       ]
     ],
     "content": [
@@ -1914,7 +1938,7 @@
         ]
       }
     ],
-    "last_updated": "9/25/2023"
+    "last_updated": "11/29/2023"
   },
   "power_volumes": {
     "content": [

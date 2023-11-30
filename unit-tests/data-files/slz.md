@@ -752,6 +752,12 @@ Memory           | Select the amount of memory for the Power Systems Virtual Ser
 - [What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-power-iaas-faqs#processor)
 - [IBM Power Storage Tiers](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#storage-tiers)
 - [Configuring and adding a private network subnet](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-subnet)
+- [Ansible Content for Power LPAR Configuration - SAP HANA and SAP NetWeaver](https://galaxy.ansible.com/ui/repo/published/ibm/power_linux_sap/docs/)
+- [Ansible Content for IBM Power Systems - AIX](https://galaxy.ansible.com/ui/repo/published/ibm/power_aix/)
+- [Ansible Content for IBM Power Systems - AIX Oracle](https://galaxy.ansible.com/ui/repo/published/ibm/power_aix_oracle/docs/)
+- [Ansible Content for IBM Power Systems - AIX with SAP Software](https://galaxy.ansible.com/ui/repo/published/ibm/power_aix_sap/)
+- [Ansible Content for IBM Power Systems - IBM i](https://galaxy.ansible.com/ui/repo/published/ibm/power_ibmi/docs/)
+- [Ansible Content for IBM Power Systems - IBM i with SAP Software](https://galaxy.ansible.com/ui/repo/published/ibm/power_ibmi_sap/)
 
 -----
 
