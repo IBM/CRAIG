@@ -881,12 +881,12 @@ const RoutingTablesPage = (craig) => {
       forceOpen={forceShowForm}
       craig={craig}
       vpcList={craig.store.vpcList}
-      invalidCallback={invalidName("routing_tables")}
-      invalidTextCallback={invalidNameText("routing_tables")}
-      invalidRouteTextCallback={invalidNameText("routes")}
-      invalidRouteCallback={invalidName("routes")}
-      onRouteSave={craig.routing_tables.routes.delete}
-      onRouteDelete={craig.routing_tables.routes.save}
+      invalidCallback={craig.routing_tables.name.invalid}
+      invalidTextCallback={craig.routing_tables.name.invalidText}
+      invalidRouteTextCallback={craig.routing_tables.routes.name.invalidText}
+      invalidRouteCallback={craig.routing_tables.routes.name.invalid}
+      onRouteSave={craig.routing_tables.routes.save}
+      onRouteDelete={craig.routing_tables.routes.delete}
       onRouteSubmit={craig.routing_tables.routes.create}
     />
   );

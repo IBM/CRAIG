@@ -52,16 +52,7 @@ const {
   getAllOtherGroups,
   getAllRuleNames,
 } = require("./copy-rules");
-const {
-  routingTableInit,
-  routingTableOnStoreUpdate,
-  routingTableCreate,
-  routingTableSave,
-  routingTableDelete,
-  routingTableRouteCreate,
-  routingTableRouteSave,
-  routingTableRouteDelete,
-} = require("./routing-tables");
+const { initRoutingTable } = require("./routing-tables");
 const { initCbrZones } = require("./cbr-zones");
 const { initCbrRules } = require("./cbr-rules");
 const { initVpnState } = require("./vpn-servers");
@@ -207,20 +198,7 @@ const state = function (legacy) {
     save: iamSave,
   });
 
-  store.newField("routing_tables", {
-    init: routingTableInit,
-    onStoreUpdate: routingTableOnStoreUpdate,
-    save: routingTableSave,
-    create: routingTableCreate,
-    delete: routingTableDelete,
-    subComponents: {
-      routes: {
-        create: routingTableRouteCreate,
-        save: routingTableRouteSave,
-        delete: routingTableRouteDelete,
-      },
-    },
-  });
+  initRoutingTable(store);
 
   store.newField("access_groups", {
     init: accessGroupInit,
