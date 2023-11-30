@@ -6,7 +6,8 @@
     "tags": ["slz", "landing-zone"],
     "dynamic_subnets": false,
     "power_vs_zones": [],
-    "endpoints": "private"
+    "endpoints": "private",
+    "account_id": ""
   },
   "access_groups": [],
   "appid": [],
@@ -177,10 +178,15 @@
   ],
   "routing_tables": [],
   "scc": {
-    "enable": false,
+    "credential_description": null,
     "id": null,
-    "name": null,
-    "credential_description": null
+    "passphrase": null,
+    "name": "",
+    "location": "us",
+    "collector_description": null,
+    "is_public": false,
+    "scope_description": null,
+    "enable": false
   },
   "secrets_manager": [],
   "security_groups": [
