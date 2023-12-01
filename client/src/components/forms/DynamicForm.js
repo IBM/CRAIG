@@ -14,7 +14,7 @@ import {
   DynamicTextArea,
   DynamicMultiSelect,
 } from "./dynamic-form/components";
-import { titleCase, eachKey, kebabCase, isBoolean, contains } from "lazy-z";
+import { eachKey, isBoolean, contains } from "lazy-z";
 import { propsMatchState } from "../../lib";
 import {
   ClassicDisabledTile,
@@ -25,6 +25,7 @@ import {
   dynamicIcseHeadingProps,
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
+import { Network_3 } from "@carbon/icons-react";
 
 const doNotRenderFields = [
   "heading",
@@ -34,6 +35,7 @@ const doNotRenderFields = [
   "pgw_zone_1",
   "pgw_zone_2",
   "pgw_zone_3",
+  "ip_address",
 ];
 
 class DynamicForm extends React.Component {
@@ -76,9 +78,11 @@ class DynamicForm extends React.Component {
   /**
    * handle override input changes
    * @param {*} nextState shallow copy of state
+   * @param {string} targetName name of the target data
+   * @param {*} targetData data for target
    * @returns {boolean} true if changes were made
    */
-  handleOverrideInputChange(nextState, targetName) {
+  handleOverrideInputChange(nextState, targetName, targetData) {
     let madeChanges = false;
     this.props.form.groups.forEach((group) => {
       // for each item in that group
@@ -86,12 +90,12 @@ class DynamicForm extends React.Component {
         if (group[field].onInputChange && targetName === field) {
           // if the item has onInputChange function, set field on next state
           // to that value
-          nextState[field] = group[field].onInputChange(nextState);
+          nextState[field] = group[field].onInputChange(nextState, targetData);
           madeChanges = true;
         } else if (group[field].onStateChange && targetName === field) {
           // if the item has onStateChange function, run against whole
           // state copy
-          group[field].onStateChange(nextState);
+          group[field].onStateChange(nextState, this.props);
           madeChanges = true;
         }
       });
@@ -107,8 +111,21 @@ class DynamicForm extends React.Component {
   handleInputChange(event) {
     let nextState = { ...this.state };
     let { name, value } = event.target;
-    nextState[name] = value;
-    this.handleOverrideInputChange(nextState, name);
+
+    // prevent setting data for power vs instance network & ips
+    if (name !== "network" && name.match(/^ip_address_\d$/g) === null) {
+      nextState[name] = value;
+    }
+
+    // update power ip address in nested component, target for future refactor
+    if (name.match(/^ip_address_\d$/g) !== null) {
+      let nw = [...this.state.network];
+      let index = parseInt(name.replace(/\D+/g, ""));
+      let item = { ...nw[index] };
+      item.ip_address = value;
+      nw[index] = item;
+      nextState.network = nw;
+    } else this.handleOverrideInputChange(nextState, name, value);
     this.setState(nextState);
   }
 
@@ -181,6 +198,38 @@ class DynamicForm extends React.Component {
             </IcseFormGroup>
           )
         )}
+        {
+          // this is less than elegant, as we add more custom components we can
+          // figure out the best way to render custom components
+          this.props.formName === "Power Instances" && (
+            <div className="formInSubForm">
+              {this.state.network.length === 0
+                ? "No Network Interfaces Selected"
+                : this.state.network.map((nw, index) => {
+                    return (
+                      <IcseFormGroup
+                        key={nw.name + "-group"}
+                        className="alignItemsCenter marginBottomSmall"
+                      >
+                        <Network_3 className="powerIpMargin" />
+                        <div className="powerIpMargin fieldWidth">
+                          <p>{nw.name}</p>
+                        </div>
+                        <DynamicFormTextInput
+                          name={"ip_address_" + index}
+                          field={this.props.craig.power_instances.ip_address}
+                          parentState={this.state}
+                          parentProps={this.props}
+                          handleInputChange={this.handleInputChange}
+                          index={index}
+                          value={nw.ip_address}
+                        />
+                      </IcseFormGroup>
+                    );
+                  })}
+            </div>
+          )
+        }
         {this.props.isModal === true || !this.props.form.subForms
           ? ""
           : this.props.form.subForms.map((subForm) => (

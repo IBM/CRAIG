@@ -1608,7 +1608,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
           dynamic_subnets: false,
           enable_power_vs: true,
           power_vs_zones: ["us-south"],
-          craig_version: "1.7.0",
+          craig_version: "1.7.1",
           template: "Power VS SAP Hana",
         },
         access_groups: [],

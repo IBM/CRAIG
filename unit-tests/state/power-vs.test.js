@@ -89,9 +89,21 @@ describe("power-vs", () => {
     });
   });
   describe("power.save", () => {
-    it("should save a workspace", () => {
+    it("should save a workspace and update instances and volumes with new name", () => {
       let state = new newState();
       state.power.create({ name: "toad", zone: "dal12", imageNames: [] });
+      state.power_instances.create({
+        name: "frog",
+        zone: "dal12",
+        workspace: "toad",
+        network: [],
+      });
+      state.power_instances.create({
+        name: "frog",
+        zone: "dal12",
+        workspace: "bog",
+        network: [],
+      });
       state.power.save(
         { name: "frog", zone: "dal12" },
         { data: { name: "toad" } }
@@ -111,6 +123,11 @@ describe("power-vs", () => {
         state.store.json.power[0],
         expectedData,
         "it should update name in place"
+      );
+      assert.deepEqual(
+        state.store.json.power_instances[0].workspace,
+        "frog",
+        "it should update name"
       );
     });
   });

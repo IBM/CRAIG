@@ -115,6 +115,13 @@ function powerVsCreate(config, stateData) {
  * @param {object} stateData component state data
  */
 function powerVsSave(config, stateData, componentProps) {
+  ["power_volumes", "power_instances"].forEach((field) => {
+    config.store.json[field].forEach((item) => {
+      if (item.workspace === componentProps.data.name) {
+        item.workspace = stateData.name;
+      }
+    });
+  });
   config.updateChild(["json", "power"], componentProps.data.name, stateData);
 }
 

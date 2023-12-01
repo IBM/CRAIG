@@ -28,6 +28,9 @@ function dynamicMultiSelectProps(props) {
     (stateValue && stateValue.length === 0 && props.field.optional) ||
     props.name === "power_connections"
       ? false
+      : // force network to not display as invalid when ip is invalid
+      stateValue.length > 0 && props.name === "network"
+      ? false
       : stateValue.length > 0
       ? invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps")
       : true;
@@ -52,6 +55,7 @@ function dynamicMultiSelectProps(props) {
     titleText: labelText || titleCase(props.name),
     itemToString: (item) => (item ? item : ""),
     invalid: invalid,
+    invalidText: props.field.invalidText(props.parentState, props.parentProps),
     onChange: (selectEvent) => {
       let event = {
         target: {

@@ -67,7 +67,9 @@ const {
 } = require("./logging-monitoring");
 const { initIcdStore } = require("./icd");
 const { initPowerVsStore } = require("./power-vs");
-const { initPowerVsInstance } = require("./power-vs-instances");
+const {
+  initPowerVsInstance,
+} = require("./power-vs-instances/power-vs-instances.js");
 const { initPowerVsVolumeStore } = require("./power-vs-volumes");
 const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");

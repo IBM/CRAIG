@@ -368,7 +368,7 @@ function forceShowForm(stateData, componentProps) {
       componentProps.innerFormProps
     );
   }
-
+  console.log("AAAAA");
   return openForm;
 }
 

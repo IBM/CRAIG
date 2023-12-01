@@ -35,7 +35,6 @@ import {
   SccV1Page,
   F5BigIpPage,
   PowerVsWorkspacePage,
-  PowerVsInstancesPage,
   PowerVsVolumesPage,
   ClassicGatewaysPage,
   IcseFormTemplate,
@@ -54,7 +53,6 @@ import {
   storageChangeDisabledCallback,
   vpnServersHelperText,
   powerImageFetch,
-  powerStoragePoolFetch,
 } from "../../lib/forms";
 import {
   invalidCidr,
@@ -83,8 +81,6 @@ import {
   edgeRouterEnabledZones,
   cosPlans,
   powerStoragePoolRegionMap,
-  systemTypes,
-  sapProfiles,
   datacenters,
 } from "../../lib/constants";
 import DynamicForm from "../forms/DynamicForm";
@@ -759,14 +755,11 @@ const PowerInfraPage = (craig) => {
 };
 
 const PowerVsInstances = (craig) => {
-  let powerStoragePoolMap = {};
-  craig.store.json._options.power_vs_zones.forEach((zone) => {
-    powerStoragePoolFetch(zone, fetch).then((zonePools) => {
-      powerStoragePoolMap[zone] = zonePools;
-    });
-  });
   return (
-    <PowerVsInstancesPage
+    <IcseFormTemplate
+      name="Power VS Instances"
+      addText="Create an Instance"
+      docs={RenderDocs("power_instances", craig.store.json._options.template)}
       overrideTile={
         !craig.store.json._options.enable_power_vs ? (
           <NoPowerNetworkTile />
@@ -774,30 +767,84 @@ const PowerVsInstances = (craig) => {
           <NoPowerWorkspaceTile />
         ) : undefined
       }
-      systemTypes={systemTypes}
-      sapProfiles={sapProfiles}
-      power_instances={craig.store.json.power_instances}
-      storage_pool_map={powerStoragePoolMap}
-      power_volumes={craig.store.json.power_volumes}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.power_instances}
       onSave={craig.power_instances.save}
       onSubmit={craig.power_instances.create}
       onDelete={craig.power_instances.delete}
-      craig={craig}
-      power={craig.store.json.power}
-      docs={RenderDocs("power_instances", craig.store.json._options.template)}
-      invalidCallback={craig.power_instances.name.invalid}
-      invalidTextCallback={craig.power_instances.name.invalidText}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
       forceOpen={forceShowForm}
-      invalidIpCallback={craig.power_instances.network.invalid}
-      invalidPiProcessorsCallback={craig.power_instances.pi_processors.invalid}
-      invalidPiProcessorsTextCallback={
-        craig.power_instances.pi_processors.invalidText
-      }
-      invalidPiMemoryCallback={craig.power_instances.pi_memory.invalid}
-      invalidPiMemoryTextCallback={craig.power_instances.pi_memory.invalidText}
-      storageChangesDisabledCallback={storageChangeDisabledCallback}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        // hard code for now, we will need a better solution for dynamically getting
+        // storage pools with API call. The issue here is that the async fetches
+        // do not set value until after the component is rendered if it is forced
+        // open. In addition, the old call was happening each time anything was rendered
+        // which is not ideal
+        powerStoragePoolMap: powerStoragePoolRegionMap,
+        formName: "Power Instances",
+        form: {
+          jsonField: "power_instances",
+          setDefault: {},
+          groups: [
+            {
+              sap: craig.power_instances.sap,
+              sap_profile: craig.power_instances.sap_profile,
+            },
+            {
+              name: craig.power_instances.name,
+              workspace: craig.power_instances.workspace,
+              network: craig.power_instances.network,
+            },
+            {
+              ssh_key: craig.power_instances.ssh_key,
+              image: craig.power_instances.image,
+              pi_sys_type: craig.power_instances.pi_sys_type,
+            },
+            {
+              pi_proc_type: craig.power_instances.pi_proc_type,
+              pi_processors: craig.power_instances.pi_processors,
+              pi_memory: craig.power_instances.pi_memory,
+            },
+            {
+              pi_storage_pool_affinity:
+                craig.power_instances.pi_storage_pool_affinity,
+            },
+            {
+              heading: {
+                name: "Boot Volume",
+                type: "subHeading",
+              },
+            },
+            {
+              storage_option: craig.power_instances.storage_option,
+              pi_storage_type: craig.power_instances.pi_storage_type,
+              pi_storage_pool: craig.power_instances.pi_storage_pool,
+              affinity_type: craig.power_instances.affinity_type,
+              pi_affinity_volume: craig.power_instances.pi_affinity_volume,
+              pi_anti_affinity_volume:
+                craig.power_instances.pi_anti_affinity_volume,
+              pi_anti_affinity_instance:
+                craig.power_instances.pi_anti_affinity_instance,
+              pi_affinity_instance: craig.power_instances.pi_affinity_instance,
+            },
+            {
+              heading: {
+                name: "IP Interface Options",
+                type: "subHeading",
+              },
+            },
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "power_instances",
+        hideName: true,
+      }}
     />
   );
 };
@@ -1170,7 +1217,6 @@ const TransitGatewayPage = (craig) => {
         craig: craig,
         disableSave: disableSave,
         submissionFieldName: "transit_gateways",
-        hide: false,
         hideName: true,
       }}
     />
@@ -1296,7 +1342,6 @@ const VpcPage = (craig) => {
         craig: craig,
         disableSave: disableSave,
         submissionFieldName: "vpcs",
-        hide: false,
         hideName: true,
       }}
     />
