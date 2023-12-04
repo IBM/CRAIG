@@ -1,11 +1,13 @@
 import React from "react";
-import { Button, TextArea, Modal } from "@carbon/react";
+import { Button, Modal } from "@carbon/react";
 import { CheckmarkFilled, Misuse } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { IcseFormGroup, IcseTextInput } from "icse-react-assets";
 import { isInRange } from "lazy-z";
 import { slzToCraig, validate } from "../../lib";
+import { JSONTextArea } from "../utils/JSONTextArea";
 import "./import-json.css";
+
 const constants = require("../../lib/constants");
 
 class ImportJson extends React.Component {
@@ -73,15 +75,18 @@ class ImportJson extends React.Component {
   }
 
   handlePrefix(event) {
-    let { value } = event.target;
-    let nextState = { ...this.state };
-    nextState.prefix = value;
-    nextState.hasInvalidPrefix =
-      this.state.prefix.match(constants.newResourceNameExp) === null;
-    this.setState(nextState);
+    let prefix = event.target.value;
+    this.setState({
+      prefix,
+      hasInvalidPrefix: prefix.match(constants.newResourceNameExp) === null,
+    });
   }
 
   render() {
+    let canBeSubmitted = this.props.slz
+      ? this.state.isValid && !this.state.hasInvalidPrefix
+      : this.state.isValid;
+
     return (
       <div>
         <div className="smallerText">
@@ -106,38 +111,32 @@ class ImportJson extends React.Component {
               />
             </IcseFormGroup>
           )}
-          <IcseFormGroup>
-            <TextArea
-              aria-label="import-json"
-              labelText={
-                this.props.slz ? "Override JSON data" : "Custom CRAIG Data"
-              }
-              id="import-json"
-              key={this.state.hasInvalidPrefix}
-              rows={20}
-              cols={75}
-              value={this.state.textData}
-              placeholder="Paste your override JSON here"
-              onChange={this.handleChange}
-              invalid={!this.state.isValid}
-              invalidText={
-                this.props.slz && this.state.hasInvalidPrefix
-                  ? "Enter a valid prefix to edit"
-                  : this.state.errorList
-              }
-              className="codeFont"
-              disabled={this.props.slz && this.state.hasInvalidPrefix === true}
-            />
-          </IcseFormGroup>
+          <JSONTextArea
+            import
+            override={this.props.slz ? true : false}
+            value={this.state.textData}
+            onChange={this.handleChange}
+            invalid={!this.state.isValid}
+            invalidText={
+              this.props.slz && this.state.hasInvalidPrefix
+                ? "Enter a valid prefix to submit"
+                : this.state.errorList
+            }
+            link={
+              this.props.slz
+                ? "https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone"
+                : undefined
+            }
+          />
           <IcseFormGroup noMarginBottom>
             <Button
               kind="tertiary"
-              disabled={this.state.isValid === false ? true : false}
+              disabled={!canBeSubmitted}
               onClick={this.toggleModal}
               aria-label="json-submit"
               className="import-btn"
             >
-              {this.state.isValid ? (
+              {canBeSubmitted ? (
                 <CheckmarkFilled className="marginRightSmall" />
               ) : (
                 <Misuse className="marginRightSmall" />

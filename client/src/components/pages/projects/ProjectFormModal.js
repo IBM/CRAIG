@@ -238,7 +238,7 @@ ProjectFormModal.defaultProps = {
 
 ProjectFormModal.propTypes = {
   data: PropTypes.shape({
-    last_save: PropTypes.string,
+    last_save: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     template: PropTypes.string,
   }).isRequired,
   open: PropTypes.bool.isRequired,

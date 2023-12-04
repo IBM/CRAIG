@@ -1,7 +1,16 @@
 const { assert } = require("chai");
-const { storageChangeDisabledCallback } = require("../../client/src/lib");
+const {
+  storageChangeDisabledCallback,
+  state,
+} = require("../../client/src/lib");
 
 describe("storageChangeDisabledCallback", () => {
+  it("should be false when is modal", () => {
+    assert.isFalse(
+      storageChangeDisabledCallback({}, { isModal: true }),
+      "it should be false for modal forms"
+    );
+  });
   it("should be true for an instance when it is used by another instance for affinity", () => {
     let actualData = storageChangeDisabledCallback(
       {
@@ -138,6 +147,7 @@ describe("storageChangeDisabledCallback", () => {
     assert.isTrue(actualData, "it should be true");
   });
   it("should be true for an instance when it is used by another instance for anti-affinity", () => {
+    let craig = state();
     let actualData = storageChangeDisabledCallback(
       {
         name: "oracle-1",
@@ -170,7 +180,7 @@ describe("storageChangeDisabledCallback", () => {
         pi_storage_pool_affinity: true,
       },
       {
-        power_volumes: [],
+        craig: craig,
         data: {
           name: "oracle-1",
           workspace: "oracle-template",

@@ -39,6 +39,7 @@
 
 /* text area font for import json */
 .cds--form-item.codeFont div.cds--text-area__wrapper {
+  width: inherit;
   font-family: monospace, monospace; // workaround for some browsers with how they handle monospace
 }
 
@@ -97,4 +98,43 @@ a.tile:is(:link, :visited, :hover, :active) {
 .smallImage {
   max-width: 90%;
   max-height: 90%;
+}
+
+.textAreaWithButtons {
+  position: relative;
+  max-width: 99%;
+  min-width: 99%;
+}
+
+.textAreaButtons {
+  position: absolute;
+  top: 2.5rem;
+  right: 1rem;
+  z-index: 5;
+}
+
+.textArea {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.fullMinWidth {
+  min-width: 100% !important;
+}
+
+.cds--form-item.tooltip > .cds--select > .cds--label:not(.labelRow) {
+  display: none;
+}
+
+.tooltip.popover-obj {
+  margin-top: 0 !important;
+}
+
+.tooltip > div.cds--select--invalid {
+  margin-top: 0 !important;
+}
+
+.powerIpMargin {
+  margin-top: 0rem;
 }

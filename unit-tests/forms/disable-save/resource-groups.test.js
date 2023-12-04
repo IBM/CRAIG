@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 describe("resource groups", () => {
   it("should return true if a resource group has an invalid name", () => {
@@ -8,17 +8,7 @@ describe("resource groups", () => {
         "resource_groups",
         { name: "@@@", use_data: false },
         {
-          craig: {
-            store: {
-              json: {
-                resource_groups: [
-                  {
-                    name: "frog",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },

@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 describe("power vs volumes", () => {
   it("should disable save for volume with an invalid name", () => {
@@ -13,13 +13,7 @@ describe("power vs volumes", () => {
           data: {
             name: "test",
           },
-          craig: {
-            store: {
-              json: {
-                power_volumes: [{}],
-              },
-            },
-          },
+          craig: state(),
         }
       ),
       "it should be disabled"
@@ -36,17 +30,7 @@ describe("power vs volumes", () => {
         data: {
           name: "egg",
         },
-        craig: {
-          store: {
-            json: {
-              power_volumes: [
-                {
-                  name: "frog",
-                },
-              ],
-            },
-          },
-        },
+        craig: state(),
       }
     );
     assert.isTrue(actualData, "it should be disabled");
@@ -63,13 +47,7 @@ describe("power vs volumes", () => {
           data: {
             name: "test",
           },
-          craig: {
-            store: {
-              json: {
-                power_volumes: [{}],
-              },
-            },
-          },
+          craig: state(),
         }
       ),
       "it should be disabled"
@@ -87,13 +65,7 @@ describe("power vs volumes", () => {
           data: {
             name: "test",
           },
-          craig: {
-            store: {
-              json: {
-                power_volumes: [{}],
-              },
-            },
-          },
+          craig: state(),
         }
       ),
       "it should be disabled"

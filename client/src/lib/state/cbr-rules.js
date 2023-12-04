@@ -3,6 +3,10 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
 } = require("./store.utils");
+const { shouldDisableComponentSave } = require("./utils");
+const { invalidCbrRule } = require("../forms/invalid-callbacks");
+const { invalidCbrRuleText } = require("../forms/text-callbacks");
+const { invalidName, invalidNameText } = require("../forms");
 
 /**
  * initialize cbr rules in store
@@ -192,6 +196,124 @@ function cbrRuleTagDelete(config, stateData, componentProps) {
   deleteSubChild(config, "cbr_rules", "tags", componentProps);
 }
 
+function initCbrRules(store) {
+  store.newField("cbr_rules", {
+    init: cbrRulesInit,
+    create: cbrRuleCreate,
+    save: cbrRuleSave,
+    delete: cbrRuleDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "description", "api_type_id"],
+      "cbr_rules"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("cbr_rules"),
+        invalidText: invalidNameText("cbr_rules"),
+      },
+      description: {
+        default: "",
+        invalid: function (stateData) {
+          return invalidCbrRule("description", stateData);
+        },
+        invalidText: invalidCbrRuleText("description"),
+      },
+      api_type_id: {
+        default: "",
+        invalid: function (stateData) {
+          return invalidCbrRule("api_type_id", stateData);
+        },
+        invalidText: invalidCbrRuleText("api_type_id"),
+      },
+      enforcement_mode: {
+        default: "Enabled",
+      },
+    },
+    subComponents: {
+      contexts: {
+        create: cbrRuleContextCreate,
+        delete: cbrRuleContextDelete,
+        save: cbrRuleContextSave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "value"],
+          "cbr_rules",
+          "contexts"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("contexts"),
+            invalidText: invalidNameText("contexts"),
+          },
+          value: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidCbrRule("value", stateData);
+            },
+            invalidText: invalidCbrRuleText("value"),
+          },
+        },
+      },
+      resource_attributes: {
+        create: cbrRuleAttributeCreate,
+        delete: cbrRuleAttributeDelete,
+        save: cbrRuleAttributeSave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "value"],
+          "cbr_rules",
+          "resource_attributes"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("resource_attributes"),
+            invalidText: invalidNameText("resource_attributes"),
+          },
+          value: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidCbrRule("value", stateData);
+            },
+            invalidText: invalidCbrRuleText("value"),
+          },
+        },
+      },
+      tags: {
+        create: cbrRuleTagCreate,
+        delete: cbrRuleTagDelete,
+        save: cbrRuleTagSave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "value", "operator"],
+          "cbr_rules",
+          "tags"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("tags"),
+            invalidText: invalidNameText("tags"),
+          },
+          value: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidCbrRule("value", stateData);
+            },
+            invalidText: invalidCbrRuleText("value"),
+          },
+          operator: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidCbrRule("operator", stateData);
+            },
+            invalidText: invalidCbrRuleText("operator"),
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   cbrRulesInit,
   cbrRuleCreate,
@@ -206,4 +328,5 @@ module.exports = {
   cbrRuleTagCreate,
   cbrRuleTagSave,
   cbrRuleTagDelete,
+  initCbrRules,
 };

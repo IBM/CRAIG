@@ -90,6 +90,12 @@ function invalidName(field, craig) {
     } else {
       return (
         hasDuplicateName(field, stateData, componentProps, overrideField) ||
+        // prevent classic vlans with names that include prefix longer than 20 characters
+        (field === "classic_vlans" &&
+          stateData.name.length +
+            1 +
+            componentProps.craig.store.json._options.prefix.length >
+            20) ||
         stateData[stateField] === "" ||
         (!stateData.use_data && invalidNewResourceName(stateData[stateField]))
       );
@@ -602,45 +608,6 @@ function invalidCbrZone(field, stateData, componentProps) {
 }
 
 /**
- * checks if specific fields relevant to a record type are valid
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if valid
- */
-function validRecord(stateData, componentProps) {
-  if (stateData.type === "MX") {
-    return stateData.preference > 0 && stateData.preference <= 65535;
-  } else if (stateData.type === "SRV") {
-    return (
-      stateData.port >= 1 &&
-      stateData.port <= 65535 &&
-      !isNullOrEmptyString(stateData.protocol) &&
-      stateData.protocol !== undefined &&
-      stateData.priority >= 0 &&
-      stateData.priority <= 65535 &&
-      validService(stateData.service) &&
-      stateData.weight >= 0 &&
-      stateData.weight <= 65535
-    );
-  } else {
-    return true;
-  }
-}
-
-/**
- * checks if service for dns is invalid
- * @param {string} service
- * @returns {boolean} true if valid
- */
-function validService(service) {
-  if (isNullOrEmptyString(service) || service === undefined) {
-    return false;
-  } else {
-    return service.startsWith("_");
-  }
-}
-
-/**
  * checks if icd cpu input is invalid
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -662,7 +629,7 @@ function invalidCpuCallback(stateData, componentProps) {
  * @returns {boolean} true if invalid
  */
 function invalidDescription(description) {
-  if (isNullOrEmptyString(description)) {
+  if (isNullOrEmptyString(description, true)) {
     return false;
   } else {
     return description.match(sccScopeDescriptionValidation) === null;
@@ -703,7 +670,7 @@ function replicationDisabledCallback(stateData, componentProps) {
     return true;
   }
   let replicationEnabledPools =
-    replicationEnabledStoragePoolMap[stateData.zone];
+    replicationEnabledStoragePoolMap[stateData.zone] || [];
   return !contains(replicationEnabledPools, pool);
 }
 
@@ -730,7 +697,6 @@ module.exports = {
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrZone,
-  validRecord,
   invalidDescription,
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,

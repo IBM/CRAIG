@@ -67,4 +67,21 @@ describe("tgw", () => {
       "it should be false"
     );
   });
+  describe("gre tunnels", () => {
+    it("should return true if no gateway", () => {
+      assert.isTrue(
+        disableSave(
+          "gre_tunnels",
+          {
+            gateway: "",
+            remote_tunnel_ip: "",
+            local_tunnel_ip: "",
+            zone: "",
+          },
+          { craig: craig }
+        ),
+        "it should be disabled"
+      );
+    });
+  });
 });

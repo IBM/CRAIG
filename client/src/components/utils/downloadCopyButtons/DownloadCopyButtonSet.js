@@ -10,11 +10,12 @@ export const DownloadCopyButtonSet = (props) => {
     <>
       <Button
         className="marginRightMed"
+        kind="tertiary"
         onClick={() => downloadContent(props.json, props.projectName)}
         disabled={props.disabled}
         renderIcon={Download}
-        kind={props.tertiaryDownload ? "tertiary" : undefined}
         iconDescription="Download craig.zip Terraform code"
+        hasIconOnly={props.iconOnly}
       >
         Download Terraform
       </Button>
@@ -28,6 +29,7 @@ export const DownloadCopyButtonSet = (props) => {
         iconDescription="Copy JSON to clipboard"
         disabled={props.disabled}
         tooltipAlignment="end"
+        hasIconOnly={props.iconOnly}
       >
         Copy JSON
       </Button>
@@ -42,6 +44,7 @@ DownloadCopyButtonSet.defaultProps = {
 };
 
 DownloadCopyButtonSet.propTypes = {
+  projectName: PropTypes.string.isRequired,
   json: PropTypes.object.isRequired,
   disabled: PropTypes.bool.isRequired,
   tertiaryDownload: PropTypes.bool.isRequired,

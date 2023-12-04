@@ -1,5 +1,10 @@
 const { contains } = require("lazy-z");
 const { setUnfoundResourceGroup, hasUnfoundVpc } = require("./store.utils");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const { invalidName, invalidNameText } = require("../forms");
 
 /**
  * initialize vpn gateway
@@ -72,10 +77,48 @@ function vpnDelete(config, stateData, componentProps) {
   config.carve(["json", "vpn_gateways"], componentProps.data.name);
 }
 
+/**
+ * init vpn gateway store
+ * @param {*} store
+ */
+function initVpnGatewayStore(store) {
+  store.newField("vpn_gateways", {
+    init: vpnInit,
+    onStoreUpdate: vpnOnStoreUpdate,
+    create: vpnCreate,
+    save: vpnSave,
+    delete: vpnDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "vpc", "resource_group", "subnet"],
+      "vpn_gateways"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("vpn_gateways"),
+        invaidText: invalidNameText("vpn_gateways"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      vpc: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("vpc"),
+      },
+      subnet: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("subnet"),
+      },
+    },
+  });
+}
+
 module.exports = {
   vpnInit,
   vpnOnStoreUpdate,
   vpnCreate,
   vpnSave,
   vpnDelete,
+  initVpnGatewayStore,
 };

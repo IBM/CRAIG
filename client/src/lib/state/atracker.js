@@ -1,4 +1,5 @@
-const { transpose } = require("lazy-z");
+const { transpose, isEmpty, isNullOrEmptyString } = require("lazy-z");
+const { shouldDisableComponentSave } = require("./utils");
 const { splatContains } = require("lazy-z/lib/objects");
 
 /**
@@ -53,8 +54,91 @@ function atrackerSave(config, stateData) {
   transpose(stateData, config.store.json.atracker);
 }
 
+function initAtracker(store) {
+  store.newField("atracker", {
+    init: atrackerInit,
+    onStoreUpdate: atrackerOnStoreUpdate,
+    save: atrackerSave,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["bucket", "cos_key", "locations", "plan", "resource_group"],
+      "atracker"
+    ),
+    schema: {
+      enabled: {
+        default: true,
+      },
+      name: {
+        default: "",
+      },
+      resource_group: {
+        default: "",
+        invalidText: function () {
+          return "Select a Resource Group";
+        },
+        invalid: function (stateData) {
+          return stateData.instance ? !stateData.resource_group : false;
+        },
+      },
+      type: {
+        default: "",
+      },
+      target_name: {
+        default: "",
+      },
+      bucket: {
+        default: "",
+        invalid: function (stateData) {
+          return stateData.enabled
+            ? isNullOrEmptyString(stateData.bucket)
+            : false;
+        },
+        invalidText: function () {
+          return "Select an Object Storage bucket.";
+        },
+      },
+      cos_key: {
+        default: "",
+        invalid: function (stateData) {
+          return stateData.enabled ? !stateData.cos_key : false;
+        },
+        invalidText: function () {
+          return "Select an Object Storage key.";
+        },
+      },
+      add_route: {
+        default: false,
+      },
+      locations: {
+        default: [],
+        invalid: function (stateData) {
+          return stateData.enabled ? isEmpty(stateData.locations) : false;
+        },
+        invalidText: function () {
+          return "Select at least one location.";
+        },
+      },
+      instance: {
+        default: false,
+      },
+      plan: {
+        default: "lite",
+        invalidText: function () {
+          return "Select a plan.";
+        },
+        invalid: function (stateData) {
+          return stateData.instance ? !stateData.plan : false;
+        },
+      },
+      archive: {
+        default: false,
+      },
+    },
+  });
+}
+
 module.exports = {
   atrackerInit,
   atrackerOnStoreUpdate,
   atrackerSave,
+  initAtracker,
 };

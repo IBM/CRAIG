@@ -1,6 +1,5 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
-const { naclRuleDelete } = require("../../client/src/lib/state/vpc");
 
 /**
  * initialize store

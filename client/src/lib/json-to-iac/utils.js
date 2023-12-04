@@ -66,9 +66,15 @@ function getCosId(cos, getGuid) {
  * @returns {string} title comment block
  */
 function buildTitleComment(name) {
+  let titleCaseName = "";
+  try {
+    titleCaseName = titleCase(name);
+  } catch (err) {
+    titleCaseName = "ERROR: Unable to Format Name";
+  }
   return (
     constants.titleComment
-      .replace("TITLE", titleCase(name))
+      .replace("TITLE", titleCaseName)
       .replace(
         new RegexButWithWords()
           .literal("F")
@@ -196,18 +202,6 @@ function bucketRef(cos, bucket, value, data) {
     value || "bucket_name",
     data
   );
-}
-
-/**
- * shortcut for references to `ibm_is_subnet`
- * @param {string} subnet name of resource ex `slz-management-rg`
- * @param {string} vpc vpc name
- * @param {string=} value value to get from reference ex `guid`. defaults to `id`
- * @param {boolean=} useData is data reference
- * @returns {string}
- */
-function subnetRef(vpc, subnet, value, data) {
-  return tfRef("ibm_is_subnet", `${vpc} ${subnet}`, value, data);
 }
 
 /**
@@ -489,7 +483,6 @@ module.exports = {
   vpcRef,
   kebabName,
   useData,
-  subnetRef,
   cosRef,
   encryptionKeyRef,
   bucketRef,

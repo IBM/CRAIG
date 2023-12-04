@@ -25,6 +25,8 @@ import {
   invalidNewResourceName,
   invalidTagList,
   releaseNotes,
+  disableSave,
+  propsMatchState,
 } from "../../lib";
 import { Rocket } from "@carbon/icons-react";
 import "./options.css";
@@ -41,7 +43,6 @@ class OptionsForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleTags = this.handleTags.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
-    this.disableSave = this.disableSave.bind(this);
     this.handlePowerZonesChange = this.handlePowerZonesChange.bind(this);
     buildFormFunctions(this);
   }
@@ -84,16 +85,6 @@ class OptionsForm extends React.Component {
     } else this.setState({ [name]: !this.state[name] });
   }
 
-  disableSave() {
-    return (
-      deepEqual(this.state, this.props.craig.store.json._options) ||
-      invalidNewResourceName(this.state.prefix) ||
-      invalidTagList(this.state.tags) ||
-      (this.state.enable_power_vs &&
-        (!this.state.power_vs_zones || isEmpty(this.state.power_vs_zones)))
-    );
-  }
-
   handlePowerZonesChange(items) {
     this.setState({ power_vs_zones: items.selectedItems });
   }
@@ -101,7 +92,7 @@ class OptionsForm extends React.Component {
   render() {
     return (
       <>
-        <div className={"tab-panel subForm"}>
+        <div className="subForm">
           <IcseHeading
             name="Environment Options"
             buttons={
@@ -110,7 +101,10 @@ class OptionsForm extends React.Component {
                 onClick={() =>
                   this.props.craig.options.save(this.state, this.props)
                 }
-                disabled={this.disableSave()}
+                disabled={
+                  propsMatchState("options", this.state, this.props) ||
+                  disableSave("options", this.state, this.props)
+                }
                 type="save"
               />
             }
@@ -341,7 +335,10 @@ class OptionsForm extends React.Component {
           {this.props.template && (
             <div className="marginBottomSmall">
               <Button
-                disabled={this.disableSave()}
+                disabled={
+                  propsMatchState("options", this.state, this.props) ||
+                  disableSave("options", this.state, this.props)
+                }
                 onClick={() => {
                   this.handleToggle("showModal");
                 }}
@@ -361,6 +358,9 @@ OptionsForm.propTypes = {
   craig: PropTypes.shape({
     options: PropTypes.shape({
       save: PropTypes.func.isRequired,
+      init: PropTypes.func.isRequired,
+      shouldDisableSave: PropTypes.func.isRequired,
+      schema: PropTypes.shape({}),
     }).isRequired,
     store: PropTypes.shape({
       json: PropTypes.shape({

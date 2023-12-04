@@ -9,9 +9,22 @@ const {
   revision,
   getObjectFromArray,
   contains,
+  isEmpty,
+  isIpv4CidrOrAddress,
 } = require("lazy-z");
 const powerImages = require("../docs/power-image-map.json");
 const { edgeRouterEnabledZones } = require("../constants");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const {
+  invalidName,
+  invalidNameText,
+  invalidSshPublicKey,
+  invalidCidrBlock,
+  invalidCidrText,
+} = require("../forms");
 
 /**
  * initialize power-vs workspace
@@ -102,6 +115,13 @@ function powerVsCreate(config, stateData) {
  * @param {object} stateData component state data
  */
 function powerVsSave(config, stateData, componentProps) {
+  ["power_volumes", "power_instances"].forEach((field) => {
+    config.store.json[field].forEach((item) => {
+      if (item.workspace === componentProps.data.name) {
+        item.workspace = stateData.name;
+      }
+    });
+  });
   config.updateChild(["json", "power"], componentProps.data.name, stateData);
 }
 
@@ -244,6 +264,141 @@ function powerVsNetworkAttachmentSave(config, stateData, componentProps) {
     });
 }
 
+/**
+ * init power vs store
+ * @param {*} store
+ */
+function initPowerVsStore(store) {
+  store.newField("power", {
+    init: powerVsInit,
+    onStoreUpdate: powerVsOnStoreUpdate,
+    save: powerVsSave,
+    create: powerVsCreate,
+    delete: powerVsDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "imageNames"],
+      "power"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("power"),
+        invalidText: invalidNameText("power"),
+      },
+      imageNames: {
+        default: [],
+        invalid: function (stateData) {
+          return isEmpty(stateData.imageNames || []);
+        },
+      },
+    },
+    subComponents: {
+      ssh_keys: {
+        create: powerVsSshKeysCreate,
+        delete: powerVsSshKeysDelete,
+        save: powerVsSshKeysSave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "public_key", "resource_group"],
+          "power",
+          "ssh_keys"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("power_vs_ssh_keys"),
+            invalidText: invalidNameText("power_vs_ssh_keys"),
+          },
+          resource_group: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("resource_group"),
+          },
+          public_key: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              return invalidSshPublicKey(stateData, componentProps).invalid;
+            },
+            invalidText: function (stateData, componentProps) {
+              return invalidSshPublicKey(stateData, componentProps).invalidText;
+            },
+          },
+        },
+      },
+      network: {
+        create: powerVsNetworkCreate,
+        delete: powerVsNetworkDelete,
+        save: powerVsNetworkSave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "pi_cidr", "pi_dns"],
+          "power",
+          "network"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("network"),
+            invalidText: invalidNameText("network"),
+          },
+          pi_cidr: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidCidrBlock(stateData.pi_cidr);
+            },
+            invalidText: function (stateData, componentProps) {
+              return invalidCidrText(store)(
+                {
+                  cidr: stateData.pi_cidr,
+                },
+                componentProps
+              );
+            },
+          },
+          pi_dns: {
+            default: "",
+            invalid: function (stateData) {
+              return (
+                contains(stateData.pi_dns[0], "/") ||
+                !isIpv4CidrOrAddress(stateData.pi_dns[0])
+              );
+            },
+            invalidText: function () {
+              return "Invalid IP Address";
+            },
+          },
+        },
+      },
+      cloud_connections: {
+        create: powerVsCloudConnectionCreate,
+        delete: powerVsCloudConnectionDelete,
+        save: powerVsCloudConnectionSave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "transit_gateways"],
+          "power",
+          "cloud_connections"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("cloud_connections"),
+            invalidText: invalidNameText("cloud_connections"),
+          },
+          transit_gateways: {
+            default: [],
+            invalid: function (stateData) {
+              return (
+                stateData.pi_cloud_connection_transit_enabled &&
+                isEmpty(stateData.transit_gateways)
+              );
+            },
+          },
+        },
+      },
+      attachments: {
+        save: powerVsNetworkAttachmentSave,
+      },
+    },
+  });
+}
+
 module.exports = {
   powerVsInit,
   powerVsOnStoreUpdate,
@@ -260,4 +415,5 @@ module.exports = {
   powerVsCloudConnectionDelete,
   powerVsCloudConnectionSave,
   powerVsNetworkAttachmentSave,
+  initPowerVsStore,
 };

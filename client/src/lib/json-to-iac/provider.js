@@ -22,11 +22,10 @@ function ibmCloudProvider(config) {
     },
   };
 
-  if (config._options?.classic) {
+  if (config._options?.enable_classic) {
     data.provider.ibm.push({
       alias: "classic",
       ibmcloud_timeout: 60,
-      region: varDotRegion,
       iaas_classic_username: "${var.iaas_classic_username}",
       iaas_classic_api_key: "${var.iaas_classic_api_key}",
     });
@@ -50,6 +49,8 @@ function ibmCloudProvider(config) {
           : config._options.region !== "us-east" &&
             contains(["us-east", "wdc06", "wdc07"], zone)
           ? "us-east"
+          : zone.match(/dal\d+/g)
+          ? "us-south"
           : "${var.region}",
         zone: zone,
         ibmcloud_timeout: 60,

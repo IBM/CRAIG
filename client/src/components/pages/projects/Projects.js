@@ -4,15 +4,14 @@ import { DeleteModal } from "icse-react-assets";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
 import { azsort } from "lazy-z";
-import { Add, MagicWandFilled } from "@carbon/icons-react";
-import "./project.css";
+import { Add, MagicWandFilled, Upload } from "@carbon/icons-react";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
 import { templates } from "../../utils";
 import { LoadingModal } from "./LoadingModal";
-import { template_dropdown_map } from "../../../lib/constants";
 import PropTypes from "prop-types";
 import Wizard from "./Wizard";
+import "./project.css";
 
 class Projects extends React.Component {
   constructor(props) {
@@ -28,6 +27,7 @@ class Projects extends React.Component {
       clickedWorkspace: "",
       clickedWorkspaceUrl: "",
       wizardModal: false,
+      importJSONModalOpen: false,
     };
 
     /* do not delete, for debugging */
@@ -44,6 +44,7 @@ class Projects extends React.Component {
     this.onSchematicsUploadClick = this.onSchematicsUploadClick.bind(this);
     this.onCreateWorkspaceClick = this.onCreateWorkspaceClick.bind(this);
     this.toggleWizard = this.toggleWizard.bind(this);
+    this.toggleImportJSONModal = this.toggleImportJSONModal.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -74,6 +75,12 @@ class Projects extends React.Component {
       loadingModalOpen: !this.state.loadingModalOpen,
       loadingDone: false,
       schematicsFailed: false,
+    });
+  }
+
+  toggleImportJSONModal() {
+    this.setState({
+      importJSONModalOpen: !this.state.importJSONModalOpen,
     });
   }
 
@@ -142,8 +149,7 @@ class Projects extends React.Component {
     return () => {
       this.setState({
         viewJSONModalData: {
-          name: this.props.projects[keyName].name,
-          json: this.props.projects[keyName].json,
+          ...this.props.projects[keyName],
         },
         viewJSONModalOpen: true,
       });
@@ -256,85 +262,14 @@ class Projects extends React.Component {
   render() {
     let projectKeys = Object.keys(this.props.projects).sort(azsort);
     return (
-      <div className="projects">
-        <Wizard
-          show={this.state.wizardModal}
-          onRequestClose={this.toggleWizard}
-          projects={this.props.projects}
-          onProjectSave={this.props.onProjectSave}
-        />
-        {this.state.modalOpen && (
-          <ProjectFormModal
-            open={this.state.modalOpen}
-            data={this.state.modalData}
-            onClose={this.toggleModal}
-            onSubmit={this.props.onProjectSave}
-            projects={this.props.projects}
-            templates={templates}
-          />
-        )}
-        {this.state.viewJSONModalOpen && (
-          <JSONModal
-            open={this.state.viewJSONModalOpen}
-            data={this.state.viewJSONModalData}
-            onClose={this.toggleViewJSONModal}
-            onSubmit={() => {
-              this.toggleViewJSONModal();
-            }}
-          />
-        )}
-        {this.state.deleteModalOpen && (
-          <DeleteModal
-            modalOpen={this.state.deleteModalOpen}
-            name={this.state.deleteProject}
-            onModalClose={this.toggleDeleteModal}
-            additionalText={
-              this.props.projects[this.state.deleteProject].use_schematics
-                ? `The Schematics Workspace '${
-                    this.props.projects[this.state.deleteProject].workspace_name
-                  }' for this project will not be deleted.`
-                : ""
-            }
-            onModalSubmit={() => {
-              this.props.onProjectDelete(this.state.deleteProject);
-              this.toggleDeleteModal();
-            }}
-          />
-        )}
-        {this.state.loadingModalOpen && (
-          <LoadingModal
-            className="alignItemsCenter"
-            action="upload"
-            project={this.state.clickedProject}
-            workspace={this.state.clickedWorkspace}
-            open={this.state.loadingModalOpen}
-            completed={this.state.loadingDone}
-            workspace_url={this.state.clickedWorkspaceUrl}
-            toggleModal={this.toggleLoadingModal}
-            failed={this.state.schematicsFailed}
-            // props for retry
-            projects={this.props.projects}
-            retryCallback={this.onSchematicsUploadClick(
-              this.state.clickedProject
-            )}
-            lastWorkspaceName={this.state.clickedWorkspace}
-          />
-        )}
+      <div>
         <CraigHeader />
-
         <div id="projects" className="body">
           <h3 className="marginBottomXs">Projects</h3>
-          <p className="marginBottom">
-            Create, deploy, and manage scalable infrastructure on IBM Cloud with
-            CRAIG. Choose from the below saved Projects, import an existing
-            configuration as a Project, or create a new configuration and save
-            it as a Project to work on later.
-          </p>
           <div className="marginBottomXs">
             <legend className="cds--label marginBottomSmall">
-              Create a Project
+              Create a New Project
             </legend>
-
             <Button
               id="new-project"
               kind="primary"
@@ -343,7 +278,17 @@ class Projects extends React.Component {
               iconDescription="Create new project"
               renderIcon={Add}
             >
-              Create a New Project
+              Create a Project
+            </Button>
+            <Button
+              id="import-project"
+              kind="secondary"
+              className="projectButton marginLeftMed"
+              onClick={this.toggleImportJSONModal}
+              iconDescription="Import project"
+              renderIcon={Upload}
+            >
+              Import from JSON
             </Button>
             <Button
               id="project-wizard"
@@ -386,6 +331,79 @@ class Projects extends React.Component {
             </div>
           )}
         </div>
+        {/* Modals */}
+        {this.state.wizardModal && (
+          <Wizard
+            show={this.state.wizardModal}
+            onRequestClose={this.toggleWizard}
+            projects={this.props.projects}
+            onProjectSave={this.props.onProjectSave}
+          />
+        )}
+        {this.state.modalOpen && (
+          <ProjectFormModal
+            open={this.state.modalOpen}
+            data={this.state.modalData}
+            onClose={this.toggleModal}
+            onSubmit={this.props.onProjectSave}
+            projects={this.props.projects}
+            templates={templates}
+          />
+        )}
+        {this.state.viewJSONModalOpen && (
+          <JSONModal
+            open={this.state.viewJSONModalOpen}
+            data={this.state.viewJSONModalData}
+            current_project={this.props.current_project}
+            onClose={this.toggleViewJSONModal}
+            onProjectSave={this.props.onProjectSave}
+          />
+        )}
+        {this.state.deleteModalOpen && (
+          <DeleteModal
+            modalOpen={this.state.deleteModalOpen}
+            name={this.state.deleteProject}
+            onModalClose={this.toggleDeleteModal}
+            additionalText={
+              this.props.projects[this.state.deleteProject].use_schematics
+                ? `The Schematics Workspace '${
+                    this.props.projects[this.state.deleteProject].workspace_name
+                  }' for this project will not be deleted.`
+                : ""
+            }
+            onModalSubmit={() => {
+              this.props.onProjectDelete(this.state.deleteProject);
+              this.toggleDeleteModal();
+            }}
+          />
+        )}
+        {this.state.loadingModalOpen && (
+          <LoadingModal
+            className="alignItemsCenter"
+            action="upload"
+            project={this.state.clickedProject}
+            workspace={this.state.clickedWorkspace}
+            open={this.state.loadingModalOpen}
+            completed={this.state.loadingDone}
+            workspace_url={this.state.clickedWorkspaceUrl}
+            toggleModal={this.toggleLoadingModal}
+            failed={this.state.schematicsFailed}
+            // props for retry
+            projects={this.props.projects}
+            retryCallback={this.onSchematicsUploadClick(
+              this.state.clickedProject
+            )}
+            lastWorkspaceName={this.state.clickedWorkspace}
+          />
+        )}
+        {this.state.importJSONModalOpen && (
+          <JSONModal
+            import
+            open={this.state.importJSONModalOpen}
+            onClose={this.toggleImportJSONModal}
+            onProjectSave={this.props.onProjectSave}
+          />
+        )}
       </div>
     );
   }

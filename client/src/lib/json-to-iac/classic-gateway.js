@@ -31,9 +31,11 @@ function formatNetworkGateway(gateway) {
       private_vlan_id: `\${ibm_network_vlan.classic_vlan_${snakeCase(
         gateway.private_vlan
       )}.id}`,
-      public_vlan_id: `\${ibm_network_vlan.classic_vlan_${snakeCase(
-        gateway.public_vlan
-      )}.id}`,
+      public_vlan_id: gateway.private_network_only
+        ? undefined
+        : `\${ibm_network_vlan.classic_vlan_${snakeCase(
+            gateway.public_vlan
+          )}.id}`,
       package_key_name: gateway.package_key_name,
       os_key_name: gateway.os_key_name,
       process_key_name: gateway.process_key_name,

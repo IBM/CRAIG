@@ -1,11 +1,9 @@
 import React from "react";
-import { FolderAdd, Save } from "@carbon/icons-react";
-import { Tile, Button, TextArea } from "@carbon/react";
-import { IcseToggle } from "icse-react-assets";
+import { Tile } from "@carbon/react";
 import { formatConfig, validate } from "../../../lib";
 import { SummaryErrorText, SummaryText } from "./SummaryContent";
 import { ProjectFormModal } from "../projects/ProjectFormModal";
-import { DownloadCopyButtonSet } from "../../utils";
+import { JSONTextArea } from "../../utils/JSONTextArea";
 import "./summary.css";
 
 class Summary extends React.Component {
@@ -62,33 +60,18 @@ class Summary extends React.Component {
           ) : (
             <SummaryText />
           )}
-          <IcseToggle
-            labelText="Use Pretty JSON"
-            defaultToggled={this.state.usePrettyJson}
-            onToggle={this.toggleUsePrettyJson}
-            className="marginBottom displayFlex"
-            id="use-pretty-json"
-            disabled={false}
-            toggleFieldName="usePrettyJson"
-            value={this.state.usePrettyJson}
-          />
-          <TextArea
-            labelText="craig.json"
-            rows={20}
-            cols={75}
+          <JSONTextArea
+            projectName={this.props.craig.store.project_name}
+            json={this.props.craig.store.json}
             value={json}
             readOnly
-            className="marginBottomSmall fitContent rightTextAlign codeFont"
+            noEditButton
             invalid={Boolean(this.state.error)}
+            wrapped={this.state.usePrettyJson}
             invalidText={this.state.error}
+            onClickWrapJSON={this.toggleUsePrettyJson}
           />
-          <div className="marginBottomXs fitContent">
-            <DownloadCopyButtonSet
-              disabled={Boolean(this.state.error)}
-              json={this.props.craig.store.json}
-              projectName={this.props.craig.store.project_name}
-            />
-            {/*
+          {/*
             
             content here is from a version where projects were not implemented first
             code is retained here for removal and removal of references
@@ -122,7 +105,6 @@ class Summary extends React.Component {
                 Save as Project
               </Button>
             )*/}
-          </div>
         </Tile>
       </>
     );

@@ -155,9 +155,65 @@ describe("classic", () => {
               name: "vsrx-public",
               datacenter: "dal10",
               type: "PUBLIC",
+              router_hostname: "",
             },
           ],
           "it should create key"
+        );
+      });
+    });
+    describe("classic_vlans.onStoreUpdate", () => {
+      it("should remove unfound classic vlans from router hostname", () => {
+        let craig = newState();
+        craig.classic_vlans.create({
+          name: "vsrx-public",
+          datacenter: "dal10",
+          type: "PUBLIC",
+          router_hostname: "fake",
+        });
+        assert.deepEqual(
+          craig.store.json.classic_vlans,
+          [
+            {
+              name: "vsrx-public",
+              datacenter: "dal10",
+              type: "PUBLIC",
+              router_hostname: "",
+            },
+          ],
+          "it should create vlan"
+        );
+      });
+      it("should not remove found classic vlans from router hostname", () => {
+        let craig = newState();
+        craig.classic_vlans.create({
+          name: "vsrx-public",
+          datacenter: "dal10",
+          type: "PUBLIC",
+        });
+        craig.classic_vlans.create({
+          name: "vsrx-public2",
+          datacenter: "dal10",
+          type: "PUBLIC",
+          router_hostname: "vsrx-public",
+        });
+        assert.deepEqual(
+          craig.store.json.classic_vlans,
+          [
+            {
+              name: "vsrx-public",
+              datacenter: "dal10",
+              type: "PUBLIC",
+              router_hostname: "",
+            },
+            {
+              datacenter: "dal10",
+              name: "vsrx-public2",
+              router_hostname: "vsrx-public",
+              type: "PUBLIC",
+            },
+          ],
+          "it should create vlan"
         );
       });
     });
@@ -188,6 +244,7 @@ describe("classic", () => {
               name: "aaa-public",
               datacenter: "dal10",
               type: "PUBLIC",
+              router_hostname: "",
             },
           ],
 
@@ -220,6 +277,155 @@ describe("classic", () => {
           [],
           "it should create key"
         );
+      });
+    });
+    describe("classic_vlans.schema", () => {
+      describe("classic_vlans.name", () => {
+        describe("classic_vlans.name.helperText", () => {
+          it("should return helper text", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.name.helperText(
+                { name: "frog" },
+                {
+                  craig: {
+                    store: {
+                      json: {
+                        _options: {
+                          prefix: "frog",
+                        },
+                      },
+                    },
+                  },
+                }
+              ),
+              "frog-frog",
+              "it should return correct helper text"
+            );
+          });
+        });
+      });
+      describe("classic_vlans.type", () => {
+        describe("classic_vlans.type.onRender", () => {
+          it("should return correct name on render", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.type.onRender({ type: "PUBLIC" }),
+              "Public",
+              "it should set to titlecase"
+            );
+          });
+        });
+        describe("classic_vlans.type.invalidText", () => {
+          it("should return invalid text", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.type.invalidText(),
+              "Select a type",
+              "it should return correct text"
+            );
+          });
+        });
+        describe("classic_vlans.type.onInputChange", () => {
+          it("should return correct name on input change", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.type.onInputChange({ type: "Public" }),
+              "PUBLIC",
+              "it should set to ALLCAPS"
+            );
+          });
+        });
+      });
+      describe("classic_vlans.datacenter", () => {
+        describe("classic_vlans.datacenters.invalidText", () => {
+          it("should return correct text", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.datacenter.invalidText(),
+              "Select a datacenter",
+              "It should return correct invalid text"
+            );
+          });
+        });
+      });
+      describe("classic_vlans.router_hostname", () => {
+        describe("classic_vlans.router_hostname.invalid", () => {
+          it("should return false", () => {
+            let craig = newState();
+            assert.isFalse(
+              craig.classic_vlans.router_hostname.invalid(),
+              "It should return correct invalid text"
+            );
+          });
+        });
+        describe("classic_vlans.router_hostname.groups", () => {
+          it("should return groups when modal", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.router_hostname.groups(
+                {
+                  datacenter: "dal10",
+                },
+                {
+                  isModal: true,
+                  craig: {
+                    store: {
+                      json: {
+                        classic_vlans: [
+                          {
+                            name: "hi",
+                            datacenter: "wdc06",
+                          },
+                          {
+                            name: "mom",
+                            datacenter: "dal10",
+                          },
+                        ],
+                      },
+                    },
+                  },
+                }
+              ),
+              ["mom"],
+              "It should return correct groups"
+            );
+          });
+          it("should return groups when not modal", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.router_hostname.groups(
+                {
+                  datacenter: "dal10",
+                  name: "hi",
+                },
+                {
+                  data: {
+                    name: "hi",
+                  },
+                  craig: {
+                    store: {
+                      json: {
+                        classic_vlans: [
+                          {
+                            name: "hi",
+                            datacenter: "wdc06",
+                          },
+                          {
+                            name: "mom",
+                            datacenter: "dal10",
+                          },
+                        ],
+                      },
+                    },
+                  },
+                }
+              ),
+              ["mom"],
+              "It should return correct groups"
+            );
+          });
+        });
       });
     });
   });

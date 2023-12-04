@@ -8,8 +8,17 @@ const {
   carve,
   revision,
   isNullOrEmptyString,
+  isEmpty,
+  splat,
+  validPortRange,
+  isIpv4CidrOrAddress,
+  isWholeNumber,
+  titleCase,
+  kebabCase,
 } = require("lazy-z");
-
+const { commaSeparatedIpListExp } = require("../constants");
+const { invalidName } = require("../forms/invalid-callbacks");
+const { invalidNameText } = require("../forms/text-callbacks");
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -359,6 +368,17 @@ function fieldIsNullOrEmptyString(fieldName) {
 }
 
 /**
+ * shortcut for form field is empty
+ * @param {*} fieldName
+ * @returns {Function}
+ */
+function fieldIsEmpty(fieldName) {
+  return function (stateData) {
+    return isEmpty(stateData[fieldName]);
+  };
+}
+
+/**
  * util function for component save to be disabled
  * @param {*} fields
  * @param {string} component
@@ -379,7 +399,207 @@ function shouldDisableComponentSave(fields, component, subComponent) {
   };
 }
 
+/**
+ * test for invalid IP string/CIDR
+ * @param {string} value
+ * @returns {boolean} true if invalid
+ */
+function isIpStringInvalid(value) {
+  if (
+    !isNullOrEmptyString(value) &&
+    value.match(commaSeparatedIpListExp) === null
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * name helper text
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} composed name with prefix prepended
+ */
+function nameHelperText(stateData, componentProps) {
+  return `${
+    stateData.use_data
+      ? ""
+      : componentProps.craig.store.json._options.prefix + "-"
+  }${stateData.name}`;
+}
+
+/**
+ * default for select
+ * @param {*} field
+ * @returns {string} select text
+ */
+function selectInvalidText(field) {
+  return function () {
+    return `Select a ${field}`;
+  };
+}
+
+/**
+ * name field
+ * @param {*} jsonField
+ * @returns {Object} name field
+ */
+function nameField(jsonField) {
+  return {
+    default: "",
+    invalid: invalidName(jsonField),
+    invalidText: invalidNameText(jsonField),
+    helperText: nameHelperText,
+  };
+}
+
+/**
+ * resource group
+ * @param {Function=} hideWhen
+ * @param {boolean=} small make small
+ * @returns {object} object for resource groups page
+ */
+function resourceGroupsField(hideWhen, small) {
+  return {
+    default: "",
+    invalid: fieldIsNullOrEmptyString("resource_group"),
+    invalidText: selectInvalidText("resource_group"),
+    type: "select",
+    groups: function (stateData, componentProps) {
+      return splat(componentProps.craig.store.json.resource_groups, "name");
+    },
+    hideWhen: hideWhen,
+    size: small ? "small" : undefined,
+  };
+}
+
+/*
+ * test if a rule has an invalid port
+ * @param {*} rule
+ * @param {boolean=} isSecurityGroup
+ * @returns {boolean} true if port is invalid
+ */
+function invalidPort(rule, isSecurityGroup) {
+  let hasInvalidPort = false;
+  if (rule.ruleProtocol !== "all") {
+    (rule.ruleProtocol === "icmp"
+      ? ["type", "code"]
+      : isSecurityGroup
+      ? ["port_min", "port_max"]
+      : ["port_min", "port_max", "source_port_min", "source_port_max"]
+    ).forEach((type) => {
+      if (rule.rule[type] && !hasInvalidPort) {
+        hasInvalidPort = !validPortRange(type, rule.rule[type]);
+      }
+    });
+  }
+  return hasInvalidPort;
+}
+
+/**
+ * invalid tcp or udp callback function
+ * @param {*} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidTcpOrUdpPort(stateData) {
+  return contains(["all", "icmp"], stateData.ruleProtocol)
+    ? false
+    : invalidPort(stateData);
+}
+
+/**
+ * invalid icmp code or type callback
+ * @param {*} stateData
+ * @returns {boolean} true if invalid
+ */
+function invalidIcmpCodeOrType(stateData) {
+  return contains(["all", "tcp", "udp"], stateData.ruleProtocol)
+    ? false
+    : invalidPort(stateData);
+}
+
+/**
+ * return validation function if value is not a valid IPV4 IP address
+ * @param {*} field
+ */
+function invalidIpv4Address(field) {
+  return function (stateData) {
+    return (
+      !isIpv4CidrOrAddress(stateData[field]) || contains(stateData[field], "/")
+    );
+  };
+}
+
+/**
+ * invalid ipv4 address text
+ * @returns {string} invalid text
+ */
+function invalidIpv4AddressText() {
+  return "Enter a valid IP address";
+}
+
+/**
+ * return a validation function to check if a value is a whole number
+ * @param {*} field
+ * @returns {Function} validation function
+ */
+function wholeNumberField(field, lazy) {
+  return function (stateData) {
+    if (isNullOrEmptyString(stateData[field], true) && lazy) {
+      return false;
+    } else
+      return (
+        !isWholeNumber(parseInt(stateData[field])) ||
+        stateData[field].match(/\D/g) !== null
+      );
+  };
+}
+
+/**
+ * return invalid text for not whole number
+ */
+function wholeNumberText() {
+  return "Enter a whole number";
+}
+
+/**
+ * render in title case
+ * @param {*} field
+ * @returns {string} render string
+ */
+function titleCaseRender(field) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[field])
+      ? ""
+      : titleCase(stateData[field]);
+  };
+}
+
+/**
+ * on input change stor as kebab case
+ * @param {*} field
+ * @returns {string} state string
+ */
+function kebabCaseInput(field) {
+  return function (stateData) {
+    return kebabCase(stateData[field]);
+  };
+}
+
+/**
+ * callback function for unconditional invalid text
+ * @param {string} text
+ * @returns {Function} function that return text
+ */
+function unconditionalInvalidText(text) {
+  return function () {
+    return text;
+  };
+}
+
 module.exports = {
+  invalidIpv4Address,
+  invalidIpv4AddressText,
   formatNetworkingRule,
   updateNetworkingRule,
   eachRuleProtocol,
@@ -388,4 +608,18 @@ module.exports = {
   setKmsFromKeyOnStoreUpdate,
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
+  isIpStringInvalid,
+  fieldIsEmpty,
+  nameHelperText,
+  selectInvalidText,
+  resourceGroupsField,
+  nameField,
+  invalidTcpOrUdpPort,
+  invalidIcmpCodeOrType,
+  invalidPort,
+  wholeNumberField,
+  wholeNumberText,
+  titleCaseRender,
+  kebabCaseInput,
+  unconditionalInvalidText,
 };

@@ -27,10 +27,8 @@ import {
   ObjectStorageTemplate,
   RoutingTableTemplate,
   SshKeysTemplate,
-  TransitGatewayTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
-  VpcTemplate,
   VpeTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
@@ -38,20 +36,19 @@ import {
   SccV1Page,
   F5BigIpPage,
   PowerVsWorkspacePage,
-  PowerVsInstancesPage,
   PowerVsVolumesPage,
   ClassicGatewaysPage,
+  IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import {
   contains,
   eachKey,
-  isIpv4CidrOrAddress,
-  isNullOrEmptyString,
   keys,
   nestedSplat,
   splat,
   isEmpty,
+  getObjectFromArray,
 } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
@@ -60,14 +57,11 @@ import {
   getSubnetTierStateData,
   getTierSubnets,
   invalidCidrBlock,
-  invalidDnsZoneName,
-  invalidEncryptionKeyRing,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   storageChangeDisabledCallback,
   vpnServersHelperText,
   powerImageFetch,
-  powerStoragePoolFetch,
 } from "../../lib/forms";
 import {
   invalidCidr,
@@ -76,12 +70,9 @@ import {
   invalidIamAccountSettings,
   invalidIdentityProviderURI,
   invalidSshPublicKey,
-  invalidSubnetTierName,
-  nullOrEmptyStringCheckCallback,
-  invalidCpuCallback,
   invalidDescription,
-  invalidTagList,
   replicationDisabledCallback,
+  invalidSubnetTierName,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
@@ -89,10 +80,9 @@ import {
   genericNameCallback,
   iamAccountSettingInvalidText,
   invalidCidrText,
-  invalidSubnetTierText,
-  invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
   invalidDescriptionText,
+  invalidSubnetTierText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
@@ -102,10 +92,10 @@ import {
   edgeRouterEnabledZones,
   cosPlans,
   powerStoragePoolRegionMap,
-  sapProfiles,
   datacenters,
 } from "../../lib/constants";
-import { tgwVpcFilter } from "../../lib/forms/filters";
+import DynamicForm from "../forms/DynamicForm";
+import { ClassicDisabledTile } from "../forms/dynamic-form/tiles";
 
 const AccessGroupsPage = (craig) => {
   return (
@@ -191,15 +181,85 @@ const Atracker = (craig) => {
   );
 };
 
-const ClassicDisabledTile = () => {
+const Cis = (craig) => {
   return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> Classic Infrastructure
-      is not enabled. Enable Classic Infrastructure from the
-      <a className="no-secrets-link" href="/">
-        Options Page.
-      </a>{" "}
-    </Tile>
+    <IcseFormTemplate
+      name="Cloud Internet Services (CIS)"
+      addText="Create a CIS Instance"
+      docs={RenderDocs("cis", craig.store.json._options.template)}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.cis}
+      onDelete={craig.cis.delete}
+      onSave={craig.cis.save}
+      onSubmit={craig.cis.create}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
+      forceOpen={forceShowForm}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        formName: "CIS",
+        form: {
+          jsonField: "cis",
+          setDefault: {
+            domains: [],
+            dns_records: [],
+          },
+          groups: [
+            {
+              name: craig.cis.name,
+              resource_group: craig.cis.resource_group,
+              plan: craig.cis.plan,
+            },
+          ],
+          subForms: [
+            {
+              name: "Domains",
+              createText: "Add a domain",
+              jsonField: "domains",
+              toggleFormFieldName: "domain",
+              form: {
+                groups: [
+                  {
+                    domain: craig.cis.domains.domain,
+                    type: craig.cis.domains.type,
+                  },
+                ],
+              },
+            },
+            {
+              name: "DNS Records",
+              createText: "Add a DNS Record",
+              jsonField: "dns_records",
+              hideFormTitleButton: function (stateData, componentProps) {
+                return componentProps.data.domains.length === 0;
+              },
+              form: {
+                groups: [
+                  {
+                    name: craig.cis.dns_records.name,
+                    domain: craig.cis.dns_records.domain,
+                  },
+                  {
+                    type: craig.cis.dns_records.type,
+                    content: craig.cis.dns_records.content,
+                  },
+                  {
+                    ttl: craig.cis.dns_records.ttl,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "cis",
+        hideName: true,
+      }}
+    />
   );
 };
 
@@ -273,7 +333,9 @@ const ClassicSshKeyPage = (craig) => {
         )
       }
       ssh_keys={craig.store.json.classic_ssh_keys}
-      disableSave={disableSave}
+      disableSave={(field, stateData, componentProps) => {
+        return disableSave("classic_ssh_keys", stateData, componentProps);
+      }}
       onDelete={craig.classic_ssh_keys.delete}
       onSave={craig.classic_ssh_keys.save}
       onSubmit={craig.classic_ssh_keys.create}
@@ -295,24 +357,49 @@ const ClassicSshKeyPage = (craig) => {
 
 const ClassicVlanPage = (craig) => {
   return (
-    <ClassicVlanTemplate
-      overrideTile={
-        craig.store.json._options.enable_classic ? undefined : (
-          <ClassicDisabledTile />
-        )
-      }
+    <IcseFormTemplate
+      name="Classic VLANs"
+      addText="Create a VLAN"
       docs={RenderDocs("classic_vlans", craig.store.json._options.template)}
-      vlans={craig.store.json.classic_vlans}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.classic_vlans}
       disableSave={disableSave}
       onDelete={craig.classic_vlans.delete}
       onSave={craig.classic_vlans.save}
       onSubmit={craig.classic_vlans.create}
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
-      invalidCallback={craig.classic_vlans.name.invalid}
-      invalidTextCallback={craig.classic_vlans.name.invalidText}
-      craig={craig}
-      datacenters={datacenters}
+      hideFormTitleButton={
+        craig.store.json._options.enable_classic ? false : true
+      }
+      overrideTile={
+        craig.store.json._options.enable_classic ? undefined : (
+          <ClassicDisabledTile />
+        )
+      }
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        form: {
+          groups: [
+            {
+              name: craig.classic_vlans.name,
+              datacenter: craig.classic_vlans.datacenter,
+            },
+            {
+              type: craig.classic_vlans.type,
+              router_hostname: craig.classic_vlans.router_hostname,
+            },
+          ],
+        },
+        formName: "classic-vlan",
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "classic_vlans",
+        hideName: true,
+      }}
     />
   );
 };
@@ -421,30 +508,34 @@ const DnsPage = (craig) => {
       onSave={craig.dns.save}
       onSubmit={craig.dns.create}
       forceOpen={forceShowForm}
-      invalidTextCallback={invalidNameText("dns")}
-      invalidCallback={invalidName("dns")}
+      invalidCallback={craig.dns.name.invalid}
+      invalidTextCallback={craig.dns.name.invalidText}
       onZoneSave={craig.dns.zones.save}
       onZoneDelete={craig.dns.zones.delete}
       onZoneSubmit={craig.dns.zones.create}
-      invalidZoneNameCallback={invalidDnsZoneName}
-      invalidZoneNameTextCallback={invalidNameText("zones")}
-      invalidLabelCallback={nullOrEmptyStringCheckCallback("label")}
-      invalidDescriptionCallback={invalidDescription}
+      invalidZoneNameCallback={craig.dns.zones.name.invalid}
+      invalidZoneNameTextCallback={craig.dns.zones.name.invalidText}
+      invalidLabelCallback={craig.dns.zones.label.invalid}
+      invalidDescriptionCallback={craig.dns.zones.description.invalid}
       invalidDescriptionTextCallback={invalidDescriptionText}
       vpcList={craig.store.vpcList}
       onRecordSave={craig.dns.records.save}
       onRecordDelete={craig.dns.records.delete}
       onRecordSubmit={craig.dns.records.create}
-      invalidRecordCallback={invalidName("records")}
-      invalidRecordTextCallback={invalidNameText("records")}
-      invalidRdataCallback={nullOrEmptyStringCheckCallback("records")}
+      invalidRecordCallback={craig.dns.records.name.invalid}
+      invalidRecordTextCallback={craig.dns.records.name.invalidText}
+      invalidRdataCallback={craig.dns.records.rdata.invalid}
       dnsZones={nestedSplat(craig.store.json.dns, "zones", "name")}
       onResolverSave={craig.dns.custom_resolvers.save}
       onResolverSubmit={craig.dns.custom_resolvers.create}
       onResolverDelete={craig.dns.custom_resolvers.delete}
-      invalidResolverNameCallback={invalidName("custom_resolvers")}
-      invalidResolverNameTextCallback={invalidNameText("custom_resolvers")}
-      invalidResolverDescriptionCallback={invalidDescription}
+      invalidResolverNameCallback={craig.dns.custom_resolvers.name.invalid}
+      invalidResolverNameTextCallback={
+        craig.dns.custom_resolvers.name.invalidText
+      }
+      invalidResolverDescriptionCallback={
+        craig.dns.custom_resolvers.description.invalid
+      }
       invalidResolverDescriptionTextCallback={invalidDescriptionText}
       subnetList={craig.getAllSubnets()}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
@@ -463,8 +554,8 @@ const EventStreamsPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("event_streams")}
-      invalidTextCallback={invalidNameText("event_streams")}
+      invalidCallback={craig.event_streams.name.invalid}
+      invalidTextCallback={craig.event_streams.name.invalidText}
       craig={craig}
       docs={RenderDocs("event_streams", craig.store.json._options.template)}
     />
@@ -563,11 +654,11 @@ const KeyManagementPage = (craig) => {
         craig.store.json._options.endpoints === "public-and-private"
       }
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("key_management")}
-      invalidTextCallback={invalidNameText("key_management")}
-      invalidKeyCallback={invalidName("encryption_keys")}
-      invalidKeyTextCallback={invalidNameText("encryption_keys")}
-      invalidRingCallback={invalidEncryptionKeyRing}
+      invalidCallback={craig.key_management.name.invalid}
+      invalidTextCallback={craig.key_management.name.invalidText}
+      invalidKeyCallback={craig.key_management.keys.name.invalid}
+      invalidKeyTextCallback={craig.key_management.keys.name.invalidText}
+      invalidRingCallback={craig.key_management.keys.key_ring.invalid}
       invalidRingText={
         "Invalid Key Ring Name. Must match the regular expression: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s"
       }
@@ -588,10 +679,10 @@ const NetworkAclPage = (craig) => {
       onAclSubmit={craig.vpcs.acls.create}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       child={CopyRuleForm}
-      invalidTextCallback={invalidNameText("acls")}
-      invalidCallback={invalidName("acls")}
-      invalidRuleTextCallback={invalidNameText("acl_rules")}
-      invalidRuleText={invalidName("acl_rules")}
+      invalidTextCallback={craig.vpcs.acls.name.invalidText}
+      invalidCallback={craig.vpcs.acls.name.invalid}
+      invalidRuleTextCallback={craig.vpcs.acls.rules.name.invalidText}
+      invalidRuleText={craig.vpcs.acls.rules.name.invalid}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
       helperTextCallback={aclHelperTextCallback}
@@ -729,49 +820,26 @@ const PowerInfraPage = (craig) => {
       onSshKeyDelete={craig.power.ssh_keys.delete}
       onSshKeySave={craig.power.ssh_keys.save}
       onSshKeySubmit={craig.power.ssh_keys.create}
-      invalidCallback={invalidName("power")}
-      invalidTextCallback={invalidNameText("power")}
+      invalidCallback={craig.power.name.invalid}
+      invalidTextCallback={craig.power.name.invalidText}
       helperTextCallback={powerVsWorkspaceHelperText}
       invalidKeyCallback={invalidSshPublicKey}
-      invalidNetworkNameCallback={invalidName("network")}
-      invalidNetworkNameCallbackText={invalidNameText("network")}
-      invalidConnectionNameCallback={invalidName("cloud_connections")}
-      invalidConnectionNameTextCallback={invalidNameText("cloud_connections")}
-      invalidCidrCallback={(stateData, componentProps) => {
-        return invalidCidr(componentProps.craig)(
-          { cidr: stateData.pi_cidr },
-          componentProps
-        );
-      }}
+      invalidNetworkNameCallback={craig.power.network.name.invalid}
+      invalidNetworkNameCallbackText={craig.power.network.name.invalidText}
+      invalidConnectionNameCallback={craig.power.cloud_connections.name.invalid}
+      invalidConnectionNameTextCallback={
+        craig.power.cloud_connections.name.invalidText
+      }
       sshKeyDeleteDisabled={() => {
         // currently ssh keys are not in use, this will be updated when they are
         return false;
       }}
-      invalidSshKeyCallback={(stateData, componentProps) => {
-        // passthrough function to override field
-        return invalidName("power_vs_ssh_keys")(stateData, componentProps);
-      }}
-      invalidSshKeyCallbackText={(stateData, componentProps) => {
-        // passthrough function to override field
-        return invalidNameText("power_vs_ssh_keys")(stateData, componentProps);
-      }}
-      invalidCidrCallbackText={(stateData, componentProps) => {
-        return invalidCidrText(componentProps.craig)(
-          {
-            cidr: stateData.pi_cidr,
-          },
-          componentProps
-        );
-      }}
-      invalidDnsCallback={(stateData) => {
-        return (
-          contains(stateData.pi_dns[0], "/") ||
-          !isIpv4CidrOrAddress(stateData.pi_dns[0])
-        );
-      }}
-      invalidDnsCallbackText={() => {
-        return "Invalid IP Address";
-      }}
+      invalidCidrCallback={craig.power.network.pi_cidr.invalid}
+      invalidSshKeyCallback={craig.power.ssh_keys.name.invalid}
+      invalidSshKeyCallbackText={craig.power.ssh_keys.name.invalidText}
+      invalidCidrCallbackText={craig.power.network.pi_cidr.invalidText}
+      invalidDnsCallback={craig.power.network.pi_dns.invalid}
+      invalidDnsCallbackText={craig.power.network.pi_dns.invalidText}
       imageMap={powerImageMap}
       onAttachmentSave={craig.power.attachments.save}
       disableAttachmentSave={storageChangeDisabledCallback}
@@ -787,7 +855,10 @@ const PowerVsInstances = (craig) => {
     });
   });
   return (
-    <PowerVsInstancesPage
+    <IcseFormTemplate
+      name="Power VS Instances"
+      addText="Create an Instance"
+      docs={RenderDocs("power_instances", craig.store.json._options.template)}
       overrideTile={
         !craig.store.json._options.enable_power_vs ? (
           <NoPowerNetworkTile />
@@ -795,43 +866,84 @@ const PowerVsInstances = (craig) => {
           <NoPowerWorkspaceTile />
         ) : undefined
       }
-      sapProfiles={sapProfiles}
-      power_instances={craig.store.json.power_instances}
-      storage_pool_map={powerStoragePoolMap}
-      power_volumes={craig.store.json.power_volumes}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.power_instances}
       onSave={craig.power_instances.save}
       onSubmit={craig.power_instances.create}
       onDelete={craig.power_instances.delete}
-      craig={craig}
-      power={craig.store.json.power}
-      docs={RenderDocs("power_instances", craig.store.json._options.template)}
-      invalidCallback={invalidName("power_instances")}
-      invalidTextCallback={invalidNameText("power_instances")}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
       forceOpen={forceShowForm}
-      invalidIpCallback={(ip) => {
-        if (isNullOrEmptyString(ip)) {
-          return false;
-        } else return contains(ip, "/") || !isIpv4CidrOrAddress(ip);
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        // hard code for now, we will need a better solution for dynamically getting
+        // storage pools with API call. The issue here is that the async fetches
+        // do not set value until after the component is rendered if it is forced
+        // open. In addition, the old call was happening each time anything was rendered
+        // which is not ideal
+        powerStoragePoolMap: powerStoragePoolRegionMap,
+        formName: "Power Instances",
+        form: {
+          jsonField: "power_instances",
+          setDefault: {},
+          groups: [
+            {
+              sap: craig.power_instances.sap,
+              sap_profile: craig.power_instances.sap_profile,
+            },
+            {
+              name: craig.power_instances.name,
+              workspace: craig.power_instances.workspace,
+              network: craig.power_instances.network,
+            },
+            {
+              ssh_key: craig.power_instances.ssh_key,
+              image: craig.power_instances.image,
+              pi_sys_type: craig.power_instances.pi_sys_type,
+            },
+            {
+              pi_proc_type: craig.power_instances.pi_proc_type,
+              pi_processors: craig.power_instances.pi_processors,
+              pi_memory: craig.power_instances.pi_memory,
+            },
+            {
+              pi_storage_pool_affinity:
+                craig.power_instances.pi_storage_pool_affinity,
+            },
+            {
+              heading: {
+                name: "Boot Volume",
+                type: "subHeading",
+              },
+            },
+            {
+              storage_option: craig.power_instances.storage_option,
+              pi_storage_type: craig.power_instances.pi_storage_type,
+              pi_storage_pool: craig.power_instances.pi_storage_pool,
+              affinity_type: craig.power_instances.affinity_type,
+              pi_affinity_volume: craig.power_instances.pi_affinity_volume,
+              pi_anti_affinity_volume:
+                craig.power_instances.pi_anti_affinity_volume,
+              pi_anti_affinity_instance:
+                craig.power_instances.pi_anti_affinity_instance,
+              pi_affinity_instance: craig.power_instances.pi_affinity_instance,
+            },
+            {
+              heading: {
+                name: "IP Interface Options",
+                type: "subHeading",
+              },
+            },
+          ],
+        },
       }}
-      invalidPiProcessorsCallback={(stateData) => {
-        // weird is in range error with decimal numbers and is in range
-        return (
-          parseFloat(stateData.pi_processors) < 0.25 ||
-          parseFloat(stateData.pi_processors) > 7
-        );
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "power_instances",
+        hideName: true,
       }}
-      invalidPiMemoryCallback={(stateData) => {
-        return !(parseInt(stateData.pi_memory) > 0);
-      }}
-      invalidPiProcessorsTextCallback={() => {
-        return "Must be a number between 0.25 and 7.";
-      }}
-      invalidPiMemoryTextCallback={() => {
-        return "Must be a whole number greater than 0.";
-      }}
-      storageChangesDisabledCallback={storageChangeDisabledCallback}
     />
   );
 };
@@ -861,14 +973,21 @@ const PowerVsVolumes = (craig) => {
       docs={RenderDocs("power_volumes", craig.store.json._options.template)}
       power={craig.store.json.power}
       power_instances={craig.store.json.power_instances}
-      invalidCallback={invalidName("power_volumes")}
-      invalidTextCallback={invalidNameText("power_volumes")}
+      invalidCallback={craig.power_volumes.name.invalid}
+      invalidTextCallback={craig.power_volumes.name.invalidText}
       replicationDisabledCallback={replicationDisabledCallback}
       affinityChangesDisabled={() => {
         // placeholder
         return false;
       }}
       storage_pool_map={powerStoragePoolRegionMap}
+      disableCapacityCallback={function (stateData, componentProps) {
+        if (stateData.sap === true && contains(stateData.name, "-sap-log-")) {
+          return false;
+        } else if (stateData.sap) {
+          return true;
+        } else return false;
+      }}
     />
   );
 };
@@ -889,8 +1008,8 @@ const ResourceGroupPage = (craig) => {
         return craig.store.json.resource_groups.length === 1;
       }}
       helperTextCallback={resourceGroupHelperTextCallback}
-      invalidCallback={invalidName("resource_groups")}
-      invalidTextCallback={invalidNameText("resource_groups")}
+      invalidCallback={craig.resource_groups.name.invalid}
+      invalidTextCallback={craig.resource_groups.name.invalidText}
     />
   );
 };
@@ -908,12 +1027,12 @@ const RoutingTablesPage = (craig) => {
       forceOpen={forceShowForm}
       craig={craig}
       vpcList={craig.store.vpcList}
-      invalidCallback={invalidName("routing_tables")}
-      invalidTextCallback={invalidNameText("routing_tables")}
-      invalidRouteTextCallback={invalidNameText("routes")}
-      invalidRouteCallback={invalidName("routes")}
-      onRouteSave={craig.routing_tables.routes.delete}
-      onRouteDelete={craig.routing_tables.routes.save}
+      invalidCallback={craig.routing_tables.name.invalid}
+      invalidTextCallback={craig.routing_tables.name.invalidText}
+      invalidRouteTextCallback={craig.routing_tables.routes.name.invalidText}
+      invalidRouteCallback={craig.routing_tables.routes.name.invalid}
+      onRouteSave={craig.routing_tables.routes.save}
+      onRouteDelete={craig.routing_tables.routes.delete}
       onRouteSubmit={craig.routing_tables.routes.create}
     />
   );
@@ -965,8 +1084,8 @@ const SecretsManagerPage = (craig) => {
       craig={craig}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
       encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={invalidName("secrets_manager")}
-      invalidTextCallback={invalidNameText("secrets_manager")}
+      invalidCallback={craig.secrets_manager.name.invalid}
+      invalidTextCallback={craig.secrets_manager.name.invalidText}
       secrets={craig.getAllResourceKeys()}
       docs={RenderDocs("secrets_manager", craig.store.json._options.template)}
     />
@@ -987,14 +1106,17 @@ const SecurityGroupPage = (craig) => {
         forceOpen={forceShowForm}
         craig={craig}
         resourceGroups={splat(craig.store.json.resource_groups, "name")}
-        invalidCallback={invalidName("security_groups")}
-        invalidTextCallback={invalidNameText("security_groups")}
+        invalidCallback={craig.security_groups.name.invalid}
+        invalidTextCallback={craig.security_groups.name.invalidText}
         disableSaveCallback={function (stateData, componentProps) {
           return (
             propsMatchState("sg_rules", stateData, componentProps) ||
             disableSave("sg_rules", stateData, componentProps)
           );
         }}
+        // due to the complex table and the way these are rendered it is
+        // unlikely that a dynamic form is practical to use for the creation
+        // of sg rules, so I'm fine leaving these as is
         invalidRuleText={invalidSecurityGroupRuleName}
         invalidRuleTextCallback={invalidSecurityGroupRuleText}
         onSubmitCallback={craig.security_groups.rules.create}
@@ -1040,11 +1162,13 @@ const SubnetsPage = (craig) => {
       craig={craig}
       propsMatchState={propsMatchState}
       disableSave={disableSave}
-      invalidSubnetTierText={invalidSubnetTierText}
-      invalidSubnetTierName={invalidSubnetTierName}
+      invalidSubnetTierText={craig.vpcs.subnetTiers.name.invalidText}
+      invalidSubnetTierName={craig.vpcs.subnetTiers.name.invalid}
       invalidCidr={invalidCidr}
+      invalidName={invalidName} // needed due to deeply rooted logic with subnet tier names
+      // not changing below invalid name text for now due to complexity, likely
+      // these forms will be easier to manage whem moving to dynamic forms
       invalidCidrText={invalidCidrText}
-      invalidName={invalidName}
       invalidNameText={invalidNameText}
       getSubnetTierStateData={getSubnetTierStateData}
       getTierSubnets={getTierSubnets}
@@ -1079,24 +1203,121 @@ const SshKeysPage = (craig) => {
 
 const TransitGatewayPage = (craig) => {
   return (
-    <TransitGatewayTemplate
+    <IcseFormTemplate
+      name="Transit Gateways"
+      addText="Create a Transit Gateway"
       docs={RenderDocs("transit_gateways", craig.store.json._options.template)}
-      transit_gateways={craig.store.json.transit_gateways}
-      disableSave={disableSave}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.transit_gateways}
       onDelete={craig.transit_gateways.delete}
       onSave={craig.transit_gateways.save}
       onSubmit={craig.transit_gateways.create}
       propsMatchState={propsMatchState}
+      disableSave={disableSave}
       forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.transit_gateways.name.invalid}
-      invalidTextCallback={craig.transit_gateways.name.invalidText}
-      invalidCrns={craig.transit_gateways.crns.invalid}
-      invalidCrnText={craig.transit_gateways.crns.invalidText}
-      vpcList={tgwVpcFilter(craig)}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      power={craig.store.json.power}
-      edgeRouterEnabledZones={edgeRouterEnabledZones}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        formName: "Transit Gateway",
+        form: {
+          jsonField: "transit_gateways",
+          setDefault: {
+            connections: [],
+          },
+          groups: [
+            {
+              use_data: craig.transit_gateways.use_data,
+            },
+            {
+              name: craig.transit_gateways.name,
+              resource_group: craig.transit_gateways.resource_group,
+            },
+            {
+              hideWhen: function (stateData) {
+                return stateData.use_data;
+              },
+              global: craig.transit_gateways.global,
+            },
+            {
+              heading: {
+                name: "Connections",
+                type: "subHeading",
+              },
+            },
+            {
+              vpc_connections: craig.transit_gateways.vpc_connections,
+              power_connections: craig.transit_gateways.power_connections,
+            },
+            // the patterns where existing infrastructure exists are more likely
+            // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
+            // is still supported, but will not be displayed. If we have a request
+            // for that functionality, we should implement
+          ],
+          subForms: [
+            {
+              name: "GRE Tunnels",
+              createText: "Create a GRE Tunnel",
+              jsonField: "gre_tunnels",
+              toggleFormFieldName: "gateway",
+              hideFormTitleButton: function (stateData, componentProps) {
+                return (
+                  !componentProps.craig.store.json._options.enable_classic ||
+                  componentProps.craig.store.json.classic_gateways.length === 0
+                );
+              },
+              form: {
+                groups: [
+                  {
+                    gateway: craig.transit_gateways.gre_tunnels.gateway,
+                    zone: craig.transit_gateways.gre_tunnels.zone,
+                  },
+                  {
+                    local_tunnel_ip:
+                      craig.transit_gateways.gre_tunnels.local_tunnel_ip,
+                    remote_tunnel_ip:
+                      craig.transit_gateways.gre_tunnels.remote_tunnel_ip,
+                  },
+                  {
+                    remote_bgp_asn:
+                      craig.transit_gateways.gre_tunnels.remote_bgp_asn,
+                  },
+                ],
+              },
+            },
+            {
+              name: "Prefix Filters",
+              createText: "Create a Prefix Filter",
+              jsonField: "prefix_filters",
+              form: {
+                groups: [
+                  {
+                    name: craig.transit_gateways.prefix_filters.name,
+                  },
+                  {
+                    connection_type:
+                      craig.transit_gateways.prefix_filters.connection_type,
+                    target: craig.transit_gateways.prefix_filters.target,
+                  },
+                  {
+                    action: craig.transit_gateways.prefix_filters.action,
+                    prefix: craig.transit_gateways.prefix_filters.prefix,
+                  },
+                  {
+                    le: craig.transit_gateways.prefix_filters.le,
+                    ge: craig.transit_gateways.prefix_filters.ge,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "transit_gateways",
+        hideName: true,
+      }}
     />
   );
 };
@@ -1113,8 +1334,8 @@ const VpnGatewayPage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("vpn_gateways")}
-      invalidTextCallback={invalidNameText("vpn_gateways")}
+      invalidCallback={craig.vpn_gateways.name.invalid}
+      invalidTextCallback={craig.vpn_gateways.name.invalidText}
       vpcList={craig.store.vpcList}
       subnetList={craig.getAllSubnets()}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
@@ -1156,21 +1377,87 @@ const VpnServerPage = (craig) => {
 
 const VpcPage = (craig) => {
   return (
-    <VpcTemplate
+    <IcseFormTemplate
+      name="Virtual Private Clouds"
+      addText="Create a VPC"
       docs={RenderDocs("vpcs", craig.store.json._options.template)}
-      vpcs={craig.store.json.vpcs}
-      disableSave={disableSave}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.vpcs}
       onDelete={craig.vpcs.delete}
       onSave={craig.vpcs.save}
       onSubmit={craig.vpcs.create}
       propsMatchState={propsMatchState}
+      disableSave={disableSave}
       forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={invalidName("vpcs")}
-      invalidTextCallback={invalidNameText("vpcs")}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      cosBuckets={craig.store.cosBuckets}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        formName: "VPC",
+        form: {
+          setDefault: {
+            public_gateways: [],
+            publicGateways: [],
+          },
+          groups: [
+            {
+              name: craig.vpcs.name,
+              resource_group: craig.vpcs.resource_group,
+              bucket: craig.vpcs.bucket,
+            },
+            {
+              default_network_acl_name: craig.vpcs.default_network_acl_name,
+              default_security_group_name:
+                craig.vpcs.default_security_group_name,
+              default_routing_table_name: craig.vpcs.default_routing_table_name,
+            },
+            {
+              heading: {
+                name: "Public Gateways",
+                type: "subHeading",
+                tooltip: {
+                  content:
+                    "Public Gateways allow for all resources in a zone to communicate with the public internet. Public Gateways are not needed for subnets where a VPN gateway is created.",
+                },
+              },
+            },
+            {
+              pgw_zone_1: craig.vpcs.pgw_zone_1,
+              pgw_zone_2: craig.vpcs.pgw_zone_2,
+              pgw_zone_3: craig.vpcs.pgw_zone_3,
+            },
+            {
+              heading: {
+                name: "Classic Access",
+                type: "subHeading",
+              },
+            },
+            {
+              classic_access: craig.vpcs.classic_access,
+            },
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "vpcs",
+        hideName: true,
+      }}
     />
+    // <VpcTemplate
+    //   docs={RenderDocs("vpcs", craig.store.json._options.template)}
+    //   vpcs={craig.store.json.vpcs}
+    //   disableSave={disableSave}
+    //   propsMatchState={propsMatchState}
+    //   forceOpen={forceShowForm}
+    //   craig={craig}
+    //   // vpc name and callbacks take in extra param, so for now
+    //   // these will remain unchanged
+    //   invalidCallback={invalidName("vpcs")}
+    //   invalidTextCallback={invalidNameText("vpcs")}
+    //   resourceGroups={splat(craig.store.json.resource_groups, "name")}
+    //   cosBuckets={craig.store.cosBuckets}
+    // />
   );
 };
 
@@ -1189,8 +1476,8 @@ const VpePage = (craig) => {
       propsMatchState={propsMatchState}
       forceOpen={forceShowForm}
       craig={craig}
-      invalidCallback={invalidName("virtual_private_endpoints")}
-      invalidTextCallback={invalidNameText("virtual_private_endpoints")}
+      invalidCallback={craig.virtual_private_endpoints.name.invalid}
+      invalidTextCallback={craig.virtual_private_endpoints.name.invalidText}
       vpcList={craig.store.vpcList}
       subnetList={craig.getAllSubnets()}
       securityGroups={craig.store.json.security_groups}
@@ -1217,10 +1504,10 @@ const VsiPage = (craig) => {
       sshKeys={craig.store.sshKeys}
       apiEndpointImages={`/api/vsi/${craig.store.json._options.region}/images`}
       apiEndpointInstanceProfiles={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
-      invalidCallback={invalidName("vsi")}
-      invalidTextCallback={invalidNameText("vsi")}
-      invalidVolumeCallback={invalidName("volume")}
-      invalidVolumeTextCallback={invalidNameText("volume")}
+      invalidCallback={craig.vsi.name.invalid}
+      invalidTextCallback={craig.vsi.name.invalidText}
+      invalidVolumeCallback={craig.vsi.volumes.name.invalid}
+      invalidVolumeTextCallback={craig.vsi.volumes.name.invalidText}
       onVolumeSave={craig.vsi.volumes.save}
       onVolumeDelete={craig.vsi.volumes.delete}
       onVolumeCreate={craig.vsi.volumes.create}
@@ -1240,6 +1527,8 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "activityTracker") {
     return Atracker(craig);
+  } else if (form === "cis") {
+    return Cis(craig);
   } else if (form === "classicGateways") {
     return ClassicGateways(craig);
   } else if (form === "classicSshKeys") {

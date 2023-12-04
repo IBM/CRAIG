@@ -1,11 +1,8 @@
-const {
-  contains,
-  splatContains,
-  getObjectFromArray,
-  splat,
-} = require("lazy-z");
-const { getSapVolumeList } = require("../forms/sap");
+const { contains, splatContains, getObjectFromArray } = require("lazy-z");
+const { shouldDisableComponentSave } = require("../utils");
+const { getSapVolumeList } = require("../../forms/sap");
 const { RegexButWithWords } = require("regex-but-with-words");
+const { powerVsInstanceSchema } = require("./power-instances-schema");
 
 /**
  * init store for power instances
@@ -213,10 +210,48 @@ function powerVsInstanceDelete(config, stateData, componentProps) {
   config.carve(["json", "power_instances"], componentProps.data.name);
 }
 
+/**
+ * initialize powerVs instance
+ * @param {*} config
+ */
+function initPowerVsInstance(store) {
+  store.newField("power_instances", {
+    init: powerVsInstanceInit,
+    onStoreUpdate: powerVsInstanceOnStoreUpdate,
+    create: powerVsInstanceCreate,
+    save: powerVsInstanceSave,
+    delete: powerVsInstanceDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "name",
+        "sap",
+        "sap_profile",
+        "workspace",
+        "network",
+        "ssh_key",
+        "image",
+        "pi_sys_type",
+        "pi_proc_type",
+        "pi_processors",
+        "pi_memory",
+        "pi_storage_type",
+        "pi_storage_pool",
+        "pi_affinity_volume",
+        "pi_affinity_instance",
+        "pi_anti_affinity_instance",
+        "pi_anti_affinity_volume",
+      ],
+      "power_instances"
+    ),
+    schema: powerVsInstanceSchema(),
+  });
+}
+
 module.exports = {
   powerVsInstanceInit,
   powerVsInstanceOnStoreUpdate,
   powerVsInstanceSave,
   powerVsInstanceCreate,
   powerVsInstanceDelete,
+  initPowerVsInstance,
 };

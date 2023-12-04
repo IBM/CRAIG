@@ -6,6 +6,7 @@ const {
   buildNetworkingRule,
   getObjectFromArray,
   contains,
+  isIpv4CidrOrAddress,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultVpeSecurityGroups } = require("./defaults");
@@ -14,7 +15,19 @@ const {
   deleteSubChild,
   pushToChildField,
 } = require("./store.utils");
-const { updateNetworkingRule, formatNetworkingRule } = require("./utils");
+const {
+  updateNetworkingRule,
+  formatNetworkingRule,
+  shouldDisableComponentSave,
+  invalidTcpOrUdpPort,
+  invalidIcmpCodeOrType,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const {
+  invalidName,
+  invalidNameText,
+  invalidSecurityGroupRuleName,
+} = require("../forms");
 
 /**
  * intialize security groups
@@ -177,6 +190,80 @@ function securityGroupRulesDelete(config, stateData, componentProps) {
   });
 }
 
+/**
+ * init sg store
+ * @param {*} store
+ */
+function initSecurityGroupStore(store) {
+  store.newField("security_groups", {
+    init: securityGroupInit,
+    onStoreUpdate: securityGroupOnStoreUpdate,
+    create: securityGroupCreate,
+    save: securityGroupSave,
+    delete: securityGroupDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "resource_group", "vpc"],
+      "security_groups"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("security_groups"),
+        invalidText: invalidNameText("security_groups"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      vpc: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("vpc"),
+      },
+    },
+    subComponents: {
+      rules: {
+        create: securityGroupRulesCreate,
+        save: securityGroupRulesSave,
+        delete: securityGroupRulesDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "source", "type", "code", "port_min", "port_max"],
+          "security_groups",
+          "rules"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidSecurityGroupRuleName,
+            invalidText: invalidNameText("sg_rules"),
+          },
+          source: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              return !isIpv4CidrOrAddress(stateData.source);
+            },
+          },
+          port_min: {
+            default: "",
+            invalid: invalidTcpOrUdpPort,
+          },
+          port_max: {
+            default: "",
+            invalid: invalidTcpOrUdpPort,
+          },
+          type: {
+            default: "",
+            invalid: invalidIcmpCodeOrType,
+          },
+          code: {
+            default: "",
+            invalid: invalidTcpOrUdpPort,
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   securityGroupInit,
   securityGroupOnStoreUpdate,
@@ -186,4 +273,5 @@ module.exports = {
   securityGroupRulesCreate,
   securityGroupRulesSave,
   securityGroupRulesDelete,
+  initSecurityGroupStore,
 };

@@ -277,6 +277,21 @@ describe("classic gateways", () => {
         disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
         hadr: false,
       });
+      craig.transit_gateways.gre_tunnels.create(
+        {
+          tgw: "transit-gateway",
+          remote_bgp_asn: 12345,
+          zone: 1,
+          gateway: "no",
+          local_tunnel_ip: "1.2.3.4",
+          remote_tunnel_ip: "1.2.3.4",
+        },
+        {
+          innerFormProps: {
+            arrayParentName: "transit-gateway",
+          },
+        }
+      );
       craig.classic_gateways.save(
         {
           name: "aaa",
@@ -304,6 +319,105 @@ describe("classic gateways", () => {
             name: "gw",
           },
         }
+      );
+      assert.deepEqual(
+        craig.store.json.classic_gateways,
+        [
+          {
+            name: "aaa",
+            hostname: "gw-host",
+            datacenter: "dal10",
+            network_speed: "1000",
+            private_network_only: false,
+            tcp_monitoring: false,
+            redundant_network: true,
+            public_bandwidth: 5000,
+            memory: 64,
+            notes: "Notes",
+            ipv6_enabled: false,
+            package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+            os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+            process_key_name: "INTEL_XEON_4210_2_20",
+            private_vlan: "vsrx-private",
+            public_vlan: "vsrx-public",
+            ssh_key: "example-classic",
+            disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
+            hadr: false,
+          },
+        ],
+        "it should save gateway"
+      );
+    });
+    it("should save a classic gateway and update gre tunnels with new updated name", () => {
+      let craig = newState();
+      craig.classic_gateways.create({
+        name: "gw",
+        hostname: "gw-host",
+        datacenter: "dal10",
+        network_speed: "1000",
+        private_network_only: false,
+        tcp_monitoring: false,
+        redundant_network: true,
+        public_bandwidth: 5000,
+        memory: 64,
+        notes: "Notes",
+        ipv6_enabled: false,
+        package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+        os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+        process_key_name: "INTEL_XEON_4210_2_20",
+        private_vlan: "vsrx-private",
+        public_vlan: "vsrx-public",
+        ssh_key: "example-classic",
+        disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
+        hadr: false,
+      });
+      craig.transit_gateways.gre_tunnels.create(
+        {
+          tgw: "transit-gateway",
+          remote_bgp_asn: 12345,
+          zone: 1,
+          gateway: "gw",
+          local_tunnel_ip: "1.2.3.4",
+          remote_tunnel_ip: "1.2.3.4",
+        },
+        {
+          innerFormProps: {
+            arrayParentName: "transit-gateway",
+          },
+        }
+      );
+      craig.classic_gateways.save(
+        {
+          name: "aaa",
+          hostname: "gw-host",
+          datacenter: "dal10",
+          network_speed: "1000",
+          private_network_only: false,
+          tcp_monitoring: false,
+          redundant_network: true,
+          public_bandwidth: 5000,
+          memory: 64,
+          notes: "Notes",
+          ipv6_enabled: false,
+          package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+          os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+          process_key_name: "INTEL_XEON_4210_2_20",
+          private_vlan: "vsrx-private",
+          public_vlan: "vsrx-public",
+          ssh_key: "example-classic",
+          disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
+          hadr: false,
+        },
+        {
+          data: {
+            name: "gw",
+          },
+        }
+      );
+      assert.deepEqual(
+        craig.store.json.transit_gateways[0].gre_tunnels[0].gateway,
+        "aaa",
+        "it should update gateway name"
       );
       assert.deepEqual(
         craig.store.json.classic_gateways,

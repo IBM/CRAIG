@@ -57,7 +57,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -787,6 +787,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -840,7 +841,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -1570,6 +1571,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -1622,7 +1624,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2006,6 +2008,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -2058,7 +2061,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2433,6 +2436,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -2485,7 +2489,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2936,6 +2940,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -2989,7 +2994,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -3092,6 +3097,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -3144,7 +3150,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -3588,6 +3594,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -3640,7 +3647,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4059,6 +4066,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -4110,7 +4118,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4529,6 +4537,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -4581,7 +4590,7 @@ describe("setup wizard", () => {
         enable_classic: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -4947,6 +4956,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -4998,7 +5008,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -5365,6 +5375,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -5417,7 +5428,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.6.1",
+        craig_version: "1.7.1",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -6387,6 +6398,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,

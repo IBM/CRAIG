@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 describe("vsi", () => {
   const example_vsi = {
@@ -23,111 +23,86 @@ describe("vsi", () => {
       "CentOS Stream 8 - Minimal Install (amd64) [ibm-centos-stream-8-amd64-1]",
     enable_floating_ip: false,
   };
-  it("should return true if a vsi volume has an invalid name", () => {
-    assert.isTrue(
-      disableSave(
-        "volumes",
-        {
-          name: "@@@",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vsi: [
-                  {
-                    name: "frog",
-                    volumes: [],
-                  },
-                  {
-                    name: "toad",
-                    volumes: [],
-                  },
-                ],
-              },
+  describe("volumes", () => {
+    it("should return true if a vsi volume has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "volumes",
+          {
+            name: "@@@",
+          },
+          {
+            craig: state(),
+            data: {
+              name: "aaaa",
             },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vsi volume has an invalid capacity", () => {
+      assert.isTrue(
+        disableSave(
+          "volumes",
+          {
+            name: "good-name",
+            capacity: "1",
           },
-          data: {
-            name: "aaaa",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return true if a vsi volume has an invalid capacity", () => {
-    assert.isTrue(
-      disableSave(
-        "volumes",
-        {
-          name: "good-name",
-          capacity: "1",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vsi: [
-                  {
-                    name: "frog",
-                    volumes: [],
-                  },
-                  {
-                    name: "toad",
-                    volumes: [],
-                  },
-                ],
-              },
+          {
+            craig: state(),
+            data: {
+              name: "aaaa",
             },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a vsi volume has an invalid decimal capacity", () => {
+      assert.isTrue(
+        disableSave(
+          "volumes",
+          {
+            name: "good-name",
+            capacity: "10.1",
           },
-          data: {
-            name: "aaaa",
-          },
-        }
-      ),
-      "it should be true"
-    );
-  });
-  it("should return false if a vsi volume has no capacity but is valid otherwise", () => {
-    assert.isFalse(
-      disableSave(
-        "volumes",
-        {
-          name: "good-name",
-          encryption_key: "good-key",
-          capacity: "",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                vsi: [
-                  {
-                    name: "frog",
-                    volumes: [],
-                  },
-                  {
-                    name: "toad",
-                    volumes: [],
-                  },
-                ],
-              },
+          {
+            craig: state(),
+            data: {
+              name: "aaaa",
             },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return false if a vsi volume has no capacity but is valid otherwise", () => {
+      assert.isFalse(
+        disableSave(
+          "volumes",
+          {
+            name: "good-name",
+            encryption_key: "good-key",
+            capacity: "",
           },
-          data: {
-            name: "aaaa",
-          },
-        }
-      ),
-      "it should be false"
-    );
+          {
+            craig: state(),
+            data: {
+              name: "aaaa",
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
   });
   it("should return true if vsi has invalid name", () => {
     let vsi = Object.assign({}, example_vsi);
     vsi.name = "";
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -137,7 +112,7 @@ describe("vsi", () => {
     vsi.resource_group = null;
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -147,7 +122,7 @@ describe("vsi", () => {
     vsi.vpc = null;
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -157,7 +132,7 @@ describe("vsi", () => {
     vsi.image_name = null;
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -167,7 +142,7 @@ describe("vsi", () => {
     vsi.profile = null;
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -177,7 +152,7 @@ describe("vsi", () => {
     vsi.encryption_key = null;
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -187,7 +162,7 @@ describe("vsi", () => {
     vsi.vsi_per_subnet = 0;
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -197,7 +172,7 @@ describe("vsi", () => {
     vsi.vsi_per_subnet = 11;
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -207,7 +182,7 @@ describe("vsi", () => {
     vsi.security_groups = [];
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -217,7 +192,7 @@ describe("vsi", () => {
     vsi.subnets = [];
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );
@@ -227,7 +202,7 @@ describe("vsi", () => {
     vsi.ssh_keys = [];
     assert.isTrue(
       disableSave("vsi", vsi, {
-        craig: { store: { json: { vsi: [{ name: "hi" }] } } },
+        craig: state(),
         data: { name: "vsi" },
       })
     );

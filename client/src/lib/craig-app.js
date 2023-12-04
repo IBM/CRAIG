@@ -1,4 +1,10 @@
-const { kebabCase, isEmpty, keys, isNullOrEmptyString } = require("lazy-z");
+const {
+  kebabCase,
+  isEmpty,
+  keys,
+  isNullOrEmptyString,
+  deepEqual,
+} = require("lazy-z");
 const { state } = require("./state");
 const { notificationText } = require("./forms");
 
@@ -31,10 +37,9 @@ function onProjectSelectCallback(projects, component, craig, name, message) {
   if (!projects[projectKeyName]) {
     projects[projectKeyName] = {};
   }
-  craig.store.json = projects[projectKeyName].json;
-  if (craig.store.json) {
-    craig.store.json._options.template = projects[projectKeyName].template;
-  }
+  craig.hardSetJson(projects[projectKeyName].json, true);
+  craig.store.json._options.template = projects[projectKeyName].template;
+
   return function () {
     component.saveAndSendNotification(
       message || `Project ${name} successfully imported`,
@@ -205,6 +210,7 @@ function getAndUpdateProjects(projects, stateData, componentProps, now) {
 
   // if the project name is changing, remove the old key from projects object
   if (
+    componentProps.data &&
     componentProps.data.name !== "" &&
     projectKeyName !== kebabCase(componentProps.data.name)
   ) {
@@ -256,6 +262,97 @@ function projectFetch(
     });
 }
 
+/**
+ * on request submit json modal
+ * @param {*} event
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @param {*} resolveCallback
+ * @returns {Function}
+ */
+function onRequestSubmitJSONModal(
+  event,
+  stateData,
+  componentProps,
+  resolveCallback
+) {
+  // if edit mode, ignore enter key to allow for new lines in text area
+  if (!stateData.readOnlyJSON && event.code === "Enter") {
+    return resolveCallback(false);
+  }
+
+  if (componentProps.import) {
+    return onRequestProjectImport(stateData, (project) => {
+      componentProps.onProjectSave(project, componentProps, true);
+      resolveCallback(true);
+    });
+  } else {
+    return onRequestOverrideProjectJSON(
+      stateData,
+      componentProps,
+      (project) => {
+        if (project) {
+          componentProps.onProjectSave(
+            project,
+            componentProps,
+            componentProps.current_project === stateData.name // update if current project
+          );
+        }
+        resolveCallback(true);
+      }
+    );
+  }
+}
+
+/**
+ * on request project import
+ * @param {*} stateData
+ * @param {*} resolveCallback
+ * @returns {Function}
+ */
+function onRequestProjectImport(stateData, resolveCallback) {
+  let now = new Date();
+  let date = now.toLocaleDateString().replaceAll("/", "-");
+  let time = now.toLocaleTimeString().replaceAll(":", "-").replaceAll(" ", "-");
+
+  let name = "new-import-project-" + date + "-" + time.toLowerCase();
+  let project = {
+    name,
+    project_name: name,
+    json: stateData.json,
+    description: `Imported Project`,
+  };
+
+  return resolveCallback(project);
+}
+
+/**
+ * on request override project json
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @param {*} resolveCallback
+ * @returns {Function}
+ */
+function onRequestOverrideProjectJSON(
+  stateData,
+  componentProps,
+  resolveCallback
+) {
+  let invalidTextData = stateData.json === undefined;
+  let textAreaDidChange =
+    componentProps.data && !deepEqual(componentProps.data.json, stateData.json);
+
+  if (invalidTextData || !textAreaDidChange) {
+    // invalid OR no changes, so no need to save
+    return resolveCallback();
+  }
+
+  let project = { ...componentProps.data };
+  project.json = stateData.json;
+
+  return resolveCallback(project);
+}
+
 module.exports = {
   onProjectDeselect,
   onProjectSelectCallback,
@@ -266,4 +363,7 @@ module.exports = {
   projectShouldCreateWorkspace,
   getAndUpdateProjects,
   projectFetch,
+  onRequestSubmitJSONModal,
+  onRequestProjectImport,
+  onRequestOverrideProjectJSON,
 };

@@ -1,5 +1,5 @@
 const { transpose, carve, contains, splatContains } = require("lazy-z");
-const { createEdgeVpc } = require("../state/vpc");
+const { createEdgeVpc } = require("../state/vpc/vpc");
 
 /**
  * setup wizard function

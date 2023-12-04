@@ -959,6 +959,7 @@ module.exports = {
       includes: ["A resource group for CRAIG generated resources"],
     },
   },
+  systemTypes: ["e880", "e980", "s922", "s1022"],
   sapProfiles: [
     "ush1-4x128",
     "ush1-4x256",

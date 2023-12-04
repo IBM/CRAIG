@@ -59,6 +59,8 @@ function invalidForms(craig) {
           },
           parent_name: "parent_name",
         },
+        // force craig as third param for subnet only (otherwise also hits access groups)
+        field === "subnet" ? craig : undefined,
       ]
     );
   }

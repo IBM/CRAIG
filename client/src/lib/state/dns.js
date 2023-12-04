@@ -10,7 +10,20 @@ const {
   splat,
   getObjectFromArray,
   splatContains,
+  isNullOrEmptyString,
+  isEmpty,
+  isInRange,
 } = require("lazy-z");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const {
+  invalidName,
+  invalidDescription,
+  invalidDnsZoneName,
+} = require("../forms/invalid-callbacks");
+const { invalidNameText } = require("../forms/text-callbacks");
 
 function dnsInit(config) {
   config.store.json.dns = [];
@@ -206,19 +219,212 @@ function dnsResolverDelete(config, stateData, componentProps) {
   dnsSubFieldDelete("custom_resolvers", config, stateData, componentProps);
 }
 
+/**
+ * init dns store
+ * @param {*} store
+ */
+function initDnsStore(store) {
+  store.newField("dns", {
+    init: dnsInit,
+    onStoreUpdate: dnsOnStoreUpdate,
+    create: dnsCreate,
+    save: dnsSave,
+    delete: dnsDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["name", "resource_group", "plan"],
+      "dns"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("dns"),
+        invalidText: invalidNameText("dns"),
+      },
+      plan: {
+        default: "free",
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+    },
+    subComponents: {
+      zones: {
+        create: dnsZoneCreate,
+        save: dnsZoneSave,
+        delete: dnsZoneDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "vpcs", "label", "description"],
+          "dns",
+          "zones"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidDnsZoneName,
+            invalidText: invalidNameText("zones"),
+          },
+          vpcs: {
+            default: "",
+            invalid: function (stateData) {
+              return (
+                isNullOrEmptyString(stateData.vpcs) || isEmpty(stateData.vpcs)
+              );
+            },
+          },
+          label: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("label"),
+          },
+          description: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidDescription(stateData.description);
+            },
+          },
+        },
+      },
+      records: {
+        create: dnsRecordCreate,
+        save: dnsRecordSave,
+        delete: dnsRecordDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          [
+            "name",
+            "dns_zone",
+            "type",
+            "rdata",
+            "preference",
+            "port",
+            "protocol",
+            "priority",
+            "service",
+            "weight",
+          ],
+          "dns",
+          "records"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("records"),
+            invalidText: invalidNameText("records"),
+          },
+          dns_zone: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("dns_zone"),
+          },
+          rdata: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("rdata"),
+          },
+          type: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("type"),
+          },
+          preference: {
+            default: "",
+            invalid: function (stateData) {
+              if (stateData.type === "MX") {
+                if (!isNullOrEmptyString(stateData.preference)) {
+                  return !isInRange(parseInt(stateData.preference), 0, 65535);
+                } else return true;
+              } else return false;
+            },
+          },
+          port: {
+            default: "",
+            invalid: function (stateData) {
+              if (stateData.type === "SRV") {
+                if (!isNullOrEmptyString(stateData.port)) {
+                  return !isInRange(parseInt(stateData.port), 1, 65535);
+                } else return true;
+              } else return false;
+            },
+          },
+          protocol: {
+            default: "",
+            invalid: function (stateData) {
+              if (stateData.type === "SRV") {
+                return (
+                  isNullOrEmptyString(stateData.protocol) ||
+                  stateData.protocol === undefined
+                );
+              } else return false;
+            },
+          },
+          priority: {
+            default: "",
+            invalid: function (stateData) {
+              if (stateData.type === "SRV") {
+                if (!isNullOrEmptyString(stateData.priority)) {
+                  return !isInRange(parseInt(stateData.priority), 0, 65535);
+                } else return true;
+              } else return false;
+            },
+          },
+          service: {
+            default: "",
+            invalid: function (stateData) {
+              if (stateData.type === "SRV") {
+                if (
+                  !isNullOrEmptyString(stateData.service) &&
+                  stateData.service !== undefined
+                ) {
+                  return !stateData.service.startsWith("_");
+                } else return true;
+              } else return false;
+            },
+          },
+          weight: {
+            default: "",
+            invalid: function (stateData) {
+              if (stateData.type === "SRV") {
+                if (!isNullOrEmptyString(stateData.weight)) {
+                  return !isInRange(parseInt(stateData.weight), 0, 65535);
+                } else return true;
+              } else return false;
+            },
+          },
+        },
+      },
+      custom_resolvers: {
+        create: dnsResolverCreate,
+        save: dnsResolverSave,
+        delete: dnsResolverDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "vpc", "subnets", "description"],
+          "dns",
+          "custom_resolvers"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("custom_resolvers"),
+            invalidText: invalidNameText("custom_resolvers"),
+          },
+          vpc: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("vpc"),
+          },
+          subnets: {
+            default: "",
+            invalid: function (stateData) {
+              return isEmpty(stateData.subnets);
+            },
+          },
+          description: {
+            default: "",
+            invalid: function (stateData) {
+              return invalidDescription(stateData.description);
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
-  dnsCreate,
-  dnsInit,
-  dnsDelete,
-  dnsSave,
-  dnsOnStoreUpdate,
-  dnsZoneCreate,
-  dnsZoneDelete,
-  dnsZoneSave,
-  dnsRecordCreate,
-  dnsRecordDelete,
-  dnsRecordSave,
-  dnsResolverCreate,
-  dnsResolverDelete,
-  dnsResolverSave,
+  initDnsStore,
 };

@@ -2,17 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.6.1
+## 1.7.1
 
 ### Upgrade Notes
 
+- Power VS Instance form has changed and may require saving the component to render correctly
+- Power VS Instance health status has been removed as it is not used for infrastructure provisioning
+- When changing a Power VS Workspace name, instances and volumes in that workspace will also be updated with the new name
 
 ### Features
 
 
 ### Fixes
 
+- Fixed an issue causing Power VS Instance page to crash when loading map of storage pools
+
+## 1.7.0
+
+### Upgrade Notes
+
+- Transit Gateways require the field `gre_tunnels`. To update existing JSON use the update banner at the top of the screen.
+
+### Features
+
+- Users can now create GRE Tunnels for Classic Gateways from the Transit Gateways page.
+
+### Fixes
+
+- Fixed an issue causing the Subnet form to crash when a Subnet Tier has an invalid name
+
+## 1.6.1
+
+### Upgrade Notes
+
+- Transit Gateway VPC CRNs have been removed from the Transit Gateway form. Existing `craig.json` files with this field will still render normally. Please reach out to us if the GUI functionality is needed for your environment
+
+### Features
+
+- Users can now edit the size of SAP log volumes for Power VS
+- When using the search bar in the hamburger menu, results will be returned based on documentation text
+- Users can now choose a router hostname from an existing Classic VLAN on the Classic VLAN page
+- Users can now import an existing Transit Gateway
+
+### Fixes
+
 - Fixed an issue causing DNS Terraform resources to have invalid plan values
+- Fixed an issue causing Power VS Volumes form to crash when selecting a workspace without storage pool replication
+- Fixed an issue causing JSON to IaC to crash when Key Management service has an invalid name
+- Fixed an issue causing F5 VPC address prefixes to not be created with the correct name
+- Fixed an issue causing F5 Big IP template to be generated with an incorrect reference to subnet CIDR
+- Fixed an issue causing Classic Network Gateways with `private_network_only` to be incorrectly created with a `public_vlan`
+- Fixed an issue causing Classic IBM Cloud provider to not be created when classic is enabled
+- Fixed an issue causing Classic Provider required variables to not be created when classic is enabled
+- Fixed an issue causing Classic Infrastructure resources to not be added to CRAIG output archive
+- Fixed an issue allowing users to create invalid Classic VLAN names with more than 20 characters
+- Fixed an issue causing Subnets page to crash when switching projects
+- Fixed an issue allowing VPCs and Power VS Workspaces to be connected to more than one local or global Transit Gateway
 
 ## 1.6.0
 
@@ -29,6 +74,7 @@ All notable changes to this project will be documented in this file.
 - Users can now create certificates for a VPN Server for developer use only
 - Users can now import PEM files as certificates for VPN Server
 - Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS
+- Users can now import from the Projects page
 
 ### Fixes
 

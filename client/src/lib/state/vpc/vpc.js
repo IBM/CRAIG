@@ -10,6 +10,8 @@ const {
   eachZone,
   splatContains,
   getObjectFromArray,
+  isIpv4CidrOrAddress,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const {
   newDefaultEdgeAcl,
@@ -22,11 +24,20 @@ const {
   firewallTiers,
   newDefaultF5ExternalAclManagement,
   legacyDefaultVpcs,
-} = require("./defaults");
+} = require("../defaults");
 const { lazyZstate } = require("lazy-z/lib/store");
-const { buildSubnet } = require("../builders");
-const { formatNetworkingRule, updateNetworkingRule } = require("./utils");
-const { calculateNeededSubnetIps, getNextCidr } = require("../json-to-iac");
+const { buildSubnet } = require("../../builders");
+const {
+  formatNetworkingRule,
+  updateNetworkingRule,
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+  invalidTcpOrUdpPort,
+  invalidIcmpCodeOrType,
+  resourceGroupsField,
+  selectInvalidText,
+} = require("../utils");
+const { calculateNeededSubnetIps, getNextCidr } = require("../../json-to-iac");
 const {
   getSubnetTierData,
   getUpdatedTierData,
@@ -35,7 +46,16 @@ const {
   deleteLegacySubnetTier,
   updateAdvancedSubnetTier,
   editSubnets,
-} = require("./subnets");
+} = require("../subnets");
+const {
+  invalidName,
+  invalidSubnetTierName,
+} = require("../../forms/invalid-callbacks");
+const {
+  invalidNameText,
+  invalidSubnetTierText,
+} = require("../../forms/text-callbacks");
+const { vpcSchema } = require("./vpc-schema");
 
 /**
  * initialize vpc store
@@ -160,6 +180,9 @@ function vpcOnStoreUpdate(config) {
     if (network.cos === null && network.bucket !== "$disabled") {
       network.bucket = null;
     }
+    if (!config.store.networkAcls) {
+      config.store.networkAcls = {};
+    }
     config.store.networkAcls[network.name] = splat(network.acls, "name");
     let subnetList = []; // create a new list
     // for each zone
@@ -180,6 +203,9 @@ function vpcOnStoreUpdate(config) {
         rule.vpc = network.name;
       });
     });
+    if (!config.store.subnets) {
+      config.store.subnets = {};
+    }
     // set subnets object vpc name to list
     config.store.subnets[network.name] = subnetList;
     // set acls object to the list of acls
@@ -1016,6 +1042,207 @@ function createEdgeVpc(config, pattern, useManagementVpc, zones, noUpdate) {
   if (!noUpdate) config.update();
 }
 
+/**
+ * init nacl rule store, put here to save space
+ */
+function naclRuleSubComponents() {
+  return {
+    rules: {
+      create: naclRuleCreate,
+      save: naclRuleSave,
+      delete: naclRuleDelete,
+      // using function here as this is the most deeply nested component
+      shouldDisableSave: function (config, stateData, componentProps) {
+        let shouldBeDisabled = false;
+        [
+          "name",
+          "source",
+          "destination",
+          "port_min",
+          "port_max",
+          "source_port_min",
+          "source_port_max",
+          "type",
+          "code",
+        ].forEach((field) => {
+          if (!shouldBeDisabled) {
+            shouldBeDisabled = config.vpcs.acls.rules[field].invalid(
+              stateData,
+              componentProps
+            );
+          }
+        });
+        return shouldBeDisabled;
+      },
+      schema: {
+        name: {
+          default: "",
+          invalid: invalidName("acl_rules"),
+          invalidText: invalidNameText("acl_rules"),
+        },
+        source: {
+          default: "",
+          invalid: function (stateData, componentProps) {
+            return !isIpv4CidrOrAddress(stateData.source);
+          },
+        },
+        destination: {
+          default: "",
+          invalid: function (stateData, componentProps) {
+            return !isIpv4CidrOrAddress(stateData.destination);
+          },
+        },
+        port_min: {
+          default: "",
+          invalid: invalidTcpOrUdpPort,
+        },
+        port_max: {
+          default: "",
+          invalid: invalidTcpOrUdpPort,
+        },
+        source_port_min: {
+          default: "",
+          invalid: invalidTcpOrUdpPort,
+        },
+        source_port_max: {
+          default: "",
+          invalid: invalidTcpOrUdpPort,
+        },
+        type: {
+          default: "",
+          invalid: invalidIcmpCodeOrType,
+        },
+        code: {
+          default: "",
+          invalid: invalidIcmpCodeOrType,
+        },
+      },
+    },
+  };
+}
+
+/**
+ * init vpc store
+ * @param {*} store
+ */
+function initVpcStore(store) {
+  store.newField("vpcs", {
+    init: vpcInit,
+    onStoreUpdate: vpcOnStoreUpdate,
+    create: vpcCreate,
+    save: vpcSave,
+    delete: vpcDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "name",
+        "bucket",
+        "resource_group",
+        "default_network_acl_name",
+        "default_security_group_name",
+        "default_routing_table_name",
+      ],
+      "vpcs"
+    ),
+    schema: vpcSchema(),
+    subComponents: {
+      acls: {
+        create: naclCreate,
+        save: naclSave,
+        delete: naclDelete,
+        subComponents: naclRuleSubComponents(),
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "resource_group"],
+          "vpcs",
+          "acls"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("acls"),
+            invalidText: invalidNameText("acls"),
+          },
+          resource_group: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              return (
+                !stateData.resource_group ||
+                isNullOrEmptyString(stateData.resource_group)
+              );
+            },
+          },
+        },
+      },
+      subnets: {
+        create: subnetCreate,
+        save: subnetSave,
+        delete: subnetDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["network_acl", "cidr", "name"],
+          "vpcs",
+          "subnets"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              componentProps.craig = store;
+              return invalidName("subnet", store)(stateData, componentProps);
+            },
+          },
+          cidr: {
+            default: "",
+            invalid: function (stateData, componentProps) {
+              if (!stateData.tier) {
+                return false;
+              } else if (!isIpv4CidrOrAddress(stateData.cidr || "")) {
+                return true;
+              } else {
+                let invalidCidrRange =
+                  Number(stateData.cidr.split("/")[1]) <= 12;
+                return invalidCidrRange || stateData.cidr.indexOf("/") === -1;
+              }
+            },
+          },
+          network_acl: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("network_acl"),
+          },
+        },
+      },
+      subnetTiers: {
+        create: subnetTierCreate,
+        save: subnetTierSave,
+        delete: subnetTierDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "networkAcl", "advanced"],
+          "vpcs",
+          "subnetTiers"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidSubnetTierName,
+            invalidText: invalidSubnetTierText,
+          },
+          networkAcl: {
+            default: "",
+            invalid: fieldIsNullOrEmptyString("networkAcl"),
+          },
+          advanced: {
+            default: false,
+            invalid: function (stateData) {
+              return (
+                stateData.advanced === true &&
+                stateData.select_zones.length === 0
+              );
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   vpcInit,
   vpcCreate,
@@ -1035,4 +1262,5 @@ module.exports = {
   naclRuleSave,
   naclRuleDelete,
   createEdgeVpc,
+  initVpcStore,
 };

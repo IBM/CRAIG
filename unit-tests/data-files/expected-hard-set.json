@@ -852,6 +852,7 @@
   ],
   "transit_gateways": [
     {
+      "use_data": false,
       "name": "transit-gateway",
       "resource_group": "slz-service-rg",
       "global": false,
@@ -864,7 +865,9 @@
           "tgw": "transit-gateway",
           "vpc": "workload"
         }
-      ]
+      ],
+      "gre_tunnels": [],
+      "prefix_filters": []
     }
   ],
   "clusters": [
@@ -958,5 +961,6 @@
   "power_volumes": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
-  "classic_gateways": []
+  "classic_gateways": [],
+  "cis": []
 }

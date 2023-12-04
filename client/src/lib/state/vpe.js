@@ -1,5 +1,15 @@
 const { newDefaultVpe } = require("./defaults");
-const { splatContains, deleteUnfoundArrayItems } = require("lazy-z");
+const {
+  splatContains,
+  deleteUnfoundArrayItems,
+  isEmpty,
+  isNullOrEmptyString,
+} = require("lazy-z");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
+} = require("./utils");
+const { invalidName, invalidNameText } = require("../forms");
 
 /**
  * initialize vpe
@@ -90,10 +100,78 @@ function vpeDelete(config, stateData, componentProps) {
   config.carve(["json", "virtual_private_endpoints"], componentProps.data.name);
 }
 
+/**
+ * init vpe
+ * @param {*} store
+ */
+function initVpe(store) {
+  store.newField("virtual_private_endpoints", {
+    init: vpeInit,
+    onStoreUpdate: vpeOnStoreUpdate,
+    create: vpeCreate,
+    save: vpeSave,
+    delete: vpeDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "name",
+        "resource_group",
+        "security_groups",
+        "subnets",
+        "service",
+        "vpc",
+        "instance",
+      ],
+      "virtual_private_endpoints"
+    ),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("virtual_private_endpoints"),
+        invalidText: invalidNameText("virtual_private_endpoints"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("resource_group"),
+      },
+      service: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("service"),
+      },
+      vpc: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("vpc"),
+      },
+      security_groups: {
+        default: [],
+        invalid: function (stateData) {
+          return (
+            !stateData.security_groups || isEmpty(stateData.security_groups)
+          );
+        },
+      },
+      subnets: {
+        default: [],
+        invalid: function (stateData) {
+          return !stateData.subnets || isEmpty(stateData.subnets);
+        },
+      },
+      instance: {
+        default: null,
+        invalid: function (stateData) {
+          return stateData.service === "secrets-manager"
+            ? isNullOrEmptyString(stateData.instance, true)
+            : false;
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   vpeInit,
   vpeOnStoreUpdate,
   vpeCreate,
   vpeSave,
   vpeDelete,
+  initVpe,
 };
