@@ -1,0 +1,127 @@
+const { varDotPrefix } = require("../constants");
+const { tfBlock, resourceRef, jsonToTfPrint } = require("./utils");
+const { kebabCase } = require("lazy-z");
+
+/**
+ * create resource instance for scc
+ * @param {*} scc
+ * @param {string} scc.resource_group
+ * @param {string} scc.region
+ * @param {*} config
+ * @returns {object} terraform object
+ */
+function ibmSccInstance(scc_v2) {
+  return {
+    name: "scc_instance",
+    data: {
+      name: `${varDotPrefix}-scc`,
+      service: "compliance",
+      plan: "security-compliance-center-standard-plan",
+      location: scc_v2.region,
+      resource_group: scc_v2.resource_group,
+    },
+  };
+}
+
+/**
+ * create scc profile attachment block
+ * @param {Object} scc_v2
+ * @param {string} scc_v2.instance_id
+ * @param {string} scc_v2.profile_id
+ * @param {string} scc_v2.attachment_name
+ * @param {string} scc_v2.account_id
+ * @param {string} scc_v2.description
+ * @param {string} scc_v2.schedule
+ * @returns {object} terraform object
+ */
+
+function ibmSccProfileAttachment(profile_attachment) {
+  let attachmentName = kebabCase(
+    `${varDotPrefix}-scc-${profile_attachment.attachment_name}`
+  );
+  return {
+    name: `${profile_attachment.attachment_name} profile attachment`,
+    data: {
+      name: attachmentName,
+      profile_id: profile_attachment.profile_id,
+      description: "example description",
+      instance_id: resourceRef("scc_instance", "id"),
+      scope: [
+        {
+          environment: "ibm-cloud",
+          properties: [
+            {
+              name: "scope_id",
+              value: "${var.account_id}",
+            },
+          ],
+          properties: [
+            {
+              name: "scope_type",
+              value: "account",
+            },
+          ],
+        },
+      ],
+      schedule: "every_30_days",
+      status: "enabled",
+      notifications: [
+        {
+          enabled: true,
+          controls: [
+            {
+              failed_control_ids: [],
+              threshold_limit: 14,
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+/**
+ * create scc terraforms
+ * @param {Object} scc_v2
+ * @param {Array<Object>} scc_v2.profile_attachments
+ * @param {string} scc_v2.location
+ * @param {Object} config
+ * @returns {string} terraform code
+ */
+function formatScc2(scc_v2, config) {
+  let tf = "";
+  tf += jsonToTfPrint(
+    "resource",
+    "ibm_resource_instance",
+    "scc_instance",
+    ibmSccInstance(scc_v2, config).data
+  );
+  scc_v2.profile_attachments.forEach((profileAttachment) => {
+    let attachment = ibmSccProfileAttachment(profileAttachment, config);
+    tf += jsonToTfPrint(
+      "resource",
+      "ibm_scc_profile_attachment",
+      attachment.name,
+      attachment.data
+    );
+  });
+  return tfBlock("Security and Compliance Center", tf);
+}
+
+/**
+ * get all scc terraform
+ * @param {Object} config
+ * @param {Object} config.scc_v2
+ * @returns {string} terraform string
+ */
+function scc2Tf(config) {
+  if (config.scc_v2.enable) return formatScc2(config.scc_v2, config);
+  else return "";
+}
+
+module.exports = {
+  formatScc2,
+  scc2Tf,
+  ibmSccProfileAttachment,
+  ibmSccInstance,
+};
