@@ -73,6 +73,7 @@ const {
 const { initPowerVsVolumeStore } = require("./power-vs-volumes");
 const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");
+const { initCis } = require("./cis.js");
 
 /**
  * get state for craig
@@ -223,11 +224,8 @@ const state = function (legacy) {
   });
 
   initCbrZones(store);
-
   initCbrRules(store);
-
   initVpnState(store);
-
   initDnsStore(store);
 
   store.newField("logdna", {
@@ -248,6 +246,7 @@ const state = function (legacy) {
   initPowerVsVolumeStore(store);
   intiClassicInfrastructure(store);
   initClassicGateways(store);
+  initCis(store);
 
   /**
    * hard set config dot json in state store

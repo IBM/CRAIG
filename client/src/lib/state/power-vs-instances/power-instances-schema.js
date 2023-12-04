@@ -15,7 +15,12 @@ const {
   invalidNameText,
   storageChangeDisabledCallback,
 } = require("../../forms");
-const { fieldIsNullOrEmptyString, selectInvalidText } = require("../utils");
+const {
+  fieldIsNullOrEmptyString,
+  selectInvalidText,
+  titleCaseRender,
+  kebabCaseInput,
+} = require("../utils");
 const { sapProfiles, systemTypes } = require("../../constants");
 
 /**
@@ -220,7 +225,6 @@ function powerVsInstanceSchema() {
         return splat(componentProps.craig.store.json.power, "name");
       },
       onStateChange: function (stateData, componentProps) {
-        console.log(componentProps.craig.store.json);
         let powerWorkspaceZone = new revision(
           componentProps.craig.store.json
         ).child("power", stateData.workspace).data.zone;
@@ -339,14 +343,8 @@ function powerVsInstanceSchema() {
       groups: ["Shared", "Capped", "Dedicated"],
       size: "small",
       type: "select",
-      onRender: function (stateData) {
-        return isNullOrEmptyString(stateData.pi_proc_type)
-          ? ""
-          : capitalize(stateData.pi_proc_type);
-      },
-      onInputChange: function (stateData) {
-        return stateData.pi_proc_type.toLowerCase();
-      },
+      onRender: titleCaseRender("pi_proc_type"),
+      onInputChange: kebabCaseInput("pi_proc_type"),
     },
     pi_processors: {
       labelText: "Processors",

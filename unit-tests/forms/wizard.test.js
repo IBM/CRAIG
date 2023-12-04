@@ -787,6 +787,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -1570,6 +1571,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -2006,6 +2008,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -2433,6 +2436,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -2936,6 +2940,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -3092,6 +3097,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -3588,6 +3594,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
 
     assert.deepEqual(
@@ -4059,6 +4066,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -4529,6 +4537,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -4947,6 +4956,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -5365,6 +5375,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,
@@ -6387,6 +6398,7 @@ describe("setup wizard", () => {
       classic_ssh_keys: [],
       classic_vlans: [],
       classic_gateways: [],
+      cis: [],
     };
     assert.deepEqual(
       actualData,

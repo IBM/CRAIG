@@ -19,6 +19,7 @@ import { propsMatchState } from "../../lib";
 import {
   ClassicDisabledTile,
   NoClassicGatewaysTile,
+  NoDomainsTile,
 } from "./dynamic-form/tiles";
 import {
   dynamicIcseFormGroupsProps,
@@ -237,8 +238,11 @@ class DynamicForm extends React.Component {
                 key={subForm.name}
                 overrideTile={
                   // this is currently messy, we'll need to figure out a better solution
-                  subForm.jsonField === "gre_tunnels" &&
-                  !this.props.craig.store.json._options.enable_classic ? (
+                  subForm.jsonField === "dns_records" &&
+                  this.props.data.domains.length === 0 ? (
+                    <NoDomainsTile />
+                  ) : subForm.jsonField === "gre_tunnels" &&
+                    !this.props.craig.store.json._options.enable_classic ? (
                     ClassicDisabledTile(true)
                   ) : subForm.jsonField === "gre_tunnels" &&
                     this.props.craig.store.json.classic_gateways.length ===

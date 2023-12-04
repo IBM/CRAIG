@@ -29,3 +29,12 @@ export const NoClassicGatewaysTile = () => {
     </Tile>
   );
 };
+
+export const NoDomainsTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap">
+      <CloudAlerting size="24" className="iconMargin" />
+      No Domains. To create a DNS Record, add a Domain to this CIS Instance.
+    </Tile>
+  );
+};

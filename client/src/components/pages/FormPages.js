@@ -40,7 +40,15 @@ import {
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { contains, eachKey, keys, nestedSplat, splat, isEmpty } from "lazy-z";
+import {
+  contains,
+  eachKey,
+  keys,
+  nestedSplat,
+  splat,
+  isEmpty,
+  getObjectFromArray,
+} from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   disableSshKeyDelete,
@@ -168,6 +176,89 @@ const Atracker = (craig) => {
       cosKeys={craig.store.cosKeys}
       cosBuckets={craig.store.cosBuckets}
       onSave={craig.atracker.save}
+    />
+  );
+};
+
+const Cis = (craig) => {
+  return (
+    <IcseFormTemplate
+      name="Cloud Internet Services (CIS)"
+      addText="Create a CIS Instance"
+      docs={RenderDocs("cis", craig.store.json._options.template)}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.cis}
+      onDelete={craig.cis.delete}
+      onSave={craig.cis.save}
+      onSubmit={craig.cis.create}
+      propsMatchState={propsMatchState}
+      disableSave={disableSave}
+      forceOpen={forceShowForm}
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        formName: "CIS",
+        form: {
+          jsonField: "cis",
+          setDefault: {
+            domains: [],
+            dns_records: [],
+          },
+          groups: [
+            {
+              name: craig.cis.name,
+              resource_group: craig.cis.resource_group,
+              plan: craig.cis.plan,
+            },
+          ],
+          subForms: [
+            {
+              name: "Domains",
+              createText: "Add a domain",
+              jsonField: "domains",
+              toggleFormFieldName: "domain",
+              form: {
+                groups: [
+                  {
+                    domain: craig.cis.domains.domain,
+                    type: craig.cis.domains.type,
+                  },
+                ],
+              },
+            },
+            {
+              name: "DNS Records",
+              createText: "Add a DNS Record",
+              jsonField: "dns_records",
+              hideFormTitleButton: function (stateData, componentProps) {
+                return componentProps.data.domains.length === 0;
+              },
+              form: {
+                groups: [
+                  {
+                    name: craig.cis.dns_records.name,
+                    domain: craig.cis.dns_records.domain,
+                  },
+                  {
+                    type: craig.cis.dns_records.type,
+                    content: craig.cis.dns_records.content,
+                  },
+                  {
+                    ttl: craig.cis.dns_records.ttl,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "cis",
+        hideName: true,
+        hide: false,
+      }}
     />
   );
 };
@@ -1430,6 +1521,8 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "activityTracker") {
     return Atracker(craig);
+  } else if (form === "cis") {
+    return Cis(craig);
   } else if (form === "classicGateways") {
     return ClassicGateways(craig);
   } else if (form === "classicSshKeys") {

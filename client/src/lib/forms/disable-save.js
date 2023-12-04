@@ -284,6 +284,9 @@ function disableSave(field, stateData, componentProps, craig) {
     "prefix_filters",
     "routing_tables",
     "routes",
+    "cis",
+    "domains",
+    "dns_records",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (containsKeys(disableSaveFunctions, field)) {
@@ -326,6 +329,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.transit_gateways[field]
         : contains(["routes"], field)
         ? componentProps.craig.routing_tables[field]
+        : contains(["domains", "dns_records"], field)
+        ? componentProps.craig.cis[field]
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;
@@ -368,7 +373,7 @@ function forceShowForm(stateData, componentProps) {
       componentProps.innerFormProps
     );
   }
-  console.log("AAAAA");
+
   return openForm;
 }
 

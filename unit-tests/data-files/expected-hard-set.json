@@ -961,5 +961,6 @@
   "power_volumes": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
-  "classic_gateways": []
+  "classic_gateways": [],
+  "cis": []
 }

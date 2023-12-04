@@ -11,6 +11,7 @@ const {
   selectInvalidText,
   wholeNumberField,
   wholeNumberText,
+  unconditionalInvalidText,
 } = require("../utils");
 
 function prefixFiltersSchema() {
@@ -66,9 +67,7 @@ function prefixFiltersSchema() {
       type: "select",
       default: "",
       invalid: fieldIsNullOrEmptyString("action"),
-      invalidText: function () {
-        return "Select an action";
-      },
+      invalidText: unconditionalInvalidText("Select an action"),
       groups: ["Permit", "Deny"],
     },
     prefix: {
@@ -80,9 +79,7 @@ function prefixFiltersSchema() {
           !contains(stateData.prefix, "/")
         );
       },
-      invalidText: function () {
-        return "Enter a valid IPV4 CIDR Block";
-      },
+      invalidText: unconditionalInvalidText("Enter a valid IPV4 CIDR Block"),
     },
     le: {
       default: "0",
