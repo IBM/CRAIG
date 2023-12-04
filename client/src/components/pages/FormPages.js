@@ -257,7 +257,6 @@ const Cis = (craig) => {
         disableSave: disableSave,
         submissionFieldName: "cis",
         hideName: true,
-        hide: false,
       }}
     />
   );
