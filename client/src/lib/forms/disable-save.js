@@ -187,40 +187,6 @@ function disableF5VsiSave(stateData) {
 }
 
 /**
- * check to see if routing tables form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableRoutingTablesSave(stateData, componentProps) {
-  return (
-    invalidName("routing_tables")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["vpc"])
-  );
-}
-
-/**
- * check to see if routes form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableRoutesSave(stateData, componentProps) {
-  return (
-    invalidName("routes")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "zone",
-      "action",
-      "next_hop",
-      "destination",
-    ]) ||
-    !isIpv4CidrOrAddress(stateData.destination) ||
-    !isIpv4CidrOrAddress(stateData.next_hop) ||
-    contains(stateData.next_hop, "/")
-  );
-}
-
-/**
  * check to see if logna form save should be disabled
  * @param {Object} stateData
  * @returns {boolean} true if should be disabled
@@ -254,8 +220,6 @@ const disableSaveFunctions = {
   iam_account_settings: disableIamAccountSettingsSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
-  routing_tables: disableRoutingTablesSave,
-  routes: disableRoutesSave,
   logdna: disableLogdnaSave,
   sysdig: disableSysdigSave,
 };
@@ -317,6 +281,12 @@ function disableSave(field, stateData, componentProps, craig) {
     "zones",
     "records",
     "custom_resolvers",
+    "prefix_filters",
+    "routing_tables",
+    "routes",
+    "cis",
+    "domains",
+    "dns_records",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (containsKeys(disableSaveFunctions, field)) {
@@ -355,8 +325,12 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.cbr_zones[field]
         : contains(["contexts", "resource_attributes", "tags"], field)
         ? componentProps.craig.cbr_rules[field]
-        : field === "gre_tunnels"
-        ? componentProps.craig.transit_gateways.gre_tunnels
+        : contains(["gre_tunnels", "prefix_filters"], field)
+        ? componentProps.craig.transit_gateways[field]
+        : contains(["routes"], field)
+        ? componentProps.craig.routing_tables[field]
+        : contains(["domains", "dns_records"], field)
+        ? componentProps.craig.cis[field]
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;

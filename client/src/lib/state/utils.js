@@ -12,6 +12,9 @@ const {
   splat,
   validPortRange,
   isIpv4CidrOrAddress,
+  isWholeNumber,
+  titleCase,
+  kebabCase,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const { invalidName } = require("../forms/invalid-callbacks");
@@ -527,8 +530,71 @@ function invalidIpv4Address(field) {
   };
 }
 
+/**
+ * invalid ipv4 address text
+ * @returns {string} invalid text
+ */
 function invalidIpv4AddressText() {
   return "Enter a valid IP address";
+}
+
+/**
+ * return a validation function to check if a value is a whole number
+ * @param {*} field
+ * @returns {Function} validation function
+ */
+function wholeNumberField(field, lazy) {
+  return function (stateData) {
+    if (isNullOrEmptyString(stateData[field], true) && lazy) {
+      return false;
+    } else
+      return (
+        !isWholeNumber(parseInt(stateData[field])) ||
+        stateData[field].match(/\D/g) !== null
+      );
+  };
+}
+
+/**
+ * return invalid text for not whole number
+ */
+function wholeNumberText() {
+  return "Enter a whole number";
+}
+
+/**
+ * render in title case
+ * @param {*} field
+ * @returns {string} render string
+ */
+function titleCaseRender(field) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[field])
+      ? ""
+      : titleCase(stateData[field]);
+  };
+}
+
+/**
+ * on input change stor as kebab case
+ * @param {*} field
+ * @returns {string} state string
+ */
+function kebabCaseInput(field) {
+  return function (stateData) {
+    return kebabCase(stateData[field]);
+  };
+}
+
+/**
+ * callback function for unconditional invalid text
+ * @param {string} text
+ * @returns {Function} function that return text
+ */
+function unconditionalInvalidText(text) {
+  return function () {
+    return text;
+  };
 }
 
 module.exports = {
@@ -551,4 +617,9 @@ module.exports = {
   invalidTcpOrUdpPort,
   invalidIcmpCodeOrType,
   invalidPort,
+  wholeNumberField,
+  wholeNumberText,
+  titleCaseRender,
+  kebabCaseInput,
+  unconditionalInvalidText,
 };

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.1
+
+### Upgrade Notes
+
+- Power VS Instance form has changed and may require saving the component to render correctly
+- Power VS Instance health status has been removed as it is not used for infrastructure provisioning
+- When changing a Power VS Workspace name, instances and volumes in that workspace will also be updated with the new name
+
+### Features
+
+
+### Fixes
+
+- Fixed an issue causing Power VS Instance page to crash when loading map of storage pools
+
 ## 1.7.0
 
 ### Upgrade Notes
@@ -14,6 +29,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+- Fixed an issue causing the Subnet form to crash when a Subnet Tier has an invalid name
 
 ## 1.6.1
 
@@ -58,6 +74,7 @@ All notable changes to this project will be documented in this file.
 - Users can now create certificates for a VPN Server for developer use only
 - Users can now import PEM files as certificates for VPN Server
 - Added the template for VPN as a Service for creating a VPC environment with connectivity to Power VS
+- Users can now import from the Projects page
 
 ### Fixes
 

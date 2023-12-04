@@ -21,7 +21,8 @@ function fieldFunctionReturnsBooleanCheck(
 ) {
   let result = props.field[fieldFunctionName](
     props.parentState,
-    props.parentProps
+    props.parentProps,
+    props.index
   );
   if (!isBoolean(result)) {
     throw new Error(

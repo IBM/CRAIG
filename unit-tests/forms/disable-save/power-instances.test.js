@@ -3,7 +3,7 @@ const { disableSave, state } = require("../../../client/src/lib");
 const {
   invalidPowerVsProcessorTextCallback,
   invalidPowerVsMemoryTextCallback,
-} = require("../../../client/src/lib/state/power-vs-instances");
+} = require("../../../client/src/lib/state/power-vs-instances/power-instances-schema.js");
 
 describe("power vs instances", () => {
   it("should be disabled when invalid duplicate power instance name", () => {
@@ -538,7 +538,6 @@ describe("power vs instances", () => {
           },
         ],
         zone: "dal12",
-        pi_health_status: "OK",
         pi_proc_type: "shared",
         pi_storage_type: null,
         storage_option: "Affinity",

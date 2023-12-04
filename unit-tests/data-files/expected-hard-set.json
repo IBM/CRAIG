@@ -866,7 +866,8 @@
           "vpc": "workload"
         }
       ],
-      "gre_tunnels": []
+      "gre_tunnels": [],
+      "prefix_filters": []
     }
   ],
   "clusters": [
@@ -960,5 +961,6 @@
   "power_volumes": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
-  "classic_gateways": []
+  "classic_gateways": [],
+  "cis": []
 }

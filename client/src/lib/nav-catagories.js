@@ -31,6 +31,7 @@ const {
   powerVsVolumeTf,
   classicInfraTf,
 } = require("./json-to-iac");
+const { cisTf } = require("./json-to-iac/cis");
 const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 
@@ -283,6 +284,15 @@ const navCatagories = [
   {
     name: "Advanced Features",
     links: [
+      {
+        title: "Cloud Internet Services (CIS)",
+        path: "/form/cis",
+        react_icon: "IbmCloudInternetServices",
+        toTf: (config) => {
+          return cisTf(config) || "";
+        },
+        jsonField: "cis",
+      },
       {
         title: "Security Compliance Center",
         path: "/form/securityComplianceCenter",

@@ -40,7 +40,7 @@ POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
 
 ## Tutorial Video
 
-[Follow this tutorial](https://github.ibm.com/platinum-developer-tools/CRAIG/blob/main/docs/craigTutorial.mp4) for step-by-step instructions on how to get started with CRAIG.
+[Follow this tutorial](https://ibm.box.com/v/craigTutorialVideo) for step-by-step instructions on how to get started with CRAIG.
 
 ---
 

@@ -7,9 +7,14 @@ const { containsKeys, contains } = require("lazy-z");
  * @returns {boolean} true if disabled
  */
 function storageChangeDisabledCallback(stateData, componentProps) {
+  if (componentProps.isModal) return false;
   let isInUse = false;
   ["power_instances", "power_volumes"].forEach((field) => {
-    componentProps[field].forEach((item) => {
+    (componentProps[field]
+      ? componentProps[field]
+      : // store is for refactored items
+        componentProps.craig.store.json[field]
+    ).forEach((item) => {
       // get test items, for instance tests check for network field
       let testItems = containsKeys(stateData, "network")
         ? [item.pi_anti_affinity_instance, item.pi_affinity_instance]

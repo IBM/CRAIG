@@ -10,7 +10,7 @@ const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc/vpc");
 const { sccInit, sccSave, sccDelete } = require("./scc");
 const { initSshKeyStore } = require("./ssh-keys.js");
 const { initSecurityGroupStore } = require("./security-groups");
-const { initTransitGateway } = require("./transit-gateways");
+const { initTransitGateway } = require("./transit-gateways/transit-gateways");
 const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
 const { initVsiStore } = require("./vsi");
@@ -52,16 +52,7 @@ const {
   getAllOtherGroups,
   getAllRuleNames,
 } = require("./copy-rules");
-const {
-  routingTableInit,
-  routingTableOnStoreUpdate,
-  routingTableCreate,
-  routingTableSave,
-  routingTableDelete,
-  routingTableRouteCreate,
-  routingTableRouteSave,
-  routingTableRouteDelete,
-} = require("./routing-tables");
+const { initRoutingTable } = require("./routing-tables");
 const { initCbrZones } = require("./cbr-zones");
 const { initCbrRules } = require("./cbr-rules");
 const { initVpnState } = require("./vpn-servers");
@@ -76,10 +67,13 @@ const {
 } = require("./logging-monitoring");
 const { initIcdStore } = require("./icd");
 const { initPowerVsStore } = require("./power-vs");
-const { initPowerVsInstance } = require("./power-vs-instances");
+const {
+  initPowerVsInstance,
+} = require("./power-vs-instances/power-vs-instances.js");
 const { initPowerVsVolumeStore } = require("./power-vs-volumes");
 const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");
+const { initCis } = require("./cis.js");
 
 /**
  * get state for craig
@@ -207,20 +201,7 @@ const state = function (legacy) {
     save: iamSave,
   });
 
-  store.newField("routing_tables", {
-    init: routingTableInit,
-    onStoreUpdate: routingTableOnStoreUpdate,
-    save: routingTableSave,
-    create: routingTableCreate,
-    delete: routingTableDelete,
-    subComponents: {
-      routes: {
-        create: routingTableRouteCreate,
-        save: routingTableRouteSave,
-        delete: routingTableRouteDelete,
-      },
-    },
-  });
+  initRoutingTable(store);
 
   store.newField("access_groups", {
     init: accessGroupInit,
@@ -243,11 +224,8 @@ const state = function (legacy) {
   });
 
   initCbrZones(store);
-
   initCbrRules(store);
-
   initVpnState(store);
-
   initDnsStore(store);
 
   store.newField("logdna", {
@@ -268,6 +246,7 @@ const state = function (legacy) {
   initPowerVsVolumeStore(store);
   intiClassicInfrastructure(store);
   initClassicGateways(store);
+  initCis(store);
 
   /**
    * hard set config dot json in state store

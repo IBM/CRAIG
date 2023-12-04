@@ -88,7 +88,10 @@ function dynamicTextInputProps(props) {
     className: addClassName("leftTextAlign", props.field),
     labelText: labelText,
     placeholder: placeholder,
-    value: props.field.onRender
+    // override value for power ips
+    value: props.value
+      ? props.value
+      : props.field.onRender
       ? props.field.onRender(props.parentState, props.parentProps)
       : props.parentState[props.name] || "",
     onChange: props.handleInputChange,
@@ -99,7 +102,7 @@ function dynamicTextInputProps(props) {
     helperText: isDisabled
       ? disabledText
       : props.field.onRender
-      ? props.field.onRender(props.parentState, props.parentProps)
+      ? props.field.onRender(props.parentState, props.parentProps, props.index)
       : isFunction(props.field.helperText)
       ? props.field.helperText(props.parentState, props.parentProps)
       : null,

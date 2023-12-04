@@ -19,10 +19,6 @@ li {
   font-size: 14px;
 }
 
-.about {
-  background-color: #f4f4f4;
-}
-
 .bold {
   font-weight: 600;
 }
@@ -115,12 +111,4 @@ div .center {
   .cds--accordion-content {
     font-size: 1.25em;
   }
-}
-
-div .aboutHeader {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-top: 2rem;
 }

@@ -2,7 +2,6 @@ export { OptionsForm, CopyRuleForm, EdgeNetworkingForm } from "./forms";
 export { NavigationRedirectModal } from "./modals/NavigationRedirectModal";
 export {
   About,
-  ImportJson,
   Home,
   ReleaseNotes,
   ResetState,

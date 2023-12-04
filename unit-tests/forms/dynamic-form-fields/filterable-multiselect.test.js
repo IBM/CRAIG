@@ -51,6 +51,7 @@ describe("filterable multiselect", () => {
         titleText: "Name",
         useTitleInItem: false,
         initialSelectedItems: [],
+        invalidText: "uh oh",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -133,6 +134,7 @@ describe("filterable multiselect", () => {
         titleText: "Name",
         useTitleInItem: false,
         initialSelectedItems: [],
+        invalidText: "uh oh",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -213,6 +215,7 @@ describe("filterable multiselect", () => {
         titleText: "Name",
         useTitleInItem: false,
         initialSelectedItems: [],
+        invalidText: "uh oh",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -295,6 +298,7 @@ describe("filterable multiselect", () => {
         titleText: "Name",
         useTitleInItem: false,
         initialSelectedItems: ["egg", "salad"],
+        invalidText: "uh oh",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -375,6 +379,7 @@ describe("filterable multiselect", () => {
         titleText: "Name",
         useTitleInItem: false,
         initialSelectedItems: [],
+        invalidText: "uh oh",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });
@@ -383,6 +388,86 @@ describe("filterable multiselect", () => {
         {
           target: {
             name: "name",
+            value: ["items"],
+          },
+        },
+        "it should return correct value"
+      );
+      delete actualData.onChange;
+      assert.isFunction(actualData.itemToString, "it should be a function");
+      assert.deepEqual(
+        actualData.itemToString(),
+        "",
+        "it should return empty string"
+      );
+      assert.deepEqual(
+        actualData.itemToString("hi"),
+        "hi",
+        "it should return string"
+      );
+      delete actualData.itemToString;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+    it("should return the correct props for multiselect when not disabled, items are not none, and is network", () => {
+      let inputChangeValue = "";
+      let actualData = dynamicMultiSelectProps({
+        name: "network",
+        field: {
+          disabled: function () {
+            return false;
+          },
+          invalid: function () {
+            return true;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          helperText: function () {
+            return "helper text";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+          groups: [],
+        },
+        parentState: {
+          network: ["egg"],
+        },
+        parentProps: {
+          formName: "atracker",
+        },
+        handleInputChange: function (event) {
+          inputChangeValue = event;
+        },
+        keyIndex: 0,
+        name: "network",
+        propsName: "frog",
+      });
+      let expectedData = {
+        className: "leftTextAlign fieldWidth",
+        disabled: false,
+        id: "frog-network-0",
+        invalid: false,
+        items: [],
+        key: undefined,
+        label: "Network",
+        titleText: "Network",
+        useTitleInItem: false,
+        initialSelectedItems: ["egg"],
+        invalidText: "uh oh",
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      actualData.onChange({ selectedItems: ["items"] });
+      assert.deepEqual(
+        inputChangeValue,
+        {
+          target: {
+            name: "network",
             value: ["items"],
           },
         },
@@ -455,6 +540,7 @@ describe("filterable multiselect", () => {
         titleText: "Name",
         useTitleInItem: false,
         initialSelectedItems: ["oops"],
+        invalidText: "uh oh",
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       actualData.onChange({ selectedItems: ["items"] });

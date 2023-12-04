@@ -1,14 +1,13 @@
 import { CraigHeader } from "./SplashPage";
-import "./about.scss";
 import { Accordion, AccordionItem } from "@carbon/react";
+import "./about.scss";
 
 const About = () => {
   return (
-    <div className="about">
-      <CraigHeader className="aboutHeader" />
-      <div id="features">
-        <h1 className="bigger">Features</h1>
-        <hr />
+    <div>
+      <CraigHeader />
+      <div id="features" className="marginBottomSmall">
+        <h2 className="marginBottomXs">Features</h2>
         <Accordion align="start" size="lg">
           <AccordionItem title="Deploy FS-Cloud Compliant Configuration">
             <p className="accordionItem">
@@ -111,8 +110,7 @@ const About = () => {
         </Accordion>
       </div>
       <div id="faqs">
-        <h1 className="bigger">FAQs</h1>
-        <hr />
+        <h2 className="marginBottomXs">FAQs</h2>
         <Accordion size="lg" align="start">
           <AccordionItem title="How is this different from SLZ?">
             <div className="marginBottomSmall">
@@ -143,7 +141,7 @@ const About = () => {
                 on how to get started with CRAIG:
                 <br />{" "}
                 <a
-                  href="https://github.ibm.com/platinum-developer-tools/CRAIG/blob/main/docs/craigTutorial.mp4"
+                  href="https://ibm.box.com/v/craigTutorialVideo"
                   target="_blank"
                 >
                   CRAIG Tutorial Video

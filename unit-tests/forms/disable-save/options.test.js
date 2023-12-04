@@ -19,7 +19,7 @@ describe("options", () => {
           enable_classic: false,
           enable_power_vs: false,
           power_vs_zones: [],
-          craig_version: "1.7.0",
+          craig_version: "1.7.1",
         },
         {
           craig: craig,
@@ -47,7 +47,7 @@ describe("options", () => {
             enable_classic: false,
             enable_power_vs: true,
             power_vs_zones: [],
-            craig_version: "1.7.0",
+            craig_version: "1.7.1",
           },
           {
             craig: craig,

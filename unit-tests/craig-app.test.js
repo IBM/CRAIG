@@ -9,6 +9,9 @@ const {
   projectShouldCreateWorkspace,
   getAndUpdateProjects,
   projectFetch,
+  onRequestProjectImport,
+  onRequestOverrideProjectJSON,
+  onRequestSubmitJSONModal,
 } = require("../client/src/lib/craig-app");
 const { state } = require("../client/src/lib");
 const sinon = require("sinon");
@@ -643,6 +646,139 @@ describe("craig app", () => {
           resolveCallbackSpy.calledOnce,
           "it should be called once"
         );
+      });
+    });
+  });
+  describe("onRequestSubmitJSONModal", () => {
+    it("should not close if in edit mode and the Enter key is clicked", () => {
+      onRequestSubmitJSONModal(
+        { code: "Enter" },
+        { readOnlyJSON: false },
+        {},
+        (shouldClose) => {
+          assert.isFalse(shouldClose, "should be false");
+        }
+      );
+    });
+    it("should import", () => {
+      let componentProps = {};
+      componentProps.import = true;
+      componentProps.onProjectSave = sinon.spy();
+      onRequestSubmitJSONModal(
+        {},
+        { readOnlyJSON: false },
+        componentProps,
+        (shouldClose) => {
+          assert.isTrue(shouldClose, "should be true");
+          assert.isTrue(
+            componentProps.onProjectSave.calledOnce,
+            "it should call on project save"
+          );
+        }
+      );
+    });
+    it("should override json", () => {
+      let stateData = { json: { test: "test1234" } };
+      let componentProps = {};
+      componentProps.data = { json: { test: "test123" } };
+      componentProps.onProjectSave = sinon.spy();
+      onRequestSubmitJSONModal({}, stateData, componentProps, (shouldClose) => {
+        assert.isTrue(shouldClose, "should be true");
+        assert.isTrue(
+          componentProps.onProjectSave.calledOnce,
+          "it should call on project save"
+        );
+      });
+    });
+    it("should not override json if json hasn't changed", () => {
+      let stateData = { json: { test: "test123" } };
+      let componentProps = {};
+      componentProps.data = { json: { test: "test123" } };
+      componentProps.onProjectSave = sinon.spy();
+      onRequestSubmitJSONModal({}, stateData, componentProps, (shouldClose) => {
+        assert.isTrue(shouldClose, "should be true");
+        assert.isTrue(
+          componentProps.onProjectSave.notCalled,
+          "it should call on project save"
+        );
+      });
+    });
+  });
+  describe("onRequestProjectImport", () => {
+    it("should create new imported project with expect name", () => {
+      let json = {};
+      onRequestProjectImport({ json }, (project) => {
+        assert.isTrue(
+          project.name.startsWith("new-import-project-"),
+          "it should be true"
+        );
+      });
+    });
+    it("should create new imported project with expected description", () => {
+      let json = {};
+      onRequestProjectImport({ json }, (project) => {
+        assert.equal(
+          project.description,
+          "Imported Project",
+          "it should be equal"
+        );
+      });
+    });
+    it("should create new imported project with expected json", () => {
+      let json = { test: "test123" };
+      onRequestProjectImport({ json }, (project) => {
+        assert.deepEqual(project.json, json, "it should be equal");
+      });
+    });
+  });
+  describe("onRequestOverrideProjectJSON", () => {
+    it("should only override json in existing project", () => {
+      let existingProject = { name: "existing-project", json: {} };
+      let stateData = { json: { test: "test123" } };
+      onRequestOverrideProjectJSON(
+        stateData,
+        { data: existingProject },
+        (project) => {
+          assert.deepEqual(project.json, stateData.json, "it should be equal");
+        }
+      );
+    });
+    it("should not override name when overriding json in existing project", () => {
+      let existingProject = { name: "existing-project", json: {} };
+      let stateData = { json: { test: "test123" } };
+      onRequestOverrideProjectJSON(
+        stateData,
+        { data: existingProject },
+        (project) => {
+          assert.deepEqual(
+            project.name,
+            existingProject.name,
+            "it should be equal"
+          );
+        }
+      );
+    });
+    it("should not override if no changes detected", () => {
+      let existingProject = {
+        name: "existing-project",
+        json: { test: "test123" },
+      };
+      let stateData = { json: { test: "test123" } };
+      onRequestOverrideProjectJSON(
+        stateData,
+        { data: existingProject },
+        (project) => {
+          assert.deepEqual(project, undefined, "it should be undefined");
+        }
+      );
+    });
+    it("should not override if json is undefined", () => {
+      let existingProject = {
+        name: "existing-project",
+        json: { test: "test123" },
+      };
+      onRequestOverrideProjectJSON({}, { data: existingProject }, (project) => {
+        assert.deepEqual(project, undefined, "it should be undefined");
       });
     });
   });

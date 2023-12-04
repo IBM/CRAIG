@@ -24,8 +24,8 @@ const DynamicFormTextInput = (props) => {
 
 DynamicFormTextInput.propTypes = {
   name: PropTypes.string.isRequired,
-  propsName: PropTypes.string.isRequired,
-  keyIndex: PropTypes.number.isRequired,
+  propsName: PropTypes.string,
+  keyIndex: PropTypes.number,
   field: PropTypes.shape({
     invalid: PropTypes.func.isRequired,
     invalidText: PropTypes.func.isRequired,

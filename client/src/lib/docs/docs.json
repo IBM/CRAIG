@@ -21,7 +21,8 @@
           "Mixed": ["management-rg", "service-rg", "workload-rg"],
           "Power VS SAP Hana": ["management-rg", "service-rg", "workload-rg"],
           "VSI Edge": ["management-rg", "service-rg", "workload-rg", "edge-rg"],
-          "VSI": ["management-rg", "service-rg", "workload-rg"]
+          "VSI": ["management-rg", "service-rg", "workload-rg"],
+          "VPN as a Service": ["vpnaas-rg"]
         },
         "table": [
           ["_headers", "Group Name", "Description", "Optional"],
@@ -46,7 +47,12 @@
             "true"
           ],
           ["craig-rg", "An example resource group", ""],
-          ["power-rg", "A resource group for Power VS resources", ""]
+          ["power-rg", "A resource group for Power VS resources", ""],
+          [
+            "vpnaas-rg",
+            "A resource group for cloud services and infrastructure management",
+            ""
+          ]
         ]
       }
     ],
@@ -79,7 +85,8 @@
           "Mixed": ["cos", "atracker-cos"],
           "Power VS SAP Hana": ["cos", "atracker-cos"],
           "VSI Edge": ["cos", "atracker-cos"],
-          "VSI": ["cos", "atracker-cos"]
+          "VSI": ["cos", "atracker-cos"],
+          "VPN as a Service": ["object-storage"]
         },
         "table": [
           ["_headers", "Instance Name", "Description"],
@@ -90,6 +97,10 @@
           [
             "atracker-cos",
             "A COS instance with a bucket where Activity Tracker logs will be stored"
+          ],
+          [
+            "object-storage",
+            "A COS instance with one bucket to store Flow Logs"
           ]
         ]
       },
@@ -105,7 +116,8 @@
           "Mixed": ["cos-bind-key"],
           "Power VS SAP Hana": ["cos-bind-key"],
           "VSI Edge": ["cos-bind-key"],
-          "VSI": ["cos-bind-key"]
+          "VSI": ["cos-bind-key"],
+          "VPN as a Service": []
         },
         "table": [
           ["_headers", "Credential Name", "Description"],
@@ -173,7 +185,8 @@
           "Mixed": ["key", "vsi-volume-key", "roks-key"],
           "Power VS SAP Hana": ["key", "vsi-volume-key", "roks-key"],
           "VSI Edge": ["key", "vsi-volume-key"],
-          "VSI": ["key", "vsi-volume-key"]
+          "VSI": ["key", "vsi-volume-key"],
+          "VPN as a Service": ["encryption-key"]
         },
         "table": [
           ["_headers", "Key Name", "Description"],
@@ -186,7 +199,8 @@
             "roks-key",
             "An encryption key for Red Hat OpenShift Kubernetes (ROKS) cluster deployments"
           ],
-          ["atracker-key", "An encryption key for Activity Tracker"]
+          ["atracker-key", "An encryption key for Activity Tracker"],
+          ["encryption-key", "An encryption key for service instances"]
         ]
       },
       {
@@ -241,7 +255,8 @@
           "Mixed": ["management", "workload"],
           "Power VS SAP Hana": ["management", "workload"],
           "VSI Edge": ["management", "workload"],
-          "VSI": ["management", "workload"]
+          "VSI": ["management", "workload"],
+          "VPN as a Service": ["vpc"]
         },
         "table": [
           ["_headers", "Network Name", "Description", "Optional"],
@@ -259,7 +274,8 @@
             "edge",
             "a VPC for edge if you enable edge networking for F5",
             "true"
-          ]
+          ],
+          ["vpc", "a VPC used for VPN connection", ""]
         ]
       }
     ],
@@ -434,7 +450,8 @@
           "Mixed": ["management", "workload"],
           "Power VS SAP Hana": ["management", "workload"],
           "VSI Edge": ["management", "workload"],
-          "VSI": ["management", "workload"]
+          "VSI": ["management", "workload"],
+          "VPN as a Service": ["vpc"]
         },
         "table": [
           ["_headers", "VPC", "Subnet Tier", "Zone 1", "Zone 2", "Zone 3"],
@@ -460,7 +477,15 @@
             "10.40.20.0/24",
             "10.40.30.0/24"
           ],
-          ["workload", "vpe", "10.50.10.0/24", "10.50.20.0/24", "10.50.30.0/24"]
+          [
+            "workload",
+            "vpe",
+            "10.50.10.0/24",
+            "10.50.20.0/24",
+            "10.50.30.0/24"
+          ],
+          ["vpc", "vpn", "10.10.0.0/28", "-", "-"],
+          ["vpc", "vpn-server", "10.134.0.0/28", "-", "-"]
         ]
       }
     ],
@@ -491,14 +516,16 @@
           "Mixed": ["transit-gateway"],
           "Power VS SAP Hana": ["transit-gateway"],
           "VSI Edge": ["transit-gateway"],
-          "VSI": ["transit-gateway"]
+          "VSI": ["transit-gateway"],
+          "VPN as a Service": ["tgw"]
         },
         "table": [
           ["_headers", "Service Name", "Description"],
           [
             "transit-gateway",
             "A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs."
-          ]
+          ],
+          ["tgw", "A transit gateway connecting the VPC and Power Workspace"]
         ]
       }
     ],
@@ -569,7 +596,8 @@
           "Mixed": ["management", "workload"],
           "Power VS SAP Hana": ["management", "workload"],
           "VSI Edge": ["management", "workload"],
-          "VSI": ["management", "workload"]
+          "VSI": ["management", "workload"],
+          "VPN as a Service": []
         },
         "table": [
           ["_headers", "VPC", "Endpoint Gateway Name", "Service"],
@@ -653,7 +681,13 @@
             "atracker-bucket",
             "cos-bind-key"
           ],
-          "VSI": ["atracker", "atracker-cos", "atracker-bucket", "cos-bind-key"]
+          "VSI": [
+            "atracker",
+            "atracker-cos",
+            "atracker-bucket",
+            "cos-bind-key"
+          ],
+          "VPN as a Service": []
         },
         "table": [
           ["_headers", "Service Name", "Description"],
@@ -733,7 +767,8 @@
           "Mixed": ["management-server"],
           "Power VS SAP Hana": ["management-server", "workload-server"],
           "VSI Edge": ["management-server", "workload-server"],
-          "VSI": ["management-server", "workload-server"]
+          "VSI": ["management-server", "workload-server"],
+          "VPN as a Service": []
         },
         "table": [
           ["_headers", "Name", "Description"],
@@ -800,7 +835,8 @@
           "Mixed": ["workload-cluster"],
           "Power VS SAP Hana": [],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": []
         },
         "table": [
           ["_headers", "Name", "Description"],
@@ -829,14 +865,16 @@
           "Mixed": ["management-gateway"],
           "Power VS SAP Hana": ["management-gateway"],
           "VSI Edge": ["management-gateway"],
-          "VSI": ["management-gateway"]
+          "VSI": ["management-gateway"],
+          "VPN as a Service": ["client-to-site-gw"]
         },
         "table": [
           ["_headers", "Resource Name", "Description"],
           [
             "management-gateway",
             "A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC."
-          ]
+          ],
+          ["client-to-site-gw", "A VPN gateway service deployed in the VPC"]
         ]
       }
     ],
@@ -1665,32 +1703,8 @@
           "Mixed": [],
           "Power VS SAP Hana": ["secure-powervs"],
           "VSI Edge": [],
-          "VSI": []
-        },
-        "subHeading": "Power VS Workspaces"
-      },
-      {
-        "templates": {
-          "Empty Project": [],
-          "Power VS Quick Start": ["workspace"],
-          "Power VS Oracle Ready": ["oracle-template"],
-          "Mixed": [],
-          "Power VS SAP Hana": ["secure-powervs"],
-          "VSI Edge": [],
-          "VSI": []
-        },
-        "text": "_default_includes",
-        "className": "marginBottomXs"
-      },
-      {
-        "templates": {
-          "Empty Project": [],
-          "Power VS Quick Start": ["workspace"],
-          "Power VS Oracle Ready": ["oracle-template"],
-          "Mixed": [],
-          "Power VS SAP Hana": ["secure-powervs"],
-          "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": ["vpnaas"]
         },
         "table": [
           ["_headers", "Name", "Description"],
@@ -1702,6 +1716,10 @@
           [
             "secure-powervs",
             "A workspace where SAP Hana infrastructure is created"
+          ],
+          [
+            "vpnaas",
+            "A worksapce with a cloud connection to the Transit Gateway"
           ]
         ]
       },
@@ -1713,7 +1731,8 @@
           "Mixed": [],
           "Power VS SAP Hana": ["power-ssh-key"],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": []
         },
         "subHeading": "Power VS SSH Keys"
       },
@@ -1725,7 +1744,8 @@
           "Mixed": [],
           "Power VS SAP Hana": ["power-ssh-key"],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": []
         },
         "text": "_default_includes",
         "className": "marginBottomXs"
@@ -1738,7 +1758,8 @@
           "Mixed": [],
           "Power VS SAP Hana": ["power-ssh-key"],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": []
         },
         "table": [
           ["_headers", "Name", "Description"],
@@ -1758,7 +1779,8 @@
           "Mixed": [],
           "Power VS SAP Hana": ["management", "sap", "backup"],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": []
         },
         "subHeading": "Power VS SSH Networks"
       },
@@ -1774,7 +1796,8 @@
           "Mixed": [],
           "Power VS SAP Hana": ["management", "sap", "backup"],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": []
         },
         "text": "_default_includes",
         "className": "marginBottomXs"
@@ -1791,7 +1814,8 @@
           "Mixed": [],
           "Power VS SAP Hana": ["management", "sap", "backup"],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": []
         },
         "table": [
           ["_headers", "Name", "Description"],
@@ -1823,7 +1847,8 @@
           "Mixed": [],
           "Power VS SAP Hana": [],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": ["power-to-tgw"]
         },
         "subHeading": "Power VS Cloud Connections"
       },
@@ -1835,7 +1860,8 @@
           "Mixed": [],
           "Power VS SAP Hana": [],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": ["power-to-tgw"]
         },
         "text": "_default_includes",
         "className": "marginBottomXs"
@@ -1848,11 +1874,13 @@
           "Mixed": [],
           "Power VS SAP Hana": [],
           "VSI Edge": [],
-          "VSI": []
+          "VSI": [],
+          "VPN as a Service": ["power-to-tgw"]
         },
         "table": [
           ["_headers", "Name", "Description"],
-          ["oracle-connection", "Connects all VLANs to the Transit Gateway"]
+          ["oracle-connection", "Connects all VLANs to the Transit Gateway"],
+          ["power-to-tgw", "Connects workspace to Transit Gateway"]
         ]
       }
     ],
@@ -1879,6 +1907,30 @@
       [
         "https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-subnet",
         "Configuring and adding a private network subnet"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_linux_sap/docs/",
+        "Ansible Content for Power LPAR Configuration - SAP HANA and SAP NetWeaver"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_aix/",
+        "Ansible Content for IBM Power Systems - AIX"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_aix_oracle/docs/",
+        "Ansible Content for IBM Power Systems - AIX Oracle"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_aix_sap/",
+        "Ansible Content for IBM Power Systems - AIX with SAP Software"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_ibmi/docs/",
+        "Ansible Content for IBM Power Systems - IBM i"
+      ],
+      [
+        "https://galaxy.ansible.com/ui/repo/published/ibm/power_ibmi_sap/",
+        "Ansible Content for IBM Power Systems - IBM i with SAP Software"
       ]
     ],
     "content": [
@@ -1914,7 +1966,7 @@
         ]
       }
     ],
-    "last_updated": "9/25/2023"
+    "last_updated": "11/29/2023"
   },
   "power_volumes": {
     "content": [
@@ -2046,6 +2098,14 @@
     "last_updated": "11/8/2023"
   },
   "classic_gateways": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": []
+  },
+  "cis": {
     "content": [
       {
         "text": "NYI"

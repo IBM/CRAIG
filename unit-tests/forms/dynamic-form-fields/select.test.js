@@ -210,6 +210,7 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
+        key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
@@ -262,6 +263,7 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
+        key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
@@ -315,6 +317,7 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
+        key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
@@ -365,6 +368,7 @@ describe("dynamic select", () => {
         name: "name",
         value: "",
         readOnly: undefined,
+        key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;

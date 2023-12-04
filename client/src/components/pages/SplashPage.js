@@ -1,6 +1,7 @@
 import React from "react";
 import "./about.scss";
 import PropTypes from "prop-types";
+import craig from "../../images/craig.png";
 
 const SplashPage = (props) => {
   return (
@@ -34,13 +35,15 @@ export default SplashPage;
 
 export const CraigHeader = (props) => {
   return (
-    <div className={"header marginBottom " + props?.className}>
-      <div className="headerItem">
-        <h1 className="bold">CRAIG</h1>
-      </div>
-      <div className="headerItem line">
-        <p>Cloud Resource and Infrastructure-as-Code Generator</p>
-      </div>
+    <div className={"header" + props?.className}>
+      <img src={craig} width="150" height="150" className="marginBottomXs" />
+      <h1 className="marginBottomXs">
+        Cloud Resource and Infrastructure-as-Code Generator
+      </h1>
+      <p className="marginBottom">
+        Create, deploy, and manage scalable infrastructure on IBM Cloud with
+        CRAIG.
+      </p>
     </div>
   );
 };

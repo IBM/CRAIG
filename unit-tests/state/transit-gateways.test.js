@@ -249,6 +249,7 @@ describe("transit_gateways", () => {
         global: false,
         connections: [{ tgw: "tg-test", vpc: "management" }],
         gre_tunnels: [],
+        prefix_filters: [],
       };
       assert.deepEqual(
         state.store.json.transit_gateways[1],
@@ -281,6 +282,7 @@ describe("transit_gateways", () => {
             },
           ],
           gre_tunnels: [],
+          prefix_filters: [],
         },
       ];
       assert.deepEqual(
@@ -1058,6 +1060,347 @@ describe("transit_gateways", () => {
               "it should be invalid"
             );
           });
+        });
+      });
+    });
+  });
+  describe("transit_gateways.prefix_filters.create", () => {
+    it("should create a prefix filter", () => {
+      let craig = newState();
+      craig.update();
+      craig.transit_gateways.prefix_filters.create(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          innerFormProps: {
+            arrayParentName: "transit-gateway",
+          },
+        }
+      );
+      assert.deepEqual(
+        craig.store.json.transit_gateways[0].prefix_filters,
+        [
+          {
+            name: "my-cool-filter",
+            tgw: "transit-gateway",
+            connection_type: "vpc",
+            target: "management",
+            action: "permit",
+            prefix: "10.10.10.10/10",
+            le: 0,
+            ge: 32,
+          },
+        ],
+        "it should create a gatway"
+      );
+    });
+  });
+  describe("transit_gateways.prefix_filters.save", () => {
+    it("should create a prefix filter", () => {
+      let craig = newState();
+      craig.update();
+      craig.transit_gateways.prefix_filters.create(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          innerFormProps: {
+            arrayParentName: "transit-gateway",
+          },
+        }
+      );
+      craig.transit_gateways.prefix_filters.save(
+        {
+          name: "oops",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          arrayParentName: "transit-gateway",
+
+          data: {
+            name: "my-cool-filter",
+          },
+        }
+      );
+      assert.deepEqual(
+        craig.store.json.transit_gateways[0].prefix_filters,
+        [
+          {
+            name: "oops",
+            tgw: "transit-gateway",
+            connection_type: "vpc",
+            target: "management",
+            action: "permit",
+            prefix: "10.10.10.10/10",
+            le: 0,
+            ge: 32,
+          },
+        ],
+        "it should create a gatway"
+      );
+    });
+  });
+  describe("transit_gateways.prefix_filters.delete", () => {
+    it("should create a prefix filter", () => {
+      let craig = newState();
+      craig.update();
+      craig.transit_gateways.prefix_filters.create(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          innerFormProps: {
+            arrayParentName: "transit-gateway",
+          },
+        }
+      );
+      craig.transit_gateways.prefix_filters.delete(
+        {
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          arrayParentName: "transit-gateway",
+          data: {
+            name: "my-cool-filter",
+          },
+        }
+      );
+      assert.deepEqual(
+        craig.store.json.transit_gateways[0].prefix_filters,
+        [],
+        "it should create a gatway"
+      );
+    });
+  });
+  describe("transit_gateways.prefix_filters.shouldDisableSave", () => {
+    it("should return true if a prefix filter has an invalid duplicate name", () => {
+      let craig = newState();
+      craig.update();
+      craig.transit_gateways.prefix_filters.create(
+        {
+          name: "my-cool-filter",
+          tgw: "transit-gateway",
+          connection_type: "vpc",
+          target: "management",
+          action: "permit",
+          prefix: "10.10.10.10/10",
+          le: 0,
+          ge: 32,
+        },
+        {
+          innerFormProps: {
+            arrayParentName: "transit-gateway",
+          },
+        }
+      );
+      assert.isTrue(
+        craig.transit_gateways.prefix_filters.name.invalid(
+          { name: "my-cool-filter" },
+          { arrayParentName: "transit-gateway", craig: craig }
+        ),
+        "it should return true"
+      );
+    });
+  });
+  describe("transit_gateways.prefix_filters.schema", () => {
+    describe("transit_gateways.prefix_filters.connection_type", () => {
+      describe("transit_gateways.prefix_filters.connection_type.invalid", () => {
+        it("should return true if is null or empty string", () => {
+          let craig = newState();
+          assert.isTrue(
+            craig.transit_gateways.prefix_filters.connection_type.invalid({
+              connection_type: "",
+            }),
+            "it should be invalid"
+          );
+        });
+      });
+      describe("transit_gateways.prefix_filters.connection_type.onStateChange", () => {
+        it("should set target to empty string", () => {
+          let data = {
+            connection_type: "",
+          };
+          let craig = newState();
+          craig.transit_gateways.prefix_filters.connection_type.onStateChange(
+            data
+          ),
+            assert.deepEqual(
+              data,
+              {
+                connection_type: "",
+                target: "",
+              },
+              "it should be invalid"
+            );
+        });
+      });
+    });
+    describe("transit_gateways.prefix_filters.le", () => {
+      describe("transit_gateways.prefix_filters.le.invalidText", () => {
+        it("should return correct invalid text", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.transit_gateways.prefix_filters.le.invalidText(),
+            "Enter a whole number",
+            "it should return correct text"
+          );
+        });
+      });
+      describe("transit_gateways.prefix_filters.le.invalid", () => {
+        it("should return true when not a whole number", () => {
+          let craig = newState();
+          assert.isTrue(
+            craig.transit_gateways.prefix_filters.le.invalid({ le: "a" }),
+            "it should return correct text"
+          );
+        });
+        it("should return true when not a whole number", () => {
+          let craig = newState();
+          assert.isTrue(
+            craig.transit_gateways.prefix_filters.le.invalid({ le: "1a" }),
+            "it should return correct text"
+          );
+        });
+      });
+    });
+    describe("transit_gateways.prefix_filters.action", () => {
+      describe("transit_gateways.prefix_filters.action.invalidText", () => {
+        it("should return correct invalid text", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.transit_gateways.prefix_filters.action.invalidText(),
+            "Select an action",
+            "it should return correct text"
+          );
+        });
+      });
+    });
+    describe("transit_gateways.prefix_filters.prefix", () => {
+      describe("transit_gateways.prefix_filters.prefix.invalid", () => {
+        it("should return true when not a cidr block", () => {
+          let craig = newState();
+          assert.isTrue(
+            craig.transit_gateways.prefix_filters.prefix.invalid({
+              prefix: "aaaa",
+            }),
+            "it should return correct text"
+          );
+        });
+        it("should return true when an ipv4 address but not a cidr block", () => {
+          let craig = newState();
+          assert.isTrue(
+            craig.transit_gateways.prefix_filters.prefix.invalid({
+              prefix: "1.2.3.4",
+            }),
+            "it should return correct text"
+          );
+        });
+      });
+      describe("transit_gateways.prefix_filters.prefix.invalidText", () => {
+        it("should return correct invalid text", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.transit_gateways.prefix_filters.prefix.invalidText(),
+            "Enter a valid IPV4 CIDR Block",
+            "it should return correct text"
+          );
+        });
+      });
+    });
+    describe("transit_gateways.prefix_filters.target", () => {
+      describe("transit_gateways.prefix_filters.target.groups", () => {
+        it("should return correct connection types for no connection type", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.transit_gateways.prefix_filters.target.groups(
+              { connection_type: "" },
+              { craig: craig, arrayParentName: "transit-gateway" }
+            ),
+            [],
+            "it should return valid connections"
+          );
+        });
+        it("should return correct connection types for vpc", () => {
+          let craig = newState();
+          craig.store.json.transit_gateways[0].connections.push({
+            tgw: "transit-gateway",
+            power: "toad",
+          });
+          assert.deepEqual(
+            craig.transit_gateways.prefix_filters.target.groups(
+              { connection_type: "VPC" },
+              { craig: craig, arrayParentName: "transit-gateway" }
+            ),
+            ["management", "workload"],
+            "it should return valid connections"
+          );
+        });
+        it("should return correct connection types for gre", () => {
+          let craig = newState();
+          craig.update();
+          assert.deepEqual(
+            craig.transit_gateways.prefix_filters.target.groups(
+              { connection_type: "GRE Tunnel" },
+              { craig: craig, arrayParentName: "transit-gateway" }
+            ),
+            [],
+            "it should return valid connections"
+          );
+        });
+        it("should return correct connection types for power", () => {
+          let craig = newState();
+          craig.power.create({
+            name: "toad",
+            imageNames: ["7100-05-09"],
+            zone: "dal10",
+          });
+          craig.store.json.transit_gateways[0].connections.push({
+            tgw: "transit-gateway",
+            power: "toad",
+          });
+
+          assert.deepEqual(
+            craig.transit_gateways.prefix_filters.target.groups(
+              { connection_type: "Power VS" },
+              { craig: craig, arrayParentName: "transit-gateway" }
+            ),
+            ["toad"],
+            "it should return valid connections"
+          );
         });
       });
     });

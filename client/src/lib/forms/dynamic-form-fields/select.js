@@ -80,6 +80,7 @@ function dynamicSelectProps(props) {
   );
 
   return {
+    key: JSON.stringify(groups),
     id: dynamicFieldId(props),
     name: props.name,
     labelText: labelText,

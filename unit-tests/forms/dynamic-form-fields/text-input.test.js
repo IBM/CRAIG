@@ -182,6 +182,58 @@ describe("text input functions", () => {
         "it should return correctly formatted data"
       );
     });
+    it("should return the correct props for text input when not disabled and override value", () => {
+      let actualData = dynamicTextInputProps({
+        name: "frog",
+        value: "value",
+        field: {
+          disabled: function () {
+            return false;
+          },
+          invalid: function () {
+            return false;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          helperText: function () {
+            return "helper text";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+        },
+        parentState: {},
+        parentProps: {
+          formName: "atracker",
+        },
+        handleInputChange: function () {},
+        keyIndex: 0,
+        name: "name",
+        propsName: "frog",
+      });
+      let expectedData = {
+        className: "leftTextAlign fieldWidth",
+        disabled: false,
+        helperText: "helper text",
+        id: "frog-name-0",
+        invalid: false,
+        invalidText: "uh oh",
+        labelText: "Name",
+        maxLength: undefined,
+        name: "name",
+        placeholder: "my-atracker-name",
+        readOnly: false,
+        value: "value",
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      delete actualData.onChange;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
     it("should return the correct props for text input when disabled", () => {
       let actualData = dynamicTextInputProps({
         name: "frog",
