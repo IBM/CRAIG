@@ -16,7 +16,9 @@
     "features": [
       "Users can now create GRE Tunnels for Classic Gateways from the Transit Gateways page."
     ],
-    "fixes": [],
+    "fixes": [
+      "Fixed an issue causing the Subnet form to crash when a Subnet Tier has an invalid name"
+    ],
     "upgrade_notes": [
       "Transit Gateways require the field `gre_tunnels`. To update existing JSON use the update banner at the top of the screen."
     ]

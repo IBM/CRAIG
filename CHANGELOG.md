@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+- Fixed an issue causing the Subnet form to crash when a Subnet Tier has an invalid name
 
 ## 1.6.1
 

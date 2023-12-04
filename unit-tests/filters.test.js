@@ -84,6 +84,7 @@ describe("filteredDocs", () => {
               "edge-rg",
             ],
             VSI: ["management-rg", "service-rg", "workload-rg"],
+            "VPN as a Service": ["vpnaas-rg"],
           },
           table: [
             ["Group Name", "Description", "Optional"],
@@ -109,6 +110,11 @@ describe("filteredDocs", () => {
             ],
             ["craig-rg", "An example resource group", ""],
             ["power-rg", "A resource group for Power VS resources", ""],
+            [
+              "vpnaas-rg",
+              "A resource group for cloud services and infrastructure management",
+              "",
+            ],
           ],
         },
       ],
@@ -156,6 +162,7 @@ describe("filteredDocs", () => {
               "edge-rg",
             ],
             VSI: ["management-rg", "service-rg", "workload-rg"],
+            "VPN as a Service": ["vpnaas-rg"],
           },
           table: [
             ["Group Name", "Description", "Optional"],
@@ -191,7 +198,7 @@ describe("filteredDocs", () => {
     };
     assert.deepEqual(actualData, expectedData);
   });
-  it("should return entire docs object for the field if the template is not found", () => {
+  it("should return entire docs object for kms", () => {
     const actualData = filterDocs("VPN as a Service", "key_management", docs);
     const expectedData = {
       content: [
@@ -231,19 +238,11 @@ describe("filteredDocs", () => {
             "Power VS SAP Hana": ["key", "vsi-volume-key", "roks-key"],
             "VSI Edge": ["key", "vsi-volume-key"],
             VSI: ["key", "vsi-volume-key"],
+            "VPN as a Service": ["encryption-key"],
           },
           table: [
             ["Key Name", "Description"],
-            ["key", "An encryption key for service instances"],
-            [
-              "vsi-volume-key",
-              "An encryption key for Virtual Server Instance (VSI) deployments",
-            ],
-            [
-              "roks-key",
-              "An encryption key for Red Hat OpenShift Kubernetes (ROKS) cluster deployments",
-            ],
-            ["atracker-key", "An encryption key for Activity Tracker"],
+            ["encryption-key", "An encryption key for service instances"],
           ],
         },
         {
@@ -278,6 +277,48 @@ describe("filteredDocs", () => {
           "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_rings",
           "Key Management Key Ring Terraform Documentation",
         ],
+      ],
+      last_updated: "6/9/2023",
+    };
+    assert.deepEqual(actualData, expectedData);
+  });
+  it("should return entire docs object if default for template is not found", () => {
+    const actualData = filterDocs("VPN as a service", "ssh_keys", docs);
+    const expectedData = {
+      relatedLinks: [
+        ["https://cloud.ibm.com/docs/ssh-keys?topic=ssh-keys-about-ssh-keys"],
+        [
+          "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_ssh_key",
+          "VPC SSH Key Terraform Documentation",
+        ],
+        [
+          "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_ssh_key",
+          "VPC SSH Key Terraform Data Documentation",
+        ],
+      ],
+      content: [
+        {
+          text: "SSH keys identify a user or device through public-key cryptography and allow access to a device without using a password. At least one SSH Key is required to create virtual server instances. Based on the pattern selected, an SSH key may or may not be configured automatically.",
+          className: "marginBottomSmall",
+        },
+        {
+          text: "_default_includes",
+        },
+        {
+          templates: {
+            "Empty Project": [],
+            "Power VS Quick Start": ["ssh-key"],
+            "Power VS Oracle Ready": ["ssh-key"],
+            Mixed: ["ssh-key"],
+            "Power VS SAP Hana": ["ssh-key"],
+            "VSI Edge": ["ssh-key"],
+            VSI: ["ssh-key"],
+          },
+          table: [
+            ["SSH Key", "Description"],
+            ["ssh-key", "An SSH key to use when provisioning VSI deployments."],
+          ],
+        },
       ],
       last_updated: "6/9/2023",
     };

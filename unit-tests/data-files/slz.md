@@ -13,6 +13,7 @@ workload-rg   | A resource group containing the compute, storage, and network se
 edge-rg       | A resource group containing the compute, storage, and network services necessary for edge networking                                                                           | true
 craig-rg      | An example resource group                                                                                                                                                      | 
 power-rg      | A resource group for Power VS resources                                                                                                                                        | 
+vpnaas-rg     | A resource group for cloud services and infrastructure management                                                                                                              | 
 
 ### Related Links
 
@@ -27,10 +28,11 @@ IBM Cloud Object Storage (COS) is a highly available, durable, and secure platfo
 
 The initial configuration includes two COS instances:
 
-Instance Name | Description
---------------|--------------------------------------------------------------------------------------------------------------------
-cos           | A COS instance with two buckets, a management bucket and a workload bucket, where respective objects can be stored
-atracker-cos  | A COS instance with a bucket where Activity Tracker logs will be stored
+Instance Name  | Description
+---------------|--------------------------------------------------------------------------------------------------------------------
+cos            | A COS instance with two buckets, a management bucket and a workload bucket, where respective objects can be stored
+atracker-cos   | A COS instance with a bucket where Activity Tracker logs will be stored
+object-storage | A COS instance with one bucket to store Flow Logs
 
 The initial configuration also includes a service credential to allow for Activity Tracker to connect to COS.
 
@@ -68,6 +70,7 @@ key            | An encryption key for service instances
 vsi-volume-key | An encryption key for Virtual Server Instance (VSI) deployments
 roks-key       | An encryption key for Red Hat OpenShift Kubernetes (ROKS) cluster deployments
 atracker-key   | An encryption key for Activity Tracker
+encryption-key | An encryption key for service instances
 
 To allow keys from your Key Protect Service to encrypt VSI and VPC Block Storage Volumes. The creation of these service authorizations can be enabled and disabled with the Authorize VPC Reader Role toggle.
 
@@ -94,6 +97,7 @@ Network Name | Description                                                      
 management   | A VPC for management to enable the application provider's administrators to monitor, operation, and maintain the environment | 
 workload     | A VPC for workload to support hosted applications and operations that deliver services to the consumer                       | 
 edge         | a VPC for edge if you enable edge networking for F5                                                                          | true
+vpc          | a VPC used for VPN connection                                                                                                | 
 
 ### Related Links
 
@@ -163,6 +167,8 @@ management | vpe         | 10.20.10.0/24 | 10.20.20.0/24 | 10.20.30.0/24
 management | vpn         | 10.30.10.0/24 | -             | -
 workload   | vsi         | 10.40.10.0/24 | 10.40.20.0/24 | 10.40.30.0/24
 workload   | vpe         | 10.50.10.0/24 | 10.50.20.0/24 | 10.50.30.0/24
+vpc        | vpn         | 10.10.0.0/28  | -             | -
+vpc        | vpn-server  | 10.134.0.0/28 | -             | -
 
 ### Related Links
 
@@ -180,6 +186,7 @@ The default configuration includes:
 Service Name    | Description
 ----------------|-----------------------------------------------------------------------------------------------------------
 transit-gateway | A transit gateway deployed in the SLZ service resource group connecting the management and workload VPCs.
+tgw             | A transit gateway connecting the VPC and Power Workspace
 
 ### Related Links
 
@@ -319,6 +326,7 @@ The default configuration includes:
 Resource Name      | Description
 -------------------|---------------------------------------------------------------------------------------------------------------
 management-gateway | A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC.
+client-to-site-gw  | A VPN gateway service deployed in the VPC
 
 ### Related Links
 
@@ -680,15 +688,12 @@ SSH Keys          | You can set up one or more Secure Shell (SSH) keys for root 
 Network Interface | When you create a Power Systems Virtual Server, you can select a private or public network interface. These network interfaces function like subnets for VPC infrastructure.
 Cloud Connections | You can use IBM Cloud connections to connect your Power Systems Virtual Server instances to IBM Cloud resources on IBM Cloud classic network and Virtual Private Cloud (VPC) infrastructures. IBM Cloud connection creates a Direct Link (2.0) Connect instance to connect your Power Systems Virtual Server instances to the IBM Cloud resources within your account. For cross-account connectivity, use IBM Transit Gateway to interconnect your Power Systems Virtual Server to the IBM Cloud classic and Virtual Private Cloud (VPC) infrastructures. The speed and reliability of the Direct Link connection extends your Power Systems Virtual Server network to the IBM Cloud network and offers more consistent and higher-throughput connectivity, while keeping network traffic within the IBM Cloud. Cloud Connections are not available in zones where Power Edge Router is deployed, see documentation for more information.
 
-### Power VS Workspaces
-
-The default configuration includes:
-
 Name            | Description
-----------------|--------------------------------------------------------
+----------------|------------------------------------------------------------
 oracle-template | A workspace where Oracle RAC infrastructure is created
 workspace       | An example Power VS Workspace
 secure-powervs  | A workspace where SAP Hana infrastructure is created
+vpnaas          | A worksapce with a cloud connection to the Transit Gateway
 
 ### Power VS SSH Keys
 
@@ -719,6 +724,7 @@ The default configuration includes:
 Name              | Description
 ------------------|-------------------------------------------
 oracle-connection | Connects all VLANs to the Transit Gateway
+power-to-tgw      | Connects workspace to Transit Gateway
 
 ### Related Links
 

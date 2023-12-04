@@ -63,6 +63,7 @@ import {
   invalidSshPublicKey,
   invalidDescription,
   replicationDisabledCallback,
+  invalidSubnetTierName,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
@@ -72,6 +73,7 @@ import {
   invalidCidrText,
   powerVsWorkspaceHelperText,
   invalidDescriptionText,
+  invalidSubnetTierText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
@@ -1066,7 +1068,7 @@ const SubnetsPage = (craig) => {
       invalidSubnetTierText={craig.vpcs.subnetTiers.name.invalidText}
       invalidSubnetTierName={craig.vpcs.subnetTiers.name.invalid}
       invalidCidr={invalidCidr}
-      invalidName={craig.vpcs.subnets.name.invalid}
+      invalidName={invalidName} // needed due to deeply rooted logic with subnet tier names
       // not changing below invalid name text for now due to complexity, likely
       // these forms will be easier to manage whem moving to dynamic forms
       invalidCidrText={invalidCidrText}
