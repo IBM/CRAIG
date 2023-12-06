@@ -553,27 +553,6 @@ describe("power", () => {
         "it should be disabled"
       );
     });
-    it("should return true when the ssh key has no rg", () => {
-      assert.isTrue(
-        disableSave(
-          "ssh_keys",
-          {
-            name: "honk",
-            resource_group: null,
-            public_key:
-              "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-          },
-          {
-            data: {
-              data: "test",
-            },
-            arrayParentName: "workspace",
-            craig: state(),
-          }
-        ),
-        "it should be disabled"
-      );
-    });
     it("should return true when the public key value already exists", () => {
       let tempCraig = state();
       tempCraig.store = {
@@ -615,6 +594,7 @@ describe("power", () => {
             },
             arrayParentName: "workspace",
             craig: tempCraig,
+            isModal: true,
           }
         ),
         "it should be disabled"

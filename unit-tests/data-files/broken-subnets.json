@@ -13,7 +13,7 @@
       "enable_classic": true,
       "dynamic_subnets": true,
       "enable_power_vs": true,
-      "craig_version": "1.7.1",
+      "craig_version": "1.8.0",
       "power_vs_zones": [
         "dal10"
       ],

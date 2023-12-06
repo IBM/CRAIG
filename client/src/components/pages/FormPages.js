@@ -34,21 +34,12 @@ import {
   IamAccountSettingsPage,
   SccV1Page,
   F5BigIpPage,
-  PowerVsWorkspacePage,
   PowerVsVolumesPage,
   ClassicGatewaysPage,
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import {
-  contains,
-  eachKey,
-  keys,
-  nestedSplat,
-  splat,
-  isEmpty,
-  getObjectFromArray,
-} from "lazy-z";
+import { contains, eachKey, keys, nestedSplat, splat } from "lazy-z";
 import {
   cosResourceHelperTextCallback,
   disableSshKeyDelete,
@@ -58,7 +49,6 @@ import {
   invalidCidrBlock,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
-  storageChangeDisabledCallback,
   vpnServersHelperText,
   powerImageFetch,
 } from "../../lib/forms";
@@ -71,7 +61,6 @@ import {
   invalidSshPublicKey,
   invalidDescription,
   replicationDisabledCallback,
-  invalidSubnetTierName,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
@@ -79,9 +68,7 @@ import {
   genericNameCallback,
   iamAccountSettingInvalidText,
   invalidCidrText,
-  powerVsWorkspaceHelperText,
   invalidDescriptionText,
-  invalidSubnetTierText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
@@ -777,71 +764,149 @@ const NoPowerWorkspaceTile = () => {
 };
 
 const PowerInfraPage = (craig) => {
-  let powerImageMap = {};
-  craig.store.json._options.power_vs_zones.forEach((zone) => {
-    powerImageFetch(zone, fetch).then((zoneImages) => {
-      powerImageMap[zone] = zoneImages;
-    });
-  });
+  // need to find a way to reimplement
+  // let powerImageMap = {};
+  // craig.store.json._options.power_vs_zones.forEach((zone) => {
+  //   powerImageFetch(zone, fetch).then((zoneImages) => {
+  //     powerImageMap[zone] = zoneImages;
+  //   });
+  // });
   return (
-    <PowerVsWorkspacePage
+    <IcseFormTemplate
+      name="Power VS Workspaces"
+      addText="Create a Workspace"
+      docs={RenderDocs("power", craig.store.json._options.template)}
       overrideTile={
-        craig.store.json._options.enable_power_vs ? undefined : (
+        craig.store.json._options.enable_power_vs !== true ? (
           <NoPowerNetworkTile />
-        )
+        ) : undefined
       }
-      edgeRouterEnabledZones={edgeRouterEnabledZones}
-      power={[...craig.store.json.power]}
+      innerForm={DynamicForm}
+      arrayData={craig.store.json.power}
       disableSave={disableSave}
       propsMatchState={propsMatchState}
       onDelete={craig.power.delete}
       onSave={craig.power.save}
       onSubmit={craig.power.create}
       forceOpen={forceShowForm}
-      deleteDisabled={() => {
-        return (
-          craig.store.json.power.length === 1 &&
-          (!isEmpty(craig.store.json.power_instances) ||
-            !isEmpty(craig.store.json.power_volumes))
-        );
-      }}
-      craig={craig}
-      docs={RenderDocs("power", craig.store.json._options.template)}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      zones={craig.store.json._options.power_vs_zones}
-      onNetworkDelete={craig.power.network.delete}
-      onNetworkSave={craig.power.network.save}
-      onNetworkSubmit={craig.power.network.create}
-      onConnectionDelete={craig.power.cloud_connections.delete}
-      onConnectionSave={craig.power.cloud_connections.save}
-      onConnectionSubmit={craig.power.cloud_connections.create}
-      transitGatewayList={splat(craig.store.json.transit_gateways, "name")}
-      onSshKeyDelete={craig.power.ssh_keys.delete}
-      onSshKeySave={craig.power.ssh_keys.save}
-      onSshKeySubmit={craig.power.ssh_keys.create}
-      invalidCallback={craig.power.name.invalid}
-      invalidTextCallback={craig.power.name.invalidText}
-      helperTextCallback={powerVsWorkspaceHelperText}
-      invalidKeyCallback={invalidSshPublicKey}
-      invalidNetworkNameCallback={craig.power.network.name.invalid}
-      invalidNetworkNameCallbackText={craig.power.network.name.invalidText}
-      invalidConnectionNameCallback={craig.power.cloud_connections.name.invalid}
-      invalidConnectionNameTextCallback={
-        craig.power.cloud_connections.name.invalidText
+      hideFormTitleButton={
+        craig.store.json._options.power_vs_zones.length === 0
       }
-      sshKeyDeleteDisabled={() => {
-        // currently ssh keys are not in use, this will be updated when they are
-        return false;
+      innerFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        formName: "Power VS Workspace",
+        form: {
+          jsonField: "power",
+          setDefault: {
+            images: [],
+            ssh_keys: [],
+          },
+          groups: [
+            {
+              name: craig.power.name,
+              resource_group: craig.power.resource_group,
+            },
+            {
+              zone: craig.power.zone,
+              imageNames: craig.power.imageNames,
+            },
+          ],
+          subForms: [
+            {
+              name: "SSH Keys",
+              createText: "Create an SSH Key",
+              jsonField: "ssh_keys",
+              form: {
+                groups: [
+                  {
+                    name: craig.power.ssh_keys.name,
+                  },
+                  {
+                    public_key: craig.power.ssh_keys.public_key,
+                  },
+                ],
+              },
+            },
+            {
+              name: "Power VS Subnets",
+              createText: "Create a Subnet",
+              jsonField: "network",
+              form: {
+                groups: [
+                  {
+                    name: craig.power.network.name,
+                    pi_network_type: craig.power.network.pi_network_type,
+                  },
+                  {
+                    pi_cidr: craig.power.network.pi_cidr,
+                    pi_dns: craig.power.network.pi_dns,
+                  },
+                  {
+                    pi_network_jumbo: craig.power.network.pi_network_jumbo,
+                  },
+                ],
+              },
+            },
+            {
+              name: "Cloud Connections",
+              addText: "Create a Cloud connection",
+              jsonField: "cloud_connections",
+              form: {
+                groups: [
+                  {
+                    name: craig.power.cloud_connections.name,
+                    pi_cloud_connection_speed:
+                      craig.power.cloud_connections.pi_cloud_connection_speed,
+                  },
+                  {
+                    pi_cloud_connection_global_routing:
+                      craig.power.cloud_connections
+                        .pi_cloud_connection_global_routing,
+                    pi_cloud_connection_metered:
+                      craig.power.cloud_connections.pi_cloud_connection_metered,
+                  },
+                  {
+                    pi_cloud_connection_transit_enabled:
+                      craig.power.cloud_connections
+                        .pi_cloud_connection_transit_enabled,
+                    transit_gateways:
+                      craig.power.cloud_connections.transit_gateways,
+                  },
+                ],
+              },
+            },
+            {
+              toggleFormFieldName: "network",
+              name: "Network Connections",
+              hideWhen: function (stateData, componentProps) {
+                return (
+                  contains(edgeRouterEnabledZones, componentProps.data.zone) ||
+                  componentProps.data.cloud_connections.length === 0
+                );
+              },
+              hideFormTitleButton: function () {
+                return true;
+              },
+              jsonField: "attachments",
+              noDeleteButton: true,
+              form: {
+                groups: [
+                  {
+                    connections: craig.power.attachments.connections,
+                  },
+                ],
+              },
+            },
+          ],
+        },
       }}
-      invalidCidrCallback={craig.power.network.pi_cidr.invalid}
-      invalidSshKeyCallback={craig.power.ssh_keys.name.invalid}
-      invalidSshKeyCallbackText={craig.power.ssh_keys.name.invalidText}
-      invalidCidrCallbackText={craig.power.network.pi_cidr.invalidText}
-      invalidDnsCallback={craig.power.network.pi_dns.invalid}
-      invalidDnsCallbackText={craig.power.network.pi_dns.invalidText}
-      imageMap={powerImageMap}
-      onAttachmentSave={craig.power.attachments.save}
-      disableAttachmentSave={storageChangeDisabledCallback}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: "power",
+        hideName: true,
+      }}
     />
   );
 };
@@ -1437,20 +1502,6 @@ const VpcPage = (craig) => {
         hideName: true,
       }}
     />
-    // <VpcTemplate
-    //   docs={RenderDocs("vpcs", craig.store.json._options.template)}
-    //   vpcs={craig.store.json.vpcs}
-    //   disableSave={disableSave}
-    //   propsMatchState={propsMatchState}
-    //   forceOpen={forceShowForm}
-    //   craig={craig}
-    //   // vpc name and callbacks take in extra param, so for now
-    //   // these will remain unchanged
-    //   invalidCallback={invalidName("vpcs")}
-    //   invalidTextCallback={invalidNameText("vpcs")}
-    //   resourceGroups={splat(craig.store.json.resource_groups, "name")}
-    //   cosBuckets={craig.store.cosBuckets}
-    // />
   );
 };
 

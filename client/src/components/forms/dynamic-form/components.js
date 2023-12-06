@@ -17,6 +17,7 @@ import {
   Select,
 } from "@carbon/react";
 import PropTypes from "prop-types";
+import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
 
 const DynamicFormTextInput = (props) => {
   return <TextInput {...dynamicTextInputProps(props)} />;
@@ -145,10 +146,34 @@ DynamicMultiSelect.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
 };
 
+const DynamicPublicKey = (props) => {
+  return (
+    <div className="fieldWidthBigger leftTextAlign">
+      <TextInput.PasswordInput {...dynamicPasswordInputProps(props)} />
+    </div>
+  );
+};
+
+DynamicPublicKey.propTypes = {
+  handleInputChange: PropTypes.func.isRequired,
+  parentState: PropTypes.shape({}).isRequired,
+  parentProps: PropTypes.shape({}).isRequired,
+  field: PropTypes.shape({
+    onRender: PropTypes.func,
+    invalid: PropTypes.func.isRequired,
+    tooltip: PropTypes.shape({}),
+    labelText: PropTypes.string,
+    forceUpdateKey: PropTypes.func,
+  }).isRequired,
+  name: PropTypes.string.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+};
+
 export {
   DynamicFormTextInput,
   DynamicFormSelect,
   DynamicFormToggle,
   DynamicTextArea,
   DynamicMultiSelect,
+  DynamicPublicKey,
 };

@@ -1,7 +1,5 @@
 const { assert } = require("chai");
 const {
-  dynamicFieldId,
-  addClassName,
   dynamicTextInputProps,
 } = require("../../../client/src/lib/forms/dynamic-form-fields/text-input");
 
@@ -555,9 +553,6 @@ describe("text input functions", () => {
           },
           invalidText: function () {
             return "uh oh";
-          },
-          helperText: function () {
-            return "helper text";
           },
           onRender: function () {
             return "haha!";
