@@ -2,6 +2,7 @@ const { splat } = require("lazy-z");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  sshKeySchema,
 } = require("./utils");
 const {
   invalidName,
@@ -125,25 +126,7 @@ function initSshKeyStore(store) {
       ["name", "resource_group", "public_key"],
       "ssh_keys"
     ),
-    schema: {
-      name: {
-        default: "",
-        invalid: invalidName("ssh_keys"),
-        invalidText: invalidNameText("ssh_keys"),
-      },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
-      public_key: {
-        default: "",
-        invalid: function (stateData, componentProps) {
-          return stateData.use_data
-            ? false
-            : invalidSshPublicKey(stateData, componentProps).invalid;
-        },
-      },
-    },
+    schema: sshKeySchema("ssh_keys"),
   });
 }
 

@@ -11,6 +11,7 @@ const {
   nameHelperText,
   selectInvalidText,
   nameField,
+  sshKeySchema,
 } = require("./utils");
 
 /**
@@ -144,22 +145,7 @@ function intiClassicInfrastructure(store) {
       ["name", "public_key"],
       "classic_ssh_keys"
     ),
-    schema: {
-      name: {
-        default: "",
-        invalid: invalidName("classic_ssh_keys"),
-        invalidText: invalidNameText("classic_ssh_keys"),
-      },
-      public_key: {
-        default: "",
-        invalid: function (stateData, componentProps) {
-          return invalidSshPublicKey(stateData, componentProps).invalid;
-        },
-        invalidText: function (stateData, componentProps) {
-          return invalidSshPublicKey(stateData, componentProps).invalidText;
-        },
-      },
-    },
+    schema: sshKeySchema("classic_ssh_keys"),
   });
 
   store.newField("classic_vlans", {

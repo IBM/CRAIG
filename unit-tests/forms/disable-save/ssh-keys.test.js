@@ -71,6 +71,7 @@ describe("ssh keys", () => {
       disableSave(
         "ssh_keys",
         {
+          use_data: false,
           name: "test",
           resource_group: "hi",
           public_key:

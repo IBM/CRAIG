@@ -37,4 +37,37 @@ describe("dynamicPasswordInputProps", () => {
     delete actualData.onChange;
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
+  it("should return the correct props for public key when value is null", () => {
+    let actualData = dynamicPasswordInputProps({
+      name: "public_key",
+      parentProps: {
+        formName: "power",
+      },
+      propsName: "ssh",
+      keyIndex: 0,
+      handleInputChange: function () {},
+      field: {
+        invalid: function () {
+          return false;
+        },
+        invalidText: function () {
+          return "uh oh";
+        },
+      },
+      parentState: {
+        public_key: null,
+      },
+    });
+    let expectedData = {
+      invalid: false,
+      invalidText: "uh oh",
+      labelText: "Public Key",
+      name: "public_key",
+      id: "ssh-public-key-0",
+      value: "",
+    };
+    assert.isFunction(actualData.onChange, "it should be a function");
+    delete actualData.onChange;
+    assert.deepEqual(actualData, expectedData, "it should return correct data");
+  });
 });

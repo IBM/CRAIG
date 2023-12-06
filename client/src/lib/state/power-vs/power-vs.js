@@ -13,7 +13,7 @@ const {
 } = require("lazy-z");
 const powerImages = require("../../docs/power-image-map.json");
 const { edgeRouterEnabledZones } = require("../../constants");
-const { shouldDisableComponentSave } = require("../utils");
+const { shouldDisableComponentSave, sshKeySchema } = require("../utils");
 const {
   invalidName,
   invalidNameText,
@@ -289,23 +289,7 @@ function initPowerVsStore(store) {
           "power",
           "ssh_keys"
         ),
-        schema: {
-          name: {
-            default: "",
-            invalid: invalidName("power_vs_ssh_keys"),
-            invalidText: invalidNameText("power_vs_ssh_keys"),
-          },
-          public_key: {
-            type: "public-key",
-            default: "",
-            invalid: function (stateData, componentProps) {
-              return invalidSshPublicKey(stateData, componentProps).invalid;
-            },
-            invalidText: function (stateData, componentProps) {
-              return invalidSshPublicKey(stateData, componentProps).invalidText;
-            },
-          },
-        },
+        schema: sshKeySchema("power_vs_ssh_keys"),
       },
       network: {
         create: powerVsNetworkCreate,

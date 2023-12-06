@@ -711,6 +711,7 @@ describe("invalid callbacks", () => {
     it("should return false when updating name", () => {
       let actualData = invalidSshPublicKey(
         {
+          use_data: false,
           name: "new-name",
           resource_group: "management-rg",
           public_key:
@@ -741,6 +742,7 @@ describe("invalid callbacks", () => {
     it("should return true when adding duplicate public key", () => {
       let actualData = invalidSshPublicKey(
         {
+          use_data: false,
           name: "hi",
           public_key:
             "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
@@ -770,6 +772,7 @@ describe("invalid callbacks", () => {
     it("should return true when key invalid", () => {
       let actualData = invalidSshPublicKey(
         {
+          use_data: false,
           name: "hi",
           public_key: "honk",
         },
@@ -791,6 +794,7 @@ describe("invalid callbacks", () => {
     it("should return false when adding valid key", () => {
       let actualData = invalidSshPublicKey(
         {
+          use_data: false,
           name: "hi",
           resource_group: "management-rg",
           public_key:
@@ -815,6 +819,7 @@ describe("invalid callbacks", () => {
       it("should return false when updating name", () => {
         let actualData = invalidSshPublicKey(
           {
+            use_data: false,
             name: "new-name",
             resource_group: "management-rg",
             public_key:
@@ -845,6 +850,7 @@ describe("invalid callbacks", () => {
       it("should return true when adding duplicate public key", () => {
         let actualData = invalidSshPublicKey(
           {
+            use_data: false,
             name: "hi",
             public_key:
               "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
@@ -895,6 +901,7 @@ describe("invalid callbacks", () => {
       it("should return false when adding valid key", () => {
         let actualData = invalidSshPublicKey(
           {
+            use_data: false,
             name: "hi",
             resource_group: "management-rg",
             public_key:
@@ -1089,6 +1096,7 @@ describe("invalid callbacks", () => {
             data: {
               name: "hi",
             },
+            arrayParentName: "workspace",
           }
         ).invalid;
         assert.isFalse(actualData);
