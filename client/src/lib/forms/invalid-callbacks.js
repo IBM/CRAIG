@@ -186,7 +186,7 @@ function invalidSshPublicKey(stateData, componentProps) {
     // if public key already used
     contains(
       splat(
-        componentProps.powerVs
+        componentProps.arrayParentName
           ? getObjectFromArray(
               componentProps.craig.store.json.power,
               "name",
@@ -201,7 +201,7 @@ function invalidSshPublicKey(stateData, componentProps) {
     )
   ) {
     let key = getObjectFromArray(
-      componentProps.powerVs
+      componentProps.arrayParentName
         ? getObjectFromArray(
             componentProps.craig.store.json.power,
             "name",
@@ -213,8 +213,9 @@ function invalidSshPublicKey(stateData, componentProps) {
       "public_key",
       stateData.public_key
     );
+
     if (
-      componentProps.data.name === key.name ||
+      (componentProps.data && componentProps.data.name === key.name) ||
       (stateData.workspace && !key.workspace) // special case where disableSave calls without powerVS prop
     ) {
       return invalid; // This is the current key, escape

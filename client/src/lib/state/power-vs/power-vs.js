@@ -3,28 +3,27 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
   setUnfoundResourceGroup,
-} = require("./store.utils");
+} = require("../store.utils");
 const {
   splatContains,
   revision,
   getObjectFromArray,
   contains,
-  isEmpty,
-  isIpv4CidrOrAddress,
+  splat,
 } = require("lazy-z");
-const powerImages = require("../docs/power-image-map.json");
-const { edgeRouterEnabledZones } = require("../constants");
-const {
-  shouldDisableComponentSave,
-  fieldIsNullOrEmptyString,
-} = require("./utils");
+const powerImages = require("../../docs/power-image-map.json");
+const { edgeRouterEnabledZones } = require("../../constants");
+const { shouldDisableComponentSave } = require("../utils");
 const {
   invalidName,
   invalidNameText,
   invalidSshPublicKey,
-  invalidCidrBlock,
-  invalidCidrText,
-} = require("../forms");
+} = require("../../forms");
+const { powerVsWorkspaceSchema } = require("./power-vs-workspace-schema");
+const { powerVsNetworkSchema } = require("./power-vs-network-schema");
+const {
+  powerVsCloudConnectionsSchema,
+} = require("./power-vs-cloud-connections-schema");
 
 /**
  * initialize power-vs workspace
@@ -276,29 +275,17 @@ function initPowerVsStore(store) {
     create: powerVsCreate,
     delete: powerVsDelete,
     shouldDisableSave: shouldDisableComponentSave(
-      ["name", "imageNames"],
+      ["name", "imageNames", "resource_group", "zone"],
       "power"
     ),
-    schema: {
-      name: {
-        default: "",
-        invalid: invalidName("power"),
-        invalidText: invalidNameText("power"),
-      },
-      imageNames: {
-        default: [],
-        invalid: function (stateData) {
-          return isEmpty(stateData.imageNames || []);
-        },
-      },
-    },
+    schema: powerVsWorkspaceSchema(),
     subComponents: {
       ssh_keys: {
         create: powerVsSshKeysCreate,
         delete: powerVsSshKeysDelete,
         save: powerVsSshKeysSave,
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "public_key", "resource_group"],
+          ["name", "public_key"],
           "power",
           "ssh_keys"
         ),
@@ -308,11 +295,8 @@ function initPowerVsStore(store) {
             invalid: invalidName("power_vs_ssh_keys"),
             invalidText: invalidNameText("power_vs_ssh_keys"),
           },
-          resource_group: {
-            default: "",
-            invalid: fieldIsNullOrEmptyString("resource_group"),
-          },
           public_key: {
+            type: "public-key",
             default: "",
             invalid: function (stateData, componentProps) {
               return invalidSshPublicKey(stateData, componentProps).invalid;
@@ -328,72 +312,42 @@ function initPowerVsStore(store) {
         delete: powerVsNetworkDelete,
         save: powerVsNetworkSave,
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "pi_cidr", "pi_dns"],
+          ["name", "pi_cidr", "pi_dns", "pi_network_type"],
           "power",
           "network"
         ),
-        schema: {
-          name: {
-            default: "",
-            invalid: invalidName("network"),
-            invalidText: invalidNameText("network"),
-          },
-          pi_cidr: {
-            default: "",
-            invalid: function (stateData) {
-              return invalidCidrBlock(stateData.pi_cidr);
-            },
-            invalidText: function (stateData, componentProps) {
-              return invalidCidrText(store)(
-                {
-                  cidr: stateData.pi_cidr,
-                },
-                componentProps
-              );
-            },
-          },
-          pi_dns: {
-            default: "",
-            invalid: function (stateData) {
-              return (
-                contains(stateData.pi_dns[0], "/") ||
-                !isIpv4CidrOrAddress(stateData.pi_dns[0])
-              );
-            },
-            invalidText: function () {
-              return "Invalid IP Address";
-            },
-          },
-        },
+        schema: powerVsNetworkSchema(),
       },
       cloud_connections: {
         create: powerVsCloudConnectionCreate,
         delete: powerVsCloudConnectionDelete,
         save: powerVsCloudConnectionSave,
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "transit_gateways"],
+          ["name", "transit_gateways", "pi_cloud_connection_speed"],
           "power",
           "cloud_connections"
         ),
-        schema: {
-          name: {
-            default: "",
-            invalid: invalidName("cloud_connections"),
-            invalidText: invalidNameText("cloud_connections"),
-          },
-          transit_gateways: {
-            default: [],
-            invalid: function (stateData) {
-              return (
-                stateData.pi_cloud_connection_transit_enabled &&
-                isEmpty(stateData.transit_gateways)
-              );
-            },
-          },
-        },
+        schema: powerVsCloudConnectionsSchema(),
       },
       attachments: {
         save: powerVsNetworkAttachmentSave,
+        schema: {
+          connections: {
+            type: "multiselect",
+            groups: function (stateData, componentProps) {
+              let parentConnections = getObjectFromArray(
+                componentProps.craig.store.json.power,
+                "name",
+                componentProps.arrayParentName
+              ).cloud_connections;
+              return splat(parentConnections, "name");
+            },
+            invalid: function () {
+              // any number of cloud connections is valid
+              return false;
+            },
+          },
+        },
       },
     },
   });

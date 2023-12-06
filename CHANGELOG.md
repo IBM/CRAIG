@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.8.0
+
+### Upgrade Notes
+
+
+### Features
+
+
+### Fixes
+
+- Fixed an error causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace
+
 ## 1.7.1
 
 ### Upgrade Notes

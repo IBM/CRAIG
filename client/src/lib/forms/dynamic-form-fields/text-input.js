@@ -101,10 +101,10 @@ function dynamicTextInputProps(props) {
     disabled: isDisabled,
     helperText: isDisabled
       ? disabledText
-      : props.field.onRender
-      ? props.field.onRender(props.parentState, props.parentProps, props.index)
       : isFunction(props.field.helperText)
       ? props.field.helperText(props.parentState, props.parentProps)
+      : props.field.onRender
+      ? props.field.onRender(props.parentState, props.parentProps, props.index)
       : null,
     readOnly: props.field.readOnly || false,
   };

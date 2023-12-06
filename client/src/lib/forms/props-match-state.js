@@ -61,7 +61,7 @@ function propsMatchState(field, stateData, componentProps) {
       stateData.name === componentProps.data.name &&
       stateData.resource_group === componentProps.data.resource_group &&
       stateData.zone === componentProps.data.zone &&
-      deepEqual(stateData.images, componentProps.data.images)
+      deepEqual(stateData.imageNames, componentProps.data.imageNames)
     ) {
       return true;
     } else return false;

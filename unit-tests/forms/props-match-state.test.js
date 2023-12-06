@@ -191,6 +191,24 @@ describe("propsMatchState", () => {
         )
       );
     });
+    it("should return false if power image names are different", () => {
+      assert.isFalse(
+        propsMatchState(
+          "power",
+          {
+            imageNames: [],
+            zone: "frog",
+          },
+          {
+            data: {
+              zone: "frog",
+              imageNames: ["names"],
+            },
+          }
+        ),
+        "should not match"
+      );
+    });
     it("should remove attachments when field is power and attachments is non-empty", () => {
       assert.isTrue(
         propsMatchState(
@@ -225,7 +243,7 @@ describe("propsMatchState", () => {
             enable_classic: false,
             enable_power_vs: false,
             power_vs_zones: [],
-            craig_version: "1.7.1",
+            craig_version: "1.8.0",
           },
           {
             craig: {
@@ -243,7 +261,7 @@ describe("propsMatchState", () => {
                     enable_classic: false,
                     enable_power_vs: false,
                     power_vs_zones: [],
-                    craig_version: "1.7.1",
+                    craig_version: "1.8.0",
                   },
                 },
               },

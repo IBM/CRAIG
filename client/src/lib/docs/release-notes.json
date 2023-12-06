@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.8.0",
+    "features": [],
+    "fixes": [
+      "Fixed an error causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.7.1",
     "features": [],
     "fixes": [

@@ -66,7 +66,7 @@ const {
   sysdigSave,
 } = require("./logging-monitoring");
 const { initIcdStore } = require("./icd");
-const { initPowerVsStore } = require("./power-vs");
+const { initPowerVsStore } = require("./power-vs/power-vs.js");
 const {
   initPowerVsInstance,
 } = require("./power-vs-instances/power-vs-instances.js");
