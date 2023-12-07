@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import { IcseFormGroup } from "icse-react-assets";
 import { Network_3 } from "@carbon/icons-react";
 import { DynamicFormTextInput } from "./components";
+import { contains } from "lazy-z";
 
 export const PowerInterfaces = (props) => {
-  return props.componentProps.formName === "Power Instances" ? (
+  return contains(["Power Instances", "VTL"], props.componentProps.formName) ? (
     <div className="formInSubForm">
       {props.stateData.network.map((nw, index) => {
         return (

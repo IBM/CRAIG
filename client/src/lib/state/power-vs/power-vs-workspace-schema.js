@@ -1,4 +1,4 @@
-const { isEmpty, isNullOrEmptyString, splat } = require("lazy-z");
+const { isEmpty, isNullOrEmptyString, splat, distinct } = require("lazy-z");
 const powerImages = require("../../docs/power-image-map.json");
 const {
   fieldIsNullOrEmptyString,
@@ -45,7 +45,14 @@ function powerVsWorkspaceSchema() {
         if (isNullOrEmptyString(stateData.zone, true)) {
           return [];
         } else {
-          return splat(powerImages[stateData.zone], "name");
+          // while the power vs image dynamic fetch is not working we need to
+          // manually add the VTL image for now. this is not ideal and should
+          // be removed as soon as possible
+          return distinct(
+            splat(powerImages[stateData.zone], "name").concat(
+              "VTL-FalconStor-10_03-001"
+            )
+          );
         }
       },
       forceUpdateKey: function (stateData) {

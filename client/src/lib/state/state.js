@@ -67,6 +67,7 @@ const { initPowerVsVolumeStore } = require("./power-vs-volumes");
 const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");
 const { initCis } = require("./cis.js");
+const { initVtlStore } = require("./vtl.js");
 
 /**
  * get state for craig
@@ -223,11 +224,11 @@ const state = function (legacy) {
 
   initLogDna(store);
   initSysDig(store);
-
   initIcdStore(store);
   initPowerVsStore(store);
   initPowerVsInstance(store);
   initPowerVsVolumeStore(store);
+  initVtlStore(store);
   intiClassicInfrastructure(store);
   initClassicGateways(store);
   initCis(store);

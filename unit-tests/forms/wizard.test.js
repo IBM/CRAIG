@@ -788,6 +788,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
 
     assert.deepEqual(
@@ -1572,6 +1573,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
 
     assert.deepEqual(
@@ -2009,6 +2011,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
 
     assert.deepEqual(
@@ -2437,6 +2440,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
 
     assert.deepEqual(
@@ -2941,6 +2945,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
 
     assert.deepEqual(
@@ -3098,6 +3103,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
 
     assert.deepEqual(
@@ -3595,6 +3601,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
 
     assert.deepEqual(
@@ -4067,6 +4074,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
     assert.deepEqual(
       actualData,
@@ -4538,6 +4546,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
     assert.deepEqual(
       actualData,
@@ -4957,6 +4966,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
     assert.deepEqual(
       actualData,
@@ -5376,6 +5386,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
     assert.deepEqual(
       actualData,
@@ -6399,6 +6410,7 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
     };
     assert.deepEqual(
       actualData,

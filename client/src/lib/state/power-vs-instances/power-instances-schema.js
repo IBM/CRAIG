@@ -20,6 +20,7 @@ const {
   selectInvalidText,
   titleCaseRender,
   kebabCaseInput,
+  unconditionalInvalidText,
 } = require("../utils");
 const { sapProfiles, systemTypes } = require("../../constants");
 
@@ -60,17 +61,20 @@ function powerAffinityInvalid(stateData, option, type, field) {
  * Processor invalidation for powerVs instance
  * @returns {boolean} function will evaluate to true if should be disabled
  */
-function powerVsCoresInvalid(stateData) {
-  let isDedicated = stateData.pi_proc_type === "dedicated";
-  let coreMax =
-    stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
-  let coreMin = isDedicated ? 1 : 0.25;
-  let processorsFloat = parseFloat(stateData.pi_processors);
-  return (
-    stateData.pi_processors === "" ||
-    (coreMin === 1 && !isWholeNumber(processorsFloat)) ||
-    (!stateData.sap && (processorsFloat < coreMin || processorsFloat > coreMax))
-  );
+function powerVsCoresInvalid(vtl) {
+  return function (stateData) {
+    let isDedicated = stateData.pi_proc_type === "dedicated";
+    let coreMax =
+      stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
+    let coreMin = isDedicated || vtl ? 1 : 0.25;
+    let processorsFloat = parseFloat(stateData.pi_processors);
+    return (
+      stateData.pi_processors === "" ||
+      (coreMin === 1 && !isWholeNumber(processorsFloat)) ||
+      (!stateData.sap &&
+        (processorsFloat < coreMin || processorsFloat > coreMax))
+    );
+  };
 }
 
 /**
@@ -89,11 +93,12 @@ function powerVsMemoryInvalid(stateData) {
 /**
  * return power_instances processor input invalid text
  * @param {Object} stateData
+ * @param {boolean=} vtl
  * @returns {string} invalid text
  */
-function invalidPowerVsProcessorTextCallback(stateData) {
+function invalidPowerVsProcessorTextCallback(stateData, vtl) {
   let isDedicated = stateData.pi_proc_type === "dedicated";
-  let coreMin = isDedicated ? 1 : 0.25;
+  let coreMin = isDedicated || vtl ? 1 : 0.25;
   let coreMax =
     stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
   return `Must be a ${
@@ -176,7 +181,12 @@ function hidePowerAffinityOption(option, type) {
   };
 }
 
-function powerVsInstanceSchema() {
+/**
+ * create power vs instance schema
+ * @param {bool} vtl true when vtl
+ * @returns {object} schema object
+ */
+function powerVsInstanceSchema(vtl) {
   return {
     name: {
       default: "",
@@ -320,10 +330,13 @@ function powerVsInstanceSchema() {
         if (isNullOrEmptyString(stateData.workspace)) {
           return [];
         } else {
-          return new revision(componentProps.craig.store.json).child(
-            "power",
-            stateData.workspace
-          ).data.imageNames;
+          return new revision(componentProps.craig.store.json)
+            .child("power", stateData.workspace)
+            .data.imageNames.filter((image) => {
+              if (vtl && contains(image, "VTL")) {
+                return image;
+              } else if (!vtl && !contains(image, "VTL")) return image;
+            });
         }
       },
     },
@@ -333,7 +346,7 @@ function powerVsInstanceSchema() {
       default: "",
       invalid: fieldIsNullOrEmptyString("pi_sys_type"),
       invalidText: selectInvalidText("systen type"),
-      groups: systemTypes,
+      groups: vtl ? ["s922", "e980"] : systemTypes,
       type: "select",
     },
     pi_proc_type: {
@@ -348,14 +361,14 @@ function powerVsInstanceSchema() {
     },
     pi_processors: {
       labelText: "Processors",
-      placeholder: "0.25",
+      placeholder: vtl ? 1 : "0.25",
       hideWhen: function (stateData) {
         return stateData.sap === true;
       },
       size: "small",
       default: "",
-      invalid: powerVsCoresInvalid,
-      invalidText: invalidPowerVsProcessorTextCallback,
+      invalid: powerVsCoresInvalid(vtl),
+      invalidText: invalidPowerVsProcessorTextCallback(true),
     },
     pi_memory: {
       hideWhen: function (stateData) {
@@ -411,6 +424,7 @@ function powerVsInstanceSchema() {
       type: "select",
       groups: ["Storage Type", "Storage Pool", "Affinity", "Anti-Affinity"],
       disabled: storageChangeDisabledCallback,
+      invalid: fieldIsNullOrEmptyString("storage_option"),
       invalidText: selectInvalidText("storage option"),
       onStateChange: function (stateData) {
         if (stateData.storage_option !== "Storage Type") {
@@ -558,6 +572,18 @@ function powerVsInstanceSchema() {
       hideWhen: hidePowerAffinityOption("Anti-Affinity", "Instance"),
       type: "select",
       groups: powerVsAffinityInstancesFilter,
+    },
+    pi_license_repository_capacity: {
+      labelText: "Repository Capacity (TB)",
+      size: "small",
+      default: "1",
+      invalid: function (stateData) {
+        return stateData.pi_license_repository_capacity === "" ||
+          stateData.pi_license_repository_capacity.match(/^\d+$/g) === null
+          ? true
+          : !isWholeNumber(parseInt(stateData.pi_license_repository_capacity));
+      },
+      invalidText: unconditionalInvalidText("Enter a whole number"),
     },
   };
 }

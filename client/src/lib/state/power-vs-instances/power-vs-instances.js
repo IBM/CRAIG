@@ -6,61 +6,73 @@ const { powerVsInstanceSchema } = require("./power-instances-schema");
 
 /**
  * init store for power instances
- * @param {lazyZstate} config
+ * @param {boolean=} vtl
+ * @returns {Function} function to set power vs
  */
-function powerVsInstanceInit(config) {
-  config.store.json.power_instances = [];
+
+function powerVsInstanceInit(vtl) {
+  return function (config) {
+    config.store.json[vtl ? "vtl" : "power_instances"] = [];
+  };
 }
 
 /**
- * on store update for power vs instances
- * @param {lazyZstate} config
+ * init store for power instances
+ * @param {boolean=} vtl
+ * @returns {Function} return function
  */
-function powerVsInstanceOnStoreUpdate(config) {
-  // update existing stores to add power instaces to prevent crash
-  if (!config.store.json.power_instances) {
-    config.store.json.power_instances = [];
-  }
-
+function powerVsInstanceOnStoreUpdate(vtl) {
   /**
-   * reset values for instance based on workspace
-   * @param {*} instance
+   * on store update for power vs instances
+   * @param {lazyZstate} config
    */
-  function resetWorkspaceValues(instance) {
-    instance.network = [];
-    instance.ssh_key = null;
-    instance.workspace = null;
-    instance.zone = null;
-    instance.image = null;
-  }
-
-  config.store.json.power_instances.forEach((instance) => {
-    if (config.store.json.power.length === 0) {
-      resetWorkspaceValues(instance);
-    } else if (
-      !splatContains(config.store.json.power, "name", instance.workspace)
-    ) {
-      resetWorkspaceValues(instance);
-    } else {
-      let workspace = getObjectFromArray(
-        config.store.json.power,
-        "name",
-        instance.workspace
-      );
-      instance.zone = workspace.zone;
-      if (!contains(workspace.imageNames, instance.image))
-        instance.image = null;
-      if (!splatContains(workspace.ssh_keys, "name", instance.ssh_key))
-        instance.ssh_key = null;
-      let newNetworks = [];
-      instance.network.forEach((nw) => {
-        if (splatContains(workspace.network, "name", nw.name)) {
-          newNetworks.push(nw);
-        }
-      });
-      instance.network = newNetworks;
+  return function (config) {
+    let field = vtl ? "vtl" : "power_instances";
+    // update existing stores to add power instaces to prevent crash
+    if (!config.store.json[field]) {
+      config.store.json[field] = [];
     }
-  });
+
+    /**
+     * reset values for instance based on workspace
+     * @param {*} instance
+     */
+    function resetWorkspaceValues(instance) {
+      instance.network = [];
+      instance.ssh_key = null;
+      instance.workspace = null;
+      instance.zone = null;
+      instance.image = null;
+    }
+
+    config.store.json[field].forEach((instance) => {
+      if (config.store.json.power.length === 0) {
+        resetWorkspaceValues(instance);
+      } else if (
+        !splatContains(config.store.json.power, "name", instance.workspace)
+      ) {
+        resetWorkspaceValues(instance);
+      } else {
+        let workspace = getObjectFromArray(
+          config.store.json.power,
+          "name",
+          instance.workspace
+        );
+        instance.zone = workspace.zone;
+        if (!contains(workspace.imageNames, instance.image))
+          instance.image = null;
+        if (!splatContains(workspace.ssh_keys, "name", instance.ssh_key))
+          instance.ssh_key = null;
+        let newNetworks = [];
+        instance.network.forEach((nw) => {
+          if (splatContains(workspace.network, "name", nw.name)) {
+            newNetworks.push(nw);
+          }
+        });
+        instance.network = newNetworks;
+      }
+    });
+  };
 }
 
 /**
@@ -118,96 +130,120 @@ function deleteSapVolumes(config, componentProps) {
 }
 
 /**
- * on power vs instance create
- * @param {lazyZstate} config
- * @param {*} stateData
+ * create power vs instance
+ * @param {*} vtl
+ * @returns {Function} function that returns function for creation
  */
-function powerVsInstanceCreate(config, stateData) {
-  addSapVolumes(config, stateData);
-  config.push(["json", "power_instances"], stateData);
-}
-
-/**
- * on power vs instance save
- * @param {lazyZstate} config
- * @param {*} stateData
- * @param {*} componentProps
- */
-function powerVsInstanceSave(config, stateData, componentProps) {
-  if (
-    componentProps.data.sap &&
-    stateData.sap &&
-    (stateData.sap_profile !== componentProps.data.sap_profile ||
-      stateData.workspace !== componentProps.workspace)
-  ) {
-    let newVolumes = getSapVolumeList(
-      stateData.sap_profile,
-      stateData.workspace,
-      stateData.name,
-      stateData.zone
-    );
-    newVolumes.forEach((volume) => {
-      let volumeData = getObjectFromArray(
-        config.store.json.power_volumes,
-        "name",
-        volume.name.replace(stateData.name, componentProps.data.name)
-      );
-      volumeData.name = volume.name;
-      volumeData.pi_volume_size = volume.pi_volume_size;
-      volumeData.workspace = volume.workspace;
-      volumeData.attachments = [stateData.name];
-    });
-  } else if (componentProps.data.sap !== true && stateData.sap) {
+function powerVsInstanceCreate(vtl) {
+  /**
+   * on power vs instance create
+   * @param {lazyZstate} config
+   * @param {*} stateData
+   */
+  return function (config, stateData) {
     addSapVolumes(config, stateData);
-  } else if (componentProps.data.sap && !stateData.sap) {
-    deleteSapVolumes(config, componentProps);
-  } else if (stateData.sap) {
-    config.store.json.power_volumes.forEach((volume) => {
-      if (
-        volume.name.match(
-          new RegexButWithWords()
-            .stringBegin()
-            .literal(componentProps.data.name)
-            .literal("-sap-")
-            .group((exp) => {
-              exp.literal("shared");
-            })
-            .or()
-            .group((exp) => {
-              exp
-                .group((exp) => exp.literal("log").or().literal("data"))
-                .literal("-")
-                .set("1-4");
-            })
-            .stringEnd()
-            .done("g")
-        ) !== null
-      ) {
-        volume.name = volume.name.replace(
-          componentProps.data.name,
-          stateData.name
-        );
-        volume.zone = stateData.zone;
-        volume.attachments = [stateData.name];
-      }
-    });
-  }
-  config.updateChild(
-    ["json", "power_instances"],
-    componentProps.data.name,
-    stateData
-  );
+    config.push(["json", vtl ? "vtl" : "power_instances"], stateData);
+  };
 }
 
 /**
- * on power vs instance delete
- * @param {lazyZstate} config
- * @param {*} stateData
- * @param {*} componentProps
+ * create function for saving power vs instances
+ * @param {boolean=} vtl true if vtl
+ * @returns {Function}
  */
-function powerVsInstanceDelete(config, stateData, componentProps) {
-  deleteSapVolumes(config, componentProps);
-  config.carve(["json", "power_instances"], componentProps.data.name);
+function powerVsInstanceSave(vtl) {
+  /**
+   * on power vs instance save
+   * @param {lazyZstate} config
+   * @param {*} stateData
+   * @param {*} componentProps
+   */
+  return function (config, stateData, componentProps) {
+    if (
+      componentProps.data.sap &&
+      stateData.sap &&
+      (stateData.sap_profile !== componentProps.data.sap_profile ||
+        stateData.workspace !== componentProps.workspace)
+    ) {
+      let newVolumes = getSapVolumeList(
+        stateData.sap_profile,
+        stateData.workspace,
+        stateData.name,
+        stateData.zone
+      );
+      newVolumes.forEach((volume) => {
+        let volumeData = getObjectFromArray(
+          config.store.json.power_volumes,
+          "name",
+          volume.name.replace(stateData.name, componentProps.data.name)
+        );
+        volumeData.name = volume.name;
+        volumeData.pi_volume_size = volume.pi_volume_size;
+        volumeData.workspace = volume.workspace;
+        volumeData.attachments = [stateData.name];
+      });
+    } else if (componentProps.data.sap !== true && stateData.sap) {
+      addSapVolumes(config, stateData);
+    } else if (componentProps.data.sap && !stateData.sap) {
+      deleteSapVolumes(config, componentProps);
+    } else if (stateData.sap) {
+      config.store.json.power_volumes.forEach((volume) => {
+        if (
+          volume.name.match(
+            new RegexButWithWords()
+              .stringBegin()
+              .literal(componentProps.data.name)
+              .literal("-sap-")
+              .group((exp) => {
+                exp.literal("shared");
+              })
+              .or()
+              .group((exp) => {
+                exp
+                  .group((exp) => exp.literal("log").or().literal("data"))
+                  .literal("-")
+                  .set("1-4");
+              })
+              .stringEnd()
+              .done("g")
+          ) !== null
+        ) {
+          volume.name = volume.name.replace(
+            componentProps.data.name,
+            stateData.name
+          );
+          volume.zone = stateData.zone;
+          volume.attachments = [stateData.name];
+        }
+      });
+    }
+    config.updateChild(
+      ["json", vtl ? "vtl" : "power_instances"],
+      componentProps.data.name,
+      stateData
+    );
+  };
+}
+
+/**
+ * power vs instance delete
+ * @param {boolean} vtl true when vtl
+ * @returns {Function}
+ */
+function powerVsInstanceDelete(vtl) {
+  /**
+   * on power vs instance delete
+   * @param {lazyZstate} config
+   * @param {*} stateData
+   * @param {*} componentProps
+   */
+  return function (config, stateData, componentProps) {
+    deleteSapVolumes(config, componentProps);
+    config.carve(
+      ["json", vtl ? "vtl" : "power_instances"],
+      componentProps.data.name
+    );
+  };
 }
 
 /**
@@ -216,11 +252,11 @@ function powerVsInstanceDelete(config, stateData, componentProps) {
  */
 function initPowerVsInstance(store) {
   store.newField("power_instances", {
-    init: powerVsInstanceInit,
-    onStoreUpdate: powerVsInstanceOnStoreUpdate,
-    create: powerVsInstanceCreate,
-    save: powerVsInstanceSave,
-    delete: powerVsInstanceDelete,
+    init: powerVsInstanceInit(),
+    onStoreUpdate: powerVsInstanceOnStoreUpdate(),
+    create: powerVsInstanceCreate(),
+    save: powerVsInstanceSave(),
+    delete: powerVsInstanceDelete(),
     shouldDisableSave: shouldDisableComponentSave(
       [
         "name",
@@ -240,6 +276,7 @@ function initPowerVsInstance(store) {
         "pi_affinity_instance",
         "pi_anti_affinity_instance",
         "pi_anti_affinity_volume",
+        "storage_option",
       ],
       "power_instances"
     ),

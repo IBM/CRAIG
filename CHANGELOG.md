@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Users can now create FalconStor VTL instances from the page `/form/vtl`
 
 ### Fixes
 

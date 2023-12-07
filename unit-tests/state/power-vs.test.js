@@ -194,7 +194,7 @@ describe("power-vs", () => {
         let craig = newState();
         assert.deepEqual(
           craig.power.imageNames.groups({ zone: "dal12" }).length,
-          32,
+          33,
           "it should return image names"
         );
       });
