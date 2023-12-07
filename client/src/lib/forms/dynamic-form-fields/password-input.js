@@ -42,7 +42,7 @@ function dynamicPasswordInputProps(props) {
     onChange: props.handleInputChange,
     invalid: invalid,
     invalidText: invalidText,
-    value: props.parentState[props.name],
+    value: props.parentState[props.name] || "",
   };
 }
 

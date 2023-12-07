@@ -57,14 +57,7 @@ const { initCbrZones } = require("./cbr-zones");
 const { initCbrRules } = require("./cbr-rules");
 const { initVpnState } = require("./vpn-servers");
 const { initDnsStore } = require("./dns");
-const {
-  logdnaInit,
-  logdnaOnStoreUpdate,
-  logdnaSave,
-  sysdigInit,
-  sysdigOnStoreUpdate,
-  sysdigSave,
-} = require("./logging-monitoring");
+const { initLogDna, initSysDig } = require("./logging-monitoring");
 const { initIcdStore } = require("./icd");
 const { initPowerVsStore } = require("./power-vs/power-vs.js");
 const {
@@ -228,17 +221,8 @@ const state = function (legacy) {
   initVpnState(store);
   initDnsStore(store);
 
-  store.newField("logdna", {
-    init: logdnaInit,
-    onStoreUpdate: logdnaOnStoreUpdate,
-    save: logdnaSave,
-  });
-
-  store.newField("sysdig", {
-    init: sysdigInit,
-    onStoreUpdate: sysdigOnStoreUpdate,
-    save: sysdigSave,
-  });
+  initLogDna(store);
+  initSysDig(store);
 
   initIcdStore(store);
   initPowerVsStore(store);

@@ -26,6 +26,7 @@ import {
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
+import { allGroupItemsHidden } from "../../lib/forms/dynamic-form-fields/icse-form-group";
 
 const doNotRenderFields = [
   "heading",
@@ -54,7 +55,10 @@ class DynamicForm extends React.Component {
           !isBoolean(this.state[field]) &&
           !contains(doNotRenderFields, field)
         )
-          this.state[field] = group[field].default || "";
+          // prevent ssh public key from causing propsMatchState to be false
+          // when use data is true
+          this.state[field] =
+            group[field].default === null ? null : group[field].default || "";
       });
     });
 
@@ -153,7 +157,9 @@ class DynamicForm extends React.Component {
           ) : group.heading ? (
             <IcseHeading {...dynamicIcseHeadingProps(group)} />
           ) : (
-            <IcseFormGroup {...dynamicIcseFormGroupsProps(this.props, index)}>
+            <IcseFormGroup
+              {...dynamicIcseFormGroupsProps(this.props, index, this.state)}
+            >
               {Object.keys(group).map((key, keyIndex) => {
                 let field = group[key];
                 return (field.hideWhen && field.hideWhen(this.state)) ||

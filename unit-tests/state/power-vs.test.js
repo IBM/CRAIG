@@ -308,6 +308,41 @@ describe("power-vs", () => {
             );
           });
         });
+        describe("invalid", () => {
+          it("should return true when key in modal is invalid when no data", () => {
+            assert.isTrue(
+              state.power.ssh_keys.public_key.invalid(
+                {
+                  public_key: "",
+                },
+                {
+                  arrayParentName: "workspace",
+                }
+              )
+            );
+          });
+          it("should return true when key name matches data name", () => {
+            state.power.ssh_keys.create(
+              { name: "test-key", public_key: "aaa" },
+              { innerFormProps: { arrayParentName: "power-vs" } }
+            );
+            delete state.store.json.power[0].ssh_keys[0].workspace;
+            assert.isTrue(
+              state.power.ssh_keys.public_key.invalid(
+                {
+                  public_key: "aaa",
+                  name: "name",
+                },
+                {
+                  arrayParentName: "workspace",
+                  data: {
+                    name: "name",
+                  },
+                }
+              )
+            );
+          });
+        });
       });
     });
   });

@@ -411,4 +411,313 @@ describe("invalidForms", () => {
       "it should return failing list of forms"
     );
   });
+  it("should not show power as disabled when valid", () => {
+    let updatedState = new state();
+    updatedState.store.json = {
+      _options: {
+        prefix: "fums-dt",
+        region: "eu-de",
+        tags: ["fums", "devtest", "fumsdt"],
+        zones: 3,
+        endpoints: "public-and-private",
+        account_id: "",
+        fs_cloud: false,
+        dynamic_subnets: true,
+        enable_power_vs: false,
+        craig_version: "1.5.0",
+        power_vs_zones: [],
+      },
+      access_groups: [
+        {
+          name: "fums-dt-ag",
+          description: "Access group for FUMS dev test team",
+          policies: [
+            {
+              name: "fums-dt-accpolicy",
+              resources: {
+                resource_group: "fums-dt-rg",
+                resource_type: "",
+                resource: "",
+                service: "containers-kubernetes",
+                resource_instance_id: "",
+              },
+            },
+          ],
+          dynamic_policies: [],
+          has_invites: false,
+          invites: {
+            group: "fums-dt-ag",
+            ibm_ids: [],
+          },
+        },
+        {
+          name: "fums-ap-ag",
+          description: "Access group for FUMS Acceptance and Prod team",
+          policies: [],
+          dynamic_policies: [],
+          has_invites: false,
+          invites: {
+            group: "fums-ap-ag",
+            ibm_ids: [],
+          },
+        },
+        {
+          name: "fums-audit-ag",
+          description: "Access group for auditors of FUMS",
+          policies: [],
+          dynamic_policies: [],
+          has_invites: false,
+          invites: {
+            group: "fums-audit-ag",
+            ibm_ids: [],
+          },
+        },
+        {
+          name: "testdev-ag",
+          description: "test för att se hur det funkar",
+          policies: [
+            {
+              name: "testpol",
+              resources: {
+                resource_group: "fums-dt-rg",
+                resource_type: "resource-group",
+                resource: "All",
+                service: "Kubernetes Service",
+                resource_instance_id: "",
+              },
+            },
+          ],
+          dynamic_policies: [],
+          has_invites: false,
+          invites: {
+            group: "testdev-ag",
+            ibm_ids: [],
+          },
+        },
+      ],
+      appid: [],
+      atracker: {
+        enabled: false,
+        type: "cos",
+        name: "atracker",
+        target_name: "atracker-cos",
+        bucket: null,
+        add_route: true,
+        cos_key: null,
+        locations: ["global", "us-south"],
+      },
+      cbr_rules: [],
+      cbr_zones: [],
+      clusters: [],
+      dns: [],
+      event_streams: [],
+      f5_vsi: [],
+      iam_account_settings: {
+        enable: false,
+        mfa: null,
+        allowed_ip_addresses: null,
+        include_history: false,
+        if_match: null,
+        max_sessions_per_identity: null,
+        restrict_create_service_id: null,
+        restrict_create_platform_apikey: null,
+        session_expiration_in_seconds: null,
+        session_invalidation_in_seconds: null,
+      },
+      icd: [],
+      key_management: [
+        {
+          use_hs_crypto: false,
+          use_data: false,
+          name: "rgnsthlm-keym",
+          resource_group: "rgnsthlm-common-srvcs",
+          authorize_vpc_reader_role: false,
+          keys: [],
+        },
+      ],
+      load_balancers: [],
+      logdna: {
+        enabled: false,
+        plan: "lite",
+        endpoints: "private",
+        platform_logs: false,
+        resource_group: null,
+        cos: null,
+        bucket: null,
+      },
+      object_storage: [
+        {
+          name: "rgnsthlm-cos",
+          use_data: false,
+          resource_group: "rgnsthlm-common-srvcs",
+          plan: "standard",
+          use_random_suffix: true,
+          kms: "rgnsthlm-keym",
+          buckets: [],
+          keys: [],
+        },
+      ],
+      power: [
+        {
+          name: "oracle-22",
+          resource_group: "workload-rg",
+          zone: "dal12",
+          ssh_keys: [
+            {
+              name: "power-ssh",
+              public_key:
+                "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+              use_data: false,
+              resource_group: "management-rg",
+              workspace: "oracle-22",
+              zone: "dal12",
+            },
+          ],
+          network: [
+            {
+              name: "oracle-public",
+              pi_network_type: "pub-vlan",
+              pi_cidr: "172.40.10.0/24",
+              pi_dns: ["127.0.0.1"],
+              pi_network_jumbo: false,
+              workspace: "oracle-22",
+              zone: "dal12",
+            },
+            {
+              name: "oracle-private-1",
+              pi_network_type: "vlan",
+              pi_cidr: "10.80.10.0/28",
+              pi_dns: ["127.0.0.1"],
+              pi_network_jumbo: false,
+              workspace: "oracle-22",
+              zone: "dal12",
+              depends_on: [
+                "${ibm_pi_network.power_network_oracle_22_oracle_public}",
+              ],
+            },
+            {
+              name: "oracle-private-2",
+              pi_network_type: "vlan",
+              pi_cidr: "10.90.10.0/28",
+              pi_dns: ["127.0.0.1"],
+              pi_network_jumbo: false,
+              workspace: "oracle-22",
+              zone: "dal12",
+              depends_on: [
+                "${ibm_pi_network.power_network_oracle_22_oracle_private_1}",
+              ],
+            },
+          ],
+          cloud_connections: [
+            {
+              name: "frog",
+              pi_cloud_connection_speed: "50",
+              pi_cloud_connection_global_routing: "",
+              pi_cloud_connection_metered: "",
+              pi_cloud_connection_transit_enabled: "",
+              transit_gateways: [],
+              workspace: "oracle-22",
+              zone: "dal12",
+            },
+          ],
+          images: [
+            {
+              name: "7100-05-09",
+              workspace: "oracle-22",
+              zone: "dal12",
+              pi_image_id: "35eca797-6599-4597-af1f-d2eb5e292dfc",
+            },
+            {
+              name: "7300-00-01",
+              workspace: "oracle-22",
+              zone: "dal12",
+              pi_image_id: "2cf98f53-433d-4c7a-bc46-1f2dfcc04066",
+              depends_on: ["${ibm_pi_image.power_image_oracle_22_7100_05_09}"],
+            },
+            {
+              name: "7200-05-03",
+              workspace: "oracle-22",
+              zone: "dal12",
+              pi_image_id: "ab5777c4-60ef-45a1-90aa-4a144dbe3104",
+              depends_on: ["${ibm_pi_image.power_image_oracle_22_7300_00_01}"],
+            },
+          ],
+          attachments: [
+            {
+              network: "oracle-public",
+              workspace: "oracle-22",
+              zone: "dal12",
+              connections: ["frog"],
+            },
+            {
+              network: "oracle-private-1",
+              workspace: "oracle-22",
+              zone: "dal12",
+              connections: [],
+            },
+            {
+              network: "oracle-private-2",
+              workspace: "oracle-22",
+              zone: "dal12",
+              connections: [],
+            },
+          ],
+          imageNames: ["7100-05-09", "7300-00-01", "7200-05-03"],
+        },
+      ],
+      power_instances: [],
+      power_volumes: [],
+      resource_groups: [
+        {
+          use_prefix: true,
+          name: "fums-dt-rg",
+          use_data: false,
+        },
+        {
+          use_data: false,
+          name: "fums-ap-rg",
+          use_prefix: true,
+        },
+        {
+          use_data: false,
+          name: "rgnsthlm-common-srvcs",
+          use_prefix: true,
+        },
+      ],
+      routing_tables: [],
+      scc: {
+        credential_description: null,
+        id: null,
+        passphrase: null,
+        name: "",
+        location: "us",
+        collector_description: null,
+        is_public: false,
+        scope_description: null,
+        enable: false,
+      },
+      secrets_manager: [],
+      security_groups: [],
+      ssh_keys: [],
+      sysdig: {
+        enabled: false,
+        plan: "graduated-tier",
+        resource_group: null,
+      },
+      teleport_vsi: [],
+      transit_gateways: [],
+      virtual_private_endpoints: [],
+      vpcs: [],
+      vpn_gateways: [],
+      vpn_servers: [],
+      vsi: [],
+    };
+    let expectedData = [];
+    let actualData = invalidForms(updatedState);
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should return failing list of forms"
+    );
+  });
 });

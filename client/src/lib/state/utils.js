@@ -17,7 +17,10 @@ const {
   kebabCase,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
-const { invalidName } = require("../forms/invalid-callbacks");
+const {
+  invalidName,
+  invalidSshPublicKey,
+} = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
 /**
  * set kms from encryption key on store update
@@ -368,6 +371,17 @@ function fieldIsNullOrEmptyString(fieldName) {
 }
 
 /**
+ * shortcut for field is null or empty string if enabled is true
+ * @param {*} field
+ * @returns {Function}
+ */
+function fieldIsNullOrEmptyStringEnabled(field) {
+  return function (stateData) {
+    return stateData.enabled ? isNullOrEmptyString(stateData[field]) : false;
+  };
+}
+
+/**
  * shortcut for form field is empty
  * @param {*} fieldName
  * @returns {Function}
@@ -597,6 +611,45 @@ function unconditionalInvalidText(text) {
   };
 }
 
+/**
+ * create schema for ssh key
+ * @param {*} fieldName
+ * @returns {object} object for schema
+ */
+function sshKeySchema(fieldName) {
+  let schema = {
+    name: {
+      default: "",
+      invalid: invalidName(fieldName),
+      invalidText: invalidNameText(fieldName),
+    },
+    public_key: {
+      type: "public-key",
+      default: null,
+      invalid: function (stateData, componentProps) {
+        return stateData.use_data
+          ? false
+          : invalidSshPublicKey(stateData, componentProps).invalid;
+      },
+      invalidText: function (stateData, componentProps) {
+        return invalidSshPublicKey(stateData, componentProps).invalidText;
+      },
+      hideWhen: function (stateData) {
+        return stateData.use_data;
+      },
+    },
+  };
+  if (fieldName === "ssh_keys") {
+    schema.resource_group = resourceGroupsField();
+    schema.use_data = {
+      type: "toggle",
+      labelText: "Use Existing SSH Key",
+      default: false,
+    };
+  }
+  return schema;
+}
+
 module.exports = {
   invalidIpv4Address,
   invalidIpv4AddressText,
@@ -607,6 +660,7 @@ module.exports = {
   saveAdvancedSubnetTier,
   setKmsFromKeyOnStoreUpdate,
   fieldIsNullOrEmptyString,
+  fieldIsNullOrEmptyStringEnabled,
   shouldDisableComponentSave,
   isIpStringInvalid,
   fieldIsEmpty,
@@ -622,4 +676,5 @@ module.exports = {
   titleCaseRender,
   kebabCaseInput,
   unconditionalInvalidText,
+  sshKeySchema,
 };

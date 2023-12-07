@@ -83,4 +83,65 @@ describe("dynamicIcseFormGroupsProps", () => {
       "it should return correct props"
     );
   });
+  it("should return for next to last group when all are hidden", () => {
+    assert.deepEqual(
+      dynamicIcseFormGroupsProps(
+        {
+          form: {
+            groups: [
+              {},
+              {
+                hidden: {
+                  hideWhen: function () {
+                    return true;
+                  },
+                },
+              },
+            ],
+            subForms: [],
+          },
+          data: {
+            name: "frog",
+          },
+        },
+        0
+      ),
+      {
+        key: "frog-group-0",
+        noMarginBottom: true,
+      },
+      "it should return correct props"
+    );
+  });
+  it("should return for next to last group when all are not hidden", () => {
+    assert.deepEqual(
+      dynamicIcseFormGroupsProps(
+        {
+          form: {
+            groups: [
+              {},
+              {
+                hidden: {
+                  hideWhen: function () {
+                    return true;
+                  },
+                },
+                notHidden: {},
+              },
+            ],
+            subForms: [],
+          },
+          data: {
+            name: "frog",
+          },
+        },
+        0
+      ),
+      {
+        key: "frog-group-0",
+        noMarginBottom: false,
+      },
+      "it should return correct props"
+    );
+  });
 });

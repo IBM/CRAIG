@@ -192,9 +192,9 @@ function invalidSshPublicKey(stateData, componentProps) {
               "name",
               componentProps.arrayParentName
             ).ssh_keys
-          : componentProps.classic
-          ? componentProps.craig.store.json.classic_ssh_keys
-          : componentProps.craig.store.json.ssh_keys,
+          : containsKeys(stateData, "use_data")
+          ? componentProps.craig.store.json.ssh_keys
+          : componentProps.craig.store.json.classic_ssh_keys,
         "public_key"
       ),
       stateData.public_key
@@ -207,17 +207,14 @@ function invalidSshPublicKey(stateData, componentProps) {
             "name",
             componentProps.arrayParentName
           ).ssh_keys
-        : componentProps.classic
-        ? componentProps.craig.store.json.classic_ssh_keys
-        : componentProps.craig.store.json.ssh_keys,
+        : containsKeys(stateData, "use_data")
+        ? componentProps.craig.store.json.ssh_keys
+        : componentProps.craig.store.json.classic_ssh_keys,
       "public_key",
       stateData.public_key
     );
 
-    if (
-      (componentProps.data && componentProps.data.name === key.name) ||
-      (stateData.workspace && !key.workspace) // special case where disableSave calls without powerVS prop
-    ) {
+    if (componentProps.data && componentProps.data.name === key.name) {
       return invalid; // This is the current key, escape
     } else {
       // duplicate key

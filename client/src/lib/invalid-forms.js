@@ -41,7 +41,7 @@ function invalidForms(craig) {
    * @param {*} data object
    * @returns {boolean} true if should be disabled
    */
-  function saveShouldBeDisabled(field, data) {
+  function saveShouldBeDisabled(field, data, arrayParentName) {
     return disableSave(
       ...[
         field,
@@ -58,6 +58,7 @@ function invalidForms(craig) {
             routes: [],
           },
           parent_name: "parent_name",
+          arrayParentName: arrayParentName,
         },
         // force craig as third param for subnet only (otherwise also hits access groups)
         field === "subnet" ? craig : undefined,
@@ -91,9 +92,9 @@ function invalidForms(craig) {
    * @param {*} data
    * @param {string=} form override field name if field and form have different names
    */
-  function setFormFieldIfFailing(field, data, form) {
+  function setFormFieldIfFailing(field, data, form, arrayParentName) {
     if (!formsFailing[form]) {
-      formsFailing[form] = saveShouldBeDisabled(field, data);
+      formsFailing[form] = saveShouldBeDisabled(field, data, arrayParentName);
     }
   }
 
@@ -201,7 +202,7 @@ function invalidForms(craig) {
   forEachDisabledCheck("power", (workspace) => {
     if (!isEmpty(workspace.ssh_keys)) {
       workspace.ssh_keys.forEach((key) => {
-        setFormFieldIfFailing("ssh_keys", key, "power");
+        setFormFieldIfFailing("ssh_keys", key, "power", workspace.name);
       });
     }
   });
