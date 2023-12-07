@@ -186,28 +186,6 @@ function disableF5VsiSave(stateData) {
   return isEmpty(stateData?.ssh_keys || []);
 }
 
-/**
- * check to see if logna form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableLogdnaSave(stateData) {
-  return stateData.enabled === true
-    ? nullOrEmptyStringFields(stateData, ["plan", "resource_group", "bucket"])
-    : false;
-}
-
-/**
- * check to see if sysdig form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableSysdigSave(stateData) {
-  return stateData.enabled === false
-    ? false
-    : nullOrEmptyStringFields(stateData, ["resource_group", "plan"]);
-}
-
 const disableSaveFunctions = {
   scc: disableSccSave,
   access_groups: invalidName("access_groups"),
@@ -220,8 +198,6 @@ const disableSaveFunctions = {
   iam_account_settings: disableIamAccountSettingsSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
-  logdna: disableLogdnaSave,
-  sysdig: disableSysdigSave,
 };
 
 /**
@@ -287,6 +263,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "cis",
     "domains",
     "dns_records",
+    "logdna",
+    "sysdig",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (containsKeys(disableSaveFunctions, field)) {

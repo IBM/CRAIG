@@ -371,6 +371,17 @@ function fieldIsNullOrEmptyString(fieldName) {
 }
 
 /**
+ * shortcut for field is null or empty string if enabled is true
+ * @param {*} field
+ * @returns {Function}
+ */
+function fieldIsNullOrEmptyStringEnabled(field) {
+  return function (stateData) {
+    return stateData.enabled ? isNullOrEmptyString(stateData[field]) : false;
+  };
+}
+
+/**
  * shortcut for form field is empty
  * @param {*} fieldName
  * @returns {Function}
@@ -649,6 +660,7 @@ module.exports = {
   saveAdvancedSubnetTier,
   setKmsFromKeyOnStoreUpdate,
   fieldIsNullOrEmptyString,
+  fieldIsNullOrEmptyStringEnabled,
   shouldDisableComponentSave,
   isIpStringInvalid,
   fieldIsEmpty,
