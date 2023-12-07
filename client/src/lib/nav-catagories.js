@@ -239,6 +239,15 @@ const navCatagories = [
         jsonField: "power_instances",
       },
       {
+        title: "FalconStor VTL",
+        path: "/form/vtl",
+        react_icon: "Voicemail",
+        toTf: (config) => {
+          return powerInstanceTf({ vtl: config.vtl }) || "";
+        },
+        jsonField: "vtl",
+      },
+      {
         title: "Power VS Storage",
         path: "/form/powerVolumes",
         react_icon: "IbmPowerVsVolumes",

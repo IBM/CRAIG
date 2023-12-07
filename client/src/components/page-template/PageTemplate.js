@@ -39,6 +39,7 @@ import {
   VlanIbm,
   FirewallClassic,
   IbmCloudInternetServices,
+  Voicemail,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -95,6 +96,7 @@ const navIcons = {
   VlanIbm: VlanIbm,
   FirewallClassic: FirewallClassic,
   IbmCloudInternetServices: IbmCloudInternetServices,
+  Voicemail: Voicemail,
 };
 
 let pageOrder = [

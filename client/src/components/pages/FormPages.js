@@ -1512,6 +1512,77 @@ const VsiPage = (craig) => {
   );
 };
 
+const Vtl = (craig) => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "FalconStor VTL Instances",
+      addText: "Create an Instance",
+      jsonField: "vtl",
+      overrideTile: !craig.store.json._options.enable_power_vs ? (
+        <NoPowerNetworkTile />
+      ) : craig.store.json.power.length === 0 ? (
+        <NoPowerWorkspaceTile />
+      ) : undefined,
+      hideFormTitleButton:
+        !craig.store.json._options.enable_power_vs ||
+        craig.store.json.power.length === 0,
+      formName: "VTL",
+      innerFormProps: {
+        powerStoragePoolMap: powerStoragePoolRegionMap,
+      },
+    },
+    {
+      jsonField: "vtl",
+      setDefault: {},
+      groups: [
+        {
+          name: craig.vtl.name,
+          workspace: craig.vtl.workspace,
+          network: craig.vtl.network,
+        },
+        {
+          ssh_key: craig.vtl.ssh_key,
+          image: craig.vtl.image,
+          pi_sys_type: craig.vtl.pi_sys_type,
+        },
+        {
+          pi_proc_type: craig.vtl.pi_proc_type,
+          pi_processors: craig.vtl.pi_processors,
+          pi_memory: craig.vtl.pi_memory,
+        },
+        {
+          pi_license_repository_capacity:
+            craig.vtl.pi_license_repository_capacity,
+          pi_storage_pool_affinity: craig.vtl.pi_storage_pool_affinity,
+        },
+        {
+          heading: {
+            name: "Boot Volume",
+            type: "subHeading",
+          },
+        },
+        {
+          storage_option: craig.vtl.storage_option,
+          pi_storage_type: craig.vtl.pi_storage_type,
+          pi_storage_pool: craig.vtl.pi_storage_pool,
+          affinity_type: craig.vtl.affinity_type,
+          pi_affinity_volume: craig.vtl.pi_affinity_volume,
+          pi_anti_affinity_volume: craig.vtl.pi_anti_affinity_volume,
+          pi_anti_affinity_instance: craig.vtl.pi_anti_affinity_instance,
+          pi_affinity_instance: craig.vtl.pi_affinity_instance,
+        },
+        {
+          heading: {
+            name: "IP Interface Options",
+            type: "subHeading",
+          },
+        },
+      ],
+    }
+  );
+};
+
 export const NewFormPage = (props) => {
   let { form, craig } = props;
 
@@ -1581,5 +1652,7 @@ export const NewFormPage = (props) => {
     return VpnServerPage(craig);
   } else if (form === "vsi") {
     return VsiPage(craig);
+  } else if (form === "vtl") {
+    return Vtl(craig);
   }
 };

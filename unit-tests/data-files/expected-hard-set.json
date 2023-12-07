@@ -962,5 +962,6 @@
   "classic_ssh_keys": [],
   "classic_vlans": [],
   "classic_gateways": [],
-  "cis": []
+  "cis": [],
+  "vtl": []
 }

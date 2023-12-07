@@ -1,7 +1,9 @@
 [
   {
     "version": "1.8.0",
-    "features": [],
+    "features": [
+      "Users can now create FalconStor VTL instances from the page `/form/vtl`"
+    ],
     "fixes": [
       "Fixed an error causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace"
     ],
