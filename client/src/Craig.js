@@ -248,7 +248,7 @@ class Craig extends React.Component {
             );
           },
           // project reject callback
-          () => {
+          (err) => {
             this.setState({ schematicsFailed: true, loadingDone: true });
             console.error(err);
           }

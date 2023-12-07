@@ -166,7 +166,9 @@ function intiClassicInfrastructure(store) {
         type: "select",
         groups: ["Public", "Private"],
         onRender: function (stateData) {
-          return titleCase(stateData.type.toLowerCase());
+          return isNullOrEmptyString(stateData.type, true)
+            ? ""
+            : titleCase(stateData.type.toLowerCase());
         },
         onInputChange: function (stateData) {
           return stateData.type.toUpperCase();
@@ -182,6 +184,7 @@ function intiClassicInfrastructure(store) {
       },
       router_hostname: {
         type: "select",
+        default: "",
         tooltip: {
           content:
             "To create a Classic Gateway using multiple VLANS, each VLAN must be in the same zone and have the same router hostname (calculated at runtime)",

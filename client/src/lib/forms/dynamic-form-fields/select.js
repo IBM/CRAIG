@@ -67,7 +67,7 @@ function dynamicSelectProps(props) {
     ? false
     : contains(groups, stateValue)
     ? invalidReturnsBooleanCheck(props, "dynamicSelectProps")
-    : true;
+    : props.field.invalid(props.parentState, props.parentProps);
 
   // hide text when tooltip so that multiple name labels are not rendered
   let labelText = props.field.tooltip

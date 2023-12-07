@@ -362,7 +362,7 @@ describe("dynamic select", () => {
         disabled: false,
         groups: ["", "a", "b", "c"],
         id: "frog-name-0",
-        invalid: true,
+        invalid: false,
         invalidText: "uh oh",
         labelText: "Name",
         name: "name",

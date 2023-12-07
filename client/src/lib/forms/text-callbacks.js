@@ -102,6 +102,7 @@ function invalidNameText(field, craig) {
       return duplicateNameCallback(stateData[overrideField || "name"]);
     } else if (
       field === "classic_vlans" &&
+      stateData.name &&
       stateData.name.length +
         1 +
         componentProps.craig.store.json._options.prefix.length >

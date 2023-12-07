@@ -26,7 +26,6 @@ import {
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
-import { allGroupItemsHidden } from "../../lib/forms/dynamic-form-fields/icse-form-group";
 
 const doNotRenderFields = [
   "heading",
@@ -56,9 +55,13 @@ class DynamicForm extends React.Component {
           !contains(doNotRenderFields, field)
         )
           // prevent ssh public key from causing propsMatchState to be false
-          // when use data is true
-          this.state[field] =
-            group[field].default === null ? null : group[field].default || "";
+          // when use data is true. also prevent router_hostname from rendering as
+          // empty string when null
+          this.state[field] = isBoolean(group[field].default)
+            ? group[field].default
+            : group[field].default === null && field !== "router_hostname"
+            ? null
+            : group[field].default || "";
       });
     });
 

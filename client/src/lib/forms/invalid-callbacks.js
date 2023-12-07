@@ -92,6 +92,7 @@ function invalidName(field, craig) {
         hasDuplicateName(field, stateData, componentProps, overrideField) ||
         // prevent classic vlans with names that include prefix longer than 20 characters
         (field === "classic_vlans" &&
+          stateData.name &&
           stateData.name.length +
             1 +
             componentProps.craig.store.json._options.prefix.length >
