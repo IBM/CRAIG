@@ -25,7 +25,6 @@ import {
   NetworkAclTemplate,
   ObjectStorageTemplate,
   RoutingTableTemplate,
-  SshKeysTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
   VpeTemplate,
@@ -35,7 +34,6 @@ import {
   SccV1Page,
   F5BigIpPage,
   PowerVsVolumesPage,
-  ClassicGatewaysPage,
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
@@ -58,7 +56,6 @@ import {
   invalidF5Vsi,
   invalidIamAccountSettings,
   invalidIdentityProviderURI,
-  invalidSshPublicKey,
   invalidDescription,
   replicationDisabledCallback,
 } from "../../lib/forms/invalid-callbacks";
@@ -78,7 +75,6 @@ import {
   edgeRouterEnabledZones,
   cosPlans,
   powerStoragePoolRegionMap,
-  datacenters,
 } from "../../lib/constants";
 import DynamicForm from "../forms/DynamicForm";
 import { ClassicDisabledTile } from "../forms/dynamic-form/tiles";
@@ -307,38 +303,49 @@ const NoClassicVlans = () => {
 };
 
 const ClassicGateways = (craig) => {
-  return (
-    <ClassicGatewaysPage
-      overrideTile={
-        !craig.store.json._options.enable_classic ? (
-          <ClassicDisabledTile />
-        ) : craig.store.json.classic_ssh_keys.length === 0 ? (
-          <NoClassicSshKeys />
-        ) : craig.store.json.classic_vlans.length === 0 ? (
-          <NoClassicVlans />
-        ) : undefined
-      }
-      classic_gateways={craig.store.json.classic_gateways || []}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      onSave={craig.classic_gateways.save}
-      onSubmit={craig.classic_gateways.create}
-      onDelete={craig.classic_gateways.delete}
-      craig={craig}
-      docs={RenderDocs("classic_gateways", craig.store.json._options.template)}
-      composedNameCallback={function (stateData) {
-        return `${craig.store.json._options.prefix}-gateway-${stateData.name}`;
-      }}
-      invalidCallback={craig.classic_gateways.name.invalid}
-      invalidTextCallback={craig.classic_gateways.name.invalidText}
-      datacenterList={datacenters}
-      classicSshKeyList={splat(craig.store.json.classic_ssh_keys, "name")}
-      classic_vlans={craig.store.json.classic_vlans}
-      invalidMemoryCallback={craig.classic_gateways.memory.invalid}
-      invalidMemoryTextCallback={craig.classic_gateways.memory.invalidText}
-      invalidDomainCallback={craig.classic_gateways.domain.invalid}
-      invalidDomainTextCallback={craig.classic_gateways.domain.invalidText}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Classic Gateways",
+      addText: "Create a Gateway",
+      formName: "classic-gateways",
+      jsonField: "classic_gateways",
+    },
+    {
+      jsonField: "classic_gateways",
+      groups: [
+        {
+          name: craig.classic_gateways.name,
+          domain: craig.classic_gateways.domain,
+          hadr: craig.classic_gateways.hadr,
+        },
+        {
+          datacenter: craig.classic_gateways.datacenter,
+          ssh_key: craig.classic_gateways.ssh_key,
+          disk_key_names: craig.classic_gateways.disk_key_names,
+        },
+        {
+          private_network_only: craig.classic_gateways.private_network_only,
+          private_vlan: craig.classic_gateways.private_vlan,
+          public_vlan: craig.classic_gateways.public_vlan,
+        },
+        {
+          package_key_name: craig.classic_gateways.package_key_name,
+          os_key_name: craig.classic_gateways.os_key_name,
+          process_key_name: craig.classic_gateways.process_key_name,
+        },
+        {
+          network_speed: craig.classic_gateways.network_speed,
+          public_bandwidth: craig.classic_gateways.public_bandwidth,
+          memory: craig.classic_gateways.memory,
+        },
+        {
+          tcp_monitoring: craig.classic_gateways.tcp_monitoring,
+          redundant_network: craig.classic_gateways.redundant_network,
+          ipv6_enabled: craig.classic_gateways.ipv6_enabled,
+        },
+      ],
+    }
   );
 };
 
@@ -1232,23 +1239,6 @@ const SshKeysPage = (craig) => {
       ],
     }
   );
-
-  <SshKeysTemplate
-    ssh_keys={craig.store.json.ssh_keys}
-    disableSave={disableSave}
-    onDelete={craig.ssh_keys.delete}
-    onSave={craig.ssh_keys.save}
-    onSubmit={craig.ssh_keys.create}
-    propsMatchState={propsMatchState}
-    forceOpen={forceShowForm}
-    resourceGroups={splat(craig.store.json.resource_groups, "name")}
-    invalidCallback={invalidName("ssh_keys")}
-    invalidTextCallback={invalidNameText("ssh_keys")}
-    craig={craig}
-    docs={RenderDocs("ssh_keys", craig.store.json._options.template)}
-    deleteDisabled={disableSshKeyDelete}
-    invalidKeyCallback={invalidSshPublicKey}
-  />;
 };
 
 const TransitGatewayPage = (craig) => {

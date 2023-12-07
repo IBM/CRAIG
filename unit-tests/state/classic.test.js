@@ -315,6 +315,14 @@ describe("classic", () => {
               "it should set to titlecase"
             );
           });
+          it("should return correct name on render when no type", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.type.onRender({ type: undefined }),
+              "",
+              "it should set to titlecase"
+            );
+          });
         });
         describe("classic_vlans.type.invalidText", () => {
           it("should return invalid text", () => {
