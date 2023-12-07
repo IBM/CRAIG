@@ -15,6 +15,7 @@ const {
   isWholeNumber,
   titleCase,
   kebabCase,
+  isInRange,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const {
@@ -362,11 +363,23 @@ function saveAdvancedSubnetTier(
 /**
  * shortcut for field is null or empty string
  * @param {*} fieldName
+ * @param {boolean} lazy  true if field cannot be undefined
  * @returns {Function}
  */
-function fieldIsNullOrEmptyString(fieldName) {
+function fieldIsNullOrEmptyString(fieldName, lazy) {
   return function (stateData) {
-    return isNullOrEmptyString(stateData[fieldName]);
+    return isNullOrEmptyString(stateData[fieldName], lazy);
+  };
+}
+
+/**
+ * shortcut for field is null or empty string if enabled is true
+ * @param {*} field
+ * @returns {Function}
+ */
+function fieldIsNullOrEmptyStringEnabled(field) {
+  return function (stateData) {
+    return stateData.enabled ? isNullOrEmptyString(stateData[field]) : false;
   };
 }
 
@@ -508,6 +521,22 @@ function invalidPort(rule, isSecurityGroup) {
     });
   }
   return hasInvalidPort;
+}
+
+/**
+ * test for invalid range
+ * @param {*} value
+ * @param {number} min
+ * @param {number} max
+ * @returns {boolean} true if invalid
+ */
+function isRangeInvalid(value, min, max) {
+  if (isNullOrEmptyString(value)) return false;
+  value = parseFloat(value);
+  if (!isWholeNumber(value) || !isInRange(value, min, max)) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -676,5 +705,6 @@ module.exports = {
   titleCaseRender,
   kebabCaseInput,
   unconditionalInvalidText,
+  isRangeInvalid,
   sshKeySchema,
 };

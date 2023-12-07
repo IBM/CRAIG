@@ -4,6 +4,7 @@ const {
   updateNetworkingRule,
   nameHelperText,
   invalidPort,
+  isRangeInvalid,
 } = require("../../client/src/lib/state/utils");
 
 describe("utils", () => {
@@ -405,6 +406,17 @@ describe("utils", () => {
         ),
         "it should be false"
       );
+    });
+  });
+  describe("isRangeInvalid", () => {
+    it("should return false if range is valid", () => {
+      assert.isFalse(isRangeInvalid(5, 1, 10));
+    });
+    it("should return false if value is empty", () => {
+      assert.isFalse(isRangeInvalid("", 1, 10));
+    });
+    it("should return true if value is not in range", () => {
+      assert.isTrue(isRangeInvalid(20, 1, 10));
     });
   });
 });
