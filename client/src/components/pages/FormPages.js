@@ -27,7 +27,6 @@ import {
   RoutingTableTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
-  VpeTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
   IamAccountSettingsPage,
@@ -1453,28 +1452,32 @@ const VpcPage = (craig) => {
 };
 
 const VpePage = (craig) => {
-  return (
-    <VpeTemplate
-      docs={RenderDocs(
-        "virtual_private_endpoints",
-        craig.store.json._options.template
-      )}
-      vpe={craig.store.json.virtual_private_endpoints}
-      disableSave={disableSave}
-      onDelete={craig.virtual_private_endpoints.delete}
-      onSave={craig.virtual_private_endpoints.save}
-      onSubmit={craig.virtual_private_endpoints.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.virtual_private_endpoints.name.invalid}
-      invalidTextCallback={craig.virtual_private_endpoints.name.invalidText}
-      vpcList={craig.store.vpcList}
-      subnetList={craig.getAllSubnets()}
-      securityGroups={craig.store.json.security_groups}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      secretsManagerInstances={splat(craig.store.json.secrets_manager, "name")}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Virtual Private Endpoints",
+      addText: "Create a VPE",
+      jsonField: "virtual_private_endpoints",
+      formName: "Virtual Private Endpoints",
+    },
+    {
+      jsonField: "virtual_private_endpoints",
+      groups: [
+        {
+          name: craig.virtual_private_endpoints.name,
+          vpc: craig.virtual_private_endpoints.vpc,
+          service: craig.virtual_private_endpoints.service,
+        },
+        {
+          resource_group: craig.virtual_private_endpoints.resource_group,
+          security_groups: craig.virtual_private_endpoints.security_groups,
+          subnets: craig.virtual_private_endpoints.subnets,
+        },
+        {
+          instance: craig.virtual_private_endpoints.instance,
+        },
+      ],
+    }
   );
 };
 
