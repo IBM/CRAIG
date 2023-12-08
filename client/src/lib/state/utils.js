@@ -368,7 +368,9 @@ function saveAdvancedSubnetTier(
  */
 function fieldIsNullOrEmptyString(fieldName, lazy) {
   return function (stateData) {
-    return isNullOrEmptyString(stateData[fieldName], lazy);
+    return stateData.use_data
+      ? false
+      : isNullOrEmptyString(stateData[fieldName], lazy);
   };
 }
 
@@ -441,7 +443,7 @@ function nameHelperText(stateData, componentProps) {
     stateData.use_data
       ? ""
       : componentProps.craig.store.json._options.prefix + "-"
-  }${stateData.name}`;
+  }${stateData.name || ""}`;
 }
 
 /**
@@ -471,11 +473,10 @@ function nameField(jsonField) {
 
 /**
  * resource group
- * @param {Function=} hideWhen
  * @param {boolean=} small make small
  * @returns {object} object for resource groups page
  */
-function resourceGroupsField(hideWhen, small) {
+function resourceGroupsField(small) {
   return {
     default: "",
     invalid: fieldIsNullOrEmptyString("resource_group"),
@@ -484,7 +485,7 @@ function resourceGroupsField(hideWhen, small) {
     groups: function (stateData, componentProps) {
       return splat(componentProps.craig.store.json.resource_groups, "name");
     },
-    hideWhen: hideWhen,
+    hideWhen: hideWhenUseData,
     size: small ? "small" : undefined,
   };
 }
@@ -634,6 +635,15 @@ function unconditionalInvalidText(text) {
 }
 
 /**
+ * hide when use data
+ * @param {*} stateData
+ * @returns
+ */
+function hideWhenUseData(stateData) {
+  return stateData.use_data;
+}
+
+/**
  * create schema for ssh key
  * @param {*} fieldName
  * @returns {object} object for schema
@@ -700,4 +710,5 @@ module.exports = {
   unconditionalInvalidText,
   isRangeInvalid,
   sshKeySchema,
+  hideWhenUseData,
 };

@@ -118,7 +118,6 @@ function disableF5VsiSave(stateData) {
 
 const disableSaveFunctions = {
   scc: disableSccSave,
-  appid_key: invalidName("appid_key"),
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
 };
@@ -192,6 +191,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "dynamic_policies",
     "logdna",
     "sysdig",
+    "keys",
+    "appid",
     "vtl",
     "buckets",
     "object_storage",
@@ -240,10 +241,13 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.routing_tables[field]
         : contains(["domains", "dns_records"], field)
         ? componentProps.craig.cis[field]
-        : contains(["buckets", "cos_keys"], field)
+        : field === "buckets" ||
+          componentProps.formName === "Service Credentials"
         ? componentProps.craig.object_storage[
             field === "buckets" ? field : "keys"
           ]
+        : field === "keys"
+        ? componentProps.craig.appid.keys
         : contains(["policies", "dynamic_policies"], field)
         ? componentProps.craig.access_groups[field]
         : componentProps.craig[field]

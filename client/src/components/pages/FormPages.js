@@ -162,35 +162,41 @@ const AccessGroupsPage = (craig) => {
 };
 
 const AppIdPage = (craig) => {
-  return (
-    <AppIdTemplate
-      docs={RenderDocs("appid", craig.store.json._options.template)}
-      appid={craig.store.json.appid}
-      disableSave={function (field, stateData, componentProps) {
-        // field is passed here but the goal is to be able to ignore the
-        // parameter entirely
-        return craig.appid.shouldDisableSave(stateData, componentProps);
-      }}
-      forceOpen={function (stateData, componentProps) {
-        // goal here is to be able to pass one param `shouldDisableSave`
-        // and handle both disable and force Open
-        return craig.appid.shouldDisableSave(stateData, componentProps);
-      }}
-      onDelete={craig.appid.delete}
-      onSave={craig.appid.save}
-      onSubmit={craig.appid.create}
-      propsMatchState={propsMatchState}
-      craig={craig}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={craig.appid.name.invalid}
-      invalidTextCallback={craig.appid.name.invalidText}
-      invalidKeyCallback={craig.appid.keys.name.invalid}
-      invalidKeyTextCallback={craig.appid.keys.name.invalidText}
-      onKeySave={craig.appid.keys.save}
-      onKeyDelete={craig.appid.keys.delete}
-      onKeySubmit={craig.appid.keys.create}
-      encryptionKeys={craig.store.encryptionKeys}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "AppID",
+      addText: "Create an AppID Instance",
+      formName: "appid",
+      jsonField: "appid",
+    },
+    {
+      jsonField: "appid",
+      groups: [
+        {
+          use_data: craig.appid.use_data,
+        },
+        {
+          name: craig.appid.name,
+          resource_group: craig.appid.resource_group,
+          encryption_key: craig.appid.encryption_key,
+        },
+      ],
+      subForms: [
+        {
+          name: "AppID Keys",
+          addText: "Create an AppID Key",
+          jsonField: "keys",
+          form: {
+            groups: [
+              {
+                name: craig.appid.keys.name,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 

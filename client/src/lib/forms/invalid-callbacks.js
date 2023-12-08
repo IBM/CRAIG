@@ -81,7 +81,9 @@ function invalidName(field, craig) {
    */
   function nameCheck(stateData, componentProps, overrideField) {
     let stateField = overrideField || "name";
-    if (containsKeys(stateData, "scope_description")) {
+    if (!stateData.name) {
+      return true;
+    } else if (containsKeys(stateData, "scope_description")) {
       // easiest way to get scc
       return (
         stateData[stateField] === "" ||

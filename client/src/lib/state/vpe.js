@@ -157,7 +157,7 @@ function initVpe(store) {
         invalidText: invalidNameText("virtual_private_endpoints"),
         size: "small",
       },
-      resource_group: resourceGroupsField(false, true),
+      resource_group: resourceGroupsField(true),
       service: {
         size: "small",
         type: "select",

@@ -87,7 +87,7 @@ function vpcSchema() {
       },
       size: "small",
     },
-    resource_group: resourceGroupsField(undefined, true),
+    resource_group: resourceGroupsField(true),
     bucket: {
       default: "",
       type: "select",

@@ -104,10 +104,10 @@ function formatAppIdKey(key, config) {
 function ibmResourceInstanceAppId(instance, config) {
   let appIdValues = {
     name: dataResourceName(instance),
-    resource_group_id: rgIdRef(instance.resource_group, config),
   };
   // add needed values when new instance is created
   if (!instance.use_data) {
+    appIdValues.resource_group_id = rgIdRef(instance.resource_group, config);
     appIdValues.service = "appid";
     appIdValues.plan = "graduated-tier";
     appIdValues.location = varDotRegion;
