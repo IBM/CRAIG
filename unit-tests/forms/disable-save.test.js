@@ -58,6 +58,7 @@ describe("disableSave", () => {
                 enable: true,
                 max_sessions_per_identity: null,
               },
+              craig: state(),
             },
           }
         ),

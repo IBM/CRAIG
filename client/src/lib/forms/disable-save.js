@@ -76,24 +76,6 @@ function disableSccSave(stateData) {
 }
 
 /**
- * check to see if dynamic policies form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableDynamicPoliciesSave(stateData, componentProps) {
-  return (
-    invalidName("dynamic_policies")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "identity_provider",
-      "expiration",
-      "conditions",
-    ]) ||
-    invalidIdentityProviderURI(stateData, componentProps)
-  );
-}
-
-/**
  * check to see if object storage form save should be disabled
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -116,22 +98,6 @@ function disableBucketsSave(stateData, componentProps) {
   return (
     invalidName("buckets")(stateData, componentProps) ||
     badField("kms_key", stateData)
-  );
-}
-
-/**
- * check to see if iam account settings form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableIamAccountSettingsSave(stateData) {
-  return (
-    nullOrEmptyStringFields(stateData, [
-      "mfa",
-      "restrict_create_platform_apikey",
-      "restrict_create_service_id",
-      "max_sessions_per_identity",
-    ]) || invalidIpCommaList(stateData.allowed_ip_addresses)
   );
 }
 
@@ -188,14 +154,10 @@ function disableF5VsiSave(stateData) {
 
 const disableSaveFunctions = {
   scc: disableSccSave,
-  access_groups: invalidName("access_groups"),
-  policies: invalidName("policies"),
-  dynamic_policies: disableDynamicPoliciesSave,
   object_storage: disableObjectStorageSave,
   appid_key: invalidName("appid_key"),
   buckets: disableBucketsSave,
   cos_keys: invalidName("cos_keys"),
-  iam_account_settings: disableIamAccountSettingsSave,
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
 };
@@ -263,6 +225,10 @@ function disableSave(field, stateData, componentProps, craig) {
     "cis",
     "domains",
     "dns_records",
+    "iam_account_settings",
+    "access_groups",
+    "policies",
+    "dynamic_policies",
     "logdna",
     "sysdig",
     "vtl",
@@ -310,6 +276,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.routing_tables[field]
         : contains(["domains", "dns_records"], field)
         ? componentProps.craig.cis[field]
+        : contains(["policies", "dynamic_policies"], field)
+        ? componentProps.craig.access_groups[field]
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;

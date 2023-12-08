@@ -26,21 +26,7 @@ const {
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
 const { initSecretsManagerStore } = require("./secrets-manager");
-const {
-  iamInit,
-  iamSave,
-  accessGroupInit,
-  accessGroupOnStoreUpdate,
-  accessGroupCreate,
-  accessGroupSave,
-  accessGroupDelete,
-  accessGroupPolicyCreate,
-  accessGroupPolicySave,
-  accessGroupPolicyDelete,
-  accessGroupDynamicPolicyCreate,
-  accessGroupDynamicPolicySave,
-  accessGroupDynamicPolicyDelete,
-} = require("./iam");
+const { initIamStore, initAccessGroups } = require("./iam");
 const validate = require("../validate");
 const { buildSubnetTiers } = require("./utils");
 const {
@@ -189,33 +175,9 @@ const state = function (legacy) {
   initLoadBalancers(store);
   initEventStreams(store);
   initSecretsManagerStore(store);
-
-  store.newField("iam_account_settings", {
-    init: iamInit,
-    save: iamSave,
-  });
-
+  initIamStore(store);
   initRoutingTable(store);
-
-  store.newField("access_groups", {
-    init: accessGroupInit,
-    onStoreUpdate: accessGroupOnStoreUpdate,
-    create: accessGroupCreate,
-    save: accessGroupSave,
-    delete: accessGroupDelete,
-    subComponents: {
-      policies: {
-        create: accessGroupPolicyCreate,
-        save: accessGroupPolicySave,
-        delete: accessGroupPolicyDelete,
-      },
-      dynamic_policies: {
-        create: accessGroupDynamicPolicyCreate,
-        save: accessGroupDynamicPolicySave,
-        delete: accessGroupDynamicPolicyDelete,
-      },
-    },
-  });
+  initAccessGroups(store);
 
   initCbrZones(store);
   initCbrRules(store);

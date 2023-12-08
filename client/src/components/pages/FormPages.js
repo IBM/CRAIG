@@ -138,10 +138,10 @@ const AccessGroupsPage = (craig) => {
       onDelete={craig.access_groups.delete}
       onSave={craig.access_groups.save}
       onSubmit={craig.access_groups.create}
-      invalidCallback={invalidName("access_groups")}
-      invalidTextCallback={invalidNameText("access_groups")}
-      invalidPolicyCallback={invalidName("policies")}
-      invalidPolicyTextCallback={invalidNameText("policies")}
+      invalidCallback={craig.access_groups.name.invalid}
+      invalidTextCallback={craig.access_groups.name.invalidText}
+      invalidPolicyCallback={craig.access_groups.policies.name.invalid}
+      invalidPolicyTextCallback={craig.access_groups.policies.name.invalidText}
       policyHelperTextCallback={accessGroupPolicyHelperTextCallback}
       onPolicyDelete={craig.access_groups.policies.delete}
       onPolicySave={craig.access_groups.policies.save}
@@ -149,10 +149,16 @@ const AccessGroupsPage = (craig) => {
       craig={craig}
       forceOpen={forceShowForm}
       resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidDynamicPolicyCallback={invalidName("dynamic_policies")}
-      invalidDynamicPolicyTextCallback={invalidNameText("dynamic_policies")}
+      invalidDynamicPolicyCallback={
+        craig.access_groups.dynamic_policies.name.invalid
+      }
+      invalidDynamicPolicyTextCallback={
+        craig.access_groups.dynamic_policies.name.invalidText
+      }
       dynamicPolicyHelperTextCallback={accessGroupPolicyHelperTextCallback}
-      invalidIdentityProviderCallback={invalidIdentityProviderURI}
+      invalidIdentityProviderCallback={
+        craig.access_groups.dynamic_policies.identity_provider.invalid
+      }
       onDynamicPolicyDelete={craig.access_groups.dynamic_policies.delete}
       onDynamicPolicySave={craig.access_groups.dynamic_policies.save}
       onDynamicPolicySubmit={craig.access_groups.dynamic_policies.create}

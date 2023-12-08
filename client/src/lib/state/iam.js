@@ -4,7 +4,111 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
 } = require("./store.utils");
+const {
+  fieldIsNullOrEmptyString,
+  shouldDisableComponentSave,
+  isRangeInvalid,
+  unconditionalInvalidText,
+} = require("./utils");
+const { invalidIpCommaList } = require("../forms/invalid-callbacks");
+const { iamAccountSettingInvalidText } = require("../forms/text-callbacks");
+const { isNullOrEmptyString } = require("lazy-z");
+const { invalidName, invalidNameText } = require("../forms");
 
+function initIamStore(store) {
+  store.newField("iam_account_settings", {
+    init: iamInit,
+    save: iamSave,
+    shouldDisableSave: shouldDisableComponentSave(
+      [
+        "mfa",
+        "allowed_ip_addresses",
+        "max_sessions_per_identity",
+        "restrict_create_service_id",
+        "restrict_create_platform_apikey",
+        "session_expiration_in_seconds",
+        "session_invalidation_in_seconds",
+      ],
+      "iam_account_settings"
+    ),
+    schema: {
+      enable: {
+        default: false,
+      },
+      mfa: {
+        default: null,
+        invalid: fieldIsNullOrEmptyString("mfa", true),
+        invalidText: iamAccountSettingInvalidText("mfa"),
+      },
+      allowed_ip_addresses: {
+        default: null,
+        invalidText: unconditionalInvalidText(
+          "Enter a comma separated list of IP addresses or CIDR blocks"
+        ),
+        invalid: function (stateData) {
+          return stateData.allowed_ip_addresses
+            ? invalidIpCommaList(stateData.allowed_ip_addresses)
+            : false;
+        },
+      },
+      include_history: {
+        default: false,
+      },
+      if_match: {
+        default: null,
+      },
+      max_sessions_per_identity: {
+        default: null,
+        invalid: function (stateData) {
+          return (
+            stateData.max_sessions_per_identity < 1 ||
+            stateData.max_sessions_per_identity > 10
+          );
+        },
+        invalidText: unconditionalInvalidText("Value must be in range [1-10]"),
+      },
+      restrict_create_service_id: {
+        default: null,
+        invalid: fieldIsNullOrEmptyString("restrict_create_service_id", true),
+        invalidText: unconditionalInvalidText("Invalid"),
+      },
+      restrict_create_platform_apikey: {
+        default: null,
+        invalid: fieldIsNullOrEmptyString(
+          "restrict_create_platform_apikey",
+          true
+        ),
+        invalidText: unconditionalInvalidText("Invalid"),
+      },
+      session_expiration_in_seconds: {
+        default: null,
+        invalid: function (stateData) {
+          return isRangeInvalid(
+            stateData.session_expiration_in_seconds,
+            900,
+            86400
+          );
+        },
+        invalidText: unconditionalInvalidText(
+          "Must be a whole number between 900 and 86400"
+        ),
+      },
+      session_invalidation_in_seconds: {
+        default: null,
+        invalid: function (stateData) {
+          return isRangeInvalid(
+            stateData.session_invalidation_in_seconds,
+            900,
+            86400
+          );
+        },
+        invalidText: unconditionalInvalidText(
+          "Must be a whole number between 900 and 86400"
+        ),
+      },
+    },
+  });
+}
 /**
  * initialize iam account settings
  * @param {lazyZState} config store
@@ -208,9 +312,71 @@ function accessGroupDynamicPolicyDelete(config, stateData, componentProps) {
   deleteSubChild(config, "access_groups", "dynamic_policies", componentProps);
 }
 
+function initAccessGroups(store) {
+  store.newField("access_groups", {
+    init: accessGroupInit,
+    create: accessGroupCreate,
+    save: accessGroupSave,
+    delete: accessGroupDelete,
+    onStoreUpdate: accessGroupOnStoreUpdate,
+    shouldDisableSave: shouldDisableComponentSave(["name"], "access_groups"),
+    schema: {
+      name: {
+        default: "",
+        invalid: invalidName("access_groups"),
+        invalidText: invalidNameText("access_groups"),
+      },
+    },
+    subComponents: {
+      policies: {
+        create: accessGroupPolicyCreate,
+        delete: accessGroupPolicyDelete,
+        save: accessGroupPolicySave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name"],
+          "access_groups",
+          "policies"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("policies"),
+            invalidText: invalidNameText("policies"),
+          },
+        },
+      },
+      dynamic_policies: {
+        create: accessGroupDynamicPolicyCreate,
+        delete: accessGroupDynamicPolicyDelete,
+        save: accessGroupDynamicPolicySave,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "identity_provider"],
+          "access_groups",
+          "dynamic_policies"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("dynamic_policies"),
+            invalidText: invalidNameText("dynamic_policies"),
+          },
+          identity_provider: {
+            default: "",
+            invalid: function (stateData) {
+              return stateData.identity_provider.length < 6;
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   iamInit,
   iamSave,
+  initIamStore,
+  initAccessGroups,
   accessGroupInit,
   accessGroupOnStoreUpdate,
   accessGroupCreate,

@@ -938,4 +938,24 @@ describe("text callbacks", () => {
       );
     });
   });
+  describe("invalidCrnText", () => {
+    it("should return empty string when not invalid", () => {
+      assert.deepEqual(
+        invalidCrnText({
+          crns: undefined,
+        }),
+        "",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when invalid", () => {
+      assert.deepEqual(
+        invalidCrnText({
+          crns: ["aaa"],
+        }),
+        "Enter a valid comma separated list of CRNs",
+        "it should return correct message"
+      );
+    });
+  });
 });
