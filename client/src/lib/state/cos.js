@@ -324,7 +324,7 @@ function initObjectStorageStore(store) {
         save: cosBucketSave,
         delete: cosBucketDelete,
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "kms_key"],
+          ["name", "kms_key", "storage_class"],
           "object_storage",
           "buckets"
         ),
@@ -378,9 +378,10 @@ function initObjectStorageStore(store) {
             invalidText: invalidNameText("cos_keys"),
           },
           role: {
+            type: "select",
             default: "",
             invalidText: selectInvalidText("role"),
-            invalid: fieldIsNullOrEmptyString("role"),
+            invalid: fieldIsNullOrEmptyString("role", false),
             groups: [
               "Object Writer",
               "Object Reader",

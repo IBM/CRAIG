@@ -13,6 +13,7 @@ const {
   resourceGroupsField,
   selectInvalidText,
   unconditionalInvalidText,
+  vpcGroups,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -157,7 +158,7 @@ function initVpe(store) {
         invalidText: invalidNameText("virtual_private_endpoints"),
         size: "small",
       },
-      resource_group: resourceGroupsField(false, true),
+      resource_group: resourceGroupsField(true),
       service: {
         size: "small",
         type: "select",
@@ -187,9 +188,7 @@ function initVpe(store) {
         default: "",
         invalid: fieldIsNullOrEmptyString("vpc"),
         invalidText: selectInvalidText("VPC"),
-        groups: function (stateData, componentProps) {
-          return splat(componentProps.craig.store.json.vpcs, "name");
-        },
+        groups: vpcGroups,
         onStateChange: function (stateData) {
           stateData.security_groups = [];
           stateData.subnets = [];

@@ -75,10 +75,10 @@ function invalidForms(craig) {
   function forEachDisabledCheck(field, callback, overrideField) {
     json[field].forEach((instance) => {
       if (!formsFailing[overrideField || field]) {
-        formsFailing[overrideField || field] =
-          field === "appid"
-            ? craig.appid.shouldDisableSave(instance, { craig: craig })
-            : saveShouldBeDisabled(field, instance);
+        formsFailing[overrideField || field] = saveShouldBeDisabled(
+          field,
+          instance
+        );
       }
       if (callback) {
         callback(instance);

@@ -186,15 +186,6 @@ function onConnectionStateChange(field, fieldName) {
 }
 
 /**
- * hide when use data
- * @param {*} stateData
- * @returns
- */
-function hideWhenUseData(stateData) {
-  return stateData.use_data;
-}
-
-/**
  * get vpc connection groups
  * @param {*} stateData
  * @param {*} componentProps
@@ -334,7 +325,7 @@ function initTransitGateway(store) {
         labelText: "Use Exsiting Transit Gateway",
       },
       name: nameField("transit_gateways"),
-      resource_group: resourceGroupsField(hideWhenUseData),
+      resource_group: resourceGroupsField(),
       global: {
         default: true,
         type: "toggle",

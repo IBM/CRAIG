@@ -298,6 +298,21 @@ describe("dns", () => {
         "it should add zone"
       );
     });
+    describe("dns.records.schema", () => {
+      it("should return correct groups for zones", () => {
+        assert.deepEqual(
+          state.dns.records.dns_zone.groups(
+            {},
+            {
+              arrayParentName: "dev",
+              craig: state,
+            }
+          ),
+          [],
+          "it should return correct groups"
+        );
+      });
+    });
   });
   describe("dns.custom_resolvers", () => {
     let state;

@@ -1,5 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
+const { disableSave } = require("../../client/src/lib");
 
 /**
  * initialize store
@@ -227,7 +228,8 @@ describe("appid", () => {
       describe("appid.shouldDisableSave", () => {
         it("should return true if the name is invalid", () => {
           let state = newState();
-          let actualData = state.appid.shouldDisableSave(
+          let actualData = disableSave(
+            "appid",
             {
               name: "@@@",
               resource_group: null,
@@ -241,9 +243,21 @@ describe("appid", () => {
           );
           assert.isTrue(actualData, "it should be disabled");
         });
+        it("should return false when name is valid, rg is invalid, and use data", () => {
+          let state = newState();
+          assert.isFalse(
+            state.appid.resource_group.invalid({
+              name: "name",
+              resource_group: "",
+              use_data: true,
+            }),
+            "it should be enabled"
+          );
+        });
         it("should return true if name is valid and resource group is invalid", () => {
           let state = newState();
-          let actualData = state.appid.shouldDisableSave(
+          let actualData = disableSave(
+            "appid",
             {
               name: "valid",
               resource_group: null,
@@ -319,6 +333,16 @@ describe("appid", () => {
             actualData,
             'Name "egg" already in use',
             "it should return correct text"
+          );
+        });
+      });
+      describe("encryption_keys", () => {
+        it("should return correct groups for encryption keys", () => {
+          let state = newState();
+          assert.deepEqual(
+            state.appid.encryption_key.groups({}, { craig: state }),
+            ["key", "atracker-key", "vsi-volume-key", "roks-key"],
+            "it should return groups"
           );
         });
       });
@@ -410,6 +434,14 @@ describe("appid", () => {
           });
         });
       });
+    });
+  });
+  describe("appid key function", () => {
+    it("should disable save when invalid name", () => {
+      assert.isTrue(
+        disableSave("keys", { name: "@@@" }, { craig: newState() }),
+        "it should be disabled"
+      );
     });
   });
 });
