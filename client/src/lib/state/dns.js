@@ -13,10 +13,17 @@ const {
   isNullOrEmptyString,
   isEmpty,
   isInRange,
+  revision,
 } = require("lazy-z");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  selectInvalidText,
+  kebabCaseInput,
+  titleCaseRender,
+  resourceGroupsField,
+  unconditionalInvalidText,
+  vpcGroups,
 } = require("./utils");
 const {
   invalidName,
@@ -242,11 +249,12 @@ function initDnsStore(store) {
       },
       plan: {
         default: "free",
+        groups: ["Free", "Standard"],
+        invalidText: selectInvalidText("plan"),
+        onInputChange: kebabCaseInput("plan"),
+        onRender: titleCaseRender("plan"),
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(),
     },
     subComponents: {
       zones: {
@@ -265,22 +273,32 @@ function initDnsStore(store) {
             invalidText: invalidNameText("zones"),
           },
           vpcs: {
-            default: "",
+            type: "multiselct",
+            default: [],
             invalid: function (stateData) {
               return (
                 isNullOrEmptyString(stateData.vpcs) || isEmpty(stateData.vpcs)
               );
             },
+            invalidText: unconditionalInvalidText("Select at least one VPC"),
+            groups: vpcGroups,
           },
           label: {
             default: "",
             invalid: fieldIsNullOrEmptyString("label"),
+            invalidText: unconditionalInvalidText(
+              "Label cannot be null or empty string"
+            ),
           },
           description: {
+            type: "textArea",
             default: "",
             invalid: function (stateData) {
               return invalidDescription(stateData.description);
             },
+            invalidText: unconditionalInvalidText(
+              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+            ),
           },
         },
       },
@@ -311,8 +329,19 @@ function initDnsStore(store) {
             invalidText: invalidNameText("records"),
           },
           dns_zone: {
+            type: "select",
             default: "",
             invalid: fieldIsNullOrEmptyString("dns_zone"),
+            invalidText: unconditionalInvalidText("Select a DNS Zone"),
+            groups: function (stateData, componentProps) {
+              return splat(
+                new revision(componentProps.craig.store.json).child(
+                  "dns",
+                  componentProps.arrayParentName
+                ).data.zones,
+                "name"
+              );
+            },
           },
           rdata: {
             default: "",

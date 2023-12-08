@@ -682,6 +682,16 @@ function sshKeySchema(fieldName) {
   return schema;
 }
 
+/**
+ * get vpc groups
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Array<string>} list of vpcs
+ */
+function vpcGroups(stateData, componentProps) {
+  return splat(componentProps.craig.store.json.vpcs, "name");
+}
+
 module.exports = {
   invalidIpv4Address,
   invalidIpv4AddressText,
@@ -710,5 +720,6 @@ module.exports = {
   unconditionalInvalidText,
   isRangeInvalid,
   sshKeySchema,
+  vpcGroups,
   hideWhenUseData,
 };
