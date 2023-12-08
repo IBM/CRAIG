@@ -1,4 +1,4 @@
-const { splat, splatContains, kebabCase } = require("lazy-z");
+const { splat, splatContains, titleCase } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultCos } = require("./defaults");
 const {
@@ -11,12 +11,17 @@ const {
 const {
   invalidName,
   invalidNameText,
-  invalidEncryptionKeyRing,
+  encryptionKeyFilter,
 } = require("../forms");
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
+  selectInvalidText,
+  resourceGroupsField,
+  titleCaseRender,
+  kebabCaseInput,
 } = require("./utils");
+const { cosPlans } = require("../constants");
 
 /**
  * set cosBuckets and cosKeys in slz store
@@ -263,18 +268,54 @@ function initObjectStorageStore(store) {
     save: cosSave,
     delete: cosDelete,
     schema: {
+      use_data: {
+        type: "toggle",
+        default: false,
+        labelText: "Use Existing Instance",
+        tooltip: {
+          content:
+            "Service credentials and buckets will be created for your environment even when using an existing Object Storage instance.",
+          alignModal: "bottom",
+        },
+      },
+      use_random_suffix: {
+        type: "toggle",
+        default: false,
+        labelText: "Append Random Suffix to Names",
+        tooltip: {
+          content:
+            "Object storage bucket names must be unique across an account. Append a random suffix to maintain unique names across deployments.",
+          alignModal: "bottom",
+        },
+      },
       name: {
         default: "",
         invalid: invalidName("object_storage"),
         invalidText: invalidNameText("object_storage"),
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(),
       kms: {
+        type: "select",
         default: "",
+        labelText: "Key Management Instance",
+        invalidText: selectInvalidText("key management instance"),
         invalid: fieldIsNullOrEmptyString("kms"),
+        groups: function (stateData, componentProps) {
+          return splat(componentProps.craig.store.json.key_management, "name");
+        },
+      },
+      plan: {
+        type: "select",
+        default: "",
+        groups: cosPlans.map((plan) => {
+          return titleCase(plan)
+            .replace("1 2", "12")
+            .replace("2 4", "24")
+            .replace("4 8", "48")
+            .replace("9 6", "96");
+        }),
+        onRender: titleCaseRender("plan"),
+        onInputChange: kebabCaseInput("plan"),
       },
     },
     subComponents: {
@@ -293,9 +334,31 @@ function initObjectStorageStore(store) {
             invalid: invalidName("buckets"),
             invalidText: invalidNameText("buckets"),
           },
+          storage_class: {
+            default: "",
+            type: "select",
+            invalid: fieldIsNullOrEmptyString("storage_class"),
+            invalidText: selectInvalidText("bucket class"),
+            labelText: "Bucket Class",
+            groups: ["Standard", "Vault", "Storage", "Smart"],
+            onInputChange: kebabCaseInput("storage_class"),
+            onRender: titleCaseRender("storage_class"),
+          },
           kms_key: {
+            type: "select",
             default: null,
             invalid: fieldIsNullOrEmptyString("kms_key"),
+            invalidText: selectInvalidText("encryption key"),
+            groups: encryptionKeyFilter,
+          },
+          force_delete: {
+            default: false,
+            type: "toggle",
+            tooltip: {
+              content:
+                "Toggling this on will force delete contents of the bucket after the bucket is deleted",
+            },
+            labelText: "Force Delete Contents",
           },
         },
       },
@@ -304,7 +367,7 @@ function initObjectStorageStore(store) {
         save: cosKeySave,
         delete: cosKeyDelete,
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "key_ring"],
+          ["name", "role"],
           "object_storage",
           "keys"
         ),
@@ -314,9 +377,29 @@ function initObjectStorageStore(store) {
             invalid: invalidName("cos_keys"),
             invalidText: invalidNameText("cos_keys"),
           },
-          key_ring: {
+          role: {
             default: "",
-            invalid: invalidEncryptionKeyRing,
+            invalidText: selectInvalidText("role"),
+            invalid: fieldIsNullOrEmptyString("role"),
+            groups: [
+              "Object Writer",
+              "Object Reader",
+              "Content Reader",
+              "Reader",
+              "Writer",
+              "Manager",
+            ],
+          },
+          enable_hmac: {
+            type: "toggle",
+            default: true,
+            labelText: "Enable HMAC",
+            tooltip: {
+              link: "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-uhc-hmac-credentials-main",
+              content:
+                "HMAC (hash-based message authentication code) is required for Teleport VSI instances.",
+              alignModal: "bottom-left",
+            },
           },
         },
       },

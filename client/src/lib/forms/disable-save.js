@@ -20,16 +20,6 @@ const {
 } = require("./invalid-callbacks");
 
 /**
- * check if a field is null or empty string, reduce unit test writing
- * @param {string} field
- * @param {Object} stateData
- * @returns {boolean} true if null or empty string
- */
-function badField(field, stateData) {
-  return isNullOrEmptyString(stateData[field]);
-}
-
-/**
  * check multiple fields against the same validating regex expression
  * @param {Array} fields list of fields
  * @param {Function} check test fields with this
@@ -72,32 +62,6 @@ function disableSccSave(stateData) {
   return (
     !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.collector_description) ||
     !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.scope_description)
-  );
-}
-
-/**
- * check to see if object storage form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableObjectStorageSave(stateData, componentProps) {
-  return (
-    invalidName("object_storage")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["kms", "resource_group"])
-  );
-}
-
-/**
- * check to see if buckets form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableBucketsSave(stateData, componentProps) {
-  return (
-    invalidName("buckets")(stateData, componentProps) ||
-    badField("kms_key", stateData)
   );
 }
 
@@ -154,10 +118,7 @@ function disableF5VsiSave(stateData) {
 
 const disableSaveFunctions = {
   scc: disableSccSave,
-  object_storage: disableObjectStorageSave,
   appid_key: invalidName("appid_key"),
-  buckets: disableBucketsSave,
-  cos_keys: invalidName("cos_keys"),
   f5_vsi_template: disableF5VsiTemplateSave,
   f5_vsi: disableF5VsiSave,
 };
@@ -232,6 +193,9 @@ function disableSave(field, stateData, componentProps, craig) {
     "logdna",
     "sysdig",
     "vtl",
+    "buckets",
+    "object_storage",
+    "cos_keys",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (containsKeys(disableSaveFunctions, field)) {
@@ -276,6 +240,10 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.routing_tables[field]
         : contains(["domains", "dns_records"], field)
         ? componentProps.craig.cis[field]
+        : contains(["buckets", "cos_keys"], field)
+        ? componentProps.craig.object_storage[
+            field === "buckets" ? field : "keys"
+          ]
         : contains(["policies", "dynamic_policies"], field)
         ? componentProps.craig.access_groups[field]
         : componentProps.craig[field]

@@ -384,17 +384,6 @@ function fieldIsNullOrEmptyStringEnabled(field) {
 }
 
 /**
- * shortcut for field is null or empty string if enabled is true
- * @param {*} field
- * @returns {Function}
- */
-function fieldIsNullOrEmptyStringEnabled(field) {
-  return function (stateData) {
-    return stateData.enabled ? isNullOrEmptyString(stateData[field]) : false;
-  };
-}
-
-/**
  * shortcut for form field is empty
  * @param {*} fieldName
  * @returns {Function}
@@ -614,7 +603,11 @@ function titleCaseRender(field) {
   return function (stateData) {
     return isNullOrEmptyString(stateData[field])
       ? ""
-      : titleCase(stateData[field]);
+      : titleCase(stateData[field])
+          .replace("1 2", "12")
+          .replace("2 4", "24")
+          .replace("4 8", "48")
+          .replace("9 6", "96");
   };
 }
 
