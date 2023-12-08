@@ -23,7 +23,6 @@ import {
   SubnetPageTemplate,
   KeyManagementTemplate,
   NetworkAclTemplate,
-  ObjectStorageTemplate,
   RoutingTableTemplate,
   VpnGatewayTemplate,
   VpnServerTemplate,
@@ -38,9 +37,7 @@ import {
 import { RenderDocs } from "./SimplePages";
 import { contains, eachKey, keys, nestedSplat, splat, transpose } from "lazy-z";
 import {
-  cosResourceHelperTextCallback,
   disableSshKeyDelete,
-  encryptionKeyFilter,
   getSubnetTierStateData,
   getTierSubnets,
   invalidCidrBlock,
@@ -54,7 +51,6 @@ import {
   invalidCrnList,
   invalidF5Vsi,
   invalidIamAccountSettings,
-  invalidIdentityProviderURI,
   invalidDescription,
   replicationDisabledCallback,
 } from "../../lib/forms/invalid-callbacks";
@@ -72,7 +68,6 @@ import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
 import {
   edgeRouterEnabledZones,
-  cosPlans,
   powerStoragePoolRegionMap,
 } from "../../lib/constants";
 import DynamicForm from "../forms/DynamicForm";
@@ -723,36 +718,71 @@ const LoadBalancerPage = (craig) => {
 };
 
 const ObjectStoragePage = (craig) => {
-  return (
-    <ObjectStorageTemplate
-      docs={RenderDocs("object_storage", craig.store.json._options.template)}
-      object_storage={craig.store.json.object_storage}
-      disableSave={disableSave}
-      onDelete={craig.object_storage.delete}
-      onSave={craig.object_storage.save}
-      onSubmit={craig.object_storage.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      kmsList={splat(craig.store.json.key_management, "name")}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      craig={craig}
-      cosPlans={cosPlans}
-      encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={craig.object_storage.name.invalid}
-      invalidTextCallback={craig.object_storage.name.invalidText}
-      invalidKeyCallback={craig.object_storage.keys.name.invalid}
-      invalidKeyTextCallback={craig.object_storage.keys.name.invalidText}
-      invalidBucketCallback={craig.object_storage.buckets.name.invalid}
-      invalidBucketTextCallback={craig.object_storage.buckets.name.invalidText}
-      onKeySave={craig.object_storage.keys.save}
-      onKeyDelete={craig.object_storage.keys.delete}
-      onKeySubmit={craig.object_storage.keys.create}
-      onBucketSave={craig.object_storage.buckets.save}
-      onBucketDelete={craig.object_storage.buckets.delete}
-      onBucketSubmit={craig.object_storage.buckets.create}
-      composedNameCallback={cosResourceHelperTextCallback}
-      encryptionKeyFilter={encryptionKeyFilter}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Object Storage",
+      addText: "Create an Object Storage Service",
+      jsonField: "object_storage",
+      formName: "cos",
+    },
+    {
+      jsonField: "object_storage",
+      groups: [
+        {
+          use_data: craig.object_storage.use_data,
+          use_random_suffix: craig.object_storage.use_random_suffix,
+        },
+        {
+          name: craig.object_storage.name,
+          resource_group: craig.object_storage.resource_group,
+        },
+        {
+          plan: craig.object_storage.plan,
+          kms: craig.object_storage.kms,
+        },
+      ],
+      subForms: [
+        {
+          name: "Service Credentials",
+          jsonField: "keys",
+          addText: "Create a Service Credential",
+          tooltip: {
+            content:
+              "A service credential allows for a service instance to connect to Object Storage.",
+            link: "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-service-credentials",
+          },
+          form: {
+            groups: [
+              {
+                name: craig.object_storage.keys.name,
+                role: craig.object_storage.keys.role,
+              },
+              {
+                enable_hmac: craig.object_storage.keys.enable_hmac,
+              },
+            ],
+          },
+        },
+        {
+          name: "Buckets",
+          jsonField: "buckets",
+          addText: "Create a Bucket",
+          form: {
+            groups: [
+              {
+                name: craig.object_storage.buckets.name,
+                storage_class: craig.object_storage.buckets.storage_class,
+              },
+              {
+                kms_key: craig.object_storage.buckets.kms_key,
+                force_delete: craig.object_storage.buckets.force_delete,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 

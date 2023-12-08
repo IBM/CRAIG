@@ -228,6 +228,7 @@ class DynamicForm extends React.Component {
               ) : (
                 <IcseFormTemplate
                   key={subForm.name}
+                  tooltip={subForm.tooltip}
                   overrideTile={
                     <SubFormOverrideTile
                       subForm={subForm}
