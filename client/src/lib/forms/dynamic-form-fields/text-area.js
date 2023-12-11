@@ -57,7 +57,7 @@ function dynamicTextAreaProps(props) {
     invalid: invalid,
     invalidText: invalidText,
     labelText: labelText,
-    value: props.parentState[props.name],
+    value: props.parentState[props.name] || "",
     placeholder: fieldFunctionReturnsStringCheck(
       props,
       "dynamicTextAreaProps",

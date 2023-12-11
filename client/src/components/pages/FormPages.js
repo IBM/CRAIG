@@ -11,11 +11,9 @@ import {
 } from "../../lib";
 import {
   AccessGroupsTemplate,
-  AppIdTemplate,
   AtrackerPage,
   CloudDatabaseTemplate,
   ClustersTemplate,
-  DnsTemplate,
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
@@ -34,7 +32,7 @@ import {
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { contains, eachKey, keys, nestedSplat, splat, transpose } from "lazy-z";
+import { contains, eachKey, keys, splat, transpose } from "lazy-z";
 import {
   disableSshKeyDelete,
   getSubnetTierStateData,
@@ -104,6 +102,8 @@ const formPageTemplate = (craig, options, form) => {
         disableSave: disableSave,
         submissionFieldName: options.jsonField,
         hideName: true,
+        // here for testing
+        // hide: false,
       }}
     />
   );
@@ -243,7 +243,7 @@ const Cis = (craig) => {
       subForms: [
         {
           name: "Domains",
-          createText: "Add a domain",
+          addText: "Add a domain",
           jsonField: "domains",
           toggleFormFieldName: "domain",
           form: {
@@ -257,7 +257,7 @@ const Cis = (craig) => {
         },
         {
           name: "DNS Records",
-          createText: "Add a DNS Record",
+          addText: "Add a DNS Record",
           jsonField: "dns_records",
           hideFormTitleButton: function (stateData, componentProps) {
             return componentProps.data.domains.length === 0;
@@ -280,30 +280,6 @@ const Cis = (craig) => {
         },
       ],
     }
-  );
-};
-
-const NoClassicSshKeys = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> No Classic SSH Keys
-      have been created. Create one from the
-      <a className="no-secrets-link" href="/form/classicSshKeys">
-        Classic SSH Keys Page.
-      </a>{" "}
-    </Tile>
-  );
-};
-
-const NoClassicVlans = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> No Classic VLANs have
-      been created. Create one from the
-      <a className="no-secrets-link" href="/form/classicVlans">
-        Classic VLANs Page.
-      </a>{" "}
-    </Tile>
   );
 };
 
@@ -502,49 +478,96 @@ const ClusterPage = (craig) => {
 };
 
 const DnsPage = (craig) => {
-  return (
-    <DnsTemplate
-      craig={craig}
-      docs={RenderDocs("dns", craig.store.json._options.template)}
-      dns={craig.store.json.dns}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      onDelete={craig.dns.delete}
-      onSave={craig.dns.save}
-      onSubmit={craig.dns.create}
-      forceOpen={forceShowForm}
-      invalidCallback={craig.dns.name.invalid}
-      invalidTextCallback={craig.dns.name.invalidText}
-      onZoneSave={craig.dns.zones.save}
-      onZoneDelete={craig.dns.zones.delete}
-      onZoneSubmit={craig.dns.zones.create}
-      invalidZoneNameCallback={craig.dns.zones.name.invalid}
-      invalidZoneNameTextCallback={craig.dns.zones.name.invalidText}
-      invalidLabelCallback={craig.dns.zones.label.invalid}
-      invalidDescriptionCallback={craig.dns.zones.description.invalid}
-      invalidDescriptionTextCallback={invalidDescriptionText}
-      vpcList={craig.store.vpcList}
-      onRecordSave={craig.dns.records.save}
-      onRecordDelete={craig.dns.records.delete}
-      onRecordSubmit={craig.dns.records.create}
-      invalidRecordCallback={craig.dns.records.name.invalid}
-      invalidRecordTextCallback={craig.dns.records.name.invalidText}
-      invalidRdataCallback={craig.dns.records.rdata.invalid}
-      dnsZones={nestedSplat(craig.store.json.dns, "zones", "name")}
-      onResolverSave={craig.dns.custom_resolvers.save}
-      onResolverSubmit={craig.dns.custom_resolvers.create}
-      onResolverDelete={craig.dns.custom_resolvers.delete}
-      invalidResolverNameCallback={craig.dns.custom_resolvers.name.invalid}
-      invalidResolverNameTextCallback={
-        craig.dns.custom_resolvers.name.invalidText
-      }
-      invalidResolverDescriptionCallback={
-        craig.dns.custom_resolvers.description.invalid
-      }
-      invalidResolverDescriptionTextCallback={invalidDescriptionText}
-      subnetList={craig.getAllSubnets()}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "DNS Service",
+      addText: "Create a DNS Service Instance",
+      jsonField: "dns",
+      formName: "DNS",
+    },
+    {
+      jsonField: "dns",
+
+      groups: [
+        {
+          name: craig.dns.name,
+          resource_group: craig.dns.resource_group,
+          plan: craig.dns.plan,
+        },
+      ],
+      subForms: [
+        {
+          name: "Zones",
+          addText: "Create a DNS Zone",
+          jsonField: "zones",
+          form: {
+            groups: [
+              {
+                name: craig.dns.zones.name,
+                label: craig.dns.zones.label,
+                vpcs: craig.dns.zones.vpcs,
+              },
+              {
+                description: craig.dns.zones.description,
+              },
+            ],
+          },
+        },
+        {
+          name: "Records",
+          addText: "Create a DNS Record",
+          jsonField: "records",
+          form: {
+            groups: [
+              {
+                use_vsi: craig.dns.records.use_vsi,
+                vpc: craig.dns.records.vpc,
+                vsi: craig.dns.records.vsi,
+              },
+              {
+                name: craig.dns.records.name,
+                dns_zone: craig.dns.records.dns_zone,
+                ttl: craig.dns.records.ttl,
+              },
+              {
+                rdata: craig.dns.records.rdata,
+                type: craig.dns.records.type,
+                preference: craig.dns.records.preference,
+                port: craig.dns.records.port,
+              },
+              {
+                hideWhen: craig.dns.records.priority.hideWhen,
+                protocol: craig.dns.records.protocol,
+                priority: craig.dns.records.priority,
+                weight: craig.dns.records.weight,
+              },
+              {
+                hideWhen: craig.dns.records.service.hideWhen,
+                service: craig.dns.records.service,
+              },
+            ],
+          },
+        },
+        {
+          name: "Custom Resolvers",
+          addText: "Create a Custom Resolver",
+          jsonField: "custom_resolvers",
+          form: {
+            groups: [
+              {
+                name: craig.dns.custom_resolvers.name,
+                vpc: craig.dns.custom_resolvers.vpc,
+                subnets: craig.dns.custom_resolvers.subnets,
+              },
+              {
+                description: craig.dns.custom_resolvers.description,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
@@ -868,7 +891,7 @@ const PowerInfraPage = (craig) => {
       subForms: [
         {
           name: "SSH Keys",
-          createText: "Create an SSH Key",
+          addText: "Create an SSH Key",
           jsonField: "ssh_keys",
           form: {
             groups: [
@@ -883,7 +906,7 @@ const PowerInfraPage = (craig) => {
         },
         {
           name: "Power VS Subnets",
-          createText: "Create a Subnet",
+          addText: "Create a Subnet",
           jsonField: "network",
           form: {
             groups: [
@@ -1337,7 +1360,7 @@ const TransitGatewayPage = (craig) => {
       subForms: [
         {
           name: "GRE Tunnels",
-          createText: "Create a GRE Tunnel",
+          addText: "Create a GRE Tunnel",
           jsonField: "gre_tunnels",
           toggleFormFieldName: "gateway",
           hideFormTitleButton: function (stateData, componentProps) {
@@ -1367,7 +1390,7 @@ const TransitGatewayPage = (craig) => {
         },
         {
           name: "Prefix Filters",
-          createText: "Create a Prefix Filter",
+          addText: "Create a Prefix Filter",
           jsonField: "prefix_filters",
           form: {
             groups: [

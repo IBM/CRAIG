@@ -242,7 +242,7 @@ class DynamicForm extends React.Component {
                   }
                   name={subForm.name}
                   subHeading
-                  addText={subForm.createText}
+                  addText={subForm.addText}
                   arrayData={this.props.data[subForm.jsonField]}
                   innerForm={DynamicForm}
                   disableSave={this.props.disableSave}
@@ -278,6 +278,8 @@ class DynamicForm extends React.Component {
                     disableSave: this.props.disableSave,
                     type: "formInSubForm",
                     noDeleteButton: subForm.noDeleteButton,
+                    // here for testing
+                    // hide: false,
                   }}
                 />
               )

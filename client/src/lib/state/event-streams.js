@@ -65,7 +65,7 @@ function eventStreamsDelete(config, stateData, componentProps) {
  * @returns {boolean} returns true if plan is not enterprise
  */
 function hideWhenNotEnterprise(stateData) {
-    return stateData.plan !== "enterprise";
+  return stateData.plan !== "enterprise";
 }
 
 /**

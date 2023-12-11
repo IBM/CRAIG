@@ -16,6 +16,7 @@ const {
   titleCase,
   kebabCase,
   isInRange,
+  isFunction,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const {
@@ -681,6 +682,65 @@ function vpcGroups(stateData, componentProps) {
   return splat(componentProps.craig.store.json.vpcs, "name");
 }
 
+/**
+ * force update on vpc change
+ * @param {*} stateData
+ * @returns {string} vpc name as key for multiselect to reset selected items
+ */
+function forceUpdateOnVpcChange(stateData) {
+  return stateData.vpc;
+}
+
+/**
+ * create a multiselect for subnet
+ * @param {object=} options optional override params
+ * @param {Function=} options.invalid replacement invalid function
+ * @param {string=} options.invalidText replacement invalid text
+ * @returns {object} schema for subnet field
+ */
+function subnetMultiSelect(options) {
+  return {
+    size: "small",
+    type: "multiselect",
+    forceUpdateKey: forceUpdateOnVpcChange,
+    default: [],
+    invalid: function (stateData) {
+      return (
+        !stateData.subnets ||
+        isEmpty(stateData.subnets) ||
+        (isFunction(options?.invalid) && options.invalid(stateData))
+      );
+    },
+    invalidText: unconditionalInvalidText(
+      options?.invalidText ? options.invalidText : "Select at least one subnet"
+    ),
+    groups: function (stateData, componentProps) {
+      if (isNullOrEmptyString(stateData.vpc, true)) {
+        return [];
+      } else {
+        return splat(
+          new revision(componentProps.craig.store.json).child(
+            "vpcs",
+            stateData.vpc
+          ).data.subnets,
+          "name"
+        );
+      }
+    },
+  };
+}
+
+/**
+ * shortcut for field is null or empty string if enabled is true
+ * @param {*} field
+ * @returns {Function}
+ */
+function fieldIsNullOrEmptyStringEnabled(field) {
+  return function (stateData) {
+    return stateData.enabled ? isNullOrEmptyString(stateData[field]) : false;
+  };
+}
+
 module.exports = {
   invalidIpv4Address,
   invalidIpv4AddressText,
@@ -711,4 +771,6 @@ module.exports = {
   sshKeySchema,
   vpcGroups,
   hideWhenUseData,
+  subnetMultiSelect,
+  forceUpdateOnVpcChange,
 };

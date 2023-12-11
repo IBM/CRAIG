@@ -5,7 +5,6 @@ const {
   isEmpty,
   isNullOrEmptyString,
   splat,
-  revision,
 } = require("lazy-z");
 const {
   shouldDisableComponentSave,
@@ -14,6 +13,8 @@ const {
   selectInvalidText,
   unconditionalInvalidText,
   vpcGroups,
+  subnetMultiSelect,
+  forceUpdateOnVpcChange,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -120,15 +121,6 @@ function vpeDelete(config, stateData, componentProps) {
 }
 
 /**
- * force update on vpc change
- * @param {*} stateData
- * @returns {string} vpc name as key for multiselect to reset selected items
- */
-function forceUpdateOnVpcChange(stateData) {
-  return stateData.vpc;
-}
-
-/**
  * init vpe
  * @param {*} store
  */
@@ -218,29 +210,7 @@ function initVpe(store) {
         },
         forceUpdateKey: forceUpdateOnVpcChange,
       },
-      subnets: {
-        size: "small",
-        type: "multiselect",
-        forceUpdateKey: forceUpdateOnVpcChange,
-        default: [],
-        invalid: function (stateData) {
-          return !stateData.subnets || isEmpty(stateData.subnets);
-        },
-        invalidText: unconditionalInvalidText("Select at least one subnet"),
-        groups: function (stateData, componentProps) {
-          if (isNullOrEmptyString(stateData.vpc, true)) {
-            return [];
-          } else {
-            return splat(
-              new revision(componentProps.craig.store.json).child(
-                "vpcs",
-                stateData.vpc
-              ).data.subnets,
-              "name"
-            );
-          }
-        },
-      },
+      subnets: subnetMultiSelect(),
       instance: {
         type: "select",
         size: "small",

@@ -9,19 +9,25 @@ const { eachKey } = require("lazy-z");
  */
 function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
   let isLast = index === componentProps.form.groups.length - 1;
-  let lastGroupIsHidden = false;
+  let allNextGroupsHidden = false;
   // prevent marginBottomSmall from being rendered on second to last
   // form group if no fields in the next form group are shown
-  if (!isLast && index + 1 === componentProps.form.groups.length - 1) {
-    lastGroupIsHidden = allGroupItemsHidden(
-      componentProps.form.groups[index + 1],
-      stateData
-    );
+  if (!isLast) {
+    allNextGroupsHidden = true;
+    // check each next group to see if all items in that group are hidden
+    // set to false if any of the next are not hidden
+    for (let i = index + 1; i < componentProps.form.groups.length; i++) {
+      if (allNextGroupsHidden)
+        allNextGroupsHidden = allGroupItemsHidden(
+          componentProps.form.groups[i],
+          stateData
+        );
+    }
   }
   return {
     key: `${componentProps.data?.name || ""}-group-${index}`,
     noMarginBottom:
-      lastGroupIsHidden ||
+      allNextGroupsHidden ||
       (isLast &&
         (!componentProps.form.subForms ||
           componentProps.form.subForms.length === 0)),
@@ -37,7 +43,10 @@ function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
 function allGroupItemsHidden(group, stateData) {
   let areAllHidden = true;
   eachKey(group, (key) => {
-    if (!group[key].hideWhen || !group[key].hideWhen(stateData)) {
+    if (
+      key !== "hideWhen" &&
+      (!group[key].hideWhen || !group[key].hideWhen(stateData))
+    ) {
       areAllHidden = false;
     }
   });

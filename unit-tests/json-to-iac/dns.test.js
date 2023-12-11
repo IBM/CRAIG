@@ -104,6 +104,8 @@ resource "ibm_dns_resource_record" "test_dns_instance_test_dot_com_testa" {
         port: 8000,
         service: "_sip",
         protocol: "udp",
+        use_vsi: false,
+        vsi: "vsi",
       });
       let expectedData = `
 resource "ibm_dns_resource_record" "test_dns_instance_test_dot_com_testa" {
@@ -118,6 +120,28 @@ resource "ibm_dns_resource_record" "test_dns_instance_test_dot_com_testa" {
   port        = 8000
   service     = "_sip"
   protocol    = "udp"
+}
+`;
+      assert.deepEqual(actualData, expectedData, "it should return terraform");
+    });
+    it("should return terraform for minimal record with reference to vsi", () => {
+      let actualData = formatDnsRecord({
+        instance: "test",
+        dns_zone: "test.com",
+        type: "A",
+        name: "testA",
+        rdata: "test.com",
+        vpc: "management",
+        vsi: "management-server-1-1",
+        use_vsi: true,
+      });
+      let expectedData = `
+resource "ibm_dns_resource_record" "test_dns_instance_test_dot_com_testa" {
+  instance_id = ibm_resource_instance.test_dns_instance.guid
+  zone_id     = ibm_dns_zone.test_dns_instance_test_dot_com.zone_id
+  type        = "A"
+  name        = "testA"
+  rdata       = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ip.0.address
 }
 `;
       assert.deepEqual(actualData, expectedData, "it should return terraform");

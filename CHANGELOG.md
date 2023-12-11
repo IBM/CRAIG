@@ -10,10 +10,13 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users can now create FalconStor VTL instances from the page `/form/vtl`
+- Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form
 
 ### Fixes
 
-- Fixed an error causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace
+- Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace
+- Fixed an issue allowing users to add more than 3 subnets to a DNS custom resolver
+- Fixed an issue allowing users to create DNS zones with duplicate names
 
 ## 1.7.1
 
