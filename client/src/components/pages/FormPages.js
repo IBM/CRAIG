@@ -16,7 +16,6 @@ import {
   CloudDatabaseTemplate,
   ClustersTemplate,
   DnsTemplate,
-  EventStreamsTemplate,
   ResourceGroupsTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
@@ -550,21 +549,31 @@ const DnsPage = (craig) => {
 };
 
 const EventStreamsPage = (craig) => {
-  return (
-    <EventStreamsTemplate
-      event_streams={craig.store.json.event_streams}
-      disableSave={disableSave}
-      onDelete={craig.event_streams.delete}
-      onSave={craig.event_streams.save}
-      onSubmit={craig.event_streams.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={craig.event_streams.name.invalid}
-      invalidTextCallback={craig.event_streams.name.invalidText}
-      craig={craig}
-      docs={RenderDocs("event_streams", craig.store.json._options.template)}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Event Streams",
+      addText: "Create an Event Streams Service",
+      jsonField: "event_streams",
+      formName: "Event Streams",
+    },
+    {
+      jsonField: "event_streams",
+      groups: [
+        {
+          name: craig.event_streams.name,
+          plan: craig.event_streams.plan,
+          resource_group: craig.event_streams.resource_group,
+        },
+        {
+          throughput: craig.event_streams.throughput,
+          storage_size: craig.event_streams.storage_size,
+        },
+        {
+          private_ip_allowlist: craig.event_streams.private_ip_allowlist,
+        },
+      ],
+    }
   );
 };
 

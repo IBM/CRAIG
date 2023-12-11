@@ -163,3 +163,67 @@ describe("event streams", () => {
     );
   });
 });
+
+describe("event_streams.schema", () => {
+  describe("plan", () => {
+    it("should return correct groups for plan", () => {
+      assert.deepEqual(
+        craig.event_streams.plan.groups,
+        ["Lite", "Standard", "Enterprise"],
+        "it should return plan types"
+      );
+    });
+  });
+  it("should return correct plan on render", () => {
+    assert.deepEqual(
+      craig.event_streams.plan.onRender({ plan: "Lite" }),
+      "Lite",
+      "it should set to title  case"
+    );
+  });
+  it("should return correct plan on render when no type", () => {
+    assert.deepEqual(
+      craig.event_streams.plan.onRender({ plan: undefined }),
+      "",
+      "it should set to empty string"
+    );
+  });
+  describe("throughput", () => {
+    it("should be hidden when plan is not enterprise", () => {
+      assert.isTrue(
+        craig.event_streams.throughput.hideWhen({ plan: "lite" }),
+        "it should be hidden"
+      );
+    });
+    it("should return correct groups for throughput", () => {
+      assert.deepEqual(
+        craig.event_streams.throughput.groups,
+        ["150MB/s", "300MB/s", "450MB/s"],
+        "it should return throughput types"
+      );
+    });
+  });
+  describe("storage_size", () => {
+    it("should be hidden when plan is not enterprise", () => {
+      assert.isTrue(
+        craig.event_streams.storage_size.hideWhen({ plan: "lite" }),
+        "it should be hidden"
+      );
+    });
+    it("should return correct groups for storage_size", () => {
+      assert.deepEqual(
+        craig.event_streams.storage_size.groups,
+        ["2TB", "4TB", "6TB", "8TB", "10TB", "12TB"],
+        "it should return storage_size types"
+      );
+    });
+  });
+  describe("private_ip_allowlist", () => {
+    it("should be hidden when plan is not enterprise", () => {
+      assert.isTrue(
+        craig.event_streams.private_ip_allowlist.hideWhen({ plan: "lite" }),
+        "it should be hidden"
+      );
+    });
+  });
+});
