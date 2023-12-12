@@ -789,6 +789,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
 
     assert.deepEqual(
@@ -1574,6 +1581,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
 
     assert.deepEqual(
@@ -2012,6 +2026,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
 
     assert.deepEqual(
@@ -2441,6 +2462,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
 
     assert.deepEqual(
@@ -2946,6 +2974,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
 
     assert.deepEqual(
@@ -3104,6 +3139,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
 
     assert.deepEqual(
@@ -3602,6 +3644,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
 
     assert.deepEqual(
@@ -4075,6 +4124,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
     assert.deepEqual(
       actualData,
@@ -4547,6 +4603,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
     assert.deepEqual(
       actualData,
@@ -4967,6 +5030,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
     assert.deepEqual(
       actualData,
@@ -5387,6 +5457,13 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
     };
     assert.deepEqual(
       actualData,
@@ -5423,6 +5500,13 @@ describe("setup wizard", () => {
         restrict_create_platform_apikey: null,
         session_expiration_in_seconds: null,
         session_invalidation_in_seconds: null,
+      },
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
       },
       access_groups: [],
       secrets_manager: [],

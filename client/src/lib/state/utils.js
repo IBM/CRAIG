@@ -470,7 +470,7 @@ function resourceGroupsField(small) {
   return {
     default: "",
     invalid: fieldIsNullOrEmptyString("resource_group"),
-    invalidText: selectInvalidText("resource_group"),
+    invalidText: selectInvalidText("resource group"),
     type: "select",
     groups: function (stateData, componentProps) {
       return splat(componentProps.craig.store.json.resource_groups, "name");

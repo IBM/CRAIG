@@ -947,5 +947,12 @@
     "enabled": true,
     "plan": "graduated-tier",
     "resource_group": "slz-service-rg"
+  },
+  "scc_v2" : {
+    "account_id" : "${var.account_id}",
+    "enable": false,
+    "profile_attachments": [],
+    "region": "",
+    "resource_group": ""
   }
 }

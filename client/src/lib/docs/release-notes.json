@@ -3,14 +3,17 @@
     "version": "1.8.0",
     "features": [
       "Users can now create FalconStor VTL instances from the page `/form/vtl`",
-      "Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form"
+      "Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form",
+      "Users can now create SCC V2 Resources fomr the `/form/sccV2` page"
     ],
     "fixes": [
       "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",
       "Fixed an issue allowing users to add more than 3 subnets to a DNS custom resolver",
       "Fixed an issue allowing users to create DNS zones with duplicate names"
     ],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "SCC v1 Terraform has been deprecated. SCC v1 resources can still be managed from `/form/securityComplianceCenter`"
+    ]
   },
   {
     "version": "1.7.1",

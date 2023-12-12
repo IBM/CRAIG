@@ -54,6 +54,7 @@ const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");
 const { initCis } = require("./cis.js");
 const { initVtlStore } = require("./vtl.js");
+const { initSccV2 } = require("./scc-v2.js");
 
 /**
  * get state for craig
@@ -129,7 +130,6 @@ const state = function (legacy) {
   };
 
   initOptions(store);
-
   initResourceGroup(store);
   // components must check for key management second
   initKeyManagement(store);
@@ -147,7 +147,6 @@ const state = function (legacy) {
   });
 
   initSshKeyStore(store);
-
   initSecurityGroupStore(store);
   initTransitGateway(store);
   initVpnGatewayStore(store);
@@ -178,12 +177,10 @@ const state = function (legacy) {
   initIamStore(store);
   initRoutingTable(store);
   initAccessGroups(store);
-
   initCbrZones(store);
   initCbrRules(store);
   initVpnState(store);
   initDnsStore(store);
-
   initLogDna(store);
   initSysDig(store);
   initIcdStore(store);
@@ -194,6 +191,7 @@ const state = function (legacy) {
   intiClassicInfrastructure(store);
   initClassicGateways(store);
   initCis(store);
+  initSccV2(store);
 
   /**
    * hard set config dot json in state store

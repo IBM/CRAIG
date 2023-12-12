@@ -944,5 +944,12 @@
   "classic_gateways": [],
   "power_instances": [],
   "power_volumes": [],
-  "cis": []
+  "cis": [],
+  "scc_v2" : {
+    "account_id" : "${var.account_id}",
+    "enable": false,
+    "profile_attachments": [],
+    "region": "",
+    "resource_group": ""
+  }
 }

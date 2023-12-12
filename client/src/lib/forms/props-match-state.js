@@ -30,6 +30,7 @@ function propsMatchState(field, stateData, componentProps) {
     stateData.subnets = componentProps.data.subnets;
     stateData.acls = componentProps.data.acls;
   } else if (
+    stateData.zone &&
     stateData.zone !== componentProps.data.zone &&
     !contains(["subnet", "public_gateway", "power"], field)
   ) {

@@ -34,6 +34,7 @@ const {
 const { cisTf } = require("./json-to-iac/cis");
 const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
+const { scc2Tf } = require("./json-to-iac/scc-v2");
 
 const navCatagories = [
   {
@@ -303,11 +304,13 @@ const navCatagories = [
         jsonField: "cis",
       },
       {
-        title: "Security Compliance Center",
-        path: "/form/securityComplianceCenter",
-        react_icon: "IbmCloudSecurityComplianceCenter",
-        toTf: sccTf,
-        jsonField: "scc",
+        title: "Security Compliance Center V2",
+        path: "/form/sccV2",
+        react_icon: "IbmCloudSecurityComplianceCenterWorkloadProtection",
+        toTf: function (config) {
+          return scc2Tf(config) || "";
+        },
+        jsonField: "scc_v2",
       },
       {
         title: "DNS Service",
@@ -349,6 +352,18 @@ const navCatagories = [
         path: "/form/cbr",
         react_icon: "CBRIcon",
         toTf: cbrTf,
+      },
+    ],
+  },
+  {
+    name: "Deprecated",
+    links: [
+      {
+        title: "(Deprecated) Security Compliance Center V1",
+        path: "/form/securityComplianceCenter",
+        react_icon: "IbmCloudSecurityComplianceCenter",
+        toTf: sccTf,
+        jsonField: "scc",
       },
     ],
   },

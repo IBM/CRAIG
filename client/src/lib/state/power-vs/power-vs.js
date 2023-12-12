@@ -14,11 +14,6 @@ const {
 const powerImages = require("../../docs/power-image-map.json");
 const { edgeRouterEnabledZones } = require("../../constants");
 const { shouldDisableComponentSave, sshKeySchema } = require("../utils");
-const {
-  invalidName,
-  invalidNameText,
-  invalidSshPublicKey,
-} = require("../../forms");
 const { powerVsWorkspaceSchema } = require("./power-vs-workspace-schema");
 const { powerVsNetworkSchema } = require("./power-vs-network-schema");
 const {

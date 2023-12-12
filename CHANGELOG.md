@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 - Users can now create FalconStor VTL instances from the page `/form/vtl`
 - Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form
+- Users can now create SCC V2 Resources fomr the `/form/sccV2` page
 
 ### Fixes
 

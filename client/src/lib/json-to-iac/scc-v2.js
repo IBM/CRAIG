@@ -37,13 +37,18 @@ function ibmSccInstance(scc_v2) {
 
 function ibmSccProfileAttachment(profile_attachment) {
   let attachmentName = kebabCase(
-    `${varDotPrefix}-scc-${profile_attachment.attachment_name}`
+    `${varDotPrefix}-scc-${profile_attachment.name}`
   );
+  let profileMap = {
+    "FS Cloud": "01326738-c8ca-456f-8315-e4573f534869",
+    "Kubernetes Benchmark": "13c2a698-0f8d-4a7a-99c0-d325acca96ec",
+    "Cloud Internet Services Benchmark": "1c13d739-e09e-4bf4-8715-dd82e4498041",
+  };
   return {
-    name: `${profile_attachment.attachment_name} profile attachment`,
+    name: `${profile_attachment.name} profile attachment`,
     data: {
       name: attachmentName,
-      profile_id: profile_attachment.profile_id,
+      profile_id: profileMap[profile_attachment.profile],
       description: "example description",
       instance_id: resourceRef("scc_instance", "id"),
       scope: [
@@ -63,7 +68,7 @@ function ibmSccProfileAttachment(profile_attachment) {
           ],
         },
       ],
-      schedule: "every_30_days",
+      schedule: profile_attachment.schedule,
       status: "enabled",
       notifications: [
         {
@@ -115,8 +120,8 @@ function formatScc2(scc_v2, config) {
  * @returns {string} terraform string
  */
 function scc2Tf(config) {
-  if (config.scc_v2.enable) return formatScc2(config.scc_v2, config);
-  else return "";
+  if (config?.scc_v2?.enable) return formatScc2(config.scc_v2, config);
+  else return null;
 }
 
 module.exports = {

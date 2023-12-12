@@ -30,6 +30,7 @@ import {
   F5BigIpPage,
   PowerVsVolumesPage,
   IcseFormTemplate,
+  ToggleForm,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { contains, eachKey, keys, splat, transpose } from "lazy-z";
@@ -1145,6 +1146,73 @@ const RoutingTablesPage = (craig) => {
   );
 };
 
+const SccV2 = (craig) => {
+  return (
+    <ToggleForm
+      name="Security and Compliance Center"
+      about={RenderDocs("scc_v2", craig.store.json._options.template)()}
+      disableSave={disableSave}
+      propsMatchState={propsMatchState}
+      hideName
+      innerForm={DynamicForm}
+      noDeleteButton={
+        craig.store.json.scc_v2
+          ? craig.store.json.scc_v2.enable === false
+          : true
+      }
+      onDelete={craig.scc_v2.delete}
+      useAddButton={
+        craig.store.json.scc_v2
+          ? craig.store.json.scc_v2.enable === false
+          : true
+      }
+      tabPanel={{
+        name: "Security and Compliance Center",
+      }}
+      onShowToggle={() => {}}
+      submissionFieldName="scc_v2"
+      onSave={craig.scc_v2.save}
+      innerFormProps={{
+        craig: craig,
+        data: craig.store.json.scc_v2,
+        disableSave: disableSave,
+        form: {
+          jsonField: "scc_v2",
+          disableSave: disableSave,
+          groups: [
+            {
+              name: craig.scc_v2.name,
+              region: craig.scc_v2.region,
+              resource_group: craig.scc_v2.resource_group,
+            },
+          ],
+          subForms: [
+            {
+              name: "Profile Attachments",
+              jsonField: "profile_attachments",
+              addText: "Create a Profile Attachment",
+              hideWhen: function (stateData, componentProps) {
+                return componentProps.craig.store.json.scc_v2.enable === false;
+              },
+              form: {
+                groups: [
+                  {
+                    name: craig.scc_v2.profile_attachments.name,
+                    profile: craig.scc_v2.profile_attachments.profile,
+                  },
+                  {
+                    schedule: craig.scc_v2.profile_attachments.schedule,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }}
+    />
+  );
+};
+
 const SccV1 = (craig) => {
   let sccData = { ...craig.store.json.scc },
     sccEnabled = craig.store.json.scc.enable === false;
@@ -1704,6 +1772,8 @@ export const NewFormPage = (props) => {
     return ResourceGroupPage(craig);
   } else if (form === "securityComplianceCenter") {
     return SccV1(craig);
+  } else if (form === "sccV2") {
+    return SccV2(craig);
   } else if (form === "secretsManager") {
     return SecretsManagerPage(craig);
   } else if (form === "routingTables") {
