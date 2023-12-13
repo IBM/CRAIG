@@ -796,6 +796,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -1588,6 +1589,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -2033,6 +2035,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -2469,6 +2472,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -2981,6 +2985,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -3146,6 +3151,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -3651,6 +3657,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -4131,6 +4138,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -4610,6 +4618,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -5037,6 +5046,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -5464,6 +5474,7 @@ describe("setup wizard", () => {
         region: "",
         resource_group: "",
       },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -6495,6 +6506,7 @@ describe("setup wizard", () => {
       classic_gateways: [],
       cis: [],
       vtl: [],
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,

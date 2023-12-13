@@ -55,6 +55,7 @@ const { initClassicGateways } = require("./classic-gateways");
 const { initCis } = require("./cis.js");
 const { initVtlStore } = require("./vtl.js");
 const { initSccV2 } = require("./scc-v2.js");
+const { initCisGlbStore } = require("./cis-glb.js");
 
 /**
  * get state for craig
@@ -192,6 +193,7 @@ const state = function (legacy) {
   initClassicGateways(store);
   initCis(store);
   initSccV2(store);
+  initCisGlbStore(store);
 
   /**
    * hard set config dot json in state store

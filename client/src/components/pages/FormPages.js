@@ -67,7 +67,7 @@ import {
   powerStoragePoolRegionMap,
 } from "../../lib/constants";
 import DynamicForm from "../forms/DynamicForm";
-import { ClassicDisabledTile } from "../forms/dynamic-form/tiles";
+import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
 
 const formPageTemplate = (craig, options, form) => {
@@ -273,6 +273,106 @@ const Cis = (craig) => {
               },
               {
                 ttl: craig.cis.dns_records.ttl,
+              },
+            ],
+          },
+        },
+      ],
+    }
+  );
+};
+
+const CisGlbs = (craig) => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "CIS Global Load Balancers",
+      addText: "Create an Origin Pool",
+      formName: "cis-glbs",
+      jsonField: "cis_glbs",
+      overrideTile:
+        craig.store.json.cis.length === 0 ? <NoCisTile /> : undefined,
+    },
+    {
+      jsonField: "cis_glbs",
+      groups: [
+        {
+          name: craig.cis_glbs.name,
+          cis: craig.cis_glbs.cis,
+        },
+        {
+          minimum_origins: craig.cis_glbs.minimum_origins,
+          enabled: craig.cis_glbs.enabled,
+        },
+        {
+          description: craig.cis_glbs.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Origins",
+          addText: "Add an Origin",
+          jsonField: "origins",
+          form: {
+            groups: [
+              {
+                name: craig.cis_glbs.origins.name,
+                address: craig.cis_glbs.origins.address,
+              },
+              {
+                enabled: craig.cis_glbs.origins.enabled,
+              },
+            ],
+          },
+        },
+        {
+          name: "Global Load Balancers",
+          addText: "Create a Global Load Balancer",
+          jsonField: "glbs",
+          form: {
+            groups: [
+              {
+                name: craig.cis_glbs.glbs.name,
+                domain: craig.cis_glbs.glbs.domain,
+              },
+              {
+                default_pools: craig.cis_glbs.glbs.default_pools,
+                fallback_pool: craig.cis_glbs.glbs.fallback_pool,
+              },
+              {
+                ttl: craig.cis_glbs.glbs.ttl,
+              },
+              {
+                enabled: craig.cis_glbs.glbs.enabled,
+                proxied: craig.cis_glbs.glbs.proxied,
+              },
+            ],
+          },
+        },
+        {
+          name: "Health Checks",
+          addText: "Create a Health Check",
+          jsonField: "health_checks",
+          form: {
+            groups: [
+              {
+                name: craig.cis_glbs.health_checks.name,
+                method: craig.cis_glbs.health_checks.method,
+                type: craig.cis_glbs.health_checks.type,
+              },
+              {
+                expected_codes: craig.cis_glbs.health_checks.expected_codes,
+                timeout: craig.cis_glbs.health_checks.timeout,
+                interval: craig.cis_glbs.health_checks.interval,
+              },
+              {
+                path: craig.cis_glbs.health_checks.path,
+                port: craig.cis_glbs.health_checks.port,
+                retries: craig.cis_glbs.health_checks.retries,
+              },
+              {
+                allow_insecure: craig.cis_glbs.health_checks.allow_insecure,
+                follow_redirects: craig.cis_glbs.health_checks.follow_redirects,
               },
             ],
           },
@@ -1740,6 +1840,8 @@ export const NewFormPage = (props) => {
     return Atracker(craig);
   } else if (form === "cis") {
     return Cis(craig);
+  } else if (form === "cisGlbs") {
+    return CisGlbs(craig);
   } else if (form === "classicGateways") {
     return ClassicGateways(craig);
   } else if (form === "classicSshKeys") {

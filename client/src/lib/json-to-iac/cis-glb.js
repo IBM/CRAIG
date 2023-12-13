@@ -13,13 +13,16 @@ function formatCisOriginPool(pool) {
     description: pool.description,
     minimum_origins: pool.minimum_origins,
     check_regions:
-      pool.check_regions.length === 0 ? undefined : pool.check_regions,
+      !pool.check_regions || pool.check_regions.length === 0
+        ? undefined
+        : pool.check_regions,
     notification_email: pool.notification_email,
   };
   pool.origins.forEach((origin) => {
     if (!originPoolData.origins) {
       originPoolData.origins = [];
     }
+    delete origin.cis;
     originPoolData.origins.push(origin);
   });
   return jsonToTfPrint(

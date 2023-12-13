@@ -548,7 +548,9 @@ function invalidIcmpCodeOrType(stateData) {
 function invalidIpv4Address(field) {
   return function (stateData) {
     return (
-      !isIpv4CidrOrAddress(stateData[field]) || contains(stateData[field], "/")
+      !stateData[field] ||
+      !isIpv4CidrOrAddress(stateData[field]) ||
+      contains(stateData[field], "/")
     );
   };
 }
@@ -741,6 +743,40 @@ function fieldIsNullOrEmptyStringEnabled(field) {
   };
 }
 
+/**
+ * shortcut for field needs to be whole number
+ * @param {*} field
+ * @returns {Function}
+ */
+function fieldIsNotWholeNumber(field, min, max) {
+  return function (stateData) {
+    return !isNullOrEmptyString(stateData[field])
+      ? !isInRange(parseInt(stateData[field]), min, max)
+      : true;
+  };
+}
+
+/**
+ * shortcut for ttl
+ * @returns {Function} function
+ */
+function timeToLive() {
+  return {
+    labelText: "Time to Live (Seconds)",
+    default: "",
+    optional: true,
+    invalid: function (stateData) {
+      return isNullOrEmptyString(stateData.ttl, true)
+        ? false
+        : fieldIsNotWholeNumber("ttl", 300, 2147483647)(stateData);
+    },
+    invalidText: unconditionalInvalidText(
+      "Enter a whole number between 300 and 2147483647"
+    ),
+    placeholder: "300",
+  };
+}
+
 module.exports = {
   invalidIpv4Address,
   invalidIpv4AddressText,
@@ -773,4 +809,6 @@ module.exports = {
   hideWhenUseData,
   subnetMultiSelect,
   forceUpdateOnVpcChange,
+  fieldIsNotWholeNumber,
+  timeToLive,
 };

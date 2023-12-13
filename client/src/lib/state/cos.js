@@ -261,7 +261,7 @@ function initObjectStorageStore(store) {
     init: cosInit,
     onStoreUpdate: cosOnStoreUpdate,
     shouldDisableSave: shouldDisableComponentSave(
-      ["name", "resource_group", "kms"],
+      ["name", "resource_group", "kms", "plan"],
       "object_storage"
     ),
     create: cosCreate,

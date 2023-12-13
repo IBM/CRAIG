@@ -230,6 +230,25 @@ module.exports = {
     .anyNumber()
     .stringEnd()
     .done("g"),
+  domainValidationExp: new RegexButWithWords()
+    .group("www.")
+    .lazy()
+    .group((exp) => {
+      exp
+        .set("A-z0-9")
+        .set("A-z0-9_-")
+        .anyNumber()
+        .set("A-z0-9")
+        .oneOrMore()
+        .literal(".");
+    })
+    .oneOrMore()
+    .set("A-z0-9")
+    .set("A-z0-9_-")
+    .anyNumber()
+    .set("A-z0-9")
+    .stringEnd()
+    .done("g"),
   crnRegex: new RegexButWithWords()
     .stringBegin()
     .group((exp) => {

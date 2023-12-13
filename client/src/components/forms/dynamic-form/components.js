@@ -115,7 +115,8 @@ DynamicTextArea.propTypes = {
     labelText: PropTypes.string, // not required for toolip wrapper
     invalid: PropTypes.func.isRequired,
     invalidText: PropTypes.func.isRequired,
-    placeholder: PropTypes.func.isRequired,
+    placeholder: PropTypes.oneOfType([PropTypes.func, PropTypes.string])
+      .isRequired,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   parentState: PropTypes.shape({}).isRequired,

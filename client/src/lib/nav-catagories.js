@@ -35,6 +35,7 @@ const { cisTf } = require("./json-to-iac/cis");
 const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 const { scc2Tf } = require("./json-to-iac/scc-v2");
+const { cisGlbTf } = require("./json-to-iac/cis-glb");
 
 const navCatagories = [
   {
@@ -292,7 +293,7 @@ const navCatagories = [
     ],
   },
   {
-    name: "Advanced Features",
+    name: "Internet Services",
     links: [
       {
         title: "Cloud Internet Services (CIS)",
@@ -303,6 +304,20 @@ const navCatagories = [
         },
         jsonField: "cis",
       },
+      {
+        title: "Global Load Balancers",
+        path: "/form/cisGlbs",
+        react_icon: "LoadBalancerPool",
+        toTf: (config) => {
+          return cisGlbTf(config) || "";
+        },
+        jsonField: "cis_glbs",
+      },
+    ],
+  },
+  {
+    name: "Advanced Features",
+    links: [
       {
         title: "Security Compliance Center V2",
         path: "/form/sccV2",

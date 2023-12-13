@@ -251,7 +251,6 @@ resource "ibm_cis_healthcheck" "cis_cis_healthcheck_check" {
           {
             cis: "cis",
             name: "pool",
-            origins: [],
             enabled: false,
             description: "example load balancer pool",
             minimum_origins: 1,

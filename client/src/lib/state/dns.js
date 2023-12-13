@@ -28,6 +28,8 @@ const {
   unconditionalInvalidText,
   vpcGroups,
   subnetMultiSelect,
+  fieldIsNotWholeNumber,
+  timeToLive,
 } = require("./utils");
 const {
   invalidName,
@@ -460,20 +462,7 @@ function initDnsStore(store) {
               return stateData.use_vsi === true;
             },
           },
-          ttl: {
-            size: "small",
-            labelText: "Time To Live (Seconds)",
-            default: "",
-            invalid: function (stateData) {
-              let ttl = parseFloat(stateData.ttl);
-              return isNullOrEmptyString(stateData.ttl, true)
-                ? false
-                : !isWholeNumber(ttl) || !isInRange(ttl, 300, 2147483647);
-            },
-            invalidText: unconditionalInvalidText(
-              "Enter a whole number between 300 and 2147483647"
-            ),
-          },
+          ttl: timeToLive(),
           type: {
             size: "small",
             type: "select",
@@ -487,9 +476,7 @@ function initDnsStore(store) {
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "MX") {
-                if (!isNullOrEmptyString(stateData.preference)) {
-                  return !isInRange(parseInt(stateData.preference), 0, 65535);
-                } else return true;
+                return fieldIsNotWholeNumber("preference", 0, 65535)(stateData);
               } else return false;
             },
             invalidText: unconditionalInvalidText(
@@ -504,9 +491,7 @@ function initDnsStore(store) {
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                if (!isNullOrEmptyString(stateData.port)) {
-                  return !isInRange(parseInt(stateData.port), 1, 65535);
-                } else return true;
+                return fieldIsNotWholeNumber("port", 1, 65535)(stateData);
               } else return false;
             },
             invalidText: unconditionalInvalidText(
@@ -535,9 +520,7 @@ function initDnsStore(store) {
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                if (!isNullOrEmptyString(stateData.priority)) {
-                  return !isInRange(parseInt(stateData.priority), 0, 65535);
-                } else return true;
+                return fieldIsNotWholeNumber("priority", 0, 65535)(stateData);
               } else return false;
             },
             invalidText: unconditionalInvalidText(

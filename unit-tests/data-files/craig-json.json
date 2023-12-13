@@ -951,5 +951,6 @@
     "profile_attachments": [],
     "region": "",
     "resource_group": ""
-  }
+  },
+  "cis_glbs": []
 }

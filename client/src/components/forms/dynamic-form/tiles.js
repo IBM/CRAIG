@@ -39,6 +39,18 @@ export const NoDomainsTile = () => {
   );
 };
 
+export const NoCisTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap">
+      <CloudAlerting size="24" className="iconMargin" /> No CIS Instances have
+      been created. Create one from the
+      <a className="no-secrets-link" href="/form/cis">
+        Cloud Internet Services Page
+      </a>{" "}
+    </Tile>
+  );
+};
+
 export const PerCloudConnections = () => {
   return (
     <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
