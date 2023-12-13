@@ -1,8 +1,11 @@
-const { contains } = require("lazy-z");
+const { contains, isNullOrEmptyString, splat, revision } = require("lazy-z");
 const { setUnfoundResourceGroup, hasUnfoundVpc } = require("./store.utils");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  resourceGroupsField,
+  vpcGroups,
+  selectInvalidText,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -98,17 +101,46 @@ function initVpnGatewayStore(store) {
         invalid: invalidName("vpn_gateways"),
         invaidText: invalidNameText("vpn_gateways"),
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(),
       vpc: {
+        labelText: "VPC",
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("vpc"),
+        invalidText: selectInvalidText("VPC"),
+        groups: vpcGroups,
+        onStateChange: function (stateData) {
+          stateData.subnet = "";
+        },
       },
       subnet: {
         default: "",
+        type: "select",
         invalid: fieldIsNullOrEmptyString("subnet"),
+        invalidText: selectInvalidText("subnet"),
+        groups: function (stateData, componentProps) {
+          if (isNullOrEmptyString(stateData.vpc, true)) {
+            return [];
+          } else {
+            return splat(
+              new revision(componentProps.craig.store.json).child(
+                "vpcs",
+                stateData.vpc
+              ).data.subnets,
+              "name"
+            );
+          }
+        },
+      },
+      policy_mode: {
+        default: false,
+        type: "toggle",
+        labelText: "Enable Policy Mode",
+        tooltip: {
+          content:
+            "A policy-based VPN operates in Active-Standby mode with a single VPN gateway IP shared between the members. The default is a route-based VPN which offers Active-Active redundancy with two VPN gateway IPs.",
+          link: "https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn",
+        },
       },
     },
   });

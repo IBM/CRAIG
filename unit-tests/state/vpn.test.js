@@ -190,4 +190,49 @@ describe("vpn_gateways", () => {
       );
     });
   });
+  describe("schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should reset subnet on state change", () => {
+      let expectedData = {
+        subnet: "",
+      };
+      let actualData = {};
+      craig.vpn_gateways.vpc.onStateChange(actualData);
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return the correct data"
+      );
+    });
+    describe("subnets", () => {
+      it("should return correct groups when none vpc", () => {
+        assert.deepEqual(
+          craig.vpn_gateways.subnet.groups({}),
+          [],
+          "it should return empty array"
+        );
+      });
+      it("should return correct groups when vpc", () => {
+        assert.deepEqual(
+          craig.vpn_gateways.subnet.groups(
+            { vpc: "management" },
+            { craig: craig }
+          ),
+          [
+            "vsi-zone-1",
+            "vpn-zone-1",
+            "vsi-zone-2",
+            "vsi-zone-3",
+            "vpe-zone-1",
+            "vpe-zone-2",
+            "vpe-zone-3",
+          ],
+          "it should return empty array"
+        );
+      });
+    });
+  });
 });

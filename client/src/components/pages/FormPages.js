@@ -923,6 +923,19 @@ const ObjectStoragePage = (craig) => {
   );
 };
 
+const NoVpcTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> No VPCs have been
+      created. Go to the
+      <a className="no-vpc-link" href="/form/vpcs">
+        Virtual Private Clouds Page
+      </a>
+      to create one.
+    </Tile>
+  );
+};
+
 const NoPowerNetworkTile = () => {
   return (
     <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
@@ -1591,23 +1604,32 @@ const TransitGatewayPage = (craig) => {
 };
 
 const VpnGatewayPage = (craig) => {
-  return (
-    <VpnGatewayTemplate
-      docs={RenderDocs("vpn_gateways", craig.store.json._options.template)}
-      vpn_gateways={craig.store.json.vpn_gateways}
-      disableSave={disableSave}
-      onDelete={craig.vpn_gateways.delete}
-      onSave={craig.vpn_gateways.save}
-      onSubmit={craig.vpn_gateways.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.vpn_gateways.name.invalid}
-      invalidTextCallback={craig.vpn_gateways.name.invalidText}
-      vpcList={craig.store.vpcList}
-      subnetList={craig.getAllSubnets()}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "VPN Gateways",
+      addText: "Create a VPN Gateway",
+      jsonField: "vpn_gateways",
+      formName: "vpn_gateways",
+      overrideTile: craig.store.vpcList.length === 0 ? <NoVpcTile /> : null,
+      hideFormTitleButton: craig.store.vpcList.length === 0,
+      innerFormProps: {},
+    },
+    {
+      groups: [
+        {
+          name: craig.vpn_gateways.name,
+          resource_group: craig.vpn_gateways.resource_group,
+        },
+        {
+          vpc: craig.vpn_gateways.vpc,
+          subnet: craig.vpn_gateways.subnet,
+        },
+        {
+          policy_mode: craig.vpn_gateways.policy_mode,
+        },
+      ],
+    }
   );
 };
 
