@@ -7,14 +7,12 @@ import {
   invalidNameText,
   newF5Vsi,
   propsMatchState,
-  resourceGroupHelperTextCallback,
 } from "../../lib";
 import {
   AccessGroupsTemplate,
   AtrackerPage,
   CloudDatabaseTemplate,
   ClustersTemplate,
-  ResourceGroupsTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
   SubnetPageTemplate,
@@ -1101,24 +1099,30 @@ const PowerVsVolumes = (craig) => {
 };
 
 const ResourceGroupPage = (craig) => {
-  return (
-    <ResourceGroupsTemplate
-      resource_groups={craig.store.json.resource_groups}
-      docs={RenderDocs("resource_groups", craig.store.json._options.template)}
-      disableSave={disableSave}
-      onDelete={craig.resource_groups.delete}
-      onSave={craig.resource_groups.save}
-      onSubmit={craig.resource_groups.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      deleteDisabled={() => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "Resource Groups",
+      addText: "Create a Resource Group",
+      formName: "Resource Groups",
+      deleteDisabled: () => {
         return craig.store.json.resource_groups.length === 1;
-      }}
-      helperTextCallback={resourceGroupHelperTextCallback}
-      invalidCallback={craig.resource_groups.name.invalid}
-      invalidTextCallback={craig.resource_groups.name.invalidText}
-    />
+      },
+      deleteDisabledMessage: "Must have at least one resource group",
+      jsonField: "resource_groups",
+    },
+    {
+      jsonField: "resource_groups",
+      groups: [
+        {
+          use_data: craig.resource_groups.use_data,
+        },
+        {
+          name: craig.resource_groups.name,
+          use_prefix: craig.resource_groups.use_prefix,
+        },
+      ],
+    }
   );
 };
 
