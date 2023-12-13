@@ -7,7 +7,12 @@ const { initObjectStorageStore } = require("./cos");
 const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc/vpc");
-const { sccInit, sccSave, sccDelete } = require("./scc");
+const {
+  sccInit,
+  sccSave,
+  sccDelete,
+  DEPRECATED_initSccStore,
+} = require("./scc");
 const { initSshKeyStore } = require("./ssh-keys.js");
 const { initSecurityGroupStore } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways/transit-gateways");
@@ -22,6 +27,7 @@ const {
   f5VsiCreate,
   f5OnStoreUpdate,
   f5TemplateSave,
+  initF5Store,
 } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
@@ -140,13 +146,7 @@ const state = function (legacy) {
   initVpcStore(store);
   initAtracker(store);
   initAppIdStore(store);
-
-  store.newField("scc", {
-    init: sccInit,
-    save: sccSave,
-    delete: sccDelete,
-  });
-
+  DEPRECATED_initSccStore(store);
   initSshKeyStore(store);
   initSecurityGroupStore(store);
   initTransitGateway(store);
@@ -154,24 +154,7 @@ const state = function (legacy) {
   initClusterStore(store);
   initVsiStore(store);
   initVpe(store);
-
-  store.newField("f5", {
-    init: f5Init,
-    onStoreUpdate: f5OnStoreUpdate,
-    subComponents: {
-      instance: {
-        save: f5InstanceSave,
-      },
-      vsi: {
-        create: f5VsiCreate,
-        save: f5VsiSave,
-      },
-      template: {
-        save: f5TemplateSave,
-      },
-    },
-  });
-
+  initF5Store(store);
   initLoadBalancers(store);
   initEventStreams(store);
   initSecretsManagerStore(store);

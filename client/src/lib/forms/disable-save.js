@@ -1,120 +1,11 @@
 const {
-  isNullOrEmptyString,
-  isEmpty,
   isIpv4CidrOrAddress,
-  containsKeys,
-  isInRange,
   distinct,
   contains,
   flatten,
   splat,
-  isWholeNumber,
-  nullOrEmptyStringFields,
 } = require("lazy-z");
-const { isValidUrl, validSshKey } = require("./invalid-callbacks");
-
-/**
- * check multiple fields against the same validating regex expression
- * @param {Array} fields list of fields
- * @param {Function} check test fields with this
- * @param {Object} stateData
- * @returns {boolean}
- */
-function fieldCheck(fields, check, stateData) {
-  let hasBadFields = false;
-  fields.forEach((field) => {
-    if (!check(stateData[field])) {
-      hasBadFields = true;
-    }
-  });
-  return hasBadFields;
-}
-
-/**
- * reduct unit test writing check for number input invalidation
- * @param {*} value
- * @param {*} minRange
- * @param {*} maxRange
- * @returns {boolean} true if any invalid number/range
- */
-function invalidNumberCheck(value, minRange, maxRange) {
-  let isInvalidNumber = false;
-  if (!isNullOrEmptyString(value)) {
-    if (!isWholeNumber(value) || !isInRange(value, minRange, maxRange)) {
-      isInvalidNumber = true;
-    }
-  }
-  return isInvalidNumber;
-}
-
-/**
- * check to see if scc form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if save should be disabled
- */
-function disableSccSave(stateData) {
-  return (
-    !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.collector_description) ||
-    !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.scope_description)
-  );
-}
-
-/**
- * check to see if f5 vsi template form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableF5VsiTemplateSave(stateData) {
-  let extraFields = {
-    none: [],
-    byol: ["byol_license_basekey"],
-    regkeypool: ["license_username", "license_host", "license_pool"],
-    utilitypool: [
-      "license_username",
-      "license_host",
-      "license_pool",
-      "license_unit_of_measure",
-      "license_sku_keyword_1",
-      "license_sku_keyword_2",
-    ],
-  };
-  return (
-    nullOrEmptyStringFields(
-      stateData,
-      ["template_version", "template_source"].concat(
-        extraFields[stateData["license_type"]]
-      )
-    ) ||
-    fieldCheck(
-      [
-        "do_declaration_url",
-        "as3_declaration_url",
-        "ts_declaration_url",
-        "phone_home_url",
-        "tgstandby_url",
-        "tgrefresh_url",
-        "tgactive_url",
-      ],
-      isValidUrl,
-      stateData
-    )
-  );
-}
-
-/**
- * check to see if f5 vsi form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableF5VsiSave(stateData) {
-  return isEmpty(stateData?.ssh_keys || []);
-}
-
-const disableSaveFunctions = {
-  scc: disableSccSave,
-  f5_vsi_template: disableF5VsiTemplateSave,
-  f5_vsi: disableF5VsiSave,
-};
+const { validSshKey } = require("./invalid-callbacks");
 
 /**
  * disable save
@@ -193,15 +84,16 @@ function disableSave(field, stateData, componentProps, craig) {
     "cos_keys",
     "scc_v2",
     "profile_attachments",
+    "f5_vsi_template",
+    "f5_vsi",
+    "scc",
     "cis_glbs",
     "origins",
     "glbs",
     "health_checks",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
-  if (containsKeys(disableSaveFunctions, field)) {
-    return disableSaveFunctions[field](stateData, componentProps, craig);
-  } else if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
+  if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
     return (
       contains(["network", "cloud_connections"], field)
         ? componentProps.craig.power[field]
@@ -242,7 +134,7 @@ function disableSave(field, stateData, componentProps, craig) {
         : contains(["domains", "dns_records"], field)
         ? componentProps.craig.cis[field]
         : field === "buckets" ||
-          componentProps.formName === "Service Credentials"
+          componentProps?.formName === "Service Credentials"
         ? componentProps.craig.object_storage[
             field === "buckets" ? field : "keys"
           ]
@@ -252,6 +144,10 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.access_groups[field]
         : field === "profile_attachments"
         ? componentProps.craig.scc_v2.profile_attachments
+        : contains(["f5_vsi_template", "f5_vsi"], field)
+        ? componentProps.craig.f5[
+            field === "f5_vsi_template" ? "template" : "vsi"
+          ]
         : contains(["origins", "glbs", "health_checks"], field)
         ? componentProps.craig.cis_glbs[field]
         : componentProps.craig[field]
@@ -325,5 +221,4 @@ module.exports = {
   forceShowForm,
   disableSshKeyDelete,
   invalidCidrBlock,
-  invalidNumberCheck,
 };

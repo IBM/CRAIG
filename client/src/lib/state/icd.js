@@ -1,16 +1,33 @@
+const { isNullOrEmptyString, isWholeNumber, isInRange } = require("lazy-z");
 const {
   invalidName,
   invalidCpuCallback,
   invalidNameText,
   invalidCpuTextCallback,
 } = require("../forms");
-const { invalidNumberCheck } = require("../forms/disable-save");
 const { setUnfoundResourceGroup } = require("./store.utils");
 const {
   setKmsFromKeyOnStoreUpdate,
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
 } = require("./utils");
+
+/**
+ * reduct unit test writing check for number input invalidation
+ * @param {*} value
+ * @param {*} minRange
+ * @param {*} maxRange
+ * @returns {boolean} true if any invalid number/range
+ */
+function invalidNumberCheck(value, minRange, maxRange) {
+  let isInvalidNumber = false;
+  if (!isNullOrEmptyString(value)) {
+    if (!isWholeNumber(value) || !isInRange(value, minRange, maxRange)) {
+      isInvalidNumber = true;
+    }
+  }
+  return isInvalidNumber;
+}
 
 /**
  * icd on store update
