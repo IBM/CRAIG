@@ -11,6 +11,7 @@ const {
   resourceGroupsField,
   hideWhenUseData,
   nameHelperText,
+  encryptionKeyGroups,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -141,9 +142,7 @@ function initAppIdStore(store) {
         type: "select",
         default: "",
         hideWhen: hideWhenUseData,
-        groups: function (stateData, componentProps) {
-          return componentProps.craig.store.encryptionKeys;
-        },
+        groups: encryptionKeyGroups,
         size: "small",
       },
     },

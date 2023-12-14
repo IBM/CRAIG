@@ -1761,6 +1761,8 @@ const VpePage = (craig) => {
       addText: "Create a VPE",
       jsonField: "virtual_private_endpoints",
       formName: "Virtual Private Endpoints",
+      overrideTile:
+        craig.store.vpcList.length === 0 ? <NoVpcTile /> : undefined,
     },
     {
       jsonField: "virtual_private_endpoints",
@@ -1784,33 +1786,64 @@ const VpePage = (craig) => {
 };
 
 const VsiPage = (craig) => {
-  return (
-    <VsiTemplate
-      docs={RenderDocs("vsi", craig.store.json._options.template)}
-      vsi={craig.store.json.vsi}
-      disableSave={disableSave}
-      onDelete={craig.vsi.delete}
-      onSave={craig.vsi.save}
-      onSubmit={craig.vsi.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      encryptionKeys={craig.store.encryptionKeys}
-      sshKeys={craig.store.sshKeys}
-      apiEndpointImages={`/api/vsi/${craig.store.json._options.region}/images`}
-      apiEndpointInstanceProfiles={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
-      invalidCallback={craig.vsi.name.invalid}
-      invalidTextCallback={craig.vsi.name.invalidText}
-      invalidVolumeCallback={craig.vsi.volumes.name.invalid}
-      invalidVolumeTextCallback={craig.vsi.volumes.name.invalidText}
-      onVolumeSave={craig.vsi.volumes.save}
-      onVolumeDelete={craig.vsi.volumes.delete}
-      onVolumeCreate={craig.vsi.volumes.create}
-      vpcList={craig.store.vpcList}
-      securityGroups={craig.store.json.security_groups}
-      subnetList={craig.getAllSubnets()}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "VSI",
+      addText: "Create a VSI",
+      jsonField: "vsi",
+      formName: "vsi",
+    },
+    {
+      jsonField: "vsi",
+      groups: [
+        {
+          name: craig.vsi.name,
+          resource_group: craig.vsi.resource_group,
+        },
+        {
+          vpc: craig.vsi.vpc,
+          subnets: craig.vsi.subnets,
+          security_groups: craig.vsi.security_groups,
+        },
+        {
+          vsi_per_subnet: craig.vsi.vsi_per_subnet,
+          image_name: craig.vsi.image_name,
+          profile: craig.vsi.profile,
+        },
+        {
+          ssh_keys: craig.vsi.ssh_keys,
+          encryption_key: craig.vsi.encryption_key,
+        },
+        {
+          enable_floating_ip: craig.vsi.enable_floating_ip,
+          primary_interface_ip_spoofing:
+            craig.vsi.primary_interface_ip_spoofing,
+        },
+        {
+          user_data: craig.vsi.user_data,
+        },
+      ],
+      subForms: [
+        {
+          name: "Block Storage Volumes",
+          addText: "Create a Block Storage Volume",
+          jsonField: "volumes",
+          form: {
+            groups: [
+              {
+                name: craig.vsi.volumes.name,
+                profile: craig.vsi.volumes.profile,
+              },
+              {
+                encryption_key: craig.vsi.volumes.encryption_key,
+                capacity: craig.vsi.volumes.capacity,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 

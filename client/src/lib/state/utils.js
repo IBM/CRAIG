@@ -734,6 +734,33 @@ function subnetMultiSelect(options) {
 }
 
 /**
+ * sg multiselect
+ * @returns {object} schema object
+ */
+function securityGroupsMultiselect() {
+  return {
+    type: "multiselect",
+    size: "small",
+    default: [],
+    invalid: function (stateData) {
+      return !stateData.security_groups || isEmpty(stateData.security_groups);
+    },
+    invalidText: unconditionalInvalidText("Select at least one security group"),
+    groups: function (stateData, componentProps) {
+      return splat(
+        componentProps.craig.store.json.security_groups.filter((sg) => {
+          if (sg.vpc === stateData.vpc) {
+            return sg;
+          }
+        }),
+        "name"
+      );
+    },
+    forceUpdateKey: forceUpdateOnVpcChange,
+  };
+}
+
+/**
  * shortcut for field is null or empty string if enabled is true
  * @param {*} field
  * @returns {Function}
@@ -779,6 +806,14 @@ function timeToLive() {
 }
 
 /**
+ * encryption key groups
+ * @returns {Function} shortcut function
+ */
+function encryptionKeyGroups(stateData, componentProps) {
+  return componentProps.craig.store.encryptionKeys;
+}
+
+/*
  * ip cidr list text area
  * @param {*} options
  * @returns {object} schema object
@@ -820,6 +855,7 @@ function ipCidrListTextArea(field, options) {
 }
 
 module.exports = {
+  encryptionKeyGroups,
   invalidIpv4Address,
   invalidIpv4AddressText,
   formatNetworkingRule,
@@ -853,5 +889,6 @@ module.exports = {
   forceUpdateOnVpcChange,
   fieldIsNotWholeNumber,
   timeToLive,
+  securityGroupsMultiselect,
   ipCidrListTextArea,
 };

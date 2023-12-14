@@ -18,6 +18,7 @@ import {
 } from "@carbon/react";
 import PropTypes from "prop-types";
 import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
+import { deepEqual } from "lazy-z";
 
 const DynamicFormTextInput = (props) => {
   return <TextInput {...dynamicTextInputProps(props)} />;
@@ -169,6 +170,67 @@ DynamicPublicKey.propTypes = {
   name: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };
+
+export class DynamicFetchSelect extends React.Component {
+  _isMounted = false;
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: ["Loading..."],
+    };
+    this.dataToGroups = this.dataToGroups.bind(this);
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    // on mount if not items have been set
+    if (deepEqual(this.state.data, ["Loading..."]))
+      fetch(
+        // generate api endpoint based on state and props
+        this.props.field.apiEndpoint(
+          this.props.parentState,
+          this.props.parentProps
+        )
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          // set state with data if mounted
+          if (this._isMounted) this.setState({ data: data });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  dataToGroups() {
+    return (this.props.parentProps.isModal ? [""] : []).concat(this.state.data);
+  }
+
+  render() {
+    let props = { ...this.props };
+    return (
+      <PopoverWrapper
+        key={this.dataToGroups()}
+        hoverText={dynamicSelectProps(props).value || ""}
+        className={props.field.tooltip ? " tooltip" : "select"}
+      >
+        <Select {...dynamicSelectProps(props, this._isMounted)}>
+          {this.dataToGroups().map((value) => (
+            <SelectItem
+              text={value}
+              value={value}
+              key={dynamicFieldId(props) + "-" + value}
+            />
+          ))}
+        </Select>
+      </PopoverWrapper>
+    );
+  }
+}
 
 export {
   DynamicFormTextInput,

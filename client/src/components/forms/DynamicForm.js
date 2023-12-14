@@ -26,6 +26,7 @@ import {
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
+import { DynamicFetchSelect } from "./dynamic-form/components";
 
 const doNotRenderFields = [
   "heading",
@@ -188,6 +189,8 @@ class DynamicForm extends React.Component {
                         ? DynamicMultiSelect
                         : field.type === "public-key"
                         ? DynamicPublicKey
+                        : field.type === "fetchSelect"
+                        ? DynamicFetchSelect
                         : DynamicFormTextInput,
                       {
                         name: key,

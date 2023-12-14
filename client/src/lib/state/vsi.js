@@ -20,6 +20,14 @@ const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
   fieldIsEmpty,
+  resourceGroupsField,
+  selectInvalidText,
+  vpcGroups,
+  subnetMultiSelect,
+  fieldIsNotWholeNumber,
+  unconditionalInvalidText,
+  securityGroupsMultiselect,
+  encryptionKeyGroups,
 } = require("./utils");
 const { invalidNameText, invalidName } = require("../forms");
 
@@ -345,47 +353,96 @@ function initVsiStore(store) {
     ),
     schema: {
       name: {
+        size: "small",
         default: "",
         invalid: invalidName("vsi"),
         invalidText: invalidNameText("vsi"),
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(true),
       vpc: {
+        type: "select",
+        labelText: "VPC",
+        size: "small",
         default: "",
         invalid: fieldIsNullOrEmptyString("vpc"),
-      },
-      image_name: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("image_name"),
-      },
-      profile: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("profile"),
-      },
-      encryption_key: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("encryption_key"),
-      },
-      vsi_per_subnet: {
-        default: "",
-        invalid: function (stateData) {
-          return !isInRange(parseInt(stateData.vsi_per_subnet), 1, 10);
+        invalidText: selectInvalidText("VPC"),
+        groups: vpcGroups,
+        onStateChange: function (stateData) {
+          stateData.security_groups = [];
+          stateData.subnets = [];
         },
       },
-      security_groups: {
-        default: [],
-        invalid: fieldIsEmpty("security_groups"),
+      subnets: subnetMultiSelect(),
+      image_name: {
+        labelText: "Image",
+        size: "small",
+        type: "fetchSelect",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("image_name"),
+        invalidText: selectInvalidText("image"),
+        groups: [],
+        apiEndpoint: function (stateData, componentProps) {
+          return `/api/vsi/${componentProps.craig.store.json._options.region}/images`;
+        },
       },
-      subnets: {
-        default: [],
-        invalid: fieldIsEmpty("subnets"),
+      profile: {
+        size: "small",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("profile"),
+        invalidText: selectInvalidText("profile"),
+        size: "small",
+        type: "fetchSelect",
+        groups: [],
+        apiEndpoint: function (stateData, componentProps) {
+          return `/api/vsi/${componentProps.craig.store.json._options.region}/instanceProfiles`;
+        },
       },
+      encryption_key: {
+        type: "select",
+        size: "small",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("encryption_key"),
+        invalidText: unconditionalInvalidText("Select an encryption key"),
+        groups: encryptionKeyGroups,
+      },
+      vsi_per_subnet: {
+        size: "small",
+        default: "",
+        invalid: fieldIsNotWholeNumber("vsi_per_subnet", 1, 10),
+        invalidText: unconditionalInvalidText(
+          "Enter a whole number between 1 and 10"
+        ),
+        labelText: "VSI Per Subnet",
+      },
+      security_groups: securityGroupsMultiselect(),
       ssh_keys: {
+        size: "small",
+        type: "multiselect",
         default: [],
         invalid: fieldIsEmpty("ssh_keys"),
+        invalidText: unconditionalInvalidText("Select at least one SSH Key"),
+        groups: function (stateData, componentProps) {
+          return splat(componentProps.craig.store.json.ssh_keys, "name");
+        },
+      },
+      enable_floating_ip: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Enable Floating IP",
+      },
+      primary_interface_ip_spoofing: {
+        size: "small",
+        default: false,
+        labelText: "Allow IP Spoofing",
+        type: "toggle",
+      },
+      user_data: {
+        type: "textArea",
+        optional: "true",
+        default: "",
+        labelText: "User Data",
+        placeholder: "Cloud init data",
       },
     },
     subComponents: {
@@ -404,12 +461,23 @@ function initVsiStore(store) {
             invalid: invalidName("volume"),
             invalidText: invalidNameText("volume"),
           },
+          profile: {
+            type: "select",
+            groups: ["3iops-tier", "5iops-tier", "10iops-tier"],
+            default: "",
+            invalid: fieldIsNullOrEmptyString("profile"),
+            invalidText: selectInvalidText("profile"),
+          },
           encryption_key: {
+            type: "select",
             default: "",
             invalid: fieldIsNullOrEmptyString("encryption_key"),
+            invalidText: unconditionalInvalidText("Select an encryption key"),
+            groups: encryptionKeyGroups,
           },
           capacity: {
             default: "",
+            placeholder: "100",
             invalid: function (stateData) {
               return (
                 !isNullOrEmptyString(stateData.capacity) &&
@@ -417,6 +485,9 @@ function initVsiStore(store) {
                   !isInRange(Number(stateData.capacity), 10, 16000))
               );
             },
+            invalidText: unconditionalInvalidText(
+              "Must ba whole number between 10 and 16000"
+            ),
           },
         },
       },

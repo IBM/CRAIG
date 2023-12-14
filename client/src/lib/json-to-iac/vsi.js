@@ -82,6 +82,9 @@ function ibmIsInstance(vsi, config) {
       },
     ],
   };
+  if (vsi.primary_interface_ip_spoofing) {
+    vsiData.primary_network_interface[0].allow_ip_spoofing = true;
+  }
   if (vsi.network_interfaces) {
     vsi.network_interfaces.forEach((intf) => {
       let nwInterface = {

@@ -15,6 +15,7 @@ const {
   vpcGroups,
   subnetMultiSelect,
   forceUpdateOnVpcChange,
+  securityGroupsMultiselect,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -186,30 +187,7 @@ function initVpe(store) {
           stateData.subnets = [];
         },
       },
-      security_groups: {
-        type: "multiselect",
-        size: "small",
-        default: [],
-        invalid: function (stateData) {
-          return (
-            !stateData.security_groups || isEmpty(stateData.security_groups)
-          );
-        },
-        invalidText: unconditionalInvalidText(
-          "Select at least one security group"
-        ),
-        groups: function (stateData, componentProps) {
-          return splat(
-            componentProps.craig.store.json.security_groups.filter((sg) => {
-              if (sg.vpc === stateData.vpc) {
-                return sg;
-              }
-            }),
-            "name"
-          );
-        },
-        forceUpdateKey: forceUpdateOnVpcChange,
-      },
+      security_groups: securityGroupsMultiselect(),
       subnets: subnetMultiSelect(),
       instance: {
         type: "select",
