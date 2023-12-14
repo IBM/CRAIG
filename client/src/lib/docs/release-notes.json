@@ -4,7 +4,9 @@
     "features": [
       "Users can now create FalconStor VTL instances from the page `/form/vtl`",
       "Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form",
-      "Users can now create SCC V2 Resources fomr the `/form/sccV2` page"
+      "Users can now create SCC V2 Resources fomr the `/form/sccV2` page",
+      "Users can now create additional VPC address prefixes from the VPN Gateways page",
+      "Users can now add VPN Gateway connections from the VPN Gateways page"
     ],
     "fixes": [
       "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",

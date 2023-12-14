@@ -4,8 +4,75 @@ const {
 } = require("../../client/src/lib/json-to-iac/variables");
 
 describe("variables", () => {
+  it("should return correct variable values for vpn connection preshared key", () => {
+    let slzNetwork = { ...require("../data-files/slz-network.json") };
+    slzNetwork.vpn_gateways[0].connections = [
+      {
+        vpn: "management-gateway",
+        name: "connection-1",
+        local_cidrs: ["10.10.10.10/24"],
+        peer_cidrs: ["10.10.20.10/24"],
+      },
+    ];
+    let actualData = variablesDotTf(slzNetwork, false);
+    let expectedData = `##############################################################################
+# Variables
+##############################################################################
+
+variable "ibmcloud_api_key" {
+  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
+  type        = string
+  sensitive   = true
+}
+
+variable "region" {
+  description = "IBM Cloud Region where resources will be provisioned"
+  type        = string
+  default     = "us-south"
+  validation {
+    error_message = "Region must be in a supported IBM VPC region."
+    condition     = contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "jp-tok", "jp-osa", "au-syd"], var.region)
+  }
+}
+
+variable "prefix" {
+  description = "Name prefix that will be prepended to named resources"
+  type        = string
+  default     = "slz"
+  validation {
+    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
+    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16
+  }
+}
+
+variable "slz_ssh_key_public_key" {
+  description = "Public SSH Key Value for Slz SSH Key"
+  type        = string
+  sensitive   = true
+  default     = "public-key"
+  validation {
+    error_message = "Public SSH Key must be a valid ssh rsa public key."
+    condition     = "\${var.slz_ssh_key_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.slz_ssh_key_public_key))}"
+  }
+}
+
+variable "management_gateway_connection_1_preshared_key" {
+  description = "Preshared key for VPN Gateway management-gateway connection connection-1"
+  type        = string
+  sensitive   = true
+}
+
+##############################################################################
+`;
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should return correct variables"
+    );
+  });
   it("should return correct variable values for cluster ingress secrets manager secrets", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
+    slzNetwork.vpn_gateways[0].connections = undefined;
     slzNetwork.clusters[0].opaque_secrets = [
       {
         name: "example",

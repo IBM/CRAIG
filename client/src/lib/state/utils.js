@@ -17,6 +17,7 @@ const {
   kebabCase,
   isInRange,
   isFunction,
+  isArray,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const {
@@ -777,6 +778,47 @@ function timeToLive() {
   };
 }
 
+/**
+ * ip cidr list text area
+ * @param {*} options
+ * @returns {object} schema object
+ */
+function ipCidrListTextArea(field, options) {
+  return {
+    tooltip: options.tooltip || undefined,
+    default: [],
+    type: "textArea",
+    labelText: options.labelText || "Additional Address Prefixes",
+    placeholder: "X.X.X.X/X, X.X.X.X/X, ...",
+    invalid: function (stateData) {
+      return isNullOrEmptyString(stateData[field], true) && !options.strict
+        ? false
+        : // prevent empty array from passing regex
+        options.strict && isEmpty(stateData[field])
+        ? true
+        : isIpStringInvalid(
+            // when additional prefixes is not array, check as string
+            isArray(stateData[field])
+              ? stateData[field].join(",")
+              : stateData[field]
+          );
+    },
+    invalidText: unconditionalInvalidText(
+      "Enter a valid comma separated list of IPV4 CIDR blocks"
+    ),
+    onRender: function (stateData) {
+      return isNullOrEmptyString(stateData[field], true)
+        ? ""
+        : stateData[field].join(",");
+    },
+    onInputChange: function (stateData) {
+      return isNullOrEmptyString(stateData[field], true)
+        ? []
+        : stateData[field].split(/,\s?/g);
+    },
+  };
+}
+
 module.exports = {
   invalidIpv4Address,
   invalidIpv4AddressText,
@@ -811,4 +853,5 @@ module.exports = {
   forceUpdateOnVpcChange,
   fieldIsNotWholeNumber,
   timeToLive,
+  ipCidrListTextArea,
 };

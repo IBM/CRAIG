@@ -133,6 +133,21 @@ function variablesDotTf(config, useF5, templateTarMode) {
     });
   }
 
+  // add preshared key
+  config.vpn_gateways.forEach((gateway) => {
+    if (gateway.connections) {
+      gateway.connections.forEach((connection) => {
+        variables[
+          snakeCase(gateway.name + " " + connection.name + " preshared_key")
+        ] = {
+          description: `Preshared key for VPN Gateway ${gateway.name} connection ${connection.name}`,
+          type: "${string}",
+          sensitive: true,
+        };
+      });
+    }
+  });
+
   config.clusters.forEach((cluster) => {
     if (cluster.opaque_secrets) {
       cluster.opaque_secrets.forEach((secret) => {

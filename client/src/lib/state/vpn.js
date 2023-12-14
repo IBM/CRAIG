@@ -1,11 +1,25 @@
-const { contains, isNullOrEmptyString, splat, revision } = require("lazy-z");
-const { setUnfoundResourceGroup, hasUnfoundVpc } = require("./store.utils");
+const {
+  contains,
+  isNullOrEmptyString,
+  splat,
+  revision,
+  isArray,
+} = require("lazy-z");
+const {
+  setUnfoundResourceGroup,
+  hasUnfoundVpc,
+  pushToChildFieldModal,
+  updateSubChild,
+  deleteSubChild,
+} = require("./store.utils");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
   resourceGroupsField,
   vpcGroups,
   selectInvalidText,
+  isIpStringInvalid,
+  ipCidrListTextArea,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -44,6 +58,13 @@ function vpnOnStoreUpdate(config) {
       gateway.subnet = null;
     }
     setUnfoundResourceGroup(config, gateway);
+    if (gateway.connections) {
+      gateway.connections.forEach((connection) => {
+        connection.vpn = gateway.name;
+      });
+    } else {
+      gateway.connections = [];
+    }
   });
 }
 
@@ -92,7 +113,7 @@ function initVpnGatewayStore(store) {
     save: vpnSave,
     delete: vpnDelete,
     shouldDisableSave: shouldDisableComponentSave(
-      ["name", "vpc", "resource_group", "subnet"],
+      ["name", "vpc", "resource_group", "subnet", "additional_prefixes"],
       "vpn_gateways"
     ),
     schema: {
@@ -140,6 +161,57 @@ function initVpnGatewayStore(store) {
           content:
             "A policy-based VPN operates in Active-Standby mode with a single VPN gateway IP shared between the members. The default is a route-based VPN which offers Active-Active redundancy with two VPN gateway IPs.",
           link: "https://cloud.ibm.com/docs/vpc?topic=vpc-using-vpn",
+        },
+      },
+      additional_prefixes: ipCidrListTextArea("additional_prefixes", {
+        tooltip: {
+          content:
+            "Add additional prefixes to the VPC Subnet to mimic on premise environment. These prefixes will be created in the same VPC and zone as the VPN gateway",
+        },
+      }),
+    },
+    subComponents: {
+      connections: {
+        create: function (config, stateData, componentProps) {
+          pushToChildFieldModal(
+            config,
+            "vpn_gateways",
+            "connections",
+            stateData,
+            componentProps
+          );
+        },
+        save: function (config, stateData, componentProps) {
+          updateSubChild(
+            config,
+            "vpn_gateways",
+            "connections",
+            stateData,
+            componentProps
+          );
+        },
+        delete: function (config, stateData, componentProps) {
+          deleteSubChild(config, "vpn_gateways", "connections", componentProps);
+        },
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name", "peer_cidrs", "local_cidrs"],
+          "vpn_gateways",
+          "connections"
+        ),
+        schema: {
+          name: {
+            default: "",
+            invalid: invalidName("connections"),
+            invalidText: invalidNameText("connections"),
+          },
+          peer_cidrs: ipCidrListTextArea("peer_cidrs", {
+            labelText: "Peer CIDRs",
+            strict: true,
+          }),
+          local_cidrs: ipCidrListTextArea("local_cidrs", {
+            labelText: "Local CIDRs",
+            strict: true,
+          }),
         },
       },
     },

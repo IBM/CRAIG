@@ -818,7 +818,8 @@
       "name": "management-gateway",
       "resource_group": "slz-management-rg",
       "subnet": "vpn-zone-1",
-      "vpc": "management"
+      "vpc": "management",
+      "connections": []
     }
   ],
   "ssh_keys": [

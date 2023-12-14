@@ -150,7 +150,6 @@ function initEventStreams(store) {
           return false;
         },
         hideWhen: hideWhenNotEnterprise,
-
         placeholder: "X.X.X.X, X.X.X.X/X, ...",
       },
       endpoints: {

@@ -19,7 +19,6 @@ import {
   KeyManagementTemplate,
   NetworkAclTemplate,
   RoutingTableTemplate,
-  VpnGatewayTemplate,
   VpnServerTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
@@ -1616,6 +1615,7 @@ const VpnGatewayPage = (craig) => {
       innerFormProps: {},
     },
     {
+      jsonField: "vpn_gateways",
       groups: [
         {
           name: craig.vpn_gateways.name,
@@ -1627,6 +1627,29 @@ const VpnGatewayPage = (craig) => {
         },
         {
           policy_mode: craig.vpn_gateways.policy_mode,
+        },
+        {
+          additional_prefixes: craig.vpn_gateways.additional_prefixes,
+        },
+      ],
+      subForms: [
+        {
+          name: "Connections",
+          addText: "Create a VPN Gateway Connection",
+          jsonField: "connections",
+          form: {
+            groups: [
+              {
+                name: craig.vpn_gateways.connections.name,
+              },
+              {
+                peer_cidrs: craig.vpn_gateways.connections.peer_cidrs,
+              },
+              {
+                local_cidrs: craig.vpn_gateways.connections.local_cidrs,
+              },
+            ],
+          },
         },
       ],
     }
