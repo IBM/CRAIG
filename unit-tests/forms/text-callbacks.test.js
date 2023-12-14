@@ -20,7 +20,6 @@ const {
 const {
   invalidDescriptionText,
   invalidCrnText,
-  invalidCpuTextCallback,
   labelsInvalidText,
   powerVsWorkspaceHelperText,
   vpnServersHelperText,
@@ -879,20 +878,6 @@ describe("text callbacks", () => {
         "it should return correct message"
       );
     });
-  });
-  describe("invalidCpuTextCallback", () => {
-    let minCpu = 0;
-    let maxCpu = 28;
-    assert.deepEqual(
-      invalidCpuTextCallback(
-        {},
-        {
-          cpuMin: minCpu,
-          cpuMax: maxCpu,
-        }
-      ),
-      `Using dedicated cores requires a minimum of ${minCpu} cores and a maximum of ${maxCpu} cores per member. For shared CPU, select 0 cores.`
-    );
   });
   describe("powerVsWorkspaceHelperText", () => {
     it("should return correct helper text", () => {

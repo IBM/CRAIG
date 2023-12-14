@@ -23,7 +23,6 @@ const {
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
   invalidCrns,
-  invalidCpuCallback,
   replicationDisabledCallback,
 } = require("../../client/src/lib/forms/invalid-callbacks");
 
@@ -1575,117 +1574,33 @@ describe("invalid callbacks", () => {
       );
     });
   });
-  describe("invalidCpuCallback", () => {
-    it("should be true for non integer value", () => {
-      assert.isTrue(
-        invalidCpuCallback(
-          {
-            cpu: 2.5,
-          },
-          {
-            cpuMin: 0,
-            cpuMax: 28,
-          },
-          "it should be true"
-        )
-      );
+  describe("replicationDisabledCallback", () => {
+    it("should be false for when the storage pool is replication enabled", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-8",
+        zone: "us-east",
+      };
+      assert.isFalse(replicationDisabledCallback(data, {}));
     });
-    it("should be true for invalid range", () => {
-      assert.isTrue(
-        invalidCpuCallback(
-          {
-            cpu: 100,
-          },
-          {
-            cpuMin: 0,
-            cpuMax: 28,
-          },
-          "it should be true"
-        )
-      );
+    it("should be true for when the storage pool is not replication enabled", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-1",
+        zone: "us-east",
+      };
+      assert.isTrue(replicationDisabledCallback(data, {}));
     });
-    it("should be false for valid range", () => {
-      assert.isFalse(
-        invalidCpuCallback(
-          {
-            cpu: 25,
-          },
-          {
-            cpuMin: 0,
-            cpuMax: 28,
-          },
-          "it should be false"
-        )
-      );
+    it("should be false for when the storage pool has no zone (no workspace selected)", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-8",
+      };
+      assert.isTrue(replicationDisabledCallback(data, {}));
     });
-    it("should be false for value of zero", () => {
-      assert.isFalse(
-        invalidCpuCallback(
-          {
-            cpu: 0,
-          },
-          {
-            cpuMin: 0,
-            cpuMax: 28,
-          },
-          "it should be false"
-        )
-      );
-    });
-    it("should be false for empty string and null", () => {
-      assert.isFalse(
-        invalidCpuCallback(
-          {
-            cpu: "",
-          },
-          {
-            cpuMin: 0,
-            cpuMax: 28,
-          },
-          "it should be false"
-        )
-      );
-      assert.isFalse(
-        invalidCpuCallback(
-          {
-            cpu: null,
-          },
-          {
-            cpuMin: 0,
-            cpuMax: 28,
-          },
-          "it should be false"
-        )
-      );
-    });
-    describe("replicationDisabledCallback", () => {
-      it("should be false for when the storage pool is replication enabled", () => {
-        let data = {
-          pi_volume_pool: "Tier1-Flash-8",
-          zone: "us-east",
-        };
-        assert.isFalse(replicationDisabledCallback(data, {}));
-      });
-      it("should be true for when the storage pool is not replication enabled", () => {
-        let data = {
-          pi_volume_pool: "Tier1-Flash-1",
-          zone: "us-east",
-        };
-        assert.isTrue(replicationDisabledCallback(data, {}));
-      });
-      it("should be false for when the storage pool has no zone (no workspace selected)", () => {
-        let data = {
-          pi_volume_pool: "Tier1-Flash-8",
-        };
-        assert.isTrue(replicationDisabledCallback(data, {}));
-      });
-      it("should be true for when the workspace's zone does not have replication enabled", () => {
-        let data = {
-          pi_volume_pool: "Tier1-Flash-8",
-          zone: "dal10",
-        };
-        assert.isTrue(replicationDisabledCallback(data, {}));
-      });
+    it("should be true for when the workspace's zone does not have replication enabled", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-8",
+        zone: "dal10",
+      };
+      assert.isTrue(replicationDisabledCallback(data, {}));
     });
   });
 });

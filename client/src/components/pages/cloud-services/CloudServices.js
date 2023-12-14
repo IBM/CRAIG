@@ -53,7 +53,6 @@ import { ManageService } from "./ManageService";
 import { cosPlans } from "../../../lib/constants";
 import {
   encryptionKeyFilter,
-  invalidCpuCallback,
   invalidCpuTextCallback,
 } from "../../../lib/forms";
 
@@ -214,7 +213,6 @@ function getFormProps(craig, service) {
         encryptionKeys: craig.store.encryptionKeys,
         invalidCallback: invalidName("icd"),
         invalidTextCallback: invalidNameText("icd"),
-        invalidCpuCallback: invalidCpuCallback,
         invalidCpuTextCallback: invalidCpuTextCallback,
       },
       formProps

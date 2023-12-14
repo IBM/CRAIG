@@ -11,7 +11,6 @@ import {
 import {
   AccessGroupsTemplate,
   AtrackerPage,
-  CloudDatabaseTemplate,
   ClustersTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
@@ -484,24 +483,36 @@ const ClassicVlanPage = (craig) => {
 };
 
 const CloudDatabasePage = (craig) => {
-  return (
-    <CloudDatabaseTemplate
-      icd={craig.store.json.icd}
-      disableSave={disableSave}
-      onDelete={craig.icd.delete}
-      onSave={craig.icd.save}
-      onSubmit={craig.icd.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={craig.icd.name.invalid}
-      invalidTextCallback={craig.icd.name.invalidText}
-      invalidCpuCallback={craig.icd.cpu.invalid}
-      invalidCpuTextCallback={craig.icd.cpu.invalidText}
-      craig={craig}
-      docs={RenderDocs("icd", craig.store.json._options.template)}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Cloud Databases",
+      addText: "Create a Cloud Database",
+      jsonField: "icd",
+      formName: "icd",
+    },
+    {
+      groups: [
+        {
+          use_data: craig.icd.use_data,
+          name: craig.icd.name,
+          service: craig.icd.service,
+        },
+        {
+          resource_group: craig.icd.resource_group,
+          plan: craig.icd.plan,
+          group_id: craig.icd.group_id,
+        },
+        {
+          memory: craig.icd.memory,
+          disk: craig.icd.disk,
+          cpu: craig.icd.cpu,
+        },
+        {
+          encryption_key: craig.icd.encryption_key,
+        },
+      ],
+    }
   );
 };
 
