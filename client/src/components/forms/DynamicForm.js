@@ -166,7 +166,8 @@ class DynamicForm extends React.Component {
             >
               {Object.keys(group).map((key, keyIndex) => {
                 let field = group[key];
-                return (field.hideWhen && field.hideWhen(this.state)) ||
+                return (field.hideWhen &&
+                  field.hideWhen(this.state, this.props)) ||
                   key === "hideWhen" ? (
                   ""
                 ) : (

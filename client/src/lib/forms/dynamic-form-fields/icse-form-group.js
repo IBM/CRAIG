@@ -20,7 +20,8 @@ function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
       if (allNextGroupsHidden)
         allNextGroupsHidden = allGroupItemsHidden(
           componentProps.form.groups[i],
-          stateData
+          stateData,
+          componentProps
         );
     }
   }
@@ -38,14 +39,15 @@ function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
  * check if all items in a line are hidden
  * @param {*} group
  * @param {*} stateData
+ * @param {*} componentProps
  * @returns {boolean} true if all are hidden
  */
-function allGroupItemsHidden(group, stateData) {
+function allGroupItemsHidden(group, stateData, componentProps) {
   let areAllHidden = true;
   eachKey(group, (key) => {
     if (
       key !== "hideWhen" &&
-      (!group[key].hideWhen || !group[key].hideWhen(stateData))
+      (!group[key].hideWhen || !group[key].hideWhen(stateData, componentProps))
     ) {
       areAllHidden = false;
     }

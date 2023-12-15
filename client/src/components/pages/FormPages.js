@@ -15,7 +15,6 @@ import {
   SecretsManagerTemplate,
   SecurityGroupTemplate,
   SubnetPageTemplate,
-  KeyManagementTemplate,
   NetworkAclTemplate,
   RoutingTableTemplate,
   VpnServerTemplate,
@@ -780,39 +779,57 @@ const IamAccountSettings = (craig) => {
 };
 
 const KeyManagementPage = (craig) => {
-  return (
-    <KeyManagementTemplate
-      docs={RenderDocs("key_management", craig.store.json._options.template)}
-      key_management={craig.store.json.key_management}
-      disableSave={disableSave}
-      onDelete={craig.key_management.delete}
-      onSave={craig.key_management.save}
-      onSubmit={craig.key_management.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      deleteDisabled={() => {
-        return (
-          craig.store.json.key_management.length === 1 &&
-          craig.store.json._options.fs_cloud
-        );
-      }}
-      selectEndpoint={
-        craig.store.json._options.endpoints === "public-and-private"
-      }
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={craig.key_management.name.invalid}
-      invalidTextCallback={craig.key_management.name.invalidText}
-      invalidKeyCallback={craig.key_management.keys.name.invalid}
-      invalidKeyTextCallback={craig.key_management.keys.name.invalidText}
-      invalidRingCallback={craig.key_management.keys.key_ring.invalid}
-      invalidRingText={
-        "Invalid Key Ring Name. Must match the regular expression: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s"
-      }
-      onKeySave={craig.key_management.keys.save}
-      onKeyDelete={craig.key_management.keys.delete}
-      onKeySubmit={craig.key_management.keys.create}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Key Management",
+      addText: "Create a Key Management Service",
+      jsonField: "key_management",
+      formName: "kms",
+    },
+    {
+      jsonField: "key_management",
+      groups: [
+        {
+          use_hs_crypto: craig.key_management.use_hs_crypto,
+          use_data: craig.key_management.use_data,
+        },
+        {
+          name: craig.key_management.name,
+          authorize_vpc_reader_role:
+            craig.key_management.authorize_vpc_reader_role,
+        },
+        {
+          resource_group: craig.key_management.resource_group,
+        },
+      ],
+      subForms: [
+        {
+          jsonField: "keys",
+          name: "Encryption Keys",
+          addText: "Create an Encryption Key",
+          form: {
+            groups: [
+              {
+                name: craig.key_management.keys.name,
+                key_ring: craig.key_management.keys.key_ring,
+              },
+              {
+                force_delete: craig.key_management.keys.force_delete,
+                dual_auth_delete: craig.key_management.keys.dual_auth_delete,
+              },
+              {
+                root_key: craig.key_management.keys.root_key,
+                rotation: craig.key_management.keys.rotation,
+              },
+              {
+                endpoint: craig.key_management.keys.endpoint,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
