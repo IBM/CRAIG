@@ -193,6 +193,7 @@ describe("iam", () => {
           assert.deepEqual(
             store.store.json.access_groups[0].policies[0],
             {
+              group: "test",
               name: "hi",
               roles: ["Writer"],
               resources: {
@@ -241,6 +242,7 @@ describe("iam", () => {
                 service: "cloud-object-storage",
                 resource_instance_id: null,
               },
+              group: "test",
             },
             "it should create policy"
           );
@@ -259,6 +261,40 @@ describe("iam", () => {
             store.store.json.access_groups[0].policies,
             [],
             "it should have no policies"
+          );
+        });
+      });
+      describe("access_group.policies.schema", () => {
+        let craig;
+        beforeEach(() => {
+          craig = newState();
+        });
+        it("should return helper text for name", () => {
+          assert.deepEqual(
+            craig.access_groups.policies.name.helperText(
+              { name: "policy" },
+              {
+                craig: {
+                  store: {
+                    json: {
+                      _options: {
+                        prefix: "test",
+                      },
+                    },
+                  },
+                },
+              }
+            ),
+            "test-policy",
+            "it should display data"
+          );
+        });
+        it("should not have resource group as invalid when empty string", () => {
+          assert.isFalse(
+            craig.access_groups.policies.resource_group.invalid({
+              resource_group: "",
+            }),
+            "it should be valid"
           );
         });
       });
@@ -284,6 +320,7 @@ describe("iam", () => {
           assert.deepEqual(
             store.store.json.access_groups[0].dynamic_policies[0],
             {
+              group: "test",
               name: "frog",
               identity_provider: "todd",
               expiration: 2,
@@ -321,6 +358,7 @@ describe("iam", () => {
           assert.deepEqual(
             store.store.json.access_groups[0].dynamic_policies[0],
             {
+              group: "test",
               name: "frog",
               identity_provider: "todd",
               expiration: 3,
@@ -361,6 +399,130 @@ describe("iam", () => {
             store.store.json.access_groups[0].dynamic_policies,
             "it should have no dynamic policies"
           );
+        });
+      });
+      describe("access_groups.dynamic_policies.schema", () => {
+        let craig;
+        beforeEach(() => {
+          craig = newState();
+        });
+        it("should have valid expiration when empty string", () => {
+          assert.isFalse(
+            craig.access_groups.dynamic_policies.expiration.invalid({
+              expiration: "",
+            }),
+            "it should be valid"
+          );
+        });
+        it("should be invalid when no identity provider", () => {
+          assert.isTrue(
+            craig.access_groups.dynamic_policies.identity_provider.invalid({}),
+            "it should be invalid"
+          );
+        });
+        it("should have invalid expiration when out of range", () => {
+          assert.isTrue(
+            craig.access_groups.dynamic_policies.expiration.invalid({
+              expiration: "29",
+            }),
+            "it should be invalid"
+          );
+        });
+        it("should hide helper text for claim", () => {
+          assert.isNull(
+            craig.access_groups.dynamic_policies.claim.helperText(),
+            "it should be hidden"
+          );
+        });
+        it("should set state on condition state change", () => {
+          let data = {
+            claim: "aa",
+            conditions: {},
+          };
+          craig.access_groups.dynamic_policies.claim.onStateChange(data);
+          assert.deepEqual(
+            data,
+            {
+              claim: "aa",
+              conditions: {
+                claim: "aa",
+              },
+            },
+            "it should be hidden"
+          );
+        });
+        it("should set state on condition state change", () => {
+          let data = {
+            claim: "aa",
+          };
+          craig.access_groups.dynamic_policies.claim.onStateChange(data);
+          assert.deepEqual(
+            data,
+            {
+              claim: "aa",
+              conditions: {
+                claim: "aa",
+              },
+            },
+            "it should be hidden"
+          );
+        });
+        it("should return correct value on render for operator when empty string", () => {
+          assert.deepEqual(
+            craig.access_groups.dynamic_policies.operator.onRender({
+              conditions: {
+                operator: "",
+              },
+            }),
+            "",
+            "it should return correct data"
+          );
+        });
+        it("should return correct value on render for operator when value", () => {
+          assert.deepEqual(
+            craig.access_groups.dynamic_policies.operator.onRender({
+              conditions: {
+                operator: "NOT_EQUALS_IGNORE_CASE",
+              },
+            }),
+            "Not Equals (Ignore Case)",
+            "it should return correct data"
+          );
+        });
+        it("should return correct value on state change for operator when value", () => {
+          let data = {
+            operator: "Not Equals (Ignore Case)",
+            conditions: {},
+          };
+          craig.access_groups.dynamic_policies.operator.onStateChange(data),
+            assert.deepEqual(
+              data.conditions.operator,
+              "NOT_EQUALS_IGNORE_CASE",
+              "it should return correct data"
+            );
+        });
+        it("should return correct value on state change for operator when value", () => {
+          let data = {
+            operator: "Not Equals (Ignore Case)",
+          };
+          craig.access_groups.dynamic_policies.operator.onStateChange(data),
+            assert.deepEqual(
+              data.conditions.operator,
+              "NOT_EQUALS_IGNORE_CASE",
+              "it should return correct data"
+            );
+        });
+        it("should return correct value on state change for operator when empty string", () => {
+          let data = {
+            operator: "",
+            conditions: {},
+          };
+          craig.access_groups.dynamic_policies.operator.onStateChange(data),
+            assert.deepEqual(
+              data.conditions.operator,
+              "",
+              "it should return correct data"
+            );
         });
       });
     });

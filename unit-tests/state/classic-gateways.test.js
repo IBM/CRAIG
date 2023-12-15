@@ -480,4 +480,101 @@ describe("classic gateways", () => {
       );
     });
   });
+  describe("classic_gateways.schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    describe("classic_gateways.name", () => {
+      it("should return correct helper text", () => {
+        assert.deepEqual(
+          craig.classic_gateways.name.helperText(
+            { name: "frog" },
+            {
+              craig: craig,
+            }
+          ),
+          "iac-gateway-frog",
+          "it should return correct helper text"
+        );
+      });
+    });
+    describe("classic_gateways.domain", () => {
+      it("should return false when domain is undefined", () => {
+        assert.isTrue(
+          craig.classic_gateways.domain.invalid({}),
+          "it should be true"
+        );
+      });
+    });
+    describe("classic_gateways.datacenter", () => {
+      it("should reset private vlan and public vlan when changing datacenter", () => {
+        let data = {};
+        craig.classic_gateways.datacenter.onStateChange(data);
+        assert.deepEqual(
+          data,
+          { private_vlan: "", public_vlan: "" },
+          "it should set to empty string"
+        );
+      });
+    });
+    describe("classic_gateways.ssh_key", () => {
+      it("should return groups", () => {
+        assert.deepEqual(
+          craig.classic_gateways.ssh_key.groups({}, { craig: craig }),
+          ["example-classic"],
+          "it should return list of keys"
+        );
+      });
+    });
+    describe("classic_gateways.public_vlan", () => {
+      it("should return groups", () => {
+        assert.deepEqual(
+          craig.classic_gateways.public_vlan.groups(
+            { datacenter: "dal10" },
+            { craig: craig }
+          ),
+          ["vsrx-public"],
+          "it should return vlans"
+        );
+      });
+      it("should hide when private_network_only", () => {
+        assert.isTrue(
+          craig.classic_gateways.public_vlan.hideWhen({
+            private_network_only: true,
+          }),
+          "it should be hidden"
+        );
+      });
+    });
+    describe("classic_gateways.public_network_only", () => {
+      it("should change state data when changing from false to true", () => {
+        let data = {
+          private_network_only: false,
+        };
+        craig.classic_gateways.private_network_only.onStateChange(data);
+        assert.deepEqual(
+          data,
+          {
+            private_network_only: true,
+            public_vlan: "",
+          },
+          "it should set data"
+        );
+      });
+      it("should change state data when changing from true to false", () => {
+        let data = {
+          private_network_only: true,
+        };
+        craig.classic_gateways.private_network_only.onStateChange(data);
+        assert.deepEqual(
+          data,
+          {
+            private_network_only: false,
+          },
+          "it should set data"
+        );
+      });
+    });
+  });
 });

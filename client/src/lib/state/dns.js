@@ -13,10 +13,23 @@ const {
   isNullOrEmptyString,
   isEmpty,
   isInRange,
+  revision,
+  isWholeNumber,
+  nestedSplat,
+  contains,
 } = require("lazy-z");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  selectInvalidText,
+  kebabCaseInput,
+  titleCaseRender,
+  resourceGroupsField,
+  unconditionalInvalidText,
+  vpcGroups,
+  subnetMultiSelect,
+  fieldIsNotWholeNumber,
+  timeToLive,
 } = require("./utils");
 const {
   invalidName,
@@ -220,6 +233,24 @@ function dnsResolverDelete(config, stateData, componentProps) {
 }
 
 /**
+ * hide when record is not SRV
+ * @param {*} stateData
+ * @returns {boolean} true if should be hidden
+ */
+function hideWhenRecordNotSrv(stateData) {
+  return stateData.type !== "SRV";
+}
+
+/**
+ * hide when not targeting vs
+ * @param {*} stateData
+ * @returns {boolean} true when should be hidden
+ */
+function hideWhenNotVsi(stateData) {
+  return stateData.use_vsi !== true;
+}
+
+/**
  * init dns store
  * @param {*} store
  */
@@ -236,17 +267,21 @@ function initDnsStore(store) {
     ),
     schema: {
       name: {
+        size: "small",
         default: "",
         invalid: invalidName("dns"),
         invalidText: invalidNameText("dns"),
       },
       plan: {
+        size: "small",
+        type: "select",
         default: "free",
+        groups: ["Free", "Standard"],
+        invalidText: selectInvalidText("plan"),
+        onInputChange: kebabCaseInput("plan"),
+        onRender: titleCaseRender("plan"),
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(true),
     },
     subComponents: {
       zones: {
@@ -260,27 +295,59 @@ function initDnsStore(store) {
         ),
         schema: {
           name: {
+            size: "small",
             default: "",
-            invalid: invalidDnsZoneName,
+            invalid: function (stateData, componentProps) {
+              let allZoneNames = [];
+              componentProps.craig.store.json.dns.forEach((instance) => {
+                instance.zones.forEach((zone) => {
+                  if (
+                    (componentProps.data &&
+                      componentProps.data.name !== zone.name) ||
+                    componentProps.isModal
+                  ) {
+                    allZoneNames.push(zone.name);
+                  }
+                });
+              });
+              return contains(allZoneNames, stateData.name)
+                ? true
+                : invalidDnsZoneName(stateData, componentProps);
+            },
             invalidText: invalidNameText("zones"),
           },
           vpcs: {
-            default: "",
+            size: "small",
+            labelText: "VPC Networks",
+            type: "multiselect",
+            default: [],
             invalid: function (stateData) {
               return (
                 isNullOrEmptyString(stateData.vpcs) || isEmpty(stateData.vpcs)
               );
             },
+            invalidText: unconditionalInvalidText("Select at least one VPC"),
+            groups: vpcGroups,
           },
           label: {
+            size: "small",
             default: "",
             invalid: fieldIsNullOrEmptyString("label"),
+            invalidText: unconditionalInvalidText(
+              "Label cannot be null or empty string"
+            ),
           },
           description: {
+            labelText: "Description",
+            type: "textArea",
             default: "",
             invalid: function (stateData) {
               return invalidDescription(stateData.description);
             },
+            invalidText: unconditionalInvalidText(
+              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+            ),
+            placeholder: "(Optional) DNS Zone Description",
           },
         },
       },
@@ -300,49 +367,141 @@ function initDnsStore(store) {
             "priority",
             "service",
             "weight",
+            "vpc",
+            "vsi",
+            "ttl",
           ],
           "dns",
           "records"
         ),
         schema: {
+          use_vsi: {
+            type: "toggle",
+            labelText: "Use VSI IP Address",
+            default: false,
+            tooltip: {
+              content:
+                "Use the IP address of a primary network interface for a VPC Virtual Server as the resource data for this record",
+            },
+          },
+          vpc: {
+            size: "small",
+            labelText: "VPC",
+            default: "",
+            type: "select",
+            groups: vpcGroups,
+            invalidText: selectInvalidText("VPC"),
+            invalid: function (stateData) {
+              return stateData.use_vsi
+                ? isNullOrEmptyString(stateData.vpc, true)
+                : false;
+            },
+            hideWhen: hideWhenNotVsi,
+          },
+          vsi: {
+            size: "small",
+            labelText: "Virtual Server Instance",
+            default: "",
+            type: "select",
+            invalid: function (stateData) {
+              return stateData.use_vsi
+                ? isNullOrEmptyString(stateData.vsi, true)
+                : false;
+            },
+            invalidText: selectInvalidText("VSI"),
+            groups: function (stateData, componentProps) {
+              let allVsi = componentProps.craig.store.json.vsi.filter((vsi) => {
+                if (vsi.vpc === stateData.vpc) {
+                  return vsi;
+                }
+              });
+              let allVsiNames = [];
+              allVsi.forEach((deployment) => {
+                for (let i = 0; i < deployment.subnets.length; i++) {
+                  for (let j = 0; j < deployment.vsi_per_subnet; j++) {
+                    allVsiNames.push(`${deployment.name}-${i + 1}-${j + 1}`);
+                  }
+                }
+              });
+              return allVsiNames;
+            },
+            hideWhen: hideWhenNotVsi,
+          },
           name: {
+            size: "small",
             default: "",
             invalid: invalidName("records"),
             invalidText: invalidNameText("records"),
           },
           dns_zone: {
+            size: "small",
+            labelText: "DNS Zone",
+            type: "select",
             default: "",
             invalid: fieldIsNullOrEmptyString("dns_zone"),
+            invalidText: unconditionalInvalidText("Select a DNS Zone"),
+            groups: function (stateData, componentProps) {
+              return splat(
+                new revision(componentProps.craig.store.json).child(
+                  "dns",
+                  componentProps.arrayParentName
+                ).data.zones,
+                "name"
+              );
+            },
           },
           rdata: {
+            size: "small",
+            labelText: "Resource Data",
             default: "",
             invalid: fieldIsNullOrEmptyString("rdata"),
+            invalidText: unconditionalInvalidText(
+              "Resource Data cannot be null or empty string."
+            ),
+            hideWhen: function (stateData) {
+              return stateData.use_vsi === true;
+            },
           },
+          ttl: timeToLive(),
           type: {
+            size: "small",
+            type: "select",
             default: "",
             invalid: fieldIsNullOrEmptyString("type"),
+            invalidText: selectInvalidText("DNS record type"),
+            groups: ["A", "AAAA", "CNAME", "PTR", "TXT", "MX", "SRV"],
           },
           preference: {
+            size: "small",
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "MX") {
-                if (!isNullOrEmptyString(stateData.preference)) {
-                  return !isInRange(parseInt(stateData.preference), 0, 65535);
-                } else return true;
+                return fieldIsNotWholeNumber("preference", 0, 65535)(stateData);
               } else return false;
+            },
+            invalidText: unconditionalInvalidText(
+              "Must be a whole number within range 0 and 65535"
+            ),
+            hideWhen: function (stateData) {
+              return stateData.type !== "MX";
             },
           },
           port: {
+            size: "small",
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                if (!isNullOrEmptyString(stateData.port)) {
-                  return !isInRange(parseInt(stateData.port), 1, 65535);
-                } else return true;
+                return fieldIsNotWholeNumber("port", 1, 65535)(stateData);
               } else return false;
             },
+            invalidText: unconditionalInvalidText(
+              "Must be a whole number between 1 and 65535"
+            ),
+            hideWhen: hideWhenRecordNotSrv,
           },
           protocol: {
+            size: "small",
+            type: "select",
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
@@ -352,18 +511,25 @@ function initDnsStore(store) {
                 );
               } else return false;
             },
+            invalidText: selectInvalidText("protocol"),
+            groups: ["TCP", "UDP"],
+            hideWhen: hideWhenRecordNotSrv,
           },
           priority: {
+            size: "small",
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                if (!isNullOrEmptyString(stateData.priority)) {
-                  return !isInRange(parseInt(stateData.priority), 0, 65535);
-                } else return true;
+                return fieldIsNotWholeNumber("priority", 0, 65535)(stateData);
               } else return false;
             },
+            invalidText: unconditionalInvalidText(
+              "Must be a whole number between 0 and 65535"
+            ),
+            hideWhen: hideWhenRecordNotSrv,
           },
           service: {
+            size: "small",
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
@@ -375,8 +541,13 @@ function initDnsStore(store) {
                 } else return true;
               } else return false;
             },
+            invalidText: unconditionalInvalidText(
+              "Service must start with a '_'."
+            ),
+            hideWhen: hideWhenRecordNotSrv,
           },
           weight: {
+            size: "small",
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
@@ -385,6 +556,10 @@ function initDnsStore(store) {
                 } else return true;
               } else return false;
             },
+            invalidText: unconditionalInvalidText(
+              "Must be a whole number between 0 and 65535"
+            ),
+            hideWhen: hideWhenRecordNotSrv,
           },
         },
       },
@@ -399,25 +574,39 @@ function initDnsStore(store) {
         ),
         schema: {
           name: {
+            size: "small",
             default: "",
             invalid: invalidName("custom_resolvers"),
             invalidText: invalidNameText("custom_resolvers"),
           },
           vpc: {
+            size: "small",
+            type: "select",
+            labelText: "VPC",
             default: "",
             invalid: fieldIsNullOrEmptyString("vpc"),
+            invalidText: selectInvalidText("VPC"),
+            groups: vpcGroups,
           },
-          subnets: {
-            default: "",
+          subnets: subnetMultiSelect({
             invalid: function (stateData) {
-              return isEmpty(stateData.subnets);
+              return stateData.subnets.length > 3;
             },
-          },
+            invalidText: "Select between 1 and 3 subnets",
+          }),
           description: {
+            labelText: "Description",
+            type: "textArea",
             default: "",
             invalid: function (stateData) {
               return invalidDescription(stateData.description);
             },
+            invalidText: unconditionalInvalidText(
+              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+            ),
+            placeholder: unconditionalInvalidText(
+              "(Optional) Custom Resolver Description"
+            ),
           },
         },
       },

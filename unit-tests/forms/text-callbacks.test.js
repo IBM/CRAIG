@@ -20,7 +20,6 @@ const {
 const {
   invalidDescriptionText,
   invalidCrnText,
-  invalidCpuTextCallback,
   labelsInvalidText,
   powerVsWorkspaceHelperText,
   vpnServersHelperText,
@@ -688,28 +687,6 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("accessGroupPolicyHelperTextCallback", () => {
-    it("should return text with prefix and random suffix", () => {
-      assert.deepEqual(
-        accessGroupPolicyHelperTextCallback(
-          { name: "policy" },
-          {
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "test",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "test-policy",
-        "it should display data"
-      );
-    });
-  });
   describe("invalidCidrText", () => {
     it("should return correct text if cidr is null", () => {
       assert.deepEqual(
@@ -880,20 +857,6 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("invalidCpuTextCallback", () => {
-    let minCpu = 0;
-    let maxCpu = 28;
-    assert.deepEqual(
-      invalidCpuTextCallback(
-        {},
-        {
-          cpuMin: minCpu,
-          cpuMax: maxCpu,
-        }
-      ),
-      `Using dedicated cores requires a minimum of ${minCpu} cores and a maximum of ${maxCpu} cores per member. For shared CPU, select 0 cores.`
-    );
-  });
   describe("powerVsWorkspaceHelperText", () => {
     it("should return correct helper text", () => {
       assert.deepEqual(
@@ -935,6 +898,26 @@ describe("text callbacks", () => {
         ),
         "toad-vpn-server-frog",
         "it should return correct helper text"
+      );
+    });
+  });
+  describe("invalidCrnText", () => {
+    it("should return empty string when not invalid", () => {
+      assert.deepEqual(
+        invalidCrnText({
+          crns: undefined,
+        }),
+        "",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when invalid", () => {
+      assert.deepEqual(
+        invalidCrnText({
+          crns: ["aaa"],
+        }),
+        "Enter a valid comma separated list of CRNs",
+        "it should return correct message"
       );
     });
   });

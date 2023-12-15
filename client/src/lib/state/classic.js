@@ -11,6 +11,7 @@ const {
   nameHelperText,
   selectInvalidText,
   nameField,
+  sshKeySchema,
 } = require("./utils");
 
 /**
@@ -144,22 +145,7 @@ function intiClassicInfrastructure(store) {
       ["name", "public_key"],
       "classic_ssh_keys"
     ),
-    schema: {
-      name: {
-        default: "",
-        invalid: invalidName("classic_ssh_keys"),
-        invalidText: invalidNameText("classic_ssh_keys"),
-      },
-      public_key: {
-        default: "",
-        invalid: function (stateData, componentProps) {
-          return invalidSshPublicKey(stateData, componentProps).invalid;
-        },
-        invalidText: function (stateData, componentProps) {
-          return invalidSshPublicKey(stateData, componentProps).invalidText;
-        },
-      },
-    },
+    schema: sshKeySchema("classic_ssh_keys"),
   });
 
   store.newField("classic_vlans", {
@@ -180,7 +166,9 @@ function intiClassicInfrastructure(store) {
         type: "select",
         groups: ["Public", "Private"],
         onRender: function (stateData) {
-          return titleCase(stateData.type.toLowerCase());
+          return isNullOrEmptyString(stateData.type, true)
+            ? ""
+            : titleCase(stateData.type.toLowerCase());
         },
         onInputChange: function (stateData) {
           return stateData.type.toUpperCase();
@@ -196,6 +184,7 @@ function intiClassicInfrastructure(store) {
       },
       router_hostname: {
         type: "select",
+        default: "",
         tooltip: {
           content:
             "To create a Classic Gateway using multiple VLANS, each VLAN must be in the same zone and have the same router hostname (calculated at runtime)",

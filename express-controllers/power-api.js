@@ -66,12 +66,11 @@ function powerRoutes(axios, controller) {
    * @param {*} req
    * @param {*} res
    */
-  controller.getPowerComponent = function (req, res) {
+  controller.getPowerComponent = function (req) {
     let zone = req.params["region"];
     let componentType = kebabCase(req.params["component"]);
     let region = getRegionFromZone(zone);
     let guid = process.env[`POWER_WORKSPACE_${snakeCase(zone).toUpperCase()}`];
-
     return new Promise((resolve, reject) => {
       if (guid === undefined) {
         return reject(
@@ -116,20 +115,23 @@ function powerRoutes(axios, controller) {
       });
     })
       .then((response) => {
-        if (componentType === "images") res.send(response.data.images);
-        else {
+        if (componentType === "images") {
+          return response.data.images;
+        } else {
           let formattedStoragePools = [];
           response.data.storagePoolsCapacity.forEach((pool) => {
             formattedStoragePools.push(pool.poolName);
           });
-          res.send(formattedStoragePools);
+          return formattedStoragePools;
         }
       })
       .catch((error) => {
-        console.error(error + " Sending hardcoded zone images.");
-        componentType === "images"
-          ? res.send(powerImageMap[zone])
-          : res.send(powerStoragePoolRegionMap[zone]);
+        console.error(error + "... Sending hardcoded zone data.");
+        if (componentType === "images") {
+          return powerImageMap[zone];
+        } else {
+          return powerStoragePoolRegionMap[zone];
+        }
       });
   };
 }

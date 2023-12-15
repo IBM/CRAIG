@@ -234,12 +234,121 @@ describe("key_management", () => {
       });
       assert.deepEqual(state.store.json.key_management, expectedData);
     });
+    it("should add a new key management system with no keys", () => {
+      let state = new newState();
+      let expectedData = [
+        {
+          name: "kms",
+          resource_group: "service-rg",
+          use_hs_crypto: false,
+          authorize_vpc_reader_role: true,
+          use_data: false,
+          keys: [
+            {
+              key_ring: "ring",
+              name: "key",
+              root_key: true,
+              force_delete: true,
+              endpoint: "public",
+              rotation: 1,
+              dual_auth_delete: false,
+            },
+            {
+              key_ring: "ring",
+              name: "atracker-key",
+              root_key: true,
+              force_delete: true,
+              endpoint: "public",
+              rotation: 1,
+              dual_auth_delete: false,
+            },
+            {
+              key_ring: "ring",
+              name: "vsi-volume-key",
+              root_key: true,
+              force_delete: true,
+              endpoint: "public",
+              rotation: 1,
+              dual_auth_delete: false,
+            },
+            {
+              key_ring: "ring",
+              name: "roks-key",
+              root_key: true,
+              force_delete: null,
+              endpoint: null,
+              rotation: 1,
+              dual_auth_delete: false,
+            },
+          ],
+        },
+        {
+          name: "todd",
+          resource_group: null,
+          use_hs_crypto: false,
+          use_data: false,
+          authorize_vpc_reader_role: false,
+          keys: [],
+        },
+      ];
+      state.key_management.create({
+        name: "todd",
+        resource_group: null,
+        use_hs_crypto: false,
+        use_data: false,
+        authorize_vpc_reader_role: false,
+      });
+      assert.deepEqual(state.store.json.key_management, expectedData);
+    });
   });
   describe("key_management.delete", () => {
     it("should delete a key_management system", () => {
       let state = new newState();
       state.key_management.delete({}, { data: { name: "kms" } });
       assert.deepEqual(state.store.json.key_management, []);
+    });
+  });
+  describe("key_management.schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = state();
+    });
+    it("should return correct name for use hs crypto on render", () => {
+      assert.deepEqual(
+        craig.key_management.use_hs_crypto.onRender({ use_hs_crypto: true }),
+        "HPCS",
+        "it should return correct data"
+      );
+    });
+    it("should return correct name for key protect on render", () => {
+      assert.deepEqual(
+        craig.key_management.use_hs_crypto.onRender({ use_hs_crypto: false }),
+        "Key Protect",
+        "it should return correct data"
+      );
+    });
+    it("should set state data for use hs crypto on input change", () => {
+      let data = {
+        use_hs_crypto: "HPCS",
+      };
+      assert.isTrue(
+        craig.key_management.use_hs_crypto.onInputChange(data),
+        "it should return true"
+      );
+      assert.deepEqual(
+        data,
+        {
+          use_data: true,
+          use_hs_crypto: "HPCS",
+        },
+        "it should return correct data"
+      );
+    });
+    it("should disable use data when use hpcs is true", () => {
+      assert.isTrue(
+        craig.key_management.use_data.disabled({ use_hs_crypto: true }),
+        "it should be disabled"
+      );
     });
   });
   describe("key_management.keys", () => {
@@ -342,6 +451,27 @@ describe("key_management", () => {
           state.store.encryptionKeys,
           ["atracker-key", "vsi-volume-key", "roks-key"],
           "it should update key"
+        );
+      });
+    });
+    describe("key management schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+      });
+      it("should hide endpoint when craig is not public and private", () => {
+        assert.isTrue(
+          craig.key_management.keys.endpoint.hideWhen({}, { craig: craig }),
+          "it should be hidden"
+        );
+      });
+      it("should hide rotation when key is not root key", () => {
+        assert.isTrue(
+          craig.key_management.keys.rotation.hideWhen(
+            { root_key: false },
+            { craig: craig }
+          ),
+          "it should be hidden"
         );
       });
     });

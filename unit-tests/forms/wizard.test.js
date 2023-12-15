@@ -57,7 +57,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -788,6 +788,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -841,7 +850,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -1572,6 +1581,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -1624,7 +1642,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2009,6 +2027,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -2061,7 +2088,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2437,6 +2464,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -2489,7 +2525,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2941,6 +2977,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -2994,7 +3039,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -3098,6 +3143,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -3150,7 +3204,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -3595,6 +3649,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
 
     assert.deepEqual(
@@ -3647,7 +3710,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4067,6 +4130,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -4118,7 +4190,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4538,6 +4610,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -4590,7 +4671,7 @@ describe("setup wizard", () => {
         enable_classic: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -4957,6 +5038,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -5008,7 +5098,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -5376,6 +5466,15 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,
@@ -5413,6 +5512,13 @@ describe("setup wizard", () => {
         session_expiration_in_seconds: null,
         session_invalidation_in_seconds: null,
       },
+      scc_v2: {
+        account_id: "${var.account_id}",
+        enable: false,
+        profile_attachments: [],
+        region: "",
+        resource_group: "",
+      },
       access_groups: [],
       secrets_manager: [],
       f5_vsi: [],
@@ -5428,7 +5534,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.7.1",
+        craig_version: "1.8.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -6399,6 +6505,8 @@ describe("setup wizard", () => {
       classic_vlans: [],
       classic_gateways: [],
       cis: [],
+      vtl: [],
+      cis_glbs: [],
     };
     assert.deepEqual(
       actualData,

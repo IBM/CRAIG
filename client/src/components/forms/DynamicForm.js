@@ -13,20 +13,22 @@ import {
   DynamicFormToggle,
   DynamicTextArea,
   DynamicMultiSelect,
-} from "./dynamic-form/components";
+  DynamicPublicKey,
+  SubFormOverrideTile,
+  PowerInterfaces,
+  PerCloudConnections,
+} from "./dynamic-form";
 import { eachKey, isBoolean, contains } from "lazy-z";
-import { propsMatchState } from "../../lib";
-import {
-  ClassicDisabledTile,
-  NoClassicGatewaysTile,
-  NoDomainsTile,
-} from "./dynamic-form/tiles";
+import { disableSave, propsMatchState } from "../../lib";
 import {
   dynamicIcseFormGroupsProps,
   dynamicIcseHeadingProps,
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
-import { Network_3 } from "@carbon/icons-react";
+import { edgeRouterEnabledZones } from "../../lib/constants";
+import { DynamicFetchSelect } from "./dynamic-form/components";
+import { Button } from "@carbon/react";
+import { Rocket } from "@carbon/icons-react";
 
 const doNotRenderFields = [
   "heading",
@@ -55,7 +57,14 @@ class DynamicForm extends React.Component {
           !isBoolean(this.state[field]) &&
           !contains(doNotRenderFields, field)
         )
-          this.state[field] = group[field].default || "";
+          // prevent ssh public key from causing propsMatchState to be false
+          // when use data is true. also prevent router_hostname from rendering as
+          // empty string when null
+          this.state[field] = isBoolean(group[field].default)
+            ? group[field].default
+            : group[field].default === null && field !== "router_hostname"
+            ? null
+            : group[field].default || "";
       });
     });
 
@@ -154,10 +163,13 @@ class DynamicForm extends React.Component {
           ) : group.heading ? (
             <IcseHeading {...dynamicIcseHeadingProps(group)} />
           ) : (
-            <IcseFormGroup {...dynamicIcseFormGroupsProps(this.props, index)}>
+            <IcseFormGroup
+              {...dynamicIcseFormGroupsProps(this.props, index, this.state)}
+            >
               {Object.keys(group).map((key, keyIndex) => {
                 let field = group[key];
-                return (field.hideWhen && field.hideWhen(this.state)) ||
+                return (field.hideWhen &&
+                  field.hideWhen(this.state, this.props)) ||
                   key === "hideWhen" ? (
                   ""
                 ) : (
@@ -178,6 +190,10 @@ class DynamicForm extends React.Component {
                         ? DynamicTextArea
                         : field.type === "multiselect"
                         ? DynamicMultiSelect
+                        : field.type === "public-key"
+                        ? DynamicPublicKey
+                        : field.type === "fetchSelect"
+                        ? DynamicFetchSelect
                         : DynamicFormTextInput,
                       {
                         name: key,
@@ -199,99 +215,94 @@ class DynamicForm extends React.Component {
             </IcseFormGroup>
           )
         )}
-        {
-          // this is less than elegant, as we add more custom components we can
-          // figure out the best way to render custom components
-          this.props.formName === "Power Instances" && (
-            <div className="formInSubForm">
-              {this.state.network.length === 0
-                ? "No Network Interfaces Selected"
-                : this.state.network.map((nw, index) => {
-                    return (
-                      <IcseFormGroup
-                        key={nw.name + "-group"}
-                        className="alignItemsCenter marginBottomSmall"
-                      >
-                        <Network_3 className="powerIpMargin" />
-                        <div className="powerIpMargin fieldWidth">
-                          <p>{nw.name}</p>
-                        </div>
-                        <DynamicFormTextInput
-                          name={"ip_address_" + index}
-                          field={this.props.craig.power_instances.ip_address}
-                          parentState={this.state}
-                          parentProps={this.props}
-                          handleInputChange={this.handleInputChange}
-                          index={index}
-                          value={nw.ip_address}
-                        />
-                      </IcseFormGroup>
-                    );
-                  })}
-            </div>
-          )
-        }
+        <PowerInterfaces
+          stateData={this.state}
+          componentProps={this.props}
+          handleInputChange={this.handleInputChange}
+        />
+        {this.props.formName === "options" ? (
+          <Button
+            disabled={disableSave("options", this.state, this.props)}
+            className="marginTop"
+            onClick={() => {
+              window.location.pathname = "/form/resourceGroups";
+            }}
+          >
+            Begin Customizing <Rocket className="rocketIcon" />
+          </Button>
+        ) : (
+          ""
+        )}
         {this.props.isModal === true || !this.props.form.subForms
           ? ""
-          : this.props.form.subForms.map((subForm) => (
-              <IcseFormTemplate
-                key={subForm.name}
-                overrideTile={
-                  // this is currently messy, we'll need to figure out a better solution
-                  subForm.jsonField === "dns_records" &&
-                  this.props.data.domains.length === 0 ? (
-                    <NoDomainsTile />
-                  ) : subForm.jsonField === "gre_tunnels" &&
-                    !this.props.craig.store.json._options.enable_classic ? (
-                    ClassicDisabledTile(true)
-                  ) : subForm.jsonField === "gre_tunnels" &&
-                    this.props.craig.store.json.classic_gateways.length ===
-                      0 ? (
-                    <NoClassicGatewaysTile />
-                  ) : undefined
-                }
-                hideFormTitleButton={
-                  subForm.hideFormTitleButton
-                    ? subForm.hideFormTitleButton(this.state, this.props)
-                    : false
-                }
-                name={subForm.name}
-                subHeading
-                addText={subForm.createText}
-                arrayData={this.props.data[subForm.jsonField]}
-                innerForm={DynamicForm}
-                disableSave={this.props.disableSave}
-                onDelete={
-                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
-                    .delete
-                }
-                onSave={
-                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
-                    .save
-                }
-                onSubmit={
-                  this.props.craig[this.props.form.jsonField][subForm.jsonField]
-                    .create
-                }
-                propsMatchState={propsMatchState}
-                innerFormProps={{
-                  formName: subForm.name,
-                  craig: this.props.craig,
-                  form: subForm.form,
-                  disableSave: this.props.disableSave,
-                  arrayParentName: this.props.data.name,
-                  propsMatchState: propsMatchState,
-                }}
-                toggleFormFieldName={subForm.toggleFormFieldName}
-                hideAbout
-                toggleFormProps={{
-                  hideName: true,
-                  submissionFieldName: subForm.jsonField,
-                  disableSave: this.props.disableSave,
-                  type: "formInSubForm",
-                }}
-              />
-            ))}
+          : this.props.form.subForms.map((subForm) =>
+              // prevent template from rendering when edge router
+              subForm.jsonField === "cloud_connections" &&
+              contains(edgeRouterEnabledZones, this.state.zone) ? (
+                <PerCloudConnections />
+              ) : subForm.hideWhen &&
+                // hide when hidden
+                subForm.hideWhen(this.state, this.props) ? (
+                ""
+              ) : (
+                <IcseFormTemplate
+                  key={subForm.name}
+                  tooltip={subForm.tooltip}
+                  overrideTile={
+                    <SubFormOverrideTile
+                      subForm={subForm}
+                      componentProps={this.props}
+                    />
+                  }
+                  hideFormTitleButton={
+                    subForm.hideFormTitleButton
+                      ? subForm.hideFormTitleButton(this.state, this.props)
+                      : false
+                  }
+                  name={subForm.name}
+                  subHeading
+                  addText={subForm.addText}
+                  arrayData={this.props.data[subForm.jsonField]}
+                  innerForm={DynamicForm}
+                  disableSave={this.props.disableSave}
+                  onDelete={
+                    this.props.craig[this.props.form.jsonField][
+                      subForm.jsonField
+                    ].delete
+                  }
+                  onSave={
+                    this.props.craig[this.props.form.jsonField][
+                      subForm.jsonField
+                    ].save
+                  }
+                  onSubmit={
+                    this.props.craig[this.props.form.jsonField][
+                      subForm.jsonField
+                    ].create
+                  }
+                  propsMatchState={propsMatchState}
+                  innerFormProps={{
+                    formName: subForm.name,
+                    craig: this.props.craig,
+                    form: subForm.form,
+                    disableSave: this.props.disableSave,
+                    arrayParentName: this.props.data.name,
+                    propsMatchState: propsMatchState,
+                  }}
+                  toggleFormFieldName={subForm.toggleFormFieldName}
+                  hideAbout
+                  toggleFormProps={{
+                    hideName: true,
+                    submissionFieldName: subForm.jsonField,
+                    disableSave: this.props.disableSave,
+                    type: "formInSubForm",
+                    noDeleteButton: subForm.noDeleteButton,
+                    // here for testing
+                    // hide: false,
+                  }}
+                />
+              )
+            )}
       </div>
     );
   }

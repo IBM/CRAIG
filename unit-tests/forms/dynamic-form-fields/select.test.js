@@ -327,6 +327,61 @@ describe("dynamic select", () => {
         "it should return correctly formatted data"
       );
     });
+    it("should return the correct props for select when not disabled and fetch select and unmounted and no value", () => {
+      let actualData = dynamicSelectProps(
+        {
+          name: "frog",
+          field: {
+            groups: ["a", "b", "c"],
+            disabled: function () {
+              return false;
+            },
+            invalid: function () {
+              return false;
+            },
+            invalidText: function () {
+              return "uh oh";
+            },
+            helperText: function () {
+              return "helper text";
+            },
+            disabledText: function () {
+              return "oops";
+            },
+            type: "fetchSelect",
+          },
+          parentState: {},
+          parentProps: {
+            formName: "atracker",
+          },
+          handleInputChange: function () {},
+          keyIndex: 0,
+          name: "name",
+          propsName: "frog",
+        },
+        false
+      );
+      let expectedData = {
+        className: "leftTextAlign fieldWidth",
+        disabled: false,
+        groups: ["", "a", "b", "c"],
+        id: "frog-name-0",
+        invalid: false,
+        invalidText: "uh oh",
+        labelText: "Name",
+        name: "name",
+        value: "",
+        readOnly: undefined,
+        key: '["","a","b","c"]',
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      delete actualData.onChange;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
     it("should return the correct props for text input when not disabled and no value", () => {
       let actualData = dynamicSelectProps({
         name: "frog",
@@ -362,7 +417,7 @@ describe("dynamic select", () => {
         disabled: false,
         groups: ["", "a", "b", "c"],
         id: "frog-name-0",
-        invalid: true,
+        invalid: false,
         invalidText: "uh oh",
         labelText: "Name",
         name: "name",

@@ -258,6 +258,17 @@ describe("object_storage", () => {
       );
     });
   });
+  describe("object_storage.schema", () => {
+    describe("kms", () => {
+      it("should return kms groups", () => {
+        assert.deepEqual(
+          newState().object_storage.kms.groups({}, { craig: newState() }),
+          ["kms"],
+          "it should return list of key protect instances"
+        );
+      });
+    });
+  });
   describe("object_storage.buckets", () => {
     describe("object_storage.buckets.create", () => {
       it("should create a bucket in a specified instance", () => {

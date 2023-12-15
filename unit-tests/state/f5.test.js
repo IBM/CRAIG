@@ -329,6 +329,26 @@ describe("f5.instance", () => {
       );
     });
   });
+  describe("f5.instance.schema", () => {
+    it("should hide byol license base key when form type is not byol", () => {
+      let craig = state();
+      assert.isTrue(
+        craig.f5.template.byol_license_basekey.hideWhen({
+          license_type: "none",
+        }),
+        "it should be hidden"
+      );
+    });
+    it("should not hide byol license base key when form type is byol", () => {
+      let craig = state();
+      assert.isFalse(
+        craig.f5.template.byol_license_basekey.hideWhen({
+          license_type: "byol",
+        }),
+        "it should be hidden"
+      );
+    });
+  });
   describe("f5.vsi", () => {
     describe("f5.vsi.save", () => {
       it("should create new instances on change", () => {

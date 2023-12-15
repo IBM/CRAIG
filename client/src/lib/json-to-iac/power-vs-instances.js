@@ -150,6 +150,13 @@ function powerInstanceTf(config) {
         formatPowerVsInstance(instance)
       ) + "\n";
   });
+  (config.vtl || []).forEach((instance) => {
+    tf +=
+      tfBlock(
+        `${instance.name} FalconStor VTL`,
+        formatFalconStorInstance(instance)
+      ).replace("Falcon Stor", "FalconStor") + "\n";
+  });
   return tf ? tf.replace(/\n+$/g, "\n") : tf;
 }
 

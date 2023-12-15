@@ -1,798 +1,728 @@
 {
-    "_options": {
-      "prefix": "pfg-poc",
-      "region": "us-south",
-      "tags": [
-        "hello",
-        "world"
-      ],
-      "zones": 3,
-      "endpoints": "public",
-      "account_id": "",
-      "fs_cloud": false,
-      "enable_classic": true,
-      "dynamic_subnets": true,
-      "enable_power_vs": true,
-      "craig_version": "1.7.1",
-      "power_vs_zones": [
-        "dal10"
-      ],
-      "power_vs_high_availability": false,
-      "template": "Empty Project"
-    },
-    "access_groups": [],
-    "appid": [],
-    "atracker": {
-      "enabled": true,
-      "type": "cos",
-      "name": "atracker",
-      "target_name": "atracker-cos",
-      "bucket": "atracker-bucket",
-      "add_route": true,
-      "cos_key": "atracker-key",
-      "locations": [
-        "global",
-        "us-south"
-      ],
-      "instance": false
-    },
-    "cbr_rules": [],
-    "cbr_zones": [],
-    "clusters": [],
-    "dns": [
-      {
-        "name": "dns",
-        "plan": "standard",
-        "resource_group": "service-rg",
-        "zones": [],
-        "records": [],
-        "custom_resolvers": [
-          {
-            "name": "dns-to-vpe",
-            "description": "",
-            "high_availability": true,
-            "enabled": true,
-            "vpc": "vpc",
-            "subnets": [
-              "vpe-zone-1",
-              "vpe-zone-2",
-              "vpe-zone-3"
-            ],
-            "instance": "dns",
-            "zone": null
-          }
-        ]
-      }
+  "_options": {
+    "prefix": "pfg-poc",
+    "region": "us-south",
+    "tags": [
+      "hello",
+      "world"
     ],
-    "event_streams": [],
-    "f5_vsi": [],
-    "iam_account_settings": {
-      "enable": false,
-      "mfa": null,
-      "allowed_ip_addresses": null,
-      "include_history": false,
-      "if_match": null,
-      "max_sessions_per_identity": null,
-      "restrict_create_service_id": null,
-      "restrict_create_platform_apikey": null,
-      "session_expiration_in_seconds": null,
-      "session_invalidation_in_seconds": null
-    },
-    "icd": [],
-    "key_management": [
-      {
-        "use_hs_crypto": false,
-        "use_data": false,
-        "name": "kms",
-        "resource_group": "service-rg",
-        "authorize_vpc_reader_role": false,
-        "keys": [
-          {
-            "name": "cos",
-            "root_key": true,
-            "key_ring": "",
-            "force_delete": false,
-            "endpoint": null,
-            "rotation": 1,
-            "dual_auth_delete": false
-          },
-          {
-            "name": "atracker",
-            "root_key": true,
-            "key_ring": "",
-            "force_delete": false,
-            "endpoint": null,
-            "rotation": 1,
-            "dual_auth_delete": false
-          }
-        ]
-      }
+    "zones": 3,
+    "endpoints": "public",
+    "account_id": "",
+    "fs_cloud": false,
+    "enable_classic": true,
+    "dynamic_subnets": true,
+    "enable_power_vs": true,
+    "craig_version": "1.8.0",
+    "power_vs_zones": [
+      "dal10"
     ],
-    "load_balancers": [],
-    "logdna": {
-      "enabled": true,
-      "plan": "14-day",
-      "endpoints": "private",
-      "platform_logs": false,
+    "power_vs_high_availability": false,
+    "template": "Empty Project"
+  },
+  "access_groups": [],
+  "appid": [],
+  "atracker": {
+    "enabled": true,
+    "type": "cos",
+    "name": "atracker",
+    "target_name": "atracker-cos",
+    "bucket": "atracker-bucket",
+    "add_route": true,
+    "cos_key": "atracker-key",
+    "locations": [
+      "global",
+      "us-south"
+    ],
+    "instance": false
+  },
+  "cbr_rules": [],
+  "cbr_zones": [],
+  "clusters": [],
+  "dns": [
+    {
+      "name": "dns",
+      "plan": "standard",
       "resource_group": "service-rg",
-      "cos": "object-storage",
-      "bucket": "vpc-bucket"
+      "zones": [],
+      "records": [],
+      "custom_resolvers": [
+        {
+          "name": "dns-to-vpe",
+          "description": "",
+          "high_availability": true,
+          "enabled": true,
+          "vpc": "vpc",
+          "subnets": [
+            "vpe-zone-1",
+            "vpe-zone-2",
+            "vpe-zone-3"
+          ],
+          "instance": "dns",
+          "zone": null
+        }
+      ]
+    }
+  ],
+  "event_streams": [],
+  "f5_vsi": [],
+  "iam_account_settings": {
+    "enable": false,
+    "mfa": null,
+    "allowed_ip_addresses": null,
+    "include_history": false,
+    "if_match": null,
+    "max_sessions_per_identity": null,
+    "restrict_create_service_id": null,
+    "restrict_create_platform_apikey": null,
+    "session_expiration_in_seconds": null,
+    "session_invalidation_in_seconds": null
+  },
+  "icd": [],
+  "key_management": [
+    {
+      "use_hs_crypto": false,
+      "use_data": false,
+      "name": "kms",
+      "resource_group": "service-rg",
+      "authorize_vpc_reader_role": false,
+      "keys": [
+        {
+          "name": "cos",
+          "root_key": true,
+          "key_ring": "",
+          "force_delete": false,
+          "endpoint": null,
+          "rotation": 1,
+          "dual_auth_delete": false
+        },
+        {
+          "name": "atracker",
+          "root_key": true,
+          "key_ring": "",
+          "force_delete": false,
+          "endpoint": null,
+          "rotation": 1,
+          "dual_auth_delete": false
+        }
+      ]
+    }
+  ],
+  "load_balancers": [],
+  "logdna": {
+    "enabled": true,
+    "plan": "14-day",
+    "endpoints": "private",
+    "platform_logs": false,
+    "resource_group": "service-rg",
+    "cos": "object-storage",
+    "bucket": "vpc-bucket"
+  },
+  "object_storage": [
+    {
+      "name": "object-storage",
+      "use_data": false,
+      "resource_group": "service-rg",
+      "plan": "standard",
+      "use_random_suffix": true,
+      "kms": "kms",
+      "buckets": [
+        {
+          "force_delete": false,
+          "name": "vpc-bucket",
+          "storage_class": "standard",
+          "kms_key": "cos",
+          "endpoint": "public",
+          "use_random_suffix": true
+        },
+        {
+          "force_delete": false,
+          "name": "logging",
+          "storage_class": "standard",
+          "kms_key": "cos",
+          "endpoint": "public",
+          "use_random_suffix": true
+        }
+      ],
+      "keys": []
     },
-    "object_storage": [
-      {
-        "name": "object-storage",
-        "use_data": false,
-        "resource_group": "service-rg",
-        "plan": "standard",
-        "use_random_suffix": true,
-        "kms": "kms",
-        "buckets": [
-          {
-            "force_delete": false,
-            "name": "vpc-bucket",
-            "storage_class": "standard",
-            "kms_key": "cos",
-            "endpoint": "public",
-            "use_random_suffix": true
-          },
-          {
-            "force_delete": false,
-            "name": "logging",
-            "storage_class": "standard",
-            "kms_key": "cos",
-            "endpoint": "public",
-            "use_random_suffix": true
-          }
-        ],
-        "keys": []
-      },
-      {
-        "name": "atracker",
-        "use_data": false,
-        "resource_group": "service-rg",
-        "plan": "standard",
-        "use_random_suffix": true,
-        "kms": "kms",
-        "buckets": [
-          {
-            "force_delete": false,
-            "name": "atracker-bucket",
-            "storage_class": "standard",
-            "kms_key": "atracker",
-            "endpoint": "public",
-            "use_random_suffix": true
-          }
-        ],
-        "keys": [
-          {
-            "name": "atracker-key",
-            "role": "Writer",
-            "enable_hmac": false,
-            "use_random_suffix": true
-          }
-        ]
-      }
-    ],
-    "power": [
-      {
-        "name": "prod",
-        "resource_group": "power-rg",
-        "zone": "dal10",
-        "ssh_keys": [
-          {
-            "name": "prod-ssh-key",
-            "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDiwEV+8av41iV0DQ4PpEnO9AKBqcc/nGZSjX0cPyRcAZsFCJGWmR0mNVSwJI1AdEq0Hg14YJ0KRRkBS+khzNrEmDiYcGK+MSIw2rjBQbpR6mR1TTMUpslso34/CWe3kEnIJhSsbTD3P3tM/3drGaX6GdDUdHFwmlp0sN1VUdtb9xH0Xa9jmwrP/4sdO4YJ8BIoiy1RuLj5EH+B7SKXfX8ZnGp3N9enmM2sIjWdOkbq1LoRDWxeZaRojbSivH7P084KOgDCtLgBsxUqkkIxDSQ94fuTSTk/6ZHPbh9ol2YeYZOB6Ohll1vBFu6ZUDqRV8mnRNhoqOBXdAET7NWurHpaBsqFWDZ+C8gYtAgDh03rZgoZGay43jfUqB10eMzQv8I6q1JkEJ8fk2e46EBMD8jU3UpLzwQyHdUS/gkh5QB8BgXTWuFB6yYmxIc32XsiFRYK4y5vAhQtHTlNwRvfdtJtou2tuNEYUbFzeqaR1TBZ/m1Hctogb9VDinTmJ4TnZpNq1M9CFNDZFWNgfvwIeyhlAxA4oVoh5a2yFV+/cz6TG+J3di7t/F3x90whA26Yjz5S1lYvfuV1ci7A9WcXwld+nD7ZwBonA1VbmyA2haHrwaPgMuuTtm4v63dHpzgvbFH9llM3RD+ZXntVd6Vspdags05+lGBhPhl+PigxgnbtUw== Jennifer.Valle@ibm.com",
-            "use_data": false,
-            "resource_group": "power-rg",
-            "workspace": "prod",
-            "zone": "dal10"
-          }
-        ],
-        "network": [
-          {
-            "name": "primary",
-            "pi_network_type": "vlan",
-            "pi_cidr": "10.134.1.0/24",
-            "pi_dns": [
-              "127.0.0.0"
-            ],
-            "pi_network_jumbo": false,
-            "workspace": "prod",
-            "zone": "dal10"
-          },
-          {
-            "name": "replication",
-            "pi_network_type": "vlan",
-            "pi_cidr": "172.20.50.0/24",
-            "pi_dns": [
-              "127.0.0.0"
-            ],
-            "pi_network_jumbo": false,
-            "workspace": "prod",
-            "zone": "dal10",
-            "depends_on": [
-              "${ibm_pi_network.power_network_prod_primary}"
-            ]
-          },
-          {
-            "name": "i-scsi",
-            "pi_network_type": "vlan",
-            "pi_cidr": "172.20.60.0/24",
-            "pi_dns": [
-              "127.0.0.1"
-            ],
-            "pi_network_jumbo": false,
-            "workspace": "prod",
-            "zone": "dal10",
-            "depends_on": [
-              "${ibm_pi_network.power_network_prod_replication}"
-            ]
-          }
-        ],
-        "cloud_connections": [],
-        "images": [
-          {
-            "name": "7100-05-09",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e"
-          },
-          {
-            "name": "7200-05-03",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "0f9818b7-1646-407a-80a1-b2cbf1154549"
-          },
-          {
-            "name": "7200-05-05",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "ccbaef35-c26e-40d3-8cc1-10dc34624b65"
-          },
-          {
-            "name": "7300-00-01",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "24083f6f-6ab7-4b59-bbd1-3ccb9e24a8db"
-          },
-          {
-            "name": "7300-01-01",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "142d55ca-d24c-4114-a2f9-4174e96ed96e"
-          },
-          {
-            "name": "IBMi-71-11-2924-6",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "a99343e9-b32e-4a38-85f8-3c1122bb3a0f"
-          },
-          {
-            "name": "IBMi-71-11-2984-6",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "1d93b604-fd7e-4aff-a261-d4d415625ff2"
-          },
-          {
-            "name": "IBMi-72-09-2924-8",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "e8b83a74-aba7-4ca2-a67a-8437ce7574d3"
-          },
-          {
-            "name": "IBMi-72-09-2984-8",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "98a65798-af17-482a-9e45-e8c4b42352ba"
-          },
-          {
-            "name": "IBMi-73-13-2924-1",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "625beea2-e63d-4861-b8d8-fadd229d4c87"
-          },
-          {
-            "name": "IBMi-73-13-2984-1",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "ad1b1e1e-08f7-40ef-80bc-3f4d6611fec4"
-          },
-          {
-            "name": "IBMi-74-07-2924-1",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "ee786c60-8b77-4fb8-a8cb-2a9dc47afa45"
-          },
-          {
-            "name": "IBMi-74-07-2984-1",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "4b584df5-4b58-42f5-a614-6ab4b6fedef3"
-          },
-          {
-            "name": "IBMi-75-01-2924-2",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "d22a080f-d1b3-4e80-898e-5e8d46cb86ca"
-          },
-          {
-            "name": "IBMi-75-01-2984-2",
-            "workspace": "prod",
-            "zone": "dal10",
-            "pi_image_id": "02f8f2f8-8dfc-4130-88bb-e91105c3d274"
-          }
-        ],
-        "attachments": [],
-        "imageNames": [
-          "7100-05-09",
-          "7200-05-03",
-          "7200-05-05",
-          "7300-00-01",
-          "7300-01-01",
-          "IBMi-71-11-2924-6",
-          "IBMi-71-11-2984-6",
-          "IBMi-72-09-2924-8",
-          "IBMi-72-09-2984-8",
-          "IBMi-73-13-2924-1",
-          "IBMi-73-13-2984-1",
-          "IBMi-74-07-2924-1",
-          "IBMi-74-07-2984-1",
-          "IBMi-75-01-2924-2",
-          "IBMi-75-01-2984-2"
-        ]
-      }
-    ],
-    "power_instances": [],
-    "power_volumes": [],
-    "resource_groups": [
-      {
-        "use_data": false,
-        "name": "service-rg",
-        "use_prefix": true
-      },
-      {
-        "use_data": false,
-        "name": "power-rg",
-        "use_prefix": true
-      },
-      {
-        "use_data": false,
-        "name": "vpc-rg",
-        "use_prefix": true
-      }
-    ],
-    "routing_tables": [],
-    "scc": {
-      "credential_description": null,
-      "id": null,
-      "passphrase": null,
-      "name": "",
-      "location": "us",
-      "collector_description": null,
-      "is_public": false,
-      "scope_description": null,
-      "enable": false
+    {
+      "name": "atracker",
+      "use_data": false,
+      "resource_group": "service-rg",
+      "plan": "standard",
+      "use_random_suffix": true,
+      "kms": "kms",
+      "buckets": [
+        {
+          "force_delete": false,
+          "name": "atracker-bucket",
+          "storage_class": "standard",
+          "kms_key": "atracker",
+          "endpoint": "public",
+          "use_random_suffix": true
+        }
+      ],
+      "keys": [
+        {
+          "name": "atracker-key",
+          "role": "Writer",
+          "enable_hmac": false,
+          "use_random_suffix": true
+        }
+      ]
+    }
+  ],
+  "power": [
+    {
+      "name": "prod",
+      "resource_group": "power-rg",
+      "zone": "dal10",
+      "ssh_keys": [
+        {
+          "name": "prod-ssh-key",
+          "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDiwEV+8av41iV0DQ4PpEnO9AKBqcc/nGZSjX0cPyRcAZsFCJGWmR0mNVSwJI1AdEq0Hg14YJ0KRRkBS+khzNrEmDiYcGK+MSIw2rjBQbpR6mR1TTMUpslso34/CWe3kEnIJhSsbTD3P3tM/3drGaX6GdDUdHFwmlp0sN1VUdtb9xH0Xa9jmwrP/4sdO4YJ8BIoiy1RuLj5EH+B7SKXfX8ZnGp3N9enmM2sIjWdOkbq1LoRDWxeZaRojbSivH7P084KOgDCtLgBsxUqkkIxDSQ94fuTSTk/6ZHPbh9ol2YeYZOB6Ohll1vBFu6ZUDqRV8mnRNhoqOBXdAET7NWurHpaBsqFWDZ+C8gYtAgDh03rZgoZGay43jfUqB10eMzQv8I6q1JkEJ8fk2e46EBMD8jU3UpLzwQyHdUS/gkh5QB8BgXTWuFB6yYmxIc32XsiFRYK4y5vAhQtHTlNwRvfdtJtou2tuNEYUbFzeqaR1TBZ/m1Hctogb9VDinTmJ4TnZpNq1M9CFNDZFWNgfvwIeyhlAxA4oVoh5a2yFV+/cz6TG+J3di7t/F3x90whA26Yjz5S1lYvfuV1ci7A9WcXwld+nD7ZwBonA1VbmyA2haHrwaPgMuuTtm4v63dHpzgvbFH9llM3RD+ZXntVd6Vspdags05+lGBhPhl+PigxgnbtUw== Jennifer.Valle@ibm.com",
+          "use_data": false,
+          "resource_group": "power-rg",
+          "workspace": "prod",
+          "zone": "dal10"
+        }
+      ],
+      "network": [
+        {
+          "name": "primary",
+          "pi_network_type": "vlan",
+          "pi_cidr": "10.134.1.0/24",
+          "pi_dns": [
+            "127.0.0.0"
+          ],
+          "pi_network_jumbo": false,
+          "workspace": "prod",
+          "zone": "dal10"
+        },
+        {
+          "name": "replication",
+          "pi_network_type": "vlan",
+          "pi_cidr": "172.20.50.0/24",
+          "pi_dns": [
+            "127.0.0.0"
+          ],
+          "pi_network_jumbo": false,
+          "workspace": "prod",
+          "zone": "dal10",
+          "depends_on": [
+            "${ibm_pi_network.power_network_prod_primary}"
+          ]
+        },
+        {
+          "name": "i-scsi",
+          "pi_network_type": "vlan",
+          "pi_cidr": "172.20.60.0/24",
+          "pi_dns": [
+            "127.0.0.1"
+          ],
+          "pi_network_jumbo": false,
+          "workspace": "prod",
+          "zone": "dal10",
+          "depends_on": [
+            "${ibm_pi_network.power_network_prod_replication}"
+          ]
+        }
+      ],
+      "cloud_connections": [],
+      "images": [
+        {
+          "name": "7100-05-09",
+          "workspace": "prod",
+          "zone": "dal10",
+          "pi_image_id": "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e"
+        },
+        {
+          "name": "7200-05-03",
+          "workspace": "prod",
+          "zone": "dal10",
+          "pi_image_id": "0f9818b7-1646-407a-80a1-b2cbf1154549"
+        },
+        {
+          "name": "7200-05-05",
+          "workspace": "prod",
+          "zone": "dal10",
+          "pi_image_id": "ccbaef35-c26e-40d3-8cc1-10dc34624b65"
+        },
+        {
+          "name": "7300-00-01",
+          "workspace": "prod",
+          "zone": "dal10",
+          "pi_image_id": "24083f6f-6ab7-4b59-bbd1-3ccb9e24a8db"
+        },
+        {
+          "name": "7300-01-01",
+          "workspace": "prod",
+          "zone": "dal10",
+          "pi_image_id": "142d55ca-d24c-4114-a2f9-4174e96ed96e"
+        }
+      ],
+      "attachments": [],
+      "imageNames": [
+        "7100-05-09",
+        "7200-05-03",
+        "7200-05-05",
+        "7300-00-01",
+        "7300-01-01"
+      ]
+    }
+  ],
+  "power_instances": [],
+  "power_volumes": [],
+  "resource_groups": [
+    {
+      "use_data": false,
+      "name": "service-rg",
+      "use_prefix": true
     },
-    "secrets_manager": [],
-    "security_groups": [
-      {
-        "resource_group": "vpc-rg",
-        "rules": [
-          {
-            "name": "allow-ibm-inbound",
-            "direction": "inbound",
-            "icmp": {
-              "type": null,
-              "code": null
-            },
-            "tcp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "udp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "source": "161.26.0.0/16",
-            "vpc": "vpc",
-            "sg": "vpc-sg"
-          },
-          {
-            "name": "allow-ibm-outbound",
-            "direction": "outbound",
-            "icmp": {
-              "type": null,
-              "code": null
-            },
-            "tcp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "udp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "source": "161.26.0.0/16",
-            "vpc": "vpc",
-            "sg": "vpc-sg"
-          },
-          {
-            "name": "allow-network-inbound",
-            "direction": "inbound",
-            "icmp": {
-              "type": null,
-              "code": null
-            },
-            "tcp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "udp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "source": "10.0.0.0/8",
-            "vpc": "vpc",
-            "sg": "vpc-sg"
-          },
-          {
-            "name": "allow-network-outbound",
-            "direction": "inbound",
-            "icmp": {
-              "type": null,
-              "code": null
-            },
-            "tcp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "udp": {
-              "port_min": null,
-              "port_max": null
-            },
-            "source": "10.0.0.0/8",
-            "vpc": "vpc",
-            "sg": "vpc-sg"
-          }
-        ],
-        "name": "vpc-sg",
-        "vpc": "vpc",
-        "show": false
-      }
-    ],
-    "ssh_keys": [
-      {
-        "name": "ssh-key",
-        "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDiwEV+8av41iV0DQ4PpEnO9AKBqcc/nGZSjX0cPyRcAZsFCJGWmR0mNVSwJI1AdEq0Hg14YJ0KRRkBS+khzNrEmDiYcGK+MSIw2rjBQbpR6mR1TTMUpslso34/CWe3kEnIJhSsbTD3P3tM/3drGaX6GdDUdHFwmlp0sN1VUdtb9xH0Xa9jmwrP/4sdO4YJ8BIoiy1RuLj5EH+B7SKXfX8ZnGp3N9enmM2sIjWdOkbq1LoRDWxeZaRojbSivH7P084KOgDCtLgBsxUqkkIxDSQ94fuTSTk/6ZHPbh9ol2YeYZOB6Ohll1vBFu6ZUDqRV8mnRNhoqOBXdAET7NWurHpaBsqFWDZ+C8gYtAgDh03rZgoZGay43jfUqB10eMzQv8I6q1JkEJ8fk2e46EBMD8jU3UpLzwQyHdUS/gkh5QB8BgXTWuFB6yYmxIc32XsiFRYK4y5vAhQtHTlNwRvfdtJtou2tuNEYUbFzeqaR1TBZ/m1Hctogb9VDinTmJ4TnZpNq1M9CFNDZFWNgfvwIeyhlAxA4oVoh5a2yFV+/cz6TG+J3di7t/F3x90whA26Yjz5S1lYvfuV1ci7A9WcXwld+nD7ZwBonA1VbmyA2haHrwaPgMuuTtm4v63dHpzgvbFH9llM3RD+ZXntVd6Vspdags05+lGBhPhl+PigxgnbtUw== Jennifer.Valle@ibm.com",
-        "use_data": false,
-        "resource_group": "vpc-rg"
-      }
-    ],
-    "sysdig": {
-      "enabled": true,
-      "plan": "graduated-tier",
-      "resource_group": "service-rg"
+    {
+      "use_data": false,
+      "name": "power-rg",
+      "use_prefix": true
     },
-    "teleport_vsi": [],
-    "transit_gateways": [
-      {
-        "global": false,
-        "connections": [],
-        "resource_group": "service-rg",
-        "name": "classic-to-router",
-        "crns": []
-      },
-      {
-        "global": false,
-        "connections": [],
-        "resource_group": "vpc-rg",
-        "name": "classic-to-power",
-        "crns": []
-      },
-      {
-        "global": true,
-        "connections": [],
-        "resource_group": "vpc-rg",
-        "name": "global",
-        "crns": []
-      }
-    ],
-    "virtual_private_endpoints": [
-      {
-        "name": "cos-vpe",
-        "vpc": "vpc",
-        "service": "cos",
-        "resource_group": "vpc-rg",
-        "security_groups": [
-          "vpc-sg"
-        ],
-        "subnets": [
-          "vpe-zone-1",
-          "vpe-zone-2",
-          "vpe-zone-3"
-        ]
-      }
-    ],
-    "vpcs": [
-      {
-        "name": "vpc",
-        "resource_group": "vpc-rg",
-        "classic_access": false,
-        "manual_address_prefix_management": false,
-        "default_network_acl_name": null,
-        "default_security_group_name": null,
-        "default_routing_table_name": null,
-        "address_prefixes": [
-          {
-            "vpc": "vpc",
-            "zone": 1,
-            "name": "vpc-zone-1",
-            "cidr": "10.10.0.0/22"
+    {
+      "use_data": false,
+      "name": "vpc-rg",
+      "use_prefix": true
+    }
+  ],
+  "routing_tables": [],
+  "scc": {
+    "credential_description": null,
+    "id": null,
+    "passphrase": null,
+    "name": "",
+    "location": "us",
+    "collector_description": null,
+    "is_public": false,
+    "scope_description": null,
+    "enable": false
+  },
+  "secrets_manager": [],
+  "security_groups": [
+    {
+      "resource_group": "vpc-rg",
+      "rules": [
+        {
+          "name": "allow-ibm-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
           },
-          {
-            "vpc": "vpc",
-            "zone": 2,
-            "name": "vpc-zone-2",
-            "cidr": "10.20.0.0/22"
+          "tcp": {
+            "port_min": null,
+            "port_max": null
           },
-          {
-            "vpc": "vpc",
-            "zone": 3,
-            "name": "vpc-zone-3",
-            "cidr": "10.30.0.0/22"
-          }
-        ],
-        "subnets": [
-          {
-            "vpc": "vpc",
-            "zone": 1,
-            "cidr": "10.10.0.0/29",
-            "name": "vsi-zone-1",
-            "network_acl": "acl",
-            "resource_group": "vpc-rg",
-            "public_gateway": false,
-            "has_prefix": false
+          "udp": {
+            "port_min": null,
+            "port_max": null
           },
-          {
-            "vpc": "vpc",
-            "zone": 2,
-            "cidr": "10.20.0.0/29",
-            "name": "vsi-zone-2",
-            "network_acl": "acl",
-            "resource_group": "vpc-rg",
-            "public_gateway": false,
-            "has_prefix": false
+          "source": "161.26.0.0/16",
+          "vpc": "vpc",
+          "sg": "vpc-sg"
+        },
+        {
+          "name": "allow-ibm-outbound",
+          "direction": "outbound",
+          "icmp": {
+            "type": null,
+            "code": null
           },
-          {
-            "vpc": "vpc",
-            "zone": 3,
-            "cidr": "10.30.0.0/29",
-            "name": "vsi-zone-3",
-            "network_acl": "acl",
-            "resource_group": "vpc-rg",
-            "public_gateway": false,
-            "has_prefix": false
+          "tcp": {
+            "port_min": null,
+            "port_max": null
           },
-          {
-            "vpc": "vpc",
-            "zone": 1,
-            "cidr": "10.10.0.16/29",
-            "name": "vpe-zone-1",
-            "network_acl": "acl",
-            "resource_group": "vpc-rg",
-            "public_gateway": false,
-            "has_prefix": false
+          "udp": {
+            "port_min": null,
+            "port_max": null
           },
-          {
-            "vpc": "vpc",
-            "zone": 2,
-            "cidr": "10.20.0.16/29",
-            "name": "vpe-zone-2",
-            "network_acl": "acl",
-            "resource_group": "vpc-rg",
-            "public_gateway": false,
-            "has_prefix": false
+          "source": "161.26.0.0/16",
+          "vpc": "vpc",
+          "sg": "vpc-sg"
+        },
+        {
+          "name": "allow-network-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
           },
-          {
-            "vpc": "vpc",
-            "zone": 3,
-            "cidr": "10.30.0.16/29",
-            "name": "vpe-zone-3",
-            "network_acl": "acl",
-            "resource_group": "vpc-rg",
-            "public_gateway": false,
-            "has_prefix": false
-          }
-        ],
-        "public_gateways": [],
-        "acls": [
-          {
-            "name": "acl",
-            "resource_group": "vpc-rg",
-            "vpc": "vpc",
-            "rules": [
-              {
-                "name": "allow-ibm-inbound",
-                "action": "allow",
-                "direction": "inbound",
-                "icmp": {
-                  "type": null,
-                  "code": null
-                },
-                "tcp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "udp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "source": "161.26.0.0/16",
-                "destination": "10.0.0.0/8",
-                "acl": "acl",
-                "vpc": "vpc"
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "10.0.0.0/8",
+          "vpc": "vpc",
+          "sg": "vpc-sg"
+        },
+        {
+          "name": "allow-network-outbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "10.0.0.0/8",
+          "vpc": "vpc",
+          "sg": "vpc-sg"
+        }
+      ],
+      "name": "vpc-sg",
+      "vpc": "vpc",
+      "show": false
+    }
+  ],
+  "ssh_keys": [
+    {
+      "name": "ssh-key",
+      "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDiwEV+8av41iV0DQ4PpEnO9AKBqcc/nGZSjX0cPyRcAZsFCJGWmR0mNVSwJI1AdEq0Hg14YJ0KRRkBS+khzNrEmDiYcGK+MSIw2rjBQbpR6mR1TTMUpslso34/CWe3kEnIJhSsbTD3P3tM/3drGaX6GdDUdHFwmlp0sN1VUdtb9xH0Xa9jmwrP/4sdO4YJ8BIoiy1RuLj5EH+B7SKXfX8ZnGp3N9enmM2sIjWdOkbq1LoRDWxeZaRojbSivH7P084KOgDCtLgBsxUqkkIxDSQ94fuTSTk/6ZHPbh9ol2YeYZOB6Ohll1vBFu6ZUDqRV8mnRNhoqOBXdAET7NWurHpaBsqFWDZ+C8gYtAgDh03rZgoZGay43jfUqB10eMzQv8I6q1JkEJ8fk2e46EBMD8jU3UpLzwQyHdUS/gkh5QB8BgXTWuFB6yYmxIc32XsiFRYK4y5vAhQtHTlNwRvfdtJtou2tuNEYUbFzeqaR1TBZ/m1Hctogb9VDinTmJ4TnZpNq1M9CFNDZFWNgfvwIeyhlAxA4oVoh5a2yFV+/cz6TG+J3di7t/F3x90whA26Yjz5S1lYvfuV1ci7A9WcXwld+nD7ZwBonA1VbmyA2haHrwaPgMuuTtm4v63dHpzgvbFH9llM3RD+ZXntVd6Vspdags05+lGBhPhl+PigxgnbtUw== Jennifer.Valle@ibm.com",
+      "use_data": false,
+      "resource_group": "vpc-rg"
+    }
+  ],
+  "sysdig": {
+    "enabled": true,
+    "plan": "graduated-tier",
+    "resource_group": "service-rg"
+  },
+  "teleport_vsi": [],
+  "transit_gateways": [
+    {
+      "global": false,
+      "connections": [],
+      "resource_group": "service-rg",
+      "name": "classic-to-router",
+      "crns": []
+    },
+    {
+      "global": false,
+      "connections": [],
+      "resource_group": "vpc-rg",
+      "name": "classic-to-power",
+      "crns": []
+    },
+    {
+      "global": true,
+      "connections": [],
+      "resource_group": "vpc-rg",
+      "name": "global",
+      "crns": []
+    }
+  ],
+  "virtual_private_endpoints": [
+    {
+      "name": "cos-vpe",
+      "vpc": "vpc",
+      "service": "cos",
+      "resource_group": "vpc-rg",
+      "security_groups": [
+        "vpc-sg"
+      ],
+      "subnets": [
+        "vpe-zone-1",
+        "vpe-zone-2",
+        "vpe-zone-3"
+      ]
+    }
+  ],
+  "vpcs": [
+    {
+      "name": "vpc",
+      "resource_group": "vpc-rg",
+      "classic_access": false,
+      "manual_address_prefix_management": false,
+      "default_network_acl_name": null,
+      "default_security_group_name": null,
+      "default_routing_table_name": null,
+      "address_prefixes": [
+        {
+          "vpc": "vpc",
+          "zone": 1,
+          "name": "vpc-zone-1",
+          "cidr": "10.10.0.0/22"
+        },
+        {
+          "vpc": "vpc",
+          "zone": 2,
+          "name": "vpc-zone-2",
+          "cidr": "10.20.0.0/22"
+        },
+        {
+          "vpc": "vpc",
+          "zone": 3,
+          "name": "vpc-zone-3",
+          "cidr": "10.30.0.0/22"
+        }
+      ],
+      "subnets": [
+        {
+          "vpc": "vpc",
+          "zone": 1,
+          "cidr": "10.10.0.0/29",
+          "name": "vsi-zone-1",
+          "network_acl": "acl",
+          "resource_group": "vpc-rg",
+          "public_gateway": false,
+          "has_prefix": false
+        },
+        {
+          "vpc": "vpc",
+          "zone": 2,
+          "cidr": "10.20.0.0/29",
+          "name": "vsi-zone-2",
+          "network_acl": "acl",
+          "resource_group": "vpc-rg",
+          "public_gateway": false,
+          "has_prefix": false
+        },
+        {
+          "vpc": "vpc",
+          "zone": 3,
+          "cidr": "10.30.0.0/29",
+          "name": "vsi-zone-3",
+          "network_acl": "acl",
+          "resource_group": "vpc-rg",
+          "public_gateway": false,
+          "has_prefix": false
+        },
+        {
+          "vpc": "vpc",
+          "zone": 1,
+          "cidr": "10.10.0.16/29",
+          "name": "vpe-zone-1",
+          "network_acl": "acl",
+          "resource_group": "vpc-rg",
+          "public_gateway": false,
+          "has_prefix": false
+        },
+        {
+          "vpc": "vpc",
+          "zone": 2,
+          "cidr": "10.20.0.16/29",
+          "name": "vpe-zone-2",
+          "network_acl": "acl",
+          "resource_group": "vpc-rg",
+          "public_gateway": false,
+          "has_prefix": false
+        },
+        {
+          "vpc": "vpc",
+          "zone": 3,
+          "cidr": "10.30.0.16/29",
+          "name": "vpe-zone-3",
+          "network_acl": "acl",
+          "resource_group": "vpc-rg",
+          "public_gateway": false,
+          "has_prefix": false
+        }
+      ],
+      "public_gateways": [],
+      "acls": [
+        {
+          "name": "acl",
+          "resource_group": "vpc-rg",
+          "vpc": "vpc",
+          "rules": [
+            {
+              "name": "allow-ibm-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
               },
-              {
-                "name": "allow-ibm-outbound",
-                "action": "allow",
-                "direction": "outbound",
-                "icmp": {
-                  "type": null,
-                  "code": null
-                },
-                "tcp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "udp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "source": "10.0.0.0/8",
-                "destination": "161.26.0.0/16",
-                "acl": "acl",
-                "vpc": "vpc"
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
               },
-              {
-                "name": "allow-network-inbound",
-                "action": "allow",
-                "direction": "inbound",
-                "icmp": {
-                  "type": null,
-                  "code": null
-                },
-                "tcp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "udp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "source": "10.0.0.0/8",
-                "destination": "10.0.0.0/8",
-                "acl": "acl",
-                "vpc": "vpc"
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
               },
-              {
-                "name": "allow-network-outbound",
-                "action": "allow",
-                "direction": "outbound",
-                "icmp": {
-                  "type": null,
-                  "code": null
-                },
-                "tcp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "udp": {
-                  "port_min": null,
-                  "port_max": null,
-                  "source_port_min": null,
-                  "source_port_max": null
-                },
-                "source": "10.0.0.0/8",
-                "destination": "10.0.0.0/8",
-                "acl": "acl",
-                "vpc": "vpc"
-              }
-            ]
-          }
-        ],
-        "bucket": "vpc-bucket",
-        "publicGateways": [],
-        "cos": "object-storage"
-      }
-    ],
-    "vpn_gateways": [],
-    "vpn_servers": [],
-    "vsi": [
-      {
-        "kms": "kms",
-        "encryption_key": "cos",
-        "image": "ibm-windows-server-2012-upgrade-2022-amd64-1",
-        "image_name": "Windows Server 2022 Standard Edition (amd64) [ibm-windows-server-2012-upgrade-2022-amd64-1]",
-        "profile": "bx2-2x8",
-        "name": "example-deployment",
-        "security_groups": [
-          "vpc-sg"
-        ],
-        "ssh_keys": [
-          "ssh-key"
-        ],
-        "vpc": "vpc",
-        "vsi_per_subnet": 1,
-        "resource_group": "vpc-rg",
-        "override_vsi_name": null,
-        "user_data": null,
-        "network_interfaces": [],
-        "subnets": [
-          "vsi-zone-1",
-          "vsi-zone-2",
-          "vsi-zone-3"
-        ],
-        "volumes": [],
-        "subnet": "",
-        "enable_floating_ip": false
-      }
-    ],
-    "classic_vlans": [
-      {
-        "name": "dal10-public",
-        "type": "PUBLIC",
-        "datacenter": "us-south"
-      },
-      {
-        "name": "dal10-private",
-        "type": "PRIVATE",
-        "datacenter": "dal10"
-      }
-    ],
-    "classic_ssh_keys": [
-      {
-        "name": "classic-ssh-key",
-        "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDiwEV+8av41iV0DQ4PpEnO9AKBqcc/nGZSjX0cPyRcAZsFCJGWmR0mNVSwJI1AdEq0Hg14YJ0KRRkBS+khzNrEmDiYcGK+MSIw2rjBQbpR6mR1TTMUpslso34/CWe3kEnIJhSsbTD3P3tM/3drGaX6GdDUdHFwmlp0sN1VUdtb9xH0Xa9jmwrP/4sdO4YJ8BIoiy1RuLj5EH+B7SKXfX8ZnGp3N9enmM2sIjWdOkbq1LoRDWxeZaRojbSivH7P084KOgDCtLgBsxUqkkIxDSQ94fuTSTk/6ZHPbh9ol2YeYZOB6Ohll1vBFu6ZUDqRV8mnRNhoqOBXdAET7NWurHpaBsqFWDZ+C8gYtAgDh03rZgoZGay43jfUqB10eMzQv8I6q1JkEJ8fk2e46EBMD8jU3UpLzwQyHdUS/gkh5QB8BgXTWuFB6yYmxIc32XsiFRYK4y5vAhQtHTlNwRvfdtJtou2tuNEYUbFzeqaR1TBZ/m1Hctogb9VDinTmJ4TnZpNq1M9CFNDZFWNgfvwIeyhlAxA4oVoh5a2yFV+/cz6TG+J3di7t/F3x90whA26Yjz5S1lYvfuV1ci7A9WcXwld+nD7ZwBonA1VbmyA2haHrwaPgMuuTtm4v63dHpzgvbFH9llM3RD+ZXntVd6Vspdags05+lGBhPhl+PigxgnbtUw== Jennifer.Valle@ibm.com",
-        "use_data": false,
-        "resource_group": ""
-      }
-    ],
-    "classic_gateways": [
-      {
-        "name": "gw",
-        "ipv6_enabled": false,
-        "redundant_network": true,
-        "tcp_monitoring": false,
-        "memory": "64",
-        "network_speed": "1000",
-        "process_key_name": "INTEL_XEON_4210_2_20",
-        "os_key_name": "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-        "package_key_name": "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-        "disk_key_names": [
-          "HARD_DRIVE_2_00_TB_SATA_2"
-        ],
-        "public_vlan": "dal10-public",
-        "private_vlan": "dal10-private",
-        "private_network_only": false,
-        "datacenter": "dal10",
-        "ssh_key": "classic-ssh-key",
-        "hadr": false,
-        "domain": "example.com",
-        "public_bandwidth": "5000"
-      }
-    ]
-  }
+              "source": "161.26.0.0/16",
+              "destination": "10.0.0.0/8",
+              "acl": "acl",
+              "vpc": "vpc"
+            },
+            {
+              "name": "allow-ibm-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "161.26.0.0/16",
+              "acl": "acl",
+              "vpc": "vpc"
+            },
+            {
+              "name": "allow-network-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "10.0.0.0/8",
+              "acl": "acl",
+              "vpc": "vpc"
+            },
+            {
+              "name": "allow-network-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "10.0.0.0/8",
+              "acl": "acl",
+              "vpc": "vpc"
+            }
+          ]
+        }
+      ],
+      "bucket": "vpc-bucket",
+      "publicGateways": [],
+      "cos": "object-storage"
+    }
+  ],
+  "vpn_gateways": [],
+  "vpn_servers": [],
+  "vsi": [
+    {
+      "kms": "kms",
+      "encryption_key": "cos",
+      "image": "ibm-windows-server-2012-upgrade-2022-amd64-1",
+      "image_name": "Windows Server 2022 Standard Edition (amd64) [ibm-windows-server-2012-upgrade-2022-amd64-1]",
+      "profile": "bx2-2x8",
+      "name": "example-deployment",
+      "security_groups": [
+        "vpc-sg"
+      ],
+      "ssh_keys": [
+        "ssh-key"
+      ],
+      "vpc": "vpc",
+      "vsi_per_subnet": 1,
+      "resource_group": "vpc-rg",
+      "override_vsi_name": null,
+      "user_data": null,
+      "network_interfaces": [],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
+      "volumes": [],
+      "subnet": "",
+      "enable_floating_ip": false
+    }
+  ],
+  "classic_vlans": [
+    {
+      "name": "dal10-public",
+      "type": "PUBLIC",
+      "datacenter": "us-south"
+    },
+    {
+      "name": "dal10-private",
+      "type": "PRIVATE",
+      "datacenter": "dal10"
+    }
+  ],
+  "classic_ssh_keys": [
+    {
+      "name": "classic-ssh-key",
+      "public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDiwEV+8av41iV0DQ4PpEnO9AKBqcc/nGZSjX0cPyRcAZsFCJGWmR0mNVSwJI1AdEq0Hg14YJ0KRRkBS+khzNrEmDiYcGK+MSIw2rjBQbpR6mR1TTMUpslso34/CWe3kEnIJhSsbTD3P3tM/3drGaX6GdDUdHFwmlp0sN1VUdtb9xH0Xa9jmwrP/4sdO4YJ8BIoiy1RuLj5EH+B7SKXfX8ZnGp3N9enmM2sIjWdOkbq1LoRDWxeZaRojbSivH7P084KOgDCtLgBsxUqkkIxDSQ94fuTSTk/6ZHPbh9ol2YeYZOB6Ohll1vBFu6ZUDqRV8mnRNhoqOBXdAET7NWurHpaBsqFWDZ+C8gYtAgDh03rZgoZGay43jfUqB10eMzQv8I6q1JkEJ8fk2e46EBMD8jU3UpLzwQyHdUS/gkh5QB8BgXTWuFB6yYmxIc32XsiFRYK4y5vAhQtHTlNwRvfdtJtou2tuNEYUbFzeqaR1TBZ/m1Hctogb9VDinTmJ4TnZpNq1M9CFNDZFWNgfvwIeyhlAxA4oVoh5a2yFV+/cz6TG+J3di7t/F3x90whA26Yjz5S1lYvfuV1ci7A9WcXwld+nD7ZwBonA1VbmyA2haHrwaPgMuuTtm4v63dHpzgvbFH9llM3RD+ZXntVd6Vspdags05+lGBhPhl+PigxgnbtUw== Jennifer.Valle@ibm.com",
+      "use_data": false,
+      "resource_group": ""
+    }
+  ],
+  "classic_gateways": [
+    {
+      "name": "gw",
+      "ipv6_enabled": false,
+      "redundant_network": true,
+      "tcp_monitoring": false,
+      "memory": "64",
+      "network_speed": "1000",
+      "process_key_name": "INTEL_XEON_4210_2_20",
+      "os_key_name": "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+      "package_key_name": "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+      "disk_key_names": [
+        "HARD_DRIVE_2_00_TB_SATA_2"
+      ],
+      "public_vlan": "dal10-public",
+      "private_vlan": "dal10-private",
+      "private_network_only": false,
+      "datacenter": "dal10",
+      "ssh_key": "classic-ssh-key",
+      "hadr": false,
+      "domain": "example.com",
+      "public_bandwidth": "5000"
+    }
+  ]
+}

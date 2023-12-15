@@ -30,6 +30,7 @@ function propsMatchState(field, stateData, componentProps) {
     stateData.subnets = componentProps.data.subnets;
     stateData.acls = componentProps.data.acls;
   } else if (
+    stateData.zone &&
     stateData.zone !== componentProps.data.zone &&
     !contains(["subnet", "public_gateway", "power"], field)
   ) {
@@ -61,7 +62,7 @@ function propsMatchState(field, stateData, componentProps) {
       stateData.name === componentProps.data.name &&
       stateData.resource_group === componentProps.data.resource_group &&
       stateData.zone === componentProps.data.zone &&
-      deepEqual(stateData.images, componentProps.data.images)
+      deepEqual(stateData.imageNames, componentProps.data.imageNames)
     ) {
       return true;
     } else return false;

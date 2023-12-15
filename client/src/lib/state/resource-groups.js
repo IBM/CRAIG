@@ -1,6 +1,10 @@
 const { splat, revision } = require("lazy-z");
-const { shouldDisableComponentSave } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
+const { shouldDisableComponentSave, hideWhenUseData } = require("./utils");
+const {
+  invalidName,
+  invalidNameText,
+  resourceGroupHelperTextCallback,
+} = require("../forms");
 
 /**
  * initialize resource groups
@@ -127,6 +131,27 @@ function initResourceGroup(store) {
         default: "",
         invalid: invalidName("resource_groups"),
         invalidText: invalidNameText("resource_groups"),
+        helperText: resourceGroupHelperTextCallback,
+      },
+      use_data: {
+        type: "toggle",
+        default: false,
+        labelText: "Use Existing Instance",
+        tooltip: {
+          content: "If true, get data from an existing resource group",
+          alignModal: "bottom",
+        },
+      },
+      use_prefix: {
+        type: "toggle",
+        default: true,
+        labelText: "Use Prefix",
+        tooltip: {
+          content:
+            "Append your environment prefix to the beginnning of the resource group",
+          alignModal: "bottom",
+        },
+        hideWhen: hideWhenUseData,
       },
     },
   });

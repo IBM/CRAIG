@@ -4,12 +4,33 @@ const {
   deleteUnfoundArrayItems,
   isEmpty,
   isNullOrEmptyString,
+  splat,
 } = require("lazy-z");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  resourceGroupsField,
+  selectInvalidText,
+  unconditionalInvalidText,
+  vpcGroups,
+  subnetMultiSelect,
+  forceUpdateOnVpcChange,
+  securityGroupsMultiselect,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
+
+const vpeServiceMap = {
+  hpcs: "Hyper Protect Crypto Services",
+  kms: "Key Protect",
+  cos: "Object Storage",
+  icr: "Container Registry",
+  "secrets-manager": "Secrets Manager",
+  "Hyper Protect Crypto Services": "hpcs",
+  "Key Protect": "kms",
+  "Object Storage": "cos",
+  "Container Registry": "icr",
+  "Secrets Manager": "secrets-manager",
+};
 
 /**
  * initialize vpe
@@ -128,39 +149,61 @@ function initVpe(store) {
         default: "",
         invalid: invalidName("virtual_private_endpoints"),
         invalidText: invalidNameText("virtual_private_endpoints"),
+        size: "small",
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(true),
       service: {
+        size: "small",
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("service"),
+        invalidText: selectInvalidText("a service"),
+        groups: [
+          "Hyper Protect Crypto Services",
+          "Key Protect",
+          "Object Storage",
+          "Container Registry",
+          "Secrets Manager",
+        ],
+        onRender: function (stateData) {
+          return isNullOrEmptyString(stateData.service, true)
+            ? ""
+            : vpeServiceMap[stateData.service];
+        },
+        onInputChange: function (stateData) {
+          return vpeServiceMap[stateData.service];
+        },
       },
       vpc: {
+        labelText: "VPC",
+        size: "small",
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("vpc"),
-      },
-      security_groups: {
-        default: [],
-        invalid: function (stateData) {
-          return (
-            !stateData.security_groups || isEmpty(stateData.security_groups)
-          );
+        invalidText: selectInvalidText("VPC"),
+        groups: vpcGroups,
+        onStateChange: function (stateData) {
+          stateData.security_groups = [];
+          stateData.subnets = [];
         },
       },
-      subnets: {
-        default: [],
-        invalid: function (stateData) {
-          return !stateData.subnets || isEmpty(stateData.subnets);
-        },
-      },
+      security_groups: securityGroupsMultiselect(),
+      subnets: subnetMultiSelect(),
       instance: {
+        type: "select",
+        size: "small",
         default: null,
         invalid: function (stateData) {
           return stateData.service === "secrets-manager"
             ? isNullOrEmptyString(stateData.instance, true)
             : false;
+        },
+        invalidText: selectInvalidText("secrets manager instance"),
+        hideWhen: function (stateData) {
+          return stateData.service !== "secrets-manager";
+        },
+        groups: function (stateData, componentProps) {
+          return splat(componentProps.craig.store.json.secrets_manager, "name");
         },
       },
     },

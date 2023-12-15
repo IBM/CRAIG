@@ -15,8 +15,9 @@ describe("security compliance center resources", () => {
           account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
           profile_attachments: [
             {
-              attachment_name: "attachment name",
-              profile_id: "01326738-c8ca-456f-8315-e4573f534869",
+              name: "attachment name",
+              profile: "FS Cloud",
+              schedule: "every_30_days",
             },
           ],
         },
@@ -77,13 +78,14 @@ resource "ibm_scc_profile_attachment" "attachment_name_profile_attachment" {
           account_id: "12ab34cd56ef78ab90cd12ef34ab56cd",
           profile_attachments: [
             {
-              attachment_name: "attachment name",
-              profile_id: "01326738-c8ca-456f-8315-e4573f534869",
+              name: "attachment name",
+              profile: "FS Cloud",
+              schedule: "every_30_days",
             },
           ],
         },
       });
-      let expectedData = ``;
+      let expectedData = null;
       assert.deepEqual(
         actualData,
         expectedData,

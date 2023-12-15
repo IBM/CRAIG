@@ -61,6 +61,58 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
         "it should return correct data"
       );
     });
+    it("should correctly format vsi with ip spoofing", () => {
+      let actualData = formatVsi(
+        {
+          kms: "slz-kms",
+          encryption_key: "slz-vsi-volume-key",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
+          profile: "cx2-4x8",
+          name: "management-server",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          index: 1,
+          resource_group: "slz-management-rg",
+          network_interfaces: [],
+          primary_interface_ip_spoofing: true,
+        },
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet            = module.management_vpc.vsi_zone_1_id
+    allow_ip_spoofing = true
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should correctly format vsi with user data", () => {
       let actualData = formatVsi(
         {

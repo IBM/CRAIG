@@ -4,7 +4,7 @@ const controller = require("../../express-controllers/controller");
 const res = require("../mocks/response.mock");
 const { initMockAxios } = require("lazy-z");
 
-const powerImageJson = require("../../client/src/lib/docs/power-image-map.json");
+const powerImageJson = require("../../client/src/lib/docs/power-image-map-legacy.json");
 
 describe("power api", () => {
   beforeEach(() => {
@@ -59,8 +59,8 @@ describe("power api", () => {
           },
           res
         )
-        .then(() => {
-          assert.isTrue(res.send.calledOnceWith(usSouthImages));
+        .then((data) => {
+          assert.deepEqual(data, usSouthImages);
         });
     });
     it("should respond with correct storage pools", () => {
@@ -90,15 +90,13 @@ describe("power api", () => {
           },
           res
         )
-        .then(() => {
-          assert.isTrue(
-            res.send.calledOnceWith([
-              "Tier1-Flash-1",
-              "Tier1-Flash-2",
-              "Tier3-Flash-1",
-              "Tier1-Flash-2",
-            ])
-          );
+        .then((data) => {
+          assert.deepEqual(data, [
+            "Tier1-Flash-1",
+            "Tier1-Flash-2",
+            "Tier3-Flash-1",
+            "Tier1-Flash-2",
+          ]);
         });
     });
     it("should respond with error when no environment variable is present", () => {

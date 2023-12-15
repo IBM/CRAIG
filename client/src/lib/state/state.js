@@ -7,7 +7,12 @@ const { initObjectStorageStore } = require("./cos");
 const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc/vpc");
-const { sccInit, sccSave, sccDelete } = require("./scc");
+const {
+  sccInit,
+  sccSave,
+  sccDelete,
+  DEPRECATED_initSccStore,
+} = require("./scc");
 const { initSshKeyStore } = require("./ssh-keys.js");
 const { initSecurityGroupStore } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways/transit-gateways");
@@ -22,25 +27,12 @@ const {
   f5VsiCreate,
   f5OnStoreUpdate,
   f5TemplateSave,
+  initF5Store,
 } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
 const { initSecretsManagerStore } = require("./secrets-manager");
-const {
-  iamInit,
-  iamSave,
-  accessGroupInit,
-  accessGroupOnStoreUpdate,
-  accessGroupCreate,
-  accessGroupSave,
-  accessGroupDelete,
-  accessGroupPolicyCreate,
-  accessGroupPolicySave,
-  accessGroupPolicyDelete,
-  accessGroupDynamicPolicyCreate,
-  accessGroupDynamicPolicySave,
-  accessGroupDynamicPolicyDelete,
-} = require("./iam");
+const { initIamStore, initAccessGroups } = require("./iam");
 const validate = require("../validate");
 const { buildSubnetTiers } = require("./utils");
 const {
@@ -57,16 +49,9 @@ const { initCbrZones } = require("./cbr-zones");
 const { initCbrRules } = require("./cbr-rules");
 const { initVpnState } = require("./vpn-servers");
 const { initDnsStore } = require("./dns");
-const {
-  logdnaInit,
-  logdnaOnStoreUpdate,
-  logdnaSave,
-  sysdigInit,
-  sysdigOnStoreUpdate,
-  sysdigSave,
-} = require("./logging-monitoring");
+const { initLogDna, initSysDig } = require("./logging-monitoring");
 const { initIcdStore } = require("./icd");
-const { initPowerVsStore } = require("./power-vs");
+const { initPowerVsStore } = require("./power-vs/power-vs.js");
 const {
   initPowerVsInstance,
 } = require("./power-vs-instances/power-vs-instances.js");
@@ -74,6 +59,9 @@ const { initPowerVsVolumeStore } = require("./power-vs-volumes");
 const { intiClassicInfrastructure } = require("./classic");
 const { initClassicGateways } = require("./classic-gateways");
 const { initCis } = require("./cis.js");
+const { initVtlStore } = require("./vtl.js");
+const { initSccV2 } = require("./scc-v2.js");
+const { initCisGlbStore } = require("./cis-glb.js");
 
 /**
  * get state for craig
@@ -149,7 +137,6 @@ const state = function (legacy) {
   };
 
   initOptions(store);
-
   initResourceGroup(store);
   // components must check for key management second
   initKeyManagement(store);
@@ -159,94 +146,37 @@ const state = function (legacy) {
   initVpcStore(store);
   initAtracker(store);
   initAppIdStore(store);
-
-  store.newField("scc", {
-    init: sccInit,
-    save: sccSave,
-    delete: sccDelete,
-  });
-
+  DEPRECATED_initSccStore(store);
   initSshKeyStore(store);
-
   initSecurityGroupStore(store);
   initTransitGateway(store);
   initVpnGatewayStore(store);
   initClusterStore(store);
   initVsiStore(store);
   initVpe(store);
-
-  store.newField("f5", {
-    init: f5Init,
-    onStoreUpdate: f5OnStoreUpdate,
-    subComponents: {
-      instance: {
-        save: f5InstanceSave,
-      },
-      vsi: {
-        create: f5VsiCreate,
-        save: f5VsiSave,
-      },
-      template: {
-        save: f5TemplateSave,
-      },
-    },
-  });
-
+  initF5Store(store);
   initLoadBalancers(store);
   initEventStreams(store);
   initSecretsManagerStore(store);
-
-  store.newField("iam_account_settings", {
-    init: iamInit,
-    save: iamSave,
-  });
-
+  initIamStore(store);
   initRoutingTable(store);
-
-  store.newField("access_groups", {
-    init: accessGroupInit,
-    onStoreUpdate: accessGroupOnStoreUpdate,
-    create: accessGroupCreate,
-    save: accessGroupSave,
-    delete: accessGroupDelete,
-    subComponents: {
-      policies: {
-        create: accessGroupPolicyCreate,
-        save: accessGroupPolicySave,
-        delete: accessGroupPolicyDelete,
-      },
-      dynamic_policies: {
-        create: accessGroupDynamicPolicyCreate,
-        save: accessGroupDynamicPolicySave,
-        delete: accessGroupDynamicPolicyDelete,
-      },
-    },
-  });
-
+  initAccessGroups(store);
   initCbrZones(store);
   initCbrRules(store);
   initVpnState(store);
   initDnsStore(store);
-
-  store.newField("logdna", {
-    init: logdnaInit,
-    onStoreUpdate: logdnaOnStoreUpdate,
-    save: logdnaSave,
-  });
-
-  store.newField("sysdig", {
-    init: sysdigInit,
-    onStoreUpdate: sysdigOnStoreUpdate,
-    save: sysdigSave,
-  });
-
+  initLogDna(store);
+  initSysDig(store);
   initIcdStore(store);
   initPowerVsStore(store);
   initPowerVsInstance(store);
   initPowerVsVolumeStore(store);
+  initVtlStore(store);
   intiClassicInfrastructure(store);
   initClassicGateways(store);
   initCis(store);
+  initSccV2(store);
+  initCisGlbStore(store);
 
   /**
    * hard set config dot json in state store

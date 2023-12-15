@@ -7,9 +7,7 @@ const { getObjectFromArray, splat, distinct, contains } = require("lazy-z");
  * @returns {array} keys
  */
 function encryptionKeyFilter(_, componentProps) {
-  let cosName = componentProps.isModal
-    ? componentProps.parent_name
-    : componentProps.arrayParentName;
+  let cosName = componentProps.arrayParentName;
   let { kms } = getObjectFromArray(
     componentProps.craig.store.json.object_storage,
     "name",

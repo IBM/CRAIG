@@ -1,4 +1,4 @@
-const { titleCase } = require("lazy-z");
+const { titleCase, contains } = require("lazy-z");
 const {
   dynamicFieldId,
   addClassName,
@@ -26,7 +26,10 @@ function dynamicMultiSelectProps(props) {
   // should always be invalid when no selection is made
   let invalid =
     (stateValue && stateValue.length === 0 && props.field.optional) ||
-    props.name === "power_connections"
+    contains(
+      ["power_connections", "accept_routes_from_resource_type"],
+      props.name
+    )
       ? false
       : // force network to not display as invalid when ip is invalid
       stateValue.length > 0 && props.name === "network"

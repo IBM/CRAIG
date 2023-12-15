@@ -43,6 +43,7 @@ const ObservabilityForm = (props) => {
               }}
               craig={props.craig}
               innerFormProps={{
+                craig: props.craig,
                 data: props.craig.store.json.logdna,
                 resourceGroups: splat(
                   props.craig.store.json.resource_groups,
@@ -73,6 +74,7 @@ const ObservabilityForm = (props) => {
               }}
               craig={props.craig}
               innerFormProps={{
+                craig: props.craig,
                 data: props.craig.store.json.sysdig,
                 resourceGroups: splat(
                   props.craig.store.json.resource_groups,

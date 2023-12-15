@@ -147,6 +147,59 @@ describe("power-vs", () => {
       );
     });
   });
+  describe("power.schema", () => {
+    describe("power.zone", () => {
+      describe("power.zone.onStateChange", () => {
+        it("should set imageNames when changing zone", () => {
+          let craig = newState();
+          let data = {};
+          let expectedData = {
+            imageNames: [],
+            images: [],
+          };
+          craig.power.zone.onStateChange(data);
+          assert.deepEqual(data, expectedData, "it should set image names");
+        });
+      });
+      describe("power.zone.groups", () => {
+        it("should return list of zones", () => {
+          let craig = newState();
+          craig.store.json._options.power_vs_zones = ["zone"];
+          assert.deepEqual(
+            craig.power.zone.groups({}, { craig: craig }),
+            ["zone"],
+            "it should return a list of zones"
+          );
+        });
+      });
+    });
+    describe("power.imageNames", () => {
+      it("should return groups when no zone", () => {
+        let craig = newState();
+        assert.deepEqual(
+          craig.power.imageNames.groups({ zone: "" }),
+          [],
+          "it should return empty array"
+        );
+      });
+      it("should return name of zone for force update key", () => {
+        let craig = newState();
+        assert.deepEqual(
+          craig.power.imageNames.forceUpdateKey({ zone: "zone" }),
+          "zone",
+          "it should return empty array"
+        );
+      });
+      it("should return groups when zone", () => {
+        let craig = newState();
+        assert.deepEqual(
+          craig.power.imageNames.groups({ zone: "dal12" }).length,
+          33,
+          "it should return image names"
+        );
+      });
+    });
+  });
   describe("power.ssh_keys crud", () => {
     let state;
     beforeEach(() => {
@@ -252,6 +305,41 @@ describe("power-vs", () => {
               ),
               "SSH Public Key in use",
               "it should return correct text"
+            );
+          });
+        });
+        describe("invalid", () => {
+          it("should return true when key in modal is invalid when no data", () => {
+            assert.isTrue(
+              state.power.ssh_keys.public_key.invalid(
+                {
+                  public_key: "",
+                },
+                {
+                  arrayParentName: "workspace",
+                }
+              )
+            );
+          });
+          it("should return true when key name matches data name", () => {
+            state.power.ssh_keys.create(
+              { name: "test-key", public_key: "aaa" },
+              { innerFormProps: { arrayParentName: "power-vs" } }
+            );
+            delete state.store.json.power[0].ssh_keys[0].workspace;
+            assert.isTrue(
+              state.power.ssh_keys.public_key.invalid(
+                {
+                  public_key: "aaa",
+                  name: "name",
+                },
+                {
+                  arrayParentName: "workspace",
+                  data: {
+                    name: "name",
+                  },
+                }
+              )
             );
           });
         });
@@ -389,12 +477,57 @@ describe("power-vs", () => {
         });
       });
       describe("pi_dns", () => {
+        describe("invalid", () => {
+          it("should return true if the pi_dns value is string", () => {
+            assert.isTrue(
+              state.power.network.pi_dns.invalid({ pi_dns: "" }),
+              "it should be true"
+            );
+          });
+        });
         describe("invalidText", () => {
           it("should return correct invalid text", () => {
             assert.deepEqual(
               state.power.network.pi_dns.invalidText(),
               "Invalid IP Address",
               "it should return correct invalid text"
+            );
+          });
+        });
+        describe("helperText", () => {
+          it("should be null", () => {
+            assert.isNull(
+              state.power.network.pi_dns.helperText(),
+              "it should be null"
+            );
+          });
+        });
+        describe("onInputChange", () => {
+          it("should add target data to array", () => {
+            let craig = newState();
+            let data = {
+              pi_dns: "dns",
+            };
+            data.pi_dns = craig.power.network.pi_dns.onInputChange(data, "dns");
+            assert.deepEqual(
+              data,
+              {
+                pi_dns: ["dns"],
+              },
+              "it should set data"
+            );
+          });
+        });
+        describe("onRender", () => {
+          it("should return string data", () => {
+            let craig = newState();
+            let data = {
+              pi_dns: ["dns"],
+            };
+            assert.deepEqual(
+              craig.power.network.pi_dns.onRender(data),
+              "dns",
+              "it should return value"
             );
           });
         });
@@ -456,6 +589,36 @@ describe("power-vs", () => {
         "it should delete a cloud connection"
       );
     });
+    describe("power.cloud_connections.schema", () => {
+      describe("power.cloud_connections.transit_gateways", () => {
+        describe("power.cloud_connections.transit_gateways.hideWhen", () => {
+          it("should return false if pi_cloud_connection_transit_enabled is true", () => {
+            assert.isFalse(
+              state.power.cloud_connections.transit_gateways.hideWhen({
+                pi_cloud_connection_transit_enabled: true,
+              }),
+              "it should be shown"
+            );
+          });
+        });
+        describe("power.cloud_connections.transit_gateways.groups", () => {
+          it("should return false if pi_cloud_connection_transit_enabled is true", () => {
+            assert.deepEqual(
+              state.power.cloud_connections.transit_gateways.groups(
+                {
+                  pi_cloud_connection_transit_enabled: true,
+                },
+                {
+                  craig: state,
+                }
+              ),
+              ["transit-gateway"],
+              "it should return list of tgws"
+            );
+          });
+        });
+      });
+    });
   });
   describe("attachments", () => {
     it("should save attachment", () => {
@@ -499,6 +662,41 @@ describe("power-vs", () => {
         ],
         "it should delete a cloud connection"
       );
+    });
+    describe("attachments schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+        craig.power.create({
+          name: "power-vs",
+          resource_group: "default",
+          zone: "dal12",
+          imageNames: ["7100-05-09"],
+        });
+        craig.power.cloud_connections.create(
+          { name: "test-network" },
+          { innerFormProps: { arrayParentName: "power-vs" } }
+        );
+      });
+      it("should return false for invalid", () => {
+        assert.isFalse(
+          craig.power.attachments.connections.invalid(),
+          "it should not be invalid"
+        );
+      });
+      it("should return groups", () => {
+        assert.deepEqual(
+          craig.power.attachments.connections.groups(
+            {},
+            {
+              craig: craig,
+              arrayParentName: "power-vs",
+            }
+          ),
+          ["test-network"],
+          "it should not be invalid"
+        );
+      });
     });
   });
 });

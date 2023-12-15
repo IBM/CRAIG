@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.8.0",
+    "features": [
+      "Users can now create FalconStor VTL instances from the page `/form/vtl`",
+      "Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form",
+      "Users can now create SCC V2 Resources fomr the `/form/sccV2` page",
+      "Users can now enable IP spoofing on the primary network interface for Virtual Servers",
+      "Users can now create additional VPC address prefixes from the VPN Gateways page",
+      "Users can now add VPN Gateway connections from the VPN Gateways page"
+    ],
+    "fixes": [
+      "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",
+      "Fixed an issue allowing users to add more than 3 subnets to a DNS custom resolver",
+      "Fixed an issue allowing users to create DNS zones with duplicate names",
+      "Fixed an issue causing Access Groups and Access Group Policies to have incorrect references to their parent access groups",
+      "Fixed an issue causing Terraform output for COS authorization credentials to always have the role `Writer` regardless of selection"
+    ],
+    "upgrade_notes": [
+      "SCC v1 Terraform has been deprecated. SCC v1 resources can still be managed from `/form/securityComplianceCenter`",
+      "Reafactored Routing Tables and Routing Table Routes Form",
+      "OptionsForm has been removed and now is generated using the DynamicForm component",
+      "Power VS Volume Attachments are no longer created in parallel to ensure that each provisions successfully"
+    ]
+  },
+  {
     "version": "1.7.1",
     "features": [],
     "fixes": [

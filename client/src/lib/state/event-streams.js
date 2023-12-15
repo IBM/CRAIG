@@ -1,10 +1,14 @@
-const { splatContains, isNullOrEmptyString } = require("lazy-z");
+const { isNullOrEmptyString, titleCase } = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
 const {
   setKmsFromKeyOnStoreUpdate,
   fieldIsNullOrEmptyString,
   isIpStringInvalid,
   shouldDisableComponentSave,
+  resourceGroupsField,
+  selectInvalidText,
+  titleCaseRender,
+  kebabCaseInput,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -56,6 +60,15 @@ function eventStreamsDelete(config, stateData, componentProps) {
 }
 
 /**
+ * hideWhen function
+ * @param {object} stateData component state data
+ * @returns {boolean} returns true if plan is not enterprise
+ */
+function hideWhenNotEnterprise(stateData) {
+  return stateData.plan !== "enterprise";
+}
+
+/**
  * intialize appid store
  * @param {*} store
  */
@@ -87,14 +100,20 @@ function initEventStreams(store) {
         invalidText: invalidNameText("event_streams"),
       },
       plan: {
+        size: "small",
+        type: "select",
         default: "lite",
         invalid: fieldIsNullOrEmptyString("plan"),
+        invalidText: selectInvalidText("a plan"),
+        groups: ["Lite", "Standard", "Enterprise"],
+
+        onRender: titleCaseRender("plan"),
+        onInputChange: kebabCaseInput("plan"),
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(false, true),
       throughput: {
+        size: "small",
+        type: "select",
         default: "",
         invalid: function (stateData) {
           if (stateData.plan === "enterprise") {
@@ -102,8 +121,13 @@ function initEventStreams(store) {
           }
           return false;
         },
+        invalidText: selectInvalidText("a throughput"),
+        groups: ["150MB/s", "300MB/s", "450MB/s"],
+        hideWhen: hideWhenNotEnterprise,
       },
       storage_size: {
+        size: "small",
+        type: "select",
         default: "",
         invalid: function (stateData) {
           if (stateData.plan === "enterprise") {
@@ -111,8 +135,13 @@ function initEventStreams(store) {
           }
           return false;
         },
+        invalidText: selectInvalidText("a throughput"),
+        groups: ["2TB", "4TB", "6TB", "8TB", "10TB", "12TB"],
+        hideWhen: hideWhenNotEnterprise,
       },
       private_ip_allowlist: {
+        labelText: "Allowed Private IPs",
+        type: "textArea",
         default: "",
         invalid: function (stateData) {
           if (stateData.plan === "enterprise") {
@@ -120,6 +149,8 @@ function initEventStreams(store) {
           }
           return false;
         },
+        hideWhen: hideWhenNotEnterprise,
+        placeholder: "X.X.X.X, X.X.X.X/X, ...",
       },
       endpoints: {
         default: "",

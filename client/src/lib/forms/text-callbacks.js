@@ -102,6 +102,7 @@ function invalidNameText(field, craig) {
       return duplicateNameCallback(stateData[overrideField || "name"]);
     } else if (
       field === "classic_vlans" &&
+      stateData.name &&
       stateData.name.length +
         1 +
         componentProps.craig.store.json._options.prefix.length >
@@ -207,16 +208,6 @@ function iamAccountSettingInvalidText(field) {
 }
 
 /**
- * create access group policy helper text
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {string} helper text
- */
-function accessGroupPolicyHelperTextCallback(stateData, componentProps) {
-  return `${componentProps.craig.store.json._options.prefix}-${stateData.name}`;
-}
-
-/**
  * create invalid cidr text function
  * @param {*} craig
  * @returns {Function} stateData componentProps function
@@ -229,17 +220,22 @@ function invalidCidrText(craig) {
    * @returns {string} invalid text string
    */
   return function (stateData, componentProps) {
-    if (!stateData.cidr) {
+    let cidrField = stateData.cidr ? "cidr" : "pi_cidr";
+    if (!stateData[cidrField]) {
       return "Invalid CIDR block";
     }
-    let cidrRange = Number(stateData.cidr.split("/")[1]) > 17;
-    if (componentProps.data.cidr === stateData.cidr && stateData.cidr) {
+    let cidrRange = Number(stateData[cidrField].split("/")[1]) > 17;
+    if (
+      componentProps.data &&
+      componentProps.data[cidrField] === stateData[cidrField] &&
+      stateData[cidrField]
+    ) {
       // by checking if matching here prevent hasOverlappingCidr from running
       // to decrease load times
       return "";
-    } else if (isIpv4CidrOrAddress(stateData.cidr) === false) {
+    } else if (isIpv4CidrOrAddress(stateData[cidrField]) === false) {
       return "Invalid CIDR block";
-    } else if (isIpv4CidrOrAddress(stateData.cidr) && cidrRange) {
+    } else if (isIpv4CidrOrAddress(stateData[cidrField]) && cidrRange) {
       let invalidCidr = hasOverlappingCidr(craig)(stateData, componentProps);
       if (invalidCidr.invalid) {
         return `Warning: CIDR overlaps with ` + invalidCidr.cidr;
@@ -330,16 +326,6 @@ function invalidCrnText(stateData) {
 }
 
 /**
- * return icd cpuinput invalid text
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {string} invalid text
- */
-function invalidCpuTextCallback(stateData, componentProps) {
-  return `Using dedicated cores requires a minimum of ${componentProps.cpuMin} cores and a maximum of ${componentProps.cpuMax} cores per member. For shared CPU, select 0 cores.`;
-}
-
-/**
  * return label invalid text
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -379,14 +365,12 @@ module.exports = {
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
-  accessGroupPolicyHelperTextCallback,
   invalidCidrText,
   invalidCbrRuleText,
   invalidCbrZoneText,
   invalidProjectNameText,
   invalidDescriptionText,
   invalidCrnText,
-  invalidCpuTextCallback,
   labelsInvalidText,
   powerVsWorkspaceHelperText,
   vpnServersHelperText,

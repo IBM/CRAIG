@@ -23,7 +23,24 @@ const { getAllSecrets } = require("./utils");
 function hasDuplicateName(field, stateData, componentProps, overrideField) {
   let allOtherNames = [];
   let stateField = overrideField || "name";
-  if (field === "cis") {
+  if (field === "connections") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.vpn_gateways,
+      "connections",
+      "name"
+    );
+  } else if (field === "origins" || field === "health_checks") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.cis_glbs,
+      field,
+      "name"
+    );
+  } else if (field === "profile_attachments") {
+    allOtherNames = splat(
+      componentProps.craig.store.json.scc_v2.profile_attachments,
+      "name"
+    );
+  } else if (field === "cis") {
     allOtherNames = splat(componentProps.craig.store.json.cis, "name");
   } else if (field === "cis_dns_record") {
     allOtherNames = nestedSplat(
@@ -140,7 +157,11 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
   } else if (field === "vsi") {
     allOtherNames = splat(componentProps.craig.store.json.vsi, "name");
   } else if (field === "routes") {
-    allOtherNames = splat(componentProps.route.routes, "name");
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.routing_tables,
+      "routes",
+      "name"
+    );
   } else if (field === "load_balancers") {
     allOtherNames = splat(
       componentProps.craig.store.json.load_balancers,

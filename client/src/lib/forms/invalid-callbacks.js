@@ -81,7 +81,9 @@ function invalidName(field, craig) {
    */
   function nameCheck(stateData, componentProps, overrideField) {
     let stateField = overrideField || "name";
-    if (containsKeys(stateData, "scope_description")) {
+    if (!stateData.name) {
+      return true;
+    } else if (containsKeys(stateData, "scope_description")) {
       // easiest way to get scc
       return (
         stateData[stateField] === "" ||
@@ -92,6 +94,7 @@ function invalidName(field, craig) {
         hasDuplicateName(field, stateData, componentProps, overrideField) ||
         // prevent classic vlans with names that include prefix longer than 20 characters
         (field === "classic_vlans" &&
+          stateData.name &&
           stateData.name.length +
             1 +
             componentProps.craig.store.json._options.prefix.length >
@@ -192,9 +195,9 @@ function invalidSshPublicKey(stateData, componentProps) {
               "name",
               componentProps.arrayParentName
             ).ssh_keys
-          : componentProps.classic
-          ? componentProps.craig.store.json.classic_ssh_keys
-          : componentProps.craig.store.json.ssh_keys,
+          : containsKeys(stateData, "use_data")
+          ? componentProps.craig.store.json.ssh_keys
+          : componentProps.craig.store.json.classic_ssh_keys,
         "public_key"
       ),
       stateData.public_key
@@ -207,16 +210,14 @@ function invalidSshPublicKey(stateData, componentProps) {
             "name",
             componentProps.arrayParentName
           ).ssh_keys
-        : componentProps.classic
-        ? componentProps.craig.store.json.classic_ssh_keys
-        : componentProps.craig.store.json.ssh_keys,
+        : containsKeys(stateData, "use_data")
+        ? componentProps.craig.store.json.ssh_keys
+        : componentProps.craig.store.json.classic_ssh_keys,
       "public_key",
       stateData.public_key
     );
-    if (
-      componentProps.data.name === key.name ||
-      (stateData.workspace && !key.workspace) // special case where disableSave calls without powerVS prop
-    ) {
+
+    if (componentProps.data && componentProps.data.name === key.name) {
       return invalid; // This is the current key, escape
     } else {
       // duplicate key
@@ -608,21 +609,6 @@ function invalidCbrZone(field, stateData, componentProps) {
 }
 
 /**
- * checks if icd cpu input is invalid
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if invalid
- */
-function invalidCpuCallback(stateData, componentProps) {
-  return (
-    !isNullOrEmptyString(stateData.cpu) &&
-    (!isWholeNumber(stateData.cpu) ||
-      (stateData.cpu !== 0 && stateData.cpu < componentProps.cpuMin) ||
-      stateData.cpu > componentProps.cpuMax)
-  );
-}
-
-/**
  * checks if description invalid
  * @param {Object} stateData
  * @param {Object} componentProps
@@ -701,6 +687,5 @@ module.exports = {
   nullOrEmptyStringCheckCallback,
   invalidDnsZoneName,
   invalidCrns,
-  invalidCpuCallback,
   replicationDisabledCallback,
 };

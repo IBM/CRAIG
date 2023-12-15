@@ -15,9 +15,15 @@ const {
   isWholeNumber,
   titleCase,
   kebabCase,
+  isInRange,
+  isFunction,
+  isArray,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
-const { invalidName } = require("../forms/invalid-callbacks");
+const {
+  invalidName,
+  invalidSshPublicKey,
+} = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
 /**
  * set kms from encryption key on store update
@@ -359,11 +365,14 @@ function saveAdvancedSubnetTier(
 /**
  * shortcut for field is null or empty string
  * @param {*} fieldName
+ * @param {boolean} lazy  true if field cannot be undefined
  * @returns {Function}
  */
-function fieldIsNullOrEmptyString(fieldName) {
+function fieldIsNullOrEmptyString(fieldName, lazy) {
   return function (stateData) {
-    return isNullOrEmptyString(stateData[fieldName]);
+    return stateData.use_data
+      ? false
+      : isNullOrEmptyString(stateData[fieldName], lazy);
   };
 }
 
@@ -425,7 +434,7 @@ function nameHelperText(stateData, componentProps) {
     stateData.use_data
       ? ""
       : componentProps.craig.store.json._options.prefix + "-"
-  }${stateData.name}`;
+  }${stateData.name || ""}`;
 }
 
 /**
@@ -455,21 +464,24 @@ function nameField(jsonField) {
 
 /**
  * resource group
- * @param {Function=} hideWhen
  * @param {boolean=} small make small
+ * @param {object} options
  * @returns {object} object for resource groups page
  */
-function resourceGroupsField(hideWhen, small) {
+function resourceGroupsField(small, options) {
   return {
     default: "",
-    invalid: fieldIsNullOrEmptyString("resource_group"),
-    invalidText: selectInvalidText("resource_group"),
+    invalid: options?.invalid
+      ? options.invalid
+      : fieldIsNullOrEmptyString("resource_group"),
+    invalidText: selectInvalidText("resource group"),
     type: "select",
     groups: function (stateData, componentProps) {
       return splat(componentProps.craig.store.json.resource_groups, "name");
     },
-    hideWhen: hideWhen,
+    hideWhen: hideWhenUseData,
     size: small ? "small" : undefined,
+    labelText: options?.labelText || undefined,
   };
 }
 
@@ -494,6 +506,22 @@ function invalidPort(rule, isSecurityGroup) {
     });
   }
   return hasInvalidPort;
+}
+
+/**
+ * test for invalid range
+ * @param {*} value
+ * @param {number} min
+ * @param {number} max
+ * @returns {boolean} true if invalid
+ */
+function isRangeInvalid(value, min, max) {
+  if (isNullOrEmptyString(value)) return false;
+  value = parseFloat(value);
+  if (!isWholeNumber(value) || !isInRange(value, min, max)) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -525,7 +553,9 @@ function invalidIcmpCodeOrType(stateData) {
 function invalidIpv4Address(field) {
   return function (stateData) {
     return (
-      !isIpv4CidrOrAddress(stateData[field]) || contains(stateData[field], "/")
+      !stateData[field] ||
+      !isIpv4CidrOrAddress(stateData[field]) ||
+      contains(stateData[field], "/")
     );
   };
 }
@@ -571,7 +601,11 @@ function titleCaseRender(field) {
   return function (stateData) {
     return isNullOrEmptyString(stateData[field])
       ? ""
-      : titleCase(stateData[field]);
+      : titleCase(stateData[field])
+          .replace("1 2", "12")
+          .replace("2 4", "24")
+          .replace("4 8", "48")
+          .replace("9 6", "96");
   };
 }
 
@@ -597,7 +631,244 @@ function unconditionalInvalidText(text) {
   };
 }
 
+/**
+ * hide when use data
+ * @param {*} stateData
+ * @returns
+ */
+function hideWhenUseData(stateData) {
+  return stateData.use_data;
+}
+
+/**
+ * create schema for ssh key
+ * @param {*} fieldName
+ * @returns {object} object for schema
+ */
+function sshKeySchema(fieldName) {
+  let schema = {
+    name: {
+      default: "",
+      invalid: invalidName(fieldName),
+      invalidText: invalidNameText(fieldName),
+    },
+    public_key: {
+      type: "public-key",
+      default: null,
+      invalid: function (stateData, componentProps) {
+        return stateData.use_data
+          ? false
+          : invalidSshPublicKey(stateData, componentProps).invalid;
+      },
+      invalidText: function (stateData, componentProps) {
+        return invalidSshPublicKey(stateData, componentProps).invalidText;
+      },
+      hideWhen: function (stateData) {
+        return stateData.use_data;
+      },
+    },
+  };
+  if (fieldName === "ssh_keys") {
+    schema.resource_group = resourceGroupsField();
+    schema.use_data = {
+      type: "toggle",
+      labelText: "Use Existing SSH Key",
+      default: false,
+    };
+  }
+  return schema;
+}
+
+/**
+ * get vpc groups
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Array<string>} list of vpcs
+ */
+function vpcGroups(stateData, componentProps) {
+  return splat(componentProps.craig.store.json.vpcs, "name");
+}
+
+/**
+ * force update on vpc change
+ * @param {*} stateData
+ * @returns {string} vpc name as key for multiselect to reset selected items
+ */
+function forceUpdateOnVpcChange(stateData) {
+  return stateData.vpc;
+}
+
+/**
+ * create a multiselect for subnet
+ * @param {object=} options optional override params
+ * @param {Function=} options.invalid replacement invalid function
+ * @param {string=} options.invalidText replacement invalid text
+ * @returns {object} schema for subnet field
+ */
+function subnetMultiSelect(options) {
+  return {
+    size: "small",
+    type: "multiselect",
+    forceUpdateKey: forceUpdateOnVpcChange,
+    default: [],
+    invalid: function (stateData) {
+      return (
+        !stateData.subnets ||
+        isEmpty(stateData.subnets) ||
+        (isFunction(options?.invalid) && options.invalid(stateData))
+      );
+    },
+    invalidText: unconditionalInvalidText(
+      options?.invalidText ? options.invalidText : "Select at least one subnet"
+    ),
+    groups: function (stateData, componentProps) {
+      if (isNullOrEmptyString(stateData.vpc, true)) {
+        return [];
+      } else {
+        return splat(
+          new revision(componentProps.craig.store.json).child(
+            "vpcs",
+            stateData.vpc
+          ).data.subnets,
+          "name"
+        );
+      }
+    },
+  };
+}
+
+/**
+ * sg multiselect
+ * @returns {object} schema object
+ */
+function securityGroupsMultiselect() {
+  return {
+    type: "multiselect",
+    size: "small",
+    default: [],
+    invalid: function (stateData) {
+      return !stateData.security_groups || isEmpty(stateData.security_groups);
+    },
+    invalidText: unconditionalInvalidText("Select at least one security group"),
+    groups: function (stateData, componentProps) {
+      return splat(
+        componentProps.craig.store.json.security_groups.filter((sg) => {
+          if (sg.vpc === stateData.vpc) {
+            return sg;
+          }
+        }),
+        "name"
+      );
+    },
+    forceUpdateKey: forceUpdateOnVpcChange,
+  };
+}
+
+/**
+ * shortcut for field is null or empty string if enabled is true
+ * @param {*} field
+ * @returns {Function}
+ */
+function fieldIsNullOrEmptyStringEnabled(field) {
+  return function (stateData) {
+    return stateData.enabled ? isNullOrEmptyString(stateData[field]) : false;
+  };
+}
+
+/**
+ * shortcut for field needs to be whole number
+ * @param {*} field
+ * @returns {Function}
+ */
+function fieldIsNotWholeNumber(field, min, max) {
+  return function (stateData) {
+    return !isNullOrEmptyString(stateData[field])
+      ? !isInRange(parseInt(stateData[field]), min, max)
+      : true;
+  };
+}
+
+/**
+ * shortcut for ttl
+ * @returns {Function} function
+ */
+function timeToLive() {
+  return {
+    labelText: "Time to Live (Seconds)",
+    default: "",
+    optional: true,
+    invalid: function (stateData) {
+      return isNullOrEmptyString(stateData.ttl, true)
+        ? false
+        : fieldIsNotWholeNumber("ttl", 300, 2147483647)(stateData);
+    },
+    invalidText: unconditionalInvalidText(
+      "Enter a whole number between 300 and 2147483647"
+    ),
+    placeholder: "300",
+  };
+}
+
+/**
+ * encryption key groups
+ * @returns {Function} shortcut function
+ */
+function encryptionKeyGroups(stateData, componentProps) {
+  return componentProps.craig.store.encryptionKeys;
+}
+
+/*
+ * ip cidr list text area
+ * @param {*} options
+ * @returns {object} schema object
+ */
+function ipCidrListTextArea(field, options) {
+  return {
+    tooltip: options.tooltip || undefined,
+    default: [],
+    type: "textArea",
+    labelText: options.labelText || "Additional Address Prefixes",
+    placeholder: "X.X.X.X/X, X.X.X.X/X, ...",
+    invalid: function (stateData) {
+      return isNullOrEmptyString(stateData[field], true) && !options.strict
+        ? false
+        : // prevent empty array from passing regex
+        options.strict && isEmpty(stateData[field])
+        ? true
+        : isIpStringInvalid(
+            // when additional prefixes is not array, check as string
+            isArray(stateData[field])
+              ? stateData[field].join(",")
+              : stateData[field]
+          );
+    },
+    invalidText: unconditionalInvalidText(
+      "Enter a valid comma separated list of IPV4 CIDR blocks"
+    ),
+    onRender: function (stateData) {
+      return isNullOrEmptyString(stateData[field], true)
+        ? ""
+        : stateData[field].join(",");
+    },
+    onInputChange: function (stateData) {
+      return isNullOrEmptyString(stateData[field], true)
+        ? []
+        : stateData[field].split(/,\s?/g);
+    },
+  };
+}
+
+/**
+ * hide helper text shortcut
+ * @returns null
+ */
+function hideHelperText() {
+  return null;
+}
+
 module.exports = {
+  hideHelperText,
+  encryptionKeyGroups,
   invalidIpv4Address,
   invalidIpv4AddressText,
   formatNetworkingRule,
@@ -607,6 +878,7 @@ module.exports = {
   saveAdvancedSubnetTier,
   setKmsFromKeyOnStoreUpdate,
   fieldIsNullOrEmptyString,
+  fieldIsNullOrEmptyStringEnabled,
   shouldDisableComponentSave,
   isIpStringInvalid,
   fieldIsEmpty,
@@ -622,4 +894,14 @@ module.exports = {
   titleCaseRender,
   kebabCaseInput,
   unconditionalInvalidText,
+  isRangeInvalid,
+  sshKeySchema,
+  vpcGroups,
+  hideWhenUseData,
+  subnetMultiSelect,
+  forceUpdateOnVpcChange,
+  fieldIsNotWholeNumber,
+  timeToLive,
+  securityGroupsMultiselect,
+  ipCidrListTextArea,
 };

@@ -14,7 +14,6 @@ const {
   invalidCbrZoneText,
   invalidProjectNameText,
   invalidCrnText,
-  invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
   vpnServersHelperText,
 } = require("./text-callbacks");
@@ -43,7 +42,6 @@ const {
   invalidCbrZone,
   invalidDnsZoneName,
   invalidCrns,
-  invalidCpuCallback,
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
 const {
@@ -125,8 +123,6 @@ module.exports = {
   getCosFromBucket,
   invalidCrns,
   invalidCrnText,
-  invalidCpuCallback,
-  invalidCpuTextCallback,
   powerVsWorkspaceHelperText,
   vpnServersHelperText,
   powerImageFetch,

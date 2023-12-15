@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
 /**
  * this file intentionally left here as disable save is handled for all three components
@@ -12,17 +12,7 @@ describe("object storage", () => {
         "object_storage",
         { name: "@@@", use_data: false },
         {
-          craig: {
-            store: {
-              json: {
-                object_storage: [
-                  {
-                    name: "frog",
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
@@ -37,18 +27,7 @@ describe("object storage", () => {
         "object_storage",
         { name: "aaa", use_data: false, resource_group: null },
         {
-          craig: {
-            store: {
-              json: {
-                object_storage: [
-                  {
-                    name: "frog",
-                    resource_group: null,
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
@@ -68,18 +47,7 @@ describe("object storage", () => {
           kms: null,
         },
         {
-          craig: {
-            store: {
-              json: {
-                object_storage: [
-                  {
-                    name: "frog",
-                    resource_group: null,
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
@@ -94,22 +62,7 @@ describe("object storage", () => {
         "buckets",
         { name: "@@@", use_data: false },
         {
-          craig: {
-            store: {
-              json: {
-                object_storage: [
-                  {
-                    name: "frog",
-                    buckets: [
-                      {
-                        name: "test",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
@@ -124,22 +77,7 @@ describe("object storage", () => {
         "buckets",
         { name: "key", kms_key: null, use_data: false },
         {
-          craig: {
-            store: {
-              json: {
-                object_storage: [
-                  {
-                    name: "frog",
-                    buckets: [
-                      {
-                        name: "test",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
@@ -154,25 +92,11 @@ describe("object storage", () => {
         "cos_keys",
         { name: "@@@", use_data: false },
         {
-          craig: {
-            store: {
-              json: {
-                object_storage: [
-                  {
-                    name: "frog",
-                    keys: [
-                      {
-                        name: "test",
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
+          craig: state(),
           data: {
             name: "test",
           },
+          formName: "Service Credentials",
         }
       ),
       "it should be false"

@@ -8,6 +8,10 @@ const {
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  resourceGroupsField,
+  hideWhenUseData,
+  nameHelperText,
+  encryptionKeyGroups,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 
@@ -119,14 +123,27 @@ function initAppIdStore(store) {
     save: appidSave,
     delete: appidDelete,
     schema: {
+      use_data: {
+        default: false,
+        type: "toggle",
+        labelText: "Use Existing Instance",
+        size: "small",
+      },
       name: {
         default: "",
         invalid: invalidName("appid"),
         invalidText: invalidNameText("appid"),
+        helperText: nameHelperText,
+        size: "small",
       },
-      resource_group: {
-        default: null,
-        invalid: fieldIsNullOrEmptyString("resource_group"),
+      resource_group: resourceGroupsField(true),
+      encryption_key: {
+        labelText: "(Optional) Encryption Key",
+        type: "select",
+        default: "",
+        hideWhen: hideWhenUseData,
+        groups: encryptionKeyGroups,
+        size: "small",
       },
     },
     subComponents: {
@@ -134,6 +151,11 @@ function initAppIdStore(store) {
         create: appidKeyCreate,
         save: appidKeySave,
         delete: appidKeyDelete,
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name"],
+          "appid",
+          "keys"
+        ),
         schema: {
           name: {
             default: "",

@@ -1,9 +1,34 @@
-const { revision, deepEqual, isEmpty } = require("lazy-z");
+const {
+  revision,
+  azsort,
+  isEmpty,
+  buildNumberDropdownList,
+  titleCase,
+  contains,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const { subnetTierSave } = require("./vpc/vpc");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { invalidNewResourceName, invalidTagList } = require("../forms");
 const releaseNotes = require("../docs/release-notes.json");
-const { shouldDisableComponentSave } = require("./utils");
+const {
+  shouldDisableComponentSave,
+  unconditionalInvalidText,
+  fieldIsNullOrEmptyString,
+  selectInvalidText,
+  kebabCaseInput,
+} = require("./utils");
+
+const powerVsZones = [
+  "au-syd",
+  "us-south",
+  "eu-de",
+  "eu-gb",
+  "us-east",
+  "br-sao",
+  "jp-tok",
+  "ca-tor",
+];
 
 /**
  * initialize options
@@ -87,34 +112,227 @@ function optionsSave(config, stateData, componentProps) {
   }
 }
 
+/**
+ * hide a field when power vs not enabled
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true when not enabled
+ */
+function hideWhenNotPowerVs(stateData) {
+  return stateData.enable_power_vs !== true;
+}
+
+/**
+ * init options store
+ * @param {*} store
+ */
 function initOptions(store) {
   store.newField("options", {
     init: optionsInit,
     save: optionsSave,
     shouldDisableSave: shouldDisableComponentSave(
-      ["prefix", "tags", "power_vs_zones"],
+      ["prefix", "tags", "power_vs_zones", "region"],
       "options"
     ),
     schema: {
+      fs_cloud: {
+        type: "toggle",
+        default: false,
+        labelText: "Use FS Cloud",
+        tooltip: {
+          content: "Show only Financial Services Cloud validated regions.",
+        },
+      },
       prefix: {
         default: "iac",
         invalid: function (stateData, componentProps) {
-          return invalidNewResourceName(stateData.prefix);
+          return (
+            (stateData.prefix || "").length > 16 ||
+            invalidNewResourceName(stateData.prefix)
+          );
+        },
+        invalidText: unconditionalInvalidText("Invalid Prefix"),
+        tooltip: {
+          content:
+            "A prefix of up to 16 characters that will begin the name of each resource provisioned by this template",
+          align: "right",
+        },
+        size: "small",
+      },
+      region: {
+        default: "",
+        invalid: fieldIsNullOrEmptyString("region"),
+        invalidText: selectInvalidText("region"),
+        groups: function (stateData) {
+          return ["us-south", "us-east", "eu-de", "eu-gb"]
+            .concat(
+              stateData.fs_cloud
+                ? []
+                : ["jp-tok", "jp-osa", "au-syd", "ca-tor", "br-sao"]
+            )
+            .sort(azsort);
+        },
+        onInputChange: function (stateData) {
+          stateData.power_vs_zones = [];
+          return stateData.region;
+        },
+        type: "select",
+        size: "small",
+      },
+      zones: {
+        default: "3",
+        type: "select",
+        labelText: "Availability Zones",
+        groups: buildNumberDropdownList(3, 1),
+        tooltip: {
+          content: "The number of availability zones for VPCs in your template",
+        },
+        size: "small",
+      },
+      endpoints: {
+        labelText: "Service Endpoints",
+        default: "Private",
+        type: "select",
+        tooltip: {
+          content:
+            "Type of service endpoints to use for each service. Private endpoints are only supported for use with IBM Schematics.",
+        },
+        groups: ["Private", "Public", "Public and Private"],
+        onRender: function (stateData) {
+          return titleCase(stateData.endpoints).replace(/And/g, "and");
+        },
+        onInputChange: kebabCaseInput("endpoints"),
+        size: "small",
+      },
+      account_id: {
+        size: "small",
+        default: "",
+        optional: true,
+        placeholder: "(Optional) Account ID",
+        tooltip: {
+          content:
+            "Account ID is used to create some resources, such as Virtual Private Endpoints for Secrets Manager",
+        },
+        labelText: "Account ID",
+      },
+      dynamic_subnets: {
+        size: "small",
+        labelText: "Enable Dynamic Scalable Subnets",
+        type: "toggle",
+        default: true,
+        disabled: function (stateData, componentProps) {
+          return (
+            componentProps.craig.store.json._options.advanced_subnets || false
+          );
+        },
+        tooltip: {
+          content:
+            "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources." +
+            " Turn off if you want to manage your address prefixes and subnet CIDR addresses manually." +
+            " Dynamic subnet addressing cannot be used with advanced subnet tiers",
         },
       },
-      tags: {
-        default: ["hello", "world"],
-        invalid: function (stateData, componentProps) {
-          return invalidTagList(stateData.tags);
+      enable_power_vs: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Enable Power Virtual Servers",
+        onStateChange: function (stateData) {
+          if (stateData.enable_power_vs) {
+            stateData.power_vs_zones = [];
+            stateData.enable_power_vs = false;
+          } else {
+            stateData.enable_power_vs = true;
+          }
+        },
+      },
+      power_vs_high_availability: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "High Availability",
+        tooltip: {
+          content:
+            "Enable High Availability and Disaster Recovery for Power VS by using enabled zones Dallas 12 and Washington DC 6",
+        },
+        hideWhen: hideWhenNotPowerVs,
+        onStateChange: function (stateData) {
+          if (!stateData.power_vs_high_availability) {
+            stateData.power_vs_high_availability = true;
+            stateData.power_vs_zones = ["dal12", "wdc06"];
+          } else {
+            stateData.power_vs_high_availability = false;
+            stateData.power_vs_zones = [];
+          }
         },
       },
       power_vs_zones: {
+        size: "small",
+        type: "multiselect",
+        labelText: "Power VS Zones",
+        hideWhen: hideWhenNotPowerVs,
         default: [],
+        forceUpdateKey: function (stateData) {
+          return stateData.power_vs_high_availability;
+        },
         invalid: function (stateData) {
           return (
             stateData.enable_power_vs &&
-            (!stateData.power_vs_zones || isEmpty(stateData.power_vs_zones))
+            (!stateData.power_vs_zones ||
+              isEmpty(stateData.power_vs_zones) ||
+              !contains(powerVsZones, stateData.region))
           );
+        },
+        invalidText: function (stateData) {
+          return !contains(powerVsZones, stateData.region)
+            ? `The region ${stateData.region} does not have any available Power VS zones`
+            : "Select at least one Availability Zone";
+        },
+        groups: function (stateData) {
+          return stateData.power_vs_high_availability
+            ? ["dal12", "wdc06"]
+            : {
+                "au-syd": ["syd04", "syd05"],
+                "eu-de": ["eu-de-1", "eu-de-2"],
+                "eu-gb": ["lon04", "lon06"],
+                "us-east": ["us-east", "wdc06", "wdc07"],
+                "us-south": ["us-south", "dal10", "dal12"],
+                "jp-tok": ["tok04"],
+                "br-sao": ["sao01"],
+                "ca-tor": ["tor01"],
+              }[stateData.region];
+        },
+      },
+      enable_classic: {
+        type: "toggle",
+        default: false,
+        labelText: "Use Classic Resources",
+      },
+      tags: {
+        placeholder: "hello,world",
+        default: ["hello", "world"],
+        type: "textArea",
+        labelText: "Tags",
+        invalid: function (stateData, componentProps) {
+          return invalidTagList(stateData.tags);
+        },
+        invalidText: unconditionalInvalidText("One or more tags are invalid"),
+        helperText: unconditionalInvalidText(
+          "Enter a comma separated list of tags"
+        ),
+        onInputChange: function (stateData) {
+          return isNullOrEmptyString(stateData.tags, true)
+            ? []
+            : stateData.tags
+                .replace(/\s\s+/g, "") // replace extra spaces
+                .replace(/,(?=,)/g, "") // prevent null tags from
+                .replace(/[^\w,-]/g, "")
+                .split(",");
+        },
+        tooltip: {
+          content:
+            "Tags are used to identify resources. These tags will be added to each resource in your configuration that supports tags",
+          align: "right",
         },
       },
     },

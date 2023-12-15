@@ -1,228 +1,11 @@
 const {
-  isNullOrEmptyString,
-  isEmpty,
   isIpv4CidrOrAddress,
-  containsKeys,
-  isInRange,
   distinct,
   contains,
   flatten,
   splat,
-  isWholeNumber,
-  nullOrEmptyStringFields,
 } = require("lazy-z");
-const {
-  invalidName,
-  invalidIpCommaList,
-  invalidIdentityProviderURI,
-  isValidUrl,
-  validSshKey,
-} = require("./invalid-callbacks");
-
-/**
- * check if a field is null or empty string, reduce unit test writing
- * @param {string} field
- * @param {Object} stateData
- * @returns {boolean} true if null or empty string
- */
-function badField(field, stateData) {
-  return isNullOrEmptyString(stateData[field]);
-}
-
-/**
- * check multiple fields against the same validating regex expression
- * @param {Array} fields list of fields
- * @param {Function} check test fields with this
- * @param {Object} stateData
- * @returns {boolean}
- */
-function fieldCheck(fields, check, stateData) {
-  let hasBadFields = false;
-  fields.forEach((field) => {
-    if (!check(stateData[field])) {
-      hasBadFields = true;
-    }
-  });
-  return hasBadFields;
-}
-
-/**
- * reduct unit test writing check for number input invalidation
- * @param {*} value
- * @param {*} minRange
- * @param {*} maxRange
- * @returns {boolean} true if any invalid number/range
- */
-function invalidNumberCheck(value, minRange, maxRange) {
-  let isInvalidNumber = false;
-  if (!isNullOrEmptyString(value)) {
-    if (!isWholeNumber(value) || !isInRange(value, minRange, maxRange)) {
-      isInvalidNumber = true;
-    }
-  }
-  return isInvalidNumber;
-}
-
-/**
- * check to see if scc form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if save should be disabled
- */
-function disableSccSave(stateData) {
-  return (
-    !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.collector_description) ||
-    !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(stateData.scope_description)
-  );
-}
-
-/**
- * check to see if dynamic policies form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableDynamicPoliciesSave(stateData, componentProps) {
-  return (
-    invalidName("dynamic_policies")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, [
-      "identity_provider",
-      "expiration",
-      "conditions",
-    ]) ||
-    invalidIdentityProviderURI(stateData, componentProps)
-  );
-}
-
-/**
- * check to see if object storage form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableObjectStorageSave(stateData, componentProps) {
-  return (
-    invalidName("object_storage")(stateData, componentProps) ||
-    nullOrEmptyStringFields(stateData, ["kms", "resource_group"])
-  );
-}
-
-/**
- * check to see if buckets form save should be disabled
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean} true if should be disabled
- */
-function disableBucketsSave(stateData, componentProps) {
-  return (
-    invalidName("buckets")(stateData, componentProps) ||
-    badField("kms_key", stateData)
-  );
-}
-
-/**
- * check to see if iam account settings form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableIamAccountSettingsSave(stateData) {
-  return (
-    nullOrEmptyStringFields(stateData, [
-      "mfa",
-      "restrict_create_platform_apikey",
-      "restrict_create_service_id",
-      "max_sessions_per_identity",
-    ]) || invalidIpCommaList(stateData.allowed_ip_addresses)
-  );
-}
-
-/**
- * check to see if f5 vsi template form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableF5VsiTemplateSave(stateData) {
-  let extraFields = {
-    none: [],
-    byol: ["byol_license_basekey"],
-    regkeypool: ["license_username", "license_host", "license_pool"],
-    utilitypool: [
-      "license_username",
-      "license_host",
-      "license_pool",
-      "license_unit_of_measure",
-      "license_sku_keyword_1",
-      "license_sku_keyword_2",
-    ],
-  };
-  return (
-    nullOrEmptyStringFields(
-      stateData,
-      ["template_version", "template_source"].concat(
-        extraFields[stateData["license_type"]]
-      )
-    ) ||
-    fieldCheck(
-      [
-        "do_declaration_url",
-        "as3_declaration_url",
-        "ts_declaration_url",
-        "phone_home_url",
-        "tgstandby_url",
-        "tgrefresh_url",
-        "tgactive_url",
-      ],
-      isValidUrl,
-      stateData
-    )
-  );
-}
-
-/**
- * check to see if f5 vsi form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableF5VsiSave(stateData) {
-  return isEmpty(stateData?.ssh_keys || []);
-}
-
-/**
- * check to see if logna form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableLogdnaSave(stateData) {
-  return stateData.enabled === true
-    ? nullOrEmptyStringFields(stateData, ["plan", "resource_group", "bucket"])
-    : false;
-}
-
-/**
- * check to see if sysdig form save should be disabled
- * @param {Object} stateData
- * @returns {boolean} true if should be disabled
- */
-function disableSysdigSave(stateData) {
-  return stateData.enabled === false
-    ? false
-    : nullOrEmptyStringFields(stateData, ["resource_group", "plan"]);
-}
-
-const disableSaveFunctions = {
-  scc: disableSccSave,
-  access_groups: invalidName("access_groups"),
-  policies: invalidName("policies"),
-  dynamic_policies: disableDynamicPoliciesSave,
-  object_storage: disableObjectStorageSave,
-  appid_key: invalidName("appid_key"),
-  buckets: disableBucketsSave,
-  cos_keys: invalidName("cos_keys"),
-  iam_account_settings: disableIamAccountSettingsSave,
-  f5_vsi_template: disableF5VsiTemplateSave,
-  f5_vsi: disableF5VsiSave,
-  logdna: disableLogdnaSave,
-  sysdig: disableSysdigSave,
-};
+const { validSshKey } = require("./invalid-callbacks");
 
 /**
  * disable save
@@ -287,11 +70,31 @@ function disableSave(field, stateData, componentProps, craig) {
     "cis",
     "domains",
     "dns_records",
+    "iam_account_settings",
+    "access_groups",
+    "policies",
+    "dynamic_policies",
+    "logdna",
+    "sysdig",
+    "keys",
+    "appid",
+    "vtl",
+    "buckets",
+    "object_storage",
+    "cos_keys",
+    "scc_v2",
+    "profile_attachments",
+    "f5_vsi_template",
+    "f5_vsi",
+    "scc",
+    "cis_glbs",
+    "origins",
+    "glbs",
+    "health_checks",
+    "connections",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
-  if (containsKeys(disableSaveFunctions, field)) {
-    return disableSaveFunctions[field](stateData, componentProps, craig);
-  } else if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
+  if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
     return (
       contains(["network", "cloud_connections"], field)
         ? componentProps.craig.power[field]
@@ -331,6 +134,25 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.routing_tables[field]
         : contains(["domains", "dns_records"], field)
         ? componentProps.craig.cis[field]
+        : field === "buckets" ||
+          componentProps?.formName === "Service Credentials"
+        ? componentProps.craig.object_storage[
+            field === "buckets" ? field : "keys"
+          ]
+        : field === "keys"
+        ? componentProps.craig.appid.keys
+        : contains(["policies", "dynamic_policies"], field)
+        ? componentProps.craig.access_groups[field]
+        : field === "profile_attachments"
+        ? componentProps.craig.scc_v2.profile_attachments
+        : contains(["f5_vsi_template", "f5_vsi"], field)
+        ? componentProps.craig.f5[
+            field === "f5_vsi_template" ? "template" : "vsi"
+          ]
+        : contains(["origins", "glbs", "health_checks"], field)
+        ? componentProps.craig.cis_glbs[field]
+        : field === "connections"
+        ? componentProps.craig.vpn_gateways.connections
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;

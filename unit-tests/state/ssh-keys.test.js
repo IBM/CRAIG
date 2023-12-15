@@ -116,4 +116,17 @@ describe("ssh_keys", () => {
       );
     });
   });
+  describe("ssh_keys.schema", () => {
+    describe("public_key", () => {
+      describe("hideWhen", () => {
+        it("should return true when use data is true", () => {
+          let craig = newState();
+          assert.isTrue(
+            craig.ssh_keys.public_key.hideWhen({ use_data: true }),
+            "it should be true"
+          );
+        });
+      });
+    });
+  });
 });

@@ -206,13 +206,13 @@
           "name": "RHEL8-SP4-SAP",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "pi_image_id": "3a1fd0fd-24df-44a1-919a-7041f9c74fc0"
+          "pi_image_id": "f185cb0f-25b3-42f3-b105-45156187a1ab"
         },
         {
           "name": "RHEL8-SP4-SAP-NETWEAVER",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "pi_image_id": "a1e22955-749d-4b4a-aeba-d297d60fcb0b"
+          "pi_image_id": "658ba2a0-4add-40b9-a177-a28a856c26de"
         },
         {
           "name": "RHEL8-SP6-SAP",
@@ -224,13 +224,13 @@
           "name": "RHEL8-SP6-SAP-NETWEAVER",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "pi_image_id": "658ba2a0-4add-40b9-a177-a28a856c26de"
+          "pi_image_id": "52579206-7efd-43ae-8417-ce5acac95d31"
         },
         {
           "name": "SLES15-SP2-SAP",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "pi_image_id": "5d548cc2-e813-4c09-beb5-8f22b094905d"
+          "pi_image_id": "071e1eac-8aa2-4259-9c0e-5ec268f610e2"
         },
         {
           "name": "SLES15-SP2-SAP-NETWEAVER",
@@ -248,7 +248,7 @@
           "name": "SLES15-SP3-SAP-NETWEAVER",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "pi_image_id": "1a62ac4a-83e7-4dee-a36f-983521f1826c"
+          "pi_image_id": "52579206-7efd-43ae-8417-ce5acac95d31"
         },
         {
           "name": "SLES15-SP4-SAP",

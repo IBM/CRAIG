@@ -119,6 +119,30 @@ describe("routing_tables", () => {
       );
     });
   });
+  describe("routing tables schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should return list of routes on render", () => {
+      assert.deepEqual(
+        craig.routing_tables.accept_routes_from_resource_type.onRender({
+          accept_routes_from_resource_type: ["vpn_server", "vpn_gateway"],
+        }),
+        ["VPN Server", "VPN Gateway"],
+        "it should return groups"
+      );
+    });
+    it("should return list of routes on input change", () => {
+      assert.deepEqual(
+        craig.routing_tables.accept_routes_from_resource_type.onInputChange({
+          accept_routes_from_resource_type: ["VPN Server", "VPN Gateway"],
+        }),
+        ["vpn_server", "vpn_gateway"],
+        "it should return groups"
+      );
+    });
+  });
   describe("routing_tables.routes", () => {
     describe("routing_tables.routes.create", () => {
       it("should create a new route", () => {
@@ -223,6 +247,45 @@ describe("routing_tables", () => {
           state.store.json.routing_tables[0].routes,
           [],
           "it should update data"
+        );
+      });
+    });
+    describe("routing tables route schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+      });
+      it("should return correct action on render when not set", () => {
+        assert.deepEqual(
+          craig.routing_tables.routes.action.onRender({}),
+          "",
+          "it should return correct data"
+        );
+      });
+      it("should return correct action on render", () => {
+        assert.deepEqual(
+          craig.routing_tables.routes.action.onRender({
+            action: "delegate_vpc",
+          }),
+          "Delegate VPC",
+          "it should return correct data"
+        );
+      });
+      it("should return correct action on input change", () => {
+        assert.deepEqual(
+          craig.routing_tables.routes.action.onInputChange({
+            action: "Delegate VPC",
+          }),
+          "delegate_vpc",
+          "it should return correct data"
+        );
+      });
+      it("should disable next hop when ", () => {
+        assert.isTrue(
+          craig.routing_tables.routes.next_hop.hideWhen({
+            action: "delegate_vpc",
+          }),
+          "it should be disabled"
         );
       });
     });

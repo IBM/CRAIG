@@ -1,7 +1,5 @@
 const { assert } = require("chai");
 const {
-  dynamicFieldId,
-  addClassName,
   dynamicTextInputProps,
 } = require("../../../client/src/lib/forms/dynamic-form-fields/text-input");
 
@@ -543,6 +541,56 @@ describe("text input functions", () => {
         "it should return correctly formatted data"
       );
     });
+    it("should return the correct props for text input when not disabled and no helper text and wide", () => {
+      let actualData = dynamicTextInputProps({
+        name: "frog",
+        field: {
+          optional: true,
+          disabled: function () {
+            return false;
+          },
+          invalid: function () {
+            return false;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+          size: "wide",
+        },
+        parentState: {},
+        parentProps: {
+          formName: "atracker",
+        },
+        handleInputChange: function () {},
+        keyIndex: 0,
+        name: "name",
+        propsName: "frog",
+      });
+      let expectedData = {
+        className: "leftTextAlign textInputWide",
+        disabled: false,
+        helperText: null,
+        id: "frog-name-0",
+        invalid: false,
+        invalidText: "uh oh",
+        labelText: "Name",
+        maxLength: undefined,
+        name: "name",
+        placeholder: "(Optional) my-atracker-name",
+        readOnly: false,
+        value: "",
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      delete actualData.onChange;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
     it("should return the correct props for text input when not disabled and field.onRender is a function", () => {
       let actualData = dynamicTextInputProps({
         name: "frog",
@@ -555,9 +603,6 @@ describe("text input functions", () => {
           },
           invalidText: function () {
             return "uh oh";
-          },
-          helperText: function () {
-            return "helper text";
           },
           onRender: function () {
             return "haha!";

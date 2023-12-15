@@ -1,6 +1,11 @@
 const { assert } = require("chai");
-const { disableSave } = require("../../../client/src/lib");
+const { disableSave, state } = require("../../../client/src/lib");
 
+function setTempCraig(store) {
+  let tempCraig = state();
+  tempCraig.store = store;
+  return tempCraig;
+}
 describe("access groups", () => {
   it("should return true if an access group has an invalid name", () => {
     assert.isTrue(
@@ -8,17 +13,7 @@ describe("access groups", () => {
         "access_groups",
         { name: "@@@", description: "" },
         {
-          craig: {
-            store: {
-              json: {
-                access_groups: [
-                  {
-                    name: "frog",
-                  },
-                ],
-              },
-            },
-          },
+          craig: setTempCraig({ json: { access_groups: [{ name: "frog" }] } }),
           data: {
             name: "test",
           },
@@ -42,22 +37,11 @@ describe("access groups", () => {
           },
         },
         {
-          craig: {
-            store: {
-              json: {
-                access_groups: [
-                  {
-                    name: "frog",
-                    policies: [
-                      {
-                        name: "test",
-                      },
-                    ],
-                  },
-                ],
-              },
+          craig: setTempCraig({
+            json: {
+              access_groups: [{ name: "frog", policies: [{ name: "test" }] }],
             },
-          },
+          }),
           data: {
             name: "test",
           },
@@ -72,22 +56,11 @@ describe("access groups", () => {
         "policies",
         { name: "@@@" },
         {
-          craig: {
-            store: {
-              json: {
-                access_groups: [
-                  {
-                    name: "frog",
-                    policies: [
-                      {
-                        name: "test",
-                      },
-                    ],
-                  },
-                ],
-              },
+          craig: setTempCraig({
+            json: {
+              access_groups: [{ name: "frog", policies: [{ name: "test" }] }],
             },
-          },
+          }),
           data: {
             name: "test",
           },
@@ -111,22 +84,13 @@ describe("access groups", () => {
           },
         },
         {
-          craig: {
-            store: {
-              json: {
-                access_groups: [
-                  {
-                    name: "frog",
-                    dynamic_policies: [
-                      {
-                        name: "@@@",
-                      },
-                    ],
-                  },
-                ],
-              },
+          craig: setTempCraig({
+            json: {
+              access_groups: [
+                { name: "frog", dynamic_policies: [{ name: "@@@" }] },
+              ],
             },
-          },
+          }),
           data: {
             name: "test",
           },
@@ -150,22 +114,73 @@ describe("access groups", () => {
           },
         },
         {
-          craig: {
-            store: {
-              json: {
-                access_groups: [
-                  {
-                    name: "frog",
-                    dynamic_policies: [
-                      {
-                        name: "@@@",
-                      },
-                    ],
-                  },
-                ],
-              },
+          craig: setTempCraig({
+            json: {
+              access_groups: [
+                { name: "frog", dynamic_policies: [{ name: "policy" }] },
+              ],
             },
+          }),
+          data: {
+            name: "test",
           },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if an access group dynamic policy has no identity provider URI", () => {
+    assert.isTrue(
+      disableSave(
+        "dynamic_policies",
+        {
+          name: "policy",
+          identity_provider: "",
+          expiration: 1,
+          conditions: {
+            claim: "c",
+            operator: "",
+            value: "c",
+          },
+        },
+        {
+          craig: setTempCraig({
+            json: {
+              access_groups: [
+                { name: "frog", dynamic_policies: [{ name: "policy" }] },
+              ],
+            },
+          }),
+          data: {
+            name: "test",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should return true if an access group dynamic policy has no identity provider URI", () => {
+    assert.isTrue(
+      disableSave(
+        "dynamic_policies",
+        {
+          name: "policy",
+          identity_provider: "AA",
+          expiration: 1,
+          conditions: {
+            claim: "c",
+            operator: "",
+            value: "c",
+          },
+        },
+        {
+          craig: setTempCraig({
+            json: {
+              access_groups: [
+                { name: "frog", dynamic_policies: [{ name: "@@@" }] },
+              ],
+            },
+          }),
           data: {
             name: "test",
           },

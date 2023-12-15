@@ -7,58 +7,35 @@ import {
   invalidNameText,
   newF5Vsi,
   propsMatchState,
-  resourceGroupHelperTextCallback,
 } from "../../lib";
 import {
   AccessGroupsTemplate,
-  AppIdTemplate,
   AtrackerPage,
-  CloudDatabaseTemplate,
   ClustersTemplate,
-  DnsTemplate,
-  EventStreamsTemplate,
-  ResourceGroupsTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
   SubnetPageTemplate,
-  KeyManagementTemplate,
   NetworkAclTemplate,
-  ObjectStorageTemplate,
   RoutingTableTemplate,
-  SshKeysTemplate,
-  VpnGatewayTemplate,
   VpnServerTemplate,
-  VpeTemplate,
   VsiTemplate,
   VsiLoadBalancerTemplate,
   IamAccountSettingsPage,
   SccV1Page,
   F5BigIpPage,
-  PowerVsWorkspacePage,
   PowerVsVolumesPage,
-  ClassicGatewaysPage,
   IcseFormTemplate,
+  ToggleForm,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
+import { contains, eachKey, keys, splat, transpose } from "lazy-z";
 import {
-  contains,
-  eachKey,
-  keys,
-  nestedSplat,
-  splat,
-  isEmpty,
-  getObjectFromArray,
-} from "lazy-z";
-import {
-  cosResourceHelperTextCallback,
   disableSshKeyDelete,
-  encryptionKeyFilter,
   getSubnetTierStateData,
   getTierSubnets,
   invalidCidrBlock,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
-  storageChangeDisabledCallback,
   vpnServersHelperText,
   powerImageFetch,
 } from "../../lib/forms";
@@ -67,11 +44,8 @@ import {
   invalidCrnList,
   invalidF5Vsi,
   invalidIamAccountSettings,
-  invalidIdentityProviderURI,
-  invalidSshPublicKey,
   invalidDescription,
   replicationDisabledCallback,
-  invalidSubnetTierName,
 } from "../../lib/forms/invalid-callbacks";
 import {
   accessGroupPolicyHelperTextCallback,
@@ -79,7 +53,6 @@ import {
   genericNameCallback,
   iamAccountSettingInvalidText,
   invalidCidrText,
-  powerVsWorkspaceHelperText,
   invalidDescriptionText,
   invalidSubnetTierText,
 } from "../../lib/forms/text-callbacks";
@@ -87,77 +60,183 @@ import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
-import {
-  edgeRouterEnabledZones,
-  cosPlans,
-  powerStoragePoolRegionMap,
-  datacenters,
-} from "../../lib/constants";
+import { edgeRouterEnabledZones } from "../../lib/constants";
+import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.json";
 import DynamicForm from "../forms/DynamicForm";
-import { ClassicDisabledTile } from "../forms/dynamic-form/tiles";
+import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
+import PropTypes from "prop-types";
 
-const AccessGroupsPage = (craig) => {
+const formPageTemplate = (craig, options, form) => {
+  let innerFormProps = {
+    craig: craig,
+    form: form,
+    disableSave: disableSave,
+    formName: options.formName,
+  };
+  if (options.innerFormProps) transpose(options.innerFormProps, innerFormProps);
   return (
-    <AccessGroupsTemplate
-      docs={RenderDocs("access_groups", craig.store.json._options.template)}
-      access_groups={craig.store.json.access_groups}
+    <IcseFormTemplate
+      name={options.name}
+      addText={options.addText}
+      docs={RenderDocs(options.jsonField, craig.store.json._options.template)}
+      arrayData={craig.store.json[options.jsonField]}
+      onDelete={craig[options.jsonField].delete}
+      onSave={craig[options.jsonField].save}
+      onSubmit={craig[options.jsonField].create}
       disableSave={disableSave}
+      innerForm={DynamicForm}
       propsMatchState={propsMatchState}
-      onDelete={craig.access_groups.delete}
-      onSave={craig.access_groups.save}
-      onSubmit={craig.access_groups.create}
-      invalidCallback={invalidName("access_groups")}
-      invalidTextCallback={invalidNameText("access_groups")}
-      invalidPolicyCallback={invalidName("policies")}
-      invalidPolicyTextCallback={invalidNameText("policies")}
-      policyHelperTextCallback={accessGroupPolicyHelperTextCallback}
-      onPolicyDelete={craig.access_groups.policies.delete}
-      onPolicySave={craig.access_groups.policies.save}
-      onPolicySubmit={craig.access_groups.policies.create}
-      craig={craig}
       forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidDynamicPolicyCallback={invalidName("dynamic_policies")}
-      invalidDynamicPolicyTextCallback={invalidNameText("dynamic_policies")}
-      dynamicPolicyHelperTextCallback={accessGroupPolicyHelperTextCallback}
-      invalidIdentityProviderCallback={invalidIdentityProviderURI}
-      onDynamicPolicyDelete={craig.access_groups.dynamic_policies.delete}
-      onDynamicPolicySave={craig.access_groups.dynamic_policies.save}
-      onDynamicPolicySubmit={craig.access_groups.dynamic_policies.create}
+      hideFormTitleButton={options.hideFormTitleButton}
+      overrideTile={options.overrideTile}
+      innerFormProps={innerFormProps}
+      deleteDisabledMessage={options.deleteDisabledMessage}
+      deleteDisabled={options.deleteDisabled}
+      toggleFormProps={{
+        craig: craig,
+        disableSave: disableSave,
+        submissionFieldName: options.jsonField,
+        hideName: true,
+        // hide: false
+      }}
     />
   );
 };
 
+formPageTemplate.propTypes = {
+  craig: PropTypes.shape({}).isRequired,
+  options: PropTypes.shape({
+    jsonField: PropTypes.string.isRequired,
+    hideFormTitleButton: PropTypes.bool,
+    overrideTile: PropTypes.node,
+    formName: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    addText: PropTypes.string.isRequired,
+  }).isRequired,
+  form: PropTypes.shape({}).isRequired,
+};
+
+const AccessGroupsPage = (craig) => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "Access Groups",
+      addText: "Create an Access Group",
+      formName: "access-groups",
+      jsonField: "access_groups",
+    },
+    {
+      jsonField: "access_groups",
+      groups: [
+        {
+          name: craig.access_groups.name,
+        },
+        {
+          description: craig.access_groups.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Policies",
+          addText: "Create a new Policy",
+          jsonField: "policies",
+          form: {
+            groups: [
+              {
+                name: craig.access_groups.policies.name,
+              },
+              {
+                heading: {
+                  name: "Resource Configuration",
+                  type: "subHeading",
+                },
+              },
+              {
+                resource: craig.access_groups.policies.resource,
+                resource_group: craig.access_groups.policies.resource_group,
+              },
+              {
+                resource_instance_id:
+                  craig.access_groups.policies.resource_instance_id,
+                service: craig.access_groups.policies.service,
+              },
+              {
+                resource_type: craig.access_groups.policies.resource_type,
+              },
+            ],
+          },
+        },
+        {
+          name: "Dynamic Policies",
+          addText: "Create a Dynamic Policy",
+          jsonField: "dynamic_policies",
+          form: {
+            groups: [
+              {
+                name: craig.access_groups.dynamic_policies.name,
+                expiration: craig.access_groups.dynamic_policies.expiration,
+              },
+              {
+                identity_provider:
+                  craig.access_groups.dynamic_policies.identity_provider,
+              },
+              {
+                heading: {
+                  name: "Condition Configuration",
+                  type: "subHeading",
+                },
+              },
+              {
+                claim: craig.access_groups.dynamic_policies.claim,
+              },
+              {
+                operator: craig.access_groups.dynamic_policies.operator,
+                value: craig.access_groups.dynamic_policies.value,
+              },
+            ],
+          },
+        },
+      ],
+    }
+  );
+};
+
 const AppIdPage = (craig) => {
-  return (
-    <AppIdTemplate
-      docs={RenderDocs("appid", craig.store.json._options.template)}
-      appid={craig.store.json.appid}
-      disableSave={function (field, stateData, componentProps) {
-        // field is passed here but the goal is to be able to ignore the
-        // parameter entirely
-        return craig.appid.shouldDisableSave(stateData, componentProps);
-      }}
-      forceOpen={function (stateData, componentProps) {
-        // goal here is to be able to pass one param `shouldDisableSave`
-        // and handle both disable and force Open
-        return craig.appid.shouldDisableSave(stateData, componentProps);
-      }}
-      onDelete={craig.appid.delete}
-      onSave={craig.appid.save}
-      onSubmit={craig.appid.create}
-      propsMatchState={propsMatchState}
-      craig={craig}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={craig.appid.name.invalid}
-      invalidTextCallback={craig.appid.name.invalidText}
-      invalidKeyCallback={craig.appid.keys.name.invalid}
-      invalidKeyTextCallback={craig.appid.keys.name.invalidText}
-      onKeySave={craig.appid.keys.save}
-      onKeyDelete={craig.appid.keys.delete}
-      onKeySubmit={craig.appid.keys.create}
-      encryptionKeys={craig.store.encryptionKeys}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "AppID",
+      addText: "Create an AppID Instance",
+      formName: "appid",
+      jsonField: "appid",
+    },
+    {
+      jsonField: "appid",
+      groups: [
+        {
+          use_data: craig.appid.use_data,
+        },
+        {
+          name: craig.appid.name,
+          resource_group: craig.appid.resource_group,
+          encryption_key: craig.appid.encryption_key,
+        },
+      ],
+      subForms: [
+        {
+          name: "AppID Keys",
+          addText: "Create an AppID Key",
+          jsonField: "keys",
+          form: {
+            groups: [
+              {
+                name: craig.appid.keys.name,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
@@ -181,247 +260,303 @@ const Atracker = (craig) => {
 };
 
 const Cis = (craig) => {
-  return (
-    <IcseFormTemplate
-      name="Cloud Internet Services (CIS)"
-      addText="Create a CIS Instance"
-      docs={RenderDocs("cis", craig.store.json._options.template)}
-      innerForm={DynamicForm}
-      arrayData={craig.store.json.cis}
-      onDelete={craig.cis.delete}
-      onSave={craig.cis.save}
-      onSubmit={craig.cis.create}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
-      forceOpen={forceShowForm}
-      innerFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        formName: "CIS",
-        form: {
-          jsonField: "cis",
-          setDefault: {
-            domains: [],
-            dns_records: [],
-          },
-          groups: [
-            {
-              name: craig.cis.name,
-              resource_group: craig.cis.resource_group,
-              plan: craig.cis.plan,
-            },
-          ],
-          subForms: [
-            {
-              name: "Domains",
-              createText: "Add a domain",
-              jsonField: "domains",
-              toggleFormFieldName: "domain",
-              form: {
-                groups: [
-                  {
-                    domain: craig.cis.domains.domain,
-                    type: craig.cis.domains.type,
-                  },
-                ],
-              },
-            },
-            {
-              name: "DNS Records",
-              createText: "Add a DNS Record",
-              jsonField: "dns_records",
-              hideFormTitleButton: function (stateData, componentProps) {
-                return componentProps.data.domains.length === 0;
-              },
-              form: {
-                groups: [
-                  {
-                    name: craig.cis.dns_records.name,
-                    domain: craig.cis.dns_records.domain,
-                  },
-                  {
-                    type: craig.cis.dns_records.type,
-                    content: craig.cis.dns_records.content,
-                  },
-                  {
-                    ttl: craig.cis.dns_records.ttl,
-                  },
-                ],
-              },
-            },
-          ],
+  return formPageTemplate(
+    craig,
+    {
+      name: "Cloud Internet Services (CIS)",
+      addText: "Create a CIS Instance",
+      formName: "CIS",
+      jsonField: "cis",
+    },
+    {
+      jsonField: "cis",
+      setDefault: {
+        domains: [],
+        dns_records: [],
+      },
+      groups: [
+        {
+          name: craig.cis.name,
+          resource_group: craig.cis.resource_group,
+          plan: craig.cis.plan,
         },
-      }}
-      toggleFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        submissionFieldName: "cis",
-        hideName: true,
-      }}
-    />
+      ],
+      subForms: [
+        {
+          name: "Domains",
+          addText: "Add a domain",
+          jsonField: "domains",
+          toggleFormFieldName: "domain",
+          form: {
+            groups: [
+              {
+                domain: craig.cis.domains.domain,
+                type: craig.cis.domains.type,
+              },
+            ],
+          },
+        },
+        {
+          name: "DNS Records",
+          addText: "Add a DNS Record",
+          jsonField: "dns_records",
+          hideFormTitleButton: function (stateData, componentProps) {
+            return componentProps.data.domains.length === 0;
+          },
+          form: {
+            groups: [
+              {
+                name: craig.cis.dns_records.name,
+                domain: craig.cis.dns_records.domain,
+              },
+              {
+                type: craig.cis.dns_records.type,
+                content: craig.cis.dns_records.content,
+              },
+              {
+                ttl: craig.cis.dns_records.ttl,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
-const NoClassicSshKeys = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> No Classic SSH Keys
-      have been created. Create one from the
-      <a className="no-secrets-link" href="/form/classicSshKeys">
-        Classic SSH Keys Page.
-      </a>{" "}
-    </Tile>
-  );
-};
-
-const NoClassicVlans = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> No Classic VLANs have
-      been created. Create one from the
-      <a className="no-secrets-link" href="/form/classicVlans">
-        Classic VLANs Page.
-      </a>{" "}
-    </Tile>
+const CisGlbs = (craig) => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "CIS Global Load Balancers",
+      addText: "Create an Origin Pool",
+      formName: "cis-glbs",
+      jsonField: "cis_glbs",
+      overrideTile:
+        craig.store.json.cis.length === 0 ? <NoCisTile /> : undefined,
+    },
+    {
+      jsonField: "cis_glbs",
+      groups: [
+        {
+          name: craig.cis_glbs.name,
+          cis: craig.cis_glbs.cis,
+        },
+        {
+          minimum_origins: craig.cis_glbs.minimum_origins,
+          enabled: craig.cis_glbs.enabled,
+        },
+        {
+          description: craig.cis_glbs.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Origins",
+          addText: "Add an Origin",
+          jsonField: "origins",
+          form: {
+            groups: [
+              {
+                name: craig.cis_glbs.origins.name,
+                address: craig.cis_glbs.origins.address,
+              },
+              {
+                enabled: craig.cis_glbs.origins.enabled,
+              },
+            ],
+          },
+        },
+        {
+          name: "Global Load Balancers",
+          addText: "Create a Global Load Balancer",
+          jsonField: "glbs",
+          form: {
+            groups: [
+              {
+                name: craig.cis_glbs.glbs.name,
+                domain: craig.cis_glbs.glbs.domain,
+              },
+              {
+                default_pools: craig.cis_glbs.glbs.default_pools,
+                fallback_pool: craig.cis_glbs.glbs.fallback_pool,
+              },
+              {
+                ttl: craig.cis_glbs.glbs.ttl,
+              },
+              {
+                enabled: craig.cis_glbs.glbs.enabled,
+                proxied: craig.cis_glbs.glbs.proxied,
+              },
+            ],
+          },
+        },
+        {
+          name: "Health Checks",
+          addText: "Create a Health Check",
+          jsonField: "health_checks",
+          form: {
+            groups: [
+              {
+                name: craig.cis_glbs.health_checks.name,
+                method: craig.cis_glbs.health_checks.method,
+                type: craig.cis_glbs.health_checks.type,
+              },
+              {
+                expected_codes: craig.cis_glbs.health_checks.expected_codes,
+                timeout: craig.cis_glbs.health_checks.timeout,
+                interval: craig.cis_glbs.health_checks.interval,
+              },
+              {
+                path: craig.cis_glbs.health_checks.path,
+                port: craig.cis_glbs.health_checks.port,
+                retries: craig.cis_glbs.health_checks.retries,
+              },
+              {
+                allow_insecure: craig.cis_glbs.health_checks.allow_insecure,
+                follow_redirects: craig.cis_glbs.health_checks.follow_redirects,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
 const ClassicGateways = (craig) => {
-  return (
-    <ClassicGatewaysPage
-      overrideTile={
-        !craig.store.json._options.enable_classic ? (
-          <ClassicDisabledTile />
-        ) : craig.store.json.classic_ssh_keys.length === 0 ? (
-          <NoClassicSshKeys />
-        ) : craig.store.json.classic_vlans.length === 0 ? (
-          <NoClassicVlans />
-        ) : undefined
-      }
-      classic_gateways={craig.store.json.classic_gateways || []}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      onSave={craig.classic_gateways.save}
-      onSubmit={craig.classic_gateways.create}
-      onDelete={craig.classic_gateways.delete}
-      craig={craig}
-      docs={RenderDocs("classic_gateways", craig.store.json._options.template)}
-      composedNameCallback={function (stateData) {
-        return `${craig.store.json._options.prefix}-gateway-${stateData.name}`;
-      }}
-      invalidCallback={craig.classic_gateways.name.invalid}
-      invalidTextCallback={craig.classic_gateways.name.invalidText}
-      datacenterList={datacenters}
-      classicSshKeyList={splat(craig.store.json.classic_ssh_keys, "name")}
-      classic_vlans={craig.store.json.classic_vlans}
-      invalidMemoryCallback={craig.classic_gateways.memory.invalid}
-      invalidMemoryTextCallback={craig.classic_gateways.memory.invalidText}
-      invalidDomainCallback={craig.classic_gateways.domain.invalid}
-      invalidDomainTextCallback={craig.classic_gateways.domain.invalidText}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Classic Gateways",
+      addText: "Create a Gateway",
+      formName: "classic-gateways",
+      jsonField: "classic_gateways",
+    },
+    {
+      jsonField: "classic_gateways",
+      groups: [
+        {
+          name: craig.classic_gateways.name,
+          domain: craig.classic_gateways.domain,
+          hadr: craig.classic_gateways.hadr,
+        },
+        {
+          datacenter: craig.classic_gateways.datacenter,
+          ssh_key: craig.classic_gateways.ssh_key,
+          disk_key_names: craig.classic_gateways.disk_key_names,
+        },
+        {
+          private_network_only: craig.classic_gateways.private_network_only,
+          private_vlan: craig.classic_gateways.private_vlan,
+          public_vlan: craig.classic_gateways.public_vlan,
+        },
+        {
+          package_key_name: craig.classic_gateways.package_key_name,
+          os_key_name: craig.classic_gateways.os_key_name,
+          process_key_name: craig.classic_gateways.process_key_name,
+        },
+        {
+          network_speed: craig.classic_gateways.network_speed,
+          public_bandwidth: craig.classic_gateways.public_bandwidth,
+          memory: craig.classic_gateways.memory,
+        },
+        {
+          tcp_monitoring: craig.classic_gateways.tcp_monitoring,
+          redundant_network: craig.classic_gateways.redundant_network,
+          ipv6_enabled: craig.classic_gateways.ipv6_enabled,
+        },
+      ],
+    }
   );
 };
 
 const ClassicSshKeyPage = (craig) => {
-  return (
-    <SshKeysTemplate
-      classic
-      overrideTile={
-        craig.store.json._options.enable_classic ? undefined : (
-          <ClassicDisabledTile />
-        )
-      }
-      ssh_keys={craig.store.json.classic_ssh_keys}
-      disableSave={(field, stateData, componentProps) => {
-        return disableSave("classic_ssh_keys", stateData, componentProps);
-      }}
-      onDelete={craig.classic_ssh_keys.delete}
-      onSave={craig.classic_ssh_keys.save}
-      onSubmit={craig.classic_ssh_keys.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      invalidCallback={craig.classic_ssh_keys.name.invalid}
-      invalidTextCallback={craig.classic_ssh_keys.name.invalidText}
-      deleteDisabled={() => {
-        // currently ssh keys are not in use, this will be updated when they are
-        return false;
-      }}
-      // sends both invalid and invalidText, should change when we move to dynamic forms
-      invalidKeyCallback={invalidSshPublicKey}
-      craig={craig}
-      docs={RenderDocs("classic_ssh_keys", craig.store.json._options.template)}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Classic SSH Keys",
+      addText: "Create an SSH Key",
+      jsonField: "classic_ssh_keys",
+      overrideTile: craig.store.json._options.enable_classic ? undefined : (
+        <ClassicDisabledTile />
+      ),
+      hideFormTitleButton: !craig.store.json._options.enable_classic,
+    },
+    {
+      groups: [
+        {
+          name: craig.classic_ssh_keys.name,
+        },
+        {
+          public_key: craig.classic_ssh_keys.public_key,
+        },
+      ],
+    }
   );
 };
 
 const ClassicVlanPage = (craig) => {
-  return (
-    <IcseFormTemplate
-      name="Classic VLANs"
-      addText="Create a VLAN"
-      docs={RenderDocs("classic_vlans", craig.store.json._options.template)}
-      innerForm={DynamicForm}
-      arrayData={craig.store.json.classic_vlans}
-      disableSave={disableSave}
-      onDelete={craig.classic_vlans.delete}
-      onSave={craig.classic_vlans.save}
-      onSubmit={craig.classic_vlans.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      hideFormTitleButton={
-        craig.store.json._options.enable_classic ? false : true
-      }
-      overrideTile={
-        craig.store.json._options.enable_classic ? undefined : (
-          <ClassicDisabledTile />
-        )
-      }
-      innerFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        form: {
-          groups: [
-            {
-              name: craig.classic_vlans.name,
-              datacenter: craig.classic_vlans.datacenter,
-            },
-            {
-              type: craig.classic_vlans.type,
-              router_hostname: craig.classic_vlans.router_hostname,
-            },
-          ],
+  return formPageTemplate(
+    craig,
+    {
+      name: "Classic VLANs",
+      addText: "Create a VLAN",
+      jsonField: "classic_vlans",
+      hideFormTitleButton: craig.store.json._options.enable_classic
+        ? false
+        : true,
+      overrideTile: craig.store.json._options.enable_classic ? undefined : (
+        <ClassicDisabledTile />
+      ),
+      formName: "classic-vlans",
+    },
+    {
+      groups: [
+        {
+          name: craig.classic_vlans.name,
+          datacenter: craig.classic_vlans.datacenter,
         },
-        formName: "classic-vlan",
-      }}
-      toggleFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        submissionFieldName: "classic_vlans",
-        hideName: true,
-      }}
-    />
+        {
+          type: craig.classic_vlans.type,
+          router_hostname: craig.classic_vlans.router_hostname,
+        },
+      ],
+    }
   );
 };
 
 const CloudDatabasePage = (craig) => {
-  return (
-    <CloudDatabaseTemplate
-      icd={craig.store.json.icd}
-      disableSave={disableSave}
-      onDelete={craig.icd.delete}
-      onSave={craig.icd.save}
-      onSubmit={craig.icd.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={craig.icd.name.invalid}
-      invalidTextCallback={craig.icd.name.invalidText}
-      invalidCpuCallback={craig.icd.cpu.invalid}
-      invalidCpuTextCallback={craig.icd.cpu.invalidText}
-      craig={craig}
-      docs={RenderDocs("icd", craig.store.json._options.template)}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Cloud Databases",
+      addText: "Create a Cloud Database",
+      jsonField: "icd",
+      formName: "icd",
+    },
+    {
+      groups: [
+        {
+          use_data: craig.icd.use_data,
+          name: craig.icd.name,
+          service: craig.icd.service,
+        },
+        {
+          resource_group: craig.icd.resource_group,
+          plan: craig.icd.plan,
+          group_id: craig.icd.group_id,
+        },
+        {
+          memory: craig.icd.memory,
+          disk: craig.icd.disk,
+          cpu: craig.icd.cpu,
+        },
+        {
+          encryption_key: craig.icd.encryption_key,
+        },
+      ],
+    }
   );
 };
 
@@ -496,68 +631,125 @@ const ClusterPage = (craig) => {
 };
 
 const DnsPage = (craig) => {
-  return (
-    <DnsTemplate
-      craig={craig}
-      docs={RenderDocs("dns", craig.store.json._options.template)}
-      dns={craig.store.json.dns}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      onDelete={craig.dns.delete}
-      onSave={craig.dns.save}
-      onSubmit={craig.dns.create}
-      forceOpen={forceShowForm}
-      invalidCallback={craig.dns.name.invalid}
-      invalidTextCallback={craig.dns.name.invalidText}
-      onZoneSave={craig.dns.zones.save}
-      onZoneDelete={craig.dns.zones.delete}
-      onZoneSubmit={craig.dns.zones.create}
-      invalidZoneNameCallback={craig.dns.zones.name.invalid}
-      invalidZoneNameTextCallback={craig.dns.zones.name.invalidText}
-      invalidLabelCallback={craig.dns.zones.label.invalid}
-      invalidDescriptionCallback={craig.dns.zones.description.invalid}
-      invalidDescriptionTextCallback={invalidDescriptionText}
-      vpcList={craig.store.vpcList}
-      onRecordSave={craig.dns.records.save}
-      onRecordDelete={craig.dns.records.delete}
-      onRecordSubmit={craig.dns.records.create}
-      invalidRecordCallback={craig.dns.records.name.invalid}
-      invalidRecordTextCallback={craig.dns.records.name.invalidText}
-      invalidRdataCallback={craig.dns.records.rdata.invalid}
-      dnsZones={nestedSplat(craig.store.json.dns, "zones", "name")}
-      onResolverSave={craig.dns.custom_resolvers.save}
-      onResolverSubmit={craig.dns.custom_resolvers.create}
-      onResolverDelete={craig.dns.custom_resolvers.delete}
-      invalidResolverNameCallback={craig.dns.custom_resolvers.name.invalid}
-      invalidResolverNameTextCallback={
-        craig.dns.custom_resolvers.name.invalidText
-      }
-      invalidResolverDescriptionCallback={
-        craig.dns.custom_resolvers.description.invalid
-      }
-      invalidResolverDescriptionTextCallback={invalidDescriptionText}
-      subnetList={craig.getAllSubnets()}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "DNS Service",
+      addText: "Create a DNS Service Instance",
+      jsonField: "dns",
+      formName: "DNS",
+    },
+    {
+      jsonField: "dns",
+
+      groups: [
+        {
+          name: craig.dns.name,
+          resource_group: craig.dns.resource_group,
+          plan: craig.dns.plan,
+        },
+      ],
+      subForms: [
+        {
+          name: "Zones",
+          addText: "Create a DNS Zone",
+          jsonField: "zones",
+          form: {
+            groups: [
+              {
+                name: craig.dns.zones.name,
+                label: craig.dns.zones.label,
+                vpcs: craig.dns.zones.vpcs,
+              },
+              {
+                description: craig.dns.zones.description,
+              },
+            ],
+          },
+        },
+        {
+          name: "Records",
+          addText: "Create a DNS Record",
+          jsonField: "records",
+          form: {
+            groups: [
+              {
+                use_vsi: craig.dns.records.use_vsi,
+                vpc: craig.dns.records.vpc,
+                vsi: craig.dns.records.vsi,
+              },
+              {
+                name: craig.dns.records.name,
+                dns_zone: craig.dns.records.dns_zone,
+                ttl: craig.dns.records.ttl,
+              },
+              {
+                rdata: craig.dns.records.rdata,
+                type: craig.dns.records.type,
+                preference: craig.dns.records.preference,
+                port: craig.dns.records.port,
+              },
+              {
+                hideWhen: craig.dns.records.priority.hideWhen,
+                protocol: craig.dns.records.protocol,
+                priority: craig.dns.records.priority,
+                weight: craig.dns.records.weight,
+              },
+              {
+                hideWhen: craig.dns.records.service.hideWhen,
+                service: craig.dns.records.service,
+              },
+            ],
+          },
+        },
+        {
+          name: "Custom Resolvers",
+          addText: "Create a Custom Resolver",
+          jsonField: "custom_resolvers",
+          form: {
+            groups: [
+              {
+                name: craig.dns.custom_resolvers.name,
+                vpc: craig.dns.custom_resolvers.vpc,
+                subnets: craig.dns.custom_resolvers.subnets,
+              },
+              {
+                description: craig.dns.custom_resolvers.description,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
 const EventStreamsPage = (craig) => {
-  return (
-    <EventStreamsTemplate
-      event_streams={craig.store.json.event_streams}
-      disableSave={disableSave}
-      onDelete={craig.event_streams.delete}
-      onSave={craig.event_streams.save}
-      onSubmit={craig.event_streams.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={craig.event_streams.name.invalid}
-      invalidTextCallback={craig.event_streams.name.invalidText}
-      craig={craig}
-      docs={RenderDocs("event_streams", craig.store.json._options.template)}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Event Streams",
+      addText: "Create an Event Streams Service",
+      jsonField: "event_streams",
+      formName: "Event Streams",
+    },
+    {
+      jsonField: "event_streams",
+      groups: [
+        {
+          name: craig.event_streams.name,
+          plan: craig.event_streams.plan,
+          resource_group: craig.event_streams.resource_group,
+        },
+        {
+          throughput: craig.event_streams.throughput,
+          storage_size: craig.event_streams.storage_size,
+        },
+        {
+          private_ip_allowlist: craig.event_streams.private_ip_allowlist,
+        },
+      ],
+    }
   );
 };
 
@@ -632,39 +824,57 @@ const IamAccountSettings = (craig) => {
 };
 
 const KeyManagementPage = (craig) => {
-  return (
-    <KeyManagementTemplate
-      docs={RenderDocs("key_management", craig.store.json._options.template)}
-      key_management={craig.store.json.key_management}
-      disableSave={disableSave}
-      onDelete={craig.key_management.delete}
-      onSave={craig.key_management.save}
-      onSubmit={craig.key_management.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      deleteDisabled={() => {
-        return (
-          craig.store.json.key_management.length === 1 &&
-          craig.store.json._options.fs_cloud
-        );
-      }}
-      selectEndpoint={
-        craig.store.json._options.endpoints === "public-and-private"
-      }
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={craig.key_management.name.invalid}
-      invalidTextCallback={craig.key_management.name.invalidText}
-      invalidKeyCallback={craig.key_management.keys.name.invalid}
-      invalidKeyTextCallback={craig.key_management.keys.name.invalidText}
-      invalidRingCallback={craig.key_management.keys.key_ring.invalid}
-      invalidRingText={
-        "Invalid Key Ring Name. Must match the regular expression: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s"
-      }
-      onKeySave={craig.key_management.keys.save}
-      onKeyDelete={craig.key_management.keys.delete}
-      onKeySubmit={craig.key_management.keys.create}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Key Management",
+      addText: "Create a Key Management Service",
+      jsonField: "key_management",
+      formName: "kms",
+    },
+    {
+      jsonField: "key_management",
+      groups: [
+        {
+          use_hs_crypto: craig.key_management.use_hs_crypto,
+          use_data: craig.key_management.use_data,
+        },
+        {
+          name: craig.key_management.name,
+          authorize_vpc_reader_role:
+            craig.key_management.authorize_vpc_reader_role,
+        },
+        {
+          resource_group: craig.key_management.resource_group,
+        },
+      ],
+      subForms: [
+        {
+          jsonField: "keys",
+          name: "Encryption Keys",
+          addText: "Create an Encryption Key",
+          form: {
+            groups: [
+              {
+                name: craig.key_management.keys.name,
+                key_ring: craig.key_management.keys.key_ring,
+              },
+              {
+                force_delete: craig.key_management.keys.force_delete,
+                dual_auth_delete: craig.key_management.keys.dual_auth_delete,
+              },
+              {
+                root_key: craig.key_management.keys.root_key,
+                rotation: craig.key_management.keys.rotation,
+              },
+              {
+                endpoint: craig.key_management.keys.endpoint,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
@@ -717,36 +927,84 @@ const LoadBalancerPage = (craig) => {
 };
 
 const ObjectStoragePage = (craig) => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "Object Storage",
+      addText: "Create an Object Storage Service",
+      jsonField: "object_storage",
+      formName: "cos",
+    },
+    {
+      jsonField: "object_storage",
+      groups: [
+        {
+          use_data: craig.object_storage.use_data,
+          use_random_suffix: craig.object_storage.use_random_suffix,
+        },
+        {
+          name: craig.object_storage.name,
+          resource_group: craig.object_storage.resource_group,
+        },
+        {
+          plan: craig.object_storage.plan,
+          kms: craig.object_storage.kms,
+        },
+      ],
+      subForms: [
+        {
+          name: "Service Credentials",
+          jsonField: "keys",
+          addText: "Create a Service Credential",
+          tooltip: {
+            content:
+              "A service credential allows for a service instance to connect to Object Storage.",
+            link: "https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-service-credentials",
+          },
+          form: {
+            groups: [
+              {
+                name: craig.object_storage.keys.name,
+                role: craig.object_storage.keys.role,
+              },
+              {
+                enable_hmac: craig.object_storage.keys.enable_hmac,
+              },
+            ],
+          },
+        },
+        {
+          name: "Buckets",
+          jsonField: "buckets",
+          addText: "Create a Bucket",
+          form: {
+            groups: [
+              {
+                name: craig.object_storage.buckets.name,
+                storage_class: craig.object_storage.buckets.storage_class,
+              },
+              {
+                kms_key: craig.object_storage.buckets.kms_key,
+                force_delete: craig.object_storage.buckets.force_delete,
+              },
+            ],
+          },
+        },
+      ],
+    }
+  );
+};
+
+const NoVpcTile = () => {
   return (
-    <ObjectStorageTemplate
-      docs={RenderDocs("object_storage", craig.store.json._options.template)}
-      object_storage={craig.store.json.object_storage}
-      disableSave={disableSave}
-      onDelete={craig.object_storage.delete}
-      onSave={craig.object_storage.save}
-      onSubmit={craig.object_storage.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      kmsList={splat(craig.store.json.key_management, "name")}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      craig={craig}
-      cosPlans={cosPlans}
-      encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={craig.object_storage.name.invalid}
-      invalidTextCallback={craig.object_storage.name.invalidText}
-      invalidKeyCallback={craig.object_storage.keys.name.invalid}
-      invalidKeyTextCallback={craig.object_storage.keys.name.invalidText}
-      invalidBucketCallback={craig.object_storage.buckets.name.invalid}
-      invalidBucketTextCallback={craig.object_storage.buckets.name.invalidText}
-      onKeySave={craig.object_storage.keys.save}
-      onKeyDelete={craig.object_storage.keys.delete}
-      onKeySubmit={craig.object_storage.keys.create}
-      onBucketSave={craig.object_storage.buckets.save}
-      onBucketDelete={craig.object_storage.buckets.delete}
-      onBucketSubmit={craig.object_storage.buckets.create}
-      composedNameCallback={cosResourceHelperTextCallback}
-      encryptionKeyFilter={encryptionKeyFilter}
-    />
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <CloudAlerting size="24" className="iconMargin" /> No VPCs have been
+      created. Go to the
+      <a className="no-vpc-link" href="/form/vpcs">
+        Virtual Private Clouds Page
+      </a>
+      to create one.
+    </Tile>
   );
 };
 
@@ -777,167 +1035,200 @@ const NoPowerWorkspaceTile = () => {
 };
 
 const PowerInfraPage = (craig) => {
-  let powerImageMap = {};
-  craig.store.json._options.power_vs_zones.forEach((zone) => {
-    powerImageFetch(zone, fetch).then((zoneImages) => {
-      powerImageMap[zone] = zoneImages;
-    });
-  });
-  return (
-    <PowerVsWorkspacePage
-      overrideTile={
-        craig.store.json._options.enable_power_vs ? undefined : (
+  return formPageTemplate(
+    craig,
+    {
+      name: "Power VS Workspace",
+      addText: "Create a Workspace",
+      jsonField: "power",
+      overrideTile:
+        craig.store.json._options.enable_power_vs !== true ? (
           <NoPowerNetworkTile />
-        )
-      }
-      edgeRouterEnabledZones={edgeRouterEnabledZones}
-      power={[...craig.store.json.power]}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      onDelete={craig.power.delete}
-      onSave={craig.power.save}
-      onSubmit={craig.power.create}
-      forceOpen={forceShowForm}
-      deleteDisabled={() => {
-        return (
-          craig.store.json.power.length === 1 &&
-          (!isEmpty(craig.store.json.power_instances) ||
-            !isEmpty(craig.store.json.power_volumes))
-        );
-      }}
-      craig={craig}
-      docs={RenderDocs("power", craig.store.json._options.template)}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      zones={craig.store.json._options.power_vs_zones}
-      onNetworkDelete={craig.power.network.delete}
-      onNetworkSave={craig.power.network.save}
-      onNetworkSubmit={craig.power.network.create}
-      onConnectionDelete={craig.power.cloud_connections.delete}
-      onConnectionSave={craig.power.cloud_connections.save}
-      onConnectionSubmit={craig.power.cloud_connections.create}
-      transitGatewayList={splat(craig.store.json.transit_gateways, "name")}
-      onSshKeyDelete={craig.power.ssh_keys.delete}
-      onSshKeySave={craig.power.ssh_keys.save}
-      onSshKeySubmit={craig.power.ssh_keys.create}
-      invalidCallback={craig.power.name.invalid}
-      invalidTextCallback={craig.power.name.invalidText}
-      helperTextCallback={powerVsWorkspaceHelperText}
-      invalidKeyCallback={invalidSshPublicKey}
-      invalidNetworkNameCallback={craig.power.network.name.invalid}
-      invalidNetworkNameCallbackText={craig.power.network.name.invalidText}
-      invalidConnectionNameCallback={craig.power.cloud_connections.name.invalid}
-      invalidConnectionNameTextCallback={
-        craig.power.cloud_connections.name.invalidText
-      }
-      sshKeyDeleteDisabled={() => {
-        // currently ssh keys are not in use, this will be updated when they are
-        return false;
-      }}
-      invalidCidrCallback={craig.power.network.pi_cidr.invalid}
-      invalidSshKeyCallback={craig.power.ssh_keys.name.invalid}
-      invalidSshKeyCallbackText={craig.power.ssh_keys.name.invalidText}
-      invalidCidrCallbackText={craig.power.network.pi_cidr.invalidText}
-      invalidDnsCallback={craig.power.network.pi_dns.invalid}
-      invalidDnsCallbackText={craig.power.network.pi_dns.invalidText}
-      imageMap={powerImageMap}
-      onAttachmentSave={craig.power.attachments.save}
-      disableAttachmentSave={storageChangeDisabledCallback}
-    />
+        ) : undefined,
+      hideFormTitleButton:
+        craig.store.json._options.power_vs_zones.length === 0,
+      formName: "Power Vs Workspace",
+    },
+    {
+      jsonField: "power",
+      setDefault: {
+        images: [],
+        ssh_keys: [],
+      },
+      groups: [
+        {
+          name: craig.power.name,
+          resource_group: craig.power.resource_group,
+        },
+        {
+          zone: craig.power.zone,
+          imageNames: craig.power.imageNames,
+        },
+      ],
+      subForms: [
+        {
+          name: "SSH Keys",
+          addText: "Create an SSH Key",
+          jsonField: "ssh_keys",
+          form: {
+            groups: [
+              {
+                name: craig.power.ssh_keys.name,
+              },
+              {
+                public_key: craig.power.ssh_keys.public_key,
+              },
+            ],
+          },
+        },
+        {
+          name: "Power VS Subnets",
+          addText: "Create a Subnet",
+          jsonField: "network",
+          form: {
+            groups: [
+              {
+                name: craig.power.network.name,
+                pi_network_type: craig.power.network.pi_network_type,
+              },
+              {
+                pi_cidr: craig.power.network.pi_cidr,
+                pi_dns: craig.power.network.pi_dns,
+              },
+              {
+                pi_network_jumbo: craig.power.network.pi_network_jumbo,
+              },
+            ],
+          },
+        },
+        {
+          name: "Cloud Connections",
+          addText: "Create a Cloud connection",
+          jsonField: "cloud_connections",
+          form: {
+            groups: [
+              {
+                name: craig.power.cloud_connections.name,
+                pi_cloud_connection_speed:
+                  craig.power.cloud_connections.pi_cloud_connection_speed,
+              },
+              {
+                pi_cloud_connection_global_routing:
+                  craig.power.cloud_connections
+                    .pi_cloud_connection_global_routing,
+                pi_cloud_connection_metered:
+                  craig.power.cloud_connections.pi_cloud_connection_metered,
+              },
+              {
+                pi_cloud_connection_transit_enabled:
+                  craig.power.cloud_connections
+                    .pi_cloud_connection_transit_enabled,
+                transit_gateways:
+                  craig.power.cloud_connections.transit_gateways,
+              },
+            ],
+          },
+        },
+        {
+          toggleFormFieldName: "network",
+          name: "Network Connections",
+          hideWhen: function (stateData, componentProps) {
+            return (
+              contains(edgeRouterEnabledZones, componentProps.data.zone) ||
+              componentProps.data.cloud_connections.length === 0
+            );
+          },
+          hideFormTitleButton: function () {
+            return true;
+          },
+          jsonField: "attachments",
+          noDeleteButton: true,
+          form: {
+            groups: [
+              {
+                connections: craig.power.attachments.connections,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
 const PowerVsInstances = (craig) => {
-  return (
-    <IcseFormTemplate
-      name="Power VS Instances"
-      addText="Create an Instance"
-      docs={RenderDocs("power_instances", craig.store.json._options.template)}
-      overrideTile={
-        !craig.store.json._options.enable_power_vs ? (
-          <NoPowerNetworkTile />
-        ) : craig.store.json.power.length === 0 ? (
-          <NoPowerWorkspaceTile />
-        ) : undefined
-      }
-      innerForm={DynamicForm}
-      arrayData={craig.store.json.power_instances}
-      onSave={craig.power_instances.save}
-      onSubmit={craig.power_instances.create}
-      onDelete={craig.power_instances.delete}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
-      forceOpen={forceShowForm}
-      innerFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        // hard code for now, we will need a better solution for dynamically getting
-        // storage pools with API call. The issue here is that the async fetches
-        // do not set value until after the component is rendered if it is forced
-        // open. In addition, the old call was happening each time anything was rendered
-        // which is not ideal
+  return formPageTemplate(
+    craig,
+    {
+      name: "Power VS Instances",
+      addText: "Create an Instance",
+      jsonField: "power_instances",
+      overrideTile: !craig.store.json._options.enable_power_vs ? (
+        <NoPowerNetworkTile />
+      ) : craig.store.json.power.length === 0 ? (
+        <NoPowerWorkspaceTile />
+      ) : undefined,
+      hideFormTitleButton:
+        !craig.store.json._options.enable_power_vs ||
+        craig.store.json.power.length === 0,
+      formName: "Power Instances",
+      innerFormProps: {
         powerStoragePoolMap: powerStoragePoolRegionMap,
-        formName: "Power Instances",
-        form: {
-          jsonField: "power_instances",
-          setDefault: {},
-          groups: [
-            {
-              sap: craig.power_instances.sap,
-              sap_profile: craig.power_instances.sap_profile,
-            },
-            {
-              name: craig.power_instances.name,
-              workspace: craig.power_instances.workspace,
-              network: craig.power_instances.network,
-            },
-            {
-              ssh_key: craig.power_instances.ssh_key,
-              image: craig.power_instances.image,
-              pi_sys_type: craig.power_instances.pi_sys_type,
-            },
-            {
-              pi_proc_type: craig.power_instances.pi_proc_type,
-              pi_processors: craig.power_instances.pi_processors,
-              pi_memory: craig.power_instances.pi_memory,
-            },
-            {
-              pi_storage_pool_affinity:
-                craig.power_instances.pi_storage_pool_affinity,
-            },
-            {
-              heading: {
-                name: "Boot Volume",
-                type: "subHeading",
-              },
-            },
-            {
-              storage_option: craig.power_instances.storage_option,
-              pi_storage_type: craig.power_instances.pi_storage_type,
-              pi_storage_pool: craig.power_instances.pi_storage_pool,
-              affinity_type: craig.power_instances.affinity_type,
-              pi_affinity_volume: craig.power_instances.pi_affinity_volume,
-              pi_anti_affinity_volume:
-                craig.power_instances.pi_anti_affinity_volume,
-              pi_anti_affinity_instance:
-                craig.power_instances.pi_anti_affinity_instance,
-              pi_affinity_instance: craig.power_instances.pi_affinity_instance,
-            },
-            {
-              heading: {
-                name: "IP Interface Options",
-                type: "subHeading",
-              },
-            },
-          ],
+      },
+    },
+    {
+      jsonField: "power_instances",
+      setDefault: {},
+      groups: [
+        {
+          sap: craig.power_instances.sap,
+          sap_profile: craig.power_instances.sap_profile,
         },
-      }}
-      toggleFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        submissionFieldName: "power_instances",
-        hideName: true,
-      }}
-    />
+        {
+          name: craig.power_instances.name,
+          workspace: craig.power_instances.workspace,
+          network: craig.power_instances.network,
+        },
+        {
+          ssh_key: craig.power_instances.ssh_key,
+          image: craig.power_instances.image,
+          pi_sys_type: craig.power_instances.pi_sys_type,
+        },
+        {
+          pi_proc_type: craig.power_instances.pi_proc_type,
+          pi_processors: craig.power_instances.pi_processors,
+          pi_memory: craig.power_instances.pi_memory,
+        },
+        {
+          pi_storage_pool_affinity:
+            craig.power_instances.pi_storage_pool_affinity,
+        },
+        {
+          heading: {
+            name: "Boot Volume",
+            type: "subHeading",
+          },
+        },
+        {
+          storage_option: craig.power_instances.storage_option,
+          pi_storage_type: craig.power_instances.pi_storage_type,
+          pi_storage_pool: craig.power_instances.pi_storage_pool,
+          affinity_type: craig.power_instances.affinity_type,
+          pi_affinity_volume: craig.power_instances.pi_affinity_volume,
+          pi_anti_affinity_volume:
+            craig.power_instances.pi_anti_affinity_volume,
+          pi_anti_affinity_instance:
+            craig.power_instances.pi_anti_affinity_instance,
+          pi_affinity_instance: craig.power_instances.pi_affinity_instance,
+        },
+        {
+          heading: {
+            name: "IP Interface Options",
+            type: "subHeading",
+          },
+        },
+      ],
+    }
   );
 };
 
@@ -986,47 +1277,150 @@ const PowerVsVolumes = (craig) => {
 };
 
 const ResourceGroupPage = (craig) => {
-  return (
-    <ResourceGroupsTemplate
-      resource_groups={craig.store.json.resource_groups}
-      docs={RenderDocs("resource_groups", craig.store.json._options.template)}
-      disableSave={disableSave}
-      onDelete={craig.resource_groups.delete}
-      onSave={craig.resource_groups.save}
-      onSubmit={craig.resource_groups.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      deleteDisabled={() => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "Resource Groups",
+      addText: "Create a Resource Group",
+      formName: "Resource Groups",
+      deleteDisabled: () => {
         return craig.store.json.resource_groups.length === 1;
-      }}
-      helperTextCallback={resourceGroupHelperTextCallback}
-      invalidCallback={craig.resource_groups.name.invalid}
-      invalidTextCallback={craig.resource_groups.name.invalidText}
-    />
+      },
+      deleteDisabledMessage: "Must have at least one resource group",
+      jsonField: "resource_groups",
+    },
+    {
+      jsonField: "resource_groups",
+      groups: [
+        {
+          use_data: craig.resource_groups.use_data,
+        },
+        {
+          name: craig.resource_groups.name,
+          use_prefix: craig.resource_groups.use_prefix,
+        },
+      ],
+    }
   );
 };
 
 const RoutingTablesPage = (craig) => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "Routing Tables",
+      addText: "Create a Routing Table",
+      formName: "routing-tables",
+      jsonField: "routing_tables",
+    },
+    {
+      jsonField: "routing_tables",
+      groups: [
+        {
+          name: craig.routing_tables.name,
+          vpc: craig.routing_tables.vpc,
+        },
+        {
+          route_direct_link_ingress:
+            craig.routing_tables.route_direct_link_ingress,
+          internet_ingress: craig.routing_tables.internet_ingress,
+        },
+        {
+          transit_gateway_ingress: craig.routing_tables.transit_gateway_ingress,
+          route_vpc_zone_ingress: craig.routing_tables.route_vpc_zone_ingress,
+        },
+        {
+          accept_routes_from_resource_type:
+            craig.routing_tables.accept_routes_from_resource_type,
+        },
+      ],
+      subForms: [
+        {
+          name: "Routes",
+          jsonField: "routes",
+          addText: "Create a Route",
+          form: {
+            groups: [
+              {
+                name: craig.routing_tables.routes.name,
+                zone: craig.routing_tables.routes.zone,
+                destination: craig.routing_tables.routes.destination,
+              },
+              {
+                action: craig.routing_tables.routes.action,
+                next_hop: craig.routing_tables.routes.next_hop,
+              },
+            ],
+          },
+        },
+      ],
+    }
+  );
+};
+
+const SccV2 = (craig) => {
   return (
-    <RoutingTableTemplate
-      routing_tables={craig.store.json.routing_tables}
+    <ToggleForm
+      name="Security and Compliance Center"
+      about={RenderDocs("scc_v2", craig.store.json._options.template)()}
       disableSave={disableSave}
-      docs={RenderDocs("routing_tables", craig.store.json._options.template)}
       propsMatchState={propsMatchState}
-      onDelete={craig.routing_tables.delete}
-      onSave={craig.routing_tables.save}
-      onSubmit={craig.routing_tables.create}
-      forceOpen={forceShowForm}
-      craig={craig}
-      vpcList={craig.store.vpcList}
-      invalidCallback={craig.routing_tables.name.invalid}
-      invalidTextCallback={craig.routing_tables.name.invalidText}
-      invalidRouteTextCallback={craig.routing_tables.routes.name.invalidText}
-      invalidRouteCallback={craig.routing_tables.routes.name.invalid}
-      onRouteSave={craig.routing_tables.routes.save}
-      onRouteDelete={craig.routing_tables.routes.delete}
-      onRouteSubmit={craig.routing_tables.routes.create}
+      hideName
+      innerForm={DynamicForm}
+      noDeleteButton={
+        craig.store.json.scc_v2
+          ? craig.store.json.scc_v2.enable === false
+          : true
+      }
+      onDelete={craig.scc_v2.delete}
+      useAddButton={
+        craig.store.json.scc_v2
+          ? craig.store.json.scc_v2.enable === false
+          : true
+      }
+      tabPanel={{
+        name: "Security and Compliance Center",
+      }}
+      onShowToggle={() => {}}
+      submissionFieldName="scc_v2"
+      onSave={craig.scc_v2.save}
+      innerFormProps={{
+        craig: craig,
+        data: craig.store.json.scc_v2,
+        disableSave: disableSave,
+        form: {
+          jsonField: "scc_v2",
+          disableSave: disableSave,
+          groups: [
+            {
+              name: craig.scc_v2.name,
+              region: craig.scc_v2.region,
+              resource_group: craig.scc_v2.resource_group,
+            },
+          ],
+          subForms: [
+            {
+              name: "Profile Attachments",
+              jsonField: "profile_attachments",
+              addText: "Create a Profile Attachment",
+              hideWhen: function (stateData, componentProps) {
+                return componentProps.craig.store.json.scc_v2.enable === false;
+              },
+              form: {
+                groups: [
+                  {
+                    name: craig.scc_v2.profile_attachments.name,
+                    profile: craig.scc_v2.profile_attachments.profile,
+                  },
+                  {
+                    schedule: craig.scc_v2.profile_attachments.schedule,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }}
     />
   );
 };
@@ -1174,165 +1568,187 @@ const SubnetsPage = (craig) => {
 };
 
 const SshKeysPage = (craig) => {
-  return (
-    <SshKeysTemplate
-      ssh_keys={craig.store.json.ssh_keys}
-      disableSave={disableSave}
-      onDelete={craig.ssh_keys.delete}
-      onSave={craig.ssh_keys.save}
-      onSubmit={craig.ssh_keys.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={invalidName("ssh_keys")}
-      invalidTextCallback={invalidNameText("ssh_keys")}
-      craig={craig}
-      docs={RenderDocs("ssh_keys", craig.store.json._options.template)}
-      deleteDisabled={disableSshKeyDelete}
-      invalidKeyCallback={invalidSshPublicKey}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "SSH Keys",
+      addText: "Create an SSH Key",
+      deleteDisabled: disableSshKeyDelete,
+      deleteDisabledMessage: "SSH Key currently in use",
+      jsonField: "ssh_keys",
+    },
+    {
+      groups: [
+        {
+          use_data: craig.ssh_keys.use_data,
+        },
+        {
+          name: craig.ssh_keys.name,
+          resource_group: craig.ssh_keys.resource_group,
+        },
+        {
+          public_key: craig.ssh_keys.public_key,
+        },
+      ],
+    }
   );
 };
 
 const TransitGatewayPage = (craig) => {
-  return (
-    <IcseFormTemplate
-      name="Transit Gateways"
-      addText="Create a Transit Gateway"
-      docs={RenderDocs("transit_gateways", craig.store.json._options.template)}
-      innerForm={DynamicForm}
-      arrayData={craig.store.json.transit_gateways}
-      onDelete={craig.transit_gateways.delete}
-      onSave={craig.transit_gateways.save}
-      onSubmit={craig.transit_gateways.create}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
-      forceOpen={forceShowForm}
-      innerFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        formName: "Transit Gateway",
-        form: {
-          jsonField: "transit_gateways",
-          setDefault: {
-            connections: [],
-          },
-          groups: [
-            {
-              use_data: craig.transit_gateways.use_data,
-            },
-            {
-              name: craig.transit_gateways.name,
-              resource_group: craig.transit_gateways.resource_group,
-            },
-            {
-              hideWhen: function (stateData) {
-                return stateData.use_data;
-              },
-              global: craig.transit_gateways.global,
-            },
-            {
-              heading: {
-                name: "Connections",
-                type: "subHeading",
-              },
-            },
-            {
-              vpc_connections: craig.transit_gateways.vpc_connections,
-              power_connections: craig.transit_gateways.power_connections,
-            },
-            // the patterns where existing infrastructure exists are more likely
-            // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
-            // is still supported, but will not be displayed. If we have a request
-            // for that functionality, we should implement
-          ],
-          subForms: [
-            {
-              name: "GRE Tunnels",
-              createText: "Create a GRE Tunnel",
-              jsonField: "gre_tunnels",
-              toggleFormFieldName: "gateway",
-              hideFormTitleButton: function (stateData, componentProps) {
-                return (
-                  !componentProps.craig.store.json._options.enable_classic ||
-                  componentProps.craig.store.json.classic_gateways.length === 0
-                );
-              },
-              form: {
-                groups: [
-                  {
-                    gateway: craig.transit_gateways.gre_tunnels.gateway,
-                    zone: craig.transit_gateways.gre_tunnels.zone,
-                  },
-                  {
-                    local_tunnel_ip:
-                      craig.transit_gateways.gre_tunnels.local_tunnel_ip,
-                    remote_tunnel_ip:
-                      craig.transit_gateways.gre_tunnels.remote_tunnel_ip,
-                  },
-                  {
-                    remote_bgp_asn:
-                      craig.transit_gateways.gre_tunnels.remote_bgp_asn,
-                  },
-                ],
-              },
-            },
-            {
-              name: "Prefix Filters",
-              createText: "Create a Prefix Filter",
-              jsonField: "prefix_filters",
-              form: {
-                groups: [
-                  {
-                    name: craig.transit_gateways.prefix_filters.name,
-                  },
-                  {
-                    connection_type:
-                      craig.transit_gateways.prefix_filters.connection_type,
-                    target: craig.transit_gateways.prefix_filters.target,
-                  },
-                  {
-                    action: craig.transit_gateways.prefix_filters.action,
-                    prefix: craig.transit_gateways.prefix_filters.prefix,
-                  },
-                  {
-                    le: craig.transit_gateways.prefix_filters.le,
-                    ge: craig.transit_gateways.prefix_filters.ge,
-                  },
-                ],
-              },
-            },
-          ],
+  return formPageTemplate(
+    craig,
+    {
+      name: "Transit Gateways",
+      addText: "Create a Transit Gateway",
+      formName: "Transit Gateway",
+      jsonField: "transit_gateways",
+    },
+    {
+      jsonField: "transit_gateways",
+      setDefault: {
+        connections: [],
+      },
+      groups: [
+        {
+          use_data: craig.transit_gateways.use_data,
         },
-      }}
-      toggleFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        submissionFieldName: "transit_gateways",
-        hideName: true,
-      }}
-    />
+        {
+          name: craig.transit_gateways.name,
+          resource_group: craig.transit_gateways.resource_group,
+        },
+        {
+          hideWhen: function (stateData) {
+            return stateData.use_data;
+          },
+          global: craig.transit_gateways.global,
+        },
+        {
+          heading: {
+            name: "Connections",
+            type: "subHeading",
+          },
+        },
+        {
+          vpc_connections: craig.transit_gateways.vpc_connections,
+          power_connections: craig.transit_gateways.power_connections,
+        },
+        // the patterns where existing infrastructure exists are more likely
+        // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
+        // is still supported, but will not be displayed. If we have a request
+        // for that functionality, we should implement
+      ],
+      subForms: [
+        {
+          name: "GRE Tunnels",
+          addText: "Create a GRE Tunnel",
+          jsonField: "gre_tunnels",
+          toggleFormFieldName: "gateway",
+          hideFormTitleButton: function (stateData, componentProps) {
+            return (
+              !componentProps.craig.store.json._options.enable_classic ||
+              componentProps.craig.store.json.classic_gateways.length === 0
+            );
+          },
+          form: {
+            groups: [
+              {
+                gateway: craig.transit_gateways.gre_tunnels.gateway,
+                zone: craig.transit_gateways.gre_tunnels.zone,
+              },
+              {
+                local_tunnel_ip:
+                  craig.transit_gateways.gre_tunnels.local_tunnel_ip,
+                remote_tunnel_ip:
+                  craig.transit_gateways.gre_tunnels.remote_tunnel_ip,
+              },
+              {
+                remote_bgp_asn:
+                  craig.transit_gateways.gre_tunnels.remote_bgp_asn,
+              },
+            ],
+          },
+        },
+        {
+          name: "Prefix Filters",
+          addText: "Create a Prefix Filter",
+          jsonField: "prefix_filters",
+          form: {
+            groups: [
+              {
+                name: craig.transit_gateways.prefix_filters.name,
+              },
+              {
+                connection_type:
+                  craig.transit_gateways.prefix_filters.connection_type,
+                target: craig.transit_gateways.prefix_filters.target,
+              },
+              {
+                action: craig.transit_gateways.prefix_filters.action,
+                prefix: craig.transit_gateways.prefix_filters.prefix,
+              },
+              {
+                le: craig.transit_gateways.prefix_filters.le,
+                ge: craig.transit_gateways.prefix_filters.ge,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
 const VpnGatewayPage = (craig) => {
-  return (
-    <VpnGatewayTemplate
-      docs={RenderDocs("vpn_gateways", craig.store.json._options.template)}
-      vpn_gateways={craig.store.json.vpn_gateways}
-      disableSave={disableSave}
-      onDelete={craig.vpn_gateways.delete}
-      onSave={craig.vpn_gateways.save}
-      onSubmit={craig.vpn_gateways.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.vpn_gateways.name.invalid}
-      invalidTextCallback={craig.vpn_gateways.name.invalidText}
-      vpcList={craig.store.vpcList}
-      subnetList={craig.getAllSubnets()}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "VPN Gateways",
+      addText: "Create a VPN Gateway",
+      jsonField: "vpn_gateways",
+      formName: "vpn_gateways",
+      overrideTile: craig.store.vpcList.length === 0 ? <NoVpcTile /> : null,
+      hideFormTitleButton: craig.store.vpcList.length === 0,
+      innerFormProps: {},
+    },
+    {
+      jsonField: "vpn_gateways",
+      groups: [
+        {
+          name: craig.vpn_gateways.name,
+          resource_group: craig.vpn_gateways.resource_group,
+        },
+        {
+          vpc: craig.vpn_gateways.vpc,
+          subnet: craig.vpn_gateways.subnet,
+        },
+        {
+          policy_mode: craig.vpn_gateways.policy_mode,
+        },
+        {
+          additional_prefixes: craig.vpn_gateways.additional_prefixes,
+        },
+      ],
+      subForms: [
+        {
+          name: "Connections",
+          addText: "Create a VPN Gateway Connection",
+          jsonField: "connections",
+          form: {
+            groups: [
+              {
+                name: craig.vpn_gateways.connections.name,
+              },
+              {
+                peer_cidrs: craig.vpn_gateways.connections.peer_cidrs,
+              },
+              {
+                local_cidrs: craig.vpn_gateways.connections.local_cidrs,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 
@@ -1369,145 +1785,221 @@ const VpnServerPage = (craig) => {
 };
 
 const VpcPage = (craig) => {
-  return (
-    <IcseFormTemplate
-      name="Virtual Private Clouds"
-      addText="Create a VPC"
-      docs={RenderDocs("vpcs", craig.store.json._options.template)}
-      innerForm={DynamicForm}
-      arrayData={craig.store.json.vpcs}
-      onDelete={craig.vpcs.delete}
-      onSave={craig.vpcs.save}
-      onSubmit={craig.vpcs.create}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
-      forceOpen={forceShowForm}
-      innerFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        formName: "VPC",
-        form: {
-          setDefault: {
-            public_gateways: [],
-            publicGateways: [],
-          },
-          groups: [
-            {
-              name: craig.vpcs.name,
-              resource_group: craig.vpcs.resource_group,
-              bucket: craig.vpcs.bucket,
-            },
-            {
-              default_network_acl_name: craig.vpcs.default_network_acl_name,
-              default_security_group_name:
-                craig.vpcs.default_security_group_name,
-              default_routing_table_name: craig.vpcs.default_routing_table_name,
-            },
-            {
-              heading: {
-                name: "Public Gateways",
-                type: "subHeading",
-                tooltip: {
-                  content:
-                    "Public Gateways allow for all resources in a zone to communicate with the public internet. Public Gateways are not needed for subnets where a VPN gateway is created.",
-                },
-              },
-            },
-            {
-              pgw_zone_1: craig.vpcs.pgw_zone_1,
-              pgw_zone_2: craig.vpcs.pgw_zone_2,
-              pgw_zone_3: craig.vpcs.pgw_zone_3,
-            },
-            {
-              heading: {
-                name: "Classic Access",
-                type: "subHeading",
-              },
-            },
-            {
-              classic_access: craig.vpcs.classic_access,
-            },
-          ],
+  return formPageTemplate(
+    craig,
+    {
+      name: "Virtual Private Clouds",
+      addText: "Create a VPC",
+      jsonField: "vpcs",
+      formName: "vpcs",
+    },
+    {
+      setDefault: {
+        public_gateways: [],
+        publicGateways: [],
+      },
+      groups: [
+        {
+          name: craig.vpcs.name,
+          resource_group: craig.vpcs.resource_group,
+          bucket: craig.vpcs.bucket,
         },
-      }}
-      toggleFormProps={{
-        craig: craig,
-        disableSave: disableSave,
-        submissionFieldName: "vpcs",
-        hideName: true,
-      }}
-    />
-    // <VpcTemplate
-    //   docs={RenderDocs("vpcs", craig.store.json._options.template)}
-    //   vpcs={craig.store.json.vpcs}
-    //   disableSave={disableSave}
-    //   propsMatchState={propsMatchState}
-    //   forceOpen={forceShowForm}
-    //   craig={craig}
-    //   // vpc name and callbacks take in extra param, so for now
-    //   // these will remain unchanged
-    //   invalidCallback={invalidName("vpcs")}
-    //   invalidTextCallback={invalidNameText("vpcs")}
-    //   resourceGroups={splat(craig.store.json.resource_groups, "name")}
-    //   cosBuckets={craig.store.cosBuckets}
-    // />
+        {
+          default_network_acl_name: craig.vpcs.default_network_acl_name,
+          default_security_group_name: craig.vpcs.default_security_group_name,
+          default_routing_table_name: craig.vpcs.default_routing_table_name,
+        },
+        {
+          heading: {
+            name: "Public Gateways",
+            type: "subHeading",
+            tooltip: {
+              content:
+                "Public Gateways allow for all resources in a zone to communicate with the public internet. Public Gateways are not needed for subnets where a VPN gateway is created.",
+            },
+          },
+        },
+        {
+          pgw_zone_1: craig.vpcs.pgw_zone_1,
+          pgw_zone_2: craig.vpcs.pgw_zone_2,
+          pgw_zone_3: craig.vpcs.pgw_zone_3,
+        },
+        {
+          heading: {
+            name: "Classic Access",
+            type: "subHeading",
+          },
+        },
+        {
+          classic_access: craig.vpcs.classic_access,
+        },
+      ],
+    }
   );
 };
 
 const VpePage = (craig) => {
-  return (
-    <VpeTemplate
-      docs={RenderDocs(
-        "virtual_private_endpoints",
-        craig.store.json._options.template
-      )}
-      vpe={craig.store.json.virtual_private_endpoints}
-      disableSave={disableSave}
-      onDelete={craig.virtual_private_endpoints.delete}
-      onSave={craig.virtual_private_endpoints.save}
-      onSubmit={craig.virtual_private_endpoints.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.virtual_private_endpoints.name.invalid}
-      invalidTextCallback={craig.virtual_private_endpoints.name.invalidText}
-      vpcList={craig.store.vpcList}
-      subnetList={craig.getAllSubnets()}
-      securityGroups={craig.store.json.security_groups}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      secretsManagerInstances={splat(craig.store.json.secrets_manager, "name")}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Virtual Private Endpoints",
+      addText: "Create a VPE",
+      jsonField: "virtual_private_endpoints",
+      formName: "Virtual Private Endpoints",
+      overrideTile:
+        craig.store.vpcList.length === 0 ? <NoVpcTile /> : undefined,
+    },
+    {
+      jsonField: "virtual_private_endpoints",
+      groups: [
+        {
+          name: craig.virtual_private_endpoints.name,
+          vpc: craig.virtual_private_endpoints.vpc,
+          service: craig.virtual_private_endpoints.service,
+        },
+        {
+          resource_group: craig.virtual_private_endpoints.resource_group,
+          security_groups: craig.virtual_private_endpoints.security_groups,
+          subnets: craig.virtual_private_endpoints.subnets,
+        },
+        {
+          instance: craig.virtual_private_endpoints.instance,
+        },
+      ],
+    }
   );
 };
 
 const VsiPage = (craig) => {
-  return (
-    <VsiTemplate
-      docs={RenderDocs("vsi", craig.store.json._options.template)}
-      vsi={craig.store.json.vsi}
-      disableSave={disableSave}
-      onDelete={craig.vsi.delete}
-      onSave={craig.vsi.save}
-      onSubmit={craig.vsi.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      encryptionKeys={craig.store.encryptionKeys}
-      sshKeys={craig.store.sshKeys}
-      apiEndpointImages={`/api/vsi/${craig.store.json._options.region}/images`}
-      apiEndpointInstanceProfiles={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
-      invalidCallback={craig.vsi.name.invalid}
-      invalidTextCallback={craig.vsi.name.invalidText}
-      invalidVolumeCallback={craig.vsi.volumes.name.invalid}
-      invalidVolumeTextCallback={craig.vsi.volumes.name.invalidText}
-      onVolumeSave={craig.vsi.volumes.save}
-      onVolumeDelete={craig.vsi.volumes.delete}
-      onVolumeCreate={craig.vsi.volumes.create}
-      vpcList={craig.store.vpcList}
-      securityGroups={craig.store.json.security_groups}
-      subnetList={craig.getAllSubnets()}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "VSI",
+      addText: "Create a VSI",
+      jsonField: "vsi",
+      formName: "vsi",
+    },
+    {
+      jsonField: "vsi",
+      groups: [
+        {
+          name: craig.vsi.name,
+          resource_group: craig.vsi.resource_group,
+        },
+        {
+          vpc: craig.vsi.vpc,
+          subnets: craig.vsi.subnets,
+          security_groups: craig.vsi.security_groups,
+        },
+        {
+          vsi_per_subnet: craig.vsi.vsi_per_subnet,
+          image_name: craig.vsi.image_name,
+          profile: craig.vsi.profile,
+        },
+        {
+          ssh_keys: craig.vsi.ssh_keys,
+          encryption_key: craig.vsi.encryption_key,
+        },
+        {
+          enable_floating_ip: craig.vsi.enable_floating_ip,
+          primary_interface_ip_spoofing:
+            craig.vsi.primary_interface_ip_spoofing,
+        },
+        {
+          user_data: craig.vsi.user_data,
+        },
+      ],
+      subForms: [
+        {
+          name: "Block Storage Volumes",
+          addText: "Create a Block Storage Volume",
+          jsonField: "volumes",
+          form: {
+            groups: [
+              {
+                name: craig.vsi.volumes.name,
+                profile: craig.vsi.volumes.profile,
+              },
+              {
+                encryption_key: craig.vsi.volumes.encryption_key,
+                capacity: craig.vsi.volumes.capacity,
+              },
+            ],
+          },
+        },
+      ],
+    }
+  );
+};
+
+const Vtl = (craig) => {
+  return formPageTemplate(
+    craig,
+    {
+      name: "FalconStor VTL Instances",
+      addText: "Create an Instance",
+      jsonField: "vtl",
+      overrideTile: !craig.store.json._options.enable_power_vs ? (
+        <NoPowerNetworkTile />
+      ) : craig.store.json.power.length === 0 ? (
+        <NoPowerWorkspaceTile />
+      ) : undefined,
+      hideFormTitleButton:
+        !craig.store.json._options.enable_power_vs ||
+        craig.store.json.power.length === 0,
+      formName: "VTL",
+      innerFormProps: {
+        powerStoragePoolMap: powerStoragePoolRegionMap,
+      },
+    },
+    {
+      jsonField: "vtl",
+      setDefault: {},
+      groups: [
+        {
+          name: craig.vtl.name,
+          workspace: craig.vtl.workspace,
+          network: craig.vtl.network,
+        },
+        {
+          ssh_key: craig.vtl.ssh_key,
+          image: craig.vtl.image,
+          pi_sys_type: craig.vtl.pi_sys_type,
+        },
+        {
+          pi_proc_type: craig.vtl.pi_proc_type,
+          pi_processors: craig.vtl.pi_processors,
+          pi_memory: craig.vtl.pi_memory,
+        },
+        {
+          pi_license_repository_capacity:
+            craig.vtl.pi_license_repository_capacity,
+          pi_storage_pool_affinity: craig.vtl.pi_storage_pool_affinity,
+        },
+        {
+          heading: {
+            name: "Boot Volume",
+            type: "subHeading",
+          },
+        },
+        {
+          storage_option: craig.vtl.storage_option,
+          pi_storage_type: craig.vtl.pi_storage_type,
+          pi_storage_pool: craig.vtl.pi_storage_pool,
+          affinity_type: craig.vtl.affinity_type,
+          pi_affinity_volume: craig.vtl.pi_affinity_volume,
+          pi_anti_affinity_volume: craig.vtl.pi_anti_affinity_volume,
+          pi_anti_affinity_instance: craig.vtl.pi_anti_affinity_instance,
+          pi_affinity_instance: craig.vtl.pi_affinity_instance,
+        },
+        {
+          heading: {
+            name: "IP Interface Options",
+            type: "subHeading",
+          },
+        },
+      ],
+    }
   );
 };
 
@@ -1522,6 +2014,8 @@ export const NewFormPage = (props) => {
     return Atracker(craig);
   } else if (form === "cis") {
     return Cis(craig);
+  } else if (form === "cisGlbs") {
+    return CisGlbs(craig);
   } else if (form === "classicGateways") {
     return ClassicGateways(craig);
   } else if (form === "classicSshKeys") {
@@ -1558,6 +2052,8 @@ export const NewFormPage = (props) => {
     return ResourceGroupPage(craig);
   } else if (form === "securityComplianceCenter") {
     return SccV1(craig);
+  } else if (form === "sccV2") {
+    return SccV2(craig);
   } else if (form === "secretsManager") {
     return SecretsManagerPage(craig);
   } else if (form === "routingTables") {
@@ -1580,5 +2076,7 @@ export const NewFormPage = (props) => {
     return VpnServerPage(craig);
   } else if (form === "vsi") {
     return VsiPage(craig);
+  } else if (form === "vtl") {
+    return Vtl(craig);
   }
 };

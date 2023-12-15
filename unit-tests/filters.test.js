@@ -41,10 +41,10 @@ describe("encryptionKeyFilter", () => {
     assert.deepEqual(result, []);
   });
 
-  it("should return an array of key names for root keys when kmd is selected", () => {
+  it("should return an array of key names for root keys when kms is selected", () => {
     const componentProps = {
       isModal: true,
-      parent_name: "cosName1",
+      arrayParentName: "cosName1",
       craig: craig,
     };
     const result = encryptionKeyFilter({}, componentProps);

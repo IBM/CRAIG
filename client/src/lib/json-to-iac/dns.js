@@ -1,3 +1,4 @@
+const { RegexButWithWords } = require("regex-but-with-words");
 const {
   jsonToTfPrint,
   kebabName,
@@ -122,9 +123,26 @@ function ibmDnsResourceRecord(record) {
       zone_id: tfRef("ibm_dns_zone", zoneName, "zone_id"),
       type: record.type,
       name: record.name,
-      rdata: record.rdata,
+      rdata: record.use_vsi ? null : record.rdata,
     },
   };
+  if (record.vsi && record.use_vsi) {
+    data.data.rdata = tfRef(
+      "ibm_is_instance",
+      `${record.vpc} vpc ${record.vsi.replace(
+        // replace hyphen between vsi name and numbers with `-vsi-` to allow for correct
+        // formatting of terraform resource name
+        new RegexButWithWords()
+          .literal("-")
+          .look.ahead((exp) => {
+            exp.digit().literal("-").digit().stringEnd();
+          })
+          .done("g"),
+        "-vsi-"
+      )}.primary_network_interface.0.primary_ip.0`,
+      "address"
+    );
+  }
   ["ttl", "weight", "priority", "port", "service", "protocol"].forEach(
     (field) => {
       if (record[field]) {

@@ -4,6 +4,7 @@ const {
   tfBlock,
   timeouts,
   jsonToTfPrint,
+  tfRef,
 } = require("./utils");
 const { snakeCase, kebabCase } = require("lazy-z");
 const { formatAddressPrefix } = require("./vpc");
@@ -51,6 +52,34 @@ function formatVpn(gw, config) {
 }
 
 /**
+ * format vpn gw connection
+ * @param {*} connection
+ * @param {*} gw parent gateway
+ * @returns {string} terraform formatted data
+ */
+function formatVpnGatewayConnection(connection, gw) {
+  return jsonToTfPrint(
+    "resource",
+    "ibm_is_vpn_gateway_connection",
+    `${gw.vpc} ${gw.name} vpn gw connection ${connection.name}`,
+    {
+      name: kebabName([gw.name, connection.name]),
+      vpn_gateway: tfRef("ibm_is_vpn_gateway", `${gw.vpc} ${gw.name} vpn gw`),
+      peer_address: tfRef(
+        "ibm_is_vpn_gateway",
+        `${gw.vpc} ${gw.name} vpn gw`,
+        "public_ip_address"
+      ),
+      preshared_key: `\${var.${snakeCase(
+        gw.name + " " + connection.name
+      )}_preshared_key}`,
+      local_cidrs: connection.local_cidrs,
+      peer_cidrs: connection.peer_cidrs,
+    }
+  );
+}
+
+/**
  * build vpn gw tf
  * @param {Object} config
  * @param {Array<Object>} config.vpn_gateways
@@ -60,6 +89,11 @@ function vpnTf(config) {
   let tf = "";
   config.vpn_gateways.forEach((gw) => {
     tf += formatVpn(gw, config);
+    if (gw.connections) {
+      gw.connections.forEach((connection) => {
+        tf += formatVpnGatewayConnection(connection, gw);
+      });
+    }
     if (gw.additional_prefixes) {
       gw.additional_prefixes.forEach((prefix) => {
         tf += formatAddressPrefix(

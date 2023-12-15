@@ -1,4 +1,11 @@
-const { revision, transpose, carve, splat, contains } = require("lazy-z");
+const {
+  revision,
+  transpose,
+  carve,
+  splat,
+  contains,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const { invalidName, invalidNameText } = require("../forms");
 const {
   resourceGroupsField,
@@ -66,7 +73,17 @@ function initCis(store) {
         type: "select",
         default: "",
         invalidText: selectInvalidText("plan"),
-        groups: ["Standard Next", "Trial"],
+        groups: [
+          "Standard Next",
+          "Trial",
+          "Enterprise Advanced",
+          "Enterprise Essential",
+          "Enterprise Package",
+          "Enterprise Premier",
+          "Enterprise Usage",
+          "Global Load Balancer",
+          "Security",
+        ],
         onRender: titleCaseRender("plan"),
         onInputChange: kebabCaseInput("plan"),
         invalid: fieldIsNullOrEmptyString("plan"),
@@ -106,7 +123,10 @@ function initCis(store) {
             invalidText: unconditionalInvalidText("Enter a valid domain"),
             placeholder: "example.com",
             invalid: function (stateData, componentProps) {
-              if (stateData.domain.match(/^(\w+\.)+[a-z]+$/g) === null) {
+              if (
+                isNullOrEmptyString(stateData.domain, true) ||
+                stateData.domain.match(/^(\w+\.)+[a-z]+$/g) === null
+              ) {
                 return true;
               }
               let allDomains = [];

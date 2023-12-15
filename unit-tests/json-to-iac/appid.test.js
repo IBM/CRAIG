@@ -167,8 +167,7 @@ resource "ibm_resource_instance" "test_appid" {
       );
       let expectedData = `
 data "ibm_resource_instance" "test_appid" {
-  name              = "test-appid"
-  resource_group_id = ibm_resource_group.slz_service_rg.id
+  name = "test-appid"
 }
 `;
       assert.deepEqual(

@@ -1,6 +1,10 @@
 const { splatContains, transpose } = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
 const { getCosFromBucket } = require("../forms/utils");
+const {
+  shouldDisableComponentSave,
+  fieldIsNullOrEmptyStringEnabled,
+} = require("./utils");
 
 /**
  * initialize logdna
@@ -80,11 +84,63 @@ function sysdigOnStoreUpdate(config) {
   setUnfoundResourceGroup(config, config.store.json.sysdig);
 }
 
+/**
+ * intialize LogDna store
+ * @param {*} store
+ */
+function initLogDna(store) {
+  store.newField("logdna", {
+    init: logdnaInit,
+    onStoreUpdate: logdnaOnStoreUpdate,
+    save: logdnaSave,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["plan", "resource_group", "bucket"],
+      "logdna"
+    ),
+    schema: {
+      plan: {
+        default: "",
+        invalid: fieldIsNullOrEmptyStringEnabled("plan"),
+      },
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyStringEnabled("resource_group"),
+      },
+      bucket: {
+        default: "",
+        invalid: fieldIsNullOrEmptyStringEnabled("bucket"),
+      },
+    },
+  });
+}
+
+/**
+ * intialize sysDig store
+ * @param {*} store
+ */
+function initSysDig(store) {
+  store.newField("sysdig", {
+    init: sysdigInit,
+    onStoreUpdate: sysdigOnStoreUpdate,
+    save: sysdigSave,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["resource_group", "plan"],
+      "sysdig"
+    ),
+    schema: {
+      resource_group: {
+        default: "",
+        invalid: fieldIsNullOrEmptyStringEnabled("resource_group"),
+      },
+      plan: {
+        default: "",
+        invalid: fieldIsNullOrEmptyStringEnabled("plan"),
+      },
+    },
+  });
+}
+
 module.exports = {
-  logdnaInit,
-  logdnaOnStoreUpdate,
-  logdnaSave,
-  sysdigInit,
-  sysdigSave,
-  sysdigOnStoreUpdate,
+  initLogDna,
+  initSysDig,
 };

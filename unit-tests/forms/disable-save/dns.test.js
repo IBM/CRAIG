@@ -75,6 +75,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
+          isModal: true,
         }
       );
       assert.isTrue(actualData, "it should be disabled");

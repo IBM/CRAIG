@@ -1,4 +1,5 @@
 const { transpose, eachKey } = require("lazy-z");
+const { shouldDisableComponentSave } = require("./utils");
 
 /**
  * init scc
@@ -47,8 +48,43 @@ function sccDelete(config) {
   });
 }
 
+/**
+ * init scc store
+ * @param {*} store
+ */
+function DEPRECATED_initSccStore(store) {
+  store.newField("scc", {
+    init: sccInit,
+    save: sccSave,
+    delete: sccDelete,
+    shouldDisableSave: shouldDisableComponentSave(
+      ["collector_description", "scope_description"],
+      "scc"
+    ),
+    schema: {
+      collector_description: {
+        default: "",
+        invalid: function (stateData) {
+          return !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(
+            stateData.collector_description
+          );
+        },
+      },
+      scope_description: {
+        default: "",
+        invalid: function (stateData) {
+          return !/^[A-z][a-zA-Z0-9-\._,\s]*$/i.test(
+            stateData.scope_description
+          );
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   sccInit,
   sccSave,
   sccDelete,
+  DEPRECATED_initSccStore,
 };

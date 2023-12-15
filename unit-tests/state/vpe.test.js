@@ -250,4 +250,130 @@ describe("virtual_private_endpoints", () => {
       );
     });
   });
+  describe("virtual_private_endpoints.schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    describe("service", () => {
+      it("should return empty string onRender when no service", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.service.onRender({}),
+          "",
+          "it should be empty string"
+        );
+      });
+      it("should return string onRender when service", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.service.onRender({ service: "icr" }),
+          "Container Registry",
+          "it should be empty string"
+        );
+      });
+      it("should return string on input change", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.service.onInputChange({
+            service: "Container Registry",
+          }),
+          "icr",
+          "it should be empty string"
+        );
+      });
+    });
+    describe("vpc", () => {
+      it("should return correct groups for vpc", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.vpc.groups({}, { craig: craig }),
+          ["management", "workload"],
+          "it should return vpc names"
+        );
+      });
+      it("should reset security groups and subnets on state change", () => {
+        let expectedData = {
+          security_groups: [],
+          subnets: [],
+        };
+        let actualData = {};
+        craig.virtual_private_endpoints.vpc.onStateChange(actualData);
+        assert.deepEqual(
+          actualData,
+          expectedData,
+          "it should return the correct data"
+        );
+      });
+    });
+    describe("security_groups", () => {
+      it("should return correct security groups when none vpc", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.security_groups.groups(
+            {},
+            { craig: craig }
+          ),
+          [],
+          "it should return empty array"
+        );
+      });
+      it("should return correct security groups when vpc", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.security_groups.groups(
+            { vpc: "management" },
+            { craig: craig }
+          ),
+          ["management-vpe", "management-vsi"],
+          "it should return empty string"
+        );
+      });
+      it("should return the correct forceUpdateKey", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.security_groups.forceUpdateKey({
+            vpc: "management",
+          }),
+          "management",
+          "it should return correct key"
+        );
+      });
+    });
+    describe("subnets", () => {
+      it("should return correct groups when none vpc", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.subnets.groups({}),
+          [],
+          "it should return empty array"
+        );
+      });
+      it("should return correct groups when vpc", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.subnets.groups(
+            { vpc: "management" },
+            { craig: craig }
+          ),
+          [
+            "vsi-zone-1",
+            "vpn-zone-1",
+            "vsi-zone-2",
+            "vsi-zone-3",
+            "vpe-zone-1",
+            "vpe-zone-2",
+            "vpe-zone-3",
+          ],
+          "it should return empty array"
+        );
+      });
+    });
+    describe("instance", () => {
+      it("should be hidden when service is not secrets manager", () => {
+        assert.isTrue(
+          craig.virtual_private_endpoints.instance.hideWhen({ service: "icr" }),
+          "it should be hidden"
+        );
+      });
+      it("should return groups", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.instance.groups({}, { craig: craig }),
+          [],
+          "it should return groups"
+        );
+      });
+    });
+  });
 });

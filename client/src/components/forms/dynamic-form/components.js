@@ -1,5 +1,5 @@
 import React from "react";
-import { PopoverWrapper } from "icse-react-assets";
+import { IcseFormGroup, PopoverWrapper } from "icse-react-assets";
 import {
   dynamicTextInputProps,
   dynamicSelectProps,
@@ -15,8 +15,12 @@ import {
   Toggle,
   TextInput,
   Select,
+  Tag,
 } from "@carbon/react";
 import PropTypes from "prop-types";
+import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
+import { deepEqual } from "lazy-z";
+const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
 const DynamicFormTextInput = (props) => {
   return <TextInput {...dynamicTextInputProps(props)} />;
@@ -103,7 +107,24 @@ DynamicFormToggle.propTypes = {
 };
 
 const DynamicTextArea = (props) => {
-  return <TextArea {...dynamicTextAreaProps(props)} />;
+  return (
+    <>
+      <TextArea {...dynamicTextAreaProps(props)} />
+      <div>
+        {props.field.labelText === "Tags"
+          ? props.parentState.tags.map((tag, i) => (
+              <Tag
+                key={"tag" + i}
+                size="md"
+                type={tagColors[i % tagColors.length]}
+              >
+                {tag}
+              </Tag>
+            ))
+          : ""}
+      </div>
+    </>
+  );
 };
 
 DynamicTextArea.propTypes = {
@@ -114,7 +135,8 @@ DynamicTextArea.propTypes = {
     labelText: PropTypes.string, // not required for toolip wrapper
     invalid: PropTypes.func.isRequired,
     invalidText: PropTypes.func.isRequired,
-    placeholder: PropTypes.func.isRequired,
+    placeholder: PropTypes.oneOfType([PropTypes.func, PropTypes.string])
+      .isRequired,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   parentState: PropTypes.shape({}).isRequired,
@@ -145,10 +167,95 @@ DynamicMultiSelect.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
 };
 
+const DynamicPublicKey = (props) => {
+  return (
+    <div className="fieldWidthBigger leftTextAlign">
+      <TextInput.PasswordInput {...dynamicPasswordInputProps(props)} />
+    </div>
+  );
+};
+
+DynamicPublicKey.propTypes = {
+  handleInputChange: PropTypes.func.isRequired,
+  parentState: PropTypes.shape({}).isRequired,
+  parentProps: PropTypes.shape({}).isRequired,
+  field: PropTypes.shape({
+    onRender: PropTypes.func,
+    invalid: PropTypes.func.isRequired,
+    tooltip: PropTypes.shape({}),
+    labelText: PropTypes.string,
+    forceUpdateKey: PropTypes.func,
+  }).isRequired,
+  name: PropTypes.string.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+};
+
+export class DynamicFetchSelect extends React.Component {
+  _isMounted = false;
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: ["Loading..."],
+    };
+    this.dataToGroups = this.dataToGroups.bind(this);
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    // on mount if not items have been set
+    if (deepEqual(this.state.data, ["Loading..."]))
+      fetch(
+        // generate api endpoint based on state and props
+        this.props.field.apiEndpoint(
+          this.props.parentState,
+          this.props.parentProps
+        )
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          // set state with data if mounted
+          if (this._isMounted) this.setState({ data: data });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  dataToGroups() {
+    return (this.props.parentProps.isModal ? [""] : []).concat(this.state.data);
+  }
+
+  render() {
+    let props = { ...this.props };
+    return (
+      <PopoverWrapper
+        key={this.dataToGroups()}
+        hoverText={dynamicSelectProps(props).value || ""}
+        className={props.field.tooltip ? " tooltip" : "select"}
+      >
+        <Select {...dynamicSelectProps(props, this._isMounted)}>
+          {this.dataToGroups().map((value) => (
+            <SelectItem
+              text={value}
+              value={value}
+              key={dynamicFieldId(props) + "-" + value}
+            />
+          ))}
+        </Select>
+      </PopoverWrapper>
+    );
+  }
+}
+
 export {
   DynamicFormTextInput,
   DynamicFormSelect,
   DynamicFormToggle,
   DynamicTextArea,
   DynamicMultiSelect,
+  DynamicPublicKey,
 };

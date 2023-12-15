@@ -836,6 +836,40 @@ By default, no Classic SSH Keys are created.
 
 ## Classic Gateways
 
+Classic network gateways control network traffic and can improve network performance and security by routing VLAN traffic. Gateways can be created in either standalone or high-availability (HA) mode. Enabling HA allows for nodes to take over for other failing nodes in the cluster, in cases where your service may be experiencing an outage or high volumes of traffic. HA ensures that your service remains available even during unexpected scenarios.
+
+When creating a classic gateway, you will need to have first created a classic SSH key and a private classic VLAN. If you wish to also attach a public classic VLAN to your gateway, you will have create that beforehand as well. You also will need to attach a domain and select a datacenter.
+
+You will need to select a disk key name, package name, OS key name, and process key name. These fields will be determined by the hardware specifications you'd like to allocate to your gateway. Currently, only IBM Cloud Juniper vSRX gateways are supported in CRAIG.
+
+Users can scale their gateway according to their desired network speed, public bandwidth, and memory. Two options are available for network speed: up to 1000 Mbps (1 Gbps) or up to 10000 Mbps (10 Gbps). Public bandwidth refers to the amount of public network traffic (in GB) that is allowed on this service per month. Users may choose to allocate between 64 to 1024 MB of memory to their service.
+
+Users can also enable TCP monitoring, redundant network, and IPV6. Enabling TCP monitoring allows users to monitor their TCP/IP traffic, allowing them to quickly identify issues and determine the root cause of slowdowns or failures. Enabling redundancy creates two physical network interfaces with a bonding configuration, improving resiliency in the face of outages.
+
+### Related Links
+
+- [Getting started with IBM Cloud Gateway Appliance](https://cloud.ibm.com/docs/gateway-appliance?topic=gateway-appliance-getting-started-ga)
+- [Getting started with IBM Cloud Juniper vSRX](https://cloud.ibm.com/docs/gateway-appliance?topic=gateway-appliance-getting-started)
+- [Classic Network Gateway Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/network_gateway)
+
+-----
+
+## Cis
+
+Powered by Cloudflare, IBM Cloud Internet Services (CIS) offers security, reliability, and performance for IBM Cloud users. Through CIS, users can manage a variety of services such as TLS certificates, rate limiting, and firewalls.
+
+Domains and DNS records may be created. Existing DNS records for your domain may be imported or you can create them manually. DNS records are optional but may be necessary for your website to function properly. After adding your domain, you must also create a name server (NS) record to delegate your domain to CIS. The NS record must contain the name servers provided by CIS for your domain's registrar or DNS provider.
+
+### Related Links
+
+- [About IBM Cloud Internet Services](https://cloud.ibm.com/docs/cis?topic=cis-about-ibm-cloud-internet-services-cis)
+- [Getting started with IBM Cloud Internet Services](https://cloud.ibm.com/docs/cis?topic=cis-getting-started)
+- [IBM Cloud Internet Services Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cis)
+
+-----
+
+## Vtl
+
 NYI
 
 ### Related Links
@@ -843,7 +877,16 @@ NYI
 
 -----
 
-## Cis
+## Scc V 2
+
+NYI
+
+### Related Links
+
+
+-----
+
+## Cis Glbs
 
 NYI
 

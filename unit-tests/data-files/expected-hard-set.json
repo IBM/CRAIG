@@ -839,7 +839,8 @@
       "name": "management-gateway",
       "resource_group": "slz-management-rg",
       "subnet": "vpn-zone-1",
-      "vpc": "management"
+      "vpc": "management",
+      "connections": []
     }
   ],
   "ssh_keys": [
@@ -962,5 +963,13 @@
   "classic_ssh_keys": [],
   "classic_vlans": [],
   "classic_gateways": [],
-  "cis": []
+  "cis": [],
+  "vtl": [],
+  "scc_v2" : {
+    "account_id" : "${var.account_id}",
+    "enable": false,
+    "profile_attachments": [],
+    "region": "",
+    "resource_group": null
+  },"cis_glbs": []
 }

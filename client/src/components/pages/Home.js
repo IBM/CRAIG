@@ -1,11 +1,15 @@
 import React from "react";
 import { Tabs, TabList, Tab, TabPanel, TabPanels } from "@carbon/react";
 import { Sprout } from "@carbon/icons-react";
-import { OptionsForm, EdgeNetworkingForm } from "../forms";
+import { EdgeNetworkingForm } from "../forms";
 import "./home.scss";
 import ImportJson from "./ImportJson";
+import { ToggleForm } from "icse-react-assets";
+import DynamicForm from "../forms/DynamicForm";
+import { disableSave, propsMatchState } from "../../lib";
 
 function Home(props) {
+  let craig = props.craig;
   return (
     <>
       <div className="banner">
@@ -29,9 +33,55 @@ function Home(props) {
         <TabPanels>
           <TabPanel>
             {/* Options Form */}
-            <OptionsForm
-              craig={props.craig}
-              data={props.craig.store.json._options}
+            <ToggleForm
+              name="Environment Options"
+              hideName
+              hideChevon
+              innerForm={DynamicForm}
+              onDelete={() => {}}
+              onSave={props.craig.options.save}
+              submissionFieldName="options"
+              disableSave={disableSave}
+              propsMatchState={propsMatchState}
+              tabPanel={{
+                hideAbout: true,
+              }}
+              noDeleteButton
+              hide={false}
+              innerFormProps={{
+                formName: "options",
+                data: craig.store.json._options,
+                craig: craig,
+                form: {
+                  groups: [
+                    {
+                      fs_cloud: craig.options.fs_cloud,
+                    },
+                    {
+                      prefix: craig.options.prefix,
+                      region: craig.options.region,
+                      zones: craig.options.zones,
+                    },
+                    {
+                      endpoints: craig.options.endpoints,
+                      account_id: craig.options.account_id,
+                      dynamic_subnets: craig.options.dynamic_subnets,
+                    },
+                    {
+                      enable_power_vs: craig.options.enable_power_vs,
+                      power_vs_high_availability:
+                        craig.options.power_vs_high_availability,
+                      power_vs_zones: craig.options.power_vs_zones,
+                    },
+                    {
+                      enable_classic: craig.options.enable_classic,
+                    },
+                    {
+                      tags: craig.options.tags,
+                    },
+                  ],
+                },
+              }}
             />
             {props.craig.store.json._options.dynamic_subnets === false && (
               <EdgeNetworkingForm craig={props.craig} />
