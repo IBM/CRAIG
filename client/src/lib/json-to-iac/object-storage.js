@@ -296,7 +296,7 @@ function ibmResourceKeyCos(key, cos, config) {
   let keyValues = {
     name: kebabName([cos.name, "key", key.name], randomSuffix(cos)),
     resource_instance_id: getCosId(cos),
-    role: "Writer",
+    role: key.role || "Writer",
     tags: getTags(config),
   };
   if (key.enable_hmac) {

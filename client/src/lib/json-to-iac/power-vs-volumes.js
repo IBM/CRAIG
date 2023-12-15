@@ -48,28 +48,33 @@ function formatPowerVsVolume(volume) {
  * create volume attachment terraform
  * @param {*} volume
  * @param {string} instance plaintext instance name
+ * @param {string=} lastAttachment previous volume attchment for reference
  * @returns {string} terraform formatted string
  */
-function formatPowerVsVolumeAttachment(volume, instance) {
+function formatPowerVsVolumeAttachment(volume, instance, lastAttachment) {
+  let volumeData = {
+    provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
+    pi_cloud_instance_id: powerVsWorkspaceRef(volume.workspace),
+    pi_volume_id: `\${ibm_pi_volume.${snakeCase(
+      volume.workspace + " volume " + volume.name
+    )}.volume_id}`,
+    pi_instance_id: `\${ibm_pi_instance.${snakeCase(
+      `${volume.workspace}_workspace_instance_${instance}`
+    )}.instance_id}`,
+    lifecycle: [
+      {
+        ignore_changes: ["${pi_cloud_instance_id}", "${pi_volume_id}"],
+      },
+    ],
+  };
+  if (lastAttachment) {
+    volumeData.depends_on = [lastAttachment];
+  }
   return jsonToTfPrint(
     "resource",
     "ibm_pi_volume_attach",
     `${volume.workspace} attach ${volume.name} to ${instance} instance`,
-    {
-      provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
-      pi_cloud_instance_id: powerVsWorkspaceRef(volume.workspace),
-      pi_volume_id: `\${ibm_pi_volume.${snakeCase(
-        volume.workspace + " volume " + volume.name
-      )}.volume_id}`,
-      pi_instance_id: `\${ibm_pi_instance.${snakeCase(
-        `${volume.workspace}_workspace_instance_${instance}`
-      )}.instance_id}`,
-      lifecycle: [
-        {
-          ignore_changes: ["${pi_cloud_instance_id}", "${pi_volume_id}"],
-        },
-      ],
-    }
+    volumeData
   );
 }
 
@@ -79,10 +84,18 @@ function formatPowerVsVolumeAttachment(volume, instance) {
  */
 function powerVsVolumeTf(config) {
   let tf = config.power_volumes && config.power_volumes.length > 0 ? "" : null;
+  let lastAttachmentAddress;
   (config.power_volumes || []).forEach((volume) => {
     let volumeTf = formatPowerVsVolume(volume);
     volume.attachments.forEach((instance) => {
-      volumeTf += formatPowerVsVolumeAttachment(volume, instance);
+      volumeTf += formatPowerVsVolumeAttachment(
+        volume,
+        instance,
+        lastAttachmentAddress
+      );
+      lastAttachmentAddress = `\${ibm_pi_volume_attach.${snakeCase(
+        `${volume.workspace} attach ${volume.name} to ${instance} instance`
+      )}}`;
     });
     tf += tfBlock(`Power VS Volume ${volume.name}`, volumeTf) + "\n";
   });

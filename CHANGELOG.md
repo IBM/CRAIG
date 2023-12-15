@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - SCC v1 Terraform has been deprecated. SCC v1 resources can still be managed from `/form/securityComplianceCenter`
 - Reafactored Routing Tables and Routing Table Routes Form
 - OptionsForm has been removed and now is generated using the DynamicForm component
+- Power VS Volume Attachments are no longer created in parallel to ensure that each provisions successfully
 
 ### Features
 
@@ -25,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue allowing users to add more than 3 subnets to a DNS custom resolver
 - Fixed an issue allowing users to create DNS zones with duplicate names
 - Fixed an issue causing Access Groups and Access Group Policies to have incorrect references to their parent access groups
+- Fixed an issue causing Terraform output for COS authorization credentials to always have the role `Writer` regardless of selection
 
 ## 1.7.1
 

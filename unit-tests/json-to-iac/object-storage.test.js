@@ -1386,6 +1386,76 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
         "it should return cos bucket tf"
       );
     });
+    it("should create cos bucket terraform code with hmac and random suffix and reader role", () => {
+      let actualData = formatCosKey(
+        {
+          role: "Reader",
+          name: "cos-key",
+          enable_hmac: true,
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: false,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
+  name                 = "\${var.prefix}-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = ibm_resource_instance.cos_object_storage.id
+  role                 = "Reader"
+  tags = [
+    "hello",
+    "world"
+  ]
+  parameters = {
+    HMAC = true
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
   });
   describe("cosInstanceTf", () => {
     it("should return terraform for a single cos instance", () => {
@@ -1399,7 +1469,6 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
           kms: "kms",
           keys: [
             {
-              role: "Writer",
               name: "cos-key",
               enable_hmac: true,
             },
