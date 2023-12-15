@@ -17,7 +17,6 @@ const {
   invalidIdentityProviderURI,
   isValidUrl,
   validSshKey,
-  invalidEncryptionKeyEndpoint,
 } = require("./invalid-callbacks");
 
 /**
@@ -401,9 +400,7 @@ function disableSshKeyDelete(componentProps) {
 module.exports = {
   disableSave,
   forceShowForm,
-  disableSshKeysSave,
   disableSshKeyDelete,
-  disableEncryptionKeysSave,
   invalidCidrBlock,
   invalidNumberCheck,
 };

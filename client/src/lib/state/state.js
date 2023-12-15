@@ -42,7 +42,7 @@ const {
   accessGroupDynamicPolicyDelete,
 } = require("./iam");
 const validate = require("../validate");
-const { buildSubnetTiers, fieldIsNullOrEmptyString } = require("./utils");
+const { buildSubnetTiers } = require("./utils");
 const {
   addClusterRules,
   copySecurityGroup,

@@ -13,7 +13,6 @@ import {
   AccessGroupsTemplate,
   AppIdTemplate,
   AtrackerPage,
-  ClassicVlanTemplate,
   CloudDatabaseTemplate,
   ClustersTemplate,
   DnsTemplate,
@@ -848,12 +847,6 @@ const PowerInfraPage = (craig) => {
 };
 
 const PowerVsInstances = (craig) => {
-  let powerStoragePoolMap = {};
-  craig.store.json._options.power_vs_zones.forEach((zone) => {
-    powerStoragePoolFetch(zone, fetch).then((zonePools) => {
-      powerStoragePoolMap[zone] = zonePools;
-    });
-  });
   return (
     <IcseFormTemplate
       name="Power VS Instances"
