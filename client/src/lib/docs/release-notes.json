@@ -16,7 +16,8 @@
       "Fixed an issue causing Access Groups and Access Group Policies to have incorrect references to their parent access groups"
     ],
     "upgrade_notes": [
-      "SCC v1 Terraform has been deprecated. SCC v1 resources can still be managed from `/form/securityComplianceCenter`"
+      "SCC v1 Terraform has been deprecated. SCC v1 resources can still be managed from `/form/securityComplianceCenter`",
+      "Reafactored Routing Tables and Routing Table Routes Form"
     ]
   },
   {

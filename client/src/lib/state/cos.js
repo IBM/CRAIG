@@ -345,6 +345,7 @@ function initObjectStorageStore(store) {
             onRender: titleCaseRender("storage_class"),
           },
           kms_key: {
+            labelText: "Encryption Key",
             type: "select",
             default: null,
             invalid: fieldIsNullOrEmptyString("kms_key"),

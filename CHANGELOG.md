@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - SCC v1 Terraform has been deprecated. SCC v1 resources can still be managed from `/form/securityComplianceCenter`
+- Reafactored Routing Tables and Routing Table Routes Form
 
 ### Features
 

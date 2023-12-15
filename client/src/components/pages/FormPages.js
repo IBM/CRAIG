@@ -1303,26 +1303,56 @@ const ResourceGroupPage = (craig) => {
 };
 
 const RoutingTablesPage = (craig) => {
-  return (
-    <RoutingTableTemplate
-      routing_tables={craig.store.json.routing_tables}
-      disableSave={disableSave}
-      docs={RenderDocs("routing_tables", craig.store.json._options.template)}
-      propsMatchState={propsMatchState}
-      onDelete={craig.routing_tables.delete}
-      onSave={craig.routing_tables.save}
-      onSubmit={craig.routing_tables.create}
-      forceOpen={forceShowForm}
-      craig={craig}
-      vpcList={craig.store.vpcList}
-      invalidCallback={craig.routing_tables.name.invalid}
-      invalidTextCallback={craig.routing_tables.name.invalidText}
-      invalidRouteTextCallback={craig.routing_tables.routes.name.invalidText}
-      invalidRouteCallback={craig.routing_tables.routes.name.invalid}
-      onRouteSave={craig.routing_tables.routes.save}
-      onRouteDelete={craig.routing_tables.routes.delete}
-      onRouteSubmit={craig.routing_tables.routes.create}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Routing Tables",
+      addText: "Create a Routing Table",
+      formName: "routing-tables",
+      jsonField: "routing_tables",
+    },
+    {
+      jsonField: "routing_tables",
+      groups: [
+        {
+          name: craig.routing_tables.name,
+          vpc: craig.routing_tables.vpc,
+        },
+        {
+          route_direct_link_ingress:
+            craig.routing_tables.route_direct_link_ingress,
+          internet_ingress: craig.routing_tables.internet_ingress,
+        },
+        {
+          transit_gateway_ingress: craig.routing_tables.transit_gateway_ingress,
+          route_vpc_zone_ingress: craig.routing_tables.route_vpc_zone_ingress,
+        },
+        {
+          accept_routes_from_resource_type:
+            craig.routing_tables.accept_routes_from_resource_type,
+        },
+      ],
+      subForms: [
+        {
+          name: "Routes",
+          jsonField: "routes",
+          addText: "Create a Route",
+          form: {
+            groups: [
+              {
+                name: craig.routing_tables.routes.name,
+                zone: craig.routing_tables.routes.zone,
+                destination: craig.routing_tables.routes.destination,
+              },
+              {
+                action: craig.routing_tables.routes.action,
+                next_hop: craig.routing_tables.routes.next_hop,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 

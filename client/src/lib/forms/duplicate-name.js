@@ -157,7 +157,11 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
   } else if (field === "vsi") {
     allOtherNames = splat(componentProps.craig.store.json.vsi, "name");
   } else if (field === "routes") {
-    allOtherNames = splat(componentProps.route.routes, "name");
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.routing_tables,
+      "routes",
+      "name"
+    );
   } else if (field === "load_balancers") {
     allOtherNames = splat(
       componentProps.craig.store.json.load_balancers,

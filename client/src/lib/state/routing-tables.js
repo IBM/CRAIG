@@ -3,6 +3,9 @@ const {
   isIpv4CidrOrAddress,
   contains,
   isNullOrEmptyString,
+  titleCase,
+  snakeCase,
+  buildNumberDropdownList,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const {
@@ -14,6 +17,9 @@ const {
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
+  selectInvalidText,
+  vpcGroups,
+  unconditionalInvalidText,
 } = require("./utils");
 const { invalidNameText, invalidName } = require("../forms");
 
@@ -131,8 +137,72 @@ function initRoutingTable(store) {
         invalidText: invalidNameText("routing_tables"),
       },
       vpc: {
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("vpc"),
+        invalidText: selectInvalidText("VPC"),
+        groups: vpcGroups,
+        labelText: "VPC",
+      },
+      internet_ingress: {
+        default: false,
+        type: "toggle",
+        labelText: "Internet Ingress",
+        tooltip: {
+          content:
+            "If set to true, this routing table will be used to route traffic that originates from the internet. For this to succeed, the VPC must not already have a routing table with this property set to true",
+          align: "bottom-left",
+          alignModal: "bottom-left",
+        },
+      },
+      route_direct_link_ingress: {
+        default: false,
+        type: "toggle",
+        tooltip: {
+          content:
+            "If set to true, the routing table is used to route traffic that originates from Direct Link to the VPC. To succeed, the VPC must not already have a routing table with the property set to true",
+          align: "bottom-left",
+          alignModal: "bottom-left",
+        },
+        labelText: "Direct Link Ingress",
+      },
+      transit_gateway_ingress: {
+        default: false,
+        type: "toggle",
+        labelText: "Transit Gateway Ingress",
+        tooltip: {
+          content:
+            "If set to true, the routing table is used to route traffic that originates from Transit Gateway to the VPC. To succeed, the VPC must not already have a routing table with the property set to true",
+          align: "bottom-left",
+          alignModal: "bottom-left",
+        },
+      },
+      route_vpc_zone_ingress: {
+        default: false,
+        type: "toggle",
+        labelText: "VPC Zone Ingress",
+        tooltip: {
+          content:
+            "If set to true, the routing table is used to route traffic that originates from subnets in other zones in the VPC. To succeed, the VPC must not already have a routing table with the property set to true",
+          align: "bottom-left",
+          alignModal: "bottom-left",
+        },
+      },
+      accept_routes_from_resource_type: {
+        default: [],
+        type: "multiselect",
+        labelText: "Additional Route Sources",
+        groups: ["VPN Server", "VPN Gateway"],
+        onRender: function (stateData) {
+          return stateData.accept_routes_from_resource_type.map((type) => {
+            return titleCase(type).replace(/Vpn/g, "VPN");
+          });
+        },
+        onInputChange: function (stateData) {
+          return stateData.accept_routes_from_resource_type.map((type) => {
+            return snakeCase(type);
+          });
+        },
       },
     },
     subComponents: {
@@ -150,14 +220,30 @@ function initRoutingTable(store) {
             default: "",
             invalid: invalidName("routes"),
             invalidText: invalidNameText("routes"),
+            size: "small",
           },
           zone: {
             default: "",
             invalid: fieldIsNullOrEmptyString("zone"),
+            invalidText: selectInvalidText("zone"),
+            groups: buildNumberDropdownList(3, 1),
+            size: "small",
+            type: "select",
           },
           action: {
             default: "",
+            type: "select",
+
             invalid: fieldIsNullOrEmptyString("action"),
+            invalidText: unconditionalInvalidText("Selet an action"),
+            groups: ["Delegate", "Deliver", "Delegate VPC", "Drop"],
+            onRender: function (stateData) {
+              return titleCase(stateData.action || "").replace("Vpc", "VPC");
+            },
+            onInputChange: function (stateData) {
+              return snakeCase(stateData.action);
+            },
+            size: "small",
           },
           next_hop: {
             default: "",
@@ -169,6 +255,12 @@ function initRoutingTable(store) {
                   contains(stateData.next_hop, "/"))
               );
             },
+            invalidText: unconditionalInvalidText("Must be a valid IP address"),
+            placeholder: "X.X.X.X",
+            size: "small",
+            hideWhen: function (stateData) {
+              return stateData.action !== "deliver";
+            },
           },
           destination: {
             default: "",
@@ -178,6 +270,11 @@ function initRoutingTable(store) {
                 !isIpv4CidrOrAddress(stateData.destination)
               );
             },
+            invalidText: unconditionalInvalidText(
+              "Enter a valid IPV4 address or CIDR block"
+            ),
+            placeholder: "X.X.X.X/X",
+            size: "small",
           },
         },
       },
