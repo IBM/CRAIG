@@ -465,12 +465,15 @@ function nameField(jsonField) {
 /**
  * resource group
  * @param {boolean=} small make small
+ * @param {object} options
  * @returns {object} object for resource groups page
  */
-function resourceGroupsField(small) {
+function resourceGroupsField(small, options) {
   return {
     default: "",
-    invalid: fieldIsNullOrEmptyString("resource_group"),
+    invalid: options?.invalid
+      ? options.invalid
+      : fieldIsNullOrEmptyString("resource_group"),
     invalidText: selectInvalidText("resource group"),
     type: "select",
     groups: function (stateData, componentProps) {
@@ -478,6 +481,7 @@ function resourceGroupsField(small) {
     },
     hideWhen: hideWhenUseData,
     size: small ? "small" : undefined,
+    labelText: options?.labelText || undefined,
   };
 }
 
@@ -854,7 +858,16 @@ function ipCidrListTextArea(field, options) {
   };
 }
 
+/**
+ * hide helper text shortcut
+ * @returns null
+ */
+function hideHelperText() {
+  return null;
+}
+
 module.exports = {
+  hideHelperText,
   encryptionKeyGroups,
   invalidIpv4Address,
   invalidIpv4AddressText,

@@ -115,40 +115,87 @@ formPageTemplate.propTypes = {
 };
 
 const AccessGroupsPage = (craig) => {
-  return (
-    <AccessGroupsTemplate
-      docs={RenderDocs("access_groups", craig.store.json._options.template)}
-      access_groups={craig.store.json.access_groups}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      onDelete={craig.access_groups.delete}
-      onSave={craig.access_groups.save}
-      onSubmit={craig.access_groups.create}
-      invalidCallback={craig.access_groups.name.invalid}
-      invalidTextCallback={craig.access_groups.name.invalidText}
-      invalidPolicyCallback={craig.access_groups.policies.name.invalid}
-      invalidPolicyTextCallback={craig.access_groups.policies.name.invalidText}
-      policyHelperTextCallback={accessGroupPolicyHelperTextCallback}
-      onPolicyDelete={craig.access_groups.policies.delete}
-      onPolicySave={craig.access_groups.policies.save}
-      onPolicySubmit={craig.access_groups.policies.create}
-      craig={craig}
-      forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidDynamicPolicyCallback={
-        craig.access_groups.dynamic_policies.name.invalid
-      }
-      invalidDynamicPolicyTextCallback={
-        craig.access_groups.dynamic_policies.name.invalidText
-      }
-      dynamicPolicyHelperTextCallback={accessGroupPolicyHelperTextCallback}
-      invalidIdentityProviderCallback={
-        craig.access_groups.dynamic_policies.identity_provider.invalid
-      }
-      onDynamicPolicyDelete={craig.access_groups.dynamic_policies.delete}
-      onDynamicPolicySave={craig.access_groups.dynamic_policies.save}
-      onDynamicPolicySubmit={craig.access_groups.dynamic_policies.create}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Access Groups",
+      addText: "Create an Access Group",
+      formName: "access-groups",
+      jsonField: "access_groups",
+    },
+    {
+      jsonField: "access_groups",
+      groups: [
+        {
+          name: craig.access_groups.name,
+        },
+        {
+          description: craig.access_groups.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Policies",
+          addText: "Create a new Policy",
+          jsonField: "policies",
+          form: {
+            groups: [
+              {
+                name: craig.access_groups.policies.name,
+              },
+              {
+                heading: {
+                  name: "Resource Configuration",
+                  type: "subHeading",
+                },
+              },
+              {
+                resource: craig.access_groups.policies.resource,
+                resource_group: craig.access_groups.policies.resource_group,
+              },
+              {
+                resource_instance_id:
+                  craig.access_groups.policies.resource_instance_id,
+                service: craig.access_groups.policies.service,
+              },
+              {
+                resource_type: craig.access_groups.policies.resource_type,
+              },
+            ],
+          },
+        },
+        {
+          name: "Dynamic Policies",
+          addText: "Create a Dynamic Policy",
+          jsonField: "dynamic_policies",
+          form: {
+            groups: [
+              {
+                name: craig.access_groups.dynamic_policies.name,
+                expiration: craig.access_groups.dynamic_policies.expiration,
+              },
+              {
+                identity_provider:
+                  craig.access_groups.dynamic_policies.identity_provider,
+              },
+              {
+                heading: {
+                  name: "Condition Configuration",
+                  type: "subHeading",
+                },
+              },
+              {
+                claim: craig.access_groups.dynamic_policies.claim,
+              },
+              {
+                operator: craig.access_groups.dynamic_policies.operator,
+                value: craig.access_groups.dynamic_policies.value,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 

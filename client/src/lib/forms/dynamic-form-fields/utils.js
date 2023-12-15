@@ -135,7 +135,11 @@ function addClassName(className, field) {
   }
 
   composedClassName +=
-    field?.size === "small" ? " fieldWidthSmaller" : " fieldWidth";
+    field?.size === "small"
+      ? " fieldWidthSmaller"
+      : field?.size === "wide"
+      ? " textInputWide"
+      : " fieldWidth";
 
   return composedClassName;
 }

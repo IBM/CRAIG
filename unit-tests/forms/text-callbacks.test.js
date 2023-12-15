@@ -687,28 +687,6 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("accessGroupPolicyHelperTextCallback", () => {
-    it("should return text with prefix and random suffix", () => {
-      assert.deepEqual(
-        accessGroupPolicyHelperTextCallback(
-          { name: "policy" },
-          {
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "test",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "test-policy",
-        "it should display data"
-      );
-    });
-  });
   describe("invalidCidrText", () => {
     it("should return correct text if cidr is null", () => {
       assert.deepEqual(

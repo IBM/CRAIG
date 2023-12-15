@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace
 - Fixed an issue allowing users to add more than 3 subnets to a DNS custom resolver
 - Fixed an issue allowing users to create DNS zones with duplicate names
+- Fixed an issue causing Access Groups and Access Group Policies to have incorrect references to their parent access groups
 
 ## 1.7.1
 

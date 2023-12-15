@@ -208,16 +208,6 @@ function iamAccountSettingInvalidText(field) {
 }
 
 /**
- * create access group policy helper text
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {string} helper text
- */
-function accessGroupPolicyHelperTextCallback(stateData, componentProps) {
-  return `${componentProps.craig.store.json._options.prefix}-${stateData.name}`;
-}
-
-/**
  * create invalid cidr text function
  * @param {*} craig
  * @returns {Function} stateData componentProps function
@@ -375,7 +365,6 @@ module.exports = {
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
-  accessGroupPolicyHelperTextCallback,
   invalidCidrText,
   invalidCbrRuleText,
   invalidCbrZoneText,
