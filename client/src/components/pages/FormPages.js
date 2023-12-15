@@ -37,7 +37,6 @@ import {
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   vpnServersHelperText,
-  powerImageFetch,
 } from "../../lib/forms";
 import {
   invalidCidr,
@@ -59,10 +58,8 @@ import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
-import {
-  edgeRouterEnabledZones,
-  powerStoragePoolRegionMap,
-} from "../../lib/constants";
+import { edgeRouterEnabledZones } from "../../lib/constants";
+import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.json";
 import DynamicForm from "../forms/DynamicForm";
 import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
@@ -98,8 +95,7 @@ const formPageTemplate = (craig, options, form) => {
         disableSave: disableSave,
         submissionFieldName: options.jsonField,
         hideName: true,
-        // here for testing
-        // hide: false,
+        // hide: false
       }}
     />
   );
@@ -990,13 +986,6 @@ const NoPowerWorkspaceTile = () => {
 };
 
 const PowerInfraPage = (craig) => {
-  // need to find a way to reimplement
-  // let powerImageMap = {};
-  // craig.store.json._options.power_vs_zones.forEach((zone) => {
-  //   powerImageFetch(zone, fetch).then((zoneImages) => {
-  //     powerImageMap[zone] = zoneImages;
-  //   });
-  // });
   return formPageTemplate(
     craig,
     {

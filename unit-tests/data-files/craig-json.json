@@ -945,8 +945,9 @@
   "power_instances": [],
   "power_volumes": [],
   "cis": [],
-  "scc_v2" : {
-    "account_id" : "${var.account_id}",
+  "vtl": [],
+  "scc_v2": {
+    "account_id": "${var.account_id}",
     "enable": false,
     "profile_attachments": [],
     "region": "",
