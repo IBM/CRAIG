@@ -1,4 +1,4 @@
-export { OptionsForm, CopyRuleForm, EdgeNetworkingForm } from "./forms";
+export { CopyRuleForm, EdgeNetworkingForm } from "./forms";
 export { NavigationRedirectModal } from "./modals/NavigationRedirectModal";
 export {
   About,

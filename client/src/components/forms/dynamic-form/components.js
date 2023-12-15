@@ -1,5 +1,5 @@
 import React from "react";
-import { PopoverWrapper } from "icse-react-assets";
+import { IcseFormGroup, PopoverWrapper } from "icse-react-assets";
 import {
   dynamicTextInputProps,
   dynamicSelectProps,
@@ -15,10 +15,12 @@ import {
   Toggle,
   TextInput,
   Select,
+  Tag,
 } from "@carbon/react";
 import PropTypes from "prop-types";
 import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
 import { deepEqual } from "lazy-z";
+const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
 const DynamicFormTextInput = (props) => {
   return <TextInput {...dynamicTextInputProps(props)} />;
@@ -105,7 +107,24 @@ DynamicFormToggle.propTypes = {
 };
 
 const DynamicTextArea = (props) => {
-  return <TextArea {...dynamicTextAreaProps(props)} />;
+  return (
+    <>
+      <TextArea {...dynamicTextAreaProps(props)} />
+      <div>
+        {props.field.labelText === "Tags"
+          ? props.parentState.tags.map((tag, i) => (
+              <Tag
+                key={"tag" + i}
+                size="md"
+                type={tagColors[i % tagColors.length]}
+              >
+                {tag}
+              </Tag>
+            ))
+          : ""}
+      </div>
+    </>
+  );
 };
 
 DynamicTextArea.propTypes = {

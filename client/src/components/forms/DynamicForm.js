@@ -19,7 +19,7 @@ import {
   PerCloudConnections,
 } from "./dynamic-form";
 import { eachKey, isBoolean, contains } from "lazy-z";
-import { propsMatchState } from "../../lib";
+import { disableSave, propsMatchState } from "../../lib";
 import {
   dynamicIcseFormGroupsProps,
   dynamicIcseHeadingProps,
@@ -27,6 +27,8 @@ import {
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
 import { DynamicFetchSelect } from "./dynamic-form/components";
+import { Button } from "@carbon/react";
+import { Rocket } from "@carbon/icons-react";
 
 const doNotRenderFields = [
   "heading",
@@ -218,6 +220,19 @@ class DynamicForm extends React.Component {
           componentProps={this.props}
           handleInputChange={this.handleInputChange}
         />
+        {this.props.formName === "options" ? (
+          <Button
+            disabled={disableSave("options", this.state, this.props)}
+            className="marginTop"
+            onClick={() => {
+              window.location.pathname = "/form/resourceGroups";
+            }}
+          >
+            Begin Customizing <Rocket className="rocketIcon" />
+          </Button>
+        ) : (
+          ""
+        )}
         {this.props.isModal === true || !this.props.form.subForms
           ? ""
           : this.props.form.subForms.map((subForm) =>
