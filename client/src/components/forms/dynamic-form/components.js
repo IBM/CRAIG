@@ -16,10 +16,12 @@ import {
   TextInput,
   Select,
   Tag,
+  DatePicker,
+  DatePickerInput,
 } from "@carbon/react";
 import PropTypes from "prop-types";
 import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
-import { deepEqual } from "lazy-z";
+import { contains, deepEqual, isNullOrEmptyString } from "lazy-z";
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
 const DynamicFormTextInput = (props) => {
@@ -226,7 +228,36 @@ export class DynamicFetchSelect extends React.Component {
   }
 
   dataToGroups() {
-    return (this.props.parentProps.isModal ? [""] : []).concat(this.state.data);
+    let apiEndpoint = this.props.field.apiEndpoint(
+      this.props.parentState,
+      this.props.parentProps
+    );
+    if (apiEndpoint === "/api/cluster/versions") {
+      // add "" if kube version is reset
+      return (
+        this.props.parentProps.isModal ||
+        isNullOrEmptyString(this.props.parentState.kube_version)
+          ? [""]
+          : []
+      ).concat(
+        // filter version based on kube type
+        this.state.data.filter((version) => {
+          if (
+            (this.props.parentState.kube_type === "openshift" &&
+              contains(version, "openshift")) ||
+            (this.props.parentState.kube_type === "iks" &&
+              !contains(version, "openshift")) ||
+            version === "default"
+          ) {
+            return version.replace(/\s\(Default\)/g, "");
+          }
+        })
+      );
+    } else {
+      return (this.props.parentProps.isModal ? [""] : []).concat(
+        this.state.data
+      );
+    }
   }
 
   render() {
@@ -242,7 +273,7 @@ export class DynamicFetchSelect extends React.Component {
             <SelectItem
               text={value}
               value={value}
-              key={dynamicFieldId(props) + "-" + value}
+              key={dynamicFieldId(props) + "-" + value + this.dataToGroups()}
             />
           ))}
         </Select>
@@ -251,6 +282,35 @@ export class DynamicFetchSelect extends React.Component {
   }
 }
 
+const DynamicDatePicker = (props) => {
+  // only used in opaque secrets, if we use this in other places we can
+  // change it to be more dynamic
+  return (
+    <DatePicker
+      datePickerType="single"
+      dateFormat="Y-m-d"
+      value={props.parentState.expiration_date}
+      onChange={(selectEvent) => {
+        let event = {
+          target: {
+            name: "expiration_date",
+            value: selectEvent[0],
+          },
+        };
+        props.handleInputChange(event);
+      }}
+    >
+      <DatePickerInput
+        placeholder="YYYY-MM-DD"
+        labelText="Expiration Date"
+        id={"expiration-date"}
+        invalid={!props.parentState.expiration_date}
+        invalidText={"Select an expiration date"}
+      />
+    </DatePicker>
+  );
+};
+
 export {
   DynamicFormTextInput,
   DynamicFormSelect,
@@ -258,4 +318,5 @@ export {
   DynamicTextArea,
   DynamicMultiSelect,
   DynamicPublicKey,
+  DynamicDatePicker,
 };

@@ -580,7 +580,8 @@ function wholeNumberField(field, lazy) {
     } else
       return (
         !isWholeNumber(parseInt(stateData[field])) ||
-        stateData[field].match(/\D/g) !== null
+        // parse numbers into string for checks
+        String(stateData[field]).match(/\D/g) !== null
       );
   };
 }
@@ -859,6 +860,23 @@ function ipCidrListTextArea(field, options) {
 }
 
 /**
+ * shortcut for array input change
+ * @param {*} field
+ * @returns {Function}
+ */
+function onArrayInputChange(field) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[field], true)
+      ? []
+      : stateData[field]
+          .replace(/\s\s+/g, "") // replace extra spaces
+          .replace(/,(?=,)/g, "") // prevent null tags from
+          .replace(/[^\w,-]/g, "")
+          .split(",");
+  };
+}
+
+/**
  * hide helper text shortcut
  * @returns null
  */
@@ -904,4 +922,5 @@ module.exports = {
   timeToLive,
   securityGroupsMultiselect,
   ipCidrListTextArea,
+  onArrayInputChange,
 };

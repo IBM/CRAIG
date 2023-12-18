@@ -447,6 +447,7 @@ describe("clusters", () => {
             arbitrary_secret_description: "frog",
             username_password_secret_description: "frog",
             labels: [],
+            auto_rotate: false,
           },
           {
             craig: craig,

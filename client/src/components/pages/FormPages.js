@@ -95,7 +95,7 @@ const formPageTemplate = (craig, options, form) => {
         disableSave: disableSave,
         submissionFieldName: options.jsonField,
         hideName: true,
-        // hide: false
+        // hide: false,
       }}
     />
   );
@@ -559,72 +559,129 @@ const CloudDatabasePage = (craig) => {
 };
 
 const ClusterPage = (craig) => {
-  return (
-    <ClustersTemplate
-      noSecretsManager={craig.store.json.secrets_manager.length === 0}
-      docs={RenderDocs("clusters", craig.store.json._options.template)}
-      clusters={craig.store.json.clusters}
-      disableSave={disableSave}
-      onDelete={craig.clusters.delete}
-      onSave={craig.clusters.save}
-      onSubmit={craig.clusters.create}
-      invalidCallback={craig.clusters.name.invalid}
-      invalidTextCallback={craig.clusters.name.invalidText}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      invalidPoolCallback={invalidName("worker_pools")}
-      invalidPoolTextCallback={invalidNameText("worker_pools")}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      vpcList={craig.store.vpcList}
-      encryptionKeys={craig.store.encryptionKeys}
-      subnetList={craig.getAllSubnets()}
-      kubeVersionApiEndpoint="/api/cluster/versions"
-      flavorApiEndpoint={`/api/cluster/${craig.store.json._options.region}/flavors`}
-      helperTextCallback={clusterHelperTestCallback}
-      cosNames={splat(craig.store.json.object_storage, "name")}
-      secretsManagerList={splat(craig.store.json.secrets_manager, "name")}
-      secretsManagerGroupCallback={function (stateData, componentProps, field) {
-        return invalidName(field || "secrets_group")(
-          stateData,
-          componentProps,
-          field
-        );
-      }}
-      secretsManagerGroupCallbackText={invalidNameText("secrets_group")}
-      secretCallback={function (stateData, componentProps, field) {
-        return invalidName(field || "opaque_secrets")(
-          stateData,
-          componentProps,
-          field
-        );
-      }}
-      secretCallbackText={function (stateData, componentProps, field) {
-        return invalidNameText(field || "opaque_secrets")(
-          stateData,
-          componentProps,
-          field
-        );
-      }}
-      descriptionInvalid={invalidDescription}
-      descriptionInvalidText={invalidDescriptionText}
-      labelsInvalid={craig.clusters.opaque_secrets.labels.invalid}
-      labelsInvalidText="One or more labels are invalid"
-      onPoolSave={craig.clusters.worker_pools.save}
-      onPoolDelete={craig.clusters.worker_pools.delete}
-      onPoolSubmit={craig.clusters.worker_pools.create}
-      onOpaqueSecretsSave={craig.clusters.opaque_secrets.save}
-      onOpaqueSecretsDelete={craig.clusters.opaque_secrets.delete}
-      onOpaqueSecretsSubmit={craig.clusters.opaque_secrets.create}
-      disablePoolSave={function (field, stateData, componentProps) {
-        // field is clusters, inject worker pools
-        return disableSave("worker_pools", stateData, componentProps);
-      }}
-      disableOpaqueSecretsSave={function (field, stateData, componentProps) {
-        // field is clusters, inject opaque secrets
-        return disableSave("opaque_secrets", stateData, componentProps);
-      }}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Clusters",
+      addText: "Create a Cluster",
+      jsonField: "clusters",
+      formName: "clusters",
+    },
+    {
+      jsonField: "clusters",
+      groups: [
+        {
+          name: craig.clusters.name,
+          resource_group: craig.clusters.resource_group,
+          kube_type: craig.clusters.kube_type,
+        },
+        {
+          flavor: craig.clusters.flavor,
+          cos: craig.clusters.cos,
+          entitlement: craig.clusters.entitlement,
+        },
+        {
+          vpc: craig.clusters.vpc,
+          subnets: craig.clusters.subnets,
+          workers_per_subnet: craig.clusters.workers_per_subnet,
+        },
+        {
+          kube_version: craig.clusters.kube_version,
+          update_all_workers: craig.clusters.update_all_workers,
+        },
+        {
+          encryption_key: craig.clusters.encryption_key,
+          private_endpoint: craig.clusters.private_endpoint,
+        },
+      ],
+      subForms: [
+        {
+          name: "Worker Pools",
+          jsonField: "worker_pools",
+          addText: "Create a Worker Pool",
+          form: {
+            groups: [
+              {
+                name: craig.clusters.worker_pools.name,
+                entitlement: craig.clusters.worker_pools.entitlement,
+                flavor: craig.clusters.worker_pools.flavor,
+              },
+              {
+                subnets: craig.clusters.worker_pools.subnets,
+                workers_per_subnet:
+                  craig.clusters.worker_pools.workers_per_subnet,
+              },
+            ],
+          },
+        },
+        {
+          name: "Opaque Secrets",
+          jsonField: "opaque_secrets",
+          addText: "Create an Opaque Secret",
+          form: {
+            groups: [
+              {
+                name: craig.clusters.opaque_secrets.name,
+                namespace: craig.clusters.opaque_secrets.namespace,
+                persistence: craig.clusters.opaque_secrets.persistence,
+              },
+              {
+                secrets_manager: craig.clusters.opaque_secrets.secrets_manager,
+                secrets_group: craig.clusters.opaque_secrets.secrets_group,
+                expiration_date: craig.clusters.opaque_secrets.expiration_date,
+              },
+              {
+                labels: craig.clusters.opaque_secrets.labels,
+              },
+              {
+                heading: {
+                  type: "subHeading",
+                  name: "Arbitrary Secret",
+                },
+              },
+              {
+                arbitrary_secret_name:
+                  craig.clusters.opaque_secrets.arbitrary_secret_name,
+                arbitrary_secret_description:
+                  craig.clusters.opaque_secrets.arbitrary_secret_description,
+              },
+              {
+                arbitrary_secret_data:
+                  craig.clusters.opaque_secrets.arbitrary_secret_data,
+              },
+              {
+                heading: {
+                  type: "subHeading",
+                  name: "Username Password Secret",
+                },
+              },
+              {
+                username_password_secret_name:
+                  craig.clusters.opaque_secrets.username_password_secret_name,
+                username_password_secret_description:
+                  craig.clusters.opaque_secrets
+                    .username_password_secret_description,
+              },
+              {
+                username_password_secret_username:
+                  craig.clusters.opaque_secrets
+                    .username_password_secret_username,
+                username_password_secret_password:
+                  craig.clusters.opaque_secrets
+                    .username_password_secret_password,
+              },
+              {
+                auto_rotate: craig.clusters.opaque_secrets.auto_rotate,
+              },
+              {
+                interval: craig.clusters.opaque_secrets.interval,
+                unit: craig.clusters.opaque_secrets.unit,
+              },
+            ],
+          },
+        },
+      ],
+    }
   );
 };
 

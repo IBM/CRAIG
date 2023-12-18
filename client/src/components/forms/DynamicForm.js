@@ -17,6 +17,7 @@ import {
   SubFormOverrideTile,
   PowerInterfaces,
   PerCloudConnections,
+  DynamicDatePicker,
 } from "./dynamic-form";
 import { eachKey, isBoolean, contains } from "lazy-z";
 import { disableSave, propsMatchState } from "../../lib";
@@ -194,6 +195,8 @@ class DynamicForm extends React.Component {
                         ? DynamicPublicKey
                         : field.type === "fetchSelect"
                         ? DynamicFetchSelect
+                        : field.type === "date"
+                        ? DynamicDatePicker
                         : DynamicFormTextInput,
                       {
                         name: key,
@@ -288,6 +291,7 @@ class DynamicForm extends React.Component {
                     disableSave: this.props.disableSave,
                     arrayParentName: this.props.data.name,
                     propsMatchState: propsMatchState,
+                    parent: this.props.data,
                   }}
                   toggleFormFieldName={subForm.toggleFormFieldName}
                   hideAbout
