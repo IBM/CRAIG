@@ -4,7 +4,7 @@
   "description": "gui for generating ibm cloud infrastructure resources",
   "main": "index.js",
   "scripts": {
-    "test": "mocha unit-tests/ --recursive",
+    "test": "mocha unit-tests/ --recursive --reporter-option maxDiffSize=0",
     "coverage": "npx nyc --check-coverage=true npm run test",
     "build": "npm i && cd client && npm i && npm run build && cp -r build ../",
     "client": "npm run build && open http://localhost:3000",

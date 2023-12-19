@@ -879,10 +879,26 @@ NYI
 
 ## Scc V 2
 
-NYI
+IBM Cloud Security and Compliance Center is designed to help you create and maintain a secure and compliant development environment. With a wide variety of available controls, customization opportunities, and integrations, Security and Compliance Center can help you to meet your most stringent security and compliance goals. This cannot be used concurrently with SccV1.
+
+CRAIG currently supports the following SCC profiles:
+
+Profile                                | Description
+---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+IBM Cloud for Financial Services       | The IBM Cloud for Financial Services profile provides you with a set of pre-configured automated goals that are mapped to the IBM Cloud Framework for Financial Services control requirements. The results of these tests help you validate compliance when you are using one of the references architectures for the IBM Cloud for Financial Services.
+IBM Cloud Kubernetes Service Benchmark | Validate the configuration of your IBM Cloud Red Hat OpenShift clusters.
+Cloud Internet Services Benchmark      | Secure your IBM Cloud Foundations resources with CIS Benchmarks.
+
+By default, IBM Cloud Security and Compliance Center is not enabled but can be enabled if desired.
 
 ### Related Links
 
+- [Docs](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started)
+- [SCC Predefined Profiles Documentation](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-predefined-profiles)
+- [SCC IBM Cloud Catalog](https://cloud.ibm.com/catalog/services/security-and-compliance-center#about)
+- [IBM Cloud Framework for Financial Services control requirements](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-about#framework-control-requirements)
+- [IBM Cloud for Financial Services Reference Architectures](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-reference-architecture-overview)
+- [SCC Profile Attachment Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_profile_attachment)
 
 -----
 
