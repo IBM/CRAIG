@@ -230,6 +230,20 @@ terraform destroy
 
 ---
 
+## Schematics Integration
+
+In order to allow Schematics to successfully create resources, users should make sure they meet the following permission requirements and prerequisites:
+
+- IBM Cloud Platform Roles: Editor or Higher
+- Schematics Service Roles: Writer or Higher
+
+ Refer to the [User permissions for Schematics Workspaces documentation](https://cloud.ibm.com/docs/schematics?topic=schematics-access) for more information.
+
+### Prerequisites
+- `.env` file is created and all fields to be used as environment variables by the backend API server are filled (see [Step 2 of Setting Up CRAIG Development Environment](#2-creating-env-file-1))
+
+---
+
 ## Code Test Coverage
 
 File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
