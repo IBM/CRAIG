@@ -11,6 +11,7 @@ const {
   splatContains,
   getObjectFromArray,
   isIpv4CidrOrAddress,
+  buildNumberDropdownList,
   isNullOrEmptyString,
 } = require("lazy-z");
 const {
@@ -25,7 +26,6 @@ const {
   newDefaultF5ExternalAclManagement,
   legacyDefaultVpcs,
 } = require("../defaults");
-const { lazyZstate } = require("lazy-z/lib/store");
 const { buildSubnet } = require("../../builders");
 const {
   formatNetworkingRule,
@@ -36,6 +36,7 @@ const {
   invalidIcmpCodeOrType,
   resourceGroupsField,
   selectInvalidText,
+  unconditionalInvalidText,
 } = require("../utils");
 const { calculateNeededSubnetIps, getNextCidr } = require("../../json-to-iac");
 const {
@@ -1122,6 +1123,31 @@ function naclRuleSubComponents() {
 }
 
 /**
+ * get acl groups
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Array<string>} list of vpc acls
+ */
+function vpcAclGroups(stateData, componentProps) {
+  return splat(
+    new revision(componentProps.craig.store.json).child(
+      "vpcs",
+      componentProps.vpc_name
+    ).data.acls,
+    "name"
+  );
+}
+
+/**
+ * disable subnet field when not advanced
+ * @param {*} stateData
+ * @returns {boolean} true if not advanced
+ */
+function disableWhenNotAdvaned(stateData) {
+  return !stateData.tier;
+}
+
+/**
  * init vpc store
  * @param {*} store
  */
@@ -1161,15 +1187,7 @@ function initVpcStore(store) {
             invalid: invalidName("acls"),
             invalidText: invalidNameText("acls"),
           },
-          resource_group: {
-            default: "",
-            invalid: function (stateData, componentProps) {
-              return (
-                !stateData.resource_group ||
-                isNullOrEmptyString(stateData.resource_group)
-              );
-            },
-          },
+          resource_group: resourceGroupsField(),
         },
       },
       subnets: {
@@ -1183,13 +1201,18 @@ function initVpcStore(store) {
         ),
         schema: {
           name: {
+            size: "small",
             default: "",
             invalid: function (stateData, componentProps) {
               componentProps.craig = store;
               return invalidName("subnet", store)(stateData, componentProps);
             },
+            disabledText: unconditionalInvalidText(""),
+            hideWhen: disableWhenNotAdvaned,
           },
           cidr: {
+            size: "small",
+            labelText: "Subnet CIDR",
             default: "",
             invalid: function (stateData, componentProps) {
               if (!stateData.tier) {
@@ -1202,10 +1225,45 @@ function initVpcStore(store) {
                 return invalidCidrRange || stateData.cidr.indexOf("/") === -1;
               }
             },
+            readOnly: disableWhenNotAdvaned,
           },
           network_acl: {
+            type: "select",
+            size: "small",
             default: "",
-            invalid: fieldIsNullOrEmptyString("network_acl"),
+            invalid: function (stateData, componentProps) {
+              return componentProps.isModal
+                ? false
+                : fieldIsNullOrEmptyString("network_acl")(
+                    stateData,
+                    componentProps
+                  );
+            },
+            groups: vpcAclGroups,
+            labelText: "Network ACL",
+            readOnly: disableWhenNotAdvaned,
+          },
+          public_gateway: {
+            size: "small",
+            type: "toggle",
+            default: false,
+            labelText: "Use Public Gateway",
+            tooltip: {
+              content:
+                "A Public Gateway must be enabled in this zone to use. To enable public gateways, see the VPC page.",
+            },
+            disabled: function (stateData, componentProps) {
+              return (
+                componentProps.isModal ||
+                !contains(
+                  new revision(componentProps.craig.store.json).child(
+                    "vpcs",
+                    componentProps.vpc_name
+                  ).data.publicGateways,
+                  parseInt(stateData.name.replace(/\D/g, ""))
+                )
+              );
+            },
           },
         },
       },
@@ -1220,21 +1278,83 @@ function initVpcStore(store) {
         ),
         schema: {
           name: {
+            placeholder: "my-new-subnet-tier",
+            size: "small",
             default: "",
             invalid: invalidSubnetTierName,
             invalidText: invalidSubnetTierText,
           },
-          networkAcl: {
-            default: "",
-            invalid: fieldIsNullOrEmptyString("networkAcl"),
+          zones: {
+            size: "small",
+            type: "select",
+            default: "3",
+            groups: buildNumberDropdownList(3, 1),
+          },
+          advanced_zones: {
+            size: "small",
+            type: "multiselect",
+            default: "3",
+            groups: buildNumberDropdownList(3, 1),
           },
           advanced: {
+            size: "small",
+            type: "toggle",
             default: false,
+            labelText: "Advanced Configuration",
+            tooltip: {
+              content:
+                "Enable advanced subnet configuration such as custom CIDR blocks. " +
+                "Advanced configuration cannot be set when using dynamically scaled subnets.",
+              alignModal: "bottom",
+              align: "left",
+            },
+            disabled: function (stateData, componentProps) {
+              return (
+                componentProps.craig.store.json._options.dynamic_subnets ||
+                componentProps.data.advanced
+              );
+            },
             invalid: function (stateData) {
               return (
                 stateData.advanced === true &&
                 stateData.select_zones.length === 0
               );
+            },
+          },
+          networkAcl: {
+            size: "small",
+            default: "",
+            invalid: fieldIsNullOrEmptyString("networkAcl"),
+            labelText: "Network ACL",
+            type: "select",
+            tooltip: {
+              content:
+                "Changing this field will overwrite existing Network ACL changes to subnets in this data.",
+              alignModal: "right",
+              align: "right",
+            },
+            groups: vpcAclGroups,
+            disabled: function (stateData) {
+              return stateData.advanced;
+            },
+            invalid: function (stateData, componentProps) {
+              return componentProps.isModal &&
+                isNullOrEmptyString(stateData.networkAcl, true)
+                ? true
+                : false;
+            },
+            invalidText: selectInvalidText("Network ACL"),
+          },
+          addPublicGateway: {
+            size: "small",
+            type: "toggle",
+            default: false,
+            tooltip: {
+              content:
+                "Changing this field will overwrite existing Public Gateway changes to subnets in this data.",
+            },
+            disabled: function (stateData, componentProps) {
+              return stateData.advanced === true; // add logic to fetch vpc gateways
             },
           },
         },

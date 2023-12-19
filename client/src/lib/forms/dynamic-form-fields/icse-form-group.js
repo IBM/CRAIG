@@ -25,7 +25,7 @@ function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
         );
     }
   }
-  return {
+  let formGroupData = {
     key: `${componentProps.data?.name || ""}-group-${index}`,
     noMarginBottom:
       allNextGroupsHidden ||
@@ -33,6 +33,12 @@ function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
         (!componentProps.form.subForms ||
           componentProps.form.subForms.length === 0)),
   };
+  if (componentProps.formName === "subnet") {
+    // add margin for subnet subform groups
+    formGroupData.className = "marginBottomSmall";
+  }
+
+  return formGroupData;
 }
 
 /**

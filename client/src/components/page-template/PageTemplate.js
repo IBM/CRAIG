@@ -128,6 +128,12 @@ let pageOrder = [
     path: "/beta/services",
     icon: Settings,
   },
+  {
+    // temporary to get page to render
+    title: "VPC Network",
+    path: "/beta/vpc",
+    icon: Settings,
+  },
 ];
 
 // for each nav category
@@ -270,7 +276,12 @@ const PageTemplate = (props) => {
           {props.children}
         </div>
         <CraigCodeMirror
-          hideCodeMirror={formPathNotPresent === true || props.hideCodeMirror}
+          hideCodeMirror={
+            formPathNotPresent === true ||
+            props.hideCodeMirror ||
+            window.location.pathname === "/beta/services" ||
+            window.location.pathname === "/beta/vpc"
+          }
           code={codeMirrorGetDisplay(
             props.json,
             props.jsonInCodeMirror,

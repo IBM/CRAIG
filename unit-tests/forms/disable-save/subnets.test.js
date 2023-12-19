@@ -5,19 +5,34 @@ describe("subnets", () => {
   describe("subnets", () => {
     it("should return true if subnet has invalid network acl", () => {
       assert.isTrue(
-        disableSave("subnet", { network_acl: null }, {}, state()),
+        disableSave(
+          "subnet",
+          { network_acl: null },
+          { craig: state() },
+          state()
+        ),
         "it should be true"
       );
     });
     it("should return true if advanced subnet has invalid cidr", () => {
       assert.isTrue(
-        disableSave("subnet", { tier: "frog", cidr: "aaaa" }, {}, state()),
+        disableSave(
+          "subnet",
+          { tier: "frog", cidr: "aaaa" },
+          { craig: state() },
+          state()
+        ),
         "it should be true"
       );
     });
     it("should return true if advanced subnet has invalid cidr block (overlapping ok)", () => {
       assert.isTrue(
-        disableSave("subnet", { tier: "frog", cidr: "1.2.3.4/5" }, {}, state()),
+        disableSave(
+          "subnet",
+          { tier: "frog", cidr: "1.2.3.4/5" },
+          { craig: state() },
+          state()
+        ),
         "it should be true"
       );
     });
@@ -31,6 +46,7 @@ describe("subnets", () => {
               name: "",
             },
             vpc_name: "management",
+            craig: state(),
           },
           state()
         ),
@@ -62,8 +78,8 @@ describe("subnets", () => {
               name: "frog",
             },
             vpc_name: "test",
-          },
-          tempCraig
+            craig: tempCraig,
+          }
         ),
         "it should be true"
       );
@@ -78,8 +94,8 @@ describe("subnets", () => {
               name: "frog",
             },
             vpc_name: "test",
-          },
-          state()
+            craig: state(),
+          }
         ),
         "it should be true"
       );
@@ -94,8 +110,8 @@ describe("subnets", () => {
               name: "frog",
             },
             vpc_name: "test",
-          },
-          state()
+            craig: state(),
+          }
         ),
         "it should be true"
       );

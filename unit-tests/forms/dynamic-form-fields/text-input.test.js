@@ -251,6 +251,61 @@ describe("text input functions", () => {
           disabledText: function () {
             return "oops";
           },
+          readOnly: true,
+        },
+        parentState: {},
+        parentProps: {
+          formName: "atracker",
+        },
+        handleInputChange: function () {},
+        keyIndex: 0,
+        name: "name",
+        propsName: "frog",
+      });
+      let expectedData = {
+        className: "leftTextAlign fieldWidth",
+        disabled: true,
+        helperText: "oops",
+        id: "frog-name-0",
+        invalid: false,
+        invalidText: "uh oh",
+        labelText: "Name",
+        maxLength: undefined,
+        name: "name",
+        placeholder: "my-atracker-name",
+        readOnly: true,
+        value: "",
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      delete actualData.onChange;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+    it("should return the correct props for text input when disabled and read only is a function", () => {
+      let actualData = dynamicTextInputProps({
+        name: "frog",
+        field: {
+          disabled: function () {
+            return true;
+          },
+          invalid: function () {
+            return false;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          helperText: function () {
+            return "helper text";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+          readOnly: function () {
+            return false;
+          },
         },
         parentState: {},
         parentProps: {

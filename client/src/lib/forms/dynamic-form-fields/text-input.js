@@ -103,7 +103,11 @@ function dynamicTextInputProps(props) {
       : props.field.onRender
       ? props.field.onRender(props.parentState, props.parentProps, props.index)
       : null,
-    readOnly: props.field.readOnly || false,
+    readOnly: !props.field.readOnly
+      ? false
+      : isFunction(props.field.readOnly)
+      ? props.field.readOnly(props.parentState, props.parentProps)
+      : props.field.readOnly,
   };
 }
 

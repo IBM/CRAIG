@@ -857,6 +857,48 @@ describe("vpcs", () => {
         );
       });
     });
+    describe("vpcs.subnets.schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+      });
+      it("should hide name when not advanced tier", () => {
+        assert.isTrue(
+          craig.vpcs.subnets.name.hideWhen({ advanced: false }),
+          "it should be hidden"
+        );
+      });
+      it("should not show network acl as invalid when in modal", () => {
+        assert.isFalse(
+          craig.vpcs.subnets.network_acl.invalid({}, { isModal: "true" })
+        ),
+          "it should be valid";
+      });
+      it("should disable public gateway toggle when subnet zone unfound in publicGateways array of parent vpc", () => {
+        assert.isTrue(
+          craig.vpcs.subnets.public_gateway.disabled(
+            {
+              name: "vsi-zone-1",
+            },
+            {
+              vpc_name: "management",
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          )
+        );
+      });
+    });
   });
   describe("vpcs.subnetTiers", () => {
     describe("vpcs.subnetTiers.save", () => {
@@ -3092,6 +3134,68 @@ describe("vpcs", () => {
           vpcState.store.json.vpcs[0].subnets,
           expectedData,
           "it should change subnets"
+        );
+      });
+    });
+    describe("vpcs.subnetTiers.schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+      });
+      it("should disable advanced toggle when dynamic subnets", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.advanced.disabled({}, { craig: craig }),
+          "it should be disabled"
+        );
+      });
+      it("should disable advanced toggle when not dynamic subnets but is advanced", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.advanced.disabled(
+            {},
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      dynamic_subnets: false,
+                    },
+                  },
+                },
+              },
+              data: {
+                advanced: true,
+              },
+            }
+          ),
+          "it should be disabled"
+        );
+      });
+      it("should get correct groups for vpc network acl", () => {
+        assert.deepEqual(
+          craig.vpcs.subnetTiers.networkAcl.groups(
+            {},
+            { craig: craig, vpc_name: "management" }
+          ),
+          ["management"],
+          "it should return list of acls"
+        );
+      });
+      it("should disable network acl when advanced", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.networkAcl.disabled({ advanced: true }),
+          "it should be disabled"
+        );
+      });
+      it("should show network acl as invalid when in modal and no acl selected", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.networkAcl.invalid({}, { isModal: true }),
+          "it should be invalid"
+        );
+      });
+      it("should disable add public gateway when advanced", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.addPublicGateway.disabled({ advanced: true }),
+          "it should be disabled"
         );
       });
     });

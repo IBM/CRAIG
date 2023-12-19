@@ -109,7 +109,7 @@ function disableSave(field, stateData, componentProps, craig) {
         : field === "acl_rules"
         ? componentProps.innerFormProps.craig.vpcs.acls.rules
         : field === "subnet"
-        ? craig.vpcs.subnets
+        ? componentProps.craig.vpcs.subnets
         : field === "subnetTier"
         ? componentProps.craig.vpcs.subnetTiers
         : field === "acls"

@@ -252,7 +252,8 @@ function editSubnets(
   stateData,
   componentProps
 ) {
-  let validZones = zones === 0 || !zones ? [] : numberToZoneList(zones);
+  let validZones =
+    zones === 0 || !zones ? [] : numberToZoneList(parseInt(zones));
   let currentZones = vpc.subnets.filter((subnet) =>
     subnet.name.startsWith(oldTierName)
   ).length;

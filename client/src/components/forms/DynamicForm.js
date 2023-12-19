@@ -20,7 +20,7 @@ import {
   DynamicDatePicker,
 } from "./dynamic-form";
 import { eachKey, isBoolean, contains } from "lazy-z";
-import { disableSave, propsMatchState } from "../../lib";
+import { buildSubnet, propsMatchState } from "../../lib";
 import {
   dynamicIcseFormGroupsProps,
   dynamicIcseHeadingProps,
@@ -28,8 +28,12 @@ import {
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
 import { DynamicFetchSelect } from "./dynamic-form/components";
-import { Button } from "@carbon/react";
-import { Rocket } from "@carbon/icons-react";
+import { OptionsButton } from "./dynamic-form/OptionsButton";
+import { NaclRulesSubForm } from "./dynamic-form/NaclRulesSubForm";
+import {
+  SubnetTileSubForm,
+  SubnetTileTitle,
+} from "./dynamic-form/SubnetTileSubForm";
 
 const doNotRenderFields = [
   "heading",
@@ -158,6 +162,7 @@ class DynamicForm extends React.Component {
     // console.log(JSON.stringify(this.state, null, 2));
     return (
       <div>
+        <SubnetTileTitle parentProps={this.props} parentState={this.state} />
         {this.props.form.groups.map((group, index) =>
           group.hideWhen && group.hideWhen(this.state) ? (
             ""
@@ -223,19 +228,13 @@ class DynamicForm extends React.Component {
           componentProps={this.props}
           handleInputChange={this.handleInputChange}
         />
-        {this.props.formName === "options" ? (
-          <Button
-            disabled={disableSave("options", this.state, this.props)}
-            className="marginTop"
-            onClick={() => {
-              window.location.pathname = "/form/resourceGroups";
-            }}
-          >
-            Begin Customizing <Rocket className="rocketIcon" />
-          </Button>
-        ) : (
-          ""
-        )}
+        <NaclRulesSubForm parentProps={this.props} parentState={this.state} />
+        <OptionsButton parentProps={this.props} parentState={this.state} />
+        <SubnetTileSubForm
+          parentProps={this.props}
+          parentState={this.state}
+          key={JSON.stringify(this.state)}
+        />
         {this.props.isModal === true || !this.props.form.subForms
           ? ""
           : this.props.form.subForms.map((subForm) =>

@@ -100,6 +100,20 @@ describe("propsMatchState", () => {
       "it should be true"
     );
   });
+  it("should set component props data hide to statedata hide when checking if props match for subnet tier in dynamic form", () => {
+    assert.isFalse(
+      propsMatchState(
+        "subnetTier",
+        {
+          hide: false,
+          showUnsavedChangesModal: undefined,
+          advancedSave: false,
+        },
+        { data: {}, formName: "subnetTier" }
+      ),
+      "it should be false"
+    );
+  });
   it("should set component props data hide to statedata hide when checking if props match for subnet tier", () => {
     assert.isTrue(
       propsMatchState(

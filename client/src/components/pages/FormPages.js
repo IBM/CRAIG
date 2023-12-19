@@ -1,6 +1,5 @@
 import {
   buildSubnet,
-  clusterHelperTestCallback,
   disableSave,
   forceShowForm,
   invalidName,
@@ -9,16 +8,12 @@ import {
   propsMatchState,
 } from "../../lib";
 import {
-  AccessGroupsTemplate,
   AtrackerPage,
-  ClustersTemplate,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
   SubnetPageTemplate,
   NetworkAclTemplate,
-  RoutingTableTemplate,
   VpnServerTemplate,
-  VsiTemplate,
   VsiLoadBalancerTemplate,
   IamAccountSettingsPage,
   SccV1Page,
@@ -43,16 +38,13 @@ import {
   invalidCrnList,
   invalidF5Vsi,
   invalidIamAccountSettings,
-  invalidDescription,
   replicationDisabledCallback,
 } from "../../lib/forms/invalid-callbacks";
 import {
-  accessGroupPolicyHelperTextCallback,
   aclHelperTextCallback,
   genericNameCallback,
   iamAccountSettingInvalidText,
   invalidCidrText,
-  invalidDescriptionText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { f5Images } from "../../lib/json-to-iac";
@@ -63,6 +55,7 @@ import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.jso
 import DynamicForm from "../forms/DynamicForm";
 import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
+import { CraigToggleForm } from "../forms/utils";
 
 const formPageTemplate = (craig, options, form) => {
   let innerFormProps = {
@@ -1415,13 +1408,11 @@ const RoutingTablesPage = (craig) => {
 
 const SccV2 = (craig) => {
   return (
-    <ToggleForm
-      name="Security and Compliance Center"
+    <CraigToggleForm
+      craig={craig}
       about={RenderDocs("scc_v2", craig.store.json._options.template)()}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
+      name="Security and Compliance Center"
       hideName
-      innerForm={DynamicForm}
       noDeleteButton={
         craig.store.json.scc_v2
           ? craig.store.json.scc_v2.enable === false

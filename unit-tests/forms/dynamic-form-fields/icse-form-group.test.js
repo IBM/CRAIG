@@ -115,6 +115,38 @@ describe("dynamicIcseFormGroupsProps", () => {
       "it should return correct props"
     );
   });
+  it("should return for next to last group for subnets", () => {
+    assert.deepEqual(
+      dynamicIcseFormGroupsProps(
+        {
+          formName: "subnet",
+          form: {
+            groups: [
+              {},
+              {
+                hidden: {
+                  hideWhen: function () {
+                    return false;
+                  },
+                },
+              },
+            ],
+            subForms: [],
+          },
+          data: {
+            name: "frog",
+          },
+        },
+        0
+      ),
+      {
+        key: "frog-group-0",
+        noMarginBottom: false,
+        className: "marginBottomSmall",
+      },
+      "it should return correct props"
+    );
+  });
   it("should return for next to last group when all are not hidden", () => {
     assert.deepEqual(
       dynamicIcseFormGroupsProps(

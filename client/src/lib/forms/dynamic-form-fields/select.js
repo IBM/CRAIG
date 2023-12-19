@@ -1,4 +1,4 @@
-const { contains, titleCase, paramTest, deepEqual } = require("lazy-z");
+const { contains, titleCase, paramTest, isFunction } = require("lazy-z");
 const {
   dynamicFieldId,
   addClassName,
@@ -85,7 +85,9 @@ function dynamicSelectProps(props, isMounted) {
     id: dynamicFieldId(props),
     name: props.name,
     labelText: labelText,
-    value: stateValue || "",
+    // force mapped numbers to return as a string to get around warning text
+    // for carbon component
+    value: String(stateValue || ""),
     className: addClassName(
       `leftTextAlign${props.field.tooltip ? " tooltip" : ""}`,
       props.field
@@ -93,7 +95,11 @@ function dynamicSelectProps(props, isMounted) {
     disabled: isDisabled,
     invalid: invalid,
     invalidText: invalidText,
-    readOnly: props.field.readOnly,
+    readOnly: !props.field.readOnly
+      ? false
+      : isFunction(props.field.readOnly)
+      ? props.field.readOnly(props.parentState, props.parentProps)
+      : props.field.readOnly,
     onChange: props.handleInputChange,
     groups: groups,
   };

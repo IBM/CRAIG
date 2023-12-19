@@ -41,8 +41,14 @@ function propsMatchState(field, stateData, componentProps) {
   }
   if (field === "subnetTier") {
     componentProps.data.hide = stateData.hide;
-    componentProps.data.select_zones = stateData.select_zones;
-    componentProps.data.advancedSave = stateData.advancedSave;
+    if (componentProps.formName) {
+      // add advanced to data when using dynamic form
+      componentProps.data.advanced = stateData.advanced;
+    } else {
+      // don't add props when using dynamic form
+      componentProps.data.select_zones = stateData.select_zones;
+      componentProps.data.advancedSave = stateData.advancedSave;
+    }
     if (stateData.showUnsavedChangesModal !== undefined)
       componentProps.data.showUnsavedChangesModal =
         stateData.showUnsavedChangesModal;
@@ -70,7 +76,6 @@ function propsMatchState(field, stateData, componentProps) {
   if (field === "options") {
     return deepEqual(stateData, componentProps.craig.store.json._options);
   }
-
   return deepEqual(stateData, componentProps.data);
 }
 

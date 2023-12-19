@@ -31,6 +31,7 @@ import {
   updateNotification,
 } from "./lib/craig-app";
 import { CloudServicesPage } from "./components/pages/cloud-services";
+import VpcDiagramPage from "./components/pages/vpc/Vpc.js";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -436,6 +437,8 @@ class Craig extends React.Component {
             />
           ) : window.location.pathname === "/beta/services" ? (
             <CloudServicesPage craig={craig} />
+          ) : window.location.pathname === "/beta/vpc" ? (
+            <VpcDiagramPage craig={craig} />
           ) : window.location.pathname === "/form/cbr" ? (
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
