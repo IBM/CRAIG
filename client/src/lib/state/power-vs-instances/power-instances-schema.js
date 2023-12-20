@@ -78,9 +78,15 @@ function powerVsCoresInvalid(vtl) {
 function powerVsMemoryInvalid(stateData) {
   let memoryFloat = parseFloat(stateData.pi_memory);
   let memoryMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
+  let vtlMemMin;
+  if (stateData.pi_license_repository_capacity) {
+    vtlMemMin = 16 + 2 * stateData.pi_license_repository_capacity;
+  }
   return (
     !isWholeNumber(memoryFloat) ||
-    (!stateData.sap && !isInRange(memoryFloat, 2, memoryMax))
+    (!stateData.sap && !isInRange(memoryFloat, 2, memoryMax)) ||
+    (stateData.pi_license_repository_capacity !== undefined &&
+      memoryFloat < vtlMemMin)
   );
 }
 
@@ -108,7 +114,14 @@ function invalidPowerVsProcessorTextCallback(stateData, vtl) {
 function invalidPowerVsMemoryTextCallback(stateData) {
   let memMin = 2;
   let memMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
-  return `Must be a whole number between ${memMin} and ${memMax}.`;
+  let vtlMemMin;
+  if (stateData.pi_license_repository_capacity) {
+    vtlMemMin = 16 + 2 * stateData.pi_license_repository_capacity;
+  }
+  let vtlText = stateData.pi_license_repository_capacity
+    ? ` For FalconStor VTL Instances, memory must be greater than or equal to ${vtlMemMin}.`
+    : ``;
+  return `Must be a whole number between ${memMin} and ${memMax}.${vtlText}`;
 }
 
 /**
