@@ -25,17 +25,17 @@ const SubnetBox = (props) => {
 
 export const SubnetTierRow = (props) => {
   let tierSubnets = getTierSubnets(props.tier, props.vpc)(props.tier);
-  let craig = props.craig;
-  return (
+  let allSubnetsHaveAcl = true;
+  tierSubnets.forEach((subnet) => {
+    if (subnet.acl_name !== props.acl.name) allSubnetsHaveAcl = false;
+  });
+  return allSubnetsHaveAcl ? (
     <div
       key={props.vpc.name + props.acl.name + props.tier.name}
       style={{
         border: "2px dotted gray",
         width: "500px",
-        marginBottom:
-          props.tierIndex === craig.store.subnetTiers[props.vpc.name].length - 1
-            ? ""
-            : "1rem",
+        marginTop: props.tierIndex === 0 ? "" : "0.5rem",
       }}
       className="displayFlex "
       onClick={props.onClick}
@@ -43,13 +43,6 @@ export const SubnetTierRow = (props) => {
       {tierSubnets.map((subnet) => {
         return (
           <SubnetBox
-            style={{
-              border: "2px solid #00882B",
-              margin: "0.5rem",
-              padding: "0.5rem",
-              width: "150px",
-              background: "#E6F0E2",
-            }}
             subnet={subnet}
             vpc={props.vpc}
             acl={props.acl}
@@ -58,5 +51,7 @@ export const SubnetTierRow = (props) => {
         );
       })}
     </div>
+  ) : (
+    ""
   );
 };

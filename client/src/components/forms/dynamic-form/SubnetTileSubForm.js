@@ -56,10 +56,10 @@ export const SubnetTileSubForm = (props) => {
   }
   return isSubnetTierForm ? (
     <div
-      className={`${props.parentProps.isModal ? "" : "formInSubForm"}`}
+      className={`${props.parentProps.isModal ? "subForm" : "formInSubForm"}`}
       style={{
-        marginTop: props.parentProps.isModal ? "2rem" : undefined,
-        marginBottom: "0rem",
+        marginTop: "1rem",
+        marginBottom: props.parentProps.isModal ? "0rem" : undefined,
       }}
     >
       <IcseHeading name="Subnets" type="subHeading" noMarginBottom />

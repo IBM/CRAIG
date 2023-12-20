@@ -1,6 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { PopoverWrapper, IcseHeading } from "icse-react-assets";
+import {
+  PopoverWrapper,
+  IcseHeading,
+  DynamicToolTipWrapper,
+} from "icse-react-assets";
 import {
   Add,
   Save,
@@ -260,7 +264,72 @@ StatelessFormWrapper.propTypes = {
   hideTitle: PropTypes.bool.isRequired,
 };
 
+const CraigFormHeading = (props) => {
+  let icon = props.icon || "";
+  return (
+    <div
+      className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter`}
+      style={{ marginBottom: "0.75rem" }}
+    >
+      <DynamicToolTipWrapper
+        tooltip={props.tooltip}
+        noLabelText={true}
+        id={props.name}
+        innerForm={() => {
+          return props.type === "subHeading" ? (
+            <h5 className="displayFlex">
+              {icon}
+              {props.name}
+            </h5>
+          ) : props.type === "p" ? (
+            <p
+              className={
+                props.toggleFormTitle
+                  ? "toggleFormTitle displayFlex"
+                  : "displayFlex"
+              }
+            >
+              {icon}
+              {props.name}
+            </p>
+          ) : props.type === "section" ? (
+            <h6 className="displayFlex">
+              {icon}
+              {props.name}
+            </h6>
+          ) : (
+            <h4 className="displayFlex">
+              {icon}
+              {props.name}
+            </h4>
+          );
+        }}
+      />
+      <div className="displayFlex">{props.buttons}</div>
+    </div>
+  );
+};
+
+CraigFormHeading.defaultProps = {
+  type: "heading",
+};
+
+CraigFormHeading.propTypes = {
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  tooltip: PropTypes.shape({
+    content: PropTypes.string.isRequired,
+    link: PropTypes.string,
+    align: PropTypes.string,
+    alignModal: PropTypes.string,
+  }),
+  buttons: PropTypes.node,
+  className: PropTypes.string,
+  toggleFormTitle: PropTypes.bool,
+};
+
 export {
+  CraigFormHeading,
   DynamicRender,
   PrimaryButton,
   RenderForm,

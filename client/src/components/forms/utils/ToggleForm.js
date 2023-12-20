@@ -129,7 +129,7 @@ class CraigToggleForm extends React.Component {
    * on delete
    */
   onDelete() {
-    this.props.onShowToggle(this.props.index);
+    if (this.props.onShowToggle) this.props.onShowToggle(this.props.index);
     this.props.onDelete(
       this.childRef.current?.state,
       this.childRef.current?.props
@@ -196,7 +196,7 @@ class CraigToggleForm extends React.Component {
     return (
       <>
         <StatefulTabs
-          hideHeading={this.props.hideTitle}
+          hideHeading={this.props.hideHeading}
           about={this.props.about}
           {...(this.props.tabPanel ? this.props.tabPanel : {})}
           toggleShowChildren={this.toggleShowChildren}
@@ -221,7 +221,7 @@ class CraigToggleForm extends React.Component {
                   onIconClick={this.toggleChildren}
                   toggleFormTitle
                   name={this.props.name}
-                  hideIcon={this.props.hideChevon}
+                  hideIcon={this.props.hideChevron}
                   buttons={
                     <>
                       <DynamicRender
@@ -309,6 +309,9 @@ class CraigToggleForm extends React.Component {
                       onSave: this.onSave,
                       disableSave: this.state.disableSave,
                     },
+                    enableModal: this.props.enableModal,
+                    disableModal: this.props.disableModal,
+                    setRefUpstream: this.props.setRefUpstream,
                   })}
                 </StatelessFormWrapper>
               </div>
@@ -340,7 +343,8 @@ CraigToggleForm.defaultProps = {
   forceOpen: () => {
     return false;
   },
-  hideChevon: false,
+  hideChevron: false,
+  hideTitle: false,
 };
 
 CraigToggleForm.propTypes = {
@@ -352,8 +356,6 @@ CraigToggleForm.propTypes = {
   index: PropTypes.number.isRequired,
   hide: PropTypes.bool.isRequired,
   submissionFieldName: PropTypes.string.isRequired,
-  propsMatchState: PropTypes.func.isRequired,
-  disableSave: PropTypes.func.isRequired,
   forceOpen: PropTypes.func, // can be null
   deleteDisabled: PropTypes.func, // can be null
   disableDeleteMessage: PropTypes.func, // can be null
@@ -366,7 +368,7 @@ CraigToggleForm.propTypes = {
   tabPanel: PropTypes.shape({
     hideFormTitleButton: PropTypes.bool, // can be null
   }).isRequired,
-  hideChevon: PropTypes.bool.isRequired,
+  hideChevron: PropTypes.bool.isRequired,
   hideTitle: PropTypes.bool.isRequired,
 };
 

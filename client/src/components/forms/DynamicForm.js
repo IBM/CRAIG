@@ -161,7 +161,7 @@ class DynamicForm extends React.Component {
     // here for testing
     // console.log(JSON.stringify(this.state, null, 2));
     return (
-      <div>
+      <div className={this.props.className}>
         <SubnetTileTitle parentProps={this.props} parentState={this.state} />
         {this.props.form.groups.map((group, index) =>
           group.hideWhen && group.hideWhen(this.state) ? (
