@@ -34,6 +34,8 @@ function dynamicMultiSelectProps(props) {
       : // force network to not display as invalid when ip is invalid
       stateValue.length > 0 && props.name === "network"
       ? false
+      : invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps") === false
+      ? false
       : stateValue.length > 0
       ? invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps")
       : true;

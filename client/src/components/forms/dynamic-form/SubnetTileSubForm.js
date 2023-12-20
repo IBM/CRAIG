@@ -1,8 +1,9 @@
 import React from "react";
 import { buildSubnet, disableSave, propsMatchState } from "../../../lib";
-import { IcseHeading, SaveAddButton } from "icse-react-assets";
+import { IcseHeading } from "icse-react-assets";
 import DynamicForm from "../DynamicForm";
 import { Tile } from "@carbon/react";
+import { PrimaryButton } from "../utils/ToggleFormComponents";
 
 export const SubnetTileTitle = (props) => {
   return props.parentProps.formName === "subnet" ? (
@@ -13,7 +14,8 @@ export const SubnetTileTitle = (props) => {
         props.parentProps.isModal ? (
           ""
         ) : (
-          <SaveAddButton
+          <PrimaryButton
+            noDeleteButton
             name={props.parentProps.data.name || "New Subnet"}
             disabled={
               disableSave("subnet", props.parentState, props.parentProps) ||

@@ -1255,13 +1255,13 @@ function initVpcStore(store) {
             disabled: function (stateData, componentProps) {
               return (
                 componentProps.isModal ||
-                !contains(
+                contains(
                   new revision(componentProps.craig.store.json).child(
                     "vpcs",
                     componentProps.vpc_name
                   ).data.publicGateways,
                   parseInt(stateData.name.replace(/\D/g, ""))
-                )
+                ) === false
               );
             },
           },

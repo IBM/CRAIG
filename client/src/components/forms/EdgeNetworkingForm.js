@@ -3,7 +3,6 @@ import {
   IcseFormGroup,
   IcseHeading,
   IcseSelect,
-  SaveAddButton,
   StatelessToggleForm,
 } from "icse-react-assets";
 import { contains, buildNumberDropdownList, kebabCase } from "lazy-z";
@@ -12,6 +11,7 @@ import { EdgeNetworkingDocs } from "../pages";
 import edgeNetwork from "../../images/edge-network.png";
 import PropTypes from "prop-types";
 import "./edge-network.css";
+import { PrimaryButton } from "./utils/ToggleFormComponents";
 
 const edgePatterns = [
   {
@@ -162,7 +162,8 @@ class EdgeNetworkingForm extends React.Component {
                     type="subHeading"
                     className="marginBottomSmall"
                     buttons={
-                      <SaveAddButton
+                      <PrimaryButton
+                        noDeleteButton
                         name="edge-networking"
                         disabled={
                           this.state.edgeType === "none" ||

@@ -187,7 +187,8 @@ class VpcDiagramPage extends React.Component {
             type: "subHeading",
             tooltip: {
               content:
-                "Public Gateways allow for all resources in a zone to communicate with the public internet. Public Gateways are not needed for subnets where a VPN gateway is created.",
+                "Public Gateways allow for all resources in a zone to communicate with the public internet. " +
+                "Public Gateways are not needed for subnets where a VPN gateway is created.",
             },
           },
         },

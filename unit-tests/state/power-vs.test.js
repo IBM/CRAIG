@@ -484,6 +484,12 @@ describe("power-vs", () => {
               "it should be true"
             );
           });
+          it("should return true if the pi_dns value is null", () => {
+            assert.isTrue(
+              state.power.network.pi_dns.invalid({}),
+              "it should be true"
+            );
+          });
         });
         describe("invalidText", () => {
           it("should return correct invalid text", () => {
@@ -527,6 +533,15 @@ describe("power-vs", () => {
             assert.deepEqual(
               craig.power.network.pi_dns.onRender(data),
               "dns",
+              "it should return value"
+            );
+          });
+          it("should return string data", () => {
+            let craig = newState();
+            let data = {};
+            assert.deepEqual(
+              craig.power.network.pi_dns.onRender(data),
+              "",
               "it should return value"
             );
           });

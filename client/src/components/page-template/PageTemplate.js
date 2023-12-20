@@ -265,6 +265,7 @@ const PageTemplate = (props) => {
           {!isResetState && (
             <>
               {window.location.pathname !== "/projects" &&
+                !contains(window.location.pathname, "/docs/") &&
                 !props.craig.store.project_name && (
                   <NoProjectModal
                     craig={props.craig}

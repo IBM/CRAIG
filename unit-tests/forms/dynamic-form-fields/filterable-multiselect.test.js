@@ -14,7 +14,7 @@ describe("filterable multiselect", () => {
             return false;
           },
           invalid: function () {
-            return false;
+            return true;
           },
           invalidText: function () {
             return "uh oh";
@@ -97,7 +97,7 @@ describe("filterable multiselect", () => {
             return false;
           },
           invalid: function () {
-            return false;
+            return true;
           },
           invalidText: function () {
             return "uh oh";
@@ -178,7 +178,7 @@ describe("filterable multiselect", () => {
             return false;
           },
           invalid: function () {
-            return false;
+            return true;
           },
           invalidText: function () {
             return "uh oh";

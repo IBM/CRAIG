@@ -21,7 +21,6 @@ import {
   LogDNAForm,
   ObjectStorageForm,
   RenderForm,
-  SaveAddButton,
   SecretsManagerForm,
   SysdigForm,
   ToggleForm,
@@ -55,6 +54,7 @@ import {
   encryptionKeyFilter,
   invalidCpuTextCallback,
 } from "../../../lib/forms";
+import { PrimaryButton } from "../../forms/utils/ToggleFormComponents";
 
 const serviceFormMap = {
   key_management: {
@@ -610,10 +610,11 @@ class CloudServicesPage extends React.Component {
                   // hide button when resource group is null
                   <></>
                 ) : (
-                  <SaveAddButton
+                  <PrimaryButton
                     type="add"
                     onClick={() => this.toggleModal(rg)}
                     className="none-right"
+                    noDeleteButton
                   />
                 )
               }

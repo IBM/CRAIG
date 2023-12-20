@@ -39,9 +39,10 @@ function powerVsNetworkSchema() {
     },
     pi_dns: {
       labelText: "DNS Server IP",
+      placeholder: "127.0.0.1",
       default: "",
       invalid: function (stateData) {
-        return isString(stateData.pi_dns)
+        return isString(stateData?.pi_dns) || !stateData.pi_dns
           ? true
           : contains(stateData.pi_dns[0], "/") ||
               !isIpv4CidrOrAddress(stateData.pi_dns[0]);
@@ -51,7 +52,7 @@ function powerVsNetworkSchema() {
         return [targetData];
       },
       onRender: function (stateData) {
-        return stateData.pi_dns[0];
+        return stateData?.pi_dns ? stateData.pi_dns[0] : "";
       },
       helperText: function () {
         return null;

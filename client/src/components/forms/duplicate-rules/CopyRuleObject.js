@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  SaveAddButton,
-  IcseFormGroup,
-  IcseSelect,
-  IcseHeading,
-} from "icse-react-assets";
+import { IcseFormGroup, IcseSelect, IcseHeading } from "icse-react-assets";
 import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
+import { PrimaryButton } from "../utils/ToggleFormComponents";
 
 const CopyRuleObject = (props) => {
   /**
@@ -75,7 +71,7 @@ const CopyRuleObject = (props) => {
           invalidText="Select a destination VPC"
         />
         <div className="align-row">
-          <SaveAddButton
+          <PrimaryButton
             type="custom"
             customIcon={Replicate}
             onClick={() => {

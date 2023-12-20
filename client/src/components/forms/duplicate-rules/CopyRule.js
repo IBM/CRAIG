@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  SaveAddButton,
-  IcseFormGroup,
-  IcseSelect,
-  IcseHeading,
-} from "icse-react-assets";
+import { IcseFormGroup, IcseSelect, IcseHeading } from "icse-react-assets";
 import { isNullOrEmptyString, splat, contains } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
+import { PrimaryButton } from "../utils/ToggleFormComponents";
 
 const CopyRule = (props) => {
   let ruleType = props.isSecurityGroup ? "Security Group" : "ACL";
@@ -80,7 +76,7 @@ const CopyRule = (props) => {
           invalidText="Select a destination"
         />
         <div className="align-row">
-          <SaveAddButton
+          <PrimaryButton
             type="custom"
             customIcon={Replicate}
             onClick={() => {

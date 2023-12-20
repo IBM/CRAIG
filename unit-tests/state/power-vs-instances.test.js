@@ -1934,6 +1934,38 @@ describe("power_instances", () => {
             "it should return fultered list of groups"
           );
         });
+        it("should return list of groups", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.power_instances.pi_anti_affinity_instance.groups(
+              { zone: "dal10", workspace: "frog" },
+              {
+                data: {
+                  name: "hello",
+                },
+                craig: {
+                  store: {
+                    json: {
+                      power_instances: [
+                        {
+                          workspace: "frog",
+                          name: "hi",
+                          pi_anti_affinity_policy: "egg",
+                        },
+                        {
+                          workspace: "toad",
+                          name: "hello",
+                        },
+                      ],
+                    },
+                  },
+                },
+              }
+            ),
+            [],
+            "it should return fultered list of groups"
+          );
+        });
       });
     });
     describe("power_instances.pi_anti_affinity_volume", () => {
@@ -1942,8 +1974,47 @@ describe("power_instances", () => {
           let craig = newState();
           assert.deepEqual(
             craig.power_instances.pi_anti_affinity_volume.groups(
+              { zone: "dal10", workspace: "frog", pi_volume_size: "yes" },
+              {
+                data: {
+                  name: "egg",
+                },
+                craig: {
+                  store: {
+                    json: {
+                      power_volumes: [
+                        {
+                          workspace: "frog",
+                          name: "hi",
+                        },
+                        {
+                          workspace: "frog",
+                          name: "hi",
+                          pi_anti_affinity_policy: "egg",
+                        },
+                        {
+                          workspace: "toad",
+                          name: "hello",
+                        },
+                      ],
+                    },
+                  },
+                },
+              }
+            ),
+            ["hi"],
+            "it should return fultered list of groups"
+          );
+        });
+        it("should return list of groups", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.power_instances.pi_anti_affinity_volume.groups(
               { zone: "dal10", workspace: "frog" },
               {
+                data: {
+                  name: "egg",
+                },
                 craig: {
                   store: {
                     json: {

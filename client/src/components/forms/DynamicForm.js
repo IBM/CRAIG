@@ -19,7 +19,7 @@ import {
   PerCloudConnections,
   DynamicDatePicker,
 } from "./dynamic-form";
-import { eachKey, isBoolean, contains } from "lazy-z";
+import { eachKey, isBoolean, contains, isFunction } from "lazy-z";
 import { buildSubnet, propsMatchState } from "../../lib";
 import {
   dynamicIcseFormGroupsProps,
@@ -110,7 +110,7 @@ class DynamicForm extends React.Component {
         } else if (group[field].onStateChange && targetName === field) {
           // if the item has onStateChange function, run against whole
           // state copy
-          group[field].onStateChange(nextState, this.props);
+          group[field].onStateChange(nextState, this.props, targetData);
           madeChanges = true;
         }
       });
@@ -174,6 +174,10 @@ class DynamicForm extends React.Component {
             >
               {Object.keys(group).map((key, keyIndex) => {
                 let field = group[key];
+                // allow field to have multiple types based on state or props data
+                let fieldType = isFunction(field.type)
+                  ? field.type(this.state, this.props)
+                  : field.type;
                 return (field.hideWhen &&
                   field.hideWhen(this.state, this.props)) ||
                   key === "hideWhen" ? (
@@ -188,19 +192,19 @@ class DynamicForm extends React.Component {
                     )}
                   >
                     {RenderForm(
-                      field.type === "select"
+                      fieldType === "select"
                         ? DynamicFormSelect
-                        : field.type === "toggle"
+                        : fieldType === "toggle"
                         ? DynamicFormToggle
-                        : field.type === "textArea"
+                        : fieldType === "textArea"
                         ? DynamicTextArea
-                        : field.type === "multiselect"
+                        : fieldType === "multiselect"
                         ? DynamicMultiSelect
-                        : field.type === "public-key"
+                        : fieldType === "public-key"
                         ? DynamicPublicKey
-                        : field.type === "fetchSelect"
+                        : fieldType === "fetchSelect"
                         ? DynamicFetchSelect
-                        : field.type === "date"
+                        : fieldType === "date"
                         ? DynamicDatePicker
                         : DynamicFormTextInput,
                       {

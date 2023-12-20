@@ -18,9 +18,7 @@ import {
   IamAccountSettingsPage,
   SccV1Page,
   F5BigIpPage,
-  PowerVsVolumesPage,
   IcseFormTemplate,
-  ToggleForm,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { contains, eachKey, keys, splat, transpose } from "lazy-z";
@@ -38,7 +36,6 @@ import {
   invalidCrnList,
   invalidF5Vsi,
   invalidIamAccountSettings,
-  replicationDisabledCallback,
 } from "../../lib/forms/invalid-callbacks";
 import {
   aclHelperTextCallback,
@@ -1281,46 +1278,50 @@ const PowerVsInstances = (craig) => {
 };
 
 const PowerVsVolumes = (craig) => {
-  return (
-    <PowerVsVolumesPage
-      overrideTile={
-        !craig.store.json._options.enable_power_vs ? (
-          <NoPowerNetworkTile />
-        ) : craig.store.json.power.length === 0 ? (
-          <NoPowerNetworkTile />
-        ) : undefined
-      }
-      power_volumes={craig.store.json.power_volumes}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      onDelete={craig.power_volumes.delete}
-      onSave={craig.power_volumes.save}
-      onSubmit={craig.power_volumes.create}
-      forceOpen={forceShowForm}
-      deleteDisabled={(componentProps) => {
-        if (componentProps.data.sap) return true;
-        else return false;
-      }}
-      craig={craig}
-      docs={RenderDocs("power_volumes", craig.store.json._options.template)}
-      power={craig.store.json.power}
-      power_instances={craig.store.json.power_instances}
-      invalidCallback={craig.power_volumes.name.invalid}
-      invalidTextCallback={craig.power_volumes.name.invalidText}
-      replicationDisabledCallback={replicationDisabledCallback}
-      affinityChangesDisabled={() => {
-        // placeholder
-        return false;
-      }}
-      storage_pool_map={powerStoragePoolRegionMap}
-      disableCapacityCallback={function (stateData, componentProps) {
-        if (stateData.sap === true && contains(stateData.name, "-sap-log-")) {
-          return false;
-        } else if (stateData.sap) {
-          return true;
-        } else return false;
-      }}
-    />
+  return formPageTemplate(
+    craig,
+    {
+      name: "Power VS Storage Volumes",
+      addText: "Create a Volume",
+      jsonField: "power_volumes",
+      overrideTile: !craig.store.json._options.enable_power_vs ? (
+        <NoPowerNetworkTile />
+      ) : craig.store.json.power.length === 0 ? (
+        <NoPowerNetworkTile />
+      ) : undefined,
+      formName: "Power Volumes",
+      hideFormTitleButton:
+        !craig.store.json._options.enable_power_vs ||
+        craig.store.json.power.length === 0,
+      innerFormProps: {
+        powerStoragePoolMap: powerStoragePoolRegionMap,
+      },
+    },
+    {
+      groups: [
+        {
+          name: craig.power_volumes.name,
+          workspace: craig.power_volumes.workspace,
+          pi_volume_size: craig.power_volumes.pi_volume_size,
+        },
+        {
+          storage_option: craig.power_volumes.storage_option,
+          pi_volume_type: craig.power_volumes.pi_volume_type,
+          pi_volume_pool: craig.power_volumes.pi_volume_pool,
+          affinity_type: craig.power_volumes.affinity_type,
+          pi_affinity_volume: craig.power_volumes.pi_affinity_volume,
+          pi_anti_affinity_volume: craig.power_volumes.pi_anti_affinity_volume,
+          pi_anti_affinity_instance:
+            craig.power_volumes.pi_anti_affinity_instance,
+          pi_affinity_instance: craig.power_volumes.pi_affinity_instance,
+        },
+        {
+          pi_replication_enabled: craig.power_volumes.pi_replication_enabled,
+          pi_volume_shareable: craig.power_volumes.pi_volume_shareable,
+          attachments: craig.power_volumes.attachments,
+        },
+      ],
+    }
   );
 };
 

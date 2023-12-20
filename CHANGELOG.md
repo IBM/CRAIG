@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Reafactored Routing Tables and Routing Table Routes Form
 - OptionsForm has been removed and now is generated using the DynamicForm component
 - Power VS Volume Attachments are no longer created in parallel to ensure that each provisions successfully
+- Documentation is now accessible without a project selected. Users no longer recieve the No Project Modal on pages with `/docs/` in the header.
 
 ### Features
 
