@@ -29,6 +29,7 @@ export const SubnetTierRow = (props) => {
   tierSubnets.forEach((subnet) => {
     if (subnet.acl_name !== props.acl.name) allSubnetsHaveAcl = false;
   });
+
   return allSubnetsHaveAcl ? (
     <div
       key={props.vpc.name + props.acl.name + props.tier.name}
@@ -36,6 +37,12 @@ export const SubnetTierRow = (props) => {
         border: "2px dotted gray",
         width: "500px",
         marginTop: props.tierIndex === 0 ? "" : "0.5rem",
+        boxShadow:
+          props.parentVpcIndex === props.vpcIndex &&
+          allSubnetsHaveAcl &&
+          props.parentTierIndex === props.tierIndex
+            ? " 0 10px 14px 0 rgba(0, 0, 0, 0.24),0 17px 50px 0 rgba(0, 0, 0, 0.19)"
+            : "",
       }}
       className="displayFlex "
       onClick={props.onClick}

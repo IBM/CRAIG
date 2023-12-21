@@ -73,7 +73,9 @@ function dynamicTextInputProps(props) {
   let placeholder = props.field.placeholder
     ? props.field.placeholder
     : (props.field.optional ? "(Optional) " : "") +
-      `my-${kebabCase(props.parentProps.formName)}-${kebabCase(props.name)}`;
+      `my-${kebabCase(props.parentProps.formName)}-${kebabCase(
+        props.name
+      )}`.replace(/--/g, "-");
   let labelText = props.field.tooltip
     ? ""
     : props.field.labelText

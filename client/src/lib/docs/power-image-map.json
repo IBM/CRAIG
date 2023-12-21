@@ -497,6 +497,504 @@
       "storageType": "tier3"
     }
   ],
+  "syd05": [
+    {
+      "imageID": "fbeb7619-702a-48f6-8fc5-fbb67df1cb7c",
+      "name": "7100-05-09",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ea146f72-08d1-48f4-babc-419af2283db5",
+      "name": "7200-05-03",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b459f922-319b-45e4-b09e-d920bc98beb0",
+      "name": "7200-05-05",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "34d38e5f-9dcb-4295-8c02-5124fe979c5b",
+      "name": "7300-00-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "47f58f14-eb2d-4635-9531-322211f831f6",
+      "name": "7300-01-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "7fa4f5bb-d77c-4719-a1ef-d6b326cc4776",
+      "name": "CentOS-Stream-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "a9ab41d8-2176-4ac8-8802-40d1ba7af024",
+      "name": "IBMi-71-11-2924-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b0797e3d-0e95-4d6b-adf8-44877d031998",
+      "name": "IBMi-71-11-2984-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "f63a5b92-99b8-4ce3-b3b6-502fba3060d5",
+      "name": "IBMi-72-09-2924-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "dc739665-12b9-44b3-84cf-86fee9c114b4",
+      "name": "IBMi-72-09-2984-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "4ad66578-8a87-427f-91e0-969e335dd98d",
+      "name": "IBMi-73-13-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ec6acbab-26dd-4083-9955-ad896427a5fd",
+      "name": "IBMi-73-13-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "da560433-32cb-4d54-ad2f-d047d0b46afc",
+      "name": "IBMi-74-07-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "871e30c0-b01a-47a1-bbba-08e445dbb0e5",
+      "name": "IBMi-74-07-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "f5bf3a21-4556-4927-b006-da6a8d1b80cc",
+      "name": "IBMi-75-01-2924-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "6b62ec02-7d1c-4a74-8d4e-217100c9b340",
+      "name": "IBMi-75-01-2984-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "4a14c697-41ff-4c7d-8ebb-7446e785d459",
+      "name": "IBMi_COR-74-07-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "557ba581-f9eb-44c4-825a-9f204c81e323",
+      "name": "Linux-CentOS-8-3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "8ab6ea4f-d80b-4713-a173-3946aae537f6",
+      "name": "RHEL8-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "93633fc2-b7bd-4af1-b326-fee14715f1ce",
+      "name": "RHEL8-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "433765a9-d1a3-4dea-95a1-faf0e1603c1a",
+      "name": "RHEL8-SP4-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "fa685f42-ac87-4b3b-9eb9-7acb41630a6e",
+      "name": "RHEL8-SP6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "1fc9fabf-f629-4d6b-adc0-793e77d91107",
+      "name": "RHEL8-SP6-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "8eebcbc7-2330-48f6-bc56-ae0d0d3d4257",
+      "name": "RHEL8-SP6-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "27400bdc-1501-48e2-93a6-a278d708a350",
+      "name": "SLES15-SP2-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "0d44287b-039e-4afe-b858-2ac7eef0dbaf",
+      "name": "SLES15-SP2-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "dca99d60-85bf-46c9-8c19-cd265e6fd7e3",
+      "name": "SLES15-SP3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "c4573ade-4a92-4885-b4e5-31d9a6a061f1",
+      "name": "SLES15-SP3-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "37f87f5c-0aee-4b43-a80d-c49f1d0ef6a7",
+      "name": "SLES15-SP3-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ca2d4e31-9022-4898-8df7-d0923aabd51b",
+      "name": "SLES15-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b615aab3-cc53-42db-b53d-af2037697e64",
+      "name": "SLES15-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "7e73a1ea-e88a-4e15-82aa-c583cf959105",
+      "name": "SLES15-SP4-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    }
+  ],
   "lon04": [
     {
       "imageID": "9357d9b9-62e8-4531-af60-4d7f093a4319",
@@ -1508,1019 +2006,6 @@
       "storageType": "tier3"
     }
   ],
-  "dal10": [
-    {
-      "imageID": "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
-      "name": "7100-05-09",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "0f9818b7-1646-407a-80a1-b2cbf1154549",
-      "name": "7200-05-03",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ccbaef35-c26e-40d3-8cc1-10dc34624b65",
-      "name": "7200-05-05",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "24083f6f-6ab7-4b59-bbd1-3ccb9e24a8db",
-      "name": "7300-00-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "142d55ca-d24c-4114-a2f9-4174e96ed96e",
-      "name": "7300-01-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "93b81838-c5f2-4a66-bb3f-85af799c07ef",
-      "name": "CentOS-Stream-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "a99343e9-b32e-4a38-85f8-3c1122bb3a0f",
-      "name": "IBMi-71-11-2924-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "1d93b604-fd7e-4aff-a261-d4d415625ff2",
-      "name": "IBMi-71-11-2984-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "e8b83a74-aba7-4ca2-a67a-8437ce7574d3",
-      "name": "IBMi-72-09-2924-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "98a65798-af17-482a-9e45-e8c4b42352ba",
-      "name": "IBMi-72-09-2984-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "625beea2-e63d-4861-b8d8-fadd229d4c87",
-      "name": "IBMi-73-13-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ad1b1e1e-08f7-40ef-80bc-3f4d6611fec4",
-      "name": "IBMi-73-13-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ee786c60-8b77-4fb8-a8cb-2a9dc47afa45",
-      "name": "IBMi-74-07-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "4b584df5-4b58-42f5-a614-6ab4b6fedef3",
-      "name": "IBMi-74-07-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "d22a080f-d1b3-4e80-898e-5e8d46cb86ca",
-      "name": "IBMi-75-01-2924-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "02f8f2f8-8dfc-4130-88bb-e91105c3d274",
-      "name": "IBMi-75-01-2984-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "3b8f7eab-5407-45da-a310-52c0de1fb4e8",
-      "name": "IBMi_COR-74-07-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "f18ef99d-d5c7-4713-96ba-986a6ff254d6",
-      "name": "Linux-CentOS-8-3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b255738f-1cb1-4298-b60c-b021415717b9",
-      "name": "OCP-DHCP-SERVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-dhcp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "eeccaa7b-6fce-45c1-a29e-572008e837a7",
-      "name": "RHEL8-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "263f090e-0798-4ab2-a6e3-513fa644510f",
-      "name": "RHEL8-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "87d65141-b929-4c72-9b73-2a7298a02b30",
-      "name": "RHEL8-SP4-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "c51f22a4-79f3-46a1-9afd-d3a91fba9208",
-      "name": "RHEL8-SP6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "6ab8e302-616c-4d4b-9a04-716a72f5e436",
-      "name": "RHEL8-SP6-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "89f60785-6e36-4bd7-807b-0c48f05dc29c",
-      "name": "RHEL8-SP6-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ff05ab81-791d-4e91-b04b-56cf1dc11047",
-      "name": "SLES15-SP2-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "2c2d175e-62e7-4d03-931b-6a256ee9735e",
-      "name": "SLES15-SP2-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ff8e64d6-833d-4359-8447-d601e090f306",
-      "name": "SLES15-SP3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "3343ccdb-9673-4164-a9e6-acec18f14102",
-      "name": "SLES15-SP3-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "e7decdab-d2f6-4fbc-90d5-cb5b6b7b4a74",
-      "name": "SLES15-SP3-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "e00178e1-f763-41b7-adb0-b5da0edde4c9",
-      "name": "SLES15-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "8d828fb4-e2de-4748-8ae7-609499a19f5d",
-      "name": "SLES15-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "3f5b2725-cc62-48f3-83b9-2376cf6d2be2",
-      "name": "SLES15-SP4-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    }
-  ],
-  "syd05": [
-    {
-      "imageID": "fbeb7619-702a-48f6-8fc5-fbb67df1cb7c",
-      "name": "7100-05-09",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ea146f72-08d1-48f4-babc-419af2283db5",
-      "name": "7200-05-03",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b459f922-319b-45e4-b09e-d920bc98beb0",
-      "name": "7200-05-05",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "34d38e5f-9dcb-4295-8c02-5124fe979c5b",
-      "name": "7300-00-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "47f58f14-eb2d-4635-9531-322211f831f6",
-      "name": "7300-01-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "7fa4f5bb-d77c-4719-a1ef-d6b326cc4776",
-      "name": "CentOS-Stream-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "a9ab41d8-2176-4ac8-8802-40d1ba7af024",
-      "name": "IBMi-71-11-2924-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b0797e3d-0e95-4d6b-adf8-44877d031998",
-      "name": "IBMi-71-11-2984-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "f63a5b92-99b8-4ce3-b3b6-502fba3060d5",
-      "name": "IBMi-72-09-2924-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "dc739665-12b9-44b3-84cf-86fee9c114b4",
-      "name": "IBMi-72-09-2984-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "4ad66578-8a87-427f-91e0-969e335dd98d",
-      "name": "IBMi-73-13-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ec6acbab-26dd-4083-9955-ad896427a5fd",
-      "name": "IBMi-73-13-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "da560433-32cb-4d54-ad2f-d047d0b46afc",
-      "name": "IBMi-74-07-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "871e30c0-b01a-47a1-bbba-08e445dbb0e5",
-      "name": "IBMi-74-07-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "f5bf3a21-4556-4927-b006-da6a8d1b80cc",
-      "name": "IBMi-75-01-2924-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "6b62ec02-7d1c-4a74-8d4e-217100c9b340",
-      "name": "IBMi-75-01-2984-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "4a14c697-41ff-4c7d-8ebb-7446e785d459",
-      "name": "IBMi_COR-74-07-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "557ba581-f9eb-44c4-825a-9f204c81e323",
-      "name": "Linux-CentOS-8-3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "8ab6ea4f-d80b-4713-a173-3946aae537f6",
-      "name": "RHEL8-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "93633fc2-b7bd-4af1-b326-fee14715f1ce",
-      "name": "RHEL8-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "433765a9-d1a3-4dea-95a1-faf0e1603c1a",
-      "name": "RHEL8-SP4-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "fa685f42-ac87-4b3b-9eb9-7acb41630a6e",
-      "name": "RHEL8-SP6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "1fc9fabf-f629-4d6b-adc0-793e77d91107",
-      "name": "RHEL8-SP6-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "8eebcbc7-2330-48f6-bc56-ae0d0d3d4257",
-      "name": "RHEL8-SP6-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "27400bdc-1501-48e2-93a6-a278d708a350",
-      "name": "SLES15-SP2-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "0d44287b-039e-4afe-b858-2ac7eef0dbaf",
-      "name": "SLES15-SP2-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "dca99d60-85bf-46c9-8c19-cd265e6fd7e3",
-      "name": "SLES15-SP3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "c4573ade-4a92-4885-b4e5-31d9a6a061f1",
-      "name": "SLES15-SP3-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "37f87f5c-0aee-4b43-a80d-c49f1d0ef6a7",
-      "name": "SLES15-SP3-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ca2d4e31-9022-4898-8df7-d0923aabd51b",
-      "name": "SLES15-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b615aab3-cc53-42db-b53d-af2037697e64",
-      "name": "SLES15-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "7e73a1ea-e88a-4e15-82aa-c583cf959105",
-      "name": "SLES15-SP4-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    }
-  ],
   "tok04": [
     {
       "imageID": "94abaad9-622c-482e-af6a-13976ada5622",
@@ -3059,6 +2544,521 @@
         "hypervisorType": "phyp",
         "imageType": "snapshot",
         "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    }
+  ],
+  "dal10": [
+    {
+      "imageID": "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
+      "name": "7100-05-09",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "0f9818b7-1646-407a-80a1-b2cbf1154549",
+      "name": "7200-05-03",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ccbaef35-c26e-40d3-8cc1-10dc34624b65",
+      "name": "7200-05-05",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "24083f6f-6ab7-4b59-bbd1-3ccb9e24a8db",
+      "name": "7300-00-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "142d55ca-d24c-4114-a2f9-4174e96ed96e",
+      "name": "7300-01-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "93b81838-c5f2-4a66-bb3f-85af799c07ef",
+      "name": "CentOS-Stream-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "a99343e9-b32e-4a38-85f8-3c1122bb3a0f",
+      "name": "IBMi-71-11-2924-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "1d93b604-fd7e-4aff-a261-d4d415625ff2",
+      "name": "IBMi-71-11-2984-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "e8b83a74-aba7-4ca2-a67a-8437ce7574d3",
+      "name": "IBMi-72-09-2924-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "98a65798-af17-482a-9e45-e8c4b42352ba",
+      "name": "IBMi-72-09-2984-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "625beea2-e63d-4861-b8d8-fadd229d4c87",
+      "name": "IBMi-73-13-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ad1b1e1e-08f7-40ef-80bc-3f4d6611fec4",
+      "name": "IBMi-73-13-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ee786c60-8b77-4fb8-a8cb-2a9dc47afa45",
+      "name": "IBMi-74-07-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "4b584df5-4b58-42f5-a614-6ab4b6fedef3",
+      "name": "IBMi-74-07-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "d22a080f-d1b3-4e80-898e-5e8d46cb86ca",
+      "name": "IBMi-75-01-2924-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "02f8f2f8-8dfc-4130-88bb-e91105c3d274",
+      "name": "IBMi-75-01-2984-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "3b8f7eab-5407-45da-a310-52c0de1fb4e8",
+      "name": "IBMi_COR-74-07-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "f18ef99d-d5c7-4713-96ba-986a6ff254d6",
+      "name": "Linux-CentOS-8-3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b255738f-1cb1-4298-b60c-b021415717b9",
+      "name": "OCP-DHCP-SERVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-dhcp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "eeccaa7b-6fce-45c1-a29e-572008e837a7",
+      "name": "RHEL8-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "263f090e-0798-4ab2-a6e3-513fa644510f",
+      "name": "RHEL8-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "87d65141-b929-4c72-9b73-2a7298a02b30",
+      "name": "RHEL8-SP4-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "c51f22a4-79f3-46a1-9afd-d3a91fba9208",
+      "name": "RHEL8-SP6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "6ab8e302-616c-4d4b-9a04-716a72f5e436",
+      "name": "RHEL8-SP6-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "89f60785-6e36-4bd7-807b-0c48f05dc29c",
+      "name": "RHEL8-SP6-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ff05ab81-791d-4e91-b04b-56cf1dc11047",
+      "name": "SLES15-SP2-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "2c2d175e-62e7-4d03-931b-6a256ee9735e",
+      "name": "SLES15-SP2-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ff8e64d6-833d-4359-8447-d601e090f306",
+      "name": "SLES15-SP3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "3343ccdb-9673-4164-a9e6-acec18f14102",
+      "name": "SLES15-SP3-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "e7decdab-d2f6-4fbc-90d5-cb5b6b7b4a74",
+      "name": "SLES15-SP3-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "e00178e1-f763-41b7-adb0-b5da0edde4c9",
+      "name": "SLES15-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "8d828fb4-e2de-4748-8ae7-609499a19f5d",
+      "name": "SLES15-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "3f5b2725-cc62-48f3-83b9-2376cf6d2be2",
+      "name": "SLES15-SP4-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
       },
       "state": "active",
       "storagePool": "Tier3-Flash-1",
@@ -3873,6 +3873,504 @@
         "hypervisorType": "phyp",
         "imageType": "stock-vtl",
         "operatingSystem": "vtl"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    }
+  ],
+  "eu-de-2": [
+    {
+      "imageID": "99173fec-b8f4-4e22-91dd-75fcb7d2c3f9",
+      "name": "7100-05-09",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "6d6052fc-5277-4cd5-82ee-1984c9ce977a",
+      "name": "7200-05-03",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "3d3002aa-0c71-4fd0-85da-d986a52b5f58",
+      "name": "7200-05-05",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "00443972-0167-4106-abea-3f01a9f2b4e5",
+      "name": "7300-00-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "c64c901b-9e24-4fa2-8dee-0d08f09b6899",
+      "name": "7300-01-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "160f6ecb-cce5-4658-9171-3ccaa6c3eabb",
+      "name": "CentOS-Stream-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ecd6e82c-e2b4-404c-9813-21786af77580",
+      "name": "IBMi-71-11-2924-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "83e2f101-b023-4f02-a911-28cbe2e9fe2b",
+      "name": "IBMi-71-11-2984-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "99928322-b790-42f1-a526-944c55e259cc",
+      "name": "IBMi-72-09-2924-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b62c568f-216a-4f6e-91bb-cbe8c374c001",
+      "name": "IBMi-72-09-2984-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "fb57b734-33e8-45ea-8673-55cf7794c127",
+      "name": "IBMi-73-13-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "9dbf9731-dc89-4928-b101-675f3c2761ce",
+      "name": "IBMi-73-13-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "e34326c7-9d33-469b-a383-25c08644f1a9",
+      "name": "IBMi-74-07-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "15694a54-6d1f-4de9-a0c1-233e5849cd0b",
+      "name": "IBMi-74-07-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "86c64e6c-c61e-45e6-a374-4171741d7b06",
+      "name": "IBMi-75-01-2924-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "9d5e44a8-b723-473f-b2cf-f792d8425292",
+      "name": "IBMi-75-01-2984-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "3d8d90d2-6682-4695-9800-dd528edd1b2e",
+      "name": "IBMi_COR-74-07-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "9a851ce4-6be9-47f3-b34c-0ef1895f1b04",
+      "name": "Linux-CentOS-8-3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier1-Flash-1",
+      "storageType": "tier1"
+    },
+    {
+      "imageID": "e4ecb464-e618-44c9-9572-1df517d05343",
+      "name": "RHEL8-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b29f3c22-ffbf-480a-8731-da2c98b0dc55",
+      "name": "RHEL8-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "8fb63080-b1df-417d-a545-40611b0c011e",
+      "name": "RHEL8-SP4-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "a90e949e-a1f3-4372-91a4-4de21bf05de7",
+      "name": "RHEL8-SP6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b89cc0c8-3471-4ee0-b486-d63d65f36fe2",
+      "name": "RHEL8-SP6-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "7e118c44-be6d-4da4-ab23-5ea8edd2c8e2",
+      "name": "RHEL8-SP6-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "614ff293-5492-4a84-882c-1d832aa0dc20",
+      "name": "SLES15-SP2-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "926847b1-8e32-4707-ab66-c1b1dcee1cb2",
+      "name": "SLES15-SP2-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "bfc5b614-a668-4454-9d33-e80e829f654a",
+      "name": "SLES15-SP3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "5ecad4fb-39ba-4306-a9d1-edb5ded27e5e",
+      "name": "SLES15-SP3-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "33aad75c-92e4-41e9-9c7f-af1b731ecec4",
+      "name": "SLES15-SP3-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "92174d94-860d-40cf-a68d-c5899ae0dd9a",
+      "name": "SLES15-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "2df6255c-01df-4f3b-9a9a-a92fa10c42e2",
+      "name": "SLES15-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b0f574d8-1711-4c52-ae58-8802755dbb4f",
+      "name": "SLES15-SP4-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
       },
       "state": "active",
       "storagePool": "Tier3-Flash-1",
@@ -5101,1001 +5599,6 @@
       "storageType": "tier3"
     }
   ],
-  "syd04": [
-    {
-      "imageID": "6c3fe5f7-3282-494a-8ca2-a85034d523bd",
-      "name": "7100-05-09",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "400eb349-27db-4ab0-a67e-51e1d459474e",
-      "name": "7200-05-03",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "79885af2-557d-4c6b-90bf-ba99a3c9be1a",
-      "name": "7200-05-05",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "efafee50-d05a-49b6-bd24-fc995b11cf62",
-      "name": "7300-00-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "5583a361-7155-48ff-9a39-8fd57d0b73fd",
-      "name": "7300-01-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b6765482-b566-46dd-920f-3c94f71fcd14",
-      "name": "CentOS-Stream-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b88f5e42-e54f-4757-83a3-fa5e4adb42f9",
-      "name": "IBMi-71-11-2924-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "db38fc66-c9f0-434b-9cd0-4d70d888659b",
-      "name": "IBMi-71-11-2984-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "bfda6e8d-e635-4582-8765-cd6afaf21020",
-      "name": "IBMi-72-09-2924-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "38adc135-260d-4de5-9ab4-8246491b4d33",
-      "name": "IBMi-72-09-2984-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "075fd43b-2771-451f-8e03-1ccb4ce827be",
-      "name": "IBMi-73-13-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "c0bf667b-60aa-408d-81cb-62b9b321aa8f",
-      "name": "IBMi-73-13-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "72bfd83b-c515-43f1-81aa-ee65d3648108",
-      "name": "IBMi-74-07-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "002f0d56-fe08-404f-b687-60461fe3f9c4",
-      "name": "IBMi-74-07-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "86903855-102f-444a-9e8f-5d985c56c977",
-      "name": "IBMi-75-01-2924-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "9bbca993-d338-400c-9aeb-f086b1ac2bb0",
-      "name": "IBMi-75-01-2984-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "f682be57-744b-488c-be5b-d9f24e77bf60",
-      "name": "IBMi_COR-74-07-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "08d20ada-3460-4833-a9c6-52a2f28e0488",
-      "name": "Linux-CentOS-8-3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ab10f0b4-d17d-459c-9f1d-a66363b3d34a",
-      "name": "RHEL8-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "52768c83-42a3-42e5-9707-3a499503b909",
-      "name": "RHEL8-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "c6baebdc-7510-4b52-a38b-3970fc9590ca",
-      "name": "RHEL8-SP4-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "cd8200ea-1fe9-4343-bf15-cb2717a2dda1",
-      "name": "RHEL8-SP6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ad405b0a-0c83-4b37-b4e3-f605a9c64452",
-      "name": "RHEL8-SP6-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "74622d29-dc49-404d-b1f5-99ae6faf6c03",
-      "name": "RHEL8-SP6-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "62ed1301-8f01-40e3-a176-e409d2244c8d",
-      "name": "SLES15-SP2-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b5654328-54db-40d9-9356-6b5937061d6a",
-      "name": "SLES15-SP2-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "f8bc8f97-bde9-4596-80f3-5ac2080c9456",
-      "name": "SLES15-SP3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b459ffdc-6a1d-42da-8f0b-95643002d364",
-      "name": "SLES15-SP3-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "a3e65ebd-b622-4ba8-ab5c-c08b4f52a3ff",
-      "name": "SLES15-SP3-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "894d9dde-d569-46f3-baa1-18188ab6fb7f",
-      "name": "SLES15-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b48e34bf-d063-4c63-ad36-64f8b202804b",
-      "name": "SLES15-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "1af1e41f-92e3-4f2b-a0f7-70559cf720d5",
-      "name": "sles12sp4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    }
-  ],
-  "eu-de-2": [
-    {
-      "imageID": "99173fec-b8f4-4e22-91dd-75fcb7d2c3f9",
-      "name": "7100-05-09",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "6d6052fc-5277-4cd5-82ee-1984c9ce977a",
-      "name": "7200-05-03",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "3d3002aa-0c71-4fd0-85da-d986a52b5f58",
-      "name": "7200-05-05",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "00443972-0167-4106-abea-3f01a9f2b4e5",
-      "name": "7300-00-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "c64c901b-9e24-4fa2-8dee-0d08f09b6899",
-      "name": "7300-01-01",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock",
-        "operatingSystem": "aix"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "160f6ecb-cce5-4658-9171-3ccaa6c3eabb",
-      "name": "CentOS-Stream-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "ecd6e82c-e2b4-404c-9813-21786af77580",
-      "name": "IBMi-71-11-2924-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "83e2f101-b023-4f02-a911-28cbe2e9fe2b",
-      "name": "IBMi-71-11-2984-6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "99928322-b790-42f1-a526-944c55e259cc",
-      "name": "IBMi-72-09-2924-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b62c568f-216a-4f6e-91bb-cbe8c374c001",
-      "name": "IBMi-72-09-2984-8",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "fb57b734-33e8-45ea-8673-55cf7794c127",
-      "name": "IBMi-73-13-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "9dbf9731-dc89-4928-b101-675f3c2761ce",
-      "name": "IBMi-73-13-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "e34326c7-9d33-469b-a383-25c08644f1a9",
-      "name": "IBMi-74-07-2924-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "15694a54-6d1f-4de9-a0c1-233e5849cd0b",
-      "name": "IBMi-74-07-2984-1",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "86c64e6c-c61e-45e6-a374-4171741d7b06",
-      "name": "IBMi-75-01-2924-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "9d5e44a8-b723-473f-b2cf-f792d8425292",
-      "name": "IBMi-75-01-2984-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "3d8d90d2-6682-4695-9800-dd528edd1b2e",
-      "name": "IBMi_COR-74-07-2",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "big-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "ibmi"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "9a851ce4-6be9-47f3-b34c-0ef1895f1b04",
-      "name": "Linux-CentOS-8-3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier1-Flash-1",
-      "storageType": "tier1"
-    },
-    {
-      "imageID": "e4ecb464-e618-44c9-9572-1df517d05343",
-      "name": "RHEL8-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b29f3c22-ffbf-480a-8731-da2c98b0dc55",
-      "name": "RHEL8-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "8fb63080-b1df-417d-a545-40611b0c011e",
-      "name": "RHEL8-SP4-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "a90e949e-a1f3-4372-91a4-4de21bf05de7",
-      "name": "RHEL8-SP6",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b89cc0c8-3471-4ee0-b486-d63d65f36fe2",
-      "name": "RHEL8-SP6-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "7e118c44-be6d-4da4-ab23-5ea8edd2c8e2",
-      "name": "RHEL8-SP6-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "rhel"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "614ff293-5492-4a84-882c-1d832aa0dc20",
-      "name": "SLES15-SP2-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "926847b1-8e32-4707-ab66-c1b1dcee1cb2",
-      "name": "SLES15-SP2-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "bfc5b614-a668-4454-9d33-e80e829f654a",
-      "name": "SLES15-SP3",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "5ecad4fb-39ba-4306-a9d1-edb5ded27e5e",
-      "name": "SLES15-SP3-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "33aad75c-92e4-41e9-9c7f-af1b731ecec4",
-      "name": "SLES15-SP3-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "92174d94-860d-40cf-a68d-c5899ae0dd9a",
-      "name": "SLES15-SP4",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "2df6255c-01df-4f3b-9a9a-a92fa10c42e2",
-      "name": "SLES15-SP4-SAP",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    },
-    {
-      "imageID": "b0f574d8-1711-4c52-ae58-8802755dbb4f",
-      "name": "SLES15-SP4-SAP-NETWEAVER",
-      "specifications": {
-        "architecture": "ppc64",
-        "containerFormat": "bare",
-        "diskFormat": "raw",
-        "endianness": "little-endian",
-        "hypervisorType": "phyp",
-        "imageType": "stock-sap-netweaver-fls",
-        "operatingSystem": "sles"
-      },
-      "state": "active",
-      "storagePool": "Tier3-Flash-1",
-      "storageType": "tier3"
-    }
-  ],
   "eu-de-1": [
     {
       "imageID": "6192e59e-c27d-4c03-b700-710b4b2e2ba7",
@@ -6587,6 +6090,503 @@
         "endianness": "little-endian",
         "hypervisorType": "phyp",
         "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    }
+  ],
+  "syd04": [
+    {
+      "imageID": "6c3fe5f7-3282-494a-8ca2-a85034d523bd",
+      "name": "7100-05-09",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "400eb349-27db-4ab0-a67e-51e1d459474e",
+      "name": "7200-05-03",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "79885af2-557d-4c6b-90bf-ba99a3c9be1a",
+      "name": "7200-05-05",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "efafee50-d05a-49b6-bd24-fc995b11cf62",
+      "name": "7300-00-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "5583a361-7155-48ff-9a39-8fd57d0b73fd",
+      "name": "7300-01-01",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock",
+        "operatingSystem": "aix"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b6765482-b566-46dd-920f-3c94f71fcd14",
+      "name": "CentOS-Stream-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b88f5e42-e54f-4757-83a3-fa5e4adb42f9",
+      "name": "IBMi-71-11-2924-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "db38fc66-c9f0-434b-9cd0-4d70d888659b",
+      "name": "IBMi-71-11-2984-6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "bfda6e8d-e635-4582-8765-cd6afaf21020",
+      "name": "IBMi-72-09-2924-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "38adc135-260d-4de5-9ab4-8246491b4d33",
+      "name": "IBMi-72-09-2984-8",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "075fd43b-2771-451f-8e03-1ccb4ce827be",
+      "name": "IBMi-73-13-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "c0bf667b-60aa-408d-81cb-62b9b321aa8f",
+      "name": "IBMi-73-13-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "72bfd83b-c515-43f1-81aa-ee65d3648108",
+      "name": "IBMi-74-07-2924-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "002f0d56-fe08-404f-b687-60461fe3f9c4",
+      "name": "IBMi-74-07-2984-1",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "86903855-102f-444a-9e8f-5d985c56c977",
+      "name": "IBMi-75-01-2924-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "9bbca993-d338-400c-9aeb-f086b1ac2bb0",
+      "name": "IBMi-75-01-2984-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "f682be57-744b-488c-be5b-d9f24e77bf60",
+      "name": "IBMi_COR-74-07-2",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "big-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "ibmi"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "08d20ada-3460-4833-a9c6-52a2f28e0488",
+      "name": "Linux-CentOS-8-3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ab10f0b4-d17d-459c-9f1d-a66363b3d34a",
+      "name": "RHEL8-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "52768c83-42a3-42e5-9707-3a499503b909",
+      "name": "RHEL8-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "c6baebdc-7510-4b52-a38b-3970fc9590ca",
+      "name": "RHEL8-SP4-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "cd8200ea-1fe9-4343-bf15-cb2717a2dda1",
+      "name": "RHEL8-SP6",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "ad405b0a-0c83-4b37-b4e3-f605a9c64452",
+      "name": "RHEL8-SP6-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "74622d29-dc49-404d-b1f5-99ae6faf6c03",
+      "name": "RHEL8-SP6-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "rhel"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "62ed1301-8f01-40e3-a176-e409d2244c8d",
+      "name": "SLES15-SP2-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b5654328-54db-40d9-9356-6b5937061d6a",
+      "name": "SLES15-SP2-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "f8bc8f97-bde9-4596-80f3-5ac2080c9456",
+      "name": "SLES15-SP3",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b459ffdc-6a1d-42da-8f0b-95643002d364",
+      "name": "SLES15-SP3-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "a3e65ebd-b622-4ba8-ab5c-c08b4f52a3ff",
+      "name": "SLES15-SP3-SAP-NETWEAVER",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-netweaver-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "894d9dde-d569-46f3-baa1-18188ab6fb7f",
+      "name": "SLES15-SP4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "b48e34bf-d063-4c63-ad36-64f8b202804b",
+      "name": "SLES15-SP4-SAP",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
+        "imageType": "stock-sap-fls",
+        "operatingSystem": "sles"
+      },
+      "state": "active",
+      "storagePool": "Tier3-Flash-1",
+      "storageType": "tier3"
+    },
+    {
+      "imageID": "1af1e41f-92e3-4f2b-a0f7-70559cf720d5",
+      "name": "sles12sp4",
+      "specifications": {
+        "architecture": "ppc64",
+        "containerFormat": "bare",
+        "diskFormat": "raw",
+        "endianness": "little-endian",
+        "hypervisorType": "phyp",
         "operatingSystem": "sles"
       },
       "state": "active",

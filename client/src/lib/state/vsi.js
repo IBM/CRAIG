@@ -6,7 +6,6 @@ const {
   splatContains,
   isInRange,
   isNullOrEmptyString,
-  contains,
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -19,7 +18,6 @@ const {
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
-  fieldIsEmpty,
   resourceGroupsField,
   selectInvalidText,
   vpcGroups,
@@ -28,6 +26,7 @@ const {
   unconditionalInvalidText,
   securityGroupsMultiselect,
   encryptionKeyGroups,
+  vpcSshKeyMultiselect,
 } = require("./utils");
 const { invalidNameText, invalidName } = require("../forms");
 
@@ -415,16 +414,7 @@ function initVsiStore(store) {
         labelText: "VSI Per Subnet",
       },
       security_groups: securityGroupsMultiselect(),
-      ssh_keys: {
-        size: "small",
-        type: "multiselect",
-        default: [],
-        invalid: fieldIsEmpty("ssh_keys"),
-        invalidText: unconditionalInvalidText("Select at least one SSH Key"),
-        groups: function (stateData, componentProps) {
-          return splat(componentProps.craig.store.json.ssh_keys, "name");
-        },
-      },
+      ssh_keys: vpcSshKeyMultiselect(),
       enable_floating_ip: {
         size: "small",
         type: "toggle",

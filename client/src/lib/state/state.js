@@ -193,13 +193,24 @@ const state = function (legacy) {
     store.store.json.vpcs.forEach((network) => {
       subnetTiers[network.name] = buildSubnetTiers(network);
     });
+    let edgeZones = 0;
+    store.store.edge_pattern = undefined;
+    store.store.edge_zones = undefined;
+    store.store.edge_vpc_name = undefined;
     store.store.json.vpcs.forEach((nw) => {
       nw.subnets.forEach((subnet) => {
         subnet.vpc = nw.name;
       });
       nw.address_prefixes.forEach((prefix) => {
+        if (prefix.name.match(/^f5-zone-\d$/g) !== null) {
+          store.store.edge_vpc_name = nw.name;
+          edgeZones++;
+        }
         prefix.vpc = nw.name;
       });
+      if (edgeZones > 0) {
+        store.store.edge_zones = edgeZones;
+      }
       nw.acls.forEach((acl) => {
         acl.rules.forEach((rule) => {
           rule.acl = acl.name;

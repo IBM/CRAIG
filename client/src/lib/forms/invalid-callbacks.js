@@ -260,24 +260,6 @@ function invalidIamAccountSettings(field, stateData) {
   );
 }
 
-function invalidF5Vsi(field, stateData, componentProps) {
-  let hasOwnValidation = ["tmos_admin_password"];
-  let optionalFields = [
-    "app_id",
-    "license_password",
-    "license_unit_of_measure",
-  ];
-  if (
-    field.includes("url") || // all url fields have their own validation
-    contains(hasOwnValidation, field) ||
-    contains(optionalFields, field)
-  ) {
-    return false; // ignore these, have their own validation
-  } else {
-    return isNullOrEmptyString(stateData[field]); // just cannot be empty
-  }
-}
-
 /**
  * check if security group rule name is invalid
  * @param {*} stateData
@@ -674,7 +656,6 @@ module.exports = {
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
-  invalidF5Vsi,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,

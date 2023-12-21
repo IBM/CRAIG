@@ -4,7 +4,6 @@ import {
   forceShowForm,
   invalidName,
   invalidNameText,
-  newF5Vsi,
   propsMatchState,
 } from "../../lib";
 import {
@@ -17,7 +16,6 @@ import {
   VsiLoadBalancerTemplate,
   IamAccountSettingsPage,
   SccV1Page,
-  F5BigIpPage,
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
@@ -34,7 +32,6 @@ import {
 import {
   invalidCidr,
   invalidCrnList,
-  invalidF5Vsi,
   invalidIamAccountSettings,
 } from "../../lib/forms/invalid-callbacks";
 import {
@@ -44,7 +41,6 @@ import {
   invalidCidrText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
-import { f5Images } from "../../lib/json-to-iac";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
 import { edgeRouterEnabledZones } from "../../lib/constants";
@@ -53,6 +49,7 @@ import DynamicForm from "../forms/DynamicForm";
 import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
 import { CraigToggleForm } from "../forms/utils";
+import StatefulTabs from "../forms/utils/StatefulTabs";
 
 const formPageTemplate = (craig, options, form) => {
   let innerFormProps = {
@@ -798,6 +795,25 @@ const EventStreamsPage = (craig) => {
   );
 };
 
+const NoEdgeNetworkTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
+      <span>
+        <CloudAlerting size="24" className="iconMargin" /> No Edge Network. Go
+        back to the{" "}
+        <a className="no-secrets-link" href="/">
+          Home page
+        </a>{" "}
+        to enable Edge Networking.{" "}
+        <em>
+          Dynamic Scalable Subnets must be disabled to create an Edge VPC
+          network.
+        </em>
+      </span>
+    </Tile>
+  );
+};
+
 const F5BigIp = (craig) => {
   let templateData = {};
   let vsiData = {};
@@ -818,28 +834,125 @@ const F5BigIp = (craig) => {
       zones: craig.store.json.f5_vsi.length,
     };
   }
-  return (
-    <F5BigIpPage
-      docs={RenderDocs("f5", craig.store.json._options.template)()}
+
+  const F5 = () => {
+    return (
+      <>
+        <CraigToggleForm
+          name="F5 Big IP Template Configuration"
+          submissionFieldName="f5_vsi_template"
+          noDeleteButton
+          hideHeading
+          hideName
+          onSave={craig.f5.template.save}
+          type="formInSubForm"
+          tabPanel={{ hideAbout: true }}
+          craig={craig}
+          innerFormProps={{
+            craig: craig,
+            form: {
+              groups: [
+                {
+                  license_type: craig.f5.template.license_type,
+                  tmos_admin_password: craig.f5.template.tmos_admin_password,
+                },
+                {
+                  byol_license_basekey: craig.f5.template.byol_license_basekey,
+                  license_username: craig.f5.template.license_username,
+                  license_password: craig.f5.template.license_password,
+                },
+                {
+                  license_host: craig.f5.template.license_host,
+                  license_pool: craig.f5.template.license_pool,
+                },
+                {
+                  license_unit_of_measure:
+                    craig.f5.template.license_unit_of_measure,
+                  license_sku_keyword_1:
+                    craig.f5.template.license_sku_keyword_1,
+                },
+                {
+                  license_sku_keyword_2:
+                    craig.f5.template.license_sku_keyword_2,
+                },
+                {
+                  template_version: craig.f5.template.template_version,
+                  template_source: craig.f5.template.template_source,
+                },
+                {
+                  app_id: craig.f5.template.app_id,
+                  phone_home_url: craig.f5.template.phone_home_url,
+                },
+                {
+                  do_declaration_url: craig.f5.template.do_declaration_url,
+                  as3_declaration_url: craig.f5.template.as3_declaration_url,
+                },
+                {
+                  ts_declaration_url: craig.f5.template.ts_declaration_url,
+                  tgstandby_url: craig.f5.template.tgstandby_url,
+                },
+                {
+                  tgrefresh_url: craig.f5.template.tgrefresh_url,
+                  tgactive_url: craig.f5.template.tgactive_url,
+                },
+              ],
+            },
+            data: templateData,
+          }}
+        />
+        <CraigToggleForm
+          name="Configure F5 Big IP"
+          noDeleteButton
+          hideHeading
+          hideName
+          craig={craig}
+          type="formInSubForm"
+          submissionFieldName="f5_vsi"
+          tabPanel={{ hideAbout: true }}
+          innerFormProps={{
+            data: vsiData,
+            craig: craig,
+            form: {
+              groups: [
+                {
+                  zones: craig.f5.vsi.zones,
+                  resource_group: craig.f5.vsi.resource_group,
+                  ssh_keys: craig.f5.vsi.ssh_keys,
+                },
+                {
+                  image: craig.f5.vsi.image,
+                  profile: craig.f5.vsi.profile,
+                },
+              ],
+            },
+          }}
+          onSave={craig.f5.vsi.save}
+        />
+      </>
+    );
+  };
+
+  return craig.store.edge_pattern === undefined ? (
+    <StatefulTabs
+      name="F5 Big IP"
+      hideFormTitleButton
+      form={<NoEdgeNetworkTile />}
+      about={RenderDocs("f5", craig.store.json._options.template)()}
+    />
+  ) : (
+    <CraigToggleForm
       craig={craig}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
-      invalidTemplateCallback={invalidF5Vsi}
-      vsis={craig.store.json.f5_vsi || []}
-      sshKeys={craig.store.sshKeys}
-      edge_pattern={craig.store.edge_pattern}
-      f5_on_management={craig.store.edge_vpc_name === "management"}
-      instanceProfilesApiEndpoint={`/api/vsi/${craig.store.json._options.region}/instanceProfiles`}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      encryptionKeys={craig.store.encryptionKeys}
-      f5Images={Object.keys(f5Images().public_image_map)}
-      initVsiCallback={newF5Vsi}
-      saveVsiCallback={craig.f5.instance.save}
-      templateData={templateData}
-      deploymentData={vsiData}
-      onTemplateSave={craig.f5.template.save}
-      onVsiSave={craig.f5.vsi.save}
-      noEdgePattern={craig.store.edge_pattern === undefined}
+      noSaveButton
+      about={RenderDocs("f5", craig.store.json._options.template)()}
+      tabPanel={{
+        name: "F5 Big IP",
+      }}
+      noDeleteButton
+      hideName
+      name="F5 Big IP"
+      submissionFieldName=""
+      nullRef
+      overrideDynamicForm={F5}
     />
   );
 };

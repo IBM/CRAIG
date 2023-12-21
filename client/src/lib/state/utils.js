@@ -385,7 +385,7 @@ function fieldIsNullOrEmptyString(fieldName, lazy) {
  */
 function fieldIsEmpty(fieldName) {
   return function (stateData) {
-    return isEmpty(stateData[fieldName]);
+    return isEmpty(stateData[fieldName] || []);
   };
 }
 
@@ -487,7 +487,7 @@ function resourceGroupsField(small, options) {
   };
 }
 
-/*
+/**
  * test if a rule has an invalid port
  * @param {*} rule
  * @param {boolean=} isSecurityGroup
@@ -886,6 +886,36 @@ function hideHelperText() {
   return null;
 }
 
+/**
+ * shortcut for vpc ssh keys
+ * @returns {object} schema object
+ */
+function vpcSshKeyMultiselect(isF5) {
+  return {
+    labelText: "SSH Keys",
+    size: "small",
+    type: "multiselect",
+    default: [],
+    invalid: isF5
+      ? function (stateData) {
+          return stateData.zones === "0"
+            ? false
+            : fieldIsEmpty("ssh_keys")(stateData);
+        }
+      : fieldIsEmpty("ssh_keys"),
+    invalidText: unconditionalInvalidText("Select at least one SSH Key"),
+    groups: function (stateData, componentProps) {
+      return splat(componentProps.craig.store.json.ssh_keys, "name");
+    },
+  };
+}
+
+/**
+ * shortcut for workspaces
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Array<string>}
+ */
 function powerVsWorkspaceGroups(stateData, componentProps) {
   return splat(componentProps.craig.store.json.power, "name");
 }
@@ -1246,6 +1276,7 @@ module.exports = {
   securityGroupsMultiselect,
   ipCidrListTextArea,
   onArrayInputChange,
+  vpcSshKeyMultiselect,
   powerVsWorkspaceGroups,
   powerVsStorageOptions,
   powerVsStorageType,

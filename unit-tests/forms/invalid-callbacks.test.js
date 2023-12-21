@@ -7,7 +7,6 @@ const {
   invalidCrnList,
   invalidIpCommaList,
   invalidIdentityProviderURI,
-  invalidF5Vsi,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
@@ -1192,18 +1191,6 @@ describe("invalid callbacks", () => {
         session_invalidation_in_seconds: null,
       });
       assert.isFalse(actualData);
-    });
-  });
-  describe("invalidF5Vsi", () => {
-    it("should return false if the fields have their own validation or is optional", () => {
-      assert.isFalse(
-        invalidF5Vsi("tmos_admin_password", { tmos_admin_password: "" })
-      );
-      assert.isFalse(invalidF5Vsi("app_id", { app_id: "" }));
-      assert.isFalse(invalidF5Vsi("home_phone_url", { home_phone_url: "" }));
-    });
-    it("should return true if null or empty string for other fields", () => {
-      assert.isTrue(invalidF5Vsi("template_version", { template_version: "" }));
     });
   });
   describe("invalidTagList", () => {

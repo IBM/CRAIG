@@ -291,7 +291,7 @@ class CraigToggleForm extends React.Component {
                     onModalClose={this.toggleDeleteModal}
                     onModalSubmit={this.onDelete}
                   />
-                  {RenderForm(DynamicForm, {
+                  {RenderForm(this.props.overrideDynamicForm || DynamicForm, {
                     ...this.props.innerFormProps,
                     ref: this.props.nullRef ? null : this.childRef,
                     index: this.props.index,
@@ -370,6 +370,9 @@ CraigToggleForm.propTypes = {
   }).isRequired,
   hideChevron: PropTypes.bool.isRequired,
   hideTitle: PropTypes.bool.isRequired,
+  // this is currently only being used as part of the f5 big ip wrapper
+  // to allow for toggle forms to be rendered inside one another
+  overrideDynamicForm: PropTypes.func,
 };
 
 export default CraigToggleForm;

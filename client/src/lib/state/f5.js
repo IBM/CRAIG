@@ -6,6 +6,8 @@ const {
   transpose,
   revision,
   isNullOrEmptyString,
+  buildNumberDropdownList,
+  keys,
 } = require("lazy-z");
 const { newF5Vsi } = require("../builders");
 const {
@@ -19,9 +21,12 @@ const {
   fieldIsNullOrEmptyString,
   selectInvalidText,
   unconditionalInvalidText,
+  vpcSshKeyMultiselect,
+  resourceGroupsField,
 } = require("./utils");
 const { isValidUrl } = require("../forms");
 const { RegexButWithWords } = require("regex-but-with-words");
+const { f5Images } = require("../json-to-iac");
 
 const tmosAdminPasswordValidationExp = new RegexButWithWords()
   .stringBegin()
@@ -128,7 +133,7 @@ function f5VsiCreate(config, stateData) {
  */
 function f5VsiSave(config, stateData) {
   config.store.json.f5_vsi = [];
-  eachZone(stateData.zones, (zone) => {
+  eachZone(parseInt(stateData.zones), (zone) => {
     config.store.json.f5_vsi.push(
       newF5Vsi(
         config.store.edge_pattern,
@@ -243,15 +248,45 @@ function initF5Store(store) {
         create: f5VsiCreate,
         save: f5VsiSave,
         shouldDisableSave: shouldDisableComponentSave(
-          ["ssh_keys"],
+          ["ssh_keys", "resource_group", "zones"],
           "f5",
           "vsi"
         ),
         schema: {
-          ssh_keys: {
-            default: [],
+          zones: {
+            labelText: "F5 Instance Zones",
+            groups: buildNumberDropdownList(4),
+            type: "select",
+            default: "0",
+            size: "small",
+          },
+          resource_group: resourceGroupsField(true, {
             invalid: function (stateData) {
-              return isEmpty(stateData.ssh_keys || []);
+              return stateData.zones === "0"
+                ? false
+                : fieldIsNullOrEmptyString("resource_group", true)(stateData);
+            },
+          }),
+          ssh_keys: vpcSshKeyMultiselect(true),
+          image: {
+            default: "",
+            labelText: "F5 Image",
+            type: "select",
+            size: "small",
+            groups: function () {
+              return keys(f5Images().public_image_map);
+            },
+          },
+          profile: {
+            size: "small",
+            default: "",
+            invalid: fieldIsNullOrEmptyString("profile"),
+            invalidText: selectInvalidText("profile"),
+            size: "small",
+            type: "fetchSelect",
+            groups: [],
+            apiEndpoint: function (stateData, componentProps) {
+              return `/api/vsi/${componentProps.craig.store.json._options.region}/instanceProfiles`;
             },
           },
         },
@@ -296,6 +331,7 @@ function initF5Store(store) {
           },
           tmos_admin_password: {
             default: "",
+            labelText: "TMOS Admin Password",
             tooltip: {
               content: "The admin account password for the F5 BIG-IP instance.",
               align: "right",
@@ -332,7 +368,7 @@ function initF5Store(store) {
             },
           },
           byol_license_basekey: {
-            default: "",
+            default: "null",
             invalid: licenseTypeFieldCheck("byol", "byol_license_basekey"),
             invalidText: unconditionalInvalidText("Enter a license basekey"),
             hideWhen: hideWhenNotLicenseType(["byol"]),
@@ -350,7 +386,7 @@ function initF5Store(store) {
             },
           },
           license_password: {
-            default: "",
+            default: "null",
             invalid: licenseTypeFieldCheck("regkeypool", "license_username"),
             invalidText: unconditionalInvalidText("Enter a license password"),
             hideWhen: hideWhenNotLicenseType(["regkeypool", "utilitypool"]),
@@ -360,7 +396,7 @@ function initF5Store(store) {
             },
           },
           license_host: {
-            default: "",
+            default: "null",
             invalid: licenseTypeFieldCheck("utilitypool", "license_host"),
             invalidText: unconditionalInvalidText("Enter a license host"),
             hideWhen: hideWhenNotLicenseType(["regkeypool", "utilitypool"]),
@@ -371,7 +407,7 @@ function initF5Store(store) {
             },
           },
           license_pool: {
-            default: "",
+            default: "null",
             invalid: licenseTypeFieldCheck("regkeypool", "license_pool"),
             invalidText: unconditionalInvalidText("Enter a license pool"),
             hideWhen: hideWhenNotLicenseType(["regkeypool", "utilitypool"]),
@@ -381,7 +417,7 @@ function initF5Store(store) {
             },
           },
           license_unit_of_measure: {
-            default: "",
+            default: "null",
             invalid: licenseTypeFieldCheck(
               "utilitypool",
               "license_unit_of_measure"
@@ -426,7 +462,9 @@ function initF5Store(store) {
           ts_declaration_url: {
             default: "",
             invalid: fieldIsValidUrl("ts_declaration_url"),
-            invalidText: unconditionalInvalidText("Enter a valid URL"),
+            invalidText: unconditionalInvalidText(
+              "Enter a valid URL. Must end with a /"
+            ),
             tooltip: {
               content:
                 "The URL to retrieve the f5-telemetry-streaming JSON declaration.",
@@ -437,7 +475,9 @@ function initF5Store(store) {
           do_declaration_url: {
             default: "",
             invalid: fieldIsValidUrl("do_declaration_url"),
-            invalidText: unconditionalInvalidText("Enter a valid URL"),
+            invalidText: unconditionalInvalidText(
+              "Enter a valid URL. Must end with a /"
+            ),
             tooltip: {
               content:
                 "The URL to retrieve the f5-declarative-onboarding JSON declaration.",
@@ -448,7 +488,9 @@ function initF5Store(store) {
           as3_declaration_url: {
             default: "",
             invalid: fieldIsValidUrl("as3_declaration_url"),
-            invalidText: unconditionalInvalidText("Enter a valid URL"),
+            invalidText: unconditionalInvalidText(
+              "Enter a valid URL. Must end with a /"
+            ),
             tooltip: {
               content:
                 "The URL to retrieve the f5-appsvcs-extension JSON declaration.",
@@ -458,7 +500,9 @@ function initF5Store(store) {
           phone_home_url: {
             default: "",
             invalid: fieldIsValidUrl("phone_home_url"),
-            invalidText: unconditionalInvalidText("Enter a valid URL"),
+            invalidText: unconditionalInvalidText(
+              "Enter a valid URL. Must end with a /"
+            ),
             tooltip: {
               content:
                 "The URL to POST status when BIG-IP is finished onboarding.",
@@ -468,7 +512,9 @@ function initF5Store(store) {
           tgstandby_url: {
             default: "",
             invalid: fieldIsValidUrl("tgstandby_url"),
-            invalidText: unconditionalInvalidText("Enter a valid URL"),
+            invalidText: unconditionalInvalidText(
+              "Enter a valid URL. Must end with a /"
+            ),
             labelText: "TGStandby URL",
             tooltip: {
               content:
@@ -478,7 +524,9 @@ function initF5Store(store) {
           tgrefresh_url: {
             default: "",
             invalid: fieldIsValidUrl("tgrefresh_url"),
-            invalidText: unconditionalInvalidText("Enter a valid URL"),
+            invalidText: unconditionalInvalidText(
+              "Enter a valid URL. Must end with a /"
+            ),
             tooltip: {
               content:
                 "The URL to POST L3 addresses when tgrefresh is triggered.",
@@ -489,7 +537,9 @@ function initF5Store(store) {
           tgactive_url: {
             default: "",
             invalid: fieldIsValidUrl("tgactive_url"),
-            invalidText: unconditionalInvalidText("Enter a valid URL"),
+            invalidText: unconditionalInvalidText(
+              "Enter a valid URL. Must end with a /"
+            ),
             tooltip: {
               content:
                 "The URL to POST L3 addresses when tgactive is triggered.",

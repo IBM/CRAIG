@@ -115,9 +115,16 @@ class VpcDiagramPage extends React.Component {
    * @param {*} vpcIndex
    */
   onVpcEditClick(vpcIndex) {
-    if (vpcIndex === this.state.vpcIndex) {
+    if (
+      vpcIndex === this.state.vpcIndex &&
+      this.state.aclIndex === -1 &&
+      this.state.subnetTierIndex === -1
+    ) {
       this.resetValues();
     } else {
+      if (this.state.aclIndex > -1 || this.state.subnetTierIndex > -1) {
+        this.resetValues();
+      }
       scrollToTop();
       this.setState({ vpcIndex: vpcIndex, editing: true });
     }
@@ -341,9 +348,9 @@ class VpcDiagramPage extends React.Component {
                 style={{
                   marginRight: "1rem",
                   width: "580px",
-                  marginTop: "1rem",
                 }}
               >
+                <div className="marginBottomSmall" />
                 <CraigFormHeading
                   name="VPC Networks"
                   noMarginBottom
@@ -368,6 +375,10 @@ class VpcDiagramPage extends React.Component {
                       style={{
                         marginRight: "1rem",
                         width: "580px",
+                        boxShadow:
+                          vpcIndex === this.state.vpcIndex
+                            ? " 0 10px 14px 0 rgba(0, 0, 0, 0.24),0 17px 50px 0 rgba(0, 0, 0, 0.19)"
+                            : "",
                       }}
                     >
                       <div
@@ -427,6 +438,11 @@ class VpcDiagramPage extends React.Component {
                                   border:
                                     "2px dashed " + (acl.name ? "blue" : "red"),
                                   marginTop: aclIndex === 0 ? "" : "0.75rem",
+                                  boxShadow:
+                                    this.state.vpcIndex === vpcIndex &&
+                                    this.state.aclIndex === actualAclIndex
+                                      ? " 0 10px 14px 0 rgba(0, 0, 100, 0.24),0 17px 50px 0 rgba(0, 0, 100, 0.19)"
+                                      : "",
                                 }}
                               >
                                 <div
@@ -480,11 +496,16 @@ class VpcDiagramPage extends React.Component {
                                   {craig.store.subnetTiers[vpc.name].map(
                                     (tier, tierIndex) => (
                                       <SubnetTierRow
+                                        parentVpcIndex={this.state.vpcIndex}
+                                        parentTierIndex={
+                                          this.state.subnetTierIndex
+                                        }
                                         key={vpc.name + JSON.stringify(tier)}
                                         tier={tier}
                                         tierIndex={tierIndex}
                                         vpc={vpc}
                                         acl={acl}
+                                        vpcIndex={vpcIndex}
                                         craig={craig}
                                         onClick={() => {
                                           this.onSubnetTierEditClick(
