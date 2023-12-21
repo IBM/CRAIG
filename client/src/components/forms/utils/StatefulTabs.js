@@ -37,7 +37,7 @@ class StatefulTabs extends React.Component {
             tooltip={this.props.tooltip}
             buttons={
               <DynamicRender
-                hide={props.hideButtons}
+                hide={this.props.hideButtons}
                 show={
                   <PrimaryButton
                     name={kebabCase(this.props.name)}
@@ -55,16 +55,38 @@ class StatefulTabs extends React.Component {
           this.props.form
         ) : (
           <Tabs onChange={this.setSelectedIndex}>
-            <TabList aria-label="formTabs">
-              <Tab>Create</Tab>
-              <Tab>About</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel className="doc">{this.props.form}</TabPanel>
-              <TabPanel className="doc">
-                {this.props.about ? this.props.about : ""}
-              </TabPanel>
-            </TabPanels>
+            {this.props.overrideTabs ? (
+              <TabList aria-label="formTabs">
+                {this.props.overrideTabs.map((tab, tabIndex) => (
+                  <Tab className="doc" key={`tab-${tabIndex}`}>
+                    {tab.name}
+                  </Tab>
+                ))}
+              </TabList>
+            ) : (
+              <TabList aria-label="formTabs">
+                <Tab>Create</Tab>
+                <Tab>About</Tab>
+              </TabList>
+            )}
+            {this.props.overrideTabs ? (
+              <TabPanels>
+                {this.props.overrideTabs.map((tab, tabIndex) => {
+                  return (
+                    <TabPanel className="doc" key={`tab-panel-${tabIndex}`}>
+                      {tabIndex === 0 ? this.props.form : tab.about()}
+                    </TabPanel>
+                  );
+                })}
+              </TabPanels>
+            ) : (
+              <TabPanels>
+                <TabPanel className="doc">{this.props.form}</TabPanel>
+                <TabPanel className="doc">
+                  {this.props.about ? this.props.about : ""}
+                </TabPanel>
+              </TabPanels>
+            )}
           </Tabs>
         )}
       </>

@@ -269,7 +269,7 @@ const CraigFormHeading = (props) => {
   return (
     <div
       className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter`}
-      style={{ marginBottom: "0.75rem" }}
+      style={props.noMarginBottom ? {} : { marginBottom: "0.75rem" }}
     >
       <DynamicToolTipWrapper
         tooltip={props.tooltip}

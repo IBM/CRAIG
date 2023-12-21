@@ -24,9 +24,8 @@
   background-color: white;
   padding: 0.9rem;
   border-radius: 5px;
-  color: #0f62fe;
-  box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.24),
-    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: none;
+  color: black;
 }
 
 .manageService:hover {
@@ -38,8 +37,9 @@
 }
 
 .serviceOpen {
-  color: #8d8d8d;
-  box-shadow: none;
+  color: #0f62fe;
+  box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
 .overrideGap {

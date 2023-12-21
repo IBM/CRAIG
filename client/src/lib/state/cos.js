@@ -316,6 +316,8 @@ function initObjectStorageStore(store) {
         }),
         onRender: titleCaseRender("plan"),
         onInputChange: kebabCaseInput("plan"),
+        invalid: fieldIsNullOrEmptyString("plan"),
+        invalidText: selectInvalidText("plan"),
       },
     },
     subComponents: {

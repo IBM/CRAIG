@@ -1,7 +1,7 @@
 /* this file is the main application page */
 
 import React from "react";
-import { kebabCase, titleCase, isNullOrEmptyString } from "lazy-z";
+import { kebabCase, titleCase, isNullOrEmptyString, contains } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -32,6 +32,7 @@ import {
 } from "./lib/craig-app";
 import { CloudServicesPage } from "./components/pages/cloud-services";
 import VpcDiagramPage from "./components/pages/vpc/Vpc.js";
+import { Breadcrumb, BreadcrumbItem } from "@carbon/react";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -403,6 +404,22 @@ class Craig extends React.Component {
           saveAndSendNotification={this.saveAndSendNotification}
           beta={this.props.params.betaPage}
         >
+          {contains(window.location.pathname, "/beta/") && (
+            <Breadcrumb noTrailingSlash>
+              <BreadcrumbItem
+                href="/beta/services"
+                isCurrentPage={window.location.pathname === "/beta/services"}
+              >
+                Services
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/vpc"
+                isCurrentPage={window.location.pathname === "/beta/vpc"}
+              >
+                VPC Networks
+              </BreadcrumbItem>
+            </Breadcrumb>
+          )}
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
               <About />

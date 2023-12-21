@@ -95,6 +95,7 @@ function initEventStreams(store) {
     ),
     schema: {
       name: {
+        size: "small",
         default: "",
         invalid: invalidName("event_streams"),
         invalidText: invalidNameText("event_streams"),
@@ -106,11 +107,10 @@ function initEventStreams(store) {
         invalid: fieldIsNullOrEmptyString("plan"),
         invalidText: selectInvalidText("a plan"),
         groups: ["Lite", "Standard", "Enterprise"],
-
         onRender: titleCaseRender("plan"),
         onInputChange: kebabCaseInput("plan"),
       },
-      resource_group: resourceGroupsField(false, true),
+      resource_group: resourceGroupsField(true, true),
       throughput: {
         size: "small",
         type: "select",

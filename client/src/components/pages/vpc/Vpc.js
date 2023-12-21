@@ -1,6 +1,10 @@
-import { Edit, SubnetAclRules, VirtualPrivateCloud } from "@carbon/icons-react";
-import { IcseHeading, RenderForm } from "icse-react-assets";
-import React, { useEffect } from "react";
+import {
+  IbmCloudSubnets,
+  SubnetAclRules,
+  VirtualPrivateCloud,
+} from "@carbon/icons-react";
+import { RenderForm } from "icse-react-assets";
+import React from "react";
 import { disableSave } from "../../../lib";
 import { isEmpty, splatContains } from "lazy-z";
 import { DynamicAclForm } from "./DynamicAclForm";
@@ -14,6 +18,8 @@ import {
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
+import StatefulTabs from "../../forms/utils/StatefulTabs";
+import { RenderDocs } from "../SimplePages";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -41,6 +47,7 @@ class VpcDiagramPage extends React.Component {
     this.onVpcSubmit = this.onVpcSubmit.bind(this);
     this.onVpcDelete = this.onVpcDelete.bind(this);
     this.onAclCreateClick = this.onAclCreateClick.bind(this);
+    this.onVpcEditClick = this.onVpcEditClick.bind(this);
   }
 
   onAclCreateClick(vpcIndex) {
@@ -308,227 +315,290 @@ class VpcDiagramPage extends React.Component {
             },
           })}
         </DynamicFormModal>
-        <div
-          style={{
-            marginRight: "1rem",
-            width: "580px",
-          }}
-        >
-          <CraigFormHeading
-            name="VPC Networks"
-            noMarginBottom
-            buttons={
-              <PrimaryButton
-                type="add"
-                hoverText="Create a VPC"
-                onClick={() => {
-                  this.setState({ vpcModal: true });
-                }}
-                noDeleteButton
-              />
-            }
-          />
-        </div>
-        <div className="displayFlex" style={{ width: "100%" }}>
-          <div id="left-vpc">
-            {craig.store.json.vpcs.map((vpc, vpcIndex) => (
+        <div className="marginBottomSmall" />
+        <StatefulTabs
+          overrideTabs={[
+            {
+              name: "Manage VPC Networks",
+            },
+            {
+              name: "Virtual Private Cloud",
+              about: RenderDocs("vpcs", craig.store.json._options.template),
+            },
+            {
+              name: "Access Control Lists (ACLs)",
+              about: RenderDocs("acls", craig.store.json._options.template),
+            },
+            {
+              name: "Subnets & Subnet Tiers",
+              about: RenderDocs("subnets", craig.store.json._options.template),
+            },
+          ]}
+          name="Virtual Private Cloud"
+          form={
+            <>
               <div
-                className="subForm marginBottomSmall"
-                key={vpc.name}
                 style={{
                   marginRight: "1rem",
                   width: "580px",
+                  marginTop: "1rem",
                 }}
               >
-                <div
-                  onClick={() => {
-                    this.onVpcEditClick(vpcIndex);
-                  }}
-                >
-                  <CraigFormHeading
-                    icon={
-                      <VirtualPrivateCloud
-                        style={{ marginRight: "0.5rem", marginTop: "0.33rem" }}
-                      />
-                    }
-                    type="subHeading"
-                    name={vpc.name + " VPC"}
-                    className="marginBottomSmall"
-                    buttons={
-                      <PrimaryButton
-                        type="add"
-                        hoverText="Create an ACL"
+                <CraigFormHeading
+                  name="VPC Networks"
+                  noMarginBottom
+                  buttons={
+                    <PrimaryButton
+                      type="add"
+                      hoverText="Create a VPC"
+                      onClick={() => {
+                        this.setState({ vpcModal: true });
+                      }}
+                      noDeleteButton
+                    />
+                  }
+                />
+              </div>
+              <div className="displayFlex" style={{ width: "100%" }}>
+                <div id="left-vpc">
+                  {craig.store.json.vpcs.map((vpc, vpcIndex) => (
+                    <div
+                      className="subForm marginBottomSmall"
+                      key={vpc.name}
+                      style={{
+                        marginRight: "1rem",
+                        width: "580px",
+                      }}
+                    >
+                      <div
                         onClick={() => {
-                          this.onAclCreateClick(vpcIndex);
+                          this.onVpcEditClick(vpcIndex);
                         }}
-                        noDeleteButton
-                      />
-                    }
-                  />
-                </div>
-                {isEmpty(vpc.acls) ? (
-                  <CraigEmptyResourceTile name="ACLs" />
-                ) : (
-                  // add network acl for null subnets if subnets with value null
-                  // are found
-                  (splatContains(vpc.subnets, "network_acl", null)
-                    ? [{ name: null }]
-                    : []
-                  )
-                    .concat(vpc.acls)
-                    .map((acl, aclIndex) => {
-                      // adding null offsets index, this corrects
-                      let actualAclIndex = splatContains(
-                        vpc.subnets,
-                        "network_acl",
-                        null
-                      )
-                        ? aclIndex - 1
-                        : aclIndex;
-                      return (
-                        <div
-                          key={acl.name + vpc.name + aclIndex + vpcIndex}
-                          className="formInSubForm"
-                          style={{
-                            width: "535px",
-                            border: "2px dashed " + (acl.name ? "blue" : "red"),
-                            marginTop: aclIndex === 0 ? "" : "0.75rem",
-                          }}
-                        >
-                          <div
-                            onClick={() => {
-                              this.onAclEditClick(vpcIndex, actualAclIndex);
-                            }}
-                          >
-                            <CraigFormHeading
-                              name={
-                                acl.name ? acl.name + " ACL" : "No ACL Selected"
-                              }
-                              icon={
-                                <SubnetAclRules
-                                  style={{
-                                    marginRight: "0.5rem",
-                                    marginTop: "0.33rem",
-                                  }}
-                                />
-                              }
-                              className="marginBottomSmall"
-                              type="subHeading"
-                              buttons={
-                                acl.name ? (
-                                  <>
-                                    <PrimaryButton
-                                      type="add"
-                                      hoverText="Create a new Subnet Tier"
-                                      noDeleteButton
-                                      onClick={() => {
-                                        this.setState({
-                                          vpcIndex: vpcIndex,
-                                          subnetTierCreateModal: true,
-                                          aclIndex: actualAclIndex,
-                                          editing: false,
-                                        });
-                                      }}
-                                    />
-                                  </>
-                                ) : (
-                                  ""
-                                )
-                              }
+                      >
+                        <CraigFormHeading
+                          icon={
+                            <VirtualPrivateCloud
+                              style={{
+                                marginRight: "0.5rem",
+                                marginTop: "0.33rem",
+                              }}
                             />
-                          </div>
-                          <div id="tiers">
-                            {craig.store.subnetTiers[vpc.name].map(
-                              (tier, tierIndex) => (
-                                <SubnetTierRow
-                                  key={vpc.name + JSON.stringify(tier)}
-                                  tier={tier}
-                                  tierIndex={tierIndex}
-                                  vpc={vpc}
-                                  acl={acl}
-                                  craig={craig}
+                          }
+                          type="subHeading"
+                          name={vpc.name + " VPC"}
+                          className="marginBottomSmall"
+                          buttons={
+                            <PrimaryButton
+                              type="add"
+                              hoverText="Create an ACL"
+                              onClick={() => {
+                                this.onAclCreateClick(vpcIndex);
+                              }}
+                              noDeleteButton
+                            />
+                          }
+                        />
+                      </div>
+                      {isEmpty(vpc.acls) ? (
+                        <CraigEmptyResourceTile name="ACLs" />
+                      ) : (
+                        // add network acl for null subnets if subnets with value null
+                        // are found
+                        (splatContains(vpc.subnets, "network_acl", null)
+                          ? [{ name: null }]
+                          : []
+                        )
+                          .concat(vpc.acls)
+                          .map((acl, aclIndex) => {
+                            // adding null offsets index, this corrects
+                            let actualAclIndex = splatContains(
+                              vpc.subnets,
+                              "network_acl",
+                              null
+                            )
+                              ? aclIndex - 1
+                              : aclIndex;
+                            return (
+                              <div
+                                key={acl.name + vpc.name + aclIndex + vpcIndex}
+                                className="formInSubForm"
+                                style={{
+                                  width: "535px",
+                                  border:
+                                    "2px dashed " + (acl.name ? "blue" : "red"),
+                                  marginTop: aclIndex === 0 ? "" : "0.75rem",
+                                }}
+                              >
+                                <div
                                   onClick={() => {
-                                    this.onSubnetTierEditClick(
+                                    this.onAclEditClick(
                                       vpcIndex,
-                                      tierIndex
+                                      actualAclIndex
                                     );
                                   }}
-                                />
-                              )
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
-                )}
-              </div>
-            ))}
-          </div>
-          <div id="right-vpc">
-            {this.state.editing === true &&
-            this.state.aclCreateModal === false &&
-            this.state.subnetTierCreateModal === false ? (
-              <div style={{ marginTop: "1rem" }}>
-                <CraigFormHeading
-                  type="subHeading"
-                  name={`Editing ${
-                    this.state.aclIndex > -1
-                      ? "ACL for"
-                      : this.state.subnetTierIndex > -1
-                      ? "Subnet Tier for"
-                      : ""
-                  } ${craig.store.json.vpcs[this.state.vpcIndex].name} VPC`}
-                />
-                <div
-                  style={{ width: "50vw", padding: "0" }}
-                  className="subForm"
-                >
-                  {this.state.subnetTierIndex > -1 ? (
-                    <DynamicSubnetTierForm
-                      vpcIndex={this.state.vpcIndex}
-                      subnetTierIndex={this.state.subnetTierIndex}
-                      craig={craig}
-                      onDelete={this.onSubnetTierDelete}
-                    />
-                  ) : this.state.aclIndex > -1 ? (
-                    <DynamicAclForm
-                      vpcIndex={this.state.vpcIndex}
-                      aclIndex={this.state.aclIndex}
-                      craig={craig}
-                      onDelete={this.onAclDelete}
-                    />
-                  ) : this.state.vpcIndex !== -1 ? (
-                    <CraigToggleForm
-                      key={this.state.vpcIndex}
-                      tabPanel={{
-                        hideAbout: true,
-                      }}
-                      onSave={craig.vpcs.save}
-                      onDelete={this.onVpcDelete}
-                      hide={false}
-                      hideChevron
-                      hideName
-                      hideHeading
-                      submissionFieldName="vpcs"
-                      name={
-                        craig.store.json.vpcs[this.state.vpcIndex].name + " VPC"
-                      }
-                      innerFormProps={{
-                        form: vpcFormData,
-                        craig: craig,
-                        data: craig.store.json.vpcs[this.state.vpcIndex],
-                      }}
-                    />
+                                >
+                                  <CraigFormHeading
+                                    name={
+                                      acl.name
+                                        ? acl.name + " ACL"
+                                        : "No ACL Selected"
+                                    }
+                                    icon={
+                                      <SubnetAclRules
+                                        style={{
+                                          marginRight: "0.5rem",
+                                          marginTop: "0.33rem",
+                                        }}
+                                      />
+                                    }
+                                    className="marginBottomSmall"
+                                    type="subHeading"
+                                    buttons={
+                                      acl.name ? (
+                                        <>
+                                          <PrimaryButton
+                                            type="add"
+                                            hoverText="Create a new Subnet Tier"
+                                            noDeleteButton
+                                            onClick={() => {
+                                              this.setState({
+                                                vpcIndex: vpcIndex,
+                                                subnetTierCreateModal: true,
+                                                aclIndex: actualAclIndex,
+                                                editing: false,
+                                              });
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        ""
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div id="tiers">
+                                  {craig.store.subnetTiers[vpc.name].map(
+                                    (tier, tierIndex) => (
+                                      <SubnetTierRow
+                                        key={vpc.name + JSON.stringify(tier)}
+                                        tier={tier}
+                                        tierIndex={tierIndex}
+                                        vpc={vpc}
+                                        acl={acl}
+                                        craig={craig}
+                                        onClick={() => {
+                                          this.onSubnetTierEditClick(
+                                            vpcIndex,
+                                            tierIndex
+                                          );
+                                        }}
+                                      />
+                                    )
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div id="right-vpc">
+                  {this.state.editing === true &&
+                  this.state.aclCreateModal === false &&
+                  this.state.subnetTierCreateModal === false ? (
+                    <div style={{ marginTop: "1rem" }}>
+                      <CraigFormHeading
+                        noMarginBottom
+                        type="subHeading"
+                        icon={
+                          this.state.subnetTierIndex > -1 ? (
+                            <IbmCloudSubnets
+                              style={{
+                                marginRight: "0.5rem",
+                                marginTop: "0.33rem",
+                              }}
+                            />
+                          ) : this.state.aclIndex > -1 ? (
+                            <SubnetAclRules
+                              style={{
+                                marginRight: "0.5rem",
+                                marginTop: "0.33rem",
+                              }}
+                            />
+                          ) : (
+                            <VirtualPrivateCloud
+                              style={{
+                                marginRight: "0.5rem",
+                                marginTop: "0.33rem",
+                              }}
+                            />
+                          )
+                        }
+                        name={`Editing ${
+                          this.state.aclIndex > -1
+                            ? "ACL for"
+                            : this.state.subnetTierIndex > -1
+                            ? "Subnet Tier for"
+                            : ""
+                        } ${
+                          craig.store.json.vpcs[this.state.vpcIndex].name
+                        } VPC`}
+                      />
+                      <div
+                        style={{ width: "50vw", padding: "0" }}
+                        className="subForm"
+                      >
+                        {this.state.subnetTierIndex > -1 ? (
+                          <DynamicSubnetTierForm
+                            vpcIndex={this.state.vpcIndex}
+                            subnetTierIndex={this.state.subnetTierIndex}
+                            craig={craig}
+                            onDelete={this.onSubnetTierDelete}
+                          />
+                        ) : this.state.aclIndex > -1 ? (
+                          <DynamicAclForm
+                            vpcIndex={this.state.vpcIndex}
+                            aclIndex={this.state.aclIndex}
+                            craig={craig}
+                            onDelete={this.onAclDelete}
+                          />
+                        ) : this.state.vpcIndex !== -1 ? (
+                          <CraigToggleForm
+                            key={this.state.vpcIndex}
+                            tabPanel={{
+                              hideAbout: true,
+                            }}
+                            onSave={craig.vpcs.save}
+                            onDelete={this.onVpcDelete}
+                            hide={false}
+                            hideChevron
+                            hideName
+                            hideHeading
+                            submissionFieldName="vpcs"
+                            name={
+                              craig.store.json.vpcs[this.state.vpcIndex].name +
+                              " VPC"
+                            }
+                            innerFormProps={{
+                              form: vpcFormData,
+                              craig: craig,
+                              data: craig.store.json.vpcs[this.state.vpcIndex],
+                            }}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
                   ) : (
                     ""
                   )}
                 </div>
               </div>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
+            </>
+          }
+        />
       </>
     );
   }

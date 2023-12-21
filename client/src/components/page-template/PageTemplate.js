@@ -241,11 +241,12 @@ const PageTemplate = (props) => {
           )}
         </>
       )}
-
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
           className={
-            props.hideCodeMirror || formPathNotPresent
+            props.hideCodeMirror ||
+            formPathNotPresent ||
+            contains(window.location.pathname, "/beta/")
               ? "widthOneHundredPercent"
               : "leftPanelWidth"
           }
