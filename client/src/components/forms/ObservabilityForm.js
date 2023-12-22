@@ -1,86 +1,101 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  LogDNAForm,
-  StatefulTabPanel,
-  SysdigForm,
-  ToggleForm,
-} from "icse-react-assets";
-import { splat } from "lazy-z";
 import { RenderDocs } from "../pages/SimplePages";
-import { disableSave, forceShowForm, propsMatchState } from "../../lib";
+import { forceShowForm } from "../../lib";
+import StatefulTabs from "./utils/StatefulTabs";
+import { CraigToggleForm } from "./utils";
 
 function none() {}
 
 const ObservabilityForm = (props) => {
+  let craig = props.craig;
   return (
     <>
-      <StatefulTabPanel
+      <StatefulTabs
         name="Observability"
         about={RenderDocs(
           "observability",
-          props.craig.store.json._options.template
+          craig.store.json._options.template
         )()}
         form={
           <div>
-            <ToggleForm
+            <CraigToggleForm
+              hideHeading
               type="subForm"
               name="LogDNA"
               submissionFieldName="logdna"
               hideName
               noDeleteButton
-              useAddButton={props.craig.store.json.logdna.enabled === false}
+              useAddButton={craig.store.json.logdna.enabled === false}
               onShowToggle={none}
-              onSave={props.craig.logdna.save}
+              onSave={craig.logdna.save}
               onDelete={none}
-              disableSave={disableSave}
-              propsMatchState={propsMatchState}
-              innerForm={LogDNAForm}
               tabPanel={{
                 name: props.name,
                 hideAbout: true,
                 hasBuiltInHeading: true,
               }}
-              craig={props.craig}
+              craig={craig}
               innerFormProps={{
-                craig: props.craig,
-                data: props.craig.store.json.logdna,
-                resourceGroups: splat(
-                  props.craig.store.json.resource_groups,
-                  "name"
-                ),
-                cosBuckets: props.craig.store.cosBuckets,
-                prefix: props.craig.store.json._options.prefix,
+                craig: craig,
+                data: craig.store.json.logdna,
+                form: {
+                  groups: [
+                    {
+                      enabled: craig.logdna.enabled,
+                    },
+                    {
+                      name: craig.logdna.name,
+                      plan: craig.logdna.plan,
+                      resource_group: craig.logdna.resource_group,
+                    },
+                    {
+                      bucket: craig.logdna.bucket,
+                      archive: craig.logdna.archive,
+                      platform_logs: craig.logdna.platform_logs,
+                    },
+                  ],
+                },
               }}
-              forceOpen={forceShowForm}
+              forceOpen={
+                craig.store.json.logdna.enabled ? forceShowForm : undefined
+              }
             />
-            <ToggleForm
+            <CraigToggleForm
               type="subForm"
               name="Sysdig"
+              hideHeading
               submissionFieldName="sysdig"
               hideName
               noDeleteButton
-              useAddButton={props.craig.store.json.sysdig.enabled === false}
+              useAddButton={craig.store.json.sysdig.enabled === false}
               onShowToggle={none}
-              onSave={props.craig.sysdig.save}
+              onSave={craig.sysdig.save}
               onDelete={none}
-              disableSave={disableSave}
-              propsMatchState={propsMatchState}
-              innerForm={SysdigForm}
               tabPanel={{
                 name: props.name,
                 hideAbout: true,
                 hasBuiltInHeading: true,
               }}
-              craig={props.craig}
+              craig={craig}
               innerFormProps={{
-                craig: props.craig,
-                data: props.craig.store.json.sysdig,
-                resourceGroups: splat(
-                  props.craig.store.json.resource_groups,
-                  "name"
-                ),
-                prefix: props.craig.store.json._options.prefix,
+                craig: craig,
+                data: craig.store.json.sysdig,
+                form: {
+                  groups: [
+                    {
+                      enabled: craig.sysdig.enabled,
+                    },
+                    {
+                      name: craig.sysdig.name,
+                      resource_group: craig.sysdig.resource_group,
+                    },
+                    {
+                      plan: craig.sysdig.plan,
+                      platform_logs: craig.sysdig.platform_logs,
+                    },
+                  ],
+                },
               }}
               forceOpen={forceShowForm}
             />
