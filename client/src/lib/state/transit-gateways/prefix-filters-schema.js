@@ -75,7 +75,7 @@ function prefixFiltersSchema() {
       placeholder: "X.X.X.X/X",
       invalid: function (stateData) {
         return (
-          !isIpv4CidrOrAddress(stateData.prefix) ||
+          !isIpv4CidrOrAddress(stateData.prefix || "") ||
           !contains(stateData.prefix, "/")
         );
       },

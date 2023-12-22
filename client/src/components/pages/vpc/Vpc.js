@@ -20,6 +20,7 @@ import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { RenderDocs } from "../SimplePages";
+import { craigForms } from "../CraigForms";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -178,50 +179,7 @@ class VpcDiagramPage extends React.Component {
       this.state.vpcIndex > -1
         ? craig.store.json.vpcs[this.state.vpcIndex].name
         : "";
-    // we'll have to move this to a file somewhere at some point
-    let vpcFormData = {
-      setDefault: {
-        public_gateways: [],
-        publicGateways: [],
-      },
-      groups: [
-        {
-          name: craig.vpcs.name,
-          resource_group: craig.vpcs.resource_group,
-          bucket: craig.vpcs.bucket,
-        },
-        {
-          default_network_acl_name: craig.vpcs.default_network_acl_name,
-          default_security_group_name: craig.vpcs.default_security_group_name,
-          default_routing_table_name: craig.vpcs.default_routing_table_name,
-        },
-        {
-          heading: {
-            name: "Public Gateways",
-            type: "subHeading",
-            tooltip: {
-              content:
-                "Public Gateways allow for all resources in a zone to communicate with the public internet. " +
-                "Public Gateways are not needed for subnets where a VPN gateway is created.",
-            },
-          },
-        },
-        {
-          pgw_zone_1: craig.vpcs.pgw_zone_1,
-          pgw_zone_2: craig.vpcs.pgw_zone_2,
-          pgw_zone_3: craig.vpcs.pgw_zone_3,
-        },
-        {
-          heading: {
-            name: "Classic Access",
-            type: "subHeading",
-          },
-        },
-        {
-          classic_access: craig.vpcs.classic_access,
-        },
-      ],
-    };
+    let vpcFormData = craigForms(craig).vpcs;
     return (
       <>
         <DynamicFormModal

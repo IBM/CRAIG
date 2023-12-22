@@ -20,7 +20,7 @@ const defaultZones = [
   "us-east",
   "dal10",
   "dal12",
-  // "us-south", this isn't working for some reason, need to investigate
+  "us-south",
   "eu-de-1",
   "eu-de-2",
   "lon04",

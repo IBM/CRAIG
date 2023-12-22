@@ -183,7 +183,12 @@ function invalidSshPublicKey(stateData, componentProps) {
     invalidText:
       "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region",
   };
-  if (!validSshKey(stateData.public_key)) {
+  if (stateData.public_key === "NONE") {
+    return {
+      invalid: false,
+      invalidText: "",
+    };
+  } else if (!validSshKey(stateData.public_key)) {
     invalid.invalid = true;
   } else if (
     // if public key already used

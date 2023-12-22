@@ -1320,6 +1320,13 @@ describe("transit_gateways", () => {
             "it should return correct text"
           );
         });
+        it("should return true when not a cidr block", () => {
+          let craig = newState();
+          assert.isTrue(
+            craig.transit_gateways.prefix_filters.prefix.invalid({}),
+            "it should return correct text"
+          );
+        });
         it("should return true when an ipv4 address but not a cidr block", () => {
           let craig = newState();
           assert.isTrue(

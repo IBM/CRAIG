@@ -96,7 +96,17 @@ describe("propsMatchState", () => {
   });
   it("should set component props data show to statedata show when checking if props match for security group", () => {
     assert.isTrue(
-      propsMatchState("security_groups", { show: false }, { data: {} }),
+      propsMatchState(
+        "security_groups",
+        { show: false },
+        { data: { show: true } }
+      ),
+      "it should be true"
+    );
+  });
+  it("should set component props data show to statedata show when checking if props match for security group when no show", () => {
+    assert.isTrue(
+      propsMatchState("security_groups", {}, { data: {} }),
       "it should be true"
     );
   });

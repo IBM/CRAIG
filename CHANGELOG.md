@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Users can now enable IP spoofing on the primary network interface for Virtual Servers
 - Users can now create additional VPC address prefixes from the VPN Gateways page
 - Users can now add VPN Gateway connections from the VPN Gateways page
+- Users can now enter NONE as a valid SSH Key
 - Users can now provider Power VS instances with Cloud Init user data
 
 ### Fixes
@@ -29,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue allowing users to create DNS zones with duplicate names
 - Fixed an issue causing Access Groups and Access Group Policies to have incorrect references to their parent access groups
 - Fixed an issue causing Terraform output for COS authorization credentials to always have the role `Writer` regardless of selection
+- Fixed an issue causing Transit Gateway Prefix Filter Modal to crash application
 
 ## 1.7.1
 

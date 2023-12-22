@@ -706,6 +706,43 @@ describe("invalid callbacks", () => {
     assert.isTrue(actualData, "it should be true");
   });
   describe("invalidSshKey", () => {
+    it("should return false when updating name and NONE", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          use_data: false,
+          name: "new-name",
+          resource_group: "management-rg",
+          public_key: "NONE",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [
+                  {
+                    name: "ssh-key",
+                    resource_group: "management-rg",
+                    public_key:
+                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "ssh-key",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        {
+          invalid: false,
+          invalidText: "",
+        },
+        "it should be valid"
+      );
+    });
     it("should return false when updating name", () => {
       let actualData = invalidSshPublicKey(
         {

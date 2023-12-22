@@ -34,6 +34,7 @@ import {
   SubnetTileSubForm,
   SubnetTileTitle,
 } from "./dynamic-form/SubnetTileSubForm";
+import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
 
 const doNotRenderFields = [
   "heading",
@@ -233,6 +234,7 @@ class DynamicForm extends React.Component {
           handleInputChange={this.handleInputChange}
         />
         <NaclRulesSubForm parentProps={this.props} parentState={this.state} />
+        <SgRulesSubForm parentProps={this.props} parentState={this.state} />
         <OptionsButton parentProps={this.props} parentState={this.state} />
         <SubnetTileSubForm
           parentProps={this.props}

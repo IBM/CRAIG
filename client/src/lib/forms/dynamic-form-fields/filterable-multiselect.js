@@ -25,18 +25,18 @@ function dynamicMultiSelectProps(props) {
 
   // should always be invalid when no selection is made
   let invalid =
-    (stateValue && stateValue.length === 0 && props.field.optional) ||
+    (stateValue && stateValue?.length === 0 && props.field.optional) ||
     contains(
       ["power_connections", "accept_routes_from_resource_type"],
       props.name
     )
       ? false
       : // force network to not display as invalid when ip is invalid
-      stateValue.length > 0 && props.name === "network"
+      stateValue?.length > 0 && props.name === "network"
       ? false
       : invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps") === false
       ? false
-      : stateValue.length > 0
+      : stateValue?.length > 0
       ? invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps")
       : true;
 

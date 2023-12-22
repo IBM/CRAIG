@@ -61,7 +61,10 @@ function propsMatchState(field, stateData, componentProps) {
       return false;
     }
   } else if (field === "security_groups") {
-    componentProps.data.show = stateData.show;
+    // this is here to prevent dynamic subnet form from always showing save
+    // button as disabled. as we move towards dynamic forms this should
+    // be removed
+    if (stateData.show !== undefined) componentProps.data.show = stateData.show;
   }
   if (field === "power") {
     if (

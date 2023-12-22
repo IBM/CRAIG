@@ -319,4 +319,5 @@ export {
   DynamicMultiSelect,
   DynamicPublicKey,
   DynamicDatePicker,
+  tagColors,
 };

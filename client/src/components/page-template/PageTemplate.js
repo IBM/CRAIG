@@ -134,6 +134,12 @@ let pageOrder = [
     path: "/beta/vpc",
     icon: Settings,
   },
+  {
+    // temporary to get page to render
+    title: "VPC Deployments",
+    path: "/beta/vpcDeployments",
+    icon: Settings,
+  },
 ];
 
 // for each nav category
@@ -281,8 +287,7 @@ const PageTemplate = (props) => {
           hideCodeMirror={
             formPathNotPresent === true ||
             props.hideCodeMirror ||
-            window.location.pathname === "/beta/services" ||
-            window.location.pathname === "/beta/vpc"
+            contains(window.location.pathname, "/beta")
           }
           code={codeMirrorGetDisplay(
             props.json,

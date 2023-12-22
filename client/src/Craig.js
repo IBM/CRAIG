@@ -33,6 +33,7 @@ import {
 import { CloudServicesPage } from "./components/pages/cloud-services";
 import VpcDiagramPage from "./components/pages/vpc/Vpc.js";
 import { Breadcrumb, BreadcrumbItem } from "@carbon/react";
+import VpcDeploymentsDiagramPage from "./components/pages/vpc/VpcDeployments.js";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -418,6 +419,14 @@ class Craig extends React.Component {
               >
                 VPC Networks
               </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/vpcDeployments"
+                isCurrentPage={
+                  window.location.pathname === "/beta/vpcDeployments"
+                }
+              >
+                VPC Deployments
+              </BreadcrumbItem>
             </Breadcrumb>
           )}
           {this.props.params.doc ? (
@@ -456,6 +465,8 @@ class Craig extends React.Component {
             <CloudServicesPage craig={craig} />
           ) : window.location.pathname === "/beta/vpc" ? (
             <VpcDiagramPage craig={craig} />
+          ) : window.location.pathname === "/beta/vpcDeployments" ? (
+            <VpcDeploymentsDiagramPage craig={craig} />
           ) : window.location.pathname === "/form/cbr" ? (
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
