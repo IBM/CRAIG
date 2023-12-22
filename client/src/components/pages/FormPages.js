@@ -7,7 +7,6 @@ import {
   propsMatchState,
 } from "../../lib";
 import {
-  AtrackerPage,
   SecretsManagerTemplate,
   SecurityGroupTemplate,
   SubnetPageTemplate,
@@ -221,19 +220,48 @@ const AppIdPage = (craig) => {
 
 const Atracker = (craig) => {
   return (
-    <AtrackerPage
-      docs={RenderDocs("atracker", craig.store.json._options.template)()}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
+    <CraigToggleForm
       craig={craig}
-      prefix={craig.store.json._options.prefix}
-      region={craig.store.json._options.region}
-      data={craig.store.json.atracker}
-      resourceName={`${craig.store.json._options.prefix}-atracker`}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      cosKeys={craig.store.cosKeys}
-      cosBuckets={craig.store.cosBuckets}
+      about={RenderDocs("atracker", craig.store.json._options.template)()}
+      name="iac-atracker"
+      hideName
+      noDeleteButton={true}
+      onDelete={craig.atracker.delete}
+      useAddButton={false}
+      tabPanel={{
+        name: "Activity Tracker",
+      }}
+      onShowToggle={() => {}}
+      submissionFieldName="atracker"
       onSave={craig.atracker.save}
+      innerFormProps={{
+        craig: craig,
+        data: craig.store.json.atracker,
+        disableSave: disableSave,
+        form: {
+          jsonField: "atracker",
+          disableSave: disableSave,
+          groups: [
+            {
+              enabled: craig.atracker.enabled,
+              instance: craig.atracker.instance,
+            },
+            {
+              name: craig.atracker.name,
+              locations: craig.atracker.locations,
+              bucket: craig.atracker.bucket,
+            },
+            {
+              add_route: craig.atracker.add_route,
+              cos_key: craig.atracker.cos_key,
+            },
+            {
+              resource_group: craig.atracker.resource_group,
+              plan: craig.atracker.plan,
+            },
+          ],
+        },
+      }}
     />
   );
 };

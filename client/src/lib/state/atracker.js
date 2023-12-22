@@ -1,6 +1,6 @@
 const { transpose, isEmpty, isNullOrEmptyString } = require("lazy-z");
 const { shouldDisableComponentSave } = require("./utils");
-const { splatContains } = require("lazy-z/lib/objects");
+const { splatContains, nestedSplat, splat } = require("lazy-z");
 
 /**
  * initialize atracker
@@ -54,6 +54,24 @@ function atrackerSave(config, stateData) {
   transpose(stateData, config.store.json.atracker);
 }
 
+/**
+ * Returns true if atracker is disabled
+ * @param {object} stateData
+ * @returns {boolean} true when should be hidden
+ */
+function hideWhenDisabled(stateData) {
+  return !stateData.enabled;
+}
+
+/**
+ * Returns true if no atracker instance is created
+ * @param {object} stateData
+ * @returns {boolean} true when should be hidden
+ */
+function hideWhenNoInstance(stateData) {
+  return !(stateData.enabled && stateData.instance);
+}
+
 function initAtracker(store) {
   store.newField("atracker", {
     init: atrackerInit,
@@ -66,12 +84,30 @@ function initAtracker(store) {
     schema: {
       enabled: {
         default: true,
+        type: "toggle",
+        size: "medium",
+        labelText: "Enable",
+        tooltip: {
+          content:
+            "Enable or Disable routing in your Activity Tracker Instance",
+          align: "right",
+        },
       },
       name: {
         default: "",
+        readOnly: true,
+        hideWhen: hideWhenDisabled,
+        onRender: function () {
+          return "iac-atracker";
+        },
       },
       resource_group: {
         default: "",
+        type: "select",
+        hideWhen: hideWhenNoInstance,
+        groups: function (stateData, componentProps) {
+          return splat(componentProps.craig.store.json.resource_groups, "name");
+        },
         invalidText: function () {
           return "Select a Resource Group";
         },
@@ -87,6 +123,21 @@ function initAtracker(store) {
       },
       bucket: {
         default: "",
+        type: "select",
+        labelText: "Object Storage Log Bucket",
+        hideWhen: hideWhenDisabled,
+        tooltip: {
+          content:
+            "The bucket name under the Cloud Object Storage instance where Activity Tracker logs will be stored",
+          align: "top",
+        },
+        groups: function (stateData, componentProps) {
+          return nestedSplat(
+            componentProps.craig.store.json.object_storage,
+            "buckets",
+            "name"
+          );
+        },
         invalid: function (stateData) {
           return stateData.enabled
             ? isNullOrEmptyString(stateData.bucket)
@@ -98,6 +149,21 @@ function initAtracker(store) {
       },
       cos_key: {
         default: "",
+        type: "select",
+        labelText: "Privileged IAM Object Storage Key",
+        hideWhen: hideWhenDisabled,
+        tooltip: {
+          content:
+            "The IAM API key that has writer access to the Cloud Object Storage instance",
+          align: "top",
+        },
+        groups: function (stateData, componentProps) {
+          return nestedSplat(
+            componentProps.craig.store.json.object_storage,
+            "keys",
+            "name"
+          );
+        },
         invalid: function (stateData) {
           return stateData.enabled ? !stateData.cos_key : false;
         },
@@ -107,9 +173,21 @@ function initAtracker(store) {
       },
       add_route: {
         default: false,
+        type: "toggle",
+        size: "medium",
+        hideWhen: hideWhenDisabled,
+        labelText: "Create Route",
+        tooltip: {
+          content:
+            "Must be enabled in order to forward all logs to the Cloud Object Storage bucket",
+          align: "right",
+        },
       },
       locations: {
         default: [],
+        type: "multiselect",
+        groups: ["global", "us-south"],
+        hideWhen: hideWhenDisabled,
         invalid: function (stateData) {
           return stateData.enabled ? isEmpty(stateData.locations) : false;
         },
@@ -119,9 +197,20 @@ function initAtracker(store) {
       },
       instance: {
         default: false,
+        type: "toggle",
+        size: "medium",
+        labelText: "Create Activity Tracker Instance",
+        tooltip: {
+          content:
+            "Only one instance of Activity Tracker can be created per region.",
+          align: "right",
+        },
       },
       plan: {
         default: "lite",
+        type: "select",
+        groups: ["Lite", "7 Day", "14 Day", "30 Day"],
+        hideWhen: hideWhenNoInstance,
         invalidText: function () {
           return "Select a plan.";
         },

@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
-
+const craig = state();
 /**
  * initialize store
  * @returns {lazyZState} state store
@@ -120,6 +120,44 @@ describe("atracker", () => {
         state.store.json.atracker.target_name,
         "atracker",
         "it should set target name"
+      );
+    });
+  });
+  describe("atracker.schema", () => {
+    it("should return correct name on render", () => {
+      assert.deepEqual(
+        craig.atracker.name.onRender(),
+        "iac-atracker",
+        "it should return correct text"
+      );
+    });
+    it("should hide cos bucket when atracker is disabled", () => {
+      assert.isTrue(craig.atracker.bucket.hideWhen({ enabled: false }));
+    });
+    it("should hide plan when atracker instance is false", () => {
+      assert.isTrue(
+        craig.atracker.plan.hideWhen({ enabled: true, instance: false })
+      );
+    });
+    it("should return the correct cos buckets", () => {
+      assert.deepEqual(
+        newState().atracker.bucket.groups({}, { craig: newState() }),
+        ["atracker-bucket", "management-bucket", "workload-bucket"],
+        "it should return list of cos buckets"
+      );
+    });
+    it("should return the correct resource groups", () => {
+      assert.deepEqual(
+        newState().atracker.resource_group.groups({}, { craig: newState() }),
+        ["service-rg", "management-rg", "workload-rg"],
+        "it should return list of resource groups"
+      );
+    });
+    it("should return the correct cos keys", () => {
+      assert.deepEqual(
+        newState().atracker.cos_key.groups({}, { craig: newState() }),
+        ["cos-bind-key"],
+        "it should return list of cos keys"
       );
     });
   });
