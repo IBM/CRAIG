@@ -7,7 +7,8 @@
       "Users can now create SCC V2 Resources fomr the `/form/sccV2` page",
       "Users can now enable IP spoofing on the primary network interface for Virtual Servers",
       "Users can now create additional VPC address prefixes from the VPN Gateways page",
-      "Users can now add VPN Gateway connections from the VPN Gateways page"
+      "Users can now add VPN Gateway connections from the VPN Gateways page",
+      "Users can now provider Power VS instances with Cloud Init user data"
     ],
     "fixes": [
       "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",

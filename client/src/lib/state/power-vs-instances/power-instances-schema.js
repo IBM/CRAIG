@@ -369,6 +369,13 @@ function powerVsInstanceSchema(vtl) {
       },
       invalidText: unconditionalInvalidText("Enter a whole number"),
     },
+    pi_user_data: {
+      type: "textArea",
+      optional: "true",
+      default: null,
+      labelText: "User Data",
+      placeholder: "Cloud init data",
+    },
   };
 }
 

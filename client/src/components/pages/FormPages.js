@@ -1439,6 +1439,9 @@ const PowerVsInstances = (craig) => {
           pi_affinity_instance: craig.power_instances.pi_affinity_instance,
         },
         {
+          pi_user_data: craig.power_instances.pi_user_data,
+        },
+        {
           heading: {
             name: "IP Interface Options",
             type: "subHeading",

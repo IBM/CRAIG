@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Users can now enable IP spoofing on the primary network interface for Virtual Servers
 - Users can now create additional VPC address prefixes from the VPN Gateways page
 - Users can now add VPN Gateway connections from the VPN Gateways page
+- Users can now provider Power VS instances with Cloud Init user data
 
 ### Fixes
 

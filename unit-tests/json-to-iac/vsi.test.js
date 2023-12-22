@@ -139,7 +139,9 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
   zone           = "\${var.region}-1"
-  user_data      = ""test-user-data""
+  user_data      = <<USER_DATA
+"test-user-data"
+  USER_DATA
   tags = [
     "slz",
     "landing-zone"
@@ -200,7 +202,9 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
   zone           = "\${var.region}-1"
-  user_data      = ""test-user-data""
+  user_data      = <<USER_DATA
+"test-user-data"
+  USER_DATA
   tags = [
     "slz",
     "landing-zone"
@@ -276,7 +280,9 @@ resource "ibm_is_instance" "management_server" {
   resource_group = ibm_resource_group.slz_management_rg.id
   vpc            = module.management_vpc.id
   zone           = "\${var.region}-1"
-  user_data      = ""test-user-data""
+  user_data      = <<USER_DATA
+"test-user-data"
+  USER_DATA
   tags = [
     "slz",
     "landing-zone"

@@ -122,7 +122,9 @@ function ibmIsInstance(vsi, config) {
   });
   vsiData.keys = allSshKeyIds;
   if (vsi.user_data) {
-    vsiData.user_data = vsi.user_data;
+    vsiData.user_data = contains(vsi.user_data, "${data.")
+      ? vsi.user_data
+      : `\${<<USER_DATA\n${vsi.user_data}\n  USER_DATA}`;
   }
   if (vsi.volumes) {
     vsiData.volumes = [];
