@@ -14,7 +14,6 @@ const {
   hideHelperText,
 } = require("./utils");
 const { invalidIpCommaList } = require("../forms/invalid-callbacks");
-const { iamAccountSettingInvalidText } = require("../forms/text-callbacks");
 const { invalidName, invalidNameText } = require("../forms");
 const { isNullOrEmptyString, buildNumberDropdownList } = require("lazy-z");
 const conditionOperators = {
@@ -24,6 +23,81 @@ const conditionOperators = {
   NOT_EQUALS_IGNORE_CASE: "Not Equals (Ignore Case)",
   NOT_EQUALS: "Not Equals",
   CONTAINS: "Contains",
+};
+const restrictMenuItems = ["Unset", "Yes", "No"];
+const mfaMenuItems = [
+  "NONE",
+  "TOTP",
+  "TOTP4ALL",
+  "Email-Based MFA",
+  "TOTP MFA",
+  "U2F MFA",
+];
+const iamItems = {
+  null: {
+    display: null,
+    value: null,
+  },
+  NONE: {
+    display: "NONE",
+    value: "NONE",
+  },
+  TOTP: {
+    display: "TOTP",
+    value: "TOTP",
+  },
+  TOTP4ALL: {
+    display: "TOTP4ALL",
+    value: "TOTP4ALL",
+  },
+  LEVEL1: {
+    display: "Email-Based MFA",
+    value: "LEVEL1",
+  },
+  LEVEL2: {
+    display: "TOTP MFA",
+    value: "LEVEL2",
+  },
+  LEVEL3: {
+    display: "U2F MFA",
+    value: "LEVEL3",
+  },
+  NOT_SET: {
+    display: "Unset",
+    value: "NOT_SET",
+  },
+  RESTRICTED: {
+    display: "Yes",
+    value: "RESTRICTED",
+  },
+  NOT_RESTRICTED: {
+    display: "No",
+    value: "NOT_RESTRICTED",
+  },
+  "Email-Based MFA": {
+    display: "Email-Based MFA",
+    value: "LEVEL1",
+  },
+  "TOTP MFA": {
+    display: "TOTP MFA",
+    value: "LEVEL2",
+  },
+  "U2F MFA": {
+    display: "U2F MFA",
+    value: "LEVEL3",
+  },
+  Unset: {
+    display: "Unset",
+    value: "NOT_SET",
+  },
+  Yes: {
+    display: "Yes",
+    value: "RESTRICTED",
+  },
+  No: {
+    display: "No",
+    value: "NOT_RESTRICTED",
+  },
 };
 
 /**
@@ -53,10 +127,25 @@ function initIamStore(store) {
       mfa: {
         default: null,
         invalid: fieldIsNullOrEmptyString("mfa", true),
-        invalidText: iamAccountSettingInvalidText("mfa"),
+        type: "select",
+        groups: mfaMenuItems,
+        labelText: "Multi-Factor Authentication",
+        onRender: function (stateData) {
+          return isNullOrEmptyString(stateData?.mfa, true)
+            ? ""
+            : iamItems[stateData.mfa].display;
+        },
+        onStateChange: function (stateData) {
+          if (!stateData.mfa) {
+            stateData.mfa = null;
+          }
+          stateData.mfa = iamItems[stateData.mfa].value;
+        },
       },
       allowed_ip_addresses: {
-        default: null,
+        type: "textArea",
+        default: "",
+        placeholder: "(Optional) X.X.X.X, X.X.X.X/X, ...",
         invalidText: unconditionalInvalidText(
           "Enter a comma separated list of IP addresses or CIDR blocks"
         ),
@@ -65,15 +154,39 @@ function initIamStore(store) {
             ? invalidIpCommaList(stateData.allowed_ip_addresses)
             : false;
         },
+        labelText: "Allowed IPs",
+        tooltip: {
+          content:
+            "IP addresses and subnets from which IAM tokens can be created for the account",
+          align: "top-left",
+        },
       },
       include_history: {
         default: false,
+        size: "small",
+        type: "toggle",
+        labelText: "(Optional) Include History",
+        tooltip: {
+          content: "Defines if the entity history is included in the response.",
+          align: "top-left",
+        },
       },
       if_match: {
         default: null,
+        size: "small",
+        labelText: "Version",
+        tooltip: {
+          content:
+            'Version of the account settings to update, if no value is supplied then the default value "*" is used to indicate to update any version available. This might result in stale updates.',
+          align: "top-left",
+        },
+        placeholder: "1",
+        invalid: isNullOrEmptyString("if_match"),
       },
       max_sessions_per_identity: {
         default: null,
+        size: "small",
+        placeholder: "1",
         invalid: function (stateData) {
           return (
             stateData.max_sessions_per_identity < 1 ||
@@ -81,11 +194,34 @@ function initIamStore(store) {
           );
         },
         invalidText: unconditionalInvalidText("Value must be in range [1-10]"),
+        labelText: "Max Sessions Per Identity",
+        tooltip: {
+          content: "The number of sessions allowed per user at a time",
+          align: "bottom-left",
+        },
       },
       restrict_create_service_id: {
         default: null,
         invalid: fieldIsNullOrEmptyString("restrict_create_service_id", true),
         invalidText: unconditionalInvalidText("Invalid"),
+        type: "select",
+        groups: restrictMenuItems,
+        labelText: "Restrict Creation of Service IDs",
+        onRender: function (stateData) {
+          return isNullOrEmptyString(
+            stateData?.restrict_create_service_id,
+            true
+          )
+            ? ""
+            : iamItems[stateData.restrict_create_service_id].display;
+        },
+        onStateChange: function (stateData) {
+          if (!stateData.restrict_create_service_id) {
+            stateData.restrict_create_service_id = null;
+          }
+          stateData.restrict_create_service_id =
+            iamItems[stateData.restrict_create_service_id].value;
+        },
       },
       restrict_create_platform_apikey: {
         default: null,
@@ -94,6 +230,24 @@ function initIamStore(store) {
           true
         ),
         invalidText: unconditionalInvalidText("Invalid"),
+        type: "select",
+        groups: restrictMenuItems,
+        labelText: "Restrict Creation of API Keys",
+        onRender: function (stateData) {
+          return isNullOrEmptyString(
+            stateData?.restrict_create_platform_apikey,
+            true
+          )
+            ? ""
+            : iamItems[stateData.restrict_create_platform_apikey].display;
+        },
+        onStateChange: function (stateData) {
+          if (!stateData.restrict_create_platform_apikey) {
+            stateData.restrict_create_platform_apikey = null;
+          }
+          stateData.restrict_create_platform_apikey =
+            iamItems[stateData.restrict_create_platform_apikey].value;
+        },
       },
       session_expiration_in_seconds: {
         default: null,
@@ -107,6 +261,8 @@ function initIamStore(store) {
         invalidText: unconditionalInvalidText(
           "Must be a whole number between 900 and 86400"
         ),
+        labelText: "(Optional) Session Expiration (sec)",
+        placeholder: "900",
       },
       session_invalidation_in_seconds: {
         default: null,
@@ -120,6 +276,8 @@ function initIamStore(store) {
         invalidText: unconditionalInvalidText(
           "Must be a whole number between 900 and 86400"
         ),
+        labelText: "(Optional) Session Invalidation (sec)",
+        placeholder: "900",
       },
     },
   });
@@ -330,7 +488,6 @@ function accessGroupDynamicPolicySave(config, stateData, componentProps) {
 function accessGroupDynamicPolicyDelete(config, stateData, componentProps) {
   deleteSubChild(config, "access_groups", "dynamic_policies", componentProps);
 }
-
 /**
  * helper text
  * @param {*} stateData

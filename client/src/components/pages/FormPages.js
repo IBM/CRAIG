@@ -14,7 +14,6 @@ import {
   NetworkAclTemplate,
   VpnServerTemplate,
   VsiLoadBalancerTemplate,
-  IamAccountSettingsPage,
   SccV1Page,
   IcseFormTemplate,
 } from "icse-react-assets";
@@ -29,15 +28,10 @@ import {
   invalidSecurityGroupRuleText,
   vpnServersHelperText,
 } from "../../lib/forms";
-import {
-  invalidCidr,
-  invalidCrnList,
-  invalidIamAccountSettings,
-} from "../../lib/forms/invalid-callbacks";
+import { invalidCidr, invalidCrnList } from "../../lib/forms/invalid-callbacks";
 import {
   aclHelperTextCallback,
   genericNameCallback,
-  iamAccountSettingInvalidText,
   invalidCidrText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
@@ -959,24 +953,61 @@ const F5BigIp = (craig) => {
 
 const IamAccountSettings = (craig) => {
   return (
-    <IamAccountSettingsPage
-      craig={craig}
-      onSave={craig.iam_account_settings.save}
+    <CraigToggleForm
+      name="IAM Account Settings"
+      hide={false}
+      about={RenderDocs(
+        "iam_account_settings",
+        craig.store.json._options.template
+      )()}
+      noDeleteButton={craig.store.json.iam_account_settings.enable === false}
+      useAddButton={craig.store.json.iam_account_settings.enable === false}
+      tabPanel={{
+        name: "IAM Account Settings",
+      }}
+      submissionFieldName="iam_account_settings"
+      hideName
+      onSave={(stateData) => {
+        stateData.enable = true;
+        craig.iam_account_settings.save(stateData);
+      }}
+      onShowToggle={() => {}}
       onDelete={() => {
         craig.store.json.iam_account_settings.enable = false;
         craig.update();
       }}
-      docs={RenderDocs(
-        "iam_account_settings",
-        craig.store.json._options.template
-      )()}
-      data={craig.store.json.iam_account_settings}
-      useAddButton={craig.store.json.iam_account_settings.enable === false}
-      noDeleteButton={craig.store.json.iam_account_settings.enable === false}
-      invalidCallback={invalidIamAccountSettings}
-      invalidTextCallback={iamAccountSettingInvalidText}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
+      craig={craig}
+      innerFormProps={{
+        craig: craig,
+        data: craig.store.json.iam_account_settings,
+        form: {
+          groups: [
+            {
+              if_match: craig.iam_account_settings.if_match,
+              mfa: craig.iam_account_settings.mfa,
+            },
+            {
+              include_history: craig.iam_account_settings.include_history,
+              restrict_create_service_id:
+                craig.iam_account_settings.restrict_create_service_id,
+              restrict_create_platform_apikey:
+                craig.iam_account_settings.restrict_create_platform_apikey,
+            },
+            {
+              max_sessions_per_identity:
+                craig.iam_account_settings.max_sessions_per_identity,
+              session_expiration_in_seconds:
+                craig.iam_account_settings.session_expiration_in_seconds,
+              session_invalidation_in_seconds:
+                craig.iam_account_settings.session_invalidation_in_seconds,
+            },
+            {
+              allowed_ip_addresses:
+                craig.iam_account_settings.allowed_ip_addresses,
+            },
+          ],
+        },
+      }}
     />
   );
 };
