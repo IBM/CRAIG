@@ -7,17 +7,15 @@ import {
   propsMatchState,
 } from "../../lib";
 import {
-  SecretsManagerTemplate,
   SecurityGroupTemplate,
   SubnetPageTemplate,
   NetworkAclTemplate,
   VpnServerTemplate,
   VsiLoadBalancerTemplate,
-  SccV1Page,
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { contains, eachKey, keys, splat, transpose } from "lazy-z";
+import { keys, splat, transpose } from "lazy-z";
 import {
   disableSshKeyDelete,
   getSubnetTierStateData,
@@ -30,13 +28,11 @@ import {
 import { invalidCidr, invalidCrnList } from "../../lib/forms/invalid-callbacks";
 import {
   aclHelperTextCallback,
-  genericNameCallback,
   invalidCidrText,
 } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
-import { edgeRouterEnabledZones } from "../../lib/constants";
 import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.json";
 import DynamicForm from "../forms/DynamicForm";
 import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
@@ -722,58 +718,13 @@ const SccV2 = (craig) => {
   );
 };
 
-const SccV1 = (craig) => {
-  let sccData = { ...craig.store.json.scc },
-    sccEnabled = craig.store.json.scc.enable === false;
-  eachKey(sccData, (key) => {
-    if (sccData[key] === null) {
-      sccData[key] = "";
-    }
-  });
-  return (
-    <SccV1Page
-      docs={RenderDocs(
-        "security_compliance_center",
-        craig.store.json._options.template
-      )()}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
-      craig={craig}
-      data={sccData}
-      onSave={craig.scc.save}
-      useAddButton={sccEnabled}
-      invalidCallback={invalidName("scc")}
-      invalidTextCallback={() => {
-        return genericNameCallback();
-      }}
-      noDeleteButton={sccEnabled}
-      onDelete={() => {
-        craig.store.json.scc.enable = false;
-        craig.update();
-      }}
-    />
-  );
-};
-
 const SecretsManagerPage = (craig) => {
-  return (
-    <SecretsManagerTemplate
-      secrets_managers={craig.store.json.secrets_manager}
-      disableSave={disableSave}
-      onDelete={craig.secrets_manager.delete}
-      onSave={craig.secrets_manager.save}
-      onSubmit={craig.secrets_manager.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      encryptionKeys={craig.store.encryptionKeys}
-      invalidCallback={craig.secrets_manager.name.invalid}
-      invalidTextCallback={craig.secrets_manager.name.invalidText}
-      secrets={craig.getAllResourceKeys()}
-      docs={RenderDocs("secrets_manager", craig.store.json._options.template)}
-    />
-  );
+  return formPageTemplate(craig, {
+    name: "Secrets Manager",
+    addText: "Create a Secrets Manager Instance",
+    formName: "secrets-manager",
+    jsonField: "secrets_manager",
+  });
 };
 
 const SecurityGroupPage = (craig) => {
@@ -1022,8 +973,6 @@ export const NewFormPage = (props) => {
     return PowerVsVolumes(craig);
   } else if (form === "resourceGroups") {
     return ResourceGroupPage(craig);
-  } else if (form === "securityComplianceCenter") {
-    return SccV1(craig);
   } else if (form === "sccV2") {
     return SccV2(craig);
   } else if (form === "secretsManager") {

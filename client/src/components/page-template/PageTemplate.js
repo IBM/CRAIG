@@ -300,17 +300,18 @@ const PageTemplate = (props) => {
           jsonInCodeMirror={props.jsonInCodeMirror}
         />
       </div>
-      {isResetState !== true && (
-        <Footer
-          toggleFooter={() => {
-            props.craig.store.json._options.hideFooter =
-              !props.craig.store.json._options.hideFooter;
-            props.saveAndSendNotification("updating footer", false, true);
-          }}
-          hideFooter={props.craig.store.json._options.hideFooter || false}
-          navigate={navigate}
-        />
-      )}
+      {isResetState !== true &&
+        !contains(window.location.pathname, "/beta") && (
+          <Footer
+            toggleFooter={() => {
+              props.craig.store.json._options.hideFooter =
+                !props.craig.store.json._options.hideFooter;
+              props.saveAndSendNotification("updating footer", false, true);
+            }}
+            hideFooter={props.craig.store.json._options.hideFooter || false}
+            navigate={navigate}
+          />
+        )}
     </>
   );
 };

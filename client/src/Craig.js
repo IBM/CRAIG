@@ -34,6 +34,7 @@ import { CloudServicesPage } from "./components/pages/cloud-services";
 import VpcDiagramPage from "./components/pages/vpc/Vpc.js";
 import { Breadcrumb, BreadcrumbItem } from "@carbon/react";
 import VpcDeploymentsDiagramPage from "./components/pages/vpc/VpcDeployments.js";
+import { Overview } from "./components/pages/diagrams/Overview.js";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -406,7 +407,19 @@ class Craig extends React.Component {
           beta={this.props.params.betaPage}
         >
           {contains(window.location.pathname, "/beta/") && (
-            <Breadcrumb noTrailingSlash>
+            <Breadcrumb noTrailingSlash style={{ marginTop: "-0.5rem" }}>
+              <BreadcrumbItem
+                href="/beta/projects"
+                isCurrentPage={window.location.pathname === "/beta/projects"}
+              >
+                Projects
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/settings"
+                isCurrentPage={window.location.pathname === "/beta/settings"}
+              >
+                Settings
+              </BreadcrumbItem>
               <BreadcrumbItem
                 href="/beta/services"
                 isCurrentPage={window.location.pathname === "/beta/services"}
@@ -427,6 +440,12 @@ class Craig extends React.Component {
               >
                 VPC Deployments
               </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/overview"
+                isCurrentPage={window.location.pathname === "/beta/overview"}
+              >
+                Overview
+              </BreadcrumbItem>
             </Breadcrumb>
           )}
           {this.props.params.doc ? (
@@ -439,7 +458,8 @@ class Craig extends React.Component {
             ) : (
               <PageNotFound />
             )
-          ) : window.location.pathname === "/projects" ? (
+          ) : window.location.pathname === "/projects" ||
+            window.location.pathname === "/beta/projects" ? (
             <Projects
               current_project={craig.store.project_name}
               projects={this.state.projects}
@@ -452,7 +472,8 @@ class Craig extends React.Component {
                 return craig.store.json.resource_groups.length === 1;
               }}
             />
-          ) : window.location.pathname === "/" ? (
+          ) : window.location.pathname === "/" ||
+            window.location.pathname === "/beta/settings" ? (
             <Home craig={craig} />
           ) : window.location.pathname === "/summary" ? (
             <Summary
@@ -467,6 +488,8 @@ class Craig extends React.Component {
             <VpcDiagramPage craig={craig} />
           ) : window.location.pathname === "/beta/vpcDeployments" ? (
             <VpcDeploymentsDiagramPage craig={craig} />
+          ) : window.location.pathname === "/beta/overview" ? (
+            <Overview craig={craig} />
           ) : window.location.pathname === "/form/cbr" ? (
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (

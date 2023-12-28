@@ -307,4 +307,29 @@ describe("vpn_servers", () => {
       });
     });
   });
+  describe("vpn_servers schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should set subnets and sgs on vpc change", () => {
+      let data = {
+        vpc: "frog",
+      };
+      assert.deepEqual(
+        craig.vpn_servers.vpc.onInputChange(data),
+        "frog",
+        "it should return vpc"
+      );
+      assert.deepEqual(
+        data,
+        {
+          vpc: "frog",
+          security_groups: [],
+          subnets: [],
+        },
+        "it should set vpc values"
+      );
+    });
+  });
 });

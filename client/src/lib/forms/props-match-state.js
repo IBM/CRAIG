@@ -1,4 +1,9 @@
-const { deepEqual, isNullOrEmptyString, contains } = require("lazy-z");
+const {
+  deepEqual,
+  isNullOrEmptyString,
+  contains,
+  isBoolean,
+} = require("lazy-z");
 
 /**
  * props match state placeholder
@@ -43,7 +48,13 @@ function propsMatchState(field, stateData, componentProps) {
     componentProps.data.hide = stateData.hide;
     if (componentProps.formName) {
       // add advanced to data when using dynamic form
-      componentProps.data.advanced = stateData.advanced;
+      componentProps.data.zones = stateData.zones;
+      if (
+        stateData.advanced === false &&
+        componentProps.data.advanced === undefined
+      ) {
+        componentProps.data.advanced = stateData.advanced;
+      }
     } else {
       // don't add props when using dynamic form
       componentProps.data.select_zones = stateData.select_zones;
@@ -52,7 +63,6 @@ function propsMatchState(field, stateData, componentProps) {
     if (stateData.showUnsavedChangesModal !== undefined)
       componentProps.data.showUnsavedChangesModal =
         stateData.showUnsavedChangesModal;
-
     if (
       stateData.subnets &&
       stateData.advanced &&

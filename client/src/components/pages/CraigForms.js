@@ -878,6 +878,16 @@ function craigForms(craig) {
         },
       ],
     },
+    secrets_manager: {
+      jsonField: "secrets_manager",
+      groups: [
+        {
+          name: craig.secrets_manager.name,
+          resource_group: craig.secrets_manager.resource_group,
+          encryption_key: craig.secrets_manager.encryption_key,
+        },
+      ],
+    },
     ssh_keys: {
       groups: [
         {

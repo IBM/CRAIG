@@ -108,6 +108,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.vpcs.acls.rules
         : field === "acl_rules"
         ? componentProps.innerFormProps.craig.vpcs.acls.rules
+        : field === "subnet" && craig // only used for icse-react-assets subnet form
+        ? craig.vpcs.subnets
         : field === "subnet"
         ? componentProps.craig.vpcs.subnets
         : field === "subnetTier"

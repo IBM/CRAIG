@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  disableSave,
-  getSubnetTierStateData,
-  propsMatchState,
-} from "../../../lib";
+import { getSubnetTierStateData } from "../../../lib";
 import { capitalize, contains, transpose } from "lazy-z";
 import { CraigToggleForm } from "../../forms/utils";
 
@@ -47,10 +43,7 @@ export class DynamicSubnetTierForm extends React.Component {
         groups: [
           {
             name: this.props.craig.vpcs.subnetTiers.name,
-            zones:
-              this.props.craig.vpcs.subnetTiers[
-                subnetTier?.advanced ? "advanced_zones" : "zones"
-              ],
+            zones: this.props.craig.vpcs.subnetTiers.zones,
             advanced: this.props.craig.vpcs.subnetTiers.advanced,
           },
           {
@@ -80,8 +73,6 @@ export class DynamicSubnetTierForm extends React.Component {
         noDeleteButton={this.props.subnetTierIndex === -1}
         type={this.props.subnetTierIndex === -1 ? "formInSubForm" : "subForm"}
         hideName
-        disableSave={disableSave}
-        propsMatchState={propsMatchState}
         submissionFieldName="subnetTier"
         tabPanel={{ hideAbout: true }}
         name={

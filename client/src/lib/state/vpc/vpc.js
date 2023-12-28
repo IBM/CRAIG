@@ -13,6 +13,8 @@ const {
   isIpv4CidrOrAddress,
   buildNumberDropdownList,
   isNullOrEmptyString,
+  isString,
+  isArray,
 } = require("lazy-z");
 const {
   newDefaultEdgeAcl,
@@ -371,8 +373,10 @@ function subnetSave(config, stateData, componentProps) {
           "name",
           subnetName
         );
-        prefix.name = stateData.name;
-        prefix.cidr = stateData.cidr;
+        if (prefix) {
+          prefix.name = stateData.name;
+          prefix.cidr = stateData.cidr;
+        }
       }
     })
     .child("subnets", subnetName, "name")
@@ -501,11 +505,11 @@ function subnetTierCreate(config, stateData, componentProps) {
     let tier = {
       name: stateData.name,
       zones: undefined,
-      select_zones: stateData.select_zones,
+      select_zones: stateData.zones || stateData.select_zones,
       advanced: true,
       subnets: [],
     };
-    stateData.select_zones.forEach((zone) => {
+    tier.select_zones.forEach((zone) => {
       tier.subnets.push(stateData.name + "-zone-" + zone);
       config.store.json.vpcs[vpcIndex].address_prefixes.push({
         name: stateData.name + "-zone-" + zone,
@@ -1286,15 +1290,22 @@ function initVpcStore(store) {
           },
           zones: {
             size: "small",
-            type: "select",
+            type: function (stateData) {
+              return stateData.advanced ? "multiselect" : "select";
+            },
             default: "3",
             groups: buildNumberDropdownList(3, 1),
-          },
-          advanced_zones: {
-            size: "small",
-            type: "multiselect",
-            default: "3",
-            groups: buildNumberDropdownList(3, 1),
+            onRender: function (stateData) {
+              if (stateData.advanced && !isArray(stateData.zones)) {
+                stateData.zones = stateData.select_zones
+                  ? stateData.select_zones
+                  : ["1", "2", "3"];
+              } else if (!stateData.advanced && isArray(stateData.zones)) {
+                stateData.zones = String(stateData.zones.length);
+              }
+              stateData.select_zones = stateData.zones;
+              return stateData.zones;
+            },
           },
           advanced: {
             size: "small",
@@ -1316,8 +1327,7 @@ function initVpcStore(store) {
             },
             invalid: function (stateData) {
               return (
-                stateData.advanced === true &&
-                stateData.select_zones.length === 0
+                stateData.advanced === true && stateData.zones.length === 0
               );
             },
           },

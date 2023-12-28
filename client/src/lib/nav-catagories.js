@@ -371,18 +371,6 @@ const navCatagories = [
     ],
   },
   {
-    name: "Deprecated",
-    links: [
-      {
-        title: "(Deprecated) Security Compliance Center V1",
-        path: "/form/securityComplianceCenter",
-        react_icon: "IbmCloudSecurityComplianceCenter",
-        toTf: sccTf,
-        jsonField: "scc",
-      },
-    ],
-  },
-  {
     name: "Final Steps",
     links: [
       {

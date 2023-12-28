@@ -190,7 +190,7 @@ describe("subnets", () => {
             name: "todd",
             advanced: true,
             network_acl: "frog",
-            select_zones: [],
+            zones: [],
           },
           {
             vpc_name: "test",

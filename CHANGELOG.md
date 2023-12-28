@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - OptionsForm has been removed and now is generated using the DynamicForm component
 - Power VS Volume Attachments are no longer created in parallel to ensure that each provisions successfully
 - Documentation is now accessible without a project selected. Users no longer recieve the No Project Modal on pages with `/docs/` in the header.
+- SCC V1 has been deprecated. While the resource is still supported through JSON, the front-end component will no longer be displayed
 
 ### Features
 
@@ -31,6 +32,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Access Groups and Access Group Policies to have incorrect references to their parent access groups
 - Fixed an issue causing Terraform output for COS authorization credentials to always have the role `Writer` regardless of selection
 - Fixed an issue causing Transit Gateway Prefix Filter Modal to crash application
+- Fixed an issue causing Security Groups and SSH Keys to not be deleted correctly from VSI objects
+- Fixed an issue causing advanced subnets to not be able to be saved from the Subnet Tiers page
 
 ## 1.7.1
 

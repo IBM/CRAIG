@@ -4,6 +4,9 @@ const {
   setKmsFromKeyOnStoreUpdate,
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
+  resourceGroupsField,
+  unconditionalInvalidText,
+  encryptionKeyGroups,
 } = require("./utils");
 
 /**
@@ -87,14 +90,16 @@ function initSecretsManagerStore(store) {
         default: "",
         invalid: invalidName("secrets_manager"),
         invalidText: invalidNameText("secrets_manager"),
+        size: "small",
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(true),
       encryption_key: {
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("encryption_key"),
+        invalidText: unconditionalInvalidText("encryption key"),
+        size: "small",
+        groups: encryptionKeyGroups,
       },
     },
   });

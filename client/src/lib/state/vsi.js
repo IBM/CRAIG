@@ -184,7 +184,15 @@ function updateVsi(config, key) {
       if (!validVpc) {
         deployment.vpc = null;
         deployment.subnets = [];
+        deployment.security_groups = [];
       }
+      let nextSshKeys = [];
+      deployment.ssh_keys.forEach((key) => {
+        if (splatContains(config.store.json.ssh_keys, "name", key)) {
+          nextSshKeys.push(key);
+        }
+      });
+      deployment.ssh_keys = nextSshKeys;
     });
     config.store[camelCase(key + " List")] = splat(data, "name");
   });

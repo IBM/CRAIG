@@ -240,6 +240,7 @@ class DynamicForm extends React.Component {
           parentProps={this.props}
           parentState={this.state}
           key={JSON.stringify(this.state)}
+          isModal={this.props.isModal}
         />
         {this.props.isModal === true || !this.props.form.subForms
           ? ""

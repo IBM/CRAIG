@@ -7,23 +7,31 @@ import ImportJson from "./ImportJson";
 import { ToggleForm } from "icse-react-assets";
 import DynamicForm from "../forms/DynamicForm";
 import { disableSave, propsMatchState } from "../../lib";
+import { contains } from "lazy-z";
+import { CraigFormHeading } from "../forms/utils/ToggleFormComponents";
 
 function Home(props) {
   let craig = props.craig;
   return (
     <>
-      <div className="banner">
-        <div className="banner-icon">
-          <Sprout size="32" />
+      {contains(window.location.pathname, "/beta") ? (
+        <div style={{ marginTop: "1rem" }}>
+          <CraigFormHeading name="Settings" noMarginBottom />
         </div>
-        <div className="banner-text">
-          Create, deploy and manage scalable infrastructure on IBM Cloud with
-          CRAIG.
-          <br />
-          Configure environment options or get started by importing a JSON
-          configuration.
+      ) : (
+        <div className="banner">
+          <div className="banner-icon">
+            <Sprout size="32" />
+          </div>
+          <div className="banner-text">
+            Create, deploy and manage scalable infrastructure on IBM Cloud with
+            CRAIG.
+            <br />
+            Configure environment options or get started by importing a JSON
+            configuration.
+          </div>
         </div>
-      </div>
+      )}
       <Tabs>
         <TabList aria-label="home-options">
           <Tab>Options</Tab>

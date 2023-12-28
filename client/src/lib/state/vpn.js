@@ -1,10 +1,4 @@
-const {
-  contains,
-  isNullOrEmptyString,
-  splat,
-  revision,
-  isArray,
-} = require("lazy-z");
+const { contains, isNullOrEmptyString, splat, revision } = require("lazy-z");
 const {
   setUnfoundResourceGroup,
   hasUnfoundVpc,
@@ -18,7 +12,6 @@ const {
   resourceGroupsField,
   vpcGroups,
   selectInvalidText,
-  isIpStringInvalid,
   ipCidrListTextArea,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");

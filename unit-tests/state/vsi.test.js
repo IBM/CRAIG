@@ -348,6 +348,28 @@ describe("vsi", () => {
         "it should be null"
       );
     });
+    it("should set ssh keys to empty array when deleted", () => {
+      let state = new newState();
+      state.ssh_keys.delete(
+        {},
+        {
+          data: {
+            name: "ssh-key",
+          },
+        }
+      );
+      assert.deepEqual(state.store.json.vsi[0].ssh_keys, [], "it should be []");
+    });
+    it("should set subnets and security groups when vpc deleted", () => {
+      let state = new newState();
+      state.vpcs.delete({}, { data: { name: "management" } });
+      assert.deepEqual(state.store.json.vsi[0].subnets, [], "it should be []");
+      assert.deepEqual(
+        state.store.json.vsi[0].security_groups,
+        [],
+        "it should be []"
+      );
+    });
   });
   describe("vsi.schema", () => {
     let craig;

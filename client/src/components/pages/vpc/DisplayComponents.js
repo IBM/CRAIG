@@ -1,14 +1,11 @@
 import React from "react";
-import {
-  BareMetalServer_02,
-  IbmCloudSubnets,
-  Security,
-} from "@carbon/icons-react";
-import { disableSave, getTierSubnets } from "../../../lib";
+import { IbmCloudSubnets, Security } from "@carbon/icons-react";
+import { getTierSubnets } from "../../../lib";
 import { RenderForm } from "../../forms/utils/ToggleFormComponents";
-import { contains } from "lazy-z";
+import { contains, snakeCase } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
+import { RenderDocs } from "../SimplePages";
 
 export const SubnetBox = (props) => {
   return (
@@ -80,10 +77,11 @@ export const SubnetTierRow = (props) => {
 };
 
 export const DeploymentIcon = (props) => {
-  let isSelected =
-    props.parentState.selectedItem === props.itemName &&
-    props.parentState.selectedIndex === props.itemIndex &&
-    props.parentState.vpcIndex === props.vpcIndex;
+  let isSelected = props.isSelected
+    ? props.isSelected(props)
+    : props?.parentState?.selectedItem === props.itemName &&
+      props?.parentState?.selectedIndex === props.itemIndex &&
+      props?.parentState?.vpcIndex === props.vpcIndex;
   return (
     <div
       style={{
@@ -104,11 +102,14 @@ export const DeploymentIcon = (props) => {
             <Tag
               key={props.item.name + props.itemName + sg}
               type={tagColors[i % tagColors.length]}
-              onClick={() => props.onTabClick(sg)}
+              onClick={
+                props.onTabClick ? () => props.onTabClick(sg) : undefined
+              }
               style={{
-                boxShadow: props.tabSelected(sg)
-                  ? " 0 10px 14px 0 rgba(0, 0, 100, 0.24),0 17px 50px 0 rgba(0, 0, 100, 0.19)"
-                  : "",
+                boxShadow:
+                  props.tabSelected && props.tabSelected(sg)
+                    ? " 0 10px 14px 0 rgba(0, 0, 100, 0.24),0 17px 50px 0 rgba(0, 0, 100, 0.19)"
+                    : "",
               }}
             >
               <div className="displayFlex" style={{ fontSize: "10px" }}>
@@ -119,4 +120,42 @@ export const DeploymentIcon = (props) => {
         : ""}
     </div>
   );
+};
+
+/**
+ * create doc tabs
+ * @param {string} mainTabName
+ * @param {Array<string>} tabs
+ * @param {*} craig
+ * @returns {Array} array of objects
+ */
+export const docTabs = (mainTabName, tabs, craig) => {
+  let displayTabs = [
+    {
+      name: mainTabName,
+    },
+  ];
+  tabs.forEach((tab) => {
+    let nextTab = {
+      name: tab,
+      about: RenderDocs(
+        snakeCase(
+          tab === "Cloud Databases"
+            ? "icd"
+            : tab === "Virtual Private Cloud"
+            ? "vpcs"
+            : tab === "Access Control Lists (ACLs)"
+            ? "acls"
+            : tab === "Subnets & Subnet Tiers"
+            ? "subnets"
+            : tab === "Virtual Servers"
+            ? "vsi"
+            : tab
+        ),
+        craig.store.json._options.template
+      ),
+    };
+    displayTabs.push(nextTab);
+  });
+  return displayTabs;
 };

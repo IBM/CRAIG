@@ -7,12 +7,7 @@ const { initObjectStorageStore } = require("./cos");
 const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc/vpc");
-const {
-  sccInit,
-  sccSave,
-  sccDelete,
-  DEPRECATED_initSccStore,
-} = require("./scc");
+const { DEPRECATED_initSccStore } = require("./scc");
 const { initSshKeyStore } = require("./ssh-keys.js");
 const { initSecurityGroupStore } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways/transit-gateways");
@@ -20,15 +15,7 @@ const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
 const { initVsiStore } = require("./vsi");
 const { initVpe } = require("./vpe");
-const {
-  f5Init,
-  f5VsiSave,
-  f5InstanceSave,
-  f5VsiCreate,
-  f5OnStoreUpdate,
-  f5TemplateSave,
-  initF5Store,
-} = require("./f5");
+const { initF5Store } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
 const { initSecretsManagerStore } = require("./secrets-manager");

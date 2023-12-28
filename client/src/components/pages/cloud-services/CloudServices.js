@@ -35,8 +35,8 @@ import {
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
-import { RenderDocs } from "../SimplePages";
 import { craigForms } from "../CraigForms";
+import { docTabs } from "../vpc/DisplayComponents";
 
 const serviceFormMap = {
   key_management: {
@@ -359,40 +359,17 @@ class CloudServicesPage extends React.Component {
         <div className="marginBottomSmall" />
         <StatefulTabs
           name="Cloud Services"
-          overrideTabs={[
-            {
-              name: "Manage Services",
-            },
-            {
-              name: "AppID",
-              about: RenderDocs("appid", craig.store.json._options.template),
-            },
-            {
-              name: "Cloud Databases",
-              about: RenderDocs("icd", craig.store.json._options.template),
-            },
-            {
-              name: "Event Streams",
-              about: RenderDocs(
-                "event_streams",
-                craig.store.json._options.template
-              ),
-            },
-            {
-              name: "Key Management",
-              about: RenderDocs(
-                "key_management",
-                craig.store.json._options.template
-              ),
-            },
-            {
-              name: "Object Storage",
-              about: RenderDocs(
-                "object_storage",
-                craig.store.json._options.template
-              ),
-            },
-          ]}
+          overrideTabs={docTabs(
+            "Manage Services",
+            [
+              "AppID",
+              "Cloud Databases",
+              "Event Streams",
+              "Key Management",
+              "Object Storage",
+            ],
+            craig
+          )}
           form={
             <div className="displayFlex" style={{ minWidth: "100%" }}>
               <div
@@ -404,14 +381,7 @@ class CloudServicesPage extends React.Component {
                 {serviceResourceGroups.map((rg) => (
                   <div className="subForm marginBottomSmall" key={rg}>
                     <CraigFormHeading
-                      icon={
-                        <GroupResource
-                          style={{
-                            marginRight: "0.5rem",
-                            marginTop: "0.33rem",
-                          }}
-                        />
-                      }
+                      icon={<GroupResource className="diagramTitleIcon" />}
                       noMarginBottom={serviceMap[rg].length === 0}
                       type="subHeading"
                       name={rg}
@@ -474,10 +444,7 @@ class CloudServicesPage extends React.Component {
                       icon={RenderForm(
                         serviceFormMap[this.state.service].icon,
                         {
-                          style: {
-                            marginRight: "0.5rem",
-                            marginTop: "0.33rem",
-                          },
+                          className: "diagramTitleIcon",
                         }
                       )}
                       name={"Editing " + this.state.serviceName}

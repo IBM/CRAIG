@@ -52,8 +52,7 @@ describe("virtual_private_endpoints", () => {
         security_groups: [],
         subnets: [],
       };
-      state.store.json.vpcs.shift();
-      state.update();
+      state.vpcs.delete({}, { data: { name: "management" } });
       assert.deepEqual(
         state.store.json.virtual_private_endpoints[0],
         expectedData,

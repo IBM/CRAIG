@@ -19,6 +19,7 @@ const {
   isFunction,
   isArray,
   capitalize,
+  isString,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const {
@@ -263,7 +264,7 @@ function saveAdvancedSubnetTier(
 ) {
   tierData.networkAcl = "-";
   tierData.zones = undefined;
-  tierData.select_zones = stateData.select_zones; // set select zone
+  tierData.select_zones = stateData.zones || stateData.select_zones; // set select zone
   tierData.subnets = []; // set individual subnet managament
   new revision(config.store.json)
     .child("vpcs", vpcName, "name")
@@ -278,7 +279,10 @@ function saveAdvancedSubnetTier(
       // for each subnet
       foundSubnets.forEach((subnet) => {
         // if is in current zone
-        if (contains(stateData.select_zones, subnet.zone)) {
+        if (
+          contains(tierData.select_zones, subnet.zone) ||
+          contains(tierData.select_zones, String(subnet.zone))
+        ) {
           let newSubnetName = subnet.name.replace(oldTierName, stateData.name);
           tierData.subnets.push(newSubnetName);
           nextTierSubnets.push({
@@ -343,7 +347,10 @@ function saveAdvancedSubnetTier(
           carve(data.subnets, "name", subnet.name);
         }
       });
-      if (tierData.subnets.length < stateData.select_zones.length) {
+      if (
+        tierData.subnets.length <
+        stateData[stateData.select_zones ? "select_zones" : "zones"].length
+      ) {
         [1, 2, 3].forEach((zone) => {
           if (!splatContains(nextTierSubnets, "zone", zone)) {
             data.subnets.push({

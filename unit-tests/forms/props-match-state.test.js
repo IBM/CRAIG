@@ -118,10 +118,26 @@ describe("propsMatchState", () => {
           hide: false,
           showUnsavedChangesModal: undefined,
           advancedSave: false,
+          advanced: true,
         },
         { data: {}, formName: "subnetTier" }
       ),
       "it should be false"
+    );
+  });
+  it("should set component props data hide to statedata hide when checking if props match for subnet tier", () => {
+    assert.isFalse(
+      propsMatchState(
+        "subnetTier",
+        {
+          hide: false,
+          showUnsavedChangesModal: undefined,
+          advancedSave: false,
+          advanced: false,
+        },
+        { data: {}, formName: "asdd" }
+      ),
+      "it should be true"
     );
   });
   it("should set component props data hide to statedata hide when checking if props match for subnet tier", () => {

@@ -18,7 +18,15 @@ const {
   invalidCidrBlock,
   invalidCrnList,
 } = require("../forms");
-const { fieldIsNullOrEmptyString } = require("./utils");
+const {
+  fieldIsNullOrEmptyString,
+  resourceGroupsField,
+  selectInvalidText,
+  vpcGroups,
+  subnetMultiSelect,
+  unconditionalInvalidText,
+  securityGroupsMultiselect,
+} = require("./utils");
 const {
   commaSeparatedIpListExp,
   commaSeparatedCidrListExp,
@@ -215,18 +223,38 @@ function initVpnState(store) {
         default: "",
         invalid: invalidName("vpn_servers"),
         invalidText: invalidNameText("vpn_servers"),
+        size: "small",
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(true),
       vpc: {
         default: "",
         invalid: fieldIsNullOrEmptyString("vpc"),
+        invalidText: selectInvalidText("VPC"),
+        type: "select",
+        size: "small",
+        groups: vpcGroups,
+        onInputChange: function (stateData) {
+          stateData.subnets = [];
+          stateData.security_groups = [];
+          return stateData.vpc;
+        },
       },
-      security_group: {
+      subnets: subnetMultiSelect({}),
+      security_group: securityGroupsMultiselect(),
+      method: {
+        type: "select",
         default: "",
-        invalid: fieldIsNullOrEmptyString("security_group"),
+        labelText: "Authentication Method",
+        invalid: fieldIsNullOrEmptyString("method"),
+        invalidText: unconditionalInvalidText(
+          "Select an authentication method"
+        ),
+        groups: [
+          "Certificate",
+          "Username",
+          "Bring Your Own Certificate",
+          "INSECURE - Developer Certificate",
+        ],
       },
       client_ip_pool: {
         default: "",
@@ -281,12 +309,6 @@ function initVpnState(store) {
           );
         },
       },
-      subnets: {
-        default: [],
-        invalid: function (stateData) {
-          return isEmpty(stateData.subnets);
-        },
-      },
       additional_prefixes: {
         default: [],
         invalid: function (stateData) {
@@ -298,6 +320,9 @@ function initVpnState(store) {
               .match(commaSeparatedCidrListExp) === null
           );
         },
+        invalidText: unconditionalInvalidText(
+          "Enter a list of comma separated CIDR blocks"
+        ),
       },
       zone: {
         default: null,
