@@ -1094,6 +1094,64 @@ function craigForms(craig) {
         },
       ],
     },
+    vpn_servers: {
+      jsonField: "vpn_servers",
+      groups: [
+        {
+          name: craig.vpn_servers.name,
+          resource_group: craig.vpn_servers.resource_group,
+          vpc: craig.vpn_servers.vpc,
+        },
+        {
+          subnets: craig.vpn_servers.subnets,
+          security_groups: craig.vpn_servers.security_groups,
+          method: craig.vpn_servers.method,
+        },
+        {
+          certificate_crn: craig.vpn_servers.certificate_crn,
+          secrets_manager: craig.vpn_servers.secrets_manager,
+          client_ca_crn: craig.vpn_servers.client_ca_crn,
+          client_ip_pool: craig.vpn_servers.client_ip_pool,
+        },
+        {
+          port: craig.vpn_servers.port,
+          protocol: craig.vpn_servers.protocol,
+        },
+        {
+          enable_split_tunneling: craig.vpn_servers.enable_split_tunneling,
+          client_idle_timeout: craig.vpn_servers.client_idle_timeout,
+        },
+        {
+          client_dns_server_ips: craig.vpn_servers.client_dns_server_ips,
+        },
+        {
+          heading: {
+            name: "Additional VPC Prefixes",
+            type: "p",
+          },
+        },
+        {
+          zone: craig.vpn_servers.zone,
+          additional_prefixes: craig.vpn_servers.additional_prefixes,
+        },
+      ],
+      subForms: [
+        {
+          name: "Routes",
+          addText: "Create a new Route",
+          jsonField: "routes",
+          form: {
+            groups: [
+              {
+                name: craig.vpn_servers.routes.name,
+                destination: craig.vpn_servers.routes.destination,
+                action: craig.vpn_servers.routes.action,
+              },
+            ],
+          },
+        },
+      ],
+    },
     vsi: {
       jsonField: "vsi",
       groups: [

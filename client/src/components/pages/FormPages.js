@@ -10,7 +10,6 @@ import {
   SecurityGroupTemplate,
   SubnetPageTemplate,
   NetworkAclTemplate,
-  VpnServerTemplate,
   VsiLoadBalancerTemplate,
   IcseFormTemplate,
 } from "icse-react-assets";
@@ -20,12 +19,10 @@ import {
   disableSshKeyDelete,
   getSubnetTierStateData,
   getTierSubnets,
-  invalidCidrBlock,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
-  vpnServersHelperText,
 } from "../../lib/forms";
-import { invalidCidr, invalidCrnList } from "../../lib/forms/invalid-callbacks";
+import { invalidCidr } from "../../lib/forms/invalid-callbacks";
 import {
   aclHelperTextCallback,
   invalidCidrText,
@@ -847,35 +844,12 @@ const VpnGatewayPage = (craig) => {
 };
 
 const VpnServerPage = (craig) => {
-  return (
-    <VpnServerTemplate
-      noSecretsManager={craig.store.json.secrets_manager.length === 0}
-      vpn_servers={craig.store.json.vpn_servers}
-      disableSave={disableSave}
-      onDelete={craig.vpn_servers.delete}
-      onSave={craig.vpn_servers.save}
-      onSubmit={craig.vpn_servers.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      invalidCallback={craig.vpn_servers.name.invalid}
-      invalidTextCallback={craig.vpn_servers.name.invalidText}
-      craig={craig}
-      docs={RenderDocs("vpn_servers", craig.store.json._options.template)}
-      invalidCidrBlock={invalidCidrBlock}
-      invalidCrnList={invalidCrnList}
-      onRouteSave={craig.vpn_servers.routes.save}
-      onRouteDelete={craig.vpn_servers.routes.delete}
-      onRouteSubmit={craig.vpn_servers.routes.create}
-      invalidRouteCallback={craig.vpn_servers.routes.name.invalid}
-      invalidRouteTextCallback={craig.vpn_servers.routes.name.invalidText}
-      subnetList={craig.getAllSubnets()}
-      vpcList={craig.store.vpcList}
-      securityGroups={craig.store.json.security_groups}
-      helperTextCallback={vpnServersHelperText}
-      secretsManagerList={splat(craig.store.json.secrets_manager, "name")}
-    />
-  );
+  return formPageTemplate(craig, {
+    name: "VPN Servers",
+    addText: "Create a VPN Server",
+    jsonField: "vpn_servers",
+    formName: "vpn_servers",
+  });
 };
 
 const VpcPage = (craig) => {

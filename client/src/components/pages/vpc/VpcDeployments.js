@@ -12,13 +12,10 @@ import {
   NetworkEnterprise,
   Password,
   Security,
-  VirtualPrivateCloud,
 } from "@carbon/icons-react";
-import { disableSave, getTierSubnets, propsMatchState } from "../../../lib";
-import { SubnetBox, DeploymentIcon, docTabs } from "./DisplayComponents";
+import { disableSave, propsMatchState } from "../../../lib";
 import {
   arraySplatIndex,
-  buildNumberDropdownList,
   contains,
   isNullOrEmptyString,
   snakeCase,
@@ -30,12 +27,13 @@ import DynamicForm from "../../forms/DynamicForm";
 import { craigForms } from "../CraigForms";
 import {
   PassThroughWrapper,
-  SecurityGroups,
   SshKeys,
   SubnetServiceMap,
   SubnetTierMap,
   VpcMap,
-} from "../diagrams/Overview";
+  SecurityGroups,
+  docTabs,
+} from "../diagrams";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -393,6 +391,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                               onClick={(vpcIndex, field, itemIndex) => {
                                 this.setSelection(vpcIndex, field, itemIndex);
                               }}
+                              craig={craig}
                               parentState={this.state}
                               tabSelected={this.tabSelected}
                               onTabClick={this.onSgTabClick}

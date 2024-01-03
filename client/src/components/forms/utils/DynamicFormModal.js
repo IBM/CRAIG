@@ -70,17 +70,18 @@ class DynamicFormModal extends Component {
             primaryButtonDisabled={this.state.isDisabled}
           >
             {this.props.show &&
-              React.Children.map(this.props.children, (child) =>
+              React.Children.map(this.props.children, (child) => {
+                // this needs some cleanup
                 // clone react child
-                React.cloneElement(child, {
+                return React.cloneElement(child, {
                   // add modal specific methods
                   disableModal: this.disableModal,
                   enableModal: this.enableModal,
                   setRefUpstream: this.setRefUpstream,
                   isModal: true,
                   ref: this.modalForm,
-                })
-              )}
+                });
+              })}
           </Modal>
         }
       />

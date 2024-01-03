@@ -61,6 +61,28 @@ const {
 const { vpcSchema } = require("./vpc-schema");
 
 /**
+ * read only when
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if read only
+ */
+function readOnlyWhenEdgeTier(stateData, componentProps) {
+  return (
+    contains(
+      [
+        "vpn-2",
+        "vpn-1",
+        "f5-workload",
+        "f5-management",
+        "f5-bastion",
+        "f5-external",
+      ],
+      stateData.name
+    ) && stateData.vpc === componentProps.craig.store.edge_vpc_name
+  );
+}
+
+/**
  * initialize vpc store
  * @param {lazyZstate} config state store
  * @param {object} config.store state store
@@ -1287,6 +1309,7 @@ function initVpcStore(store) {
             default: "",
             invalid: invalidSubnetTierName,
             invalidText: invalidSubnetTierText,
+            readOnly: readOnlyWhenEdgeTier,
           },
           zones: {
             size: "small",
@@ -1306,6 +1329,7 @@ function initVpcStore(store) {
               stateData.select_zones = stateData.zones;
               return stateData.zones;
             },
+            readOnly: readOnlyWhenEdgeTier,
           },
           advanced: {
             size: "small",
@@ -1322,7 +1346,8 @@ function initVpcStore(store) {
             disabled: function (stateData, componentProps) {
               return (
                 componentProps.craig.store.json._options.dynamic_subnets ||
-                componentProps.data.advanced
+                componentProps.data.advanced ||
+                readOnlyWhenEdgeTier(stateData, componentProps)
               );
             },
             invalid: function (stateData) {
@@ -1354,6 +1379,7 @@ function initVpcStore(store) {
                 : false;
             },
             invalidText: selectInvalidText("Network ACL"),
+            readOnly: readOnlyWhenEdgeTier,
           },
           addPublicGateway: {
             size: "small",
@@ -1364,7 +1390,10 @@ function initVpcStore(store) {
                 "Changing this field will overwrite existing Public Gateway changes to subnets in this data.",
             },
             disabled: function (stateData, componentProps) {
-              return stateData.advanced === true; // add logic to fetch vpc gateways
+              return (
+                stateData.advanced === true ||
+                readOnlyWhenEdgeTier(stateData, componentProps)
+              );
             },
           },
         },

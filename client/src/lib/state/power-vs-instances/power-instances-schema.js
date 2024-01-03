@@ -57,6 +57,7 @@ function powerVsNetworkInvalid(stateData) {
  */
 function powerVsCoresInvalid(vtl) {
   return function (stateData) {
+    if (stateData.sap) return false;
     let isDedicated = stateData.pi_proc_type === "dedicated";
     let coreMax =
       stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
@@ -76,6 +77,7 @@ function powerVsCoresInvalid(vtl) {
  * @returns {boolean} function will evaluate to true if should be disabled
  */
 function powerVsMemoryInvalid(stateData) {
+  if (stateData.sap) return false;
   let memoryFloat = parseFloat(stateData.pi_memory);
   let memoryMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
   let vtlMemMin;

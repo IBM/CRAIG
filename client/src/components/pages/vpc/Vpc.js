@@ -5,9 +5,9 @@ import {
 } from "@carbon/icons-react";
 import { RenderForm } from "icse-react-assets";
 import React from "react";
-import { disableSave, getSubnetTierStateData } from "../../../lib";
+import { disableSave } from "../../../lib";
 import { DynamicAclForm } from "./DynamicAclForm";
-import { docTabs } from "./DisplayComponents";
+import { docTabs } from "../diagrams/DocTabs";
 import { DynamicSubnetTierForm } from "./DynamicSubnetTierForm";
 import {
   CraigFormHeading,
@@ -18,7 +18,7 @@ import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
-import { AclMap, SubnetTierMap, VpcMap } from "../diagrams/Overview";
+import { AclMap, SubnetTierMap, VpcMap } from "../diagrams";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -99,7 +99,6 @@ class VpcDiagramPage extends React.Component {
   onAclEditClick(vpcIndex, aclIndex) {
     if (vpcIndex === this.state.vpcIndex && aclIndex === this.state.aclIndex) {
       this.resetValues();
-      this.setState({ vpcIndex: -1 });
     } else {
       scrollToTop();
       this.setState({

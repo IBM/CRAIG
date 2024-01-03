@@ -331,5 +331,125 @@ describe("vpn_servers", () => {
         "it should set vpc values"
       );
     });
+    it("should render method correctly", () => {
+      assert.deepEqual(
+        craig.vpn_servers.method.onRender({ method: "INSECURE" }),
+        "INSECURE - Developer Certificate",
+        "it should return correct method"
+      );
+      assert.deepEqual(
+        craig.vpn_servers.method.onRender({ method: "byo" }),
+        "Bring Your Own Certificate",
+        "it should return correct method"
+      );
+      assert.deepEqual(
+        craig.vpn_servers.method.onRender({ method: "username" }),
+        "Username",
+        "it should return correct method"
+      );
+    });
+    it("should handle method input change correctly", () => {
+      assert.deepEqual(
+        craig.vpn_servers.method.onInputChange({
+          method: "INSECURE - Developer Certificate",
+        }),
+        "INSECURE",
+        "it should return correct method"
+      );
+      assert.deepEqual(
+        craig.vpn_servers.method.onInputChange({
+          method: "Bring Your Own Certificate",
+        }),
+        "byo",
+        "it should return correct method"
+      );
+      assert.deepEqual(
+        craig.vpn_servers.method.onInputChange({ method: "Username" }),
+        "username",
+        "it should return correct method"
+      );
+    });
+    it("should hide certificate crn when type is byo", () => {
+      assert.isTrue(
+        craig.vpn_servers.certificate_crn.hideWhen({ method: "byo" }),
+        "it should be hidden"
+      );
+    });
+    it("should not have invalid certificate_crn when method is byo", () => {
+      assert.isFalse(
+        craig.vpn_servers.certificate_crn.invalid({ method: "byo" }),
+        "it should be valid"
+      );
+    });
+    it("should not have invalid client_ca_crn when method is not certificate", () => {
+      assert.isFalse(
+        craig.vpn_servers.client_ca_crn.invalid({ method: "byo" }),
+        "it should not be invalid"
+      );
+    });
+    it("should have invalid client_ca_crn when method is certificate and crn invalid", () => {
+      assert.isTrue(
+        craig.vpn_servers.client_ca_crn.invalid({
+          method: "certificate",
+          client_ca_crn: "aaa",
+        }),
+        "it should be invalid"
+      );
+    });
+    it("should not have invalid secrets manager when method is certificate", () => {
+      assert.isFalse(
+        craig.vpn_servers.secrets_manager.invalid({ method: "certificate" }),
+        "it should be valid"
+      );
+    });
+    it("should have invalid secrets manager when method is byo and none selected", () => {
+      assert.isTrue(
+        craig.vpn_servers.secrets_manager.invalid({ method: "byo" }),
+        "it should be invalid"
+      );
+    });
+    it("should hide secrets manager when no method", () => {
+      assert.isTrue(
+        craig.vpn_servers.secrets_manager.hideWhen({ method: "" }),
+        "it should be hidden"
+      );
+    });
+    it("should hide secrets manager when method and not byo", () => {
+      assert.isTrue(
+        craig.vpn_servers.secrets_manager.hideWhen({ method: "certificate" }),
+        "it should be hidden"
+      );
+    });
+    it("should return addition prefix as string on render", () => {
+      assert.deepEqual(
+        craig.vpn_servers.additional_prefixes.onRender({
+          additional_prefixes: [],
+        }),
+        "",
+        "it should return string"
+      );
+    });
+    it("should only check match if dns ips undefined", () => {
+      assert.isFalse(
+        craig.vpn_servers.client_dns_server_ips.invalid({}),
+        "it should be false"
+      );
+    });
+    it("should return array on input change", () => {
+      assert.deepEqual(
+        craig.vpn_servers.additional_prefixes.onInputChange({
+          additional_prefixes: "",
+        }),
+        [""],
+        "it should return string"
+      );
+    });
+    it("should get groups for secrets manager", () => {
+      assert.deepEqual(
+        craig.vpn_servers.secrets_manager.groups({}, { craig: craig }),
+        [],
+        "it should return groups"
+      );
+    });
   });
 });

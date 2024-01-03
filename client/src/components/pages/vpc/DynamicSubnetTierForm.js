@@ -56,6 +56,19 @@ export class DynamicSubnetTierForm extends React.Component {
       vpc_name: vpcName,
     };
     transpose(this.props.innerFormProps || {}, innerFormProps);
+    let noButtons =
+      this.props.subnetTierIndex === -1 ||
+      contains(
+        [
+          "vpn-2",
+          "vpn-1",
+          "f5-workload",
+          "f5-management",
+          "f5-bastion",
+          "f5-external",
+        ],
+        innerFormProps.data.name
+      );
     return (
       <CraigToggleForm
         key={
@@ -69,8 +82,8 @@ export class DynamicSubnetTierForm extends React.Component {
         hideHeading
         hide={false}
         isModal={this.props.subnetTierIndex === -1}
-        noSaveButton={this.props.subnetTierIndex === -1}
-        noDeleteButton={this.props.subnetTierIndex === -1}
+        noSaveButton={noButtons}
+        noDeleteButton={noButtons}
         type={this.props.subnetTierIndex === -1 ? "formInSubForm" : "subForm"}
         hideName
         submissionFieldName="subnetTier"

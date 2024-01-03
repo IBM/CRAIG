@@ -410,6 +410,25 @@ describe("power-vs", () => {
         "it should create a network interface"
       );
     });
+    it("should update a network interface", () => {
+      state.power.network.create(
+        { name: "test-network" },
+        { innerFormProps: { arrayParentName: "power-vs" } }
+      );
+      state.store.json.power[0].attachments = [];
+      state.power.network.save(
+        { name: "new-network-name" },
+        {
+          arrayParentName: "power-vs",
+          data: { name: "test-network" },
+        }
+      );
+      assert.deepEqual(
+        state.store.json.power[0].network,
+        [{ name: "new-network-name", workspace: "power-vs", zone: "dal12" }],
+        "it should update network name"
+      );
+    });
     it("should update a network interface with same name", () => {
       state.power.network.create(
         { name: "test-network" },

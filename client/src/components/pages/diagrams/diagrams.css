@@ -1,0 +1,49 @@
+.diagramBoxSelected {
+  box-shadow: 0 10px 14px 0 rgba(0, 0, 100, 0.24),
+    0 17px 50px 0 rgba(0, 0, 100, 0.19);
+}
+
+.aclBoxTop {
+  margin-top: 0px;
+}
+
+.aclBox {
+  width: 535px;
+  border: 2px dashed blue;
+  margin-top: 0.75rem;
+}
+
+.noAclBox {
+  border: 2px dashed red;
+}
+
+.deploymentIconBox {
+  color: black;
+  text-align: center;
+}
+
+.diagramIconBoxSelected {
+  color: blue;
+  text-shadow: 0 10px 14px 0 rgba(0, 0, 100, 0.24),
+    0 17px 50px 0 rgba(0, 0, 100, 0.19);
+}
+
+.maxWith150 {
+  max-width: 150px;
+}
+
+.font10Px {
+  font-size: 10px;
+}
+
+.font12px {
+  font-size: 12px;
+}
+
+.securityTabIconMargin {
+  margin-right: 0.33rem;
+}
+
+.margin1rem {
+  margin: 1rem;
+}

@@ -361,20 +361,18 @@ function editSubnets(
       }
     }
   }
-  ["vsi", "vpn_servers", "virtual_private_endpoints", "f5_vsi"].forEach(
-    (item) => {
-      config.store.json[item].forEach((resource) => {
-        for (let i = 0; i < resource.subnets.length; i++) {
-          if (resource.subnets[i].startsWith(oldTierName)) {
-            resource.subnets[i] = resource.subnets[i].replace(
-              oldTierName,
-              stateData.name
-            );
-          }
+  ["vsi", "vpn_servers", "virtual_private_endpoints"].forEach((item) => {
+    config.store.json[item].forEach((resource) => {
+      for (let i = 0; i < resource.subnets.length; i++) {
+        if (resource.subnets[i].startsWith(oldTierName)) {
+          resource.subnets[i] = resource.subnets[i].replace(
+            oldTierName,
+            stateData.name
+          );
         }
-      });
-    }
-  );
+      }
+    });
+  });
   config.store.json.clusters.forEach((cluster) => {
     for (let i = 0; i < cluster.subnets.length; i++) {
       if (cluster.subnets[i].startsWith(oldTierName)) {

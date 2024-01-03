@@ -14,7 +14,6 @@ export const NaclRulesSubForm = (props) => {
         onRuleSave={props.parentProps.craig.vpcs.acls.rules.save}
         onRuleDelete={props.parentProps.craig.vpcs.acls.rules.delete}
         isAclForm
-        isSecurityGroup
         invalidRuleTextCallback={
           props.parentProps.craig.vpcs.acls.rules.name.invalidText
         }

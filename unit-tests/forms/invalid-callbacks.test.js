@@ -1325,6 +1325,28 @@ describe("invalid callbacks", () => {
         "it should return true when overlapping cidr"
       );
     });
+    it("should return false for power cidrs", () => {
+      let craigData = require("../data-files/craig-json.json");
+      let actualData = hasOverlappingCidr({
+        store: {
+          json: craigData,
+        },
+      })(
+        {
+          name: "test",
+          pi_cidr: "10.20.10.0/24",
+        },
+        {
+          data: {
+            name: "",
+          },
+        }
+      );
+      assert.isFalse(
+        actualData.invalid,
+        "it should return true when overlapping cidr"
+      );
+    });
     it("should return true if cidr does not already exist but does overlap", () => {
       let craigData = require("../data-files/craig-json.json");
       let actualData = hasOverlappingCidr({

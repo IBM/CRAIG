@@ -350,7 +350,7 @@ function accessGroupOnStoreUpdate(config) {
     // for each policy in that group
     group.policies.forEach((policy) => {
       policy.group = group.name;
-      setUnfoundResourceGroup(config, policy.resources);
+      if (policy.resources) setUnfoundResourceGroup(config, policy.resources);
     });
     group.dynamic_policies.forEach((policy) => {
       policy.group = group.name;

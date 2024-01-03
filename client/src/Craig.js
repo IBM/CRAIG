@@ -35,6 +35,7 @@ import VpcDiagramPage from "./components/pages/vpc/Vpc.js";
 import { Breadcrumb, BreadcrumbItem } from "@carbon/react";
 import VpcDeploymentsDiagramPage from "./components/pages/vpc/VpcDeployments.js";
 import { Overview } from "./components/pages/diagrams/Overview.js";
+import PowerDiagram from "./components/pages/power/Power.js";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -441,6 +442,12 @@ class Craig extends React.Component {
                 VPC Deployments
               </BreadcrumbItem>
               <BreadcrumbItem
+                href="/beta/power"
+                isCurrentPage={window.location.pathname === "/beta/power"}
+              >
+                Power VS
+              </BreadcrumbItem>
+              <BreadcrumbItem
                 href="/beta/overview"
                 isCurrentPage={window.location.pathname === "/beta/overview"}
               >
@@ -488,6 +495,8 @@ class Craig extends React.Component {
             <VpcDiagramPage craig={craig} />
           ) : window.location.pathname === "/beta/vpcDeployments" ? (
             <VpcDeploymentsDiagramPage craig={craig} />
+          ) : window.location.pathname === "/beta/power" ? (
+            <PowerDiagram craig={craig} />
           ) : window.location.pathname === "/beta/overview" ? (
             <Overview craig={craig} />
           ) : window.location.pathname === "/form/cbr" ? (

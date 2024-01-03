@@ -12,13 +12,18 @@ export const ManageService = (props) => {
           ? " serviceOpen"
           : props.resourceGroup === "No Resource Group"
           ? " noRgService"
-          : "")
+          : "") +
+        " " +
+        props.className
       }
-      onClick={() =>
-        props.onClick({
-          service: props.service,
-          resourceGroup: props.resourceGroup,
-        })
+      onClick={
+        props.onClick
+          ? () =>
+              props.onClick({
+                service: props.service,
+                resourceGroup: props.resourceGroup,
+              })
+          : undefined
       }
     >
       <div className="icon-div">
@@ -47,7 +52,7 @@ ManageService.propTypes = {
     type: PropTypes.string.isRequired,
   }).isRequired,
   icon: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   resourceGroup: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
 };

@@ -257,6 +257,15 @@ describe("iam", () => {
           "it should set unfound group to null"
         );
       });
+      it("should set resource_group to null if a policy's resource object exists and contains a delete group name", () => {
+        let store = newState();
+        lazyAccessGroup(store);
+        lazyPolicy(store);
+        delete store.store.json.access_groups[0].policies[0].resources;
+        let task = () =>
+          store.resource_groups.delete({}, { data: { name: "management-rg" } });
+        assert.doesNotThrow(task, "it should not error");
+      });
     });
     describe("access_groups.create", () => {
       it("should create a new access group", () => {

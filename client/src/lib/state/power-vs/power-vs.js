@@ -176,13 +176,16 @@ function powerVsNetworkCreate(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function powerVsNetworkSave(config, stateData, componentProps) {
+  console.log(componentProps.data.name);
   if (stateData.name !== componentProps.data.name) {
     // update attachment name on network change
     new revision(config.store.json)
       .child("power", componentProps.arrayParentName)
       .child("attachments", componentProps.data.name, "network")
       .then((data) => {
-        data.network = stateData.name;
+        if (data)
+          // per zones don't have attachments
+          data.network = stateData.name;
       });
   }
   updateSubChild(config, "power", "network", stateData, componentProps);

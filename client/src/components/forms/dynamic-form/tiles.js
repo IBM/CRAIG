@@ -71,11 +71,15 @@ export const CraigEmptyResourceTile = (props) => {
     <Tile className="tileBackground displayFlex alignItemsCenter wrap">
       <CloudAlerting size="24" className="iconMargin" />
       No {props.name}.{" "}
-      <>
-        Click
-        <Add size="24" className="inlineIconMargin" />
-        button to add one.
-      </>
+      {props.noClick ? (
+        ""
+      ) : (
+        <>
+          Click
+          <Add size="24" className="inlineIconMargin" />
+          button to add one.
+        </>
+      )}
     </Tile>
   );
 };

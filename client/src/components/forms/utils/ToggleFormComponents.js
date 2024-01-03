@@ -269,7 +269,6 @@ const CraigFormHeading = (props) => {
   return (
     <div
       className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter`}
-      onClick={props.onClick}
       style={props.noMarginBottom ? {} : { marginBottom: "0.75rem" }}
     >
       <DynamicToolTipWrapper
@@ -277,32 +276,37 @@ const CraigFormHeading = (props) => {
         noLabelText={true}
         id={props.name}
         innerForm={() => {
-          return props.type === "subHeading" ? (
-            <h5 className="displayFlex">
-              {icon}
-              {props.name}
-            </h5>
-          ) : props.type === "p" ? (
-            <p
-              className={
-                props.toggleFormTitle
-                  ? "toggleFormTitle displayFlex"
-                  : "displayFlex"
-              }
-            >
-              {icon}
-              {props.name}
-            </p>
-          ) : props.type === "section" ? (
-            <h6 className="displayFlex">
-              {icon}
-              {props.name}
-            </h6>
-          ) : (
-            <h4 className="displayFlex">
-              {icon}
-              {props.name}
-            </h4>
+          return (
+            <div onClick={props.onClick}>
+              {props.type === "subHeading" ? (
+                <h5 className="displayFlex">
+                  {icon}
+                  {props.name}
+                  {props.addText}
+                </h5>
+              ) : props.type === "p" ? (
+                <p
+                  className={
+                    props.toggleFormTitle
+                      ? "toggleFormTitle displayFlex"
+                      : "displayFlex"
+                  }
+                >
+                  {icon}
+                  {props.name}
+                </p>
+              ) : props.type === "section" ? (
+                <h6 className="displayFlex">
+                  {icon}
+                  {props.name}
+                </h6>
+              ) : (
+                <h4 className="displayFlex">
+                  {icon}
+                  {props.name}
+                </h4>
+              )}
+            </div>
           );
         }}
       />

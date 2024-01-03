@@ -421,15 +421,16 @@ function hasOverlappingCidr(craig) {
       invalid: false,
       cidr: stateData.cidr,
     };
-    craig.store.json.vpcs.forEach((vpc) => {
-      vpc.subnets.forEach((subnet) => {
-        if (subnet.name !== componentProps.data.name)
-          allCidrs.push(subnet.cidr);
+    if (!stateData.pi_cidr)
+      craig.store.json.vpcs.forEach((vpc) => {
+        vpc.subnets.forEach((subnet) => {
+          if (subnet.name !== componentProps.data.name)
+            allCidrs.push(subnet.cidr);
+        });
       });
-    });
     if (
-      contains(allCidrs, stateData.cidr) ||
-      !isIpv4CidrOrAddress(stateData.cidr)
+      contains(allCidrs, stateData.cidr || stateData.pi_cidr) ||
+      !isIpv4CidrOrAddress(stateData.cidr || stateData.pi_cidr)
     ) {
       cidrData.invalid = true;
     } else {

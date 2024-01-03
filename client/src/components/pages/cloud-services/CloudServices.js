@@ -13,20 +13,17 @@ import {
   IcseSelect,
 } from "icse-react-assets";
 import {
-  azsort,
   contains,
   deepEqual,
-  distinct,
   isNullOrEmptyString,
   revision,
   snakeCase,
-  splat,
   titleCase,
 } from "lazy-z";
 import React from "react";
 import "./cloud-services.css";
 import { disableSave, propsMatchState } from "../../../lib";
-import { ManageService } from "./ManageService";
+import { ManageService } from "../diagrams/ManageService";
 import {
   CraigFormHeading,
   PrimaryButton,
@@ -36,7 +33,8 @@ import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
-import { docTabs } from "../vpc/DisplayComponents";
+import { getServices } from "../../../lib/forms/overview";
+import { docTabs } from "../diagrams/DocTabs";
 
 const serviceFormMap = {
   key_management: {
@@ -58,68 +56,6 @@ const serviceFormMap = {
     icon: IbmDb2,
   },
 };
-
-/**
- * get services
- * @param {*} craig craig object
- * @param {Array<string>} services list of services
- * @returns {Object} service resource groups and service map
- */
-function getServices(craig, services) {
-  let serviceResourceGroups = splat(craig.store.json.resource_groups, "name");
-  let serviceMap = {};
-  services.forEach((field) => {
-    serviceResourceGroups = distinct(
-      serviceResourceGroups.concat(
-        splat(craig.store.json[field], "resource_group")
-      )
-    );
-  });
-  serviceResourceGroups = serviceResourceGroups.sort(azsort).sort((a) => {
-    // move null to front
-    if (!a) return -1;
-    else return 0;
-  });
-  // for each resource group
-  serviceResourceGroups.forEach((rg) => {
-    let rgName = rg === null ? "No Resource Group" : rg;
-    serviceMap[rgName] = [];
-    // for each service
-    services.forEach((resourceType) => {
-      // look up that resource and add to service map
-      craig.store.json[resourceType].forEach((service) => {
-        if (service.resource_group === rg) {
-          serviceMap[rgName].push({
-            name: service.name,
-            type: resourceType,
-            overrideType:
-              resourceType === "icd" ? "cloud_databases" : undefined,
-          });
-        }
-      });
-    });
-  });
-
-  ["sysdig", "logdna"].forEach((observabilityService) => {
-    if (craig.store.json[observabilityService].enabled) {
-      let rg = craig.store.json[observabilityService].resource_group;
-      let serviceRg = !rg ? "No Resource Group" : rg;
-      serviceMap[serviceRg].push({
-        name: observabilityService,
-        type: observabilityService,
-      });
-    }
-  });
-
-  if (!serviceResourceGroups[0]) {
-    serviceResourceGroups[0] = "No Resource Group";
-  }
-
-  return {
-    serviceResourceGroups,
-    serviceMap,
-  };
-}
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });

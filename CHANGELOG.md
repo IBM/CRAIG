@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
-- SCC v1 Terraform has been deprecated. SCC v1 resources can still be managed from `/form/securityComplianceCenter`
 - Reafactored Routing Tables and Routing Table Routes Form
 - OptionsForm has been removed and now is generated using the DynamicForm component
 - Power VS Volume Attachments are no longer created in parallel to ensure that each provisions successfully
@@ -34,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Transit Gateway Prefix Filter Modal to crash application
 - Fixed an issue causing Security Groups and SSH Keys to not be deleted correctly from VSI objects
 - Fixed an issue causing advanced subnets to not be able to be saved from the Subnet Tiers page
+- Fixed an issue preventing Power VS SAP instances from being created
 
 ## 1.7.1
 
