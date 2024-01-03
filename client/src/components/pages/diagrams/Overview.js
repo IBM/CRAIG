@@ -3,7 +3,6 @@ import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import {
   NetworkEnterprise,
   CloudServices,
-  IbmPowerVs,
   IbmPowerVsPrivateCloud,
 } from "@carbon/icons-react";
 import PropTypes from "prop-types";
@@ -17,6 +16,7 @@ import { SubnetTierMap } from "./SubnetTierMap";
 import { PowerMap } from "./PowerMap";
 import { PowerSubnets } from "../power/PowerSubnets";
 import { PowerVolumes } from "../power/PowerVolumes";
+import "./diagrams.css";
 
 export class Overview extends React.Component {
   constructor(props) {
@@ -28,16 +28,8 @@ export class Overview extends React.Component {
     return (
       <>
         <CraigFormHeading name="Overview" />
-        <div
-          id="services-diagram"
-          style={{
-            border: "1px solid gray",
-            padding: "0.25rem",
-            paddingLeft: "1rem",
-          }}
-          className="marginBottomSmall"
-        >
-          <div style={{ marginBottom: "0.5rem" }} />
+        <div id="services-diagram" className="marginBottomSmall diagramBox">
+          <div className="marginBottomHalfRem" />
           <CraigFormHeading
             name="Cloud Services"
             noMarginBottom
@@ -56,21 +48,14 @@ export class Overview extends React.Component {
             />
           </div>
         </div>
-        <div
-          id="vpc-diagram"
-          style={{
-            border: "1px solid gray",
-            padding: "0.25rem",
-            paddingLeft: "1rem",
-          }}
-        >
-          <div style={{ marginBottom: "0.5rem" }} />
+        <div id="vpc-diagram" className="diagramBox">
+          <div className="marginBottomHalfRem" />
           <CraigFormHeading
             name="VPC Networks"
             noMarginBottom
             icon={<NetworkEnterprise className="diagramTitleIcon" />}
           />
-          <div id="vpc-ssh-keys" style={{ marginBottom: "0rem" }}>
+          <div id="vpc-ssh-keys" className="marginBottomNone">
             <SshKeys craig={craig} width="575px" />
           </div>
           <div id="vpcs" className="displayFlex">
@@ -88,16 +73,8 @@ export class Overview extends React.Component {
         {craig.store.json.power.length === 0 ? (
           ""
         ) : (
-          <div
-            id="vpc-diagram"
-            style={{
-              border: "1px solid gray",
-              padding: "0.25rem",
-              paddingLeft: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            <div style={{ marginBottom: "0.5rem" }} />
+          <div id="vpc-diagram" className="diagramBox marginTop1Rem">
+            <div className="marginBottomHalfRem" />
             <CraigFormHeading
               name="Power VS"
               noMarginBottom
@@ -105,16 +82,10 @@ export class Overview extends React.Component {
             />
             <PowerMap craig={craig} big>
               <PassThroughWrapper className="displayFlex">
-                <PassThroughWrapper
-                  style={{
-                    width: "50%",
-                    marginRight: "1rem",
-                    maxWidth: "850px",
-                  }}
-                >
+                <PassThroughWrapper className="powerMapPassthrough marginRight1Rem">
                   <PowerSubnets static craig={craig} />
                 </PassThroughWrapper>
-                <PassThroughWrapper style={{ width: "50%", maxWidth: "850px" }}>
+                <PassThroughWrapper className="powerMapPassthrough">
                   <PowerVolumes static craig={craig} />
                 </PassThroughWrapper>
               </PassThroughWrapper>

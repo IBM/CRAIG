@@ -47,3 +47,140 @@
 .margin1rem {
   margin: 1rem;
 }
+
+.diagramBox {
+  border: 1px solid lightgray;
+  padding: 0.25rem;
+  padding-left: 1rem;
+}
+
+.marginBottomHalfRem {
+  margin-bottom: 0.5rem;
+}
+
+.marginBottomNone {
+  margin-bottom: 0rem;
+}
+
+.marginTop1Rem {
+  margin-top: 1rem;
+}
+
+.marginLeftHalfRem {
+  margin-left: 0.5rem;
+}
+
+.powerMapPassthrough {
+  width: 50%;
+  max-width: 850px;
+}
+
+.marginRight1Rem {
+  margin-right: 1rem;
+}
+
+.textAlignCenter {
+  text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.marginRightQuarterRem {
+  margin-right: 0.25rem;
+}
+
+.powerSubForm {
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  width: 580px;
+}
+
+.powerSubFormBig {
+  width: 100%;
+  max-width: 1775px;
+}
+
+.powerSubnetName {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.powerSubnetBox {
+  margin-top: 1rem;
+  border: 2px solid #00882b;
+  padding: 0.5rem;
+  background: #e6f0e2;
+}
+
+.marginBottomThreeQuarterRem {
+  margin-bottom: 0.75rem;
+}
+
+.powerSubnetInnerBox {
+  border: 2px dashed gray;
+  width: 100%;
+  text-align: left;
+}
+
+.marginTopThreeQuartersRem {
+  margin-top: 0.75rem;
+}
+
+.powerSubnetTitleMargin {
+  margin-top: 0.25rem;
+  margin-left: 0.25rem;
+}
+
+.powerSubnetIconMargin {
+  margin-top: 0.25rem;
+  margin-left: 0.33rem;
+  margin-right: 0.33rem;
+}
+
+.powerSubnetChildren {
+  justify-content: center;
+  padding-bottom: 0.5rem;
+}
+
+.serviceBox {
+  width: 580px;
+  margin: 1rem;
+  margin-left: 0;
+}
+
+.securityGroupsBoxWidth {
+  width: 535px;
+}
+
+.sgDeploymentBox {
+  text-align: center;
+  max-width: 150px;
+}
+
+.subnetBox {
+  border: 2px solid #00882b;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 150px;
+  background: #e6f0e2;
+}
+
+.grayText {
+  color: gray;
+}
+
+.subnetRowBox {
+  border: 2px dotted gray;
+  width: 500px;
+  margin-top: 0.5rem;
+}
+
+.marginTopHalfRem {
+  margin-top: 0.5rem;
+}
+
+.width580 {
+  width: 580px;
+}

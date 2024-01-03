@@ -2,23 +2,17 @@ import React from "react";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { VirtualPrivateCloud } from "@carbon/icons-react";
 import PropTypes from "prop-types";
+import "./diagrams.css";
 
 export const VpcMap = (props) => {
   let craig = props.craig;
   return craig.store.json.vpcs.map((vpc, vpcIndex) => {
+    let vpcBoxClassName = "subForm marginBottomSmall marginRight1Rem width580";
+    if (props.isSelected && props.isSelected(vpcIndex)) {
+      vpcBoxClassName += " diagramBoxSelected";
+    }
     return (
-      <div
-        className="subForm marginBottomSmall"
-        key={vpc.name + vpc.index}
-        style={{
-          marginRight: "1rem",
-          width: "580px",
-          boxShadow:
-            props.isSelected && props.isSelected(vpcIndex)
-              ? " 0 10px 14px 0 rgba(0, 0, 0, 0.24),0 17px 50px 0 rgba(0, 0, 0, 0.19)"
-              : "",
-        }}
-      >
+      <div className={vpcBoxClassName} key={vpc.name + vpc.index}>
         <div
           onClick={
             props.onTitleClick ? () => props.onTitleClick(vpcIndex) : undefined

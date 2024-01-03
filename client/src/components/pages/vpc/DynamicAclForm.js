@@ -34,13 +34,17 @@ export class DynamicAclForm extends React.Component {
         noSaveButton={this.props.aclIndex === -1}
         noDeleteButton={this.props.aclIndex === -1}
         hideTitle={this.props.aclIndex === -1}
-        type={this.props.aclIndex === -1 ? "formInSubForm" : "subForm"}
+        type={
+          this.props.aclIndex === -1 || this.props.nested
+            ? "formInSubForm"
+            : "subForm"
+        }
         hideHeading
         key={this.props.vpcIndex + "-acl-form-" + this.props.aclIndex}
         onDelete={this.props.onDelete}
         onSave={craig.vpcs.acls.save}
-        hideChevron
-        hide={false}
+        hideChevron={!this.props.nested}
+        hide={this.props.beginHidden}
         hideName
         innerForm={DynamicForm}
         propsMatchState={propsMatchState}
@@ -58,3 +62,8 @@ export class DynamicAclForm extends React.Component {
     );
   }
 }
+
+DynamicAclForm.defaultProps = {
+  nested: false,
+  beginHidden: false,
+};

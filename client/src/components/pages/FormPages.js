@@ -1,3 +1,4 @@
+import React from "react";
 import {
   buildSubnet,
   disableSave,
@@ -9,12 +10,11 @@ import {
 import {
   SecurityGroupTemplate,
   SubnetPageTemplate,
-  NetworkAclTemplate,
   VsiLoadBalancerTemplate,
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { keys, splat, transpose } from "lazy-z";
+import { arraySplatIndex, keys, splat, transpose } from "lazy-z";
 import {
   disableSshKeyDelete,
   getSubnetTierStateData,
@@ -23,10 +23,7 @@ import {
   invalidSecurityGroupRuleText,
 } from "../../lib/forms";
 import { invalidCidr } from "../../lib/forms/invalid-callbacks";
-import {
-  aclHelperTextCallback,
-  invalidCidrText,
-} from "../../lib/forms/text-callbacks";
+import { invalidCidrText } from "../../lib/forms/text-callbacks";
 import { CopyRuleForm } from "../forms";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
@@ -34,9 +31,15 @@ import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.jso
 import DynamicForm from "../forms/DynamicForm";
 import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
-import { CraigToggleForm } from "../forms/utils";
+import { CraigToggleForm, DynamicFormModal } from "../forms/utils";
 import StatefulTabs from "../forms/utils/StatefulTabs";
 import { craigForms } from "./CraigForms";
+import {
+  CraigFormHeading,
+  PrimaryButton,
+  RenderForm,
+} from "../forms/utils/ToggleFormComponents";
+import { DynamicAclForm } from "./vpc/DynamicAclForm";
 
 const formPageTemplate = (craig, options, form) => {
   let forms = craigForms(craig);
@@ -478,28 +481,155 @@ const KeyManagementPage = (craig) => {
   });
 };
 
+class NetworkAcls extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showToggleForm: false,
+      sourceAcl: null,
+      destinationVpc: null,
+      addClusterRuleAcl: null,
+      showAclModal: false,
+    };
+    this.onModalSubmit = this.onModalSubmit.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleModalToggle = this.handleModalToggle.bind(this);
+  }
+
+  handleModalToggle() {
+    this.setState({ showAclModal: !this.state.showAclModal });
+  }
+
+  onModalSubmit(data) {
+    this.props.craig.vpcs.acls.create(data, {
+      vpc_name: this.props.data.name,
+    });
+    this.handleModalToggle();
+  }
+
+  handleSelect(event) {
+    let { name, value } = event.target;
+    this.setState({ [name]: value });
+  }
+
+  render() {
+    let craig = this.props.craig;
+    let vpcIndex = arraySplatIndex(
+      this.props.craig.store.json.vpcs,
+      "name",
+      this.props.data.name
+    );
+    return (
+      <>
+        <DynamicFormModal
+          name="Create an ACL"
+          show={this.state.showAclModal}
+          beginDisabled
+          submissionFieldName="acls"
+          onRequestSubmit={this.onModalSubmit}
+          onRequestClose={this.handleModalToggle}
+        >
+          {RenderForm(DynamicAclForm, {
+            craig: craig,
+            vpcIndex: vpcIndex,
+            aclIndex: -1,
+            innerFormProps: {
+              isModal: true,
+              shouldDisableSubmit: function () {
+                // see above
+                this.props.setRefUpstream(this.state);
+                if (disableSave("acls", this.state, this.props) === false) {
+                  this.props.enableModal();
+                } else {
+                  this.props.disableModal();
+                }
+              },
+            },
+          })}
+        </DynamicFormModal>
+
+        <CraigFormHeading
+          name="Network Access Control Lists"
+          className="marginBottomSmall"
+          type="subHeading"
+          buttons={
+            <PrimaryButton
+              type="add"
+              noDeleteButton
+              onClick={this.handleModalToggle}
+            />
+          }
+        />
+
+        {this.props.data.acls.map((acl, aclIndex) => (
+          <DynamicAclForm
+            nested
+            beginHidden
+            craig={craig}
+            aclIndex={aclIndex}
+            vpcIndex={vpcIndex}
+            onDelete={craig.vpcs.acls.delete}
+            onSave={craig.vpcs.acls.save}
+            innerFormProps={{
+              vpc_name: this.props.data.name,
+              data: acl,
+              craig: craig,
+              disableSave: disableSave,
+              form: {
+                jsonField: "acls",
+                groups: [
+                  {
+                    name: craig.vpcs.acls.name,
+                    resource_group: craig.vpcs.acls.resource_group,
+                  },
+                ],
+              },
+            }}
+          />
+        ))}
+
+        {this.props.child
+          ? RenderForm(this.props.child, {
+              data: this.props.data,
+              craig: this.props.craig,
+            })
+          : ""}
+      </>
+    );
+  }
+}
+
 const NetworkAclPage = (craig) => {
+  let none = () => {};
   return (
-    <NetworkAclTemplate
-      vpcs={craig.store.json.vpcs}
+    <IcseFormTemplate
+      name="Network Access Control Lists"
+      innerForm={NetworkAcls}
+      arrayData={craig.store.json.vpcs}
       docs={RenderDocs("acls", craig.store.json._options.template)}
+      onSubmit={none}
+      onDelete={none}
+      onSave={none}
+      disableSave={none}
+      propsMatchState={none}
       forceOpen={forceShowForm}
-      craig={craig}
-      onAclSubmit={craig.vpcs.acls.create}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      child={CopyRuleForm}
-      invalidTextCallback={craig.vpcs.acls.name.invalidText}
-      invalidCallback={craig.vpcs.acls.name.invalid}
-      invalidRuleTextCallback={craig.vpcs.acls.rules.name.invalidText}
-      invalidRuleText={craig.vpcs.acls.rules.name.invalid}
-      disableSave={disableSave}
-      propsMatchState={propsMatchState}
-      helperTextCallback={aclHelperTextCallback}
-      onRuleSave={craig.vpcs.acls.rules.save}
-      onRuleDelete={craig.vpcs.acls.rules.delete}
-      onSubmitCallback={craig.vpcs.acls.rules.create}
-      onSave={craig.vpcs.acls.save}
-      onDelete={craig.vpcs.acls.delete}
+      hideFormTitleButton
+      innerFormProps={{
+        craig: craig,
+        child: CopyRuleForm,
+        disableSave: disableSave,
+        propsMatchState: propsMatchState,
+      }}
+      toggleFormProps={{
+        craig: craig,
+        noDeleteButton: true,
+        noSaveButton: true,
+        hideName: true,
+        submissionFieldName: "network_acls",
+        disableSave: none,
+        propsMatchState: none,
+        nullRef: true,
+      }}
     />
   );
 };

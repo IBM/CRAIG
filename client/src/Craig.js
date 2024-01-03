@@ -425,7 +425,7 @@ class Craig extends React.Component {
                 href="/beta/services"
                 isCurrentPage={window.location.pathname === "/beta/services"}
               >
-                Services
+                Cloud Services
               </BreadcrumbItem>
               <BreadcrumbItem
                 href="/beta/vpc"

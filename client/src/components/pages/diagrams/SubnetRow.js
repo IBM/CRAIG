@@ -3,6 +3,7 @@ import { getTierSubnets } from "../../../lib";
 import { splatContains } from "lazy-z";
 import { Subnet } from "./Subnet";
 import PropTypes from "prop-types";
+import "./diagrams.css";
 
 export const SubnetRow = (props) => {
   let tierSubnets = getTierSubnets(props.tier, props.vpc)(props.tier);
@@ -16,6 +17,14 @@ export const SubnetRow = (props) => {
       allSubnetsHaveAcl = false;
   });
 
+  let subnetRowClassName = "displayFlex subnetRowBox";
+  if (props.tierIndex === 0) subnetRowClassName += " marginTopHalfRem";
+  if (
+    props.isSelected &&
+    props.isSelected(props.vpcIndex, props.tierIndex, allSubnetsHaveAcl)
+  )
+    subnetRowClassName += " diagramBoxSelected";
+
   return allSubnetsHaveAcl &&
     (!props.tier.advanced ||
       // prevent advanced tiers from rendering in unfound groups
@@ -23,17 +32,7 @@ export const SubnetRow = (props) => {
         splatContains(tierSubnets, "network_acl", props.acl.name))) ? (
     <div
       key={props.vpc.name + (props.acl ? props.acl.name : "") + props.tier.name}
-      style={{
-        border: "2px dotted gray",
-        width: "500px",
-        marginTop: props.tierIndex === 0 ? "" : "0.5rem",
-        boxShadow:
-          props.isSelected &&
-          props.isSelected(props.vpcIndex, props.tierIndex, allSubnetsHaveAcl)
-            ? " 0 10px 14px 0 rgba(0, 0, 0, 0.24),0 17px 50px 0 rgba(0, 0, 0, 0.19)"
-            : "",
-      }}
-      className="displayFlex"
+      className={subnetRowClassName}
       onClick={
         props.onClick
           ? () => {

@@ -14,6 +14,7 @@ import { IcseFormGroup } from "icse-react-assets";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import { ManageService } from "./ManageService";
 import PropTypes from "prop-types";
+import "./diagrams.css";
 
 const serviceFormMap = {
   key_management: {
@@ -41,11 +42,7 @@ export const RgServiceMap = (props) => {
   return services.serviceResourceGroups.map((rg, rgIndex) => {
     let serviceMap = services.serviceMap[rg];
     return (
-      <div
-        className="subForm marginBottomSmall"
-        key={rg}
-        style={{ width: "580px", margin: "1rem", marginLeft: "0" }}
-      >
+      <div className="subForm marginBottomSmall serviceBox" key={rg}>
         <CraigFormHeading
           icon={<GroupResource className="diagramTitleIcon" />}
           name={rg}

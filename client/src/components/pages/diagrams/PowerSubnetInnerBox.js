@@ -4,42 +4,25 @@ import {
   RenderForm,
 } from "../../forms/utils/ToggleFormComponents";
 import PropTypes from "prop-types";
+import "./diagrams.css";
 
 export const PowerSubnetInnerBox = (props) => {
+  let powerInnerBoxClassName = "powerSubnetInnerBox";
+  if (props.marginTop) {
+    powerInnerBoxClassName += " marginTopThreeQuartersRem";
+  }
   return (
-    <div
-      style={{
-        border: "2px dashed gray",
-        width: "100%",
-        textAlign: "left",
-        marginTop: props.marginTop ? "0.75rem" : undefined,
-      }}
-    >
-      <div
-        style={{
-          marginTop: "0.25rem",
-          marginLeft: "0.25rem",
-        }}
-      >
+    <div className={powerInnerBoxClassName}>
+      <div className="powerSubnetTitleMargin">
         <CraigFormHeading
           icon={RenderForm(props.icon, {
-            style: {
-              marginTop: "0.25rem",
-              marginLeft: "0.33rem",
-              marginRight: "0.33rem",
-            },
+            className: "powerSubnetIconMargin",
           })}
           name={props.name}
           type="p"
         />
       </div>
-      <div
-        className="displayFlex alignItemsCenter"
-        style={{
-          justifyContent: "center",
-          paddingBottom: "0.5rem",
-        }}
-      >
+      <div className="displayFlex alignItemsCenter powerSubnetChildren">
         {props.children}
       </div>
     </div>

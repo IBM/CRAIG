@@ -4,14 +4,17 @@ import { Security } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
 import { IcseFormGroup } from "icse-react-assets";
+import "./diagrams.css";
 
 export const SecurityGroups = (props) => {
   let craig = props.craig;
   let vpc = props.vpc;
   return (
     <div
-      className="formInSubForm marginBottomSmall"
-      style={{ width: props.width ? props.width : "535px" }}
+      className={
+        "formInSubForm marginBottomSmall" +
+        (props.width ? " securityGroupsBoxWidth" : "")
+      }
     >
       <CraigFormHeading
         icon={<Security className="diagramTitleIcon" />}
@@ -20,19 +23,17 @@ export const SecurityGroups = (props) => {
         noMarginBottom
       />
       <IcseFormGroup
-        className="displayFlex alignItemsCenter overrideGap"
-        style={{ width: props.width ? props.width : "535px" }}
+        className={
+          "displayFlex alignItemsCenter overrideGap" +
+          (props.width ? " securityGroupsBoxWidth" : "")
+        }
       >
         {craig.store.json.security_groups.map((sg, sgIndex) => {
           if (sg.vpc === vpc.name)
             return (
               <div
                 key={"sg-" + sgIndex}
-                className="fieldWidthSmaller"
-                style={{
-                  textAlign: "center",
-                  maxWidth: "150px",
-                }}
+                className="fieldWidthSmaller sgDeploymentBox"
               >
                 <DeploymentIcon
                   craig={craig}
