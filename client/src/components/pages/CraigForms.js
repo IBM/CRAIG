@@ -882,6 +882,9 @@ function craigForms(craig) {
       jsonField: "secrets_manager",
       groups: [
         {
+          use_data: craig.secrets_manager.use_data,
+        },
+        {
           name: craig.secrets_manager.name,
           resource_group: craig.secrets_manager.resource_group,
           encryption_key: craig.secrets_manager.encryption_key,

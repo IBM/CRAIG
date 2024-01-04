@@ -9,7 +9,8 @@
       "Users can now create additional VPC address prefixes from the VPN Gateways page",
       "Users can now add VPN Gateway connections from the VPN Gateways page",
       "Users can now enter NONE as a valid SSH Key",
-      "Users can now provider Power VS instances with Cloud Init user data"
+      "Users can now provider Power VS instances with Cloud Init user data",
+      "Users can now import existing Secrets Manager instances into CRAIG"
     ],
     "fixes": [
       "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",
@@ -20,7 +21,8 @@
       "Fixed an issue causing Transit Gateway Prefix Filter Modal to crash application",
       "Fixed an issue causing Security Groups and SSH Keys to not be deleted correctly from VSI objects",
       "Fixed an issue causing advanced subnets to not be able to be saved from the Subnet Tiers page",
-      "Fixed an issue preventing Power VS SAP instances from being created"
+      "Fixed an issue preventing Power VS SAP instances from being created",
+      "Fixed an issue causing refactored VPN Server instances to not have the correct references when using Bring Your Own ceritificate or Insecure Developer Certificate"
     ],
     "upgrade_notes": [
       "Reafactored Routing Tables and Routing Table Routes Form",

@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Users can now add VPN Gateway connections from the VPN Gateways page
 - Users can now enter NONE as a valid SSH Key
 - Users can now provider Power VS instances with Cloud Init user data
+- Users can now import existing Secrets Manager instances into CRAIG
 
 ### Fixes
 
@@ -34,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Security Groups and SSH Keys to not be deleted correctly from VSI objects
 - Fixed an issue causing advanced subnets to not be able to be saved from the Subnet Tiers page
 - Fixed an issue preventing Power VS SAP instances from being created
+- Fixed an issue causing refactored VPN Server instances to not have the correct references when using Bring Your Own ceritificate or Insecure Developer Certificate
 
 ## 1.7.1
 

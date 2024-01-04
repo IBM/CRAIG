@@ -7,6 +7,7 @@ const {
   resourceGroupsField,
   unconditionalInvalidText,
   encryptionKeyGroups,
+  hideWhenUseData,
 } = require("./utils");
 
 /**
@@ -86,6 +87,11 @@ function initSecretsManagerStore(store) {
       "secrets_manager"
     ),
     schema: {
+      use_data: {
+        type: "toggle",
+        default: false,
+        labelText: "Use Existing Instance",
+      },
       name: {
         default: "",
         invalid: invalidName("secrets_manager"),
@@ -100,6 +106,7 @@ function initSecretsManagerStore(store) {
         invalidText: unconditionalInvalidText("encryption key"),
         size: "small",
         groups: encryptionKeyGroups,
+        hideWhen: hideWhenUseData,
       },
     },
   });
