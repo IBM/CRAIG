@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
 import { validate } from "../../lib";
-import { splat } from "lazy-z";
+import { contains, splat } from "lazy-z";
 import { allDocText } from "../../lib/docs";
 const releaseNotes = require("../../lib/docs/release-notes.json");
 
@@ -227,7 +227,12 @@ class Navigation extends React.Component {
           <LeftNav
             expanded={this.state.expanded}
             onOverlayClick={this.onHamburgerClick}
-            navCategories={this.state.filteredNavCategories}
+            navCategories={
+              contains(window.location.pathname, "/beta") &&
+              !this.state.hasSearch
+                ? []
+                : this.state.filteredNavCategories
+            }
             fsCloud={
               this.props.isResetState === false
                 ? this.props.json._options.fs_cloud
@@ -236,6 +241,7 @@ class Navigation extends React.Component {
             invalidForms={this.props.invalidForms}
             isResetState={this.props.isResetState}
             onSearch={this.onSearch}
+            hasSearch={this.state.hasSearch}
           />
           {this.state.showModal && (
             <Modal

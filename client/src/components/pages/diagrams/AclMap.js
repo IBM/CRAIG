@@ -35,6 +35,7 @@ export const AclMap = (props) => {
                 ? () => props.aclTitleClick(props.vpc_index, actualAclIndex)
                 : undefined
             }
+            className="clicky"
           >
             <CraigFormHeading
               name={acl.name ? acl.name + " ACL" : "No ACL Selected"}

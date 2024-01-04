@@ -6,7 +6,10 @@ export const PowerSubnet = (props) => {
   return (
     <div className="powerSubnetBox">
       <div
-        className="displayFlex marginBottomThreeQuarterRem"
+        className={
+          "displayFlex marginBottomThreeQuarterRem" +
+          (props.onClick ? " clicky" : "")
+        }
         onClick={props.onClick ? props.onClick : undefined}
       >
         <IbmCloudSubnets className="marginRightQuarterRem" />

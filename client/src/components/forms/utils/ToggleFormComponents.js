@@ -277,7 +277,10 @@ const CraigFormHeading = (props) => {
         id={props.name}
         innerForm={() => {
           return (
-            <div onClick={props.onClick}>
+            <div
+              onClick={props.onClick}
+              className={props.onClick ? "clicky" : ""}
+            >
               {props.type === "subHeading" ? (
                 <h5 className="displayFlex">
                   {icon}

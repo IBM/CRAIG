@@ -20,7 +20,7 @@ export const DeploymentIcon = (props) => {
       <div className="maxWidth150">
         {RenderForm(props.icon, {
           size: "60",
-          className: "margin1rem",
+          className: "margin1rem" + (props.onClick ? " clicky" : ""),
           onClick: props.onClick ? props.onClick : undefined,
         })}
         <p className="font12px">{props.item.name}</p>

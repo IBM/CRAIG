@@ -37,6 +37,9 @@ import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
 
 const serviceFormMap = {
+  resource_groups: {
+    icon: GroupResource,
+  },
   key_management: {
     icon: IbmCloudKeyProtect,
   },
@@ -71,6 +74,7 @@ class CloudServicesPage extends React.Component {
       modalService: "",
       service: "",
       serviceName: "",
+      rgModal: false,
     };
 
     this.onServiceIconClick = this.onServiceIconClick.bind(this);
@@ -197,13 +201,18 @@ class CloudServicesPage extends React.Component {
       "event_streams",
       "key_management",
       "object_storage",
-      // "secrets_manager", not supported until after refactor
+      "secrets_manager",
     ]);
 
     return (
       <>
         <DynamicFormModal
-          name={`Create a Service in ${this.state.modalResourceGroup}`}
+          key={this.state.modalService}
+          name={
+            this.state.modalService === "resource_groups"
+              ? "Create a Resource Group"
+              : `Create a Service in ${this.state.modalResourceGroup}`
+          }
           show={this.state.showModal}
           beginDisabled
           submissionFieldName={this.state.modalService}
@@ -244,6 +253,8 @@ class CloudServicesPage extends React.Component {
               "Event Streams",
               "Object Storage",
               "Key Management",
+              "Secrets Manager",
+              "Resource Groups",
             ]}
           />
           <div className="marginBottomSmall" />
@@ -258,7 +269,9 @@ class CloudServicesPage extends React.Component {
                   : this.state.modalService === "appid"
                   ? "AppID"
                   : titleCase(this.state.modalService)
-              )} Service`}
+              )}${
+                this.state.modalService === "resource_groups" ? "" : " Service"
+              }`}
             />
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (
@@ -314,12 +327,40 @@ class CloudServicesPage extends React.Component {
                   width: "580px",
                 }}
               >
+                <div className="marginBottomSmall" />
+
+                <CraigFormHeading
+                  name="Resource Groups"
+                  type="subHeading"
+                  buttons={
+                    <PrimaryButton
+                      type="add"
+                      noDeleteButton
+                      hoverText="Create a Resource Group"
+                      onClick={() => {
+                        this.setState({
+                          showModal: true,
+                          modalService: "resource_groups",
+                        });
+                      }}
+                    />
+                  }
+                />
                 {serviceResourceGroups.map((rg) => (
                   <div className="subForm marginBottomSmall" key={rg}>
                     <CraigFormHeading
                       icon={<GroupResource className="diagramTitleIcon" />}
                       noMarginBottom={serviceMap[rg].length === 0}
                       type="subHeading"
+                      onClick={() => {
+                        this.onServiceIconClick({
+                          resourceGroup: "",
+                          service: {
+                            type: "resource_groups",
+                            name: rg,
+                          },
+                        });
+                      }}
                       name={rg}
                       buttons={
                         rg === "No Resource Group" ? (

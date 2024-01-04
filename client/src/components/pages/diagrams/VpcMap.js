@@ -17,6 +17,7 @@ export const VpcMap = (props) => {
           onClick={
             props.onTitleClick ? () => props.onTitleClick(vpcIndex) : undefined
           }
+          className={props.static ? "" : "clicky"}
         >
           <CraigFormHeading
             icon={<VirtualPrivateCloud className="diagramTitleIcon" />}

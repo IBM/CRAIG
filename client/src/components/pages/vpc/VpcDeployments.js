@@ -312,7 +312,26 @@ class VpcDeploymentsDiagramPage extends React.Component {
             form={
               <>
                 <div className="marginBottomSmall" />
-                <CraigFormHeading name="Deployments" noMarginBottom />
+                <div style={{ width: "580px" }}>
+                  <CraigFormHeading
+                    name="Deployments"
+                    noMarginBottom
+                    buttons={
+                      <PrimaryButton
+                        type="add"
+                        hoverText="Create a Deployment"
+                        noDeleteButton
+                        onClick={() => {
+                          this.resetSelection();
+                          this.setState({
+                            selectedItem: "ssh_keys",
+                            showModal: true,
+                          });
+                        }}
+                      />
+                    }
+                  />
+                </div>
                 <div className="displayFlex" style={{ width: "100%" }}>
                   <div id="left-vpc-deployments">
                     <div
@@ -325,20 +344,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
                     >
                       <SshKeys
                         craig={craig}
-                        buttons={
-                          <PrimaryButton
-                            type="add"
-                            hoverText="Create an SSH Key"
-                            noDeleteButton
-                            onClick={() => {
-                              this.resetSelection();
-                              this.setState({
-                                selectedItem: "ssh_keys",
-                                showModal: true,
-                              });
-                            }}
-                          />
-                        }
                         onKeyClick={(sshKeyIndex) =>
                           this.setSelection(-1, "ssh_keys", sshKeyIndex)
                         }
@@ -353,6 +358,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                     </div>
                     <VpcMap
                       craig={craig}
+                      static
                       isSelected={(vpcIndex) => {
                         return vpcIndex === this.state.vpcIndex;
                       }}

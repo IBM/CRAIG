@@ -12,6 +12,11 @@ import {
   Compass,
   Folders,
   Settings,
+  CloudServices,
+  VirtualPrivateCloud,
+  IbmCloudVpc,
+  IbmPowerVs,
+  Dashboard,
 } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
@@ -21,7 +26,7 @@ import { contains, kebabCase } from "lazy-z";
 
 const LeftNav = (props) => {
   let dividerClass = props.expanded ? "expandedDivider" : "railDivider";
-
+  let isBetaPage = contains(window.location.pathname, "/beta");
   return (
     <SideNav
       expanded={props.expanded}
@@ -32,18 +37,72 @@ const LeftNav = (props) => {
       <SideNavItems>
         <LeftNavItem
           item={{
-            path: "/projects",
+            path: `${isBetaPage ? "/beta" : ""}/projects`,
             icon: Folders,
-            title: "Projects",
+            title: (isBetaPage ? "[Beta] " : "") + "Projects",
           }}
           key="Projects"
           expanded={props.expanded}
         />
         <LeftNavItem
-          item={{ path: "/", icon: Settings, title: "Options" }}
+          item={{
+            path: isBetaPage ? "/beta/settings" : "/",
+            icon: Settings,
+            title: (isBetaPage ? "[Beta] " : "") + "Options",
+          }}
           key="Options"
           expanded={props.expanded}
         />
+        {isBetaPage && (
+          <>
+            <LeftNavItem
+              key="Cloud Services"
+              item={{
+                path: "/beta/services",
+                icon: CloudServices,
+                title: "[Beta] Cloud Services",
+              }}
+              expanded={props.expanded}
+            />
+            <LeftNavItem
+              key="VPC Networks"
+              item={{
+                path: "/beta/vpc",
+                icon: VirtualPrivateCloud,
+                title: "[Beta] VPC Networks",
+              }}
+              expanded={props.expanded}
+            />
+            <LeftNavItem
+              key="VPC Deployments"
+              item={{
+                path: "/beta/vpcDeployments",
+                icon: IbmCloudVpc,
+                title: "[Beta] VPC Deployments",
+              }}
+              expanded={props.expanded}
+            />
+            <LeftNavItem
+              key="Power VS"
+              item={{
+                path: "/beta/power",
+                icon: IbmPowerVs,
+                title: "[Beta] Power VS",
+              }}
+              expanded={props.expanded}
+            />
+            <LeftNavItem
+              key="Overview"
+              item={{
+                path: "/beta/overview",
+                icon: Dashboard,
+                title: "[Beta] Overview",
+              }}
+              expanded={props.expanded}
+            />
+            {props.expanded && <SideNavDivider className={dividerClass} />}
+          </>
+        )}
         {props.expanded && (
           <>
             <LeftNavItem
@@ -82,7 +141,7 @@ const LeftNav = (props) => {
             <SideNavLink href="#">Search</SideNavLink>
             <Search
               size="lg"
-              id="search"
+              id="craig-search"
               placeholder="Find cloud resources"
               labelText="Search"
               className="left-nav-search"

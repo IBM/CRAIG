@@ -18,6 +18,7 @@ export const SubnetRow = (props) => {
   });
 
   let subnetRowClassName = "displayFlex subnetRowBox";
+  if (!props.grayNames) subnetRowClassName += " clicky";
   if (props.tierIndex === 0) subnetRowClassName += " marginTopHalfRem";
   if (
     props.isSelected &&
