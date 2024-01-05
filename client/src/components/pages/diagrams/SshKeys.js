@@ -11,7 +11,7 @@ export const SshKeys = (props) => {
       className="subForm"
       style={{
         marginRight: "1rem",
-        width: props.width ? props.width : "580px",
+        width: "580px",
         marginBottom: "0rem",
       }}
     >

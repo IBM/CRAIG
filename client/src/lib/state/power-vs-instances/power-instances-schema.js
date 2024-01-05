@@ -9,11 +9,7 @@ const {
   revision,
   splatContains,
 } = require("lazy-z");
-const {
-  invalidName,
-  invalidNameText,
-  storageChangeDisabledCallback,
-} = require("../../forms");
+const { invalidName, invalidNameText } = require("../../forms");
 const {
   fieldIsNullOrEmptyString,
   selectInvalidText,

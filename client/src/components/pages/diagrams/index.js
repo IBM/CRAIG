@@ -12,3 +12,4 @@ export { SubnetRow } from "./SubnetRow";
 export { SubnetServiceMap } from "./SubnetServiceMap";
 export { PowerSubnet } from "./PowerSubnet";
 export { PowerSubnetInnerBox } from "./PowerSubnetInnerBox";
+export { TransitGatewaysMap } from "./TransitGatewaysMap";

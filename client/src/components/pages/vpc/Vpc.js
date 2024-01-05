@@ -67,6 +67,7 @@ class VpcDiagramPage extends React.Component {
       editing: false,
       aclIndex: -1,
       subnetTierIndex: -1,
+      aclCreateModal: false,
     });
   }
 
@@ -189,6 +190,7 @@ class VpcDiagramPage extends React.Component {
         ? craig.store.json.vpcs[this.state.vpcIndex].name
         : "";
     let vpcFormData = craigForms(craig).vpcs;
+    console.log(JSON.stringify(this.state, null, 2));
     return (
       <>
         <DynamicFormModal
@@ -269,7 +271,7 @@ class VpcDiagramPage extends React.Component {
           submissionFieldName="acls"
           onRequestSubmit={this.onAclSubmit}
           onRequestClose={() => {
-            this.setState({ aclCreateModal: false });
+            this.resetValues();
           }}
         >
           {RenderForm(DynamicAclForm, {

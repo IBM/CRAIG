@@ -4,6 +4,7 @@ import {
   NetworkEnterprise,
   CloudServices,
   IbmPowerVsPrivateCloud,
+  IbmCloudTransitGateway,
 } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { RgServiceMap } from "./RgServiceMap";
@@ -17,6 +18,7 @@ import { PowerMap } from "./PowerMap";
 import { PowerSubnets } from "../power/PowerSubnets";
 import { PowerVolumes } from "../power/PowerVolumes";
 import "./diagrams.css";
+import { TransitGatewaysMap } from "./TransitGatewaysMap";
 
 export class Overview extends React.Component {
   constructor(props) {
@@ -90,6 +92,21 @@ export class Overview extends React.Component {
                 </PassThroughWrapper>
               </PassThroughWrapper>
             </PowerMap>
+          </div>
+        )}
+        {craig.store.json.transit_gateways.length === 0 ? (
+          ""
+        ) : (
+          <div id="tgw-diagram" className="diagramBox marginTop1Rem">
+            <div className="marginBottomHalfRem" />
+            <CraigFormHeading
+              name="Network Connectivity"
+              noMarginBottom
+              icon={<IbmCloudTransitGateway className="diagramTitleIcon" />}
+            />
+            <div className="displayFlex">
+              <TransitGatewaysMap craig={craig} />
+            </div>
           </div>
         )}
       </>

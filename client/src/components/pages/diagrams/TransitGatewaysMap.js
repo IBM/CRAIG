@@ -1,0 +1,130 @@
+import React from "react";
+import { DeploymentIcon } from "./DeploymentIcon";
+import { Tag } from "@carbon/react";
+import {
+  Link,
+  Connect,
+  EarthFilled,
+  FirewallClassic,
+  GatewayUserAccess,
+  IbmCloudTransitGateway,
+  IbmPowerVs,
+  VirtualPrivateCloud,
+} from "@carbon/icons-react";
+import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { IcseFormGroup } from "icse-react-assets";
+import { tagColors } from "../../forms/dynamic-form/components";
+import PropTypes from "prop-types";
+
+export const TransitGatewaysMap = (props) => {
+  return props.craig.store.json.transit_gateways.map((tgw, tgwIndex) => {
+    let isSelected = props.isSelected && props.isSelected(tgwIndex);
+    return (
+      <div
+        className={
+          "subForm marginBottomSmall marginRight1Rem width580" +
+          (props.onClick ? " clicky" : "") +
+          (isSelected ? " diagramBoxSelected" : "")
+        }
+        key={tgw.name + tgwIndex}
+        onClick={
+          props.onClick
+            ? () => {
+                props.onClick(tgwIndex);
+              }
+            : undefined
+        }
+      >
+        <DeploymentIcon
+          itemName="transit_gateways"
+          item={tgw}
+          icon={IbmCloudTransitGateway}
+        >
+          <>
+            <div className="marginTopHalfRem" />
+            <Tag type={tgw.global ? tagColors[5] : tagColors[0]}>
+              <div className="displayFlex font10Px">
+                {tgw.global ? (
+                  <EarthFilled className="securityTabIconMargin" />
+                ) : (
+                  <Connect className="securityTabIconMargin" />
+                )}
+                <div style={{ marginTop: "0.05rem" }}>
+                  {tgw.global ? "Global" : "Local"}
+                </div>
+              </div>
+            </Tag>
+          </>
+        </DeploymentIcon>
+        <div className="marginBottomSmall" />
+        <div className="formInSubForm">
+          <CraigFormHeading
+            icon={<Link className="diagramTitleIcon" />}
+            type="subHeading"
+            name="Connected Networks"
+            noMarginBottom={tgw.connections.length === 0}
+          />
+          {tgw.connections.length === 0 ? (
+            ""
+          ) : (
+            <IcseFormGroup
+              className="displayFlex alignItemsCenter overrideGap powerSubnetChildren"
+              style={{
+                width: "535px",
+              }}
+            >
+              {tgw.connections.map((connection, connectionIndex) => (
+                <DeploymentIcon
+                  key={tgw.name + "-connection-" + connectionIndex}
+                  item={{
+                    name: connection.vpc
+                      ? connection.vpc
+                      : connection.power
+                      ? connection.power
+                      : "",
+                  }}
+                  itemName="connection"
+                  icon={connection.vpc ? VirtualPrivateCloud : IbmPowerVs}
+                />
+              ))}
+            </IcseFormGroup>
+          )}
+        </div>
+        {tgw.gre_tunnels.length === 0 ? (
+          ""
+        ) : (
+          <div className="formInSubForm marginTop1Rem">
+            <CraigFormHeading
+              icon={<GatewayUserAccess className="diagramTitleIcon" />}
+              type="subHeading"
+              name="GRE Tunnels"
+            />
+            <IcseFormGroup
+              className="displayFlex alignItemsCenter overrideGap powerSubnetChildren"
+              style={{
+                width: "535px",
+              }}
+            >
+              {tgw.gre_tunnels.map((tunnel, tunnelIndex) => (
+                <DeploymentIcon
+                  key={tgw.name + "-connection-" + tunnelIndex}
+                  item={{
+                    name: tunnel.gateway,
+                  }}
+                  itemName="gre_tunnels"
+                  icon={FirewallClassic}
+                />
+              ))}
+            </IcseFormGroup>
+          </div>
+        )}
+      </div>
+    );
+  });
+};
+
+TransitGatewaysMap.propTypes = {
+  craig: PropTypes.shape({}).isRequired,
+  onClick: PropTypes.func,
+  isSelected: PropTypes.func,
+};

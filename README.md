@@ -24,13 +24,23 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 4. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
 
 ---
+
 ## Power VS Workspace Deployment
 
+To dynamically fetch Power VS images and storage pools, the IBM Power VS APIs require a workspace to be created. CRAIG provides Terraform scripts to automatically provision these workspaces and import the GUIDs into the local NodeJS environment.
+
 ### Automated Deployment
+
 The `terraform.sh` script found in `/deploy` provisions a Power VS Workspace in each zone and sets the needed environment variables with the format of `POWER_WORKSPACE_<zone>=<workspace-guid>`.
 
+Use the following command to run the script:
+```shell
+sh deploy/terraform.sh -a "<Your IBM Cloud Platform API key>"
+```
+
 ### Bring Your Own Workspace
-To bring your own Power VS Workspace into CRAIG you will need to set a field in your `.env` with the following format
+
+To bring your own Power VS Workspace into CRAIG to fetch images, you will need to set a field in your `.env` with the following format. To see an example, see [.env.example](./.env.example)
 
 ```
 POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>

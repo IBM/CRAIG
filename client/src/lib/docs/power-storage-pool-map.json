@@ -1,30 +1,19 @@
 {
-  "us-east": [
-    "Tier1-Flash-8",
-    "Tier1-Flash-7",
-    "Tier1-Flash-6",
-    "Tier1-Flash-5",
-    "Tier1-Flash-4",
+  "syd05": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
+  "eu-de-1": [
     "Tier1-Flash-2",
     "Tier1-Flash-1",
-    "Tier3-Flash-5",
-    "Tier3-Flash-2",
-    "Tier3-Flash-4",
     "Tier3-Flash-3",
+    "Tier3-Flash-2",
     "Tier3-Flash-1"
   ],
-  "tor01": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
-  "dal10": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
-  "syd05": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
-  "wdc07": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
-  "lon06": [
+  "tok04": [
+    "Tier3-Flash-3",
     "Tier3-Flash-2",
     "Tier3-Flash-1",
     "Tier1-Flash-2",
-    "Tier1-Flash-1",
-    "Tier3-Flash-3"
+    "Tier1-Flash-1"
   ],
-  "lon04": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
   "wdc06": [
     "Tier1-Flash-1",
     "Tier1-Flash-3",
@@ -34,13 +23,7 @@
     "Tier3-Flash-3"
   ],
   "syd04": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
-  "eu-de-1": [
-    "Tier1-Flash-2",
-    "Tier1-Flash-1",
-    "Tier3-Flash-3",
-    "Tier3-Flash-2",
-    "Tier3-Flash-1"
-  ],
+  "wdc07": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
   "eu-de-2": [
     "Tier1-Flash-4",
     "Tier1-Flash-3",
@@ -49,6 +32,7 @@
     "Tier3-Flash-2",
     "Tier3-Flash-1"
   ],
+  "tor01": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
   "dal12": [
     "Tier1-Flash-6",
     "Tier1-Flash-5",
@@ -62,12 +46,14 @@
     "Tier3-Flash-2",
     "Tier3-Flash-1"
   ],
-  "tok04": [
-    "Tier3-Flash-3",
+  "dal10": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
+  "lon04": ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
+  "lon06": [
     "Tier3-Flash-2",
     "Tier3-Flash-1",
     "Tier1-Flash-2",
-    "Tier1-Flash-1"
+    "Tier1-Flash-1",
+    "Tier3-Flash-3"
   ],
   "us-south": [
     "Tier1-Flash-6",
@@ -80,6 +66,20 @@
     "Tier3-Flash-4",
     "Tier3-Flash-3",
     "Tier3-Flash-2",
+    "Tier3-Flash-1"
+  ],
+  "us-east": [
+    "Tier1-Flash-8",
+    "Tier1-Flash-7",
+    "Tier1-Flash-6",
+    "Tier1-Flash-5",
+    "Tier1-Flash-4",
+    "Tier1-Flash-2",
+    "Tier1-Flash-1",
+    "Tier3-Flash-5",
+    "Tier3-Flash-2",
+    "Tier3-Flash-4",
+    "Tier3-Flash-3",
     "Tier3-Flash-1"
   ]
 }

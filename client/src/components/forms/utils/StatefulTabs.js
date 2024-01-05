@@ -126,7 +126,7 @@ StatefulTabs.propTypes = {
   onClick: PropTypes.func, // can be null
   shouldDisableSave: PropTypes.func, // can be null
   about: PropTypes.node, // can be null
-  form: PropTypes.node.isRequired,
+  form: PropTypes.node, // not required for recursive tab
   hideAbout: PropTypes.bool.isRequired,
   hasBuiltInHeading: PropTypes.bool.isRequired,
   hideHeading: PropTypes.bool.isRequired,
