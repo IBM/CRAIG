@@ -27,7 +27,7 @@ const {
   invalidSshPublicKey,
 } = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
-const { storageChangeDisabledCallback } = require("../forms");
+const { storageChangeDisabledCallback } = require("../forms/power-affinity");
 /**
  * set kms from encryption key on store update
  * @param {*} instance
