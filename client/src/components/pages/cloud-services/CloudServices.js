@@ -307,9 +307,9 @@ class CloudServicesPage extends React.Component {
         </DynamicFormModal>
         <div className="marginBottomSmall" />
         <StatefulTabs
+          formName="Cloud Services"
           name="Cloud Services"
-          overrideTabs={docTabs(
-            "Manage Services",
+          nestedDocs={docTabs(
             [
               "AppID",
               "Cloud Databases",

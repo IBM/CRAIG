@@ -350,8 +350,8 @@ class PowerDiagram extends React.Component {
         >
           <StatefulTabs
             name="Power VS"
-            overrideTabs={docTabs(
-              "Manage Power VS",
+            formName="Power VS"
+            nestedDocs={docTabs(
               ["Power VS", "Power VS Instances (LPARs)", "Power Volumes"],
               craig
             )}

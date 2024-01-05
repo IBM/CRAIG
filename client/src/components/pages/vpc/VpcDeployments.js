@@ -297,8 +297,8 @@ class VpcDeploymentsDiagramPage extends React.Component {
         >
           <StatefulTabs
             name="VPC Deployments"
-            overrideTabs={docTabs(
-              "Manage Deployments",
+            formName="VPC Deployments"
+            nestedDocs={docTabs(
               [
                 "SSH Keys",
                 "Clusters",

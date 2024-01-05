@@ -292,8 +292,8 @@ class VpcDiagramPage extends React.Component {
         </DynamicFormModal>
         <div className="marginBottomSmall" />
         <StatefulTabs
-          overrideTabs={docTabs(
-            "Manage VPC Networks",
+          formName="Manage VPC Networks"
+          nestedDocs={docTabs(
             [
               "Virtual Private Cloud",
               "Access Control Lists (ACLs)",

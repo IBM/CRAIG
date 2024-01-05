@@ -32,7 +32,7 @@ class StatefulTabs extends React.Component {
         ) : (
           <IcseHeading
             name={this.props.name}
-            type={props.headingType}
+            type={this.props.headingType}
             className={this.props.className}
             tooltip={this.props.tooltip}
             buttons={
@@ -65,8 +65,8 @@ class StatefulTabs extends React.Component {
               </TabList>
             ) : (
               <TabList aria-label="formTabs">
-                <Tab>Create</Tab>
-                <Tab>About</Tab>
+                <Tab>{this.props.formName || "Create"}</Tab>
+                <Tab>{this.props.formName ? "Documentation" : "About"}</Tab>
               </TabList>
             )}
             {this.props.overrideTabs ? (
@@ -74,7 +74,7 @@ class StatefulTabs extends React.Component {
                 {this.props.overrideTabs.map((tab, tabIndex) => {
                   return (
                     <TabPanel className="doc" key={`tab-panel-${tabIndex}`}>
-                      {tabIndex === 0 ? this.props.form : tab.about()}
+                      {tab.about()}
                     </TabPanel>
                   );
                 })}
@@ -83,7 +83,17 @@ class StatefulTabs extends React.Component {
               <TabPanels>
                 <TabPanel className="doc">{this.props.form}</TabPanel>
                 <TabPanel className="doc">
-                  {this.props.about ? this.props.about : ""}
+                  {this.props.nestedDocs ? (
+                    <StatefulTabs
+                      name={this.props.name + " Documentation"}
+                      overrideTabs={this.props.nestedDocs}
+                      headingType="subHeading"
+                    />
+                  ) : this.props.about ? (
+                    this.props.about
+                  ) : (
+                    ""
+                  )}
                 </TabPanel>
               </TabPanels>
             )}

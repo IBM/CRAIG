@@ -9,12 +9,8 @@ import { snakeCase } from "lazy-z";
  * @param {*} craig
  * @returns {Array} array of objects
  */
-export const docTabs = (mainTabName, tabs, craig) => {
-  let displayTabs = [
-    {
-      name: mainTabName,
-    },
-  ];
+export const docTabs = (tabs, craig) => {
+  let displayTabs = [];
   tabs.forEach((tab) => {
     let nextTab = {
       name: tab,
