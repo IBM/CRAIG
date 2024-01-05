@@ -1,4 +1,9 @@
-const { splat, splatContains, titleCase } = require("lazy-z");
+const {
+  splat,
+  splatContains,
+  titleCase,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultCos } = require("./defaults");
 const {
@@ -20,6 +25,7 @@ const {
   resourceGroupsField,
   titleCaseRender,
   kebabCaseInput,
+  unconditionalInvalidText,
 } = require("./utils");
 const { cosPlans } = require("../constants");
 
@@ -326,7 +332,7 @@ function initObjectStorageStore(store) {
         save: cosBucketSave,
         delete: cosBucketDelete,
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "kms_key", "storage_class"],
+          ["name", "storage_class"],
           "object_storage",
           "buckets"
         ),
@@ -351,8 +357,13 @@ function initObjectStorageStore(store) {
             type: "select",
             default: null,
             invalid: fieldIsNullOrEmptyString("kms_key"),
-            invalidText: selectInvalidText("encryption key"),
+            invalidText: unconditionalInvalidText(
+              "Warning: Unencrypted storage bucket"
+            ),
             groups: encryptionKeyFilter,
+            tooltip: {
+              content: "To follow best practices, encrypt your storage bucket.",
+            },
           },
           force_delete: {
             default: false,

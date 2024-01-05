@@ -630,35 +630,36 @@ describe("object_storage", () => {
         "it should be false"
       );
     });
-    it("should return true if an object storage bucket has an invalid encryption key name", () => {
-      assert.isTrue(
-        craig.object_storage.buckets.shouldDisableSave(
-          { name: "key", kms_key: null, use_data: false },
-          {
-            craig: {
-              store: {
-                json: {
-                  object_storage: [
-                    {
-                      name: "frog",
-                      buckets: [
-                        {
-                          name: "test",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
-            data: {
-              name: "test",
-            },
-          }
-        ),
-        "it should be false"
-      );
-    });
+    // commented out to allow for unencrypted cos buckets
+    // it("should return true if an object storage bucket has an invalid encryption key name", () => {
+    //   assert.isTrue(
+    //     craig.object_storage.buckets.shouldDisableSave(
+    //       { name: "key", kms_key: null, use_data: false },
+    //       {
+    //         craig: {
+    //           store: {
+    //             json: {
+    //               object_storage: [
+    //                 {
+    //                   name: "frog",
+    //                   buckets: [
+    //                     {
+    //                       name: "test",
+    //                     },
+    //                   ],
+    //                 },
+    //               ],
+    //             },
+    //           },
+    //         },
+    //         data: {
+    //           name: "test",
+    //         },
+    //       }
+    //     ),
+    //     "it should be false"
+    //   );
+    // });
   });
   describe("object_storage.keys.shouldDisableSave", () => {
     const craig = newState();

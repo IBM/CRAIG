@@ -66,7 +66,6 @@ describe("invalidForms", () => {
     updatedState.update();
     let expectedData = [
       "key_management",
-      "object_storage",
       "routing_tables",
       "clusters",
       "vsi",
@@ -93,7 +92,6 @@ describe("invalidForms", () => {
     updatedState.store.json._options.power_vs_zones = ["dal10"];
     let expectedData = [
       "key_management",
-      "object_storage",
       "routing_tables",
       "clusters",
       "vsi",

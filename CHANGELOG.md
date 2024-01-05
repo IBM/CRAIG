@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Power VS Volume Attachments are no longer created in parallel to ensure that each provisions successfully
 - Documentation is now accessible without a project selected. Users no longer recieve the No Project Modal on pages with `/docs/` in the header.
 - SCC V1 has been deprecated. While the resource is still supported through JSON, the front-end component will no longer be displayed
+- Encrypted COS buckets are no longer required. To follow best practices, we recommend that storage buckets are encrypted.
 
 ### Features
 

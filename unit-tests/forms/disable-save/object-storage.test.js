@@ -71,21 +71,22 @@ describe("object storage", () => {
       "it should be false"
     );
   });
-  it("should return true if an object storage bucket has an invalid encryption key name", () => {
-    assert.isTrue(
-      disableSave(
-        "buckets",
-        { name: "key", kms_key: null, use_data: false },
-        {
-          craig: state(),
-          data: {
-            name: "test",
-          },
-        }
-      ),
-      "it should be false"
-    );
-  });
+  // commented out to allow for unencrypted cos buckets
+  // it("should return true if an object storage bucket has an invalid encryption key name", () => {
+  //   assert.isTrue(
+  //     disableSave(
+  //       "buckets",
+  //       { name: "key", kms_key: null, use_data: false },
+  //       {
+  //         craig: state(),
+  //         data: {
+  //           name: "test",
+  //         },
+  //       }
+  //     ),
+  //     "it should be false"
+  //   );
+  // });
   it("should return true if an object storage key has an invalid name", () => {
     assert.isTrue(
       disableSave(
