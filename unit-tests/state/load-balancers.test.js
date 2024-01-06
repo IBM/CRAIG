@@ -371,4 +371,212 @@ describe("load_balancers", () => {
       );
     });
   });
+  describe("load balancer schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should hide persistance cookie name when session_persistence_type is not app_cookie", () => {
+      assert.isTrue(
+        craig.load_balancers.session_persistence_app_cookie_name.hideWhen({}),
+        "it should be hidden"
+      );
+    });
+    it("should not hide persistance cookie name when session_persistence_type is app_cookie", () => {
+      assert.isFalse(
+        craig.load_balancers.session_persistence_app_cookie_name.hideWhen({
+          session_persistence_type: "app_cookie",
+        }),
+        "it should be hidden"
+      );
+    });
+    it("should correctly handle session persistance type on input change", () => {
+      assert.deepEqual(
+        craig.load_balancers.session_persistence_type.onInputChange({
+          session_persistence_type: "HTTP Cookie",
+        }),
+        "http_cookie",
+        "it should change on input change"
+      );
+    });
+    it("should return correct render for session_persistence_type", () => {
+      assert.deepEqual(
+        craig.load_balancers.session_persistence_type.onRender({
+          session_persistence_type: "source_ip",
+        }),
+        "Source IP",
+        "it should return correct text"
+      );
+      assert.deepEqual(
+        craig.load_balancers.session_persistence_type.onRender({
+          session_persistence_type: "http_cookie",
+        }),
+        "HTTP Cookie",
+        "it should return correct text"
+      );
+      assert.deepEqual(
+        craig.load_balancers.session_persistence_type.onRender({
+          session_persistence_type: "",
+        }),
+        "",
+        "it should return correct text"
+      );
+    });
+    it("should not have session_persistence_type as invalid", () => {
+      assert.isFalse(
+        craig.load_balancers.session_persistence_type.invalid(),
+        "it should be false"
+      );
+    });
+    it("should render proxy_protocol correctly", () => {
+      assert.deepEqual(
+        craig.load_balancers.proxy_protocol.onInputChange({
+          proxy_protocol: "V2",
+        }),
+        "v2",
+        "it should return correct data"
+      );
+      assert.deepEqual(
+        craig.load_balancers.proxy_protocol.onInputChange({}),
+        "",
+        "it should return correct data"
+      );
+      assert.deepEqual(
+        craig.load_balancers.proxy_protocol.onRender({
+          proxy_protocol: "disabled",
+        }),
+        "Disabled",
+        "it should render correctly"
+      );
+      assert.deepEqual(
+        craig.load_balancers.proxy_protocol.onRender({
+          proxy_protocol: "disabled",
+        }),
+        "Disabled",
+        "it should render correctly"
+      );
+      assert.deepEqual(
+        craig.load_balancers.proxy_protocol.onRender({ proxy_protocol: "v1" }),
+        "V1",
+        "it should render correctly"
+      );
+    });
+    it("should return correct invalid text for health delay", () => {
+      assert.deepEqual(
+        craig.load_balancers.health_delay.invalidText({
+          health_delay: "5",
+          health_timeout: "5",
+        }),
+        "Must be greater than Health Timeout value",
+        "it should return correct invalid text"
+      );
+      assert.deepEqual(
+        craig.load_balancers.health_delay.invalidText({
+          health_delay: "5.6",
+          health_timeout: "5",
+        }),
+        "Must be a whole number between 5 and 3000",
+        "it should return correct invalid text"
+      );
+    });
+    it("should render listener protocol", () => {
+      assert.deepEqual(
+        craig.load_balancers.listener_protocol.onRender({
+          listener_protocol: "https",
+        }),
+        "HTTPS",
+        "it should return correct value"
+      );
+      assert.deepEqual(
+        craig.load_balancers.listener_protocol.onRender({}),
+        "",
+        "it should return correct value"
+      );
+    });
+    it("should handle algoritm on input change", () => {
+      assert.deepEqual(
+        craig.load_balancers.algorithm.onInputChange({
+          algorithm: "Round Robin",
+        }),
+        "round_robin",
+        "it should return correct value"
+      );
+    });
+    it("should return correct groups for target vsi", () => {
+      assert.deepEqual(
+        craig.load_balancers.target_vsi.groups({}),
+        [],
+        "it should be empty"
+      );
+      assert.deepEqual(
+        craig.load_balancers.target_vsi.groups(
+          { vpc: "workload" },
+          { craig: craig }
+        ),
+        [],
+        "it should be empty"
+      );
+      assert.deepEqual(
+        craig.load_balancers.target_vsi.groups(
+          { vpc: "management" },
+          { craig: craig }
+        ),
+        ["management-server"],
+        "it should have server"
+      );
+    });
+    it("should return type on render", () => {
+      assert.deepEqual(
+        craig.load_balancers.type.onRender({ type: "" }),
+        "",
+        "it should return correct data"
+      );
+      assert.deepEqual(
+        craig.load_balancers.type.onRender({ type: "private" }),
+        "Private (NLB)",
+        "it should return correct data"
+      );
+      assert.deepEqual(
+        craig.load_balancers.type.onRender({ type: "public" }),
+        "Public (ALB)",
+        "it should return correct data"
+      );
+    });
+    it("should return type on input change", () => {
+      assert.deepEqual(
+        craig.load_balancers.type.onInputChange({ type: "Public (ALB)" }),
+        "public",
+        "it should return correct data"
+      );
+    });
+    it("should set subnets and security groups on vpc change", () => {
+      let data = {};
+      craig.load_balancers.vpc.onStateChange(data, {}, "vpc"),
+        assert.deepEqual(
+          data,
+          {
+            security_groups: [],
+            subnets: [],
+            vpc: "vpc",
+          },
+          "it should set values"
+        );
+    });
+    it("should add subnets for vsi deployment", () => {
+      let actualData = {};
+      craig.load_balancers.target_vsi.onStateChange(
+        actualData,
+        { craig: craig },
+        ["management-server"]
+      );
+      assert.deepEqual(
+        actualData,
+        {
+          target_vsi: ["management-server"],
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+        },
+        "it should return correct data"
+      );
+    });
+  });
 });

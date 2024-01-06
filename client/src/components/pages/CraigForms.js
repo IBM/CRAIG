@@ -582,6 +582,79 @@ function craigForms(craig) {
         },
       ],
     },
+    load_balancers: {
+      jsonField: "load_balancers",
+      groups: [
+        {
+          heading: {
+            name: "Load Balancer",
+            type: "subHeading",
+          },
+        },
+        {
+          name: craig.load_balancers.name,
+          resource_group: craig.load_balancers.resource_group,
+          type: craig.load_balancers.type,
+        },
+        {
+          vpc: craig.load_balancers.vpc,
+          security_groups: craig.load_balancers.security_groups,
+        },
+        {
+          heading: {
+            name: "Load Balancer VSI",
+            type: "subHeading",
+          },
+        },
+        {
+          target_vsi: craig.load_balancers.target_vsi,
+          port: craig.load_balancers.port,
+        },
+        {
+          vsi_tiles: true,
+        },
+        {
+          heading: {
+            name: "Load Balancer Pool",
+            type: "subHeading",
+          },
+        },
+        {
+          algorithm: craig.load_balancers.algorithm,
+          protocol: craig.load_balancers.protocol,
+          health_type: craig.load_balancers.health_type,
+        },
+        {
+          health_timeout: craig.load_balancers.health_timeout,
+          health_delay: craig.load_balancers.health_delay,
+          health_retries: craig.load_balancers.health_retries,
+        },
+        {
+          heading: {
+            name: "Load Balancer Listener",
+            type: "subHeading",
+          },
+        },
+        {
+          listener_port: craig.load_balancers.listener_port,
+          listener_protocol: craig.load_balancers.listener_protocol,
+          connection_limit: craig.load_balancers.connection_limit,
+        },
+        {
+          heading: {
+            name: "(Optional) Pool Customization",
+            type: "subHeading",
+          },
+        },
+        {
+          proxy_protocol: craig.load_balancers.proxy_protocol,
+          session_persistence_type:
+            craig.load_balancers.session_persistence_type,
+          session_persistence_app_cookie_name:
+            craig.load_balancers.session_persistence_app_cookie_name,
+        },
+      ],
+    },
     object_storage: {
       jsonField: "object_storage",
       groups: [

@@ -10,7 +10,6 @@ import {
 import {
   SecurityGroupTemplate,
   SubnetPageTemplate,
-  VsiLoadBalancerTemplate,
   IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
@@ -635,25 +634,12 @@ const NetworkAclPage = (craig) => {
 };
 
 const LoadBalancerPage = (craig) => {
-  return (
-    <VsiLoadBalancerTemplate
-      docs={RenderDocs("load_balancers", craig.store.json._options.template)}
-      load_balancers={craig.store.json.load_balancers}
-      disableSave={disableSave}
-      onDelete={craig.load_balancers.delete}
-      onSave={craig.load_balancers.save}
-      onSubmit={craig.load_balancers.create}
-      propsMatchState={propsMatchState}
-      forceOpen={forceShowForm}
-      craig={craig}
-      invalidCallback={craig.load_balancers.name.invalid}
-      invalidTextCallback={craig.load_balancers.name.invalidText}
-      resourceGroups={splat(craig.store.json.resource_groups, "name")}
-      vpcList={craig.store.vpcList}
-      securityGroups={craig.store.json.security_groups}
-      vsiDeployments={craig.store.json.vsi}
-    />
-  );
+  return formPageTemplate(craig, {
+    name: "VPC Load Balancers",
+    addText: "Create a Load Balancer",
+    jsonField: "load_balancers",
+    formName: "load_balancers",
+  });
 };
 
 const ObjectStoragePage = (craig) => {

@@ -19,8 +19,14 @@ import {
   PerCloudConnections,
   DynamicDatePicker,
 } from "./dynamic-form";
-import { eachKey, isBoolean, contains, isFunction } from "lazy-z";
-import { buildSubnet, propsMatchState } from "../../lib";
+import {
+  eachKey,
+  isBoolean,
+  contains,
+  isFunction,
+  getObjectFromArray,
+} from "lazy-z";
+import { propsMatchState } from "../../lib";
 import {
   dynamicIcseFormGroupsProps,
   dynamicIcseHeadingProps,
@@ -35,9 +41,11 @@ import {
   SubnetTileTitle,
 } from "./dynamic-form/SubnetTileSubForm";
 import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
+import { Tile } from "@carbon/react";
 
 const doNotRenderFields = [
   "heading",
+  "vsi_tiles",
   "vpc_connections",
   "power_connections",
   "hideWhen",
@@ -89,6 +97,7 @@ class DynamicForm extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.handleOverrideInputChange = this.handleOverrideInputChange.bind(this);
+    this.getAllVsi = this.getAllVsi.bind(this);
   }
 
   /**
@@ -157,6 +166,40 @@ class DynamicForm extends React.Component {
     } else this.setState({ [toggleName]: !this.state[toggleName] });
   }
 
+  /**
+   * get dynamic list of vsi for lb page
+   * @returns {Array<string>} list of vsi
+   */
+  getAllVsi() {
+    let allVsi = [];
+    this.state.target_vsi.forEach((deployment) => {
+      let vsi = getObjectFromArray(
+        this.props.craig.store.json.vsi,
+        "name",
+        deployment
+      );
+      let nextRow = [];
+      // for each subnet vsi
+      for (let subnet = 0; subnet < vsi.subnets.length; subnet++) {
+        // for each vsi per subnet
+        for (let count = 0; count < vsi.vsi_per_subnet; count++) {
+          nextRow.push({
+            name: deployment + "-" + (count + 1),
+            subnet: vsi.subnets[subnet],
+          });
+          if (nextRow.length === 3) {
+            allVsi.push(nextRow);
+            nextRow = [];
+          }
+        }
+      }
+      if (nextRow.length > 0) {
+        allVsi.push(nextRow);
+      }
+    });
+    return allVsi;
+  }
+
   render() {
     let propsName = this.props.data?.name || "";
     // here for testing
@@ -169,6 +212,22 @@ class DynamicForm extends React.Component {
             ""
           ) : group.heading ? (
             <IcseHeading {...dynamicIcseHeadingProps(group)} />
+          ) : group.vsi_tiles ? (
+            this.getAllVsi().map((row, index) => (
+              <IcseFormGroup key={"row-" + index}>
+                {row.map((vsi, vsiIndex) => (
+                  <Tile
+                    key={`${index}-${vsiIndex}`}
+                    className="fieldWidthSmaller tileFormMargin"
+                  >
+                    <p className="tileTitle">Name:</p>
+                    <p className="tileContent">{vsi.name}</p>
+                    <p className="tileTitle">Subnet:</p>
+                    <p className="tileContent">{vsi.subnet}</p>
+                  </Tile>
+                ))}
+              </IcseFormGroup>
+            ))
           ) : (
             <IcseFormGroup
               {...dynamicIcseFormGroupsProps(this.props, index, this.state)}

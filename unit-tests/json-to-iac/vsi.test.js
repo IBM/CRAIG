@@ -620,6 +620,170 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
         "it should return correct data"
       );
     });
+    it("should correctly format load balancer", () => {
+      let actualData = formatLoadBalancer(
+        {
+          name: "lb-1",
+          vpc: "management",
+          type: "public",
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          vsi_per_subnet: 2,
+          security_groups: ["management-vpe-sg"],
+          resource_group: "slz-management-rg",
+          algorithm: "round_robin",
+          protocol: "tcp",
+          health_delay: 60,
+          health_retries: 5,
+          health_timeout: 30,
+          health_type: "https",
+          proxy_protocol: "",
+          session_persistence_type: "app_cookie",
+          session_persistence_app_cookie_name: "cookie1",
+          port: 80,
+          target_vsi: ["management-server"],
+          listener_port: 443,
+          listener_protocol: "https",
+          connection_limit: 2,
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_prefix: true,
+              name: "slz-service-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: true,
+              name: "slz-management-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: true,
+              name: "slz-workload-rg",
+              use_data: false,
+            },
+          ],
+          vsi: [
+            {
+              kms: "slz-kms",
+              encryption_key: "slz-vsi-volume-key",
+              image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
+              profile: "cx2-4x8",
+              name: "management-server",
+              security_groups: ["management-vpe-sg"],
+              ssh_keys: ["slz-ssh-key"],
+              subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+              vpc: "management",
+              vsi_per_subnet: 2,
+              resource_group: "slz-management-rg",
+            },
+          ],
+        }
+      );
+      let expectedData =
+        `
+resource "ibm_is_lb" "lb_1_load_balancer" {
+  name           = "\${var.prefix}-lb-1-lb"
+  type           = "public"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+  subnets = [
+    module.management_vpc.vsi_zone_1_id,
+    module.management_vpc.vsi_zone_2_id,
+    module.management_vpc.vsi_zone_3_id
+  ]
+}` +
+        `
+
+resource "ibm_is_lb_pool" "lb_1_load_balancer_pool" {
+  lb                                  = ibm_is_lb.lb_1_load_balancer.id
+  name                                = "\${var.prefix}-lb-1-lb-pool"
+  algorithm                           = "round_robin"
+  protocol                            = "tcp"
+  health_delay                        = 60
+  health_retries                      = 5
+  health_timeout                      = 30
+  health_type                         = "https"
+  session_persistence_type            = "app_cookie"
+  session_persistence_app_cookie_name = "cookie1"
+}
+` +
+        `
+resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member" {
+  port           = 80
+  lb             = ibm_is_lb.lb_1_load_balancer.id
+  pool           = ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_1.primary_network_interface.0.primary_ip.0.address
+}
+
+resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member" {
+  port           = 80
+  lb             = ibm_is_lb.lb_1_load_balancer.id
+  pool           = ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_1_2.primary_network_interface.0.primary_ip.0.address
+}
+
+resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member" {
+  port           = 80
+  lb             = ibm_is_lb.lb_1_load_balancer.id
+  pool           = ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_1.primary_network_interface.0.primary_ip.0.address
+}
+
+resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member" {
+  port           = 80
+  lb             = ibm_is_lb.lb_1_load_balancer.id
+  pool           = ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_2_2.primary_network_interface.0.primary_ip.0.address
+}
+
+resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member" {
+  port           = 80
+  lb             = ibm_is_lb.lb_1_load_balancer.id
+  pool           = ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_1.primary_network_interface.0.primary_ip.0.address
+}
+
+resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member" {
+  port           = 80
+  lb             = ibm_is_lb.lb_1_load_balancer.id
+  pool           = ibm_is_lb_pool.lb_1_load_balancer_pool.pool_id
+  target_address = ibm_is_instance.management_vpc_management_server_vsi_3_2.primary_network_interface.0.primary_ip.0.address
+}
+
+resource "ibm_is_lb_listener" "lb_1_listener" {
+  lb               = ibm_is_lb.lb_1_load_balancer.id
+  default_pool     = ibm_is_lb_pool.lb_1_load_balancer_pool.id
+  port             = 443
+  protocol         = "https"
+  connection_limit = 2
+  depends_on = [
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_2_2_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_1_pool_member,
+    ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_3_2_pool_member
+  ]
+}
+`;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should correctly format load balancer without app_cookie", () => {
       let actualData = formatLoadBalancer(
         {
@@ -846,7 +1010,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
             target_vsi: ["management-server"],
             listener_port: 443,
             listener_protocol: "https",
-            connection_limit: 2,
+            connection_limit: "",
           },
         ],
       });
@@ -932,11 +1096,10 @@ resource "ibm_is_lb_pool_member" "lb_1_management_server_management_vpc_manageme
 }
 
 resource "ibm_is_lb_listener" "lb_1_listener" {
-  lb               = ibm_is_lb.lb_1_load_balancer.id
-  default_pool     = ibm_is_lb_pool.lb_1_load_balancer_pool.id
-  port             = 443
-  protocol         = "https"
-  connection_limit = 2
+  lb           = ibm_is_lb.lb_1_load_balancer.id
+  default_pool = ibm_is_lb_pool.lb_1_load_balancer_pool.id
+  port         = 443
+  protocol     = "https"
   depends_on = [
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_1_pool_member,
     ibm_is_lb_pool_member.lb_1_management_server_management_vpc_management_server_vsi_1_2_pool_member,

@@ -8,6 +8,7 @@ const {
   contains,
   kebabCase,
   azsort,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -305,7 +306,9 @@ function ibmIsLbListener(deployment, poolMemberData, cdktf) {
       ),
       port: deployment.listener_port,
       protocol: deployment.listener_protocol,
-      connection_limit: deployment.connection_limit,
+      connection_limit: isNullOrEmptyString(deployment.connection_limit, true)
+        ? undefined
+        : deployment.connection_limit,
       depends_on: [],
     },
   };
@@ -344,7 +347,9 @@ function ibmIsLbPool(deployment) {
       health_retries: deployment.health_retries,
       health_timeout: deployment.health_timeout,
       health_type: deployment.health_type,
-      proxy_protocol: deployment.proxy_protocol,
+      proxy_protocol: contains(["v1", "v2"], deployment.proxy_protocol)
+        ? deployment.proxy_protocol
+        : undefined,
       session_persistence_type: deployment.session_persistence_type,
       session_persistence_app_cookie_name:
         deployment.session_persistence_app_cookie_name,
