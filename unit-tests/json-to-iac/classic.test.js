@@ -110,12 +110,10 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public" {
           {
             name: "example-classic1",
             public_key: "1234",
-            datacenter: "dal10",
           },
           {
             name: "example-classic2",
             public_key: "1234",
-            datacenter: "dal12",
           },
         ],
         classic_vlans: [
@@ -145,12 +143,6 @@ resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic" {
   provider   = ibm.classic
   label      = "example-classic"
   public_key = var.classic_example_classic_public_key
-}
-
-resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic1" {
-  provider   = ibm.classic
-  label      = "example-classic1"
-  public_key = var.classic_example_classic1_public_key
 }
 
 ##############################################################################
@@ -184,18 +176,6 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public1" {
 ##############################################################################
 
 ##############################################################################
-# Dal 12 SSH Keys
-##############################################################################
-
-resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic2" {
-  provider   = ibm.classic
-  label      = "example-classic2"
-  public_key = var.classic_example_classic2_public_key
-}
-
-##############################################################################
-
-##############################################################################
 # Dal 12 VLANs
 ##############################################################################
 
@@ -208,6 +188,24 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public2" {
     "hello",
     "world"
   ]
+}
+
+##############################################################################
+
+##############################################################################
+# Classic SSH Keys
+##############################################################################
+
+resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic1" {
+  provider   = ibm.classic
+  label      = "example-classic1"
+  public_key = var.classic_example_classic1_public_key
+}
+
+resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic2" {
+  provider   = ibm.classic
+  label      = "example-classic2"
+  public_key = var.classic_example_classic2_public_key
 }
 
 ##############################################################################

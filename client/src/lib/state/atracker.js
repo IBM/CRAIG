@@ -85,7 +85,7 @@ function initAtracker(store) {
       enabled: {
         default: true,
         type: "toggle",
-        size: "medium",
+        size: "small",
         labelText: "Enable",
         tooltip: {
           content:
@@ -95,6 +95,7 @@ function initAtracker(store) {
       },
       name: {
         default: "",
+        size: "small",
         readOnly: true,
         hideWhen: hideWhenDisabled,
         onRender: function () {
@@ -102,6 +103,7 @@ function initAtracker(store) {
         },
       },
       resource_group: {
+        size: "small",
         default: "",
         type: "select",
         hideWhen: hideWhenNoInstance,
@@ -122,6 +124,7 @@ function initAtracker(store) {
         default: "",
       },
       bucket: {
+        size: "small",
         default: "",
         type: "select",
         labelText: "Object Storage Log Bucket",
@@ -148,6 +151,7 @@ function initAtracker(store) {
         },
       },
       cos_key: {
+        size: "small",
         default: "",
         type: "select",
         labelText: "Privileged IAM Object Storage Key",
@@ -172,9 +176,9 @@ function initAtracker(store) {
         },
       },
       add_route: {
+        size: "small",
         default: false,
         type: "toggle",
-        size: "medium",
         hideWhen: hideWhenDisabled,
         labelText: "Create Route",
         tooltip: {
@@ -184,6 +188,7 @@ function initAtracker(store) {
         },
       },
       locations: {
+        size: "small",
         default: [],
         type: "multiselect",
         groups: ["global", "us-south"],
@@ -198,7 +203,7 @@ function initAtracker(store) {
       instance: {
         default: false,
         type: "toggle",
-        size: "medium",
+        size: "small",
         labelText: "Create Activity Tracker Instance",
         tooltip: {
           content:
@@ -207,6 +212,7 @@ function initAtracker(store) {
         },
       },
       plan: {
+        size: "small",
         default: "lite",
         type: "select",
         groups: ["Lite", "7 Day", "14 Day", "30 Day"],
@@ -219,6 +225,7 @@ function initAtracker(store) {
         },
       },
       archive: {
+        size: "small",
         default: false,
       },
     },

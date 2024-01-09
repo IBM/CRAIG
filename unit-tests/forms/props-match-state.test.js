@@ -2,6 +2,22 @@ const { assert } = require("chai");
 const { propsMatchState } = require("../../client/src/lib/forms");
 
 describe("propsMatchState", () => {
+  it("should return true if a function that causes deep equal to crash is sent", () => {
+    assert.isTrue(
+      propsMatchState(
+        "logdna",
+        {
+          fn: () => {},
+        },
+        {
+          data: {
+            fn: "egg",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
   it("should return true if stateData and componentProps.data are the same", () => {
     assert.isTrue(
       propsMatchState(

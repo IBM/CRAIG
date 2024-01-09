@@ -74,7 +74,8 @@ function classicInfraTf(config) {
           sshKeyTf += formatClassicSshKey(key);
         }
       });
-      if (sshKeyTf !== "") tf += tfBlock(zone + " SSH Keys", sshKeyTf) + "\n";
+      if (sshKeyTf !== "")
+        tf += tfBlock((zone || "Classic") + " SSH Keys", sshKeyTf) + "\n";
       let vlanTf = "";
       config.classic_vlans.forEach((vlan) => {
         if (vlan.datacenter === zone) {

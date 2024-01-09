@@ -41,14 +41,18 @@ function getServices(craig, services) {
     });
   });
 
-  ["sysdig", "logdna"].forEach((observabilityService) => {
+  ["sysdig", "logdna", "atracker"].forEach((observabilityService) => {
     if (craig.store.json[observabilityService].enabled) {
       let rg = craig.store.json[observabilityService].resource_group;
       let serviceRg = !rg ? "No Resource Group" : rg;
-      serviceMap[serviceRg].push({
-        name: observabilityService,
-        type: observabilityService,
-      });
+      if (
+        observabilityService !== "atracker" ||
+        craig.store.json[observabilityService].instance
+      )
+        serviceMap[serviceRg].push({
+          name: observabilityService,
+          type: observabilityService,
+        });
     }
   });
 

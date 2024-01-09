@@ -5,6 +5,7 @@ import {
   CloudServices,
   IbmPowerVsPrivateCloud,
   IbmCloudTransitGateway,
+  InfrastructureClassic,
 } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { RgServiceMap } from "./RgServiceMap";
@@ -19,6 +20,9 @@ import { PowerSubnets } from "../power/PowerSubnets";
 import { PowerVolumes } from "../power/PowerVolumes";
 import "./diagrams.css";
 import { TransitGatewaysMap } from "./TransitGatewaysMap";
+import { ClassicMap } from "./ClassicMap";
+import { ClassicSubnets } from "./ClassicSubnets";
+import { ClassicGateways } from "./ClassicGateways";
 
 export class Overview extends React.Component {
   constructor(props) {
@@ -42,6 +46,7 @@ export class Overview extends React.Component {
               craig={craig}
               services={[
                 "appid",
+                "dns",
                 "icd",
                 "event_streams",
                 "key_management",
@@ -93,6 +98,25 @@ export class Overview extends React.Component {
               </PassThroughWrapper>
             </PowerMap>
           </div>
+        )}
+        {craig.store.json._options.enable_classic ? (
+          <div id="vpc-diagram" className="diagramBox marginTop1Rem">
+            <div className="marginBottomHalfRem" />
+            <CraigFormHeading
+              name="Classic Infrastrucutre"
+              noMarginBottom
+              icon={<InfrastructureClassic className="diagramTitleIcon" />}
+            />
+            <div className="displayFlex">
+              <ClassicMap craig={craig}>
+                <ClassicSubnets craig={craig}>
+                  <ClassicGateways craig={craig} />
+                </ClassicSubnets>
+              </ClassicMap>
+            </div>
+          </div>
+        ) : (
+          ""
         )}
         {craig.store.json.transit_gateways.length === 0 ? (
           ""

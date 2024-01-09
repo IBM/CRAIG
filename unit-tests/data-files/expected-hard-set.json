@@ -7,7 +7,8 @@
       "landing-zone"
     ],
     "power_vs_zones": [],
-    "dynamic_subnets": false
+    "dynamic_subnets": false,
+    "enable_classic": false
   },
   "dns": [],
   "logdna": {

@@ -176,7 +176,6 @@ function powerVsNetworkCreate(config, stateData, componentProps) {
  * @param {object} componentProps props from component form
  */
 function powerVsNetworkSave(config, stateData, componentProps) {
-  console.log(componentProps.data.name);
   if (stateData.name !== componentProps.data.name) {
     // update attachment name on network change
     new revision(config.store.json)

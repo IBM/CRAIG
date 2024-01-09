@@ -9,6 +9,10 @@ import {
   IbmCloudEventStreams,
   CloudApp,
   IbmDb2,
+  DnsServices,
+  IbmCloudLogging,
+  IbmCloudSysdigSecure,
+  CloudMonitoring,
 } from "@carbon/icons-react";
 import { IcseFormGroup } from "icse-react-assets";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
@@ -34,6 +38,18 @@ const serviceFormMap = {
   },
   icd: {
     icon: IbmDb2,
+  },
+  dns: {
+    icon: DnsServices,
+  },
+  logdna: {
+    icon: IbmCloudLogging,
+  },
+  sysdig: {
+    icon: IbmCloudSysdigSecure,
+  },
+  atracker: {
+    icon: CloudMonitoring,
   },
 };
 

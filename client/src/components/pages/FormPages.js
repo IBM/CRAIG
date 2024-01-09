@@ -28,7 +28,7 @@ import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
 import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.json";
 import DynamicForm from "../forms/DynamicForm";
-import { ClassicDisabledTile, NoCisTile } from "../forms/dynamic-form/tiles";
+import { NoCisTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
 import { CraigToggleForm, DynamicFormModal } from "../forms/utils";
 import StatefulTabs from "../forms/utils/StatefulTabs";
@@ -190,10 +190,6 @@ const ClassicSshKeyPage = (craig) => {
     name: "Classic SSH Keys",
     addText: "Create an SSH Key",
     jsonField: "classic_ssh_keys",
-    overrideTile: craig.store.json._options.enable_classic ? undefined : (
-      <ClassicDisabledTile />
-    ),
-    hideFormTitleButton: !craig.store.json._options.enable_classic,
   });
 };
 
@@ -202,12 +198,6 @@ const ClassicVlanPage = (craig) => {
     name: "Classic VLANs",
     addText: "Create a VLAN",
     jsonField: "classic_vlans",
-    hideFormTitleButton: craig.store.json._options.enable_classic
-      ? false
-      : true,
-    overrideTile: craig.store.json._options.enable_classic ? undefined : (
-      <ClassicDisabledTile />
-    ),
     formName: "classic-vlans",
   });
 };

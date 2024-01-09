@@ -1,5 +1,5 @@
 import React from "react";
-import { isEmpty, splatContains } from "lazy-z";
+import { isEmpty, isNullOrEmptyString, splatContains } from "lazy-z";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { SubnetAclRules } from "@carbon/icons-react";
@@ -20,9 +20,15 @@ export const AclMap = (props) => {
         ? aclIndex - 1
         : aclIndex;
       let aclClassName = "formInSubForm aclBox";
+      let isRed = isNullOrEmptyString(acl.resource_group, true);
       if (aclIndex !== 0) aclClassName += " aclBoxTop";
-      if (props.isSelected && props.isSelected(props.vpc_index, actualAclIndex))
+      if (
+        props.isSelected &&
+        props.isSelected(props.vpc_index, actualAclIndex)
+      ) {
         aclClassName += " diagramBoxSelected";
+        isRed = false;
+      }
       if (!acl.name) aclClassName += "noAclBox";
       return (
         <div
@@ -42,6 +48,7 @@ export const AclMap = (props) => {
               icon={<SubnetAclRules className="diagramTitleIcon" />}
               className="marginBottomSmall"
               type="subHeading"
+              isRed={isRed}
               buttons={
                 props.buttons
                   ? props.buttons(acl, props.vpc_index, actualAclIndex)

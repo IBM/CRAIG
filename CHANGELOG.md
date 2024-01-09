@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Documentation is now accessible without a project selected. Users no longer recieve the No Project Modal on pages with `/docs/` in the header.
 - SCC V1 has been deprecated. While the resource is still supported through JSON, the front-end component will no longer be displayed
 - Encrypted COS buckets are no longer required. To follow best practices, we recommend that storage buckets are encrypted.
+- The `Enable Classic` toggle has been removed from the options page to improve worklow. Classic will be enabled automatically when a classic VLAN or SSH Key is created and disabled when no classic resources exist within a configuration.
 
 ### Features
 
@@ -37,6 +38,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing advanced subnets to not be able to be saved from the Subnet Tiers page
 - Fixed an issue preventing Power VS SAP instances from being created
 - Fixed an issue causing refactored VPN Server instances to not have the correct references when using Bring Your Own ceritificate or Insecure Developer Certificate
+- Fixed an issue causing `Undefined` to incorrectly be added when creating JSON to IaC for Classic SSH Keys
+- Fixed an issue causing resource group property for VPC Network ACLs to not be reset after deletion
 
 ## 1.7.1
 

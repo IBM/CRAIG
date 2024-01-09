@@ -6,6 +6,10 @@ import {
   CloudApp,
   IbmDb2,
   GroupResource,
+  DnsServices,
+  IbmCloudSysdigSecure,
+  IbmCloudLogging,
+  CloudMonitoring,
 } from "@carbon/icons-react";
 import {
   EmptyResourceTile,
@@ -13,6 +17,7 @@ import {
   IcseSelect,
 } from "icse-react-assets";
 import {
+  azsort,
   contains,
   deepEqual,
   isNullOrEmptyString,
@@ -58,6 +63,18 @@ const serviceFormMap = {
   icd: {
     icon: IbmDb2,
   },
+  dns: {
+    icon: DnsServices,
+  },
+  logdna: {
+    icon: IbmCloudLogging,
+  },
+  sysdig: {
+    icon: IbmCloudSysdigSecure,
+  },
+  atracker: {
+    icon: CloudMonitoring,
+  },
 };
 
 function scrollToTop() {
@@ -93,6 +110,8 @@ class CloudServicesPage extends React.Component {
           ? "icd"
           : value === "App ID"
           ? "appid"
+          : value === "Activity Tracker"
+          ? "atracker"
           : snakeCase(value),
     });
   }
@@ -129,10 +148,14 @@ class CloudServicesPage extends React.Component {
     }
   }
 
-  onServiceSubmit(data) {
-    if (contains(["logdna", "sysdig"], this.state.modalService)) {
-      this.props.craig[this.state.modalService].save(data);
-    } else this.props.craig[this.state.modalService].create(data);
+  onServiceSubmit(stateData, componentProps) {
+    if (contains(["logdna", "sysdig", "atracker"], this.state.modalService)) {
+      this.props.craig[this.state.modalService].save(stateData, componentProps);
+    } else
+      this.props.craig[this.state.modalService].create(
+        stateData,
+        componentProps
+      );
     this.toggleModal();
   }
 
@@ -150,7 +173,7 @@ class CloudServicesPage extends React.Component {
         service: "",
         serviceName: "",
       });
-    } else
+    } else if (this.state.service !== "atracker")
       this.setState({
         serviceName: stateData.name,
       });
@@ -163,10 +186,14 @@ class CloudServicesPage extends React.Component {
    * @param {*} componentProps
    */
   onServiceDelete(stateData, componentProps) {
-    if (contains(["sysdig", "logdna"], this.state.service)) {
+    if (contains(["sysdig", "logdna", "atracker"], this.state.service)) {
       let data = { ...this.props.craig[this.state.service] };
       data.enabled = false;
       this.props.craig[this.state.service].save(data);
+      this.setState({
+        serviceName: "",
+        service: "",
+      });
     } else
       this.props.craig[this.state.service].delete(stateData, componentProps);
     this.setState({
@@ -202,7 +229,46 @@ class CloudServicesPage extends React.Component {
       "key_management",
       "object_storage",
       "secrets_manager",
+      "dns",
     ]);
+
+    let modalGroups = [
+      "Activity Tracker",
+      "AppID",
+      "Cloud Databases",
+      "DNS",
+      "Event Streams",
+      "Object Storage",
+      "Key Management",
+      "Secrets Manager",
+      "Resource Groups",
+      "LogDNA",
+      "Sysdig",
+    ];
+
+    if (craig.store.json.atracker.enabled) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "Activity Tracker") {
+          return group;
+        }
+      });
+    }
+
+    if (craig.store.json.sysdig.enabled) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "Sysdig") {
+          return group;
+        }
+      });
+    }
+
+    if (craig.store.json.logdna.enabled) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "LogDNA") {
+          return group;
+        }
+      });
+    }
 
     return (
       <>
@@ -222,10 +288,7 @@ class CloudServicesPage extends React.Component {
             isNullOrEmptyString(this.state.modalService, true)
               ? () => {}
               : (stateData, componentProps) => {
-                  craig[this.state.modalService].create(
-                    stateData,
-                    componentProps
-                  );
+                  this.onServiceSubmit(stateData, componentProps);
                   this.setState({
                     showModal: false,
                     modalService: "",
@@ -241,21 +304,19 @@ class CloudServicesPage extends React.Component {
                 ? "AppID"
                 : this.state.modalService === "icd"
                 ? "Cloud Databases"
+                : this.state.modalService === "dns"
+                ? "DNS"
+                : this.state.modalService === "logdna"
+                ? "LogDNA"
+                : this.state.modalService === "atracker"
+                ? "Activity Tracker"
                 : titleCase(this.state.modalService)
             }
             labelText="Service"
             name="modalService"
             handleInputChange={this.handleInputChange}
             disableInvalid
-            groups={[
-              "AppID",
-              "Cloud Databases",
-              "Event Streams",
-              "Object Storage",
-              "Key Management",
-              "Secrets Manager",
-              "Resource Groups",
-            ]}
+            groups={modalGroups.sort(azsort)}
           />
           <div className="marginBottomSmall" />
           {isNullOrEmptyString(this.state.modalService, true) ? (
@@ -268,6 +329,10 @@ class CloudServicesPage extends React.Component {
                   ? "Cloud Databases"
                   : this.state.modalService === "appid"
                   ? "AppID"
+                  : this.state.modalService === "logdna"
+                  ? "LogDNA"
+                  : this.state.modalService === "atracker"
+                  ? "Activity Tracker"
                   : titleCase(this.state.modalService)
               )}${
                 this.state.modalService === "resource_groups" ? "" : " Service"
@@ -286,6 +351,9 @@ class CloudServicesPage extends React.Component {
               modalService={this.state.modalService}
               data={{
                 resource_group: this.state.modalResourceGroup,
+                enabled: contains(["logdna", "sysdig"], this.state.modalService)
+                  ? true
+                  : undefined,
               }}
               shouldDisableSubmit={function () {
                 if (isNullOrEmptyString(this.props.modalService, true)) {
@@ -313,6 +381,7 @@ class CloudServicesPage extends React.Component {
             [
               "AppID",
               "Cloud Databases",
+              "DNS",
               "Event Streams",
               "Key Management",
               "Object Storage",
@@ -328,7 +397,35 @@ class CloudServicesPage extends React.Component {
                 }}
               >
                 <div className="marginBottomSmall" />
-
+                {craig.store.json.atracker.enabled ? (
+                  <>
+                    <CraigFormHeading
+                      name="Activity Tracker"
+                      type="subHeading"
+                    />
+                    <div className="subForm marginBottomSmall">
+                      <CraigFormHeading
+                        icon={<CloudMonitoring className="diagramTitleIcon" />}
+                        type="subHeading"
+                        name="Activity Tracker"
+                      />
+                      <IcseFormGroup className="overrideGap">
+                        <ManageService
+                          icon={CloudMonitoring}
+                          key={JSON.stringify(craig.store.json.atracker)}
+                          service={{
+                            type: "atracker",
+                            name: "atracker",
+                          }}
+                          onClick={this.onServiceIconClick}
+                          isSelected={this.state.service === "atracker"}
+                        />
+                      </IcseFormGroup>
+                    </div>
+                  </>
+                ) : (
+                  ""
+                )}
                 <CraigFormHeading
                   name="Resource Groups"
                   type="subHeading"
@@ -451,10 +548,15 @@ class CloudServicesPage extends React.Component {
                           disableSave: disableSave,
                           propsMatchState: propsMatchState,
                           craig: craig,
-                          data: new revision(craig.store.json).child(
-                            this.state.service,
-                            this.state.serviceName
-                          ).data,
+                          data: contains(
+                            ["logdna", "sysdig", "atracker"],
+                            this.state.service
+                          )
+                            ? craig.store.json[this.state.service]
+                            : new revision(craig.store.json).child(
+                                this.state.service,
+                                this.state.serviceName
+                              ).data,
                           form: forms[this.state.service],
                         }}
                       />

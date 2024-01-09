@@ -1,5 +1,6 @@
 const { contains } = require("lazy-z");
 const { edgeRouterEnabledZones } = require("../../lib/constants");
+const { disableSave } = require("../../lib");
 
 /**
  * craig forms
@@ -105,6 +106,29 @@ function craigForms(craig) {
               },
             ],
           },
+        },
+      ],
+    },
+    atracker: {
+      jsonField: "atracker",
+      disableSave: disableSave,
+      groups: [
+        {
+          enabled: craig.atracker.enabled,
+          instance: craig.atracker.instance,
+        },
+        {
+          name: craig.atracker.name,
+          locations: craig.atracker.locations,
+          bucket: craig.atracker.bucket,
+        },
+        {
+          add_route: craig.atracker.add_route,
+          cos_key: craig.atracker.cos_key,
+        },
+        {
+          resource_group: craig.atracker.resource_group,
+          plan: craig.atracker.plan,
         },
       ],
     },
@@ -655,6 +679,23 @@ function craigForms(craig) {
         },
       ],
     },
+    logdna: {
+      groups: [
+        {
+          enabled: craig.logdna.enabled,
+        },
+        {
+          name: craig.logdna.name,
+          plan: craig.logdna.plan,
+          resource_group: craig.logdna.resource_group,
+        },
+        {
+          bucket: craig.logdna.bucket,
+          archive: craig.logdna.archive,
+          platform_logs: craig.logdna.platform_logs,
+        },
+      ],
+    },
     object_storage: {
       jsonField: "object_storage",
       groups: [
@@ -975,6 +1016,21 @@ function craigForms(craig) {
         },
         {
           public_key: craig.ssh_keys.public_key,
+        },
+      ],
+    },
+    sysdig: {
+      groups: [
+        {
+          enabled: craig.sysdig.enabled,
+        },
+        {
+          name: craig.sysdig.name,
+          resource_group: craig.sysdig.resource_group,
+        },
+        {
+          plan: craig.sysdig.plan,
+          platform_logs: craig.sysdig.platform_logs,
         },
       ],
     },

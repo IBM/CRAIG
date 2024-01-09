@@ -13,7 +13,6 @@ const {
   isIpv4CidrOrAddress,
   buildNumberDropdownList,
   isNullOrEmptyString,
-  isString,
   isArray,
 } = require("lazy-z");
 const {
@@ -227,6 +226,7 @@ function vpcOnStoreUpdate(config) {
         rule.acl = acl.name;
         rule.vpc = network.name;
       });
+      config.updateUnfound("resourceGroups", acl, "resource_group");
     });
     if (!config.store.subnets) {
       config.store.subnets = {};

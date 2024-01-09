@@ -1,3 +1,5 @@
+export { ClassicSubnets } from "./ClassicSubnets";
+export { ClassicMap } from "./ClassicMap";
 export { DeploymentIcon } from "./DeploymentIcon";
 export { docTabs } from "./DocTabs";
 export { ManageService } from "./ManageService";

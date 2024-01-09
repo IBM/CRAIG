@@ -87,7 +87,14 @@ function propsMatchState(field, stateData, componentProps) {
   if (field === "options") {
     return deepEqual(stateData, componentProps.craig.store.json._options);
   }
-  return deepEqual(stateData, componentProps.data);
+  try {
+    return deepEqual(stateData, componentProps.data);
+  } catch (err) {
+    // this is to catch in cloud services form to prevent form from crashing the page
+    // somewhere a function gets sent on load to deepEqual for propsMatchState. I believe
+    // this is happening before component render
+    return true;
+  }
 }
 
 module.exports = {

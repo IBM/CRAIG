@@ -190,7 +190,6 @@ class VpcDiagramPage extends React.Component {
         ? craig.store.json.vpcs[this.state.vpcIndex].name
         : "";
     let vpcFormData = craigForms(craig).vpcs;
-    console.log(JSON.stringify(this.state, null, 2));
     return (
       <>
         <DynamicFormModal

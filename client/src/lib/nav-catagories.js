@@ -19,7 +19,6 @@ const {
   sshKeyTf,
   vsiTf,
   lbTf,
-  sccTf,
   dnsTf,
   f5Tf,
   iamTf,

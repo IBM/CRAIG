@@ -3917,6 +3917,22 @@ describe("vpcs", () => {
           "it should create acl"
         );
       });
+      it("should create an acl and update rg when deleted", () => {
+        let state = newState();
+        state.vpcs.acls.create({ name: "new" }, { vpc_name: "management" });
+        state.resource_groups.delete({}, { data: { name: "management-rg" } });
+        let expectedData = {
+          name: "new",
+          resource_group: null,
+          vpc: "management",
+          rules: [],
+        };
+        assert.deepEqual(
+          state.store.json.vpcs[0].acls[1],
+          expectedData,
+          "it should create acl"
+        );
+      });
     });
     describe("vpcs.network_acls.delete", () => {
       it("should delete an acl", () => {

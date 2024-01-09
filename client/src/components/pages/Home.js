@@ -82,9 +82,6 @@ function Home(props) {
                       power_vs_zones: craig.options.power_vs_zones,
                     },
                     {
-                      enable_classic: craig.options.enable_classic,
-                    },
-                    {
                       tags: craig.options.tags,
                     },
                   ],

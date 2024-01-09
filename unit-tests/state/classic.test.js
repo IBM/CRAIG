@@ -36,8 +36,11 @@ describe("classic", () => {
               datacenter: "dal10",
             },
           ],
-
           "it should create key"
+        );
+        assert.isTrue(
+          craig.store.json._options.enable_classic,
+          "it should enable classic"
         );
       });
     });
@@ -100,6 +103,10 @@ describe("classic", () => {
           [],
           "it should create key"
         );
+        assert.isFalse(
+          craig.store.json._options.enable_classic,
+          "it should disable classic"
+        );
       });
     });
     describe("classic_ssh_keys.schema", () => {
@@ -159,6 +166,10 @@ describe("classic", () => {
             },
           ],
           "it should create key"
+        );
+        assert.isTrue(
+          craig.store.json._options.enable_classic,
+          "it should enable classic"
         );
       });
     });

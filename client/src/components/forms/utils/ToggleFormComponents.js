@@ -279,7 +279,10 @@ const CraigFormHeading = (props) => {
           return (
             <div
               onClick={props.onClick}
-              className={props.onClick ? "clicky" : ""}
+              className={
+                (props.onClick ? "clicky" : "") +
+                (props.isRed ? " diagramSubFormInvalid" : "")
+              }
             >
               {props.type === "subHeading" ? (
                 <h5 className="displayFlex">
@@ -334,6 +337,7 @@ CraigFormHeading.propTypes = {
   buttons: PropTypes.node,
   className: PropTypes.string,
   toggleFormTitle: PropTypes.bool,
+  isRed: PropTypes.bool,
 };
 
 export {

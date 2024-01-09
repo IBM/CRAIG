@@ -87,6 +87,10 @@ class App extends Component {
             path="/projects"
             element={<Craig craigRouter={this.craigRouter} />}
           />
+          <Route
+            path="/beta"
+            element={<Craig craigRouter={this.craigRouter} />}
+          />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
