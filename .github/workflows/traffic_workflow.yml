@@ -48,9 +48,13 @@ jobs:
             cd $(date +%Y-%m-%d)-traffic-stats
             gts Ay1man2:${{ secrets.TRAFFIC_ACTION_TOKEN }} CRAIG save_csv -o IBM
 
-      - name: commit files
+      - name: commit and push files
+        env:
+            TRAFFIC_ACTION_TOKEN: ${{ secrets.TRAFFIC_ACTION_TOKEN }}
         run: |
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
+            git remote set-url origin https://x-access-token:${{ secrets.TRAFFIC_ACTION_TOKEN }}@github.com/IBM/CRAIG
             git add -A
-            git diff-index --quiet HEAD || (git commit -a -m "daily traffic data uploaded" --allow-empty)
+            git commit -a -m "daily traffic data uploaded"
+            git push
