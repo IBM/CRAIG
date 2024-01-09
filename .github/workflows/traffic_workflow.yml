@@ -54,9 +54,3 @@ jobs:
             git config --local user.name "GitHub Action"
             git add -A
             git diff-index --quiet HEAD || (git commit -a -m "daily traffic data uploaded" --allow-empty)
-
-      - name: push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-            github_token: ${{ secrets.TRAFFIC_ACTION_TOKEN }}
-            branch: traffic 
