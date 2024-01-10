@@ -13,6 +13,7 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 - NodeJS 18.11 or higher
 - NPM version 8.19.2 or higher
 - Terraform 1.3 or higher
+- [jq](https://jqlang.github.io/jq/) version 1.7.1 or higher
 
 ---
 
@@ -46,6 +47,13 @@ To bring your own Power VS Workspace into CRAIG to fetch images, you will need t
 POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
 ```
 
+To find the GUIDs and locations of your workspaces, the following command can be run in a terminal window or an IBM Cloud Shell: 
+
+```
+ibmcloud resource service-instances --service-name power-iaas --output json | jq -r '.[]? | "\(.guid), \(.name), \(.region_id)"'.
+```
+
+For instructions on how to install the IBM Cloud CLI, click [here](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 ---
 
 ## Tutorial Video
