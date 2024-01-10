@@ -50,7 +50,7 @@ POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
 To find the GUIDs and locations of your workspaces, the following command can be run in a terminal window or an IBM Cloud Shell: 
 
 ```
-ibmcloud resource service-instances --service-name power-iaas --output json | jq -r '.[]? | "\(.guid), \(.name), \(.region_id)"'.
+ibmcloud resource service-instances --service-name power-iaas --output json | jq -r '.[]? | "\(.guid), \(.name), \(.region_id)"'
 ```
 
 For instructions on how to install the IBM Cloud CLI, click [here](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
