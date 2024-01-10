@@ -939,7 +939,7 @@ module.exports = {
       template: powerVsQuickStart,
       name: "Power VS Quick Start",
       patternDocText:
-        "This template initializes an environment with one VPC and a Power VS workspace to get started with using Power VS on IBM Cloud,",
+        "This template initializes an environment with one VPC and a Power VS workspace to get started with using Power VS on IBM Cloud.",
       includes: [
         "A resource group for cloud services and for infrastructure management",
         "A management VPC and a transit gateway",
@@ -965,7 +965,7 @@ module.exports = {
         "A Secrets Manager instance",
         "A VPC and a transit gateway",
         "A VPC flow log collector",
-        "An Power VS workspace with a cloud connection to the Transit Gateway",
+        "A Power VS workspace with a cloud connection to the Transit Gateway",
         "A site-to-site VPN Gateway in the VPC",
         "A client-to-site VPN Server in the VPC",
       ],
