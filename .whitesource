@@ -1,4 +1,0 @@
-{
-  "settingsInheritedFrom": "whitesource-config/whitesource-config@master",
-  "whitesource.config.includesDevDependencies": false
-}
