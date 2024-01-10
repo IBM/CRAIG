@@ -13,6 +13,7 @@ import {
   IbmCloudLogging,
   IbmCloudSysdigSecure,
   CloudMonitoring,
+  IbmCloudSecurityComplianceCenterWorkloadProtection,
 } from "@carbon/icons-react";
 import { IcseFormGroup } from "icse-react-assets";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
@@ -50,6 +51,9 @@ const serviceFormMap = {
   },
   atracker: {
     icon: CloudMonitoring,
+  },
+  scc_v2: {
+    icon: IbmCloudSecurityComplianceCenterWorkloadProtection,
   },
 };
 

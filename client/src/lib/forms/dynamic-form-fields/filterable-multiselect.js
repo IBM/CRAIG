@@ -53,6 +53,7 @@ function dynamicMultiSelectProps(props) {
   let dynamicKeyProp = props.field.forceUpdateKey
     ? props.field.forceUpdateKey(props.parentState)
     : undefined;
+
   return {
     key: dynamicKeyProp,
     id: dynamicFieldId(props),

@@ -1,5 +1,5 @@
 import { RenderForm } from "icse-react-assets";
-import { titleCase } from "lazy-z";
+import { contains, titleCase } from "lazy-z";
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -34,9 +34,18 @@ export const ManageService = (props) => {
           {titleCase(props.service.type)
             .replace("Appid", "AppID")
             .replace("Icd", "Cloud Database")
-            .replace("Logdna", "LogDNA")}
+            .replace("Atracker", "Activity Tracker")
+            .replace("Logdna", "LogDNA")
+            .replace(/Scc\s.+/g, "Security & Compliance Center")}
         </h6>
-        <p>{props.service.name}</p>
+        <p>
+          {contains(
+            ["atracker", "logdna", "sysdig", "scc_v2"],
+            props.service.name
+          )
+            ? ""
+            : props.service.name}
+        </p>
       </div>
     </div>
   );
@@ -53,6 +62,6 @@ ManageService.propTypes = {
   }).isRequired,
   icon: PropTypes.object.isRequired,
   onClick: PropTypes.func,
-  resourceGroup: PropTypes.string.isRequired,
+  resourceGroup: PropTypes.string, // not required for atracker
   isSelected: PropTypes.bool.isRequired,
 };

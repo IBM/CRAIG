@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Users can now enter NONE as a valid SSH Key
 - Users can now provider Power VS instances with Cloud Init user data
 - Users can now import existing Secrets Manager instances into CRAIG
+- Power zones WDC06 and WDC07 now support Power Edge Router
 
 ### Fixes
 

@@ -38,7 +38,7 @@ function dynamicTextAreaProps(props) {
     props.handleInputChange
   );
 
-  let labelText = props.field.tooltip ? null : props.field.labelText;
+  let labelText = props.field.tooltip ? "" : props.field.labelText;
   let invalid = invalidReturnsBooleanCheck(props, "dynamicTextAreaProps");
   let invalidText = fieldFunctionReturnsStringCheck(
     props,

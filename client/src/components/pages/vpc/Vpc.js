@@ -305,12 +305,7 @@ class VpcDiagramPage extends React.Component {
           name="Virtual Private Cloud"
           form={
             <>
-              <div
-                style={{
-                  marginRight: "1rem",
-                  width: "580px",
-                }}
-              >
+              <div className="marginRight1Rem width580">
                 <div className="marginBottomSmall" />
                 <CraigFormHeading
                   name="VPC Networks"
@@ -327,9 +322,10 @@ class VpcDiagramPage extends React.Component {
                   }
                 />
               </div>
-              <div className="displayFlex" style={{ width: "100%" }}>
+              <div className="displayFlex rightForm">
                 <div id="left-vpc">
                   <VpcMap
+                    key={JSON.stringify(craig.store.json.vpcs)}
                     craig={craig}
                     onTitleClick={(vpcIndex) => this.onVpcEditClick(vpcIndex)}
                     isSelected={(vpcIndex) => {
@@ -397,7 +393,7 @@ class VpcDiagramPage extends React.Component {
                   {this.state.editing === true &&
                   this.state.aclCreateModal === false &&
                   this.state.subnetTierCreateModal === false ? (
-                    <div style={{ marginTop: "1rem" }}>
+                    <div className="marginTop1rem">
                       <CraigFormHeading
                         noMarginBottom
                         type="subHeading"
@@ -420,10 +416,7 @@ class VpcDiagramPage extends React.Component {
                           craig.store.json.vpcs[this.state.vpcIndex].name
                         } VPC`}
                       />
-                      <div
-                        style={{ width: "50vw", padding: "0" }}
-                        className="subForm"
-                      >
+                      <div className="subForm rightForm">
                         {this.state.subnetTierIndex > -1 ? (
                           <DynamicSubnetTierForm
                             vpcIndex={this.state.vpcIndex}

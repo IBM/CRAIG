@@ -530,7 +530,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   endpoint_type        = "public"
   force_delete         = true
   region_location      = var.region
-  key_protect          = "ERROR: Unfound Ref"
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_null_kms_policy
   ]

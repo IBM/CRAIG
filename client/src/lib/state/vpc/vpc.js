@@ -14,6 +14,7 @@ const {
   buildNumberDropdownList,
   isNullOrEmptyString,
   isArray,
+  isEmpty,
 } = require("lazy-z");
 const {
   newDefaultEdgeAcl,
@@ -1320,9 +1321,7 @@ function initVpcStore(store) {
             groups: buildNumberDropdownList(3, 1),
             onRender: function (stateData) {
               if (stateData.advanced && !isArray(stateData.zones)) {
-                stateData.zones = stateData.select_zones
-                  ? stateData.select_zones
-                  : ["1", "2", "3"];
+                stateData.zones = stateData.select_zones || ["1", "2", "3"];
               } else if (!stateData.advanced && isArray(stateData.zones)) {
                 stateData.zones = String(stateData.zones.length);
               }
@@ -1392,7 +1391,13 @@ function initVpcStore(store) {
             disabled: function (stateData, componentProps) {
               return (
                 stateData.advanced === true ||
-                readOnlyWhenEdgeTier(stateData, componentProps)
+                readOnlyWhenEdgeTier(stateData, componentProps) ||
+                isEmpty(
+                  new revision(componentProps.craig.store.json).child(
+                    "vpcs",
+                    componentProps.vpc
+                  ).data.public_gateways
+                )
               );
             },
           },

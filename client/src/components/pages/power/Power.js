@@ -22,6 +22,10 @@ import { PowerMap } from "../diagrams/PowerMap";
 import { PowerSubnets } from "./PowerSubnets";
 import { PowerVolumes } from "./PowerVolumes";
 import { IcseSelect } from "icse-react-assets";
+import {
+  CraigEmptyResourceTile,
+  NoPowerNetworkTile,
+} from "../../forms/dynamic-form";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -356,151 +360,155 @@ class PowerDiagram extends React.Component {
               craig
             )}
             form={
-              <>
-                <div className="marginBottomSmall" />
-                <div style={{ width: "580px" }}>
-                  <CraigFormHeading
-                    name="Power Workspaces"
-                    noMarginBottom
-                    buttons={
-                      <PrimaryButton
-                        noDeleteButton
-                        type="add"
-                        hoverText="Create a Power Workspace"
-                        onClick={this.onPowerCreateClick}
-                      />
-                    }
-                  />
-                </div>
-                <div className="displayFlex" style={{ width: "100%" }}>
-                  <div id="left-power">
-                    <PowerMap
-                      craig={craig}
-                      onClick={this.onPowerWorkspaceClick}
-                      isSelected={(powerIndex) => {
-                        return (
-                          this.state.selectedItem === "power" &&
-                          this.state.selectedIndex === powerIndex
-                        );
-                      }}
-                      buttons={(powerIndex) => {
-                        return (
-                          <PrimaryButton
-                            noDeleteButton
-                            type="add"
-                            name="Create a Deployment"
-                            onClick={() =>
-                              this.onWorkspaceButtonClick(powerIndex)
-                            }
-                          />
-                        );
-                      }}
-                    >
-                      {/*<PowerSshKeys onClick={this.onPowerWorkspaceClick} />*/}
-                      <PowerSubnets
-                        craig={craig}
-                        onPowerWorkspaceClick={this.onPowerWorkspaceClick}
-                        onPowerInstanceClick={this.onPowerInstanceClick}
-                        onVolumeClick={this.onVolumeClick}
-                        onVtlClick={this.onVtlClick}
-                        isSelected={(props) => {
-                          return (
-                            this.state.selectedIndex === props.index &&
-                            this.state.selectedItem === props.itemName
-                          );
-                        }}
-                        volumeIsSelected={(volumeIndex) => {
-                          return (
-                            this.state.selectedItem === "power_volumes" &&
-                            volumeIndex === this.state.selectedIndex
-                          );
-                        }}
-                      />
-                      <PowerVolumes
-                        craig={craig}
-                        isSelected={(props) => {
-                          return (
-                            this.state.selectedIndex === props.index &&
-                            this.state.selectedItem === props.itemName
-                          );
-                        }}
-                        onVolumeClick={this.onVolumeClick}
-                      />
-                    </PowerMap>
+              craig.store.json._options.enable_power_vs === true ? (
+                <>
+                  <div className="marginBottomSmall" />
+                  <div style={{ width: "580px" }}>
+                    <CraigFormHeading
+                      name="Power Workspaces"
+                      noMarginBottom
+                      buttons={
+                        <PrimaryButton
+                          noDeleteButton
+                          type="add"
+                          hoverText="Create a Power Workspace"
+                          onClick={this.onPowerCreateClick}
+                        />
+                      }
+                    />
                   </div>
-                  <div id="right-power">
-                    {this.state.editing === true ? (
-                      <div
-                        style={{
-                          width: "50vw",
-                          padding: "0",
-                          marginTop: "1rem",
+                  <div className="displayFlex" style={{ width: "100%" }}>
+                    <div id="left-power">
+                      <PowerMap
+                        craig={craig}
+                        onClick={this.onPowerWorkspaceClick}
+                        isSelected={(powerIndex) => {
+                          return (
+                            this.state.selectedItem === "power" &&
+                            this.state.selectedIndex === powerIndex
+                          );
+                        }}
+                        buttons={(powerIndex) => {
+                          return (
+                            <PrimaryButton
+                              noDeleteButton
+                              type="add"
+                              name="Create a Deployment"
+                              onClick={() =>
+                                this.onWorkspaceButtonClick(powerIndex)
+                              }
+                            />
+                          );
                         }}
                       >
-                        <CraigFormHeading
-                          icon={RenderForm(this.getIcon(), {
-                            style: {
-                              marginRight: "0.5rem",
-                              marginTop: "0.4rem",
-                            },
-                          })}
-                          noMarginBottom
-                          name={`Editing Power ${
-                            this.state.selectedItem === "power"
-                              ? "Workspace"
-                              : this.state.selectedItem === "power_instances"
-                              ? "Instance"
-                              : this.state.selectedItem === "vtl"
-                              ? "FalconStor VTL"
-                              : "Volume"
-                          } ${
-                            craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ].name
-                          }`}
-                        />
-                        <CraigToggleForm
-                          key={
-                            this.state.selectedItem + this.state.selectedIndex
-                          }
-                          tabPanel={{ hideAbout: true }}
-                          onSave={craig[this.state.selectedItem].save}
-                          onDelete={this.onItemDelete}
-                          hideChevron
-                          hideName
-                          hide={false}
-                          hideHeading
-                          name={
-                            craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ].name
-                          }
-                          submissionFieldName={this.state.selectedItem}
-                          innerFormProps={{
-                            form: forms[this.state.selectedItem],
-                            formName: contains(
-                              ["power_instances", "vtl"],
-                              this.state.selectedItem
-                            )
-                              ? "Power Instances"
-                              : undefined,
-                            craig: craig,
-                            data: craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ],
-                            disableSave: disableSave,
-                            propsMatchState: propsMatchState,
-                            arrayParentName:
-                              craig.store.json.power[this.state.powerIndex],
+                        {/*<PowerSshKeys onClick={this.onPowerWorkspaceClick} />*/}
+                        <PowerSubnets
+                          craig={craig}
+                          onPowerWorkspaceClick={this.onPowerWorkspaceClick}
+                          onPowerInstanceClick={this.onPowerInstanceClick}
+                          onVolumeClick={this.onVolumeClick}
+                          onVtlClick={this.onVtlClick}
+                          isSelected={(props) => {
+                            return (
+                              this.state.selectedIndex === props.index &&
+                              this.state.selectedItem === props.itemName
+                            );
+                          }}
+                          volumeIsSelected={(volumeIndex) => {
+                            return (
+                              this.state.selectedItem === "power_volumes" &&
+                              volumeIndex === this.state.selectedIndex
+                            );
                           }}
                         />
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                        <PowerVolumes
+                          craig={craig}
+                          isSelected={(props) => {
+                            return (
+                              this.state.selectedIndex === props.index &&
+                              this.state.selectedItem === props.itemName
+                            );
+                          }}
+                          onVolumeClick={this.onVolumeClick}
+                        />
+                      </PowerMap>
+                    </div>
+                    <div id="right-power">
+                      {this.state.editing === true ? (
+                        <div
+                          style={{
+                            width: "50vw",
+                            padding: "0",
+                            marginTop: "1rem",
+                          }}
+                        >
+                          <CraigFormHeading
+                            icon={RenderForm(this.getIcon(), {
+                              style: {
+                                marginRight: "0.5rem",
+                                marginTop: "0.4rem",
+                              },
+                            })}
+                            noMarginBottom
+                            name={`Editing Power ${
+                              this.state.selectedItem === "power"
+                                ? "Workspace"
+                                : this.state.selectedItem === "power_instances"
+                                ? "Instance"
+                                : this.state.selectedItem === "vtl"
+                                ? "FalconStor VTL"
+                                : "Volume"
+                            } ${
+                              craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ].name
+                            }`}
+                          />
+                          <CraigToggleForm
+                            key={
+                              this.state.selectedItem + this.state.selectedIndex
+                            }
+                            tabPanel={{ hideAbout: true }}
+                            onSave={craig[this.state.selectedItem].save}
+                            onDelete={this.onItemDelete}
+                            hideChevron
+                            hideName
+                            hide={false}
+                            hideHeading
+                            name={
+                              craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ].name
+                            }
+                            submissionFieldName={this.state.selectedItem}
+                            innerFormProps={{
+                              form: forms[this.state.selectedItem],
+                              formName: contains(
+                                ["power_instances", "vtl"],
+                                this.state.selectedItem
+                              )
+                                ? "Power Instances"
+                                : undefined,
+                              craig: craig,
+                              data: craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ],
+                              disableSave: disableSave,
+                              propsMatchState: propsMatchState,
+                              arrayParentName:
+                                craig.store.json.power[this.state.powerIndex],
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
-                </div>
-              </>
+                </>
+              ) : (
+                <NoPowerNetworkTile />
+              )
             }
           />
         </div>

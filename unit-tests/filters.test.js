@@ -38,7 +38,7 @@ describe("encryptionKeyFilter", () => {
       craig: craig,
     };
     const result = encryptionKeyFilter({}, componentProps);
-    assert.deepEqual(result, []);
+    assert.deepEqual(result, ["NONE (Insecure)"]);
   });
 
   it("should return an array of key names for root keys when kms is selected", () => {
@@ -49,7 +49,7 @@ describe("encryptionKeyFilter", () => {
     };
     const result = encryptionKeyFilter({}, componentProps);
 
-    assert.deepEqual(result, ["key1"]);
+    assert.deepEqual(result, ["key1", "NONE (Insecure)"]);
   });
 });
 

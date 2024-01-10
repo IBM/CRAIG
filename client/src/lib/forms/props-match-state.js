@@ -46,7 +46,8 @@ function propsMatchState(field, stateData, componentProps) {
   }
   if (field === "subnetTier") {
     componentProps.data.hide = stateData.hide;
-    componentProps.data.select_zones = stateData.select_zones;
+    if (!stateData.advanced)
+      componentProps.data.select_zones = stateData.select_zones;
     if (componentProps.formName) {
       if (
         stateData.advanced === false &&
@@ -54,6 +55,11 @@ function propsMatchState(field, stateData, componentProps) {
       ) {
         componentProps.data.advanced = stateData.advanced;
       }
+      if (stateData.advanced)
+        return (
+          stateData.name === componentProps.data.name &&
+          deepEqual(componentProps.data.select_zones, stateData.zones)
+        );
     } else {
       // don't add props when using dynamic form
       componentProps.data.advancedSave = stateData.advancedSave;

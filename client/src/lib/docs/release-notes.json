@@ -10,7 +10,8 @@
       "Users can now add VPN Gateway connections from the VPN Gateways page",
       "Users can now enter NONE as a valid SSH Key",
       "Users can now provider Power VS instances with Cloud Init user data",
-      "Users can now import existing Secrets Manager instances into CRAIG"
+      "Users can now import existing Secrets Manager instances into CRAIG",
+      "Power zones WDC06 and WDC07 now support Power Edge Router"
     ],
     "fixes": [
       "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",

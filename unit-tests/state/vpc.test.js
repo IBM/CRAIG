@@ -3898,6 +3898,15 @@ describe("vpcs", () => {
           "it should be disabled"
         );
       });
+      it("should disable add public gateway toggle when no gateways", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.addPublicGateway.disabled(
+            { name: "hi" },
+            { craig: craig, vpc: "management" }
+          ),
+          "it should be disabled"
+        );
+      });
     });
   });
   describe("vpcs.network_acls", () => {

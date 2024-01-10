@@ -41,8 +41,12 @@ function getServices(craig, services) {
     });
   });
 
-  ["sysdig", "logdna", "atracker"].forEach((observabilityService) => {
-    if (craig.store.json[observabilityService].enabled) {
+  ["sysdig", "logdna", "atracker", "scc_v2"].forEach((observabilityService) => {
+    if (
+      craig.store.json[observabilityService][
+        observabilityService === "scc_v2" ? "enable" : "enabled"
+      ]
+    ) {
       let rg = craig.store.json[observabilityService].resource_group;
       let serviceRg = !rg ? "No Resource Group" : rg;
       if (

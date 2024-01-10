@@ -85,6 +85,7 @@ export const TransitGatewaysMap = (props) => {
                   }}
                   itemName="connection"
                   icon={connection.vpc ? VirtualPrivateCloud : IbmPowerVs}
+                  size="30"
                 />
               ))}
             </IcseFormGroup>

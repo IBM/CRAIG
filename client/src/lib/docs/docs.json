@@ -852,7 +852,7 @@
   "vpn_gateways": {
     "content": [
       {
-        "text": "VPN Gateway service for VPC provides secure, encrypted connectivity from a user's on-premise network to the IBM Cloud VPC network."
+        "text": "VPN Gateway service for VPC provides secure, encrypted connectivity from a user's on-premises network to the IBM Cloud VPC network."
       },
       {
         "text": "_default_includes"

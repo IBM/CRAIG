@@ -188,3 +188,21 @@
 .diagramSubFormInvalid {
   color: red;
 }
+
+.rightForm {
+  width: 50vw;
+  padding: 0;
+}
+
+.vpcDeploymentIcon {
+  margin-top: 0.4rem;
+  margin-right: 0.5rem;
+}
+
+.width140 {
+  width: 140px;
+}
+
+.width535 {
+  width: 535px;
+}

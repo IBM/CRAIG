@@ -15,7 +15,7 @@ function Home(props) {
   return (
     <>
       {contains(window.location.pathname, "/beta") ? (
-        <div style={{ marginTop: "1rem" }}>
+        <div className="marginTop1Rem">
           <CraigFormHeading name="Settings" noMarginBottom />
         </div>
       ) : (

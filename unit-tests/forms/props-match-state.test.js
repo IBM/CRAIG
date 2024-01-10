@@ -127,7 +127,7 @@ describe("propsMatchState", () => {
     );
   });
   it("should set component props data hide to statedata hide when checking if props match for subnet tier in dynamic form", () => {
-    assert.isFalse(
+    assert.isTrue(
       propsMatchState(
         "subnetTier",
         {

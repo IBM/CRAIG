@@ -241,7 +241,7 @@ const PageTemplate = (props) => {
               kind="warning-alt"
               lowContrast={true}
               subtitle="Some elements may not function correctly."
-              title="CRAIG version out of date."
+              title="CRAIG state version out of date."
               hideCloseButton={true}
             />
           )}
@@ -273,6 +273,7 @@ const PageTemplate = (props) => {
             <>
               {window.location.pathname !== "/projects" &&
                 !contains(window.location.pathname, "/docs/") &&
+                !contains(window.location.pathname, "/beta") &&
                 !props.craig.store.project_name && (
                   <NoProjectModal
                     craig={props.craig}

@@ -108,12 +108,7 @@ class VpcConnectivityPage extends React.Component {
           nestedDocs={docTabs(["Transit Gateways"], craig)}
           form={
             <>
-              <div
-                style={{
-                  marginRight: "1rem",
-                  width: "580px",
-                }}
-              >
+              <div className="marginRight1Rem width580">
                 <div className="marginBottomSmall" />
                 <CraigFormHeading
                   name="Transit Gateways"
@@ -130,7 +125,7 @@ class VpcConnectivityPage extends React.Component {
                   }
                 />
               </div>
-              <div className="displayFlex" style={{ width: "100%" }}>
+              <div className="displayFlex">
                 <div id="left-connectivity">
                   <TransitGatewaysMap
                     craig={craig}
@@ -142,11 +137,11 @@ class VpcConnectivityPage extends React.Component {
                     }}
                   />
                 </div>
-                <div id="right-connectivity" style={{ width: "580px" }}>
+                <div id="right-connectivity" className="width580">
                   {this.state.editing === false ? (
                     ""
                   ) : (
-                    <div style={{ marginTop: "1rem" }}>
+                    <div className="marginTop1Rem">
                       <CraigFormHeading
                         noMarginBottom
                         type="subHeading"

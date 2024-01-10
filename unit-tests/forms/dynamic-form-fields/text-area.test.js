@@ -188,7 +188,7 @@ describe("text area", () => {
       let expectedData = {
         className: "my-cool-classname textInputMedium",
         id: "frog-name-0",
-        labelText: null,
+        labelText: "",
         invalid: false,
         invalidText: "uh oh",
         placeholder: "placeholder",

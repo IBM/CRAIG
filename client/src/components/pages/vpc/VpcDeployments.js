@@ -289,12 +289,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
             />
           )}
         </DynamicFormModal>
-        <div
-          style={{
-            marginRight: "1rem",
-            marginTop: "1rem",
-          }}
-        >
+        <div className="marginRight1Rem marginTop1Rem">
           <StatefulTabs
             name="VPC Deployments"
             formName="VPC Deployments"
@@ -312,7 +307,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
             form={
               <>
                 <div className="marginBottomSmall" />
-                <div style={{ width: "580px" }}>
+                <div className="width580">
                   <CraigFormHeading
                     name="Deployments"
                     noMarginBottom
@@ -332,7 +327,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                     }
                   />
                 </div>
-                <div className="displayFlex" style={{ width: "100%" }}>
+                <div className="displayFlex">
                   <div id="left-vpc-deployments">
                     <div
                       key={
@@ -409,21 +404,12 @@ class VpcDeploymentsDiagramPage extends React.Component {
                   </div>
                   <div id="right-vpc-deployments">
                     {this.state.editing === true ? (
-                      <div
-                        style={{
-                          width: "50vw",
-                          padding: "0",
-                          marginTop: "1rem",
-                        }}
-                      >
+                      <div className="rightForm marginTop1Rem">
                         <CraigFormHeading
                           icon={RenderForm(
                             this.getIcon(this.state.selectedItem),
                             {
-                              style: {
-                                marginRight: "0.5rem",
-                                marginTop: "0.4rem",
-                              },
+                              className: "vpcDeploymentIcon",
                             }
                           )}
                           noMarginBottom

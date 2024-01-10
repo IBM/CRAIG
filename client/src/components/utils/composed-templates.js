@@ -7,6 +7,7 @@ import Empty from "../../images/empty.png";
 import PowerVsQuickStart from "../../images/quick-start-power.png";
 import OracleSI from "../../images/oracle-si.png";
 import Vpnaas from "../../images/vpnaas.png";
+import PowerVsPoc from "../../images/power-poc.png";
 import { keys } from "lazy-z";
 const { template_dropdown_map } = require("../../lib/constants");
 
@@ -20,6 +21,7 @@ const templateImages = {
   "Power VS Quick Start": PowerVsQuickStart,
   "Power VS Oracle Single Instance": OracleSI,
   "VPN as a Service": Vpnaas,
+  "Power VS POC Quick Start": PowerVsPoc,
 };
 
 keys(template_dropdown_map).forEach((template) => {

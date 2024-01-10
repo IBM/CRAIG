@@ -246,5 +246,77 @@ describe("overview", () => {
         "it should return correct data"
       );
     });
+    it("should return a map of services with scc when enabled", () => {
+      craig.store.json.key_management[0].resource_group = null;
+      craig.store.json.logdna.enabled = true;
+      craig.store.json.logdna.resource_group = null;
+      craig.icd.create({ name: "default" });
+      craig.icd.save(
+        { resource_group: "service-rg" },
+        { data: { name: "default" } }
+      );
+      craig.store.json.atracker.instance = true;
+      craig.store.json.scc_v2.enable = true;
+      let actualData = getServices(craig, [
+        "appid",
+        "icd",
+        "event_streams",
+        "key_management",
+        "object_storage",
+      ]);
+      let expectedData = {
+        serviceResourceGroups: [
+          "No Resource Group",
+          "management-rg",
+          "service-rg",
+          "workload-rg",
+        ],
+        serviceMap: {
+          "No Resource Group": [
+            {
+              name: "kms",
+              type: "key_management",
+              overrideType: undefined,
+            },
+            {
+              name: "logdna",
+              type: "logdna",
+            },
+            {
+              name: "atracker",
+              type: "atracker",
+            },
+            {
+              name: "scc_v2",
+              type: "scc_v2",
+            },
+          ],
+          "management-rg": [],
+          "service-rg": [
+            {
+              name: "default",
+              overrideType: "cloud_databases",
+              type: "icd",
+            },
+            {
+              name: "atracker-cos",
+              type: "object_storage",
+              overrideType: undefined,
+            },
+            {
+              name: "cos",
+              type: "object_storage",
+              overrideType: undefined,
+            },
+          ],
+          "workload-rg": [],
+        },
+      };
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
 });

@@ -319,7 +319,7 @@ workload-cluster | A Red Hat OpenShift cluster on the Workload VPC.
 
 ## VPN Gateways
 
-VPN Gateway service for VPC provides secure, encrypted connectivity from a user's on-premise network to the IBM Cloud VPC network.
+VPN Gateway service for VPC provides secure, encrypted connectivity from a user's on-premises network to the IBM Cloud VPC network.
 
 The default configuration includes:
 

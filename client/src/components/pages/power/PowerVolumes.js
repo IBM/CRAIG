@@ -15,12 +15,7 @@ export const PowerVolumes = (props) => {
         type="subHeading"
         icon={<FileStorage className="diagramTitleIcon" />}
       />
-      <IcseFormGroup
-        className="displayFlex alignItemsCenter overrideGap"
-        style={{
-          width: "535px",
-        }}
-      >
+      <IcseFormGroup className="displayFlex alignItemsCenter overrideGap width535">
         {craig.store.json.power_volumes
           .filter((volume, volumeIndex) => {
             if (volume.workspace === power.name) {
@@ -29,7 +24,7 @@ export const PowerVolumes = (props) => {
             }
           })
           .map((volume) => (
-            <div style={{ width: "140px" }} key={volume.name + power.name}>
+            <div className="width140" key={volume.name + power.name}>
               <DeploymentIcon
                 icon={FileStorage}
                 itemName="power_volumes"

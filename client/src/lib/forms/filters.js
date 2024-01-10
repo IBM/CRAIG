@@ -25,7 +25,7 @@ function encryptionKeyFilter(_, componentProps) {
       }
     });
   }
-  return kms ? validKeys : [];
+  return (kms ? validKeys : []).concat("NONE (Insecure)");
 }
 
 /**

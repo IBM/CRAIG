@@ -5,6 +5,8 @@ import "./app.scss";
 import { ResetState, PageNotFound } from "./components";
 import { Buffer } from "buffer";
 import Tutorial from "./components/pages/tutorial/Tutorial";
+import "@carbon/styles/css/styles.css";
+import "./index.css";
 window.Buffer = Buffer; // Buffer is used to download zip file
 
 /**

@@ -10,6 +10,7 @@ import {
   IbmCloudSysdigSecure,
   IbmCloudLogging,
   CloudMonitoring,
+  IbmCloudSecurityComplianceCenterWorkloadProtection,
 } from "@carbon/icons-react";
 import {
   EmptyResourceTile,
@@ -75,6 +76,9 @@ const serviceFormMap = {
   atracker: {
     icon: CloudMonitoring,
   },
+  scc_v2: {
+    icon: IbmCloudSecurityComplianceCenterWorkloadProtection,
+  },
 };
 
 function scrollToTop() {
@@ -112,6 +116,8 @@ class CloudServicesPage extends React.Component {
           ? "appid"
           : value === "Activity Tracker"
           ? "atracker"
+          : value === "Security & Compliance Center"
+          ? "scc_v2"
           : snakeCase(value),
     });
   }
@@ -149,7 +155,15 @@ class CloudServicesPage extends React.Component {
   }
 
   onServiceSubmit(stateData, componentProps) {
-    if (contains(["logdna", "sysdig", "atracker"], this.state.modalService)) {
+    if (
+      contains(
+        ["logdna", "sysdig", "atracker", "scc_v2"],
+        this.state.modalService
+      )
+    ) {
+      if (this.state.modalService === "scc_v2") {
+        stateData.enable = true;
+      }
       this.props.craig[this.state.modalService].save(stateData, componentProps);
     } else
       this.props.craig[this.state.modalService].create(
@@ -244,6 +258,7 @@ class CloudServicesPage extends React.Component {
       "Resource Groups",
       "LogDNA",
       "Sysdig",
+      "Security & Compliance Center",
     ];
 
     if (craig.store.json.atracker.enabled) {
@@ -265,6 +280,14 @@ class CloudServicesPage extends React.Component {
     if (craig.store.json.logdna.enabled) {
       modalGroups = modalGroups.filter((group) => {
         if (group !== "LogDNA") {
+          return group;
+        }
+      });
+    }
+
+    if (craig.store.json.scc_v2.enable) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "Security & Compliance Center") {
           return group;
         }
       });
@@ -310,6 +333,8 @@ class CloudServicesPage extends React.Component {
                 ? "LogDNA"
                 : this.state.modalService === "atracker"
                 ? "Activity Tracker"
+                : this.state.modalService === "scc_v2"
+                ? "Security & Compliance Center"
                 : titleCase(this.state.modalService)
             }
             labelText="Service"
@@ -333,6 +358,8 @@ class CloudServicesPage extends React.Component {
                   ? "LogDNA"
                   : this.state.modalService === "atracker"
                   ? "Activity Tracker"
+                  : this.state.modalService === "scc_v2"
+                  ? "Security & Compliance Center"
                   : titleCase(this.state.modalService)
               )}${
                 this.state.modalService === "resource_groups" ? "" : " Service"
@@ -395,6 +422,7 @@ class CloudServicesPage extends React.Component {
                   marginRight: "1rem",
                   width: "580px",
                 }}
+                key={serviceResourceGroups}
               >
                 <div className="marginBottomSmall" />
                 {craig.store.json.atracker.enabled ? (
@@ -511,7 +539,7 @@ class CloudServicesPage extends React.Component {
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: "1rem" }}>
+              <div className="marginTop1Rem">
                 {this.state.service ? (
                   <>
                     <CraigFormHeading
@@ -521,7 +549,12 @@ class CloudServicesPage extends React.Component {
                           className: "diagramTitleIcon",
                         }
                       )}
-                      name={"Editing " + this.state.serviceName}
+                      name={
+                        "Editing " +
+                        (this.state.serviceName === "scc_v2"
+                          ? "Security & Compliance Center"
+                          : this.state.serviceName)
+                      }
                     />
                     <div
                       style={{
@@ -532,7 +565,11 @@ class CloudServicesPage extends React.Component {
                       className="subForm"
                     >
                       <CraigToggleForm
-                        name={this.state.serviceName}
+                        name={
+                          this.state.serviceName === "scc_v2"
+                            ? "Security & Compliance Center"
+                            : this.state.serviceName
+                        }
                         tabPanel={{ hideAbout: true }}
                         key={this.state.service + this.state.serviceName}
                         onSave={this.onServiceSave}
@@ -549,7 +586,7 @@ class CloudServicesPage extends React.Component {
                           propsMatchState: propsMatchState,
                           craig: craig,
                           data: contains(
-                            ["logdna", "sysdig", "atracker"],
+                            ["logdna", "sysdig", "atracker", "scc_v2"],
                             this.state.service
                           )
                             ? craig.store.json[this.state.service]

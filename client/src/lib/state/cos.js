@@ -93,6 +93,11 @@ function cosOnStoreUpdate(config) {
     if (!cos.plan) {
       cos.plan = "standard";
     }
+    cos.buckets.forEach((bucket) => {
+      if (!cos.kms) {
+        bucket.kms_key = null;
+      }
+    });
   });
   cosSetStoreBucketsAndKeys(config, (instance) => {
     setUnfoundResourceGroup(config, instance);
@@ -267,7 +272,7 @@ function initObjectStorageStore(store) {
     init: cosInit,
     onStoreUpdate: cosOnStoreUpdate,
     shouldDisableSave: shouldDisableComponentSave(
-      ["name", "resource_group", "kms", "plan"],
+      ["name", "resource_group", "plan"],
       "object_storage"
     ),
     create: cosCreate,
@@ -305,9 +310,20 @@ function initObjectStorageStore(store) {
         default: "",
         labelText: "Key Management Instance",
         invalidText: selectInvalidText("key management instance"),
-        invalid: fieldIsNullOrEmptyString("kms"),
+        invalid: function (stateData) {
+          return stateData.kms === "";
+        },
         groups: function (stateData, componentProps) {
-          return splat(componentProps.craig.store.json.key_management, "name");
+          return splat(
+            componentProps.craig.store.json.key_management,
+            "name"
+          ).concat("NONE (Insecure)");
+        },
+        onInputChange: function (stateData) {
+          return stateData.kms === "NONE (Insecure)" ? null : stateData.kms;
+        },
+        onRender: function (stateData) {
+          return stateData.kms === null ? "NONE (Insecure)" : stateData.kms;
         },
       },
       plan: {
@@ -361,6 +377,16 @@ function initObjectStorageStore(store) {
               "Warning: Unencrypted storage bucket"
             ),
             groups: encryptionKeyFilter,
+            onRender: function (stateData) {
+              return stateData.kms_key === null
+                ? "NONE (Insecure)"
+                : stateData.kms_key;
+            },
+            onInputChange: function (stateData) {
+              return stateData.kms_key === "NONE (Insecure)"
+                ? null
+                : stateData.kms_key;
+            },
             tooltip: {
               content: "To follow best practices, encrypt your storage bucket.",
             },

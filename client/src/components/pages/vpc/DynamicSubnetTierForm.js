@@ -54,6 +54,7 @@ export class DynamicSubnetTierForm extends React.Component {
         ],
       },
       vpc_name: vpcName,
+      vpc: vpcName,
     };
     transpose(this.props.innerFormProps || {}, innerFormProps);
     let noButtons =
@@ -74,7 +75,8 @@ export class DynamicSubnetTierForm extends React.Component {
         key={
           this.props.vpcIndex +
           "-subnet-tier-form-" +
-          this.props.subnetTierIndex
+          this.props.subnetTierIndex +
+          JSON.stringify(innerFormProps.data)
         }
         onSave={this.props.craig.vpcs.subnetTiers.save}
         onDelete={this.props.onDelete}

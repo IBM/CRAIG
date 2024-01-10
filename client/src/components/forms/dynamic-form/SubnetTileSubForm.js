@@ -45,11 +45,9 @@ export const SubnetTileSubForm = (props) => {
   }
   return isSubnetTierForm ? (
     <div
-      className={`${props.parentProps.isModal ? "subForm" : "formInSubForm"}`}
-      style={{
-        marginTop: "1rem",
-        marginBottom: props.parentProps.isModal ? "0rem" : undefined,
-      }}
+      className={`${
+        props.parentProps.isModal ? "subForm" : "formInSubForm"
+      } marginTop1Rem ${props.parentProps.isModal ? "marginBottomNone" : ""}`}
     >
       <IcseHeading name="Subnets" type="subHeading" noMarginBottom />
       <div className="displayFlex">
@@ -60,8 +58,7 @@ export const SubnetTileSubForm = (props) => {
                 key={subnet.name + index}
                 className={`marginRightSubnetTile ${
                   props.parentProps.isModal ? "formInSubForm" : "subForm"
-                }`}
-                style={{ marginBottom: "0rem" }}
+                } marginBottomNone`}
               >
                 <CraigFormHeading
                   name={`No Subnet in Zone ${index + 1}`}
@@ -74,10 +71,9 @@ export const SubnetTileSubForm = (props) => {
             return (
               <Tile
                 key={subnet.name + index}
-                className={`marginRightSubnetTile ${
+                className={`marginRightSubnetTile marginBottomNone ${
                   props.parentProps.isModal ? "formInSubForm" : "subForm"
                 }`}
-                style={{ marginBottom: "0rem" }}
               >
                 <DynamicForm
                   isModal={props.parentProps.isModal}
