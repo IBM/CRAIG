@@ -374,7 +374,7 @@
   ],
   "vpn_gateways": [
     {
-      "name": "client-to-site-gw",
+      "name": "site-to-site-gw",
       "resource_group": "vpnaas-rg",
       "vpc": "vpc",
       "subnet": "vpn-zone-1",

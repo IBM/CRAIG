@@ -250,10 +250,12 @@ terraform destroy
 
 ## Schematics Integration
 
-In order to allow Schematics to successfully create resources, users should make sure they meet the following permission requirements and prerequisites:
+In order to allow Schematics integration, users should make sure they have the following access policy roles for the Schematics service set within their IBM Cloud Account:
 
 - IBM Cloud Platform Roles: Editor or Higher
 - Schematics Service Roles: Writer or Higher
+
+These roles allow the integration with Schematics including the Schematics workspace creation and the upload of the project. However, to create and manage the IBM Cloud resources in a CRAIG project, you must be assigned the IAM platform or service access role for the individual IBM Cloud resources being provisioned in the project. 
 
  Refer to the [User permissions for Schematics Workspaces documentation](https://cloud.ibm.com/docs/schematics?topic=schematics-access) for more information.
 

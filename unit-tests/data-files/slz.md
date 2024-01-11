@@ -326,7 +326,7 @@ The default configuration includes:
 Resource Name      | Description
 -------------------|---------------------------------------------------------------------------------------------------------------
 management-gateway | A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC.
-client-to-site-gw  | A VPN gateway service deployed in the VPC
+site-to-site-gw    | A VPN gateway service deployed in the VPC
 
 ### Related Links
 
