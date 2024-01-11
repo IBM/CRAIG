@@ -5,9 +5,9 @@ const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
   resourceGroupsField,
-  unconditionalInvalidText,
   encryptionKeyGroups,
   hideWhenUseData,
+  selectInvalidText,
 } = require("./utils");
 
 /**
@@ -103,7 +103,7 @@ function initSecretsManagerStore(store) {
         type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("encryption_key"),
-        invalidText: unconditionalInvalidText("encryption key"),
+        invalidText: selectInvalidText("encryption key"),
         size: "small",
         groups: encryptionKeyGroups,
         hideWhen: hideWhenUseData,

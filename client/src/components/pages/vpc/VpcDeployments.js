@@ -12,10 +12,13 @@ import {
   NetworkEnterprise,
   Password,
   Security,
+  ServerProxy,
+  LoadBalancerVpc,
 } from "@carbon/icons-react";
 import { disableSave, propsMatchState } from "../../../lib";
 import {
   arraySplatIndex,
+  azsort,
   contains,
   isNullOrEmptyString,
   snakeCase,
@@ -34,6 +37,8 @@ import {
   SecurityGroups,
   docTabs,
 } from "../diagrams";
+import { NoSecretsManagerTile } from "../../utils/NoSecretsManagerTile";
+import { NoVpcVsiTile } from "../../forms/dynamic-form/tiles";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -70,7 +75,11 @@ class VpcDeploymentsDiagramPage extends React.Component {
   }
 
   getIcon(field) {
-    return field === "security_groups"
+    return field === "load_balancers"
+      ? LoadBalancerVpc
+      : field === "vpn_servers"
+      ? ServerProxy
+      : field === "security_groups"
       ? Security
       : field === "ssh_keys"
       ? Password
@@ -181,6 +190,8 @@ class VpcDeploymentsDiagramPage extends React.Component {
   selectRenderValue() {
     return this.state.selectedItem === "vsi"
       ? "VSI"
+      : this.state.selectedItem === "vpn_servers"
+      ? "VPN Server"
       : this.state.selectedItem === "vpn_gateways"
       ? "VPN Gateway"
       : this.state.selectedItem === "ssh_keys"
@@ -225,7 +236,9 @@ class VpcDeploymentsDiagramPage extends React.Component {
               "Security Group",
               "SSH Key",
               "Virtual Private Endpoint",
+              "Load Balancer",
               "VPN Gateway",
+              "VPN Server",
               "VSI",
             ]}
             handleInputChange={this.handleInputChange}
@@ -246,6 +259,12 @@ class VpcDeploymentsDiagramPage extends React.Component {
           {noSelectedItem ? (
             // need to pass html element
             <></>
+          ) : this.state.selectedItem === "load_balancers" &&
+            craig.store.json.vsi.length === 0 ? (
+            <NoVpcVsiTile />
+          ) : this.state.selectedItem === "vpn_servers" &&
+            craig.store.json.secrets_manager.length === 0 ? (
+            <NoSecretsManagerTile />
           ) : (
             <DynamicForm
               key={this.state.selectedItem}
@@ -301,7 +320,9 @@ class VpcDeploymentsDiagramPage extends React.Component {
                 "Virtual Servers",
                 "Virtual Private Endpoints",
                 "VPN Gateways",
-              ],
+                "VPN Servers",
+                "Load Balancers",
+              ].sort(azsort),
               craig
             )}
             form={
@@ -319,7 +340,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
                         onClick={() => {
                           this.resetSelection();
                           this.setState({
-                            selectedItem: "ssh_keys",
                             showModal: true,
                           });
                         }}

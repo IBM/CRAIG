@@ -26,7 +26,10 @@ export const DeploymentIcon = (props) => {
         <p className="font12px">{props.item.name}</p>
       </div>
       {props.children}
-      {contains(["virtual_private_endpoints", "vsi"], props.itemName)
+      {contains(
+        ["virtual_private_endpoints", "vsi", "vpn_servers", "load_balancers"],
+        props.itemName
+      )
         ? props.item.security_groups.map((sg, i) => (
             <Tag
               key={props.item.name + props.itemName + sg}

@@ -17,6 +17,16 @@ export const ClassicDisabledTile = (isSubComponent) => {
   );
 };
 
+export const NoVpcVsiTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap">
+      <CloudAlerting size="24" className="iconMargin" /> No VPC Virtual Servers
+      have been created. To enable Load Balancer creation, create a Virtual
+      Server deployment.
+    </Tile>
+  );
+};
+
 export const NoClassicGatewaysTile = () => {
   return (
     <Tile className="tileBackground displayFlex alignItemsCenter wrap">

@@ -1,10 +1,10 @@
 import React from "react";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
-import { VirtualPrivateCloud } from "@carbon/icons-react";
+import { GatewayPublic, VirtualPrivateCloud } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
-import { disableSave } from "../../../lib";
-import { isNullOrEmptyString } from "lazy-z";
+import { isNullOrEmptyString, splatContains } from "lazy-z";
+import { DeploymentIcon } from "./DeploymentIcon";
 
 export const VpcMap = (props) => {
   let craig = props.craig;
@@ -39,6 +39,31 @@ export const VpcMap = (props) => {
             vpc_index: vpcIndex,
           })
         )}
+        <div
+          className="displayFlex overrideGap alignItemsCenter"
+          style={{
+            justifyContent: "center",
+          }}
+        >
+          {["1", "2", "3"].map((num) => {
+            return (
+              <div style={{ width: "150px" }} key={num}>
+                {splatContains(vpc.public_gateways, "zone", Number(num)) ? (
+                  <DeploymentIcon
+                    icon={GatewayPublic}
+                    item={{ name: "Public Gateway" }}
+                    isSelected={() => {
+                      return false;
+                    }}
+                    itemName="public_gateway"
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   });
