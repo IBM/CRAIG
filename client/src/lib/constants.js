@@ -715,7 +715,7 @@ module.exports = {
       },
     },
   },
-  edgeRouterEnabledZones: ["dal10", "wdc06", "wdc07"],
+  edgeRouterEnabledZones: ["dal10", "wdc06", "wdc07", "eu-de-1", "eu-de-2"],
   cosPlans: [
     "standard",
     "lite",

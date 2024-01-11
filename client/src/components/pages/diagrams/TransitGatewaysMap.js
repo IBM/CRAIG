@@ -12,9 +12,9 @@ import {
   VirtualPrivateCloud,
 } from "@carbon/icons-react";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
-import { IcseFormGroup } from "icse-react-assets";
 import { tagColors } from "../../forms/dynamic-form/components";
 import PropTypes from "prop-types";
+import { CraigFormGroup } from "../../forms";
 
 export const TransitGatewaysMap = (props) => {
   return props.craig.store.json.transit_gateways.map((tgw, tgwIndex) => {
@@ -67,7 +67,7 @@ export const TransitGatewaysMap = (props) => {
           {tgw.connections.length === 0 ? (
             ""
           ) : (
-            <IcseFormGroup
+            <CraigFormGroup
               className="displayFlex alignItemsCenter overrideGap powerSubnetChildren"
               style={{
                 width: "535px",
@@ -88,7 +88,7 @@ export const TransitGatewaysMap = (props) => {
                   size="30"
                 />
               ))}
-            </IcseFormGroup>
+            </CraigFormGroup>
           )}
         </div>
         {tgw.gre_tunnels.length === 0 ? (
@@ -100,7 +100,7 @@ export const TransitGatewaysMap = (props) => {
               type="subHeading"
               name="GRE Tunnels"
             />
-            <IcseFormGroup
+            <CraigFormGroup
               className="displayFlex alignItemsCenter overrideGap powerSubnetChildren"
               style={{
                 width: "535px",
@@ -116,7 +116,7 @@ export const TransitGatewaysMap = (props) => {
                   icon={FirewallClassic}
                 />
               ))}
-            </IcseFormGroup>
+            </CraigFormGroup>
           </div>
         )}
       </div>

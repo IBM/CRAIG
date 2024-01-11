@@ -3,7 +3,7 @@ import { disableSave, propsMatchState } from "../../../lib";
 import { IcseHeading } from "icse-react-assets";
 import DynamicForm from "../DynamicForm";
 import { Tile } from "@carbon/react";
-import { CraigFormHeading, PrimaryButton } from "../utils/ToggleFormComponents";
+import { CraigFormHeading, PrimaryButton } from "../utils";
 import { getSubnetData } from "../../../lib/forms/dynamic-subnet-tile-sub-form";
 
 export const SubnetTileTitle = (props) => {

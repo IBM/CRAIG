@@ -11,7 +11,7 @@ export const AclMap = (props) => {
   let initialAclList = splatContains(vpc.subnets, "network_acl", null)
     ? [{ name: null }]
     : [];
-  return isEmpty(vpc.acls) ? (
+  return isEmpty(vpc.acls) && !props.static ? (
     <CraigEmptyResourceTile name="ACLs" />
   ) : (
     initialAclList.concat(vpc.acls).map((acl, aclIndex) => {

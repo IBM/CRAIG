@@ -2,7 +2,6 @@ import React from "react";
 import {
   buildFormFunctions,
   DynamicToolTipWrapper,
-  IcseFormGroup,
   IcseFormTemplate,
   IcseHeading,
   RenderForm,
@@ -28,7 +27,7 @@ import {
 } from "lazy-z";
 import { propsMatchState } from "../../lib";
 import {
-  dynamicIcseFormGroupsProps,
+  dynamicCraigFormGroupsProps,
   dynamicIcseHeadingProps,
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
@@ -42,6 +41,7 @@ import {
 } from "./dynamic-form/SubnetTileSubForm";
 import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
 import { Tile } from "@carbon/react";
+import { CraigFormGroup } from "./utils";
 
 const doNotRenderFields = [
   "heading",
@@ -214,7 +214,7 @@ class DynamicForm extends React.Component {
             <IcseHeading {...dynamicIcseHeadingProps(group)} />
           ) : group.vsi_tiles ? (
             this.getAllVsi().map((row, index) => (
-              <IcseFormGroup key={"row-" + index}>
+              <CraigFormGroup key={"row-" + index}>
                 {row.map((vsi, vsiIndex) => (
                   <Tile
                     key={`${index}-${vsiIndex}`}
@@ -226,11 +226,11 @@ class DynamicForm extends React.Component {
                     <p className="tileContent">{vsi.subnet}</p>
                   </Tile>
                 ))}
-              </IcseFormGroup>
+              </CraigFormGroup>
             ))
           ) : (
-            <IcseFormGroup
-              {...dynamicIcseFormGroupsProps(this.props, index, this.state)}
+            <CraigFormGroup
+              {...dynamicCraigFormGroupsProps(this.props, index, this.state)}
             >
               {Object.keys(group).map((key, keyIndex) => {
                 let field = group[key];
@@ -284,7 +284,7 @@ class DynamicForm extends React.Component {
                   </DynamicToolTipWrapper>
                 );
               })}
-            </IcseFormGroup>
+            </CraigFormGroup>
           )
         )}
         <PowerInterfaces

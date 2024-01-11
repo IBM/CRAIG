@@ -15,11 +15,11 @@ import {
   CloudMonitoring,
   IbmCloudSecurityComplianceCenterWorkloadProtection,
 } from "@carbon/icons-react";
-import { IcseFormGroup } from "icse-react-assets";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import { ManageService } from "./ManageService";
 import PropTypes from "prop-types";
 import "./diagrams.css";
+import { CraigFormGroup } from "../../forms";
 
 const serviceFormMap = {
   key_management: {
@@ -69,7 +69,7 @@ export const RgServiceMap = (props) => {
           type="subHeading"
           buttons={props.buttons ? props.buttons(rg) : undefined}
         />
-        <IcseFormGroup className="overrideGap">
+        <CraigFormGroup className="overrideGap">
           {serviceMap.length === 0 ? (
             <CraigEmptyResourceTile
               name="services in this resource group"
@@ -98,7 +98,7 @@ export const RgServiceMap = (props) => {
                 );
               })
           )}
-        </IcseFormGroup>
+        </CraigFormGroup>
       </div>
     );
   });

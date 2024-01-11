@@ -1,9 +1,9 @@
 import React from "react";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
-import { FileStorage, Power } from "@carbon/icons-react";
-import { IcseFormGroup } from "icse-react-assets";
+import { FileStorage } from "@carbon/icons-react";
 import { DeploymentIcon } from "../diagrams";
 import PropTypes from "prop-types";
+import { CraigFormGroup } from "../../forms";
 
 export const PowerVolumes = (props) => {
   let craig = props.craig;
@@ -15,7 +15,7 @@ export const PowerVolumes = (props) => {
         type="subHeading"
         icon={<FileStorage className="diagramTitleIcon" />}
       />
-      <IcseFormGroup className="displayFlex alignItemsCenter overrideGap width535">
+      <CraigFormGroup className="displayFlex alignItemsCenter overrideGap width535">
         {craig.store.json.power_volumes
           .filter((volume, volumeIndex) => {
             if (volume.workspace === power.name) {
@@ -41,7 +41,7 @@ export const PowerVolumes = (props) => {
               />
             </div>
           ))}
-      </IcseFormGroup>
+      </CraigFormGroup>
     </div>
   );
 };

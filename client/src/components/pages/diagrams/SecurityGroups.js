@@ -3,8 +3,8 @@ import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { Security } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
-import { IcseFormGroup } from "icse-react-assets";
 import "./diagrams.css";
+import { CraigFormGroup } from "../../forms";
 
 export const SecurityGroups = (props) => {
   let craig = props.craig;
@@ -22,7 +22,7 @@ export const SecurityGroups = (props) => {
         type="subHeading"
         noMarginBottom
       />
-      <IcseFormGroup
+      <CraigFormGroup
         className={
           "displayFlex alignItemsCenter overrideGap" +
           (props.width ? " securityGroupsBoxWidth" : "")
@@ -52,7 +52,7 @@ export const SecurityGroups = (props) => {
               </div>
             );
         })}
-      </IcseFormGroup>
+      </CraigFormGroup>
     </div>
   );
 };

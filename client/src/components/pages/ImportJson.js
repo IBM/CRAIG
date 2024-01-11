@@ -2,11 +2,12 @@ import React from "react";
 import { Button, Modal } from "@carbon/react";
 import { CheckmarkFilled, Misuse } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { IcseFormGroup, IcseTextInput } from "icse-react-assets";
+import { IcseTextInput } from "icse-react-assets";
 import { isInRange } from "lazy-z";
 import { slzToCraig, validate } from "../../lib";
 import { JSONTextArea } from "../utils/JSONTextArea";
 import "./import-json.css";
+import { CraigFormGroup } from "../forms";
 
 const constants = require("../../lib/constants");
 
@@ -96,7 +97,7 @@ class ImportJson extends React.Component {
         </div>
         <div className="subForm">
           {this.props.slz && (
-            <IcseFormGroup>
+            <CraigFormGroup>
               <IcseTextInput
                 id="slz-prefix"
                 labelText="Secure Landing Zone Prefix"
@@ -109,7 +110,7 @@ class ImportJson extends React.Component {
                 invalidText="Invalid prefix. Must match the regular expression: /[a-z][a-z0-9-]*[a-z0-9]/"
                 onChange={this.handlePrefix}
               />
-            </IcseFormGroup>
+            </CraigFormGroup>
           )}
           <JSONTextArea
             import
@@ -128,7 +129,7 @@ class ImportJson extends React.Component {
                 : undefined
             }
           />
-          <IcseFormGroup noMarginBottom>
+          <CraigFormGroup noMarginBottom>
             <Button
               kind="tertiary"
               disabled={!canBeSubmitted}
@@ -143,7 +144,7 @@ class ImportJson extends React.Component {
               )}
               Submit JSON
             </Button>
-          </IcseFormGroup>
+          </CraigFormGroup>
         </div>
         <div className="smallerText">
           <p>{"For more information, visit: "}</p>

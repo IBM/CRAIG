@@ -66,9 +66,9 @@ export class Overview extends React.Component {
             <SshKeys craig={craig} width="575px" />
           </div>
           <div id="vpcs" className="displayFlex">
-            <VpcMap craig={craig}>
+            <VpcMap craig={craig} static>
               <SecurityGroups craig={craig} />
-              <AclMap>
+              <AclMap static>
                 <SubnetTierMap
                   craig={craig}
                   renderChildren={<SubnetServiceMap craig={craig} />}

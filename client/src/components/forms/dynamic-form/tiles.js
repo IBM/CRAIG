@@ -77,7 +77,11 @@ export const PerCloudConnections = () => {
 
 export const CraigEmptyResourceTile = (props) => {
   return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap">
+    <Tile
+      className={
+        "tileBackground displayFlex alignItemsCenter wrap " + props.className
+      }
+    >
       <CloudAlerting size="24" className="iconMargin" />
       No {props.name}.{" "}
       {props.noClick ? (

@@ -7,7 +7,7 @@ const { eachKey } = require("lazy-z");
  * @param {*} stateData
  * @returns {object} props object
  */
-function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
+function dynamicCraigFormGroupsProps(componentProps, index, stateData) {
   let isLast = index === componentProps.form.groups.length - 1;
   let allNextGroupsHidden = false;
   // prevent marginBottomSmall from being rendered on second to last
@@ -62,6 +62,6 @@ function allGroupItemsHidden(group, stateData, componentProps) {
 }
 
 module.exports = {
-  dynamicIcseFormGroupsProps,
+  dynamicCraigFormGroupsProps,
   allGroupItemsHidden,
 };

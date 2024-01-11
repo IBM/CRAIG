@@ -13,12 +13,12 @@ const {
 } = require("./utils");
 const { dynamicTextAreaProps } = require("./text-area");
 const { dynamicIcseHeadingProps } = require("./icse-heading");
-const { dynamicIcseFormGroupsProps } = require("./icse-form-group");
+const { dynamicCraigFormGroupsProps } = require("./craig-form-group");
 const { dynamicToolTipWrapperProps } = require("./dynamic-tooltip-wrapper");
 
 module.exports = {
   dynamicToolTipWrapperProps,
-  dynamicIcseFormGroupsProps,
+  dynamicCraigFormGroupsProps,
   dynamicIcseHeadingProps,
   dynamicTextAreaProps,
   dynamicSelectProps,

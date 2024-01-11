@@ -12,11 +12,7 @@ import {
   CloudMonitoring,
   IbmCloudSecurityComplianceCenterWorkloadProtection,
 } from "@carbon/icons-react";
-import {
-  EmptyResourceTile,
-  IcseFormGroup,
-  IcseSelect,
-} from "icse-react-assets";
+import { EmptyResourceTile, IcseSelect } from "icse-react-assets";
 import {
   azsort,
   contains,
@@ -35,7 +31,11 @@ import {
   PrimaryButton,
   RenderForm,
 } from "../../forms/utils/ToggleFormComponents";
-import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
+import {
+  CraigFormGroup,
+  CraigToggleForm,
+  DynamicFormModal,
+} from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
@@ -104,10 +104,34 @@ class CloudServicesPage extends React.Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.onServiceSubmit = this.onServiceSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.onRequestSubmit = this.onRequestSubmit.bind(this);
   }
 
+  /**
+   * create modal request submit function
+   * @returns {Function} request submit function
+   */
+  onRequestSubmit() {
+    // prevent from loading unfound field
+    return isNullOrEmptyString(this.state.modalService, true)
+      ? () => {}
+      : (stateData, componentProps) => {
+          this.onServiceSubmit(stateData, componentProps);
+          this.setState({
+            showModal: false,
+            modalService: "",
+            serviceName: "",
+          });
+        };
+  }
+
+  /**
+   * handle input change for modal event
+   * @param {*} event
+   */
   handleInputChange(event) {
     let { name, value } = event.target;
+    // convert display name to craig store name
     this.setState({
       [name]:
         value === "Cloud Databases"
@@ -154,22 +178,33 @@ class CloudServicesPage extends React.Component {
     }
   }
 
+  /**
+   * handle service modal submit
+   * @param {*} stateData
+   * @param {*} componentProps
+   */
   onServiceSubmit(stateData, componentProps) {
     if (
+      // if the service is not part of an array
       contains(
         ["logdna", "sysdig", "atracker", "scc_v2"],
         this.state.modalService
       )
     ) {
       if (this.state.modalService === "scc_v2") {
+        // set SCC enable to true since it is not part of
         stateData.enable = true;
       }
       this.props.craig[this.state.modalService].save(stateData, componentProps);
-    } else
+    }
+    // otherwise create
+    else
       this.props.craig[this.state.modalService].create(
         stateData,
         componentProps
       );
+
+    // close modal
     this.toggleModal();
   }
 
@@ -201,6 +236,7 @@ class CloudServicesPage extends React.Component {
    */
   onServiceDelete(stateData, componentProps) {
     if (contains(["sysdig", "logdna", "atracker"], this.state.service)) {
+      // handle delete for non-array services
       let data = { ...this.props.craig[this.state.service] };
       data.enabled = false;
       this.props.craig[this.state.service].save(data);
@@ -216,6 +252,10 @@ class CloudServicesPage extends React.Component {
     });
   }
 
+  /**
+   * handle modal toggle
+   * @param {*} resourceGroup
+   */
   toggleModal(resourceGroup) {
     if (this.state.showModal) {
       this.setState({
@@ -261,6 +301,7 @@ class CloudServicesPage extends React.Component {
       "Security & Compliance Center",
     ];
 
+    // filter out activity tracker when enabled
     if (craig.store.json.atracker.enabled) {
       modalGroups = modalGroups.filter((group) => {
         if (group !== "Activity Tracker") {
@@ -269,6 +310,7 @@ class CloudServicesPage extends React.Component {
       });
     }
 
+    // filter out sysdig when enabled
     if (craig.store.json.sysdig.enabled) {
       modalGroups = modalGroups.filter((group) => {
         if (group !== "Sysdig") {
@@ -277,6 +319,7 @@ class CloudServicesPage extends React.Component {
       });
     }
 
+    // filter out logdna when enabled
     if (craig.store.json.logdna.enabled) {
       modalGroups = modalGroups.filter((group) => {
         if (group !== "LogDNA") {
@@ -285,6 +328,7 @@ class CloudServicesPage extends React.Component {
       });
     }
 
+    // filter out scc when enabled
     if (craig.store.json.scc_v2.enable) {
       modalGroups = modalGroups.filter((group) => {
         if (group !== "Security & Compliance Center") {
@@ -306,19 +350,7 @@ class CloudServicesPage extends React.Component {
           beginDisabled
           submissionFieldName={this.state.modalService}
           onRequestClose={this.toggleModal}
-          onRequestSubmit={
-            // prevent from loading unfound field
-            isNullOrEmptyString(this.state.modalService, true)
-              ? () => {}
-              : (stateData, componentProps) => {
-                  this.onServiceSubmit(stateData, componentProps);
-                  this.setState({
-                    showModal: false,
-                    modalService: "",
-                    serviceName: "",
-                  });
-                }
-          }
+          onRequestSubmit={this.onRequestSubmit}
         >
           <IcseSelect
             formName="cloud-services"
@@ -437,7 +469,7 @@ class CloudServicesPage extends React.Component {
                         type="subHeading"
                         name="Activity Tracker"
                       />
-                      <IcseFormGroup className="overrideGap">
+                      <CraigFormGroup className="overrideGap">
                         <ManageService
                           icon={CloudMonitoring}
                           key={JSON.stringify(craig.store.json.atracker)}
@@ -448,7 +480,7 @@ class CloudServicesPage extends React.Component {
                           onClick={this.onServiceIconClick}
                           isSelected={this.state.service === "atracker"}
                         />
-                      </IcseFormGroup>
+                      </CraigFormGroup>
                     </div>
                   </>
                 ) : (
@@ -504,7 +536,7 @@ class CloudServicesPage extends React.Component {
                     {serviceMap[rg].length === 0 ? (
                       <EmptyResourceTile name="services in this resource group" />
                     ) : (
-                      <IcseFormGroup className="overrideGap">
+                      <CraigFormGroup className="overrideGap">
                         {serviceMap[rg]
                           .sort((a, b) => {
                             // sort resources by name within the same resource type
@@ -534,7 +566,7 @@ class CloudServicesPage extends React.Component {
                               }
                             />
                           ))}
-                      </IcseFormGroup>
+                      </CraigFormGroup>
                     )}
                   </div>
                 ))}

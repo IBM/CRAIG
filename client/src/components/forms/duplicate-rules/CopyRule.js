@@ -1,9 +1,10 @@
 import React from "react";
-import { IcseFormGroup, IcseSelect, IcseHeading } from "icse-react-assets";
+import { IcseSelect, IcseHeading } from "icse-react-assets";
 import { isNullOrEmptyString, splat, contains } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { PrimaryButton } from "../utils/ToggleFormComponents";
+import { CraigFormGroup } from "../utils";
 
 const CopyRule = (props) => {
   let ruleType = props.isSecurityGroup ? "Security Group" : "ACL";
@@ -28,7 +29,7 @@ const CopyRule = (props) => {
           content: "Copy a rule from one " + ruleType + " to another",
         }}
       />
-      <IcseFormGroup noMarginBottom className="align-row">
+      <CraigFormGroup noMarginBottom className="align-row">
         <IcseSelect
           formName={getFormName("source")}
           labelText={"Rule Source " + ruleType}
@@ -95,7 +96,7 @@ const CopyRule = (props) => {
             }
           />
         </div>
-      </IcseFormGroup>
+      </CraigFormGroup>
     </>
   );
 };

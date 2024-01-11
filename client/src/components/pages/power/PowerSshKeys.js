@@ -1,9 +1,9 @@
 import React from "react";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { Password } from "@carbon/icons-react";
-import { IcseFormGroup } from "icse-react-assets";
 import { DeploymentIcon } from "../diagrams";
 import PropTypes from "prop-types";
+import { CraigFormGroup } from "../../forms";
 
 export const PowerSshKeys = (props) => {
   return (
@@ -19,7 +19,7 @@ export const PowerSshKeys = (props) => {
         type="subHeading"
         icon={<Password className="diagramTitleIcon" />}
       />
-      <IcseFormGroup className="overrideGap alignItemsCenter">
+      <CraigFormGroup className="overrideGap alignItemsCenter">
         {props.power.ssh_keys.map((sshKey, sshIndex) => (
           <DeploymentIcon
             key={props.power.name + "key" + sshIndex}
@@ -28,7 +28,7 @@ export const PowerSshKeys = (props) => {
             itemName="ssh_key"
           />
         ))}
-      </IcseFormGroup>
+      </CraigFormGroup>
     </div>
   );
 };

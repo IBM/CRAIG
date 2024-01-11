@@ -1,9 +1,10 @@
 import React from "react";
-import { IcseFormGroup, IcseSelect, IcseHeading } from "icse-react-assets";
+import { IcseSelect, IcseHeading } from "icse-react-assets";
 import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { PrimaryButton } from "../utils/ToggleFormComponents";
+import { CraigFormGroup } from "../utils";
 
 const AddClusterRules = (props) => {
   return (
@@ -17,7 +18,7 @@ const AddClusterRules = (props) => {
           link: "https://cloud.ibm.com/docs/openshift?topic=openshift-vpc-acls#acls_ui",
         }}
       />
-      <IcseFormGroup className="align-row">
+      <CraigFormGroup className="align-row">
         <IcseSelect
           formName={"cluster-rules-acl-source-" + props.data.name}
           labelText="Target ACL"
@@ -41,7 +42,7 @@ const AddClusterRules = (props) => {
             hoverText="Add Cluster Rules"
           />
         </div>
-      </IcseFormGroup>
+      </CraigFormGroup>
     </>
   );
 };
