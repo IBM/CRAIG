@@ -1676,6 +1676,26 @@ describe("power_instances", () => {
           assert.deepEqual(actualData, expectedData, "it should set data");
         });
       });
+      describe("power_instances.storage_option.invalidText", () => {
+        it("should return correct text when option is storage pool and no workspace", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.storage_option.invalidText({ workspace: "" }),
+            "Select a workspace",
+            "it should be equal"
+          );
+        });
+        it("should return correct text when workspace is selected", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.storage_option.invalidText({
+              workspace: "foo",
+            }),
+            "Select a storage option",
+            "it should be equal"
+          );
+        });
+      });
     });
     describe("power_instances.pi_storage_type", () => {
       describe("power_instances.pi_storage_type.hideWhen", () => {
@@ -1739,42 +1759,16 @@ describe("power_instances", () => {
           );
         });
       });
-      describe("power_instances.pi_storage_pool.groups", () => {
-        it("should return groups when no storage pool map", () => {
+      describe("power_instances.pi_storage_pool.apiEndpoint", () => {
+        it("should return api endpoint for pi_storage_pool with region", () => {
           let craig = state();
           assert.deepEqual(
-            craig.power_instances.pi_storage_pool.groups(
-              { zone: "aaa" },
-              { craig: craig, powerStoragePoolMap: undefined }
+            craig.power_instances.pi_storage_pool.apiEndpoint(
+              { zone: "us-south" },
+              { craig: craig }
             ),
-            [],
-            "it should return empty array"
-          );
-        });
-        it("should return groups when no zone", () => {
-          let craig = state();
-          assert.deepEqual(
-            craig.power_instances.pi_storage_pool.groups(
-              { zone: "" },
-              { craig: craig, powerStoragePoolMap: { dal12: ["pool"] } }
-            ),
-            [],
-            "it should return empty string"
-          );
-        });
-        it("should return groups when zone", () => {
-          let craig = state();
-          assert.deepEqual(
-            craig.power_instances.pi_storage_pool.groups(
-              { zone: "dal12" },
-              {
-                powerStoragePoolMap: {
-                  dal12: ["Pools"],
-                },
-              }
-            ),
-            ["Pools"],
-            "it should return pools from map"
+            "/api/power/us-south/storage-pools",
+            "it should return api endpoint"
           );
         });
       });

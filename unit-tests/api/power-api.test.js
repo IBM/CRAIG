@@ -63,7 +63,7 @@ describe("power api", () => {
           assert.deepEqual(data, usSouthImages);
         });
     });
-    it("should respond with correct storage pools", () => {
+    it("should send storage pools", () => {
       process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
       let { axios } = initMockAxios(
         {
@@ -90,13 +90,16 @@ describe("power api", () => {
           },
           res
         )
-        .then((data) => {
-          assert.deepEqual(data, [
-            "Tier1-Flash-1",
-            "Tier1-Flash-2",
-            "Tier3-Flash-1",
-            "Tier1-Flash-2",
-          ]);
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith([
+              "Tier1-Flash-1",
+              "Tier1-Flash-2",
+              "Tier3-Flash-1",
+              "Tier1-Flash-2",
+            ]),
+            "it should be true"
+          );
         });
     });
     it("should respond with error when no environment variable is present", () => {

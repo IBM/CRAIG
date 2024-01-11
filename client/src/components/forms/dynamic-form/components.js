@@ -216,7 +216,9 @@ export class DynamicFetchSelect extends React.Component {
         .then((res) => res.json())
         .then((data) => {
           // set state with data if mounted
-          if (this._isMounted) this.setState({ data: data });
+          if (this._isMounted) {
+            this.setState({ data: data });
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -254,8 +256,16 @@ export class DynamicFetchSelect extends React.Component {
         })
       );
     } else {
-      return (this.props.parentProps.isModal ? [""] : []).concat(
-        this.state.data
+      return (
+        // to prevent storage pools from being loaded incorrectly,
+        // prevent first item in storage groups from being loaded when not selected
+        (
+          dynamicSelectProps(this.props).value === "" &&
+          this._isMounted &&
+          !deepEqual(this.state.data, ["Loading..."])
+            ? [""]
+            : []
+        ).concat(this.state.data)
       );
     }
   }
@@ -268,7 +278,9 @@ export class DynamicFetchSelect extends React.Component {
         hoverText={dynamicSelectProps(props).value || ""}
         className={props.field.tooltip ? " tooltip" : "select"}
       >
-        <Select {...dynamicSelectProps(props, this._isMounted)}>
+        <Select
+          {...dynamicSelectProps(props, this._isMounted, this.state.data)}
+        >
           {this.dataToGroups().map((value) => (
             <SelectItem
               text={value}

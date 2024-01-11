@@ -328,7 +328,7 @@ describe("dynamic select", () => {
         "it should return correctly formatted data"
       );
     });
-    it("should return the correct props for select when not disabled and fetch select and unmounted and no value", () => {
+    it('should return the correct props for select when not disabled and fetch select and unmounted and stateData is ["Loading..."] and no value', () => {
       let actualData = dynamicSelectProps(
         {
           name: "frog",
@@ -360,11 +360,12 @@ describe("dynamic select", () => {
           name: "name",
           propsName: "frog",
         },
-        false
+        false,
+        ["Loading..."]
       );
       let expectedData = {
         className: "leftTextAlign fieldWidth",
-        disabled: false,
+        disabled: true,
         groups: ["", "a", "b", "c"],
         id: "frog-name-0",
         invalid: false,

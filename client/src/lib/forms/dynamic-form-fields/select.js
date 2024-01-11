@@ -1,4 +1,10 @@
-const { contains, titleCase, paramTest, isFunction } = require("lazy-z");
+const {
+  contains,
+  titleCase,
+  paramTest,
+  isFunction,
+  deepEqual,
+} = require("lazy-z");
 const {
   dynamicFieldId,
   addClassName,
@@ -20,7 +26,7 @@ const {
  * @param {object} props.parentState state data for stateful foem
  * @returns {object} props object for carbon react select
  */
-function dynamicSelectProps(props, isMounted) {
+function dynamicSelectProps(props, isMounted, stateData) {
   paramTest(
     "dynamicSelectProps",
     "props.name",
@@ -50,7 +56,9 @@ function dynamicSelectProps(props, isMounted) {
   );
 
   // check params for disabled
-  let isDisabled = disabledReturnsBooleanCheck(props, "dynamicSelectProps");
+  let isDisabled =
+    disabledReturnsBooleanCheck(props, "dynamicSelectProps") ||
+    deepEqual(stateData, ["Loading..."]);
 
   // state value
   let stateValue = props.field.onRender
@@ -63,12 +71,11 @@ function dynamicSelectProps(props, isMounted) {
     stateValue
   );
 
-  let invalid =
-    isDisabled || (props.field.type === "fetchSelect" && !isMounted)
-      ? false
-      : contains(groups, stateValue)
-      ? invalidReturnsBooleanCheck(props, "dynamicSelectProps")
-      : props.field.invalid(props.parentState, props.parentProps);
+  let invalid = isDisabled
+    ? false
+    : contains(groups, stateValue)
+    ? invalidReturnsBooleanCheck(props, "dynamicSelectProps")
+    : props.field.invalid(props.parentState, props.parentProps);
 
   // hide text when tooltip so that multiple name labels are not rendered
   let labelText = props.field.tooltip

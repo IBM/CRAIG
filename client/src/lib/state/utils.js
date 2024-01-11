@@ -940,8 +940,18 @@ function powerVsStorageOptions(isVolume) {
     type: "select",
     groups: ["Storage Type", "Storage Pool", "Affinity", "Anti-Affinity"],
     disabled: storageChangeDisabledCallback,
-    invalid: fieldIsNullOrEmptyString("storage_option"),
-    invalidText: selectInvalidText("storage option"),
+    invalid: function (stateData) {
+      return (
+        isNullOrEmptyString("storage_option") ||
+        (stateData.storage_option === "Storage Pool" &&
+          isNullOrEmptyString(stateData.workspace))
+      );
+    },
+    invalidText: function (stateData, componentProps) {
+      return isNullOrEmptyString(stateData.workspace, true)
+        ? "Select a workspace"
+        : "Select a storage option";
+    },
     onStateChange: function (stateData) {
       if (stateData.storage_option !== "Storage Type") {
         stateData[isVolume ? "pi_volume_type" : "pi_storage_type"] = null;
@@ -1218,11 +1228,14 @@ function powerStoragePoolSelect(isVolume) {
   let field = isVolume ? "pi_volume_pool" : "pi_storage_pool";
   return {
     size: "small",
-    type: "select",
+    type: "fetchSelect",
     default: "",
     labelText: "Storage Pool",
     hideWhen: function (stateData) {
-      return stateData.storage_option !== "Storage Pool";
+      return (
+        stateData.storage_option !== "Storage Pool" ||
+        isNullOrEmptyString(stateData.workspace)
+      );
     },
     invalid: function (stateData) {
       return (
@@ -1235,13 +1248,10 @@ function powerStoragePoolSelect(isVolume) {
         ? "Select a workspace"
         : selectInvalidText("storage pool")(stateData, componentProps);
     },
-    groups: function (stateData, componentProps) {
-      return componentProps.powerStoragePoolMap &&
-        stateData.zone &&
-        componentProps.powerStoragePoolMap[stateData.zone]
-        ? componentProps.powerStoragePoolMap[stateData.zone]
-        : [];
+    apiEndpoint: function (stateData, componentProps) {
+      return `/api/power/${stateData.zone}/storage-pools`;
     },
+    groups: [],
   };
 }
 

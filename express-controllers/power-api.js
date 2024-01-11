@@ -66,7 +66,7 @@ function powerRoutes(axios, controller) {
    * @param {*} req
    * @param {*} res
    */
-  controller.getPowerComponent = function (req) {
+  controller.getPowerComponent = function (req, res) {
     let zone = req.params["region"];
     let componentType = kebabCase(req.params["component"]);
     let region = getRegionFromZone(zone);
@@ -122,7 +122,7 @@ function powerRoutes(axios, controller) {
           response.data.storagePoolsCapacity.forEach((pool) => {
             formattedStoragePools.push(pool.poolName);
           });
-          return formattedStoragePools;
+          res.send(formattedStoragePools);
         }
       })
       .catch((error) => {

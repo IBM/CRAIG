@@ -32,7 +32,7 @@ const defaultZones = [
   // "sao01",
 ];
 
-function startSever() {
+function startServer() {
   if (process.env.PRE_COMMIT !== "true") {
     // check env vars to see which power workspaces are set
     let foundZones = [];
@@ -41,43 +41,28 @@ function startSever() {
         foundZones.push(zone);
       }
     });
+    try {
+      app.use(express.static(guiBuild));
+      app.use(bodyParser.json());
 
-    getImagesAndStoragePools(foundZones, controller.getPowerComponent).then(
-      (data) => {
-        try {
-          fs.writeFileSync(
-            "./client/src/lib/docs/power-image-map.json",
-            JSON.stringify(data.images, null, 2)
-          );
-          fs.writeFileSync(
-            "./client/src/lib/docs/power-storage-pool-map.json",
-            JSON.stringify(data.pools, null, 2)
-          );
-          console.log("\nPower VS images and storage pools fetched");
+      // create a GET route
+      app.get("/express_backend", (req, res) => {
+        res.send({ express: "YOUR EXPRESS BACKEND IS CONNECTED TO CRAIG" });
+      });
 
-          app.use(express.static(guiBuild));
-          app.use(bodyParser.json());
+      app.use("/api", routes);
 
-          // create a GET route
-          app.get("/express_backend", (req, res) => {
-            res.send({ express: "YOUR EXPRESS BACKEND IS CONNECTED TO CRAIG" });
-          });
+      app.get("*", (req, res) => {
+        res.sendFile(path.join(guiBuild, "index.html"));
+      });
 
-          app.use("/api", routes);
-
-          app.get("*", (req, res) => {
-            res.sendFile(path.join(guiBuild, "index.html"));
-          });
-
-          // This displays message that the server running and listening to specified port
-          if (process.env.PRE_COMMIT !== "true")
-            app.listen(port, () => console.log(`Listening on port ${port}`));
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    );
+      // This displays message that the server running and listening to specified port
+      if (process.env.PRE_COMMIT !== "true")
+        app.listen(port, () => console.log(`Listening on port ${port}`));
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 
-startSever();
+startServer();
