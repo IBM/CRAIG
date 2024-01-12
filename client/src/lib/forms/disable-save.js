@@ -224,5 +224,4 @@ module.exports = {
   forceShowForm,
   disableSshKeyDelete,
   invalidCidrBlock,
-  invalidNumberCheck,
 };

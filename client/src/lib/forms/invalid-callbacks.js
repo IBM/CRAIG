@@ -189,7 +189,7 @@ function invalidSshPublicKey(stateData, componentProps) {
     // if public key already used
     contains(
       splat(
-        componentProps.powerVs
+        componentProps.arrayParentName
           ? getObjectFromArray(
               componentProps.craig.store.json.power,
               "name",
@@ -204,7 +204,7 @@ function invalidSshPublicKey(stateData, componentProps) {
     )
   ) {
     let key = getObjectFromArray(
-      componentProps.powerVs
+      componentProps.arrayParentName
         ? getObjectFromArray(
             componentProps.craig.store.json.power,
             "name",
