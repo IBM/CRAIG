@@ -1,4 +1,4 @@
-const { titleCase, contains } = require("lazy-z");
+const { titleCase, contains, deepEqual } = require("lazy-z");
 const {
   dynamicFieldId,
   addClassName,
@@ -12,12 +12,11 @@ const {
  * @param {*} props
  * @returns {object} params for carbon filterable multiselect
  */
-function dynamicMultiSelectProps(props) {
+function dynamicMultiSelectProps(props, fetchedData) {
   // check params for disabled
-  let isDisabled = disabledReturnsBooleanCheck(
-    props,
-    "dynamicMultiSelectProps"
-  );
+  let isDisabled =
+    disabledReturnsBooleanCheck(props, "dynamicMultiSelectProps") ||
+    deepEqual(fetchedData, ["Loading..."]); // disable multiselect until fetch resolves
   // quick ref for state value
   let stateValue = props.field.onRender
     ? props.field.onRender(props.parentState)
@@ -49,6 +48,8 @@ function dynamicMultiSelectProps(props) {
   // hide text when tooltip so that multiple name labels are not rendered
   let labelText = props.field.tooltip
     ? null
+    : isDisabled
+    ? `Loading ${props.field.labelText || props.name}...` // Add Loading... while values are being fetched
     : titleCase(props.field.labelText || props.name);
   let dynamicKeyProp = props.field.forceUpdateKey
     ? props.field.forceUpdateKey(props.parentState)
@@ -59,7 +60,13 @@ function dynamicMultiSelectProps(props) {
     id: dynamicFieldId(props),
     className: addClassName("leftTextAlign", props.field),
     titleText: labelText || titleCase(props.name),
-    itemToString: (item) => (item ? item : ""),
+    itemToString: (item) => {
+      // lists only names of image objects
+      if (item) {
+        return item.name ? item.name : item;
+      }
+      return "";
+    },
     invalid: invalid,
     invalidText: props.field.invalidText(props.parentState, props.parentProps),
     onChange: (selectEvent) => {

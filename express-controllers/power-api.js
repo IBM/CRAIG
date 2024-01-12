@@ -116,7 +116,7 @@ function powerRoutes(axios, controller) {
     })
       .then((response) => {
         if (componentType === "images") {
-          return response.data.images;
+          res.send(response.data.images);
         } else {
           let formattedStoragePools = [];
           response.data.storagePoolsCapacity.forEach((pool) => {

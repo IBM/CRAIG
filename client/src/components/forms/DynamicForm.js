@@ -32,7 +32,10 @@ import {
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
-import { DynamicFetchSelect } from "./dynamic-form/components";
+import {
+  DynamicFetchMultiSelect,
+  DynamicFetchSelect,
+} from "./dynamic-form/components";
 import { OptionsButton } from "./dynamic-form/OptionsButton";
 import { NaclRulesSubForm } from "./dynamic-form/NaclRulesSubForm";
 import {
@@ -98,6 +101,7 @@ class DynamicForm extends React.Component {
     this.handleToggle = this.handleToggle.bind(this);
     this.handleOverrideInputChange = this.handleOverrideInputChange.bind(this);
     this.getAllVsi = this.getAllVsi.bind(this);
+    this.onPowerImageLoad = this.onPowerImageLoad.bind(this);
   }
 
   /**
@@ -200,6 +204,10 @@ class DynamicForm extends React.Component {
     return allVsi;
   }
 
+  onPowerImageLoad(images) {
+    this.setState({ images: images });
+  }
+
   render() {
     let propsName = this.props.data?.name || "";
     // here for testing
@@ -264,6 +272,8 @@ class DynamicForm extends React.Component {
                         ? DynamicPublicKey
                         : fieldType === "fetchSelect"
                         ? DynamicFetchSelect
+                        : fieldType === "fetchMultiSelect"
+                        ? DynamicFetchMultiSelect
                         : fieldType === "date"
                         ? DynamicDatePicker
                         : DynamicFormTextInput,
@@ -275,6 +285,7 @@ class DynamicForm extends React.Component {
                         field: field,
                         parentState: this.state,
                         parentProps: this.props,
+                        onPowerImageLoad: this.onPowerImageLoad,
                         handleInputChange:
                           field.type === "toggle"
                             ? this.handleToggle

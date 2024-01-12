@@ -20,12 +20,34 @@ describe("power-vs", () => {
     });
   });
   describe("power.onStoreUpdate", () => {
+    it("should update images to only contain the selected image names", () => {
+      let state = new newState();
+      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
+      state.power.create({
+        name: "toad",
+        zone: "dal12",
+      });
+      state.store.json.power[0].images.push({ name: "imageName" });
+      state.store.json.power[0].imageNames.push("otherImageName");
+      state.update();
+      assert.deepEqual(state.store.json.power[0], {
+        attachments: [],
+        cloud_connections: [],
+        name: "toad",
+        imageNames: ["otherImageName"],
+        images: [],
+        zone: "dal12",
+        network: [],
+        resource_group: null,
+        ssh_keys: [],
+      });
+    });
     it("should set unfound workspaces to null on change of power vs zones", () => {
       let state = new newState();
       state.store.json._options.power_vs_zones = ["dal10", "dal12"];
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal12",
       });
       state.store.json._options.power_vs_zones = [];
@@ -39,7 +61,6 @@ describe("power-vs", () => {
         images: [
           {
             name: "7100-05-09",
-            pi_image_id: "ERROR: ZONE UNDEFINED",
             workspace: "toad",
             zone: null,
           },
@@ -60,6 +81,14 @@ describe("power-vs", () => {
       let state = new newState();
       state.power.create({
         name: "toad",
+        images: [
+          {
+            name: "7100-05-09",
+            pi_image_id: "35eca797-6599-4597-af1f-d2eb5e292dfc",
+            workspace: "toad",
+            zone: "dal12",
+          },
+        ],
         imageNames: ["7100-05-09"],
         zone: "dal12",
       });
@@ -136,7 +165,7 @@ describe("power-vs", () => {
       let state = new newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal12",
       });
       state.power.delete({}, { data: { name: "toad" } });
@@ -150,15 +179,15 @@ describe("power-vs", () => {
   describe("power.schema", () => {
     describe("power.zone", () => {
       describe("power.zone.onStateChange", () => {
-        it("should set imageNames when changing zone", () => {
+        it("should set images when changing zone", () => {
           let craig = newState();
           let data = {};
           let expectedData = {
-            imageNames: [],
             images: [],
+            imageNames: [],
           };
           craig.power.zone.onStateChange(data);
-          assert.deepEqual(data, expectedData, "it should set image names");
+          assert.deepEqual(data, expectedData, "it should set images");
         });
       });
       describe("power.zone.groups", () => {
@@ -173,29 +202,45 @@ describe("power-vs", () => {
         });
       });
     });
-    describe("power.imageNames", () => {
+    describe("power.images", () => {
+      it("should return images and zone for updated key", () => {
+        let craig = newState();
+        assert.deepEqual(
+          craig.power.imageNames.forceUpdateKey({
+            images: [{ name: "image" }],
+            zone: "dal12",
+          }),
+          '[{"name":"image"}]dal12',
+          "it should return images array"
+        );
+      });
       it("should return groups when no zone", () => {
         let craig = newState();
         assert.deepEqual(
-          craig.power.imageNames.groups({ zone: "" }),
+          craig.power.imageNames.groups({}),
           [],
           "it should return empty array"
         );
       });
-      it("should return name of zone for force update key", () => {
+      it("should return correct api endpoint for images", () => {
         let craig = newState();
         assert.deepEqual(
-          craig.power.imageNames.forceUpdateKey({ zone: "zone" }),
-          "zone",
-          "it should return empty array"
-        );
-      });
-      it("should return groups when zone", () => {
-        let craig = newState();
-        assert.deepEqual(
-          craig.power.imageNames.groups({ zone: "dal12" }).length,
-          33,
-          "it should return image names"
+          craig.power.imageNames.apiEndpoint(
+            {},
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      region: "us-south",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          `/api/power/us-south/images`,
+          "it should return api endpoint"
         );
       });
     });
@@ -211,7 +256,7 @@ describe("power-vs", () => {
         network: [],
         cloud_connections: [],
         zone: "dal12",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
       });
     });
     it("should create a ssh key", () => {
@@ -354,7 +399,7 @@ describe("power-vs", () => {
         name: "power-vs",
         resource_group: "default",
         zone: "dal12",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
       });
     });
     it("should create a network interface", () => {
@@ -576,7 +621,7 @@ describe("power-vs", () => {
         name: "power-vs",
         resource_group: "default",
         zone: "dal12",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
     });
     it("should create a cloud connection", () => {
@@ -661,7 +706,7 @@ describe("power-vs", () => {
         name: "power-vs",
         resource_group: "default",
         zone: "dal12",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
       state.power.network.create(
         { name: "test-network" },
@@ -705,7 +750,7 @@ describe("power-vs", () => {
           name: "power-vs",
           resource_group: "default",
           zone: "dal12",
-          imageNames: ["7100-05-09"],
+          images: [{ name: "7100-05-09", workspace: "power-vs" }],
         });
         craig.power.cloud_connections.create(
           { name: "test-network" },

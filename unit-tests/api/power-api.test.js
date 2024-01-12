@@ -59,8 +59,11 @@ describe("power api", () => {
           },
           res
         )
-        .then((data) => {
-          assert.deepEqual(data, usSouthImages);
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith(usSouthImages),
+            "it should be true"
+          );
         });
     });
     it("should send storage pools", () => {

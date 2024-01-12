@@ -575,4 +575,105 @@ describe("filterable multiselect", () => {
       );
     });
   });
+  it("should return name of item if it has a name field", () => {
+    let actualData = dynamicMultiSelectProps({
+      name: "frog",
+      field: {
+        optional: true,
+        disabled: function () {
+          return false;
+        },
+        invalid: function () {
+          return true;
+        },
+        invalidText: function () {
+          return "uh oh";
+        },
+        helperText: function () {
+          return "helper text";
+        },
+        disabledText: function () {
+          return "oops";
+        },
+        groups: [],
+      },
+      parentState: {
+        name: ["oops"],
+      },
+      parentProps: {
+        formName: "atracker",
+      },
+      handleInputChange: function (event) {
+        inputChangeValue = event;
+      },
+      keyIndex: 0,
+      name: "name",
+      propsName: "frog",
+    });
+    assert.deepEqual(
+      actualData.itemToString({ name: "frog" }),
+      "frog",
+      "it should return string"
+    );
+  });
+  it("should append Loading... to labelText if data is being fetched", () => {
+    let inputChangeValue = "";
+    let actualData = dynamicMultiSelectProps(
+      {
+        name: "frog",
+        field: {
+          optional: true,
+          disabled: function () {
+            return false;
+          },
+          invalid: function () {
+            return true;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          helperText: function () {
+            return "helper text";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+          groups: [],
+        },
+        parentState: {
+          name: ["oops"],
+        },
+        parentProps: {
+          formName: "atracker",
+        },
+        handleInputChange: function (event) {
+          inputChangeValue = event;
+        },
+        keyIndex: 0,
+        name: "name",
+        propsName: "frog",
+      },
+      ["Loading..."]
+    );
+    let expectedData = {
+      className: "leftTextAlign fieldWidth",
+      disabled: true,
+      id: "frog-name-0",
+      invalid: true,
+      items: [],
+      key: undefined,
+      label: "Loading name...",
+      titleText: "Loading name...",
+      useTitleInItem: false,
+      initialSelectedItems: ["oops"],
+      invalidText: "uh oh",
+    };
+    delete actualData.itemToString;
+    delete actualData.onChange;
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should add Loading... to name"
+    );
+  });
 });

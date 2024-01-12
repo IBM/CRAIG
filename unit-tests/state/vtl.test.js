@@ -716,12 +716,12 @@ describe("vtl", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal12",
       });
       state.power.create({
         name: "frog",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "frog" }],
         zone: "dal12",
       });
       state.store.json.power_volumes.push({
@@ -1045,7 +1045,7 @@ describe("vtl", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.vtl.create({
@@ -1080,6 +1080,7 @@ describe("vtl", () => {
       let state = newState();
       state.power.create({
         name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         imageNames: ["7100-05-09"],
         zone: "dal10",
       });
@@ -1127,7 +1128,7 @@ describe("vtl", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.ssh_keys.create(
@@ -1178,7 +1179,7 @@ describe("vtl", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.network.create(
@@ -1258,14 +1259,18 @@ describe("vtl", () => {
         let craig = newState();
         craig.power.create({
           name: "toad",
-          imageNames: ["VTL", "uh"],
+          images: [
+            { name: "VTL", workspace: "toad" },
+            { name: "goBlue", workspace: "toad" },
+          ],
           zone: "dal12",
           network: [],
         });
+
         assert.deepEqual(
           craig.vtl.image.groups({ workspace: "toad" }, { craig: craig }),
           ["VTL"],
-          "it should return list of networks"
+          "it should return list of images"
         );
       });
     });

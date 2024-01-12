@@ -55,19 +55,14 @@ function powerVsOnStoreUpdate(config) {
         item.zone = workspace.zone;
       });
     });
-    workspace.images = [];
-    let zoneImages = powerImages[workspace.zone];
-    // convert image names to list
-    workspace.imageNames.forEach((name) => {
-      workspace.images.push({
-        name: name,
-        workspace: workspace.name,
-        zone: workspace.zone,
-        pi_image_id: workspace.zone
-          ? getObjectFromArray(zoneImages, "name", name).imageID
-          : "ERROR: ZONE UNDEFINED",
-      });
+
+    let selectedImages = [];
+    workspace.images.forEach((image) => {
+      if (contains(workspace.imageNames, image.name)) {
+        selectedImages.push(image);
+      }
     });
+    workspace.images = selectedImages;
     // add unfound networks to attachments
     workspace.network.forEach((nw) => {
       if (!splatContains(workspace.attachments, "network", nw.name)) {
@@ -95,7 +90,14 @@ function powerVsCreate(config, stateData) {
   stateData.ssh_keys = [];
   stateData.network = [];
   stateData.cloud_connections = [];
-  stateData.images = [];
+  stateData.imageNames = [];
+  if (stateData.images) {
+    stateData.images.forEach((image) => {
+      stateData.imageNames.push(image.name);
+    });
+  } else {
+    stateData.images = [];
+  }
   stateData.attachments = [];
   config.push(["json", "power"], stateData);
 }

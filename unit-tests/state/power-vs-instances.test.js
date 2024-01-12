@@ -720,12 +720,12 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal12",
       });
       state.power.create({
         name: "frog",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "frog" }],
         zone: "dal12",
       });
       state.store.json.power_volumes.push({
@@ -1096,7 +1096,7 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.network.create(
@@ -1143,7 +1143,7 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.ssh_keys.create(
@@ -1194,7 +1194,7 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.network.create(
@@ -1534,7 +1534,7 @@ describe("power_instances", () => {
           let craig = newState();
           craig.power.create({
             name: "toad",
-            imageNames: ["7100-05-09"],
+            images: [{ name: "7100-05-09", workspace: "toad" }],
             zone: "dal12",
             network: [],
           });
@@ -1544,7 +1544,7 @@ describe("power_instances", () => {
               { craig: craig }
             ),
             ["7100-05-09"],
-            "it should return list of networks"
+            "it should return list of images"
           );
         });
       });
