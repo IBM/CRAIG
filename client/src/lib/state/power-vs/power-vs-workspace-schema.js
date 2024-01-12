@@ -35,28 +35,21 @@ function powerVsWorkspaceSchema() {
       },
     },
     imageNames: {
-      type: "multiselect",
-      default: [],
+      labelText: "Image Names",
+      type: "fetchMultiSelect",
+      default: "",
       invalid: function (stateData) {
         return isEmpty(stateData.imageNames || []);
       },
       invalidText: unconditionalInvalidText("Select at least one image name"),
       groups: function (stateData) {
-        if (isNullOrEmptyString(stateData.zone, true)) {
-          return [];
-        } else {
-          // while the power vs image dynamic fetch is not working we need to
-          // manually add the VTL image for now. this is not ideal and should
-          // be removed as soon as possible
-          return distinct(
-            splat(powerImages[stateData.zone], "name").concat(
-              "VTL-FalconStor-10_03-001"
-            )
-          );
-        }
+        return splat(stateData.images || [], "name");
+      },
+      apiEndpoint: function (stateData, componentProps) {
+        return `/api/power/${componentProps.craig.store.json._options.region}/images`;
       },
       forceUpdateKey: function (stateData) {
-        return stateData.zone;
+        return JSON.stringify(stateData.images) + stateData.zone;
       },
     },
   };

@@ -7,11 +7,22 @@ const {
   isInRange,
   rangeInvalid,
   isEmpty,
+  snakeCase,
+  isNullOrEmptyString,
+  titleCase,
+  splat,
+  contains,
 } = require("lazy-z");
 const { invalidNameText, invalidName } = require("../forms");
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
+  resourceGroupsField,
+  selectInvalidText,
+  vpcGroups,
+  securityGroupsMultiselect,
+  unconditionalInvalidText,
+  titleCaseRender,
 } = require("./utils");
 
 /**
@@ -136,9 +147,31 @@ function disableLoadBalancerSaveRangeValue(field, min, max) {
   return function (stateData, componentProps) {
     return (
       fieldIsNullOrEmptyString(field)(stateData, componentProps) ||
-      !isWholeNumber(stateData[field]) ||
-      !isInRange(stateData[field], min, max)
+      !isWholeNumber(Number(stateData[field])) ||
+      !isInRange(Number(stateData[field]), min, max)
     );
+  };
+}
+
+/**
+ * shortcut for upper case
+ * @param {string} field
+ * @returns {Function} on render function
+ */
+function renderUpperCase(field) {
+  return function (stateData) {
+    return (stateData[field] || "").toUpperCase();
+  };
+}
+
+/**
+ * shortcut for lower case
+ * @param {string} field
+ * @returns {Function} on render function
+ */
+function inputChangeLowerCase(field) {
+  return function (stateData) {
+    return (stateData[field] || "").toLowerCase();
   };
 }
 
@@ -162,8 +195,7 @@ function initLoadBalancers(store) {
         "security_groups",
         "target_vsi",
         "algorithm",
-        "pool_protocol",
-        "pool_health_protocol",
+        "protocol",
         "listener_protocol",
         "listener_port",
         "health_retries",
@@ -176,77 +208,136 @@ function initLoadBalancers(store) {
     ),
     schema: {
       name: {
+        size: "small",
         default: "",
         invalid: invalidName("load_balancers"),
         invalidText: invalidNameText("load_balancers"),
-      },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_groups"),
-      },
-      type: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("type"),
-      },
-      vpc: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("vpc"),
-      },
-      security_groups: {
-        default: "",
-        invalid: function (stateData) {
-          return isEmpty(stateData.security_groups);
+        tooltip: {
+          content:
+            "Name for the load balancer service. This name will be prepended to the components provisioned as part of the load balancer.",
+          align: "right",
         },
       },
-      target_vsi: {
+      resource_group: resourceGroupsField(true),
+      type: {
+        size: "small",
+        type: "select",
         default: "",
+        invalid: fieldIsNullOrEmptyString("type"),
+        invalidText: selectInvalidText("load balancer type"),
+        groups: ["Private (NLB)", "Public (ALB)"],
+        onRender: function (stateData) {
+          if (stateData.type === "public") {
+            return "Public (ALB)";
+          } else if (stateData.type === "private") {
+            return "Private (NLB)";
+          } else return "";
+        },
+        onInputChange: function (stateData) {
+          return snakeCase(stateData.type.replace(/\s.+/g, ""));
+        },
+      },
+      vpc: {
+        type: "select",
+        labelText: "VPC",
+        size: "small",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("vpc"),
+        invalidText: selectInvalidText("VPC"),
+        groups: vpcGroups,
+        onStateChange: function (stateData, componentProps, targetData) {
+          stateData.subnets = [];
+          stateData.security_groups = [];
+          stateData.vpc = targetData;
+        },
+      },
+      security_groups: securityGroupsMultiselect(),
+      target_vsi: {
+        labelText: "Deployment VSI",
+        size: "small",
+        type: "multiselect",
+        default: [],
         invalid: function (stateData) {
           return isEmpty(stateData.target_vsi);
         },
+        invalidText: unconditionalInvalidText(
+          "select at least one VSI deployment"
+        ),
+        groups: function (stateData, componentProps) {
+          if (isNullOrEmptyString(stateData.vpc, true)) {
+            return [];
+          } else {
+            return splat(
+              componentProps.craig.store.json.vsi.filter((instance) => {
+                if (instance.vpc === stateData.vpc) {
+                  return instance;
+                }
+              }),
+              "name"
+            );
+          }
+        },
+        onStateChange: function (stateData, componentProps, targetData) {
+          stateData.subnets = [];
+          targetData.forEach((deployment) => {
+            stateData.subnets = distinct(
+              stateData.subnets.concat(
+                getObjectFromArray(
+                  componentProps.craig.store.json.vsi,
+                  "name",
+                  deployment
+                ).subnets
+              )
+            );
+          });
+          stateData.target_vsi = targetData;
+        },
       },
       algorithm: {
+        size: "small",
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("algorithm"),
-      },
-      pool_protocol: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("pool_protocol"),
-      },
-      pool_health_protocol: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("pool_health_protocol"),
-      },
-      listener_protocol: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("listener_protocol"),
-      },
-      listener_port: {
-        default: "",
-        invalid: disableLoadBalancerSaveRangeValue("listener_port", 1, 65535),
-      },
-      connection_limit: {
-        default: null,
-        invalid: function (stateData) {
-          return (
-            stateData.connection_limit &&
-            rangeInvalid(stateData.connection_limit, 1, 15000)
-          );
+        invalidText: unconditionalInvalidText("Select an algorithm"),
+        labelText: "Load Balancing Algorithm",
+        groups: ["Round Robin", "Weighted Round Robin", "Least Connections"],
+        onRender: titleCaseRender("algorithm"),
+        onInputChange: function (stateData) {
+          return snakeCase(stateData.algorithm);
         },
       },
-      health_retries: {
+      protocol: {
+        type: "select",
+        size: "small",
         default: "",
-        invalid: function (stateData, componentProps) {
-          return (
-            fieldIsNullOrEmptyString("health_retries")(
-              stateData,
-              componentProps
-            ) ||
-            !isWholeNumber(stateData.health_retries) ||
-            !isInRange(stateData.health_retries, 5, 3000)
-          );
+        invalid: fieldIsNullOrEmptyString("protocol"),
+        invalidText: selectInvalidText("pool protocol"),
+        labelText: "Pool Protocol",
+        groups: ["HTTPS", "HTTP", "TCP", "UDP"],
+        onRender: renderUpperCase("protocol"),
+        onInputChange: inputChangeLowerCase("protocol"),
+        tooltip: {
+          content: "Protocol of the application running on VSI instances",
         },
+      },
+      health_type: {
+        type: "select",
+        size: "small",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("health_type"),
+        invalidText: selectInvalidText("health type"),
+        groups: ["HTTPS", "HTTP", "TCP"],
+        onRender: renderUpperCase("health_type"),
+        onInputChange: inputChangeLowerCase("health_type"),
+        tooltip: {
+          content: "Protocol used to check the health of member VSI instances",
+        },
+        labelText: "Pool Health Protocol",
       },
       health_timeout: {
+        size: "small",
+        labelText: "Health Timeout (Seconds)",
+        placeholder: "5",
         default: "",
         invalid: function (stateData, componentProps) {
           return (
@@ -254,13 +345,18 @@ function initLoadBalancers(store) {
               stateData,
               componentProps
             ) ||
-            !isWholeNumber(stateData.health_timeout) ||
-            !isInRange(stateData.health_timeout, 5, 3000) ||
-            stateData.health_delay <= stateData.health_timeout
+            !isWholeNumber(Number(stateData.health_timeout)) ||
+            !isInRange(Number(stateData.health_timeout), 5, 3000)
           );
         },
+        invalidText: unconditionalInvalidText(
+          "Must be a whole number between 5 and 300"
+        ),
       },
       health_delay: {
+        placeholder: "5",
+        size: "small",
+        labelText: "Health Delay (Seconds)",
         default: "",
         invalid: function (stateData, componentProps) {
           return (
@@ -268,15 +364,120 @@ function initLoadBalancers(store) {
               stateData,
               componentProps
             ) ||
-            !isWholeNumber(stateData.health_delay) ||
-            !isInRange(stateData.health_delay, 5, 3000) ||
+            !isWholeNumber(Number(stateData.health_delay)) ||
+            !isInRange(Number(stateData.health_delay), 5, 3000) ||
             stateData.health_delay <= stateData.health_timeout
           );
         },
+        invalidText: function (stateData) {
+          return stateData.health_delay <= stateData.health_timeout
+            ? "Must be greater than Health Timeout value"
+            : "Must be a whole number between 5 and 3000";
+        },
+      },
+      health_retries: {
+        size: "small",
+        placeholder: "5",
+        default: "",
+        invalid: function (stateData, componentProps) {
+          return (
+            fieldIsNullOrEmptyString("health_retries")(
+              stateData,
+              componentProps
+            ) ||
+            !isWholeNumber(Number(stateData.health_retries)) ||
+            !isInRange(Number(stateData.health_retries), 5, 3000)
+          );
+        },
+        invalidText: unconditionalInvalidText(
+          "Must be a whole number between 5 and 3000"
+        ),
+      },
+      listener_port: {
+        size: "small",
+        placeholder: "443",
+        default: "",
+        invalid: disableLoadBalancerSaveRangeValue("listener_port", 1, 65535),
+        invalidText: unconditionalInvalidText(
+          "Must be a whole number between 1 and 65535"
+        ),
+      },
+      listener_protocol: {
+        size: "small",
+        type: "select",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("listener_protocol"),
+        invalidText: selectInvalidText("listener protocol"),
+        groups: ["HTTPS", "HTTP", "TCP", "UDP"],
+        onRender: renderUpperCase("listener_protocol"),
+        onInputChange: inputChangeLowerCase("listener_protocol"),
+        tooltip: {
+          content: "Protocol of the listener for the load balancer",
+        },
+      },
+      connection_limit: {
+        optional: true,
+        size: "small",
+        placeholder: "(Optional) 2",
+        default: "",
+        invalid: function (stateData) {
+          return (
+            !isNullOrEmptyString(stateData.connection_limit, true) &&
+            rangeInvalid(Number(stateData.connection_limit), 1, 15000)
+          );
+        },
+        invalidText: unconditionalInvalidText(
+          "Must be a whole number between 1 and 15000"
+        ),
+      },
+      proxy_protocol: {
+        size: "small",
+        type: "select",
+        default: "disabled",
+        groups: ["Disabled", "V1", "V2"],
+        onInputChange: inputChangeLowerCase("proxy_protocol"),
+        onRender: function (stateData) {
+          return contains(["disabled", ""], stateData.proxy_protocol)
+            ? "Disabled"
+            : stateData.proxy_protocol.toUpperCase();
+        },
+      },
+      session_persistence_type: {
+        size: "small",
+        type: "select",
+        default: "",
+        invalid: function () {
+          return false;
+        },
+        groups: ["Source IP", "App Cookie", "HTTP Cookie"],
+        onRender: function (stateData) {
+          return stateData.session_persistence_type === "source_ip"
+            ? "Source IP"
+            : stateData.session_persistence_type === "http_cookie"
+            ? "HTTP Cookie"
+            : titleCase(stateData.session_persistence_type);
+        },
+        onInputChange: function (stateData) {
+          return snakeCase(stateData.session_persistence_type.toLowerCase());
+        },
+      },
+      session_persistence_app_cookie_name: {
+        size: "small",
+        default: "",
+        hideWhen: function (stateData) {
+          return stateData.session_persistence_type !== "app_cookie";
+        },
+        labelText: "Session Cookie Name",
       },
       port: {
+        labelText: "Application Port",
+        placeholder: "80",
+        size: "small",
         default: "",
         invalid: disableLoadBalancerSaveRangeValue("port", 1, 65535),
+        invalidText: unconditionalInvalidText(
+          "Enter a whole number between 1 and 65535"
+        ),
       },
     },
   });

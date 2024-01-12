@@ -1,4 +1,9 @@
-const { deepEqual, isNullOrEmptyString, contains } = require("lazy-z");
+const {
+  deepEqual,
+  isNullOrEmptyString,
+  contains,
+  isBoolean,
+} = require("lazy-z");
 
 /**
  * props match state placeholder
@@ -41,12 +46,27 @@ function propsMatchState(field, stateData, componentProps) {
   }
   if (field === "subnetTier") {
     componentProps.data.hide = stateData.hide;
-    componentProps.data.select_zones = stateData.select_zones;
-    componentProps.data.advancedSave = stateData.advancedSave;
+    if (!stateData.advanced)
+      componentProps.data.select_zones = stateData.select_zones;
+    if (componentProps.formName) {
+      if (
+        stateData.advanced === false &&
+        componentProps.data.advanced === undefined
+      ) {
+        componentProps.data.advanced = stateData.advanced;
+      }
+      if (stateData.advanced)
+        return (
+          stateData.name === componentProps.data.name &&
+          deepEqual(componentProps.data.select_zones, stateData.zones)
+        );
+    } else {
+      // don't add props when using dynamic form
+      componentProps.data.advancedSave = stateData.advancedSave;
+    }
     if (stateData.showUnsavedChangesModal !== undefined)
       componentProps.data.showUnsavedChangesModal =
         stateData.showUnsavedChangesModal;
-
     if (
       stateData.subnets &&
       stateData.advanced &&
@@ -55,7 +75,10 @@ function propsMatchState(field, stateData, componentProps) {
       return false;
     }
   } else if (field === "security_groups") {
-    componentProps.data.show = stateData.show;
+    // this is here to prevent dynamic subnet form from always showing save
+    // button as disabled. as we move towards dynamic forms this should
+    // be removed
+    if (stateData.show !== undefined) componentProps.data.show = stateData.show;
   }
   if (field === "power") {
     if (
@@ -70,8 +93,14 @@ function propsMatchState(field, stateData, componentProps) {
   if (field === "options") {
     return deepEqual(stateData, componentProps.craig.store.json._options);
   }
-
-  return deepEqual(stateData, componentProps.data);
+  try {
+    return deepEqual(stateData, componentProps.data);
+  } catch (err) {
+    // this is to catch in cloud services form to prevent form from crashing the page
+    // somewhere a function gets sent on load to deepEqual for propsMatchState. I believe
+    // this is happening before component render
+    return true;
+  }
 }
 
 module.exports = {

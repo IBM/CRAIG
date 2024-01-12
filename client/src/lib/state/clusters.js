@@ -7,6 +7,7 @@ const {
   splatContains,
   isEmpty,
   isNullOrEmptyString,
+  buildNumberDropdownList,
 } = require("lazy-z");
 const { newDefaultWorkloadCluster } = require("./defaults");
 const {
@@ -20,6 +21,15 @@ const {
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
+  resourceGroupsField,
+  unconditionalInvalidText,
+  selectInvalidText,
+  vpcGroups,
+  subnetMultiSelect,
+  wholeNumberField,
+  encryptionKeyGroups,
+  onArrayInputChange,
+  fieldIsNotWholeNumber,
 } = require("./utils");
 const { invalidName, invalidNameText, invalidTagList } = require("../forms");
 const { invalidDescription } = require("../forms/invalid-callbacks");
@@ -240,6 +250,33 @@ function clusterOpaqueSecretDelete(config, stateData, componentProps) {
 }
 
 /**
+ * check if subnets invalid
+ * @param {*} stateData
+ * @returns {boolean} true if invalid
+ */
+
+function openshiftWorkersInvalid(stateData) {
+  if (stateData.kube_type === "openshift")
+    return stateData.subnets.length * stateData.workers_per_subnet < 2;
+  else return false;
+}
+
+function flavor() {
+  return {
+    size: "small",
+    labelText: "Instance Profile",
+    type: "fetchSelect",
+    groups: [],
+    default: "",
+    invalid: fieldIsNullOrEmptyString("flavor"),
+    invalidText: selectInvalidText("flavor"),
+    apiEndpoint: function (stateData, componentProps) {
+      return `/api/cluster/${componentProps.craig.store.json._options.region}/flavors`;
+    },
+  };
+}
+
+/**
  * initialize cluster store
  * @param {*} store
  */
@@ -274,8 +311,31 @@ function initClusterStore(store) {
         default: "",
         invalid: invalidName("clusters"),
         invalidText: invalidNameText("clusters"),
+        size: "small",
+      },
+      resource_group: resourceGroupsField(true),
+      kube_type: {
+        size: "small",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("kube_type"),
+        type: "select",
+        groups: ["OpenShift", "IBM Kubernetes Service"],
+        onRender: function (stateData) {
+          return isNullOrEmptyString(stateData.kube_type, true)
+            ? ""
+            : stateData.kube_type === "openshift"
+            ? "OpenShift"
+            : "IBM Kubernetes Service";
+        },
+        onInputChange: function (stateData) {
+          stateData.kube_version = "";
+          return stateData.kube_type === "OpenShift" ? "openshift" : "iks";
+        },
       },
       cos: {
+        labelText: "Cloud Object Storage Instance",
+        type: "select",
+        size: "small",
         default: "",
         invalid: function (stateData) {
           if (stateData.kube_type === "openshift") {
@@ -284,40 +344,84 @@ function initClusterStore(store) {
             return false;
           }
         },
-      },
-      vpc: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("vpc"),
-      },
-      subnets: {
-        default: [],
-        invalid: function (stateData) {
-          if (stateData.kube_type === "openshift") {
-            return stateData.subnets.length * stateData.workers_per_subnet < 2;
-          } else {
-            return isEmpty(stateData.subnets);
-          }
+        invalidText: unconditionalInvalidText(
+          "Select an Object Storage instanace"
+        ),
+        groups: function (stateData, componentProps) {
+          return splat(componentProps.craig.store.json.object_storage, "name");
+        },
+        hideWhen: function (stateData) {
+          return stateData.kube_type !== "openshift";
         },
       },
+      entitlement: {
+        size: "small",
+        type: "select",
+        default: "null",
+        groups: ["null", "cloud_pak"],
+        hideWhen: function (stateData) {
+          return stateData.kube_type !== "openshift";
+        },
+      },
+      vpc: {
+        type: "select",
+        labelText: "VPC",
+        size: "small",
+        default: "",
+        invalid: fieldIsNullOrEmptyString("vpc"),
+        invalidText: selectInvalidText("VPC"),
+        groups: vpcGroups,
+      },
+      subnets: subnetMultiSelect({
+        invalid: openshiftWorkersInvalid,
+      }),
       workers_per_subnet: {
-        default: "",
-        invalid: isNullOrEmptyString("workers_per_subnet"),
+        size: "small",
+        type: "select",
+        default: "1",
+        invalid: function (stateData) {
+          return stateData.kube_type === "openshift" &&
+            stateData.subnets.length * Number(stateData.workers_per_subnet) < 2
+            ? true
+            : wholeNumberField("workers_per_subnet")(stateData);
+        },
+        groups: buildNumberDropdownList(10, 1),
+        invalidText: unconditionalInvalidText(
+          "OpenShift clusters require at least 2 workers across any number of subnets"
+        ),
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
-      flavor: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("flavor"),
+      flavor: flavor(),
+      update_all_workers: {
+        type: "toggle",
+        size: "small",
+        default: false,
+        labelText: "Update All Workers",
       },
       encryption_key: {
+        type: "select",
+        size: "small",
         default: "",
         invalid: fieldIsNullOrEmptyString("encryption_key"),
+        invalidText: unconditionalInvalidText("Select an encryption keys"),
+        groups: encryptionKeyGroups,
       },
       kube_version: {
+        size: "small",
         default: "",
         invalid: fieldIsNullOrEmptyString("kube_version"),
+        invalidText: selectInvalidText("Kubernetes Version"),
+        type: "fetchSelect",
+        groups: [],
+        apiEndpoint: unconditionalInvalidText("/api/cluster/versions"),
+      },
+      private_endpoint: {
+        size: "small",
+        default: false,
+        type: "toggle",
+        labelText: "Private Endpoint",
+        tooltip: {
+          content: "Use private service endpoint for Encryption Key",
+        },
       },
     },
     subComponents: {
@@ -332,20 +436,28 @@ function initClusterStore(store) {
         ),
         schema: {
           name: {
+            size: "small",
             default: "",
             invalid: invalidName("worker_pools"),
             invalidText: invalidNameText("worker_pools"),
           },
-          flavor: {
-            default: "",
-            invalid: fieldIsNullOrEmptyString("flavor"),
+          flavor: flavor(),
+          subnets: subnetMultiSelect({
+            invalid: openshiftWorkersInvalid,
+          }),
+          workers_per_subnet: {
+            size: "small",
+            type: "select",
+            default: "1",
+            groups: buildNumberDropdownList(10, 1),
           },
-          subnets: {
-            default: [],
-            invalid: function (stateData) {
-              if (!stateData.subnets) {
-                return true;
-              } else return isEmpty(stateData.subnets);
+          entitlement: {
+            size: "small",
+            type: "select",
+            default: "null",
+            groups: ["null", "cloud_pak"],
+            hideWhen: function (stateData, componentProps) {
+              return componentProps.parent.kube_type !== "openshift";
             },
           },
         },
@@ -368,12 +480,14 @@ function initClusterStore(store) {
             "expiration_date",
             "username_password_secret_description",
             "arbitrary_secret_description",
+            "interval",
           ],
           "clusters",
           "opaque_secrets"
         ),
         schema: {
           name: {
+            size: "small",
             default: "",
             invalid: function (stateData, componentProps) {
               return invalidName("opaque_secrets")(
@@ -382,8 +496,28 @@ function initClusterStore(store) {
                 "name"
               );
             },
+            invalidText: invalidNameText("opaque_secrets"),
+          },
+          namespace: {
+            size: "small",
+            default: "",
+            invalid: fieldIsNullOrEmptyString("namespace"),
+            invalidText: unconditionalInvalidText("Enter a namespace"),
+          },
+          persistence: {
+            size: "small",
+            default: false,
+            type: "toggle",
+            labelText: "Persistence",
+            tooltip: {
+              content:
+                "The persistence field ensures that if a user inadvertently deletes the secret from the cluster, it will be recreated.",
+              alignModal: "bottom",
+              align: "bottom",
+            },
           },
           secrets_group: {
+            size: "small",
             default: "",
             invalid: function (stateData, componentProps) {
               return invalidName("secrets_group")(
@@ -392,6 +526,7 @@ function initClusterStore(store) {
                 "secrets_group"
               );
             },
+            invalidText: invalidNameText("secrets_group"),
           },
           arbitrary_secret_name: {
             default: "",
@@ -402,6 +537,7 @@ function initClusterStore(store) {
                 "arbitrary_secret_name"
               );
             },
+            invalidText: invalidNameText("arbitrary_secret_name"),
           },
           username_password_secret_name: {
             default: "",
@@ -412,38 +548,60 @@ function initClusterStore(store) {
                 "username_password_secret_name"
               );
             },
+            invalidText: invalidNameText("username_password_secret_name"),
           },
           labels: {
+            type: "textArea",
             default: [],
             invalid: function (stateData) {
               return !stateData.labels || invalidTagList(stateData.labels);
             },
+            invalidText: unconditionalInvalidText(
+              "Enter a valid list of labels"
+            ),
+            placeholder: "hello,world",
+            labelText: "Labels",
+            onInputChange: onArrayInputChange("labels"),
           },
           secrets_manager: {
+            size: "small",
+            type: "select",
             default: "",
             invalid: fieldIsNullOrEmptyString("secrets_manager"),
+            invalidText: selectInvalidText("Secrets Manager instance"),
+            groups: function (stateData, componentProps) {
+              return splat(
+                componentProps.craig.store.json.secrets_manager,
+                "name"
+              );
+            },
           },
           arbitrary_secret_data: {
             default: "",
             invalid: fieldIsNullOrEmptyString("arbitrary_secret_data"),
+            invalidText: unconditionalInvalidText("Enter secret data"),
           },
           username_password_secret_username: {
             default: "",
             invalid: fieldIsNullOrEmptyString(
               "username_password_secret_username"
             ),
+            invalidText: unconditionalInvalidText("Enter a username"),
           },
           username_password_secret_password: {
             default: "",
             invalid: fieldIsNullOrEmptyString(
               "username_password_secret_password"
             ),
+            invalidText: unconditionalInvalidText("Enter a password"),
           },
           expiration_date: {
+            type: "date",
             default: null,
             invalid: function (stateData) {
               return !stateData.expiration_date;
             },
+            invalidText: unconditionalInvalidText("Select a date"),
           },
           username_password_secret_description: {
             default: "",
@@ -452,11 +610,40 @@ function initClusterStore(store) {
                 stateData.username_password_secret_description
               );
             },
+            invalidText: unconditionalInvalidText("Enter a valid description"),
           },
           arbitrary_secret_description: {
             default: "",
             invalid: function (stateData) {
               return invalidDescription(stateData.arbitrary_secret_description);
+            },
+            invalidText: unconditionalInvalidText("Enter a valid description"),
+          },
+          auto_rotate: {
+            type: "toggle",
+            default: false,
+            labelText: "Auto Rotate",
+          },
+          interval: {
+            default: "1",
+            invalid: function (stateData) {
+              return stateData.auto_rotate === false
+                ? false
+                : fieldIsNotWholeNumber("interval", 1, 1000)(stateData);
+            },
+            invalidText: unconditionalInvalidText(
+              "Enter a whole number between 1 and 1000"
+            ),
+            hideWhen: function (stateData) {
+              return stateData.auto_rotate === false;
+            },
+          },
+          unit: {
+            type: "select",
+            default: "day",
+            groups: ["day", "month"],
+            hideWhen: function (stateData) {
+              return stateData.auto_rotate === false;
             },
           },
         },

@@ -2,6 +2,22 @@ const { assert } = require("chai");
 const { propsMatchState } = require("../../client/src/lib/forms");
 
 describe("propsMatchState", () => {
+  it("should return true if a function that causes deep equal to crash is sent", () => {
+    assert.isTrue(
+      propsMatchState(
+        "logdna",
+        {
+          fn: () => {},
+        },
+        {
+          data: {
+            fn: "egg",
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
   it("should return true if stateData and componentProps.data are the same", () => {
     assert.isTrue(
       propsMatchState(
@@ -96,7 +112,47 @@ describe("propsMatchState", () => {
   });
   it("should set component props data show to statedata show when checking if props match for security group", () => {
     assert.isTrue(
-      propsMatchState("security_groups", { show: false }, { data: {} }),
+      propsMatchState(
+        "security_groups",
+        { show: false },
+        { data: { show: true } }
+      ),
+      "it should be true"
+    );
+  });
+  it("should set component props data show to statedata show when checking if props match for security group when no show", () => {
+    assert.isTrue(
+      propsMatchState("security_groups", {}, { data: {} }),
+      "it should be true"
+    );
+  });
+  it("should set component props data hide to statedata hide when checking if props match for subnet tier in dynamic form", () => {
+    assert.isTrue(
+      propsMatchState(
+        "subnetTier",
+        {
+          hide: false,
+          showUnsavedChangesModal: undefined,
+          advancedSave: false,
+          advanced: true,
+        },
+        { data: {}, formName: "subnetTier" }
+      ),
+      "it should be false"
+    );
+  });
+  it("should set component props data hide to statedata hide when checking if props match for subnet tier", () => {
+    assert.isFalse(
+      propsMatchState(
+        "subnetTier",
+        {
+          hide: false,
+          showUnsavedChangesModal: undefined,
+          advancedSave: false,
+          advanced: false,
+        },
+        { data: {}, formName: "asdd" }
+      ),
       "it should be true"
     );
   });

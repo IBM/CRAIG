@@ -1,16 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { IcseFormGroup } from "icse-react-assets";
 import { Network_3 } from "@carbon/icons-react";
 import { DynamicFormTextInput } from "./components";
 import { contains } from "lazy-z";
+import { CraigFormGroup } from "../utils";
 
 export const PowerInterfaces = (props) => {
   return contains(["Power Instances", "VTL"], props.componentProps.formName) ? (
     <div className="formInSubForm">
       {props.stateData.network.map((nw, index) => {
         return (
-          <IcseFormGroup
+          <CraigFormGroup
             key={nw.name + "-group"}
             className="alignItemsCenter marginBottomSmall"
           >
@@ -27,7 +27,7 @@ export const PowerInterfaces = (props) => {
               index={index}
               value={nw.ip_address}
             />
-          </IcseFormGroup>
+          </CraigFormGroup>
         );
       })}
     </div>

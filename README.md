@@ -13,6 +13,7 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 - NodeJS 18.11 or higher
 - NPM version 8.19.2 or higher
 - Terraform 1.3 or higher
+- [jq](https://jqlang.github.io/jq/) version 1.7.1 or higher
 
 ---
 
@@ -36,6 +37,42 @@ To bring your own Power VS Workspace into CRAIG you will need to set a field in 
 POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
 ```
 
+---
+
+## Tutorial Video
+
+[Follow this tutorial](https://ibm.box.com/v/craigTutorialVideo) for step-by-step instructions on how to get started with CRAIG.
+
+---
+
+## Power VS Workspace Deployment
+
+To dynamically fetch Power VS images and storage pools, the IBM Power VS APIs require a workspace to be created. CRAIG provides Terraform scripts to automatically provision these workspaces and import the GUIDs into the local NodeJS environment.
+
+### Automated Deployment
+
+The `terraform.sh` script found in `/deploy` provisions a Power VS Workspace in each zone and sets the needed environment variables with the format of `POWER_WORKSPACE_<zone>=<workspace-guid>`.
+
+Use the following command to run the script:
+```shell
+sh deploy/terraform.sh -a "<Your IBM Cloud Platform API key>"
+```
+
+### Bring Your Own Workspace
+
+To bring your own Power VS Workspace into CRAIG to fetch images, you will need to set a field in your `.env` with the following format. To see an example, see [.env.example](./.env.example)
+
+```
+POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
+```
+
+To find the GUIDs and locations of your workspaces, the following command can be run in a terminal window or an IBM Cloud Shell: 
+
+```
+ibmcloud resource service-instances --service-name power-iaas --output json | jq -r '.[]? | "\(.guid), \(.name), \(.region_id)"'
+```
+
+For instructions on how to install the IBM Cloud CLI, click [here](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 ---
 
 ## Tutorial Video
@@ -128,7 +165,7 @@ Craig uses [nyc](https://www.npmjs.com/package/nyc) for unit test coverage. To g
 npm run coverage
 ```
 
-#### 6. Install Pre-commit Hook
+#### 7. Install Pre-commit Hook
 ```shell
 git config --local core.hooksPath .githooks/
 ```
@@ -227,6 +264,22 @@ To destroy you resources, use the following command. This will **delete all reso
 ```
 terraform destroy
 ```
+
+---
+
+## Schematics Integration
+
+In order to allow Schematics integration, users should make sure they have the following access policy roles for the Schematics service set within their IBM Cloud Account:
+
+- IBM Cloud Platform Roles: Editor or Higher
+- Schematics Service Roles: Writer or Higher
+
+These roles allow the integration with Schematics including the Schematics workspace creation and the upload of the project. However, to create and manage the IBM Cloud resources in a CRAIG project, you must be assigned the IAM platform or service access role for the individual IBM Cloud resources being provisioned in the project. 
+
+ Refer to the [User permissions for Schematics Workspaces documentation](https://cloud.ibm.com/docs/schematics?topic=schematics-access) for more information.
+
+### Prerequisites
+- `.env` file is created and all fields to be used as environment variables by the backend API server are filled (see [Step 2 of Setting Up CRAIG Development Environment](#2-creating-env-file-1))
 
 ---
 

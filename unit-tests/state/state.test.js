@@ -4,6 +4,7 @@ const { splat } = require("lazy-z");
 const json = require("../data-files/craig-json.json");
 const hardSetData = require("../data-files/expected-hard-set.json");
 const brokenSubnets = require("../data-files/broken-subnets.json");
+const { deepEqual } = require("assert");
 
 /**
  * initialize store
@@ -321,6 +322,23 @@ describe("state util functions", () => {
           ],
         },
         "it should set subnet tiers"
+      );
+    });
+    it("should hard set json data and set edge pattern when edge resources are found", () => {
+      let state = newState();
+      let data = require("../../client/src/lib/docs/templates/slz-vsi-edge.json");
+      state.setUpdateCallback(() => {});
+      delete data.ssh_keys[0]; // remove extra ssh key that should not be there lol
+      state.hardSetJson(data);
+      assert.deepEqual(
+        state.store.edge_vpc_name,
+        "edge",
+        "it should update name"
+      );
+      assert.deepEqual(
+        state.store.edge_zones,
+        3,
+        "it should set correct number of zones"
       );
     });
     it("should set JSON data if valid with advanced subnet tiers", () => {

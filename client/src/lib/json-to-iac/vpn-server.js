@@ -4,6 +4,7 @@ const {
   isNullOrEmptyString,
   titleCase,
   keyCheck,
+  contains,
 } = require("lazy-z");
 const { rgIdRef, tfBlock, jsonToTfPrint, kebabName } = require("./utils");
 const { formatAddressPrefix } = require("./vpc");
@@ -31,22 +32,29 @@ const { varDotRegion } = require("../constants");
  */
 
 function ibmIsVpnServer(server, craig) {
-  let overrideCert = server.bring_your_own_cert
-    ? // reference for BYO certificate
-      `\${ibm_sm_imported_certificate.${snakeCase(
-        `${server.vpc} vpn server ${server.name}`
-      )}_imported_certificate.crn}`
-    : server.DANGER_developer_certificate
-    ? // reference for auto generated developer certificate
-      `\${ibm_sm_imported_certificate.DANGER_${snakeCase(
-        `${server.vpc} vpn server ${server.name} dev cert`
-      )}.crn}`
-    : false;
+  let overrideCert =
+    server.bring_your_own_cert || server.method === "byo"
+      ? // reference for BYO certificate
+        `\${ibm_sm_imported_certificate.${snakeCase(
+          `${server.vpc} vpn server ${server.name}`
+        )}_imported_certificate.crn}`
+      : server.DANGER_developer_certificate || server.method === "INSECURE"
+      ? // reference for auto generated developer certificate
+        `\${ibm_sm_imported_certificate.DANGER_${snakeCase(
+          `${server.vpc} vpn server ${server.name} dev cert`
+        )}.crn}`
+      : false;
 
   // vpn server data
   let serverData = {
     certificate_crn: overrideCert || server.certificate_crn,
-    client_authentication: [{ method: server.method }],
+    client_authentication: [
+      {
+        method: contains(["byo", "INSECURE"], server.method)
+          ? "certificate"
+          : server.method,
+      },
+    ],
     client_dns_server_ips: isNullOrEmptyString(server.client_dns_server_ips)
       ? null
       : server.client_dns_server_ips.split(","),
@@ -72,7 +80,10 @@ function ibmIsVpnServer(server, craig) {
       `\${module.${snakeCase(server.vpc)}_vpc.${snakeCase(group)}_id}`
     );
   });
-  if (server.method === "certificate") {
+  if (
+    server.method === "certificate" ||
+    contains(["byo", "INSECURE"], server.method)
+  ) {
     serverData.client_authentication[0].client_ca_crn =
       overrideCert || server.client_ca_crn;
   } else {
@@ -239,28 +250,29 @@ function formatVpnServer(server, config) {
 
   // bring your own cert needs to be added when not directly referring to
   // secrets manager CRN
-  let certData = server.bring_your_own_cert
-    ? jsonToTfPrint(
-        "resource",
-        "ibm_sm_imported_certificate",
-        data.name + "_imported_certificate",
-        {
-          instance_id: `\${ibm_resource_instance.${snakeCase(
-            server.secrets_manager
-          )}_secrets_manager.guid}`,
-          region: varDotRegion,
-          name: kebabName([server.vpc, server.name, "server", "cert"]),
-          description: `Secret for \${var.prefix} ${titleCase(
-            server.vpc + " " + server.name
-          )} Server authentication`,
-          certificate: `\${var.${data.name}_cert_pem}`,
-          private_key: `\${var.${data.name}_private_key_pem}`,
-          intermediate: `\${var.${data.name}_intermediate_pem}`,
-        }
-      )
-    : server.DANGER_developer_certificate
-    ? DANGER_formatDevRsaCertificate(server)
-    : "";
+  let certData =
+    server.bring_your_own_cert || server.method === "byo"
+      ? jsonToTfPrint(
+          "resource",
+          "ibm_sm_imported_certificate",
+          data.name + "_imported_certificate",
+          {
+            instance_id: `\${ibm_resource_instance.${snakeCase(
+              server.secrets_manager
+            )}_secrets_manager.guid}`,
+            region: varDotRegion,
+            name: kebabName([server.vpc, server.name, "server", "cert"]),
+            description: `Secret for \${var.prefix} ${titleCase(
+              server.vpc + " " + server.name
+            )} Server authentication`,
+            certificate: `\${var.${data.name}_cert_pem}`,
+            private_key: `\${var.${data.name}_private_key_pem}`,
+            intermediate: `\${var.${data.name}_intermediate_pem}`,
+          }
+        )
+      : server.DANGER_developer_certificate || server.method === "INSECURE"
+      ? DANGER_formatDevRsaCertificate(server)
+      : "";
 
   return (
     certData +

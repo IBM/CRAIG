@@ -322,7 +322,7 @@ function initTransitGateway(store) {
       use_data: {
         default: false,
         type: "toggle",
-        labelText: "Use Exsiting Transit Gateway",
+        labelText: "Use Existing Transit Gateway",
       },
       name: nameField("transit_gateways"),
       resource_group: resourceGroupsField(),

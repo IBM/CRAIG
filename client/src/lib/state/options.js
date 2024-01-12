@@ -17,6 +17,7 @@ const {
   fieldIsNullOrEmptyString,
   selectInvalidText,
   kebabCaseInput,
+  onArrayInputChange,
 } = require("./utils");
 
 const powerVsZones = [
@@ -320,15 +321,7 @@ function initOptions(store) {
         helperText: unconditionalInvalidText(
           "Enter a comma separated list of tags"
         ),
-        onInputChange: function (stateData) {
-          return isNullOrEmptyString(stateData.tags, true)
-            ? []
-            : stateData.tags
-                .replace(/\s\s+/g, "") // replace extra spaces
-                .replace(/,(?=,)/g, "") // prevent null tags from
-                .replace(/[^\w,-]/g, "")
-                .split(",");
-        },
+        onInputChange: onArrayInputChange("tags"),
         tooltip: {
           content:
             "Tags are used to identify resources. These tags will be added to each resource in your configuration that supports tags",

@@ -18,6 +18,8 @@ const {
   isInRange,
   isFunction,
   isArray,
+  capitalize,
+  isString,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const {
@@ -25,6 +27,7 @@ const {
   invalidSshPublicKey,
 } = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
+const { storageChangeDisabledCallback } = require("../forms/power-affinity");
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -261,7 +264,7 @@ function saveAdvancedSubnetTier(
 ) {
   tierData.networkAcl = "-";
   tierData.zones = undefined;
-  tierData.select_zones = stateData.select_zones; // set select zone
+  tierData.select_zones = stateData.zones || stateData.select_zones; // set select zone
   tierData.subnets = []; // set individual subnet managament
   new revision(config.store.json)
     .child("vpcs", vpcName, "name")
@@ -276,7 +279,10 @@ function saveAdvancedSubnetTier(
       // for each subnet
       foundSubnets.forEach((subnet) => {
         // if is in current zone
-        if (contains(stateData.select_zones, subnet.zone)) {
+        if (
+          contains(tierData.select_zones, subnet.zone) ||
+          contains(tierData.select_zones, String(subnet.zone))
+        ) {
           let newSubnetName = subnet.name.replace(oldTierName, stateData.name);
           tierData.subnets.push(newSubnetName);
           nextTierSubnets.push({
@@ -293,14 +299,15 @@ function saveAdvancedSubnetTier(
               "f5_vsi",
             ].forEach((item) => {
               config.store.json[item].forEach((resource) => {
-                for (let i = 0; i < resource.subnets.length; i++) {
-                  if (resource.subnets[i].startsWith(oldTierName)) {
-                    resource.subnets[i] = resource.subnets[i].replace(
-                      oldTierName,
-                      stateData.name
-                    );
+                if (resource.subnets)
+                  for (let i = 0; i < resource.subnets.length; i++) {
+                    if (resource.subnets[i].startsWith(oldTierName)) {
+                      resource.subnets[i] = resource.subnets[i].replace(
+                        oldTierName,
+                        stateData.name
+                      );
+                    }
                   }
-                }
               });
             });
             config.store.json.clusters.forEach((cluster) => {
@@ -341,7 +348,10 @@ function saveAdvancedSubnetTier(
           carve(data.subnets, "name", subnet.name);
         }
       });
-      if (tierData.subnets.length < stateData.select_zones.length) {
+      if (
+        tierData.subnets.length <
+        stateData[stateData.select_zones ? "select_zones" : "zones"].length
+      ) {
         [1, 2, 3].forEach((zone) => {
           if (!splatContains(nextTierSubnets, "zone", zone)) {
             data.subnets.push({
@@ -383,7 +393,7 @@ function fieldIsNullOrEmptyString(fieldName, lazy) {
  */
 function fieldIsEmpty(fieldName) {
   return function (stateData) {
-    return isEmpty(stateData[fieldName]);
+    return isEmpty(stateData[fieldName] || []);
   };
 }
 
@@ -485,7 +495,7 @@ function resourceGroupsField(small, options) {
   };
 }
 
-/*
+/**
  * test if a rule has an invalid port
  * @param {*} rule
  * @param {boolean=} isSecurityGroup
@@ -580,7 +590,8 @@ function wholeNumberField(field, lazy) {
     } else
       return (
         !isWholeNumber(parseInt(stateData[field])) ||
-        stateData[field].match(/\D/g) !== null
+        // parse numbers into string for checks
+        String(stateData[field]).match(/\D/g) !== null
       );
   };
 }
@@ -859,11 +870,389 @@ function ipCidrListTextArea(field, options) {
 }
 
 /**
+ * shortcut for array input change
+ * @param {*} field
+ * @returns {Function}
+ */
+function onArrayInputChange(field) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[field], true)
+      ? []
+      : stateData[field]
+          .replace(/\s\s+/g, "") // replace extra spaces
+          .replace(/,(?=,)/g, "") // prevent null tags from
+          .replace(/[^\w,-]/g, "")
+          .split(",");
+  };
+}
+
+/**
  * hide helper text shortcut
  * @returns null
  */
 function hideHelperText() {
   return null;
+}
+
+/**
+ * shortcut for vpc ssh keys
+ * @returns {object} schema object
+ */
+function vpcSshKeyMultiselect(isF5) {
+  return {
+    labelText: "SSH Keys",
+    size: "small",
+    type: "multiselect",
+    default: [],
+    invalid: isF5
+      ? function (stateData) {
+          return stateData.zones === "0"
+            ? false
+            : fieldIsEmpty("ssh_keys")(stateData);
+        }
+      : fieldIsEmpty("ssh_keys"),
+    invalidText: unconditionalInvalidText("Select at least one SSH Key"),
+    groups: function (stateData, componentProps) {
+      return splat(componentProps.craig.store.json.ssh_keys, "name");
+    },
+  };
+}
+
+/**
+ * shortcut for workspaces
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {Array<string>}
+ */
+function powerVsWorkspaceGroups(stateData, componentProps) {
+  return splat(componentProps.craig.store.json.power, "name");
+}
+
+/**
+ * get power vs storage options field
+ * @param {boolean=} isVolume true if is volume
+ * @returns {object} schema object
+ */
+function powerVsStorageOptions(isVolume) {
+  return {
+    size: "small",
+    default: "",
+    type: "select",
+    groups: ["Storage Type", "Storage Pool", "Affinity", "Anti-Affinity"],
+    disabled: storageChangeDisabledCallback,
+    invalid: function (stateData) {
+      return (
+        isNullOrEmptyString("storage_option") ||
+        (stateData.storage_option === "Storage Pool" &&
+          isNullOrEmptyString(stateData.workspace))
+      );
+    },
+    invalidText: function (stateData, componentProps) {
+      return isNullOrEmptyString(stateData.workspace, true)
+        ? "Select a workspace"
+        : "Select a storage option";
+    },
+    onStateChange: function (stateData) {
+      if (stateData.storage_option !== "Storage Type") {
+        stateData[isVolume ? "pi_volume_type" : "pi_storage_type"] = null;
+      }
+      if (stateData.storage_option !== "Storage Pool") {
+        stateData[isVolume ? "pi_volume_pool" : "pi_storage_pool"] = null;
+      }
+      if (stateData.storage_option !== "Affinity") {
+        stateData.pi_affinity_policy = null;
+        stateData.pi_affinity_volume = null;
+        stateData.pi_affinity_instance = null;
+      }
+      if (stateData.storage_option !== "Anti-Affinity") {
+        stateData.pi_anti_affinity_volume = null;
+        stateData.pi_anti_affinity_instance = null;
+      }
+      if (contains(["Affinity", "Anti-Affinity"], stateData.storage_option)) {
+        stateData.pi_affinity_policy = stateData.storage_option.toLowerCase();
+      } else {
+        stateData.pi_affinity_policy = null;
+      }
+      stateData.affinity_type = null;
+    },
+  };
+}
+
+/**
+ * get power vs storage type field
+ * @param {boolean=} isVolume true if is volume
+ * @returns {object} schema object
+ */
+function powerVsStorageType(isVolume) {
+  let storageField = isVolume ? "pi_volume_type" : "pi_storage_type";
+  return {
+    size: "small",
+    default: null,
+    type: "select",
+    labelText: "Storage Type",
+    hideWhen: function (stateData, componentProps) {
+      return stateData.storage_option !== "Storage Type";
+    },
+    groups: ["Tier-1", "Tier-3"],
+    disabled: storageChangeDisabledCallback,
+    invalid: function (stateData) {
+      return (
+        stateData.storage_option === "Storage Type" &&
+        isNullOrEmptyString(stateData[storageField])
+      );
+    },
+    invalidText: selectInvalidText("Storage Type"),
+    onRender: function (stateData) {
+      return isNullOrEmptyString(stateData[storageField])
+        ? ""
+        : capitalize(stateData[storageField].split(/(?=\d)/).join("-"));
+    },
+    onInputChange: function (stateData) {
+      return stateData[storageField].toLowerCase().replace(/-/, "");
+    },
+  };
+}
+
+/**
+ * shortcut for affinity type
+ * @returns {Object} schema object
+ */
+function powerVsAffinityType() {
+  return {
+    default: null,
+    hideWhen: function (stateData) {
+      return !contains(["Affinity", "Anti-Affinity"], stateData.storage_option);
+    },
+    type: "select",
+    size: "small",
+    onRender: function (stateData) {
+      return isNullOrEmptyString(stateData.affinity_type)
+        ? ""
+        : stateData.affinity_type;
+    },
+    groups: ["Instance", "Volume"],
+    invalid: function (stateData) {
+      return (
+        contains(["Affinity", "Anti-Affinity"], stateData.storage_option) &&
+        isNullOrEmptyString(stateData.affinity_type, true)
+      );
+    },
+    invalidText: function (stateData) {
+      return `Select an ${stateData.storage_option} option`;
+    },
+  };
+}
+
+/**
+ * generate function to handle hide/show affinity volumes
+ * @param {string} option volume or instance
+ * @param {string} type affinity or anti-affinity
+ */
+function hidePowerAffinityOption(option, type) {
+  return function (stateData) {
+    return (
+      stateData.storage_option !== option || stateData.affinity_type !== type
+    );
+  };
+}
+
+/**
+ * Affinity invalidation for powerVs instance
+ * @returns {boolean} function will evaluate to true if should be disabled
+ */
+function powerAffinityInvalid(stateData, option, type, field) {
+  return (
+    (stateData.storage_option === option && !stateData.affinity_type) ||
+    (stateData.storage_option === option &&
+      stateData.affinity_type &&
+      stateData.affinity_type === type &&
+      isNullOrEmptyString(stateData[field]))
+  );
+}
+
+/**
+ * generate a function to handle invalid text
+ * @param {string} text text to add to invalid text
+ */
+function powerVsInstanceInvalidText(text) {
+  return function (stateData) {
+    if (isNullOrEmptyString(stateData.workspace)) {
+      return "Select a workspace";
+    } else return "Select " + text;
+  };
+}
+
+/**
+ * filter function to get affinity volumes based on instance policy
+ * @param {*} volume
+ * @returns {string} volume name
+ */
+function powerVsAffinityVolumesFilter(stateData, componentProps) {
+  return splat(
+    componentProps.craig.store.json.power_volumes.filter((volume) => {
+      if (
+        isNullOrEmptyString(volume.pi_affinity_policy, true) &&
+        isNullOrEmptyString(volume.pi_anti_affinity_policy, true) &&
+        volume.workspace === stateData.workspace &&
+        !stateData.pi_sys_type &&
+        componentProps.data.name !== volume.name
+      )
+        return volume;
+    }),
+    "name"
+  );
+}
+
+/**
+ * filter function to get affinity instances based on instance policy
+ * @param {*} volume
+ * @returns {string} volume name
+ */
+function powerVsAffinityInstancesFilter(stateData, componentProps) {
+  return splat(
+    componentProps.craig.store.json.power_instances.filter((instance) => {
+      if (
+        isNullOrEmptyString(instance.pi_affinity_policy, true) &&
+        isNullOrEmptyString(instance.pi_anti_affinity_policy, true) &&
+        instance.workspace === stateData.workspace &&
+        (!componentProps?.data ||
+          stateData.pi_volume_size ||
+          instance.name !== componentProps?.data?.name)
+      )
+        return instance;
+    }),
+    "name"
+  );
+}
+
+/**
+ * power affinity shortcut
+ */
+function powerAffinityVolume() {
+  return {
+    invalid: function (stateData) {
+      return powerAffinityInvalid(
+        stateData,
+        "Affinity",
+        "Volume",
+        "pi_affinity_volume"
+      );
+    },
+    labelText: "Affinity Volume",
+    invalidText: powerVsInstanceInvalidText("an affinity volume"),
+    default: null,
+    size: "small",
+    hideWhen: hidePowerAffinityOption("Affinity", "Volume"),
+    type: "select",
+    groups: powerVsAffinityVolumesFilter,
+  };
+}
+
+/**
+ * power affinity shortcut
+ */
+function powerAffinityInstance() {
+  return {
+    default: null,
+    invalid: function (stateData) {
+      return powerAffinityInvalid(
+        stateData,
+        "Affinity",
+        "Instance",
+        "pi_affinity_instance"
+      );
+    },
+    labelText: "Affinity Instance",
+    invalidText: powerVsInstanceInvalidText("an affinity instance"),
+    size: "small",
+    hideWhen: hidePowerAffinityOption("Affinity", "Instance"),
+    type: "select",
+    groups: powerVsAffinityInstancesFilter,
+  };
+}
+
+/**
+ * power affinity shortcut
+ */
+
+function powerAntiAffinityVolume() {
+  return {
+    labelText: "Anti-Affinity Volume",
+    hideWhen: hidePowerAffinityOption("Anti-Affinity", "Volume"),
+    default: null,
+    invalid: function (stateData) {
+      return powerAffinityInvalid(
+        stateData,
+        "Anti-Affinity",
+        "Volume",
+        "pi_anti_affinity_volume"
+      );
+    },
+    invalidText: powerVsInstanceInvalidText("an anti affinity volume"),
+    type: "select",
+    groups: powerVsAffinityVolumesFilter,
+    size: "small",
+  };
+}
+
+/**
+ * power affinity shortcut
+ */
+
+function powerAntiAffinityInstance() {
+  return {
+    labelText: "Anti-Affinity Instance",
+    default: null,
+    invalid: function (stateData) {
+      return powerAffinityInvalid(
+        stateData,
+        "Anti-Affinity",
+        "Instance",
+        "pi_anti_affinity_instance"
+      );
+    },
+    invalidText: powerVsInstanceInvalidText("an anti affinity instance"),
+    size: "small",
+    hideWhen: hidePowerAffinityOption("Anti-Affinity", "Instance"),
+    type: "select",
+    groups: powerVsAffinityInstancesFilter,
+  };
+}
+
+/**
+ * power storage pool select
+ * @param {boolean=} isVolume
+ * @returns {object} object
+ */
+function powerStoragePoolSelect(isVolume) {
+  let field = isVolume ? "pi_volume_pool" : "pi_storage_pool";
+  return {
+    size: "small",
+    type: "fetchSelect",
+    default: "",
+    labelText: "Storage Pool",
+    hideWhen: function (stateData) {
+      return (
+        stateData.storage_option !== "Storage Pool" ||
+        isNullOrEmptyString(stateData.workspace)
+      );
+    },
+    invalid: function (stateData) {
+      return (
+        stateData.storage_option === "Storage Pool" &&
+        (!stateData[field] || isNullOrEmptyString(stateData[field]))
+      );
+    },
+    invalidText: function (stateData, componentProps) {
+      return isNullOrEmptyString(stateData.workspace, true)
+        ? "Select a workspace"
+        : selectInvalidText("storage pool")(stateData, componentProps);
+    },
+    apiEndpoint: function (stateData, componentProps) {
+      return `/api/power/${stateData.zone}/storage-pools`;
+    },
+    groups: [],
+  };
 }
 
 module.exports = {
@@ -904,4 +1293,15 @@ module.exports = {
   timeToLive,
   securityGroupsMultiselect,
   ipCidrListTextArea,
+  onArrayInputChange,
+  vpcSshKeyMultiselect,
+  powerVsWorkspaceGroups,
+  powerVsStorageOptions,
+  powerVsStorageType,
+  powerVsAffinityType,
+  powerAffinityVolume,
+  powerAffinityInstance,
+  powerAntiAffinityVolume,
+  powerAntiAffinityInstance,
+  powerStoragePoolSelect,
 };

@@ -7,7 +7,8 @@
       "landing-zone"
     ],
     "power_vs_zones": [],
-    "dynamic_subnets": false
+    "dynamic_subnets": false,
+    "enable_classic": false
   },
   "dns": [],
   "logdna": {
@@ -971,5 +972,6 @@
     "profile_attachments": [],
     "region": "",
     "resource_group": null
-  },"cis_glbs": []
+  },"cis_glbs": [],
+  "fortigate_vnf": []
 }

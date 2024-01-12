@@ -1,9 +1,13 @@
-const { splatContains, transpose } = require("lazy-z");
+const { splatContains, transpose, titleCase } = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
 const { getCosFromBucket } = require("../forms/utils");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyStringEnabled,
+  resourceGroupsField,
+  selectInvalidText,
+  kebabCaseInput,
+  titleCaseRender,
 } = require("./utils");
 
 /**
@@ -94,21 +98,74 @@ function initLogDna(store) {
     onStoreUpdate: logdnaOnStoreUpdate,
     save: logdnaSave,
     shouldDisableSave: shouldDisableComponentSave(
-      ["plan", "resource_group", "bucket"],
+      ["plan", "resource_group", "bucket", "enabled"],
       "logdna"
     ),
     schema: {
+      name: {
+        readOnly: true,
+        labelText: "Name",
+        size: "small",
+        default: "logdna",
+        helperText: function (stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-logdna`;
+        },
+      },
+      enabled: {
+        type: "toggle",
+        labelText: "Enabled",
+        default: false,
+        size: "small",
+        invalid: function (stateData, componentProps) {
+          return (
+            stateData.enabled === false && componentProps.data.enabled === false
+          );
+        },
+      },
       plan: {
+        size: "small",
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyStringEnabled("plan"),
+        invalidText: selectInvalidText("plan"),
+        groups: ["Lite", "7 Day", "14 Day", "30 Day"],
+        onInputChange: kebabCaseInput("plan"),
+        onRender: function (stateData) {
+          return titleCase(stateData.plan)
+            .replace(/3 0/, "30")
+            .replace(/1 4/, "14");
+        },
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyStringEnabled("resource_group"),
-      },
+      resource_group: resourceGroupsField(true, {
+        invalid: function (stateData) {
+          return fieldIsNullOrEmptyStringEnabled("resource_group")(stateData);
+        },
+      }),
       bucket: {
+        type: "select",
+        size: "small",
         default: "",
         invalid: fieldIsNullOrEmptyStringEnabled("bucket"),
+        invalidText: selectInvalidText("bucket"),
+        groups: function (stateData, componentProps) {
+          return componentProps.craig.store.cosBuckets;
+        },
+      },
+      archive: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        tooltip: {
+          content: "Create an archive with the LogDNA Provider",
+          align: "bottom-left",
+        },
+        labelText: "(Optional) LogDNA Archive",
+      },
+      platform_logs: {
+        type: "toggle",
+        default: false,
+        labelText: "(Optional) Platform Logging",
+        size: "small",
       },
     },
   });
@@ -128,13 +185,42 @@ function initSysDig(store) {
       "sysdig"
     ),
     schema: {
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyStringEnabled("resource_group"),
+      enabled: {
+        type: "toggle",
+        labelText: "Enabled",
+        default: false,
       },
+      name: {
+        readOnly: true,
+        labelText: "Name",
+        default: "sysdig",
+        helperText: function (stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-sysdig`;
+        },
+      },
+      resource_group: resourceGroupsField(false, {
+        invalid: function (stateData) {
+          return fieldIsNullOrEmptyStringEnabled("resource_group")(stateData);
+        },
+      }),
       plan: {
+        type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyStringEnabled("plan"),
+        invalidText: selectInvalidText("plan"),
+        groups: ["Graduated Tier"],
+        onRender: titleCaseRender("plan"),
+        onInputChange: kebabCaseInput("plan"),
+        tooltip: {
+          content: "Each tier level allows for more time-series per month.",
+          link: "https://cloud.ibm.com/docs/monitoring?topic=monitoring-pricing_plans#graduated_secure",
+          align: "bottom-left",
+        },
+      },
+      platform_logs: {
+        type: "toggle",
+        default: false,
+        labelText: "(Optional) Platform Logging",
       },
     },
   });

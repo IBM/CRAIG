@@ -168,7 +168,7 @@ function formatPowerVsImage(image) {
     {
       provider: `\${ibm.power_vs${snakeCase("_" + image.zone)}}`,
       pi_cloud_instance_id: powerVsWorkspaceRef(image.workspace),
-      pi_image_id: image.pi_image_id,
+      pi_image_id: image.imageID || image.pi_image_id,
       pi_image_name: image.name,
       timeouts: timeouts("9m"),
       depends_on: image.depends_on,
@@ -300,8 +300,9 @@ function powerVsTf(config) {
       }
       imagesTf += formatPowerVsImage(image);
     });
-    if (workspace.images.length > 0)
+    if (workspace.images.length > 0) {
       tf += "\n" + tfBlock(`${workspace.name} Workspace Images`, imagesTf);
+    }
     // cloud connections
     workspace.cloud_connections.forEach((connection) => {
       let connectionTf =

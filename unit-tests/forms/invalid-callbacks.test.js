@@ -7,7 +7,6 @@ const {
   invalidCrnList,
   invalidIpCommaList,
   invalidIdentityProviderURI,
-  invalidF5Vsi,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
@@ -707,6 +706,43 @@ describe("invalid callbacks", () => {
     assert.isTrue(actualData, "it should be true");
   });
   describe("invalidSshKey", () => {
+    it("should return false when updating name and NONE", () => {
+      let actualData = invalidSshPublicKey(
+        {
+          use_data: false,
+          name: "new-name",
+          resource_group: "management-rg",
+          public_key: "NONE",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                ssh_keys: [
+                  {
+                    name: "ssh-key",
+                    resource_group: "management-rg",
+                    public_key:
+                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "ssh-key",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        {
+          invalid: false,
+          invalidText: "",
+        },
+        "it should be valid"
+      );
+    });
     it("should return false when updating name", () => {
       let actualData = invalidSshPublicKey(
         {
@@ -1194,18 +1230,6 @@ describe("invalid callbacks", () => {
       assert.isFalse(actualData);
     });
   });
-  describe("invalidF5Vsi", () => {
-    it("should return false if the fields have their own validation or is optional", () => {
-      assert.isFalse(
-        invalidF5Vsi("tmos_admin_password", { tmos_admin_password: "" })
-      );
-      assert.isFalse(invalidF5Vsi("app_id", { app_id: "" }));
-      assert.isFalse(invalidF5Vsi("home_phone_url", { home_phone_url: "" }));
-    });
-    it("should return true if null or empty string for other fields", () => {
-      assert.isTrue(invalidF5Vsi("template_version", { template_version: "" }));
-    });
-  });
   describe("invalidTagList", () => {
     it("should return true when invalid tag list", () => {
       assert.isTrue(invalidTagList(["hi", "2@@@2"]));
@@ -1297,6 +1321,28 @@ describe("invalid callbacks", () => {
         }
       );
       assert.isTrue(
+        actualData.invalid,
+        "it should return true when overlapping cidr"
+      );
+    });
+    it("should return false for power cidrs", () => {
+      let craigData = require("../data-files/craig-json.json");
+      let actualData = hasOverlappingCidr({
+        store: {
+          json: craigData,
+        },
+      })(
+        {
+          name: "test",
+          pi_cidr: "10.20.10.0/24",
+        },
+        {
+          data: {
+            name: "",
+          },
+        }
+      );
+      assert.isFalse(
         actualData.invalid,
         "it should return true when overlapping cidr"
       );

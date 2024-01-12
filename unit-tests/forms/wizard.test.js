@@ -797,6 +797,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
 
     assert.deepEqual(
@@ -1590,6 +1591,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
 
     assert.deepEqual(
@@ -2036,6 +2038,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
 
     assert.deepEqual(
@@ -2473,6 +2476,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
 
     assert.deepEqual(
@@ -2986,6 +2990,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
 
     assert.deepEqual(
@@ -3152,6 +3157,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
 
     assert.deepEqual(
@@ -3658,6 +3664,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
 
     assert.deepEqual(
@@ -4139,6 +4146,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
     assert.deepEqual(
       actualData,
@@ -4619,6 +4627,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
     assert.deepEqual(
       actualData,
@@ -5047,6 +5056,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
     assert.deepEqual(
       actualData,
@@ -5475,6 +5485,7 @@ describe("setup wizard", () => {
         resource_group: "",
       },
       cis_glbs: [],
+      fortigate_vnf: [],
     };
     assert.deepEqual(
       actualData,
@@ -6507,6 +6518,7 @@ describe("setup wizard", () => {
       cis: [],
       vtl: [],
       cis_glbs: [],
+      fortigate_vnf: [],
     };
     assert.deepEqual(
       actualData,

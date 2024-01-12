@@ -117,6 +117,61 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
     });
   });
   describe("formatSecretsManagerInstance", () => {
+    it("should return correct data for secrets manager from data", () => {
+      let actualData = formatSecretsManagerInstance(
+        {
+          name: "secrets-manager",
+          resource_group: "slz-service-rg",
+          kms: "kms",
+          encryption_key: "key",
+          use_data: true,
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: false,
+              use_hs_crypto: false,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+data "ibm_resource_instance" "secrets_manager_secrets_manager" {
+  name = "secrets-manager"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return auth policy tf"
+      );
+    });
     it("should return correct data for secrets manager", () => {
       let actualData = formatSecretsManagerInstance(
         {
@@ -615,6 +670,105 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
     "hello",
     "world"
   ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should have the correct terraform code"
+      );
+    });
+    it("should create the correct terraform code with data source", () => {
+      let actualData = secretsManagerTf({
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
+          },
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+          {
+            name: "kms2",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: true,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+          {
+            name: "kms3",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            has_secrets_manager_auth: true,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+        secrets_manager: [
+          {
+            name: "secrets-manager",
+            resource_group: "slz-service-rg",
+            kms: "kms",
+            encryption_key: "key",
+            use_data: true,
+          },
+        ],
+      });
+      let expectedData = `##############################################################################
+# Secrets Manager Instances
+##############################################################################
+
+data "ibm_resource_instance" "secrets_manager_secrets_manager" {
+  name = "secrets-manager"
 }
 
 ##############################################################################

@@ -8,6 +8,7 @@ describe("acls", () => {
         "acls",
         {
           name: "aaa",
+          resource_group: "",
         },
         {
           craig: state(),

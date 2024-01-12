@@ -5,402 +5,84 @@ import {
   IbmCloudEventStreams,
   CloudApp,
   IbmDb2,
-  IbmCloudLogging,
+  GroupResource,
+  DnsServices,
   IbmCloudSysdigSecure,
+  IbmCloudLogging,
+  CloudMonitoring,
+  IbmCloudSecurityComplianceCenterWorkloadProtection,
 } from "@carbon/icons-react";
-import {
-  AppIdForm,
-  CloudDatabaseForm,
-  EmptyResourceTile,
-  EventStreamsForm,
-  FormModal,
-  IcseFormGroup,
-  IcseHeading,
-  IcseSelect,
-  KeyManagementForm,
-  LogDNAForm,
-  ObjectStorageForm,
-  RenderForm,
-  SaveAddButton,
-  SecretsManagerForm,
-  SysdigForm,
-  ToggleForm,
-} from "icse-react-assets";
+import { EmptyResourceTile, IcseSelect } from "icse-react-assets";
 import {
   azsort,
   contains,
   deepEqual,
-  distinct,
-  getObjectFromArray,
   isNullOrEmptyString,
+  revision,
   snakeCase,
-  splat,
   titleCase,
-  transpose,
 } from "lazy-z";
 import React from "react";
 import "./cloud-services.css";
-import PropTypes from "prop-types";
+import { disableSave, propsMatchState } from "../../../lib";
+import { ManageService } from "../diagrams/ManageService";
 import {
-  cosResourceHelperTextCallback,
-  disableSave,
-  invalidEncryptionKeyRing,
-  invalidName,
-  invalidNameText,
-  propsMatchState,
-} from "../../../lib";
-import { ManageService } from "./ManageService";
-import { cosPlans } from "../../../lib/constants";
+  CraigFormHeading,
+  PrimaryButton,
+  RenderForm,
+} from "../../forms/utils/ToggleFormComponents";
 import {
-  encryptionKeyFilter,
-  invalidCpuTextCallback,
-} from "../../../lib/forms";
+  CraigFormGroup,
+  CraigToggleForm,
+  DynamicFormModal,
+} from "../../forms/utils";
+import DynamicForm from "../../forms/DynamicForm";
+import StatefulTabs from "../../forms/utils/StatefulTabs";
+import { craigForms } from "../CraigForms";
+import { getServices } from "../../../lib/forms/overview";
+import { docTabs } from "../diagrams/DocTabs";
 
 const serviceFormMap = {
+  resource_groups: {
+    icon: GroupResource,
+  },
   key_management: {
-    form: KeyManagementForm,
     icon: IbmCloudKeyProtect,
   },
   object_storage: {
-    form: ObjectStorageForm,
     icon: ObjectStorage,
   },
   secrets_manager: {
-    form: SecretsManagerForm,
     icon: IbmCloudSecretsManager,
   },
   event_streams: {
     icon: IbmCloudEventStreams,
-    form: EventStreamsForm,
   },
   appid: {
     icon: CloudApp,
-    form: AppIdForm,
   },
   icd: {
-    form: CloudDatabaseForm,
     icon: IbmDb2,
   },
+  dns: {
+    icon: DnsServices,
+  },
   logdna: {
-    form: LogDNAForm,
     icon: IbmCloudLogging,
   },
   sysdig: {
-    form: SysdigForm,
     icon: IbmCloudSysdigSecure,
+  },
+  atracker: {
+    icon: CloudMonitoring,
+  },
+  scc_v2: {
+    icon: IbmCloudSecurityComplianceCenterWorkloadProtection,
   },
 };
 
-/**
- * get form props based
- * @param {*} craig
- * @param {*} service
- * @returns {object} inner form props
- */
-function getFormProps(craig, service) {
-  let formProps = {
-    submissionFieldName: service,
-    craig: craig,
-    resourceGroups: splat(craig.store.json.resource_groups, "name"),
-    disableSave: disableSave,
-    propsMatchState: propsMatchState,
-  };
-  if (service === "logdna") {
-    transpose(
-      {
-        cosBuckets: craig.store.cosBuckets,
-        prefix: craig.store.json._options.prefix,
-      },
-      formProps
-    );
-  } else if (service === "sysdig") {
-    transpose(
-      {
-        prefix: craig.store.json._options.prefix,
-      },
-      formProps
-    );
-  } else if (service === "key_management") {
-    transpose(
-      {
-        invalidCallback: invalidName("key_management"),
-        invalidTextCallback: invalidNameText("key_management"),
-        invalidKeyCallback: invalidName("encryption_keys"),
-        invalidKeyTextCallback: invalidNameText("encryption_keys"),
-        invalidRingCallback: invalidEncryptionKeyRing,
-        invalidRingText:
-          "Invalid Key Ring Name. Must match the regular expression: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-        encryptionKeyProps: {
-          craig: craig,
-          disableSave: disableSave,
-          onSave: craig.key_management.keys.save,
-          onDelete: craig.key_management.keys.delete,
-          onSubmit: craig.key_management.keys.create,
-        },
-      },
-      formProps
-    );
-  } else if (service === "object_storage") {
-    transpose(
-      {
-        cosPlans: cosPlans,
-        kmsList: splat(craig.store.json.key_management, "name"),
-        invalidCallback: invalidName("object_storage"),
-        invalidTextCallback: invalidNameText("object_storage"),
-        invalidKeyCallback: invalidName("cos_keys"),
-        invalidKeyTextCallback: invalidNameText("cos_keys"),
-        invalidBucketCallback: invalidName("buckets"),
-        invalidBucketTextCallback: invalidNameText("buckets"),
-        composedNameCallback: cosResourceHelperTextCallback,
-        keyProps: {
-          craig: craig,
-          onSave: craig.object_storage.keys.save,
-          onSubmit: craig.object_storage.keys.create,
-          onDelete: craig.object_storage.keys.delete,
-          disableSave: disableSave,
-        },
-        bucketProps: {
-          craig: craig,
-          disableSave: disableSave,
-          onSave: craig.object_storage.buckets.save,
-          onSubmit: craig.object_storage.buckets.create,
-          onDelete: craig.object_storage.buckets.delete,
-          encryptionKeys: craig.store.encryptionKeys,
-          encryptionKeyFilter: encryptionKeyFilter,
-        },
-      },
-      formProps
-    );
-  } else if (service === "secrets_manager") {
-    transpose(
-      {
-        encryptionKeys: craig.store.encryptionKeys,
-        invalidCallback: invalidName("secrets_manager"),
-        invalidTextCallback: invalidNameText("secrets_manager"),
-        secrets: craig.getAllResourceKeys(),
-      },
-      formProps
-    );
-  } else if (service === "event_streams") {
-    transpose(
-      {
-        invalidCallback: invalidName("event_streams"),
-        invalidTextCallback: invalidNameText("event_streams"),
-      },
-      formProps
-    );
-  } else if (service === "appid") {
-    transpose(
-      {
-        encryptionKeys: craig.store.encryptionKeys,
-        invalidCallback: invalidName("appid"),
-        invalidTextCallback: invalidNameText("appid"),
-        invalidKeyCallback: invalidName("appid_key"),
-        invalidKeyTextCallback: invalidNameText("appid_key"),
-        keyProps: {
-          craig: craig,
-          onSave: craig.appid.keys.save,
-          onSubmit: craig.appid.keys.create,
-          onDelete: craig.appid.keys.delete,
-          disableSave: disableSave,
-        },
-      },
-      formProps
-    );
-  } else if (service === "icd") {
-    transpose(
-      {
-        encryptionKeys: craig.store.encryptionKeys,
-        invalidCallback: invalidName("icd"),
-        invalidTextCallback: invalidNameText("icd"),
-        invalidCpuTextCallback: invalidCpuTextCallback,
-      },
-      formProps
-    );
-  }
-  return formProps;
-}
-
-/**
- * create service form modal inner form props
- * @param {*} craig
- * @param {string} form
- * @param {string} resourceGroup
- * @returns {Object} inner form modal object
- */
-function serviceFormModalInnerFormProps(craig, form, resourceGroup) {
-  let innerFormProps = {
-    data: {
-      resource_group: resourceGroup,
-      name: "",
-    },
-    isModal: true,
-    shouldDisableSubmit: function () {
-      // references to `this` in function are intentionally vague
-      // in order to pass the correct functions and field values to the
-      // child modal component
-      // by passing `this` in a function that it scoped to the component
-      // we allow the function to be successfully bound to the modal form
-      // while still referencing the local value `enableSubmitField`
-      // to use it's own values for state and props including enableModal
-      // and disableModal, which are dynamically added to the component
-      // at time of render
-      if (
-        disableSave(this.props.submissionFieldName, this.state, this.props) ===
-        false
-      ) {
-        this.props.enableModal();
-      } else {
-        this.props.disableModal();
-      }
-    },
-  };
-  transpose(getFormProps(craig, form), innerFormProps);
-  if (form === "icd") {
-    transpose(
-      {
-        use_data: false,
-        plan: "standard",
-        encryption_key: "",
-        service: "",
-        group_id: "member",
-        memory: null,
-        disk: null,
-        cpu: null,
-      },
-      innerFormProps.data
-    );
-  } else if (contains(["logdna", "sysdig"], form)) {
-    innerFormProps.data = { ...craig.store.json[form] };
-    innerFormProps.data.enabled = true;
-    innerFormProps.data.resource_group = resourceGroup;
-  }
-  return innerFormProps;
-}
-
-/**
- * get toggle form props
- * @param {*} craig
- * @param {string} service service name ex. key_management
- * @param {*} innerForm
- * @param {string} serviceName name of the service to find
- * @param {Function} onServiceSave pass through function for save
- */
-function serviceToggleFormProps(
-  craig,
-  service,
-  innerForm,
-  serviceName,
-  onServiceSave,
-  onServiceDelete
-) {
-  let baseToggleFormProps = {
-    name:
-      (service === "logdna"
-        ? "logdna"
-        : service === "sysdig"
-        ? "sysdig"
-        : serviceName) +
-      ` (${titleCase(service)
-        .replace("Appid", "AppID")
-        .replace("Icd", "Cloud Database")
-        .replace("Logdna", "LogDNA")})`,
-    hide: false,
-    type: "form",
-    propsMatchState: propsMatchState,
-    tabPanel: {
-      hideAbout: true,
-    },
-    onSave: onServiceSave,
-    onDelete: onServiceDelete,
-    innerForm: innerForm,
-    innerFormProps: {
-      data: contains(["logdna", "sysdig"], service)
-        ? {
-            ...craig.store.json[service],
-          }
-        : {
-            ...getObjectFromArray(
-              craig.store.json[service],
-              "name",
-              serviceName
-            ),
-          },
-      propsMatchState: propsMatchState,
-      craig: craig,
-    },
-    craig: craig,
-    disableSave: disableSave,
-    submissionFieldName: service,
-    hideName: true,
-    onShowToggle: () => {
-      // dummy function
-    },
-  };
-  transpose(getFormProps(craig, service), baseToggleFormProps.innerFormProps);
-  return baseToggleFormProps;
-}
-
-/**
- * get services
- * @param {*} craig craig object
- * @param {Array<string>} services list of services
- * @returns {Object} service resource groups and service map
- */
-function getServices(craig, services) {
-  let serviceResourceGroups = splat(craig.store.json.resource_groups, "name");
-  let serviceMap = {};
-  services.forEach((field) => {
-    serviceResourceGroups = distinct(
-      serviceResourceGroups.concat(
-        splat(craig.store.json[field], "resource_group")
-      )
-    );
-  });
-  serviceResourceGroups = serviceResourceGroups.sort(azsort).sort((a) => {
-    // move null to front
-    if (!a) return -1;
-    else return 0;
-  });
-  // for each resource group
-  serviceResourceGroups.forEach((rg) => {
-    let rgName = rg === null ? "No Resource Group" : rg;
-    serviceMap[rgName] = [];
-    // for each service
-    services.forEach((resourceType) => {
-      // look up that resource and add to service map
-      craig.store.json[resourceType].forEach((service) => {
-        if (service.resource_group === rg) {
-          serviceMap[rgName].push({
-            name: service.name,
-            type: resourceType,
-            overrideType:
-              resourceType === "icd" ? "cloud_databases" : undefined,
-          });
-        }
-      });
-    });
-  });
-
-  ["sysdig", "logdna"].forEach((observabilityService) => {
-    if (craig.store.json[observabilityService].enabled) {
-      let rg = craig.store.json[observabilityService].resource_group;
-      let serviceRg = !rg ? "No Resource Group" : rg;
-      serviceMap[serviceRg].push({
-        name: observabilityService,
-        type: observabilityService,
-      });
-    }
-  });
-
-  if (!serviceResourceGroups[0]) {
-    serviceResourceGroups[0] = "No Resource Group";
-  }
-
-  return {
-    serviceResourceGroups,
-    serviceMap,
-  };
+function scrollToTop() {
+  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 }
 
 class CloudServicesPage extends React.Component {
@@ -409,8 +91,11 @@ class CloudServicesPage extends React.Component {
     this.state = {
       activeRg: "",
       showModal: false,
-      modalResourceGroup: "service-rg",
+      modalResourceGroup: "",
       modalService: "",
+      service: "",
+      serviceName: "",
+      rgModal: false,
     };
 
     this.onServiceIconClick = this.onServiceIconClick.bind(this);
@@ -419,16 +104,44 @@ class CloudServicesPage extends React.Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.onServiceSubmit = this.onServiceSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.onRequestSubmit = this.onRequestSubmit.bind(this);
   }
 
+  /**
+   * create modal request submit function
+   * @returns {Function} request submit function
+   */
+  onRequestSubmit() {
+    // prevent from loading unfound field
+    return isNullOrEmptyString(this.state.modalService, true)
+      ? () => {}
+      : (stateData, componentProps) => {
+          this.onServiceSubmit(stateData, componentProps);
+          this.setState({
+            showModal: false,
+            modalService: "",
+            serviceName: "",
+          });
+        };
+  }
+
+  /**
+   * handle input change for modal event
+   * @param {*} event
+   */
   handleInputChange(event) {
     let { name, value } = event.target;
+    // convert display name to craig store name
     this.setState({
       [name]:
         value === "Cloud Databases"
           ? "icd"
           : value === "App ID"
           ? "appid"
+          : value === "Activity Tracker"
+          ? "atracker"
+          : value === "Security & Compliance Center"
+          ? "scc_v2"
           : snakeCase(value),
     });
   }
@@ -456,6 +169,7 @@ class CloudServicesPage extends React.Component {
         serviceName: "",
       });
     } else {
+      scrollToTop();
       this.setState({
         activeRg: serviceData.resourceGroup,
         service: serviceData.service.type,
@@ -464,10 +178,33 @@ class CloudServicesPage extends React.Component {
     }
   }
 
-  onServiceSubmit(data) {
-    if (contains(["logdna", "sysdig"], this.state.modalService)) {
-      this.props.craig[this.state.modalService].save(data);
-    } else this.props.craig[this.state.modalService].create(data);
+  /**
+   * handle service modal submit
+   * @param {*} stateData
+   * @param {*} componentProps
+   */
+  onServiceSubmit(stateData, componentProps) {
+    if (
+      // if the service is not part of an array
+      contains(
+        ["logdna", "sysdig", "atracker", "scc_v2"],
+        this.state.modalService
+      )
+    ) {
+      if (this.state.modalService === "scc_v2") {
+        // set SCC enable to true since it is not part of
+        stateData.enable = true;
+      }
+      this.props.craig[this.state.modalService].save(stateData, componentProps);
+    }
+    // otherwise create
+    else
+      this.props.craig[this.state.modalService].create(
+        stateData,
+        componentProps
+      );
+
+    // close modal
     this.toggleModal();
   }
 
@@ -485,7 +222,7 @@ class CloudServicesPage extends React.Component {
         service: "",
         serviceName: "",
       });
-    } else
+    } else if (this.state.service !== "atracker")
       this.setState({
         serviceName: stateData.name,
       });
@@ -498,10 +235,15 @@ class CloudServicesPage extends React.Component {
    * @param {*} componentProps
    */
   onServiceDelete(stateData, componentProps) {
-    if (contains(["sysdig", "logdna"], this.state.service)) {
+    if (contains(["sysdig", "logdna", "atracker"], this.state.service)) {
+      // handle delete for non-array services
       let data = { ...this.props.craig[this.state.service] };
       data.enabled = false;
       this.props.craig[this.state.service].save(data);
+      this.setState({
+        serviceName: "",
+        service: "",
+      });
     } else
       this.props.craig[this.state.service].delete(stateData, componentProps);
     this.setState({
@@ -510,6 +252,10 @@ class CloudServicesPage extends React.Component {
     });
   }
 
+  /**
+   * handle modal toggle
+   * @param {*} resourceGroup
+   */
   toggleModal(resourceGroup) {
     if (this.state.showModal) {
       this.setState({
@@ -521,11 +267,15 @@ class CloudServicesPage extends React.Component {
         showModal: true,
         modalResourceGroup: resourceGroup,
         modalService: "",
+        service: "",
+        serviceName: "",
       });
     }
   }
 
   render() {
+    let craig = this.props.craig;
+    const forms = craigForms(craig);
     let { serviceResourceGroups, serviceMap } = getServices(this.props.craig, [
       "appid",
       "icd",
@@ -533,138 +283,361 @@ class CloudServicesPage extends React.Component {
       "key_management",
       "object_storage",
       "secrets_manager",
+      "dns",
     ]);
+
+    let modalGroups = [
+      "Activity Tracker",
+      "AppID",
+      "Cloud Databases",
+      "DNS",
+      "Event Streams",
+      "Object Storage",
+      "Key Management",
+      "Secrets Manager",
+      "Resource Groups",
+      "LogDNA",
+      "Sysdig",
+      "Security & Compliance Center",
+    ];
+
+    // filter out activity tracker when enabled
+    if (craig.store.json.atracker.enabled) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "Activity Tracker") {
+          return group;
+        }
+      });
+    }
+
+    // filter out sysdig when enabled
+    if (craig.store.json.sysdig.enabled) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "Sysdig") {
+          return group;
+        }
+      });
+    }
+
+    // filter out logdna when enabled
+    if (craig.store.json.logdna.enabled) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "LogDNA") {
+          return group;
+        }
+      });
+    }
+
+    // filter out scc when enabled
+    if (craig.store.json.scc_v2.enable) {
+      modalGroups = modalGroups.filter((group) => {
+        if (group !== "Security & Compliance Center") {
+          return group;
+        }
+      });
+    }
+
     return (
       <>
-        <IcseHeading name="Cloud Services" />
-        <FormModal
-          name={"Create a new service"}
+        <DynamicFormModal
+          key={this.state.modalService}
+          name={
+            this.state.modalService === "resource_groups"
+              ? "Create a Resource Group"
+              : `Create a Service in ${this.state.modalResourceGroup}`
+          }
           show={this.state.showModal}
-          onRequestSubmit={this.onServiceSubmit}
-          onRequestClose={this.toggleModal}
-          submissionFieldName="key_management"
           beginDisabled
+          submissionFieldName={this.state.modalService}
+          onRequestClose={this.toggleModal}
+          onRequestSubmit={this.onRequestSubmit()}
         >
           <IcseSelect
-            formName="cloud-service-modal"
+            formName="cloud-services"
+            value={
+              this.state.modalService === "appid"
+                ? "AppID"
+                : this.state.modalService === "icd"
+                ? "Cloud Databases"
+                : this.state.modalService === "dns"
+                ? "DNS"
+                : this.state.modalService === "logdna"
+                ? "LogDNA"
+                : this.state.modalService === "atracker"
+                ? "Activity Tracker"
+                : this.state.modalService === "scc_v2"
+                ? "Security & Compliance Center"
+                : titleCase(this.state.modalService)
+            }
+            labelText="Service"
             name="modalService"
-            labelText="Service Type"
-            value={titleCase(this.state.modalService)
-              .replace("Icd", "Cloud Databases")
-              .replace("Logdna", "LogDNA")}
-            groups={[
+            handleInputChange={this.handleInputChange}
+            disableInvalid
+            groups={modalGroups.sort(azsort)}
+          />
+          <div className="marginBottomSmall" />
+          {isNullOrEmptyString(this.state.modalService, true) ? (
+            // need to pass html element
+            <></>
+          ) : (
+            <CraigFormHeading
+              name={`New ${titleCase(
+                this.state.modalService === "icd"
+                  ? "Cloud Databases"
+                  : this.state.modalService === "appid"
+                  ? "AppID"
+                  : this.state.modalService === "logdna"
+                  ? "LogDNA"
+                  : this.state.modalService === "atracker"
+                  ? "Activity Tracker"
+                  : this.state.modalService === "scc_v2"
+                  ? "Security & Compliance Center"
+                  : titleCase(this.state.modalService)
+              )}${
+                this.state.modalService === "resource_groups" ? "" : " Service"
+              }`}
+            />
+          )}
+          {isNullOrEmptyString(this.state.modalService, true) ? (
+            // need to pass html element
+            <></>
+          ) : (
+            <DynamicForm
+              className="formInSubForm"
+              isModal
+              form={forms[this.state.modalService]}
+              craig={craig}
+              modalService={this.state.modalService}
+              data={{
+                resource_group: this.state.modalResourceGroup,
+                enabled: contains(["logdna", "sysdig"], this.state.modalService)
+                  ? true
+                  : undefined,
+              }}
+              shouldDisableSubmit={function () {
+                if (isNullOrEmptyString(this.props.modalService, true)) {
+                  this.props.disableModal();
+                } else if (
+                  disableSave(
+                    this.props.modalService,
+                    this.state,
+                    this.props
+                  ) === false
+                ) {
+                  this.props.enableModal();
+                } else {
+                  this.props.disableModal();
+                }
+              }}
+            />
+          )}
+        </DynamicFormModal>
+        <div className="marginBottomSmall" />
+        <StatefulTabs
+          formName="Cloud Services"
+          name="Cloud Services"
+          nestedDocs={docTabs(
+            [
+              "AppID",
+              "Cloud Databases",
+              "DNS",
+              "Event Streams",
               "Key Management",
               "Object Storage",
-              "Secrets Manager",
-              "Event Streams",
-              "App ID",
-              "Cloud Databases",
-            ]
-              .concat(
-                this.props.craig.store.json.logdna.enabled ? [] : ["LogDNA"]
-              )
-              .concat(
-                this.props.craig.store.json.sysdig.enabled ? [] : ["Sysdig"]
-              )
-              .sort(azsort)}
-            handleInputChange={this.handleInputChange}
-            invalidText="Select a service type"
-            className={
-              isNullOrEmptyString(this.state.modalService)
-                ? "fieldWidth"
-                : "fieldWidth marginBottom"
-            }
-          />
-          {isNullOrEmptyString(this.state.modalService) ? (
-            <></> // empty div here must be passed to be valid child
-          ) : (
-            <IcseHeading
-              type="subHeading"
-              name={"New " + titleCase(this.state.modalService) + " Service"}
-            />
+            ],
+            craig
           )}
-          {isNullOrEmptyString(this.state.modalService) ? (
-            <></> // empty div here must be passed to be a valid child
-          ) : (
-            RenderForm(serviceFormMap[this.state.modalService].form, {
-              ...serviceFormModalInnerFormProps(
-                this.props.craig,
-                this.state.modalService,
-                this.state.modalResourceGroup
-              ),
-            })
-          )}
-        </FormModal>
-        {serviceResourceGroups.map((rg) => (
-          <div className="subForm marginBottomSmall" key={rg}>
-            <IcseHeading
-              type="subHeading"
-              name={rg}
-              className={
-                serviceMap[rg].length === 0
-                  ? "marginBottomSmaller"
-                  : "marginBottomSmall"
-              }
-              buttons={
-                rg === "No Resource Group" ? (
-                  // hide button when resource group is null
-                  <></>
+          form={
+            <div className="displayFlex" style={{ minWidth: "100%" }}>
+              <div
+                style={{
+                  marginRight: "1rem",
+                  width: "580px",
+                }}
+                key={serviceResourceGroups}
+              >
+                <div className="marginBottomSmall" />
+                {craig.store.json.atracker.enabled ? (
+                  <>
+                    <CraigFormHeading
+                      name="Activity Tracker"
+                      type="subHeading"
+                    />
+                    <div className="subForm marginBottomSmall">
+                      <CraigFormHeading
+                        icon={<CloudMonitoring className="diagramTitleIcon" />}
+                        type="subHeading"
+                        name="Activity Tracker"
+                      />
+                      <CraigFormGroup className="overrideGap">
+                        <ManageService
+                          icon={CloudMonitoring}
+                          key={JSON.stringify(craig.store.json.atracker)}
+                          service={{
+                            type: "atracker",
+                            name: "atracker",
+                          }}
+                          onClick={this.onServiceIconClick}
+                          isSelected={this.state.service === "atracker"}
+                        />
+                      </CraigFormGroup>
+                    </div>
+                  </>
                 ) : (
-                  <SaveAddButton
-                    type="add"
-                    onClick={() => this.toggleModal(rg)}
-                    className="none-right"
-                  />
-                )
-              }
-            />
-            {serviceMap[rg].length === 0 ? (
-              <EmptyResourceTile name="services in this resource group" />
-            ) : (
-              <IcseFormGroup className="overrideGap">
-                {serviceMap[rg]
-                  .sort((a, b) => {
-                    // sort resources by name within the same resource type
-                    if ((a.overrideType || a.type) < (b.overrideType || b.type))
-                      return -1;
-                    if ((a.overrideType || a.type) > (b.overrideType || b.type))
-                      return 1;
-                    if (a.name < b.name && a.type === b.type) return -1;
-                    if (a.name > b.name && a.type === b.type) return 1;
-                  })
-                  .map((service) => (
-                    <ManageService
-                      key={JSON.stringify(service)}
-                      resourceGroup={rg}
-                      service={service}
-                      icon={serviceFormMap[service.type].icon}
-                      onClick={this.onServiceIconClick}
-                      isSelected={
-                        this.state.service === service.type &&
-                        this.state.serviceName === service.name
+                  ""
+                )}
+                <CraigFormHeading
+                  name="Resource Groups"
+                  type="subHeading"
+                  buttons={
+                    <PrimaryButton
+                      type="add"
+                      noDeleteButton
+                      hoverText="Create a Resource Group"
+                      onClick={() => {
+                        this.setState({
+                          showModal: true,
+                          modalService: "resource_groups",
+                        });
+                      }}
+                    />
+                  }
+                />
+                {serviceResourceGroups.map((rg) => (
+                  <div className="subForm marginBottomSmall" key={rg}>
+                    <CraigFormHeading
+                      icon={<GroupResource className="diagramTitleIcon" />}
+                      noMarginBottom={serviceMap[rg].length === 0}
+                      type="subHeading"
+                      onClick={() => {
+                        this.onServiceIconClick({
+                          resourceGroup: "",
+                          service: {
+                            type: "resource_groups",
+                            name: rg,
+                          },
+                        });
+                      }}
+                      name={rg}
+                      buttons={
+                        rg === "No Resource Group" ? (
+                          // hide button when resource group is null
+                          <></>
+                        ) : (
+                          <PrimaryButton
+                            type="add"
+                            onClick={() => this.toggleModal(rg)}
+                            className="none-right"
+                            noDeleteButton
+                          />
+                        )
                       }
                     />
-                  ))}
-              </IcseFormGroup>
-            )}
-
-            {this.state.activeRg === rg &&
-              !isNullOrEmptyString(this.state.serviceName) && (
-                <ToggleForm
-                  key={this.state.serviceName}
-                  hideChevon
-                  {...serviceToggleFormProps(
-                    this.props.craig,
-                    this.state.service,
-                    serviceFormMap[this.state.service].form,
-                    this.state.serviceName,
-                    this.onServiceSave,
-                    this.onServiceDelete
-                  )}
-                />
-              )}
-          </div>
-        ))}
+                    {serviceMap[rg].length === 0 ? (
+                      <EmptyResourceTile name="services in this resource group" />
+                    ) : (
+                      <CraigFormGroup className="overrideGap">
+                        {serviceMap[rg]
+                          .sort((a, b) => {
+                            // sort resources by name within the same resource type
+                            if (
+                              (a.overrideType || a.type) <
+                              (b.overrideType || b.type)
+                            )
+                              return -1;
+                            if (
+                              (a.overrideType || a.type) >
+                              (b.overrideType || b.type)
+                            )
+                              return 1;
+                            if (a.name < b.name && a.type === b.type) return -1;
+                            if (a.name > b.name && a.type === b.type) return 1;
+                          })
+                          .map((service) => (
+                            <ManageService
+                              key={JSON.stringify(service)}
+                              resourceGroup={rg}
+                              service={service}
+                              icon={serviceFormMap[service.type].icon}
+                              onClick={this.onServiceIconClick}
+                              isSelected={
+                                this.state.service === service.type &&
+                                this.state.serviceName === service.name
+                              }
+                            />
+                          ))}
+                      </CraigFormGroup>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="marginTop1Rem">
+                {this.state.service ? (
+                  <>
+                    <CraigFormHeading
+                      icon={RenderForm(
+                        serviceFormMap[this.state.service].icon,
+                        {
+                          className: "diagramTitleIcon",
+                        }
+                      )}
+                      name={
+                        "Editing " +
+                        (this.state.serviceName === "scc_v2"
+                          ? "Security & Compliance Center"
+                          : this.state.serviceName)
+                      }
+                    />
+                    <div
+                      style={{
+                        padding: "0",
+                        width: "50vw",
+                        maxWidth: "690px",
+                      }}
+                      className="subForm"
+                    >
+                      <CraigToggleForm
+                        name={
+                          this.state.serviceName === "scc_v2"
+                            ? "Security & Compliance Center"
+                            : this.state.serviceName
+                        }
+                        tabPanel={{ hideAbout: true }}
+                        key={this.state.service + this.state.serviceName}
+                        onSave={this.onServiceSave}
+                        onDelete={this.onServiceDelete}
+                        type="subForm"
+                        hideChevron
+                        hideHeading
+                        hide={false}
+                        hideName
+                        submissionFieldName={this.state.service}
+                        innerFormProps={{
+                          // these are required to populate children
+                          disableSave: disableSave,
+                          propsMatchState: propsMatchState,
+                          craig: craig,
+                          data: contains(
+                            ["logdna", "sysdig", "atracker", "scc_v2"],
+                            this.state.service
+                          )
+                            ? craig.store.json[this.state.service]
+                            : new revision(craig.store.json).child(
+                                this.state.service,
+                                this.state.serviceName
+                              ).data,
+                          form: forms[this.state.service],
+                        }}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          }
+        />
       </>
     );
   }

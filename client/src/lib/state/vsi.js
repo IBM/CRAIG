@@ -6,7 +6,6 @@ const {
   splatContains,
   isInRange,
   isNullOrEmptyString,
-  contains,
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -19,7 +18,6 @@ const {
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
-  fieldIsEmpty,
   resourceGroupsField,
   selectInvalidText,
   vpcGroups,
@@ -28,6 +26,7 @@ const {
   unconditionalInvalidText,
   securityGroupsMultiselect,
   encryptionKeyGroups,
+  vpcSshKeyMultiselect,
 } = require("./utils");
 const { invalidNameText, invalidName } = require("../forms");
 
@@ -185,7 +184,21 @@ function updateVsi(config, key) {
       if (!validVpc) {
         deployment.vpc = null;
         deployment.subnets = [];
+        deployment.security_groups = [];
+      } else {
+        deployment.security_groups = deployment.security_groups.filter((sg) => {
+          if (splatContains(config.store.json.security_groups, "name", sg)) {
+            return sg;
+          }
+        });
       }
+      let nextSshKeys = [];
+      deployment.ssh_keys.forEach((key) => {
+        if (splatContains(config.store.json.ssh_keys, "name", key)) {
+          nextSshKeys.push(key);
+        }
+      });
+      deployment.ssh_keys = nextSshKeys;
     });
     config.store[camelCase(key + " List")] = splat(data, "name");
   });
@@ -415,16 +428,7 @@ function initVsiStore(store) {
         labelText: "VSI Per Subnet",
       },
       security_groups: securityGroupsMultiselect(),
-      ssh_keys: {
-        size: "small",
-        type: "multiselect",
-        default: [],
-        invalid: fieldIsEmpty("ssh_keys"),
-        invalidText: unconditionalInvalidText("Select at least one SSH Key"),
-        groups: function (stateData, componentProps) {
-          return splat(componentProps.craig.store.json.ssh_keys, "name");
-        },
-      },
+      ssh_keys: vpcSshKeyMultiselect(),
       enable_floating_ip: {
         size: "small",
         type: "toggle",

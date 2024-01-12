@@ -2,7 +2,6 @@ import React from "react";
 import {
   buildFormFunctions,
   DynamicToolTipWrapper,
-  IcseFormGroup,
   IcseFormTemplate,
   IcseHeading,
   RenderForm,
@@ -17,21 +16,39 @@ import {
   SubFormOverrideTile,
   PowerInterfaces,
   PerCloudConnections,
+  DynamicDatePicker,
 } from "./dynamic-form";
-import { eachKey, isBoolean, contains } from "lazy-z";
-import { disableSave, propsMatchState } from "../../lib";
 import {
-  dynamicIcseFormGroupsProps,
+  eachKey,
+  isBoolean,
+  contains,
+  isFunction,
+  getObjectFromArray,
+} from "lazy-z";
+import { propsMatchState } from "../../lib";
+import {
+  dynamicCraigFormGroupsProps,
   dynamicIcseHeadingProps,
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
-import { DynamicFetchSelect } from "./dynamic-form/components";
-import { Button } from "@carbon/react";
-import { Rocket } from "@carbon/icons-react";
+import {
+  DynamicFetchMultiSelect,
+  DynamicFetchSelect,
+} from "./dynamic-form/components";
+import { OptionsButton } from "./dynamic-form/OptionsButton";
+import { NaclRulesSubForm } from "./dynamic-form/NaclRulesSubForm";
+import {
+  SubnetTileSubForm,
+  SubnetTileTitle,
+} from "./dynamic-form/SubnetTileSubForm";
+import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
+import { Tile } from "@carbon/react";
+import { CraigFormGroup } from "./utils";
 
 const doNotRenderFields = [
   "heading",
+  "vsi_tiles",
   "vpc_connections",
   "power_connections",
   "hideWhen",
@@ -83,6 +100,8 @@ class DynamicForm extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.handleOverrideInputChange = this.handleOverrideInputChange.bind(this);
+    this.getAllVsi = this.getAllVsi.bind(this);
+    this.onPowerImageLoad = this.onPowerImageLoad.bind(this);
   }
 
   /**
@@ -105,7 +124,7 @@ class DynamicForm extends React.Component {
         } else if (group[field].onStateChange && targetName === field) {
           // if the item has onStateChange function, run against whole
           // state copy
-          group[field].onStateChange(nextState, this.props);
+          group[field].onStateChange(nextState, this.props, targetData);
           madeChanges = true;
         }
       });
@@ -151,23 +170,82 @@ class DynamicForm extends React.Component {
     } else this.setState({ [toggleName]: !this.state[toggleName] });
   }
 
+  /**
+   * get dynamic list of vsi for lb page
+   * @returns {Array<string>} list of vsi
+   */
+  getAllVsi() {
+    let allVsi = [];
+    this.state.target_vsi.forEach((deployment) => {
+      let vsi = getObjectFromArray(
+        this.props.craig.store.json.vsi,
+        "name",
+        deployment
+      );
+      let nextRow = [];
+      // for each subnet vsi
+      for (let subnet = 0; subnet < vsi.subnets.length; subnet++) {
+        // for each vsi per subnet
+        for (let count = 0; count < vsi.vsi_per_subnet; count++) {
+          nextRow.push({
+            name: deployment + "-" + (count + 1),
+            subnet: vsi.subnets[subnet],
+          });
+          if (nextRow.length === 3) {
+            allVsi.push(nextRow);
+            nextRow = [];
+          }
+        }
+      }
+      if (nextRow.length > 0) {
+        allVsi.push(nextRow);
+      }
+    });
+    return allVsi;
+  }
+
+  onPowerImageLoad(images) {
+    this.setState({ images: images });
+  }
+
   render() {
     let propsName = this.props.data?.name || "";
     // here for testing
     // console.log(JSON.stringify(this.state, null, 2));
     return (
-      <div>
+      <div className={this.props.className}>
+        <SubnetTileTitle parentProps={this.props} parentState={this.state} />
         {this.props.form.groups.map((group, index) =>
           group.hideWhen && group.hideWhen(this.state) ? (
             ""
           ) : group.heading ? (
             <IcseHeading {...dynamicIcseHeadingProps(group)} />
+          ) : group.vsi_tiles ? (
+            this.getAllVsi().map((row, index) => (
+              <CraigFormGroup key={"row-" + index}>
+                {row.map((vsi, vsiIndex) => (
+                  <Tile
+                    key={`${index}-${vsiIndex}`}
+                    className="fieldWidthSmaller tileFormMargin"
+                  >
+                    <p className="tileTitle">Name:</p>
+                    <p className="tileContent">{vsi.name}</p>
+                    <p className="tileTitle">Subnet:</p>
+                    <p className="tileContent">{vsi.subnet}</p>
+                  </Tile>
+                ))}
+              </CraigFormGroup>
+            ))
           ) : (
-            <IcseFormGroup
-              {...dynamicIcseFormGroupsProps(this.props, index, this.state)}
+            <CraigFormGroup
+              {...dynamicCraigFormGroupsProps(this.props, index, this.state)}
             >
               {Object.keys(group).map((key, keyIndex) => {
                 let field = group[key];
+                // allow field to have multiple types based on state or props data
+                let fieldType = isFunction(field.type)
+                  ? field.type(this.state, this.props)
+                  : field.type;
                 return (field.hideWhen &&
                   field.hideWhen(this.state, this.props)) ||
                   key === "hideWhen" ? (
@@ -182,18 +260,22 @@ class DynamicForm extends React.Component {
                     )}
                   >
                     {RenderForm(
-                      field.type === "select"
+                      fieldType === "select"
                         ? DynamicFormSelect
-                        : field.type === "toggle"
+                        : fieldType === "toggle"
                         ? DynamicFormToggle
-                        : field.type === "textArea"
+                        : fieldType === "textArea"
                         ? DynamicTextArea
-                        : field.type === "multiselect"
+                        : fieldType === "multiselect"
                         ? DynamicMultiSelect
-                        : field.type === "public-key"
+                        : fieldType === "public-key"
                         ? DynamicPublicKey
-                        : field.type === "fetchSelect"
+                        : fieldType === "fetchSelect"
                         ? DynamicFetchSelect
+                        : fieldType === "fetchMultiSelect"
+                        ? DynamicFetchMultiSelect
+                        : fieldType === "date"
+                        ? DynamicDatePicker
                         : DynamicFormTextInput,
                       {
                         name: key,
@@ -203,6 +285,7 @@ class DynamicForm extends React.Component {
                         field: field,
                         parentState: this.state,
                         parentProps: this.props,
+                        onPowerImageLoad: this.onPowerImageLoad,
                         handleInputChange:
                           field.type === "toggle"
                             ? this.handleToggle
@@ -212,7 +295,7 @@ class DynamicForm extends React.Component {
                   </DynamicToolTipWrapper>
                 );
               })}
-            </IcseFormGroup>
+            </CraigFormGroup>
           )
         )}
         <PowerInterfaces
@@ -220,19 +303,15 @@ class DynamicForm extends React.Component {
           componentProps={this.props}
           handleInputChange={this.handleInputChange}
         />
-        {this.props.formName === "options" ? (
-          <Button
-            disabled={disableSave("options", this.state, this.props)}
-            className="marginTop"
-            onClick={() => {
-              window.location.pathname = "/form/resourceGroups";
-            }}
-          >
-            Begin Customizing <Rocket className="rocketIcon" />
-          </Button>
-        ) : (
-          ""
-        )}
+        <NaclRulesSubForm parentProps={this.props} parentState={this.state} />
+        <SgRulesSubForm parentProps={this.props} parentState={this.state} />
+        <OptionsButton parentProps={this.props} parentState={this.state} />
+        <SubnetTileSubForm
+          parentProps={this.props}
+          parentState={this.state}
+          key={JSON.stringify(this.state)}
+          isModal={this.props.isModal}
+        />
         {this.props.isModal === true || !this.props.form.subForms
           ? ""
           : this.props.form.subForms.map((subForm) =>
@@ -288,6 +367,7 @@ class DynamicForm extends React.Component {
                     disableSave: this.props.disableSave,
                     arrayParentName: this.props.data.name,
                     propsMatchState: propsMatchState,
+                    parent: this.props.data,
                   }}
                   toggleFormFieldName={subForm.toggleFormFieldName}
                   hideAbout

@@ -1,5 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
+const { deepEqual } = require("assert");
 
 /**
  * initialize store
@@ -55,6 +56,147 @@ describe("iam", () => {
           store.store.json.iam_account_settings.enable,
           true,
           "it should set value to true"
+        );
+      });
+    });
+    describe("iam_account_settings store", () => {
+      it("should return correct value mfa.onRender", () => {
+        let store = newState();
+        let data = {
+          mfa: "TOTP MFA",
+        };
+        assert.deepEqual(
+          store.iam_account_settings.mfa.onRender(data),
+          "TOTP MFA",
+          "should be equal"
+        );
+      });
+      it("should return correct value mfa.onRender when null", () => {
+        let store = newState();
+        assert.deepEqual(
+          store.iam_account_settings.mfa.onRender(),
+          "",
+          "should be equal"
+        );
+      });
+      it("should return correct value mfa.onStateChange", () => {
+        let store = newState();
+        let data = {
+          mfa: "Email-Based MFA",
+        };
+        store.iam_account_settings.mfa.onStateChange(data);
+        assert.deepEqual("LEVEL1", data.mfa, "should be equal");
+      });
+      it("should return correct value mfa.onStateChange when null", () => {
+        let store = newState();
+        let data = {
+          mfa: null,
+        };
+        store.iam_account_settings.mfa.onStateChange(data);
+        assert.deepEqual(null, data.mfa, "should be equal");
+      });
+      it("should return correct value restrict_create_service_id.onRender", () => {
+        let store = newState();
+        let data = {
+          restrict_create_service_id: "Unset",
+        };
+        assert.deepEqual(
+          store.iam_account_settings.restrict_create_service_id.onRender(data),
+          "Unset",
+          "should be equal"
+        );
+      });
+      it("should return correct value restrict_create_service_id.onRender when null", () => {
+        let store = newState();
+        let data = {
+          restrict_create_service_id: null,
+        };
+        assert.deepEqual(
+          store.iam_account_settings.restrict_create_service_id.onRender(data),
+          "",
+          "should be equal"
+        );
+      });
+      it("should return correct value restrict_create_service_id.onStateChange", () => {
+        let store = newState();
+        let data = {
+          restrict_create_service_id: "Unset",
+        };
+        store.iam_account_settings.restrict_create_service_id.onStateChange(
+          data
+        );
+        assert.deepEqual(
+          "NOT_SET",
+          data.restrict_create_service_id,
+          "should be equal"
+        );
+      });
+      it("should return correct value restrict_create_service_id.onStateChange when null", () => {
+        let store = newState();
+        let data = {
+          restrict_create_service_id: null,
+        };
+        store.iam_account_settings.restrict_create_service_id.onStateChange(
+          data
+        );
+        assert.deepEqual(
+          null,
+          data.restrict_create_service_id,
+          "should be equal"
+        );
+      });
+      it("should return correct value restrict_create_platform_apikey.onRender", () => {
+        let store = newState();
+        let data = {
+          restrict_create_platform_apikey: "Unset",
+        };
+        assert.deepEqual(
+          store.iam_account_settings.restrict_create_platform_apikey.onRender(
+            data
+          ),
+          "Unset",
+          "should be equal"
+        );
+      });
+      it("should return correct value restrict_create_platform_apikey.onRender when null", () => {
+        let store = newState();
+        let data = {
+          restrict_create_platform_apikey: null,
+        };
+        assert.deepEqual(
+          store.iam_account_settings.restrict_create_platform_apikey.onRender(
+            data
+          ),
+          "",
+          "should be equal"
+        );
+      });
+      it("should return correct value restrict_create_platform_apikey.onStateChange", () => {
+        let store = newState();
+        let data = {
+          restrict_create_platform_apikey: "Unset",
+        };
+        store.iam_account_settings.restrict_create_platform_apikey.onStateChange(
+          data
+        );
+        assert.deepEqual(
+          "NOT_SET",
+          data.restrict_create_platform_apikey,
+          "should be equal"
+        );
+      });
+      it("should return correct value restrict_create_platform_apikey.onStateChange when null", () => {
+        let store = newState();
+        let data = {
+          restrict_create_platform_apikey: null,
+        };
+        store.iam_account_settings.restrict_create_platform_apikey.onStateChange(
+          data
+        );
+        assert.deepEqual(
+          null,
+          data.restrict_create_platform_apikey,
+          "should be equal"
         );
       });
     });
@@ -114,6 +256,15 @@ describe("iam", () => {
           null,
           "it should set unfound group to null"
         );
+      });
+      it("should set resource_group to null if a policy's resource object exists and contains a delete group name", () => {
+        let store = newState();
+        lazyAccessGroup(store);
+        lazyPolicy(store);
+        delete store.store.json.access_groups[0].policies[0].resources;
+        let task = () =>
+          store.resource_groups.delete({}, { data: { name: "management-rg" } });
+        assert.doesNotThrow(task, "it should not error");
       });
     });
     describe("access_groups.create", () => {

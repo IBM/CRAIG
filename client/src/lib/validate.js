@@ -319,8 +319,8 @@ const validate = function (json) {
       nullResourceGroupTest("Object Storage", instance);
       validationTest("Object Storage", instance, "kms", "kms"); // check if key management service provided
       instance.buckets.forEach((bucket) => {
-        validationTest("Object Storage Buckets", bucket, "kms_key", "kms_key");
         if (
+          bucket.kms_key &&
           !contains(
             splat(
               getObjectFromArray(json.key_management, "name", instance.kms)
@@ -482,6 +482,7 @@ const validate = function (json) {
     if (
       !key.use_data &&
       key.public_key !== null &&
+      key.public_key !== "NONE" &&
       key.public_key.match(sshKeyValidationExp) === null
     )
       throw new Error(`Key ${key.name} has invalid public key.`);

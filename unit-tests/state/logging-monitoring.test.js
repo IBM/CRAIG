@@ -162,4 +162,50 @@ describe("observability", () => {
       });
     });
   });
+  describe("schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    describe("logdna & sysdig", () => {
+      it("should return helper text for name", () => {
+        assert.deepEqual(
+          craig.logdna.name.helperText({}, { craig: craig }),
+          "iac-logdna",
+          "it should retrun"
+        );
+      });
+      it("should return list of cos buckets", () => {
+        assert.deepEqual(
+          craig.logdna.bucket.groups({}, { craig: craig }),
+          ["atracker-bucket", "management-bucket", "workload-bucket"],
+          "it should return list of buckets"
+        );
+      });
+      it("should return helper text for name", () => {
+        assert.deepEqual(
+          craig.sysdig.name.helperText({}, { craig: craig }),
+          "iac-sysdig",
+          "it should retrun"
+        );
+      });
+      it("should return plan on render", () => {
+        assert.deepEqual(
+          craig.logdna.plan.onRender({ plan: "30-day" }),
+          "30 Day",
+          "it should return correct text"
+        );
+      });
+      it("should return false when not enabled for resource group invalid", () => {
+        assert.isFalse(
+          craig.logdna.resource_group.invalid({ enabled: false }),
+          "it should be false"
+        );
+        assert.isFalse(
+          craig.sysdig.resource_group.invalid({ enabled: false }),
+          "it should be false"
+        );
+      });
+    });
+  });
 });

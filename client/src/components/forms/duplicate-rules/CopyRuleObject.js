@@ -1,13 +1,10 @@
 import React from "react";
-import {
-  SaveAddButton,
-  IcseFormGroup,
-  IcseSelect,
-  IcseHeading,
-} from "icse-react-assets";
+import { IcseSelect, IcseHeading } from "icse-react-assets";
 import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
+import { PrimaryButton } from "../utils/ToggleFormComponents";
+import { CraigFormGroup } from "../utils";
 
 const CopyRuleObject = (props) => {
   /**
@@ -35,7 +32,7 @@ const CopyRuleObject = (props) => {
             : "Copy ACL from one VPC to another",
         }}
       />
-      <IcseFormGroup className="align-row">
+      <CraigFormGroup className="align-row">
         <IcseSelect
           formName={getFormName("source")}
           labelText={
@@ -75,7 +72,7 @@ const CopyRuleObject = (props) => {
           invalidText="Select a destination VPC"
         />
         <div className="align-row">
-          <SaveAddButton
+          <PrimaryButton
             type="custom"
             customIcon={Replicate}
             onClick={() => {
@@ -89,7 +86,7 @@ const CopyRuleObject = (props) => {
             hoverText={props.hoverText}
           />
         </div>
-      </IcseFormGroup>
+      </CraigFormGroup>
     </>
   );
 };

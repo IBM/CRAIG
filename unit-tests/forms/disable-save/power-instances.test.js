@@ -468,6 +468,36 @@ describe("power vs instances", () => {
     );
     assert.isTrue(actualData, "it should be disabled");
   });
+  it("should be disabled when invalid memory for FalconStor VTL instance", () => {
+    let actualData = disableSave(
+      "power_instances",
+      {
+        name: "toad",
+        workspace: "good",
+        ssh_key: "good",
+        image: "good",
+        pi_sys_type: "good",
+        pi_health_status: "good",
+        pi_storage_type: "good",
+        network: [
+          {
+            name: "good",
+            ip_address: "",
+          },
+        ],
+        pi_processors: "7",
+        pi_memory: "21",
+        pi_license_repository_capacity: "3",
+      },
+      {
+        data: {
+          name: "egg",
+        },
+        craig: state(),
+      }
+    );
+    assert.isTrue(actualData, "it should be disabled");
+  });
   it("should be disabled when storage type is `Storage Type` and pi_storage_type is empty string", () => {
     let actualData = disableSave(
       "power_instances",
@@ -845,6 +875,15 @@ describe("invalidPowerVsMemoryTextCallback", () => {
     assert.deepEqual(
       invalidPowerVsMemoryTextCallback({}),
       "Must be a whole number between 2 and 934.",
+      "it should return correct invalid text"
+    );
+  });
+  it("should return correct invalid memory text for a FalconStor VTL Instance", () => {
+    assert.deepEqual(
+      invalidPowerVsMemoryTextCallback({
+        pi_license_repository_capacity: 3,
+      }),
+      "Must be a whole number between 2 and 934. For FalconStor VTL Instances, memory must be greater than or equal to 22.",
       "it should return correct invalid text"
     );
   });

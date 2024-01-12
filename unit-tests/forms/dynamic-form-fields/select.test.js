@@ -211,6 +211,7 @@ describe("dynamic select", () => {
         value: "",
         readOnly: undefined,
         key: '["","a","b","c"]',
+        readOnly: false,
       };
       assert.isFunction(actualData.onChange, "it should be a function");
       delete actualData.onChange;
@@ -262,7 +263,7 @@ describe("dynamic select", () => {
         labelText: "Name",
         name: "name",
         value: "",
-        readOnly: undefined,
+        readOnly: false,
         key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");
@@ -316,7 +317,7 @@ describe("dynamic select", () => {
         labelText: "",
         name: "name",
         value: "",
-        readOnly: undefined,
+        readOnly: false,
         key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");
@@ -327,7 +328,7 @@ describe("dynamic select", () => {
         "it should return correctly formatted data"
       );
     });
-    it("should return the correct props for select when not disabled and fetch select and unmounted and no value", () => {
+    it('should return the correct props for select when not disabled and fetch select and unmounted and stateData is ["Loading..."] and no value', () => {
       let actualData = dynamicSelectProps(
         {
           name: "frog",
@@ -359,11 +360,12 @@ describe("dynamic select", () => {
           name: "name",
           propsName: "frog",
         },
-        false
+        false,
+        ["Loading..."]
       );
       let expectedData = {
         className: "leftTextAlign fieldWidth",
-        disabled: false,
+        disabled: true,
         groups: ["", "a", "b", "c"],
         id: "frog-name-0",
         invalid: false,
@@ -371,7 +373,7 @@ describe("dynamic select", () => {
         labelText: "Name",
         name: "name",
         value: "",
-        readOnly: undefined,
+        readOnly: false,
         key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");
@@ -402,6 +404,7 @@ describe("dynamic select", () => {
           disabledText: function () {
             return "oops";
           },
+          readOnly: true,
         },
         parentState: {},
         parentProps: {
@@ -422,7 +425,61 @@ describe("dynamic select", () => {
         labelText: "Name",
         name: "name",
         value: "",
-        readOnly: undefined,
+        readOnly: true,
+        key: '["","a","b","c"]',
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      delete actualData.onChange;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+    it("should return the correct props for text input when not disabled and no value and read only is function", () => {
+      let actualData = dynamicSelectProps({
+        name: "frog",
+        field: {
+          groups: ["a", "b", "c"],
+          disabled: function () {
+            return false;
+          },
+          invalid: function () {
+            return false;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          helperText: function () {
+            return "helper text";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+          readOnly: function () {
+            return false;
+          },
+        },
+        parentState: {},
+        parentProps: {
+          formName: "atracker",
+        },
+        handleInputChange: function () {},
+        keyIndex: 0,
+        name: "name",
+        propsName: "frog",
+      });
+      let expectedData = {
+        className: "leftTextAlign fieldWidth",
+        disabled: false,
+        groups: ["", "a", "b", "c"],
+        id: "frog-name-0",
+        invalid: false,
+        invalidText: "uh oh",
+        labelText: "Name",
+        name: "name",
+        value: "",
+        readOnly: false,
         key: '["","a","b","c"]',
       };
       assert.isFunction(actualData.onChange, "it should be a function");

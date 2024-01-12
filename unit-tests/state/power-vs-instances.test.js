@@ -720,12 +720,12 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal12",
       });
       state.power.create({
         name: "frog",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "frog" }],
         zone: "dal12",
       });
       state.store.json.power_volumes.push({
@@ -1096,7 +1096,7 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.network.create(
@@ -1143,7 +1143,7 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.ssh_keys.create(
@@ -1194,7 +1194,7 @@ describe("power_instances", () => {
       let state = newState();
       state.power.create({
         name: "toad",
-        imageNames: ["7100-05-09"],
+        images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
       state.power.network.create(
@@ -1534,7 +1534,7 @@ describe("power_instances", () => {
           let craig = newState();
           craig.power.create({
             name: "toad",
-            imageNames: ["7100-05-09"],
+            images: [{ name: "7100-05-09", workspace: "toad" }],
             zone: "dal12",
             network: [],
           });
@@ -1544,7 +1544,7 @@ describe("power_instances", () => {
               { craig: craig }
             ),
             ["7100-05-09"],
-            "it should return list of networks"
+            "it should return list of images"
           );
         });
       });
@@ -1676,6 +1676,26 @@ describe("power_instances", () => {
           assert.deepEqual(actualData, expectedData, "it should set data");
         });
       });
+      describe("power_instances.storage_option.invalidText", () => {
+        it("should return correct text when option is storage pool and no workspace", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.storage_option.invalidText({ workspace: "" }),
+            "Select a workspace",
+            "it should be equal"
+          );
+        });
+        it("should return correct text when workspace is selected", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.storage_option.invalidText({
+              workspace: "foo",
+            }),
+            "Select a storage option",
+            "it should be equal"
+          );
+        });
+      });
     });
     describe("power_instances.pi_storage_type", () => {
       describe("power_instances.pi_storage_type.hideWhen", () => {
@@ -1739,42 +1759,16 @@ describe("power_instances", () => {
           );
         });
       });
-      describe("power_instances.pi_storage_pool.groups", () => {
-        it("should return groups when no storage pool map", () => {
+      describe("power_instances.pi_storage_pool.apiEndpoint", () => {
+        it("should return api endpoint for pi_storage_pool with region", () => {
           let craig = state();
           assert.deepEqual(
-            craig.power_instances.pi_storage_pool.groups(
-              { zone: "aaa" },
-              { craig: craig, powerStoragePoolMap: undefined }
+            craig.power_instances.pi_storage_pool.apiEndpoint(
+              { zone: "us-south" },
+              { craig: craig }
             ),
-            [],
-            "it should return empty array"
-          );
-        });
-        it("should return groups when no zone", () => {
-          let craig = state();
-          assert.deepEqual(
-            craig.power_instances.pi_storage_pool.groups(
-              { zone: "" },
-              { craig: craig, powerStoragePoolMap: { dal12: ["pool"] } }
-            ),
-            [],
-            "it should return empty string"
-          );
-        });
-        it("should return groups when zone", () => {
-          let craig = state();
-          assert.deepEqual(
-            craig.power_instances.pi_storage_pool.groups(
-              { zone: "dal12" },
-              {
-                powerStoragePoolMap: {
-                  dal12: ["Pools"],
-                },
-              }
-            ),
-            ["Pools"],
-            "it should return pools from map"
+            "/api/power/us-south/storage-pools",
+            "it should return api endpoint"
           );
         });
       });
@@ -1934,6 +1928,38 @@ describe("power_instances", () => {
             "it should return fultered list of groups"
           );
         });
+        it("should return list of groups", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.power_instances.pi_anti_affinity_instance.groups(
+              { zone: "dal10", workspace: "frog" },
+              {
+                data: {
+                  name: "hello",
+                },
+                craig: {
+                  store: {
+                    json: {
+                      power_instances: [
+                        {
+                          workspace: "frog",
+                          name: "hi",
+                          pi_anti_affinity_policy: "egg",
+                        },
+                        {
+                          workspace: "toad",
+                          name: "hello",
+                        },
+                      ],
+                    },
+                  },
+                },
+              }
+            ),
+            [],
+            "it should return fultered list of groups"
+          );
+        });
       });
     });
     describe("power_instances.pi_anti_affinity_volume", () => {
@@ -1942,8 +1968,47 @@ describe("power_instances", () => {
           let craig = newState();
           assert.deepEqual(
             craig.power_instances.pi_anti_affinity_volume.groups(
+              { zone: "dal10", workspace: "frog", pi_volume_size: "yes" },
+              {
+                data: {
+                  name: "egg",
+                },
+                craig: {
+                  store: {
+                    json: {
+                      power_volumes: [
+                        {
+                          workspace: "frog",
+                          name: "hi",
+                        },
+                        {
+                          workspace: "frog",
+                          name: "hi",
+                          pi_anti_affinity_policy: "egg",
+                        },
+                        {
+                          workspace: "toad",
+                          name: "hello",
+                        },
+                      ],
+                    },
+                  },
+                },
+              }
+            ),
+            ["hi"],
+            "it should return fultered list of groups"
+          );
+        });
+        it("should return list of groups", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.power_instances.pi_anti_affinity_volume.groups(
               { zone: "dal10", workspace: "frog" },
               {
+                data: {
+                  name: "egg",
+                },
                 craig: {
                   store: {
                     json: {

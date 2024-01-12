@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  IcseFormGroup,
   IcseHeading,
   IcseSelect,
   IcseToggle,
@@ -23,6 +22,7 @@ import {
   releaseNotes,
   wizard,
 } from "../../../lib";
+import { CraigFormGroup } from "../../forms";
 const mixedTemplate = require("../../../lib/docs/templates/slz-mixed.json");
 
 class Wizard extends React.Component {
@@ -60,7 +60,9 @@ class Wizard extends React.Component {
     stateCopy.json = wizard(stateCopy, stateCopy.json);
     this.props.onProjectSave(stateCopy, this.props, true).then(() => {
       this.props.onRequestClose();
-      window.location.pathname = "/";
+      if (contains(window.location.pathname, "/beta"))
+        window.location.pathname = "/beta/settings";
+      else window.location.pathname = "/";
     });
   }
 
@@ -117,7 +119,7 @@ class Wizard extends React.Component {
         size="lg"
       >
         <div className="formInSubForm">
-          <IcseFormGroup>
+          <CraigFormGroup>
             <IcseTextInput
               id="project-name"
               labelText="Project Name"
@@ -127,12 +129,12 @@ class Wizard extends React.Component {
               invalidText={invalidProjectNameText(this.state, this.props)}
               onChange={this.handleChange}
             />
-          </IcseFormGroup>
+          </CraigFormGroup>
           <IcseHeading type="subHeading" name="Financial Services Cloud" />
           <p className="marginBottomSmall">
             Show only Financial Services Cloud validated regions.
           </p>
-          <IcseFormGroup>
+          <CraigFormGroup>
             <IcseToggle
               labelText="Use FS Cloud"
               defaultToggled={this.state.fs_cloud}
@@ -151,12 +153,12 @@ class Wizard extends React.Component {
                 value={this.state.key_management_service}
               />
             )}
-          </IcseFormGroup>
+          </CraigFormGroup>
           <IcseHeading type="subHeading" name="Virtual Private Cloud (VPC)" />
           <p className="marginBottomSmall">
             Choose your VPC region & availability zones
           </p>
-          <IcseFormGroup>
+          <CraigFormGroup>
             <IcseSelect
               formName="wizard"
               name="region"
@@ -184,8 +186,8 @@ class Wizard extends React.Component {
                   "The number of availability zones for VPCs in your template",
               }}
             />
-          </IcseFormGroup>
-          <IcseFormGroup>
+          </CraigFormGroup>
+          <CraigFormGroup>
             <IcseMultiSelect
               id="wizard-vpcs"
               titleText="Select VPC Networks"
@@ -215,8 +217,8 @@ class Wizard extends React.Component {
                   "Create a Transit Gateway to allow for connectivity between VPCs",
               }}
             />
-          </IcseFormGroup>
-          <IcseFormGroup>
+          </CraigFormGroup>
+          <CraigFormGroup>
             <IcseToggle
               labelText="Use Activity Tracker"
               defaultToggled={this.state.use_atracker}
@@ -246,8 +248,8 @@ class Wizard extends React.Component {
                   "Create Virtual Private Endpoint Gateways for IBM Cloud Object storage in your VPC networks.",
               }}
             />
-          </IcseFormGroup>
-          <IcseFormGroup>
+          </CraigFormGroup>
+          <CraigFormGroup>
             <IcseToggle
               labelText="Use F5 Big IP"
               defaultToggled={this.state.use_f5}
@@ -262,12 +264,12 @@ class Wizard extends React.Component {
                   "Crate F5 Big IP instances and networking components on an Edge VPC",
               }}
             />
-          </IcseFormGroup>
+          </CraigFormGroup>
           <IcseHeading type="subHeading" name="Power Virtual Servers" />
           <p className="marginBottomSmall">
             Choose your VPC region & availability zones
           </p>
-          <IcseFormGroup>
+          <CraigFormGroup>
             <IcseToggle
               labelText="Enable Power Virtual Servers"
               defaultToggled={this.state.enable_power_vs}
@@ -290,9 +292,9 @@ class Wizard extends React.Component {
                 }}
               />
             )}
-          </IcseFormGroup>
+          </CraigFormGroup>
           {this.state.enable_power_vs && (
-            <IcseFormGroup>
+            <CraigFormGroup>
               <IcseMultiSelect
                 id="options-power-zones"
                 titleText="Power VS Zone"
@@ -346,7 +348,7 @@ class Wizard extends React.Component {
                     : "Select at least one Availability Zone"
                 }
               />
-            </IcseFormGroup>
+            </CraigFormGroup>
           )}
         </div>
       </IcseModal>

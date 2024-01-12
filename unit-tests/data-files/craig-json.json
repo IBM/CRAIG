@@ -953,5 +953,6 @@
     "region": "",
     "resource_group": ""
   },
-  "cis_glbs": []
+  "cis_glbs": [],
+  "fortigate_vnf": []
 }

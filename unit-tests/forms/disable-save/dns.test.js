@@ -69,13 +69,28 @@ describe("dns", () => {
       assert.isTrue(actualData, "it should be disabled");
     });
     it("should be disabled when duplicate zone name", () => {
+      let tempCraig = state();
+      tempCraig.setUpdateCallback(() => {});
+      tempCraig.dns.create({
+        name: "dev",
+        resource_group: "service-rg",
+        plan: "stanard",
+      });
+      tempCraig.dns.zones.create(
+        {
+          name: "zone",
+          vpcs: [],
+        },
+        {
+          innerFormProps: { arrayParentName: "dev" },
+        }
+      );
       let actualData = disableSave(
         "zones",
-        { name: "hi", vpcs: [] },
+        { name: "zone", vpcs: [] },
         {
           data: { name: "" },
-          craig: state(),
-          isModal: true,
+          craig: tempCraig,
         }
       );
       assert.isTrue(actualData, "it should be disabled");

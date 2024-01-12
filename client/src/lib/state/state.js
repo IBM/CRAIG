@@ -7,12 +7,7 @@ const { initObjectStorageStore } = require("./cos");
 const { initAtracker } = require("./atracker");
 const { initAppIdStore } = require("./appid");
 const { vpcOnStoreUpdate, createEdgeVpc, initVpcStore } = require("./vpc/vpc");
-const {
-  sccInit,
-  sccSave,
-  sccDelete,
-  DEPRECATED_initSccStore,
-} = require("./scc");
+const { DEPRECATED_initSccStore } = require("./scc");
 const { initSshKeyStore } = require("./ssh-keys.js");
 const { initSecurityGroupStore } = require("./security-groups");
 const { initTransitGateway } = require("./transit-gateways/transit-gateways");
@@ -20,15 +15,7 @@ const { initVpnGatewayStore } = require("./vpn");
 const { initClusterStore } = require("./clusters");
 const { initVsiStore } = require("./vsi");
 const { initVpe } = require("./vpe");
-const {
-  f5Init,
-  f5VsiSave,
-  f5InstanceSave,
-  f5VsiCreate,
-  f5OnStoreUpdate,
-  f5TemplateSave,
-  initF5Store,
-} = require("./f5");
+const { initF5Store } = require("./f5");
 const { initLoadBalancers } = require("./load-balancers");
 const { initEventStreams } = require("./event-streams");
 const { initSecretsManagerStore } = require("./secrets-manager");
@@ -62,6 +49,7 @@ const { initCis } = require("./cis.js");
 const { initVtlStore } = require("./vtl.js");
 const { initSccV2 } = require("./scc-v2.js");
 const { initCisGlbStore } = require("./cis-glb.js");
+const { initFortigateStore } = require("./fortigate.js");
 
 /**
  * get state for craig
@@ -177,6 +165,7 @@ const state = function (legacy) {
   initCis(store);
   initSccV2(store);
   initCisGlbStore(store);
+  initFortigateStore(store);
 
   /**
    * hard set config dot json in state store
@@ -193,13 +182,24 @@ const state = function (legacy) {
     store.store.json.vpcs.forEach((network) => {
       subnetTiers[network.name] = buildSubnetTiers(network);
     });
+    let edgeZones = 0;
+    store.store.edge_pattern = undefined;
+    store.store.edge_zones = undefined;
+    store.store.edge_vpc_name = undefined;
     store.store.json.vpcs.forEach((nw) => {
       nw.subnets.forEach((subnet) => {
         subnet.vpc = nw.name;
       });
       nw.address_prefixes.forEach((prefix) => {
+        if (prefix.name.match(/^f5-zone-\d$/g) !== null) {
+          store.store.edge_vpc_name = nw.name;
+          edgeZones++;
+        }
         prefix.vpc = nw.name;
       });
+      if (edgeZones > 0) {
+        store.store.edge_zones = edgeZones;
+      }
       nw.acls.forEach((acl) => {
         acl.rules.forEach((rule) => {
           rule.acl = acl.name;

@@ -158,7 +158,7 @@ describe("vsi", () => {
         image_name: null,
         profile: null,
         name: "todd",
-        security_groups: ["workload-vsi-sg"],
+        security_groups: [],
         ssh_keys: [],
         subnets: [],
         vpc: "workload",
@@ -170,7 +170,7 @@ describe("vsi", () => {
         volumes: [],
       };
       state.vsi.save(
-        { name: "todd", vpc: "workload", security_groups: ["workload-vsi-sg"] },
+        { name: "todd", vpc: "workload", security_groups: ["workload-vsi"] },
         { data: { name: "todd" }, isTeleport: false }
       );
       assert.deepEqual(
@@ -196,7 +196,7 @@ describe("vsi", () => {
         image_name: null,
         profile: null,
         name: "todd",
-        security_groups: ["workload-vsi-sg"],
+        security_groups: [],
         ssh_keys: [],
         subnets: [],
         vpc: "workload",
@@ -211,7 +211,7 @@ describe("vsi", () => {
         {
           name: "todd",
           vpc: "workload",
-          security_groups: ["workload-vsi-sg"],
+          security_groups: ["workload-vsi"],
           encryption_key: "key",
         },
         { data: { name: "todd" }, isTeleport: false }
@@ -346,6 +346,77 @@ describe("vsi", () => {
         state.store.json.vsi[0].encryption_key,
         null,
         "it should be null"
+      );
+    });
+    it("should set ssh keys to empty array when deleted", () => {
+      let state = new newState();
+      state.ssh_keys.delete(
+        {},
+        {
+          data: {
+            name: "ssh-key",
+          },
+        }
+      );
+      assert.deepEqual(state.store.json.vsi[0].ssh_keys, [], "it should be []");
+    });
+    it("should set subnets and security groups when vpc deleted", () => {
+      let state = new newState();
+      state.vpcs.delete({}, { data: { name: "management" } });
+      assert.deepEqual(state.store.json.vsi[0].subnets, [], "it should be []");
+      assert.deepEqual(
+        state.store.json.vsi[0].security_groups,
+        [],
+        "it should be []"
+      );
+    });
+    it("should set security groups when deleted", () => {
+      let state = new newState();
+      state.security_groups.delete({}, { data: { name: "management-vsi" } });
+      assert.deepEqual(
+        state.store.json.vsi[0].security_groups,
+        [],
+        "it should be []"
+      );
+    });
+  });
+  describe("vsi.schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should reset security groups and subnets on state change", () => {
+      let expectedData = {
+        security_groups: [],
+        subnets: [],
+      };
+      let actualData = {};
+      craig.vsi.vpc.onStateChange(actualData);
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return the correct data"
+      );
+    });
+    it("should return api endpoint for image name with region", () => {
+      assert.deepEqual(
+        craig.vsi.image_name.apiEndpoint({}, { craig: craig }),
+        "/api/vsi/us-south/images",
+        "it should return api endpoint"
+      );
+    });
+    it("should return api endpoint for profile with region", () => {
+      assert.deepEqual(
+        craig.vsi.profile.apiEndpoint({}, { craig: craig }),
+        "/api/vsi/us-south/instanceProfiles",
+        "it should return api endpoint"
+      );
+    });
+    it("should return list of ssh keys", () => {
+      assert.deepEqual(
+        craig.vsi.ssh_keys.groups({}, { craig: craig }),
+        ["ssh-key"],
+        "it should return ssh keys"
       );
     });
   });

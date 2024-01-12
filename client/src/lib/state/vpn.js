@@ -1,10 +1,4 @@
-const {
-  contains,
-  isNullOrEmptyString,
-  splat,
-  revision,
-  isArray,
-} = require("lazy-z");
+const { contains, isNullOrEmptyString, splat, revision } = require("lazy-z");
 const {
   setUnfoundResourceGroup,
   hasUnfoundVpc,
@@ -18,7 +12,6 @@ const {
   resourceGroupsField,
   vpcGroups,
   selectInvalidText,
-  isIpStringInvalid,
   ipCidrListTextArea,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
@@ -166,7 +159,7 @@ function initVpnGatewayStore(store) {
       additional_prefixes: ipCidrListTextArea("additional_prefixes", {
         tooltip: {
           content:
-            "Add additional prefixes to the VPC Subnet to mimic on premise environment. These prefixes will be created in the same VPC and zone as the VPN gateway",
+            "Add additional prefixes to the VPC Subnet to mimic on-premises environment. These prefixes will be created in the same VPC and zone as the VPN gateway",
         },
       }),
     },

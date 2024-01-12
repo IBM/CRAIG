@@ -85,7 +85,7 @@ function powerRoutes(axios, controller) {
           .then((powerWorkspaceData) => {
             if (powerWorkspaceData === undefined) {
               return reject(
-                `Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables are exist and are correct.`
+                `Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables exist and are correct.`
               );
             }
 
@@ -116,7 +116,7 @@ function powerRoutes(axios, controller) {
     })
       .then((response) => {
         if (componentType === "images") {
-          return response.data.images;
+          res.send(response.data.images);
         } else {
           let formattedStoragePools = [];
           response.data.storagePoolsCapacity.forEach((pool) => {

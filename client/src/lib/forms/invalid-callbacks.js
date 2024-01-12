@@ -183,7 +183,12 @@ function invalidSshPublicKey(stateData, componentProps) {
     invalidText:
       "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region",
   };
-  if (!validSshKey(stateData.public_key)) {
+  if (stateData.public_key === "NONE") {
+    return {
+      invalid: false,
+      invalidText: "",
+    };
+  } else if (!validSshKey(stateData.public_key)) {
     invalid.invalid = true;
   } else if (
     // if public key already used
@@ -258,24 +263,6 @@ function invalidIamAccountSettings(field, stateData) {
     (stateData.max_sessions_per_identity < 1 ||
       stateData.max_sessions_per_identity > 10)
   );
-}
-
-function invalidF5Vsi(field, stateData, componentProps) {
-  let hasOwnValidation = ["tmos_admin_password"];
-  let optionalFields = [
-    "app_id",
-    "license_password",
-    "license_unit_of_measure",
-  ];
-  if (
-    field.includes("url") || // all url fields have their own validation
-    contains(hasOwnValidation, field) ||
-    contains(optionalFields, field)
-  ) {
-    return false; // ignore these, have their own validation
-  } else {
-    return isNullOrEmptyString(stateData[field]); // just cannot be empty
-  }
 }
 
 /**
@@ -434,15 +421,16 @@ function hasOverlappingCidr(craig) {
       invalid: false,
       cidr: stateData.cidr,
     };
-    craig.store.json.vpcs.forEach((vpc) => {
-      vpc.subnets.forEach((subnet) => {
-        if (subnet.name !== componentProps.data.name)
-          allCidrs.push(subnet.cidr);
+    if (!stateData.pi_cidr)
+      craig.store.json.vpcs.forEach((vpc) => {
+        vpc.subnets.forEach((subnet) => {
+          if (subnet.name !== componentProps.data.name)
+            allCidrs.push(subnet.cidr);
+        });
       });
-    });
     if (
-      contains(allCidrs, stateData.cidr) ||
-      !isIpv4CidrOrAddress(stateData.cidr)
+      contains(allCidrs, stateData.cidr || stateData.pi_cidr) ||
+      !isIpv4CidrOrAddress(stateData.cidr || stateData.pi_cidr)
     ) {
       cidrData.invalid = true;
     } else {
@@ -674,7 +662,6 @@ module.exports = {
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
-  invalidF5Vsi,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,

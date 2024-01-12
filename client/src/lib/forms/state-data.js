@@ -14,9 +14,21 @@ function getTierSubnets(tier, vpc) {
    */
   return function (stateData) {
     let subnets = [];
-    if (tier.advanced) {
+    if (tier.advanced || stateData.advanced) {
       vpc.subnets.forEach((subnet) => {
-        if (contains(tier.subnets, subnet.name)) {
+        if (
+          stateData.advanced && !tier.advanced
+            ? subnet.name.match(
+                new RegexButWithWords()
+                  .stringBegin()
+                  .literal(tier.name)
+                  .literal("-zone-")
+                  .digit()
+                  .stringEnd()
+                  .done("g")
+              ) !== null
+            : contains(tier.subnets, subnet.name)
+        ) {
           subnets[subnet.zone - 1] = subnet;
         }
       });

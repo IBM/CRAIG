@@ -12,12 +12,7 @@ import {
   IcseHeading,
 } from "icse-react-assets";
 import { RenderDocs } from "../pages/SimplePages";
-import {
-  disableSave,
-  invalidName,
-  invalidNameText,
-  propsMatchState,
-} from "../../lib";
+import { disableSave, propsMatchState } from "../../lib";
 import { invalidCbrRuleText } from "../../lib/forms/text-callbacks";
 import { invalidCbrRule } from "../../lib/forms/invalid-callbacks";
 

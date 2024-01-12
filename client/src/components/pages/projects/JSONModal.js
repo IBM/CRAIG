@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { IcseModal, IcseFormGroup, IcseNameInput } from "icse-react-assets";
+import { IcseModal, IcseNameInput } from "icse-react-assets";
 import { formatConfig, validate } from "../../../lib";
 import { InlineNotification } from "@carbon/react";
 import { deepEqual } from "lazy-z";
 import { JSONTextArea } from "../../utils/JSONTextArea";
 import { onRequestSubmitJSONModal } from "../../../lib/craig-app";
+import { CraigFormGroup } from "../../forms";
 
 export class JSONModal extends React.Component {
   constructor(props) {
@@ -114,7 +115,7 @@ export class JSONModal extends React.Component {
         }}
       >
         {!this.props.import && (
-          <IcseFormGroup>
+          <CraigFormGroup>
             <IcseNameInput
               labelText={"Project Name"}
               invalid={false}
@@ -126,7 +127,7 @@ export class JSONModal extends React.Component {
               helperTextCallback={() => {}}
               readOnly={true}
             />
-          </IcseFormGroup>
+          </CraigFormGroup>
         )}
         <JSONTextArea
           json={this.state.json}

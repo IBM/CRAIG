@@ -189,9 +189,10 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
     endpoint_type: config._options.endpoints,
     force_delete: bucket.force_delete,
     region_location: varDotRegion,
-    key_protect: cos.kms
-      ? encryptionKeyRef(cos.kms, bucket.kms_key, "crn")
-      : "ERROR: Unfound Ref",
+    key_protect:
+      cos.kms && bucket.kms_key
+        ? encryptionKeyRef(cos.kms, bucket.kms_key, "crn")
+        : undefined,
   };
   if (bucket.allowed_ip) {
     bucketValues.allowed_ip = JSON.stringify(bucket.allowed_ip).replace(

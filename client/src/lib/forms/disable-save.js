@@ -92,6 +92,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "glbs",
     "health_checks",
     "connections",
+    "fortigate_vnf",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
@@ -108,8 +109,10 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.vpcs.acls.rules
         : field === "acl_rules"
         ? componentProps.innerFormProps.craig.vpcs.acls.rules
-        : field === "subnet"
+        : field === "subnet" && craig // only used for icse-react-assets subnet form
         ? craig.vpcs.subnets
+        : field === "subnet"
+        ? componentProps.craig.vpcs.subnets
         : field === "subnetTier"
         ? componentProps.craig.vpcs.subnetTiers
         : field === "acls"

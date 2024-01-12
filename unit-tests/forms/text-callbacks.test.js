@@ -9,7 +9,6 @@ const {
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
-  accessGroupPolicyHelperTextCallback,
   invalidCidrText,
   invalidProjectNameText,
 } = require("../../client/src/lib");

@@ -319,14 +319,14 @@ workload-cluster | A Red Hat OpenShift cluster on the Workload VPC.
 
 ## VPN Gateways
 
-VPN Gateway service for VPC provides secure, encrypted connectivity from a user's on-premise network to the IBM Cloud VPC network.
+VPN Gateway service for VPC provides secure, encrypted connectivity from a user's on-premises network to the IBM Cloud VPC network.
 
 The default configuration includes:
 
 Resource Name      | Description
 -------------------|---------------------------------------------------------------------------------------------------------------
 management-gateway | A VPN gateway service deployed in the management resource group on the VPN subnet tier of the management VPC.
-client-to-site-gw  | A VPN gateway service deployed in the VPC
+site-to-site-gw    | A VPN gateway service deployed in the VPC
 
 ### Related Links
 
@@ -870,15 +870,61 @@ Domains and DNS records may be created. Existing DNS records for your domain may
 
 ## Vtl
 
-NYI
+FalconStor StorSafe Virtual Tape Library (VTL) is a software solution that optimizes backup and restore, to improve performance and significantly reduce backup storage costs, all without requiring changes to the existing requirement. With its integrated deduplication, the solution removes redundant copies of data, thereby reducing capacity requirements, decreasing storage costs, and minimizing replication and restore times. StorSafe VTL can be used with all leading backup solutions, and enables both hybrid and native-cloud backup, as well as both workload and tape migration to the cloud.
+
+To provision a FalconStor VTL instance, first ensure that Power VS is enabled in the Options page, along with the zone(s) you would like to provision Power VS resources in. Then create a Power VS workspace and be sure to import any FalconStor VTL images you will need for your instance along with your SSH Keys and Network Interfaces for connectivity. At least one SSH Key and one Network interface are required to create a Power VS Instance in a Power VS workspace.
+
+Refer to the following table for more information on FalconStor VTL instance fields:
+
+Instance Fields     | Description
+--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+System Type         | Specify the machine type. The machine type that you select determines the number of cores and memory that is available. For more information about machine types, see Hardware Specification documentation.
+Processor Type      | When deploying a VM, customers can choose between dedicated, capped shared, or uncapped shared processors for their virtual CPUs (vCPUs). The following list provides a simplified breakdown of their differences: Dedicated: resources are allocated for a specific client (used for specific third-party considerations). Uncapped shared: shared among other clients. Capped shared: shared, but resources do not expand beyond those that are requested (used mostly for licensing). For more information on processor types, see 'What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?' documentation.
+Storage Type        | For each Power Systems Virtual Server instance, you must select a storage tier - Tier 1 or Tier 3. The storage tiers in Power Systems Virtual Server are based on I/O operations per second (IOPS). It means that the performance of your storage volumes is limited to the maximum number of IOPS based on volume size and storage tier. Although, the exact numbers might change over time, the Tier 3 storage is currently set to 3 IOPS/GB, and the Tier 1 storage is currently set to 10 IOPS/GB. For example, a 100 GB Tier 3 storage volume can receive up to 300 IOPs, and a 100 GB Tier 1 storage volume can receive up to 1000 IOPS. After the IOPS limit is reached for the storage volume, the I/O latency increases. For more information on storage types, see Storage Tiers documentation.
+Cores/Processors    | There is a core-to-vCPU ratio of 1:1. For shared processors, fractional cores round up to the nearest whole number. For example, 1.25 cores equals 2 vCPUs. If the system type is S922 and operating system is IBM i, IBM i supports maximum of 4 cores per VM.
+Memory              | Select the amount of memory for the FalconStor VTL instance. Use the following formula: memory >= 16 + (2 * repository_capacity). If you choose to use more than 64 GBs of memory per core, you are charged a higher price. For example, when you choose one core with 128 GBs of memory, you are charged the regular price for the first 64 GBs. After the first 64 GBs (64 - 128 GBs), you are charged a higher price.
+Repository Capacity | Select the repository capacity for the FalconStor VTL object storage instance. Note that the memory reserved for deduplication depends on the size of the deduplication repository, where 2 GB memory is used for each 1 TB of deduplication repository capacity. You will need at least 16 GB of base memory plus 2 GB for each TB of deduplication repository (see memory formula above).
 
 ### Related Links
 
+- [FalconStor VTL IBM Cloud Catalog](https://cloud.ibm.com/catalog/content/vtltile-tags-v10.03-01-f1e88e51-7e3d-4fbc-a7ed-3ab9adb2afea-global#about)
+- [FalconStor VTL Readme File](https://cloud.ibm.com/catalog/content/vtltile-tags-v10.03-01-f1e88e51-7e3d-4fbc-a7ed-3ab9adb2afea-global/readme/power-iaas/vsi-image/0c3e5d0b-3a0c-4fcc-a7dc-3d1add34cbaa-global)
+- [FalconStor VTL for IBM Deployment Guide](https://falconstor-download.s3.us-east.cloud-object-storage.appdomain.cloud/FalconStor%20VTL%20for%20IBM%20Deployment%20Guide.pdf)
+- [Creating a Power Systems Virtual Server](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-creating-power-virtual-server)
+- [IBM Power Hardware Specifications](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#hardware-specifications)
+- [What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-power-iaas-faqs#processor)
+- [IBM Power Storage Tiers](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#storage-tiers)
+- [Configuring and adding a private network subnet](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-subnet)
 
 -----
 
 ## Scc V 2
 
+IBM Cloud Security and Compliance Center is designed to help you create and maintain a secure and compliant development environment. With a wide variety of available controls, customization opportunities, and integrations, Security and Compliance Center can help you to meet your most stringent security and compliance goals. This cannot be used concurrently with SccV1.
+
+CRAIG currently supports the following SCC profiles:
+
+Profile                                | Description
+---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+IBM Cloud for Financial Services       | The IBM Cloud for Financial Services profile provides you with a set of pre-configured automated goals that are mapped to the IBM Cloud Framework for Financial Services control requirements. The results of these tests help you validate compliance when you are using one of the references architectures for the IBM Cloud for Financial Services.
+IBM Cloud Kubernetes Service Benchmark | Validate the configuration of your IBM Cloud Red Hat OpenShift clusters.
+Cloud Internet Services Benchmark      | Secure your IBM Cloud Foundations resources with CIS Benchmarks.
+
+By default, IBM Cloud Security and Compliance Center is not enabled but can be enabled if desired.
+
+### Related Links
+
+- [Docs](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started)
+- [SCC Predefined Profiles Documentation](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-predefined-profiles)
+- [SCC IBM Cloud Catalog](https://cloud.ibm.com/catalog/services/security-and-compliance-center#about)
+- [IBM Cloud Framework for Financial Services control requirements](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-about#framework-control-requirements)
+- [IBM Cloud for Financial Services Reference Architectures](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-reference-architecture-overview)
+- [SCC Profile Attachment Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_profile_attachment)
+
+-----
+
+## Cis Glbs
+
 NYI
 
 ### Related Links
@@ -886,7 +932,7 @@ NYI
 
 -----
 
-## Cis Glbs
+## Fortigate Vnf
 
 NYI
 

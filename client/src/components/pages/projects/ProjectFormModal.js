@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  IcseFormGroup,
   IcseNameInput,
   IcseTextInput,
   IcseModal,
@@ -22,6 +21,7 @@ import {
   template_dropdown_map,
 } from "../../../lib/constants";
 import PropTypes from "prop-types";
+import { CraigFormGroup } from "../../forms";
 
 export class ProjectFormModal extends React.Component {
   constructor(props) {
@@ -97,7 +97,7 @@ export class ProjectFormModal extends React.Component {
         }}
         primaryButtonDisabled={primaryButtonDisabled}
       >
-        <IcseFormGroup>
+        <CraigFormGroup>
           <IcseNameInput
             invalid={invalidProjectNameVal}
             invalidText={invalidProjectNameText(this.state, this.props)}
@@ -112,8 +112,8 @@ export class ProjectFormModal extends React.Component {
                 : "";
             }}
           />
-        </IcseFormGroup>
-        <IcseFormGroup>
+        </CraigFormGroup>
+        <CraigFormGroup>
           <IcseTextInput
             invalid={invalidDescription}
             invalidText={
@@ -129,8 +129,8 @@ export class ProjectFormModal extends React.Component {
             className="textInputWide"
             optional={true}
           />
-        </IcseFormGroup>
-        <IcseFormGroup className="formInSubForm">
+        </CraigFormGroup>
+        <CraigFormGroup className="formInSubForm">
           <IcseSelect
             name="template"
             tooltip={{
@@ -150,9 +150,9 @@ export class ProjectFormModal extends React.Component {
             className="projectSelectMarginBottom"
           />
           <TemplateAbout smallImage template={templates[this.state.template]} />
-        </IcseFormGroup>
+        </CraigFormGroup>
         <>
-          <IcseFormGroup>
+          <CraigFormGroup>
             {this.props.noProjectSave === false && (
               <IcseToggle
                 labelText="Integrate with Schematics"
@@ -163,10 +163,10 @@ export class ProjectFormModal extends React.Component {
                 value={this.state.use_schematics}
               />
             )}
-          </IcseFormGroup>
+          </CraigFormGroup>
           {this.state.use_schematics && (
             <div className="formInSubForm">
-              <IcseFormGroup>
+              <CraigFormGroup>
                 <IcseTextInput
                   invalid={invalidNewResourceName(this.state.workspace_name)}
                   invalidText={"Invalid Name"}
@@ -176,8 +176,8 @@ export class ProjectFormModal extends React.Component {
                   onChange={this.handleTextInput}
                   value={this.state.workspace_name || ""}
                 />
-              </IcseFormGroup>
-              <IcseFormGroup>
+              </CraigFormGroup>
+              <CraigFormGroup>
                 <IcseTextInput
                   invalid={false}
                   componentName="workspace"
@@ -192,8 +192,8 @@ export class ProjectFormModal extends React.Component {
                     link: "https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui",
                   }}
                 />
-              </IcseFormGroup>
-              <IcseFormGroup>
+              </CraigFormGroup>
+              <CraigFormGroup>
                 <IcseSelect
                   name="workspace_region"
                   labelText={"Workspace Region"}
@@ -202,7 +202,7 @@ export class ProjectFormModal extends React.Component {
                   groups={["us-south", "eu-de", "eu-gb"].sort(azsort)}
                   handleInputChange={this.handleTextInput}
                 />
-              </IcseFormGroup>
+              </CraigFormGroup>
               {this.state.workspace_url && (
                 <div className="displayFlex alignItemsEnd">
                   <IcseTextInput

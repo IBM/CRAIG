@@ -37,7 +37,6 @@ function dynamicToggleProps(props) {
     "Function",
     props.handleInputChange
   );
-
   // check params for disabled
   let isDisabled = disabledReturnsBooleanCheck(props, "dynamicToggleProps");
   let labelA = props.field.useOnOff ? "Off" : "False",

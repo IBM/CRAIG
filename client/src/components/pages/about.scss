@@ -10,6 +10,14 @@ h2 {
   font-size: 1.5em;
 }
 
+h3 {
+  font-size: 1.2em;
+}
+
+h4 {
+  font-size: 1em;
+}
+
 p {
   font-size: 1.25em;
   line-height: 2.5rem;
@@ -21,6 +29,13 @@ li {
 
 .bold {
   font-weight: 600;
+}
+
+code {
+  font-family: Consolas, "courier new";
+  color: rgb(0, 0, 0);
+  background-color: #f1f1f1;
+  font-size: 105%;
 }
 
 .verticalAlign {
@@ -57,6 +72,14 @@ ul.bullets {
 }
 
 ul.indent {
+  margin-left: 2rem;
+}
+
+ul.indentLarge {
+  margin-left: 4rem;
+}
+
+p.indent {
   margin-left: 2rem;
 }
 
@@ -103,6 +126,10 @@ div .center {
     line-height: 2.5rem;
   }
 
+  li.small {
+    font-size: 0.8em;
+  }
+
   p.textContainer {
     text-align: center;
   }
@@ -111,4 +138,8 @@ div .center {
   .cds--accordion-content {
     font-size: 1.25em;
   }
+}
+
+#craig-about .cds--accordion__title {
+  font-size: 1.25rem;
 }

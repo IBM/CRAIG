@@ -1,14 +1,14 @@
 const { assert } = require("chai");
 const {
-  dynamicIcseFormGroupsProps,
+  dynamicCraigFormGroupsProps,
 } = require("../../../client/src/lib/forms/dynamic-form-fields");
 const { state } = require("../../../client/src/lib");
 const craig = state();
 
-describe("dynamicIcseFormGroupsProps", () => {
+describe("dynamicCraigFormGroupsProps", () => {
   it("should return correct props if no name, no subForms, and is last", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: ["hi"],
@@ -25,7 +25,7 @@ describe("dynamicIcseFormGroupsProps", () => {
   });
   it("should return correct props if name, no subForms, and is last", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: ["hi"],
@@ -45,7 +45,7 @@ describe("dynamicIcseFormGroupsProps", () => {
   });
   it("should return correct props if name, with subForms, and is last", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: ["hi"],
@@ -66,7 +66,7 @@ describe("dynamicIcseFormGroupsProps", () => {
   });
   it("should return correct props if name, with subForms length 0, and is last", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: ["hi"],
@@ -87,7 +87,7 @@ describe("dynamicIcseFormGroupsProps", () => {
   });
   it("should return for next to last group when all are hidden", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: [
@@ -115,9 +115,41 @@ describe("dynamicIcseFormGroupsProps", () => {
       "it should return correct props"
     );
   });
+  it("should return for next to last group for subnets", () => {
+    assert.deepEqual(
+      dynamicCraigFormGroupsProps(
+        {
+          formName: "subnet",
+          form: {
+            groups: [
+              {},
+              {
+                hidden: {
+                  hideWhen: function () {
+                    return false;
+                  },
+                },
+              },
+            ],
+            subForms: [],
+          },
+          data: {
+            name: "frog",
+          },
+        },
+        0
+      ),
+      {
+        key: "frog-group-0",
+        noMarginBottom: false,
+        className: "marginBottomSmall",
+      },
+      "it should return correct props"
+    );
+  });
   it("should return for next to last group when all are not hidden", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: [
@@ -148,7 +180,7 @@ describe("dynamicIcseFormGroupsProps", () => {
   });
   it("should return for dns when record not srv and row is 2", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: [
@@ -211,7 +243,7 @@ describe("dynamicIcseFormGroupsProps", () => {
   });
   it("should return for dns when record not srv and row is 1", () => {
     assert.deepEqual(
-      dynamicIcseFormGroupsProps(
+      dynamicCraigFormGroupsProps(
         {
           form: {
             groups: [

@@ -42,6 +42,7 @@ import {
   Voicemail,
   IbmCloudSecurityComplianceCenterWorkloadProtection,
   LoadBalancerPool,
+  AppConnectivity,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
@@ -102,6 +103,7 @@ const navIcons = {
   IbmCloudSecurityComplianceCenterWorkloadProtection:
     IbmCloudSecurityComplianceCenterWorkloadProtection,
   LoadBalancerPool: LoadBalancerPool,
+  AppConnectivity: AppConnectivity,
 };
 
 let pageOrder = [
@@ -126,6 +128,18 @@ let pageOrder = [
     // temporary to get page to render
     title: "Cloud Services",
     path: "/beta/services",
+    icon: Settings,
+  },
+  {
+    // temporary to get page to render
+    title: "VPC Network",
+    path: "/beta/vpc",
+    icon: Settings,
+  },
+  {
+    // temporary to get page to render
+    title: "VPC Deployments",
+    path: "/beta/vpcDeployments",
     icon: Settings,
   },
 ];
@@ -229,17 +243,18 @@ const PageTemplate = (props) => {
               kind="warning-alt"
               lowContrast={true}
               subtitle="Some elements may not function correctly."
-              title="CRAIG version out of date."
+              title="CRAIG state version out of date."
               hideCloseButton={true}
             />
           )}
         </>
       )}
-
       <div className="minHeight displayFlex navBarAlign boxShadow fieldPadding">
         <div
           className={
-            props.hideCodeMirror || formPathNotPresent
+            props.hideCodeMirror ||
+            formPathNotPresent ||
+            contains(window.location.pathname, "/beta/")
               ? "widthOneHundredPercent"
               : "leftPanelWidth"
           }
@@ -259,6 +274,8 @@ const PageTemplate = (props) => {
           {!isResetState && (
             <>
               {window.location.pathname !== "/projects" &&
+                !contains(window.location.pathname, "/docs/") &&
+                !contains(window.location.pathname, "/beta") &&
                 !props.craig.store.project_name && (
                   <NoProjectModal
                     craig={props.craig}
@@ -270,7 +287,11 @@ const PageTemplate = (props) => {
           {props.children}
         </div>
         <CraigCodeMirror
-          hideCodeMirror={formPathNotPresent === true || props.hideCodeMirror}
+          hideCodeMirror={
+            formPathNotPresent === true ||
+            props.hideCodeMirror ||
+            contains(window.location.pathname, "/beta")
+          }
           code={codeMirrorGetDisplay(
             props.json,
             props.jsonInCodeMirror,
@@ -282,17 +303,18 @@ const PageTemplate = (props) => {
           jsonInCodeMirror={props.jsonInCodeMirror}
         />
       </div>
-      {isResetState !== true && (
-        <Footer
-          toggleFooter={() => {
-            props.craig.store.json._options.hideFooter =
-              !props.craig.store.json._options.hideFooter;
-            props.saveAndSendNotification("updating footer", false, true);
-          }}
-          hideFooter={props.craig.store.json._options.hideFooter || false}
-          navigate={navigate}
-        />
-      )}
+      {isResetState !== true &&
+        !contains(window.location.pathname, "/beta") && (
+          <Footer
+            toggleFooter={() => {
+              props.craig.store.json._options.hideFooter =
+                !props.craig.store.json._options.hideFooter;
+              props.saveAndSendNotification("updating footer", false, true);
+            }}
+            hideFooter={props.craig.store.json._options.hideFooter || false}
+            navigate={navigate}
+          />
+        )}
     </>
   );
 };

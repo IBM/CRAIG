@@ -5,6 +5,8 @@ import "./app.scss";
 import { ResetState, PageNotFound } from "./components";
 import { Buffer } from "buffer";
 import Tutorial from "./components/pages/tutorial/Tutorial";
+import "@carbon/styles/css/styles.css";
+import "./index.css";
 window.Buffer = Buffer; // Buffer is used to download zip file
 
 /**
@@ -85,6 +87,10 @@ class App extends Component {
           />
           <Route
             path="/projects"
+            element={<Craig craigRouter={this.craigRouter} />}
+          />
+          <Route
+            path="/beta"
             element={<Craig craigRouter={this.craigRouter} />}
           />
           <Route path="*" element={<PageNotFound />} />

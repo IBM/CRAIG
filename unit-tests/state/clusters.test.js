@@ -368,6 +368,128 @@ describe("clusters", () => {
       );
     });
   });
+  describe("clusters.schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should return correct data on kube type render when empty string", () => {
+      assert.deepEqual(
+        craig.clusters.kube_type.onRender({}),
+        "",
+        "it should return empty string"
+      );
+    });
+    it("should return correct data on kube type render when openshift", () => {
+      assert.deepEqual(
+        craig.clusters.kube_type.onRender({ kube_type: "openshift" }),
+        "OpenShift",
+        "it should return correct data"
+      );
+    });
+    it("should return correct data on kube type render when iks", () => {
+      assert.deepEqual(
+        craig.clusters.kube_type.onRender({ kube_type: "iks" }),
+        "IBM Kubernetes Service",
+        "it should return correct data"
+      );
+    });
+    it("should return correct data on kube type render when openshift", () => {
+      assert.deepEqual(
+        craig.clusters.kube_type.onInputChange({ kube_type: "OpenShift" }),
+        "openshift",
+        "it should return correct data"
+      );
+    });
+    it("should return correct data on kube type input change when iks", () => {
+      assert.deepEqual(
+        craig.clusters.kube_type.onInputChange({
+          kube_type: "IBM Kubernetes Service",
+        }),
+        "iks",
+        "it should return correct data"
+      );
+    });
+    it("should return correct groups for cos", () => {
+      assert.deepEqual(
+        craig.clusters.cos.groups({}, { craig: craig }),
+        ["atracker-cos", "cos"],
+        "it should return correct data"
+      );
+    });
+    it("should hide cos when type not openshift", () => {
+      assert.isTrue(
+        craig.clusters.cos.hideWhen({ kube_type: "" }),
+        "it should be hidden"
+      );
+    });
+    it("should hide entitlement when type not openshift", () => {
+      assert.isTrue(
+        craig.clusters.entitlement.hideWhen({ kube_type: "" }),
+        "it should be hidden"
+      );
+    });
+    it("should have invalid subnets when openshift and invalid workers per subnet", () => {
+      assert.isTrue(
+        craig.clusters.subnets.invalid({
+          kube_type: "openshift",
+          subnets: [],
+          workers_per_subnet: "1",
+        }),
+        "it should be invalid"
+      );
+    });
+    it("should have invalid workers per subnet when openshift and invalid workers per subnet", () => {
+      assert.isTrue(
+        craig.clusters.workers_per_subnet.invalid({
+          kube_type: "openshift",
+          subnets: [],
+          workers_per_subnet: "1",
+        }),
+        "it should be invalid"
+      );
+    });
+    it("should not be invalid subnets when openshift and workers per subnet", () => {
+      assert.isFalse(
+        craig.clusters.subnets.invalid({
+          kube_type: "openshift",
+          subnets: ["subnet"],
+          workers_per_subnet: "2",
+        }),
+        "it should be invalid"
+      );
+    });
+    it("should not be invalid when not openshift and 1 workers per subnet", () => {
+      assert.isFalse(
+        craig.clusters.subnets.invalid({
+          kube_type: "iks",
+          subnets: ["subnet"],
+          workers_per_subnet: "1",
+        }),
+        "it should be invalid"
+      );
+    });
+    it("should return correct api endpoint for flavors", () => {
+      assert.deepEqual(
+        craig.clusters.flavor.apiEndpoint(
+          {},
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    region: "us-south",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        `/api/cluster/us-south/flavors`,
+        "it should return api endpoint"
+      );
+    });
+  });
   describe("cluster.worker_pools", () => {
     describe("clusters.worker_pools.delete", () => {
       it("should delete a worker pool from a cluster object", () => {
@@ -430,6 +552,21 @@ describe("clusters", () => {
             flavor: "bx2.16x64",
           },
           "it should be empty"
+        );
+      });
+    });
+    describe("worker pools schema", () => {
+      it("should be hidden when parent kube type is not openshift", () => {
+        assert.isTrue(
+          newState().clusters.worker_pools.entitlement.hideWhen(
+            {},
+            {
+              parent: {
+                kube_type: "iks",
+              },
+            }
+          ),
+          "it should be hidden"
         );
       });
     });
@@ -507,6 +644,53 @@ describe("clusters", () => {
           state.store.json.clusters[0].opaque_secrets,
           [],
           "it should be empty"
+        );
+      });
+    });
+    describe("clusters.opaque_secrets.schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+      });
+      it("should return groups for secrets manager", () => {
+        assert.deepEqual(
+          craig.clusters.opaque_secrets.secrets_manager.groups(
+            {},
+            { craig: craig }
+          ),
+          [],
+          "it should return secrets manager instances"
+        );
+      });
+      it("should hide interval when auto rotate is false", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.interval.hideWhen({
+            auto_rotate: false,
+          }),
+          "it should be hidden"
+        );
+      });
+      it("should not have invalid interval when auto rotate is false", () => {
+        assert.isFalse(
+          craig.clusters.opaque_secrets.interval.invalid({
+            auto_rotate: false,
+          }),
+          "it should be hidden"
+        );
+      });
+      it("should return true when auto rotate and no interval", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.interval.invalid({
+            auto_rotate: true,
+            interval: "",
+          }),
+          "it should be hidden"
+        );
+      });
+      it("should hide unit when auto rotate is false", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.unit.hideWhen({ auto_rotate: false }),
+          "it should be hidden"
         );
       });
     });

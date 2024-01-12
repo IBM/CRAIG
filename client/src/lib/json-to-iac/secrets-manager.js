@@ -108,25 +108,33 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
   let kmsInstance = secretsManager.kms
     ? getObjectFromArray(config.key_management, "name", secretsManager.kms)
     : null;
-  let instance = {
-    name: kebabName([secretsManager.name]),
-    location: varDotRegion,
-    plan: "standard",
-    service: "secrets-manager",
-    resource_group_id: rgIdRef(secretsManager.resource_group, config),
-    parameters: {
-      kms_key: !kmsInstance
-        ? "ERROR: Unfound Reference"
-        : encryptionKeyRef(
-            secretsManager.kms,
-            secretsManager.encryption_key,
-            "crn"
-          ),
-    },
-    timeouts: timeouts("1h", "", "1h"),
-    tags: config._options.tags,
-  };
-  if (kmsInstance && kmsInstance.has_secrets_manager_auth !== true) {
+  let instance = secretsManager.use_data
+    ? {
+        name: secretsManager.name,
+      }
+    : {
+        name: kebabName([secretsManager.name]),
+        location: varDotRegion,
+        plan: "standard",
+        service: "secrets-manager",
+        resource_group_id: rgIdRef(secretsManager.resource_group, config),
+        parameters: {
+          kms_key: !kmsInstance
+            ? "ERROR: Unfound Reference"
+            : encryptionKeyRef(
+                secretsManager.kms,
+                secretsManager.encryption_key,
+                "crn"
+              ),
+        },
+        timeouts: timeouts("1h", "", "1h"),
+        tags: config._options.tags,
+      };
+  if (
+    kmsInstance &&
+    kmsInstance.has_secrets_manager_auth !== true &&
+    !secretsManager.use_data
+  ) {
     instance.depends_on = [
       cdktfRef(
         `ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
@@ -156,7 +164,7 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
 function formatSecretsManagerInstance(secretsManager, config) {
   let instance = ibmResourceInstanceSecretsManager(secretsManager, config);
   return jsonToTfPrint(
-    "resource",
+    secretsManager.use_data ? "data" : "resource",
     "ibm_resource_instance",
     instance.name,
     instance.data
@@ -372,7 +380,14 @@ function formatSecretsManagerK8sSecret(secret, config) {
  */
 function secretsManagerTf(config) {
   let tf = ``;
-  let allKmsServices = distinct(splat(config.secrets_manager, "kms"));
+  let allKmsServices = distinct(
+    splat(
+      config.secrets_manager.filter((instance) => {
+        if (!instance.use_data) return instance;
+      }),
+      "kms"
+    )
+  );
   let kmstf = "";
   let totalKmsInstances = 0;
   allKmsServices.forEach((service) => {

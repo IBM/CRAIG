@@ -512,5 +512,48 @@ describe("f5.instance", () => {
         ]);
       });
     });
+    describe("f5.vsi.schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+      });
+      it("should return false for ssh key invalid if zones is 0 and no ssh keys are selected", () => {
+        assert.isFalse(
+          craig.f5.vsi.ssh_keys.invalid({ zones: "0", ssh_keys: [] }),
+          "it should be valid"
+        );
+      });
+      it("should not have resource groups as invalid when no zones", () => {
+        assert.isFalse(
+          craig.f5.vsi.resource_group.invalid({ zones: "0", ssh_keys: [] }),
+          "it should be valid"
+        );
+      });
+      it("should have resource groups as invalid when  zones", () => {
+        assert.isTrue(
+          craig.f5.vsi.resource_group.invalid({ zones: "1", ssh_keys: [] }),
+          "it should be valid"
+        );
+      });
+      it("should have correct image groups", () => {
+        assert.deepEqual(
+          craig.f5.vsi.image.groups(),
+          [
+            "f5-bigip-15-1-5-1-0-0-14-all-1slot",
+            "f5-bigip-15-1-5-1-0-0-14-ltm-1slot",
+            "f5-bigip-16-1-2-2-0-0-28-ltm-1slot",
+            "f5-bigip-16-1-2-2-0-0-28-all-1slot",
+          ],
+          "it should return list of images"
+        );
+      });
+      it("should return api endpoint for image name with region", () => {
+        assert.deepEqual(
+          craig.f5.vsi.profile.apiEndpoint({}, { craig: craig }),
+          "/api/vsi/us-south/instanceProfiles",
+          "it should return api endpoint"
+        );
+      });
+    });
   });
 });

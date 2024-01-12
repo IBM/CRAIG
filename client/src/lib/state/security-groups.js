@@ -22,11 +22,15 @@ const {
   invalidTcpOrUdpPort,
   invalidIcmpCodeOrType,
   fieldIsNullOrEmptyString,
+  resourceGroupsField,
+  selectInvalidText,
+  vpcGroups,
 } = require("./utils");
 const {
   invalidName,
   invalidNameText,
   invalidSecurityGroupRuleName,
+  invalidSecurityGroupRuleText,
 } = require("../forms");
 
 /**
@@ -210,14 +214,17 @@ function initSecurityGroupStore(store) {
         default: "",
         invalid: invalidName("security_groups"),
         invalidText: invalidNameText("security_groups"),
+        size: "small",
       },
-      resource_group: {
-        default: "",
-        invalid: fieldIsNullOrEmptyString("resource_group"),
-      },
+      resource_group: resourceGroupsField(true),
       vpc: {
+        type: "select",
+        labelText: "VPC",
         default: "",
         invalid: fieldIsNullOrEmptyString("vpc"),
+        invalidText: selectInvalidText("vpc"),
+        size: "small",
+        groups: vpcGroups,
       },
     },
     subComponents: {
@@ -234,7 +241,7 @@ function initSecurityGroupStore(store) {
           name: {
             default: "",
             invalid: invalidSecurityGroupRuleName,
-            invalidText: invalidNameText("sg_rules"),
+            invalidText: invalidSecurityGroupRuleText,
           },
           source: {
             default: "",

@@ -1,5 +1,6 @@
 import { Add, CloudAlerting } from "@carbon/icons-react";
 import { Tile } from "@carbon/react";
+import { contains } from "lazy-z";
 
 export const ClassicDisabledTile = (isSubComponent) => {
   return (
@@ -9,11 +10,19 @@ export const ClassicDisabledTile = (isSubComponent) => {
         (isSubComponent ? "" : " marginTop")
       }
     >
-      <CloudAlerting size="24" className="iconMargin" /> Classic Infrastructure
-      is not enabled. Enable Classic Infrastructure from the
-      <a className="no-secrets-link" href="/">
-        Options Page.
-      </a>{" "}
+      <CloudAlerting size="24" className="iconMargin" /> No Classic
+      Infrastructure resources have been created. Create one to enable this
+      feature.
+    </Tile>
+  );
+};
+
+export const NoVpcVsiTile = () => {
+  return (
+    <Tile className="tileBackground displayFlex alignItemsCenter wrap">
+      <CloudAlerting size="24" className="iconMargin" /> No VPC Virtual Servers
+      have been created. To enable Load Balancer creation, create a Virtual
+      Server deployment.
     </Tile>
   );
 };
@@ -68,14 +77,22 @@ export const PerCloudConnections = () => {
 
 export const CraigEmptyResourceTile = (props) => {
   return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap">
+    <Tile
+      className={
+        "tileBackground displayFlex alignItemsCenter wrap " + props.className
+      }
+    >
       <CloudAlerting size="24" className="iconMargin" />
       No {props.name}.{" "}
-      <>
-        Click
-        <Add size="24" className="inlineIconMargin" />
-        button to add one.
-      </>
+      {props.noClick ? (
+        ""
+      ) : (
+        <>
+          Click
+          <Add size="24" className="inlineIconMargin" />
+          button to add one.
+        </>
+      )}
     </Tile>
   );
 };
@@ -85,7 +102,12 @@ export const NoPowerNetworkTile = () => {
     <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
       <CloudAlerting size="24" className="iconMargin" /> Power VS is not
       enabled. Return to the
-      <a className="no-secrets-link" href="/">
+      <a
+        className="no-secrets-link"
+        href={
+          contains(window.location.pathname, "/beta") ? "/beta/settings" : "/"
+        }
+      >
         Options Page
       </a>{" "}
       to enable Power VS.

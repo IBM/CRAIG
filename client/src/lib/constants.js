@@ -8,6 +8,7 @@ const emptyProject = require("./docs/templates/from-scratch.json");
 const powerVsQuickStart = require("./docs/templates/quick-start-power.json");
 const oracleSi = require("./docs/templates/oracle-si.json");
 const vpnaas = require("./docs/templates/vpn-as-a-service.json");
+const powerVsPocQuickStart = require("./docs/templates/power-poc-quick-start.json");
 const { azsort } = require("lazy-z");
 
 module.exports = {
@@ -714,7 +715,7 @@ module.exports = {
       },
     },
   },
-  edgeRouterEnabledZones: ["dal10"],
+  edgeRouterEnabledZones: ["dal10", "wdc06", "wdc07", "eu-de-1", "eu-de-2"],
   cosPlans: [
     "standard",
     "lite",
@@ -939,7 +940,7 @@ module.exports = {
       template: powerVsQuickStart,
       name: "Power VS Quick Start",
       patternDocText:
-        "This template initializes an environment with one VPC and a Power VS workspace to get started with using Power VS on IBM Cloud,",
+        "This template initializes an environment with one VPC and a Power VS workspace to get started with using Power VS on IBM Cloud.",
       includes: [
         "A resource group for cloud services and for infrastructure management",
         "A management VPC and a transit gateway",
@@ -951,6 +952,24 @@ module.exports = {
         "A Flow Logs collector for VPC",
         "Virtual Private endpoints for Cloud Object storage in the management VPC",
         "An empty Power VS workspace",
+      ],
+    },
+    "Power VS POC Quick Start": {
+      template: powerVsPocQuickStart,
+      name: "Power VS POC Quick Start",
+      patternDocText:
+        "This template initializes an environment with one VPC and a Power VS workspace to get started with using Power VS on IBM Cloud,",
+      includes: [
+        "A resource group for cloud services and for infrastructure management",
+        "A management VPC and a transit gateway",
+        "A VPC flow log collector",
+        "A VPN Gateway in the Management VPC",
+        "An example Virtual Server instance deployment in the management VPC",
+        "Encryption keys in either a Key Protect or Hyper Protect Crypto Services instance",
+        "A Cloud Object Storage Instance",
+        "A Flow Logs collector for VPC",
+        "Virtual Private endpoints for Cloud Object storage in the management VPC",
+        "An Power VS workspace with an example AIX and IBMi instance",
       ],
     },
     "VPN as a Service": {
@@ -965,7 +984,7 @@ module.exports = {
         "A Secrets Manager instance",
         "A VPC and a transit gateway",
         "A VPC flow log collector",
-        "An Power VS workspace with a cloud connection to the Transit Gateway",
+        "A Power VS workspace with a cloud connection to the Transit Gateway",
         "A site-to-site VPN Gateway in the VPC",
         "A client-to-site VPN Server in the VPC",
       ],

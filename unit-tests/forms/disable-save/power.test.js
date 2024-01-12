@@ -115,7 +115,7 @@ describe("power", () => {
         data: {
           name: "workspace",
           ssh_keys: [],
-          imageNames: [],
+          images: [],
         },
       }
     );

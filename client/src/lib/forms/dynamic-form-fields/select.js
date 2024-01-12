@@ -1,4 +1,10 @@
-const { contains, titleCase, paramTest, deepEqual } = require("lazy-z");
+const {
+  contains,
+  titleCase,
+  paramTest,
+  isFunction,
+  deepEqual,
+} = require("lazy-z");
 const {
   dynamicFieldId,
   addClassName,
@@ -20,7 +26,7 @@ const {
  * @param {object} props.parentState state data for stateful foem
  * @returns {object} props object for carbon react select
  */
-function dynamicSelectProps(props, isMounted) {
+function dynamicSelectProps(props, isMounted, stateData) {
   paramTest(
     "dynamicSelectProps",
     "props.name",
@@ -50,7 +56,9 @@ function dynamicSelectProps(props, isMounted) {
   );
 
   // check params for disabled
-  let isDisabled = disabledReturnsBooleanCheck(props, "dynamicSelectProps");
+  let isDisabled =
+    disabledReturnsBooleanCheck(props, "dynamicSelectProps") ||
+    deepEqual(stateData, ["Loading..."]);
 
   // state value
   let stateValue = props.field.onRender
@@ -63,12 +71,11 @@ function dynamicSelectProps(props, isMounted) {
     stateValue
   );
 
-  let invalid =
-    isDisabled || (props.field.type === "fetchSelect" && !isMounted)
-      ? false
-      : contains(groups, stateValue)
-      ? invalidReturnsBooleanCheck(props, "dynamicSelectProps")
-      : props.field.invalid(props.parentState, props.parentProps);
+  let invalid = isDisabled
+    ? false
+    : contains(groups, stateValue)
+    ? invalidReturnsBooleanCheck(props, "dynamicSelectProps")
+    : props.field.invalid(props.parentState, props.parentProps);
 
   // hide text when tooltip so that multiple name labels are not rendered
   let labelText = props.field.tooltip
@@ -85,7 +92,9 @@ function dynamicSelectProps(props, isMounted) {
     id: dynamicFieldId(props),
     name: props.name,
     labelText: labelText,
-    value: stateValue || "",
+    // force mapped numbers to return as a string to get around warning text
+    // for carbon component
+    value: String(stateValue || ""),
     className: addClassName(
       `leftTextAlign${props.field.tooltip ? " tooltip" : ""}`,
       props.field
@@ -93,7 +102,11 @@ function dynamicSelectProps(props, isMounted) {
     disabled: isDisabled,
     invalid: invalid,
     invalidText: invalidText,
-    readOnly: props.field.readOnly,
+    readOnly: !props.field.readOnly
+      ? false
+      : isFunction(props.field.readOnly)
+      ? props.field.readOnly(props.parentState, props.parentProps)
+      : props.field.readOnly,
     onChange: props.handleInputChange,
     groups: groups,
   };

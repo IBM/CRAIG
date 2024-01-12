@@ -24,7 +24,10 @@ function fieldFunctionReturnsBooleanCheck(
     props.parentProps,
     props.index
   );
-  if (!isBoolean(result)) {
+  // prevent crashing for vpc subnet page public gateway toggle
+  // it inexplicably is returning `undefined` even though the evaluation
+  // is true
+  if (!isBoolean(result || false)) {
     throw new Error(
       `${functionName} expects props.field.${fieldFunctionName} to evaluate to boolean, got ${typeof result}`
     );

@@ -263,8 +263,58 @@ describe("object_storage", () => {
       it("should return kms groups", () => {
         assert.deepEqual(
           newState().object_storage.kms.groups({}, { craig: newState() }),
-          ["kms"],
+          ["kms", "NONE (Insecure)"],
           "it should return list of key protect instances"
+        );
+      });
+      it("should be invalid when empty string", () => {
+        assert.isTrue(
+          newState().object_storage.kms.invalid({ kms: "" }),
+          "it should not be valid"
+        );
+      });
+      it("should return correct value on input change", () => {
+        assert.deepEqual(
+          newState().object_storage.kms.onInputChange({
+            kms: "NONE (Insecure)",
+          }),
+          null,
+          "it should return correct data"
+        );
+        assert.deepEqual(
+          newState().object_storage.kms.onInputChange({ kms: "frog" }),
+          "frog",
+          "it should return correct data"
+        );
+      });
+      it("should return correct value on render change", () => {
+        assert.deepEqual(
+          newState().object_storage.kms.onRender({
+            kms: null,
+          }),
+          "NONE (Insecure)",
+          "it should return correct data"
+        );
+        assert.deepEqual(
+          newState().object_storage.kms.onRender({ kms: "frog" }),
+          "frog",
+          "it should return correct data"
+        );
+      });
+      it("should return correct value on input change", () => {
+        assert.deepEqual(
+          newState().object_storage.buckets.kms_key.onInputChange({
+            kms_key: "NONE (Insecure)",
+          }),
+          null,
+          "it should return correct data"
+        );
+        assert.deepEqual(
+          newState().object_storage.buckets.kms_key.onInputChange({
+            kms_key: "frog",
+          }),
+          "frog",
+          "it should return correct data"
         );
       });
     });
@@ -515,6 +565,198 @@ describe("object_storage", () => {
         );
         assert.deepEqual(state.store.json.object_storage[0].keys, []);
       });
+    });
+    describe("bucket shcema", () => {
+      it("should return correct values on render", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.object_storage.buckets.kms_key.onRender({ kms_key: null }),
+          "NONE (Insecure)",
+          "it should return correct value"
+        );
+        assert.deepEqual(
+          state.object_storage.buckets.kms_key.onRender({ kms_key: "toad" }),
+          "toad",
+          "it should return correct value"
+        );
+      });
+    });
+  });
+  describe("object_storage.shouldDisableSave", () => {
+    const craig = newState();
+    it("should return true if a object storage instance has an invalid name", () => {
+      assert.isTrue(
+        craig.object_storage.shouldDisableSave(
+          { name: "@@@", use_data: false },
+          {
+            craig: {
+              store: {
+                json: {
+                  object_storage: [
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "test",
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
+    it("should return true if a object storage instance has an invalid resource group", () => {
+      assert.isTrue(
+        craig.object_storage.shouldDisableSave(
+          { name: "aaa", use_data: false, resource_group: null },
+          {
+            craig: {
+              store: {
+                json: {
+                  object_storage: [
+                    {
+                      name: "frog",
+                      resource_group: null,
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "test",
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
+    // commented out for power poc
+    // it("should return true if a object storage instance has an invalid kms instance", () => {
+    //   assert.isTrue(
+    //     craig.object_storage.shouldDisableSave(
+    //       {
+    //         name: "aaa",
+    //         use_data: false,
+    //         resource_group: "management-rg",
+    //         kms: null,
+    //       },
+    //       {
+    //         craig: {
+    //           store: {
+    //             json: {
+    //               object_storage: [
+    //                 {
+    //                   name: "frog",
+    //                   resource_group: null,
+    //                 },
+    //               ],
+    //             },
+    //           },
+    //         },
+    //         data: {
+    //           name: "test",
+    //         },
+    //       }
+    //     ),
+    //     "it should be false"
+    //   );
+    // });
+  });
+  describe("object_storage.buckets.shouldDisableSave", () => {
+    const craig = newState();
+    it("should return true if an object storage bucket has an invalid name", () => {
+      assert.isTrue(
+        craig.object_storage.buckets.shouldDisableSave(
+          { name: "@@@", use_data: false },
+          {
+            craig: {
+              store: {
+                json: {
+                  object_storage: [
+                    {
+                      name: "frog",
+                      buckets: [
+                        {
+                          name: "test",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "test",
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
+    // commented out to allow for unencrypted cos buckets
+    // it("should return true if an object storage bucket has an invalid encryption key name", () => {
+    //   assert.isTrue(
+    //     craig.object_storage.buckets.shouldDisableSave(
+    //       { name: "key", kms_key: null, use_data: false },
+    //       {
+    //         craig: {
+    //           store: {
+    //             json: {
+    //               object_storage: [
+    //                 {
+    //                   name: "frog",
+    //                   buckets: [
+    //                     {
+    //                       name: "test",
+    //                     },
+    //                   ],
+    //                 },
+    //               ],
+    //             },
+    //           },
+    //         },
+    //         data: {
+    //           name: "test",
+    //         },
+    //       }
+    //     ),
+    //     "it should be false"
+    //   );
+    // });
+  });
+  describe("object_storage.keys.shouldDisableSave", () => {
+    const craig = newState();
+    it("should return true if an object storage key has an invalid name", () => {
+      assert.isTrue(
+        craig.object_storage.keys.shouldDisableSave(
+          { name: "@@@", use_data: false },
+          {
+            craig: {
+              store: {
+                json: {
+                  object_storage: [
+                    {
+                      name: "frog",
+                      keys: [
+                        {
+                          name: "test",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "test",
+            },
+          }
+        ),
+        "it should be false"
+      );
     });
   });
   describe("object_storage.shouldDisableSave", () => {

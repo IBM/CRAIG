@@ -1,7 +1,7 @@
 /* this file is the main application page */
 
 import React from "react";
-import { kebabCase, titleCase, isNullOrEmptyString } from "lazy-z";
+import { kebabCase, titleCase, contains } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -31,6 +31,13 @@ import {
   updateNotification,
 } from "./lib/craig-app";
 import { CloudServicesPage } from "./components/pages/cloud-services";
+import VpcDiagramPage from "./components/pages/vpc/Vpc.js";
+import { Breadcrumb, BreadcrumbItem } from "@carbon/react";
+import VpcDeploymentsDiagramPage from "./components/pages/vpc/VpcDeployments.js";
+import { Overview } from "./components/pages/diagrams/Overview.js";
+import PowerDiagram from "./components/pages/power/Power.js";
+import VpcConnectivityPage from "./components/pages/vpc/Connectivity.js";
+import ClassicDiagram from "./components/pages/classic/Classic.js";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -402,6 +409,71 @@ class Craig extends React.Component {
           saveAndSendNotification={this.saveAndSendNotification}
           beta={this.props.params.betaPage}
         >
+          {contains(window.location.pathname, "/beta") && (
+            <Breadcrumb noTrailingSlash style={{ marginTop: "-0.5rem" }}>
+              <BreadcrumbItem
+                href="/beta/projects"
+                isCurrentPage={
+                  window.location.pathname === "/beta/projects" ||
+                  window.location.pathname === "/beta"
+                }
+              >
+                Projects
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/settings"
+                isCurrentPage={window.location.pathname === "/beta/settings"}
+              >
+                Settings
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/services"
+                isCurrentPage={window.location.pathname === "/beta/services"}
+              >
+                Cloud Services
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/vpc"
+                isCurrentPage={window.location.pathname === "/beta/vpc"}
+              >
+                VPC Networks
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/vpcDeployments"
+                isCurrentPage={
+                  window.location.pathname === "/beta/vpcDeployments"
+                }
+              >
+                VPC Deployments
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/connectivity"
+                isCurrentPage={
+                  window.location.pathname === "/beta/connectivity"
+                }
+              >
+                Connectivity
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/power"
+                isCurrentPage={window.location.pathname === "/beta/power"}
+              >
+                Power VS
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/classic"
+                isCurrentPage={window.location.pathname === "/beta/classic"}
+              >
+                Classic Network
+              </BreadcrumbItem>
+              <BreadcrumbItem
+                href="/beta/overview"
+                isCurrentPage={window.location.pathname === "/beta/overview"}
+              >
+                Overview
+              </BreadcrumbItem>
+            </Breadcrumb>
+          )}
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
               <About />
@@ -412,7 +484,9 @@ class Craig extends React.Component {
             ) : (
               <PageNotFound />
             )
-          ) : window.location.pathname === "/projects" ? (
+          ) : window.location.pathname === "/projects" ||
+            window.location.pathname === "/beta/projects" ||
+            window.location.pathname === "/beta" ? (
             <Projects
               current_project={craig.store.project_name}
               projects={this.state.projects}
@@ -425,7 +499,8 @@ class Craig extends React.Component {
                 return craig.store.json.resource_groups.length === 1;
               }}
             />
-          ) : window.location.pathname === "/" ? (
+          ) : window.location.pathname === "/" ||
+            window.location.pathname === "/beta/settings" ? (
             <Home craig={craig} />
           ) : window.location.pathname === "/summary" ? (
             <Summary
@@ -436,6 +511,18 @@ class Craig extends React.Component {
             />
           ) : window.location.pathname === "/beta/services" ? (
             <CloudServicesPage craig={craig} />
+          ) : window.location.pathname === "/beta/vpc" ? (
+            <VpcDiagramPage craig={craig} />
+          ) : window.location.pathname === "/beta/vpcDeployments" ? (
+            <VpcDeploymentsDiagramPage craig={craig} />
+          ) : window.location.pathname === "/beta/connectivity" ? (
+            <VpcConnectivityPage craig={craig} />
+          ) : window.location.pathname === "/beta/power" ? (
+            <PowerDiagram craig={craig} />
+          ) : window.location.pathname === "/beta/classic" ? (
+            <ClassicDiagram craig={craig} />
+          ) : window.location.pathname === "/beta/overview" ? (
+            <Overview craig={craig} />
           ) : window.location.pathname === "/form/cbr" ? (
             <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (

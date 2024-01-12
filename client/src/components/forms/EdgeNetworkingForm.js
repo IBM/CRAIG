@@ -1,9 +1,7 @@
 import React from "react";
 import {
-  IcseFormGroup,
   IcseHeading,
   IcseSelect,
-  SaveAddButton,
   StatelessToggleForm,
 } from "icse-react-assets";
 import { contains, buildNumberDropdownList, kebabCase } from "lazy-z";
@@ -12,6 +10,8 @@ import { EdgeNetworkingDocs } from "../pages";
 import edgeNetwork from "../../images/edge-network.png";
 import PropTypes from "prop-types";
 import "./edge-network.css";
+import { PrimaryButton } from "./utils/ToggleFormComponents";
+import { CraigFormGroup } from "./utils";
 
 const edgePatterns = [
   {
@@ -153,7 +153,7 @@ class EdgeNetworkingForm extends React.Component {
           hide={this.state.hideEdgeForm}
         >
           <div className="displayFlex edgeFormWidth">
-            <IcseFormGroup>
+            <CraigFormGroup>
               <div>
                 <EdgeNetworkingDocs />
                 <div className="formInSubForm">
@@ -162,7 +162,8 @@ class EdgeNetworkingForm extends React.Component {
                     type="subHeading"
                     className="marginBottomSmall"
                     buttons={
-                      <SaveAddButton
+                      <PrimaryButton
+                        noDeleteButton
                         name="edge-networking"
                         disabled={
                           this.state.edgeType === "none" ||
@@ -180,7 +181,7 @@ class EdgeNetworkingForm extends React.Component {
                       />
                     }
                   />
-                  <IcseFormGroup noMarginBottom>
+                  <CraigFormGroup noMarginBottom>
                     <RadioGroup
                       name="Edge Network"
                       type="edgeType"
@@ -209,8 +210,8 @@ class EdgeNetworkingForm extends React.Component {
                       invalidText="Select a pattern to create an edge network"
                       handleRadioChange={this.handleRadioChange}
                     />
-                  </IcseFormGroup>
-                  <IcseFormGroup>
+                  </CraigFormGroup>
+                  <CraigFormGroup>
                     <IcseSelect
                       groups={
                         this.state.zones === "0"
@@ -234,10 +235,10 @@ class EdgeNetworkingForm extends React.Component {
                           "The number of Availability Zones where the Edge Network will be created.",
                       }}
                     />
-                  </IcseFormGroup>
+                  </CraigFormGroup>
                 </div>
               </div>
-            </IcseFormGroup>
+            </CraigFormGroup>
             <div className="edgeTileMargin">
               <a
                 href={edgeNetwork}

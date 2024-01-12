@@ -138,7 +138,14 @@
       "ssh_keys": [],
       "network": [],
       "cloud_connections": [],
-      "images": [],
+      "images": [
+        {
+          "name": "7100-05-09",
+          "workspace": "workspace",
+          "zone": "dal12",
+          "pi_image_id": "35eca797-6599-4597-af1f-d2eb5e292dfc"
+        }
+      ],
       "attachments": [],
       "imageNames": ["7100-05-09"]
     }
