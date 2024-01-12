@@ -2298,5 +2298,13 @@
       }
     ],
     "relatedLinks": []
+  },
+  "fortigate_vnf": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": []
   }
 }

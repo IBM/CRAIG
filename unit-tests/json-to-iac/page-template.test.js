@@ -9,6 +9,7 @@ const {
 } = require("../../client/src/lib/json-to-iac/page-template");
 const resourceGroupTf = require("../../client/src/lib/json-to-iac/resource-groups");
 const { f5Tf, cbrTf, loggingMonitoringTf } = require("../../client/src/lib");
+const { fortigateTf } = require("../../client/src/lib/json-to-iac/fortigate");
 
 describe("page template", () => {
   describe("vpc", () => {
@@ -1131,6 +1132,45 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
           "/form/resourceGroups",
           resourceGroupTf,
           "resource_groups"
+        ),
+        expectedData,
+        "should return code mirror display"
+      );
+    });
+    it("should return correct terraform for fortigate page when none fortigate", () => {
+      let testData = {
+        _options: {
+          prefix: "iac",
+          region: "us-south",
+          tags: ["hello", "world"],
+          zones: 3,
+        },
+        resource_groups: [
+          {
+            use_prefix: true,
+            name: "service-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: true,
+            name: "management-rg",
+            use_data: false,
+          },
+          {
+            use_prefix: true,
+            name: "workload-rg",
+            use_data: false,
+          },
+        ],
+      };
+      let expectedData = ``;
+      assert.deepEqual(
+        codeMirrorGetDisplay(
+          testData,
+          false,
+          "/form/fortigate_vnf",
+          fortigateTf,
+          "fortigate_vnf"
         ),
         expectedData,
         "should return code mirror display"

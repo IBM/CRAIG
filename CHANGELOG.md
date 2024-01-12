@@ -18,14 +18,15 @@ All notable changes to this project will be documented in this file.
 
 - Users can now create FalconStor VTL instances from the page `/form/vtl`
 - Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form
-- Users can now create SCC V2 Resources fomr the `/form/sccV2` page
+- Users can now create SCC V2 Resources from the `/form/sccV2` page
 - Users can now enable IP spoofing on the primary network interface for Virtual Servers
 - Users can now create additional VPC address prefixes from the VPN Gateways page
 - Users can now add VPN Gateway connections from the VPN Gateways page
 - Users can now enter NONE as a valid SSH Key
 - Users can now provider Power VS instances with Cloud Init user data
 - Users can now import existing Secrets Manager instances into CRAIG
-- Power zones WDC06 and WDC07 now support Power Edge Router
+- Power zones WDC06, WDC07, eu-de-1, and eu-de-2 now support Power Edge Router
+- Users can now create, update, and delete Fortigate VNF gateways from the `/form/fortigate` page
 
 ### Fixes
 

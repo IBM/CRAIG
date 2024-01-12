@@ -35,6 +35,7 @@ const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
 const { scc2Tf } = require("./json-to-iac/scc-v2");
 const { cisGlbTf } = require("./json-to-iac/cis-glb");
+const { fortigateTf } = require("./json-to-iac/fortigate");
 
 const navCatagories = [
   {
@@ -346,6 +347,13 @@ const navCatagories = [
         react_icon: "F5Icon",
         jsonField: "f5_vsi",
         toTf: f5Tf,
+      },
+      {
+        title: "Fortigate VNF",
+        path: "/form/fortigate",
+        react_icon: "AppConnectivity",
+        jsonField: "fortigate_vnf",
+        toTf: fortigateTf,
       },
       {
         title: "Access Groups",

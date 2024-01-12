@@ -1321,7 +1321,9 @@ function initVpcStore(store) {
             groups: buildNumberDropdownList(3, 1),
             onRender: function (stateData) {
               if (stateData.advanced && !isArray(stateData.zones)) {
-                stateData.zones = stateData.select_zones || ["1", "2", "3"];
+                stateData.zones = isArray(stateData.select_zones)
+                  ? stateData.select_zones
+                  : ["1", "2", "3"];
               } else if (!stateData.advanced && isArray(stateData.zones)) {
                 stateData.zones = String(stateData.zones.length);
               }

@@ -49,6 +49,7 @@ const { initCis } = require("./cis.js");
 const { initVtlStore } = require("./vtl.js");
 const { initSccV2 } = require("./scc-v2.js");
 const { initCisGlbStore } = require("./cis-glb.js");
+const { initFortigateStore } = require("./fortigate.js");
 
 /**
  * get state for craig
@@ -164,6 +165,7 @@ const state = function (legacy) {
   initCis(store);
   initSccV2(store);
   initCisGlbStore(store);
+  initFortigateStore(store);
 
   /**
    * hard set config dot json in state store

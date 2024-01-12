@@ -19,7 +19,7 @@ export const PowerSshKeys = (props) => {
         type="subHeading"
         icon={<Password className="diagramTitleIcon" />}
       />
-      <CraigFormGroup className="overrideGap alignItemsCenter">
+      <div className="formInSubForm" style={{ padding: "0" }}>
         {props.power.ssh_keys.map((sshKey, sshIndex) => (
           <DeploymentIcon
             key={props.power.name + "key" + sshIndex}
@@ -28,7 +28,7 @@ export const PowerSshKeys = (props) => {
             itemName="ssh_key"
           />
         ))}
-      </CraigFormGroup>
+      </div>
     </div>
   );
 };

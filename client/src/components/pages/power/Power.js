@@ -15,17 +15,15 @@ import { craigForms } from "../CraigForms";
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import { disableSave, propsMatchState } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";
-import { contains, isNullOrEmptyString } from "lazy-z";
+import { contains, isNullOrEmptyString, revision } from "lazy-z";
 import { docTabs } from "../diagrams/DocTabs";
 import { PowerMap } from "../diagrams/PowerMap";
-// import { PowerSshKeys } from "./PowerSshKeys";
+import { PowerSshKeys } from "./PowerSshKeys";
 import { PowerSubnets } from "./PowerSubnets";
 import { PowerVolumes } from "./PowerVolumes";
 import { IcseSelect } from "icse-react-assets";
-import {
-  CraigEmptyResourceTile,
-  NoPowerNetworkTile,
-} from "../../forms/dynamic-form";
+import { NoPowerNetworkTile } from "../../forms/dynamic-form";
+import { PowerVolumeTable } from "./PowerVolumeTable";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -42,6 +40,7 @@ class PowerDiagram extends React.Component {
       showModal: false,
       showInstanceVolumeModal: false,
       modalService: "",
+      overrideData: {},
     };
     this.getIcon = this.getIcon.bind(this);
     this.resetSelection = this.resetSelection.bind(this);
@@ -103,6 +102,7 @@ class PowerDiagram extends React.Component {
       editing: false,
       showModal: false,
       showInstanceVolumeModal: false,
+      overrideData: {},
     });
   }
 
@@ -224,10 +224,15 @@ class PowerDiagram extends React.Component {
                     stateData,
                     componentProps
                   );
-                  this.setState({
-                    showInstanceVolumeModal: false,
-                    modalService: "",
-                  });
+                  this.setState(
+                    {
+                      showInstanceVolumeModal: false,
+                      modalService: "",
+                    },
+                    () => {
+                      this.resetSelection();
+                    }
+                  );
                 }
           }
         >
@@ -278,12 +283,16 @@ class PowerDiagram extends React.Component {
                   ? undefined
                   : "Power Instances"
               }
-              data={{
-                workspace:
-                  this.state.powerIndex > -1
-                    ? craig.store.json.power[this.state.powerIndex].name
-                    : undefined,
-              }}
+              data={
+                this.state.overrideData
+                  ? this.state.overrideData
+                  : {
+                      workspace:
+                        this.state.powerIndex > -1
+                          ? craig.store.json.power[this.state.powerIndex].name
+                          : undefined,
+                    }
+              }
               shouldDisableSubmit={function () {
                 if (isNullOrEmptyString(this.props.modalService, true)) {
                   this.props.disableModal();
@@ -401,7 +410,7 @@ class PowerDiagram extends React.Component {
                           );
                         }}
                       >
-                        {/*<PowerSshKeys onClick={this.onPowerWorkspaceClick} />*/}
+                        <PowerSshKeys onClick={this.onPowerWorkspaceClick} />
                         <PowerSubnets
                           craig={craig}
                           onPowerWorkspaceClick={this.onPowerWorkspaceClick}
@@ -497,6 +506,35 @@ class PowerDiagram extends React.Component {
                               propsMatchState: propsMatchState,
                               arrayParentName:
                                 craig.store.json.power[this.state.powerIndex],
+                            }}
+                          />
+                          <PowerVolumeTable
+                            craig={craig}
+                            parentState={this.state}
+                            parentProps={this.props}
+                            onClick={() => {
+                              this.setState({
+                                showInstanceVolumeModal: true,
+                                modalService: "power_volumes",
+                                editing: false,
+                                overrideData: {
+                                  workspace:
+                                    craig.store.json[this.state.selectedItem][
+                                      this.state.selectedIndex
+                                    ].workspace,
+                                  zone: new revision(craig.store.json).child(
+                                    "power",
+                                    craig.store.json[this.state.selectedItem][
+                                      this.state.selectedIndex
+                                    ].workspace
+                                  ).data.zone,
+                                  attachments: [
+                                    craig.store.json[this.state.selectedItem][
+                                      this.state.selectedIndex
+                                    ].name,
+                                  ],
+                                },
+                              });
                             }}
                           />
                         </div>

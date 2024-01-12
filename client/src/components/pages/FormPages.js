@@ -400,6 +400,15 @@ const F5BigIp = (craig) => {
   );
 };
 
+const FortigateVnf = (craig) => {
+  return formPageTemplate(craig, {
+    name: "Fortigate",
+    addText: "Create a Fortigate Network Appliance",
+    jsonField: "fortigate_vnf",
+    formName: "fortigate",
+  });
+};
+
 const IamAccountSettings = (craig) => {
   return (
     <CraigToggleForm
@@ -1035,6 +1044,8 @@ export const NewFormPage = (props) => {
     return EventStreamsPage(craig);
   } else if (form === "f5") {
     return F5BigIp(craig);
+  } else if (form === "fortigate") {
+    return FortigateVnf(craig);
   } else if (form === "iamAccountSettings") {
     return IamAccountSettings(craig);
   } else if (form === "keyManagement") {

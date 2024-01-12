@@ -185,6 +185,12 @@ function updateVsi(config, key) {
         deployment.vpc = null;
         deployment.subnets = [];
         deployment.security_groups = [];
+      } else {
+        deployment.security_groups = deployment.security_groups.filter((sg) => {
+          if (splatContains(config.store.json.security_groups, "name", sg)) {
+            return sg;
+          }
+        });
       }
       let nextSshKeys = [];
       deployment.ssh_keys.forEach((key) => {

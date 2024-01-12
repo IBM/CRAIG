@@ -1,9 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  CraigFormHeading,
-  PrimaryButton,
-} from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { InfrastructureClassic } from "@carbon/icons-react";
 import { distinct } from "lazy-z";
 

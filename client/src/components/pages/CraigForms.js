@@ -328,6 +328,24 @@ function craigForms(craig) {
         },
       ],
     },
+    fortigate_vnf: {
+      groups: [
+        {
+          name: craig.fortigate_vnf.name,
+          resource_group: craig.fortigate_vnf.resource_group,
+          vpc: craig.fortigate_vnf.vpc,
+        },
+        {
+          profile: craig.fortigate_vnf.profile,
+          ssh_keys: craig.fortigate_vnf.ssh_keys,
+          security_groups: craig.fortigate_vnf.security_groups,
+        },
+        {
+          primary_subnet: craig.fortigate_vnf.primary_subnet,
+          secondary_subnet: craig.fortigate_vnf.secondary_subnet,
+        },
+      ],
+    },
     icd: {
       groups: [
         {

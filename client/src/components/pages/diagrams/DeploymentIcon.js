@@ -27,7 +27,13 @@ export const DeploymentIcon = (props) => {
       </div>
       {props.children}
       {contains(
-        ["virtual_private_endpoints", "vsi", "vpn_servers", "load_balancers"],
+        [
+          "virtual_private_endpoints",
+          "vsi",
+          "vpn_servers",
+          "load_balancers",
+          "fortigate_vnf",
+        ],
         props.itemName
       )
         ? props.item.security_groups.map((sg, i) => (

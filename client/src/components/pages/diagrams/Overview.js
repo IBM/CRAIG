@@ -23,6 +23,7 @@ import { TransitGatewaysMap } from "./TransitGatewaysMap";
 import { ClassicMap } from "./ClassicMap";
 import { ClassicSubnets } from "./ClassicSubnets";
 import { ClassicGateways } from "./ClassicGateways";
+import { RoutingTables } from "./RoutingTables";
 
 export class Overview extends React.Component {
   constructor(props) {
@@ -67,6 +68,7 @@ export class Overview extends React.Component {
           </div>
           <div id="vpcs" className="displayFlex">
             <VpcMap craig={craig} static>
+              <RoutingTables craig={craig} />
               <SecurityGroups craig={craig} />
               <AclMap static>
                 <SubnetTierMap

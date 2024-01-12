@@ -140,7 +140,7 @@ function codeMirrorGetDisplay(json, jsonInCodeMirror, path, toTf, jsonField) {
       .replace(maskFieldsExpStep4HideValue, '": "****************************')
       .replace(maskFieldsExpStep5CleanUp, "public_key"); // remove any extraneous %%%% from setting fields to null
   } else if (toTf) {
-    return toTf(json).replace(/\[\n\s*\]/g, "[]");
+    return (toTf(json) || "").replace(/\[\n\s*\]/g, "[]");
   } else return prettyJSON(json);
 }
 

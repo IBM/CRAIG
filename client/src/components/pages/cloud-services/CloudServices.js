@@ -350,7 +350,7 @@ class CloudServicesPage extends React.Component {
           beginDisabled
           submissionFieldName={this.state.modalService}
           onRequestClose={this.toggleModal}
-          onRequestSubmit={this.onRequestSubmit}
+          onRequestSubmit={this.onRequestSubmit()}
         >
           <IcseSelect
             formName="cloud-services"

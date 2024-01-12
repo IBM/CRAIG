@@ -4,14 +4,15 @@
     "features": [
       "Users can now create FalconStor VTL instances from the page `/form/vtl`",
       "Users can now set DNS Record Data to be the Primary IPV4 address for a VSI from the DNS Record form",
-      "Users can now create SCC V2 Resources fomr the `/form/sccV2` page",
+      "Users can now create SCC V2 Resources from the `/form/sccV2` page",
       "Users can now enable IP spoofing on the primary network interface for Virtual Servers",
       "Users can now create additional VPC address prefixes from the VPN Gateways page",
       "Users can now add VPN Gateway connections from the VPN Gateways page",
       "Users can now enter NONE as a valid SSH Key",
       "Users can now provider Power VS instances with Cloud Init user data",
       "Users can now import existing Secrets Manager instances into CRAIG",
-      "Power zones WDC06 and WDC07 now support Power Edge Router"
+      "Power zones WDC06, WDC07, eu-de-1, and eu-de-2 now support Power Edge Router",
+      "Users can now create, update, and delete Fortigate VNF gateways from the `/form/fortigate` page"
     ],
     "fixes": [
       "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",
@@ -25,7 +26,8 @@
       "Fixed an issue preventing Power VS SAP instances from being created",
       "Fixed an issue causing refactored VPN Server instances to not have the correct references when using Bring Your Own ceritificate or Insecure Developer Certificate",
       "Fixed an issue causing `Undefined` to incorrectly be added when creating JSON to IaC for Classic SSH Keys",
-      "Fixed an issue causing resource group property for VPC Network ACLs to not be reset after deletion"
+      "Fixed an issue causing resource group property for VPC Network ACLs to not be reset after deletion",
+      "Fixed an issue causing unfound security groups to not be deleted from VSI deployments"
     ],
     "upgrade_notes": [
       "Reafactored Routing Tables and Routing Table Routes Form",

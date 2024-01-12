@@ -158,7 +158,7 @@ describe("vsi", () => {
         image_name: null,
         profile: null,
         name: "todd",
-        security_groups: ["workload-vsi-sg"],
+        security_groups: [],
         ssh_keys: [],
         subnets: [],
         vpc: "workload",
@@ -170,7 +170,7 @@ describe("vsi", () => {
         volumes: [],
       };
       state.vsi.save(
-        { name: "todd", vpc: "workload", security_groups: ["workload-vsi-sg"] },
+        { name: "todd", vpc: "workload", security_groups: ["workload-vsi"] },
         { data: { name: "todd" }, isTeleport: false }
       );
       assert.deepEqual(
@@ -196,7 +196,7 @@ describe("vsi", () => {
         image_name: null,
         profile: null,
         name: "todd",
-        security_groups: ["workload-vsi-sg"],
+        security_groups: [],
         ssh_keys: [],
         subnets: [],
         vpc: "workload",
@@ -211,7 +211,7 @@ describe("vsi", () => {
         {
           name: "todd",
           vpc: "workload",
-          security_groups: ["workload-vsi-sg"],
+          security_groups: ["workload-vsi"],
           encryption_key: "key",
         },
         { data: { name: "todd" }, isTeleport: false }
@@ -364,6 +364,15 @@ describe("vsi", () => {
       let state = new newState();
       state.vpcs.delete({}, { data: { name: "management" } });
       assert.deepEqual(state.store.json.vsi[0].subnets, [], "it should be []");
+      assert.deepEqual(
+        state.store.json.vsi[0].security_groups,
+        [],
+        "it should be []"
+      );
+    });
+    it("should set security groups when deleted", () => {
+      let state = new newState();
+      state.security_groups.delete({}, { data: { name: "management-vsi" } });
       assert.deepEqual(
         state.store.json.vsi[0].security_groups,
         [],

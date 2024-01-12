@@ -17,6 +17,7 @@ import {
   IbmCloudVpc,
   IbmPowerVs,
   Dashboard,
+  InfrastructureClassic,
 } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
@@ -88,6 +89,15 @@ const LeftNav = (props) => {
                 path: "/beta/power",
                 icon: IbmPowerVs,
                 title: "[Beta] Power VS",
+              }}
+              expanded={props.expanded}
+            />
+            <LeftNavItem
+              key="Classic Network"
+              item={{
+                path: "/beta/classic",
+                icon: InfrastructureClassic,
+                title: "[Beta] Classic Network",
               }}
               expanded={props.expanded}
             />

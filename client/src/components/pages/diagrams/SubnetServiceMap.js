@@ -8,6 +8,7 @@ import {
   Security,
   ServerProxy,
   LoadBalancerVpc,
+  AppConnectivity,
 } from "@carbon/icons-react";
 import { buildNumberDropdownList, contains } from "lazy-z";
 import { DeploymentIcon } from "./DeploymentIcon";
@@ -15,7 +16,9 @@ import PropTypes from "prop-types";
 
 export const SubnetServiceMap = (props) => {
   function getIcon(field) {
-    return field === "load_balancers"
+    return field === "fortigate_vnf"
+      ? AppConnectivity
+      : field === "load_balancers"
       ? LoadBalancerVpc
       : field === "vpn_servers"
       ? ServerProxy
@@ -41,11 +44,15 @@ export const SubnetServiceMap = (props) => {
     "vpn_gateways",
     "vpn_servers",
     "load_balancers",
+    "fortigate_vnf",
   ].map((field) =>
     craig.store.json[field].map((item, itemIndex) => {
       if (
         (field === "vpn_gateways"
           ? item.subnet === subnet.name
+          : field === "fortigate_vnf"
+          ? item.primary_subnet === subnet.name ||
+            item.secondary_subnet === subnet.name
           : contains(item.subnets, subnet.name)) &&
         item.vpc === vpc.name
       ) {
@@ -57,6 +64,7 @@ export const SubnetServiceMap = (props) => {
                 "vpn_gateways",
                 "vpn_servers",
                 "load_balancers",
+                "fortigate_vnf",
               ],
               field
             )

@@ -14,6 +14,8 @@ import {
   Security,
   ServerProxy,
   LoadBalancerVpc,
+  AppConnectivity,
+  Router,
 } from "@carbon/icons-react";
 import { disableSave, propsMatchState } from "../../../lib";
 import {
@@ -39,6 +41,7 @@ import {
 } from "../diagrams";
 import { NoSecretsManagerTile } from "../../utils/NoSecretsManagerTile";
 import { NoVpcVsiTile } from "../../forms/dynamic-form/tiles";
+import { RoutingTables } from "../diagrams/RoutingTables";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -75,7 +78,11 @@ class VpcDeploymentsDiagramPage extends React.Component {
   }
 
   getIcon(field) {
-    return field === "load_balancers"
+    return field === "routing_tables"
+      ? Router
+      : field === "fortigate_vnf"
+      ? AppConnectivity
+      : field === "load_balancers"
       ? LoadBalancerVpc
       : field === "vpn_servers"
       ? ServerProxy
@@ -148,7 +155,12 @@ class VpcDeploymentsDiagramPage extends React.Component {
   handleInputChange(event) {
     let { name, value } = event.target;
     this.setState({
-      [name]: value === "VSI" ? "vsi" : snakeCase(value) + "s",
+      [name]:
+        value === "VSI"
+          ? "vsi"
+          : value === "Fortigate VNF"
+          ? "fortigate_vnf"
+          : snakeCase(value) + "s",
     });
   }
 
@@ -188,7 +200,9 @@ class VpcDeploymentsDiagramPage extends React.Component {
   }
 
   selectRenderValue() {
-    return this.state.selectedItem === "vsi"
+    return this.state.selectedItem === "fortigate_vnf"
+      ? "Fortigate VNF"
+      : this.state.selectedItem === "vsi"
       ? "VSI"
       : this.state.selectedItem === "vpn_servers"
       ? "VPN Server"
@@ -233,6 +247,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
             name="selectedItem"
             groups={[
               "Cluster",
+              "Fortigate VNF",
               "Security Group",
               "SSH Key",
               "Virtual Private Endpoint",
@@ -240,7 +255,8 @@ class VpcDeploymentsDiagramPage extends React.Component {
               "VPN Gateway",
               "VPN Server",
               "VSI",
-            ]}
+              "Routing Table",
+            ].sort(azsort)}
             handleInputChange={this.handleInputChange}
           />
           <div className="marginBottomSmall" />
@@ -378,6 +394,24 @@ class VpcDeploymentsDiagramPage extends React.Component {
                         return vpcIndex === this.state.vpcIndex;
                       }}
                     >
+                      <RoutingTables
+                        width="548px"
+                        craig={craig}
+                        isSelected={(props) => {
+                          return (
+                            this.state.selectedItem === props.itemName &&
+                            this.state.selectedIndex === props.itemIndex &&
+                            this.state.vpcIndex === props.vpcIndex
+                          );
+                        }}
+                        onClick={(vpcIndex, rtIndex) => {
+                          this.setSelection(
+                            vpcIndex,
+                            "routing_tables",
+                            rtIndex
+                          );
+                        }}
+                      />
                       <SecurityGroups
                         width="548px"
                         craig={craig}

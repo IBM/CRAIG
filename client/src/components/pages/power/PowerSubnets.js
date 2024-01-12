@@ -115,57 +115,58 @@ export const PowerSubnets = (props) => {
                         {instanceVolumes.length === 0 ? (
                           <></>
                         ) : (
-                          <div
-                            style={{
-                              maxWidth: "150px",
-                              textAlign: "center",
-                              marginTop: "0.33rem",
-                            }}
-                          >
-                            {instanceVolumes
-                              .sort((a, b) => {
-                                if (a.pi_volume_size > b.pi_volume_size)
-                                  return -1;
-                                else if (a.pi_volume_size < b.pi_volume_size)
-                                  return 1;
-                              })
-                              .map((vol) => {
-                                return (
-                                  <Tag
-                                    key={vol.index + instance.name}
-                                    style={{
-                                      boxShadow:
-                                        props.volumeIsSelected &&
-                                        props.volumeIsSelected(vol.index)
-                                          ? " 0 10px 14px 0 rgba(0, 0, 100, 0.24),0 17px 50px 0 rgba(0, 0, 100, 0.19)"
-                                          : "",
-                                    }}
-                                    onClick={
-                                      props.static
-                                        ? undefined
-                                        : () => {
-                                            props.onVolumeClick(vol.index);
-                                          }
-                                    }
-                                  >
-                                    <div
-                                      className="displayFlex"
-                                      style={{
-                                        fontSize: "10px",
-                                      }}
-                                    >
-                                      <FileStorage
-                                        style={{
-                                          marginTop: "0.33rem",
-                                          marginRight: "0.25rem",
-                                        }}
-                                      />{" "}
-                                      <p>{vol.pi_volume_size}</p>
-                                    </div>
-                                  </Tag>
-                                );
-                              })}
-                          </div>
+                          <></>
+                          // <div
+                          //   style={{
+                          //     maxWidth: "150px",
+                          //     textAlign: "center",
+                          //     marginTop: "0.33rem",
+                          //   }}
+                          // >
+                          //   {instanceVolumes
+                          //     .sort((a, b) => {
+                          //       if (a.pi_volume_size > b.pi_volume_size)
+                          //         return -1;
+                          //       else if (a.pi_volume_size < b.pi_volume_size)
+                          //         return 1;
+                          //     })
+                          //     .map((vol) => {
+                          //       return (
+                          //         <Tag
+                          //           key={vol.index + instance.name}
+                          //           style={{
+                          //             boxShadow:
+                          //               props.volumeIsSelected &&
+                          //               props.volumeIsSelected(vol.index)
+                          //                 ? " 0 10px 14px 0 rgba(0, 0, 100, 0.24),0 17px 50px 0 rgba(0, 0, 100, 0.19)"
+                          //                 : "",
+                          //           }}
+                          //           onClick={
+                          //             props.static
+                          //               ? undefined
+                          //               : () => {
+                          //                   props.onVolumeClick(vol.index);
+                          //                 }
+                          //           }
+                          //         >
+                          //           <div
+                          //             className="displayFlex"
+                          //             style={{
+                          //               fontSize: "10px",
+                          //             }}
+                          //           >
+                          //             <FileStorage
+                          //               style={{
+                          //                 marginTop: "0.33rem",
+                          //                 marginRight: "0.25rem",
+                          //               }}
+                          //             />{" "}
+                          //             <p>{vol.pi_volume_size}</p>
+                          //           </div>
+                          //         </Tag>
+                          //       );
+                          //     })}
+                          // </div>
                         )}
                       </DeploymentIcon>
                     </div>

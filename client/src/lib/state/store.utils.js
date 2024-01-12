@@ -1,5 +1,4 @@
-const { revision, contains } = require("lazy-z");
-const { lazyZstate } = require("lazy-z/lib/store");
+const { revision, contains, splat } = require("lazy-z");
 
 /**
  * set unfound resource group to null
@@ -112,7 +111,7 @@ function deleteSubChild(config, field, subField, componentProps) {
  * @returns {boolean} true if not found
  */
 function hasUnfoundVpc(config, obj) {
-  return contains(config.store.vpcList, obj.vpc) === false;
+  return contains(splat(config.store.json.vpcs, "name"), obj.vpc) === false;
 }
 
 /**

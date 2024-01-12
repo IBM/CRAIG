@@ -92,6 +92,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "glbs",
     "health_checks",
     "connections",
+    "fortigate_vnf",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {

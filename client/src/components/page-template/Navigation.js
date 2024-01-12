@@ -172,7 +172,11 @@ class Navigation extends React.Component {
                 </p>
                 <HeaderMenuItem
                   className="headerMenuBoxItemLink"
-                  href="/projects"
+                  href={
+                    contains(window.location.pathname, "/beta")
+                      ? "/beta/projects"
+                      : "/projects"
+                  }
                 >
                   Manage Projects
                 </HeaderMenuItem>
