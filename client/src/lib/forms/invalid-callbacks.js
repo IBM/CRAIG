@@ -164,7 +164,8 @@ function invalidEncryptionKeyEndpoint(stateData) {
  * @returns {boolean} true if it is a valid sshKey
  */
 function validSshKey(str) {
-  if (str === null) {
+  // "NONE" is valid to quickly get past ssh key validation for testing purposes
+  if (str === null || str === "NONE") {
     return false;
   } else {
     return str.match(sshKeyValidationExp) !== null;

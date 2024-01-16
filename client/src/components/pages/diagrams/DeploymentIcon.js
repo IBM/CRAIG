@@ -15,6 +15,7 @@ export const DeploymentIcon = (props) => {
       props?.parentState?.vpcIndex === props.vpcIndex;
   let boxClassName = "deploymentIconBox";
   if (isSelected) boxClassName += " diagramIconBoxSelected";
+  if (props.isInvalid) boxClassName += " diagramIconBoxInvalid";
   return (
     <div className={boxClassName}>
       <div className="maxWidth150">
@@ -69,4 +70,5 @@ DeploymentIcon.propTypes = {
   }).isRequired,
   onTabClick: PropTypes.func,
   tabSelected: PropTypes.func,
+  isInvalid: PropTypes.bool,
 };
