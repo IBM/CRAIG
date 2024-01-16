@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.9.0",
+    "features": [],
+    "fixes": [],
+    "upgrade_notes": [
+      "Updated the Power SAP HANA template to have current images for zone"
+    ]
+  },
+  {
     "version": "1.8.0",
     "features": [
       "Users can now create FalconStor VTL instances from the page `/form/vtl`",
