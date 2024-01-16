@@ -3,6 +3,7 @@ import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { Password } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
+import { validSshKey } from "../../../lib/forms/invalid-callbacks";
 
 export const SshKeys = (props) => {
   let craig = props.craig;
@@ -32,6 +33,9 @@ export const SshKeys = (props) => {
             >
               <DeploymentIcon
                 isSelected={props.isSelected}
+                isInvalid={
+                  sshKey.use_data ? false : !validSshKey(sshKey.public_key)
+                }
                 craig={craig}
                 itemName="ssh_keys"
                 itemIndex={sshKeyIndex}

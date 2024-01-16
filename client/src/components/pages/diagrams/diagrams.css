@@ -28,6 +28,10 @@
     0 17px 50px 0 rgba(0, 0, 100, 0.19);
 }
 
+.diagramIconBoxInvalid {
+  color: red;
+}
+
 .maxWith150 {
   max-width: 150px;
 }
