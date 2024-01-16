@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.9.0
+
+### Upgrade Notes
+
+- Updated the Power SAP HANA template to have current images for zone
+
+### Features
+
+
+### Fixes
+
+
 ## 1.8.0
 
 ### Upgrade Notes
@@ -42,6 +54,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing refactored VPN Server instances to not have the correct references when using Bring Your Own ceritificate or Insecure Developer Certificate
 - Fixed an issue causing `Undefined` to incorrectly be added when creating JSON to IaC for Classic SSH Keys
 - Fixed an issue causing resource group property for VPC Network ACLs to not be reset after deletion
+- Fixed an issue causing unfound security groups to not be deleted from VSI deployments
 
 ## 1.7.1
 

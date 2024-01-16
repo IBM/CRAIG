@@ -11,7 +11,7 @@
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["us-south"],
-    "craig_version": "1.5.0"
+    "craig_version": "1.8.0"
   },
   "access_groups": [],
   "appid": [],
@@ -164,7 +164,7 @@
       "ssh_keys": [
         {
           "name": "power-ssh-key",
-          "public_key": "",
+          "public_key": "NONE",
           "use_data": false,
           "resource_group": "powervs-rg",
           "workspace": "secure-powervs",
@@ -203,64 +203,312 @@
       "cloud_connections": [],
       "images": [
         {
-          "name": "RHEL8-SP4-SAP",
+          "creationDate": "2022-07-21T15:46:50.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/f185cb0f-25b3-42f3-b105-45156187a1ab",
+          "imageID": "f185cb0f-25b3-42f3-b105-45156187a1ab",
+          "lastUpdateDate": "2022-07-21T19:47:33.000Z",
+          "name": "RHEL8-SP6",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "f185cb0f-25b3-42f3-b105-45156187a1ab"
+          "zone": "us-south"
         },
         {
-          "name": "RHEL8-SP4-SAP-NETWEAVER",
-          "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "658ba2a0-4add-40b9-a177-a28a856c26de"
-        },
-        {
+          "creationDate": "2023-03-22T18:46:00.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/268144b8-6223-48e4-a26e-bdc8f71f6c60",
+          "imageID": "268144b8-6223-48e4-a26e-bdc8f71f6c60",
+          "lastUpdateDate": "2023-09-19T14:14:50.000Z",
           "name": "RHEL8-SP6-SAP",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "268144b8-6223-48e4-a26e-bdc8f71f6c60"
+          "zone": "us-south"
         },
         {
+          "creationDate": "2023-03-22T19:13:31.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/658ba2a0-4add-40b9-a177-a28a856c26de",
+          "imageID": "658ba2a0-4add-40b9-a177-a28a856c26de",
+          "lastUpdateDate": "2023-09-19T14:15:33.000Z",
           "name": "RHEL8-SP6-SAP-NETWEAVER",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "52579206-7efd-43ae-8417-ce5acac95d31"
+          "zone": "us-south"
         },
         {
+          "creationDate": "2023-12-13T10:29:52.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/0f70afc6-732f-4080-830a-50ccc5d4a400",
+          "imageID": "0f70afc6-732f-4080-830a-50ccc5d4a400",
+          "lastUpdateDate": "2023-12-13T13:01:08.000Z",
+          "name": "RHEL8-SP8",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south"
+        },
+        {
+          "creationDate": "2023-12-13T15:27:06.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/ee35fbfe-4c6a-45d0-9485-7d2235f4f1d1",
+          "imageID": "ee35fbfe-4c6a-45d0-9485-7d2235f4f1d1",
+          "lastUpdateDate": "2023-12-13T16:08:28.000Z",
+          "name": "RHEL8-SP8-SAP",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south"
+        },
+        {
+          "creationDate": "2023-12-13T20:24:03.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/fedf5303-d9b9-4ab4-ad31-b8759a3a05f2",
+          "imageID": "fedf5303-d9b9-4ab4-ad31-b8759a3a05f2",
+          "lastUpdateDate": "2023-12-13T20:54:25.000Z",
+          "name": "RHEL8-SP8-SAP-NETWEAVER",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south"
+        },
+        {
+          "creationDate": "2022-06-19T14:17:19.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/5d548cc2-e813-4c09-beb5-8f22b094905d",
+          "imageID": "5d548cc2-e813-4c09-beb5-8f22b094905d",
+          "lastUpdateDate": "2022-06-23T20:13:59.000Z",
           "name": "SLES15-SP2-SAP",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "071e1eac-8aa2-4259-9c0e-5ec268f610e2"
+          "zone": "us-south"
         },
         {
+          "creationDate": "2022-06-19T13:48:55.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/52579206-7efd-43ae-8417-ce5acac95d31",
+          "imageID": "52579206-7efd-43ae-8417-ce5acac95d31",
+          "lastUpdateDate": "2022-06-23T20:14:22.000Z",
           "name": "SLES15-SP2-SAP-NETWEAVER",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "52579206-7efd-43ae-8417-ce5acac95d31"
+          "zone": "us-south"
         },
         {
-          "name": "SLES15-SP3-SAP",
+          "creationDate": "2022-09-13T18:49:39.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/65c1f031-9154-45cb-8bb8-d2b9dae5728f",
+          "imageID": "65c1f031-9154-45cb-8bb8-d2b9dae5728f",
+          "lastUpdateDate": "2022-09-13T20:11:59.000Z",
+          "name": "SLES15-SP4",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "423bc6f6-bb0d-44c2-ad26-8705ae83f5ca"
+          "zone": "us-south"
         },
         {
-          "name": "SLES15-SP3-SAP-NETWEAVER",
-          "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "52579206-7efd-43ae-8417-ce5acac95d31"
-        },
-        {
+          "creationDate": "2022-11-04T05:37:01.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/a6b8f8d5-86e0-4fb2-b335-2ce3f1a88612",
+          "imageID": "a6b8f8d5-86e0-4fb2-b335-2ce3f1a88612",
+          "lastUpdateDate": "2023-09-19T14:17:38.000Z",
           "name": "SLES15-SP4-SAP",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "a6b8f8d5-86e0-4fb2-b335-2ce3f1a88612"
+          "zone": "us-south"
         },
         {
+          "creationDate": "2022-11-04T05:32:31.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/071e1eac-8aa2-4259-9c0e-5ec268f610e2",
+          "imageID": "071e1eac-8aa2-4259-9c0e-5ec268f610e2",
+          "lastUpdateDate": "2023-09-19T14:18:26.000Z",
           "name": "SLES15-SP4-SAP-NETWEAVER",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "pi_image_id": "071e1eac-8aa2-4259-9c0e-5ec268f610e2"
+          "zone": "us-south"
+        },
+        {
+          "creationDate": "2024-01-08T17:35:21.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/73480807-1560-49ab-9119-b5df796c7e55",
+          "imageID": "73480807-1560-49ab-9119-b5df796c7e55",
+          "lastUpdateDate": "2024-01-08T17:45:01.000Z",
+          "name": "SLES15-SP5",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south"
+        },
+        {
+          "creationDate": "2024-01-08T23:03:56.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/fa1e5433-de7a-4fce-ac2c-33407bdc3fcf",
+          "imageID": "fa1e5433-de7a-4fce-ac2c-33407bdc3fcf",
+          "lastUpdateDate": "2024-01-08T23:47:38.000Z",
+          "name": "SLES15-SP5-SAP",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south"
+        },
+        {
+          "creationDate": "2024-01-10T10:39:13.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/8c727c9a-8065-4fb4-b782-69ac8eb51674",
+          "imageID": "8c727c9a-8065-4fb4-b782-69ac8eb51674",
+          "lastUpdateDate": "2024-01-10T13:19:53.000Z",
+          "name": "SLES15-SP5-SAP-NETWEAVER",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver-fls",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south"
         }
       ],
       "attachments": [
@@ -284,16 +532,20 @@
         }
       ],
       "imageNames": [
-        "RHEL8-SP4-SAP",
-        "RHEL8-SP4-SAP-NETWEAVER",
+        "RHEL8-SP6",
         "RHEL8-SP6-SAP",
         "RHEL8-SP6-SAP-NETWEAVER",
+        "RHEL8-SP8",
+        "RHEL8-SP8-SAP",
+        "RHEL8-SP8-SAP-NETWEAVER",
         "SLES15-SP2-SAP",
         "SLES15-SP2-SAP-NETWEAVER",
-        "SLES15-SP3-SAP",
-        "SLES15-SP3-SAP-NETWEAVER",
+        "SLES15-SP4",
         "SLES15-SP4-SAP",
-        "SLES15-SP4-SAP-NETWEAVER"
+        "SLES15-SP4-SAP-NETWEAVER",
+        "SLES15-SP5",
+        "SLES15-SP5-SAP",
+        "SLES15-SP5-SAP-NETWEAVER"
       ]
     }
   ],
@@ -301,7 +553,7 @@
     {
       "name": "secure-file-share",
       "workspace": "secure-powervs",
-      "image": "RHEL8-SP4-SAP",
+      "image": "RHEL8-SP6-SAP",
       "network": [
         {
           "name": "backup",
@@ -322,7 +574,16 @@
       "pi_processors": ".5",
       "storage_option": "Storage Type",
       "pi_storage_pool_affinity": false,
-      "sap": false
+      "sap": false,
+      "index": 0,
+      "sap_profile": null,
+      "pi_storage_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "pi_user_data": null
     },
     {
       "name": "sap-hana",
@@ -357,7 +618,11 @@
       "storage_option": "Storage Type",
       "pi_storage_pool_affinity": false,
       "sap": true,
-      "sap_profile": "ush1-4x256"
+      "sap_profile": "ush1-4x256",
+      "index": 1,
+      "pi_storage_pool": null,
+      "affinity_type": null,
+      "pi_user_data": null
     },
     {
       "name": "sap-netweaver",
@@ -387,7 +652,16 @@
       "pi_memory": "32",
       "storage_option": "Storage Type",
       "pi_storage_pool_affinity": false,
-      "sap": false
+      "sap": false,
+      "index": 2,
+      "sap_profile": null,
+      "pi_storage_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "pi_user_data": null
     }
   ],
   "power_volumes": [
@@ -399,7 +673,8 @@
       "pi_volume_type": "tier3",
       "attachments": ["sap-hana", "sap-netweaver"],
       "zone": "us-south",
-      "pi_volume_size": "300"
+      "pi_volume_size": "300",
+      "index": 0
     },
     {
       "name": "trans",
@@ -409,7 +684,8 @@
       "pi_volume_type": "tier3",
       "attachments": ["sap-hana", "sap-netweaver"],
       "zone": "us-south",
-      "pi_volume_size": "50"
+      "pi_volume_size": "50",
+      "index": 1
     },
     {
       "name": "sap-hana-sap-data-1",
@@ -421,7 +697,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 2
     },
     {
       "name": "sap-hana-sap-data-2",
@@ -433,7 +710,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 3
     },
     {
       "name": "sap-hana-sap-data-3",
@@ -445,7 +723,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 4
     },
     {
       "name": "sap-hana-sap-data-4",
@@ -457,7 +736,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 5
     },
     {
       "name": "sap-hana-sap-log-1",
@@ -469,7 +749,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 6
     },
     {
       "name": "sap-hana-sap-log-2",
@@ -481,7 +762,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 7
     },
     {
       "name": "sap-hana-sap-log-3",
@@ -493,7 +775,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 8
     },
     {
       "name": "sap-hana-sap-log-4",
@@ -505,7 +788,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 9
     },
     {
       "name": "sap-hana-sap-shared",
@@ -517,7 +801,8 @@
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "storage_option": "Storage Type",
-      "affinity_type": null
+      "affinity_type": null,
+      "index": 10
     }
   ],
   "resource_groups": [
@@ -923,7 +1208,7 @@
   "ssh_keys": [
     {
       "name": "ssh-key",
-      "public_key": "",
+      "public_key": "NONE",
       "resource_group": "management-rg",
       "use_data": false
     }
@@ -948,7 +1233,10 @@
           "tgw": "transit-gateway",
           "vpc": "workload"
         }
-      ]
+      ],
+      "use_data": false,
+      "prefix_filters": [],
+      "gre_tunnels": []
     }
   ],
   "virtual_private_endpoints": [
@@ -1436,7 +1724,8 @@
       "name": "management-gw",
       "resource_group": "management-rg",
       "subnet": "vpn-zone-1",
-      "vpc": "management"
+      "vpc": "management",
+      "connections": []
     }
   ],
   "vpn_servers": [],
@@ -1460,5 +1749,18 @@
     }
   ],
   "classic_ssh_keys": [],
-  "classic_vlans": []
+  "classic_vlans": [],
+  "vtl": [],
+  "classic_gateways": [],
+  "cis": [],
+  "scc_v2": {
+    "enable": true,
+    "resource_group": "service-rg",
+    "region": "us-south",
+    "account_id": "${var.account_id}",
+    "profile_attachments": [],
+    "name": null
+  },
+  "cis_glbs": [],
+  "fortigate_vnf": []
 }
