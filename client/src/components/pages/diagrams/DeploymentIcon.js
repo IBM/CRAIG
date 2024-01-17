@@ -11,7 +11,9 @@ export const DeploymentIcon = (props) => {
   let isSelected = props.isSelected
     ? props.isSelected(props)
     : props?.parentState?.selectedItem === props.itemName &&
-      props?.parentState?.selectedIndex === props.itemIndex &&
+      // select all items when f5
+      (props?.parentState?.selectedIndex === props.itemIndex ||
+        props.itemName === "f5_vsi") &&
       props?.parentState?.vpcIndex === props.vpcIndex;
   let boxClassName = "deploymentIconBox";
   if (isSelected) boxClassName += " diagramIconBoxSelected";
@@ -34,6 +36,7 @@ export const DeploymentIcon = (props) => {
           "vpn_servers",
           "load_balancers",
           "fortigate_vnf",
+          "f5_vsi",
         ],
         props.itemName
       )

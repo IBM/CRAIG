@@ -65,6 +65,23 @@ describe("atracker", () => {
       "it should be true"
     );
   });
+  it("should return false if atracker does not have any locations and is disabled", () => {
+    assert.isFalse(
+      disableSave(
+        "atracker",
+        {
+          enabled: false,
+          bucket: "bucket",
+          cos_key: "key",
+          locations: [],
+        },
+        {
+          craig: craig,
+        }
+      ),
+      "it should be true"
+    );
+  });
   it("should return true if instance is enabled and no resource group is selected", () => {
     assert.isTrue(
       disableSave(

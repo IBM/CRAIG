@@ -257,7 +257,7 @@ const NoEdgeNetworkTile = () => {
   );
 };
 
-const F5BigIp = (craig) => {
+export const F5BigIp = (craig, isBeta) => {
   let templateData = {};
   let vsiData = {};
   if (craig.store.json.f5_vsi.length > 0) {
@@ -287,6 +287,8 @@ const F5BigIp = (craig) => {
           noDeleteButton
           hideHeading
           hideName
+          hide={isBeta ? false : true}
+          hideChevron={isBeta}
           onSave={craig.f5.template.save}
           type="formInSubForm"
           tabPanel={{ hideAbout: true }}
@@ -345,6 +347,8 @@ const F5BigIp = (craig) => {
         />
         <CraigToggleForm
           name="Configure F5 Big IP"
+          hide={isBeta ? false : true}
+          hideChevron={isBeta}
           noDeleteButton
           hideHeading
           hideName
@@ -375,7 +379,9 @@ const F5BigIp = (craig) => {
     );
   };
 
-  return craig.store.edge_pattern === undefined ? (
+  return isBeta ? (
+    <F5 />
+  ) : craig.store.edge_pattern === undefined ? (
     <StatefulTabs
       name="F5 Big IP"
       hideFormTitleButton

@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 
 export const SubnetServiceMap = (props) => {
   function getIcon(field) {
-    return field === "fortigate_vnf"
+    return field === "fortigate_vnf" || field === "f5_vsi"
       ? AppConnectivity
       : field === "load_balancers"
       ? LoadBalancerVpc
@@ -45,10 +45,11 @@ export const SubnetServiceMap = (props) => {
     "vpn_servers",
     "load_balancers",
     "fortigate_vnf",
+    "f5_vsi",
   ].map((field) =>
     craig.store.json[field].map((item, itemIndex) => {
       if (
-        (field === "vpn_gateways"
+        (field === "vpn_gateways" || field === "f5_vsi"
           ? item.subnet === subnet.name
           : field === "fortigate_vnf"
           ? item.primary_subnet === subnet.name ||
@@ -65,6 +66,7 @@ export const SubnetServiceMap = (props) => {
                 "vpn_servers",
                 "load_balancers",
                 "fortigate_vnf",
+                "f5_vsi",
               ],
               field
             )

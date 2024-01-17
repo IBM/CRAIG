@@ -82,7 +82,7 @@ function dynamicMultiSelectProps(props, fetchedData) {
     useTitleInItem: props.field.useTitleInItem || false,
     label: labelText,
     disabled: isDisabled,
-    initialSelectedItems: stateValue,
+    initialSelectedItems: stateValue || [], // or here to allow images to fetch without crashing in modal
   };
 }
 

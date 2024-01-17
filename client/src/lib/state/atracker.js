@@ -114,7 +114,9 @@ function initAtracker(store) {
           return "Select a Resource Group";
         },
         invalid: function (stateData) {
-          return stateData.instance ? !stateData.resource_group : false;
+          return stateData.instance && stateData.enabled
+            ? isNullOrEmptyString(stateData.resource_group, true)
+            : false;
         },
       },
       type: {
@@ -194,7 +196,9 @@ function initAtracker(store) {
         groups: ["global", "us-south"],
         hideWhen: hideWhenDisabled,
         invalid: function (stateData) {
-          return stateData.enabled ? isEmpty(stateData.locations) : false;
+          return stateData.enabled === true
+            ? isEmpty(stateData.locations)
+            : false;
         },
         invalidText: function () {
           return "Select at least one location.";
@@ -221,7 +225,9 @@ function initAtracker(store) {
           return "Select a plan.";
         },
         invalid: function (stateData) {
-          return stateData.instance ? !stateData.plan : false;
+          return stateData.instance && stateData.enabled
+            ? !stateData.plan
+            : false;
         },
       },
       archive: {

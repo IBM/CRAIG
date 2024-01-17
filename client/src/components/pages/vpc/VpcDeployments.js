@@ -42,9 +42,15 @@ import {
 import { NoSecretsManagerTile } from "../../utils/NoSecretsManagerTile";
 import { NoVpcVsiTile } from "../../forms/dynamic-form/tiles";
 import { RoutingTables } from "../diagrams/RoutingTables";
+import { F5BigIp } from "../FormPages";
+import f5 from "../../../images/f5.png";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+}
+
+function F5Icon() {
+  return <img src={f5} className="vpcDeploymentIcon" />;
 }
 
 class VpcDeploymentsDiagramPage extends React.Component {
@@ -67,6 +73,41 @@ class VpcDeploymentsDiagramPage extends React.Component {
     this.selectRenderValue = this.selectRenderValue.bind(this);
     this.getIcon = this.getIcon.bind(this);
     this.onSshKeyButtonClick = this.onSshKeyButtonClick.bind(this);
+    this.getServiceData = this.getServiceData.bind(this);
+  }
+
+  getServiceData() {
+    let craig = this.props.craig;
+    if (this.state.selectedItem === "f5_vsi") {
+      let templateData = {};
+      let vsiData = {};
+      if (craig.store.json.f5_vsi.length > 0) {
+        // pass in defaults if instances exist
+        vsiData = {
+          resource_group: craig.store.json.f5_vsi[0].resource_group,
+          ssh_keys: craig.store.json.f5_vsi[0].ssh_keys,
+          image:
+            /f5-bigip-(15-1-5-1-0-0-14|16-1-2-2-0-0-28)-(ltm|all)-1slot/.exec(
+              craig.store.json.f5_vsi[0].image
+            )[0], // keep only image name in props
+          profile: craig.store.json.f5_vsi[0].profile,
+          zones: craig.store.json.f5_vsi.length,
+        };
+        templateData = craig.store.json.f5_vsi[0].template;
+      } else {
+        vsiData = {
+          zones: craig.store.json.f5_vsi.length,
+        };
+      }
+      return {
+        templateData,
+        vsiData,
+      };
+    } else {
+      return craig.store.json[this.state.selectedItem][
+        this.state.selectedIndex
+      ];
+    }
   }
 
   onSshKeyButtonClick() {
@@ -338,7 +379,9 @@ class VpcDeploymentsDiagramPage extends React.Component {
                 "VPN Gateways",
                 "VPN Servers",
                 "Load Balancers",
-              ].sort(azsort),
+              ]
+                .sort(azsort)
+                .concat("F5 Big IP"), // have f5 always be last
               craig
             )}
             form={
@@ -457,7 +500,16 @@ class VpcDeploymentsDiagramPage extends React.Component {
                     </VpcMap>
                   </div>
                   <div id="right-vpc-deployments">
-                    {this.state.editing === true ? (
+                    {this.state.editing &&
+                    this.state.selectedItem === "f5_vsi" ? (
+                      <div className="rightForm marginTop1Rem">
+                        <CraigFormHeading
+                          icon={<F5Icon />}
+                          name="Editing F5 Big IP Deployment"
+                        />
+                        <div className="subForm">{F5BigIp(craig, true)}</div>
+                      </div>
+                    ) : this.state.editing === true ? (
                       <div className="rightForm marginTop1Rem">
                         <CraigFormHeading
                           icon={RenderForm(
@@ -506,9 +558,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           innerFormProps={{
                             form: forms[this.state.selectedItem],
                             craig: craig,
-                            data: craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ],
+                            data: this.getServiceData(),
                             // need to be passed to render child forms
                             disableSave: disableSave,
                             propsMatchState: propsMatchState,

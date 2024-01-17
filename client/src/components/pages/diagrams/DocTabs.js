@@ -16,7 +16,9 @@ export const docTabs = (tabs, craig) => {
       name: tab,
       about: RenderDocs(
         snakeCase(
-          tab === "Power VS Instances (LPARs)"
+          tab === "F5 Big IP"
+            ? "f5"
+            : tab === "Power VS Instances (LPARs)"
             ? "power_instances"
             : tab === "Power VS"
             ? "power"

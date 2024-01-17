@@ -45,7 +45,12 @@ import {
   AppConnectivity,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
-import { arraySplatIndex, contains, getObjectFromArray } from "lazy-z";
+import {
+  arraySplatIndex,
+  contains,
+  getObjectFromArray,
+  isBoolean,
+} from "lazy-z";
 import { CraigCodeMirror, Navigation, Footer } from ".";
 import PropTypes from "prop-types";
 import "./page-template.css";
@@ -124,25 +129,30 @@ let pageOrder = [
     path: "/",
     icon: Settings,
   },
-  {
-    // temporary to get page to render
-    title: "Cloud Services",
-    path: "/beta/services",
-    icon: Settings,
-  },
-  {
-    // temporary to get page to render
-    title: "VPC Network",
-    path: "/beta/vpc",
-    icon: Settings,
-  },
-  {
-    // temporary to get page to render
-    title: "VPC Deployments",
-    path: "/beta/vpcDeployments",
-    icon: Settings,
-  },
-];
+].concat(
+  contains(window.location.pathname, "/beta")
+    ? [
+        {
+          // temporary to get page to render
+          title: "Cloud Services",
+          path: "/beta/services",
+          icon: Settings,
+        },
+        {
+          // temporary to get page to render
+          title: "VPC Network",
+          path: "/beta/vpc",
+          icon: Settings,
+        },
+        {
+          // temporary to get page to render
+          title: "VPC Deployments",
+          path: "/beta/vpcDeployments",
+          icon: Settings,
+        },
+      ]
+    : []
+);
 
 // for each nav category
 navCategories.forEach((category) => {
@@ -311,7 +321,11 @@ const PageTemplate = (props) => {
                 !props.craig.store.json._options.hideFooter;
               props.saveAndSendNotification("updating footer", false, true);
             }}
-            hideFooter={props.craig.store.json._options.hideFooter || false}
+            hideFooter={
+              isBoolean(props.craig.store.json._options.hideFooter)
+                ? props.craig.store.json._options.hideFooter
+                : true
+            }
             navigate={navigate}
           />
         )}

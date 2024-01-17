@@ -36,7 +36,8 @@ export const ManageService = (props) => {
             .replace("Icd", "Cloud Database")
             .replace("Atracker", "Activity Tracker")
             .replace("Logdna", "LogDNA")
-            .replace(/Scc\s.+/g, "Security & Compliance Center")}
+            .replace(/Scc\s.+/g, "Security & Compliance Center")
+            .replace(/Dns/g, "DNS")}
         </h6>
         <p>
           {contains(
