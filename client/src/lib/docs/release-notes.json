@@ -20,7 +20,8 @@
       "Users can now provider Power VS instances with Cloud Init user data",
       "Users can now import existing Secrets Manager instances into CRAIG",
       "Power zones WDC06, WDC07, eu-de-1, and eu-de-2 now support Power Edge Router",
-      "Users can now create, update, and delete Fortigate VNF gateways from the `/form/fortigate` page"
+      "Users can now create, update, and delete Fortigate VNF gateways from the `/form/fortigate` page",
+      "Power zones MAD02 (EU-ES-1), MAD04 (EU-ES-2), and SAO04 now support Power Edge Router"
     ],
     "fixes": [
       "Fixed an issue causing Power VS Workspace save to be incorrectly disabled when changing images in that workspace",

@@ -23,6 +23,8 @@ const defaultZones = [
   "us-south",
   "eu-de-1",
   "eu-de-2",
+  //"eu-es-1",
+  //"eu-es-2",
   "lon04",
   "lon06",
   "tor01",
@@ -30,6 +32,7 @@ const defaultZones = [
   "syd05",
   "tok04",
   // "sao01",
+  // "sao04",
 ];
 
 function startServer() {

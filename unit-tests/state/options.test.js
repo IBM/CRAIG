@@ -164,7 +164,7 @@ describe("options", () => {
       it("should return region groups when fs cloud", () => {
         assert.deepEqual(
           craig.options.region.groups({ fs_cloud: true }),
-          ["eu-de", "eu-gb", "us-east", "us-south"],
+          ["eu-de", "eu-es", "eu-gb", "us-east", "us-south"],
           "it should return correct groups"
         );
       });
@@ -176,6 +176,7 @@ describe("options", () => {
             "br-sao",
             "ca-tor",
             "eu-de",
+            "eu-es",
             "eu-gb",
             "jp-osa",
             "jp-tok",

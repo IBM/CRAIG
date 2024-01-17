@@ -715,7 +715,16 @@ module.exports = {
       },
     },
   },
-  edgeRouterEnabledZones: ["dal10", "wdc06", "wdc07", "eu-de-1", "eu-de-2"],
+  edgeRouterEnabledZones: [
+    "dal10",
+    "wdc06",
+    "wdc07",
+    "eu-de-1",
+    "eu-de-2",
+    "eu-es-1",
+    "eu-es-2",
+    "sao04",
+  ],
   cosPlans: [
     "standard",
     "lite",
@@ -743,6 +752,10 @@ module.exports = {
       "Tier3-Flash-2",
       "Tier3-Flash-1",
     ],
+    "eu-es-1": [],
+    "eu-es-2": [],
+    sao01: [],
+    sao04: [],
     lon04: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
     lon06: [
       "Tier3-Flash-2",

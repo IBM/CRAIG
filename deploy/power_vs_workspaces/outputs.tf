@@ -15,6 +15,10 @@ output "SAO01" {
   value = ibm_resource_instance.power_vs_workspace_craig_sao01.guid
 }
 
+output "SAO04" {
+  value = ibm_resource_instance.power_vs_workspace_craig_sao04.guid
+}
+
 output "TOK04" {
   value = ibm_resource_instance.power_vs_workspace_craig_tok04.guid
 }
@@ -53,6 +57,14 @@ output "EU_DE_2" {
 
 output "EU_DE_1" {
   value = ibm_resource_instance.power_vs_workspace_craig_eu_de_1.guid
+}
+
+output "EU-ES-1" {
+  value = ibm_resource_instance.power_vs_workspace_craig_eu_es_1.guid
+}
+
+output "EU-ES-2" {
+  value = ibm_resource_instance.power_vs_workspace_craig_eu_es_2.guid
 }
 
 output "SYD05" {

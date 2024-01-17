@@ -25,6 +25,7 @@ const powerVsZones = [
   "us-south",
   "eu-de",
   "eu-gb",
+  "eu-es",
   "us-east",
   "br-sao",
   "jp-tok",
@@ -165,7 +166,7 @@ function initOptions(store) {
         invalid: fieldIsNullOrEmptyString("region"),
         invalidText: selectInvalidText("region"),
         groups: function (stateData) {
-          return ["us-south", "us-east", "eu-de", "eu-gb"]
+          return ["us-south", "us-east", "eu-de", "eu-gb", "eu-es"]
             .concat(
               stateData.fs_cloud
                 ? []
@@ -296,10 +297,11 @@ function initOptions(store) {
                 "au-syd": ["syd04", "syd05"],
                 "eu-de": ["eu-de-1", "eu-de-2"],
                 "eu-gb": ["lon04", "lon06"],
+                "eu-es": ["eu-es-1", "eu-es-2"],
                 "us-east": ["us-east", "wdc06", "wdc07"],
                 "us-south": ["us-south", "dal10", "dal12"],
                 "jp-tok": ["tok04"],
-                "br-sao": ["sao01"],
+                "br-sao": ["sao01", "sao04"],
                 "ca-tor": ["tor01"],
               }[stateData.region];
         },

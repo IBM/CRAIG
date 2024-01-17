@@ -14,11 +14,12 @@ function getRegionFromZone(zone) {
     ["us-east", ["wdc06", "wdc07", "us-east"]],
     ["us-south", ["dal10", "dal12", "us-south"]],
     ["eu-de", ["eu-de-1", "eu-de-2"]],
+    ["eu-es", ["eu-es-1", "eu-es-2"]],
     ["lon", ["lon04", "lon06"]],
     ["tor", ["tor01"]],
     ["syd", ["syd04", "syd05"]],
     ["tok", ["tok04"]],
-    ["br-sao", ["sao01"]],
+    ["br-sao", ["sao01", "sao04"]],
   ]);
 
   regionZoneMap.forEach((values, key) => {
