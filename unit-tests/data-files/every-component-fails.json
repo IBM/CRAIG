@@ -213,7 +213,7 @@
           "cidr": "10.10.20.0/24",
           "name": "vpe-zone-1",
           "resource_group": "slz-management-rg",
-          "network_acl": "management",
+          "network_acl": null,
           "public_gateway": false,
           "has_prefix": true
         },
@@ -281,8 +281,8 @@
       "public_gateways": [],
       "acls": [
         {
-          "resource_group": "slz-management-rg",
-          "name": "management",
+          "resource_group": null,
+          "name": null,
           "vpc": "management",
           "rules": [
             {

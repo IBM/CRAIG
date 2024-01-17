@@ -14,9 +14,10 @@ import { Reset, Download, Debug, Code, CodeHide } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
-import { validate } from "../../lib";
+import { invalidForms, validate } from "../../lib";
 import { contains, splat } from "lazy-z";
 import { allDocText } from "../../lib/docs";
+import { ValidNavBox } from "./ValidNavBox";
 const releaseNotes = require("../../lib/docs/release-notes.json");
 
 class Navigation extends React.Component {
@@ -28,6 +29,7 @@ class Navigation extends React.Component {
       expanded: false,
       filteredNavCategories: props.navCategories,
     };
+
     this.isResetState = this.isResetState.bind(this);
     this.onModalClose = this.onModalClose.bind(this);
     this.onModalShow = this.onModalShow.bind(this);
@@ -128,7 +130,7 @@ class Navigation extends React.Component {
 
   render() {
     return (
-      <Theme theme="g10">
+      <Theme theme="g10" key={this.props.json}>
         <Header aria-label="IBM Platform Name">
           <HeaderMenuButton
             aria-label="Open menu"
@@ -184,7 +186,26 @@ class Navigation extends React.Component {
             </HeaderMenu>
           )}
           <HeaderGlobalBar>
-            {this.props.isResetState === false &&
+            <ValidNavBox
+              json={this.props.json}
+              isResetState={this.props.isResetState}
+            />
+            {this.props.isResetState === false && (
+              <HeaderGlobalAction
+                aria-label="Download Environment Terraform"
+                isActive
+                onClick={this.onDownloadClick}
+                tooltipAlignment="end"
+                disabled={
+                  invalidForms({ store: { json: this.props.json } }).length !==
+                  0
+                }
+              >
+                <Download />
+              </HeaderGlobalAction>
+            )}
+            {!contains(window.location.pathname, "/beta") &&
+              this.props.isResetState === false &&
               this.props.formPathNotPresent === false && (
                 <HeaderGlobalAction
                   aria-label={
@@ -199,16 +220,6 @@ class Navigation extends React.Component {
                   {this.props.hideCodeMirror ? <Code /> : <CodeHide />}
                 </HeaderGlobalAction>
               )}
-            {this.props.isResetState === false && (
-              <HeaderGlobalAction
-                aria-label="Download Environment Terraform"
-                isActive
-                onClick={this.onDownloadClick}
-                tooltipAlignment="end"
-              >
-                <Download />
-              </HeaderGlobalAction>
-            )}
             <HeaderGlobalAction
               aria-label="Report Bug"
               isActive

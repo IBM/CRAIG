@@ -9,7 +9,6 @@ const {
 } = require("./store.utils");
 const {
   shouldDisableComponentSave,
-  fieldIsNullOrEmptyString,
   resourceGroupsField,
   unconditionalInvalidText,
   kebabCaseInput,
@@ -20,6 +19,7 @@ const {
   invalidNameText,
   invalidEncryptionKeyRing,
   invalidEncryptionKeyEndpoint,
+  invalidNewResourceName,
 } = require("../forms");
 
 /**
@@ -291,7 +291,12 @@ function initKeyManagement(store) {
           },
           key_ring: {
             default: "",
-            invalid: invalidEncryptionKeyRing,
+            invalid: function (stateData) {
+              return (
+                stateData.key_ring !== "" &&
+                invalidNewResourceName(stateData.key_ring)
+              );
+            },
             invalidText: unconditionalInvalidText(
               "Enter a valid key ring name"
             ),
@@ -299,7 +304,9 @@ function initKeyManagement(store) {
           endpoint: {
             type: "select",
             default: "",
-            invalid: invalidEncryptionKeyEndpoint,
+            invalid: function (stateData) {
+              return stateData.endpoint === "public-and-private";
+            },
             invalidText: unconditionalInvalidText("Select an endpoint"),
             hideWhen: function (stateData, componentProps) {
               return (

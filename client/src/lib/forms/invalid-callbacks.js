@@ -137,28 +137,6 @@ function invalidName(field, craig) {
 }
 
 /**
- * invalid encryption key ring name
- * @param {Object} stateData
- * @param {string} stateData.key_ring
- * @return {boolean} true if invalid
- */
-function invalidEncryptionKeyRing(stateData) {
-  return (
-    stateData.key_ring !== "" && invalidNewResourceName(stateData.key_ring)
-  );
-}
-
-/**
- * invalid encryption key endpoint
- * @param {Object} stateData
- * @param {Object} stateData.endpoint
- * @return {boolean} true if invalid
- */
-function invalidEncryptionKeyEndpoint(stateData) {
-  return stateData.endpoint === "public-and-private";
-}
-
-/**
  * validate sshKey
  * @param {string} str
  * @returns {boolean} true if it is a valid sshKey
@@ -652,8 +630,6 @@ function replicationDisabledCallback(stateData, componentProps) {
 module.exports = {
   invalidName,
   invalidNewResourceName,
-  invalidEncryptionKeyRing,
-  invalidEncryptionKeyEndpoint,
   invalidSshPublicKey,
   invalidTagList,
   invalidCrnList,
