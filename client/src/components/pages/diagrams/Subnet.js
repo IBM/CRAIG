@@ -4,17 +4,21 @@ import PropTypes from "prop-types";
 import "./diagrams.css";
 
 export const Subnet = (props) => {
-  let subnetClassName = "subnetBox";
+  let subnetClassName = props.small ? "subnetBoxSmall" : "subnetBox";
   if (props.grayNames) subnetClassName += " grayText";
   return (
     <div
       className={subnetClassName}
       key={props.subnet.name + props.vpc.name + props.acl?.name}
     >
-      <div className="displayFlex marginBottomThreeQuarterRem">
-        <IbmCloudSubnets className="marginRightQuarterRem" />
-        <span className="bold">{props.subnet.name}</span>
-      </div>
+      {props.small ? (
+        ""
+      ) : (
+        <div className="displayFlex marginBottomThreeQuarterRem">
+          <IbmCloudSubnets className="marginRightQuarterRem" />
+          <span className="bold">{props.subnet.name}</span>
+        </div>
+      )}
       <div>{props.subnet.cidr}</div>
       <div className="textAlignCenter">
         {React.Children.map(props.children, (child) =>

@@ -78,6 +78,7 @@ export const SubnetServiceMap = (props) => {
         ).map((num) => {
           return (
             <DeploymentIcon
+              small={props.small}
               key={subnet.name + vpc?.name + num + item.name}
               craig={craig}
               itemName={field}
@@ -86,7 +87,6 @@ export const SubnetServiceMap = (props) => {
               vpc={vpc}
               item={item}
               index={num}
-              isInvalid={!props.vpc}
               parentState={props.parentState}
               vpcIndex={props.vpc_index}
               itemIndex={itemIndex}

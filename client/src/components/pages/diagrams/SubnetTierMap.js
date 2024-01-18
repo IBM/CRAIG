@@ -23,6 +23,7 @@ export const SubnetTierMap = (props) => {
           isSelected={props.isSelected}
           onClick={props.onClick}
           grayNames={props.grayNames}
+          small={props.small}
         />
       );
     })

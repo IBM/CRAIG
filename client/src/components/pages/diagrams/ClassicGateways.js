@@ -32,6 +32,7 @@ export const ClassicGateways = (props) => {
             icon={FirewallClassic}
             item={gw}
             itemName="classic_gateways"
+            craig={props.craig}
             onClick={
               props.onClick
                 ? () => {

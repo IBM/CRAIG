@@ -15,7 +15,7 @@ export const PowerVolumes = (props) => {
         type="subHeading"
         icon={<FileStorage className="diagramTitleIcon" />}
       />
-      <CraigFormGroup className="displayFlex alignItemsCenter overrideGap width535">
+      <CraigFormGroup className="displayFlex alignItemsCenter overrideGap">
         {craig.store.json.power_volumes
           .filter((volume, volumeIndex) => {
             if (volume.workspace === power.name) {
@@ -29,6 +29,7 @@ export const PowerVolumes = (props) => {
                 icon={FileStorage}
                 itemName="power_volumes"
                 item={volume}
+                craig={craig}
                 index={volume.index}
                 onClick={
                   props.onVolumeClick

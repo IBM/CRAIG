@@ -54,25 +54,29 @@ export const VpcMap = (props) => {
         }
         return (
           <div className={vpcBoxClassName} key={vpc.name + vpc.index}>
-            <div className={props.static ? "" : "clicky"}>
-              <CraigFormHeading
-                isRed={isRed}
-                icon={<VirtualPrivateCloud className="diagramTitleIcon" />}
-                className="marginBottomSmall"
-                type="subHeading"
-                name={
-                  nullVpcResources && !vpc.name
-                    ? "No VPC Selected"
-                    : vpc.name + " VPC"
-                }
-                buttons={props.buttons ? props.buttons(vpcIndex) : ""}
-                onClick={
-                  props.onTitleClick
-                    ? () => props.onTitleClick(vpcIndex)
-                    : undefined
-                }
-              />
-            </div>
+            {props.small ? (
+              ""
+            ) : (
+              <div className={props.static ? "" : "clicky"}>
+                <CraigFormHeading
+                  isRed={isRed}
+                  icon={<VirtualPrivateCloud className="diagramTitleIcon" />}
+                  className="marginBottomSmall"
+                  type="subHeading"
+                  name={
+                    nullVpcResources && !vpc.name
+                      ? "No VPC Selected"
+                      : vpc.name + " VPC"
+                  }
+                  buttons={props.buttons ? props.buttons(vpcIndex) : ""}
+                  onClick={
+                    props.onTitleClick
+                      ? () => props.onTitleClick(vpcIndex)
+                      : undefined
+                  }
+                />
+              </div>
+            )}
             {React.Children.map(props.children, (child) =>
               // clone react child
               React.cloneElement(child, {

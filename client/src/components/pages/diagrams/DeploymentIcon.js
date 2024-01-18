@@ -6,6 +6,7 @@ import { tagColors } from "../../forms/dynamic-form/components";
 import { Security } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
+import { disableSave } from "../../../lib";
 
 export const DeploymentIcon = (props) => {
   let isSelected = props.isSelected
@@ -17,16 +18,22 @@ export const DeploymentIcon = (props) => {
       props?.parentState?.vpcIndex === props.vpcIndex;
   let boxClassName = "deploymentIconBox";
   if (isSelected) boxClassName += " diagramIconBoxSelected";
-  if (props.isInvalid) boxClassName += " diagramIconBoxInvalid";
+  if (
+    disableSave(props.itemName, props.item, {
+      craig: props.craig,
+      data: props.item,
+    })
+  )
+    boxClassName += " diagramIconBoxInvalid";
   return (
     <div className={boxClassName}>
       <div className="maxWidth150">
         {RenderForm(props.icon, {
-          size: props.size || "60",
+          size: props.small ? "30" : props.size || "60",
           className: "margin1rem" + (props.onClick ? " clicky" : ""),
           onClick: props.onClick ? props.onClick : undefined,
         })}
-        <p className="font12px">{props.item.name}</p>
+        {props.small ? "" : <p className="font12px">{props.item.name}</p>}
       </div>
       {props.children}
       {contains(
@@ -39,7 +46,7 @@ export const DeploymentIcon = (props) => {
           "f5_vsi",
         ],
         props.itemName
-      )
+      ) && !props.small
         ? props.item.security_groups.map((sg, i) => (
             <Tag
               key={props.item.name + props.itemName + sg}

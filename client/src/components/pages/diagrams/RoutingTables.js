@@ -1,6 +1,6 @@
 import React from "react";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
-import { Security, Router } from "@carbon/icons-react";
+import { Router } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
 import "./diagrams.css";
@@ -25,6 +25,7 @@ export const RoutingTables = (props) => {
         name="Routing Tables"
         type="subHeading"
         noMarginBottom
+        className={vpc.name === null ? "diagramSubFormInvalid" : ""}
       />
       <CraigFormGroup
         className={

@@ -29,7 +29,8 @@ export const AclMap = (props) => {
       let actualAclIndex = splatContains(subnets, "network_acl", null)
         ? aclIndex - 1
         : aclIndex;
-      let aclClassName = "formInSubForm aclBox";
+      let aclClassName =
+        "formInSubForm " + (props.small ? "aclBoxSmall" : "aclBox");
       let isRed = isNullOrEmptyString(
         acl ? acl.resource_group : undefined,
         true
@@ -48,27 +49,31 @@ export const AclMap = (props) => {
           key={acl.name + vpc.name + aclIndex + props.vpc_index}
           className={aclClassName}
         >
-          <div
-            onClick={
-              props.aclTitleClick
-                ? () => props.aclTitleClick(props.vpc_index, actualAclIndex)
-                : undefined
-            }
-            className="clicky"
-          >
-            <CraigFormHeading
-              name={acl?.name ? acl.name + " ACL" : "No ACL Selected"}
-              icon={<SubnetAclRules className="diagramTitleIcon" />}
-              className="marginBottomSmall"
-              type="subHeading"
-              isRed={isRed}
-              buttons={
-                props.buttons
-                  ? props.buttons(acl, props.vpc_index, actualAclIndex)
+          {props.small ? (
+            ""
+          ) : (
+            <div
+              onClick={
+                props.aclTitleClick
+                  ? () => props.aclTitleClick(props.vpc_index, actualAclIndex)
                   : undefined
               }
-            />
-          </div>
+              className="clicky"
+            >
+              <CraigFormHeading
+                name={acl?.name ? acl.name + " ACL" : "No ACL Selected"}
+                icon={<SubnetAclRules className="diagramTitleIcon" />}
+                className="marginBottomSmall"
+                type="subHeading"
+                isRed={isRed}
+                buttons={
+                  props.buttons
+                    ? props.buttons(acl, props.vpc_index, actualAclIndex)
+                    : undefined
+                }
+              />
+            </div>
+          )}
           {React.Children.map(props.children, (child) =>
             // clone react child
             React.cloneElement(child, {

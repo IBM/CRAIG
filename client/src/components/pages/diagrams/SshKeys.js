@@ -22,6 +22,7 @@ export const SshKeys = (props) => {
         type="subHeading"
         name={(props.classic ? "Classic" : "VPC") + " SSH Keys"}
         buttons={props.buttons ? props.buttons : ""}
+        className="marginBottomSmall"
       />
       <div className="formInSubForm">
         {craig.store.json[props.classic ? "classic_ssh_keys" : "ssh_keys"]

@@ -54,6 +54,7 @@ export const SubnetRow = (props) => {
               subnet.name + props.vpc.name + (props.acl ? props.acl.name : "")
             }
             craig={props.craig}
+            small={props.small}
           >
             {props.renderChildren}
           </Subnet>
