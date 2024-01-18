@@ -1,12 +1,12 @@
 const { assert } = require("chai");
 const {
-  dynamicIcseHeadingProps,
+  dynamicHeadingProps,
 } = require("../../../client/src/lib/forms/dynamic-form-fields");
 
-describe("dynamicIcseHeadingProps", () => {
+describe("dynamicHeadingProps", () => {
   it("should return props based on group", () => {
     assert.deepEqual(
-      dynamicIcseHeadingProps({
+      dynamicHeadingProps({
         heading: {
           name: "heading",
           type: "type",

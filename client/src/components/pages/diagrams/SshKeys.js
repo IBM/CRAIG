@@ -4,6 +4,7 @@ import { Password } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
 import { validSshKey } from "../../../lib/forms/invalid-callbacks";
+import { disableSave } from "../../../lib";
 
 export const SshKeys = (props) => {
   let craig = props.craig;
@@ -33,9 +34,10 @@ export const SshKeys = (props) => {
             >
               <DeploymentIcon
                 isSelected={props.isSelected}
-                isInvalid={
-                  sshKey.use_data ? false : !validSshKey(sshKey.public_key)
-                }
+                isInvalid={disableSave("ssh_keys", sshKey, {
+                  craig: craig,
+                  data: sshKey,
+                })}
                 craig={craig}
                 itemName="ssh_keys"
                 itemIndex={sshKeyIndex}

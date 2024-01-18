@@ -20,7 +20,6 @@ const ObservabilityForm = (props) => {
         form={
           <div>
             <CraigToggleForm
-              hideHeading
               type="subForm"
               name="LogDNA"
               submissionFieldName="logdna"
@@ -64,7 +63,6 @@ const ObservabilityForm = (props) => {
             <CraigToggleForm
               type="subForm"
               name="Sysdig"
-              hideHeading
               submissionFieldName="sysdig"
               hideName
               noDeleteButton

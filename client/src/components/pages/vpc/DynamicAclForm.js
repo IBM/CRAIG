@@ -39,7 +39,6 @@ export class DynamicAclForm extends React.Component {
             ? "formInSubForm"
             : "subForm"
         }
-        hideHeading
         key={this.props.vpcIndex + "-acl-form-" + this.props.aclIndex}
         onDelete={this.props.onDelete}
         onSave={craig.vpcs.acls.save}

@@ -608,7 +608,6 @@ class CloudServicesPage extends React.Component {
                         onDelete={this.onServiceDelete}
                         type="subForm"
                         hideChevron
-                        hideHeading
                         hide={false}
                         hideName
                         submissionFieldName={this.state.service}

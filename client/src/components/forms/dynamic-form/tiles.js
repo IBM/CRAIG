@@ -76,7 +76,7 @@ export const PerCloudConnections = () => {
 };
 
 export const CraigEmptyResourceTile = (props) => {
-  return (
+  return props.show !== false ? (
     <Tile
       className={
         "tileBackground displayFlex alignItemsCenter wrap " + props.className
@@ -94,6 +94,8 @@ export const CraigEmptyResourceTile = (props) => {
         </>
       )}
     </Tile>
+  ) : (
+    ""
   );
 };
 

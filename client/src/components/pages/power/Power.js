@@ -483,7 +483,6 @@ class PowerDiagram extends React.Component {
                             hideChevron
                             hideName
                             hide={false}
-                            hideHeading
                             name={
                               craig.store.json[this.state.selectedItem][
                                 this.state.selectedIndex

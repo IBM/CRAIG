@@ -3,7 +3,6 @@ import {
   buildFormFunctions,
   DynamicToolTipWrapper,
   IcseFormTemplate,
-  IcseHeading,
   RenderForm,
 } from "icse-react-assets";
 import {
@@ -28,7 +27,7 @@ import {
 import { propsMatchState } from "../../lib";
 import {
   dynamicCraigFormGroupsProps,
-  dynamicIcseHeadingProps,
+  dynamicHeadingProps,
   dynamicToolTipWrapperProps,
 } from "../../lib/forms/dynamic-form-fields";
 import { edgeRouterEnabledZones } from "../../lib/constants";
@@ -44,7 +43,7 @@ import {
 } from "./dynamic-form/SubnetTileSubForm";
 import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
 import { Tile } from "@carbon/react";
-import { CraigFormGroup } from "./utils";
+import { CraigFormGroup, CraigFormHeading } from "./utils";
 
 const doNotRenderFields = [
   "heading",
@@ -219,7 +218,7 @@ class DynamicForm extends React.Component {
           group.hideWhen && group.hideWhen(this.state) ? (
             ""
           ) : group.heading ? (
-            <IcseHeading {...dynamicIcseHeadingProps(group)} />
+            <CraigFormHeading {...dynamicHeadingProps(group)} />
           ) : group.vsi_tiles ? (
             this.getAllVsi().map((row, index) => (
               <CraigFormGroup key={"row-" + index}>

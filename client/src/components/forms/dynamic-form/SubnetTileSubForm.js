@@ -1,6 +1,5 @@
 import React from "react";
 import { disableSave, propsMatchState } from "../../../lib";
-import { IcseHeading } from "icse-react-assets";
 import DynamicForm from "../DynamicForm";
 import { Tile } from "@carbon/react";
 import { CraigFormHeading, PrimaryButton } from "../utils";
@@ -8,7 +7,7 @@ import { getSubnetData } from "../../../lib/forms/dynamic-subnet-tile-sub-form";
 
 export const SubnetTileTitle = (props) => {
   return props.parentProps.formName === "subnet" ? (
-    <IcseHeading
+    <CraigFormHeading
       name={props.parentState.name}
       type="subHeading"
       buttons={
@@ -49,7 +48,7 @@ export const SubnetTileSubForm = (props) => {
         props.parentProps.isModal ? "subForm" : "formInSubForm"
       } marginTop1Rem ${props.parentProps.isModal ? "marginBottomNone" : ""}`}
     >
-      <IcseHeading name="Subnets" type="subHeading" noMarginBottom />
+      <CraigFormHeading name="Subnets" type="subHeading" noMarginBottom />
       <div className="displayFlex">
         {subnets.map((subnet, index) => {
           if (subnet.name === "NONE") {

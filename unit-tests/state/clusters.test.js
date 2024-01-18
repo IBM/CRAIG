@@ -129,6 +129,7 @@ describe("clusters", () => {
           kube_version: "default",
           flavor: "bx2.16x64",
           name: "frog",
+          opaque_secrets: [],
           kms: "kms",
           resource_group: "workload-rg",
           encryption_key: "roks-key",
@@ -212,6 +213,7 @@ describe("clusters", () => {
           kube_version: "default",
           flavor: "bx2.16x64",
           kms: "kms",
+          opaque_secrets: [],
           name: "frog",
           resource_group: "workload-rg",
           encryption_key: "roks-key",
@@ -290,6 +292,18 @@ describe("clusters", () => {
       assert.deepEqual(
         state.store.json.clusters[0].cos,
         null,
+        "it should be null"
+      );
+    });
+    it("should set worker pools if not found", () => {
+      let state = new newState();
+      let cluster = newDefaultWorkloadCluster();
+      delete cluster.worker_pools;
+      state.clusters.create(cluster);
+      state.object_storage.delete({}, { data: { name: "cos" } });
+      assert.deepEqual(
+        state.store.json.clusters[1].worker_pools,
+        [],
         "it should be null"
       );
     });

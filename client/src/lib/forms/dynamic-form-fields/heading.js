@@ -3,7 +3,7 @@
  * @param {*} group
  * @returns {object} props object from group
  */
-function dynamicIcseHeadingProps(group) {
+function dynamicHeadingProps(group) {
   return {
     name: group.heading.name,
     type: group.heading.type,
@@ -12,4 +12,4 @@ function dynamicIcseHeadingProps(group) {
   };
 }
 
-module.exports = { dynamicIcseHeadingProps };
+module.exports = { dynamicHeadingProps };

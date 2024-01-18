@@ -24,6 +24,7 @@ import {
   contains,
   isNullOrEmptyString,
   snakeCase,
+  splatContains,
   titleCase,
 } from "lazy-z";
 import { IcseSelect, RenderForm } from "icse-react-assets";
@@ -548,7 +549,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           hideChevron
                           hideName
                           hide={false}
-                          hideHeading
                           name={
                             craig.store.json[this.state.selectedItem][
                               this.state.selectedIndex

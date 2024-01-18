@@ -16,11 +16,20 @@ function getServices(craig, services) {
       )
     );
   });
+
+  // add logdna and sysdig rgs
+  serviceResourceGroups = distinct(
+    serviceResourceGroups
+      .concat(craig.store.json.sysdig.resource_group)
+      .concat(craig.store.json.logdna.resource_group)
+  );
+
   serviceResourceGroups = serviceResourceGroups.sort(azsort).sort((a) => {
     // move null to front
     if (!a) return -1;
     else return 0;
   });
+
   // for each resource group
   serviceResourceGroups.forEach((rg) => {
     let rgName = rg === null ? "No Resource Group" : rg;

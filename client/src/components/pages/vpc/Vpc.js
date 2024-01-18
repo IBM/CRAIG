@@ -62,12 +62,13 @@ class VpcDiagramPage extends React.Component {
   /**
    * stop displaying form
    */
-  resetValues() {
+  resetValues(vpcIndex) {
     this.setState({
       editing: false,
       aclIndex: -1,
       subnetTierIndex: -1,
       aclCreateModal: false,
+      vpcIndex: vpcIndex ? vpcIndex : this.state.vpcIndex,
     });
   }
 
@@ -164,7 +165,7 @@ class VpcDiagramPage extends React.Component {
   }
 
   onVpcDelete(stateData, componentProps) {
-    this.resetValues();
+    this.resetValues(-1);
     this.props.craig.vpcs.delete(stateData, componentProps);
   }
 
@@ -331,6 +332,7 @@ class VpcDiagramPage extends React.Component {
                     isSelected={(vpcIndex) => {
                       return vpcIndex === this.state.vpcIndex;
                     }}
+                    noDeployments
                     buttons={(vpcIndex) => {
                       return (
                         <PrimaryButton
@@ -442,7 +444,6 @@ class VpcDiagramPage extends React.Component {
                             hide={false}
                             hideChevron
                             hideName
-                            hideHeading
                             submissionFieldName="vpcs"
                             name={
                               craig.store.json.vpcs[this.state.vpcIndex].name +

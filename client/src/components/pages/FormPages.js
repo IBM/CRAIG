@@ -8,9 +8,9 @@ import {
   propsMatchState,
 } from "../../lib";
 import {
+  IcseFormTemplate,
   SecurityGroupTemplate,
   SubnetPageTemplate,
-  IcseFormTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { arraySplatIndex, keys, splat, transpose } from "lazy-z";
@@ -39,6 +39,7 @@ import {
   RenderForm,
 } from "../forms/utils/ToggleFormComponents";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
+import FormTemplate from "../forms/utils/FormTemplate";
 
 const formPageTemplate = (craig, options, form) => {
   let forms = craigForms(craig);
@@ -285,7 +286,6 @@ export const F5BigIp = (craig, isBeta) => {
           name="F5 Big IP Template Configuration"
           submissionFieldName="f5_vsi_template"
           noDeleteButton
-          hideHeading
           hideName
           hide={isBeta ? false : true}
           hideChevron={isBeta}
@@ -350,7 +350,6 @@ export const F5BigIp = (craig, isBeta) => {
           hide={isBeta ? false : true}
           hideChevron={isBeta}
           noDeleteButton
-          hideHeading
           hideName
           craig={craig}
           type="formInSubForm"

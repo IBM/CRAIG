@@ -402,11 +402,12 @@ function calculateNeededSubnetIps(config) {
     cluster.subnets.forEach((subnet) => {
       addIps(cluster.vpc, subnet, 2 * cluster.workers_per_subnet);
     });
-    cluster.worker_pools.forEach((pool) => {
-      pool.subnets.forEach((subnet) => {
-        addIps(pool.vpc, subnet, 2 * pool.workers_per_subnet);
+    if (cluster.worker_pools)
+      cluster.worker_pools.forEach((pool) => {
+        pool.subnets.forEach((subnet) => {
+          addIps(pool.vpc, subnet, 2 * pool.workers_per_subnet);
+        });
       });
-    });
   });
   config.virtual_private_endpoints.forEach((vpe) => {
     // add one for each vpe reserved ip

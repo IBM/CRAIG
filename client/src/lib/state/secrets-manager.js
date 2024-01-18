@@ -44,13 +44,11 @@ function secretsManagerCreate(config, stateData) {
  */
 function secretsManagerSave(config, stateData, componentProps) {
   config.store.json.clusters.forEach((cluster) => {
-    if (cluster.opaque_secrets) {
-      cluster.opaque_secrets.forEach((secret) => {
-        if (secret.secrets_manager == componentProps.data.name) {
-          secret.secrets_manager = stateData.name;
-        }
-      });
-    }
+    cluster.opaque_secrets.forEach((secret) => {
+      if (secret.secrets_manager == componentProps.data.name) {
+        secret.secrets_manager = stateData.name;
+      }
+    });
   });
   config.updateChild(
     ["json", "secrets_manager"],

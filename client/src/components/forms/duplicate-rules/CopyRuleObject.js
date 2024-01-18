@@ -1,9 +1,9 @@
 import React from "react";
-import { IcseSelect, IcseHeading } from "icse-react-assets";
+import { IcseSelect } from "icse-react-assets";
 import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { PrimaryButton } from "../utils/ToggleFormComponents";
+import { CraigFormHeading, PrimaryButton } from "../utils/ToggleFormComponents";
 import { CraigFormGroup } from "../utils";
 
 const CopyRuleObject = (props) => {
@@ -19,7 +19,7 @@ const CopyRuleObject = (props) => {
   }
   return (
     <>
-      <IcseHeading
+      <CraigFormHeading
         type="subHeading"
         name={
           props.isSecurityGroup
