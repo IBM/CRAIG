@@ -59,12 +59,12 @@ output "EU_DE_1" {
   value = ibm_resource_instance.power_vs_workspace_craig_eu_de_1.guid
 }
 
-output "EU-ES-1" {
-  value = ibm_resource_instance.power_vs_workspace_craig_eu_es_1.guid
+output "MAD02" {
+  value = ibm_resource_instance.power_vs_workspace_craig_mad02.guid
 }
 
-output "EU-ES-2" {
-  value = ibm_resource_instance.power_vs_workspace_craig_eu_es_2.guid
+output "MAD04" {
+  value = ibm_resource_instance.power_vs_workspace_craig_mad04.guid
 }
 
 output "SYD05" {

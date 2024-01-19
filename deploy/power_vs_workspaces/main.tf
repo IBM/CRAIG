@@ -121,18 +121,18 @@ provider "ibm" {
 }
 
 provider "ibm" {
-  alias            = "power_vs_eu_es_1"
+  alias            = "power_vs_mad02"
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.region
-  zone             = "eu-es-1"
+  zone             = "mad02"
   ibmcloud_timeout = 60
 }
 
 provider "ibm" {
-  alias            = "power_vs_eu_es_2"
+  alias            = "power_vs_mad04"
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.region
-  zone             = "eu-es-2"
+  zone             = "mad04"
   ibmcloud_timeout = 60
 }
 
@@ -506,15 +506,15 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_eu_de_1" {
 ##############################################################################
 
 ##############################################################################
-# Power VS Workspace Craig EU ES 1
+# Power VS Workspace Craig Mad 02
 ##############################################################################
 
-resource "ibm_resource_instance" "power_vs_workspace_craig_eu_es_1" {
-  provider          = ibm.power_vs_eu_es_1
-  name              = "craig-power-workspace-craig-eu-es-1"
+resource "ibm_resource_instance" "power_vs_workspace_craig_mad02" {
+  provider          = ibm.power_vs_mad02
+  name              = "craig-power-workspace-craig-mad02"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
-  location          = "eu-es-1"
+  location          = "mad02"
   resource_group_id = ibm_resource_group.craig_rg.id
   tags = [
     "hello",
@@ -530,15 +530,15 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_eu_es_1" {
 ##############################################################################
 
 ##############################################################################
-# Power VS Workspace Craig EU ES 2
+# Power VS Workspace Craig Mad 04
 ##############################################################################
 
-resource "ibm_resource_instance" "power_vs_workspace_craig_eu_es_2" {
-  provider          = ibm.power_vs_eu_es_2
-  name              = "craig-power-workspace-craig-eu-es-2"
+resource "ibm_resource_instance" "power_vs_workspace_craig_mad04" {
+  provider          = ibm.power_vs_mad04
+  name              = "craig-power-workspace-craig-mad04"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
-  location          = "eu-es-2"
+  location          = "mad04"
   resource_group_id = ibm_resource_group.craig_rg.id
   tags = [
     "hello",
