@@ -1,7 +1,12 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const { shouldDisableComponentSave } = require("./utils");
+const {
+  shouldDisableComponentSave,
+  unconditionalInvalidText,
+  cbrSaveType,
+  cbrValuePlaceholder,
+  cbrTitleCase,
+} = require("./utils");
 const { invalidCbrZone } = require("../forms/invalid-callbacks");
-const { invalidCbrZoneText } = require("../forms/text-callbacks");
 const {
   carveChild,
   updateSubChild,
@@ -9,6 +14,8 @@ const {
   pushToChildFieldModal,
 } = require("./store.utils");
 const { invalidName, invalidNameText } = require("../forms");
+const { isNullOrEmptyString, isIpv4CidrOrAddress } = require("lazy-z");
+const { ipRangeExpression } = require("../constants");
 
 /**
  * initialize cbr zones in store
@@ -153,9 +160,59 @@ function cbrZoneExclusionDelete(config, stateData, componentProps) {
   deleteSubChild(config, "cbr_zones", "exclusions", componentProps);
 }
 
+function cbrZonesOnStoreUpdate(config) {
+  if (config.store.json.cbr_zones) {
+    config.store.json.cbr_zones.forEach((zone) => {
+      if (!zone.addresses) {
+        zone.addresses = [];
+      }
+      if (!zone.exclusions) {
+        zone.exclusions = [];
+      }
+    });
+  } else config.store.json.cbr_zones = [];
+}
+
+/**
+ * @param {string} field field to get invalid text for
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} invalid text string
+ */
+function invalidCbrZoneText(field) {
+  if (field === "description") {
+    return "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/";
+  } else {
+    return `Invalid ${field}. Value must match regular expression /^[0-9a-z-]+$/.`;
+  }
+}
+
+/**
+ * returns invalid text for cbr zone value based on type
+ * @param {*} type
+ * @param {*} value
+ * @returns {Object} invalidText string
+ */
+function cbrValueInvalidText(type, value) {
+  let invalidText = "";
+  if (isNullOrEmptyString(value)) {
+    invalidText = `Invalid value for type ${type}. Cannot be empty string.`;
+  } else if (type === "ipAddress") {
+    if (!isIpv4CidrOrAddress(value) || value.includes("/")) {
+      invalidText = `Invalid value for type ${type}. Value must be a valid IPV4 Address.`;
+    }
+  } else if (type === "ipRange") {
+    if (value.match(ipRangeExpression) === null) {
+      invalidText = `Invalid value for type ${type}. Value must be a range of IPV4 Addresses.`;
+    }
+  }
+  return invalidText;
+}
+
 function initCbrZones(store) {
   store.newField("cbr_zones", {
     init: cbrZonesInit,
+    onStoreUpdate: cbrZonesOnStoreUpdate,
     create: cbrZoneCreate,
     save: cbrZoneSave,
     delete: cbrZoneDelete,
@@ -171,13 +228,22 @@ function initCbrZones(store) {
       },
       description: {
         default: "",
+        type: "textArea",
+        labelText: "Description",
         invalid: function (stateData) {
-          return invalidCbrZone("description", stateData);
+          return (
+            stateData.description && invalidCbrZone("description", stateData)
+          );
         },
-        invalidText: invalidCbrZoneText("description"),
+        invalidText: unconditionalInvalidText(
+          "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/"
+        ),
+        placeholder: "(Optional) Zone Description",
       },
       account_id: {
         default: "",
+        labelText: "Account ID",
+        optional: true,
         invalid: function (stateData) {
           return invalidCbrZone("account_id", stateData);
         },
@@ -209,6 +275,7 @@ function initCbrZones(store) {
           },
           account_id: {
             default: "",
+            labelText: "Account ID",
             invalid: function (stateData) {
               return invalidCbrZone("account_id", stateData);
             },
@@ -218,32 +285,46 @@ function initCbrZones(store) {
             invalid: function (stateData) {
               return invalidCbrZone("location", stateData);
             },
+            invalidText: invalidCbrZoneText("location"),
           },
           service_name: {
             default: "",
             invalid: function (stateData) {
               return invalidCbrZone("service_name", stateData);
             },
+            invalidText: invalidCbrZoneText("service_name"),
           },
           service_type: {
             default: "",
             invalid: function (stateData) {
               return invalidCbrZone("service_type", stateData);
             },
+            invalidText: invalidCbrZoneText("service_type"),
           },
           service_instance: {
             default: "",
             invalid: function (stateData) {
               return invalidCbrZone("service_instance", stateData);
             },
+            invalidText: invalidCbrZoneText("service_instance"),
           },
           type: {
             default: "ipAddress",
+            type: "select",
+            groups: ["IP Address", "IP Range", "Subnet", "Vpc", "Service Ref"],
+            onRender: cbrTitleCase("type"),
+            onInputChange: cbrSaveType("type"),
           },
           value: {
             default: "",
+            placeholder: function (stateData) {
+              return cbrValuePlaceholder(stateData.type);
+            },
             invalid: function (stateData) {
               return invalidCbrZone("value", stateData);
+            },
+            invalidText: function (stateData) {
+              return cbrValueInvalidText(stateData.type, stateData.value);
             },
           },
         },
@@ -273,6 +354,7 @@ function initCbrZones(store) {
           },
           account_id: {
             default: "",
+            labelText: "Account ID",
             invalid: function (stateData) {
               return invalidCbrZone("account_id", stateData);
             },
@@ -282,32 +364,46 @@ function initCbrZones(store) {
             invalid: function (stateData) {
               return invalidCbrZone("location", stateData);
             },
+            invalidText: invalidCbrZoneText("location"),
           },
           service_name: {
             default: "",
             invalid: function (stateData) {
               return invalidCbrZone("service_name", stateData);
             },
+            invalidText: invalidCbrZoneText("service_name"),
           },
           service_type: {
             default: "",
             invalid: function (stateData) {
               return invalidCbrZone("service_type", stateData);
             },
+            invalidText: invalidCbrZoneText("service_type"),
           },
           service_instance: {
             default: "",
             invalid: function (stateData) {
               return invalidCbrZone("service_instance", stateData);
             },
+            invalidText: invalidCbrZoneText("service_instance"),
           },
           type: {
             default: "ipAddress",
+            type: "select",
+            groups: ["IP Address", "IP Range", "Subnet", "Vpc", "Service Ref"],
+            onRender: cbrTitleCase("type"),
+            onInputChange: cbrSaveType("type"),
           },
           value: {
             default: "",
+            placeholder: function (stateData) {
+              return cbrValuePlaceholder(stateData.type);
+            },
             invalid: function (stateData) {
               return invalidCbrZone("value", stateData);
+            },
+            invalidText: function (stateData) {
+              return cbrValueInvalidText(stateData.type, stateData.value);
             },
           },
         },
@@ -328,4 +424,6 @@ module.exports = {
   cbrZoneExclusionSave,
   cbrZoneExclusionDelete,
   initCbrZones,
+  invalidCbrZoneText,
+  cbrValueInvalidText,
 };

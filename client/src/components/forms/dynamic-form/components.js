@@ -40,6 +40,7 @@ DynamicFormTextInput.propTypes = {
     disabled: PropTypes.func.isRequired,
     disabledText: PropTypes.func.isRequired,
     className: PropTypes.string,
+    placeholder: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   }).isRequired,
   parentState: PropTypes.shape({}).isRequired,
   parentProps: PropTypes.shape({}).isRequired,

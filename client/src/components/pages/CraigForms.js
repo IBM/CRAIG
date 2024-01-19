@@ -82,6 +82,121 @@ function craigForms(craig) {
         },
       ],
     },
+    cbr_zones: {
+      jsonField: "cbr_zones",
+      groups: [
+        {
+          name: craig.cbr_zones.name,
+          account_id: craig.cbr_zones.account_id,
+        },
+        {
+          description: craig.cbr_zones.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Addresses",
+          jsonField: "addresses",
+          addText: "Create an Address",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_zones.addresses.name,
+                account_id: craig.cbr_zones.addresses.account_id,
+                location: craig.cbr_zones.addresses.location,
+              },
+              {
+                service_name: craig.cbr_zones.addresses.service_name,
+                service_instance: craig.cbr_zones.addresses.service_instance,
+                service_type: craig.cbr_zones.addresses.service_type,
+              },
+              {
+                type: craig.cbr_zones.addresses.type,
+                value: craig.cbr_zones.addresses.value,
+              },
+            ],
+          },
+        },
+        {
+          name: "Exclusions",
+          jsonField: "exclusions",
+          addText: "Create an Exclusion",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_zones.exclusions.name,
+                account_id: craig.cbr_zones.exclusions.account_id,
+                location: craig.cbr_zones.exclusions.location,
+              },
+              {
+                service_name: craig.cbr_zones.exclusions.service_name,
+                service_instance: craig.cbr_zones.exclusions.service_instance,
+                service_type: craig.cbr_zones.exclusions.service_type,
+              },
+              {
+                type: craig.cbr_zones.exclusions.type,
+                value: craig.cbr_zones.exclusions.value,
+              },
+            ],
+          },
+        },
+      ],
+    },
+    cbr_rules: {
+      jsonField: "cbr_rules",
+      groups: [
+        {
+          name: craig.cbr_rules.name,
+          enforcement_mode: craig.cbr_rules.enforcement_mode,
+          api_type_id: craig.cbr_rules.api_type_id,
+        },
+        {
+          description: craig.cbr_rules.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Contexts",
+          jsonField: "contexts",
+          addText: "Create a Context",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_rules.contexts.name,
+                value: craig.cbr_rules.contexts.value,
+              },
+            ],
+          },
+        },
+        {
+          name: "Resource Attributes",
+          jsonField: "resource_attributes",
+          addText: "Create a Resource Attribute",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_rules.resource_attributes.name,
+                value: craig.cbr_rules.resource_attributes.value,
+              },
+            ],
+          },
+        },
+        {
+          name: "Tags",
+          jsonField: "tags",
+          addText: "Create a Tag",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_rules.tags.name,
+                operator: craig.cbr_rules.tags.operator,
+                value: craig.cbr_rules.tags.value,
+              },
+            ],
+          },
+        },
+      ],
+    },
     appid: {
       jsonField: "appid",
       groups: [

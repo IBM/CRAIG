@@ -1255,6 +1255,42 @@ function powerStoragePoolSelect(isVolume) {
   };
 }
 
+function cbrValuePlaceholder(type) {
+  return type === "ipAddress"
+    ? "x.x.x.x"
+    : type === "ipRange"
+    ? "x.x.x.x-x.x.x.x"
+    : `my-cbr-zone-${type}`;
+}
+
+function cbrTitleCase(field) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[field])
+      ? ""
+      : titleCase(stateData[field])
+          .replace("Ipa", "IP A")
+          .replace("Ip R", "IP R")
+          .replace("Serviceref", "Service Ref");
+  };
+}
+
+function cbrSaveType(field) {
+  return function (stateData) {
+    stateData.value = ""; // clear value on type change
+    return stateData[field] === "IP Address"
+      ? "ipAddress"
+      : stateData[field] === "IP Range"
+      ? "ipRange"
+      : stateData[field] === "Service Ref"
+      ? "serviceRef"
+      : stateData[field] === "Subnet"
+      ? "subnet"
+      : stateData[field] === "Vpc"
+      ? "vpc"
+      : "";
+  };
+}
+
 module.exports = {
   hideHelperText,
   encryptionKeyGroups,
@@ -1304,4 +1340,7 @@ module.exports = {
   powerAntiAffinityVolume,
   powerAntiAffinityInstance,
   powerStoragePoolSelect,
+  cbrValuePlaceholder,
+  cbrTitleCase,
+  cbrSaveType,
 };

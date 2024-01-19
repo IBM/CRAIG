@@ -41,7 +41,106 @@ import {
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
 import FormTemplate from "../forms/utils/FormTemplate";
 
-const formPageTemplate = (craig, options, form) => {
+function cbrPageTemplate(craig) {
+  let forms = craigForms(craig);
+  let zoneOptions = {
+    name: "Context Based Restriction Zones",
+    addText: "Add a CBR Zone",
+    formName: "cbr_zones",
+    jsonField: "cbr_zones",
+  };
+  let ruleOptions = {
+    name: "Context Based Restriction Rules",
+    addText: "Add a CBR Rule",
+    formName: "cbr_rules",
+    jsonField: "cbr_rules",
+  };
+  let zoneInnerFormProps = {
+    craig: craig,
+    form: forms[zoneOptions.jsonField],
+    disableSave: disableSave,
+    formName: zoneOptions.formName,
+    className: "subForm",
+  };
+  let ruleInnerFormProps = {
+    craig: craig,
+    form: forms[ruleOptions.jsonField],
+    disableSave: disableSave,
+    formName: ruleOptions.formName,
+    className: "subForm",
+  };
+
+  return (
+    <>
+      <StatefulTabs
+        name="Context Based Restrictions"
+        about={RenderDocs("cbr", craig.store.json._options.template)()}
+        form={
+          <>
+            <div className="subForm">
+              <IcseFormTemplate
+                name={zoneOptions.name}
+                addText={zoneOptions.addText}
+                arrayData={craig.store.json[zoneOptions.jsonField]}
+                onDelete={craig[zoneOptions.jsonField].delete}
+                onSave={craig[zoneOptions.jsonField].save}
+                onSubmit={craig[zoneOptions.jsonField].create}
+                disableSave={disableSave}
+                subHeading={true}
+                innerForm={DynamicForm}
+                hideAbout={true}
+                propsMatchState={propsMatchState}
+                forceOpen={forceShowForm}
+                hideFormTitleButton={zoneOptions.hideFormTitleButton}
+                overrideTile={zoneOptions.overrideTile}
+                innerFormProps={zoneInnerFormProps}
+                deleteDisabledMessage={zoneOptions.deleteDisabledMessage}
+                deleteDisabled={zoneOptions.deleteDisabled}
+                toggleFormProps={{
+                  craig: craig,
+                  disableSave: disableSave,
+                  submissionFieldName: zoneOptions.jsonField,
+                  hideName: true,
+                  type: "formInSubForm",
+                }}
+              />
+            </div>
+            <div className="subForm">
+              <IcseFormTemplate
+                name={ruleOptions.name}
+                addText={ruleOptions.addText}
+                arrayData={craig.store.json[ruleOptions.jsonField]}
+                onDelete={craig[ruleOptions.jsonField].delete}
+                onSave={craig[ruleOptions.jsonField].save}
+                onSubmit={craig[ruleOptions.jsonField].create}
+                disableSave={disableSave}
+                subHeading={true}
+                innerForm={DynamicForm}
+                hideAbout={true}
+                propsMatchState={propsMatchState}
+                forceOpen={forceShowForm}
+                hideFormTitleButton={false}
+                overrideTile={ruleOptions.overrideTile}
+                innerFormProps={ruleInnerFormProps}
+                deleteDisabledMessage={ruleOptions.deleteDisabledMessage}
+                deleteDisabled={ruleOptions.deleteDisabled}
+                toggleFormProps={{
+                  craig: craig,
+                  disableSave: disableSave,
+                  submissionFieldName: ruleOptions.jsonField,
+                  hideName: true,
+                  type: "formInSubForm",
+                }}
+              ></IcseFormTemplate>
+            </div>
+          </>
+        }
+      />
+    </>
+  );
+}
+
+export const formPageTemplate = (craig, options, form) => {
   let forms = craigForms(craig);
   let innerFormProps = {
     craig: craig,
@@ -99,6 +198,10 @@ const AccessGroupsPage = (craig) => {
     formName: "access-groups",
     jsonField: "access_groups",
   });
+};
+
+const CbrForm = (craig) => {
+  return cbrPageTemplate(craig);
 };
 
 const AppIdPage = (craig) => {
@@ -1029,6 +1132,8 @@ export const NewFormPage = (props) => {
     return AppIdPage(craig);
   } else if (form === "activityTracker") {
     return Atracker(craig);
+  } else if (form === "cbr") {
+    return CbrForm(craig);
   } else if (form === "cis") {
     return Cis(craig);
   } else if (form === "cisGlbs") {

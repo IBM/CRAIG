@@ -3,9 +3,11 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
 } = require("./store.utils");
-const { shouldDisableComponentSave } = require("./utils");
+const {
+  shouldDisableComponentSave,
+  unconditionalInvalidText,
+} = require("./utils");
 const { invalidCbrRule } = require("../forms/invalid-callbacks");
-const { invalidCbrRuleText } = require("../forms/text-callbacks");
 const { invalidName, invalidNameText } = require("../forms");
 
 /**
@@ -196,9 +198,46 @@ function cbrRuleTagDelete(config, stateData, componentProps) {
   deleteSubChild(config, "cbr_rules", "tags", componentProps);
 }
 
+function cbrRulesOnStoreUpdate(config) {
+  if (config.store.json.cbr_rules) {
+    config.store.json.cbr_rules.forEach((rule) => {
+      if (!rule.contexts) {
+        rule.contexts = [];
+      }
+      if (!rule.resource_attributes) {
+        rule.resource_attributes = [];
+      }
+      if (!rule.tags) {
+        rule.tags = [];
+      }
+    });
+  } else config.store.json.cbr_rules = [];
+}
+
+/**
+ * @param {string} field field to get invalid text for
+ * @param {Object} stateData
+ * @param {Object} componentProps
+ * @returns {string} invalid text string
+ */
+function invalidCbrRuleText(field, stateData, componentProps) {
+  if (field === "api_type_id") {
+    return "Invalid api_type_id. Must match the regex expression /^[a-zA-Z0-9_.-:]+$/";
+  } else if (field === "description") {
+    return "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/";
+  } else if (field === "value") {
+    return "Invalid value. Must match the regex expression /^[Ss]+$/";
+  } else if (field == "operator") {
+    return "Invalid operator. Must match the regex expression /^[a-zA-Z0-9]+$/";
+  } else {
+    return "";
+  }
+}
+
 function initCbrRules(store) {
   store.newField("cbr_rules", {
     init: cbrRulesInit,
+    onStoreUpdate: cbrRulesOnStoreUpdate,
     create: cbrRuleCreate,
     save: cbrRuleSave,
     delete: cbrRuleDelete,
@@ -214,13 +253,25 @@ function initCbrRules(store) {
       },
       description: {
         default: "",
+        type: "textArea",
+        placeholder: "(Optional) Rule Description",
+        labelText: "Description",
         invalid: function (stateData) {
-          return invalidCbrRule("description", stateData);
+          return (
+            stateData.description && invalidCbrRule("description", stateData)
+          );
         },
-        invalidText: invalidCbrRuleText("description"),
+        invalidText: invalidCbrRuleText("descriptions"),
       },
       api_type_id: {
         default: "",
+        optional: true,
+        labelText: "API Type ID",
+        tooltip: {
+          content:
+            "APIs can be scoped for some service types that adopt CBR. This is mostly used for managed database services.",
+          alignModal: "bottom",
+        },
         invalid: function (stateData) {
           return invalidCbrRule("api_type_id", stateData);
         },
@@ -228,6 +279,14 @@ function initCbrRules(store) {
       },
       enforcement_mode: {
         default: "Enabled",
+        type: "select",
+        groups: function () {
+          return ["Enabled", "Disabled", "Report"];
+        },
+        invalid: function (stateData) {
+          return invalidCbrRule("enforcement_mode", stateData);
+        },
+        invalidText: unconditionalInvalidText("Select an Enforcement Type"),
       },
     },
     subComponents: {
@@ -329,4 +388,5 @@ module.exports = {
   cbrRuleTagSave,
   cbrRuleTagDelete,
   initCbrRules,
+  invalidCbrRuleText,
 };
