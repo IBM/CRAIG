@@ -120,7 +120,7 @@ describe("secrets_manager", () => {
       );
       assert.deepEqual(
         state.store.json.clusters[0].opaque_secrets,
-        undefined,
+        [],
         "it should update cluster.opaque_secrets"
       );
     });

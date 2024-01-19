@@ -1,13 +1,11 @@
 import React from "react";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import {
-  FileStorage,
   NetworkEnterprise,
   Voicemail,
   VirtualMachine,
 } from "@carbon/icons-react";
 import { DeploymentIcon, PowerSubnet, PowerSubnetInnerBox } from "../diagrams";
-import { Tag } from "@carbon/react";
 import { contains, splatContains } from "lazy-z";
 import PropTypes from "prop-types";
 
@@ -106,69 +104,13 @@ export const PowerSubnets = (props) => {
                         itemName="power_instances"
                         icon={VirtualMachine}
                         index={instance.index}
+                        craig={craig}
                         onClick={
                           props.static
                             ? undefined
                             : () => props.onPowerInstanceClick(instance.index)
                         }
-                      >
-                        {instanceVolumes.length === 0 ? (
-                          <></>
-                        ) : (
-                          <></>
-                          // <div
-                          //   style={{
-                          //     maxWidth: "150px",
-                          //     textAlign: "center",
-                          //     marginTop: "0.33rem",
-                          //   }}
-                          // >
-                          //   {instanceVolumes
-                          //     .sort((a, b) => {
-                          //       if (a.pi_volume_size > b.pi_volume_size)
-                          //         return -1;
-                          //       else if (a.pi_volume_size < b.pi_volume_size)
-                          //         return 1;
-                          //     })
-                          //     .map((vol) => {
-                          //       return (
-                          //         <Tag
-                          //           key={vol.index + instance.name}
-                          //           style={{
-                          //             boxShadow:
-                          //               props.volumeIsSelected &&
-                          //               props.volumeIsSelected(vol.index)
-                          //                 ? " 0 10px 14px 0 rgba(0, 0, 100, 0.24),0 17px 50px 0 rgba(0, 0, 100, 0.19)"
-                          //                 : "",
-                          //           }}
-                          //           onClick={
-                          //             props.static
-                          //               ? undefined
-                          //               : () => {
-                          //                   props.onVolumeClick(vol.index);
-                          //                 }
-                          //           }
-                          //         >
-                          //           <div
-                          //             className="displayFlex"
-                          //             style={{
-                          //               fontSize: "10px",
-                          //             }}
-                          //           >
-                          //             <FileStorage
-                          //               style={{
-                          //                 marginTop: "0.33rem",
-                          //                 marginRight: "0.25rem",
-                          //               }}
-                          //             />{" "}
-                          //             <p>{vol.pi_volume_size}</p>
-                          //           </div>
-                          //         </Tag>
-                          //       );
-                          //     })}
-                          // </div>
-                        )}
-                      </DeploymentIcon>
+                      />
                     </div>
                   );
                 })}
@@ -190,6 +132,7 @@ export const PowerSubnets = (props) => {
                     item={instance}
                     itemName="vtl"
                     icon={Voicemail}
+                    craig={craig}
                     onClick={
                       props.static
                         ? undefined

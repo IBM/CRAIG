@@ -1,7 +1,10 @@
 import React from "react";
 import { Tab, TabList, TabPanels, Tabs, TabPanel } from "@carbon/react";
-import { IcseHeading } from "icse-react-assets";
-import { DynamicRender, PrimaryButton } from "./ToggleFormComponents";
+import {
+  CraigFormHeading,
+  DynamicRender,
+  PrimaryButton,
+} from "./ToggleFormComponents";
 import { kebabCase } from "lazy-z";
 import PropTypes from "prop-types";
 import { tabPanelProps } from "../../../lib/components/toggle-form-components";
@@ -30,7 +33,7 @@ class StatefulTabs extends React.Component {
         {props.hideHeading ? (
           ""
         ) : (
-          <IcseHeading
+          <CraigFormHeading
             name={this.props.name}
             type={this.props.headingType}
             className={this.props.className}
@@ -105,7 +108,6 @@ class StatefulTabs extends React.Component {
 }
 
 StatefulTabs.defaultProps = {
-  subHeading: false,
   hideFormTitleButton: false,
   hideAbout: false,
   hasBuiltInHeading: false,
@@ -114,7 +116,6 @@ StatefulTabs.defaultProps = {
 
 StatefulTabs.propTypes = {
   name: PropTypes.string, // can be null
-  subHeading: PropTypes.bool.isRequired,
   className: PropTypes.string, // can be null
   tooltip: PropTypes.shape({
     content: PropTypes.string.isRequired,

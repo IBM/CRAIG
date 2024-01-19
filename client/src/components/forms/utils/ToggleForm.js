@@ -1,10 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  DeleteModal,
-  UnsavedChangesModal,
-  IcseHeading,
-} from "icse-react-assets";
+import { DeleteModal, UnsavedChangesModal } from "icse-react-assets";
 import { disableSave, propsMatchState } from "../../../lib";
 import StatefulTabs from "./StatefulTabs";
 import {
@@ -13,6 +9,7 @@ import {
   PrimaryButton,
   SecondaryButton,
   StatelessFormWrapper,
+  CraigFormHeading,
 } from "./ToggleFormComponents";
 import DynamicForm from "../DynamicForm";
 
@@ -196,14 +193,14 @@ class CraigToggleForm extends React.Component {
     return (
       <>
         <StatefulTabs
-          hideHeading={this.props.hideHeading}
+          hideHeading
           about={this.props.about}
           {...(this.props.tabPanel ? this.props.tabPanel : {})}
           toggleShowChildren={this.toggleShowChildren}
           form={
             <>
               {this.props.name && !this.props.hideName ? (
-                <IcseHeading name={this.props.name} hideButton />
+                <CraigFormHeading name={this.props.name} hideButton />
               ) : (
                 ""
               )}

@@ -61,14 +61,27 @@ export const RgServiceMap = (props) => {
   let services = getServices(props.craig, props.services);
   return services.serviceResourceGroups.map((rg, rgIndex) => {
     let serviceMap = services.serviceMap[rg];
-    return (
-      <div className="subForm marginBottomSmall serviceBox" key={rg}>
-        <CraigFormHeading
-          icon={<GroupResource className="diagramTitleIcon" />}
-          name={rg}
-          type="subHeading"
-          buttons={props.buttons ? props.buttons(rg) : undefined}
-        />
+    return serviceMap.length === 0 && props.small ? (
+      ""
+    ) : (
+      <div
+        className={
+          "subForm marginBottomSmall " +
+          (props.small ? "serviceBoxSmall" : "serviceBox")
+        }
+        key={rg}
+      >
+        {props.small ? (
+          ""
+        ) : (
+          <CraigFormHeading
+            icon={<GroupResource className="diagramTitleIcon" />}
+            name={rg}
+            type="subHeading"
+            buttons={props.buttons ? props.buttons(rg) : undefined}
+            className="marginBottomSmall"
+          />
+        )}
         <CraigFormGroup className="overrideGap">
           {serviceMap.length === 0 ? (
             <CraigEmptyResourceTile
@@ -94,6 +107,7 @@ export const RgServiceMap = (props) => {
                     service={service}
                     icon={serviceFormMap[service.type].icon}
                     className="pointerEventsNone"
+                    small={props.small}
                   />
                 );
               })

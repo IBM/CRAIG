@@ -420,46 +420,6 @@ describe("vsi", () => {
       );
     });
   });
-  describe("vsi.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
-    it("should reset security groups and subnets on state change", () => {
-      let expectedData = {
-        security_groups: [],
-        subnets: [],
-      };
-      let actualData = {};
-      craig.vsi.vpc.onStateChange(actualData);
-      assert.deepEqual(
-        actualData,
-        expectedData,
-        "it should return the correct data"
-      );
-    });
-    it("should return api endpoint for image name with region", () => {
-      assert.deepEqual(
-        craig.vsi.image_name.apiEndpoint({}, { craig: craig }),
-        "/api/vsi/us-south/images",
-        "it should return api endpoint"
-      );
-    });
-    it("should return api endpoint for profile with region", () => {
-      assert.deepEqual(
-        craig.vsi.profile.apiEndpoint({}, { craig: craig }),
-        "/api/vsi/us-south/instanceProfiles",
-        "it should return api endpoint"
-      );
-    });
-    it("should return list of ssh keys", () => {
-      assert.deepEqual(
-        craig.vsi.ssh_keys.groups({}, { craig: craig }),
-        ["ssh-key"],
-        "it should return ssh keys"
-      );
-    });
-  });
   describe("volumes", () => {
     describe("volumes.create", () => {
       it("should create a new vsi volume", () => {

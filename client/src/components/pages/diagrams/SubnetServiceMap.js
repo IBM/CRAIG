@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 
 export const SubnetServiceMap = (props) => {
   function getIcon(field) {
-    return field === "fortigate_vnf"
+    return field === "fortigate_vnf" || field === "f5_vsi"
       ? AppConnectivity
       : field === "load_balancers"
       ? LoadBalancerVpc
@@ -34,9 +34,9 @@ export const SubnetServiceMap = (props) => {
       ? IbmCloudKubernetesService
       : IbmCloudVpcEndpoints;
   }
-  let subnet = props.subnet;
   let craig = props.craig;
   let vpc = props.vpc;
+  let subnet = props.vpc ? props.subnet : { name: null };
   return [
     "vsi",
     "clusters",
@@ -45,16 +45,18 @@ export const SubnetServiceMap = (props) => {
     "vpn_servers",
     "load_balancers",
     "fortigate_vnf",
+    "f5_vsi",
   ].map((field) =>
     craig.store.json[field].map((item, itemIndex) => {
       if (
-        (field === "vpn_gateways"
+        (item.vpc === null && !props.vpc) ||
+        ((field === "vpn_gateways" || field === "f5_vsi"
           ? item.subnet === subnet.name
           : field === "fortigate_vnf"
           ? item.primary_subnet === subnet.name ||
             item.secondary_subnet === subnet.name
           : contains(item.subnets, subnet.name)) &&
-        item.vpc === vpc.name
+          item.vpc === vpc.name)
       ) {
         return buildNumberDropdownList(
           Number(
@@ -65,9 +67,10 @@ export const SubnetServiceMap = (props) => {
                 "vpn_servers",
                 "load_balancers",
                 "fortigate_vnf",
+                "f5_vsi",
               ],
               field
-            )
+            ) || item.vpc === null
               ? 1 // 1 if not itterated
               : item[field === "vsi" ? "vsi_per_subnet" : "workers_per_subnet"]
           ),
@@ -75,7 +78,8 @@ export const SubnetServiceMap = (props) => {
         ).map((num) => {
           return (
             <DeploymentIcon
-              key={subnet.name + vpc.name + num + item.name}
+              small={props.small}
+              key={subnet.name + vpc?.name + num + item.name}
               craig={craig}
               itemName={field}
               icon={getIcon(field)}

@@ -135,32 +135,6 @@ describe("classic", () => {
         });
       });
     });
-    describe("classic_ssh_keys.schema", () => {
-      describe("classic_ssh_keys.public_key", () => {
-        describe("classic_ssh_keys.public_key.invalidText", () => {
-          it("should return correct invalid text for ssh key with invalid public key", () => {
-            let craig = newState();
-            assert.deepEqual(
-              craig.classic_ssh_keys.public_key.invalidText(
-                {
-                  name: "classic-key",
-                  public_key: "wrong",
-                },
-                {
-                  classic: true,
-                  craig: craig,
-                  data: {
-                    name: "hi",
-                  },
-                }
-              ),
-              "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region",
-              "it should return correct invalid text"
-            );
-          });
-        });
-      });
-    });
   });
   describe("classic vlans", () => {
     describe("classic_vlans.init", () => {
@@ -196,61 +170,6 @@ describe("classic", () => {
         assert.isTrue(
           craig.store.json._options.enable_classic,
           "it should enable classic"
-        );
-      });
-    });
-    describe("classic_vlans.onStoreUpdate", () => {
-      it("should remove unfound classic vlans from router hostname", () => {
-        let craig = newState();
-        craig.classic_vlans.create({
-          name: "vsrx-public",
-          datacenter: "dal10",
-          type: "PUBLIC",
-          router_hostname: "fake",
-        });
-        assert.deepEqual(
-          craig.store.json.classic_vlans,
-          [
-            {
-              name: "vsrx-public",
-              datacenter: "dal10",
-              type: "PUBLIC",
-              router_hostname: "",
-            },
-          ],
-          "it should create vlan"
-        );
-      });
-      it("should not remove found classic vlans from router hostname", () => {
-        let craig = newState();
-        craig.classic_vlans.create({
-          name: "vsrx-public",
-          datacenter: "dal10",
-          type: "PUBLIC",
-        });
-        craig.classic_vlans.create({
-          name: "vsrx-public2",
-          datacenter: "dal10",
-          type: "PUBLIC",
-          router_hostname: "vsrx-public",
-        });
-        assert.deepEqual(
-          craig.store.json.classic_vlans,
-          [
-            {
-              name: "vsrx-public",
-              datacenter: "dal10",
-              type: "PUBLIC",
-              router_hostname: "",
-            },
-            {
-              datacenter: "dal10",
-              name: "vsrx-public2",
-              router_hostname: "vsrx-public",
-              type: "PUBLIC",
-            },
-          ],
-          "it should create vlan"
         );
       });
     });

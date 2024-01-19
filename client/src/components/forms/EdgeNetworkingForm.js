@@ -1,16 +1,12 @@
 import React from "react";
-import {
-  IcseHeading,
-  IcseSelect,
-  StatelessToggleForm,
-} from "icse-react-assets";
+import { IcseSelect, StatelessToggleForm } from "icse-react-assets";
 import { contains, buildNumberDropdownList, kebabCase } from "lazy-z";
 import { Modal, RadioButtonGroup, RadioButton, Tile } from "@carbon/react";
 import { EdgeNetworkingDocs } from "../pages";
 import edgeNetwork from "../../images/edge-network.png";
 import PropTypes from "prop-types";
 import "./edge-network.css";
-import { PrimaryButton } from "./utils/ToggleFormComponents";
+import { CraigFormHeading, PrimaryButton } from "./utils/ToggleFormComponents";
 import { CraigFormGroup } from "./utils";
 
 const edgePatterns = [
@@ -157,7 +153,7 @@ class EdgeNetworkingForm extends React.Component {
               <div>
                 <EdgeNetworkingDocs />
                 <div className="formInSubForm">
-                  <IcseHeading
+                  <CraigFormHeading
                     name="Configure Edge Networking"
                     type="subHeading"
                     className="marginBottomSmall"

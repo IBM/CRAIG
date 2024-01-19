@@ -18,8 +18,6 @@ const {
 } = require("./text-callbacks");
 const {
   invalidName,
-  invalidEncryptionKeyRing,
-  invalidEncryptionKeyEndpoint,
   invalidSshPublicKey,
   validSshKey,
   invalidIamAccountSettings,
@@ -76,8 +74,6 @@ module.exports = {
   disableSave,
   clusterHelperTestCallback,
   invalidNameText,
-  invalidEncryptionKeyRing,
-  invalidEncryptionKeyEndpoint,
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
   validSshKey,

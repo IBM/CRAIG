@@ -27,6 +27,7 @@ export const PowerMap = (props) => {
           onClick={props.onClick ? () => props.onClick(powerIndex) : undefined}
           buttons={props.buttons ? props.buttons(powerIndex) : undefined}
           isRed={isRed}
+          className="marginBottomSmall"
         />
         {React.Children.map(props.children, (child) =>
           // clone react child

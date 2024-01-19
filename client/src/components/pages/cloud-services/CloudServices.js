@@ -468,6 +468,7 @@ class CloudServicesPage extends React.Component {
                         icon={<CloudMonitoring className="diagramTitleIcon" />}
                         type="subHeading"
                         name="Activity Tracker"
+                        className="marginBottomSmall"
                       />
                       <CraigFormGroup className="overrideGap">
                         <ManageService
@@ -489,6 +490,7 @@ class CloudServicesPage extends React.Component {
                 <CraigFormHeading
                   name="Resource Groups"
                   type="subHeading"
+                  className="marginBottomSmall"
                   buttons={
                     <PrimaryButton
                       type="add"
@@ -509,6 +511,7 @@ class CloudServicesPage extends React.Component {
                       icon={<GroupResource className="diagramTitleIcon" />}
                       noMarginBottom={serviceMap[rg].length === 0}
                       type="subHeading"
+                      className="marginBottomSmall"
                       onClick={() => {
                         this.onServiceIconClick({
                           resourceGroup: "",
@@ -608,7 +611,6 @@ class CloudServicesPage extends React.Component {
                         onDelete={this.onServiceDelete}
                         type="subForm"
                         hideChevron
-                        hideHeading
                         hide={false}
                         hideName
                         submissionFieldName={this.state.service}

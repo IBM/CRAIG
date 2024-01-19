@@ -459,6 +459,26 @@ describe("key_management", () => {
       beforeEach(() => {
         craig = newState();
       });
+      it("should not have invalid key ring when empty string", () => {
+        assert.isFalse(
+          craig.key_management.keys.key_ring.invalid({ key_ring: "" }),
+          "it should not be invalid"
+        );
+      });
+      it("should have invalid key ring when bad name", () => {
+        assert.isTrue(
+          craig.key_management.keys.key_ring.invalid({ key_ring: "@@@" }),
+          "it should not be invalid"
+        );
+      });
+      it("should have invalid endpoint when public and private", () => {
+        assert.isTrue(
+          craig.key_management.keys.endpoint.invalid({
+            endpoint: "public-and-private",
+          }),
+          "it should be true"
+        );
+      });
       it("should hide endpoint when craig is not public and private", () => {
         assert.isTrue(
           craig.key_management.keys.endpoint.hideWhen({}, { craig: craig }),

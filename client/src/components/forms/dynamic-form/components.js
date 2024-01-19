@@ -172,7 +172,7 @@ DynamicMultiSelect.propTypes = {
 const DynamicPublicKey = (props) => {
   return (
     <div className="fieldWidthBigger leftTextAlign">
-      <TextInput.PasswordInput {...dynamicPasswordInputProps(props)} />
+      <TextInput {...dynamicPasswordInputProps(props)} />
     </div>
   );
 };

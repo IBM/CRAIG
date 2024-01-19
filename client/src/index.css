@@ -101,6 +101,10 @@ input:read-only {
   display: flex;
 }
 
+.flexWrap {
+  flex-wrap: wrap;
+}
+
 .alignItemsTop {
   align-items: top;
 }

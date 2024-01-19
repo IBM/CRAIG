@@ -12,14 +12,14 @@ const {
   addClassName,
 } = require("./utils");
 const { dynamicTextAreaProps } = require("./text-area");
-const { dynamicIcseHeadingProps } = require("./icse-heading");
+const { dynamicHeadingProps } = require("./heading");
 const { dynamicCraigFormGroupsProps } = require("./craig-form-group");
 const { dynamicToolTipWrapperProps } = require("./dynamic-tooltip-wrapper");
 
 module.exports = {
   dynamicToolTipWrapperProps,
   dynamicCraigFormGroupsProps,
-  dynamicIcseHeadingProps,
+  dynamicHeadingProps,
   dynamicTextAreaProps,
   dynamicSelectProps,
   dynamicMultiSelectProps,

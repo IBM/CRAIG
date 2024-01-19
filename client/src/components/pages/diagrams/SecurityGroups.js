@@ -13,7 +13,8 @@ export const SecurityGroups = (props) => {
     <div
       className={
         "formInSubForm marginBottomSmall" +
-        (props.width ? " securityGroupsBoxWidth" : "")
+        (props.width ? " securityGroupsBoxWidth" : "") +
+        (props.vpc.name === null ? " diagramSubFormInvalid" : "")
       }
     >
       <CraigFormHeading
@@ -40,6 +41,7 @@ export const SecurityGroups = (props) => {
                   icon={Security}
                   item={sg}
                   vpcIndex={props.vpc_index}
+                  isInvalid={props.vpc.name === null}
                   itemIndex={sgIndex}
                   itemName="security_groups"
                   isSelected={props.isSelected}

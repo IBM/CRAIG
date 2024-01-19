@@ -39,6 +39,7 @@ export const TransitGatewaysMap = (props) => {
           itemName="transit_gateways"
           item={tgw}
           icon={IbmCloudTransitGateway}
+          craig={props.craig}
         >
           <>
             <div className="marginTopHalfRem" />

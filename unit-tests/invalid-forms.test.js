@@ -1,5 +1,6 @@
 const { assert } = require("chai");
 const { state, invalidForms } = require("../client/src/lib");
+const { azsort } = require("lazy-z");
 const failingComponents = require("./data-files/every-component-fails.json");
 const craig = require("./data-files/craig-json.json");
 const failingSubComponents = require("./data-files/sub-components-fail.json");
@@ -37,7 +38,8 @@ describe("invalidForms", () => {
       "vpn_servers",
       "access_groups",
       "/form/cbr",
-    ];
+      "icd",
+    ].sort(azsort);
     let actualData = invalidForms(updatedState);
     assert.deepEqual(
       actualData,
@@ -65,18 +67,18 @@ describe("invalidForms", () => {
     updatedState.updateCallback = () => {};
     updatedState.update();
     let expectedData = [
+      "dns",
+      "vpn_servers",
       "key_management",
-      "routing_tables",
       "clusters",
       "vsi",
+      "routing_tables",
+      "access_groups",
+      "/form/cbr",
       "power",
       "power_instances",
       "power_volumes",
-      "dns",
-      "vpn_servers",
-      "access_groups",
-      "/form/cbr",
-    ];
+    ].sort(azsort);
     let actualData = invalidForms(updatedState);
     assert.deepEqual(
       actualData,
@@ -91,18 +93,18 @@ describe("invalidForms", () => {
     updatedState.update();
     updatedState.store.json._options.power_vs_zones = ["dal10"];
     let expectedData = [
+      "dns",
+      "vpn_servers",
       "key_management",
-      "routing_tables",
       "clusters",
       "vsi",
+      "routing_tables",
+      "access_groups",
+      "/form/cbr",
       "power",
       "power_instances",
       "power_volumes",
-      "dns",
-      "vpn_servers",
-      "access_groups",
-      "/form/cbr",
-    ];
+    ].sort();
     let actualData = invalidForms(updatedState);
     assert.deepEqual(
       actualData,
@@ -423,7 +425,7 @@ describe("invalidForms", () => {
         dynamic_subnets: true,
         enable_power_vs: false,
         craig_version: "1.5.0",
-        power_vs_zones: [],
+        power_vs_zones: ["dal12"],
       },
       access_groups: [
         {
@@ -558,7 +560,7 @@ describe("invalidForms", () => {
       power: [
         {
           name: "oracle-22",
-          resource_group: "workload-rg",
+          resource_group: "fums-dt-rg",
           zone: "dal12",
           ssh_keys: [
             {

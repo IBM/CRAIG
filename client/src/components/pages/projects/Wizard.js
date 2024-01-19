@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  IcseHeading,
   IcseSelect,
   IcseToggle,
   IcseNumberSelect,
@@ -22,7 +21,7 @@ import {
   releaseNotes,
   wizard,
 } from "../../../lib";
-import { CraigFormGroup } from "../../forms";
+import { CraigFormGroup, CraigFormHeading } from "../../forms";
 const mixedTemplate = require("../../../lib/docs/templates/slz-mixed.json");
 
 class Wizard extends React.Component {
@@ -130,7 +129,7 @@ class Wizard extends React.Component {
               onChange={this.handleChange}
             />
           </CraigFormGroup>
-          <IcseHeading type="subHeading" name="Financial Services Cloud" />
+          <CraigFormHeading type="subHeading" name="Financial Services Cloud" />
           <p className="marginBottomSmall">
             Show only Financial Services Cloud validated regions.
           </p>
@@ -154,7 +153,10 @@ class Wizard extends React.Component {
               />
             )}
           </CraigFormGroup>
-          <IcseHeading type="subHeading" name="Virtual Private Cloud (VPC)" />
+          <CraigFormHeading
+            type="subHeading"
+            name="Virtual Private Cloud (VPC)"
+          />
           <p className="marginBottomSmall">
             Choose your VPC region & availability zones
           </p>
@@ -164,7 +166,7 @@ class Wizard extends React.Component {
               name="region"
               labelText="VPC Region"
               value={this.state.region}
-              groups={["us-south", "us-east", "eu-de", "eu-gb"]
+              groups={["us-south", "us-east", "eu-de", "eu-gb", "eu-es"]
                 .concat(
                   this.state.fs_cloud
                     ? []
@@ -265,7 +267,7 @@ class Wizard extends React.Component {
               }}
             />
           </CraigFormGroup>
-          <IcseHeading type="subHeading" name="Power Virtual Servers" />
+          <CraigFormHeading type="subHeading" name="Power Virtual Servers" />
           <p className="marginBottomSmall">
             Choose your VPC region & availability zones
           </p>
@@ -308,10 +310,11 @@ class Wizard extends React.Component {
                         "au-syd": ["syd04", "syd05"],
                         "eu-de": ["eu-de-1", "eu-de-2"],
                         "eu-gb": ["lon04", "lon06"],
+                        "eu-es": ["eu-es-1", "eu-es-2"],
                         "us-east": ["us-east", "wdc06", "wdc07"],
                         "us-south": ["us-south", "dal10", "dal12"],
                         "jp-tok": ["tok04"],
-                        "br-sao": ["sao01"],
+                        "br-sao": ["sao01", "sao04"],
                         "ca-tor": ["tor01"],
                       }[this.state.region]
                 }
@@ -322,6 +325,7 @@ class Wizard extends React.Component {
                       "us-south",
                       "eu-de",
                       "eu-gb",
+                      "eu-es",
                       "us-east",
                       "br-sao",
                       "jp-tok",
@@ -337,6 +341,7 @@ class Wizard extends React.Component {
                       "us-south",
                       "eu-de",
                       "eu-gb",
+                      "eu-es",
                       "us-east",
                       "br-sao",
                       "jp-osa",

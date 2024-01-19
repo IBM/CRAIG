@@ -5,13 +5,14 @@
     "tags": ["hello", "world"],
     "zones": 3,
     "endpoints": "private",
-    "account_id": "",
+    "account_id": null,
     "fs_cloud": false,
     "dynamic_subnets": false,
     "enable_power_vs": true,
-    "craig_version": "1.6.0",
+    "craig_version": "1.9.0",
     "power_vs_zones": ["dal12", "dal10", "us-south"],
-    "advanced_subnets": true
+    "advanced_subnets": true,
+    "power_vs_high_availability": false
   },
   "access_groups": [],
   "appid": [],
@@ -23,7 +24,10 @@
     "bucket": null,
     "add_route": true,
     "cos_key": null,
-    "locations": ["global", "us-south"]
+    "locations": ["global", "us-south"],
+    "instance": false,
+    "plan": "lite",
+    "resource_group": null
   },
   "cbr_rules": [],
   "cbr_zones": [],
@@ -209,7 +213,9 @@
   "sysdig": {
     "enabled": false,
     "plan": "graduated-tier",
-    "resource_group": null
+    "resource_group": null,
+    "name": "sysdig",
+    "platform_logs": false
   },
   "teleport_vsi": [],
   "transit_gateways": [

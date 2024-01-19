@@ -5,14 +5,15 @@
     "tags": ["craig", "quick-start"],
     "zones": 1,
     "endpoints": "public-and-private",
-    "account_id": "",
+    "account_id": null,
     "dynamic_subnets": true,
     "enable_power_vs": true,
     "enable_classic": false,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.8.0",
+    "craig_version": "1.9.0",
     "power_vs_high_availability": false,
-    "template": "Power VS POC Quick Start"
+    "template": "Power VS POC Quick Start",
+    "fs_cloud": false
   },
   "access_groups": [],
   "appid": [],
@@ -24,15 +25,13 @@
     "bucket": null,
     "add_route": true,
     "cos_key": null,
-    "locations": ["global", "us-south"]
+    "locations": ["global", "us-south"],
+    "instance": false,
+    "plan": "lite",
+    "resource_group": null
   },
   "cbr_rules": [],
   "cbr_zones": [],
-  "cis": [],
-  "cis_glbs": [],
-  "classic_gateways": [],
-  "classic_ssh_keys": [],
-  "classic_vlans": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
@@ -81,13 +80,15 @@
   ],
   "load_balancers": [],
   "logdna": {
-    "enabled": false,
-    "plan": "lite",
+    "enabled": true,
+    "plan": "7-day",
     "endpoints": "private",
     "platform_logs": false,
     "resource_group": "service-rg",
-    "cos": null,
-    "bucket": null
+    "cos": "savefiles",
+    "bucket": "aix",
+    "name": "logdna",
+    "archive": false
   },
   "object_storage": [
     {
@@ -102,7 +103,7 @@
           "force_delete": false,
           "name": "aix",
           "storage_class": "smart",
-          "kms_key": "",
+          "kms_key": null,
           "endpoint": "public",
           "use_random_suffix": true
         },
@@ -110,7 +111,7 @@
           "force_delete": false,
           "name": "iseries",
           "storage_class": "smart",
-          "kms_key": "",
+          "kms_key": null,
           "endpoint": "public",
           "use_random_suffix": true
         }
@@ -175,7 +176,12 @@
       "name": "aixtarget",
       "workspace": "workspace",
       "image": "7300-01-01",
-      "network": [{ "name": "pvm", "ip_address": "" }],
+      "network": [
+        {
+          "name": "pvm",
+          "ip_address": ""
+        }
+      ],
       "zone": "dal10",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
@@ -193,14 +199,20 @@
       "sap_profile": null,
       "pi_storage_pool": null,
       "affinity_type": null,
-      "pi_affinity_instance": null
+      "pi_affinity_instance": null,
+      "index": 0
     },
     {
       "sap": false,
       "sap_profile": null,
       "name": "ibmitarget",
       "workspace": "workspace",
-      "network": [{ "name": "pvm", "ip_address": "" }],
+      "network": [
+        {
+          "name": "pvm",
+          "ip_address": ""
+        }
+      ],
       "ssh_key": "sample",
       "image": "IBMi-75-01-2924-2",
       "pi_sys_type": "s922",
@@ -217,7 +229,8 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
       "zone": "dal10",
-      "pi_affinity_policy": null
+      "pi_affinity_policy": null,
+      "index": 1
     }
   ],
   "power_volumes": [
@@ -236,7 +249,8 @@
       "pi_affinity_policy": "affinity",
       "zone": "dal10",
       "pi_volume_size": "100",
-      "pi_affinity_instance": "aixtarget"
+      "pi_affinity_instance": "aixtarget",
+      "index": 0
     },
     {
       "name": "aixtgtvols2",
@@ -253,7 +267,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "aixtarget"
+      "pi_affinity_instance": "aixtarget",
+      "index": 1
     },
     {
       "name": "aixtgtvols3",
@@ -270,7 +285,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "aixtarget"
+      "pi_affinity_instance": "aixtarget",
+      "index": 2
     },
     {
       "name": "aixtgtvols4",
@@ -287,7 +303,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "aixtarget"
+      "pi_affinity_instance": "aixtarget",
+      "index": 3
     },
     {
       "name": "aixtgtvols5",
@@ -304,7 +321,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "aixtarget"
+      "pi_affinity_instance": "aixtarget",
+      "index": 4
     },
     {
       "name": "ibmitgtvols1",
@@ -321,7 +339,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "ibmitarget"
+      "pi_affinity_instance": "ibmitarget",
+      "index": 5
     },
     {
       "name": "ibmitgtvols2",
@@ -338,7 +357,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "ibmitarget"
+      "pi_affinity_instance": "ibmitarget",
+      "index": 6
     },
     {
       "name": "ibmitgtvols3",
@@ -355,7 +375,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "ibmitarget"
+      "pi_affinity_instance": "ibmitarget",
+      "index": 7
     },
     {
       "name": "ibmitgtvols4",
@@ -372,7 +393,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "ibmitarget"
+      "pi_affinity_instance": "ibmitarget",
+      "index": 8
     },
     {
       "name": "ibmitgtvols5",
@@ -389,13 +411,26 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": "ibmitarget"
+      "pi_affinity_instance": "ibmitarget",
+      "index": 9
     }
   ],
   "resource_groups": [
-    { "use_prefix": true, "name": "service-rg", "use_data": false },
-    { "use_prefix": true, "name": "management-rg", "use_data": false },
-    { "use_data": false, "name": "power-rg", "use_prefix": true }
+    {
+      "use_prefix": true,
+      "name": "service-rg",
+      "use_data": false
+    },
+    {
+      "use_prefix": true,
+      "name": "management-rg",
+      "use_data": false
+    },
+    {
+      "use_data": false,
+      "name": "power-rg",
+      "use_prefix": true
+    }
   ],
   "routing_tables": [
     {
@@ -420,13 +455,6 @@
     "scope_description": null,
     "enable": false
   },
-  "scc_v2": {
-    "enable": false,
-    "resource_group": null,
-    "region": "",
-    "account_id": "${var.account_id}",
-    "profile_attachments": []
-  },
   "secrets_manager": [],
   "security_groups": [
     {
@@ -440,9 +468,18 @@
           "direction": "inbound",
           "name": "allow-ibm-inbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": null, "port_min": null },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -450,9 +487,18 @@
           "direction": "inbound",
           "name": "allow-vpc-inbound",
           "source": "10.0.0.0/8",
-          "tcp": { "port_max": null, "port_min": null },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -460,9 +506,18 @@
           "direction": "outbound",
           "name": "allow-vpc-outbound",
           "source": "10.0.0.0/8",
-          "tcp": { "port_max": null, "port_min": null },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -470,9 +525,18 @@
           "direction": "outbound",
           "name": "allow-ibm-tcp-53-outbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": 53, "port_min": 53 },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": 53,
+            "port_min": 53
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -480,9 +544,18 @@
           "direction": "outbound",
           "name": "allow-ibm-tcp-80-outbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": 80, "port_min": 80 },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": 80,
+            "port_min": 80
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -490,9 +563,18 @@
           "direction": "outbound",
           "name": "allow-ibm-tcp-443-outbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": 443, "port_min": 443 },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": 443,
+            "port_min": 443
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         }
       ]
     },
@@ -507,9 +589,18 @@
           "direction": "inbound",
           "name": "allow-ibm-inbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": null, "port_min": null },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -517,9 +608,18 @@
           "direction": "inbound",
           "name": "allow-vpc-inbound",
           "source": "10.0.0.0/8",
-          "tcp": { "port_max": null, "port_min": null },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -527,9 +627,18 @@
           "direction": "outbound",
           "name": "allow-vpc-outbound",
           "source": "10.0.0.0/8",
-          "tcp": { "port_max": null, "port_min": null },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -537,9 +646,18 @@
           "direction": "outbound",
           "name": "allow-ibm-tcp-53-outbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": 53, "port_min": 53 },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": 53,
+            "port_min": 53
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -547,9 +665,18 @@
           "direction": "outbound",
           "name": "allow-ibm-tcp-80-outbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": 80, "port_min": 80 },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": 80,
+            "port_min": 80
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         },
         {
           "vpc": "management",
@@ -557,9 +684,18 @@
           "direction": "outbound",
           "name": "allow-ibm-tcp-443-outbound",
           "source": "161.26.0.0/16",
-          "tcp": { "port_max": 443, "port_min": 443 },
-          "udp": { "port_max": null, "port_min": null },
-          "icmp": { "type": null, "code": null }
+          "tcp": {
+            "port_max": 443,
+            "port_min": 443
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
         }
       ]
     }
@@ -573,9 +709,11 @@
     }
   ],
   "sysdig": {
-    "enabled": false,
+    "enabled": true,
     "plan": "graduated-tier",
-    "resource_group": "service-rg"
+    "resource_group": "service-rg",
+    "name": "sysdig",
+    "platform_logs": false
   },
   "teleport_vsi": [],
   "transit_gateways": [
@@ -584,8 +722,14 @@
       "resource_group": "service-rg",
       "global": false,
       "connections": [
-        { "tgw": "transit-gateway", "vpc": "management" },
-        { "tgw": "transit-gateway", "power": "workspace" }
+        {
+          "tgw": "transit-gateway",
+          "vpc": "management"
+        },
+        {
+          "tgw": "transit-gateway",
+          "power": "workspace"
+        }
       ],
       "use_data": false,
       "gre_tunnels": [],
@@ -599,7 +743,8 @@
       "vpc": "management",
       "resource_group": "management-rg",
       "security_groups": ["management-vpe"],
-      "subnets": ["vpe-zone-1"]
+      "subnets": ["vpe-zone-1"],
+      "instance": null
     }
   ],
   "vpcs": [
@@ -656,7 +801,11 @@
         }
       ],
       "public_gateways": [
-        { "vpc": "management", "zone": 1, "resource_group": "management-rg" }
+        {
+          "vpc": "management",
+          "zone": 1,
+          "resource_group": "management-rg"
+        }
       ],
       "acls": [
         {
@@ -672,7 +821,10 @@
               "source": "161.26.0.0/16",
               "acl": "management",
               "vpc": "management",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -694,7 +846,10 @@
               "destination": "161.26.0.0/16",
               "acl": "management",
               "vpc": "management",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -716,7 +871,10 @@
               "source": "10.0.0.0/8",
               "acl": "management",
               "vpc": "management",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -738,7 +896,10 @@
               "source": "10.0.0.0/8",
               "acl": "management",
               "vpc": "management",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -804,5 +965,18 @@
       "primary_interface_ip_spoofing": false
     }
   ],
-  "vtl": []
+  "classic_ssh_keys": [],
+  "classic_vlans": [],
+  "vtl": [],
+  "classic_gateways": [],
+  "cis": [],
+  "scc_v2": {
+    "enable": false,
+    "resource_group": null,
+    "region": "",
+    "account_id": "${var.account_id}",
+    "profile_attachments": []
+  },
+  "cis_glbs": [],
+  "fortigate_vnf": []
 }

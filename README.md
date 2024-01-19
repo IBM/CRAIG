@@ -25,25 +25,6 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 4. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
 
 ---
-## Power VS Workspace Deployment
-
-### Automated Deployment
-The `terraform.sh` script found in `/deploy` provisions a Power VS Workspace in each zone and sets the needed environment variables with the format of `POWER_WORKSPACE_<zone>=<workspace-guid>`.
-
-### Bring Your Own Workspace
-To bring your own Power VS Workspace into CRAIG you will need to set a field in your `.env` with the following format
-
-```
-POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
-```
-
----
-
-## Tutorial Video
-
-[Follow this tutorial](https://ibm.box.com/v/craigTutorialVideo) for step-by-step instructions on how to get started with CRAIG.
-
----
 
 ## Power VS Workspace Deployment
 

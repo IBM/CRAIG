@@ -14,11 +14,12 @@ function getRegionFromZone(zone) {
     ["us-east", ["wdc06", "wdc07", "us-east"]],
     ["us-south", ["dal10", "dal12", "us-south"]],
     ["eu-de", ["eu-de-1", "eu-de-2"]],
+    ["eu-es", ["eu-es-1", "eu-es-2"]],
     ["lon", ["lon04", "lon06"]],
     ["tor", ["tor01"]],
     ["syd", ["syd04", "syd05"]],
     ["tok", ["tok04"]],
-    ["br-sao", ["sao01"]],
+    ["br-sao", ["sao01", "sao04"]],
   ]);
 
   regionZoneMap.forEach((values, key) => {
@@ -66,7 +67,7 @@ function powerRoutes(axios, controller) {
    * @param {*} req
    * @param {*} res
    */
-  controller.getPowerComponent = function (req) {
+  controller.getPowerComponent = function (req, res) {
     let zone = req.params["region"];
     let componentType = kebabCase(req.params["component"]);
     let region = getRegionFromZone(zone);
@@ -122,7 +123,7 @@ function powerRoutes(axios, controller) {
           response.data.storagePoolsCapacity.forEach((pool) => {
             formattedStoragePools.push(pool.poolName);
           });
-          return formattedStoragePools;
+          res.send(formattedStoragePools);
         }
       })
       .catch((error) => {

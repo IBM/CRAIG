@@ -5,12 +5,13 @@
     "tags": ["hello", "world"],
     "zones": 3,
     "endpoints": "private",
-    "account_id": "",
+    "account_id": null,
     "fs_cloud": false,
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal12", "dal10", "us-south"],
-    "craig_version": "1.5.0"
+    "craig_version": "1.9.0",
+    "power_vs_high_availability": false
   },
   "access_groups": [],
   "appid": [],
@@ -22,7 +23,10 @@
     "bucket": "atracker-bucket",
     "add_route": true,
     "cos_key": "cos-bind-key",
-    "locations": ["global", "us-south"]
+    "locations": ["global", "us-south"],
+    "instance": false,
+    "plan": "lite",
+    "resource_group": null
   },
   "cbr_rules": [],
   "cbr_zones": [],
@@ -683,7 +687,9 @@
   "sysdig": {
     "enabled": false,
     "plan": "graduated-tier",
-    "resource_group": "service-rg"
+    "resource_group": "service-rg",
+    "name": "sysdig",
+    "platform_logs": false
   },
   "teleport_vsi": [],
   "transit_gateways": [
@@ -710,7 +716,8 @@
       "vpc": "management",
       "resource_group": "management-rg",
       "security_groups": ["management-vpe"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "instance": null
     },
     {
       "name": "workload-cos",
@@ -718,7 +725,8 @@
       "vpc": "workload",
       "resource_group": "workload-rg",
       "security_groups": ["workload-vpe"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "instance": null
     }
   ],
   "vpcs": [

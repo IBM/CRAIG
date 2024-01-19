@@ -496,21 +496,6 @@ const About = () => {
               </div>
             </div>
           </AccordionItem>
-          <AccordionItem title="How do I use CRAIG?">
-            <div className="marginBottomSmall">
-              <p className="accordionItem">
-                Please refer to the following video for a step-by-step tutorial
-                on how to get started with CRAIG:
-                <br />{" "}
-                <a
-                  href="https://ibm.box.com/v/craigTutorialVideo"
-                  target="_blank"
-                >
-                  CRAIG Tutorial Video
-                </a>{" "}
-              </p>
-            </div>
-          </AccordionItem>
         </Accordion>
       </div>
     </div>

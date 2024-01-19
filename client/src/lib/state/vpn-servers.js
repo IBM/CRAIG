@@ -1,7 +1,6 @@
 const {
   deleteUnfoundArrayItems,
   isNullOrEmptyString,
-  portRangeInvalid,
   rangeInvalid,
   isEmpty,
   titleCase,

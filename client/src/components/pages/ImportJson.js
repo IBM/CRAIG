@@ -3,7 +3,7 @@ import { Button, Modal } from "@carbon/react";
 import { CheckmarkFilled, Misuse } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { IcseTextInput } from "icse-react-assets";
-import { isInRange } from "lazy-z";
+import { contains, isInRange } from "lazy-z";
 import { slzToCraig, validate } from "../../lib";
 import { JSONTextArea } from "../utils/JSONTextArea";
 import "./import-json.css";
@@ -72,7 +72,11 @@ class ImportJson extends React.Component {
   handleSubmit() {
     this.props.craig.hardSetJson(this.state.validJson, this.props.slz);
     this.toggleModal();
-    window.location.pathname = this.props.slz ? "/" : "/form/resourceGroups";
+    window.location.pathname = contains(window.location.pathname, "/beta")
+      ? "/beta/services"
+      : this.props.slz
+      ? "/"
+      : "/form/resourceGroups";
   }
 
   handlePrefix(event) {

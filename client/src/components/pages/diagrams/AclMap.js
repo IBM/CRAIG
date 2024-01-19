@@ -8,19 +8,33 @@ import PropTypes from "prop-types";
 
 export const AclMap = (props) => {
   let vpc = props.vpc;
-  let initialAclList = splatContains(vpc.subnets, "network_acl", null)
+  let subnets = vpc.subnets || []; // empty subnets for no vpc
+  // add null as acl
+  let initialAclList = splatContains(subnets, "network_acl", null)
     ? [{ name: null }]
     : [];
-  return isEmpty(vpc.acls) && !props.static ? (
+  // if no acls on vpc, add null
+  let aclList = initialAclList.concat(
+    vpc.acls || [
+      {
+        name: null,
+      },
+    ]
+  );
+  return isEmpty(vpc.acls || []) && !props.static ? (
     <CraigEmptyResourceTile name="ACLs" />
   ) : (
-    initialAclList.concat(vpc.acls).map((acl, aclIndex) => {
+    aclList.map((acl, aclIndex) => {
       // adding null offsets index, this corrects
-      let actualAclIndex = splatContains(vpc.subnets, "network_acl", null)
+      let actualAclIndex = splatContains(subnets, "network_acl", null)
         ? aclIndex - 1
         : aclIndex;
-      let aclClassName = "formInSubForm aclBox";
-      let isRed = isNullOrEmptyString(acl.resource_group, true);
+      let aclClassName =
+        "formInSubForm " + (props.small ? "aclBoxSmall" : "aclBox");
+      let isRed = isNullOrEmptyString(
+        acl ? acl.resource_group : undefined,
+        true
+      );
       if (aclIndex !== 0) aclClassName += " aclBoxTop";
       if (
         props.isSelected &&
@@ -29,33 +43,37 @@ export const AclMap = (props) => {
         aclClassName += " diagramBoxSelected";
         isRed = false;
       }
-      if (!acl.name) aclClassName += "noAclBox";
+      if (!acl?.name) aclClassName += "noAclBox";
       return (
         <div
           key={acl.name + vpc.name + aclIndex + props.vpc_index}
           className={aclClassName}
         >
-          <div
-            onClick={
-              props.aclTitleClick
-                ? () => props.aclTitleClick(props.vpc_index, actualAclIndex)
-                : undefined
-            }
-            className="clicky"
-          >
-            <CraigFormHeading
-              name={acl.name ? acl.name + " ACL" : "No ACL Selected"}
-              icon={<SubnetAclRules className="diagramTitleIcon" />}
-              className="marginBottomSmall"
-              type="subHeading"
-              isRed={isRed}
-              buttons={
-                props.buttons
-                  ? props.buttons(acl, props.vpc_index, actualAclIndex)
+          {props.small ? (
+            ""
+          ) : (
+            <div
+              onClick={
+                props.aclTitleClick
+                  ? () => props.aclTitleClick(props.vpc_index, actualAclIndex)
                   : undefined
               }
-            />
-          </div>
+              className="clicky"
+            >
+              <CraigFormHeading
+                name={acl?.name ? acl.name + " ACL" : "No ACL Selected"}
+                icon={<SubnetAclRules className="diagramTitleIcon" />}
+                className="marginBottomSmall"
+                type="subHeading"
+                isRed={isRed}
+                buttons={
+                  props.buttons
+                    ? props.buttons(acl, props.vpc_index, actualAclIndex)
+                    : undefined
+                }
+              />
+            </div>
+          )}
           {React.Children.map(props.children, (child) =>
             // clone react child
             React.cloneElement(child, {

@@ -132,6 +132,7 @@ function f5VsiCreate(config, stateData) {
  * @param {number} stateData.zones number of zones
  */
 function f5VsiSave(config, stateData) {
+  let template = config.store.json.f5_vsi[0]?.template;
   config.store.json.f5_vsi = [];
   eachZone(parseInt(stateData.zones), (zone) => {
     config.store.json.f5_vsi.push(
@@ -143,6 +144,9 @@ function f5VsiSave(config, stateData) {
       )
     );
   });
+  if (!isNullOrEmptyString(template, true)) {
+    f5TemplateSave(config, template);
+  }
 }
 
 /**

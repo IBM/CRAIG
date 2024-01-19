@@ -421,6 +421,174 @@ describe("f5.instance", () => {
           "it should return correct vsi"
         );
       });
+      it("should use default template if no pre-existing vsi", () => {
+        let state = new newState();
+        state.createEdgeVpc("vpn-and-waf", false, 3);
+        state.f5.vsi.save({
+          zones: 1,
+          image: "todd",
+          resource_group: "service-rg",
+          profile: "1x2x3x4",
+          ssh_keys: ["ssh-key"],
+        });
+        assert.deepEqual(
+          state.store.json.f5_vsi,
+          [
+            {
+              kms: "kms",
+              image: "todd",
+              encryption_key: "vsi-volume-key",
+              profile: "1x2x3x4",
+              name: "f5-zone-1",
+              subnet: "f5-management-zone-1",
+              resource_group: "service-rg",
+              security_groups: ["f5-management-sg"],
+              ssh_keys: ["ssh-key"],
+              vpc: "edge",
+              network_interfaces: [
+                {
+                  security_groups: ["f5-bastion-sg"],
+                  subnet: "f5-bastion-zone-1",
+                },
+                {
+                  security_groups: ["f5-external-sg"],
+                  subnet: "f5-external-zone-1",
+                },
+                {
+                  security_groups: ["f5-workload-sg"],
+                  subnet: "f5-workload-zone-1",
+                },
+              ],
+              template: {
+                app_id: "null",
+                as3_declaration_url: "null",
+                default_route_gateway_cidr: "10.10.10.10/24",
+                do_declaration_url: "null",
+                domain: "local",
+                hostname: "f5-ve-01",
+                license_host: "null",
+                license_password: "null",
+                license_pool: "null",
+                license_sku_keyword_1: "null",
+                license_sku_keyword_2: "null",
+                license_type: "none",
+                license_username: "null",
+                phone_home_url: "null",
+                template_version: "20210201",
+                template_source:
+                  "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
+                tgactive_url: "null",
+                tgrefresh_url: "null",
+                tgstandby_url: "null",
+                tmos_admin_password: null,
+                ts_declaration_url: "null",
+                vpc: "edge",
+                zone: 1,
+              },
+            },
+          ],
+          "it should return correct vsi"
+        );
+      });
+      it("should retain template from existing vsi on save", () => {
+        let state = new newState();
+        state.createEdgeVpc("vpn-and-waf", false, 3);
+        state.f5.vsi.create({ edgeType: "edge", zones: 2 });
+        state.f5.template.save(
+          {
+            app_id: "hi",
+            as3_declaration_url: "null",
+            default_route_gateway_cidr: "10.10.10.10/24",
+            do_declaration_url: "null",
+            domain: "local",
+            hostname: "f5-ve-01",
+            license_host: "null",
+            license_password: "null",
+            template_source:
+              "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
+            license_pool: "null",
+            license_sku_keyword_1: "null",
+            license_sku_keyword_2: "null",
+            license_type: "none",
+            license_username: "todd",
+            phone_home_url: "null",
+            template_version: "20210201",
+            tgactive_url: "null",
+            tgrefresh_url: "null",
+            tgstandby_url: "null",
+            tmos_admin_password: null,
+            ts_declaration_url: "null",
+            vpc: "edge",
+            zone: 1,
+          },
+          { data: { name: "f5-zone-1" } }
+        );
+        state.f5.vsi.save({
+          zones: 1,
+          image: "todd",
+          resource_group: "service-rg",
+          profile: "1x2x3x4",
+          ssh_keys: ["ssh-key"],
+        });
+        assert.deepEqual(
+          state.store.json.f5_vsi,
+          [
+            {
+              kms: "kms",
+              image: "todd",
+              encryption_key: "vsi-volume-key",
+              profile: "1x2x3x4",
+              name: "f5-zone-1",
+              subnet: "f5-management-zone-1",
+              resource_group: "service-rg",
+              security_groups: ["f5-management-sg"],
+              ssh_keys: ["ssh-key"],
+              vpc: "edge",
+              network_interfaces: [
+                {
+                  security_groups: ["f5-bastion-sg"],
+                  subnet: "f5-bastion-zone-1",
+                },
+                {
+                  security_groups: ["f5-external-sg"],
+                  subnet: "f5-external-zone-1",
+                },
+                {
+                  security_groups: ["f5-workload-sg"],
+                  subnet: "f5-workload-zone-1",
+                },
+              ],
+              template: {
+                app_id: "hi",
+                as3_declaration_url: "null",
+                default_route_gateway_cidr: "10.10.10.10/24",
+                do_declaration_url: "null",
+                domain: "local",
+                hostname: "f5-ve-01",
+                license_host: "null",
+                license_password: "null",
+                template_source:
+                  "f5devcentral/ibmcloud_schematics_bigip_multinic_declared",
+                license_pool: "null",
+                license_sku_keyword_1: "null",
+                license_sku_keyword_2: "null",
+                license_type: "none",
+                license_username: "todd",
+                phone_home_url: "null",
+                template_version: "20210201",
+                tgactive_url: "null",
+                tgrefresh_url: "null",
+                tgstandby_url: "null",
+                tmos_admin_password: null,
+                ts_declaration_url: "null",
+                vpc: "edge",
+                zone: 1,
+              },
+            },
+          ],
+          "it should return correct vsi"
+        );
+      });
     });
     describe("f5.vsi.create", () => {
       it("should create a new ssh key if one is not found", () => {

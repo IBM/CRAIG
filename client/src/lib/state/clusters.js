@@ -81,6 +81,9 @@ function clusterOnStoreUpdate(config) {
       cluster.opaque_secrets.forEach((secret) => {
         secret.cluster = cluster.name;
       });
+    } else cluster.opaque_secrets = [];
+    if (!cluster.worker_pools) {
+      cluster.worker_pools = [];
     }
     // update vpc
     if (hasUnfoundVpc(config, cluster)) {

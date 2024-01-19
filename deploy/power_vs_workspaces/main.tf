@@ -33,6 +33,14 @@ provider "ibm" {
 }
 
 provider "ibm" {
+  alias            = "power_vs_sao04"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  zone             = "sao04"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
   alias            = "power_vs_tok04"
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.region
@@ -109,6 +117,22 @@ provider "ibm" {
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = var.region
   zone             = "eu-de-1"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_eu_es_1"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  zone             = "eu-es-1"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_eu_es_2"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  zone             = "eu-es-2"
   ibmcloud_timeout = 60
 }
 
@@ -203,6 +227,30 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_sao01" {
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "sao01"
+  resource_group_id = ibm_resource_group.craig_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
+  timeouts {
+    create = "6m"
+    update = "5m"
+    delete = "10m"
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# Power VS Workspace Craig Sao 04
+##############################################################################
+
+resource "ibm_resource_instance" "power_vs_workspace_craig_sao04" {
+  provider          = ibm.power_vs_sao04
+  name              = "craig-power-workspace-craig-sao04"
+  service           = "power-iaas"
+  plan              = "power-virtual-server-group"
+  location          = "sao04"
   resource_group_id = ibm_resource_group.craig_rg.id
   tags = [
     "hello",
@@ -443,6 +491,54 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_eu_de_1" {
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "eu-de-1"
+  resource_group_id = ibm_resource_group.craig_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
+  timeouts {
+    create = "6m"
+    update = "5m"
+    delete = "10m"
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# Power VS Workspace Craig EU ES 1
+##############################################################################
+
+resource "ibm_resource_instance" "power_vs_workspace_craig_eu_es_1" {
+  provider          = ibm.power_vs_eu_es_1
+  name              = "craig-power-workspace-craig-eu-es-1"
+  service           = "power-iaas"
+  plan              = "power-virtual-server-group"
+  location          = "eu-es-1"
+  resource_group_id = ibm_resource_group.craig_rg.id
+  tags = [
+    "hello",
+    "world"
+  ]
+  timeouts {
+    create = "6m"
+    update = "5m"
+    delete = "10m"
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# Power VS Workspace Craig EU ES 2
+##############################################################################
+
+resource "ibm_resource_instance" "power_vs_workspace_craig_eu_es_2" {
+  provider          = ibm.power_vs_eu_es_2
+  name              = "craig-power-workspace-craig-eu-es-2"
+  service           = "power-iaas"
+  plan              = "power-virtual-server-group"
+  location          = "eu-es-2"
   resource_group_id = ibm_resource_group.craig_rg.id
   tags = [
     "hello",

@@ -34,7 +34,8 @@ export class Overview extends React.Component {
     let craig = this.props.craig;
     return (
       <>
-        <CraigFormHeading name="Overview" />
+        <div className="marginBottomSmall" />
+        <CraigFormHeading name="Overview" className="marginBottomSmall" />
         <div id="services-diagram" className="marginBottomSmall diagramBox">
           <div className="marginBottomHalfRem" />
           <CraigFormHeading
@@ -42,8 +43,9 @@ export class Overview extends React.Component {
             noMarginBottom
             icon={<CloudServices className="diagramTitleIcon" />}
           />
-          <div id="rgs" className="displayFlex">
+          <div id="rgs" className="displayFlex flexWrap">
             <RgServiceMap
+              small={this.props.small}
               craig={craig}
               services={[
                 "appid",
@@ -63,17 +65,24 @@ export class Overview extends React.Component {
             noMarginBottom
             icon={<NetworkEnterprise className="diagramTitleIcon" />}
           />
-          <div id="vpc-ssh-keys" className="marginBottomNone">
-            <SshKeys craig={craig} width="575px" />
-          </div>
+          {this.props.small ? (
+            ""
+          ) : (
+            <div id="vpc-ssh-keys" className="marginBottomNone">
+              <SshKeys craig={craig} width="575px" />
+            </div>
+          )}
           <div id="vpcs" className="displayFlex">
-            <VpcMap craig={craig} static>
-              <RoutingTables craig={craig} />
-              <SecurityGroups craig={craig} />
-              <AclMap static>
+            <VpcMap craig={craig} static small={this.props.small}>
+              {this.props.small ? <></> : <RoutingTables craig={craig} />}
+              {this.props.small ? <></> : <SecurityGroups craig={craig} />}
+              <AclMap static small={this.props.small}>
                 <SubnetTierMap
                   craig={craig}
-                  renderChildren={<SubnetServiceMap craig={craig} />}
+                  renderChildren={
+                    <SubnetServiceMap craig={craig} small={this.props.small} />
+                  }
+                  small={this.props.small}
                 />
               </AclMap>
             </VpcMap>

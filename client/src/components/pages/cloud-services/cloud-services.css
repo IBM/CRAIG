@@ -3,6 +3,11 @@
   width: 80px;
 }
 
+.small-icon {
+  height: 30px;
+  width: 30px;
+}
+
 .border-none {
   border: none;
   margin: 1rem;

@@ -81,7 +81,6 @@ export class DynamicSubnetTierForm extends React.Component {
         onSave={this.props.craig.vpcs.subnetTiers.save}
         onDelete={this.props.onDelete}
         hideChevron
-        hideHeading
         hide={false}
         isModal={this.props.subnetTierIndex === -1}
         noSaveButton={noButtons}

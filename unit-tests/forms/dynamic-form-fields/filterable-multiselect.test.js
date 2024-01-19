@@ -27,6 +27,84 @@ describe("filterable multiselect", () => {
           },
           groups: [],
         },
+        parentState: {},
+        parentProps: {
+          formName: "atracker",
+        },
+        handleInputChange: function (event) {
+          inputChangeValue = event;
+        },
+        keyIndex: 0,
+        name: "name",
+        propsName: "frog",
+      });
+      let expectedData = {
+        className: "leftTextAlign fieldWidth",
+        disabled: false,
+        id: "frog-name-0",
+        invalid: true,
+        items: [],
+        key: undefined,
+        label: "Name",
+        titleText: "Name",
+        useTitleInItem: false,
+        initialSelectedItems: [],
+        invalidText: "uh oh",
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      actualData.onChange({ selectedItems: ["items"] });
+      assert.deepEqual(
+        inputChangeValue,
+        {
+          target: {
+            name: "name",
+            value: ["items"],
+          },
+        },
+        "it should return correct value"
+      );
+      delete actualData.onChange;
+      assert.isFunction(actualData.itemToString, "it should be a function");
+      assert.deepEqual(
+        actualData.itemToString(),
+        "",
+        "it should return empty string"
+      );
+      assert.deepEqual(
+        actualData.itemToString("hi"),
+        "hi",
+        "it should return string"
+      );
+      delete actualData.itemToString;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+    it("should return the correct props for multiselect when not disabled", () => {
+      let inputChangeValue = "";
+      let actualData = dynamicMultiSelectProps({
+        name: "frog",
+        field: {
+          disabled: function () {
+            return false;
+          },
+          invalid: function () {
+            return true;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          helperText: function () {
+            return "helper text";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+          groups: [],
+        },
         parentState: {
           name: [],
         },

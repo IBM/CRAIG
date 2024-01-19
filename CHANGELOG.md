@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Users can now import existing Secrets Manager instances into CRAIG
 - Power zones WDC06, WDC07, eu-de-1, and eu-de-2 now support Power Edge Router
 - Users can now create, update, and delete Fortigate VNF gateways from the `/form/fortigate` page
+- Power zones MAD02 (EU-ES-1), MAD04 (EU-ES-2), and SAO04 now support Power Edge Router
 
 ### Fixes
 

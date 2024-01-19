@@ -1,10 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  PopoverWrapper,
-  IcseHeading,
-  DynamicToolTipWrapper,
-} from "icse-react-assets";
+import { PopoverWrapper, DynamicToolTipWrapper } from "icse-react-assets";
 import {
   Add,
   Save,
@@ -224,7 +220,7 @@ const StatelessFormWrapper = (props) => {
             open={props.hide === false}
           />
         )}
-        <IcseHeading
+        <CraigFormHeading
           type={wrapperProps.headerType}
           name={props.name}
           toggleFormTitle={props.toggleFormTitle}
@@ -268,8 +264,9 @@ const CraigFormHeading = (props) => {
   let icon = props.icon || "";
   return (
     <div
-      className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter`}
-      style={props.noMarginBottom ? {} : { marginBottom: "0.75rem" }}
+      className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter ${
+        props.className
+      } ${props.noMarginBottom ? "marginBottomNone" : ""}`}
     >
       <DynamicToolTipWrapper
         tooltip={props.tooltip}
