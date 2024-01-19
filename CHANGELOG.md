@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Users can now provision Power VS resources in PER regions in Madrid and Sao Paolo
 
 ### Fixes
 

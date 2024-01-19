@@ -24,7 +24,7 @@ export const SshKeys = (props) => {
         buttons={props.buttons ? props.buttons : ""}
         className="marginBottomSmall"
       />
-      <div className="formInSubForm">
+      <div className="formInSubForm displayFlex alignItemsCenter powerSubnetChildren">
         {craig.store.json[props.classic ? "classic_ssh_keys" : "ssh_keys"]
           .length === 0 && `No ${props.classic ? "Classic" : "VPC"} SSH Keys`}
         {craig.store.json[props.classic ? "classic_ssh_keys" : "ssh_keys"].map(

@@ -5,7 +5,11 @@ import {
   PrimaryButton,
 } from "../../forms/utils/ToggleFormComponents";
 import { TransitGatewaysMap, docTabs } from "../diagrams";
-import { IbmCloudTransitGateway } from "@carbon/icons-react";
+import {
+  DirectoryDomain, // cis domain
+  Account, // cis record
+  IbmCloudTransitGateway,
+} from "@carbon/icons-react";
 import "../diagrams/diagrams.css";
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import { craigForms } from "../CraigForms";
