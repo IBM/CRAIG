@@ -171,36 +171,30 @@ docker run -it craig
 
 ### Deploying to IBM Code Engine
 
-Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. At a minimum an IBM Cloud API key will be needed that has sufficient permissions to provision a Code Engine project, application, and secrets. In addition, this API key must be able to create a IBM Container Registry namespace. See below for a simple use case using the default parameters.
+Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. The user running this command must have sufficient permissions to provision a Code Engine project, application, image build, and secrets. In addition, this API key must be able to create a IBM Container Registry namespace. See below for a simple use case using the default parameters.
+
+#### Prerequisites
+>* The `ibmcloud` CLI must be [installed](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli)
+>* `ibmcloud login` must be run before invoking the script
+>* An API key must be provided that will be used for CRAIG's integration with  IBM Cloud Schematics and Power Virtual Server Workspaces. See later sections in this document about Schematics and Power Virtual Server integrations for more information.
+
+#### Running the deploy script
+
+By default the script will securely prompt you for your API key. It may also be read from an environment variable or specified as a command line argument. See the `deploy.sh -h` usage for more information.
 
 ```bash
-npm run deploy -- -a <API_KEY>
+deploy.sh
 ```
 
 This script can also delete the resources when the delete flag `-d` is passed
 
 ```bash
-npm run deploy -- -d -a <API_KEY>
+deploy.sh -d
 ```
 
-Below is the full list of parameters and their default values
-
+For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
 ```
-Syntax: $ deploy.sh [-h] [-d] [-a API KEY] [-r REGION] [-g RESOURCE GROUP] [-p PROJECT NAME] [-n ICR NAMESPACE]
-Options:
-  a     IBM Cloud Platform API Key (REQUIRED).
-  d     Delete resources.
-  g     Resource group to deploy resources in. Default value = 'default'
-  h     Print help.
-  n     IBM Cloud Container Registry namespace. Default value = 'slz-gui-namespace'
-  p     Name of Code Engine project. Default value = 'slz-gui'
-  r     Region to deploy resources in. Default value = 'us-south'
-```
-
-or run
-
-```bash
-npm run deploy -- -h
+deploy.sh -h
 ```
 
 ---
