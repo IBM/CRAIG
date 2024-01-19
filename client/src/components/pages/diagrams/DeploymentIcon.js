@@ -3,7 +3,7 @@ import { RenderForm } from "../../forms/utils/ToggleFormComponents";
 import { contains } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
-import { Security } from "@carbon/icons-react";
+import { FloatingIp, Security } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import { disableSave } from "../../../lib";
@@ -66,6 +66,15 @@ export const DeploymentIcon = (props) => {
             </Tag>
           ))
         : ""}
+      {props.itemName === "vsi" && props.item.enable_floating_ip ? (
+        <Tag type={tagColors[3]}>
+          <div className="displayFlex font10Px">
+            <FloatingIp className="securityTabIconMargin" /> Floating IP
+          </div>
+        </Tag>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

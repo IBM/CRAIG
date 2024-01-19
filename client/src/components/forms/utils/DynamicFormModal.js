@@ -68,6 +68,7 @@ class DynamicFormModal extends Component {
             primaryButtonText="Submit"
             secondaryButtonText="Cancel"
             primaryButtonDisabled={this.state.isDisabled}
+            preventCloseOnClickOutside
           >
             {this.props.show &&
               React.Children.map(this.props.children, (child) => {

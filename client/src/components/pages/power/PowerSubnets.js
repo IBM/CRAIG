@@ -86,9 +86,6 @@ export const PowerSubnets = (props) => {
             ) : (
               <PowerSubnetInnerBox icon={VirtualMachine} name="Virtual Servers">
                 {subnetInstances.map((instance, subnetInstanceIndex) => {
-                  let instanceVolumes = craig.store.json.power_volumes.filter(
-                    volumeFilter(power.name, instance.name)
-                  );
                   return (
                     <div
                       key={instance.name + subnet.name}

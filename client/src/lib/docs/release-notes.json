@@ -1,7 +1,9 @@
 [
   {
     "version": "1.9.0",
-    "features": [],
+    "features": [
+      "Users can now provision Power VS resources in PER regions in Madrid and Sao Paolo"
+    ],
     "fixes": [],
     "upgrade_notes": [
       "Updated the Power SAP HANA template to have current images for zone"

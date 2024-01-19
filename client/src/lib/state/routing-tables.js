@@ -250,6 +250,7 @@ function initRoutingTable(store) {
             invalid: function (stateData, componentProps) {
               return (
                 stateData.action === "deliver" &&
+                stateData.next_hop &&
                 (isNullOrEmptyString(stateData.next_hop) ||
                   !isIpv4CidrOrAddress(stateData.next_hop) ||
                   contains(stateData.next_hop, "/"))

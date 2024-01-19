@@ -19,7 +19,10 @@ export const PowerSshKeys = (props) => {
         type="subHeading"
         icon={<Password className="diagramTitleIcon" />}
       />
-      <div className="formInSubForm" style={{ padding: "0" }}>
+      <div
+        className="formInSubForm displayFlex alignItemsCenter overrideGap powerSubnetChildren"
+        style={{ padding: "0" }}
+      >
         {props.power.ssh_keys.map((sshKey, sshIndex) => (
           <DeploymentIcon
             key={props.power.name + "key" + sshIndex}
