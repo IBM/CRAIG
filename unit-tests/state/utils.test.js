@@ -5,6 +5,8 @@ const {
   nameHelperText,
   invalidPort,
   isRangeInvalid,
+  cbrTitleCase,
+  cbrSaveType,
 } = require("../../client/src/lib/state/utils");
 
 describe("utils", () => {
@@ -433,6 +435,52 @@ describe("utils", () => {
     });
     it("should return true if value is not in range", () => {
       assert.isTrue(isRangeInvalid(20, 1, 10));
+    });
+  });
+  describe("cbrTitleCase", () => {
+    it("should return correct titleCase formatting for ip address", () => {
+      assert.deepEqual(
+        cbrTitleCase("type")({ type: "Ipaddress" }),
+        "IP Address"
+      );
+    });
+    it("should return correct titleCase formatting for ip range", () => {
+      assert.deepEqual(cbrTitleCase("type")({ type: "Ip Range" }), "IP Range");
+    });
+    it("should return correct titleCase formatting for service ref", () => {
+      assert.deepEqual(
+        cbrTitleCase("type")({ type: "Serviceref" }),
+        "Service Ref"
+      );
+    });
+    it("should return correct titleCase for empty string", () => {
+      assert.deepEqual(cbrTitleCase("type")({ type: "" }), "");
+    });
+  });
+  describe("cbrSaveType", () => {
+    it("should return correctly formatted cbr type to store in JSON", () => {
+      assert.deepEqual(cbrSaveType("type")({ type: "IP Range" }), "ipRange");
+    });
+    it("should return correctly formatted cbr type to store in JSON", () => {
+      assert.deepEqual(
+        cbrSaveType("type")({ type: "IP Address" }),
+        "ipAddress"
+      );
+    });
+    it("should return correctly formatted cbr type to store in JSON", () => {
+      assert.deepEqual(cbrSaveType("type")({ type: "Subnet" }), "subnet");
+    });
+    it("should return correctly formatted cbr type to store in JSON", () => {
+      assert.deepEqual(cbrSaveType("type")({ type: "Vpc" }), "vpc");
+    });
+    it("should return correctly formatted cbr type to store in JSON", () => {
+      assert.deepEqual(cbrSaveType("type")({ type: "" }), "");
+    });
+    it("should return correctly formatted cbr type to store in JSON", () => {
+      assert.deepEqual(
+        cbrSaveType("type")({ type: "Service Ref" }),
+        "serviceRef"
+      );
     });
   });
 });

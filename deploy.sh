@@ -85,6 +85,14 @@ delete_resources() {
 }
 
 create_resources() {
+  if [ $API_KEY == "NOT-SET" ]; then
+    read -s -p "Enter an IBM Cloud API key for CRAIG-IBM Cloud integration:" API_KEY
+
+    if [ $API_KEY == "" ]; then
+      fatal "An IBM Cloud API key is required." 
+    fi
+  fi
+
   # create namespace
   if ! ibmcloud cr namespace-list | grep $ICR_NAMESPACE > /dev/null; then
     # no namespace found add it
@@ -116,11 +124,13 @@ create_resources() {
     ibmcloud ce secret create -n "${secret_name}" --from-literal "API_KEY=$API_KEY" || fatal "An error occurred creating the API secret in IBM Code Engine"
   fi
 
-  configmap_name="${APP_NAME}-env"
-  if ! ibmcloud ce configmap list | grep $configmap_name > /dev/null ; then
-    ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred creating the config map for the application."
-  else
-    ibmcloud ce configmap update -n "${configmap_name}" --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred updating the config map for the application."  
+  if [ ! -z "${ENVIRONMENT_FILE}" ]; then
+    configmap_name="${APP_NAME}-env"
+    if ! ibmcloud ce configmap list | grep $configmap_name > /dev/null ; then
+      ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred creating the config map for the application."
+    else
+      ibmcloud ce configmap update -n "${configmap_name}" --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred updating the config map for the application."  
+    fi
   fi
 
   IMAGE_REF="${ICR}/${ICR_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}"
@@ -149,6 +159,11 @@ create_resources() {
   echo "Building the CRAIG container in IBM Code Engine"
   ibmcloud ce br submit -b $build_name -w || fatal "An error occurred with the image build"
 
+  configmap_param=""
+  if [ ! -z "${ENVIRONMENT_FILE}" ]; then
+    configmap_param="--env-from-configmap ${configmap_name}"
+  fi
+
  # create/check for Code Engine application
   if ibmcloud ce app get -n "${APP_NAME}" 2>/dev/null | grep Age > /dev/null; then
     # app with name found update existing
@@ -165,7 +180,7 @@ create_resources() {
       --es 2G \
       --scale-down-delay $SCALE_DOWN_DELAY \
       --env-from-secret "${secret_name}" \
-      --env-from-configmap $configmap_name || fatal "An error occurred updating the application"
+      ${configmap_param} || fatal "An error occurred updating the application"
     echo "The CRAIG application is now ready at the URL above."
   else
     # no app found create one
@@ -182,7 +197,7 @@ create_resources() {
       --scale-down-delay $SCALE_DOWN_DELAY \
       --es 2G \
       --env-from-secret "${secret_name}" \
-      --env-from-configmap $configmap_name || fatal "An error occurred creating the application"
+      ${configmap_param} || fatal "An error occurred creating the application"
     echo "The CRAIG application is now ready at the URL above."
   fi
 }
@@ -223,14 +238,6 @@ done
 
 
 ibmcloud iam oauth-tokens &> /dev/null || fatal "Please log in with the ibmcloud CLI (ibmcloud login)"
-
-if [ $API_KEY == "NOT-SET" ]; then
-  read -s -p "Enter an IBM Cloud API key for CRAIG-IBM Cloud integration:" API_KEY
-
-  if [ $API_KEY == "" ]; then
-    fatal "An IBM Cloud API key is required." 
-  fi
-fi
 
 ibmcloud target -g $RESOURCE_GROUP -r $REGION > /dev/null || fatal "Error targeting resource group ${RESOURCE_GROUP} and region ${REGION}"
 

@@ -13,6 +13,11 @@ const {
 
 function powerVsWorkspaceSchema() {
   return {
+    use_data: {
+      type: "toggle",
+      labelText: "Use Existing Workspace",
+      default: false,
+    },
     name: {
       default: "",
       invalid: invalidName("power"),
@@ -24,7 +29,7 @@ function powerVsWorkspaceSchema() {
       type: "select",
       default: "",
       labelText: "Availability Zone",
-      invalid: fieldIsNullOrEmptyString("zone"),
+      invalid: fieldIsNullOrEmptyString("zone", true),
       invalidText: unconditionalInvalidText("Select a zone"),
       onStateChange: function (stateData) {
         stateData.imageNames = [];
@@ -39,14 +44,19 @@ function powerVsWorkspaceSchema() {
       type: "fetchMultiSelect",
       default: "",
       invalid: function (stateData) {
-        return isEmpty(stateData.imageNames || []);
+        // prevent needing to add images when getting from data
+        return stateData.use_data ? false : isEmpty(stateData.imageNames || []);
       },
       invalidText: unconditionalInvalidText("Select at least one image name"),
       groups: function (stateData) {
         return splat(stateData.images || [], "name");
       },
       apiEndpoint: function (stateData, componentProps) {
-        return `/api/power/${componentProps.craig.store.json._options.region}/images`;
+        return (
+          `/api/power/${componentProps.craig.store.json._options.region}/images` +
+          // add name query when using data to fetch images
+          (stateData.use_data ? "?name=" + stateData.name : "")
+        );
       },
       forceUpdateKey: function (stateData) {
         return JSON.stringify(stateData.images) + stateData.zone;

@@ -380,7 +380,7 @@ function saveAdvancedSubnetTier(
  */
 function fieldIsNullOrEmptyString(fieldName, lazy) {
   return function (stateData) {
-    return stateData.use_data
+    return stateData.use_data && !lazy
       ? false
       : isNullOrEmptyString(stateData[fieldName], lazy);
   };
@@ -679,12 +679,18 @@ function sshKeySchema(fieldName) {
       },
     },
   };
-  if (fieldName === "ssh_keys") {
-    schema.resource_group = resourceGroupsField();
+  if (fieldName === "ssh_keys" || fieldName === "power_vs_ssh_keys") {
+    if (fieldName === "ssh_keys") schema.resource_group = resourceGroupsField();
     schema.use_data = {
       type: "toggle",
       labelText: "Use Existing SSH Key",
       default: false,
+      hideWhen: function (stateData) {
+        return (
+          fieldName === "power_vs_ssh_keys" &&
+          stateData.workspace_use_data !== true
+        );
+      },
     };
   }
   return schema;
@@ -793,8 +799,10 @@ function fieldIsNullOrEmptyStringEnabled(field) {
  */
 function fieldIsNotWholeNumber(field, min, max) {
   return function (stateData) {
-    return !isNullOrEmptyString(stateData[field])
-      ? !isInRange(parseInt(stateData[field]), min, max)
+    return Number(stateData[field]) % 1 !== 0
+      ? true
+      : !isNullOrEmptyString(stateData[field])
+      ? !isInRange(Number(stateData[field]), min, max)
       : true;
   };
 }
@@ -1255,6 +1263,42 @@ function powerStoragePoolSelect(isVolume) {
   };
 }
 
+function cbrValuePlaceholder(type) {
+  return type === "ipAddress"
+    ? "x.x.x.x"
+    : type === "ipRange"
+    ? "x.x.x.x-x.x.x.x"
+    : `my-cbr-zone-${type}`;
+}
+
+function cbrTitleCase(field) {
+  return function (stateData) {
+    return isNullOrEmptyString(stateData[field])
+      ? ""
+      : titleCase(stateData[field])
+          .replace("Ipa", "IP A")
+          .replace("Ip R", "IP R")
+          .replace("Serviceref", "Service Ref");
+  };
+}
+
+function cbrSaveType(field) {
+  return function (stateData) {
+    stateData.value = ""; // clear value on type change
+    return stateData[field] === "IP Address"
+      ? "ipAddress"
+      : stateData[field] === "IP Range"
+      ? "ipRange"
+      : stateData[field] === "Service Ref"
+      ? "serviceRef"
+      : stateData[field] === "Subnet"
+      ? "subnet"
+      : stateData[field] === "Vpc"
+      ? "vpc"
+      : "";
+  };
+}
+
 module.exports = {
   hideHelperText,
   encryptionKeyGroups,
@@ -1304,4 +1348,7 @@ module.exports = {
   powerAntiAffinityVolume,
   powerAntiAffinityInstance,
   powerStoragePoolSelect,
+  cbrValuePlaceholder,
+  cbrTitleCase,
+  cbrSaveType,
 };

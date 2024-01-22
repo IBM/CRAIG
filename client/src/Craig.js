@@ -15,7 +15,7 @@ import {
   PageNotFound,
 } from "./components";
 import { invalidForms, state } from "./lib";
-import { CbrForm, ObservabilityForm } from "./components/forms";
+import { ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { LoadingModal } from "./components/pages/projects/LoadingModal";
@@ -523,8 +523,6 @@ class Craig extends React.Component {
             <ClassicDiagram craig={craig} />
           ) : window.location.pathname === "/beta/overview" ? (
             <Overview craig={craig} />
-          ) : window.location.pathname === "/form/cbr" ? (
-            <CbrForm craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
             <ObservabilityForm craig={craig} />
           ) : this.props.params.form ? (

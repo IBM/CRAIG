@@ -1509,6 +1509,9 @@ describe("invalid callbacks", () => {
     it("should return true when description contains invalid character", () => {
       assert.isTrue(invalidCbrZone("description", { description: "\x00" }));
     });
+    it("should return true when ip address is undefined", () => {
+      assert.isTrue(invalidCbrZone("value", { type: "ipAddress" }));
+    });
     it("should return true when description is more than 300 chars", () => {
       let longDescription = "*".repeat(301);
       assert.isTrue(

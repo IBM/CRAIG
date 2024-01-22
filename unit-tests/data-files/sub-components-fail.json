@@ -34,7 +34,7 @@
       "security_groups": [
         "management-vpe-sg"
       ],
-      "certificate_crn": "CHEATER",
+      "certificate_crn": "PLACEHOLDER",
       "client_dns_server_ips": "1.2.3.4",
       "method": "username",
       "port": 1,

@@ -1,6 +1,7 @@
-const { kebabCase, contains, snakeCase } = require("lazy-z");
+const { kebabCase, contains, snakeCase, titleCase } = require("lazy-z");
 const powerImageMap = require("../client/src/lib/docs/power-image-map.json");
 const { powerStoragePoolRegionMap } = require("../client/src/lib/constants");
+const { response } = require("express");
 
 /**
  *
@@ -36,6 +37,30 @@ function getRegionFromZone(zone) {
  * @returns {Promise}
  */
 function powerRoutes(axios, controller) {
+  controller.getResourceInstance = function (name) {
+    return new Promise((resolve, reject) => {
+      let requestConfig = {
+        method: "get",
+        url: `https://resource-controller.cloud.ibm.com/v2/resource_instances?name=${name}`,
+        headers: { Authorization: `Bearer ${controller.token}` },
+      };
+      console.log("> Fetching data for workspace: " + name + "...");
+      return axios(requestConfig).then((response) => {
+        let resources = response.data.resources;
+        let foundResource;
+        resources.forEach((item) => {
+          if (contains(item.id, "power-iaas")) {
+            foundResource = item;
+          }
+        });
+        if (foundResource) {
+          console.log("> Success! Workspace " + name + " found");
+          resolve(foundResource);
+        } else reject("Error: no power workspace found with name: " + name);
+      });
+    });
+  };
+
   /**
    * get power details for a specified powervs workspace guid using resource controller api
    * https://cloud.ibm.com/apidocs/resource-controller/resource-controller#list-resource-instances
@@ -71,7 +96,10 @@ function powerRoutes(axios, controller) {
     let zone = req.params["region"];
     let componentType = kebabCase(req.params["component"]);
     let region = getRegionFromZone(zone);
-    let guid = process.env[`POWER_WORKSPACE_${snakeCase(zone).toUpperCase()}`];
+    let guid = req?.query?.name
+      ? false
+      : process.env[`POWER_WORKSPACE_${snakeCase(zone).toUpperCase()}`];
+    let workspaceData;
     return new Promise((resolve, reject) => {
       if (guid === undefined) {
         return reject(
@@ -80,10 +108,21 @@ function powerRoutes(axios, controller) {
           ).toUpperCase()} has no value.`
         );
       }
+      console.log(
+        `\n${titleCase(componentType)} request for workspace ${
+          guid ? guid : req.query.name
+        }...`
+      );
       return controller.getBearerToken().then(() => {
-        return controller
-          .getPowerDetails(guid)
+        // when getting one by name, use get power details and guid otherwise
+        // get resource instance using query name
+        // an additional issue will be needed to add this option to the CRAIG api
+        // swagger
+        return controller[guid ? "getPowerDetails" : "getResourceInstance"](
+          guid || req.query.name
+        )
           .then((powerWorkspaceData) => {
+            workspaceData = powerWorkspaceData;
             if (powerWorkspaceData === undefined) {
               return reject(
                 `Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables exist and are correct.`
@@ -104,7 +143,7 @@ function powerRoutes(axios, controller) {
                 Authorization: `Bearer ${controller.token}`,
               },
             };
-
+            console.log(`> Fetching images...`);
             return axios(requestConfig);
           })
           .then((response) => {
@@ -117,7 +156,38 @@ function powerRoutes(axios, controller) {
     })
       .then((response) => {
         if (componentType === "images") {
-          res.send(response.data.images);
+          console.log(`Success! Found ${response.data.images.length} images.`);
+          if (guid) {
+            console.log("Sending images...");
+            // if using GUID send list of images
+            res.send(response.data.images);
+          } else {
+            // if looking up by name, search for custom images and add to list
+            let requestConfig = {
+              method: "get",
+              url: `https://${region}.power-iaas.cloud.ibm.com/pcloud/v1/cloud-instances/${workspaceData["guid"]}/images`,
+              headers: {
+                Accept: "application/json",
+                CRN: `${workspaceData["crn"]}`,
+                Authorization: `Bearer ${controller.token}`,
+              },
+            };
+            console.log("> Fetching Custom Images...");
+            axios(requestConfig).then((imageResponse) => {
+              console.log(
+                `Success! Found ${imageResponse.data.images.length} custom images.`
+              );
+              console.log("Sending images...");
+              res.send(
+                response.data.images.concat(
+                  imageResponse.data.images.filter((image) => {
+                    image.use_data = true;
+                    return image;
+                  })
+                )
+              );
+            });
+          }
         } else {
           let formattedStoragePools = [];
           response.data.storagePoolsCapacity.forEach((pool) => {
@@ -127,6 +197,9 @@ function powerRoutes(axios, controller) {
         }
       })
       .catch((error) => {
+        if (typeof error === "string" && contains(error, ": ")) {
+          res.send(error);
+        }
         console.error(error + "... Sending hardcoded zone data.");
         if (componentType === "images") {
           return powerImageMap[zone];

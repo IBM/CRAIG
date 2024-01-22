@@ -37,7 +37,7 @@ export const PowerSshKeys = (props) => {
 };
 
 PowerSshKeys.propTypes = {
-  power: PropTypes.shape({}).isRequired,
+  power: PropTypes.shape({}),
   onClick: PropTypes.func.isRequired,
-  powerIndex: PropTypes.number.isRequired,
+  powerIndex: PropTypes.number,
 };

@@ -18,18 +18,24 @@ const { RegexButWithWords } = require("regex-but-with-words");
  * @returns {string} terraform formatted resource
  */
 function formatPowerVsWorkspace(workspace, config) {
-  let data = {
-    provider: `\${ibm.power_vs${snakeCase("_" + workspace.zone)}}`,
-    name: kebabName(["power-workspace", workspace.name]),
-    service: "power-iaas",
-    plan: "power-virtual-server-group",
-    location: workspace.zone,
-    resource_group_id: rgIdRef(workspace.resource_group, config),
-    tags: config._options.tags,
-    timeouts: timeouts("6m", "5m", "10m"),
-  };
+  let data = workspace.use_data
+    ? {
+        provider: `\${ibm.power_vs${snakeCase("_" + workspace.zone)}}`,
+        name: workspace.name,
+        service: "power-iaas",
+      }
+    : {
+        provider: `\${ibm.power_vs${snakeCase("_" + workspace.zone)}}`,
+        name: kebabName(["power-workspace", workspace.name]),
+        service: "power-iaas",
+        plan: "power-virtual-server-group",
+        location: workspace.zone,
+        resource_group_id: rgIdRef(workspace.resource_group, config),
+        tags: config._options.tags,
+        timeouts: timeouts("6m", "5m", "10m"),
+      };
   return jsonToTfPrint(
-    "resource",
+    workspace.use_data ? "data" : "resource",
     "ibm_resource_instance",
     "power vs workspace " + workspace.name,
     data
@@ -41,9 +47,9 @@ function formatPowerVsWorkspace(workspace, config) {
  * @param {*} workspaceName
  * @returns {string} reference to power vs
  */
-function powerVsWorkspaceRef(workspaceName) {
+function powerVsWorkspaceRef(workspaceName, useData) {
   return tfRef(
-    "ibm_resource_instance",
+    `${useData ? "data." : ""}ibm_resource_instance`,
     snakeCase(`power vs workspace ${workspaceName}`),
     "guid"
   );
@@ -59,14 +65,26 @@ function powerVsWorkspaceRef(workspaceName) {
  */
 function formatPowerVsSshKey(key) {
   let fullKeyName = snakeCase(`power ${key.workspace} ${key.name} key`);
-  let data = {
-    provider: `\${ibm.power_vs${snakeCase("_" + key.zone)}}`,
-    pi_cloud_instance_id: powerVsWorkspaceRef(key.workspace),
-    pi_key_name: kebabName([fullKeyName]),
-    pi_ssh_key: `\${var.${fullKeyName}}`,
-  };
+  let data = key.use_data
+    ? {
+        provider: `\${ibm.power_vs${snakeCase("_" + key.zone)}}`,
+        pi_cloud_instance_id: powerVsWorkspaceRef(
+          key.workspace,
+          key.workspace_use_data
+        ),
+        pi_key_name: key.name,
+      }
+    : {
+        provider: `\${ibm.power_vs${snakeCase("_" + key.zone)}}`,
+        pi_cloud_instance_id: powerVsWorkspaceRef(
+          key.workspace,
+          key.workspace_use_data
+        ),
+        pi_key_name: kebabName([fullKeyName]),
+        pi_ssh_key: `\${var.${fullKeyName}}`,
+      };
   return jsonToTfPrint(
-    "resource",
+    key.use_data ? "data" : "resource",
     "ibm_pi_key",
     snakeCase(`power vs ssh key ${key.name}`),
     data
@@ -86,19 +104,31 @@ function formatPowerVsSshKey(key) {
  */
 function formatPowerVsNetwork(network) {
   return jsonToTfPrint(
-    "resource",
+    network.use_data ? "data" : "resource",
     "ibm_pi_network",
     snakeCase(`power network ${network.workspace} ${network.name}`),
-    {
-      provider: `\${ibm.power_vs${snakeCase("_" + network.zone)}}`,
-      pi_cloud_instance_id: powerVsWorkspaceRef(network.workspace),
-      pi_network_name: kebabName(["power-network", network.name]),
-      pi_cidr: network.pi_cidr,
-      pi_network_type: network.pi_network_type,
-      pi_network_jumbo: network.pi_network_jumbo,
-      pi_dns: network.pi_dns,
-      depends_on: network.depends_on,
-    }
+    network.use_data
+      ? {
+          provider: `\${ibm.power_vs${snakeCase("_" + network.zone)}}`,
+          pi_cloud_instance_id: powerVsWorkspaceRef(
+            network.workspace,
+            network.workspace_use_data
+          ),
+          pi_network_name: network.name,
+        }
+      : {
+          provider: `\${ibm.power_vs${snakeCase("_" + network.zone)}}`,
+          pi_cloud_instance_id: powerVsWorkspaceRef(
+            network.workspace,
+            network.workspace_use_data
+          ),
+          pi_network_name: kebabName(["power-network", network.name]),
+          pi_cidr: network.pi_cidr,
+          pi_network_type: network.pi_network_type,
+          pi_network_jumbo: network.pi_network_jumbo,
+          pi_dns: network.pi_dns,
+          depends_on: network.depends_on,
+        }
   );
 }
 
@@ -140,7 +170,10 @@ function formatPowerVsCloudConnection(connection) {
     formatCloudConnectionResourceName(connection),
     {
       provider: `\${ibm.power_vs${snakeCase("_" + connection.zone)}}`,
-      pi_cloud_instance_id: powerVsWorkspaceRef(connection.workspace),
+      pi_cloud_instance_id: powerVsWorkspaceRef(
+        connection.workspace,
+        connection.workspace_use_data
+      ),
       pi_cloud_connection_name: formatCloudConnectionName(connection),
       pi_cloud_connection_speed: connection.pi_cloud_connection_speed,
       pi_cloud_connection_global_routing:
@@ -161,18 +194,31 @@ function formatPowerVsCloudConnection(connection) {
  * @returns {string} terraform formatted resource
  */
 function formatPowerVsImage(image) {
+  let imageData = image.use_data
+    ? {
+        provider: `\${ibm.power_vs${snakeCase("_" + image.zone)}}`,
+        pi_cloud_instance_id: powerVsWorkspaceRef(
+          image.workspace,
+          image.workspace_use_data
+        ),
+        pi_image_name: image.name,
+      }
+    : {
+        provider: `\${ibm.power_vs${snakeCase("_" + image.zone)}}`,
+        pi_cloud_instance_id: powerVsWorkspaceRef(
+          image.workspace,
+          image.workspace_use_data
+        ),
+        pi_image_id: image.imageID || image.pi_image_id,
+        pi_image_name: image.name,
+        timeouts: timeouts("9m"),
+        depends_on: image.depends_on,
+      };
   return jsonToTfPrint(
-    "resource",
+    image.use_data ? "data" : "resource",
     "ibm_pi_image",
     snakeCase(`power image ${image.workspace} ${image.name}`),
-    {
-      provider: `\${ibm.power_vs${snakeCase("_" + image.zone)}}`,
-      pi_cloud_instance_id: powerVsWorkspaceRef(image.workspace),
-      pi_image_id: image.imageID || image.pi_image_id,
-      pi_image_name: image.name,
-      timeouts: timeouts("9m"),
-      depends_on: image.depends_on,
-    }
+    imageData
   );
 }
 
@@ -241,7 +287,10 @@ function formatPowerVsNetworkAttachment(attachment) {
     `power ${attachment.workspace} ${attachment.connection} connection ${attachment.network} connection`,
     {
       provider: `\${ibm.power_vs${snakeCase("_" + attachment.zone)}}`,
-      pi_cloud_instance_id: powerVsWorkspaceRef(attachment.workspace),
+      pi_cloud_instance_id: powerVsWorkspaceRef(
+        attachment.workspace,
+        attachment.workspace_use_data
+      ),
       pi_cloud_connection_id: `\${ibm_pi_cloud_connection.${formatCloudConnectionResourceName(
         {
           name: attachment.connection,

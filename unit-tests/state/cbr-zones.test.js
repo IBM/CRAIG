@@ -304,5 +304,86 @@ describe("cbr_zones", () => {
         assert.deepEqual(state.store.json.cbr_zones[0].exclusions, []);
       });
     });
+    describe("cbr_zones.onStoreUpdate", () => {
+      it("should initialize addresses to empty array", () => {
+        let state = new newState();
+        state.cbr_zones.create({
+          name: "cbr-rule",
+          description: "description",
+          account_id: "frog",
+        });
+        state.update();
+        assert.deepEqual(state.store.json.cbr_zones[0].addresses, []);
+      });
+      it("should make cbr zones empty if undefined", () => {
+        let state = new newState();
+        state.store.json.cbr_zones = undefined;
+        state.update();
+        assert.deepEqual(state.store.json.cbr_zones, []);
+      });
+    });
+    describe("cbr-zones.schema", () => {
+      it("should return correct placeholder for address value", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.cbr_zones.addresses.value.placeholder({ type: "ipAddress" }),
+          "x.x.x.x",
+          "it should return correct placeholder"
+        );
+      });
+      it("should return correct invalidText for address value", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.cbr_zones.addresses.value.invalidText({
+            type: "ipAddress",
+            value: "frog",
+          }),
+          `Invalid value for type ipAddress. Value must be a valid IPV4 Address.`,
+          "it should return correct placeholder"
+        );
+      });
+      it("should return correct placeholder for exclusion value", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.cbr_zones.exclusions.value.placeholder({ type: "ipAddress" }),
+          "x.x.x.x",
+          "it should return correct placeholder"
+        );
+      });
+      it("should return correct placeholder for exclusion value", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.cbr_zones.exclusions.value.placeholder({ type: "ipRange" }),
+          "x.x.x.x-x.x.x.x",
+          "it should return correct placeholder"
+        );
+      });
+      it("should return correct placeholder for exclusion value", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.cbr_zones.exclusions.value.placeholder({ type: "serviceRef" }),
+          "my-cbr-zone-serviceRef",
+          "it should return correct placeholder"
+        );
+      });
+      it("should return correct invalidText for exclusion value", () => {
+        let state = new newState();
+        assert.deepEqual(
+          state.cbr_zones.exclusions.value.invalidText({
+            type: "ipAddress",
+            value: "frog",
+          }),
+          `Invalid value for type ipAddress. Value must be a valid IPV4 Address.`,
+          "it should return correct placeholder"
+        );
+      });
+      it("should return return false if description is valid", () => {
+        let state = new newState();
+        assert.isFalse(
+          state.cbr_zones.description.invalid({ description: "toad" }),
+          "it should return false"
+        );
+      });
+    });
   });
 });

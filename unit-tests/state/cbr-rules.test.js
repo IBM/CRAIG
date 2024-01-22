@@ -1,5 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
+const craig = state();
 
 /**
  * initialize store
@@ -273,6 +274,42 @@ describe("cbr_rules", () => {
           { arrayParentName: "cbr-rule", data: { name: "tag" } }
         );
       });
+    });
+    describe("cbr_rules.onStoreUpdate", () => {
+      it("should initialize context to empty array", () => {
+        let state = new newState();
+        state.cbr_rules.create({
+          name: "cbr-rule",
+          description: "description",
+          enforcement_mode: "enabled",
+          api_type_id: "frog",
+        });
+        state.update();
+        assert.deepEqual(state.store.json.cbr_rules[0].tags, []);
+      });
+      it("should make cbr rules empty if undefined", () => {
+        let state = new newState();
+        state.store.json.cbr_rules = undefined;
+        state.update();
+        assert.deepEqual(state.store.json.cbr_rules, []);
+      });
+    });
+  });
+  describe("cbr-rules.schema", () => {
+    it("should return correct groups for enfocement mode", () => {
+      assert.deepEqual(
+        craig.cbr_rules.enforcement_mode.groups(),
+        ["Enabled", "Disabled", "Report"],
+        "it should return correct text"
+      );
+    });
+    it("should return false for valid enforcement mode", () => {
+      assert.isFalse(
+        craig.cbr_rules.enforcement_mode.invalid({
+          enforcement_mode: "Enabled",
+        }),
+        "it should return correct text"
+      );
     });
   });
 });

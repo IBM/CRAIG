@@ -11,7 +11,6 @@ const {
   contains,
   splat,
 } = require("lazy-z");
-const powerImages = require("../../docs/power-image-map.json");
 const { edgeRouterEnabledZones } = require("../../constants");
 const { shouldDisableComponentSave, sshKeySchema } = require("../utils");
 const { powerVsWorkspaceSchema } = require("./power-vs-workspace-schema");
@@ -53,6 +52,7 @@ function powerVsOnStoreUpdate(config) {
       workspace[field].forEach((item) => {
         item.workspace = workspace.name;
         item.zone = workspace.zone;
+        item.workspace_use_data = workspace.use_data || false;
       });
     });
 
@@ -90,13 +90,13 @@ function powerVsCreate(config, stateData) {
   stateData.ssh_keys = [];
   stateData.network = [];
   stateData.cloud_connections = [];
-  stateData.imageNames = [];
-  if (stateData.images) {
-    stateData.images.forEach((image) => {
-      stateData.imageNames.push(image.name);
+  if (stateData.images && stateData.imageNames) {
+    stateData.images = stateData.images.filter((image) => {
+      if (contains(stateData.imageNames, image.name)) return image;
     });
   } else {
     stateData.images = [];
+    stateData.imageNames = [];
   }
   stateData.attachments = [];
   config.push(["json", "power"], stateData);
@@ -263,6 +263,24 @@ function powerVsNetworkAttachmentSave(config, stateData, componentProps) {
 }
 
 /**
+ * hide when workspace does uses data
+ * @param {*} stateData
+ * @returns {boolean} true if use data
+ */
+function hideWhenWorkspaceUseData(stateData) {
+  return stateData.workspace_use_data === true;
+}
+
+/**
+ * hide when workspace does not use data
+ * @param {*} stateData
+ * @returns {boolean} true if not use data
+ */
+function hideWhenWorkspaceNotUseData(stateData) {
+  return !hideWhenWorkspaceUseData(stateData);
+}
+
+/**
  * init power vs store
  * @param {*} store
  */
@@ -353,4 +371,5 @@ module.exports = {
   powerVsCloudConnectionSave,
   powerVsNetworkAttachmentSave,
   initPowerVsStore,
+  hideWhenWorkspaceNotUseData,
 };

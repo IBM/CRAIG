@@ -1098,6 +1098,7 @@ describe("power_instances", () => {
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
+        imageNames: ["7100-05-09"],
       });
       state.power.network.create(
         { name: "test-network" },
@@ -1176,7 +1177,7 @@ describe("power_instances", () => {
         [
           {
             name: "toad",
-            image: "7100-05-09",
+            image: null,
             ssh_key: "test-key",
             network: [
               {
@@ -1534,7 +1535,11 @@ describe("power_instances", () => {
           let craig = newState();
           craig.power.create({
             name: "toad",
-            images: [{ name: "7100-05-09", workspace: "toad" }],
+            images: [
+              { name: "7100-05-09", workspace: "toad" },
+              { name: "VTL" },
+            ],
+            imageNames: ["7100-05-09"],
             zone: "dal12",
             network: [],
           });
@@ -1544,6 +1549,24 @@ describe("power_instances", () => {
               { craig: craig }
             ),
             ["7100-05-09"],
+            "it should return list of images"
+          );
+        });
+        it("should return groups when workspace", () => {
+          let craig = newState();
+          craig.power.create({
+            name: "toad",
+            images: [
+              { name: "7100-05-09", workspace: "toad" },
+              { name: "VTL" },
+            ],
+            imageNames: ["7100-05-09", "VTL"],
+            zone: "dal12",
+            network: [],
+          });
+          assert.deepEqual(
+            craig.vtl.image.groups({ workspace: "toad" }, { craig: craig }),
+            ["VTL"],
             "it should return list of images"
           );
         });

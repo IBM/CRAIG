@@ -14,6 +14,13 @@ export const PowerSubnet = (props) => {
       >
         <IbmCloudSubnets className="marginRightQuarterRem" />
         <span className="powerSubnetName">{props.subnet.name}</span>
+        {props.subnet.use_data ? (
+          <span className="powerSubnetName" style={{ fontWeight: "normal" }}>
+            [Imported]
+          </span>
+        ) : (
+          ""
+        )}
         <div>{props.subnet.pi_cidr}</div>
       </div>
       {props.children}

@@ -12,10 +12,11 @@ const {
   invalidCidrText,
   invalidProjectNameText,
 } = require("../../client/src/lib");
+const { invalidCbrRuleText } = require("../../client/src/lib/state/cbr-rules");
 const {
   invalidCbrZoneText,
-  invalidCbrRuleText,
-} = require("../../client/src/lib/forms");
+  cbrValueInvalidText,
+} = require("../../client/src/lib/state/cbr-zones");
 const {
   invalidDescriptionText,
   invalidCrnText,
@@ -793,7 +794,10 @@ describe("text callbacks", () => {
       );
     });
     it("returns no invalid text for other fields", () => {
-      assert.equal(invalidCbrZoneText("not real field", {}, {}), "");
+      assert.equal(
+        invalidCbrZoneText("not real field"),
+        "Invalid not real field. Value must match regular expression /^[0-9a-z-]+$/."
+      );
     });
   });
   describe("invalidProjectNameText", () => {
@@ -916,6 +920,50 @@ describe("text callbacks", () => {
           crns: ["aaa"],
         }),
         "Enter a valid comma separated list of CRNs",
+        "it should return correct message"
+      );
+    });
+  });
+  describe("cbrValueInvalidText", () => {
+    it("should return correct string when not empty string", () => {
+      assert.deepEqual(
+        cbrValueInvalidText("ipAddress", ""),
+        "Invalid value for type ipAddress. Cannot be empty string.",
+        "it should return correct message"
+      );
+    });
+    it("should return correct string when invalid ip address", () => {
+      assert.deepEqual(
+        cbrValueInvalidText("ipAddress", "/"),
+        "Invalid value for type ipAddress. Value must be a valid IPV4 Address.",
+        "it should return correct message"
+      );
+    });
+    it("should return correct string when invalid ip range", () => {
+      assert.deepEqual(
+        cbrValueInvalidText("ipRange", "1.1.1.1"),
+        "Invalid value for type ipRange. Value must be a range of IPV4 Addresses.",
+        "it should return correct message"
+      );
+    });
+    it("should return correct string when empty type", () => {
+      assert.deepEqual(
+        cbrValueInvalidText("", "frog"),
+        "",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when valid ip range", () => {
+      assert.deepEqual(
+        cbrValueInvalidText("ipRange", "1.1.1.1-1.1.1.1"),
+        "",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when valid ip address", () => {
+      assert.deepEqual(
+        cbrValueInvalidText("ipAddress", "1.1.1.1"),
+        "",
         "it should return correct message"
       );
     });

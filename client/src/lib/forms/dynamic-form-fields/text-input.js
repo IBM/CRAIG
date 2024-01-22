@@ -86,7 +86,9 @@ function dynamicTextInputProps(props) {
     id: dynamicFieldId(props),
     className: addClassName("leftTextAlign", props.field),
     labelText: labelText,
-    placeholder: placeholder,
+    placeholder: isFunction(placeholder)
+      ? placeholder(props.parentState)
+      : placeholder,
     // override value for power ips
     value: props.value
       ? props.value

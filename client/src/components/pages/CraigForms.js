@@ -82,6 +82,121 @@ function craigForms(craig) {
         },
       ],
     },
+    cbr_zones: {
+      jsonField: "cbr_zones",
+      groups: [
+        {
+          name: craig.cbr_zones.name,
+          account_id: craig.cbr_zones.account_id,
+        },
+        {
+          description: craig.cbr_zones.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Addresses",
+          jsonField: "addresses",
+          addText: "Create an Address",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_zones.addresses.name,
+                account_id: craig.cbr_zones.addresses.account_id,
+                location: craig.cbr_zones.addresses.location,
+              },
+              {
+                service_name: craig.cbr_zones.addresses.service_name,
+                service_instance: craig.cbr_zones.addresses.service_instance,
+                service_type: craig.cbr_zones.addresses.service_type,
+              },
+              {
+                type: craig.cbr_zones.addresses.type,
+                value: craig.cbr_zones.addresses.value,
+              },
+            ],
+          },
+        },
+        {
+          name: "Exclusions",
+          jsonField: "exclusions",
+          addText: "Create an Exclusion",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_zones.exclusions.name,
+                account_id: craig.cbr_zones.exclusions.account_id,
+                location: craig.cbr_zones.exclusions.location,
+              },
+              {
+                service_name: craig.cbr_zones.exclusions.service_name,
+                service_instance: craig.cbr_zones.exclusions.service_instance,
+                service_type: craig.cbr_zones.exclusions.service_type,
+              },
+              {
+                type: craig.cbr_zones.exclusions.type,
+                value: craig.cbr_zones.exclusions.value,
+              },
+            ],
+          },
+        },
+      ],
+    },
+    cbr_rules: {
+      jsonField: "cbr_rules",
+      groups: [
+        {
+          name: craig.cbr_rules.name,
+          enforcement_mode: craig.cbr_rules.enforcement_mode,
+          api_type_id: craig.cbr_rules.api_type_id,
+        },
+        {
+          description: craig.cbr_rules.description,
+        },
+      ],
+      subForms: [
+        {
+          name: "Contexts",
+          jsonField: "contexts",
+          addText: "Create a Context",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_rules.contexts.name,
+                value: craig.cbr_rules.contexts.value,
+              },
+            ],
+          },
+        },
+        {
+          name: "Resource Attributes",
+          jsonField: "resource_attributes",
+          addText: "Create a Resource Attribute",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_rules.resource_attributes.name,
+                value: craig.cbr_rules.resource_attributes.value,
+              },
+            ],
+          },
+        },
+        {
+          name: "Tags",
+          jsonField: "tags",
+          addText: "Create a Tag",
+          form: {
+            groups: [
+              {
+                name: craig.cbr_rules.tags.name,
+                operator: craig.cbr_rules.tags.operator,
+                value: craig.cbr_rules.tags.value,
+              },
+            ],
+          },
+        },
+      ],
+    },
     appid: {
       jsonField: "appid",
       groups: [
@@ -779,11 +894,14 @@ function craigForms(craig) {
       },
       groups: [
         {
-          name: craig.power.name,
-          resource_group: craig.power.resource_group,
+          use_data: craig.power.use_data,
         },
         {
+          name: craig.power.name,
           zone: craig.power.zone,
+        },
+        {
+          resource_group: craig.power.resource_group,
           imageNames: craig.power.imageNames,
         },
       ],
@@ -795,6 +913,7 @@ function craigForms(craig) {
           form: {
             groups: [
               {
+                use_data: craig.power.ssh_keys.use_data,
                 name: craig.power.ssh_keys.name,
               },
               {
@@ -811,13 +930,14 @@ function craigForms(craig) {
             groups: [
               {
                 name: craig.power.network.name,
+                use_data: craig.power.network.use_data,
+              },
+              {
                 pi_network_type: craig.power.network.pi_network_type,
-              },
-              {
                 pi_cidr: craig.power.network.pi_cidr,
-                pi_dns: craig.power.network.pi_dns,
               },
               {
+                pi_dns: craig.power.network.pi_dns,
                 pi_network_jumbo: craig.power.network.pi_network_jumbo,
               },
             ],
@@ -953,6 +1073,9 @@ function craigForms(craig) {
           pi_replication_enabled: craig.power_volumes.pi_replication_enabled,
           pi_volume_shareable: craig.power_volumes.pi_volume_shareable,
           attachments: craig.power_volumes.attachments,
+        },
+        {
+          count: craig.power_volumes.count,
         },
       ],
     },

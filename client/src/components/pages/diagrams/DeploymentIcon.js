@@ -1,6 +1,6 @@
 import React from "react";
 import { RenderForm } from "../../forms/utils/ToggleFormComponents";
-import { contains } from "lazy-z";
+import { contains, isNullOrEmptyString } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
 import { FloatingIp, Security } from "@carbon/icons-react";
@@ -8,23 +8,57 @@ import PropTypes from "prop-types";
 import "./diagrams.css";
 import { disableSave } from "../../../lib";
 
-export const DeploymentIcon = (props) => {
-  let isSelected = props.isSelected
+/**
+ * check to see if deployment icon is selected
+ * @param {*} props
+ * @returns {boolean} true if selected
+ */
+function deploymentIconIsSelected(props) {
+  return props.isSelected
     ? props.isSelected(props)
     : props?.parentState?.selectedItem === props.itemName &&
-      // select all items when f5
-      (props?.parentState?.selectedIndex === props.itemIndex ||
-        props.itemName === "f5_vsi") &&
-      props?.parentState?.vpcIndex === props.vpcIndex;
+        // select all items when f5
+        (props?.parentState?.selectedIndex === props.itemIndex ||
+          props.itemName === "f5_vsi") &&
+        props?.parentState?.vpcIndex === props.vpcIndex;
+}
+
+/**
+ * get boc classname for deployment icon
+ * @param {*} props
+ * @returns {string} className
+ */
+function deploymentIconBoxClassName(props) {
   let boxClassName = "deploymentIconBox";
-  if (isSelected) boxClassName += " diagramIconBoxSelected";
+  if (deploymentIconIsSelected(props)) {
+    boxClassName += " diagramIconBoxSelected";
+  }
   if (
     disableSave(props.itemName, props.item, {
       craig: props.craig,
       data: props.item,
     })
-  )
+  ) {
     boxClassName += " diagramIconBoxInvalid";
+  }
+  return boxClassName;
+}
+
+export const DeploymentIcon = (props) => {
+  let boxClassName = deploymentIconBoxClassName(props);
+  let hasSecurityGroups =
+    contains(
+      [
+        "virtual_private_endpoints",
+        "vsi",
+        "vpn_servers",
+        "load_balancers",
+        "fortigate_vnf",
+        "f5_vsi",
+      ],
+      props.itemName
+    ) && !props.small;
+
   return (
     <div className={boxClassName}>
       <div className="maxWidth150">
@@ -33,20 +67,21 @@ export const DeploymentIcon = (props) => {
           className: "margin1rem" + (props.onClick ? " clicky" : ""),
           onClick: props.onClick ? props.onClick : undefined,
         })}
-        {props.small ? "" : <p className="font12px">{props.item.name}</p>}
+        {props.small ? (
+          ""
+        ) : (
+          <p className="font12px">
+            {props.item.name}
+            {props.itemName === "power_volumes" &&
+            !isNullOrEmptyString(props.item.count, true)
+              ? "  (x" + props.item.count + ")"
+              : ""}
+            {props.item.use_data ? " [Imported]" : ""}
+          </p>
+        )}
       </div>
       {props.children}
-      {contains(
-        [
-          "virtual_private_endpoints",
-          "vsi",
-          "vpn_servers",
-          "load_balancers",
-          "fortigate_vnf",
-          "f5_vsi",
-        ],
-        props.itemName
-      ) && !props.small
+      {hasSecurityGroups
         ? props.item.security_groups.map((sg, i) => (
             <Tag
               key={props.item.name + props.itemName + sg}

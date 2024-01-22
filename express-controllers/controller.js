@@ -67,6 +67,7 @@ function controller(axios) {
    */
   this.getBearerToken = () => {
     return new Promise((resolve, reject) => {
+      console.log("> Fetching API token...");
       if (!process.env.API_KEY) {
         let error = new Error("No API_KEY defined");
         reject(error);

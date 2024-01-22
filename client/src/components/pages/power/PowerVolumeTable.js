@@ -93,6 +93,7 @@ export const PowerVolumeTable = (props) => {
             <TableHeader>Volume Name</TableHeader>
             <TableHeader>Storage Type</TableHeader>
             <TableHeader>Capacity</TableHeader>
+            <TableHeader>Total Capacity</TableHeader>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -111,7 +112,12 @@ export const PowerVolumeTable = (props) => {
             })
             .map((vol) => (
               <TableRow key={vol.name}>
-                <TableCell>{vol.name}</TableCell>
+                <TableCell>
+                  {vol.name}
+                  {!isNullOrEmptyString(vol.count, true)
+                    ? " (x" + vol.count + ")"
+                    : ""}
+                </TableCell>
                 <TableCell>
                   {vol.storage_option === "Storage Type"
                     ? titleCase(vol.pi_volume_type)
@@ -122,6 +128,11 @@ export const PowerVolumeTable = (props) => {
                     : getAntiAffinityName(vol, craig)}
                 </TableCell>
                 <TableCell>{vol.pi_volume_size}</TableCell>
+                <TableCell>
+                  {isNullOrEmptyString(vol.count, true)
+                    ? vol.pi_volume_size
+                    : vol.count * vol.pi_volume_size}
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>

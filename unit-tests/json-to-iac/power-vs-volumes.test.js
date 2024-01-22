@@ -34,6 +34,186 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
         "it should return correct data"
       );
     });
+    it("should return correct volume terraform with existing workspace", () => {
+      let actualData = formatPowerVsVolume(
+        {
+          zone: "dal12",
+          pi_volume_size: 20,
+          name: "test-volume",
+          workspace: "example",
+          pi_volume_shareable: true,
+          pi_replication_enabled: true,
+          pi_volume_type: "tier1",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [
+            {
+              name: "example",
+              resource_group: "example",
+              zone: "dal10",
+              use_data: true,
+              ssh_keys: [
+                {
+                  workspace: "example",
+                  name: "keyname",
+                  zone: "dal10",
+                },
+              ],
+              network: [
+                {
+                  workspace: "example",
+                  name: "dev-nw",
+                  pi_cidr: "1.2.3.4/5",
+                  pi_dns: ["127.0.0.1"],
+                  pi_network_type: "vlan",
+                  pi_network_jumbo: true,
+                  zone: "dal10",
+                },
+              ],
+              cloud_connections: [
+                {
+                  name: "dev-connection",
+                  workspace: "example",
+                  pi_cloud_connection_speed: 50,
+                  pi_cloud_connection_global_routing: false,
+                  pi_cloud_connection_metered: false,
+                  pi_cloud_connection_transit_enabled: true,
+                  transit_gateways: ["tgw", "tgw2"],
+                  zone: "dal10",
+                },
+              ],
+              images: [
+                {
+                  workspace: "example",
+                  pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+                  name: "SLES15-SP3-SAP",
+                  zone: "dal10",
+                },
+              ],
+              attachments: [
+                {
+                  connections: ["dev-connection"],
+                  workspace: "example",
+                  network: "dev-nw",
+                  zone: "dal10",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_volume" "example_volume_test_volume" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct volume terraform when count is empty string", () => {
+      let actualData = formatPowerVsVolume({
+        zone: "dal12",
+        pi_volume_size: 20,
+        name: "test-volume",
+        workspace: "example",
+        pi_volume_shareable: true,
+        pi_replication_enabled: true,
+        pi_volume_type: "tier1",
+        count: "",
+      });
+      let expectedData = `
+resource "ibm_pi_volume" "example_volume_test_volume" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct volume terraform with multiples", () => {
+      let actualData = formatPowerVsVolume({
+        count: "4",
+        zone: "dal12",
+        pi_volume_size: "20",
+        name: "test-volume",
+        workspace: "example",
+        pi_volume_shareable: true,
+        pi_replication_enabled: true,
+        pi_volume_type: "tier1",
+      });
+      let expectedData = `
+resource "ibm_pi_volume" "example_volume_test_volume_1" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume-1"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+
+resource "ibm_pi_volume" "example_volume_test_volume_2" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume-2"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+
+resource "ibm_pi_volume" "example_volume_test_volume_3" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume-3"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+
+resource "ibm_pi_volume" "example_volume_test_volume_4" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume-4"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should format volume terraform with affinity policy for instance", () => {
       let actualData = formatPowerVsVolume({
         name: "oracle-1-db-1",
@@ -58,7 +238,7 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
 resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   provider               = ibm.power_vs_dal12
   pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_oracle_template.guid
-  pi_volume_size         = "90"
+  pi_volume_size         = 90
   pi_volume_name         = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable    = true
   pi_replication_enabled = false
@@ -96,7 +276,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
 resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   provider                = ibm.power_vs_dal12
   pi_cloud_instance_id    = ibm_resource_instance.power_vs_workspace_oracle_template.guid
-  pi_volume_size          = "90"
+  pi_volume_size          = 90
   pi_volume_name          = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable     = true
   pi_replication_enabled  = false
@@ -133,7 +313,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
 resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   provider               = ibm.power_vs_dal12
   pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_oracle_template.guid
-  pi_volume_size         = "90"
+  pi_volume_size         = 90
   pi_volume_name         = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable    = true
   pi_replication_enabled = false
@@ -177,7 +357,103 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
         "it should return correct data"
       );
     });
+    it("should return correctly formatted data when using data", () => {
+      let actualData = formatPowerVsVolumeAttachment(
+        {
+          workspace: "example",
+          name: "test-volume",
+          zone: "dal12",
+        },
+        "test",
+        undefined,
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [
+            {
+              name: "example",
+              resource_group: "example",
+              zone: "dal10",
+              use_data: true,
+              ssh_keys: [
+                {
+                  workspace: "example",
+                  name: "keyname",
+                  zone: "dal10",
+                },
+              ],
+              network: [
+                {
+                  workspace: "example",
+                  name: "dev-nw",
+                  pi_cidr: "1.2.3.4/5",
+                  pi_dns: ["127.0.0.1"],
+                  pi_network_type: "vlan",
+                  pi_network_jumbo: true,
+                  zone: "dal10",
+                },
+              ],
+              cloud_connections: [
+                {
+                  name: "dev-connection",
+                  workspace: "example",
+                  pi_cloud_connection_speed: 50,
+                  pi_cloud_connection_global_routing: false,
+                  pi_cloud_connection_metered: false,
+                  pi_cloud_connection_transit_enabled: true,
+                  transit_gateways: ["tgw", "tgw2"],
+                  zone: "dal10",
+                },
+              ],
+              images: [
+                {
+                  workspace: "example",
+                  pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+                  name: "SLES15-SP3-SAP",
+                  zone: "dal10",
+                },
+              ],
+              attachments: [
+                {
+                  connections: ["dev-connection"],
+                  workspace: "example",
+                  network: "dev-nw",
+                  zone: "dal10",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
+  provider             = ibm.power_vs_dal12
+  pi_cloud_instance_id = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_id         = ibm_pi_volume.example_volume_test_volume.volume_id
+  pi_instance_id       = ibm_pi_instance.example_workspace_instance_test.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
+
   describe("powerVsVolumeTf", () => {
     it("should return power volume terraform file", () => {
       let actualData = powerVsVolumeTf({

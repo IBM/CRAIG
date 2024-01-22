@@ -60,6 +60,8 @@ For instructions on how to install the IBM Cloud CLI, click [here](https://cloud
 
 [Follow this tutorial](https://ibm.box.com/v/craigTutorialVideo) for step-by-step instructions on how to get started with CRAIG.
 
+***Ensure `Quality: 1080p` is selected within Box video player settings for the best viewing experience.***
+
 ---
 
 ### Running CRAIG Application Locally
@@ -173,10 +175,20 @@ docker run -it craig
 
 Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. The user running this command must have sufficient permissions to provision a Code Engine project, application, image build, and secrets. In addition, this API key must be able to create a IBM Container Registry namespace. See below for a simple use case using the default parameters.
 
-#### Prerequisites
+#### Prerequisites for running deploy.sh from IBM Cloud Shell (recommended)
+>* An API key must be provided that will be used for CRAIG's integration with IBM Cloud Schematics and Power Virtual Server Workspaces. This API key will also be used for IBM Code Engine's access to the IBM Container Registry. See later sections in this document about Schematics and Power Virtual Server integrations for more information.
+
+#### Prerequisites for running deploy.sh outside of IBM Cloud Shell
 >* The `ibmcloud` CLI must be [installed](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli)
 >* `ibmcloud login` must be run before invoking the script
->* An API key must be provided that will be used for CRAIG's integration with  IBM Cloud Schematics and Power Virtual Server Workspaces. See later sections in this document about Schematics and Power Virtual Server integrations for more information.
+>* An API key must be provided that will be used for CRAIG's integration with IBM Cloud Schematics and Power Virtual Server Workspaces. This API key will also be used for IBM Code Engine's access to the IBM Container Registry. See later sections in this document about Schematics and Power Virtual Server integrations for more information.
+
+#### Downloading deploy.sh in IBM Cloud Shell
+From within IBM Cloud Shell run the following two commands to download the deploy.sh script and make it executable:
+```bash
+wget https://raw.githubusercontent.com/IBM/CRAIG/main/deploy.sh
+chmod 755 deploy.sh
+```
 
 #### Running the deploy script
 

@@ -536,7 +536,10 @@ function invalidCbrRule(field, stateData, componentProps) {
       stateData.description.match(/^[\x20-\xFE]*$/) === null
     );
   } else if (field === "value") {
-    return stateData.value.match(/^[\S\s]+$/) === null;
+    return (
+      isNullOrEmptyString(stateData.value) ||
+      stateData.value.match(/^[\S\s]+$/) === null
+    );
   } else if (field === "operator") {
     return (
       !isNullOrEmptyString(stateData.operator) &&
@@ -562,11 +565,12 @@ function invalidCbrZone(field, stateData, componentProps) {
   } else if (field === "value") {
     if (stateData.type === "ipAddress")
       return (
-        !isIpv4CidrOrAddress(stateData.value) || stateData.value.includes("/")
+        !isIpv4CidrOrAddress(stateData.value || "") ||
+        stateData.value.includes("/")
       );
     else if (stateData.type === "ipRange")
-      return stateData.value.match(ipRangeExpression) === null;
-    else return stateData.value.match(/^[0-9a-z\-]+$/) === null;
+      return stateData.value?.match(ipRangeExpression) === null;
+    else return stateData.value?.match(/^[0-9a-z\-]+$/) === null;
   } else {
     return (
       !isNullOrEmptyString(stateData[field]) &&
