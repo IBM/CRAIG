@@ -308,7 +308,9 @@ function labelsInvalidText(stateData, componentProps) {
  * @returns {string} helper text
  */
 function powerVsWorkspaceHelperText(stateData, componentProps) {
-  return `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
+  return stateData.use_data
+    ? stateData.name
+    : `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
 }
 /**
  * return helper text for vpn servers

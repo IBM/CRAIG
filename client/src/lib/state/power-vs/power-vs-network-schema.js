@@ -3,6 +3,7 @@ const {
   fieldIsNullOrEmptyString,
   unconditionalInvalidText,
   selectInvalidText,
+  hideWhenUseData,
 } = require("../utils");
 const {
   invalidName,
@@ -13,6 +14,14 @@ const {
 
 function powerVsNetworkSchema() {
   return {
+    use_data: {
+      default: false,
+      labelText: "Use Existing Subnet",
+      type: "toggle",
+      hideWhen: function (stateData) {
+        return stateData.workspace_use_data !== true;
+      },
+    },
     name: {
       default: "",
       invalid: invalidName("network"),
@@ -25,8 +34,12 @@ function powerVsNetworkSchema() {
       invalid: fieldIsNullOrEmptyString("pi_network_type"),
       invalidText: selectInvalidText("network type"),
       groups: ["vlan", "pub-vlan"],
+      hideWhen: hideWhenUseData,
     },
     pi_cidr: {
+      // need to open an issue to add some sort of dynamic rendering to
+      // inform the user that when use_data is true the CIDR listed here
+      // is used only for reminder text
       default: "",
       placeholder: "X.X.X.X/X",
       labelText: "Network CIDR Block",
@@ -57,11 +70,13 @@ function powerVsNetworkSchema() {
       helperText: function () {
         return null;
       },
+      hideWhen: hideWhenUseData,
     },
     pi_network_jumbo: {
       type: "toggle",
       default: false,
       labelText: "MTU Jumbo",
+      hideWhen: hideWhenUseData,
     },
   };
 }

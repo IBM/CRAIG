@@ -1,5 +1,8 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
+const {
+  hideWhenWorkspaceNotUseData,
+} = require("../../client/src/lib/state/power-vs/power-vs");
 
 /**
  * initialize store
@@ -49,6 +52,7 @@ describe("power-vs", () => {
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal12",
+        imageNames: ["7100-05-09"],
       });
       state.store.json._options.power_vs_zones = [];
       state.update();
@@ -63,6 +67,7 @@ describe("power-vs", () => {
             name: "7100-05-09",
             workspace: "toad",
             zone: null,
+            workspace_use_data: false,
           },
         ],
         attachments: [],
@@ -104,6 +109,7 @@ describe("power-vs", () => {
             pi_image_id: "35eca797-6599-4597-af1f-d2eb5e292dfc",
             workspace: "toad",
             zone: "dal12",
+            workspace_use_data: false,
           },
         ],
         attachments: [],
@@ -177,6 +183,14 @@ describe("power-vs", () => {
     });
   });
   describe("power.schema", () => {
+    it("should return correct helper text for name when use data", () => {
+      let state = newState();
+      assert.deepEqual(
+        state.power.name.helperText({ use_data: true, name: "name" }),
+        "name",
+        "it should return correct helper text"
+      );
+    });
     describe("power.zone", () => {
       describe("power.zone.onStateChange", () => {
         it("should set images when changing zone", () => {
@@ -203,6 +217,13 @@ describe("power-vs", () => {
       });
     });
     describe("power.images", () => {
+      it("should not be invalid when using data", () => {
+        let craig = newState();
+        assert.isFalse(
+          craig.power.imageNames.invalid({ use_data: true }),
+          "it should be false"
+        );
+      });
       it("should return images and zone for updated key", () => {
         let craig = newState();
         assert.deepEqual(
@@ -243,6 +264,30 @@ describe("power-vs", () => {
           "it should return api endpoint"
         );
       });
+      it("should return correct api endpoint for images when workspace uses data", () => {
+        let craig = newState();
+        assert.deepEqual(
+          craig.power.imageNames.apiEndpoint(
+            {
+              use_data: true,
+              name: "frog",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      region: "us-south",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          `/api/power/us-south/images?name=frog`,
+          "it should return api endpoint"
+        );
+      });
     });
   });
   describe("power.ssh_keys crud", () => {
@@ -266,7 +311,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].ssh_keys,
-        [{ name: "test-key", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "test-key",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: false,
+          },
+        ],
         "it should create a ssh key"
       );
     });
@@ -284,7 +336,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].ssh_keys,
-        [{ name: "new-key-name", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "new-key-name",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: false,
+          },
+        ],
         "it should update ssh key name"
       );
     });
@@ -389,6 +448,21 @@ describe("power-vs", () => {
           });
         });
       });
+      beforeEach(() => {
+        state = new newState();
+        state.power.create({
+          name: "power-vs",
+          resource_group: "default",
+          zone: "dal12",
+          images: [{ name: "7100-05-09", workspace: "toad" }],
+        });
+      });
+      it("should add hidewhen to key and be true for use_data workspace is not using data", () => {
+        assert.isTrue(
+          state.power.ssh_keys.use_data.hideWhen({ workspace_use_data: false }),
+          "it should be hidden"
+        );
+      });
     });
   });
   describe("power.network crud", () => {
@@ -403,13 +477,28 @@ describe("power-vs", () => {
       });
     });
     it("should create a network interface", () => {
+      state = new newState();
+      state.power.create({
+        name: "power-vs",
+        resource_group: "default",
+        zone: "dal12",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        use_data: true,
+      });
       state.power.network.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "test-network", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "test-network",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: true,
+          },
+        ],
         "it should create a network interface"
       );
       assert.deepEqual(
@@ -439,7 +528,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "new-network-name", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "new-network-name",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: false,
+          },
+        ],
         "it should update network name"
       );
       assert.deepEqual(
@@ -450,6 +546,7 @@ describe("power-vs", () => {
             workspace: "power-vs",
             zone: "dal12",
             network: "new-network-name",
+            workspace_use_data: false,
           },
         ],
         "it should create a network interface"
@@ -470,7 +567,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "new-network-name", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "new-network-name",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: false,
+          },
+        ],
         "it should update network name"
       );
     });
@@ -488,7 +592,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].network,
-        [{ name: "test-network", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "test-network",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: false,
+          },
+        ],
         "it should update network name"
       );
       assert.deepEqual(
@@ -499,6 +610,7 @@ describe("power-vs", () => {
             workspace: "power-vs",
             zone: "dal12",
             network: "test-network",
+            workspace_use_data: false,
           },
         ],
         "it should create a network interface"
@@ -611,6 +723,13 @@ describe("power-vs", () => {
           });
         });
       });
+      it("should hide subnet use data when not workspace use data", () => {
+        let state = newState();
+        assert.isTrue(
+          state.power.network.use_data.hideWhen({}),
+          "it should be hidden"
+        );
+      });
     });
   });
   describe("power.cloud_connections crud", () => {
@@ -631,7 +750,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].cloud_connections,
-        [{ name: "test-network", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "test-network",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: false,
+          },
+        ],
         "it should create a cloud connection"
       );
     });
@@ -649,7 +775,14 @@ describe("power-vs", () => {
       );
       assert.deepEqual(
         state.store.json.power[0].cloud_connections,
-        [{ name: "new-network-name", workspace: "power-vs", zone: "dal12" }],
+        [
+          {
+            name: "new-network-name",
+            workspace: "power-vs",
+            zone: "dal12",
+            workspace_use_data: false,
+          },
+        ],
         "it should update cloud connection"
       );
     });
@@ -737,6 +870,7 @@ describe("power-vs", () => {
             workspace: "power-vs",
             zone: "dal12",
             connections: ["test-network"],
+            workspace_use_data: false,
           },
         ],
         "it should delete a cloud connection"
@@ -776,6 +910,14 @@ describe("power-vs", () => {
           "it should not be invalid"
         );
       });
+    });
+  });
+  describe("hideWhenWorkspaceNotUseData", () => {
+    it("should be true when workspace does not use data", () => {
+      assert.isTrue(
+        hideWhenWorkspaceNotUseData({ workspace_use_data: false }),
+        "it should be hidden"
+      );
     });
   });
 });

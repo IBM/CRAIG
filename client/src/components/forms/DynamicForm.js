@@ -324,7 +324,7 @@ class DynamicForm extends React.Component {
                 ""
               ) : (
                 <IcseFormTemplate
-                  key={subForm.name}
+                  key={subForm.name + JSON.stringify(this.props.data)}
                   tooltip={subForm.tooltip}
                   overrideTile={
                     <SubFormOverrideTile
@@ -379,6 +379,13 @@ class DynamicForm extends React.Component {
                     // here for testing
                     // hide: false,
                   }}
+                  defaultModalValues={
+                    this.props.form.jsonField === "power"
+                      ? {
+                          workspace_use_data: this.props.data.use_data,
+                        }
+                      : undefined
+                  }
                 />
               )
             )}

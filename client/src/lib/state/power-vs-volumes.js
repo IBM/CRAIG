@@ -4,6 +4,7 @@ const {
   contains,
   splat,
   revision,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const {
   shouldDisableComponentSave,
@@ -19,6 +20,9 @@ const {
   powerAntiAffinityVolume,
   powerAntiAffinityInstance,
   powerStoragePoolSelect,
+  wholeNumberField,
+  wholeNumberText,
+  fieldIsNotWholeNumber,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
 const { replicationDisabledCallback } = require("../forms/invalid-callbacks");
@@ -242,6 +246,28 @@ function initPowerVsVolumeStore(store) {
               "name"
             )
           );
+        },
+      },
+      count: {
+        default: null,
+        size: "small",
+        optional: true,
+        placeholder: "1",
+        invalid: function (stateData, componentProps) {
+          if (isNullOrEmptyString(stateData.count, true)) {
+            return false;
+          } else {
+            return (
+              Number(stateData.count) < 1 ||
+              fieldIsNotWholeNumber("count", 1, 100)(stateData)
+            );
+          }
+        },
+        invalidText: unconditionalInvalidText(
+          "Enter a whole number between 1 and 100"
+        ),
+        tooltip: {
+          content: "Create multiple volumes with this configuration",
         },
       },
     },

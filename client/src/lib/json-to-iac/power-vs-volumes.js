@@ -1,17 +1,23 @@
-const { snakeCase, contains } = require("lazy-z");
+const { snakeCase, contains, getObjectFromArray } = require("lazy-z");
 const { jsonToTfPrint, tfBlock, kebabName } = require("./utils");
 const { powerVsWorkspaceRef } = require("./power-vs");
 
 /**
  * format power vs volume
  * @param {*} volume
+ * @param {*} config
  * @returns {string} terraform formatted string
  */
-function formatPowerVsVolume(volume) {
+function formatPowerVsVolume(volume, config) {
   let data = {
     provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
-    pi_cloud_instance_id: powerVsWorkspaceRef(volume.workspace),
-    pi_volume_size: volume.pi_volume_size,
+    pi_cloud_instance_id: powerVsWorkspaceRef(
+      volume.workspace,
+      config?.power
+        ? getObjectFromArray(config.power, "name", volume.workspace).use_data
+        : false
+    ),
+    pi_volume_size: Number(volume.pi_volume_size),
     pi_volume_name: kebabName([volume.workspace, volume.name]),
     pi_volume_shareable: volume.pi_volume_shareable,
     pi_replication_enabled: volume.pi_replication_enabled,
@@ -36,12 +42,28 @@ function formatPowerVsVolume(volume) {
   } else {
     data.pi_storage_pool = volume.pi_volume_pool;
   }
-  return jsonToTfPrint(
-    "resource",
-    "ibm_pi_volume",
-    `${snakeCase(volume.workspace)} volume ${snakeCase(volume.name)}`,
-    data
-  );
+
+  if (volume.count) {
+    let volumeTf = "";
+    for (let i = 1; i <= Number(volume.count); i++) {
+      let volumeData = { ...data }; // create copy
+      // add volume number to name
+      volumeData.pi_volume_name += "-" + i;
+      volumeTf += jsonToTfPrint(
+        "resource",
+        "ibm_pi_volume",
+        `${snakeCase(volume.workspace)} volume ${snakeCase(volume.name)} ${i}`,
+        volumeData
+      );
+    }
+    return volumeTf;
+  } else
+    return jsonToTfPrint(
+      "resource",
+      "ibm_pi_volume",
+      `${snakeCase(volume.workspace)} volume ${snakeCase(volume.name)}`,
+      data
+    );
 }
 
 /**
@@ -51,10 +73,20 @@ function formatPowerVsVolume(volume) {
  * @param {string=} lastAttachment previous volume attchment for reference
  * @returns {string} terraform formatted string
  */
-function formatPowerVsVolumeAttachment(volume, instance, lastAttachment) {
+function formatPowerVsVolumeAttachment(
+  volume,
+  instance,
+  lastAttachment,
+  config
+) {
   let volumeData = {
     provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
-    pi_cloud_instance_id: powerVsWorkspaceRef(volume.workspace),
+    pi_cloud_instance_id: powerVsWorkspaceRef(
+      volume.workspace,
+      config?.power
+        ? getObjectFromArray(config.power, "name", volume.workspace).use_data
+        : false
+    ),
     pi_volume_id: `\${ibm_pi_volume.${snakeCase(
       volume.workspace + " volume " + volume.name
     )}.volume_id}`,
@@ -86,12 +118,13 @@ function powerVsVolumeTf(config) {
   let tf = config.power_volumes && config.power_volumes.length > 0 ? "" : null;
   let lastAttachmentAddress;
   (config.power_volumes || []).forEach((volume) => {
-    let volumeTf = formatPowerVsVolume(volume);
+    let volumeTf = formatPowerVsVolume(volume, config);
     volume.attachments.forEach((instance) => {
       volumeTf += formatPowerVsVolumeAttachment(
         volume,
         instance,
-        lastAttachmentAddress
+        lastAttachmentAddress,
+        config
       );
       lastAttachmentAddress = `\${ibm_pi_volume_attach.${snakeCase(
         `${volume.workspace} attach ${volume.name} to ${instance} instance`

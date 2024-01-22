@@ -894,11 +894,14 @@ function craigForms(craig) {
       },
       groups: [
         {
-          name: craig.power.name,
-          resource_group: craig.power.resource_group,
+          use_data: craig.power.use_data,
         },
         {
+          name: craig.power.name,
           zone: craig.power.zone,
+        },
+        {
+          resource_group: craig.power.resource_group,
           imageNames: craig.power.imageNames,
         },
       ],
@@ -910,6 +913,7 @@ function craigForms(craig) {
           form: {
             groups: [
               {
+                use_data: craig.power.ssh_keys.use_data,
                 name: craig.power.ssh_keys.name,
               },
               {
@@ -926,13 +930,14 @@ function craigForms(craig) {
             groups: [
               {
                 name: craig.power.network.name,
+                use_data: craig.power.network.use_data,
+              },
+              {
                 pi_network_type: craig.power.network.pi_network_type,
-              },
-              {
                 pi_cidr: craig.power.network.pi_cidr,
-                pi_dns: craig.power.network.pi_dns,
               },
               {
+                pi_dns: craig.power.network.pi_dns,
                 pi_network_jumbo: craig.power.network.pi_network_jumbo,
               },
             ],
@@ -1068,6 +1073,9 @@ function craigForms(craig) {
           pi_replication_enabled: craig.power_volumes.pi_replication_enabled,
           pi_volume_shareable: craig.power_volumes.pi_volume_shareable,
           attachments: craig.power_volumes.attachments,
+        },
+        {
+          count: craig.power_volumes.count,
         },
       ],
     },

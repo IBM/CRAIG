@@ -66,6 +66,71 @@ describe("power api", () => {
           );
         });
     });
+    it("should respond with an error when unable to find workspace", () => {
+      let usSouthImages = powerImageJson["us-south"];
+      let { axios } = initMockAxios(
+        {
+          resources: [],
+          images: usSouthImages,
+        },
+        false
+      );
+      let testPowerController = new controller(axios);
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { region: "us-south", component: "images" },
+            query: {
+              name: "egg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith(
+              "Error: no power workspace found with name: egg"
+            ),
+            "it should send"
+          );
+        });
+    });
+    it("should respond with a list of images when using req", () => {
+      let usSouthImages = powerImageJson["us-south"];
+      let { axios } = initMockAxios(
+        {
+          resources: [
+            {
+              guid: "1234",
+              crn: "fooCrn",
+              id: "power-iaas",
+            },
+            {
+              id: "no",
+            },
+          ],
+          images: usSouthImages,
+        },
+        false
+      );
+      let testPowerController = new controller(axios);
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { region: "us-south", component: "images" },
+            query: {
+              name: "egg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isFalse(
+            res.send.calledOnceWith(usSouthImages),
+            "it should be true"
+          );
+        });
+    });
     it("should send storage pools", () => {
       process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
       let { axios } = initMockAxios(

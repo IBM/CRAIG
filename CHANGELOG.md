@@ -11,9 +11,16 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users can now provision Power VS resources in PER regions in Madrid and Sao Paolo
+- Users can now use a new field `count` to create multiple Power VS Volumes with the same configuration
+- Users can now create Terraform resources using an existing Power VS Workspace
+- When using an existing Power VS Workspace, users can optionally import existing Subnets and SSH Keys
+- When using an existing Power VS Workspace, images within that workspace will be retrieved using the CRAIG API. This will allow for the retrieval of custom Power VS Images in CRAIG
+- CRAIG Power VS Images API endpoints now have more robust logging
+- Users can now use `PLACEHOLDER` as a placeholder certificate value on the VPN Servers page
 
 ### Fixes
 
+- Fixed an issue causing all Power VS images to be imported into a workspace
 
 ## 1.8.0
 

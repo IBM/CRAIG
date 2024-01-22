@@ -53,6 +53,464 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
         "it should return correct instance data"
       );
     });
+    it("should correctly return power vs instance data when workspace is from data", () => {
+      let actualData = formatPowerVsInstance(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          image: "SLES15-SP3-SAP",
+          ssh_key: "keyname",
+          network: [
+            {
+              name: "dev-nw",
+            },
+          ],
+          pi_memory: "4",
+          pi_processors: "2",
+          pi_proc_type: "shared",
+          pi_sys_type: "s922",
+          pi_pin_policy: "none",
+          pi_health_status: "WARNING",
+          pi_storage_type: "tier1",
+          pi_user_data: "",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [
+            {
+              name: "example",
+              resource_group: "example",
+              zone: "dal10",
+              use_data: true,
+              ssh_keys: [
+                {
+                  workspace: "example",
+                  name: "keyname",
+                  zone: "dal10",
+                },
+              ],
+              network: [
+                {
+                  workspace: "example",
+                  name: "dev-nw",
+                  pi_cidr: "1.2.3.4/5",
+                  pi_dns: ["127.0.0.1"],
+                  pi_network_type: "vlan",
+                  pi_network_jumbo: true,
+                  zone: "dal10",
+                },
+              ],
+              cloud_connections: [
+                {
+                  name: "dev-connection",
+                  workspace: "example",
+                  pi_cloud_connection_speed: 50,
+                  pi_cloud_connection_global_routing: false,
+                  pi_cloud_connection_metered: false,
+                  pi_cloud_connection_transit_enabled: true,
+                  transit_gateways: ["tgw", "tgw2"],
+                  zone: "dal10",
+                },
+              ],
+              images: [
+                {
+                  workspace: "example",
+                  pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+                  name: "SLES15-SP3-SAP",
+                  zone: "dal10",
+                },
+              ],
+              attachments: [
+                {
+                  connections: ["dev-connection"],
+                  workspace: "example",
+                  network: "dev-nw",
+                  zone: "dal10",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_instance" "example_workspace_instance_test" {
+  provider             = ibm.power_vs_dal12
+  pi_image_id          = ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
+  pi_key_pair_name     = ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
+  pi_cloud_instance_id = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_instance_name     = "\${var.prefix}-test"
+  pi_memory            = "4"
+  pi_processors        = "2"
+  pi_proc_type         = "shared"
+  pi_sys_type          = "s922"
+  pi_pin_policy        = "none"
+  pi_health_status     = "WARNING"
+  pi_storage_type      = "tier1"
+  pi_network {
+    network_id = ibm_pi_network.power_network_example_dev_nw.network_id
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should correctly return power vs instance data when workspace and ssh key are from data", () => {
+      let actualData = formatPowerVsInstance(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          image: "SLES15-SP3-SAP",
+          ssh_key: "keyname",
+          network: [
+            {
+              name: "dev-nw",
+            },
+          ],
+          pi_memory: "4",
+          pi_processors: "2",
+          pi_proc_type: "shared",
+          pi_sys_type: "s922",
+          pi_pin_policy: "none",
+          pi_health_status: "WARNING",
+          pi_storage_type: "tier1",
+          pi_user_data: "",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [
+            {
+              name: "example",
+              resource_group: "example",
+              zone: "dal10",
+              use_data: true,
+              ssh_keys: [
+                {
+                  workspace: "example",
+                  name: "keyname",
+                  zone: "dal10",
+                  use_data: true,
+                },
+              ],
+              network: [
+                {
+                  workspace: "example",
+                  name: "dev-nw",
+                  pi_cidr: "1.2.3.4/5",
+                  pi_dns: ["127.0.0.1"],
+                  pi_network_type: "vlan",
+                  pi_network_jumbo: true,
+                  zone: "dal10",
+                },
+              ],
+              cloud_connections: [
+                {
+                  name: "dev-connection",
+                  workspace: "example",
+                  pi_cloud_connection_speed: 50,
+                  pi_cloud_connection_global_routing: false,
+                  pi_cloud_connection_metered: false,
+                  pi_cloud_connection_transit_enabled: true,
+                  transit_gateways: ["tgw", "tgw2"],
+                  zone: "dal10",
+                },
+              ],
+              images: [
+                {
+                  workspace: "example",
+                  pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+                  name: "SLES15-SP3-SAP",
+                  zone: "dal10",
+                },
+              ],
+              attachments: [
+                {
+                  connections: ["dev-connection"],
+                  workspace: "example",
+                  network: "dev-nw",
+                  zone: "dal10",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_instance" "example_workspace_instance_test" {
+  provider             = ibm.power_vs_dal12
+  pi_image_id          = ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
+  pi_key_pair_name     = data.ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
+  pi_cloud_instance_id = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_instance_name     = "\${var.prefix}-test"
+  pi_memory            = "4"
+  pi_processors        = "2"
+  pi_proc_type         = "shared"
+  pi_sys_type          = "s922"
+  pi_pin_policy        = "none"
+  pi_health_status     = "WARNING"
+  pi_storage_type      = "tier1"
+  pi_network {
+    network_id = ibm_pi_network.power_network_example_dev_nw.network_id
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should correctly return power vs instance data when workspace, ssh key, and network are from data", () => {
+      let actualData = formatPowerVsInstance(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          image: "SLES15-SP3-SAP",
+          ssh_key: "keyname",
+          network: [
+            {
+              name: "dev-nw",
+            },
+          ],
+          pi_memory: "4",
+          pi_processors: "2",
+          pi_proc_type: "shared",
+          pi_sys_type: "s922",
+          pi_pin_policy: "none",
+          pi_health_status: "WARNING",
+          pi_storage_type: "tier1",
+          pi_user_data: "",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [
+            {
+              name: "example",
+              resource_group: "example",
+              zone: "dal10",
+              use_data: true,
+              ssh_keys: [
+                {
+                  workspace: "example",
+                  name: "keyname",
+                  zone: "dal10",
+                  use_data: true,
+                },
+              ],
+              network: [
+                {
+                  workspace: "example",
+                  name: "dev-nw",
+                  pi_cidr: "1.2.3.4/5",
+                  pi_dns: ["127.0.0.1"],
+                  pi_network_type: "vlan",
+                  pi_network_jumbo: true,
+                  zone: "dal10",
+                  use_data: true,
+                },
+              ],
+              cloud_connections: [
+                {
+                  name: "dev-connection",
+                  workspace: "example",
+                  pi_cloud_connection_speed: 50,
+                  pi_cloud_connection_global_routing: false,
+                  pi_cloud_connection_metered: false,
+                  pi_cloud_connection_transit_enabled: true,
+                  transit_gateways: ["tgw", "tgw2"],
+                  zone: "dal10",
+                },
+              ],
+              images: [
+                {
+                  workspace: "example",
+                  pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+                  name: "SLES15-SP3-SAP",
+                  zone: "dal10",
+                },
+              ],
+              attachments: [
+                {
+                  connections: ["dev-connection"],
+                  workspace: "example",
+                  network: "dev-nw",
+                  zone: "dal10",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_instance" "example_workspace_instance_test" {
+  provider             = ibm.power_vs_dal12
+  pi_image_id          = ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
+  pi_key_pair_name     = data.ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
+  pi_cloud_instance_id = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_instance_name     = "\${var.prefix}-test"
+  pi_memory            = "4"
+  pi_processors        = "2"
+  pi_proc_type         = "shared"
+  pi_sys_type          = "s922"
+  pi_pin_policy        = "none"
+  pi_health_status     = "WARNING"
+  pi_storage_type      = "tier1"
+  pi_network {
+    network_id = data.ibm_pi_network.power_network_example_dev_nw.network_id
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should correctly return power vs instance data when workspace, ssh key, network, and image are from data", () => {
+      let actualData = formatPowerVsInstance(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          image: "SLES15-SP3-SAP",
+          ssh_key: "keyname",
+          network: [
+            {
+              name: "dev-nw",
+            },
+          ],
+          pi_memory: "4",
+          pi_processors: "2",
+          pi_proc_type: "shared",
+          pi_sys_type: "s922",
+          pi_pin_policy: "none",
+          pi_health_status: "WARNING",
+          pi_storage_type: "tier1",
+          pi_user_data: "",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [
+            {
+              name: "example",
+              resource_group: "example",
+              zone: "dal10",
+              use_data: true,
+              ssh_keys: [
+                {
+                  workspace: "example",
+                  name: "keyname",
+                  zone: "dal10",
+                  use_data: true,
+                },
+              ],
+              network: [
+                {
+                  workspace: "example",
+                  name: "dev-nw",
+                  pi_cidr: "1.2.3.4/5",
+                  pi_dns: ["127.0.0.1"],
+                  pi_network_type: "vlan",
+                  pi_network_jumbo: true,
+                  zone: "dal10",
+                  use_data: true,
+                },
+              ],
+              cloud_connections: [
+                {
+                  name: "dev-connection",
+                  workspace: "example",
+                  pi_cloud_connection_speed: 50,
+                  pi_cloud_connection_global_routing: false,
+                  pi_cloud_connection_metered: false,
+                  pi_cloud_connection_transit_enabled: true,
+                  transit_gateways: ["tgw", "tgw2"],
+                  zone: "dal10",
+                },
+              ],
+              images: [
+                {
+                  workspace: "example",
+                  pi_image_id: "e4de6683-2a42-4993-b702-c8613f132d39",
+                  name: "SLES15-SP3-SAP",
+                  zone: "dal10",
+                  use_data: true,
+                },
+              ],
+              attachments: [
+                {
+                  connections: ["dev-connection"],
+                  workspace: "example",
+                  network: "dev-nw",
+                  zone: "dal10",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_instance" "example_workspace_instance_test" {
+  provider             = ibm.power_vs_dal12
+  pi_image_id          = data.ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
+  pi_key_pair_name     = data.ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
+  pi_cloud_instance_id = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_instance_name     = "\${var.prefix}-test"
+  pi_memory            = "4"
+  pi_processors        = "2"
+  pi_proc_type         = "shared"
+  pi_sys_type          = "s922"
+  pi_pin_policy        = "none"
+  pi_health_status     = "WARNING"
+  pi_storage_type      = "tier1"
+  pi_network {
+    network_id = data.ibm_pi_network.power_network_example_dev_nw.network_id
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
     it("should correctly return power vs instance data with userdata", () => {
       let actualData = formatPowerVsInstance({
         zone: "dal12",
@@ -147,7 +605,6 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
         "it should return correct instance data"
       );
     });
-
     it("should correctly return power vs instance data with BYO IP", () => {
       let actualData = formatPowerVsInstance({
         zone: "dal12",

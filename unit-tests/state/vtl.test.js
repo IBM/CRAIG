@@ -1130,6 +1130,7 @@ describe("vtl", () => {
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
+        imageNames: ["7100-05-09"],
       });
       state.power.ssh_keys.create(
         { name: "test-key" },
@@ -1265,6 +1266,7 @@ describe("vtl", () => {
           ],
           zone: "dal12",
           network: [],
+          imageNames: ["VTL"],
         });
 
         assert.deepEqual(

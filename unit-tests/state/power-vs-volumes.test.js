@@ -268,6 +268,24 @@ describe("power_volumes", () => {
         "it should return correct data"
       );
     });
+    it("should not have count as invalid when null or empty string", () => {
+      assert.isFalse(
+        craig.power_volumes.count.invalid({}),
+        "it should be valid"
+      );
+    });
+    it("should have invalid count if less than 1", () => {
+      assert.isTrue(
+        craig.power_volumes.count.invalid({ count: "-12" }),
+        "it should be invalid"
+      );
+    });
+    it("should have invalid count if greater than 1 and not whole number", () => {
+      assert.isTrue(
+        craig.power_volumes.count.invalid({ count: "1.2" }),
+        "it should be invalid"
+      );
+    });
     it("should disable workspace select when sap", () => {
       assert.isTrue(
         craig.power_volumes.workspace.disabled({}, { data: { sap: true } }),

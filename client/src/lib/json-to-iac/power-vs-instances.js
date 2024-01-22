@@ -1,30 +1,63 @@
 const { powerVsWorkspaceRef } = require("./power-vs");
 const { jsonToTfPrint, tfBlock } = require("./utils");
-const { snakeCase, isNullOrEmptyString, transpose } = require("lazy-z");
+const {
+  snakeCase,
+  isNullOrEmptyString,
+  transpose,
+  getObjectFromArray,
+  revision,
+} = require("lazy-z");
 
 /**
  * get power vs instance data
  * @param {*} instance
+ * @param {*} config
  * @returns {object} data object
  */
-function powerVsInstanceData(instance) {
+function powerVsInstanceData(instance, config) {
+  let piKeyPairUseData = !config?.power
+    ? ""
+    : new revision(config)
+        .child("power", instance.workspace)
+        .child("ssh_keys", instance.ssh_key).data.use_data
+    ? "data."
+    : "";
+  let imageUseData = !config?.power
+    ? ""
+    : new revision(config)
+        .child("power", instance.workspace)
+        .child("images", instance.image).data.use_data
+    ? "data."
+    : "";
   let data = {
     provider: `\${ibm.power_vs${snakeCase("_" + instance.zone)}}`,
-    pi_image_id: `\${ibm_pi_image.power_image_${snakeCase(
+    pi_image_id: `\${${imageUseData}ibm_pi_image.power_image_${snakeCase(
       instance.workspace
     )}_${snakeCase(instance.image)}.image_id}`,
-    pi_key_pair_name: `\${ibm_pi_key.power_vs_ssh_key_${snakeCase(
+    pi_key_pair_name: `\${${piKeyPairUseData}ibm_pi_key.power_vs_ssh_key_${snakeCase(
       instance.ssh_key
     )}.pi_key_name}`,
-    pi_cloud_instance_id: powerVsWorkspaceRef(instance.workspace),
+    pi_cloud_instance_id: powerVsWorkspaceRef(
+      instance.workspace,
+      config?.power
+        ? getObjectFromArray(config.power, "name", instance.workspace).use_data
+        : false
+    ),
     pi_instance_name: "${var.prefix}-" + instance.name,
   };
   transpose(instance, data);
   // add pi network here to have the items at the bottom of the terraform code
   data.pi_network = [];
   instance.network.forEach((nw) => {
+    let networkUseData = !config?.power
+      ? ""
+      : new revision(config)
+          .child("power", instance.workspace)
+          .child("network", nw.name).data.use_data
+      ? "data."
+      : "";
     let nwData = {
-      network_id: `\${ibm_pi_network.power_network_${snakeCase(
+      network_id: `\${${networkUseData}ibm_pi_network.power_network_${snakeCase(
         instance.workspace
       )}_${snakeCase(nw.name)}.network_id}`,
     };
@@ -113,12 +146,12 @@ function powerVsInstanceData(instance) {
  * @param {*} instance
  * @returns {string} terraform formatted json
  */
-function formatPowerVsInstance(instance) {
+function formatPowerVsInstance(instance, config) {
   return jsonToTfPrint(
     "resource",
     "ibm_pi_instance",
     `${instance.workspace}_workspace_instance_${instance.name}`,
-    powerVsInstanceData(instance)
+    powerVsInstanceData(instance, config)
   );
 }
 
@@ -127,8 +160,8 @@ function formatPowerVsInstance(instance) {
  * @param {*} instance
  * @returns {string} terraform formatted json
  */
-function formatFalconStorInstance(instance) {
-  let data = powerVsInstanceData(instance);
+function formatFalconStorInstance(instance, config) {
+  let data = powerVsInstanceData(instance, config);
   return jsonToTfPrint(
     "resource",
     "ibm_pi_instance",
@@ -151,14 +184,14 @@ function powerInstanceTf(config) {
     tf +=
       tfBlock(
         `${instance.name} Power Instance`,
-        formatPowerVsInstance(instance)
+        formatPowerVsInstance(instance, config)
       ) + "\n";
   });
   (config.vtl || []).forEach((instance) => {
     tf +=
       tfBlock(
         `${instance.name} FalconStor VTL`,
-        formatFalconStorInstance(instance)
+        formatFalconStorInstance(instance, config)
       ).replace("Falcon Stor", "FalconStor") + "\n";
   });
   return tf ? tf.replace(/\n+$/g, "\n") : tf;

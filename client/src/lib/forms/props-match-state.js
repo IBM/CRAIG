@@ -82,6 +82,7 @@ function propsMatchState(field, stateData, componentProps) {
   }
   if (field === "power") {
     if (
+      stateData.use_data === componentProps.data.use_data &&
       stateData.name === componentProps.data.name &&
       stateData.resource_group === componentProps.data.resource_group &&
       stateData.zone === componentProps.data.zone &&

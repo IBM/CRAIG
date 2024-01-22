@@ -273,7 +273,9 @@ module.exports = {
             .oneOrMore();
         })
         .or()
-        .literal("CHEATER");
+        .literal("CHEATER")
+        .or()
+        .literal("PLACEHOLDER");
     })
     .stringEnd()
     .done("s"),
@@ -752,8 +754,8 @@ module.exports = {
       "Tier3-Flash-2",
       "Tier3-Flash-1",
     ],
-    "mad02": [],
-    "mad04": [],
+    mad02: [],
+    mad04: [],
     sao01: [],
     sao04: [],
     lon04: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],

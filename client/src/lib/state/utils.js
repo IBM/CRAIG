@@ -380,7 +380,7 @@ function saveAdvancedSubnetTier(
  */
 function fieldIsNullOrEmptyString(fieldName, lazy) {
   return function (stateData) {
-    return stateData.use_data
+    return stateData.use_data && !lazy
       ? false
       : isNullOrEmptyString(stateData[fieldName], lazy);
   };
@@ -679,12 +679,18 @@ function sshKeySchema(fieldName) {
       },
     },
   };
-  if (fieldName === "ssh_keys") {
-    schema.resource_group = resourceGroupsField();
+  if (fieldName === "ssh_keys" || fieldName === "power_vs_ssh_keys") {
+    if (fieldName === "ssh_keys") schema.resource_group = resourceGroupsField();
     schema.use_data = {
       type: "toggle",
       labelText: "Use Existing SSH Key",
       default: false,
+      hideWhen: function (stateData) {
+        return (
+          fieldName === "power_vs_ssh_keys" &&
+          stateData.workspace_use_data !== true
+        );
+      },
     };
   }
   return schema;
@@ -793,8 +799,10 @@ function fieldIsNullOrEmptyStringEnabled(field) {
  */
 function fieldIsNotWholeNumber(field, min, max) {
   return function (stateData) {
-    return !isNullOrEmptyString(stateData[field])
-      ? !isInRange(parseInt(stateData[field]), min, max)
+    return Number(stateData[field]) % 1 !== 0
+      ? true
+      : !isNullOrEmptyString(stateData[field])
+      ? !isInRange(Number(stateData[field]), min, max)
       : true;
   };
 }

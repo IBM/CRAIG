@@ -14,7 +14,7 @@ export const PowerMap = (props) => {
       powerSubFormClassName += " diagramBoxSelected";
     }
     if (props.big) powerSubFormClassName += " powerSubFormBig";
-    if (isNullOrEmptyString(power.resource_group, true)) {
+    if (isNullOrEmptyString(power.resource_group, true) && !power.use_data) {
       isRed = true;
     }
     return (
@@ -23,7 +23,16 @@ export const PowerMap = (props) => {
           name={power.name}
           icon={<IbmPowerVs className="diagramTitleIcon" />}
           type="subHeading"
-          addText={<p className="marginLeftHalfRem">[{power.zone}]</p>}
+          addText={
+            <>
+              <p className="marginLeftHalfRem">[{power.zone}]</p>
+              {power.use_data ? (
+                <p className="marginLeftHalfRem">[Imported]</p>
+              ) : (
+                ""
+              )}
+            </>
+          }
           onClick={props.onClick ? () => props.onClick(powerIndex) : undefined}
           buttons={props.buttons ? props.buttons(powerIndex) : undefined}
           isRed={isRed}
