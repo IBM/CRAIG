@@ -60,6 +60,8 @@ For instructions on how to install the IBM Cloud CLI, click [here](https://cloud
 
 [Follow this tutorial](https://ibm.box.com/v/craigTutorialVideo) for step-by-step instructions on how to get started with CRAIG.
 
+***Ensure `Quality: 1080p` is selected within Box video player settings for the best viewing experience.***
+
 ---
 
 ### Running CRAIG Application Locally
