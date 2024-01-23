@@ -173,7 +173,22 @@ docker run -it craig
 
 ### Deploying to IBM Code Engine
 
-Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. The user running this command must have sufficient permissions to provision a Code Engine project, application, image build, and secrets. In addition, this API key must be able to create a IBM Container Registry namespace. See below for a simple use case using the default parameters.
+Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. 
+
+Users should make sure they have the following access policy roles for the IBM Code Engine service set within their IBM Cloud Account:
+
+- IBM Cloud Platform Roles: Editor or Higher
+- Code Engine Service Roles: Writer or Higher
+
+Users should also make sure they have the following access policy roles for the IBM Cloud Container Registry service set within their IBM Cloud Account:
+
+- Container Registry Service: Manager
+
+These permissions are the minimum requirements needed in order to provision a Code Engine project, Container Registry namespace, application, image build, and secrets using the `deploy.sh` script. 
+
+Refer to the [User Permissions for Code Engine documentation](https://cloud.ibm.com/docs/codeengine?topic=codeengine-iam)  and [User Permissions for IBM Cloud Container Registry documentation](https://cloud.ibm.com/docs/Registry?topic=Registry-iam&interface=ui) for more information.
+
+In addition, an API key must be provided in order to create an IBM Container Registry namespace. See below for a simple use case using the default parameters.
 
 #### Prerequisites for running deploy.sh from IBM Cloud Shell (recommended)
 >* An API key must be provided that will be used for CRAIG's integration with IBM Cloud Schematics and Power Virtual Server Workspaces. This API key will also be used for IBM Code Engine's access to the IBM Container Registry. See later sections in this document about Schematics and Power Virtual Server integrations for more information.
