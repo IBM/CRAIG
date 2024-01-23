@@ -41,6 +41,7 @@ import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
 import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
+import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 
 const serviceFormMap = {
   resource_groups: {
@@ -506,7 +507,11 @@ class CloudServicesPage extends React.Component {
                   }
                 />
                 {serviceResourceGroups.map((rg) => (
-                  <div className="subForm marginBottomSmall" key={rg}>
+                  <HoverClassNameWrapper
+                    className="subForm marginBottomSmall"
+                    hoverClassName="diagramBoxSelected"
+                    key={rg}
+                  >
                     <CraigFormHeading
                       icon={<GroupResource className="diagramTitleIcon" />}
                       noMarginBottom={serviceMap[rg].length === 0}
@@ -557,21 +562,26 @@ class CloudServicesPage extends React.Component {
                             if (a.name > b.name && a.type === b.type) return 1;
                           })
                           .map((service) => (
-                            <ManageService
+                            <HoverClassNameWrapper
+                              hoverClassName="diagramBoxSelected"
                               key={JSON.stringify(service)}
-                              resourceGroup={rg}
-                              service={service}
-                              icon={serviceFormMap[service.type].icon}
-                              onClick={this.onServiceIconClick}
-                              isSelected={
-                                this.state.service === service.type &&
-                                this.state.serviceName === service.name
-                              }
-                            />
+                            >
+                              <ManageService
+                                key={JSON.stringify(service)}
+                                resourceGroup={rg}
+                                service={service}
+                                icon={serviceFormMap[service.type].icon}
+                                onClick={this.onServiceIconClick}
+                                isSelected={
+                                  this.state.service === service.type &&
+                                  this.state.serviceName === service.name
+                                }
+                              />
+                            </HoverClassNameWrapper>
                           ))}
                       </CraigFormGroup>
                     )}
-                  </div>
+                  </HoverClassNameWrapper>
                 ))}
               </div>
               <div className="marginTop1Rem">

@@ -34,9 +34,10 @@ const {
 const {
   invalidName,
   invalidDescription,
-  invalidDnsZoneName,
 } = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
+const { hasDuplicateName } = require("../forms");
+const { dnsZoneNameExp } = require("../constants");
 
 function dnsInit(config) {
   config.store.json.dns = [];
@@ -312,7 +313,14 @@ function initDnsStore(store) {
               });
               return contains(allZoneNames, stateData.name)
                 ? true
-                : invalidDnsZoneName(stateData, componentProps);
+                : hasDuplicateName(
+                    "zones",
+                    stateData,
+                    componentProps,
+                    "name"
+                  ) || stateData.name
+                ? stateData.name.match(dnsZoneNameExp) === null
+                : true;
             },
             invalidText: invalidNameText("zones"),
           },

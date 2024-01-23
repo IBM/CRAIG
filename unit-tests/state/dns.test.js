@@ -425,6 +425,68 @@ describe("dns", () => {
         );
       });
     });
+    describe("dns.zones.schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = new newState();
+        craig.dns.create({
+          name: "dev",
+          resource_group: "service-rg",
+          plan: "stanard",
+        });
+      });
+      it("should return if string is not valid", () => {
+        assert.isTrue(
+          craig.dns.zones.name.invalid(
+            { name: null },
+            {
+              data: { name: "" },
+              craig: {
+                store: {
+                  json: {
+                    dns: [{ name: "hi", zones: [{ name: "hi" }] }],
+                  },
+                },
+              },
+            }
+          )
+        );
+      });
+      it("should allow periods within the name", () => {
+        assert.isFalse(
+          craig.dns.zones.name.invalid(
+            { name: "example.com" },
+            {
+              data: { name: "" },
+              craig: {
+                store: {
+                  json: {
+                    dns: [{ name: "hi", zones: [{ name: "hi" }] }],
+                  },
+                },
+              },
+            }
+          )
+        );
+      });
+      it("should not allow periods at the end of the name", () => {
+        assert.isTrue(
+          craig.dns.zones.name.invalid(
+            { name: "example.com." },
+            {
+              data: { name: "" },
+              craig: {
+                store: {
+                  json: {
+                    dns: [{ name: "hi", zones: [{ name: "hi" }] }],
+                  },
+                },
+              },
+            }
+          )
+        );
+      });
+    });
   });
   describe("dns.custom_resolvers", () => {
     let state;

@@ -24,6 +24,7 @@ import { ClassicMap } from "./ClassicMap";
 import { ClassicSubnets } from "./ClassicSubnets";
 import { ClassicGateways } from "./ClassicGateways";
 import { RoutingTables } from "./RoutingTables";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export class Overview extends React.Component {
   constructor(props) {
@@ -69,18 +70,31 @@ export class Overview extends React.Component {
             ""
           ) : (
             <div id="vpc-ssh-keys" className="marginBottomNone">
-              <SshKeys craig={craig} width="575px" />
+              <SshKeys craig={craig} width="575px" static />
             </div>
           )}
           <div id="vpcs" className="displayFlex">
             <VpcMap craig={craig} static small={this.props.small}>
-              {this.props.small ? <></> : <RoutingTables craig={craig} />}
-              {this.props.small ? <></> : <SecurityGroups craig={craig} />}
+              {this.props.small ? (
+                <></>
+              ) : (
+                <RoutingTables craig={craig} static />
+              )}
+              {this.props.small ? (
+                <></>
+              ) : (
+                <SecurityGroups craig={craig} static />
+              )}
               <AclMap static small={this.props.small}>
                 <SubnetTierMap
+                  static
                   craig={craig}
                   renderChildren={
-                    <SubnetServiceMap craig={craig} small={this.props.small} />
+                    <SubnetServiceMap
+                      static
+                      craig={craig}
+                      small={this.props.small}
+                    />
                   }
                   small={this.props.small}
                 />
@@ -98,7 +112,7 @@ export class Overview extends React.Component {
               noMarginBottom
               icon={<IbmPowerVsPrivateCloud className="diagramTitleIcon" />}
             />
-            <PowerMap craig={craig} big>
+            <PowerMap craig={craig} big static>
               <PassThroughWrapper className="displayFlex">
                 <PassThroughWrapper className="powerMapPassthrough marginRight1Rem">
                   <PowerSubnets static craig={craig} />
@@ -119,9 +133,9 @@ export class Overview extends React.Component {
               icon={<InfrastructureClassic className="diagramTitleIcon" />}
             />
             <div className="displayFlex">
-              <ClassicMap craig={craig}>
-                <ClassicSubnets craig={craig}>
-                  <ClassicGateways craig={craig} />
+              <ClassicMap craig={craig} static>
+                <ClassicSubnets craig={craig} static>
+                  <ClassicGateways craig={craig} static />
                 </ClassicSubnets>
               </ClassicMap>
             </div>
@@ -140,7 +154,7 @@ export class Overview extends React.Component {
               icon={<IbmCloudTransitGateway className="diagramTitleIcon" />}
             />
             <div className="displayFlex">
-              <TransitGatewaysMap craig={craig} />
+              <TransitGatewaysMap craig={craig} static />
             </div>
           </div>
         )}
@@ -173,4 +187,12 @@ export const PassThroughWrapper = (props) => {
 
 PassThroughWrapper.propTypes = {
   className: PropTypes.string,
+};
+
+export const PassThroughHoverWrapper = (props) => {
+  return (
+    <HoverClassNameWrapper hoverClassName={props.hoverClassName}>
+      <PassThroughWrapper {...props}>{props.children}</PassThroughWrapper>
+    </HoverClassNameWrapper>
+  );
 };

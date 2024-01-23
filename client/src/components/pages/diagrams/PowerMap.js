@@ -4,6 +4,7 @@ import { IbmPowerVs } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import { isNullOrEmptyString } from "lazy-z";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const PowerMap = (props) => {
   let craig = props.craig;
@@ -18,7 +19,12 @@ export const PowerMap = (props) => {
       isRed = true;
     }
     return (
-      <div className={powerSubFormClassName} key={power.name + powerIndex}>
+      <HoverClassNameWrapper
+        className={powerSubFormClassName}
+        key={power.name + powerIndex}
+        static={props.static}
+        hoverClassName="diagramBoxSelected"
+      >
         <CraigFormHeading
           name={power.name}
           icon={<IbmPowerVs className="diagramTitleIcon" />}
@@ -45,7 +51,7 @@ export const PowerMap = (props) => {
             powerIndex: powerIndex,
           })
         )}
-      </div>
+      </HoverClassNameWrapper>
     );
   });
 };

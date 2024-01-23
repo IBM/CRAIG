@@ -9,8 +9,6 @@ const {
   invalidSecurityGroupRuleText,
   clusterHelperTestCallback,
   invalidCidrText,
-  invalidCbrRuleText,
-  invalidCbrZoneText,
   invalidProjectNameText,
   invalidCrnText,
   powerVsWorkspaceHelperText,
@@ -20,7 +18,6 @@ const {
   invalidName,
   invalidSshPublicKey,
   validSshKey,
-  invalidIamAccountSettings,
   invalidTagList,
   invalidCrnList,
   invalidSubnetTierName,
@@ -36,7 +33,6 @@ const {
   invalidProjectDescription,
   invalidCbrRule,
   invalidCbrZone,
-  invalidDnsZoneName,
   invalidCrns,
 } = require("./invalid-callbacks");
 const { propsMatchState } = require("./props-match-state");
@@ -56,14 +52,12 @@ const {
 } = require("./format-json");
 const { leftNavItemClassName } = require("./class-names");
 const { notificationText, getCosFromBucket } = require("./utils");
-const { encryptionKeyFilter } = require("./filters");
 const { storageChangeDisabledCallback } = require("./power-affinity");
 const wizard = require("./wizard");
 
 module.exports = {
   wizard,
   storageChangeDisabledCallback,
-  encryptionKeyFilter,
   leftNavItemClassName,
   notificationText,
   hasDuplicateName,
@@ -85,7 +79,6 @@ module.exports = {
   getSubnetTierStateData,
   getTierSubnets,
   iamAccountSettingInvalidText,
-  invalidIamAccountSettings,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   invalidNewResourceName,
@@ -105,12 +98,9 @@ module.exports = {
   invalidProjectName,
   invalidProjectDescription,
   invalidCbrRule,
-  invalidCbrRuleText,
   invalidCbrZone,
-  invalidCbrZoneText,
   invalidCidrBlock,
   invalidProjectNameText,
-  invalidDnsZoneName,
   getCosFromBucket,
   invalidCrns,
   invalidCrnText,

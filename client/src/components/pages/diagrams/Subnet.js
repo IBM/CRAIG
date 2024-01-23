@@ -5,7 +5,6 @@ import "./diagrams.css";
 
 export const Subnet = (props) => {
   let subnetClassName = props.small ? "subnetBoxSmall" : "subnetBox";
-  if (props.grayNames) subnetClassName += " grayText";
   return (
     <div
       className={subnetClassName}
@@ -14,12 +13,19 @@ export const Subnet = (props) => {
       {props.small ? (
         ""
       ) : (
-        <div className="displayFlex marginBottomThreeQuarterRem">
+        <div
+          className={
+            "displayFlex marginBottomThreeQuarterRem" +
+            (props.grayNames ? " grayText" : "")
+          }
+        >
           <IbmCloudSubnets className="marginRightQuarterRem" />
           <span className="bold">{props.subnet.name}</span>
         </div>
       )}
-      <div>{props.subnet.cidr}</div>
+      <div className={props.grayNames ? " grayText" : ""}>
+        {props.subnet.cidr}
+      </div>
       <div className="textAlignCenter">
         {React.Children.map(props.children, (child) =>
           // clone react child

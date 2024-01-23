@@ -141,7 +141,7 @@ class VpcConnectivityPage extends React.Component {
                     }}
                   />
                 </div>
-                <div id="right-connectivity" className="width580">
+                <div id="right-connectivity" className="">
                   {this.state.editing === false ? (
                     ""
                   ) : (

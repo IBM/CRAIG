@@ -24,7 +24,6 @@ import {
   contains,
   isNullOrEmptyString,
   snakeCase,
-  splatContains,
   titleCase,
 } from "lazy-z";
 import { IcseSelect, RenderForm } from "icse-react-assets";
@@ -45,6 +44,8 @@ import { NoVpcVsiTile } from "../../forms/dynamic-form/tiles";
 import { RoutingTables } from "../diagrams/RoutingTables";
 import { F5BigIp } from "../FormPages";
 import f5 from "../../../images/f5.png";
+import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
+import { PassThroughHoverWrapper } from "../diagrams/Overview";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -410,13 +411,15 @@ class VpcDeploymentsDiagramPage extends React.Component {
                 </div>
                 <div className="displayFlex">
                   <div id="left-vpc-deployments">
-                    <div
+                    <HoverClassNameWrapper
                       key={
                         String(this.state.vpcIndex) +
                         String(this.state.editing) +
                         String(this.state.selectedItem) +
                         "new-ssh-keys"
                       }
+                      hoverClassName="diagramBoxSelected"
+                      className="width580"
                     >
                       <SshKeys
                         craig={craig}
@@ -431,16 +434,14 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           );
                         }}
                       />
-                    </div>
+                    </HoverClassNameWrapper>
                     <VpcMap
                       craig={craig}
-                      static
                       isSelected={(vpcIndex) => {
                         return vpcIndex === this.state.vpcIndex;
                       }}
                     >
                       <RoutingTables
-                        width="548px"
                         craig={craig}
                         isSelected={(props) => {
                           return (
@@ -458,7 +459,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
                         }}
                       />
                       <SecurityGroups
-                        width="548px"
                         craig={craig}
                         isSelected={(props) => {
                           return (
@@ -475,7 +475,10 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           );
                         }}
                       />
-                      <PassThroughWrapper className="formInSubForm">
+                      <PassThroughHoverWrapper
+                        className="formInSubForm"
+                        hoverClassName="diagramBoxSelected"
+                      >
                         <CraigFormHeading
                           icon={
                             <NetworkEnterprise className="diagramTitleIcon" />
@@ -498,10 +501,13 @@ class VpcDeploymentsDiagramPage extends React.Component {
                             />
                           }
                         />
-                      </PassThroughWrapper>
+                      </PassThroughHoverWrapper>
                     </VpcMap>
                   </div>
-                  <div id="right-vpc-deployments">
+                  <div
+                    id="right-vpc-deployments"
+                    style={{ marginLeft: "1rem" }}
+                  >
                     {this.state.editing &&
                     this.state.selectedItem === "f5_vsi" ? (
                       <div className="rightForm marginTop1Rem">

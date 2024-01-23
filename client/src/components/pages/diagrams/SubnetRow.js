@@ -4,6 +4,7 @@ import { splatContains } from "lazy-z";
 import { Subnet } from "./Subnet";
 import PropTypes from "prop-types";
 import "./diagrams.css";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const SubnetRow = (props) => {
   let tierSubnets = getTierSubnets(props.tier, props.vpc)(props.tier);
@@ -18,7 +19,7 @@ export const SubnetRow = (props) => {
   });
 
   let subnetRowClassName = "displayFlex subnetRowBox";
-  if (!props.grayNames) subnetRowClassName += " clicky";
+  if (!props.grayNames && !props.static) subnetRowClassName += " clicky";
   if (props.tierIndex === 0) subnetRowClassName += " marginTopHalfRem";
   if (
     props.isSelected &&
@@ -31,9 +32,11 @@ export const SubnetRow = (props) => {
       // prevent advanced tiers from rendering in unfound groups
       (props.acl &&
         splatContains(tierSubnets, "network_acl", props.acl.name))) ? (
-    <div
+    <HoverClassNameWrapper
       key={props.vpc.name + (props.acl ? props.acl.name : "") + props.tier.name}
       className={subnetRowClassName}
+      hoverClassName="diagramBoxSelected"
+      static={props.static}
       onClick={
         props.onClick
           ? () => {
@@ -60,7 +63,7 @@ export const SubnetRow = (props) => {
           </Subnet>
         );
       })}
-    </div>
+    </HoverClassNameWrapper>
   ) : (
     ""
   );

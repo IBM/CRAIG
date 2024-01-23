@@ -4,6 +4,7 @@ import { Connect, EarthFilled, Router, VlanIbm } from "@carbon/icons-react";
 import { arraySplatIndex, titleCase } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const ClassicSubnets = (props) => {
   return props.craig.store.json.classic_vlans
@@ -22,7 +23,8 @@ export const ClassicSubnets = (props) => {
       );
       let isPrivate = vlan.type === "PRIVATE";
       return (
-        <div
+        <HoverClassNameWrapper
+          static={props.static}
           className={
             "powerSubnetBox" +
             (props.isSelected && props.isSelected(vlanIndex)
@@ -30,6 +32,7 @@ export const ClassicSubnets = (props) => {
               : "")
           }
           key={vlan.name + "-" + props.datacenter}
+          hoverClassName="diagramBoxSelected"
         >
           <div
             className={
@@ -63,7 +66,7 @@ export const ClassicSubnets = (props) => {
               vlan: vlan.name,
             })
           )}
-        </div>
+        </HoverClassNameWrapper>
       );
     });
 };

@@ -17,8 +17,6 @@ const {
 const {
   invalidName,
   invalidNameText,
-  invalidEncryptionKeyRing,
-  invalidEncryptionKeyEndpoint,
   invalidNewResourceName,
 } = require("../forms");
 

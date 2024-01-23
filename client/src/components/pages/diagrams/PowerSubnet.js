@@ -1,10 +1,15 @@
 import React from "react";
 import { IbmCloudSubnets } from "@carbon/icons-react";
 import PropTypes from "prop-types";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const PowerSubnet = (props) => {
   return (
-    <div className="powerSubnetBox">
+    <HoverClassNameWrapper
+      className="powerSubnetBox"
+      hoverClassName="diagramBoxSelected"
+      static={props.static}
+    >
       <div
         className={
           "displayFlex marginBottomThreeQuarterRem" +
@@ -24,7 +29,7 @@ export const PowerSubnet = (props) => {
         <div>{props.subnet.pi_cidr}</div>
       </div>
       {props.children}
-    </div>
+    </HoverClassNameWrapper>
   );
 };
 

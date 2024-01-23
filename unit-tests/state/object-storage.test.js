@@ -458,6 +458,57 @@ describe("object_storage", () => {
         );
       });
     });
+    describe("object_storage.buckets.schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+        craig.store.json = {
+          object_storage: [
+            { name: "cosName1", kms: "kms1" },
+            { name: "cosName2", kms: null },
+          ],
+          key_management: [
+            {
+              name: "kms1",
+              keys: [
+                { name: "key1", root_key: true },
+                { name: "key2", root_key: false },
+              ],
+            },
+            {
+              name: "kms2",
+              keys: [{ name: "key3", root_key: false }],
+            },
+          ],
+        };
+      });
+      it("should return an empty array if kms is falsy", () => {
+        const componentProps = {
+          isModal: false,
+          arrayParentName: "cosName2",
+          craig: craig,
+        };
+        const result = craig.object_storage.buckets.kms_key.groups(
+          {},
+          componentProps
+        );
+        assert.deepEqual(result, ["NONE (Insecure)"]);
+      });
+
+      it("should return an array of key names for root keys when kms is selected", () => {
+        const componentProps = {
+          isModal: true,
+          arrayParentName: "cosName1",
+          craig: craig,
+        };
+        const result = craig.object_storage.buckets.kms_key.groups(
+          {},
+          componentProps
+        );
+
+        assert.deepEqual(result, ["key1", "NONE (Insecure)"]);
+      });
+    });
   });
   describe("object_storage.keys", () => {
     describe("object_storage.keys.create", () => {

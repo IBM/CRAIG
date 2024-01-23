@@ -8,7 +8,7 @@
 }
 
 .aclBox {
-  width: 535px;
+  min-width: 535px;
   border: 2px dashed blue;
   margin-top: 0.75rem;
 }
@@ -24,7 +24,7 @@
 }
 
 .deploymentIconBox {
-  color: black;
+  color: inherit;
   text-align: center;
 }
 
@@ -198,7 +198,6 @@
 
 .subnetRowBox {
   border: 2px dotted gray;
-  max-width: 500px;
   margin-top: 0.5rem;
 }
 

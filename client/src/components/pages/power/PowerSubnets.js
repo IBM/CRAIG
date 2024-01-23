@@ -8,6 +8,7 @@ import {
 import { DeploymentIcon, PowerSubnet, PowerSubnetInnerBox } from "../diagrams";
 import { contains, splatContains } from "lazy-z";
 import PropTypes from "prop-types";
+import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 
 export const PowerSubnets = (props) => {
   let craig = props.craig;
@@ -71,6 +72,7 @@ export const PowerSubnets = (props) => {
         );
         return (
           <PowerSubnet
+            static={props.static}
             key={power.name + subnetIndex}
             subnet={subnet}
             onClick={
@@ -84,16 +86,22 @@ export const PowerSubnets = (props) => {
             {subnetInstances.length === 0 ? (
               ""
             ) : (
-              <PowerSubnetInnerBox icon={VirtualMachine} name="Virtual Servers">
+              <PowerSubnetInnerBox
+                icon={VirtualMachine}
+                name="Virtual Servers"
+                static={props.static}
+              >
                 {subnetInstances.map((instance, subnetInstanceIndex) => {
                   return (
-                    <div
+                    <HoverClassNameWrapper
                       key={instance.name + subnet.name}
+                      static={props.static}
                       className="displayFlex"
                       style={{
                         marginLeft:
                           subnetInstanceIndex === 0 ? undefined : "1rem",
                       }}
+                      hoverClassName="diagramIconBoxSelected"
                     >
                       <DeploymentIcon
                         isSelected={props.isSelected}
@@ -108,7 +116,7 @@ export const PowerSubnets = (props) => {
                             : () => props.onPowerInstanceClick(instance.index)
                         }
                       />
-                    </div>
+                    </HoverClassNameWrapper>
                   );
                 })}
               </PowerSubnetInnerBox>
@@ -120,22 +128,28 @@ export const PowerSubnets = (props) => {
                 icon={Voicemail}
                 name="FalconStor VTL"
                 marginTop={subnetInstances.length !== 0}
+                static={props.static}
               >
                 {subnetVtl.map((instance) => (
-                  <DeploymentIcon
-                    key={instance.name + subnet.name}
-                    isSelected={props.isSelected}
-                    index={instance.index}
-                    item={instance}
-                    itemName="vtl"
-                    icon={Voicemail}
-                    craig={craig}
-                    onClick={
-                      props.static
-                        ? undefined
-                        : () => props.onVtlClick(instance.index)
-                    }
-                  />
+                  <HoverClassNameWrapper
+                    static={props.static}
+                    hoverClassName="diagramIconBoxSelected"
+                  >
+                    <DeploymentIcon
+                      key={instance.name + subnet.name}
+                      isSelected={props.isSelected}
+                      index={instance.index}
+                      item={instance}
+                      itemName="vtl"
+                      icon={Voicemail}
+                      craig={craig}
+                      onClick={
+                        props.static
+                          ? undefined
+                          : () => props.onVtlClick(instance.index)
+                      }
+                    />
+                  </HoverClassNameWrapper>
                 ))}
               </PowerSubnetInnerBox>
             )}

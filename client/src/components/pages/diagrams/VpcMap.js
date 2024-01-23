@@ -6,6 +6,7 @@ import "./diagrams.css";
 import { isNullOrEmptyString, splatContains } from "lazy-z";
 import { DeploymentIcon } from "./DeploymentIcon";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const VpcMap = (props) => {
   let craig = props.craig;
@@ -53,11 +54,18 @@ export const VpcMap = (props) => {
           isRed = false;
         }
         return (
-          <div className={vpcBoxClassName} key={vpc.name + vpc.index}>
+          <HoverClassNameWrapper
+            className={vpcBoxClassName}
+            key={vpc.name + vpc.index}
+            hoverClassName="diagramBoxSelected"
+            static={props.static}
+          >
             {props.small ? (
               ""
             ) : (
-              <div className={props.static ? "" : "clicky"}>
+              <div
+                className={props.static || !props.onTitleClick ? "" : "clicky"}
+              >
                 <CraigFormHeading
                   isRed={isRed}
                   icon={<VirtualPrivateCloud className="diagramTitleIcon" />}
@@ -109,7 +117,7 @@ export const VpcMap = (props) => {
                 );
               })}
             </div>
-          </div>
+          </HoverClassNameWrapper>
         );
       })
   );

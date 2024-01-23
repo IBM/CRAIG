@@ -5,17 +5,20 @@ import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import { CraigFormGroup } from "../../forms";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const SecurityGroups = (props) => {
   let craig = props.craig;
   let vpc = props.vpc;
   return (
-    <div
+    <HoverClassNameWrapper
       className={
         "formInSubForm marginBottomSmall" +
         (props.width ? " securityGroupsBoxWidth" : "") +
         (props.vpc.name === null ? " diagramSubFormInvalid" : "")
       }
+      hoverClassName="diagramBoxSelected"
+      static={props.static}
     >
       <CraigFormHeading
         icon={<Security className="diagramTitleIcon" />}
@@ -32,9 +35,11 @@ export const SecurityGroups = (props) => {
         {craig.store.json.security_groups.map((sg, sgIndex) => {
           if (sg.vpc === vpc.name)
             return (
-              <div
+              <HoverClassNameWrapper
                 key={"sg-" + sgIndex}
                 className="fieldWidthSmaller sgDeploymentBox"
+                static={props.static}
+                hoverClassName="diagramIconBoxSelected"
               >
                 <DeploymentIcon
                   craig={craig}
@@ -51,11 +56,11 @@ export const SecurityGroups = (props) => {
                       : undefined
                   }
                 />
-              </div>
+              </HoverClassNameWrapper>
             );
         })}
       </CraigFormGroup>
-    </div>
+    </HoverClassNameWrapper>
   );
 };
 

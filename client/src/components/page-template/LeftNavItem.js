@@ -34,7 +34,7 @@ class LeftNavItem extends React.Component {
           key={"popover-" + this.props.item.title}
         >
           <SideNavLink
-            href={this.props.item.path}
+            href={this.props.item.path + (this.props.isBetaPage ? "?beta" : "")}
             renderIcon={this.props.item.icon}
             key={this.props.item.title}
             onMouseOver={() => this.setHover(true)}

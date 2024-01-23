@@ -5,6 +5,7 @@ import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import { CraigFormGroup } from "../../forms";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const RoutingTables = (props) => {
   let craig = props.craig;
@@ -14,11 +15,13 @@ export const RoutingTables = (props) => {
   }).length === 0 ? (
     ""
   ) : (
-    <div
+    <HoverClassNameWrapper
       className={
         "formInSubForm marginBottomSmall" +
         (props.width ? " securityGroupsBoxWidth" : "")
       }
+      hoverClassName="diagramBoxSelected"
+      static={props.static}
     >
       <CraigFormHeading
         icon={<Router className="diagramTitleIcon" />}
@@ -36,9 +39,11 @@ export const RoutingTables = (props) => {
         {craig.store.json.routing_tables.map((rt, rtIndex) => {
           if (rt.vpc === vpc.name)
             return (
-              <div
+              <HoverClassNameWrapper
                 key={"rt-" + rtIndex}
                 className="fieldWidthSmaller sgDeploymentBox"
+                hoverClassName="diagramIconBoxSelected"
+                static={props.static}
               >
                 <DeploymentIcon
                   craig={craig}
@@ -54,11 +59,11 @@ export const RoutingTables = (props) => {
                       : undefined
                   }
                 />
-              </div>
+              </HoverClassNameWrapper>
             );
         })}
       </CraigFormGroup>
-    </div>
+    </HoverClassNameWrapper>
   );
 };
 

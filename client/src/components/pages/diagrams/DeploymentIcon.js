@@ -59,6 +59,26 @@ export const DeploymentIcon = (props) => {
       props.itemName
     ) && !props.small;
 
+  /**
+   * get name display
+   * @param {*} props
+   * @returns {string} string
+   */
+  function nameDisplay(props) {
+    let name = props.item.name;
+    if (props.count && props.count !== 1) {
+      name += ` (x${props.count})`;
+    } else if (
+      props.itemName === "power_volumes" &&
+      !isNullOrEmptyString(props.item.count, true)
+    ) {
+      name += ` (x${props.item.count})`;
+    } else if (props.item.use_data) {
+      name += " [Imported]";
+    }
+    return name;
+  }
+
   return (
     <div className={boxClassName}>
       <div className="maxWidth150">
@@ -67,18 +87,7 @@ export const DeploymentIcon = (props) => {
           className: "margin1rem" + (props.onClick ? " clicky" : ""),
           onClick: props.onClick ? props.onClick : undefined,
         })}
-        {props.small ? (
-          ""
-        ) : (
-          <p className="font12px">
-            {props.item.name}
-            {props.itemName === "power_volumes" &&
-            !isNullOrEmptyString(props.item.count, true)
-              ? "  (x" + props.item.count + ")"
-              : ""}
-            {props.item.use_data ? " [Imported]" : ""}
-          </p>
-        )}
+        {props.small ? "" : <p className="font12px">{nameDisplay(props)}</p>}
       </div>
       {props.children}
       {hasSecurityGroups

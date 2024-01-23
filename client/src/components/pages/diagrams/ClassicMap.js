@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { InfrastructureClassic } from "@carbon/icons-react";
 import { distinct } from "lazy-z";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const ClassicMap = (props) => {
   let craig = props.craig;
@@ -11,9 +12,11 @@ export const ClassicMap = (props) => {
     classicDatacenters = distinct(classicDatacenters.concat(vlan.datacenter));
   });
   return classicDatacenters.map((datacenter) => (
-    <div
+    <HoverClassNameWrapper
+      static={props.static}
       className={"subForm powerSubForm" + (props.big ? " powerSubFormBig" : "")}
       key={datacenter}
+      hoverClassName="diagramBoxSelected"
     >
       <CraigFormHeading
         name={datacenter}
@@ -27,7 +30,7 @@ export const ClassicMap = (props) => {
           datacenter: datacenter,
         })
       )}
-    </div>
+    </HoverClassNameWrapper>
   ));
 };
 

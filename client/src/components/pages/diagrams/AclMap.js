@@ -5,6 +5,7 @@ import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { SubnetAclRules } from "@carbon/icons-react";
 import "./diagrams.css";
 import PropTypes from "prop-types";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const AclMap = (props) => {
   let vpc = props.vpc;
@@ -45,9 +46,11 @@ export const AclMap = (props) => {
       }
       if (!acl?.name) aclClassName += "noAclBox";
       return (
-        <div
+        <HoverClassNameWrapper
           key={acl.name + vpc.name + aclIndex + props.vpc_index}
           className={aclClassName}
+          hoverClassName="diagramBoxSelected"
+          static={props.static}
         >
           {props.small ? (
             ""
@@ -82,7 +85,7 @@ export const AclMap = (props) => {
               acl: acl,
             })
           )}
-        </div>
+        </HoverClassNameWrapper>
       );
     })
   );
