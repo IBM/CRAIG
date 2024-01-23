@@ -28,7 +28,7 @@ describe("power api", () => {
       return testPowerController
         .getPowerComponent(
           {
-            params: { region: "us-south", component: "images" },
+            params: { zone: "us-south", component: "images" },
           },
           res
         )
@@ -55,7 +55,7 @@ describe("power api", () => {
       return testPowerController
         .getPowerComponent(
           {
-            params: { region: "us-south", component: "images" },
+            params: { zone: "us-south", component: "images" },
           },
           res
         )
@@ -79,7 +79,7 @@ describe("power api", () => {
       return testPowerController
         .getPowerComponent(
           {
-            params: { region: "us-south", component: "images" },
+            params: { zone: "us-south", component: "images" },
             query: {
               name: "egg",
             },
@@ -117,7 +117,7 @@ describe("power api", () => {
       return testPowerController
         .getPowerComponent(
           {
-            params: { region: "us-south", component: "images" },
+            params: { zone: "us-south", component: "images" },
             query: {
               name: "egg",
             },
@@ -154,7 +154,7 @@ describe("power api", () => {
       return testPowerController
         .getPowerComponent(
           {
-            params: { region: "us-south", component: "storage_pools" },
+            params: { zone: "us-south", component: "storage_pools" },
           },
           res
         )
@@ -181,7 +181,7 @@ describe("power api", () => {
       return testPowerController
         .getPowerComponent(
           {
-            params: { region: "us-south", component: "images" },
+            params: { zone: "us-south", component: "images" },
           },
           res
         )
@@ -207,7 +207,7 @@ describe("power api", () => {
       return testPowerController
         .getPowerComponent(
           {
-            params: { region: "us-south", component: "storage_pools" },
+            params: { zone: "us-south", component: "storage_pools" },
           },
           res
         )

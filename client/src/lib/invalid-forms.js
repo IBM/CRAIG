@@ -70,6 +70,9 @@ function invalidForms(craig) {
                     {
                       data: subItem,
                       craig: testCraig,
+                      // pass array parent name to prevent disable save from checking
+                      // other ssh keys lists
+                      arrayParentName: key === "power" ? item.name : undefined,
                     }
                   )
                 ) {

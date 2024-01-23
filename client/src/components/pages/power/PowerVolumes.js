@@ -4,12 +4,17 @@ import { FileStorage } from "@carbon/icons-react";
 import { DeploymentIcon } from "../diagrams";
 import PropTypes from "prop-types";
 import { CraigFormGroup } from "../../forms";
+import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 
 export const PowerVolumes = (props) => {
   let craig = props.craig;
   let power = props.power;
   return (
-    <div className="formInSubForm">
+    <HoverClassNameWrapper
+      className="formInSubForm"
+      static={props.static}
+      hoverClassName="diagramBoxSelected"
+    >
       <CraigFormHeading
         name="Storage Volumes"
         type="subHeading"
@@ -24,7 +29,12 @@ export const PowerVolumes = (props) => {
             }
           })
           .map((volume) => (
-            <div className="width140" key={volume.name + power.name}>
+            <HoverClassNameWrapper
+              className="width140"
+              key={volume.name + power.name}
+              static={props.static}
+              hoverClassName="diagramIconBoxSelected"
+            >
               <DeploymentIcon
                 icon={FileStorage}
                 itemName="power_volumes"
@@ -40,10 +50,10 @@ export const PowerVolumes = (props) => {
                 }
                 isSelected={props.isSelected}
               />
-            </div>
+            </HoverClassNameWrapper>
           ))}
       </CraigFormGroup>
-    </div>
+    </HoverClassNameWrapper>
   );
 };
 

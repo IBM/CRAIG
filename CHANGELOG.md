@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue causing all Power VS images to be imported into a workspace
+- Fixed an issue causing Power Workspaces to be incorrectly flagged as invalid when using the same SSH Public Key as a VPC SSH Key
 
 ## 1.8.0
 

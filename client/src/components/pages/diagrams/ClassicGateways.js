@@ -2,6 +2,7 @@ import React from "react";
 import { PowerSubnetInnerBox } from "./PowerSubnetInnerBox";
 import { FirewallClassic } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const ClassicGateways = (props) => {
   let gateways = [];
@@ -24,26 +25,36 @@ export const ClassicGateways = (props) => {
   return gateways.length === 0 ? (
     ""
   ) : (
-    <PowerSubnetInnerBox icon={FirewallClassic} name="Classic Gateways">
+    <PowerSubnetInnerBox
+      icon={FirewallClassic}
+      name="Classic Gateways"
+      static={props.static}
+    >
       {gateways.map((gw) => {
         return (
-          <DeploymentIcon
+          <HoverClassNameWrapper
+            static={props.static}
+            hoverClassName="diagramIconBoxSelected"
             key={gw.name + props.vlan}
-            icon={FirewallClassic}
-            item={gw}
-            itemName="classic_gateways"
-            craig={props.craig}
-            onClick={
-              props.onClick
-                ? () => {
-                    props.onClick(gw.index);
-                  }
-                : undefined
-            }
-            isSelected={
-              props.isSelected ? () => props.isSelected(gw.index) : undefined
-            }
-          />
+          >
+            <DeploymentIcon
+              key={gw.name + props.vlan}
+              icon={FirewallClassic}
+              item={gw}
+              itemName="classic_gateways"
+              craig={props.craig}
+              onClick={
+                props.onClick
+                  ? () => {
+                      props.onClick(gw.index);
+                    }
+                  : undefined
+              }
+              isSelected={
+                props.isSelected ? () => props.isSelected(gw.index) : undefined
+              }
+            />
+          </HoverClassNameWrapper>
         );
       })}
     </PowerSubnetInnerBox>

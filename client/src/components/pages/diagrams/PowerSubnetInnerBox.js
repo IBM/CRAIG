@@ -5,6 +5,7 @@ import {
 } from "../../forms/utils/ToggleFormComponents";
 import PropTypes from "prop-types";
 import "./diagrams.css";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const PowerSubnetInnerBox = (props) => {
   let powerInnerBoxClassName = "powerSubnetInnerBox";
@@ -12,7 +13,11 @@ export const PowerSubnetInnerBox = (props) => {
     powerInnerBoxClassName += " marginTopThreeQuartersRem";
   }
   return (
-    <div className={powerInnerBoxClassName}>
+    <HoverClassNameWrapper
+      className={powerInnerBoxClassName}
+      static={props.static}
+      hoverClassName="diagramBoxSelected"
+    >
       <div className="powerSubnetTitleMargin">
         <CraigFormHeading
           icon={RenderForm(props.icon, {
@@ -25,7 +30,7 @@ export const PowerSubnetInnerBox = (props) => {
       <div className="displayFlex alignItemsCenter powerSubnetChildren">
         {props.children}
       </div>
-    </div>
+    </HoverClassNameWrapper>
   );
 };
 

@@ -23,11 +23,13 @@ import React from "react";
 import "./navigation.scss";
 import LeftNavItem from "./LeftNavItem";
 import PropTypes from "prop-types";
-import { contains, kebabCase } from "lazy-z";
+import { contains, containsAny, kebabCase, splatContains } from "lazy-z";
 
 const LeftNav = (props) => {
   let dividerClass = props.expanded ? "expandedDivider" : "railDivider";
-  let isBetaPage = contains(window.location.pathname, "/beta");
+  let isBetaPage =
+    contains(window.location.pathname, "beta") ||
+    contains(window.location.search, "beta");
   return (
     <SideNav
       expanded={props.expanded}
@@ -49,7 +51,7 @@ const LeftNav = (props) => {
           item={{
             path: isBetaPage ? "/beta/settings" : "/",
             icon: Settings,
-            title: (isBetaPage ? "[Beta] " : "") + "Options",
+            title: isBetaPage ? "[Beta] Settings" : "Options",
           }}
           key="Options"
           expanded={props.expanded}
@@ -64,6 +66,18 @@ const LeftNav = (props) => {
                 title: "[Beta] Cloud Services",
               }}
               expanded={props.expanded}
+              hasInvalidForm={containsAny(props.invalidForms, [
+                "/form/observability",
+                "key_management",
+                "object_storage",
+                "event_streams",
+                "secrets_manager",
+                "appid",
+                "atracker",
+                "icd",
+                "dns",
+                "scc_v2",
+              ])}
             />
             <LeftNavItem
               key="VPC Networks"
@@ -73,6 +87,11 @@ const LeftNav = (props) => {
                 title: "[Beta] VPC Networks",
               }}
               expanded={props.expanded}
+              hasInvalidForm={containsAny(props.invalidForms, [
+                "vpcs",
+                "/form/nacls",
+                "/forms/subnets",
+              ])}
             />
             <LeftNavItem
               key="VPC Deployments"
@@ -82,6 +101,18 @@ const LeftNav = (props) => {
                 title: "[Beta] VPC Deployments",
               }}
               expanded={props.expanded}
+              hasInvalidForm={containsAny(props.invalidForms, [
+                "vsi",
+                "clusters",
+                "ssh_keys",
+                "load_balancers",
+                "virtual_private_endpoints",
+                "vpn_gateways",
+                "vpn_servers",
+                "routing_tables",
+                "security_groups",
+                "fortigate_vnf",
+              ])}
             />
             <LeftNavItem
               key="Power VS"
@@ -91,6 +122,11 @@ const LeftNav = (props) => {
                 title: "[Beta] Power VS",
               }}
               expanded={props.expanded}
+              hasInvalidForm={containsAny(props.invalidForms, [
+                "power",
+                "power_instances",
+                "power_volumes",
+              ])}
             />
             <LeftNavItem
               key="Classic Network"
@@ -100,6 +136,11 @@ const LeftNav = (props) => {
                 title: "[Beta] Classic Network",
               }}
               expanded={props.expanded}
+              hasInvalidForm={containsAny(props.invalidForms, [
+                "classic_ssh_keys",
+                "classic_vlans",
+                "classic_gateways",
+              ])}
             />
             <LeftNavItem
               key="Overview"
@@ -109,6 +150,7 @@ const LeftNav = (props) => {
                 title: "[Beta] Overview",
               }}
               expanded={props.expanded}
+              hasInvalidForm={props.invalidForms.length !== 0}
             />
             {props.expanded && <SideNavDivider className={dividerClass} />}
           </>
@@ -161,30 +203,46 @@ const LeftNav = (props) => {
           </>
         )}
         {props.navCategories.map((category) => {
+          // display nav category and divider when searching for a page in the beta
+          // and that page is part of the category
+          let showNavCategory =
+            (isBetaPage &&
+              splatContains(
+                category.links,
+                "path",
+                window.location.pathname
+              )) ||
+            !isBetaPage;
           return (
             <div key={kebabCase(category.name)}>
-              <SideNavDivider className={dividerClass} />
-              {props.expanded && (
+              {showNavCategory && <SideNavDivider className={dividerClass} />}
+              {props.expanded && showNavCategory && (
                 <SideNavLink href="#">{category.name}</SideNavLink>
               )}
               {category.links.map((item) => {
                 if (!item.icon) {
                   console.log(item);
                 }
-                return (
-                  <LeftNavItem
-                    item={item}
-                    key={item.title}
-                    expanded={props.expanded}
-                    fsCloud={props.fsCloud}
-                    hasInvalidForm={
-                      props.isResetState
-                        ? false
-                        : contains(props.invalidForms, item.jsonField) ||
-                          contains(props.invalidForms, item.path)
-                    }
-                  />
-                );
+                if (
+                  (isBetaPage && item.path === window.location.pathname) ||
+                  !isBetaPage ||
+                  props.hasSearch
+                )
+                  return (
+                    <LeftNavItem
+                      isBetaPage={isBetaPage}
+                      item={item}
+                      key={item.title}
+                      expanded={props.expanded}
+                      fsCloud={props.fsCloud}
+                      hasInvalidForm={
+                        props.isResetState
+                          ? false
+                          : contains(props.invalidForms, item.jsonField) ||
+                            contains(props.invalidForms, item.path)
+                      }
+                    />
+                  );
               })}
             </div>
           );

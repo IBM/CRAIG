@@ -2,7 +2,6 @@ const {
   splat,
   getObjectFromArray,
   isNullOrEmptyString,
-  isWholeNumber,
   contains,
   containsKeys,
   splatContains,
@@ -21,7 +20,6 @@ const {
   projectDescriptionRegex,
   ipRangeExpression,
   sccScopeDescriptionValidation,
-  dnsZoneNameExp,
   replicationEnabledStoragePoolMap,
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
@@ -33,19 +31,6 @@ const { hasDuplicateName } = require("./duplicate-name");
  */
 function invalidNewResourceName(str) {
   return str ? str.match(newResourceNameExp) === null : true;
-}
-
-/**
- * check to see if dns zone name is invalid
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {boolean}
- */
-function invalidDnsZoneName(stateData, componentProps) {
-  return hasDuplicateName("zones", stateData, componentProps, "name") ||
-    stateData.name
-    ? stateData.name.match(dnsZoneNameExp) === null
-    : true;
 }
 
 /**
@@ -227,20 +212,6 @@ function invalidSubnetTierName(stateData, componentProps) {
     ) &&
       stateData.name !== componentProps.data.name) ||
     invalidNewResourceName(stateData.name)
-  );
-}
-
-/**
- * check if iam account setting is invalid
- * @param {string} field
- * @param {Object} stateData
- * @returns {boolean} true if invalid
- */
-function invalidIamAccountSettings(field, stateData) {
-  return (
-    field === "max_sessions_per_identity" &&
-    (stateData.max_sessions_per_identity < 1 ||
-      stateData.max_sessions_per_identity > 10)
   );
 }
 
@@ -615,22 +586,6 @@ function invalidCrns(stateData) {
   return invalidCrnList(stateData.crns);
 }
 
-/**
- * check to see if a storage pool is replication disabled
- * @param {object} stateData
- * @param {object} componentProps
- * @returns {boolean} true if replication is disabled
- */
-function replicationDisabledCallback(stateData, componentProps) {
-  let pool = stateData.pi_volume_pool;
-  if (!stateData.zone) {
-    return true;
-  }
-  let replicationEnabledPools =
-    replicationEnabledStoragePoolMap[stateData.zone] || [];
-  return !contains(replicationEnabledPools, pool);
-}
-
 module.exports = {
   invalidName,
   invalidNewResourceName,
@@ -639,7 +594,6 @@ module.exports = {
   invalidCrnList,
   validSshKey,
   invalidSubnetTierName,
-  invalidIamAccountSettings,
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
   invalidIdentityProviderURI,
@@ -653,7 +607,5 @@ module.exports = {
   invalidCbrZone,
   invalidDescription,
   nullOrEmptyStringCheckCallback,
-  invalidDnsZoneName,
   invalidCrns,
-  replicationDisabledCallback,
 };

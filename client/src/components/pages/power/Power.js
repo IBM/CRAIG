@@ -24,10 +24,7 @@ import { PowerVolumes } from "./PowerVolumes";
 import { IcseSelect } from "icse-react-assets";
 import { NoPowerNetworkTile } from "../../forms/dynamic-form";
 import { PowerVolumeTable } from "./PowerVolumeTable";
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-}
+import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
 
 class PowerDiagram extends React.Component {
   constructor(props) {
@@ -62,17 +59,12 @@ class PowerDiagram extends React.Component {
     if (powerIndex === this.state.powerIndex) {
       this.resetSelection();
     } else {
-      this.setState(
-        {
-          editing: true,
-          selectedItem: "power",
-          selectedIndex: powerIndex,
-          powerIndex: powerIndex,
-        },
-        () => {
-          scrollToTop();
-        }
-      );
+      this.setState({
+        editing: true,
+        selectedItem: "power",
+        selectedIndex: powerIndex,
+        powerIndex: powerIndex,
+      });
     }
   }
 
@@ -132,16 +124,11 @@ class PowerDiagram extends React.Component {
       this.resetSelection();
     } else {
       this.resetSelection();
-      this.setState(
-        {
-          editing: true,
-          selectedItem: "power_instances",
-          selectedIndex: instanceIndex,
-        },
-        () => {
-          scrollToTop();
-        }
-      );
+      this.setState({
+        editing: true,
+        selectedItem: "power_instances",
+        selectedIndex: instanceIndex,
+      });
     }
   }
 
@@ -153,16 +140,11 @@ class PowerDiagram extends React.Component {
       this.resetSelection();
     } else {
       this.resetSelection();
-      this.setState(
-        {
-          editing: true,
-          selectedItem: "vtl",
-          selectedIndex: instanceIndex,
-        },
-        () => {
-          scrollToTop();
-        }
-      );
+      this.setState({
+        editing: true,
+        selectedItem: "vtl",
+        selectedIndex: instanceIndex,
+      });
     }
   }
 
@@ -174,16 +156,11 @@ class PowerDiagram extends React.Component {
       this.resetSelection();
     } else {
       this.resetSelection();
-      this.setState(
-        {
-          editing: true,
-          selectedItem: "power_volumes",
-          selectedIndex: volumeIndex,
-        },
-        () => {
-          scrollToTop();
-        }
-      );
+      this.setState({
+        editing: true,
+        selectedItem: "power_volumes",
+        selectedIndex: volumeIndex,
+      });
     }
   }
 
@@ -444,13 +421,7 @@ class PowerDiagram extends React.Component {
                     </div>
                     <div id="right-power">
                       {this.state.editing === true ? (
-                        <div
-                          style={{
-                            width: "50vw",
-                            padding: "0",
-                            marginTop: "1rem",
-                          }}
-                        >
+                        <ScrollFormWrapper>
                           <CraigFormHeading
                             icon={RenderForm(this.getIcon(), {
                               style: {
@@ -536,7 +507,7 @@ class PowerDiagram extends React.Component {
                               });
                             }}
                           />
-                        </div>
+                        </ScrollFormWrapper>
                       ) : (
                         ""
                       )}

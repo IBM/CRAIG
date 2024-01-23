@@ -969,22 +969,20 @@ module.exports = {
         "An empty Power VS workspace",
       ],
     },
-    "Power VS POC Quick Start": {
+    "Power VS POC": {
       template: powerVsPocQuickStart,
-      name: "Power VS POC Quick Start",
+      name: "Power VS POC",
       patternDocText:
-        "This template initializes an environment with one VPC and a Power VS workspace to get started with using Power VS on IBM Cloud,",
+        "This template initializes an environment with one VPC and a Power VS workspace with 2 VSIs to get started with using Power VS on IBM Cloud,",
       includes: [
-        "A resource group for cloud services and for infrastructure management",
-        "A management VPC and a transit gateway",
-        "A VPC flow log collector",
-        "A VPN Gateway in the Management VPC",
-        "An example Virtual Server instance deployment in the management VPC",
-        "Encryption keys in either a Key Protect or Hyper Protect Crypto Services instance",
-        "A Cloud Object Storage Instance",
-        "A Flow Logs collector for VPC",
-        "Virtual Private endpoints for Cloud Object storage in the management VPC",
-        "An Power VS workspace with an example AIX and IBMi instance",
+        "Three resource groups designated for the Power Virtual Server Workspace, auxiliary resources, and cloud services",
+        "A VPC and 2 example Virtual Server instances deployment in the VPC",
+        "A Virtual Private Endpoint for Cloud Object storage in the VPC",
+        "A public gateway, a Transit gateway, and a VPC VPN Gateway",
+        "A VPC flow log collector, Activity Tracker, Cloud Monitoring and Log Analysis",
+        "A Key Protect Service and Encryption keys",
+        "Object storage instances for flow logs and Activity Tracker",
+        "A Power VS workspace with AIX and IBM i Power Virtual Server instances",
       ],
     },
     "VPN as a Service": {

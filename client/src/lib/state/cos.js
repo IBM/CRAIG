@@ -2,9 +2,8 @@ const {
   splat,
   splatContains,
   titleCase,
-  isNullOrEmptyString,
+  getObjectFromArray,
 } = require("lazy-z");
-const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultCos } = require("./defaults");
 const {
   updateSubChild,
@@ -13,11 +12,7 @@ const {
   setUnfoundEncryptionKey,
   pushToChildFieldModal,
 } = require("./store.utils");
-const {
-  invalidName,
-  invalidNameText,
-  encryptionKeyFilter,
-} = require("../forms");
+const { invalidName, invalidNameText } = require("../forms");
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
@@ -376,7 +371,27 @@ function initObjectStorageStore(store) {
             invalidText: unconditionalInvalidText(
               "Warning: Unencrypted storage bucket"
             ),
-            groups: encryptionKeyFilter,
+            groups: function (stateData, componentProps) {
+              let cosName = componentProps.arrayParentName;
+              let { kms } = getObjectFromArray(
+                componentProps.craig.store.json.object_storage,
+                "name",
+                cosName
+              );
+              let validKeys = [];
+              if (kms) {
+                getObjectFromArray(
+                  componentProps.craig.store.json.key_management,
+                  "name",
+                  kms
+                ).keys.forEach((key) => {
+                  if (key.root_key) {
+                    validKeys.push(key.name);
+                  }
+                });
+              }
+              return (kms ? validKeys : []).concat("NONE (Insecure)");
+            },
             onRender: function (stateData) {
               return stateData.kms_key === null
                 ? "NONE (Insecure)"

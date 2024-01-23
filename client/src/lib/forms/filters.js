@@ -1,32 +1,4 @@
-const { getObjectFromArray, splat, distinct, contains } = require("lazy-z");
-
-/**
- * filter encryption keys
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {array} keys
- */
-function encryptionKeyFilter(_, componentProps) {
-  let cosName = componentProps.arrayParentName;
-  let { kms } = getObjectFromArray(
-    componentProps.craig.store.json.object_storage,
-    "name",
-    cosName
-  );
-  let validKeys = [];
-  if (kms) {
-    getObjectFromArray(
-      componentProps.craig.store.json.key_management,
-      "name",
-      kms
-    ).keys.forEach((key) => {
-      if (key.root_key) {
-        validKeys.push(key.name);
-      }
-    });
-  }
-  return (kms ? validKeys : []).concat("NONE (Insecure)");
-}
+const { getObjectFromArray, distinct, contains } = require("lazy-z");
 
 /**
  * Filters docs obj to render defaults for specific template only.
@@ -85,4 +57,4 @@ function tgwVpcFilter(craig) {
   return unconnectedVpcs;
 }
 
-module.exports = { encryptionKeyFilter, filterDocs, tgwVpcFilter };
+module.exports = { filterDocs, tgwVpcFilter };

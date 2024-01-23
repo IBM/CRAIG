@@ -2,7 +2,6 @@ const { assert } = require("chai");
 const {
   invalidName,
   invalidSshPublicKey,
-  invalidIamAccountSettings,
   invalidTagList,
   invalidCrnList,
   invalidIpCommaList,
@@ -20,9 +19,7 @@ const {
 const {
   invalidDescription,
   nullOrEmptyStringCheckCallback,
-  invalidDnsZoneName,
   invalidCrns,
-  replicationDisabledCallback,
 } = require("../../client/src/lib/forms/invalid-callbacks");
 
 describe("invalid callbacks", () => {
@@ -1198,38 +1195,6 @@ describe("invalid callbacks", () => {
       });
     });
   });
-  describe("invalidIamAccountSettings", () => {
-    it("should return true when max_sessions_per_identity is invalid", () => {
-      let actualData = invalidIamAccountSettings("max_sessions_per_identity", {
-        enable: false,
-        mfa: null,
-        allowed_ip_addresses: null,
-        include_history: false,
-        if_match: null,
-        max_sessions_per_identity: 100,
-        restrict_create_service_id: null,
-        restrict_create_platform_apikey: null,
-        session_expiration_in_seconds: null,
-        session_invalidation_in_seconds: null,
-      });
-      assert.isTrue(actualData);
-    });
-    it("should return false when max_sessions_per_identity is valid", () => {
-      let actualData = invalidIamAccountSettings("max_sessions_per_identity", {
-        enable: false,
-        mfa: null,
-        allowed_ip_addresses: null,
-        include_history: false,
-        if_match: null,
-        max_sessions_per_identity: 5,
-        restrict_create_service_id: null,
-        restrict_create_platform_apikey: null,
-        session_expiration_in_seconds: null,
-        session_invalidation_in_seconds: null,
-      });
-      assert.isFalse(actualData);
-    });
-  });
   describe("invalidTagList", () => {
     it("should return true when invalid tag list", () => {
       assert.isTrue(invalidTagList(["hi", "2@@@2"]));
@@ -1558,59 +1523,6 @@ describe("invalid callbacks", () => {
   describe("nullOrEmptyStringCheckCallback", () => {
     assert.isTrue(nullOrEmptyStringCheckCallback("rdata")({ rdata: "" }, {}));
   });
-  describe("invalidDnsZoneName", () => {
-    it("should return if string is not valid", () => {
-      assert.isTrue(
-        invalidDnsZoneName(
-          { name: null },
-          {
-            data: { name: "" },
-            craig: {
-              store: {
-                json: {
-                  dns: [{ name: "hi", zones: [{ name: "hi" }] }],
-                },
-              },
-            },
-          }
-        )
-      );
-    });
-    it("should allow periods within the name", () => {
-      assert.isFalse(
-        invalidDnsZoneName(
-          { name: "example.com" },
-          {
-            data: { name: "" },
-            craig: {
-              store: {
-                json: {
-                  dns: [{ name: "hi", zones: [{ name: "hi" }] }],
-                },
-              },
-            },
-          }
-        )
-      );
-    });
-    it("should not allow periods at the end of the name", () => {
-      assert.isTrue(
-        invalidDnsZoneName(
-          { name: "example.com." },
-          {
-            data: { name: "" },
-            craig: {
-              store: {
-                json: {
-                  dns: [{ name: "hi", zones: [{ name: "hi" }] }],
-                },
-              },
-            },
-          }
-        )
-      );
-    });
-  });
   describe("invalidCrns", () => {
     it("should return true if invalid crn list", () => {
       assert.isTrue(
@@ -1621,35 +1533,6 @@ describe("invalid callbacks", () => {
           "it should be true"
         )
       );
-    });
-  });
-  describe("replicationDisabledCallback", () => {
-    it("should be false for when the storage pool is replication enabled", () => {
-      let data = {
-        pi_volume_pool: "Tier1-Flash-8",
-        zone: "us-east",
-      };
-      assert.isFalse(replicationDisabledCallback(data, {}));
-    });
-    it("should be true for when the storage pool is not replication enabled", () => {
-      let data = {
-        pi_volume_pool: "Tier1-Flash-1",
-        zone: "us-east",
-      };
-      assert.isTrue(replicationDisabledCallback(data, {}));
-    });
-    it("should be false for when the storage pool has no zone (no workspace selected)", () => {
-      let data = {
-        pi_volume_pool: "Tier1-Flash-8",
-      };
-      assert.isTrue(replicationDisabledCallback(data, {}));
-    });
-    it("should be true for when the workspace's zone does not have replication enabled", () => {
-      let data = {
-        pi_volume_pool: "Tier1-Flash-8",
-        zone: "dal10",
-      };
-      assert.isTrue(replicationDisabledCallback(data, {}));
     });
   });
 });

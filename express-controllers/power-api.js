@@ -93,7 +93,7 @@ function powerRoutes(axios, controller) {
    * @param {*} res
    */
   controller.getPowerComponent = function (req, res) {
-    let zone = req.params["region"];
+    let zone = req.params["zone"];
     let componentType = kebabCase(req.params["component"]);
     let region = getRegionFromZone(zone);
     let guid = req?.query?.name

@@ -13,6 +13,7 @@ import {
 import { buildNumberDropdownList, contains } from "lazy-z";
 import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const SubnetServiceMap = (props) => {
   function getIcon(field) {
@@ -58,35 +59,39 @@ export const SubnetServiceMap = (props) => {
           : contains(item.subnets, subnet.name)) &&
           item.vpc === vpc.name)
       ) {
-        return buildNumberDropdownList(
-          Number(
-            contains(
-              [
-                "virtual_private_endpoints",
-                "vpn_gateways",
-                "vpn_servers",
-                "load_balancers",
-                "fortigate_vnf",
-                "f5_vsi",
-              ],
-              field
-            ) || item.vpc === null
-              ? 1 // 1 if not itterated
-              : item[field === "vsi" ? "vsi_per_subnet" : "workers_per_subnet"]
-          ),
-          0
-        ).map((num) => {
-          return (
+        return (
+          <HoverClassNameWrapper
+            hoverClassName="diagramIconBoxSelected"
+            static={props.static}
+            key={subnet.name + vpc?.name + item.name}
+          >
             <DeploymentIcon
               small={props.small}
-              key={subnet.name + vpc?.name + num + item.name}
+              key={subnet.name + vpc?.name + item.name}
               craig={craig}
               itemName={field}
               icon={getIcon(field)}
+              count={Number(
+                contains(
+                  [
+                    "virtual_private_endpoints",
+                    "vpn_gateways",
+                    "vpn_servers",
+                    "load_balancers",
+                    "fortigate_vnf",
+                    "f5_vsi",
+                  ],
+                  field
+                ) || item.vpc === null
+                  ? 1 // 1 if not itterated
+                  : item[
+                      field === "vsi" ? "vsi_per_subnet" : "workers_per_subnet"
+                    ]
+              )}
               subnet={subnet}
               vpc={vpc}
               item={item}
-              index={num}
+              index={1}
               parentState={props.parentState}
               vpcIndex={props.vpc_index}
               itemIndex={itemIndex}
@@ -102,8 +107,9 @@ export const SubnetServiceMap = (props) => {
                 props.onTabClick ? props.onTabClick(props.vpc_index) : undefined
               }
             />
-          );
-        });
+          </HoverClassNameWrapper>
+        );
+        //});
       }
     })
   );

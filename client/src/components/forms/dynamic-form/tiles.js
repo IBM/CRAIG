@@ -84,7 +84,9 @@ export const CraigEmptyResourceTile = (props) => {
     >
       <CloudAlerting size="24" className="iconMargin" />
       No {props.name}.{" "}
-      {props.noClick ? (
+      {props.customClick ? (
+        props.customClick
+      ) : props.noClick ? (
         ""
       ) : (
         <>
@@ -100,17 +102,15 @@ export const CraigEmptyResourceTile = (props) => {
 };
 
 export const NoPowerNetworkTile = () => {
+  let isBetaPage =
+    contains(window.location.pathname, "beta") ||
+    contains(window.location.search, "beta");
   return (
     <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
       <CloudAlerting size="24" className="iconMargin" /> Power VS is not
       enabled. Return to the
-      <a
-        className="no-secrets-link"
-        href={
-          contains(window.location.pathname, "/beta") ? "/beta/settings" : "/"
-        }
-      >
-        Options Page
+      <a className="no-secrets-link" href={isBetaPage ? "/beta/settings" : "/"}>
+        {isBetaPage ? "Settings Page" : "Options Page"}
       </a>{" "}
       to enable Power VS.
     </Tile>

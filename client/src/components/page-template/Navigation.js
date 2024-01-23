@@ -37,6 +37,7 @@ class Navigation extends React.Component {
     this.onDownloadClick = this.onDownloadClick.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.resetSearch = this.resetSearch.bind(this);
+    this.onInvalidClick = this.onInvalidClick.bind(this);
   }
 
   // Reset state and redirect to home page
@@ -128,6 +129,12 @@ class Navigation extends React.Component {
     });
   }
 
+  onInvalidClick() {
+    window.location.href = contains(window.location.pathname, "/beta")
+      ? "/beta/overview"
+      : "/summary";
+  }
+
   render() {
     return (
       <Theme theme="g10" key={this.props.json}>
@@ -189,6 +196,7 @@ class Navigation extends React.Component {
             <ValidNavBox
               json={this.props.json}
               isResetState={this.props.isResetState}
+              onClick={this.onInvalidClick}
             />
             {this.props.isResetState === false && (
               <HeaderGlobalAction

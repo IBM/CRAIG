@@ -41,6 +41,8 @@ import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
 import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
+import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
 
 const serviceFormMap = {
   resource_groups: {
@@ -506,7 +508,11 @@ class CloudServicesPage extends React.Component {
                   }
                 />
                 {serviceResourceGroups.map((rg) => (
-                  <div className="subForm marginBottomSmall" key={rg}>
+                  <HoverClassNameWrapper
+                    className="subForm marginBottomSmall"
+                    hoverClassName="diagramBoxSelected"
+                    key={rg}
+                  >
                     <CraigFormHeading
                       icon={<GroupResource className="diagramTitleIcon" />}
                       noMarginBottom={serviceMap[rg].length === 0}
@@ -557,26 +563,31 @@ class CloudServicesPage extends React.Component {
                             if (a.name > b.name && a.type === b.type) return 1;
                           })
                           .map((service) => (
-                            <ManageService
+                            <HoverClassNameWrapper
+                              hoverClassName="diagramBoxSelected"
                               key={JSON.stringify(service)}
-                              resourceGroup={rg}
-                              service={service}
-                              icon={serviceFormMap[service.type].icon}
-                              onClick={this.onServiceIconClick}
-                              isSelected={
-                                this.state.service === service.type &&
-                                this.state.serviceName === service.name
-                              }
-                            />
+                            >
+                              <ManageService
+                                key={JSON.stringify(service)}
+                                resourceGroup={rg}
+                                service={service}
+                                icon={serviceFormMap[service.type].icon}
+                                onClick={this.onServiceIconClick}
+                                isSelected={
+                                  this.state.service === service.type &&
+                                  this.state.serviceName === service.name
+                                }
+                              />
+                            </HoverClassNameWrapper>
                           ))}
                       </CraigFormGroup>
                     )}
-                  </div>
+                  </HoverClassNameWrapper>
                 ))}
               </div>
               <div className="marginTop1Rem">
                 {this.state.service ? (
-                  <>
+                  <ScrollFormWrapper>
                     <CraigFormHeading
                       icon={RenderForm(
                         serviceFormMap[this.state.service].icon,
@@ -591,14 +602,7 @@ class CloudServicesPage extends React.Component {
                           : this.state.serviceName)
                       }
                     />
-                    <div
-                      style={{
-                        padding: "0",
-                        width: "50vw",
-                        maxWidth: "690px",
-                      }}
-                      className="subForm"
-                    >
+                    <div>
                       <CraigToggleForm
                         name={
                           this.state.serviceName === "scc_v2"
@@ -632,7 +636,7 @@ class CloudServicesPage extends React.Component {
                         }}
                       />
                     </div>
-                  </>
+                  </ScrollFormWrapper>
                 ) : (
                   ""
                 )}

@@ -15,18 +15,21 @@ import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
 import { tagColors } from "../../forms/dynamic-form/components";
 import PropTypes from "prop-types";
 import { CraigFormGroup } from "../../forms";
+import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const TransitGatewaysMap = (props) => {
   return props.craig.store.json.transit_gateways.map((tgw, tgwIndex) => {
     let isSelected = props.isSelected && props.isSelected(tgwIndex);
     return (
-      <div
+      <HoverClassNameWrapper
         className={
           "subForm marginBottomSmall marginRight1Rem width580" +
           (props.onClick ? " clicky" : "") +
           (isSelected ? " diagramBoxSelected" : "")
         }
+        hoverClassName="diagramBoxSelected"
         key={tgw.name + tgwIndex}
+        static={props.static}
         onClick={
           props.onClick
             ? () => {
@@ -120,7 +123,7 @@ export const TransitGatewaysMap = (props) => {
             </CraigFormGroup>
           </div>
         )}
-      </div>
+      </HoverClassNameWrapper>
     );
   });
 };

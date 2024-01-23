@@ -14,6 +14,7 @@ import { disableSave, propsMatchState } from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";
 import { IcseSelect } from "icse-react-assets";
 import DynamicForm from "../../forms/DynamicForm";
+import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 
 function scrollToTop() {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -261,17 +262,20 @@ class ClassicDiagram extends React.Component {
                 </div>
                 <div className="displayFlex" style={{ width: "100%" }}>
                   <div id="left-classic">
-                    <SshKeys
-                      craig={craig}
-                      classic
-                      isSelected={(props) => {
-                        return (
-                          this.state.selectedItem === "classic_ssh_keys" &&
-                          this.state.selectedIndex === props.itemIndex
-                        );
-                      }}
-                      onKeyClick={this.onKeyClick}
-                    />
+                    <HoverClassNameWrapper hoverClassName="diagramBoxSelected">
+                      <SshKeys
+                        craig={craig}
+                        classic
+                        width="580px"
+                        isSelected={(props) => {
+                          return (
+                            this.state.selectedItem === "classic_ssh_keys" &&
+                            this.state.selectedIndex === props.itemIndex
+                          );
+                        }}
+                        onKeyClick={this.onKeyClick}
+                      />
+                    </HoverClassNameWrapper>
                     <ClassicMap
                       craig={craig}
                       buttons={

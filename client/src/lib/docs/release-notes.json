@@ -11,7 +11,8 @@
       "Users can now use `PLACEHOLDER` as a placeholder certificate value on the VPN Servers page"
     ],
     "fixes": [
-      "Fixed an issue causing all Power VS images to be imported into a workspace"
+      "Fixed an issue causing all Power VS images to be imported into a workspace",
+      "Fixed an issue causing Power Workspaces to be incorrectly flagged as invalid when using the same SSH Public Key as a VPC SSH Key"
     ],
     "upgrade_notes": [
       "Updated the Power SAP HANA template to have current images for zone"

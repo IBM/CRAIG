@@ -24,7 +24,6 @@ import {
   contains,
   isNullOrEmptyString,
   snakeCase,
-  splatContains,
   titleCase,
 } from "lazy-z";
 import { IcseSelect, RenderForm } from "icse-react-assets";
@@ -32,7 +31,6 @@ import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import { craigForms } from "../CraigForms";
 import {
-  PassThroughWrapper,
   SshKeys,
   SubnetServiceMap,
   SubnetTierMap,
@@ -45,10 +43,9 @@ import { NoVpcVsiTile } from "../../forms/dynamic-form/tiles";
 import { RoutingTables } from "../diagrams/RoutingTables";
 import { F5BigIp } from "../FormPages";
 import f5 from "../../../images/f5.png";
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-}
+import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
+import { PassThroughHoverWrapper } from "../diagrams/Overview";
+import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
 
 function F5Icon() {
   return <img src={f5} className="vpcDeploymentIcon" />;
@@ -230,7 +227,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
     ) {
       this.resetSelection();
     } else {
-      scrollToTop();
       this.resetSelection();
       this.setState({
         vpcIndex: vpcIndex,
@@ -410,13 +406,15 @@ class VpcDeploymentsDiagramPage extends React.Component {
                 </div>
                 <div className="displayFlex">
                   <div id="left-vpc-deployments">
-                    <div
+                    <HoverClassNameWrapper
                       key={
                         String(this.state.vpcIndex) +
                         String(this.state.editing) +
                         String(this.state.selectedItem) +
                         "new-ssh-keys"
                       }
+                      hoverClassName="diagramBoxSelected"
+                      className="width580"
                     >
                       <SshKeys
                         craig={craig}
@@ -431,16 +429,14 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           );
                         }}
                       />
-                    </div>
+                    </HoverClassNameWrapper>
                     <VpcMap
                       craig={craig}
-                      static
                       isSelected={(vpcIndex) => {
                         return vpcIndex === this.state.vpcIndex;
                       }}
                     >
                       <RoutingTables
-                        width="548px"
                         craig={craig}
                         isSelected={(props) => {
                           return (
@@ -458,7 +454,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
                         }}
                       />
                       <SecurityGroups
-                        width="548px"
                         craig={craig}
                         isSelected={(props) => {
                           return (
@@ -475,7 +470,10 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           );
                         }}
                       />
-                      <PassThroughWrapper className="formInSubForm">
+                      <PassThroughHoverWrapper
+                        className="formInSubForm"
+                        hoverClassName="diagramBoxSelected"
+                      >
                         <CraigFormHeading
                           icon={
                             <NetworkEnterprise className="diagramTitleIcon" />
@@ -498,78 +496,80 @@ class VpcDeploymentsDiagramPage extends React.Component {
                             />
                           }
                         />
-                      </PassThroughWrapper>
+                      </PassThroughHoverWrapper>
                     </VpcMap>
                   </div>
                   <div id="right-vpc-deployments">
-                    {this.state.editing &&
-                    this.state.selectedItem === "f5_vsi" ? (
-                      <div className="rightForm marginTop1Rem">
-                        <CraigFormHeading
-                          icon={<F5Icon />}
-                          name="Editing F5 Big IP Deployment"
-                        />
-                        <div className="subForm">{F5BigIp(craig, true)}</div>
-                      </div>
-                    ) : this.state.editing === true ? (
-                      <div className="rightForm marginTop1Rem">
-                        <CraigFormHeading
-                          icon={RenderForm(
-                            this.getIcon(this.state.selectedItem),
-                            {
-                              className: "vpcDeploymentIcon",
+                    <ScrollFormWrapper>
+                      {this.state.editing &&
+                      this.state.selectedItem === "f5_vsi" ? (
+                        <div className="rightForm marginTop1Rem">
+                          <CraigFormHeading
+                            icon={<F5Icon />}
+                            name="Editing F5 Big IP Deployment"
+                          />
+                          <div className="subForm">{F5BigIp(craig, true)}</div>
+                        </div>
+                      ) : this.state.editing === true ? (
+                        <div>
+                          <CraigFormHeading
+                            icon={RenderForm(
+                              this.getIcon(this.state.selectedItem),
+                              {
+                                className: "vpcDeploymentIcon",
+                              }
+                            )}
+                            noMarginBottom
+                            name={`Editing ${
+                              this.state.selectedItem === "ssh_keys"
+                                ? "SSH Keys"
+                                : this.selectRenderValue()
+                            }${
+                              contains(
+                                ["security_groups", "ssh_keys"],
+                                this.state.selectedItem
+                              )
+                                ? ""
+                                : " Deployment"
+                            } ${
+                              craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ].name
+                            }`}
+                          />
+                          <CraigToggleForm
+                            key={
+                              this.state.selectedItem +
+                              this.state.selectedIndex +
+                              this.state.vpcIndex
                             }
-                          )}
-                          noMarginBottom
-                          name={`Editing ${
-                            this.state.selectedItem === "ssh_keys"
-                              ? "SSH Keys"
-                              : this.selectRenderValue()
-                          }${
-                            contains(
-                              ["security_groups", "ssh_keys"],
-                              this.state.selectedItem
-                            )
-                              ? ""
-                              : " Deployment"
-                          } ${
-                            craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ].name
-                          }`}
-                        />
-                        <CraigToggleForm
-                          key={
-                            this.state.selectedItem +
-                            this.state.selectedIndex +
-                            this.state.vpcIndex
-                          }
-                          tabPanel={{ hideAbout: true }}
-                          onSave={craig[this.state.selectedItem].save}
-                          onDelete={this.onItemDelete}
-                          hideChevron
-                          hideName
-                          hide={false}
-                          name={
-                            craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ].name
-                          }
-                          submissionFieldName={this.state.selectedItem}
-                          innerFormProps={{
-                            form: forms[this.state.selectedItem],
-                            craig: craig,
-                            data: this.getServiceData(),
-                            // need to be passed to render child forms
-                            disableSave: disableSave,
-                            propsMatchState: propsMatchState,
-                            vpc_name: this.vpcName(),
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                            tabPanel={{ hideAbout: true }}
+                            onSave={craig[this.state.selectedItem].save}
+                            onDelete={this.onItemDelete}
+                            hideChevron
+                            hideName
+                            hide={false}
+                            name={
+                              craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ].name
+                            }
+                            submissionFieldName={this.state.selectedItem}
+                            innerFormProps={{
+                              form: forms[this.state.selectedItem],
+                              craig: craig,
+                              data: this.getServiceData(),
+                              // need to be passed to render child forms
+                              disableSave: disableSave,
+                              propsMatchState: propsMatchState,
+                              vpc_name: this.vpcName(),
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </ScrollFormWrapper>
                   </div>
                 </div>
               </>

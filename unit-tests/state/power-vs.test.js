@@ -247,7 +247,9 @@ describe("power-vs", () => {
         let craig = newState();
         assert.deepEqual(
           craig.power.imageNames.apiEndpoint(
-            {},
+            {
+              zone: "us-south",
+            },
             {
               craig: {
                 store: {
@@ -271,6 +273,7 @@ describe("power-vs", () => {
             {
               use_data: true,
               name: "frog",
+              zone: "us-south",
             },
             {
               craig: {
@@ -370,17 +373,16 @@ describe("power-vs", () => {
             tempState.store = {
               resourceGroups: ["hi"],
               json: {
-                ssh_keys: [
-                  {
-                    name: "honk",
-                    public_key:
-                      "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
-                  },
-                ],
+                ssh_keys: [],
                 power: [
                   {
                     name: "workspace",
                     ssh_keys: [
+                      {
+                        name: "honk",
+                        public_key:
+                          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                      },
                       {
                         name: "ddd",
                         public_key:

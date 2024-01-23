@@ -53,7 +53,7 @@ function powerVsWorkspaceSchema() {
       },
       apiEndpoint: function (stateData, componentProps) {
         return (
-          `/api/power/${componentProps.craig.store.json._options.region}/images` +
+          `/api/power/${stateData.zone}/images` +
           // add name query when using data to fetch images
           (stateData.use_data ? "?name=" + stateData.name : "")
         );
