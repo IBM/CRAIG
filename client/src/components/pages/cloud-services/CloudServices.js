@@ -42,6 +42,7 @@ import { craigForms } from "../CraigForms";
 import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
 
 const serviceFormMap = {
   resource_groups: {
@@ -586,7 +587,7 @@ class CloudServicesPage extends React.Component {
               </div>
               <div className="marginTop1Rem">
                 {this.state.service ? (
-                  <>
+                  <ScrollFormWrapper>
                     <CraigFormHeading
                       icon={RenderForm(
                         serviceFormMap[this.state.service].icon,
@@ -601,14 +602,7 @@ class CloudServicesPage extends React.Component {
                           : this.state.serviceName)
                       }
                     />
-                    <div
-                      style={{
-                        padding: "0",
-                        width: "50vw",
-                        maxWidth: "690px",
-                      }}
-                      className="subForm"
-                    >
+                    <div>
                       <CraigToggleForm
                         name={
                           this.state.serviceName === "scc_v2"
@@ -642,7 +636,7 @@ class CloudServicesPage extends React.Component {
                         }}
                       />
                     </div>
-                  </>
+                  </ScrollFormWrapper>
                 ) : (
                   ""
                 )}

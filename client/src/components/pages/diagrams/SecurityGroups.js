@@ -28,7 +28,7 @@ export const SecurityGroups = (props) => {
       />
       <CraigFormGroup
         className={
-          "displayFlex alignItemsCenter overrideGap" +
+          "displayFlex alignItemsCenter overrideGap powerSubnetChildren paddingBottomNone" +
           (props.width ? " securityGroupsBoxWidth" : "")
         }
       >

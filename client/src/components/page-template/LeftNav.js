@@ -51,7 +51,7 @@ const LeftNav = (props) => {
           item={{
             path: isBetaPage ? "/beta/settings" : "/",
             icon: Settings,
-            title: (isBetaPage ? "[Beta] " : "") + "Options",
+            title: isBetaPage ? "[Beta] Settings" : "Options",
           }}
           key="Options"
           expanded={props.expanded}
@@ -225,7 +225,8 @@ const LeftNav = (props) => {
                 }
                 if (
                   (isBetaPage && item.path === window.location.pathname) ||
-                  !isBetaPage
+                  !isBetaPage ||
+                  props.hasSearch
                 )
                   return (
                     <LeftNavItem

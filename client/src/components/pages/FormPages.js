@@ -13,7 +13,7 @@ import {
   SubnetPageTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { arraySplatIndex, keys, splat, transpose } from "lazy-z";
+import { arraySplatIndex, contains, keys, splat, transpose } from "lazy-z";
 import {
   disableSshKeyDelete,
   getSubnetTierStateData,
@@ -28,7 +28,7 @@ import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
 import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.json";
 import DynamicForm from "../forms/DynamicForm";
-import { NoCisTile } from "../forms/dynamic-form/tiles";
+import { NoCisTile, NoPowerNetworkTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
 import { CraigToggleForm, DynamicFormModal } from "../forms/utils";
 import StatefulTabs from "../forms/utils/StatefulTabs";
@@ -767,19 +767,6 @@ const NoVpcTile = () => {
         Virtual Private Clouds Page
       </a>
       to create one.
-    </Tile>
-  );
-};
-
-const NoPowerNetworkTile = () => {
-  return (
-    <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
-      <CloudAlerting size="24" className="iconMargin" /> Power VS is not
-      enabled. Return to the
-      <a className="no-secrets-link" href="/">
-        Options Page
-      </a>{" "}
-      to enable Power VS.
     </Tile>
   );
 };

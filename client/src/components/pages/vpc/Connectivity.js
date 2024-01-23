@@ -16,10 +16,7 @@ import { craigForms } from "../CraigForms";
 import { disableSave, propsMatchState } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";
 import { isNullOrEmptyString } from "lazy-z";
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-}
+import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
 
 class VpcConnectivityPage extends React.Component {
   constructor(props) {
@@ -145,7 +142,7 @@ class VpcConnectivityPage extends React.Component {
                   {this.state.editing === false ? (
                     ""
                   ) : (
-                    <div className="marginTop1Rem">
+                    <ScrollFormWrapper>
                       <CraigFormHeading
                         noMarginBottom
                         type="subHeading"
@@ -182,7 +179,7 @@ class VpcConnectivityPage extends React.Component {
                           propsMatchState: propsMatchState,
                         }}
                       />
-                    </div>
+                    </ScrollFormWrapper>
                   )}
                 </div>
               </div>

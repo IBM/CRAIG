@@ -29,7 +29,7 @@ router.post(
 );
 
 // power
-router.get("/power/:region/:component", controller.getPowerComponent);
+router.get("/power/:zone/:component", controller.getPowerComponent);
 
 // craig
 router.post("/craig/tar", craigRoutes.craigTar);

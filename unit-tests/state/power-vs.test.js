@@ -247,7 +247,9 @@ describe("power-vs", () => {
         let craig = newState();
         assert.deepEqual(
           craig.power.imageNames.apiEndpoint(
-            {},
+            {
+              zone: "us-south",
+            },
             {
               craig: {
                 store: {
@@ -271,6 +273,7 @@ describe("power-vs", () => {
             {
               use_data: true,
               name: "frog",
+              zone: "us-south",
             },
             {
               craig: {

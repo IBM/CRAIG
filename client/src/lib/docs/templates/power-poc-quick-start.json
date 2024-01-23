@@ -2,18 +2,14 @@
   "_options": {
     "prefix": "poc",
     "region": "us-south",
-    "tags": [
-      "poc"
-    ],
+    "tags": ["poc"],
     "zones": 1,
     "endpoints": "public",
     "account_id": null,
     "dynamic_subnets": true,
     "enable_power_vs": true,
     "enable_classic": false,
-    "power_vs_zones": [
-      "dal10"
-    ],
+    "power_vs_zones": ["dal10"],
     "craig_version": "1.9.0",
     "power_vs_high_availability": false,
     "template": "Power VS POC",
@@ -29,10 +25,7 @@
     "bucket": "a-tracker",
     "add_route": true,
     "cos_key": "a-tracker-cos",
-    "locations": [
-      "global",
-      "us-south"
-    ],
+    "locations": ["global", "us-south"],
     "instance": true,
     "plan": "lite",
     "resource_group": "service-rg"
@@ -184,9 +177,7 @@
           "name": "pvm",
           "pi_network_type": "vlan",
           "pi_cidr": "192.168.0.0/24",
-          "pi_dns": [
-            "127.0.0.1"
-          ],
+          "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
           "workspace": "workspace",
           "zone": "dal10"
@@ -208,10 +199,7 @@
         }
       ],
       "attachments": [],
-      "imageNames": [
-        "7300-01-01",
-        "IBMi-75-01-2924-2"
-      ]
+      "imageNames": ["7300-01-01", "IBMi-75-01-2924-2"]
     }
   ],
   "power_instances": [
@@ -283,9 +271,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "aixtarget"
-      ],
+      "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "pi_storage_pool": null,
@@ -303,9 +289,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "aixtarget"
-      ],
+      "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -323,9 +307,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "aixtarget"
-      ],
+      "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -343,9 +325,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "aixtarget"
-      ],
+      "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -363,9 +343,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "aixtarget"
-      ],
+      "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -383,9 +361,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "ibmitarget"
-      ],
+      "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -403,9 +379,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "ibmitarget"
-      ],
+      "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -423,9 +397,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "ibmitarget"
-      ],
+      "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -443,9 +415,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "ibmitarget"
-      ],
+      "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -463,9 +433,7 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": [
-        "ibmitarget"
-      ],
+      "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -812,12 +780,8 @@
       "service": "cos",
       "vpc": "transit",
       "resource_group": "transit-rg",
-      "security_groups": [
-        "transit-vpe"
-      ],
-      "subnets": [
-        "vpe-zone-1"
-      ]
+      "security_groups": ["transit-vpe"],
+      "subnets": ["vpe-zone-1"]
     }
   ],
   "vpcs": [
@@ -831,9 +795,7 @@
       "default_network_acl_name": null,
       "default_security_group_name": null,
       "default_routing_table_name": null,
-      "publicGateways": [
-        1
-      ],
+      "publicGateways": [1],
       "address_prefixes": [
         {
           "vpc": "transit",
@@ -1003,9 +965,7 @@
       "connections": [
         {
           "name": "on-prem-connection",
-          "peer_cidrs": [
-            "10.40.0.0/16"
-          ],
+          "peer_cidrs": ["10.40.0.0/16"],
           "local_cidrs": [
             "192.168.0.0/24",
             "10.10.0.0/26",
@@ -1015,9 +975,7 @@
           "vpn": "dal10gw"
         }
       ],
-      "additional_prefixes": [
-        "10.40.0.0/16"
-      ]
+      "additional_prefixes": ["10.40.0.0/16"]
     }
   ],
   "vpn_servers": [],
@@ -1029,21 +987,15 @@
       "image_name": "Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-2-minimal-amd64-3]",
       "profile": "bx2-4x16",
       "name": "example-deployment",
-      "security_groups": [
-        "transit-vsi"
-      ],
-      "ssh_keys": [
-        "vsi-ssh-key"
-      ],
+      "security_groups": ["transit-vsi"],
+      "ssh_keys": ["vsi-ssh-key"],
       "vpc": "transit",
       "vsi_per_subnet": "2",
       "resource_group": "transit-rg",
       "override_vsi_name": null,
       "user_data": null,
       "network_interfaces": [],
-      "subnets": [
-        "vsi-zone-1"
-      ],
+      "subnets": ["vsi-zone-1"],
       "volumes": [],
       "subnet": "",
       "enable_floating_ip": false,

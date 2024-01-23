@@ -20,12 +20,10 @@ const {
   powerAntiAffinityVolume,
   powerAntiAffinityInstance,
   powerStoragePoolSelect,
-  wholeNumberField,
-  wholeNumberText,
   fieldIsNotWholeNumber,
 } = require("./utils");
 const { invalidName, invalidNameText } = require("../forms");
-const { replicationDisabledCallback } = require("../forms/invalid-callbacks");
+const { replicationEnabledStoragePoolMap } = require("../constants");
 
 /**
  * initialize power vs volumes
@@ -195,7 +193,15 @@ function initPowerVsVolumeStore(store) {
         labelText: "Enable Volume Replication",
         default: false,
         type: "toggle",
-        disabled: replicationDisabledCallback,
+        disabled: function (stateData, componentProps) {
+          let pool = stateData.pi_volume_pool;
+          if (!stateData.zone) {
+            return true;
+          }
+          let replicationEnabledPools =
+            replicationEnabledStoragePoolMap[stateData.zone] || [];
+          return !contains(replicationEnabledPools, pool);
+        },
       },
       pi_volume_shareable: {
         size: "small",

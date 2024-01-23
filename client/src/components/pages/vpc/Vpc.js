@@ -19,10 +19,7 @@ import "./vpc.css";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
 import { AclMap, SubnetTierMap, VpcMap } from "../diagrams";
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-}
+import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
 
 class VpcDiagramPage extends React.Component {
   constructor(props) {
@@ -84,7 +81,6 @@ class VpcDiagramPage extends React.Component {
     ) {
       this.resetValues();
     } else {
-      scrollToTop();
       this.setState({
         vpcIndex: vpcIndex,
         subnetTierIndex: tierIndex,
@@ -102,7 +98,6 @@ class VpcDiagramPage extends React.Component {
     if (vpcIndex === this.state.vpcIndex && aclIndex === this.state.aclIndex) {
       this.resetValues();
     } else {
-      scrollToTop();
       this.setState({
         editing: true,
         vpcIndex: vpcIndex,
@@ -128,7 +123,6 @@ class VpcDiagramPage extends React.Component {
       if (this.state.aclIndex > -1 || this.state.subnetTierIndex > -1) {
         this.resetValues();
       }
-      scrollToTop();
       this.setState({ vpcIndex: vpcIndex, editing: true });
     }
   }
@@ -395,7 +389,7 @@ class VpcDiagramPage extends React.Component {
                   {this.state.editing === true &&
                   this.state.aclCreateModal === false &&
                   this.state.subnetTierCreateModal === false ? (
-                    <div className="marginTop1rem">
+                    <ScrollFormWrapper>
                       <CraigFormHeading
                         noMarginBottom
                         type="subHeading"
@@ -418,7 +412,7 @@ class VpcDiagramPage extends React.Component {
                           craig.store.json.vpcs[this.state.vpcIndex].name
                         } VPC`}
                       />
-                      <div className="subForm rightForm">
+                      <div>
                         {this.state.subnetTierIndex > -1 ? (
                           <DynamicSubnetTierForm
                             vpcIndex={this.state.vpcIndex}
@@ -459,7 +453,7 @@ class VpcDiagramPage extends React.Component {
                           ""
                         )}
                       </div>
-                    </div>
+                    </ScrollFormWrapper>
                   ) : (
                     ""
                   )}

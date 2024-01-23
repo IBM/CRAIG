@@ -29,7 +29,21 @@ export const VpcMap = (props) => {
     }
   });
   return craig.store.json.vpcs.length === 0 && !props.static ? (
-    <CraigEmptyResourceTile name="VPCs" className="width580 marginTopHalfRem" />
+    <CraigEmptyResourceTile
+      name="VPCs"
+      className="width580 marginTopHalfRem"
+      customClick={
+        window.location.pathname !== "/beta/vpc" ? (
+          <>
+            Add one from the{" "}
+            <a href="/beta/vpc" style={{ marginLeft: "0.33rem" }}>
+              VPC Page
+            </a>
+            .
+          </>
+        ) : undefined
+      }
+    />
   ) : (
     (nullVpcResources && !props.noDeployments
       ? [{ name: null, public_gateways: [] }]

@@ -154,6 +154,10 @@
   padding-bottom: 0.5rem;
 }
 
+.paddingBottomNone {
+  padding-bottom: 0;
+}
+
 .serviceBox {
   width: 580px;
   margin: 1rem;
@@ -229,4 +233,18 @@
 
 .width535 {
   width: 535px;
+}
+
+.scrollFormWrapper {
+  width: 45vw;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 16rem;
+  height: 75%;
+  overflow: auto;
+}
+
+.marginRightThreeQuarterRem {
+  margin-right: 0.75rem;
 }

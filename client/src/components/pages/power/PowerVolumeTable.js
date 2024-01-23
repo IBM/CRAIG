@@ -84,8 +84,10 @@ export const PowerVolumeTable = (props) => {
             type="add"
             noDeleteButton
             onClick={props.onClick}
+            className="marginRightThreeQuarterRem"
           />
         }
+        className="marginBottomSmall"
       />
       <Table>
         <TableHead>

@@ -601,5 +601,40 @@ describe("power_volumes", () => {
         "it should return list of groups"
       );
     });
+    it("should be false for when the storage pool is replication enabled", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-8",
+        zone: "us-east",
+      };
+      assert.isFalse(
+        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+      );
+    });
+    it("should be true for when the storage pool is not replication enabled", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-1",
+        zone: "us-east",
+      };
+      assert.isTrue(
+        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+      );
+    });
+    it("should be false for when the storage pool has no zone (no workspace selected)", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-8",
+      };
+      assert.isTrue(
+        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+      );
+    });
+    it("should be true for when the workspace's zone does not have replication enabled", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-8",
+        zone: "dal10",
+      };
+      assert.isTrue(
+        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+      );
+    });
   });
 });
