@@ -195,18 +195,18 @@ chmod 755 deploy.sh
 By default the script will securely prompt you for your API key. It may also be read from an environment variable or specified as a command line argument. See the `deploy.sh -h` usage for more information.
 
 ```bash
-deploy.sh
+./deploy.sh
 ```
 
 This script can also delete the resources when the delete flag `-d` is passed
 
 ```bash
-deploy.sh -d
+./deploy.sh -d
 ```
 
 For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
 ```
-deploy.sh -h
+./deploy.sh -h
 ```
 
 ---
