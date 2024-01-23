@@ -12,6 +12,7 @@ export const ValidNavBox = (props) => {
   ) : (
     <HeaderGlobalAction
       key={JSON.stringify(props.json)}
+      onClick={props.onClick}
       aria-label={
         isValid
           ? "Configuration is valid and ready to download"
