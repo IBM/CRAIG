@@ -21,7 +21,7 @@ const templateImages = {
   "Power VS Quick Start": PowerVsQuickStart,
   "Power VS Oracle Single Instance": OracleSI,
   "VPN as a Service": Vpnaas,
-  "Power VS POC Quick Start": PowerVsPoc,
+  "Power VS POC": PowerVsPoc,
 };
 
 keys(template_dropdown_map).forEach((template) => {

@@ -1,41 +1,54 @@
 {
   "_options": {
-    "prefix": "craig",
+    "prefix": "poc",
     "region": "us-south",
-    "tags": ["craig", "quick-start"],
+    "tags": [
+      "poc"
+    ],
     "zones": 1,
-    "endpoints": "public-and-private",
+    "endpoints": "public",
     "account_id": null,
     "dynamic_subnets": true,
     "enable_power_vs": true,
     "enable_classic": false,
-    "power_vs_zones": ["dal10"],
+    "power_vs_zones": [
+      "dal10"
+    ],
     "craig_version": "1.9.0",
     "power_vs_high_availability": false,
-    "template": "Power VS POC Quick Start",
+    "template": "Power VS POC",
     "fs_cloud": false
   },
   "access_groups": [],
   "appid": [],
   "atracker": {
-    "enabled": false,
+    "enabled": true,
     "type": "cos",
     "name": "atracker",
-    "target_name": "atracker-cos",
-    "bucket": null,
+    "target_name": "a-tracker",
+    "bucket": "a-tracker",
     "add_route": true,
-    "cos_key": null,
-    "locations": ["global", "us-south"],
-    "instance": false,
+    "cos_key": "a-tracker-cos",
+    "locations": [
+      "global",
+      "us-south"
+    ],
+    "instance": true,
     "plan": "lite",
-    "resource_group": null
+    "resource_group": "service-rg"
   },
   "cbr_rules": [],
   "cbr_zones": [],
+  "cis": [],
+  "cis_glbs": [],
+  "classic_gateways": [],
+  "classic_ssh_keys": [],
+  "classic_vlans": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
   "f5_vsi": [],
+  "fortigate_vnf": [],
   "iam_account_settings": {
     "enable": false,
     "mfa": null,
@@ -109,7 +122,7 @@
         },
         {
           "force_delete": false,
-          "name": "iseries",
+          "name": "ibm-i",
           "storage_class": "smart",
           "kms_key": null,
           "endpoint": "public",
@@ -124,6 +137,31 @@
           "use_random_suffix": true
         }
       ]
+    },
+    {
+      "use_data": false,
+      "use_random_suffix": false,
+      "name": "a-tracker",
+      "resource_group": "service-rg",
+      "plan": "standard",
+      "kms": "kms",
+      "buckets": [
+        {
+          "name": "a-tracker",
+          "storage_class": "standard",
+          "kms_key": "atracker-key",
+          "force_delete": false,
+          "use_random_suffix": false
+        }
+      ],
+      "keys": [
+        {
+          "name": "a-tracker-cos",
+          "role": "Writer",
+          "enable_hmac": false,
+          "use_random_suffix": false
+        }
+      ]
     }
   ],
   "power": [
@@ -133,10 +171,10 @@
       "zone": "dal10",
       "ssh_keys": [
         {
-          "name": "sample",
-          "public_key": "NONE",
+          "name": "powervs-ssh-key",
+          "public_key": "",
           "use_data": false,
-          "resource_group": "management-rg",
+          "resource_group": "power-rg",
           "workspace": "workspace",
           "zone": "dal10"
         }
@@ -146,7 +184,9 @@
           "name": "pvm",
           "pi_network_type": "vlan",
           "pi_cidr": "192.168.0.0/24",
-          "pi_dns": ["127.0.0.1"],
+          "pi_dns": [
+            "127.0.0.1"
+          ],
           "pi_network_jumbo": false,
           "workspace": "workspace",
           "zone": "dal10"
@@ -168,7 +208,10 @@
         }
       ],
       "attachments": [],
-      "imageNames": ["7300-01-01", "IBMi-75-01-2924-2"]
+      "imageNames": [
+        "7300-01-01",
+        "IBMi-75-01-2924-2"
+      ]
     }
   ],
   "power_instances": [
@@ -189,7 +232,7 @@
       "storage_option": "Storage Type",
       "pi_storage_pool_affinity": false,
       "sap": false,
-      "ssh_key": "sample",
+      "ssh_key": "powervs-ssh-key",
       "pi_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_anti_affinity_volume": null,
@@ -200,7 +243,7 @@
       "pi_storage_pool": null,
       "affinity_type": null,
       "pi_affinity_instance": null,
-      "index": 0
+      "pi_user_data": null
     },
     {
       "sap": false,
@@ -213,7 +256,7 @@
           "ip_address": ""
         }
       ],
-      "ssh_key": "sample",
+      "ssh_key": "powervs-ssh-key",
       "image": "IBMi-75-01-2924-2",
       "pi_sys_type": "s922",
       "pi_proc_type": "shared",
@@ -230,7 +273,7 @@
       "pi_affinity_instance": null,
       "zone": "dal10",
       "pi_affinity_policy": null,
-      "index": 1
+      "pi_user_data": null
     }
   ],
   "power_volumes": [
@@ -240,7 +283,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["aixtarget"],
+      "attachments": [
+        "aixtarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "pi_storage_pool": null,
@@ -258,7 +303,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["aixtarget"],
+      "attachments": [
+        "aixtarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -276,7 +323,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["aixtarget"],
+      "attachments": [
+        "aixtarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -294,7 +343,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["aixtarget"],
+      "attachments": [
+        "aixtarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -312,7 +363,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["aixtarget"],
+      "attachments": [
+        "aixtarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -330,7 +383,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["ibmitarget"],
+      "attachments": [
+        "ibmitarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -348,7 +403,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["ibmitarget"],
+      "attachments": [
+        "ibmitarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -366,7 +423,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["ibmitarget"],
+      "attachments": [
+        "ibmitarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -384,7 +443,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["ibmitarget"],
+      "attachments": [
+        "ibmitarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -402,7 +463,9 @@
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
       "pi_volume_type": null,
-      "attachments": ["ibmitarget"],
+      "attachments": [
+        "ibmitarget"
+      ],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
       "zone": "dal10",
@@ -423,7 +486,7 @@
     },
     {
       "use_prefix": true,
-      "name": "management-rg",
+      "name": "transit-rg",
       "use_data": false
     },
     {
@@ -436,7 +499,7 @@
     {
       "routes": [],
       "name": "poweringress",
-      "vpc": "management",
+      "vpc": "transit",
       "internet_ingress": false,
       "transit_gateway_ingress": false,
       "vpc_zone_ingress": true,
@@ -455,16 +518,23 @@
     "scope_description": null,
     "enable": false
   },
+  "scc_v2": {
+    "enable": false,
+    "resource_group": null,
+    "region": "",
+    "account_id": "${var.account_id}",
+    "profile_attachments": []
+  },
   "secrets_manager": [],
   "security_groups": [
     {
-      "vpc": "management",
-      "name": "management-vpe",
-      "resource_group": "management-rg",
+      "vpc": "transit",
+      "name": "transit-vpe",
+      "resource_group": "transit-rg",
       "rules": [
         {
-          "vpc": "management",
-          "sg": "management-vpe",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "inbound",
           "name": "allow-ibm-inbound",
           "source": "161.26.0.0/16",
@@ -482,8 +552,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vpe",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "inbound",
           "name": "allow-vpc-inbound",
           "source": "10.0.0.0/8",
@@ -501,8 +571,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vpe",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-vpc-outbound",
           "source": "10.0.0.0/8",
@@ -520,8 +590,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vpe",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-ibm-tcp-53-outbound",
           "source": "161.26.0.0/16",
@@ -539,8 +609,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vpe",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-ibm-tcp-80-outbound",
           "source": "161.26.0.0/16",
@@ -558,8 +628,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vpe",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-ibm-tcp-443-outbound",
           "source": "161.26.0.0/16",
@@ -579,13 +649,13 @@
       ]
     },
     {
-      "vpc": "management",
-      "name": "management-vsi",
-      "resource_group": "management-rg",
+      "vpc": "transit",
+      "name": "transit-vsi",
+      "resource_group": "transit-rg",
       "rules": [
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "direction": "inbound",
           "name": "allow-ibm-inbound",
           "source": "161.26.0.0/16",
@@ -603,8 +673,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "direction": "inbound",
           "name": "allow-vpc-inbound",
           "source": "10.0.0.0/8",
@@ -622,8 +692,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "direction": "outbound",
           "name": "allow-vpc-outbound",
           "source": "10.0.0.0/8",
@@ -641,8 +711,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "direction": "outbound",
           "name": "allow-ibm-tcp-53-outbound",
           "source": "161.26.0.0/16",
@@ -660,8 +730,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "direction": "outbound",
           "name": "allow-ibm-tcp-80-outbound",
           "source": "161.26.0.0/16",
@@ -679,8 +749,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "direction": "outbound",
           "name": "allow-ibm-tcp-443-outbound",
           "source": "161.26.0.0/16",
@@ -703,9 +773,9 @@
   "ssh_keys": [
     {
       "name": "vsi-ssh-key",
-      "public_key": "NONE",
+      "public_key": "",
       "use_data": false,
-      "resource_group": "management-rg"
+      "resource_group": "transit-rg"
     }
   ],
   "sysdig": {
@@ -724,7 +794,7 @@
       "connections": [
         {
           "tgw": "transit-gateway",
-          "vpc": "management"
+          "vpc": "transit"
         },
         {
           "tgw": "transit-gateway",
@@ -738,80 +808,85 @@
   ],
   "virtual_private_endpoints": [
     {
-      "name": "management-cos",
+      "name": "transit-cos",
       "service": "cos",
-      "vpc": "management",
-      "resource_group": "management-rg",
-      "security_groups": ["management-vpe"],
-      "subnets": ["vpe-zone-1"],
-      "instance": null
+      "vpc": "transit",
+      "resource_group": "transit-rg",
+      "security_groups": [
+        "transit-vpe"
+      ],
+      "subnets": [
+        "vpe-zone-1"
+      ]
     }
   ],
   "vpcs": [
     {
       "cos": null,
       "bucket": "$disabled",
-      "name": "management",
-      "resource_group": "management-rg",
+      "name": "transit",
+      "resource_group": "transit-rg",
       "classic_access": false,
       "manual_address_prefix_management": true,
       "default_network_acl_name": null,
       "default_security_group_name": null,
       "default_routing_table_name": null,
-      "publicGateways": [1],
+      "publicGateways": [
+        1
+      ],
       "address_prefixes": [
         {
-          "vpc": "management",
+          "vpc": "transit",
           "zone": 1,
-          "name": "management-zone-1",
+          "name": "transit-zone-1",
           "cidr": "10.10.0.0/22"
         }
       ],
       "subnets": [
         {
-          "vpc": "management",
+          "vpc": "transit",
           "zone": 1,
           "cidr": "10.10.0.0/26",
           "name": "vsi-zone-1",
-          "network_acl": "management",
-          "resource_group": "management-rg",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
           "public_gateway": true,
           "has_prefix": false
         },
         {
-          "vpc": "management",
+          "vpc": "transit",
           "zone": 1,
           "cidr": "10.10.0.128/29",
           "name": "vpe-zone-1",
-          "resource_group": "management-rg",
-          "network_acl": "management",
+          "resource_group": "transit-rg",
+          "network_acl": "transit",
           "public_gateway": false,
           "has_prefix": false
         },
         {
-          "vpc": "management",
+          "vpc": "transit",
           "zone": 1,
           "cidr": "10.10.0.144/28",
           "name": "vpn-zone-1",
-          "networkAcl": "management",
-          "resource_group": "management-rg",
+          "networkAcl": "transit",
+          "resource_group": "transit-rg",
           "has_prefix": false,
-          "network_acl": "management",
+          "network_acl": "transit",
           "public_gateway": false
         }
       ],
       "public_gateways": [
         {
-          "vpc": "management",
+          "vpc": "transit",
           "zone": 1,
-          "resource_group": "management-rg"
+          "resource_group": "transit-rg"
         }
       ],
       "acls": [
         {
-          "resource_group": "management-rg",
-          "name": "management",
-          "vpc": "management",
+          "resource_group": "transit-rg",
+          "name": "transit",
+          "vpc": "transit",
           "rules": [
             {
               "action": "allow",
@@ -819,8 +894,8 @@
               "direction": "inbound",
               "name": "allow-ibm-inbound",
               "source": "161.26.0.0/16",
-              "acl": "management",
-              "vpc": "management",
+              "acl": "transit",
+              "vpc": "transit",
               "icmp": {
                 "type": null,
                 "code": null
@@ -844,8 +919,8 @@
               "direction": "outbound",
               "name": "allow-ibm-outbound",
               "destination": "161.26.0.0/16",
-              "acl": "management",
-              "vpc": "management",
+              "acl": "transit",
+              "vpc": "transit",
               "icmp": {
                 "type": null,
                 "code": null
@@ -869,8 +944,8 @@
               "direction": "inbound",
               "name": "allow-all-network-inbound",
               "source": "10.0.0.0/8",
-              "acl": "management",
-              "vpc": "management",
+              "acl": "transit",
+              "vpc": "transit",
               "icmp": {
                 "type": null,
                 "code": null
@@ -894,8 +969,8 @@
               "direction": "outbound",
               "name": "allow-all-network-outbound",
               "source": "10.0.0.0/8",
-              "acl": "management",
-              "vpc": "management",
+              "acl": "transit",
+              "vpc": "transit",
               "icmp": {
                 "type": null,
                 "code": null
@@ -921,14 +996,16 @@
   "vpn_gateways": [
     {
       "name": "dal10gw",
-      "resource_group": "management-rg",
-      "vpc": "management",
+      "resource_group": "transit-rg",
+      "vpc": "transit",
       "subnet": "vpn-zone-1",
       "policy_mode": true,
       "connections": [
         {
-          "name": "sampleconnection",
-          "peer_cidrs": ["10.40.0.0/16"],
+          "name": "on-prem-connection",
+          "peer_cidrs": [
+            "10.40.0.0/16"
+          ],
           "local_cidrs": [
             "192.168.0.0/24",
             "10.10.0.0/26",
@@ -938,7 +1015,9 @@
           "vpn": "dal10gw"
         }
       ],
-      "additional_prefixes": ["10.10.0.0/16"]
+      "additional_prefixes": [
+        "10.40.0.0/16"
+      ]
     }
   ],
   "vpn_servers": [],
@@ -946,37 +1025,30 @@
     {
       "kms": "kms",
       "encryption_key": "key",
-      "image": "ibm-redhat-9-2-minimal-amd64-1",
-      "image_name": "Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-2-minimal-amd64-1]",
+      "image": "ibm-redhat-9-2-minimal-amd64-3",
+      "image_name": "Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-2-minimal-amd64-3]",
       "profile": "bx2-4x16",
       "name": "example-deployment",
-      "security_groups": ["management-vsi"],
-      "ssh_keys": ["vsi-ssh-key"],
-      "vpc": "management",
+      "security_groups": [
+        "transit-vsi"
+      ],
+      "ssh_keys": [
+        "vsi-ssh-key"
+      ],
+      "vpc": "transit",
       "vsi_per_subnet": "2",
-      "resource_group": "management-rg",
+      "resource_group": "transit-rg",
       "override_vsi_name": null,
       "user_data": null,
       "network_interfaces": [],
-      "subnets": ["vsi-zone-1"],
+      "subnets": [
+        "vsi-zone-1"
+      ],
       "volumes": [],
       "subnet": "",
       "enable_floating_ip": false,
       "primary_interface_ip_spoofing": false
     }
   ],
-  "classic_ssh_keys": [],
-  "classic_vlans": [],
-  "vtl": [],
-  "classic_gateways": [],
-  "cis": [],
-  "scc_v2": {
-    "enable": false,
-    "resource_group": null,
-    "region": "",
-    "account_id": "${var.account_id}",
-    "profile_attachments": []
-  },
-  "cis_glbs": [],
-  "fortigate_vnf": []
+  "vtl": []
 }
