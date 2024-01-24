@@ -8,7 +8,12 @@ import {
   RenderForm,
 } from "../../forms/utils/ToggleFormComponents";
 import { distinct, isNullOrEmptyString, snakeCase, titleCase } from "lazy-z";
-import { FirewallClassic, Password, VlanIbm } from "@carbon/icons-react";
+import {
+  FirewallClassic,
+  InfrastructureClassic,
+  Password,
+  VlanIbm,
+} from "@carbon/icons-react";
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import { disableSave, propsMatchState } from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";
@@ -233,19 +238,24 @@ class ClassicDiagram extends React.Component {
         <div
           style={{
             marginRight: "1rem",
-            marginTop: "1rem",
           }}
         >
           <StatefulTabs
+            h2
+            icon={
+              <InfrastructureClassic
+                style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+                size="20"
+              />
+            }
             name="Classic Network"
-            formName="Classic Network"
+            formName="Manage Classic Network"
             nestedDocs={docTabs(
               ["Classic SSH Keys", "Classic VLANs", "Classic Gateways"],
               craig
             )}
             form={
               <>
-                <div className="marginBottomSmall" />
                 <div style={{ width: "580px" }}>
                   <CraigFormHeading
                     name="Classic Resources"

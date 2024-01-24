@@ -63,6 +63,8 @@ export const RgServiceMap = (props) => {
     let serviceMap = services.serviceMap[rg];
     return serviceMap.length === 0 && props.small ? (
       ""
+    ) : serviceMap.length === 0 ? (
+      <div style={{ marginBottom: "0.5rem" }} />
     ) : (
       <div
         className={

@@ -11,6 +11,7 @@ import {
   IbmCloudLogging,
   CloudMonitoring,
   IbmCloudSecurityComplianceCenterWorkloadProtection,
+  CloudServices,
 } from "@carbon/icons-react";
 import { EmptyResourceTile, IcseSelect } from "icse-react-assets";
 import {
@@ -434,9 +435,15 @@ class CloudServicesPage extends React.Component {
             />
           )}
         </DynamicFormModal>
-        <div className="marginBottomSmall" />
         <StatefulTabs
-          formName="Cloud Services"
+          h2
+          icon={
+            <CloudServices
+              style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+              size="20"
+            />
+          }
+          formName="Manage Cloud Services"
           name="Cloud Services"
           nestedDocs={docTabs(
             [
@@ -507,83 +514,92 @@ class CloudServicesPage extends React.Component {
                     />
                   }
                 />
-                {serviceResourceGroups.map((rg) => (
-                  <HoverClassNameWrapper
-                    className="subForm marginBottomSmall"
-                    hoverClassName="diagramBoxSelected"
-                    key={rg}
-                  >
-                    <CraigFormHeading
-                      icon={<GroupResource className="diagramTitleIcon" />}
-                      noMarginBottom={serviceMap[rg].length === 0}
-                      type="subHeading"
-                      className="marginBottomSmall"
-                      onClick={() => {
-                        this.onServiceIconClick({
-                          resourceGroup: "",
-                          service: {
-                            type: "resource_groups",
-                            name: rg,
-                          },
-                        });
-                      }}
-                      name={rg}
-                      buttons={
-                        rg === "No Resource Group" ? (
-                          // hide button when resource group is null
-                          <></>
-                        ) : (
-                          <PrimaryButton
-                            type="add"
-                            onClick={() => this.toggleModal(rg)}
-                            className="none-right"
-                            noDeleteButton
-                          />
-                        )
-                      }
-                    />
-                    {serviceMap[rg].length === 0 ? (
-                      <EmptyResourceTile name="services in this resource group" />
-                    ) : (
-                      <CraigFormGroup className="overrideGap">
-                        {serviceMap[rg]
-                          .sort((a, b) => {
-                            // sort resources by name within the same resource type
-                            if (
-                              (a.overrideType || a.type) <
-                              (b.overrideType || b.type)
-                            )
-                              return -1;
-                            if (
-                              (a.overrideType || a.type) >
-                              (b.overrideType || b.type)
-                            )
-                              return 1;
-                            if (a.name < b.name && a.type === b.type) return -1;
-                            if (a.name > b.name && a.type === b.type) return 1;
-                          })
-                          .map((service) => (
-                            <HoverClassNameWrapper
-                              hoverClassName="diagramBoxSelected"
-                              key={JSON.stringify(service)}
-                            >
-                              <ManageService
-                                key={JSON.stringify(service)}
-                                resourceGroup={rg}
-                                service={service}
-                                icon={serviceFormMap[service.type].icon}
-                                onClick={this.onServiceIconClick}
-                                isSelected={
-                                  this.state.service === service.type &&
-                                  this.state.serviceName === service.name
-                                }
+                {serviceResourceGroups.map((rg) => {
+                  if (
+                    // prevent no resource group box from rendering when no services
+                    // are present
+                    !(rg === "No Resource Group" && serviceMap[rg].length === 0)
+                  )
+                    return (
+                      <HoverClassNameWrapper
+                        className="subForm marginBottomSmall"
+                        hoverClassName="diagramBoxSelected"
+                        key={rg}
+                      >
+                        <CraigFormHeading
+                          icon={<GroupResource className="diagramTitleIcon" />}
+                          noMarginBottom={serviceMap[rg].length === 0}
+                          type="subHeading"
+                          className="marginBottomSmall"
+                          onClick={() => {
+                            this.onServiceIconClick({
+                              resourceGroup: "",
+                              service: {
+                                type: "resource_groups",
+                                name: rg,
+                              },
+                            });
+                          }}
+                          name={rg}
+                          buttons={
+                            rg === "No Resource Group" ? (
+                              // hide button when resource group is null
+                              <></>
+                            ) : (
+                              <PrimaryButton
+                                type="add"
+                                onClick={() => this.toggleModal(rg)}
+                                className="none-right"
+                                noDeleteButton
                               />
-                            </HoverClassNameWrapper>
-                          ))}
-                      </CraigFormGroup>
-                    )}
-                  </HoverClassNameWrapper>
-                ))}
+                            )
+                          }
+                        />
+                        {serviceMap[rg].length === 0 ? (
+                          <EmptyResourceTile name="services in this resource group" />
+                        ) : (
+                          <CraigFormGroup className="overrideGap">
+                            {serviceMap[rg]
+                              .sort((a, b) => {
+                                // sort resources by name within the same resource type
+                                if (
+                                  (a.overrideType || a.type) <
+                                  (b.overrideType || b.type)
+                                )
+                                  return -1;
+                                if (
+                                  (a.overrideType || a.type) >
+                                  (b.overrideType || b.type)
+                                )
+                                  return 1;
+                                if (a.name < b.name && a.type === b.type)
+                                  return -1;
+                                if (a.name > b.name && a.type === b.type)
+                                  return 1;
+                              })
+                              .map((service) => (
+                                <HoverClassNameWrapper
+                                  hoverClassName="diagramBoxSelected"
+                                  key={JSON.stringify(service)}
+                                >
+                                  <ManageService
+                                    key={JSON.stringify(service)}
+                                    resourceGroup={rg}
+                                    service={service}
+                                    icon={serviceFormMap[service.type].icon}
+                                    onClick={this.onServiceIconClick}
+                                    isSelected={
+                                      this.state.service === service.type &&
+                                      this.state.serviceName === service.name
+                                    }
+                                  />
+                                </HoverClassNameWrapper>
+                              ))}
+                          </CraigFormGroup>
+                        )}
+                      </HoverClassNameWrapper>
+                    );
+                })}
               </div>
               <div className="marginTop1Rem">
                 {this.state.service ? (

@@ -34,10 +34,12 @@ class StatefulTabs extends React.Component {
           ""
         ) : (
           <CraigFormHeading
+            icon={this.props.icon}
             name={this.props.name}
             type={this.props.headingType}
             className={this.props.className}
             tooltip={this.props.tooltip}
+            h2={this.props.h2}
             buttons={
               <DynamicRender
                 hide={this.props.hideButtons}

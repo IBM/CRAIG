@@ -335,12 +335,18 @@ class PowerDiagram extends React.Component {
         <div
           style={{
             marginRight: "1rem",
-            marginTop: "1rem",
           }}
         >
           <StatefulTabs
+            h2
+            icon={
+              <IbmPowerVs
+                style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+                size="20"
+              />
+            }
             name="Power VS"
-            formName="Power VS"
+            formName="Manage Power VS"
             nestedDocs={docTabs(
               ["Power VS", "Power VS Instances (LPARs)", "Power Volumes"],
               craig
@@ -348,7 +354,6 @@ class PowerDiagram extends React.Component {
             form={
               craig.store.json._options.enable_power_vs === true ? (
                 <>
-                  <div className="marginBottomSmall" />
                   <div style={{ width: "580px" }}>
                     <CraigFormHeading
                       name="Power Workspaces"

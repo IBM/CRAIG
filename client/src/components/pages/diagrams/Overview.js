@@ -6,6 +6,7 @@ import {
   IbmPowerVsPrivateCloud,
   IbmCloudTransitGateway,
   InfrastructureClassic,
+  Dashboard,
 } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { RgServiceMap } from "./RgServiceMap";
@@ -35,8 +36,16 @@ export class Overview extends React.Component {
     let craig = this.props.craig;
     return (
       <>
-        <div className="marginBottomSmall" />
-        <CraigFormHeading name="Overview" className="marginBottomSmall" />
+        <CraigFormHeading
+          name="Overview"
+          h2
+          icon={
+            <Dashboard
+              style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+              size="20"
+            />
+          }
+        />
         <div id="services-diagram" className="marginBottomSmall diagramBox">
           <div className="marginBottomHalfRem" />
           <CraigFormHeading
@@ -66,7 +75,7 @@ export class Overview extends React.Component {
             noMarginBottom
             icon={<NetworkEnterprise className="diagramTitleIcon" />}
           />
-          {this.props.small ? (
+          {this.props.small || craig.store.json.ssh_keys.length === 0 ? (
             ""
           ) : (
             <div id="vpc-ssh-keys" className="marginBottomNone">

@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, TabList, Tab, TabPanel, TabPanels } from "@carbon/react";
-import { Sprout } from "@carbon/icons-react";
+import { Settings, Sprout } from "@carbon/icons-react";
 import { EdgeNetworkingForm } from "../forms";
 import "./home.scss";
 import ImportJson from "./ImportJson";
@@ -15,8 +15,18 @@ function Home(props) {
   return (
     <>
       {contains(window.location.pathname, "/beta") ? (
-        <div className="marginTop1Rem">
-          <CraigFormHeading name="Settings" noMarginBottom />
+        <div>
+          <CraigFormHeading
+            name="Settings"
+            noMarginBottom
+            h2
+            icon={
+              <Settings
+                style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+                size="20"
+              />
+            }
+          />
         </div>
       ) : (
         <div className="banner">
@@ -34,7 +44,11 @@ function Home(props) {
       )}
       <Tabs>
         <TabList aria-label="home-options">
-          <Tab>Options</Tab>
+          <Tab>
+            {contains(window.location.pathname, "beta")
+              ? "Manage Settings"
+              : "Options"}
+          </Tab>
           <Tab>Import JSON</Tab>
           <Tab>Import SLZ JSON</Tab>
         </TabList>

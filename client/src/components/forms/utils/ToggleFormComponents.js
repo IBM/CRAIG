@@ -303,6 +303,11 @@ const CraigFormHeading = (props) => {
                   {icon}
                   {props.name}
                 </h6>
+              ) : props.h2 ? (
+                <h2 className="displayFlex marginBottomSmall">
+                  {icon}
+                  {props.name}
+                </h2>
               ) : (
                 <h4 className="displayFlex">
                   {icon}

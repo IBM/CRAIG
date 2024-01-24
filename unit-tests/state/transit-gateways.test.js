@@ -114,7 +114,7 @@ describe("transit_gateways", () => {
         {
           name: "toad",
           imageNames: ["7100-05-09"],
-          zone: "dal12",
+          zone: "dal13",
         },
         {
           data: {
@@ -467,7 +467,7 @@ describe("transit_gateways", () => {
           });
           craig.power.create({
             name: "power-also",
-            zone: "dal12",
+            zone: "dal13",
             images: [],
             imageNames: [],
           });
