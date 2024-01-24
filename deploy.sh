@@ -5,7 +5,7 @@
 # Some of these values can then be further overridden by command line arguments
 API_KEY=${CRAIG_API_KEY:-"NOT-SET"}
 REGION=${CRAIG_REGION:-"us-south"}
-RESOURCE_GROUP=${CRAIG_RESOURCE_GROUP:-"default"}
+RESOURCE_GROUP=${CRAIG_RESOURCE_GROUP:-"Default"}
 ENVIRONMENT_FILE=${CRAIG_ENVIRONMENT_FILE}
 PROJECT_NAME=${CRAIG_PROJECT_NAME:-"craig"}
 ICR_NAMESPACE=${CRAIG_ICR_NAMESPACE:-"craig-namespace"}
@@ -37,7 +37,7 @@ Options:
   a     IBM Cloud Platform API Key.
   d     Delete resources.
 
-  g     Resource group to deploy resources in. Default value = 'default'.
+  g     Resource group to deploy resources in. Default value = 'Default'.
   r     Region to deploy resources in. Default value = 'us-south'.
   e     Path to a CRAIG environment file for things such as Power Virtual Server Workspace GUIDs. No default.
 

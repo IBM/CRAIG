@@ -213,15 +213,23 @@ By default the script will securely prompt you for your API key. It may also be 
 ./deploy.sh
 ```
 
-This script can also delete the resources when the delete flag `-d` is passed
+For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
+```
+./deploy.sh -h
+```
+
+This script can also delete the resources created when the delete flag `-d` is passed:
 
 ```bash
 ./deploy.sh -d
 ```
 
-For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
-```
-./deploy.sh -h
+Note, if you've specified custom parameters beyond the default values for your deploy script, then you must specify them after the delete flag in order to delete all resources properly. 
+
+For example, to delete the CRAIG Code Engine and Container Registry resources with custom parameters resource group: `test`, namespace: `craig-demo-namespace`, and project name: `craig-demo-project`, then the script must be specified as followed:
+
+```bash
+./deploy.sh -d -g test -n craig-demo-namespace -p craig-demo-project
 ```
 
 ---
