@@ -6,6 +6,7 @@ const {
   transpose,
   getObjectFromArray,
   revision,
+  splatContains,
 } = require("lazy-z");
 
 /**
@@ -15,34 +16,52 @@ const {
  * @returns {object} data object
  */
 function powerVsInstanceData(instance, config) {
+  let foundWorkspace = !config?.power
+    ? true
+    : splatContains(config.power, "name", instance.workspace);
   let piKeyPairUseData = !config?.power
     ? ""
-    : new revision(config)
-        .child("power", instance.workspace)
-        .child("ssh_keys", instance.ssh_key).data.use_data
+    : (
+        foundWorkspace
+          ? new revision(config)
+              .child("power", instance.workspace)
+              .child("ssh_keys", instance.ssh_key).data.use_data
+          : false
+      )
     ? "data."
     : "";
   let imageUseData = !config?.power
     ? ""
-    : new revision(config)
-        .child("power", instance.workspace)
-        .child("images", instance.image).data.use_data
+    : (
+        foundWorkspace
+          ? new revision(config)
+              .child("power", instance.workspace)
+              .child("images", instance.image).data.use_data
+          : false
+      )
     ? "data."
     : "";
   let data = {
     provider: `\${ibm.power_vs${snakeCase("_" + instance.zone)}}`,
-    pi_image_id: `\${${imageUseData}ibm_pi_image.power_image_${snakeCase(
-      instance.workspace
-    )}_${snakeCase(instance.image)}.image_id}`,
-    pi_key_pair_name: `\${${piKeyPairUseData}ibm_pi_key.power_vs_ssh_key_${snakeCase(
-      instance.ssh_key
-    )}.pi_key_name}`,
-    pi_cloud_instance_id: powerVsWorkspaceRef(
-      instance.workspace,
-      config?.power
-        ? getObjectFromArray(config.power, "name", instance.workspace).use_data
-        : false
-    ),
+    pi_image_id: foundWorkspace
+      ? `\${${imageUseData}ibm_pi_image.power_image_${snakeCase(
+          instance.workspace
+        )}_${snakeCase(instance.image)}.image_id}`
+      : "${ERROR: Unfound Ref}",
+    pi_key_pair_name: foundWorkspace
+      ? `\${${piKeyPairUseData}ibm_pi_key.power_vs_ssh_key_${snakeCase(
+          instance.ssh_key
+        )}.pi_key_name}`
+      : "${ERROR: Unfound Ref}",
+    pi_cloud_instance_id: foundWorkspace
+      ? powerVsWorkspaceRef(
+          instance.workspace,
+          config?.power
+            ? getObjectFromArray(config.power, "name", instance.workspace)
+                .use_data
+            : false
+        )
+      : "${ERROR: Unfound Ref}",
     pi_instance_name: "${var.prefix}-" + instance.name,
   };
   transpose(instance, data);
@@ -51,15 +70,21 @@ function powerVsInstanceData(instance, config) {
   instance.network.forEach((nw) => {
     let networkUseData = !config?.power
       ? ""
-      : new revision(config)
-          .child("power", instance.workspace)
-          .child("network", nw.name).data.use_data
+      : (
+          foundWorkspace
+            ? new revision(config)
+                .child("power", instance.workspace)
+                .child("network", nw.name).data.use_data
+            : "${Error: Unfound Ref}"
+        )
       ? "data."
       : "";
     let nwData = {
-      network_id: `\${${networkUseData}ibm_pi_network.power_network_${snakeCase(
-        instance.workspace
-      )}_${snakeCase(nw.name)}.network_id}`,
+      network_id: foundWorkspace
+        ? `\${${networkUseData}ibm_pi_network.power_network_${snakeCase(
+            instance.workspace
+          )}_${snakeCase(nw.name)}.${networkUseData ? "id" : "network_id"}}`
+        : "${ERROR: Unfound Ref}",
     };
     if (!isNullOrEmptyString(nw.ip_address)) {
       nwData.ip_address = nw.ip_address;

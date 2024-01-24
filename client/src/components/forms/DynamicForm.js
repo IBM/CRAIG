@@ -304,7 +304,7 @@ class DynamicForm extends React.Component {
         />
         <NaclRulesSubForm parentProps={this.props} parentState={this.state} />
         <SgRulesSubForm parentProps={this.props} parentState={this.state} />
-        <OptionsButton parentProps={this.props} parentState={this.state} />
+        {/* <OptionsButton parentProps={this.props} parentState={this.state} /> */}
         <SubnetTileSubForm
           parentProps={this.props}
           parentState={this.state}

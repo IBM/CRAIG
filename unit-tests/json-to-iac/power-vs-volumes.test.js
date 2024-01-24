@@ -128,6 +128,47 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
         "it should return correct data"
       );
     });
+    it("should return correct volume terraform with unfound workspace", () => {
+      let actualData = formatPowerVsVolume(
+        {
+          zone: "dal12",
+          pi_volume_size: 20,
+          name: "test-volume",
+          workspace: "example",
+          pi_volume_shareable: true,
+          pi_replication_enabled: true,
+          pi_volume_type: "tier1",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_volume" "example_volume_test_volume" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = "ERROR: Unfound Ref"
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should return correct volume terraform when count is empty string", () => {
       let actualData = formatPowerVsVolume({
         zone: "dal12",
@@ -510,6 +551,115 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_instance_2_instan
   }
   depends_on = [
     ibm_pi_volume_attach.example_attach_test_volume_to_instance_1_instance
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return power volume terraform file with count", () => {
+      let actualData = powerVsVolumeTf({
+        power_volumes: [
+          {
+            zone: "dal12",
+            pi_volume_size: 20,
+            name: "test-volume",
+            workspace: "example",
+            pi_volume_shareable: true,
+            pi_replication_enabled: true,
+            pi_volume_type: "tier1",
+            attachments: ["instance-1", "instance-2"],
+            count: 2,
+          },
+        ],
+      });
+      let expectedData = `##############################################################################
+# Power VS Volume Test Volume
+##############################################################################
+
+resource "ibm_pi_volume" "example_volume_test_volume_1" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume-1"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+
+resource "ibm_pi_volume" "example_volume_test_volume_2" {
+  provider               = ibm.power_vs_dal12
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_size         = 20
+  pi_volume_name         = "\${var.prefix}-example-test-volume-2"
+  pi_volume_shareable    = true
+  pi_replication_enabled = true
+  pi_volume_type         = "tier1"
+}
+
+resource "ibm_pi_volume_attach" "example_attach_test_volume_1_to_instance_1_instance" {
+  provider             = ibm.power_vs_dal12
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_id         = ibm_pi_volume.example_volume_test_volume_1.volume_id
+  pi_instance_id       = ibm_pi_instance.example_workspace_instance_instance_1.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+}
+
+resource "ibm_pi_volume_attach" "example_attach_test_volume_2_to_instance_1_instance" {
+  provider             = ibm.power_vs_dal12
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_id         = ibm_pi_volume.example_volume_test_volume_2.volume_id
+  pi_instance_id       = ibm_pi_instance.example_workspace_instance_instance_1.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+  depends_on = [
+    ibm_pi_volume_attach.example_attach_test_volume_1_to_instance_1_instance
+  ]
+}
+
+resource "ibm_pi_volume_attach" "example_attach_test_volume_1_to_instance_2_instance" {
+  provider             = ibm.power_vs_dal12
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_id         = ibm_pi_volume.example_volume_test_volume_1.volume_id
+  pi_instance_id       = ibm_pi_instance.example_workspace_instance_instance_2.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+  depends_on = [
+    ibm_pi_volume_attach.example_attach_test_volume_2_to_instance_1_instance
+  ]
+}
+
+resource "ibm_pi_volume_attach" "example_attach_test_volume_2_to_instance_2_instance" {
+  provider             = ibm.power_vs_dal12
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_volume_id         = ibm_pi_volume.example_volume_test_volume_2.volume_id
+  pi_instance_id       = ibm_pi_instance.example_workspace_instance_instance_2.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+  depends_on = [
+    ibm_pi_volume_attach.example_attach_test_volume_1_to_instance_2_instance
   ]
 }
 

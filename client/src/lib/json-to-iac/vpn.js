@@ -65,11 +65,7 @@ function formatVpnGatewayConnection(connection, gw) {
     {
       name: kebabName([gw.name, connection.name]),
       vpn_gateway: tfRef("ibm_is_vpn_gateway", `${gw.vpc} ${gw.name} vpn gw`),
-      peer_address: tfRef(
-        "ibm_is_vpn_gateway",
-        `${gw.vpc} ${gw.name} vpn gw`,
-        "public_ip_address"
-      ),
+      peer_address: connection.peer_address,
       preshared_key: `\${var.${snakeCase(
         gw.name + " " + connection.name
       )}_preshared_key}`,

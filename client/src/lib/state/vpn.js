@@ -1,4 +1,10 @@
-const { contains, isNullOrEmptyString, splat, revision } = require("lazy-z");
+const {
+  contains,
+  isNullOrEmptyString,
+  splat,
+  revision,
+  isIpv4CidrOrAddress,
+} = require("lazy-z");
 const {
   setUnfoundResourceGroup,
   hasUnfoundVpc,
@@ -13,8 +19,9 @@ const {
   vpcGroups,
   selectInvalidText,
   ipCidrListTextArea,
+  unconditionalInvalidText,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
+const { invalidName, invalidNameText, invalidCidrBlock } = require("../forms");
 
 /**
  * initialize vpn gateway
@@ -196,6 +203,17 @@ function initVpnGatewayStore(store) {
             default: "",
             invalid: invalidName("connections"),
             invalidText: invalidNameText("connections"),
+          },
+          peer_address: {
+            default: "",
+            invalid: function (stateData) {
+              return (
+                isIpv4CidrOrAddress(stateData.peer_address || "") === false ||
+                contains(stateData.peer_address, "/")
+              );
+            },
+            invalidText: unconditionalInvalidText("Enter a valud IPV4 address"),
+            placeholder: unconditionalInvalidText("0.0.0.0"),
           },
           peer_cidrs: ipCidrListTextArea("peer_cidrs", {
             labelText: "Peer CIDRs",

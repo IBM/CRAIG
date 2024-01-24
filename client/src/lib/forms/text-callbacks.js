@@ -27,7 +27,7 @@ const {
  */
 function resourceGroupHelperTextCallback(stateData, componentProps) {
   return (
-    (stateData.use_prefix
+    (stateData.use_prefix && !stateData.use_data
       ? componentProps.craig.store.json._options.prefix + "-"
       : "") + stateData.name
   );

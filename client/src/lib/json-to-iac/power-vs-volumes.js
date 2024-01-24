@@ -1,4 +1,9 @@
-const { snakeCase, contains, getObjectFromArray } = require("lazy-z");
+const {
+  snakeCase,
+  contains,
+  getObjectFromArray,
+  splatContains,
+} = require("lazy-z");
 const { jsonToTfPrint, tfBlock, kebabName } = require("./utils");
 const { powerVsWorkspaceRef } = require("./power-vs");
 
@@ -9,14 +14,20 @@ const { powerVsWorkspaceRef } = require("./power-vs");
  * @returns {string} terraform formatted string
  */
 function formatPowerVsVolume(volume, config) {
+  let foundWorkspace = !config?.power
+    ? true
+    : splatContains(config.power, "name", volume.workspace);
   let data = {
     provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
-    pi_cloud_instance_id: powerVsWorkspaceRef(
-      volume.workspace,
-      config?.power
-        ? getObjectFromArray(config.power, "name", volume.workspace).use_data
-        : false
-    ),
+    pi_cloud_instance_id: foundWorkspace
+      ? powerVsWorkspaceRef(
+          volume.workspace,
+          config?.power
+            ? getObjectFromArray(config.power, "name", volume.workspace)
+                .use_data
+            : false
+        )
+      : "ERROR: Unfound Ref",
     pi_volume_size: Number(volume.pi_volume_size),
     pi_volume_name: kebabName([volume.workspace, volume.name]),
     pi_volume_shareable: volume.pi_volume_shareable,
@@ -77,7 +88,8 @@ function formatPowerVsVolumeAttachment(
   volume,
   instance,
   lastAttachment,
-  config
+  config,
+  count
 ) {
   let volumeData = {
     provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
@@ -89,7 +101,7 @@ function formatPowerVsVolumeAttachment(
     ),
     pi_volume_id: `\${ibm_pi_volume.${snakeCase(
       volume.workspace + " volume " + volume.name
-    )}.volume_id}`,
+    )}${count ? "_" + count : ""}.volume_id}`,
     pi_instance_id: `\${ibm_pi_instance.${snakeCase(
       `${volume.workspace}_workspace_instance_${instance}`
     )}.instance_id}`,
@@ -105,7 +117,9 @@ function formatPowerVsVolumeAttachment(
   return jsonToTfPrint(
     "resource",
     "ibm_pi_volume_attach",
-    `${volume.workspace} attach ${volume.name} to ${instance} instance`,
+    `${volume.workspace} attach ${
+      volume.name + (count ? "-" + count : "")
+    } to ${instance} instance`,
     volumeData
   );
 }
@@ -120,15 +134,21 @@ function powerVsVolumeTf(config) {
   (config.power_volumes || []).forEach((volume) => {
     let volumeTf = formatPowerVsVolume(volume, config);
     volume.attachments.forEach((instance) => {
-      volumeTf += formatPowerVsVolumeAttachment(
-        volume,
-        instance,
-        lastAttachmentAddress,
-        config
-      );
-      lastAttachmentAddress = `\${ibm_pi_volume_attach.${snakeCase(
-        `${volume.workspace} attach ${volume.name} to ${instance} instance`
-      )}}`;
+      let count = volume.count;
+      for (let i = 0; count ? i < volume.count : i < 1; i++) {
+        volumeTf += formatPowerVsVolumeAttachment(
+          volume,
+          instance,
+          lastAttachmentAddress,
+          config,
+          count ? i + 1 : undefined
+        );
+        lastAttachmentAddress = `\${ibm_pi_volume_attach.${snakeCase(
+          `${volume.workspace} attach ${volume.name}${
+            count ? "_" + (i + 1) : ""
+          } to ${instance} instance`
+        )}}`;
+      }
     });
     tf += tfBlock(`Power VS Volume ${volume.name}`, volumeTf) + "\n";
   });

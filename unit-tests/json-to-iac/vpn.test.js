@@ -140,7 +140,6 @@ resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
 resource "ibm_is_vpn_gateway_connection" "management_management_gateway_vpn_gw_connection_connection_1" {
   name          = "\${var.prefix}-management-gateway-connection-1"
   vpn_gateway   = ibm_is_vpn_gateway.management_management_gateway_vpn_gw.id
-  peer_address  = ibm_is_vpn_gateway.management_management_gateway_vpn_gw.public_ip_address
   preshared_key = var.management_gateway_connection_1_preshared_key
   local_cidrs = [
     "10.10.10.10/24"
