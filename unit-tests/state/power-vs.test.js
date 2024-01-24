@@ -11,7 +11,7 @@ const {
 function newState() {
   let store = new state(true);
   store.setUpdateCallback(() => {});
-  store.store.json._options.power_vs_zones = ["dal12", "dal10"];
+  store.store.json._options.power_vs_zones = ["us-south", "dal10"];
   return store;
 }
 
@@ -25,10 +25,10 @@ describe("power-vs", () => {
   describe("power.onStoreUpdate", () => {
     it("should update images to only contain the selected image names", () => {
       let state = new newState();
-      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
+      state.store.json._options.power_vs_zones = ["dal10", "us-south"];
       state.power.create({
         name: "toad",
-        zone: "dal12",
+        zone: "us-south",
       });
       state.store.json.power[0].images.push({ name: "imageName" });
       state.store.json.power[0].imageNames.push("otherImageName");
@@ -39,7 +39,7 @@ describe("power-vs", () => {
         name: "toad",
         imageNames: ["otherImageName"],
         images: [],
-        zone: "dal12",
+        zone: "us-south",
         network: [],
         resource_group: null,
         ssh_keys: [],
@@ -47,11 +47,11 @@ describe("power-vs", () => {
     });
     it("should set unfound workspaces to null on change of power vs zones", () => {
       let state = new newState();
-      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
+      state.store.json._options.power_vs_zones = ["dal10", "us-south"];
       state.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
-        zone: "dal12",
+        zone: "us-south",
         imageNames: ["7100-05-09"],
       });
       state.store.json._options.power_vs_zones = [];
@@ -91,11 +91,11 @@ describe("power-vs", () => {
             name: "7100-05-09",
             pi_image_id: "35eca797-6599-4597-af1f-d2eb5e292dfc",
             workspace: "toad",
-            zone: "dal12",
+            zone: "us-south",
           },
         ],
         imageNames: ["7100-05-09"],
-        zone: "dal12",
+        zone: "us-south",
       });
       let expectedData = {
         name: "toad",
@@ -108,13 +108,13 @@ describe("power-vs", () => {
             name: "7100-05-09",
             pi_image_id: "35eca797-6599-4597-af1f-d2eb5e292dfc",
             workspace: "toad",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
         attachments: [],
         imageNames: ["7100-05-09"],
-        zone: "dal12",
+        zone: "us-south",
       };
       assert.deepEqual(
         state.store.json.power[0],
@@ -126,21 +126,21 @@ describe("power-vs", () => {
   describe("power.save", () => {
     it("should save a workspace and update instances and volumes with new name", () => {
       let state = new newState();
-      state.power.create({ name: "toad", zone: "dal12", imageNames: [] });
+      state.power.create({ name: "toad", zone: "us-south", imageNames: [] });
       state.power_instances.create({
         name: "frog",
-        zone: "dal12",
+        zone: "us-south",
         workspace: "toad",
         network: [],
       });
       state.power_instances.create({
         name: "frog",
-        zone: "dal12",
+        zone: "us-south",
         workspace: "bog",
         network: [],
       });
       state.power.save(
-        { name: "frog", zone: "dal12" },
+        { name: "frog", zone: "us-south" },
         { data: { name: "toad" } }
       );
       let expectedData = {
@@ -152,7 +152,7 @@ describe("power-vs", () => {
         images: [],
         imageNames: [],
         attachments: [],
-        zone: "dal12",
+        zone: "us-south",
       };
       assert.deepEqual(
         state.store.json.power[0],
@@ -172,7 +172,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
-        zone: "dal12",
+        zone: "us-south",
       });
       state.power.delete({}, { data: { name: "toad" } });
       assert.deepEqual(
@@ -229,9 +229,9 @@ describe("power-vs", () => {
         assert.deepEqual(
           craig.power.imageNames.forceUpdateKey({
             images: [{ name: "image" }],
-            zone: "dal12",
+            zone: "us-south",
           }),
-          '[{"name":"image"}]dal12',
+          '[{"name":"image"}]us-south',
           "it should return images array"
         );
       });
@@ -303,7 +303,7 @@ describe("power-vs", () => {
         ssh_keys: [],
         network: [],
         cloud_connections: [],
-        zone: "dal12",
+        zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "toad" }],
       });
     });
@@ -318,7 +318,7 @@ describe("power-vs", () => {
           {
             name: "test-key",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
@@ -343,7 +343,7 @@ describe("power-vs", () => {
           {
             name: "new-key-name",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
@@ -455,7 +455,7 @@ describe("power-vs", () => {
         state.power.create({
           name: "power-vs",
           resource_group: "default",
-          zone: "dal12",
+          zone: "us-south",
           images: [{ name: "7100-05-09", workspace: "toad" }],
         });
       });
@@ -474,7 +474,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "dal12",
+        zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "toad" }],
       });
     });
@@ -483,7 +483,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "dal12",
+        zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         use_data: true,
       });
@@ -497,7 +497,7 @@ describe("power-vs", () => {
           {
             name: "test-network",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: true,
           },
         ],
@@ -509,7 +509,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             network: "test-network",
           },
         ],
@@ -534,7 +534,7 @@ describe("power-vs", () => {
           {
             name: "new-network-name",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
@@ -546,7 +546,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             network: "new-network-name",
             workspace_use_data: false,
           },
@@ -573,7 +573,7 @@ describe("power-vs", () => {
           {
             name: "new-network-name",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
@@ -598,7 +598,7 @@ describe("power-vs", () => {
           {
             name: "test-network",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
@@ -610,7 +610,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             network: "test-network",
             workspace_use_data: false,
           },
@@ -741,7 +741,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "dal12",
+        zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
     });
@@ -756,7 +756,7 @@ describe("power-vs", () => {
           {
             name: "test-network",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
@@ -781,7 +781,7 @@ describe("power-vs", () => {
           {
             name: "new-network-name",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             workspace_use_data: false,
           },
         ],
@@ -840,7 +840,7 @@ describe("power-vs", () => {
       state.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "dal12",
+        zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
       state.power.network.create(
@@ -870,7 +870,7 @@ describe("power-vs", () => {
           {
             network: "test-network",
             workspace: "power-vs",
-            zone: "dal12",
+            zone: "us-south",
             connections: ["test-network"],
             workspace_use_data: false,
           },
@@ -885,7 +885,7 @@ describe("power-vs", () => {
         craig.power.create({
           name: "power-vs",
           resource_group: "default",
-          zone: "dal12",
+          zone: "us-south",
           images: [{ name: "7100-05-09", workspace: "power-vs" }],
         });
         craig.power.cloud_connections.create(

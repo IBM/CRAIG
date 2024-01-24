@@ -286,8 +286,14 @@ class VpcDiagramPage extends React.Component {
             },
           })}
         </DynamicFormModal>
-        <div className="marginBottomSmall" />
         <StatefulTabs
+          h2
+          icon={
+            <VirtualPrivateCloud
+              style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+              size="20"
+            />
+          }
           formName="Manage VPC Networks"
           nestedDocs={docTabs(
             [
@@ -297,7 +303,7 @@ class VpcDiagramPage extends React.Component {
             ],
             craig
           )}
-          name="Virtual Private Cloud"
+          name="VPC Networks"
           form={
             <>
               <div className="marginRight1Rem width580">

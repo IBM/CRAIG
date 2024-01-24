@@ -102,8 +102,14 @@ class VpcConnectivityPage extends React.Component {
             }}
           />
         </DynamicFormModal>
-        <div className="marginBottomSmall" />
         <StatefulTabs
+          h2
+          icon={
+            <IbmCloudTransitGateway
+              style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+              size="20"
+            />
+          }
           formName="Manage Connectivity"
           name="Connectivity"
           nestedDocs={docTabs(["Transit Gateways"], craig)}

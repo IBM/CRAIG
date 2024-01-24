@@ -16,6 +16,7 @@ import {
   LoadBalancerVpc,
   AppConnectivity,
   Router,
+  IbmCloudVpc,
 } from "@carbon/icons-react";
 import { disableSave, propsMatchState } from "../../../lib";
 import {
@@ -363,8 +364,15 @@ class VpcDeploymentsDiagramPage extends React.Component {
             />
           )}
         </DynamicFormModal>
-        <div className="marginRight1Rem marginTop1Rem">
+        <div className="marginRight1Rem">
           <StatefulTabs
+            h2
+            icon={
+              <IbmCloudVpc
+                style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+                size="20"
+              />
+            }
             name="VPC Deployments"
             formName="VPC Deployments"
             nestedDocs={docTabs(
