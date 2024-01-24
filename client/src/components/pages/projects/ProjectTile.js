@@ -114,7 +114,7 @@ export const ProjectTile = (props) => {
               renderIcon={Add}
               disabled={isValid ? false : true}
             >
-              Create Workspace
+              Create Schematics Workspace
             </Button>
           )}
           <Button

@@ -1387,6 +1387,7 @@ function craigForms(craig) {
             groups: [
               {
                 name: craig.vpn_gateways.connections.name,
+                peer_address: craig.vpn_gateways.connections.peer_address,
               },
               {
                 peer_cidrs: craig.vpn_gateways.connections.peer_cidrs,

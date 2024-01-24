@@ -166,6 +166,66 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
         "it should return correct instance data"
       );
     });
+    it("should correctly return power vs instance data when workspace is from data and no ws", () => {
+      let actualData = formatPowerVsInstance(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          image: "SLES15-SP3-SAP",
+          ssh_key: "keyname",
+          network: [
+            {
+              name: "dev-nw",
+            },
+          ],
+          pi_memory: "4",
+          pi_processors: "2",
+          pi_proc_type: "shared",
+          pi_sys_type: "s922",
+          pi_pin_policy: "none",
+          pi_health_status: "WARNING",
+          pi_storage_type: "tier1",
+          pi_user_data: "",
+        },
+        {
+          _options: {
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "example",
+            },
+          ],
+          power: [],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_instance" "example_workspace_instance_test" {
+  provider             = ibm.power_vs_dal12
+  pi_image_id          = ERROR: Unfound Ref
+  pi_key_pair_name     = ERROR: Unfound Ref
+  pi_cloud_instance_id = ERROR: Unfound Ref
+  pi_instance_name     = "\${var.prefix}-test"
+  pi_memory            = "4"
+  pi_processors        = "2"
+  pi_proc_type         = "shared"
+  pi_sys_type          = "s922"
+  pi_pin_policy        = "none"
+  pi_health_status     = "WARNING"
+  pi_storage_type      = "tier1"
+  pi_network {
+    network_id = ERROR: Unfound Ref
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
     it("should correctly return power vs instance data when workspace and ssh key are from data", () => {
       let actualData = formatPowerVsInstance(
         {
@@ -385,7 +445,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
   pi_health_status     = "WARNING"
   pi_storage_type      = "tier1"
   pi_network {
-    network_id = data.ibm_pi_network.power_network_example_dev_nw.network_id
+    network_id = data.ibm_pi_network.power_network_example_dev_nw.id
   }
 }
 `;
@@ -501,7 +561,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
   pi_health_status     = "WARNING"
   pi_storage_type      = "tier1"
   pi_network {
-    network_id = data.ibm_pi_network.power_network_example_dev_nw.network_id
+    network_id = data.ibm_pi_network.power_network_example_dev_nw.id
   }
 }
 `;

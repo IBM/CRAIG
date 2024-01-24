@@ -44,7 +44,7 @@ function powerVsNetworkSchema() {
       placeholder: "X.X.X.X/X",
       labelText: "Network CIDR Block",
       invalid: function (stateData) {
-        return invalidCidrBlock(stateData.pi_cidr);
+        return stateData.use_data ? false : invalidCidrBlock(stateData.pi_cidr);
       },
       invalidText: function (stateData, componentProps) {
         return invalidCidrText(componentProps.craig)(stateData, componentProps);
@@ -55,10 +55,12 @@ function powerVsNetworkSchema() {
       placeholder: "127.0.0.1",
       default: "",
       invalid: function (stateData) {
-        return isString(stateData?.pi_dns) || !stateData.pi_dns
+        return stateData.use_data
+          ? false
+          : isString(stateData?.pi_dns) || !stateData.pi_dns
           ? true
           : contains(stateData.pi_dns[0], "/") ||
-              !isIpv4CidrOrAddress(stateData.pi_dns[0]);
+            !isIpv4CidrOrAddress(stateData.pi_dns[0]);
       },
       invalidText: unconditionalInvalidText("Invalid IP Address"),
       onInputChange: function (stateData, targetData) {

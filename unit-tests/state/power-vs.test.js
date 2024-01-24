@@ -732,6 +732,24 @@ describe("power-vs", () => {
           "it should be hidden"
         );
       });
+      it("should not have pi cidr invalid when use data", () => {
+        let state = newState();
+        assert.isFalse(
+          state.power.network.pi_cidr.invalid({
+            use_data: true,
+          }),
+          "it should be use data"
+        );
+      });
+      it("should not have pi_dns invalid when use data", () => {
+        let state = newState();
+        assert.isFalse(
+          state.power.network.pi_dns.invalid({
+            use_data: true,
+          }),
+          "it should be use data"
+        );
+      });
     });
   });
   describe("power.cloud_connections crud", () => {

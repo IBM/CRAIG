@@ -1,6 +1,5 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
-const { contains } = require("lazy-z");
 const { disableSave } = require("../../client/src/lib/forms");
 
 /**
@@ -427,6 +426,20 @@ describe("vpn_gateways", () => {
         assert.isTrue(
           disableSave("connections", { name: "@@" }, { craig: craig }),
           "it should be disabled"
+        );
+      });
+      it("should be invalid when peer address not on object", () => {
+        assert.isTrue(
+          craig.vpn_gateways.connections.peer_address.invalid({}),
+          "it should be invalid"
+        );
+      });
+      it("should be invalid when peer address is cidr", () => {
+        assert.isTrue(
+          craig.vpn_gateways.connections.peer_address.invalid({
+            peer_address: "1.2.3.4/5",
+          }),
+          "it should be invalid"
         );
       });
       it("should be disabled when peer cidrs is empty", () => {
