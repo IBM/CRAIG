@@ -1,6 +1,7 @@
 import React from "react";
 import {
   buildFormFunctions,
+  DynamicToolTipWrapper,
   IcseFormTemplate,
   RenderForm,
 } from "icse-react-assets";
@@ -15,7 +16,6 @@ import {
   PowerInterfaces,
   PerCloudConnections,
   DynamicDatePicker,
-  DynamicToolTipWrapper,
 } from "./dynamic-form";
 import {
   eachKey,

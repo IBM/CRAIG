@@ -22,7 +22,6 @@ import {
 import PropTypes from "prop-types";
 import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
 import { contains, deepEqual, isNullOrEmptyString } from "lazy-z";
-import { ToolTipWrapper } from "../utils/ToolTip";
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
 const DynamicFormTextInput = (props) => {
@@ -384,32 +383,6 @@ const DynamicDatePicker = (props) => {
   );
 };
 
-const DynamicToolTipWrapper = (props) => {
-  //make sure that either children or innerForm are passed as a prop
-  if (props.children === undefined && props.innerForm === undefined) {
-    throw new Error(
-      "DynamicToolTipWrapper expects either `props.children` or `props.innerForm` when rendering ToolTipWrapper, got neither."
-    );
-  }
-  return props.tooltip ? (
-    <ToolTipWrapper {...props} />
-  ) : props.children ? (
-    props.children
-  ) : (
-    RenderForm(props.innerForm, {})
-  );
-};
-
-DynamicToolTipWrapper.propTypes = {
-  tooltip: PropTypes.shape({
-    content: PropTypes.string,
-    link: PropTypes.string,
-  }),
-  isModal: PropTypes.bool,
-  children: PropTypes.node,
-  innerForm: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-};
-
 export {
   DynamicFormTextInput,
   DynamicFormSelect,
@@ -418,6 +391,5 @@ export {
   DynamicMultiSelect,
   DynamicPublicKey,
   DynamicDatePicker,
-  DynamicToolTipWrapper,
   tagColors,
 };
