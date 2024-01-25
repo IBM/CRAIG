@@ -6,7 +6,7 @@
     "zones": 1,
     "endpoints": "public",
     "account_id": null,
-    "dynamic_subnets": true,
+    "dynamic_subnets": false,
     "enable_power_vs": true,
     "enable_classic": false,
     "power_vs_zones": ["dal10"],
