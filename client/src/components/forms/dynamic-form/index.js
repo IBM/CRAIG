@@ -6,6 +6,7 @@ export {
   DynamicTextArea,
   DynamicPublicKey,
   DynamicDatePicker,
+  DynamicToolTipWrapper,
 } from "./components";
 export { PowerInterfaces } from "./PowerInterfaces";
 export { SubFormOverrideTile } from "./SubFormOverrideTile";
