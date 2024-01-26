@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { PopoverWrapper, DynamicToolTipWrapper } from "icse-react-assets";
+import { PopoverWrapper } from "icse-react-assets";
 import {
   Add,
   Save,
@@ -15,6 +15,7 @@ import {
   statelessWrapperProps,
 } from "../../../lib/components/toggle-form-components";
 import { kebabCase } from "lazy-z";
+import { DynamicToolTipWrapper } from "../dynamic-form/components";
 
 /**
  * generate save icon
