@@ -39,7 +39,7 @@ export const PowerInterfaces = (props) => {
 PowerInterfaces.propTypes = {
   stateData: PropTypes.shape({}).isRequired,
   componentProps: PropTypes.shape({
-    craig: PropTypes.shape({}).isRequired,
+    craig: PropTypes.shape({}),
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
 };

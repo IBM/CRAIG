@@ -13,7 +13,7 @@ import {
 } from "@carbon/icons-react";
 import { craigForms } from "../CraigForms";
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
-import { disableSave, propsMatchState } from "../../../lib";
+import { disableSave, powerVsTf, propsMatchState } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";
 import { contains, isNullOrEmptyString, revision } from "lazy-z";
 import { docTabs } from "../diagrams/DocTabs";
@@ -25,6 +25,7 @@ import { IcseSelect } from "icse-react-assets";
 import { NoPowerNetworkTile } from "../../forms/dynamic-form";
 import { PowerVolumeTable } from "./PowerVolumeTable";
 import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { powerInstanceTf, powerVsVolumeTf } from "../../../lib/json-to-iac";
 
 class PowerDiagram extends React.Component {
   constructor(props) {
@@ -351,9 +352,52 @@ class PowerDiagram extends React.Component {
               ["Power VS", "Power VS Instances (LPARs)", "Power Volumes"],
               craig
             )}
+            tfTabs={[
+              {
+                name: "Power VS Workspaces",
+                tf: powerVsTf(craig.store.json) || "",
+              },
+              {
+                name: "Power VS Instances",
+                tf: powerInstanceTf(craig.store.json) || "",
+              },
+              {
+                name: "Power VS Volumes",
+                tf: powerVsVolumeTf(craig.store.json) || "",
+              },
+            ]}
             form={
               craig.store.json._options.enable_power_vs === true ? (
                 <>
+                  <div style={{ width: "580px" }}>
+                    <CraigToggleForm
+                      hideName
+                      name="Project Power VS Settings"
+                      tabPanel={{
+                        hideAbout: true,
+                        hasBuiltInHeading: true,
+                      }}
+                      noDeleteButton
+                      onDelete={() => {}}
+                      onSave={craig.options.save}
+                      craig={craig}
+                      innerFormProps={{
+                        data: craig.store.json._options,
+                        form: {
+                          groups: [
+                            {
+                              enable_power_vs: craig.options.enable_power_vs,
+                              power_vs_high_availability:
+                                craig.options.power_vs_high_availability,
+                            },
+                            {
+                              power_vs_zones: craig.options.power_vs_zones,
+                            },
+                          ],
+                        },
+                      }}
+                    />
+                  </div>
                   <div style={{ width: "580px" }}>
                     <CraigFormHeading
                       name="Power Workspaces"

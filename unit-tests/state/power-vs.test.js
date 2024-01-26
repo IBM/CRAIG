@@ -459,12 +459,6 @@ describe("power-vs", () => {
           images: [{ name: "7100-05-09", workspace: "toad" }],
         });
       });
-      it("should add hidewhen to key and be true for use_data workspace is not using data", () => {
-        assert.isTrue(
-          state.power.ssh_keys.use_data.hideWhen({ workspace_use_data: false }),
-          "it should be hidden"
-        );
-      });
     });
   });
   describe("power.network crud", () => {

@@ -53,7 +53,7 @@ function formatPowerVsVolume(volume, config) {
   } else {
     data.pi_storage_pool = volume.pi_volume_pool;
   }
-
+  delete data.index;
   if (volume.count) {
     let volumeTf = "";
     for (let i = 1; i <= Number(volume.count); i++) {

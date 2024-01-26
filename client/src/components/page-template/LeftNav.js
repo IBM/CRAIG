@@ -19,6 +19,8 @@ import {
   Dashboard,
   InfrastructureClassic,
   IbmCloudTransitGateway,
+  DrillThrough,
+  DrillBack,
 } from "@carbon/icons-react";
 import React from "react";
 import "./navigation.scss";
@@ -41,8 +43,8 @@ class LeftNav extends React.Component {
    */
   handleMouseOver() {
     if (
-      contains(window.location.pathname, "beta") ||
-      contains(window.location.search, "beta")
+      contains(window.location.pathname, "/v2") ||
+      contains(window.location.search, "v2")
     )
       this.setState({ isHovering: true }, () => {
         if (!this.props.expanded) this.props.onOverlayClick();
@@ -54,8 +56,8 @@ class LeftNav extends React.Component {
    */
   handleMouseOut() {
     if (
-      contains(window.location.pathname, "beta") ||
-      contains(window.location.search, "beta")
+      contains(window.location.pathname, "/v2") ||
+      contains(window.location.search, "v2")
     )
       this.setState({ isHovering: false }, () => {
         if (this.props.expanded) this.props.onOverlayClick();
@@ -64,9 +66,9 @@ class LeftNav extends React.Component {
 
   render() {
     let dividerClass = this.props.expanded ? "expandedDivider" : "railDivider";
-    let isBetaPage =
-      contains(window.location.pathname, "beta") ||
-      contains(window.location.search, "beta");
+    let isV2Page =
+      contains(window.location.pathname, "/v2") ||
+      contains(window.location.search, "v2");
     return (
       <SideNav
         expanded={this.props.expanded}
@@ -79,30 +81,30 @@ class LeftNav extends React.Component {
         <SideNavItems>
           <LeftNavItem
             item={{
-              path: `${isBetaPage ? "/beta" : ""}/projects`,
+              path: `${isV2Page ? "/v2" : ""}/projects`,
               icon: Folders,
-              title: (isBetaPage ? "[Beta] " : "") + "Projects",
+              title: "Projects",
             }}
             key="Projects"
             expanded={this.props.expanded}
           />
           <LeftNavItem
             item={{
-              path: isBetaPage ? "/beta/settings" : "/",
+              path: isV2Page ? "/v2/settings" : "/",
               icon: Settings,
-              title: isBetaPage ? "[Beta] Settings" : "Options",
+              title: "Options",
             }}
             key="Options"
             expanded={this.props.expanded}
           />
-          {isBetaPage && (
+          {isV2Page && (
             <>
               <LeftNavItem
                 key="Cloud Services"
                 item={{
-                  path: "/beta/services",
+                  path: "/v2/services",
                   icon: CloudServices,
-                  title: "[Beta] Cloud Services",
+                  title: "Cloud Services",
                 }}
                 expanded={this.props.expanded}
                 hasInvalidForm={containsAny(this.props.invalidForms, [
@@ -121,9 +123,9 @@ class LeftNav extends React.Component {
               <LeftNavItem
                 key="VPC Networks"
                 item={{
-                  path: "/beta/vpc",
+                  path: "/v2/vpc",
                   icon: VirtualPrivateCloud,
-                  title: "[Beta] VPC Networks",
+                  title: "VPC Networks",
                 }}
                 expanded={this.props.expanded}
                 hasInvalidForm={containsAny(this.props.invalidForms, [
@@ -135,9 +137,9 @@ class LeftNav extends React.Component {
               <LeftNavItem
                 key="VPC Deployments"
                 item={{
-                  path: "/beta/vpcDeployments",
+                  path: "/v2/vpcDeployments",
                   icon: IbmCloudVpc,
-                  title: "[Beta] VPC Deployments",
+                  title: "VPC Deployments",
                 }}
                 expanded={this.props.expanded}
                 hasInvalidForm={containsAny(this.props.invalidForms, [
@@ -156,9 +158,9 @@ class LeftNav extends React.Component {
               <LeftNavItem
                 key="Connectivity"
                 item={{
-                  path: "/beta/connectivity",
+                  path: "/v2/connectivity",
                   icon: IbmCloudTransitGateway,
-                  title: "[Beta] Connectivity",
+                  title: "Connectivity",
                 }}
                 expanded={this.props.expanded}
                 hasInvalidForm={containsAny(this.props.invalidForms, [
@@ -168,9 +170,9 @@ class LeftNav extends React.Component {
               <LeftNavItem
                 key="Power VS"
                 item={{
-                  path: "/beta/power",
+                  path: "/v2/power",
                   icon: IbmPowerVs,
-                  title: "[Beta] Power VS",
+                  title: "Power VS",
                 }}
                 expanded={this.props.expanded}
                 hasInvalidForm={containsAny(this.props.invalidForms, [
@@ -182,9 +184,9 @@ class LeftNav extends React.Component {
               <LeftNavItem
                 key="Classic Network"
                 item={{
-                  path: "/beta/classic",
+                  path: "/v2/classic",
                   icon: InfrastructureClassic,
-                  title: "[Beta] Classic Network",
+                  title: "Classic Network",
                 }}
                 expanded={this.props.expanded}
                 hasInvalidForm={containsAny(this.props.invalidForms, [
@@ -196,9 +198,9 @@ class LeftNav extends React.Component {
               <LeftNavItem
                 key="Overview"
                 item={{
-                  path: "/beta/overview",
+                  path: "/v2/overview",
                   icon: Dashboard,
-                  title: "[Beta] Overview",
+                  title: "Overview",
                 }}
                 expanded={this.props.expanded}
                 hasInvalidForm={this.props.invalidForms.length !== 0}
@@ -210,6 +212,18 @@ class LeftNav extends React.Component {
           )}
           {this.props.expanded && (
             <>
+              {this.props.expanded && !isV2Page && (
+                <LeftNavItem
+                  key="V2"
+                  item={{
+                    path: "/v2/projects",
+                    icon: DrillThrough,
+                    title: "[New] Use Craig V2",
+                  }}
+                  expanded={this.props.expanded}
+                  new
+                />
+              )}
               <LeftNavItem
                 item={{ path: "/docs/about", icon: Help, title: "About" }}
                 key="About"
@@ -242,6 +256,18 @@ class LeftNav extends React.Component {
                 key="tutorial"
                 expanded={this.props.expanded}
               />
+              {this.props.expanded && isV2Page && (
+                <LeftNavItem
+                  key="V2"
+                  item={{
+                    path: "/",
+                    icon: DrillBack,
+                    title: "Use Classic Craig",
+                  }}
+                  expanded={this.props.expanded}
+                  new
+                />
+              )}
               <SideNavDivider className={dividerClass} />
               <SideNavLink href="#">Search</SideNavLink>
               <Search
@@ -259,13 +285,13 @@ class LeftNav extends React.Component {
             // display nav category and divider when searching for a page in the beta
             // and that page is part of the category
             let showNavCategory =
-              (isBetaPage &&
+              (isV2Page &&
                 splatContains(
                   category.links,
                   "path",
                   window.location.pathname
                 )) ||
-              !isBetaPage;
+              !isV2Page;
             return (
               <div key={kebabCase(category.name)}>
                 {showNavCategory && <SideNavDivider className={dividerClass} />}
@@ -277,13 +303,13 @@ class LeftNav extends React.Component {
                     console.log(item);
                   }
                   if (
-                    (isBetaPage && item.path === window.location.pathname) ||
-                    !isBetaPage ||
-                    (this.props.hasSearch && isBetaPage)
+                    (isV2Page && item.path === window.location.pathname) ||
+                    !isV2Page ||
+                    (this.props.hasSearch && isV2Page)
                   )
                     return (
                       <LeftNavItem
-                        isBetaPage={isBetaPage}
+                        isV2Page={isV2Page}
                         item={item}
                         key={item.title}
                         expanded={this.props.expanded}

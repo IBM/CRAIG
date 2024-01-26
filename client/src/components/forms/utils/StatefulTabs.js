@@ -8,6 +8,7 @@ import {
 import { kebabCase } from "lazy-z";
 import PropTypes from "prop-types";
 import { tabPanelProps } from "../../../lib/components/toggle-form-components";
+import { CarbonCodeMirror } from "carbon-react-code-mirror";
 
 class StatefulTabs extends React.Component {
   constructor(props) {
@@ -30,16 +31,21 @@ class StatefulTabs extends React.Component {
     let props = tabPanelProps(this.state, this.props);
     return (
       <>
+        <div
+          style={{
+            marginBottom: this.props.recursive ? "1rem" : undefined,
+          }}
+        />
         {props.hideHeading ? (
           ""
         ) : (
           <CraigFormHeading
-            icon={this.props.icon}
             name={this.props.name}
             type={this.props.headingType}
             className={this.props.className}
             tooltip={this.props.tooltip}
             h2={this.props.h2}
+            icon={this.props.icon}
             buttons={
               <DynamicRender
                 hide={this.props.hideButtons}
@@ -56,6 +62,11 @@ class StatefulTabs extends React.Component {
             }
           />
         )}
+        <div
+          style={{
+            marginBottom: this.props.recursive ? "0.5rem" : undefined,
+          }}
+        />
         {this.props.hideAbout ? (
           this.props.form
         ) : (
@@ -72,6 +83,7 @@ class StatefulTabs extends React.Component {
               <TabList aria-label="formTabs">
                 <Tab>{this.props.formName || "Create"}</Tab>
                 <Tab>{this.props.formName ? "Documentation" : "About"}</Tab>
+                {this.props.tfTabs ? <Tab>Terraform</Tab> : ""}
               </TabList>
             )}
             {this.props.overrideTabs ? (
@@ -79,7 +91,15 @@ class StatefulTabs extends React.Component {
                 {this.props.overrideTabs.map((tab, tabIndex) => {
                   return (
                     <TabPanel className="doc" key={`tab-panel-${tabIndex}`}>
-                      {tab.about()}
+                      {this.props.codeMirror ? (
+                        <CarbonCodeMirror
+                          code={
+                            tab.tf === "" ? "# No Terraform Resources" : tab.tf
+                          }
+                        />
+                      ) : (
+                        tab.about()
+                      )}
                     </TabPanel>
                   );
                 })}
@@ -93,6 +113,7 @@ class StatefulTabs extends React.Component {
                       name={this.props.name + " Documentation"}
                       overrideTabs={this.props.nestedDocs}
                       headingType="subHeading"
+                      recursive
                     />
                   ) : this.props.about ? (
                     this.props.about
@@ -100,6 +121,19 @@ class StatefulTabs extends React.Component {
                     ""
                   )}
                 </TabPanel>
+                {this.props.tfTabs ? (
+                  <TabPanel className="doc">
+                    <StatefulTabs
+                      name={this.props.name + " Terraform"}
+                      headingType="subHeading"
+                      recursive
+                      codeMirror
+                      overrideTabs={this.props.tfTabs}
+                    />
+                  </TabPanel>
+                ) : (
+                  ""
+                )}
               </TabPanels>
             )}
           </Tabs>

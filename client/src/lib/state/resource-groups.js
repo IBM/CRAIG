@@ -89,6 +89,15 @@ function resourceGroupSave(config, stateData, componentProps) {
         if (resource.resource_group === componentProps.data.name) {
           resource.resource_group = stateData.name;
         }
+        if (item === "vpcs") {
+          ["subnets", "acls", "public_gateways"].forEach((subItem) => {
+            resource[subItem].forEach((childResource) => {
+              if (childResource.resource_group === componentProps.data.name) {
+                childResource.resource_group = stateData.name;
+              }
+            });
+          });
+        }
       });
     });
     ["logdna", "sysdig", "atracker"].forEach((item) => {

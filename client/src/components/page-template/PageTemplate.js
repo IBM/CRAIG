@@ -130,24 +130,24 @@ let pageOrder = [
     icon: Settings,
   },
 ].concat(
-  contains(window.location.pathname, "/beta")
+  contains(window.location.pathname, "/v2")
     ? [
         {
           // temporary to get page to render
           title: "Cloud Services",
-          path: "/beta/services",
+          path: "/v2/services",
           icon: Settings,
         },
         {
           // temporary to get page to render
           title: "VPC Network",
-          path: "/beta/vpc",
+          path: "/v2/vpc",
           icon: Settings,
         },
         {
           // temporary to get page to render
           title: "VPC Deployments",
-          path: "/beta/vpcDeployments",
+          path: "/v2/vpcDeployments",
           icon: Settings,
         },
       ]
@@ -264,7 +264,7 @@ const PageTemplate = (props) => {
           className={
             props.hideCodeMirror ||
             formPathNotPresent ||
-            contains(window.location.pathname, "/beta/")
+            contains(window.location.pathname, "/v2/")
               ? "widthOneHundredPercent"
               : "leftPanelWidth"
           }
@@ -285,7 +285,7 @@ const PageTemplate = (props) => {
             <>
               {window.location.pathname !== "/projects" &&
                 !contains(window.location.pathname, "/docs/") &&
-                !contains(window.location.pathname, "/beta") &&
+                !contains(window.location.pathname, "/v2") &&
                 !props.craig.store.project_name && (
                   <NoProjectModal
                     craig={props.craig}
@@ -300,12 +300,12 @@ const PageTemplate = (props) => {
           hideCodeMirror={
             formPathNotPresent === true ||
             props.hideCodeMirror ||
-            contains(window.location.pathname, "/beta")
+            contains(window.location.pathname, "/v2")
           }
           code={codeMirrorGetDisplay(
             props.json,
             props.jsonInCodeMirror,
-            props.beta ? "/beta/services" : pageObj.path,
+            props.beta ? "/v2/services" : pageObj.path,
             pageObj.toTf,
             pageObj.jsonField
           )}
@@ -313,22 +313,21 @@ const PageTemplate = (props) => {
           jsonInCodeMirror={props.jsonInCodeMirror}
         />
       </div>
-      {isResetState !== true &&
-        !contains(window.location.pathname, "/beta") && (
-          <Footer
-            toggleFooter={() => {
-              props.craig.store.json._options.hideFooter =
-                !props.craig.store.json._options.hideFooter;
-              props.saveAndSendNotification("updating footer", false, true);
-            }}
-            hideFooter={
-              isBoolean(props.craig.store.json._options.hideFooter)
-                ? props.craig.store.json._options.hideFooter
-                : true
-            }
-            navigate={navigate}
-          />
-        )}
+      {isResetState !== true && !contains(window.location.pathname, "/v2") && (
+        <Footer
+          toggleFooter={() => {
+            props.craig.store.json._options.hideFooter =
+              !props.craig.store.json._options.hideFooter;
+            props.saveAndSendNotification("updating footer", false, true);
+          }}
+          hideFooter={
+            isBoolean(props.craig.store.json._options.hideFooter)
+              ? props.craig.store.json._options.hideFooter
+              : true
+          }
+          navigate={navigate}
+        />
+      )}
     </>
   );
 };

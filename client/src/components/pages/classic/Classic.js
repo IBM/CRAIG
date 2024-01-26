@@ -15,15 +15,13 @@ import {
   VlanIbm,
 } from "@carbon/icons-react";
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
-import { disableSave, propsMatchState } from "../../../lib";
+import { classicInfraTf, disableSave, propsMatchState } from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";
 import { IcseSelect } from "icse-react-assets";
 import DynamicForm from "../../forms/DynamicForm";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-}
+import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { classicGatewayTf } from "../../../lib/json-to-iac/classic-gateway";
 
 class ClassicDiagram extends React.Component {
   constructor(props) {
@@ -108,7 +106,6 @@ class ClassicDiagram extends React.Component {
         selectedIndex: gwIndex,
         selectedItem: "classic_gateways",
       });
-      scrollToTop();
     }
   }
 
@@ -129,7 +126,6 @@ class ClassicDiagram extends React.Component {
         selectedIndex: vlanIndex,
         selectedItem: "classic_vlans",
       });
-      scrollToTop();
     }
   }
 
@@ -150,7 +146,6 @@ class ClassicDiagram extends React.Component {
         selectedIndex: keyIndex,
         selectedItem: "classic_ssh_keys",
       });
-      scrollToTop();
     }
   }
 
@@ -254,6 +249,16 @@ class ClassicDiagram extends React.Component {
               ["Classic SSH Keys", "Classic VLANs", "Classic Gateways"],
               craig
             )}
+            tfTabs={[
+              {
+                name: "Classic Infrasctructure",
+                tf: classicInfraTf(craig.store.json) || "",
+              },
+              {
+                name: "Classic Gateways",
+                tf: classicGatewayTf(craig.store.json) || "",
+              },
+            ]}
             form={
               <>
                 <div style={{ width: "580px" }}>
@@ -272,11 +277,13 @@ class ClassicDiagram extends React.Component {
                 </div>
                 <div className="displayFlex" style={{ width: "100%" }}>
                   <div id="left-classic">
-                    <HoverClassNameWrapper hoverClassName="diagramBoxSelected">
+                    <HoverClassNameWrapper
+                      hoverClassName="diagramBoxSelected"
+                      className="width580"
+                    >
                       <SshKeys
                         craig={craig}
                         classic
-                        width="580px"
                         isSelected={(props) => {
                           return (
                             this.state.selectedItem === "classic_ssh_keys" &&
@@ -329,52 +336,54 @@ class ClassicDiagram extends React.Component {
                           marginTop: "1rem",
                         }}
                       >
-                        <CraigFormHeading
-                          icon={RenderForm(this.getIcon(), {
-                            style: {
-                              marginRight: "0.5rem",
-                              marginTop: "0.4rem",
-                            },
-                          })}
-                          noMarginBottom
-                          name={`Editing ${
-                            this.state.selectedItem === "classic_ssh_keys"
-                              ? "Classic SSH Key"
-                              : this.state.selectedItem === "classic_vlans"
-                              ? "VLAN"
-                              : "Classic Gateway"
-                          } ${
-                            craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ].name
-                          }`}
-                        />
-                        <CraigToggleForm
-                          key={
-                            this.state.selectedItem + this.state.selectedIndex
-                          }
-                          tabPanel={{ hideAbout: true }}
-                          onSave={craig[this.state.selectedItem].save}
-                          onDelete={this.onItemDelete}
-                          hideChevron
-                          hideName
-                          hide={false}
-                          name={
-                            craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ].name
-                          }
-                          submissionFieldName={this.state.selectedItem}
-                          innerFormProps={{
-                            form: forms[this.state.selectedItem],
-                            craig: craig,
-                            data: craig.store.json[this.state.selectedItem][
-                              this.state.selectedIndex
-                            ],
-                            disableSave: disableSave,
-                            propsMatchState: propsMatchState,
-                          }}
-                        />
+                        <ScrollFormWrapper>
+                          <CraigFormHeading
+                            icon={RenderForm(this.getIcon(), {
+                              style: {
+                                marginRight: "0.5rem",
+                                marginTop: "0.4rem",
+                              },
+                            })}
+                            noMarginBottom
+                            name={`Editing ${
+                              this.state.selectedItem === "classic_ssh_keys"
+                                ? "Classic SSH Key"
+                                : this.state.selectedItem === "classic_vlans"
+                                ? "VLAN"
+                                : "Classic Gateway"
+                            } ${
+                              craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ].name
+                            }`}
+                          />
+                          <CraigToggleForm
+                            key={
+                              this.state.selectedItem + this.state.selectedIndex
+                            }
+                            tabPanel={{ hideAbout: true }}
+                            onSave={craig[this.state.selectedItem].save}
+                            onDelete={this.onItemDelete}
+                            hideChevron
+                            hideName
+                            hide={false}
+                            name={
+                              craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ].name
+                            }
+                            submissionFieldName={this.state.selectedItem}
+                            innerFormProps={{
+                              form: forms[this.state.selectedItem],
+                              craig: craig,
+                              data: craig.store.json[this.state.selectedItem][
+                                this.state.selectedIndex
+                              ],
+                              disableSave: disableSave,
+                              propsMatchState: propsMatchState,
+                            }}
+                          />
+                        </ScrollFormWrapper>
                       </div>
                     ) : (
                       ""

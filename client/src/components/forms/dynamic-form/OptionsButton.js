@@ -6,7 +6,7 @@ import { contains } from "lazy-z";
 
 export const OptionsButton = (props) => {
   return props.parentProps.formName === "options" &&
-    !contains(window.location.pathname, "/beta") ? (
+    !contains(window.location.pathname, "/v2") ? (
     <Button
       disabled={disableSave("options", props.parentState, props.parentProps)}
       className="marginTop"

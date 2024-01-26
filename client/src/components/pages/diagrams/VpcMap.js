@@ -33,10 +33,10 @@ export const VpcMap = (props) => {
       name="VPCs"
       className="width580 marginTopHalfRem"
       customClick={
-        window.location.pathname !== "/beta/vpc" ? (
+        window.location.pathname !== "/v2/vpc" ? (
           <>
             Add one from the{" "}
-            <a href="/beta/vpc" style={{ marginLeft: "0.33rem" }}>
+            <a href="/v2/vpc" style={{ marginLeft: "0.33rem" }}>
               VPC Page
             </a>
             .
@@ -54,7 +54,9 @@ export const VpcMap = (props) => {
         let vpcBoxClassName =
           "subForm marginBottomSmall marginRight1Rem width580";
         let isRed =
-          isNullOrEmptyString(vpc.resource_group, true) || vpc.name === null;
+          isNullOrEmptyString(vpc.resource_group, true) ||
+          isNullOrEmptyString(vpc.flow_logs_bucket_name, true) ||
+          vpc.name === null;
         // vpc index needs to be modified when there are rresources with no vpc
         let vpcIndex = props.noDeployments
           ? calcVpcIndex

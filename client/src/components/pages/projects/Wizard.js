@@ -59,8 +59,8 @@ class Wizard extends React.Component {
     stateCopy.json = wizard(stateCopy, stateCopy.json);
     this.props.onProjectSave(stateCopy, this.props, true).then(() => {
       this.props.onRequestClose();
-      if (contains(window.location.pathname, "/beta"))
-        window.location.pathname = "/beta/settings";
+      if (contains(window.location.pathname, "/v2"))
+        window.location.pathname = "/v2/settings";
       else window.location.pathname = "/";
     });
   }

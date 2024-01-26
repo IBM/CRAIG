@@ -201,6 +201,7 @@ function vpcDelete(config, stateData, componentProps) {
 function vpcOnStoreUpdate(config) {
   // for each network
   config.store.json.vpcs.forEach((network) => {
+    pgwNumberToZone(network);
     network.cos = getVpcCosName(config, network.bucket);
     if (network.cos === null && network.bucket !== "$disabled") {
       network.bucket = null;
@@ -213,6 +214,7 @@ function vpcOnStoreUpdate(config) {
     // for each zone
     network.subnets.forEach((subnet) => {
       subnet.vpc = network.name;
+      subnet.resource_group = network.resource_group;
       // add the names of the subnets to the list
       subnetList = subnetList.concat(subnet.name);
       if (
@@ -227,7 +229,15 @@ function vpcOnStoreUpdate(config) {
         rule.acl = acl.name;
         rule.vpc = network.name;
       });
-      config.updateUnfound("resourceGroups", acl, "resource_group");
+      if (
+        !splatContains(
+          config.store.json.resource_groups,
+          "name",
+          acl.resource_group
+        )
+      ) {
+        acl.resource_group = null;
+      }
     });
     if (!config.store.subnets) {
       config.store.subnets = {};

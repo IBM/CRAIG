@@ -177,6 +177,504 @@ describe("vpcs", () => {
         "todd should be there"
       );
     });
+    it("should update pgw vpc on store update", () => {
+      let craig = newState();
+      craig.vpcs.save(
+        { publicGateways: [1, 2, 3] },
+        {
+          data: {
+            name: "management",
+          },
+          craig: craig,
+        }
+      );
+      let expectedData = {
+        cos: "cos",
+        bucket: "management-bucket",
+        name: "management",
+        resource_group: "management-rg",
+        classic_access: false,
+        manual_address_prefix_management: true,
+        default_network_acl_name: null,
+        default_security_group_name: null,
+        default_routing_table_name: null,
+        publicGateways: [1, 2, 3],
+        address_prefixes: [
+          {
+            vpc: "management",
+            zone: 1,
+            name: "management-zone-1",
+            cidr: "10.10.0.0/22",
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            name: "management-zone-2",
+            cidr: "10.20.0.0/22",
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            name: "management-zone-3",
+            cidr: "10.30.0.0/22",
+          },
+        ],
+        subnets: [
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.0.0/29",
+            name: "vsi-zone-1",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.0.16/29",
+            name: "vpn-zone-1",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.0.0/29",
+            name: "vsi-zone-2",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            cidr: "10.30.0.0/29",
+            name: "vsi-zone-3",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.0.32/29",
+            name: "vpe-zone-1",
+            resource_group: "management-rg",
+            network_acl: "management",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.0.16/29",
+            name: "vpe-zone-2",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            cidr: "10.30.0.16/29",
+            name: "vpe-zone-3",
+            network_acl: "management",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: false,
+          },
+        ],
+        public_gateways: [
+          {
+            zone: 1,
+            vpc: "management",
+            resource_group: "management-rg",
+          },
+          {
+            zone: 2,
+            vpc: "management",
+            resource_group: "management-rg",
+          },
+          {
+            zone: 3,
+            vpc: "management",
+            resource_group: "management-rg",
+          },
+        ],
+        acls: [
+          {
+            resource_group: "management-rg",
+            name: "management",
+            vpc: "management",
+            rules: [
+              {
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound",
+                source: "161.26.0.0/16",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+              {
+                action: "allow",
+                source: "10.0.0.0/8",
+                direction: "outbound",
+                name: "allow-ibm-outbound",
+                destination: "161.26.0.0/16",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+              {
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-all-network-inbound",
+                source: "10.0.0.0/8",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+              {
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "outbound",
+                name: "allow-all-network-outbound",
+                source: "10.0.0.0/8",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+            ],
+          },
+        ],
+      };
+      assert.deepEqual(
+        craig.store.json.vpcs[0],
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should update pgw and subnet rg on rg name change", () => {
+      let craig = newState();
+      craig.resource_groups.save(
+        { name: "frog" },
+        { data: { name: "management-rg" }, craig: craig }
+      );
+      craig.vpcs.save(
+        { publicGateways: [1, 2, 3] },
+        {
+          data: {
+            name: "management",
+          },
+          craig: craig,
+        }
+      );
+      let expectedData = {
+        cos: "cos",
+        bucket: "management-bucket",
+        name: "management",
+        resource_group: "frog",
+        classic_access: false,
+        manual_address_prefix_management: true,
+        default_network_acl_name: null,
+        default_security_group_name: null,
+        default_routing_table_name: null,
+        publicGateways: [1, 2, 3],
+        address_prefixes: [
+          {
+            vpc: "management",
+            zone: 1,
+            name: "management-zone-1",
+            cidr: "10.10.0.0/22",
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            name: "management-zone-2",
+            cidr: "10.20.0.0/22",
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            name: "management-zone-3",
+            cidr: "10.30.0.0/22",
+          },
+        ],
+        subnets: [
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.0.0/29",
+            name: "vsi-zone-1",
+            network_acl: "management",
+            resource_group: "frog",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.0.16/29",
+            name: "vpn-zone-1",
+            network_acl: "management",
+            resource_group: "frog",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.0.0/29",
+            name: "vsi-zone-2",
+            network_acl: "management",
+            resource_group: "frog",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            cidr: "10.30.0.0/29",
+            name: "vsi-zone-3",
+            network_acl: "management",
+            resource_group: "frog",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.0.32/29",
+            name: "vpe-zone-1",
+            resource_group: "frog",
+            network_acl: "management",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.0.16/29",
+            name: "vpe-zone-2",
+            network_acl: "management",
+            resource_group: "frog",
+            public_gateway: false,
+            has_prefix: false,
+          },
+          {
+            vpc: "management",
+            zone: 3,
+            cidr: "10.30.0.16/29",
+            name: "vpe-zone-3",
+            network_acl: "management",
+            resource_group: "frog",
+            public_gateway: false,
+            has_prefix: false,
+          },
+        ],
+        public_gateways: [
+          {
+            zone: 1,
+            vpc: "management",
+            resource_group: "frog",
+          },
+          {
+            zone: 2,
+            vpc: "management",
+            resource_group: "frog",
+          },
+          {
+            zone: 3,
+            vpc: "management",
+            resource_group: "frog",
+          },
+        ],
+        acls: [
+          {
+            resource_group: "frog",
+            name: "management",
+            vpc: "management",
+            rules: [
+              {
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound",
+                source: "161.26.0.0/16",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+              {
+                action: "allow",
+                source: "10.0.0.0/8",
+                direction: "outbound",
+                name: "allow-ibm-outbound",
+                destination: "161.26.0.0/16",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+              {
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-all-network-inbound",
+                source: "10.0.0.0/8",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+              {
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "outbound",
+                name: "allow-all-network-outbound",
+                source: "10.0.0.0/8",
+                acl: "management",
+                vpc: "management",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+            ],
+          },
+        ],
+      };
+      assert.deepEqual(
+        craig.store.json.vpcs[0],
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("vpcs.create", () => {
     it("should create a new vpc with a name and resource group", () => {
@@ -3621,7 +4119,7 @@ describe("vpcs", () => {
             name: "f5-bastion-zone-1",
             network_acl: "management",
             public_gateway: false,
-            resource_group: "edge-rg",
+            resource_group: "management-rg",
             vpc: "management",
             zone: 1,
           },
@@ -3631,7 +4129,7 @@ describe("vpcs", () => {
             name: "f5-bastion-zone-2",
             network_acl: "management",
             public_gateway: false,
-            resource_group: "edge-rg",
+            resource_group: "management-rg",
             vpc: "management",
             zone: 2,
           },
@@ -3641,7 +4139,7 @@ describe("vpcs", () => {
             name: "f5-bastion-zone-3",
             network_acl: "management",
             public_gateway: false,
-            resource_group: "edge-rg",
+            resource_group: "management-rg",
             vpc: "management",
             zone: 3,
           },

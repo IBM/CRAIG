@@ -72,8 +72,8 @@ class ImportJson extends React.Component {
   handleSubmit() {
     this.props.craig.hardSetJson(this.state.validJson, this.props.slz);
     this.toggleModal();
-    window.location.pathname = contains(window.location.pathname, "/beta")
-      ? "/beta/services"
+    window.location.pathname = contains(window.location.pathname, "/v2")
+      ? "/v2/services"
       : this.props.slz
       ? "/"
       : "/form/resourceGroups";

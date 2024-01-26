@@ -197,6 +197,43 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
         "it should return correct data"
       );
     });
+    it("should return correct volume and remove index", () => {
+      let actualData = formatPowerVsVolume({
+        name: "aixtgtvols1",
+        workspace: "workspace",
+        pi_volume_shareable: false,
+        pi_replication_enabled: false,
+        pi_volume_type: null,
+        attachments: ["aixtarget"],
+        storage_option: "Affinity",
+        affinity_type: "Instance",
+        pi_storage_pool: null,
+        pi_anti_affinity_volume: null,
+        pi_anti_affinity_instance: null,
+        pi_affinity_policy: "affinity",
+        zone: "dal10",
+        pi_volume_size: "100",
+        pi_affinity_instance: "aixtarget",
+        index: 0,
+      });
+      let expectedData = `
+resource "ibm_pi_volume" "workspace_volume_aixtgtvols1" {
+  provider               = ibm.power_vs_dal10
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_workspace.guid
+  pi_volume_size         = 100
+  pi_volume_name         = "\${var.prefix}-workspace-aixtgtvols1"
+  pi_volume_shareable    = false
+  pi_replication_enabled = false
+  pi_affinity_policy     = "affinity"
+  pi_affinity_instance   = ibm_pi_instance.workspace_workspace_instance_aixtarget.instance_id
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should return correct volume terraform with multiples", () => {
       let actualData = formatPowerVsVolume({
         count: "4",
