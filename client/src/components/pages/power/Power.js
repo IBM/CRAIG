@@ -355,6 +355,35 @@ class PowerDiagram extends React.Component {
               craig.store.json._options.enable_power_vs === true ? (
                 <>
                   <div style={{ width: "580px" }}>
+                    <CraigToggleForm
+                      hideName
+                      name="Project Power VS Settings"
+                      tabPanel={{
+                        hideAbout: true,
+                        hasBuiltInHeading: true,
+                      }}
+                      noDeleteButton
+                      onDelete={() => {}}
+                      onSave={craig.options.save}
+                      craig={craig}
+                      innerFormProps={{
+                        data: craig.store.json._options,
+                        form: {
+                          groups: [
+                            {
+                              enable_power_vs: craig.options.enable_power_vs,
+                              power_vs_high_availability:
+                                craig.options.power_vs_high_availability,
+                            },
+                            {
+                              power_vs_zones: craig.options.power_vs_zones,
+                            },
+                          ],
+                        },
+                      }}
+                    />
+                  </div>
+                  <div style={{ width: "580px" }}>
                     <CraigFormHeading
                       name="Power Workspaces"
                       noMarginBottom

@@ -15,10 +15,9 @@ import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
 import { invalidForms, validate } from "../../lib";
-import { camelCase, contains, snakeCase, splat } from "lazy-z";
+import { contains, splat } from "lazy-z";
 import { allDocText } from "../../lib/docs";
 import { ValidNavBox } from "./ValidNavBox";
-import { RenderForm } from "icse-react-assets";
 const releaseNotes = require("../../lib/docs/release-notes.json");
 
 class Navigation extends React.Component {
@@ -57,11 +56,17 @@ class Navigation extends React.Component {
   };
 
   onHamburgerClick() {
-    // reset search on nav close
-    if (!this.state.expanded == false && this.state.hasSearch) {
-      this.resetSearch();
+    if (!this.state.timeout) {
+      // reset search on nav close
+      if (!this.state.expanded == false && this.state.hasSearch) {
+        this.resetSearch();
+      }
+      this.setState({ expanded: !this.state.expanded, timeout: true }, () => {
+        setTimeout(() => {
+          this.setState({ timeout: false });
+        }, 100);
+      });
     }
-    this.setState({ expanded: !this.state.expanded });
   }
 
   onDownloadClick() {
@@ -131,8 +136,8 @@ class Navigation extends React.Component {
   }
 
   onInvalidClick() {
-    window.location.href = contains(window.location.pathname, "/beta")
-      ? "/beta/overview"
+    window.location.href = contains(window.location.pathname, "/v2")
+      ? "/v2/overview"
       : "/summary";
   }
 
@@ -146,7 +151,7 @@ class Navigation extends React.Component {
             onClick={this.onHamburgerClick}
             isActive={this.state.expanded}
           />
-          <HeaderName href="/" prefix="">
+          <HeaderName href="/v2/projects" prefix="">
             CRAIG v{releaseNotes[0].version}
           </HeaderName>
           {this.props.project && (
@@ -183,8 +188,8 @@ class Navigation extends React.Component {
                 <HeaderMenuItem
                   className="headerMenuBoxItemLink"
                   href={
-                    contains(window.location.pathname, "/beta")
-                      ? "/beta/projects"
+                    contains(window.location.pathname, "/v2")
+                      ? "/v2/projects"
                       : "/projects"
                   }
                 >
@@ -213,7 +218,7 @@ class Navigation extends React.Component {
                 <Download />
               </HeaderGlobalAction>
             )}
-            {!contains(window.location.pathname, "/beta") &&
+            {!contains(window.location.pathname, "/v2") &&
               this.props.isResetState === false &&
               this.props.formPathNotPresent === false && (
                 <HeaderGlobalAction
@@ -252,8 +257,7 @@ class Navigation extends React.Component {
             expanded={this.state.expanded}
             onOverlayClick={this.onHamburgerClick}
             navCategories={
-              contains(window.location.pathname, "/beta") &&
-              !this.state.hasSearch
+              contains(window.location.pathname, "/v2") && !this.state.hasSearch
                 ? []
                 : this.state.filteredNavCategories
             }

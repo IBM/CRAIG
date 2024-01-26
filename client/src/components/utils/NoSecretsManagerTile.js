@@ -9,8 +9,8 @@ export const NoSecretsManagerTile = () => {
     <Tile className="tileBackground displayFlex alignItemsCenter wrap marginTop">
       <CloudAlerting size="24" className="iconMargin" /> No Secrets Manager
       instances have been created. Create one from the{" "}
-      {contains(window.location.pathname, "/beta") ? (
-        <a className="no-secrets-link" href="/beta/services">
+      {contains(window.location.pathname, "/v2") ? (
+        <a className="no-secrets-link" href="/v2/services">
           Cloud Services Page
         </a>
       ) : (

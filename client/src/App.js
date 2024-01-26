@@ -69,7 +69,7 @@ class App extends Component {
           <Route path="/resetState" element={<ResetState />} />
           <Route path="/" element={<Craig craigRouter={this.craigRouter} />} />
           <Route
-            path="/beta/:betaPage"
+            path="/v2/:v2Page"
             element={<Craig craigRouter={this.craigRouter} />}
           />
           <Route
@@ -90,7 +90,7 @@ class App extends Component {
             element={<Craig craigRouter={this.craigRouter} />}
           />
           <Route
-            path="/beta"
+            path="/v2"
             element={<Craig craigRouter={this.craigRouter} />}
           />
           <Route path="*" element={<PageNotFound />} />

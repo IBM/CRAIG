@@ -407,7 +407,7 @@ class Craig extends React.Component {
           craig={craig}
           onProjectSave={this.onProjectSave}
           saveAndSendNotification={this.saveAndSendNotification}
-          beta={this.props.params.betaPage}
+          beta={this.props.params.v2Page}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
@@ -420,8 +420,8 @@ class Craig extends React.Component {
               <PageNotFound />
             )
           ) : window.location.pathname === "/projects" ||
-            window.location.pathname === "/beta/projects" ||
-            window.location.pathname === "/beta" ? (
+            window.location.pathname === "/v2/projects" ||
+            window.location.pathname === "/v2" ? (
             <Projects
               current_project={craig.store.project_name}
               projects={this.state.projects}
@@ -435,7 +435,7 @@ class Craig extends React.Component {
               }}
             />
           ) : window.location.pathname === "/" ||
-            window.location.pathname === "/beta/settings" ? (
+            window.location.pathname === "/v2/settings" ? (
             <Home craig={craig} />
           ) : window.location.pathname === "/summary" ? (
             <Summary
@@ -444,19 +444,19 @@ class Craig extends React.Component {
               projects={this.state.projects}
               nav={this.props.craigRouter.nav}
             />
-          ) : window.location.pathname === "/beta/services" ? (
+          ) : window.location.pathname === "/v2/services" ? (
             <CloudServicesPage craig={craig} />
-          ) : window.location.pathname === "/beta/vpc" ? (
+          ) : window.location.pathname === "/v2/vpc" ? (
             <VpcDiagramPage craig={craig} />
-          ) : window.location.pathname === "/beta/vpcDeployments" ? (
+          ) : window.location.pathname === "/v2/vpcDeployments" ? (
             <VpcDeploymentsDiagramPage craig={craig} />
-          ) : window.location.pathname === "/beta/connectivity" ? (
+          ) : window.location.pathname === "/v2/connectivity" ? (
             <VpcConnectivityPage craig={craig} />
-          ) : window.location.pathname === "/beta/power" ? (
+          ) : window.location.pathname === "/v2/power" ? (
             <PowerDiagram craig={craig} />
-          ) : window.location.pathname === "/beta/classic" ? (
+          ) : window.location.pathname === "/v2/classic" ? (
             <ClassicDiagram craig={craig} />
-          ) : window.location.pathname === "/beta/overview" ? (
+          ) : window.location.pathname === "/v2/overview" ? (
             <Overview craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
             <ObservabilityForm craig={craig} />

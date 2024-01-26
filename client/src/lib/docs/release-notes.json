@@ -9,7 +9,8 @@
       "When using an existing Power VS Workspace, images within that workspace will be retrieved using the CRAIG API. This will allow for the retrieval of custom Power VS Images in CRAIG",
       "CRAIG Power VS Images API endpoints now have more robust logging",
       "Users can now use `PLACEHOLDER` as a placeholder certificate value on the VPN Servers page",
-      "Users can now specify a peer address using the VPN Gateway connection subform"
+      "Users can now specify a peer address using the VPN Gateway connection subform",
+      "Users can now import a Power VS SSH Key from data even when the parent workspace is not imported"
     ],
     "fixes": [
       "Fixed an issue causing all Power VS images to be imported into a workspace",
@@ -145,7 +146,7 @@
     "version": "1.5.0",
     "features": [
       "Users can now fetch Power VS images and storage pools by using the API endpoint `/api/power/:region/:component` for a Power VS workspace.",
-      "Users can now use a beta version of a new cloud services page at `/beta/services`",
+      "Users can now use a beta version of a new cloud services page at `/v2/services`",
       "Added Oracle Single Instance template",
       "Users can now create policy-based VPN Gateways using the VPN Gateway form",
       "Users can now create a Power VS SSH key with the same public key as a VPC SSH key",

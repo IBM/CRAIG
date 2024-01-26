@@ -30,16 +30,21 @@ class StatefulTabs extends React.Component {
     let props = tabPanelProps(this.state, this.props);
     return (
       <>
+        <div
+          style={{
+            marginBottom: this.props.recursive ? "1rem" : undefined,
+          }}
+        />
         {props.hideHeading ? (
           ""
         ) : (
           <CraigFormHeading
-            icon={this.props.icon}
             name={this.props.name}
             type={this.props.headingType}
             className={this.props.className}
             tooltip={this.props.tooltip}
             h2={this.props.h2}
+            icon={this.props.icon}
             buttons={
               <DynamicRender
                 hide={this.props.hideButtons}
@@ -56,6 +61,11 @@ class StatefulTabs extends React.Component {
             }
           />
         )}
+        <div
+          style={{
+            marginBottom: this.props.recursive ? "0.5rem" : undefined,
+          }}
+        />
         {this.props.hideAbout ? (
           this.props.form
         ) : (
@@ -93,6 +103,7 @@ class StatefulTabs extends React.Component {
                       name={this.props.name + " Documentation"}
                       overrideTabs={this.props.nestedDocs}
                       headingType="subHeading"
+                      recursive
                     />
                   ) : this.props.about ? (
                     this.props.about

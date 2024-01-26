@@ -685,12 +685,6 @@ function sshKeySchema(fieldName) {
       type: "toggle",
       labelText: "Use Existing SSH Key",
       default: false,
-      hideWhen: function (stateData) {
-        return (
-          fieldName === "power_vs_ssh_keys" &&
-          stateData.workspace_use_data !== true
-        );
-      },
     };
   }
   return schema;

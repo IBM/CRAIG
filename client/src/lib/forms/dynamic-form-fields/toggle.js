@@ -39,8 +39,18 @@ function dynamicToggleProps(props) {
   );
   // check params for disabled
   let isDisabled = disabledReturnsBooleanCheck(props, "dynamicToggleProps");
-  let labelA = props.field.useOnOff ? "Off" : "False",
-    labelB = props.field.useOnOff ? "On" : "True",
+  let dynamicSubnetToggle =
+    props.field.labelText === "VPC Network Address Management";
+  let labelA = dynamicSubnetToggle
+      ? "Manual Address Management"
+      : props.field.useOnOff
+      ? "Off"
+      : "False",
+    labelB = dynamicSubnetToggle
+      ? "CRAIG Managed Network Addresses"
+      : props.field.useOnOff
+      ? "On"
+      : "True",
     labelText = props.field.tooltip ? " " : props.field.labelText,
     id = kebabCase(props.name) + "-toggle-" + props.propsName,
     className =

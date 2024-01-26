@@ -352,7 +352,7 @@ CraigToggleForm.propTypes = {
   onShowToggle: PropTypes.func,
   index: PropTypes.number.isRequired,
   hide: PropTypes.bool.isRequired,
-  submissionFieldName: PropTypes.string.isRequired,
+  submissionFieldName: PropTypes.string,
   forceOpen: PropTypes.func, // can be null
   deleteDisabled: PropTypes.func, // can be null
   disableDeleteMessage: PropTypes.func, // can be null

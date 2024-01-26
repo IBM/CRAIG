@@ -14,7 +14,7 @@ function Home(props) {
   let craig = props.craig;
   return (
     <>
-      {contains(window.location.pathname, "/beta") ? (
+      {contains(window.location.pathname, "/v2") ? (
         <div>
           <CraigFormHeading
             name="Settings"
@@ -45,7 +45,7 @@ function Home(props) {
       <Tabs>
         <TabList aria-label="home-options">
           <Tab>
-            {contains(window.location.pathname, "beta")
+            {contains(window.location.pathname, "/v2")
               ? "Manage Settings"
               : "Options"}
           </Tab>
@@ -77,7 +77,7 @@ function Home(props) {
                 form: {
                   groups: [
                     {
-                      fs_cloud: craig.options.fs_cloud,
+                      dynamic_subnets: craig.options.dynamic_subnets,
                     },
                     {
                       prefix: craig.options.prefix,
@@ -87,7 +87,6 @@ function Home(props) {
                     {
                       endpoints: craig.options.endpoints,
                       account_id: craig.options.account_id,
-                      dynamic_subnets: craig.options.dynamic_subnets,
                     },
                     {
                       enable_power_vs: craig.options.enable_power_vs,

@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./navigation.scss";
 import { leftNavItemClassName } from "../../lib/forms";
+import { contains } from "lazy-z";
 
 class LeftNavItem extends React.Component {
   constructor(props) {
@@ -34,12 +35,18 @@ class LeftNavItem extends React.Component {
           key={"popover-" + this.props.item.title}
         >
           <SideNavLink
-            href={this.props.item.path + (this.props.isBetaPage ? "?beta" : "")}
+            href={this.props.item.path + (this.props.isV2Page ? "?v2" : "")}
             renderIcon={this.props.item.icon}
             key={this.props.item.title}
             onMouseOver={() => this.setHover(true)}
             onMouseOut={() => this.setHover(false)}
             className={
+              (this.props.new &&
+              this.props.expanded &&
+              !contains(window.location.pathname, "/v2") &&
+              !contains(window.location.search, "v2")
+                ? "newLeftNav "
+                : "") +
               (requiredComponent && this.props.expanded
                 ? "sideNavLinkRequired "
                 : "") +

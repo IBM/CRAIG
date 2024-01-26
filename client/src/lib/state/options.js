@@ -219,9 +219,11 @@ function initOptions(store) {
       },
       dynamic_subnets: {
         size: "small",
-        labelText: "Enable Dynamic Scalable Subnets",
+        labelText: "VPC Network Address Management",
         type: "toggle",
         default: true,
+        useOnOff: true,
+        labelA: "aaa",
         disabled: function (stateData, componentProps) {
           return (
             componentProps.craig.store.json._options.advanced_subnets || false
@@ -229,9 +231,7 @@ function initOptions(store) {
         },
         tooltip: {
           content:
-            "Use this setting to minimize the number of provisioned IPs in your VPCs. When active, each subnet will be sized to the number of interfaces needed for provisioned resources." +
-            " Turn off if you want to manage your address prefixes and subnet CIDR addresses manually." +
-            " Dynamic subnet addressing cannot be used with advanced subnet tiers",
+            "CRAIG managed subnet addresses will try and minimize the number of available IP addresses in VPC subnets. To bring your own network addresses, turn this setting off.",
         },
       },
       enable_power_vs: {
