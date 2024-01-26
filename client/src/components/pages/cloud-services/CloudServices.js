@@ -25,7 +25,12 @@ import {
 } from "lazy-z";
 import React from "react";
 import "./cloud-services.css";
-import { disableSave, propsMatchState } from "../../../lib";
+import {
+  appidTf,
+  atrackerTf,
+  disableSave,
+  propsMatchState,
+} from "../../../lib";
 import { ManageService } from "../diagrams/ManageService";
 import {
   CraigFormHeading,
@@ -44,6 +49,17 @@ import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import {
+  cosTf,
+  dnsTf,
+  eventStreamsTf,
+  icdTf,
+  kmsTf,
+  loggingMonitoringTf,
+  resourceGroupTf,
+  secretsManagerTf,
+} from "../../../lib/json-to-iac";
+import { scc2Tf } from "../../../lib/json-to-iac/scc-v2";
 
 const serviceFormMap = {
   resource_groups: {
@@ -445,8 +461,58 @@ class CloudServicesPage extends React.Component {
           }
           formName="Manage Cloud Services"
           name="Cloud Services"
+          tfTabs={[
+            {
+              name: "Activity Tracker",
+              tf: atrackerTf(craig.store.json),
+            },
+            {
+              name: "AppID",
+              tf: appidTf(craig.store.json),
+            },
+            {
+              name: "Cloud Databases",
+              tf: icdTf(craig.store.json),
+            },
+            {
+              name: "DNS",
+              tf: dnsTf(craig.store.json),
+            },
+            {
+              name: "Event Streams",
+              tf:
+                craig.store.json.event_streams.length === 0
+                  ? ""
+                  : eventStreamsTf(craig.store.json),
+            },
+            {
+              name: "Key Management",
+              tf: kmsTf(craig.store.json),
+            },
+            {
+              name: "Logging & Monitoring",
+              tf: loggingMonitoringTf(craig.store.json),
+            },
+            {
+              name: "Object Storage",
+              tf: cosTf(craig.store.json),
+            },
+            {
+              name: "Resource Groups",
+              tf: resourceGroupTf(craig.store.json),
+            },
+            {
+              name: "Secrets Manager",
+              tf: secretsManagerTf(craig.store.json),
+            },
+            {
+              name: "Security & Compliance Center",
+              tf: scc2Tf(craig.store.json) || "",
+            },
+          ]}
           nestedDocs={docTabs(
             [
+              "Activity Tracker",
               "AppID",
               "Cloud Databases",
               "DNS",

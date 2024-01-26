@@ -18,7 +18,19 @@ import {
   Router,
   IbmCloudVpc,
 } from "@carbon/icons-react";
-import { disableSave, propsMatchState } from "../../../lib";
+import {
+  clusterTf,
+  disableSave,
+  f5Tf,
+  lbTf,
+  propsMatchState,
+  routingTableTf,
+  sgTf,
+  sshKeyTf,
+  vpeTf,
+  vpnTf,
+  vsiTf,
+} from "../../../lib";
 import {
   arraySplatIndex,
   azsort,
@@ -47,6 +59,8 @@ import f5 from "../../../images/f5.png";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { PassThroughHoverWrapper } from "../diagrams/Overview";
 import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { fortigateTf } from "../../../lib/json-to-iac/fortigate";
+import { vpnServerTf } from "../../../lib/json-to-iac";
 
 function F5Icon() {
   return <img src={f5} className="vpcDeploymentIcon" />;
@@ -375,6 +389,55 @@ class VpcDeploymentsDiagramPage extends React.Component {
             }
             name="VPC Deployments"
             formName="VPC Deployments"
+            tfTabs={[
+              {
+                name: "Clusters",
+                tf: clusterTf(craig.store.json),
+              },
+              {
+                name: "F5 Big IP",
+                tf: f5Tf(craig.store.json),
+              },
+              {
+                name: "Fortigate VNF",
+                tf: fortigateTf(craig.store.json) || "",
+              },
+              {
+                name: "Load Balancers",
+                tf: lbTf(craig.store.json),
+              },
+              {
+                name: "Routing Tables",
+                tf: routingTableTf(craig.store.json),
+              },
+              {
+                name: "Security Groups",
+                tf: sgTf(craig.store.json),
+              },
+              {
+                name: "SSH Keys",
+                tf:
+                  craig.store.json.ssh_keys.length === 0
+                    ? ""
+                    : sshKeyTf(craig.store.json),
+              },
+              {
+                name: "Virtual Servers",
+                tf: vsiTf(craig.store.json),
+              },
+              {
+                name: "Virtual Private Endpoints",
+                tf: vpeTf(craig.store.json),
+              },
+              {
+                name: "VPN Gateways",
+                tf: vpnTf(craig.store.json),
+              },
+              {
+                name: "VPN Servers",
+                tf: vpnServerTf(craig.store.json),
+              },
+            ]}
             nestedDocs={docTabs(
               [
                 "SSH Keys",
@@ -392,7 +455,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
             )}
             form={
               <>
-                <div className="marginBottomSmall" />
                 <div className="width580">
                   <CraigFormHeading
                     name="Deployments"

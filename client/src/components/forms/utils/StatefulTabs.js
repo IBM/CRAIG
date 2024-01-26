@@ -8,6 +8,7 @@ import {
 import { kebabCase } from "lazy-z";
 import PropTypes from "prop-types";
 import { tabPanelProps } from "../../../lib/components/toggle-form-components";
+import { CarbonCodeMirror } from "carbon-react-code-mirror";
 
 class StatefulTabs extends React.Component {
   constructor(props) {
@@ -82,6 +83,7 @@ class StatefulTabs extends React.Component {
               <TabList aria-label="formTabs">
                 <Tab>{this.props.formName || "Create"}</Tab>
                 <Tab>{this.props.formName ? "Documentation" : "About"}</Tab>
+                {this.props.tfTabs ? <Tab>Terraform</Tab> : ""}
               </TabList>
             )}
             {this.props.overrideTabs ? (
@@ -89,7 +91,15 @@ class StatefulTabs extends React.Component {
                 {this.props.overrideTabs.map((tab, tabIndex) => {
                   return (
                     <TabPanel className="doc" key={`tab-panel-${tabIndex}`}>
-                      {tab.about()}
+                      {this.props.codeMirror ? (
+                        <CarbonCodeMirror
+                          code={
+                            tab.tf === "" ? "# No Terraform Resources" : tab.tf
+                          }
+                        />
+                      ) : (
+                        tab.about()
+                      )}
                     </TabPanel>
                   );
                 })}
@@ -111,6 +121,19 @@ class StatefulTabs extends React.Component {
                     ""
                   )}
                 </TabPanel>
+                {this.props.tfTabs ? (
+                  <TabPanel className="doc">
+                    <StatefulTabs
+                      name={this.props.name + " Terraform"}
+                      headingType="subHeading"
+                      recursive
+                      codeMirror
+                      overrideTabs={this.props.tfTabs}
+                    />
+                  </TabPanel>
+                ) : (
+                  ""
+                )}
               </TabPanels>
             )}
           </Tabs>

@@ -99,7 +99,7 @@ function vpnTf(config) {
               "-"
             )}`,
             vpc: gw.vpc,
-            zone: gw.subnet.replace(/.+(?=\d$)/g, ""),
+            zone: (gw.subnet || "").replace(/.+(?=\d$)/g, ""),
             cidr: prefix,
             prefix: prefix,
           },

@@ -247,7 +247,10 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
   let depends = `ibm_iam_authorization_policy.${snakeCase(
     cos.name + " cos to " + cos.kms + " kms policy"
   )}`;
-  bucketValues.depends_on = [cdktf ? depends : cdktfRef(depends)];
+  bucketValues.depends_on =
+    cos.kms && bucket.kms_key
+      ? [cdktf ? depends : cdktfRef(depends)]
+      : undefined;
   data.data = bucketValues;
   return data;
 }
@@ -343,7 +346,8 @@ function formatCosKey(key, cos, config) {
  */
 function cosInstanceTf(cos, config) {
   let instanceTf =
-    formatCosInstance(cos, config) + formatCosToKmsAuth(cos, config);
+    formatCosInstance(cos, config) +
+    (cos.kms ? formatCosToKmsAuth(cos, config) : "");
   cos.buckets.forEach(
     (bucket) => (instanceTf += formatCosBucket(bucket, cos, config))
   );

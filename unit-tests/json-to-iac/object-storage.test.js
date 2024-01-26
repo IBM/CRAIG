@@ -530,9 +530,6 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   endpoint_type        = "public"
   force_delete         = true
   region_location      = var.region
-  depends_on = [
-    ibm_iam_authorization_policy.cos_cos_to_null_kms_policy
-  ]
 }
 `;
       assert.deepEqual(
@@ -1883,6 +1880,173 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
   ]
+}
+
+resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
+  name                 = "\${var.prefix}-cos-key-cos-key"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  role                 = "Writer"
+  tags = [
+    "hello",
+    "world"
+  ]
+  parameters = {
+    HMAC = true
+  }
+}
+
+##############################################################################
+`;
+      assert.deepEqual(actualData, expectedData, "it should create correct tf");
+    });
+    it("should return terraform for cos instances from config with no encryption", () => {
+      let actualData = cosTf({
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+          endpoints: "public",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
+          },
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: true,
+            use_hs_crypto: true,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+        object_storage: [
+          {
+            name: "cos",
+            plan: "standard",
+            resource_group: "slz-service-rg",
+            use_random_suffix: true,
+            use_data: false,
+            kms: null,
+            keys: [
+              {
+                role: "Writer",
+                name: "cos-key",
+                enable_hmac: true,
+              },
+            ],
+            buckets: [
+              {
+                force_delete: true,
+                kms_key: null,
+                name: "bucket",
+                storage_class: "standard",
+              },
+            ],
+          },
+          {
+            name: "cos2",
+            name: "cos",
+            plan: "standard",
+            resource_group: "slz-service-rg",
+            use_random_suffix: false,
+            kms: null,
+            keys: [
+              {
+                role: "Writer",
+                name: "cos-key",
+                enable_hmac: true,
+              },
+            ],
+            buckets: [
+              {
+                force_delete: true,
+                kms_key: null,
+                name: "bucket2",
+                storage_class: "standard",
+              },
+            ],
+            use_data: true,
+          },
+        ],
+      });
+      let expectedData = `##############################################################################
+# Object Storage Instance Cos
+##############################################################################
+
+resource "random_string" "cos_random_suffix" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
+resource "ibm_resource_instance" "cos_object_storage" {
+  name              = "\${var.prefix}-cos-object-storage-\${random_string.cos_random_suffix.result}"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  service           = "cloud-object-storage"
+  location          = "global"
+  plan              = "standard"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = var.region
+}
+
+resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
+  name                 = "\${var.prefix}-cos-key-cos-key-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = ibm_resource_instance.cos_object_storage.id
+  role                 = "Writer"
+  tags = [
+    "hello",
+    "world"
+  ]
+  parameters = {
+    HMAC = true
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# Object Storage Instance Cos
+##############################################################################
+
+data "ibm_resource_instance" "cos_object_storage" {
+  name              = "cos"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  service           = "cloud-object-storage"
+  location          = "global"
+}
+
+resource "ibm_cos_bucket" "cos_object_storage_bucket2_bucket" {
+  bucket_name          = "\${var.prefix}-cos-bucket2"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = var.region
 }
 
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {

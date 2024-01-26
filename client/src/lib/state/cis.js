@@ -68,7 +68,7 @@ function initCis(store) {
         invalidText: invalidNameText("cis"),
         size: "small",
       },
-      resource_group: resourceGroupsField(false, true),
+      resource_group: resourceGroupsField(true, true),
       plan: {
         type: "select",
         default: "",
@@ -132,7 +132,7 @@ function initCis(store) {
               let allDomains = [];
               componentProps.craig.store.json.cis.forEach((cis) => {
                 cis.domains.forEach((domain) => {
-                  if (domain.domain !== componentProps.data.domain) {
+                  if (domain.domain !== componentProps?.data?.domain) {
                     allDomains.push(domain.domain);
                   }
                 });

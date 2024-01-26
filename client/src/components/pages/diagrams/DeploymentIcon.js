@@ -65,7 +65,7 @@ export const DeploymentIcon = (props) => {
    * @returns {string} string
    */
   function nameDisplay(props) {
-    let name = props.item.name;
+    let name = props.item.name || props.item.domain;
     if (props.count && props.count !== 1) {
       name += ` (x${props.count})`;
     } else if (

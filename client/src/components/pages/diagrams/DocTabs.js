@@ -16,7 +16,11 @@ export const docTabs = (tabs, craig) => {
       name: tab,
       about: RenderDocs(
         snakeCase(
-          tab === "F5 Big IP"
+          tab === "Cloud Internet Services"
+            ? "cis"
+            : tab === "Activity Tracker"
+            ? "atracker"
+            : tab === "F5 Big IP"
             ? "f5"
             : tab === "Power VS Instances (LPARs)"
             ? "power_instances"

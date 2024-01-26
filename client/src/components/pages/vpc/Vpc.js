@@ -5,7 +5,12 @@ import {
 } from "@carbon/icons-react";
 import { RenderForm } from "icse-react-assets";
 import React from "react";
-import { disableSave } from "../../../lib";
+import {
+  codeMirrorAclTf,
+  codeMirrorSubnetsTf,
+  codeMirrorVpcTf,
+  disableSave,
+} from "../../../lib";
 import { DynamicAclForm } from "./DynamicAclForm";
 import { docTabs } from "../diagrams/DocTabs";
 import { DynamicSubnetTierForm } from "./DynamicSubnetTierForm";
@@ -303,6 +308,20 @@ class VpcDiagramPage extends React.Component {
             ],
             craig
           )}
+          tfTabs={[
+            {
+              name: "VPCs",
+              tf: codeMirrorVpcTf(craig.store.json),
+            },
+            {
+              name: "Network ACLs",
+              tf: codeMirrorAclTf(craig.store.json),
+            },
+            {
+              name: "Subnets",
+              tf: codeMirrorSubnetsTf(craig.store.json),
+            },
+          ]}
           name="VPC Networks"
           form={
             <>
