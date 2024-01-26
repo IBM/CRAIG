@@ -17,10 +17,12 @@
       "Fixed an issue causing Power Workspaces to be incorrectly flagged as invalid when using the same SSH Public Key as a VPC SSH Key",
       "Fixed an issue causing Power VS Subnet Terraform imported from data to have incorrect references",
       "Fixed an issue causing Power VS Subnets to not be able to be created when importing an existing subnet",
-      "Fixed an issue causing Power VS Volumes created using count to not have the correct attachments in Terraform"
+      "Fixed an issue causing Power VS Volumes created using count to not have the correct attachments in Terraform",
+      "Fixed an issue causing VPC ACLs and Public Gateways to not update resource group when changing a resource group name"
     ],
     "upgrade_notes": [
-      "Updated the Power SAP HANA template to have current images for zone"
+      "Updated the Power SAP HANA template to have current images for zone",
+      "When using the Terraform deploy scripts as part of environment setup, workspace GUID values will no longer be wrapped in quotes"
     ]
   },
   {

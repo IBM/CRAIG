@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - Updated the Power SAP HANA template to have current images for zone
+- When using the Terraform deploy scripts as part of environment setup, workspace GUID values will no longer be wrapped in quotes
 
 ### Features
 
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - CRAIG Power VS Images API endpoints now have more robust logging
 - Users can now use `PLACEHOLDER` as a placeholder certificate value on the VPN Servers page
 - Users can now specify a peer address using the VPN Gateway connection subform
+- Users can now import a Power VS SSH Key from data even when the parent workspace is not imported
 
 ### Fixes
 
@@ -26,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Power VS Subnet Terraform imported from data to have incorrect references
 - Fixed an issue causing Power VS Subnets to not be able to be created when importing an existing subnet
 - Fixed an issue causing Power VS Volumes created using count to not have the correct attachments in Terraform
+- Fixed an issue causing VPC ACLs and Public Gateways to not update resource group when changing a resource group name
 
 ## 1.8.0
 

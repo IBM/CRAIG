@@ -60,4 +60,4 @@ FORCE_QUIET=$(echo "yes" | terraform apply)
 echo \\nWorkspace Creation Successful!
 
 # for local deployments convert to list of workspace environment variables
-terraform output --json | jq -r 'keys[] as $k | "POWER_WORKSPACE_\($k)=\"\(.[$k] | .value)\""' > $CRAIG_PATH/.env
+terraform output --json | jq -r 'keys[] as $k | "POWER_WORKSPACE_\($k)=\(.[$k] | .value)"' > $CRAIG_PATH/.env
