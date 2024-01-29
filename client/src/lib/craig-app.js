@@ -79,7 +79,9 @@ function updateNotification(pathName, message) {
     text:
       message ||
       `Successfully updated${
-        pathName === "/" ? "" : " " + notificationText(pathName)
+        pathName === "/"
+          ? ""
+          : " " + notificationText(pathName).replace(/v\s2/g, "v2")
       }`,
     timeout: 3000,
   };

@@ -36,7 +36,7 @@ DynamicFormTextInput.propTypes = {
   keyIndex: PropTypes.number,
   field: PropTypes.shape({
     invalid: PropTypes.func.isRequired,
-    invalidText: PropTypes.func.isRequired,
+    invalidText: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     optional: PropTypes.bool,
     labelText: PropTypes.string,
     disabled: PropTypes.func.isRequired,

@@ -14,26 +14,6 @@ const {
 } = require("./invalid-callbacks");
 
 /**
- * create helper text for resource group name
- * @param {Object} stateData
- * @param {boolean} stateData.use_prefix
- * @param {Object} componentProps
- * @param {Object} componentProps.craig
- * @param {Object} componentProps.craig.store
- * @param {Object} componentProps.craig.store.json
- * @param {Object} componentProps.craig.store.json._options
- * @param {string} componentProps.craig.store.json._options.prefix
- * @returns {string} composed resource group name
- */
-function resourceGroupHelperTextCallback(stateData, componentProps) {
-  return (
-    (stateData.use_prefix && !stateData.use_data
-      ? componentProps.craig.store.json._options.prefix + "-"
-      : "") + stateData.name
-  );
-}
-
-/**
  * create generic name callback for most use cases
  * @return {string} invalid message
  */
@@ -182,21 +162,6 @@ function aclHelperTextCallback(stateData, componentProps) {
 }
 
 /**
- * get helper text for cluster
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {string} composed acl name
- */
-function clusterHelperTestCallback(stateData, componentProps) {
-  return (
-    componentProps.craig.store.json._options.prefix +
-    "-" +
-    stateData.name +
-    "-cluster"
-  );
-}
-
-/**
  * get invalid text for iam account setting
  * @param {string} field
  * @returns {string} invalid text
@@ -300,18 +265,6 @@ function invalidCrnText(stateData) {
 function labelsInvalidText(stateData, componentProps) {
   return `Invalid labels. All labels must match regular expression: /^[A-z][a-zA-Z0-9-\._,\s]*$/i`;
 }
-
-/**
- * return helper text for power workspace
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {string} helper text
- */
-function powerVsWorkspaceHelperText(stateData, componentProps) {
-  return stateData.use_data
-    ? stateData.name
-    : `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
-}
 /**
  * return helper text for vpn servers
  * @param {*} stateData
@@ -323,7 +276,6 @@ function vpnServersHelperText(stateData, componentProps) {
 }
 
 module.exports = {
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   duplicateNameCallback,
   invalidNameText,
@@ -332,12 +284,10 @@ module.exports = {
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback,
   invalidCidrText,
   invalidProjectNameText,
   invalidDescriptionText,
   invalidCrnText,
   labelsInvalidText,
-  powerVsWorkspaceHelperText,
   vpnServersHelperText,
 };

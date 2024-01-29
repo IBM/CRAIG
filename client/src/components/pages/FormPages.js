@@ -13,7 +13,7 @@ import {
   SubnetPageTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { arraySplatIndex, contains, keys, splat, transpose } from "lazy-z";
+import { arraySplatIndex, keys, splat, transpose } from "lazy-z";
 import {
   disableSshKeyDelete,
   getSubnetTierStateData,
@@ -39,7 +39,6 @@ import {
   RenderForm,
 } from "../forms/utils/ToggleFormComponents";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
-import FormTemplate from "../forms/utils/FormTemplate";
 
 function cbrPageTemplate(craig) {
   let forms = craigForms(craig);

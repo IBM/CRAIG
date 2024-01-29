@@ -191,7 +191,18 @@ class PowerDiagram extends React.Component {
           }`}
           beginDisabled
           show={this.state.showInstanceVolumeModal}
-          onRequestClose={this.resetSelection}
+          onRequestClose={() => {
+            if (this.state.selectWhenDone) {
+              this.setState({
+                modalService: "",
+                showInstanceVolumeModal: false,
+                editing: this.state.selectWhenDone.editing,
+                selectedItem: this.state.selectWhenDone.selectedItem,
+                selectedIndex: this.state.selectWhenDone.selectedIndex,
+                selectWhenDone: {},
+              });
+            } else this.resetSelection();
+          }}
           key={this.state.modalService}
           onRequestSubmit={
             // prevent from loading unfound field
@@ -202,15 +213,26 @@ class PowerDiagram extends React.Component {
                     stateData,
                     componentProps
                   );
-                  this.setState(
-                    {
-                      showInstanceVolumeModal: false,
+                  if (this.state.selectWhenDone) {
+                    this.setState({
                       modalService: "",
-                    },
-                    () => {
-                      this.resetSelection();
-                    }
-                  );
+                      showInstanceVolumeModal: false,
+                      editing: this.state.selectWhenDone.editing,
+                      selectedItem: this.state.selectWhenDone.selectedItem,
+                      selectedIndex: this.state.selectWhenDone.selectedIndex,
+                      selectWhenDone: {},
+                    });
+                  } else {
+                    this.setState(
+                      {
+                        showInstanceVolumeModal: false,
+                        modalService: "",
+                      },
+                      () => {
+                        this.resetSelection();
+                      }
+                    );
+                  }
                 }
           }
         >
@@ -302,6 +324,7 @@ class PowerDiagram extends React.Component {
                     stateData,
                     componentProps
                   );
+
                   this.resetSelection();
                   this.setState({
                     editing: true,
@@ -535,7 +558,11 @@ class PowerDiagram extends React.Component {
                               this.setState({
                                 showInstanceVolumeModal: true,
                                 modalService: "power_volumes",
-                                editing: false,
+                                selectWhenDone: {
+                                  selectedItem: "power_instances",
+                                  editing: true,
+                                  selectedIndex: this.state.selectedIndex,
+                                },
                                 overrideData: {
                                   workspace:
                                     craig.store.json[this.state.selectedItem][

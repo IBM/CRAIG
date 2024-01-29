@@ -1,4 +1,4 @@
-const { getObjectFromArray, distinct, contains } = require("lazy-z");
+const { distinct, contains } = require("lazy-z");
 
 /**
  * Filters docs obj to render defaults for specific template only.

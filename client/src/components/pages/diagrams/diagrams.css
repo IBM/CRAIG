@@ -240,7 +240,7 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 16rem;
+  top: 10rem;
   height: 75%;
   overflow: auto;
 }

@@ -19,7 +19,7 @@ const {
   isFunction,
   isArray,
   capitalize,
-  isString,
+  containsKeys,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const {
@@ -27,7 +27,34 @@ const {
   invalidSshPublicKey,
 } = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
-const { storageChangeDisabledCallback } = require("../forms/power-affinity");
+
+/**
+ * check to see if storage for a power vs instance or volume should be disabled
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if disabled
+ */
+function storageChangeDisabledCallback(stateData, componentProps) {
+  if (componentProps.isModal) return false;
+  let isInUse = false;
+  ["power_instances", "power_volumes"].forEach((field) => {
+    (componentProps[field]
+      ? componentProps[field]
+      : // store is for refactored items
+        componentProps.craig.store.json[field]
+    ).forEach((item) => {
+      // get test items, for instance tests check for network field
+      let testItems = containsKeys(stateData, "network")
+        ? [item.pi_anti_affinity_instance, item.pi_affinity_instance]
+        : [item.pi_affinity_volume, item.pi_anti_affinity_volume];
+      if (contains(testItems, componentProps.data.name)) {
+        isInUse = true;
+      }
+    });
+  });
+  return isInUse;
+}
+
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -944,7 +971,7 @@ function powerVsStorageOptions(isVolume) {
     disabled: storageChangeDisabledCallback,
     invalid: function (stateData) {
       return (
-        isNullOrEmptyString("storage_option") ||
+        isNullOrEmptyString(stateData.storage_option, true) ||
         (stateData.storage_option === "Storage Pool" &&
           isNullOrEmptyString(stateData.workspace))
       );
@@ -1345,4 +1372,5 @@ module.exports = {
   cbrValuePlaceholder,
   cbrTitleCase,
   cbrSaveType,
+  storageChangeDisabledCallback,
 };

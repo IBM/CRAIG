@@ -128,6 +128,7 @@ function initPowerVsVolumeStore(store) {
         "pi_anti_affinity_volume",
         "pi_anti_affinity_instance",
         "storage_option",
+        "pi_volume_type",
       ],
       "power_volumes"
     ),

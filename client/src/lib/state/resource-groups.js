@@ -1,10 +1,6 @@
-const { splat, revision } = require("lazy-z");
+const { splat } = require("lazy-z");
 const { shouldDisableComponentSave, hideWhenUseData } = require("./utils");
-const {
-  invalidName,
-  invalidNameText,
-  resourceGroupHelperTextCallback,
-} = require("../forms");
+const { invalidName, invalidNameText } = require("../forms");
 
 /**
  * initialize resource groups
@@ -140,7 +136,26 @@ function initResourceGroup(store) {
         default: "",
         invalid: invalidName("resource_groups"),
         invalidText: invalidNameText("resource_groups"),
-        helperText: resourceGroupHelperTextCallback,
+        helperText:
+          /**
+           * create helper text for resource group name
+           * @param {Object} stateData
+           * @param {boolean} stateData.use_prefix
+           * @param {Object} componentProps
+           * @param {Object} componentProps.craig
+           * @param {Object} componentProps.craig.store
+           * @param {Object} componentProps.craig.store.json
+           * @param {Object} componentProps.craig.store.json._options
+           * @param {string} componentProps.craig.store.json._options.prefix
+           * @returns {string} composed resource group name
+           */
+          function resourceGroupHelperTextCallback(stateData, componentProps) {
+            return (
+              (stateData.use_prefix && !stateData.use_data
+                ? componentProps.craig.store.json._options.prefix + "-"
+                : "") + stateData.name
+            );
+          },
       },
       use_data: {
         type: "toggle",

@@ -1,6 +1,5 @@
 const { assert } = require("chai");
 const {
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
@@ -8,7 +7,6 @@ const {
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback,
   invalidCidrText,
   invalidProjectNameText,
 } = require("../../client/src/lib");
@@ -21,53 +19,10 @@ const {
   invalidDescriptionText,
   invalidCrnText,
   labelsInvalidText,
-  powerVsWorkspaceHelperText,
   vpnServersHelperText,
 } = require("../../client/src/lib/forms/text-callbacks");
 
 describe("text callbacks", () => {
-  describe("resourceGroupHelperTextCallback", () => {
-    it("should return the correct helper text when using prefix", () => {
-      let actualData = resourceGroupHelperTextCallback(
-        {
-          name: "test",
-          use_prefix: true,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                _options: {
-                  prefix: "iac",
-                },
-              },
-            },
-          },
-        }
-      );
-      assert.deepEqual(actualData, "iac-test", "it should return correct data");
-    });
-    it("should return the correct helper text when not using prefix", () => {
-      let actualData = resourceGroupHelperTextCallback(
-        {
-          name: "test",
-          use_prefix: false,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                _options: {
-                  prefix: "iac",
-                },
-              },
-            },
-          },
-        }
-      );
-      assert.deepEqual(actualData, "test", "it should return correct data");
-    });
-  });
   describe("genericNameCallback", () => {
     it("should return correct callback text", () => {
       assert.deepEqual(
@@ -567,29 +522,6 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("clusterHelperTestCallback", () => {
-    it("should return correct text", () => {
-      assert.deepEqual(
-        clusterHelperTestCallback(
-          { name: "test" },
-          {
-            vpc_name: "vpc",
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "iac",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "iac-test-cluster",
-        "it should return correct text"
-      );
-    });
-  });
   describe("invalidSubnetTierText", () => {
     it("should return true when name invalid", () => {
       let actualData = invalidSubnetTierText(
@@ -857,28 +789,6 @@ describe("text callbacks", () => {
         }),
         "Enter a valid comma separated list of CRNs",
         "it should return correct message"
-      );
-    });
-  });
-  describe("powerVsWorkspaceHelperText", () => {
-    it("should return correct helper text", () => {
-      assert.deepEqual(
-        powerVsWorkspaceHelperText(
-          { name: "frog" },
-          {
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "toad",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "toad-power-workspace-frog",
-        "it should return correct helper text"
       );
     });
   });

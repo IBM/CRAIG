@@ -1,8 +1,8 @@
 const { assert } = require("chai");
 const {
-  storageChangeDisabledCallback,
   state,
-} = require("../../client/src/lib");
+  storageChangeDisabledCallback,
+} = require("../../client/src/lib/state");
 
 describe("storageChangeDisabledCallback", () => {
   it("should be false when is modal", () => {

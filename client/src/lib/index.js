@@ -1,11 +1,9 @@
 const {
   hasDuplicateName,
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidName,
   propsMatchState,
   disableSave,
-  clusterHelperTestCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
@@ -39,7 +37,6 @@ const {
   invalidCrnList,
   invalidCrns,
   invalidCrnText,
-  storageChangeDisabledCallback,
   wizard,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
@@ -192,12 +189,10 @@ module.exports = {
   codeMirrorFormatIamAccountSettingsTf,
   codeMirrorGetDisplay,
   hasDuplicateName,
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidName,
   propsMatchState,
   disableSave,
-  clusterHelperTestCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
@@ -252,5 +247,4 @@ module.exports = {
   invalidCrns,
   invalidCrnText,
   powerVsTf,
-  storageChangeDisabledCallback,
 };

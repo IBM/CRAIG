@@ -5,11 +5,7 @@ const {
   unconditionalInvalidText,
   resourceGroupsField,
 } = require("../utils");
-const {
-  invalidName,
-  invalidNameText,
-  powerVsWorkspaceHelperText,
-} = require("../../forms");
+const { invalidName, invalidNameText } = require("../../forms");
 
 function powerVsWorkspaceSchema() {
   return {
@@ -22,7 +18,20 @@ function powerVsWorkspaceSchema() {
       default: "",
       invalid: invalidName("power"),
       invalidText: invalidNameText("power"),
-      helperText: powerVsWorkspaceHelperText,
+      /**
+       * return helper text for power workspace
+       * @param {*} stateData
+       * @param {*} componentProps
+       * @returns {string} helper text
+       */
+      helperText: function powerVsWorkspaceHelperText(
+        stateData,
+        componentProps
+      ) {
+        return stateData.use_data
+          ? stateData.name
+          : `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
+      },
     },
     resource_group: resourceGroupsField(),
     zone: {

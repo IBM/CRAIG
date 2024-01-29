@@ -20,7 +20,6 @@ const {
   projectDescriptionRegex,
   ipRangeExpression,
   sccScopeDescriptionValidation,
-  replicationEnabledStoragePoolMap,
 } = require("../constants");
 const { hasDuplicateName } = require("./duplicate-name");
 

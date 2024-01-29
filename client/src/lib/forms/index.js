@@ -1,5 +1,4 @@
 const {
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
@@ -7,11 +6,9 @@ const {
   invalidSubnetTierText,
   iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback,
   invalidCidrText,
   invalidProjectNameText,
   invalidCrnText,
-  powerVsWorkspaceHelperText,
   vpnServersHelperText,
 } = require("./text-callbacks");
 const {
@@ -52,21 +49,17 @@ const {
 } = require("./format-json");
 const { leftNavItemClassName } = require("./class-names");
 const { notificationText, getCosFromBucket } = require("./utils");
-const { storageChangeDisabledCallback } = require("./power-affinity");
 const wizard = require("./wizard");
 
 module.exports = {
   wizard,
-  storageChangeDisabledCallback,
   leftNavItemClassName,
   notificationText,
   hasDuplicateName,
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidName,
   propsMatchState,
   disableSave,
-  clusterHelperTestCallback,
   invalidNameText,
   cosResourceHelperTextCallback,
   invalidSshPublicKey,
@@ -104,6 +97,5 @@ module.exports = {
   getCosFromBucket,
   invalidCrns,
   invalidCrnText,
-  powerVsWorkspaceHelperText,
   vpnServersHelperText,
 };
