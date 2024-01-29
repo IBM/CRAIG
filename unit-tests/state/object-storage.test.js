@@ -259,6 +259,58 @@ describe("object_storage", () => {
     });
   });
   describe("object_storage.schema", () => {
+    describe("name helper text", () => {
+      it("should return text if using data", () => {
+        assert.deepEqual(
+          newState().object_storage.name.helperText({
+            use_data: true,
+            name: "test",
+          }),
+          "test",
+          "it should display data"
+        );
+      });
+      it("should return text if not using data and with random suffix", () => {
+        assert.deepEqual(
+          newState().object_storage.name.helperText(
+            { use_data: false, use_random_suffix: true, name: "test" },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "test",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "test-test-<random-suffix>",
+          "it should display data"
+        );
+      });
+      it("should return text if not using data and without random suffix", () => {
+        assert.deepEqual(
+          newState().object_storage.name.helperText(
+            { use_data: false, use_random_suffix: false, name: "test" },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "test",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "test-test",
+          "it should display data"
+        );
+      });
+    });
     describe("kms", () => {
       it("should return kms groups", () => {
         assert.deepEqual(

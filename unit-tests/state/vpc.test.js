@@ -5840,4 +5840,28 @@ describe("vpcs", () => {
       );
     });
   });
+  describe("acl shcema", () => {
+    let craig = newState();
+    it("should return correct text", () => {
+      assert.deepEqual(
+        craig.vpcs.acls.name.helperText(
+          { name: "test" },
+          {
+            vpc_name: "vpc",
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "iac-vpc-test-acl",
+        "it should return correct text"
+      );
+    });
+  });
 });

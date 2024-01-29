@@ -26,7 +26,9 @@ function getAffinityName(vol, craig) {
     volumeAffinityData
   ).data;
   let titleName = titleCase(
-    isVolumeAffinity && data.storage_option === "Storage Type"
+    !data?.storage_option
+      ? ""
+      : isVolumeAffinity && data.storage_option === "Storage Type"
       ? data.pi_volume_type
       : isVolumeAffinity
       ? data.pi_volume_pool
@@ -36,9 +38,9 @@ function getAffinityName(vol, craig) {
   );
   return (
     titleName +
-    ` (Affinity ${
+    ` Affinity ${
       isVolumeAffinity ? "Volume" : "Instance"
-    } ${volumeAffinityData})`
+    } ${volumeAffinityData}`
   );
 }
 
@@ -150,7 +152,8 @@ export class PowerVolumeTable extends React.Component {
                       : ""}
                   </TableCell>
                   <TableCell>
-                    {vol.storage_option === "Storage Type"
+                    {!vol?.storage_option ||
+                    vol.storage_option === "Storage Type"
                       ? titleCase(vol.pi_volume_type)
                       : vol.storage_option === "Storage Pool"
                       ? titleCase(vol.pi_volume_pool)

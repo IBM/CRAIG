@@ -203,8 +203,7 @@ function formatFalconStorInstance(instance, config) {
 function powerInstanceTf(config) {
   // for some reason i do not understand this code didn't work in config-to-files
   // after spending about 30 mins debugging i moved it here and now it works great
-  let tf =
-    config.power_instances && config.power_instances.length > 0 ? "" : null;
+  let tf = "";
   (config.power_instances || []).forEach((instance) => {
     tf +=
       tfBlock(

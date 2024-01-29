@@ -1223,6 +1223,25 @@ function initVpcStore(store) {
             default: "",
             invalid: invalidName("acls"),
             invalidText: invalidNameText("acls"),
+            /**
+             * get helper text for network acl
+             * @param {Object} stateData
+             * @param {Object} componentProps
+             * @returns {string} composed acl name
+             */
+            helperText: function aclHelperTextCallback(
+              stateData,
+              componentProps
+            ) {
+              return (
+                componentProps.craig.store.json._options.prefix +
+                "-" +
+                componentProps.vpc_name +
+                "-" +
+                stateData.name +
+                "-acl"
+              );
+            },
           },
           resource_group: resourceGroupsField(),
         },

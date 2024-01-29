@@ -298,6 +298,24 @@ function initObjectStorageStore(store) {
         default: "",
         invalid: invalidName("object_storage"),
         invalidText: invalidNameText("object_storage"),
+        /**
+         * get cos resource helper text
+         * @param {*} stateData
+         * @param {*} componentProps
+         * @returns {string} composed helper text
+         */
+        helperText: function cosResourceHelperTextCallback(
+          stateData,
+          componentProps
+        ) {
+          return `${
+            stateData.use_data
+              ? ""
+              : componentProps.craig.store.json._options.prefix + "-"
+          }${stateData.name}${
+            stateData.use_random_suffix ? "-<random-suffix>" : ""
+          }`;
+        },
       },
       resource_group: resourceGroupsField(),
       kms: {

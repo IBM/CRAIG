@@ -129,50 +129,6 @@ function invalidNameText(field, craig) {
 }
 
 /**
- * get cos resource helper text
- * function only uses stateData and componentProps, can this be moved to
- * icse-react-assets?
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {string} composed helper text
- */
-function cosResourceHelperTextCallback(stateData, componentProps) {
-  return `${
-    stateData.use_data
-      ? ""
-      : componentProps.craig.store.json._options.prefix + "-"
-  }${stateData.name}${stateData.use_random_suffix ? "-<random-suffix>" : ""}`;
-}
-
-/**
- * get helper text for network acl
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {string} composed acl name
- */
-function aclHelperTextCallback(stateData, componentProps) {
-  return (
-    componentProps.craig.store.json._options.prefix +
-    "-" +
-    componentProps.vpc_name +
-    "-" +
-    stateData.name +
-    "-acl"
-  );
-}
-
-/**
- * get invalid text for iam account setting
- * @param {string} field
- * @returns {string} invalid text
- */
-function iamAccountSettingInvalidText(field) {
-  return field === "max_sessions_per_identity"
-    ? "Value must be in range [1-10]"
-    : "Invalid";
-}
-
-/**
  * create invalid cidr text function
  * @param {*} craig
  * @returns {Function} stateData componentProps function
@@ -240,15 +196,6 @@ function invalidProjectNameText(stateData, componentProps) {
 
   return invalidText;
 }
-/**
- * return dns description invalid text
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {string} invalid text
- */
-function invalidDescriptionText(stateData, componentProps) {
-  return "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.";
-}
 
 function invalidCrnText(stateData) {
   return invalidCrns(stateData)
@@ -256,38 +203,13 @@ function invalidCrnText(stateData) {
     : "";
 }
 
-/**
- * return label invalid text
- * @param {Object} stateData
- * @param {Object} componentProps
- * @returns {string} invalid text
- */
-function labelsInvalidText(stateData, componentProps) {
-  return `Invalid labels. All labels must match regular expression: /^[A-z][a-zA-Z0-9-\._,\s]*$/i`;
-}
-/**
- * return helper text for vpn servers
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {string} helper text
- */
-function vpnServersHelperText(stateData, componentProps) {
-  return `${componentProps.craig.store.json._options.prefix}-vpn-server-${stateData.name}`;
-}
-
 module.exports = {
   genericNameCallback,
   duplicateNameCallback,
   invalidNameText,
-  cosResourceHelperTextCallback,
-  aclHelperTextCallback,
   invalidSubnetTierText,
-  iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
   invalidCidrText,
   invalidProjectNameText,
-  invalidDescriptionText,
   invalidCrnText,
-  labelsInvalidText,
-  vpnServersHelperText,
 };
