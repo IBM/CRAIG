@@ -1,9 +1,9 @@
 import "./diagrams.css";
 
-export const ScrollFormWrapper = (props) => {
+export const ScrollFormWrapper = props => {
   return (
     <div className="scrollFormWrapper">
-      <div>{props.children}</div>
+      <div className="overflow-auto">{props.children}</div>
     </div>
   );
 };

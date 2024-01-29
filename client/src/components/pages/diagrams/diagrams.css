@@ -242,9 +242,13 @@
   flex-direction: column;
   top: 10rem;
   height: 75%;
-  overflow: auto;
+  padding-bottom: 4rem;
 }
 
 .marginRightThreeQuarterRem {
   margin-right: 0.75rem;
+}
+
+.overflow-auto {
+  overflow: auto;
 }
