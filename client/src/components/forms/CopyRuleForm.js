@@ -1,4 +1,4 @@
-import { IcseModal, StatelessToggleForm } from "icse-react-assets";
+import { IcseModal } from "icse-react-assets";
 import { getObjectFromArray, revision, splat, splatContains } from "lazy-z";
 import React from "react";
 import { copyRuleCodeMirrorData } from "../../lib";
@@ -13,6 +13,7 @@ import {
   CopySgModalContent,
 } from "./duplicate-rules";
 import PropTypes from "prop-types";
+import { StatelessFormWrapper } from "./utils";
 
 class CopyRuleForm extends React.Component {
   constructor(props) {
@@ -279,7 +280,7 @@ class CopyRuleForm extends React.Component {
             )
           )}
         </IcseModal>
-        <StatelessToggleForm
+        <StatelessFormWrapper
           name="Duplicate Lists & Rules"
           subHeading={this.props.isAclForm}
           onIconClick={() => {
@@ -320,7 +321,7 @@ class CopyRuleForm extends React.Component {
             craig={this.props.craig}
             isSecurityGroup={this.props.isAclForm === false}
           />
-        </StatelessToggleForm>
+        </StatelessFormWrapper>
       </div>
     );
   }

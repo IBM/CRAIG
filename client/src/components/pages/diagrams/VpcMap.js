@@ -55,7 +55,7 @@ export const VpcMap = (props) => {
           "subForm marginBottomSmall marginRight1Rem width580";
         let isRed =
           isNullOrEmptyString(vpc.resource_group, true) ||
-          isNullOrEmptyString(vpc.flow_logs_bucket_name, true) ||
+          isNullOrEmptyString(vpc.bucket, true) ||
           vpc.name === null;
         // vpc index needs to be modified when there are rresources with no vpc
         let vpcIndex = props.noDeployments

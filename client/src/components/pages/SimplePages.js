@@ -1,5 +1,5 @@
 import React from "react";
-import { Docs } from "icse-react-assets";
+import { Docs } from "../forms/utils";
 const { docs } = require("../../lib");
 const { filterDocs } = require("../../lib/forms/filters");
 

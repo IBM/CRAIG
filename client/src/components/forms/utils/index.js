@@ -10,3 +10,5 @@ export {
   SecondaryButton,
   StatelessFormWrapper,
 } from "./ToggleFormComponents";
+export { default as Docs } from "./Docs";
+export { default as PopoverWrapper } from "./PopoverWrapper";

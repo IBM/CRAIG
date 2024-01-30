@@ -52,6 +52,17 @@ function logdnaOnStoreUpdate(config) {
  * @param {object} stateData
  */
 function logdnaSave(config, stateData) {
+  function getCosFromBucket(name, objectStoreArray) {
+    let cos;
+    objectStoreArray.forEach((instance) => {
+      instance.buckets.forEach((bucket) => {
+        if (name === bucket.name) {
+          cos = instance.name;
+        }
+      });
+    });
+    return cos || null;
+  }
   stateData.cos = getCosFromBucket(
     stateData.bucket,
     config.store.json.object_storage

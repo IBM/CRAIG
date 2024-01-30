@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { PopoverWrapper } from "icse-react-assets";
+// popover wrapper needs to be imported this way to prevent an error importing
+// dynamic form before initializtion
+import { default as PopoverWrapper } from "../utils/PopoverWrapper";
 import {
   Add,
   Save,

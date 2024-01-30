@@ -17,7 +17,6 @@ const {
   invalidSecurityGroupRuleName,
   invalidNewResourceName,
   invalidIpCommaList,
-  invalidIdentityProviderURI,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
@@ -44,7 +43,7 @@ const {
   copySgModalContent,
 } = require("./format-json");
 const { leftNavItemClassName } = require("./class-names");
-const { notificationText, getCosFromBucket } = require("./utils");
+const { notificationText } = require("./utils");
 const wizard = require("./wizard");
 
 module.exports = {
@@ -73,7 +72,6 @@ module.exports = {
   copyRuleCodeMirrorData,
   copySgModalContent,
   forceShowForm,
-  invalidIdentityProviderURI,
   isValidUrl,
   disableSshKeyDelete,
   cidrBlocksOverlap,
@@ -87,7 +85,6 @@ module.exports = {
   invalidCbrZone,
   invalidCidrBlock,
   invalidProjectNameText,
-  getCosFromBucket,
   invalidCrns,
   invalidCrnText,
 };

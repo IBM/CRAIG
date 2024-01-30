@@ -3,12 +3,12 @@ import { Button } from "@carbon/react";
 import { DeleteModal } from "icse-react-assets";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
-import { azsort } from "lazy-z";
+import { azsort, contains, eachKey } from "lazy-z";
 import { Add, MagicWandFilled, Upload } from "@carbon/icons-react";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
 import { templates } from "../../utils";
-import { LoadingModal } from "./LoadingModal";
+import { LoadingModal, ValidationModal } from "./LoadingModal";
 import PropTypes from "prop-types";
 import Wizard from "./Wizard";
 import "./project.css";
@@ -28,6 +28,8 @@ class Projects extends React.Component {
       clickedWorkspaceUrl: "",
       wizardModal: false,
       importJSONModalOpen: false,
+      showValidationModal: false,
+      invalidItems: {},
     };
 
     /* do not delete, for debugging */
@@ -45,6 +47,8 @@ class Projects extends React.Component {
     this.onCreateWorkspaceClick = this.onCreateWorkspaceClick.bind(this);
     this.toggleWizard = this.toggleWizard.bind(this);
     this.toggleImportJSONModal = this.toggleImportJSONModal.bind(this);
+    this.afterValidation = this.afterValidation.bind(this);
+    this.removeInvalidReferences = this.removeInvalidReferences.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -120,10 +124,61 @@ class Projects extends React.Component {
           // not already selected
           this.props.current_project !== keyName
         ) {
-          this.props.onProjectSelect(this.props.projects[keyName].project_name);
+          this.setState({ showValidationModal: true }, () => {
+            this.props.onProjectSelect(
+              this.props.projects[keyName].project_name,
+              "",
+              this.afterValidation
+            );
+          });
         }
       }
     };
+  }
+
+  /**
+   * on validation modal done
+   * @param {*} invalidItems
+   */
+  afterValidation(invalidItems) {
+    let noItemsInvalid = true;
+    // if any arrays in the map of invalid items have a name contained within
+    // set to false
+    eachKey(invalidItems, (item) => {
+      if (invalidItems[item].length > 0) {
+        noItemsInvalid = false;
+      }
+    });
+    // if no items are invalid, hide modal. otherwise save invalid items to state
+    if (noItemsInvalid) this.setState({ showValidationModal: false });
+    else this.setState({ invalidItems });
+  }
+
+  /**
+   * remove invalid references
+   */
+  removeInvalidReferences() {
+    // for each item that is checked
+    eachKey(this.state.invalidItems, (item) => {
+      // for each item in the json store field
+      this.props.craig.store.json[item].forEach((resource) => {
+        // if the resource name is contained in the list of invalid items
+        // set the reference to null
+        if (contains(this.state.invalidItems[item], resource.name)) {
+          if (item === "vsi" && resource.image_name) {
+            resource.image_name = null;
+            resource.image = null;
+          } else if (item === "clusters" && resource.kube_version) {
+            resource.kube_version = null;
+          }
+        }
+      });
+    });
+    // reset invalid items and hide validation modal
+    this.setState({ invalidItems: {}, showValidationModal: false }, () => {
+      // force update state store to ensure changes are saved
+      this.props.craig.update();
+    });
   }
 
   /**
@@ -263,6 +318,13 @@ class Projects extends React.Component {
     let projectKeys = Object.keys(this.props.projects).sort(azsort);
     return (
       <div>
+        {this.state.showValidationModal && (
+          <ValidationModal
+            invalidItems={this.state.invalidItems}
+            afterValidation={this.afterValidation}
+            removeInvalidReferences={this.removeInvalidReferences}
+          />
+        )}
         <CraigHeader />
         <div id="projects" className="body">
           <h3 className="marginBottomXs">Projects</h3>

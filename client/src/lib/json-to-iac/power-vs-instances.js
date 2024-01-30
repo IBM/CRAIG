@@ -25,7 +25,7 @@ function powerVsInstanceData(instance, config) {
         foundWorkspace
           ? new revision(config)
               .child("power", instance.workspace)
-              .child("ssh_keys", instance.ssh_key).data.use_data
+              .child("ssh_keys", instance.ssh_key).data?.use_data
           : false
       )
     ? "data."
@@ -36,7 +36,7 @@ function powerVsInstanceData(instance, config) {
         foundWorkspace
           ? new revision(config)
               .child("power", instance.workspace)
-              .child("images", instance.image).data.use_data
+              .child("images", instance.image).data?.use_data
           : false
       )
     ? "data."

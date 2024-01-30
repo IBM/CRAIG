@@ -29,9 +29,17 @@ function onProjectDeselect(component, craig) {
  * @param {*} craig
  * @param {*} name
  * @param {string=} message
+ * @param {Function=} callback
  * @returns {Function} callback to run after save state
  */
-function onProjectSelectCallback(projects, component, craig, name, message) {
+function onProjectSelectCallback(
+  projects,
+  component,
+  craig,
+  name,
+  message,
+  callback
+) {
   let projectKeyName = kebabCase(name);
   craig.store.project_name = projectKeyName;
   if (!projects[projectKeyName]) {
@@ -45,6 +53,7 @@ function onProjectSelectCallback(projects, component, craig, name, message) {
       message || `Project ${name} successfully imported`,
       true
     );
+    if (callback) callback();
   };
 }
 

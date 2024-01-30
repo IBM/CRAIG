@@ -32,7 +32,6 @@ import {
 } from "./lib/craig-app";
 import { CloudServicesPage } from "./components/pages/cloud-services";
 import VpcDiagramPage from "./components/pages/vpc/Vpc.js";
-import { Breadcrumb, BreadcrumbItem } from "@carbon/react";
 import VpcDeploymentsDiagramPage from "./components/pages/vpc/VpcDeployments.js";
 import { Overview } from "./components/pages/diagrams/Overview.js";
 import PowerDiagram from "./components/pages/power/Power.js";
@@ -345,20 +344,93 @@ class Craig extends React.Component {
    * load function for when project is selected
    * @param {string} name project name
    * @param {string=} message message to be display in notification
+   * @param {Function} callback
    */
-  onProjectSelect(name, message) {
+  onProjectSelect(name, message, callback) {
     let projects = JSON.parse(window.localStorage.getItem("craigProjects"));
     let projectKeyName = kebabCase(name);
+    let invalidItems = {
+      vsi: [],
+      clusters: [],
+    };
     // update store project name and json
     craig.store.project_name = projectKeyName;
     craig.store.json = projects[projectKeyName].json;
 
-    this.setState(
-      {
-        store: craig.store,
-      },
-      onProjectSelectCallback(projects, this, craig, name, message)
-    );
+    // callback function for when fetch tasks are complete
+    let updateCheckDone = () => {
+      this.setState(
+        {
+          store: craig.store,
+        },
+        onProjectSelectCallback(projects, this, craig, name, message, () => {
+          if (callback) callback(invalidItems);
+        })
+      );
+    };
+
+    // should check components for update
+    let componentsShouldUpdate =
+      craig.store.json.vsi.length > 0 || craig.store.json.clusters.length > 0;
+
+    // if components need to be updated
+    if (componentsShouldUpdate) {
+      let completedTasks = 0;
+      let tasks = 0;
+
+      // callback function to run when fetch complete
+      let completeTasks = () => {
+        completedTasks++;
+        if (completedTasks === tasks) {
+          updateCheckDone();
+        }
+      };
+
+      // add number of tasks based on checks that need to be made
+      if (craig.store.json.vsi.length > 0) tasks++;
+      if (craig.store.json.clusters.length > 0) tasks++;
+
+      if (craig.store.json.clusters.length > 0) {
+        // get cluster versions
+        fetch("/api/cluster/versions")
+          .then((res) => res.json())
+          .then((data) => {
+            // replace ` (Default)`
+            let versions = data.map((item) => {
+              return item.replace(/\s.+/g, "");
+            });
+            craig.store.json.clusters.forEach((cluster) => {
+              // if cluster has a kube version and the version is not returned by the API call
+              // add to list
+              if (
+                !contains(versions, cluster.kube_version) &&
+                cluster.kube_version
+              ) {
+                invalidItems.clusters.push(cluster.name);
+              }
+            });
+            completeTasks();
+          });
+      }
+
+      if (craig.store.json.vsi.length > 0) {
+        // get vsi image names
+        fetch(craig.vsi.image_name.apiEndpoint({}, { craig: craig }))
+          .then((res) => res.json())
+          .then((data) => {
+            craig.store.json.vsi.forEach((vsi) => {
+              // if vsi has an image name and this image is not returned by the API call
+              // add to list
+              if (!contains(data, vsi.image_name) && vsi.image_name) {
+                invalidItems.vsi.push(vsi.name);
+              }
+            });
+          })
+          .then(() => {
+            completeTasks();
+          });
+      }
+    } else updateCheckDone();
   }
 
   /**
@@ -423,6 +495,7 @@ class Craig extends React.Component {
             window.location.pathname === "/v2/projects" ||
             window.location.pathname === "/v2" ? (
             <Projects
+              craig={craig}
               current_project={craig.store.project_name}
               projects={this.state.projects}
               onProjectSave={this.onProjectSave}

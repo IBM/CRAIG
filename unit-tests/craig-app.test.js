@@ -151,6 +151,31 @@ describe("craig app", () => {
         "it should have correct message"
       );
     });
+    it("should update project name, json, projects when found with project info, and call save and send notification with correct text and call callback", () => {
+      let craigApp = newMockCraig();
+      let craigState = new state();
+      craigState.setUpdateCallback(() => {});
+      let called = false;
+      let callback = onProjectSelectCallback(
+        {
+          "project-name": {},
+        }, // projects
+        craigApp,
+        craigState,
+        "project-name",
+        "message",
+        () => {
+          called = true;
+        }
+      );
+      callback();
+      assert.deepEqual(
+        craigApp.lastSaveAndSend,
+        `message`,
+        "it should have correct message"
+      );
+      assert.isTrue(called, "it should be called");
+    });
   });
   describe("onProjectDeleteCallback", () => {
     it("should call deselect if deleting currently selected project", () => {

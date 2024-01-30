@@ -338,10 +338,6 @@ function invalidIpCommaList(ipList) {
   } else return ipList.match(commaSeparatedIpListExp) === null;
 }
 
-function invalidIdentityProviderURI(stateData, componentProps) {
-  return !(stateData.identity_provider.length >= 6);
-}
-
 /**
  * url value is valid and not empty
  * @param {str} url
@@ -564,19 +560,6 @@ function invalidDescription(description) {
 }
 
 /**
- * function within function to allow passing of field to the
- * callback without creating multiple callbacks
- * @param {string} field
- * @returns {boolean} if stateData[field] null or empty string
- */
-function nullOrEmptyStringCheckCallback(field) {
-  function invalidCallback(stateData, componentProps) {
-    return isNullOrEmptyString(stateData[field]);
-  }
-  return invalidCallback;
-}
-
-/**
  * check to see if a transit gateway has invalid crns
  * @param {object} stateData
  * @returns {boolean} true if invalid
@@ -595,7 +578,6 @@ module.exports = {
   invalidSubnetTierName,
   invalidSecurityGroupRuleName,
   invalidIpCommaList,
-  invalidIdentityProviderURI,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
@@ -605,6 +587,5 @@ module.exports = {
   invalidCbrRule,
   invalidCbrZone,
   invalidDescription,
-  nullOrEmptyStringCheckCallback,
   invalidCrns,
 };

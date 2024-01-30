@@ -8,7 +8,6 @@ const {
 } = require("./utils");
 const { invalidCbrZone } = require("../forms/invalid-callbacks");
 const {
-  carveChild,
   updateSubChild,
   deleteSubChild,
   pushToChildFieldModal,

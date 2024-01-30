@@ -2,6 +2,7 @@ import React from "react";
 import { Loading, Modal } from "@carbon/react";
 import { CheckmarkOutline, CloseOutline } from "@carbon/icons-react";
 import PropTypes from "prop-types";
+import { eachKey, keys, titleCase } from "lazy-z";
 
 export const LoadingModal = (props) => {
   return (
@@ -101,4 +102,70 @@ LoadingModal.propTypes = {
   toggleModal: PropTypes.func.isRequired,
   failed: PropTypes.bool,
   retryCallback: PropTypes.func.isRequired,
+};
+
+export const ValidationModal = (props) => {
+  let noItemsInvalid = true;
+  if (props.invalidItems) {
+    eachKey(props.invalidItems, (item) => {
+      if (props.invalidItems[item].length > 0) {
+        noItemsInvalid = false;
+      }
+    });
+  }
+
+  return (
+    <Modal
+      open={!noItemsInvalid}
+      preventCloseOnClickOutside
+      passiveModal={noItemsInvalid}
+      modalHeading={
+        noItemsInvalid ? "Validating Configuration..." : "Invalid Items"
+      }
+      danger={!noItemsInvalid}
+      primaryButtonText="Remove invalid references (Recommended)"
+      secondaryButtonText="Do not update"
+      onRequestClose={() => props.afterValidation({})}
+      onRequestSubmit={() => {
+        props.removeInvalidReferences();
+      }}
+    >
+      {noItemsInvalid ? (
+        <>
+          <div className="loadingWheel flexDirectionColumn marginBottomSmall">
+            <Loading active={true} withOverlay={false} />
+          </div>
+          <div className="warningText yellowText marginBottomSmall">
+            Warning: Do not close or reload window.
+          </div>
+        </>
+      ) : (
+        <>
+          <div>
+            <h3>
+              The following items have out of date references.{" "}
+              <b style={{ fontWeight: "bold" }}>
+                New resources cannot be provisioned with these settings.
+              </b>
+            </h3>
+            <div className="marginBottomSmall" />
+            {keys(props.invalidItems).map((item) => {
+              return props.invalidItems[item].length === 0 ? (
+                ""
+              ) : (
+                <div key={item}>
+                  <h3>{titleCase(item).replace(/Vsi/, "VSI")}</h3>
+                  <ul className="bullets indent">
+                    {props.invalidItems[item].map((resource) => (
+                      <li key={item + "-" + resource}>{resource}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </Modal>
+  );
 };

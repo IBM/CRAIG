@@ -1,9 +1,4 @@
-const {
-  deepEqual,
-  isNullOrEmptyString,
-  contains,
-  isBoolean,
-} = require("lazy-z");
+const { deepEqual, isNullOrEmptyString, contains } = require("lazy-z");
 
 /**
  * props match state placeholder
