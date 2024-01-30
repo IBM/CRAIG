@@ -297,6 +297,7 @@
         }
       ],
       "zone": "dal12",
+      "storage_option": "Storage Type",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
       "pi_storage_type": "tier1",
@@ -896,7 +897,7 @@
   "ssh_keys": [
     {
       "name": "ssh-key",
-      "public_key": null,
+      "public_key": "NONE",
       "resource_group": "management-rg",
       "use_data": true
     }
