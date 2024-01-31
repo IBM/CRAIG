@@ -225,6 +225,7 @@ function craigForms(craig) {
       ],
     },
     atracker: {
+      name: "Activity Tracker",
       jsonField: "atracker",
       disableSave: disableSave,
       groups: [

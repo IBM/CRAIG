@@ -15,10 +15,11 @@ import { DynamicAclForm } from "./DynamicAclForm";
 import { docTabs } from "../diagrams/DocTabs";
 import { DynamicSubnetTierForm } from "./DynamicSubnetTierForm";
 import {
-  CraigFormHeading,
   PrimaryButton,
-} from "../../forms/utils/ToggleFormComponents";
-import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
+  CraigToggleForm,
+  DynamicFormModal,
+  CraigFormHeading,
+} from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
 import StatefulTabs from "../../forms/utils/StatefulTabs";

@@ -3,39 +3,14 @@ import PropTypes from "prop-types";
 // popover wrapper needs to be imported this way to prevent an error importing
 // dynamic form before initializtion
 import { default as PopoverWrapper } from "../utils/PopoverWrapper";
-import {
-  Add,
-  Save,
-  TrashCan,
-  ChevronDown,
-  ChevronRight,
-} from "@carbon/icons-react";
+import { CraigFormHeading } from "./CraigFormHeading";
+import { Add, TrashCan, ChevronDown, ChevronRight } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
 import {
-  dynamicPrimaryButtonProps,
   dynamicSecondaryButtonProps,
   statelessWrapperProps,
 } from "../../../lib/components/toggle-form-components";
 import { kebabCase } from "lazy-z";
-import { DynamicToolTipWrapper } from "../dynamic-form/components";
-
-/**
- * generate save icon
- * @param {object} props
- * @param {boolean} props.saveIsDisabled true if disabled
- * @returns Save Icon
- */
-const SaveIcon = (props) => {
-  return <Save className={props.disabled ? "" : "tertiaryButtonColors"} />;
-};
-
-SaveIcon.defaultProps = {
-  disabled: false,
-};
-
-SaveIcon.propTypes = {
-  disabled: PropTypes.bool.isRequired,
-};
 
 /**
  * Render a form
@@ -67,52 +42,6 @@ DynamicRender.defaultProps = {
 
 DynamicRender.propTypes = {
   hide: PropTypes.bool.isRequired,
-};
-
-const PrimaryButton = (props) => {
-  let buttonProps = dynamicPrimaryButtonProps(props);
-  return (
-    <PopoverWrapper
-      hoverText={buttonProps.popoverProps.hoverText}
-      className={buttonProps.popoverProps.className}
-      align={props.hoverTextAlign}
-    >
-      <Button
-        aria-label={props.name + "-" + props.type}
-        kind={buttonProps.buttonProps.kind}
-        onClick={props.onClick}
-        className={buttonProps.buttonProps.className}
-        disabled={props.disabled || false}
-        size="sm"
-      >
-        {props.type === "custom" ? (
-          RenderForm(props.customIcon)
-        ) : props.type === "add" ? (
-          <Add />
-        ) : (
-          <SaveIcon saveIsDisabled={props.disabled} />
-        )}
-      </Button>
-    </PopoverWrapper>
-  );
-};
-
-PrimaryButton.defaultProps = {
-  type: "save",
-  hoverText: "Save Changes",
-  inline: false,
-  disabled: false,
-  hoverTextAlign: "bottom",
-};
-
-PrimaryButton.propTypes = {
-  hoverText: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool.isRequired,
-  type: PropTypes.string.isRequired,
-  inline: PropTypes.bool.isRequired,
-  hoverTextAlign: PropTypes.string.isRequired,
-  customIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
 const SecondaryButton = (props) => {
@@ -263,94 +192,4 @@ StatelessFormWrapper.propTypes = {
   hideTitle: PropTypes.bool.isRequired,
 };
 
-const CraigFormHeading = (props) => {
-  let icon = props.icon || "";
-  return (
-    <div
-      className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter ${
-        props.className
-      } ${props.noMarginBottom ? "marginBottomNone" : ""}`}
-    >
-      <DynamicToolTipWrapper
-        tooltip={props.tooltip}
-        noLabelText={true}
-        id={props.name}
-        innerForm={() => {
-          return (
-            <div
-              onClick={props.onClick}
-              className={
-                (props.onClick ? "clicky" : "") +
-                (props.isRed ? " diagramSubFormInvalid" : "")
-              }
-            >
-              {props.type === "subHeading" ? (
-                <h5 className="displayFlex">
-                  {icon}
-                  {props.name}
-                  {props.addText}
-                </h5>
-              ) : props.type === "p" ? (
-                <p
-                  className={
-                    props.toggleFormTitle
-                      ? "toggleFormTitle displayFlex"
-                      : "displayFlex"
-                  }
-                >
-                  {icon}
-                  {props.name}
-                </p>
-              ) : props.type === "section" ? (
-                <h6 className="displayFlex">
-                  {icon}
-                  {props.name}
-                </h6>
-              ) : props.h2 ? (
-                <h2 className="displayFlex marginBottomSmall">
-                  {icon}
-                  {props.name}
-                </h2>
-              ) : (
-                <h4 className="displayFlex">
-                  {icon}
-                  {props.name}
-                </h4>
-              )}
-            </div>
-          );
-        }}
-      />
-      <div className="displayFlex">{props.buttons}</div>
-    </div>
-  );
-};
-
-CraigFormHeading.defaultProps = {
-  type: "heading",
-};
-
-CraigFormHeading.propTypes = {
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string,
-  tooltip: PropTypes.shape({
-    content: PropTypes.string.isRequired,
-    link: PropTypes.string,
-    align: PropTypes.string,
-    alignModal: PropTypes.string,
-  }),
-  buttons: PropTypes.node,
-  className: PropTypes.string,
-  toggleFormTitle: PropTypes.bool,
-  isRed: PropTypes.bool,
-};
-
-export {
-  CraigFormHeading,
-  DynamicRender,
-  PrimaryButton,
-  RenderForm,
-  SaveIcon,
-  SecondaryButton,
-  StatelessFormWrapper,
-};
+export { DynamicRender, RenderForm, SecondaryButton, StatelessFormWrapper };

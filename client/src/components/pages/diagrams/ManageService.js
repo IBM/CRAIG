@@ -31,19 +31,19 @@ export const ManageService = (props) => {
           className: props.small ? "small-icon" : "big-icon",
         })}
       </div>
-      {props.small ? (
-        ""
-      ) : (
-        <div className="icon-text">
-          <h6>
-            {titleCase(props.service.type)
-              .replace("Appid", "AppID")
-              .replace("Icd", "Cloud Database")
-              .replace("Atracker", "Activity Tracker")
-              .replace("Logdna", "LogDNA")
-              .replace(/Scc\s.+/g, "Security & Compliance Center")
-              .replace(/Dns/g, "DNS")}
-          </h6>
+      <div className="icon-text">
+        <h6>
+          {titleCase(props.service.type)
+            .replace("Appid", "AppID")
+            .replace("Icd", "Cloud Database")
+            .replace("Atracker", "Activity Tracker")
+            .replace("Logdna", "LogDNA")
+            .replace(/Scc\s.+/g, "Security & Compliance Center")
+            .replace(/Dns/g, "DNS")}
+        </h6>
+        {props.small ? (
+          ""
+        ) : (
           <p>
             {contains(
               ["atracker", "logdna", "sysdig", "scc_v2"],
@@ -52,8 +52,8 @@ export const ManageService = (props) => {
               ? ""
               : props.service.name}
           </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

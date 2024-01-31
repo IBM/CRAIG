@@ -187,6 +187,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
           pi_health_status: "WARNING",
           pi_storage_type: "tier1",
           pi_user_data: "",
+          index: 0,
         },
         {
           _options: {

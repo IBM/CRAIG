@@ -2,11 +2,7 @@ import React from "react";
 import { craigForms } from "../CraigForms";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { ClassicMap, ClassicSubnets, SshKeys, docTabs } from "../diagrams";
-import {
-  CraigFormHeading,
-  PrimaryButton,
-  RenderForm,
-} from "../../forms/utils/ToggleFormComponents";
+import { RenderForm } from "../../forms/utils/ToggleFormComponents";
 import { distinct, isNullOrEmptyString, snakeCase, titleCase } from "lazy-z";
 import {
   FirewallClassic,
@@ -14,7 +10,12 @@ import {
   Password,
   VlanIbm,
 } from "@carbon/icons-react";
-import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
+import {
+  PrimaryButton,
+  CraigFormHeading,
+  CraigToggleForm,
+  DynamicFormModal,
+} from "../../forms/utils";
 import { classicInfraTf, disableSave, propsMatchState } from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";
 import { IcseSelect } from "icse-react-assets";

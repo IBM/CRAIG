@@ -1,14 +1,11 @@
 import React from "react";
-import {
-  CraigFormHeading,
-  RenderForm,
-} from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading, RenderForm } from "../../forms/utils";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const PowerSubnetInnerBox = (props) => {
-  let powerInnerBoxClassName = "powerSubnetInnerBox";
+  let powerInnerBoxClassName = props.small ? "" : "powerSubnetInnerBox";
   if (props.marginTop) {
     powerInnerBoxClassName += " marginTopThreeQuartersRem";
   }
@@ -18,15 +15,19 @@ export const PowerSubnetInnerBox = (props) => {
       static={props.static}
       hoverClassName="diagramBoxSelected"
     >
-      <div className="powerSubnetTitleMargin">
-        <CraigFormHeading
-          icon={RenderForm(props.icon, {
-            className: "powerSubnetIconMargin",
-          })}
-          name={props.name}
-          type="p"
-        />
-      </div>
+      {props.small ? (
+        ""
+      ) : (
+        <div className="powerSubnetTitleMargin">
+          <CraigFormHeading
+            icon={RenderForm(props.icon, {
+              className: "powerSubnetIconMargin",
+            })}
+            name={props.name}
+            type="p"
+          />
+        </div>
+      )}
       <div className="displayFlex alignItemsCenter powerSubnetChildren">
         {props.children}
       </div>

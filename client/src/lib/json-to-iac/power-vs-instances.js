@@ -65,6 +65,7 @@ function powerVsInstanceData(instance, config) {
     pi_instance_name: "${var.prefix}-" + instance.name,
   };
   transpose(instance, data);
+  delete data.index;
   // add pi network here to have the items at the bottom of the terraform code
   data.pi_network = [];
   instance.network.forEach((nw) => {

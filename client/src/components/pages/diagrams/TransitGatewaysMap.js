@@ -11,7 +11,7 @@ import {
   IbmPowerVs,
   VirtualPrivateCloud,
 } from "@carbon/icons-react";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import { tagColors } from "../../forms/dynamic-form/components";
 import PropTypes from "prop-types";
 import { CraigFormGroup } from "../../forms";
@@ -43,6 +43,7 @@ export const TransitGatewaysMap = (props) => {
           item={tgw}
           icon={IbmCloudTransitGateway}
           craig={props.craig}
+          small={props.small}
         >
           <>
             <div className="marginTopHalfRem" />
@@ -61,40 +62,44 @@ export const TransitGatewaysMap = (props) => {
           </>
         </DeploymentIcon>
         <div className="marginBottomSmall" />
-        <div className="formInSubForm">
-          <CraigFormHeading
-            icon={<Link className="diagramTitleIcon" />}
-            type="subHeading"
-            name="Connected Networks"
-            noMarginBottom={tgw.connections.length === 0}
-          />
-          {tgw.connections.length === 0 ? (
-            ""
-          ) : (
-            <CraigFormGroup
-              className="displayFlex alignItemsCenter overrideGap powerSubnetChildren"
-              style={{
-                width: "535px",
-              }}
-            >
-              {tgw.connections.map((connection, connectionIndex) => (
-                <DeploymentIcon
-                  key={tgw.name + "-connection-" + connectionIndex}
-                  item={{
-                    name: connection.vpc
-                      ? connection.vpc
-                      : connection.power
-                      ? connection.power
-                      : "",
-                  }}
-                  itemName="connection"
-                  icon={connection.vpc ? VirtualPrivateCloud : IbmPowerVs}
-                  size="30"
-                />
-              ))}
-            </CraigFormGroup>
-          )}
-        </div>
+        {props.small ? (
+          ""
+        ) : (
+          <div className="formInSubForm">
+            <CraigFormHeading
+              icon={<Link className="diagramTitleIcon" />}
+              type="subHeading"
+              name="Connected Networks"
+              noMarginBottom={tgw.connections.length === 0}
+            />
+            {tgw.connections.length === 0 ? (
+              ""
+            ) : (
+              <CraigFormGroup
+                className="displayFlex alignItemsCenter overrideGap powerSubnetChildren"
+                style={{
+                  width: "535px",
+                }}
+              >
+                {tgw.connections.map((connection, connectionIndex) => (
+                  <DeploymentIcon
+                    key={tgw.name + "-connection-" + connectionIndex}
+                    item={{
+                      name: connection.vpc
+                        ? connection.vpc
+                        : connection.power
+                        ? connection.power
+                        : "",
+                    }}
+                    itemName="connection"
+                    icon={connection.vpc ? VirtualPrivateCloud : IbmPowerVs}
+                    size="30"
+                  />
+                ))}
+              </CraigFormGroup>
+            )}
+          </div>
+        )}
         {tgw.gre_tunnels.length === 0 ? (
           ""
         ) : (

@@ -1,5 +1,5 @@
 import React from "react";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import { IbmPowerVs } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";

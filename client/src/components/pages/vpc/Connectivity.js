@@ -1,9 +1,5 @@
 import React from "react";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
-import {
-  CraigFormHeading,
-  PrimaryButton,
-} from "../../forms/utils/ToggleFormComponents";
 import { DeploymentIcon, TransitGatewaysMap, docTabs } from "../diagrams";
 import {
   DirectoryDomain, // cis domain
@@ -12,11 +8,7 @@ import {
   IbmCloudInternetServices,
 } from "@carbon/icons-react";
 import "../diagrams/diagrams.css";
-import {
-  CraigFormGroup,
-  CraigToggleForm,
-  DynamicFormModal,
-} from "../../forms/utils";
+import { PrimaryButton, CraigFormGroup } from "../../forms/utils";
 import { craigForms } from "../CraigForms";
 import { disableSave, propsMatchState, tgwTf } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";

@@ -1,5 +1,5 @@
 import React from "react";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import {
   NetworkEnterprise,
   CloudServices,
@@ -25,7 +25,7 @@ import { ClassicMap } from "./ClassicMap";
 import { ClassicSubnets } from "./ClassicSubnets";
 import { ClassicGateways } from "./ClassicGateways";
 import { RoutingTables } from "./RoutingTables";
-import HoverClassNameWrapper from "./HoverClassNameWrapper";
+import { PassThroughWrapper } from "./PassthroughWrapper";
 
 export class Overview extends React.Component {
   constructor(props) {
@@ -35,18 +35,26 @@ export class Overview extends React.Component {
   render() {
     let craig = this.props.craig;
     return (
-      <>
-        <CraigFormHeading
-          name="Overview"
-          h2
-          icon={
-            <Dashboard
-              style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
-              size="20"
-            />
-          }
-        />
-        <div id="services-diagram" className="marginBottomSmall diagramBox">
+      <div className={this.props.className}>
+        {this.props.small ? (
+          ""
+        ) : (
+          <CraigFormHeading
+            name="Overview"
+            h2
+            icon={
+              <Dashboard
+                style={{ marginTop: "0.4rem", marginRight: "0.5rem" }}
+                size="20"
+              />
+            }
+          />
+        )}
+        <div
+          id="services-diagram"
+          className="marginBottomSmall diagramBox"
+          style={this.props.small ? { minWidth: "500px" } : {}}
+        >
           <div className="marginBottomHalfRem" />
           <CraigFormHeading
             name="Cloud Services"
@@ -68,7 +76,11 @@ export class Overview extends React.Component {
             />
           </div>
         </div>
-        <div id="vpc-diagram" className="diagramBox">
+        <div
+          id="vpc-diagram"
+          className="diagramBox"
+          style={this.props.small ? { minWidth: "500px" } : {}}
+        >
           <div className="marginBottomHalfRem" />
           <CraigFormHeading
             name="VPC Networks"
@@ -82,7 +94,13 @@ export class Overview extends React.Component {
               <SshKeys craig={craig} width="575px" static />
             </div>
           )}
-          <div id="vpcs" className="displayFlex">
+          <div
+            id="vpcs"
+            className="displayFlex"
+            style={{
+              flexWrap: "wrap",
+            }}
+          >
             <VpcMap craig={craig} static small={this.props.small}>
               {this.props.small ? (
                 <></>
@@ -114,27 +132,54 @@ export class Overview extends React.Component {
         {craig.store.json.power.length === 0 ? (
           ""
         ) : (
-          <div id="vpc-diagram" className="diagramBox marginTop1Rem">
+          <div
+            id="vpc-diagram"
+            className="diagramBox marginTop1Rem "
+            style={
+              this.props.small
+                ? { minWidth: "500px", paddingRight: "1rem" }
+                : {}
+            }
+          >
             <div className="marginBottomHalfRem" />
             <CraigFormHeading
               name="Power VS"
               noMarginBottom
               icon={<IbmPowerVsPrivateCloud className="diagramTitleIcon" />}
             />
-            <PowerMap craig={craig} big static>
-              <PassThroughWrapper className="displayFlex">
-                <PassThroughWrapper className="powerMapPassthrough marginRight1Rem">
-                  <PowerSubnets static craig={craig} />
+            <PowerMap craig={craig} big static small={this.props.small}>
+              <PassThroughWrapper
+                className={this.props.small ? "" : "displayFlex"}
+              >
+                <PassThroughWrapper
+                  className={
+                    (this.props.small ? "" : "powerMapPassthrough") +
+                    " marginRight1Rem"
+                  }
+                >
+                  <PowerSubnets static small={this.props.small} craig={craig} />
                 </PassThroughWrapper>
-                <PassThroughWrapper className="powerMapPassthrough">
-                  <PowerVolumes static craig={craig} />
-                </PassThroughWrapper>
+                {this.props.small ? (
+                  <></>
+                ) : (
+                  <PassThroughWrapper className="powerMapPassthrough">
+                    <PowerVolumes static craig={craig} />
+                  </PassThroughWrapper>
+                )}
               </PassThroughWrapper>
             </PowerMap>
           </div>
         )}
         {craig.store.json._options.enable_classic ? (
-          <div id="vpc-diagram" className="diagramBox marginTop1Rem">
+          <div
+            id="vpc-diagram"
+            className="diagramBox marginTop1Rem"
+            style={
+              this.props.small
+                ? { minWidth: "500px", paddingRight: "1rem" }
+                : {}
+            }
+          >
             <div className="marginBottomHalfRem" />
             <CraigFormHeading
               name="Classic Infrastrucutre"
@@ -142,9 +187,13 @@ export class Overview extends React.Component {
               icon={<InfrastructureClassic className="diagramTitleIcon" />}
             />
             <div className="displayFlex">
-              <ClassicMap craig={craig} static>
-                <ClassicSubnets craig={craig} static>
-                  <ClassicGateways craig={craig} static />
+              <ClassicMap craig={craig} static small={this.props.small}>
+                <ClassicSubnets craig={craig} static small={this.props.small}>
+                  <ClassicGateways
+                    craig={craig}
+                    static
+                    small={this.props.small}
+                  />
                 </ClassicSubnets>
               </ClassicMap>
             </div>
@@ -152,7 +201,7 @@ export class Overview extends React.Component {
         ) : (
           ""
         )}
-        {craig.store.json.transit_gateways.length === 0 ? (
+        {craig.store.json.transit_gateways.length === 0 || this.props.small ? (
           ""
         ) : (
           <div id="tgw-diagram" className="diagramBox marginTop1Rem">
@@ -163,45 +212,19 @@ export class Overview extends React.Component {
               icon={<IbmCloudTransitGateway className="diagramTitleIcon" />}
             />
             <div className="displayFlex">
-              <TransitGatewaysMap craig={craig} static />
+              <TransitGatewaysMap
+                craig={craig}
+                static
+                small={this.props.small}
+              />
             </div>
           </div>
         )}
-      </>
+      </div>
     );
   }
 }
 
 Overview.propTypes = {
   craig: PropTypes.shape({}).isRequired,
-};
-
-// pass through props to allow render of subcomponents
-export const PassThroughWrapper = (props) => {
-  return (
-    <div className={props.className} style={props.style}>
-      {React.Children.map(props.children, (child) =>
-        // clone react child
-        React.cloneElement(child, {
-          vpc: props.vpc,
-          vpc_index: props.vpc_index,
-          acl: props.acl,
-          power: props.power,
-          powerIndex: props.powerIndex,
-        })
-      )}
-    </div>
-  );
-};
-
-PassThroughWrapper.propTypes = {
-  className: PropTypes.string,
-};
-
-export const PassThroughHoverWrapper = (props) => {
-  return (
-    <HoverClassNameWrapper hoverClassName={props.hoverClassName}>
-      <PassThroughWrapper {...props}>{props.children}</PassThroughWrapper>
-    </HoverClassNameWrapper>
-  );
 };

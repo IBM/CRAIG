@@ -8,7 +8,7 @@ import { ToggleForm } from "icse-react-assets";
 import DynamicForm from "../forms/DynamicForm";
 import { disableSave, propsMatchState } from "../../lib";
 import { contains } from "lazy-z";
-import { CraigFormHeading } from "../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../forms/utils";
 
 function Home(props) {
   let craig = props.craig;

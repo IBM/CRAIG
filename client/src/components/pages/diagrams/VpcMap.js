@@ -1,5 +1,5 @@
 import React from "react";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import { GatewayPublic, VirtualPrivateCloud } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
@@ -52,7 +52,8 @@ export const VpcMap = (props) => {
       .concat(craig.store.json.vpcs)
       .map((vpc, calcVpcIndex) => {
         let vpcBoxClassName =
-          "subForm marginBottomSmall marginRight1Rem width580";
+          "subForm marginBottomSmall marginRight1Rem " +
+          (props.small ? " width300" : " width580");
         let isRed =
           isNullOrEmptyString(vpc.resource_group, true) ||
           isNullOrEmptyString(vpc.bucket, true) ||
@@ -76,31 +77,27 @@ export const VpcMap = (props) => {
             hoverClassName="diagramBoxSelected"
             static={props.static}
           >
-            {props.small ? (
-              ""
-            ) : (
-              <div
-                className={props.static || !props.onTitleClick ? "" : "clicky"}
-              >
-                <CraigFormHeading
-                  isRed={isRed}
-                  icon={<VirtualPrivateCloud className="diagramTitleIcon" />}
-                  className="marginBottomSmall"
-                  type="subHeading"
-                  name={
-                    nullVpcResources && !vpc.name
-                      ? "No VPC Selected"
-                      : vpc.name + " VPC"
-                  }
-                  buttons={props.buttons ? props.buttons(vpcIndex) : ""}
-                  onClick={
-                    props.onTitleClick
-                      ? () => props.onTitleClick(vpcIndex)
-                      : undefined
-                  }
-                />
-              </div>
-            )}
+            <div
+              className={props.static || !props.onTitleClick ? "" : "clicky"}
+            >
+              <CraigFormHeading
+                isRed={isRed}
+                icon={<VirtualPrivateCloud className="diagramTitleIcon" />}
+                className="marginBottomSmall"
+                type="subHeading"
+                name={
+                  nullVpcResources && !vpc.name
+                    ? "No VPC Selected"
+                    : vpc.name + " VPC"
+                }
+                buttons={props.buttons ? props.buttons(vpcIndex) : ""}
+                onClick={
+                  props.onTitleClick
+                    ? () => props.onTitleClick(vpcIndex)
+                    : undefined
+                }
+              />
+            </div>
             {React.Children.map(props.children, (child) =>
               // clone react child
               React.cloneElement(child, {
@@ -125,6 +122,7 @@ export const VpcMap = (props) => {
                           return false;
                         }}
                         itemName="public_gateway"
+                        small={props.small}
                       />
                     ) : (
                       ""

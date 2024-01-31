@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Connect, EarthFilled, Router, VlanIbm } from "@carbon/icons-react";
+import { Connect, EarthFilled, VlanIbm } from "@carbon/icons-react";
 import { arraySplatIndex, titleCase } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
@@ -22,15 +22,16 @@ export const ClassicSubnets = (props) => {
         vlan.name
       );
       let isPrivate = vlan.type === "PRIVATE";
+      let hoverClassName =
+        "powerSubnetBox" +
+        (props.small && vlanIndex === 0 ? " marginTopNone" : "") +
+        (props.isSelected && props.isSelected(vlanIndex)
+          ? " diagramBoxSelected"
+          : "");
       return (
         <HoverClassNameWrapper
           static={props.static}
-          className={
-            "powerSubnetBox" +
-            (props.isSelected && props.isSelected(vlanIndex)
-              ? " diagramBoxSelected"
-              : "")
-          }
+          className={hoverClassName}
           key={vlan.name + "-" + props.datacenter}
           hoverClassName="diagramBoxSelected"
         >
@@ -41,23 +42,29 @@ export const ClassicSubnets = (props) => {
             }
             onClick={props.onClick ? () => props.onClick(vlanIndex) : undefined}
           >
-            <VlanIbm className="marginRightQuarterRem" />
-            <span className="powerSubnetName">{vlan.name}</span>
-            <Tag
-              type={isPrivate ? tagColors[0] : tagColors[5]}
-              style={{
-                marginTop: "-0.05rem",
-              }}
-            >
-              <div className="displayFlex font10Px">
-                {isPrivate ? (
-                  <Connect className="securityTabIconMargin" />
-                ) : (
-                  <EarthFilled className="securityTabIconMargin" />
-                )}
-                <div>{titleCase(vlan.type.toLowerCase())}</div>
-              </div>
-            </Tag>
+            {props.small ? "" : <VlanIbm className="marginRightQuarterRem" />}
+            <span className={props.small ? "font10px" : "powerSubnetName"}>
+              {vlan.name}
+            </span>
+            {props.small ? (
+              ""
+            ) : (
+              <Tag
+                type={isPrivate ? tagColors[0] : tagColors[5]}
+                style={{
+                  marginTop: "-0.05rem",
+                }}
+              >
+                <div className="displayFlex font10Px">
+                  {isPrivate ? (
+                    <Connect className="securityTabIconMargin" />
+                  ) : (
+                    <EarthFilled className="securityTabIconMargin" />
+                  )}
+                  <div>{titleCase(vlan.type.toLowerCase())}</div>
+                </div>
+              </Tag>
+            )}
           </div>
           {React.Children.map(props.children, (child) =>
             // clone react child

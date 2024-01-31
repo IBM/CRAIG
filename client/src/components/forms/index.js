@@ -7,10 +7,11 @@ export {
   DynamicRender,
   PrimaryButton,
   RenderForm,
-  SaveIcon,
   SecondaryButton,
   StatelessFormWrapper,
   DynamicFormModal,
   CraigToggleForm,
   PopoverWrapper,
+  UnsavedChangesModal,
+  DeleteModal,
 } from "./utils";

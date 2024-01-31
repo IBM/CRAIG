@@ -87,7 +87,7 @@ export const DeploymentIcon = (props) => {
           className: "margin1rem" + (props.onClick ? " clicky" : ""),
           onClick: props.onClick ? props.onClick : undefined,
         })}
-        {props.small ? "" : <p className="font12px">{nameDisplay(props)}</p>}
+        <p className="font12px">{nameDisplay(props)}</p>
       </div>
       {props.children}
       {hasSecurityGroups
@@ -110,7 +110,9 @@ export const DeploymentIcon = (props) => {
             </Tag>
           ))
         : ""}
-      {props.itemName === "vsi" && props.item.enable_floating_ip ? (
+      {props.itemName === "vsi" &&
+      props.item.enable_floating_ip &&
+      !props.small ? (
         <Tag type={tagColors[3]}>
           <div className="displayFlex font10Px">
             <FloatingIp className="securityTabIconMargin" /> Floating IP

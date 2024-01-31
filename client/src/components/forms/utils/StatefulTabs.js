@@ -1,14 +1,12 @@
 import React from "react";
 import { Tab, TabList, TabPanels, Tabs, TabPanel } from "@carbon/react";
-import {
-  CraigFormHeading,
-  DynamicRender,
-  PrimaryButton,
-} from "./ToggleFormComponents";
+import { DynamicRender } from "./ToggleFormComponents";
 import { kebabCase } from "lazy-z";
 import PropTypes from "prop-types";
 import { tabPanelProps } from "../../../lib/components/toggle-form-components";
 import { CarbonCodeMirror } from "carbon-react-code-mirror";
+import { CraigFormHeading } from "./CraigFormHeading";
+import { PrimaryButton } from "./PrimaryButton";
 
 class StatefulTabs extends React.Component {
   constructor(props) {
@@ -82,7 +80,13 @@ class StatefulTabs extends React.Component {
             ) : (
               <TabList aria-label="formTabs">
                 <Tab>{this.props.formName || "Create"}</Tab>
-                <Tab>{this.props.formName ? "Documentation" : "About"}</Tab>
+                <Tab>
+                  {this.props.secondTabName
+                    ? this.props.secondTabName
+                    : this.props.formName
+                    ? "Documentation"
+                    : "About"}
+                </Tab>
                 {this.props.tfTabs ? <Tab>Terraform</Tab> : ""}
               </TabList>
             )}

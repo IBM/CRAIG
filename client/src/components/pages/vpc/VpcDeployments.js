@@ -1,9 +1,6 @@
 import React from "react";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
-import {
-  CraigFormHeading,
-  PrimaryButton,
-} from "../../forms/utils/ToggleFormComponents";
+import { PrimaryButton, CraigFormHeading, RenderForm } from "../../forms/utils";
 import {
   BareMetalServer_02,
   GatewayVpn,
@@ -39,7 +36,7 @@ import {
   snakeCase,
   titleCase,
 } from "lazy-z";
-import { IcseSelect, RenderForm } from "icse-react-assets";
+import { IcseSelect } from "icse-react-assets";
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import { craigForms } from "../CraigForms";
@@ -57,7 +54,7 @@ import { RoutingTables } from "../diagrams/RoutingTables";
 import { F5BigIp } from "../FormPages";
 import f5 from "../../../images/f5.png";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-import { PassThroughHoverWrapper } from "../diagrams/Overview";
+import { PassThroughHoverWrapper } from "../diagrams/PassthroughWrapper";
 import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
 import { fortigateTf } from "../../../lib/json-to-iac/fortigate";
 import { vpnServerTf } from "../../../lib/json-to-iac";

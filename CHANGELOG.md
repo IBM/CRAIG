@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Users can now specify a peer address using the VPN Gateway connection subform
 - Users can now import a Power VS SSH Key from data even when the parent workspace is not imported
 - When selecting a project and loading it into CRAIG, invalid VSI images and cluster versions will be removed
+- Users can now see a diagram preview of their architecture by clicking the `Preview Configuration` on the projects page
 
 ### Fixes
 

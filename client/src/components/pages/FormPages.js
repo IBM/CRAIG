@@ -30,14 +30,15 @@ import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.jso
 import DynamicForm from "../forms/DynamicForm";
 import { NoCisTile, NoPowerNetworkTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
-import { CraigToggleForm, DynamicFormModal } from "../forms/utils";
+import {
+  PrimaryButton,
+  CraigFormHeading,
+  CraigToggleForm,
+  DynamicFormModal,
+} from "../forms/utils";
 import StatefulTabs from "../forms/utils/StatefulTabs";
 import { craigForms } from "./CraigForms";
-import {
-  CraigFormHeading,
-  PrimaryButton,
-  RenderForm,
-} from "../forms/utils/ToggleFormComponents";
+import { RenderForm } from "../forms/utils/ToggleFormComponents";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
 
 function cbrPageTemplate(craig) {

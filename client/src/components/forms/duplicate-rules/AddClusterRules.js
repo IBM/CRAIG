@@ -3,8 +3,7 @@ import { IcseSelect } from "icse-react-assets";
 import { isNullOrEmptyString, splat } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { CraigFormHeading, PrimaryButton } from "../utils/ToggleFormComponents";
-import { CraigFormGroup } from "../utils";
+import { CraigFormHeading, CraigFormGroup, PrimaryButton } from "../utils";
 
 const AddClusterRules = (props) => {
   return (

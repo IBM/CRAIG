@@ -530,7 +530,7 @@ class Craig extends React.Component {
           ) : window.location.pathname === "/v2/classic" ? (
             <ClassicDiagram craig={craig} />
           ) : window.location.pathname === "/v2/overview" ? (
-            <Overview craig={craig} />
+            <Overview craig={craig} small />
           ) : window.location.pathname === "/form/observability" ? (
             <ObservabilityForm craig={craig} />
           ) : this.props.params.form ? (

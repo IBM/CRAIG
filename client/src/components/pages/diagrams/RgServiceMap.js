@@ -1,6 +1,6 @@
 import React from "react";
 import { getServices } from "../../../lib/forms/overview";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import {
   GroupResource,
   IbmCloudKeyProtect,

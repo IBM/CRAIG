@@ -90,7 +90,7 @@ export const ProjectTile = (props) => {
             iconDescription="View Configuration"
             renderIcon={View}
           >
-            {isValid ? "View Configuration" : "Review Configuration"}
+            Preview Configuration
           </Button>
           {props.data.workspace_url ? (
             <Button
