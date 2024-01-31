@@ -8,7 +8,7 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 
 ---
 
-## Prerequisites
+## Prerequisites for Local Installations
 
 - NodeJS v18.11 or higher
 - NPM version v8.19.2 or higher
@@ -33,6 +33,7 @@ To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Pow
 
 >* _**Note:** this only needs to be done once per IBM Cloud Account, not per user of CRAIG._
 >* _This is a recommended but optional step. If these workspaces are not deployed CRAIG will use a static list which may include options that are not available in a specific zone._
+>* _The deploy.sh script used to deploy CRAIG in IBM Code Engine can also automatically deploy the workspaces using its `-z` parameter._
 
 ### Prerequisites
 - [Create an IBM Cloud API Key](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key) 
@@ -209,6 +210,8 @@ In addition, an API key must be provided in order to create an IBM Container Reg
 >* The `ibmcloud` CLI must be [installed](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli)
 >* `ibmcloud login` must be run before invoking the script
 >* An API key must be provided that will be used for CRAIG's integration with IBM Cloud Schematics and Power Virtual Server Workspaces. This API key will also be used for IBM Code Engine's access to the IBM Container Registry. See later sections in this document about Schematics and Power Virtual Server integrations for more information.
+>* [jq](https://jqlang.github.io/jq/) v1.7 or higher
+
 
 #### Downloading deploy.sh in IBM Cloud Shell
 From within IBM Cloud Shell run the following two commands to download the deploy.sh script and make it executable:
@@ -225,10 +228,9 @@ By default the script will securely prompt you for your API key. It may also be 
 ./deploy.sh
 ```
 
-If Power Virtual Server Workspace integration is desired, the `.env` file that is created by the [Power VS Workspace Deployment](#power-vs-workspace-deployment) script should be specified using the `-e` parameter:
-
+The deploy script can also create the Power Virtual Server workspaces and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
 ```bash
-./deploy.sh -e .env
+./deploy.sh -z
 ```
 
 For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
