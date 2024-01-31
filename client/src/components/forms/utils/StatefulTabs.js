@@ -1,6 +1,6 @@
 import React from "react";
 import { Tab, TabList, TabPanels, Tabs, TabPanel } from "@carbon/react";
-import { DynamicRender } from "./ToggleFormComponents";
+import { DynamicRender } from "./DynamicRender";
 import { kebabCase } from "lazy-z";
 import PropTypes from "prop-types";
 import { tabPanelProps } from "../../../lib/components/toggle-form-components";

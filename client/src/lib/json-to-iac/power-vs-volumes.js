@@ -33,9 +33,8 @@ function formatPowerVsVolume(volume, config) {
     pi_volume_shareable: volume.pi_volume_shareable,
     pi_replication_enabled: volume.pi_replication_enabled,
   };
-  if (!volume.storage_option || volume.storage_option === "Storage Type") {
-    data.pi_volume_type = volume.pi_volume_type;
-  } else if (contains(["Affinity", "Anti-Affinity"], volume.storage_option)) {
+  data.pi_volume_type = volume.pi_volume_type;
+  if (contains(["Affinity", "Anti-Affinity"], volume.storage_option)) {
     data.pi_affinity_policy = volume.pi_affinity_policy;
     // field will be some combination of pi [anti_affinity|affinity] [volume|instance]
     let affinityField = snakeCase(

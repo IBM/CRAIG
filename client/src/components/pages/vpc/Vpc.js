@@ -3,7 +3,6 @@ import {
   SubnetAclRules,
   VirtualPrivateCloud,
 } from "@carbon/icons-react";
-import { RenderForm } from "icse-react-assets";
 import React from "react";
 import {
   codeMirrorAclTf,
@@ -19,6 +18,7 @@ import {
   CraigToggleForm,
   DynamicFormModal,
   CraigFormHeading,
+  RenderForm,
 } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";

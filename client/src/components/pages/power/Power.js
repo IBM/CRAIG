@@ -1,5 +1,4 @@
 import React from "react";
-import { RenderForm } from "../../forms/utils/ToggleFormComponents";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import {
   FileStorage,
@@ -13,6 +12,7 @@ import {
   CraigToggleForm,
   DynamicFormModal,
   CraigFormHeading,
+  RenderForm,
 } from "../../forms/utils";
 import { disableSave, powerVsTf, propsMatchState } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";

@@ -24,8 +24,9 @@ import {
 import PropTypes from "prop-types";
 import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
 import { contains, deepEqual, isNullOrEmptyString } from "lazy-z";
-import { RenderForm } from "../utils/ToggleFormComponents";
 import { ToolTipWrapper } from "../utils/ToolTip";
+import { RenderForm } from "../utils";
+
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
 
 const DynamicToolTipWrapper = (props) => {

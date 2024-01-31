@@ -226,6 +226,7 @@ resource "ibm_pi_volume" "workspace_volume_aixtgtvols1" {
   pi_replication_enabled = false
   pi_affinity_policy     = "affinity"
   pi_affinity_instance   = ibm_pi_instance.workspace_workspace_instance_aixtarget.instance_id
+  pi_volume_type         = null
 }
 `;
       assert.deepEqual(
@@ -320,6 +321,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   pi_volume_name         = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable    = true
   pi_replication_enabled = false
+  pi_volume_type         = "tier1"
   pi_affinity_policy     = "affinity"
   pi_affinity_instance   = ibm_pi_instance.oracle_template_workspace_instance_oracle_1.instance_id
 }
@@ -358,6 +360,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   pi_volume_name          = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable     = true
   pi_replication_enabled  = false
+  pi_volume_type          = "tier1"
   pi_affinity_policy      = "anti-affinity"
   pi_anti_affinity_volume = ibm_pi_volume.oracle_template_volume_oracle_2_db_1.volume_id
 }
@@ -396,6 +399,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   pi_volume_shareable    = true
   pi_replication_enabled = false
   pi_storage_pool        = "Tier1-Flash-4"
+  pi_volume_type         = null
 }
 `;
       assert.deepEqual(

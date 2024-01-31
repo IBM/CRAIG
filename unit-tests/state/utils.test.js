@@ -7,6 +7,7 @@ const {
   isRangeInvalid,
   cbrTitleCase,
   cbrSaveType,
+  powerAffinityInvalid,
 } = require("../../client/src/lib/state/utils");
 
 describe("utils", () => {
@@ -480,6 +481,25 @@ describe("utils", () => {
       assert.deepEqual(
         cbrSaveType("type")({ type: "Service Ref" }),
         "serviceRef"
+      );
+    });
+  });
+  describe("powerAffinityInvalid", () => {
+    it("should be true if state data option is option and no affinity type", () => {
+      assert.isTrue(
+        powerAffinityInvalid({ storage_option: "good" }, "good"),
+        "it should be true"
+      );
+    });
+    it("should be false if everything matches and field is not null", () => {
+      assert.isFalse(
+        powerAffinityInvalid(
+          { storage_option: "good", affinity_type: "good" },
+          "good",
+          "good",
+          "good"
+        ),
+        "it should be false"
       );
     });
   });

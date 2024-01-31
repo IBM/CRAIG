@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Updated the Power SAP HANA template to have current images for zone
 - When using the Terraform deploy scripts as part of environment setup, workspace GUID values will no longer be wrapped in quotes
+- Storage Type is now required for all Power VS Instances and Volumes regardless of affinity
+- Dropdowns with only one possible item will now be automatically selected within a form
 
 ### Features
 

@@ -1,5 +1,4 @@
 import React from "react";
-import { RenderForm } from "../../forms/utils/ToggleFormComponents";
 import { contains, isNullOrEmptyString } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
@@ -7,6 +6,7 @@ import { FloatingIp, Security } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import { disableSave } from "../../../lib";
+import { RenderForm } from "../../forms";
 
 /**
  * check to see if deployment icon is selected

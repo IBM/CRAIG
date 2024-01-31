@@ -7,7 +7,7 @@ import { EdgeNetworkingDocs } from "../pages";
 import edgeNetwork from "../../images/edge-network.png";
 import PropTypes from "prop-types";
 import "./edge-network.css";
-import { StatelessFormWrapper } from "./utils/ToggleFormComponents";
+import { StatelessFormWrapper } from "./utils/StatelessFormWrapper";
 import { PrimaryButton, CraigFormHeading, CraigFormGroup } from "./utils";
 
 const edgePatterns = [

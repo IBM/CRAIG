@@ -1,7 +1,7 @@
 import { Modal } from "@carbon/react";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { DynamicRender } from "./ToggleFormComponents";
+import { DynamicRender } from "./DynamicRender";
 
 /**
  * Form Modal

@@ -1,6 +1,5 @@
-import { IcseModal } from "icse-react-assets";
-import { getObjectFromArray, revision, splat, splatContains } from "lazy-z";
 import React from "react";
+import { getObjectFromArray, revision, splat, splatContains } from "lazy-z";
 import { copyRuleCodeMirrorData } from "../../lib";
 import { CraigCodeMirror } from "../page-template/CodeMirror";
 import "./copy-rule-form-page.css";
@@ -14,6 +13,7 @@ import {
 } from "./duplicate-rules";
 import PropTypes from "prop-types";
 import { StatelessFormWrapper } from "./utils";
+import { Modal } from "@carbon/react";
 
 class CopyRuleForm extends React.Component {
   constructor(props) {
@@ -215,9 +215,10 @@ class CopyRuleForm extends React.Component {
             : "subForm sgFormTopMargin ") + "positionRelative"
         }
       >
-        <IcseModal
+        <Modal
+          id="copy-rule-modal"
           open={this.state.showModal}
-          heading={
+          modalHeading={
             this.state.modalStyle === "copyRule"
               ? "Copy Rule"
               : this.state.modalStyle === "addClusterRules"
@@ -235,6 +236,9 @@ class CopyRuleForm extends React.Component {
               ? "Copy Network ACL"
               : "Copy Security Group"
           }
+          className="leftTextAlign"
+          secondaryButtonText="Cancel"
+          size="md"
           onRequestSubmit={this.onModalSubmit}
           onRequestClose={() => {
             this.setState({ showModal: false, modalStyle: null });
@@ -279,7 +283,7 @@ class CopyRuleForm extends React.Component {
               />
             )
           )}
-        </IcseModal>
+        </Modal>
         <StatelessFormWrapper
           name="Duplicate Lists & Rules"
           subHeading={this.props.isAclForm}

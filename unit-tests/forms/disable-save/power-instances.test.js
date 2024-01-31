@@ -761,7 +761,7 @@ describe("power vs instances", () => {
         craig: state(),
       }
     );
-    assert.isFalse(actualData, "it should not be disabled");
+    assert.isTrue(actualData, "it should be disabled");
   });
   it("should not be disabled when values are valid with storage option: storage type", () => {
     let actualData = disableSave(

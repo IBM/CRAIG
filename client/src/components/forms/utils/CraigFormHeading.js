@@ -70,7 +70,7 @@ CraigFormHeading.defaultProps = {
 };
 
 CraigFormHeading.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   type: PropTypes.string,
   tooltip: PropTypes.shape({
     content: PropTypes.string.isRequired,

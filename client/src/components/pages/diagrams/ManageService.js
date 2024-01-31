@@ -1,7 +1,7 @@
-import { RenderForm } from "icse-react-assets";
 import { contains, titleCase } from "lazy-z";
 import React from "react";
 import PropTypes from "prop-types";
+import { RenderForm } from "../../forms";
 
 export const ManageService = (props) => {
   return (

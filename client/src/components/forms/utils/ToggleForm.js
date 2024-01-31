@@ -2,17 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import { disableSave, propsMatchState } from "../../../lib";
 import StatefulTabs from "./StatefulTabs";
-import {
-  RenderForm,
-  DynamicRender,
-  SecondaryButton,
-  StatelessFormWrapper,
-} from "./ToggleFormComponents";
+import { StatelessFormWrapper } from "./StatelessFormWrapper";
 import DynamicForm from "../DynamicForm";
 import { CraigFormHeading } from "./CraigFormHeading";
 import { UnsavedChangesModal } from "./UnsavedChangesModal";
 import { DeleteModal } from "./DeleteModal";
 import { PrimaryButton } from "./PrimaryButton";
+import { RenderForm } from "./RenderForm";
+import { DynamicRender } from "./DynamicRender";
+import { SecondaryButton } from "./SecondaryButton";
 
 class CraigToggleForm extends React.Component {
   constructor(props) {

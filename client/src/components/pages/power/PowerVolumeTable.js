@@ -1,5 +1,10 @@
 import React from "react";
-import { CraigFormHeading, PrimaryButton, SecondaryButton } from "../../forms";
+import {
+  CraigFormHeading,
+  DeleteModal,
+  PrimaryButton,
+  SecondaryButton,
+} from "../../forms";
 import { FileStorage } from "@carbon/icons-react";
 import {
   Table,
@@ -9,8 +14,7 @@ import {
   TableCell,
   TableHead,
 } from "@carbon/react";
-import { contains, isNullOrEmptyString, revision, titleCase } from "lazy-z";
-import { DeleteModal } from "icse-react-assets";
+import { contains, isNullOrEmptyString } from "lazy-z";
 import { getVolumeDisplayName } from "../../../lib/forms/power-volume-table";
 
 export class PowerVolumeTable extends React.Component {

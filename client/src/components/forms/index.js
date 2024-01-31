@@ -6,7 +6,6 @@ export {
   CraigFormHeading,
   DynamicRender,
   PrimaryButton,
-  RenderForm,
   SecondaryButton,
   StatelessFormWrapper,
   DynamicFormModal,
@@ -14,4 +13,5 @@ export {
   PopoverWrapper,
   UnsavedChangesModal,
   DeleteModal,
+  RenderForm,
 } from "./utils";

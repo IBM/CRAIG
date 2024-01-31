@@ -32,8 +32,8 @@ import {
   propsMatchState,
 } from "../../../lib";
 import { ManageService } from "../diagrams/ManageService";
-import { RenderForm } from "../../forms/utils/ToggleFormComponents";
 import {
+  RenderForm,
   PrimaryButton,
   CraigFormHeading,
   CraigFormGroup,

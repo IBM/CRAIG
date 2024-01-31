@@ -104,7 +104,6 @@ function powerVsInstanceData(instance, config) {
     delete data[field];
   });
   if (data.pi_affinity_policy) {
-    delete data.pi_storage_type;
     delete data.pi_storage_pool;
     if (data.pi_affinity_policy === "affinity") {
       delete data.pi_anti_affinity_instance;

@@ -1634,10 +1634,10 @@ describe("power_instances", () => {
         });
         it("should set state when storage option is storage type", () => {
           let actualData = {
-            storage_option: "Storage Type",
+            storage_option: "None",
           };
           let expectedData = {
-            storage_option: "Storage Type",
+            storage_option: "None",
             pi_affinity_instance: null,
             pi_affinity_policy: null,
             pi_affinity_volume: null,
@@ -1660,7 +1660,6 @@ describe("power_instances", () => {
             pi_affinity_volume: null,
             pi_anti_affinity_instance: null,
             pi_anti_affinity_volume: null,
-            pi_storage_type: null,
             affinity_type: null,
           };
           craig.power_instances.storage_option.onStateChange(actualData);
@@ -1675,7 +1674,6 @@ describe("power_instances", () => {
             pi_affinity_policy: "affinity",
             pi_anti_affinity_instance: null,
             pi_anti_affinity_volume: null,
-            pi_storage_type: null,
             pi_storage_pool: null,
             affinity_type: null,
           };
@@ -1691,7 +1689,6 @@ describe("power_instances", () => {
             pi_affinity_policy: "anti-affinity",
             pi_affinity_instance: null,
             pi_affinity_volume: null,
-            pi_storage_type: null,
             pi_storage_pool: null,
             affinity_type: null,
           };
@@ -1721,17 +1718,6 @@ describe("power_instances", () => {
       });
     });
     describe("power_instances.pi_storage_type", () => {
-      describe("power_instances.pi_storage_type.hideWhen", () => {
-        it("should not be hidden when option is storage type", () => {
-          let craig = state();
-          assert.isTrue(
-            craig.power_instances.pi_storage_type.hideWhen({
-              storage_option: "",
-            }),
-            "it should be true"
-          );
-        });
-      });
       describe("power_instances.pi_storage_type.onRender", () => {
         it("should not be hidden when type is tier-1", () => {
           let craig = state();
@@ -1947,7 +1933,7 @@ describe("power_instances", () => {
                 },
               }
             ),
-            ["hi"],
+            ["hi", "hi"],
             "it should return fultered list of groups"
           );
         });
@@ -1979,7 +1965,7 @@ describe("power_instances", () => {
                 },
               }
             ),
-            [],
+            ["hi"],
             "it should return fultered list of groups"
           );
         });
@@ -2019,7 +2005,7 @@ describe("power_instances", () => {
                 },
               }
             ),
-            ["hi"],
+            ["hi", "hi"],
             "it should return fultered list of groups"
           );
         });
@@ -2055,7 +2041,7 @@ describe("power_instances", () => {
                 },
               }
             ),
-            ["hi"],
+            ["hi", "hi"],
             "it should return fultered list of groups"
           );
         });

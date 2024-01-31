@@ -2,7 +2,6 @@ import React from "react";
 import { craigForms } from "../CraigForms";
 import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { ClassicMap, ClassicSubnets, SshKeys, docTabs } from "../diagrams";
-import { RenderForm } from "../../forms/utils/ToggleFormComponents";
 import { distinct, isNullOrEmptyString, snakeCase, titleCase } from "lazy-z";
 import {
   FirewallClassic,
@@ -15,6 +14,7 @@ import {
   CraigFormHeading,
   CraigToggleForm,
   DynamicFormModal,
+  RenderForm,
 } from "../../forms/utils";
 import { classicInfraTf, disableSave, propsMatchState } from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";

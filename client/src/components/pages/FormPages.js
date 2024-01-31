@@ -35,10 +35,10 @@ import {
   CraigFormHeading,
   CraigToggleForm,
   DynamicFormModal,
+  RenderForm,
 } from "../forms/utils";
 import StatefulTabs from "../forms/utils/StatefulTabs";
 import { craigForms } from "./CraigForms";
-import { RenderForm } from "../forms/utils/ToggleFormComponents";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
 
 function cbrPageTemplate(craig) {

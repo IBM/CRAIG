@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  buildFormFunctions,
-  IcseFormTemplate,
-  RenderForm,
-} from "icse-react-assets";
+import { buildFormFunctions, IcseFormTemplate } from "icse-react-assets";
 import {
   DynamicFormTextInput,
   DynamicFormSelect,
@@ -35,7 +31,6 @@ import {
   DynamicFetchMultiSelect,
   DynamicFetchSelect,
 } from "./dynamic-form/components";
-import { OptionsButton } from "./dynamic-form/OptionsButton";
 import { NaclRulesSubForm } from "./dynamic-form/NaclRulesSubForm";
 import {
   SubnetTileSubForm,
@@ -43,7 +38,7 @@ import {
 } from "./dynamic-form/SubnetTileSubForm";
 import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
 import { Tile } from "@carbon/react";
-import { CraigFormGroup, CraigFormHeading } from "./utils";
+import { CraigFormGroup, CraigFormHeading, RenderForm } from "./utils";
 
 const doNotRenderFields = [
   "heading",
@@ -64,6 +59,8 @@ class DynamicForm extends React.Component {
       ...this.props.data,
     };
 
+    let selectFields = {};
+
     // set unfound parameters to data
     this.props.form.groups.forEach((group) => {
       eachKey(group, (field) => {
@@ -72,16 +69,30 @@ class DynamicForm extends React.Component {
           !this.state[field] &&
           !isBoolean(this.state[field]) &&
           !contains(doNotRenderFields, field)
-        )
-          // prevent ssh public key from causing propsMatchState to be false
-          // when use data is true. also prevent router_hostname from rendering as
-          // empty string when null
+        ) {
+          // add select to select fields to populate
+          if (group[field]?.type === "select") {
+            selectFields[field] = group[field];
+          }
           this.state[field] = isBoolean(group[field].default)
             ? group[field].default
             : group[field].default === null && field !== "router_hostname"
             ? null
             : group[field].default || "";
+        }
       });
+    });
+
+    // For each field that is a select
+    eachKey(selectFields, (field) => {
+      // if groups is function evaluate
+      let groups = isFunction(selectFields[field].groups)
+        ? selectFields[field].groups(this.state, this.props)
+        : selectFields[field].groups;
+      // if only one option set state value to value
+      if (groups.length === 1) {
+        this.state[field] = groups[0];
+      }
     });
 
     // set default for fields that are not explicitly declared

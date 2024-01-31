@@ -3,7 +3,7 @@ import { contains, kebabCase } from "lazy-z";
 import PropTypes from "prop-types";
 import ToggleForm from "./ToggleForm";
 import DynamicFormModal from "./DynamicFormModal";
-import { RenderForm } from "./ToggleFormComponents";
+import { RenderForm } from "./StatelessFormWrapper";
 import StatefulTabs from "./StatefulTabs";
 import { CraigEmptyResourceTile } from "../dynamic-form";
 import CraigToggleForm from "./ToggleForm";

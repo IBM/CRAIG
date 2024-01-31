@@ -326,7 +326,7 @@ function powerVsInstanceSchema(vtl) {
         return stateData.sap === true;
       },
       labelText: "Memory (GB)",
-      placeholder: "1024",
+      placeholder: "4",
       size: "small",
       default: "",
       invalid: powerVsMemoryInvalid,
