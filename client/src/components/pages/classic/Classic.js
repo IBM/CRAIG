@@ -1,6 +1,5 @@
 import React from "react";
 import { craigForms } from "../CraigForms";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { ClassicMap, ClassicSubnets, SshKeys, docTabs } from "../diagrams";
 import { distinct, isNullOrEmptyString, snakeCase, titleCase } from "lazy-z";
 import {
@@ -10,6 +9,7 @@ import {
   VlanIbm,
 } from "@carbon/icons-react";
 import {
+  StatefulTabs,
   PrimaryButton,
   CraigFormHeading,
   CraigToggleForm,

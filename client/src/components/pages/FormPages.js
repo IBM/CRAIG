@@ -36,8 +36,8 @@ import {
   CraigToggleForm,
   DynamicFormModal,
   RenderForm,
+  StatefulTabs,
 } from "../forms/utils";
-import StatefulTabs from "../forms/utils/StatefulTabs";
 import { craigForms } from "./CraigForms";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
 

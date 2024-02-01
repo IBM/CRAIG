@@ -1,5 +1,4 @@
 import React from "react";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 import {
   FileStorage,
   IbmPowerVs,
@@ -13,6 +12,7 @@ import {
   DynamicFormModal,
   CraigFormHeading,
   RenderForm,
+  StatefulTabs,
 } from "../../forms/utils";
 import { disableSave, powerVsTf, propsMatchState } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";

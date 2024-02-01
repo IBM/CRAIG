@@ -19,10 +19,10 @@ import {
   DynamicFormModal,
   CraigFormHeading,
   RenderForm,
+  StatefulTabs,
 } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
 import { AclMap, SubnetTierMap, VpcMap } from "../diagrams";
 import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
@@ -392,6 +392,7 @@ class VpcDiagramPage extends React.Component {
                       }}
                     >
                       <SubnetTierMap
+                        foundSubnetsOnly
                         craig={craig}
                         isSelected={(
                           vpcIndex,

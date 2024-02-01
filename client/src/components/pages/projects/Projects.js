@@ -361,6 +361,7 @@ class Projects extends React.Component {
 
   render() {
     let projectKeys = Object.keys(this.props.projects).sort(azsort);
+    console.log(JSON.stringify(this.state, null, 2));
     return (
       <div>
         {this.state.showValidationModal && (

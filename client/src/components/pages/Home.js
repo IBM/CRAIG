@@ -4,11 +4,10 @@ import { Settings, Sprout } from "@carbon/icons-react";
 import { EdgeNetworkingForm } from "../forms";
 import "./home.scss";
 import ImportJson from "./ImportJson";
-import { ToggleForm } from "icse-react-assets";
 import DynamicForm from "../forms/DynamicForm";
 import { disableSave, propsMatchState } from "../../lib";
 import { contains } from "lazy-z";
-import { CraigFormHeading } from "../forms/utils";
+import { CraigFormHeading, CraigToggleForm } from "../forms/utils";
 
 function Home(props) {
   let craig = props.craig;
@@ -55,10 +54,10 @@ function Home(props) {
         <TabPanels>
           <TabPanel>
             {/* Options Form */}
-            <ToggleForm
+            <CraigToggleForm
               name="Environment Options"
               hideName
-              hideChevon
+              hideChevron
               innerForm={DynamicForm}
               onDelete={() => {}}
               onSave={props.craig.options.save}

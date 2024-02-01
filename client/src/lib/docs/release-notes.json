@@ -22,7 +22,9 @@
       "Fixed an issue causing Power VS Volumes created using count to not have the correct attachments in Terraform",
       "Fixed an issue causing VPC ACLs and Public Gateways to not update resource group when changing a resource group name",
       "Fixed an error causing VPN Gateway page to crash when a gateway has additional prefixes with a deleted subnet",
-      "Fixed an issue causing invalid Terraform to be generated when COS instance and bucket are unencrypted"
+      "Fixed an issue causing invalid Terraform to be generated when COS instance and bucket are unencrypted",
+      "Fixed an issue causing V2 forms to not display items with a valid VPC that have invalid subnets",
+      "Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform"
     ],
     "upgrade_notes": [
       "Updated the Power SAP HANA template to have current images for zone",

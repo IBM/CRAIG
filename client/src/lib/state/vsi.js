@@ -6,6 +6,7 @@ const {
   splatContains,
   isInRange,
   isNullOrEmptyString,
+  getObjectFromArray,
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -186,6 +187,16 @@ function updateVsi(config, key) {
         deployment.subnets = [];
         deployment.security_groups = [];
       } else {
+        let vsiVpc = getObjectFromArray(
+          config.store.json.vpcs,
+          "name",
+          deployment.vpc
+        );
+        deployment.subnets = deployment.subnets.filter((subnet) => {
+          if (splatContains(vsiVpc.subnets, "name", subnet)) {
+            return subnet;
+          }
+        });
         deployment.security_groups = deployment.security_groups.filter((sg) => {
           if (splatContains(config.store.json.security_groups, "name", sg)) {
             return sg;

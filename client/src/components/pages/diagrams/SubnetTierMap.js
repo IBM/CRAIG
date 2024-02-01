@@ -2,13 +2,38 @@ import React from "react";
 import { SubnetRow } from "./SubnetRow";
 import PropTypes from "prop-types";
 import { IbmCloudSubnets } from "@carbon/icons-react";
+import { isEmpty } from "lazy-z";
 
 export const SubnetTierMap = (props) => {
   let vpc = props.vpc;
   let vpcIndex = props.vpc_index;
   let craig = props.craig;
+  let emptySubnetResources = false;
+  // check for empty subnet objects
+  ["virtual_private_endpoints", "vsi", "vpn_servers", "clusters"].forEach(
+    (field) => {
+      craig.store.json[field].forEach((item) => {
+        if (isEmpty(item.subnets) && item.vpc === vpc.name) {
+          emptySubnetResources = true;
+        }
+      });
+    }
+  );
+
+  ["vpn_gateways"].forEach((field) => {
+    craig.store.json[field].forEach((item) => {
+      if (item.subnet === null && item.vpc === vpc.name)
+        emptySubnetResources = true;
+    });
+  });
+
+  let subnetTiers = craig.store.subnetTiers[vpc.name];
+  if (emptySubnetResources && !props.foundSubnetsOnly) {
+    subnetTiers = subnetTiers.concat("NO_SUBNETS");
+  }
+
   return vpc.name ? (
-    craig.store.subnetTiers[vpc.name].map((tier, tierIndex) => {
+    subnetTiers.map((tier, tierIndex) => {
       return (
         <SubnetRow
           key={vpc.name + JSON.stringify(tier)}

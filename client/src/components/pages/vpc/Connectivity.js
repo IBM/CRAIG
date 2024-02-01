@@ -1,5 +1,4 @@
 import React from "react";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { DeploymentIcon, TransitGatewaysMap, docTabs } from "../diagrams";
 import {
   DirectoryDomain, // cis domain
@@ -14,6 +13,7 @@ import {
   CraigFormGroup,
   DynamicFormModal,
   CraigToggleForm,
+  StatefulTabs,
 } from "../../forms/utils";
 import { craigForms } from "../CraigForms";
 import { disableSave, propsMatchState, tgwTf } from "../../../lib";

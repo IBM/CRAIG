@@ -1,12 +1,27 @@
 import React from "react";
 import { getTierSubnets } from "../../../lib";
-import { splatContains } from "lazy-z";
+import { isString, splatContains } from "lazy-z";
 import { Subnet } from "./Subnet";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
 
 export const SubnetRow = (props) => {
+  if (isString(props.tier)) {
+    return (
+      <Subnet
+        vpcIndex={props.vpcIndex}
+        vpc={props.vpc}
+        acl={props.acl}
+        key={props.vpc?.name + (props.acl ? props.acl.name : "")}
+        craig={props.craig}
+        small={props.small}
+      >
+        {props.renderChildren}
+      </Subnet>
+    );
+  }
+
   let tierSubnets = getTierSubnets(props.tier, props.vpc)(props.tier);
   let allSubnetsHaveAcl = true;
   tierSubnets.forEach((subnet) => {

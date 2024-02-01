@@ -410,6 +410,10 @@ class Craig extends React.Component {
               }
             });
             completeTasks();
+          })
+          .catch((err) => {
+            console.error("Error fetching cluster versions\n\n", err);
+            completeTasks();
           });
       }
 
@@ -427,6 +431,10 @@ class Craig extends React.Component {
             });
           })
           .then(() => {
+            completeTasks();
+          })
+          .catch((err) => {
+            console.error("Error fetching VSI images\n\n", err);
             completeTasks();
           });
       }
@@ -530,7 +538,7 @@ class Craig extends React.Component {
           ) : window.location.pathname === "/v2/classic" ? (
             <ClassicDiagram craig={craig} />
           ) : window.location.pathname === "/v2/overview" ? (
-            <Overview craig={craig} small />
+            <Overview craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
             <ObservabilityForm craig={craig} />
           ) : this.props.params.form ? (

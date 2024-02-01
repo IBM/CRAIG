@@ -1114,6 +1114,7 @@ function naclRuleSubComponents() {
       },
       schema: {
         name: {
+          size: "small",
           default: "",
           invalid: invalidName("acl_rules"),
           invalidText: invalidNameText("acl_rules"),
@@ -1123,36 +1124,70 @@ function naclRuleSubComponents() {
           invalid: function (stateData, componentProps) {
             return !isIpv4CidrOrAddress(stateData.source);
           },
+          invalidText: unconditionalInvalidText(
+            "Please provide a valid IPV4 IP address or CIDR notation."
+          ),
+          size: "small",
+          placeholder: "x.x.x.x",
         },
         destination: {
           default: "",
           invalid: function (stateData, componentProps) {
             return !isIpv4CidrOrAddress(stateData.destination);
           },
+          invalidText: unconditionalInvalidText(
+            "Please provide a valid IPV4 IP address or CIDR notation."
+          ),
+          size: "small",
+          placeholder: "x.x.x.x",
         },
         port_min: {
           default: "",
           invalid: invalidTcpOrUdpPort,
+          size: "small",
+          invalidText: unconditionalInvalidText(
+            "Enter a whole number between 1 and 65536"
+          ),
         },
         port_max: {
           default: "",
           invalid: invalidTcpOrUdpPort,
+          size: "small",
+          invalidText: unconditionalInvalidText(
+            "Enter a whole number between 1 and 65536"
+          ),
         },
         source_port_min: {
           default: "",
           invalid: invalidTcpOrUdpPort,
+          size: "small",
+          invalidText: unconditionalInvalidText(
+            "Enter a whole number between 1 and 65536"
+          ),
         },
         source_port_max: {
           default: "",
           invalid: invalidTcpOrUdpPort,
+          size: "small",
+          invalidText: unconditionalInvalidText(
+            "Enter a whole number between 1 and 65536"
+          ),
         },
         type: {
+          size: "small",
           default: "",
           invalid: invalidIcmpCodeOrType,
+          invalidText: unconditionalInvalidText(
+            "Enter a while number between 0 and 254"
+          ),
         },
         code: {
+          size: "small",
           default: "",
           invalid: invalidIcmpCodeOrType,
+          invalidText: unconditionalInvalidText(
+            "Enter a while number between 0 and 255"
+          ),
         },
       },
     },

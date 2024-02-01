@@ -35,6 +35,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing VPC ACLs and Public Gateways to not update resource group when changing a resource group name
 - Fixed an error causing VPN Gateway page to crash when a gateway has additional prefixes with a deleted subnet
 - Fixed an issue causing invalid Terraform to be generated when COS instance and bucket are unencrypted
+- Fixed an issue causing V2 forms to not display items with a valid VPC that have invalid subnets
+- Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform
 
 ## 1.8.0
 

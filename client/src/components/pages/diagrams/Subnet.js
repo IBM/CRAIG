@@ -4,11 +4,16 @@ import PropTypes from "prop-types";
 import "./diagrams.css";
 
 export const Subnet = (props) => {
-  let subnetClassName = props.small ? "subnetBoxSmall" : "subnetBox";
+  let subnetClassName = props.small
+    ? "subnetBoxSmall"
+    : props.subnet
+    ? "subnetBox"
+    : "powerSubnetBox";
+  let subnetName = props?.subnet?.name || "No Subnets Selected";
   return (
     <div
       className={subnetClassName}
-      key={props.subnet.name + props.vpc.name + props.acl?.name}
+      key={props?.subnet?.name + props.vpc.name + props.acl?.name}
     >
       {props.small ? (
         ""
@@ -18,13 +23,27 @@ export const Subnet = (props) => {
             "displayFlex marginBottomThreeQuarterRem" +
             (props.grayNames ? " grayText" : "")
           }
+          style={{
+            color:
+              subnetName === "No Subnets Selected"
+                ? "red !important"
+                : undefined,
+          }}
         >
-          <IbmCloudSubnets className="marginRightQuarterRem" />
-          <span className="bold">{props.subnet.name}</span>
+          <IbmCloudSubnets
+            className="marginRightQuarterRem"
+            style={subnetName === "No Subnets Selected" ? { fill: "red" } : {}}
+          />
+          <span
+            className="bold"
+            style={subnetName === "No Subnets Selected" ? { color: "red" } : {}}
+          >
+            {subnetName}
+          </span>
         </div>
       )}
       <div className={props.grayNames ? " grayText" : ""}>
-        {props.subnet.cidr}
+        {props?.subnet?.cidr || ""}
       </div>
       <div className="textAlignCenter">
         {React.Children.map(props.children, (child) =>

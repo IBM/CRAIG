@@ -1,5 +1,5 @@
 import React from "react";
-import { buildFormFunctions, IcseFormTemplate } from "icse-react-assets";
+import { IcseFormTemplate } from "icse-react-assets";
 import {
   DynamicFormTextInput,
   DynamicFormSelect,
@@ -39,6 +39,43 @@ import {
 import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
 import { Tile } from "@carbon/react";
 import { CraigFormGroup, CraigFormHeading, RenderForm } from "./utils";
+
+/**
+ * build functions for modal forms
+ * @param {React.Element} component stateful component
+ */
+function buildFormFunctions(component) {
+  let disableSave = isFunction(component.props.shouldDisableSave);
+  let disableSubmit = isFunction(component.props.shouldDisableSubmit);
+
+  if (component.props.shouldDisableSave)
+    component.shouldDisableSave =
+      component.props.shouldDisableSave.bind(component);
+
+  if (disableSubmit)
+    component.shouldDisableSubmit =
+      component.props.shouldDisableSubmit.bind(component);
+
+  // set update
+  component.componentDidMount = function () {
+    if (disableSubmit) component.shouldDisableSubmit();
+    if (disableSave) component.shouldDisableSave(this.state, this.props);
+  }.bind(component);
+
+  component.componentDidUpdate = function (prevProps) {
+    if (disableSubmit) component.shouldDisableSubmit();
+    if (disableSave) component.shouldDisableSave(this.state, this.props);
+  }.bind(component);
+
+  // set on save function
+  component.onSave = function () {
+    component.props.onSave(this.state, this.props);
+  }.bind(component);
+  // save on delete
+  component.onDelete = function () {
+    component.props.onDelete(this.state, this.props);
+  }.bind(component);
+}
 
 const doNotRenderFields = [
   "heading",
@@ -90,7 +127,7 @@ class DynamicForm extends React.Component {
         ? selectFields[field].groups(this.state, this.props)
         : selectFields[field].groups;
       // if only one option set state value to value
-      if (groups.length === 1) {
+      if (groups.length === 1 && this.state[field] !== null) {
         this.state[field] = groups[0];
       }
     });

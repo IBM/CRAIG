@@ -18,7 +18,11 @@ function formatPowerVsVolume(volume, config) {
     ? true
     : splatContains(config.power, "name", volume.workspace);
   let data = {
-    provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
+    provider: volume.zone
+      ? `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`
+      : `\${ibm.power_vs_${snakeCase(
+          getObjectFromArray(config.power, "name", volume.workspace).zone
+        )}}`,
     pi_cloud_instance_id: foundWorkspace
       ? powerVsWorkspaceRef(
           volume.workspace,
@@ -91,7 +95,11 @@ function formatPowerVsVolumeAttachment(
   count
 ) {
   let volumeData = {
-    provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
+    provider: volume.zone
+      ? `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`
+      : `\${ibm.power_vs_${snakeCase(
+          getObjectFromArray(config.power, "name", volume.workspace).zone
+        )}}`,
     pi_cloud_instance_id: powerVsWorkspaceRef(
       volume.workspace,
       config?.power

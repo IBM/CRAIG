@@ -21,6 +21,12 @@ describe("security compliance center resources", () => {
             },
           ],
         },
+        resource_groups: [
+          {
+            name: "slz-service-rg",
+            use_data: false,
+          },
+        ],
       });
       let expectedData = `##############################################################################
 # Security and Compliance Center
@@ -31,7 +37,7 @@ resource "ibm_resource_instance" "scc_instance" {
   service        = "compliance"
   plan           = "security-compliance-center-standard-plan"
   location       = "us-south"
-  resource_group = "slz-service-rg"
+  resource_group = ibm_resource_group.slz_service_rg.id
 }
 
 resource "ibm_scc_profile_attachment" "attachment_name_profile_attachment" {

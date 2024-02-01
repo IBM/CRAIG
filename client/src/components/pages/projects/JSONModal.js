@@ -6,10 +6,9 @@ import { InlineNotification } from "@carbon/react";
 import { deepEqual } from "lazy-z";
 import { JSONTextArea } from "../../utils/JSONTextArea";
 import { onRequestSubmitJSONModal } from "../../../lib/craig-app";
-import { CraigFormGroup } from "../../forms";
+import { CraigFormGroup, StatefulTabs } from "../../forms";
 import { state } from "../../../lib/state";
 import { Overview } from "../diagrams/Overview";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 
 export class JSONModal extends React.Component {
   constructor(props) {

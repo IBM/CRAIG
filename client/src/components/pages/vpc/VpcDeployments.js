@@ -1,6 +1,10 @@
 import React from "react";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
-import { PrimaryButton, CraigFormHeading, RenderForm } from "../../forms/utils";
+import {
+  PrimaryButton,
+  CraigFormHeading,
+  RenderForm,
+  StatefulTabs,
+} from "../../forms/utils";
 import {
   BareMetalServer_02,
   GatewayVpn,

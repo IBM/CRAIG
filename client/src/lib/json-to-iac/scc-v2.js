@@ -1,5 +1,5 @@
 const { varDotPrefix } = require("../constants");
-const { tfBlock, resourceRef, jsonToTfPrint } = require("./utils");
+const { tfBlock, resourceRef, jsonToTfPrint, rgIdRef } = require("./utils");
 const { kebabCase } = require("lazy-z");
 
 /**
@@ -10,7 +10,7 @@ const { kebabCase } = require("lazy-z");
  * @param {*} config
  * @returns {object} terraform object
  */
-function ibmSccInstance(scc_v2) {
+function ibmSccInstance(scc_v2, config) {
   return {
     name: "scc_instance",
     data: {
@@ -18,7 +18,7 @@ function ibmSccInstance(scc_v2) {
       service: "compliance",
       plan: "security-compliance-center-standard-plan",
       location: scc_v2.region,
-      resource_group: scc_v2.resource_group,
+      resource_group: rgIdRef(scc_v2.resource_group, config),
     },
   };
 }

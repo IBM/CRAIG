@@ -11,3 +11,4 @@ export { PrimaryButton } from "./PrimaryButton";
 export { RenderForm } from "./RenderForm";
 export { DynamicRender } from "./DynamicRender";
 export { SecondaryButton } from "./SecondaryButton";
+export { default as StatefulTabs } from "./StatefulTabs";

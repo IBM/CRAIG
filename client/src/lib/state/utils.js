@@ -1016,7 +1016,7 @@ function powerVsStorageType(isVolume) {
     default: null,
     type: "select",
     labelText: "Storage Type",
-    groups: ["Tier-0", "Tier-1", "Tier-3"],
+    groups: ["Tier-1", "Tier-3"],
     invalid: function (stateData) {
       return isNullOrEmptyString(stateData[storageField]);
     },

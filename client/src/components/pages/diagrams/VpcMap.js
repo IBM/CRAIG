@@ -3,7 +3,12 @@ import { CraigFormHeading } from "../../forms/utils";
 import { GatewayPublic, VirtualPrivateCloud } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
-import { isNullOrEmptyString, splatContains } from "lazy-z";
+import {
+  contains,
+  containsKeys,
+  isNullOrEmptyString,
+  splatContains,
+} from "lazy-z";
 import { DeploymentIcon } from "./DeploymentIcon";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
@@ -20,6 +25,7 @@ export const VpcMap = (props) => {
     "routing_tables",
     "load_balancers",
     "security_groups",
+    "virtual_private_endpoints",
   ].forEach((item) => {
     if (
       !nullVpcResources &&
