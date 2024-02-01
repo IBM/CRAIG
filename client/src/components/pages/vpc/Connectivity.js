@@ -19,7 +19,7 @@ import { craigForms } from "../CraigForms";
 import { disableSave, propsMatchState, tgwTf } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";
 import { isNullOrEmptyString } from "lazy-z";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { cisTf } from "../../../lib/json-to-iac/cis";
 

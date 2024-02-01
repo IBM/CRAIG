@@ -46,7 +46,7 @@ import { craigForms } from "../CraigForms";
 import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import {
   cosTf,
   dnsTf,

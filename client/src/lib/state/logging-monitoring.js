@@ -109,7 +109,7 @@ function initLogDna(store) {
     onStoreUpdate: logdnaOnStoreUpdate,
     save: logdnaSave,
     shouldDisableSave: shouldDisableComponentSave(
-      ["plan", "resource_group", "bucket", "enabled"],
+      ["plan", "resource_group", "bucket"],
       "logdna"
     ),
     schema: {
@@ -127,11 +127,6 @@ function initLogDna(store) {
         labelText: "Enabled",
         default: false,
         size: "small",
-        invalid: function (stateData, componentProps) {
-          return (
-            stateData.enabled === false && componentProps.data.enabled === false
-          );
-        },
       },
       plan: {
         size: "small",

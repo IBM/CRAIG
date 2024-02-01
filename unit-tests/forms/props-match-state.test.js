@@ -5,7 +5,7 @@ describe("propsMatchState", () => {
   it("should return true if a function that causes deep equal to crash is sent", () => {
     assert.isTrue(
       propsMatchState(
-        "logdna",
+        "sysdig",
         {
           fn: () => {},
         },
@@ -185,6 +185,37 @@ describe("propsMatchState", () => {
             showUnsavedChangesModal: true,
             select_zones: undefined,
             hide: false,
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
+  it("should set component props data archive value to statedata archive value for logdna instance if missing", () => {
+    assert.isTrue(
+      propsMatchState(
+        "logdna",
+        {
+          name: "logdna",
+          archive: false,
+          enabled: false,
+          plan: "14-day",
+          endpoints: "private",
+          platform_logs: false,
+          resource_group: "frog-rg",
+          cos: "toad-cos",
+          bucket: "toad-bucket",
+        },
+        {
+          data: {
+            name: "logdna",
+            enabled: false,
+            plan: "14-day",
+            endpoints: "private",
+            platform_logs: false,
+            resource_group: "frog-rg",
+            cos: "toad-cos",
+            bucket: "toad-bucket",
           },
         }
       ),

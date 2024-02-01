@@ -25,7 +25,7 @@ import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
 import { craigForms } from "../CraigForms";
 import { AclMap, SubnetTierMap, VpcMap } from "../diagrams";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 
 class VpcDiagramPage extends React.Component {
   constructor(props) {

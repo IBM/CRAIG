@@ -21,7 +21,7 @@ import { ClassicGateways } from "../diagrams/ClassicGateways";
 import { IcseSelect } from "icse-react-assets";
 import DynamicForm from "../../forms/DynamicForm";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { classicGatewayTf } from "../../../lib/json-to-iac/classic-gateway";
 
 class ClassicDiagram extends React.Component {

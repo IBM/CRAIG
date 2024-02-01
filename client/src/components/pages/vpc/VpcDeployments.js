@@ -59,7 +59,7 @@ import { F5BigIp } from "../FormPages";
 import f5 from "../../../images/f5.png";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { PassThroughHoverWrapper } from "../diagrams/PassthroughWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { fortigateTf } from "../../../lib/json-to-iac/fortigate";
 import { vpnServerTf } from "../../../lib/json-to-iac";
 

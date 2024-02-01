@@ -25,7 +25,7 @@ import { PowerVolumes } from "./PowerVolumes";
 import { IcseSelect } from "icse-react-assets";
 import { NoPowerNetworkTile } from "../../forms/dynamic-form";
 import { PowerVolumeTable } from "./PowerVolumeTable";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { powerInstanceTf, powerVsVolumeTf } from "../../../lib/json-to-iac";
 
 class PowerDiagram extends React.Component {
