@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing invalid Terraform to be generated when COS instance and bucket are unencrypted
 - Fixed an issue causing V2 forms to not display items with a valid VPC that have invalid subnets
 - Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform
+- Fixed an issue causing all Schematics Workspaces to be created in the default resource group even when a resource group was provided
 
 ## 1.8.0
 

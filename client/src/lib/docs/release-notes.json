@@ -24,7 +24,8 @@
       "Fixed an error causing VPN Gateway page to crash when a gateway has additional prefixes with a deleted subnet",
       "Fixed an issue causing invalid Terraform to be generated when COS instance and bucket are unencrypted",
       "Fixed an issue causing V2 forms to not display items with a valid VPC that have invalid subnets",
-      "Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform"
+      "Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform",
+      "Fixed an issue causing all Schematics Workspaces to be created in the default resource group even when a resource group was provided"
     ],
     "upgrade_notes": [
       "Updated the Power SAP HANA template to have current images for zone",

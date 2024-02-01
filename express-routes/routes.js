@@ -24,7 +24,7 @@ router.get("/cluster/versions", controller.clusterVersions);
 // schematics
 router.put("/schematics/tar/:workspaceName", controller.uploadTar);
 router.post(
-  "/schematics/:workspaceName/:region?/:resourceGroup?",
+  "/schematics/:workspaceName/:region/:resourceGroup",
   controller.createWorkspace
 );
 
