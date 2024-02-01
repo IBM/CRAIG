@@ -105,24 +105,26 @@ LoadingModal.propTypes = {
 };
 
 export const ValidationModal = (props) => {
-  let noItemsInvalid = true;
+  let hasInvalidItems = false;
   if (props.invalidItems) {
     eachKey(props.invalidItems, (item) => {
       if (props.invalidItems[item].length > 0) {
-        noItemsInvalid = false;
+        hasInvalidItems = true;
       }
     });
   }
 
   return (
     <Modal
-      open={!noItemsInvalid}
+      open
       preventCloseOnClickOutside
-      passiveModal={noItemsInvalid}
+      passiveModal={hasInvalidItems === false}
       modalHeading={
-        noItemsInvalid ? "Validating Configuration..." : "Invalid Items"
+        hasInvalidItems === false
+          ? "Validating Configuration..."
+          : "Invalid Items"
       }
-      danger={!noItemsInvalid}
+      danger={hasInvalidItems}
       primaryButtonText="Remove invalid references (Recommended)"
       secondaryButtonText="Do not update"
       onRequestClose={() => props.afterValidation({})}
@@ -130,7 +132,7 @@ export const ValidationModal = (props) => {
         props.removeInvalidReferences();
       }}
     >
-      {noItemsInvalid ? (
+      {Object.keys(props.invalidItems).length === 0 ? (
         <>
           <div className="loadingWheel flexDirectionColumn marginBottomSmall">
             <Loading active={true} withOverlay={false} />

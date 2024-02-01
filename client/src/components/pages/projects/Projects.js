@@ -195,7 +195,10 @@ class Projects extends React.Component {
       }
     });
     // if no items are invalid, hide modal. otherwise save invalid items to state
-    if (noItemsInvalid) this.setState({ showValidationModal: false });
+    if (noItemsInvalid)
+      setTimeout(() => {
+        this.setState({ showValidationModal: false });
+      }, 1000);
     else this.setState({ invalidItems });
   }
 
@@ -367,7 +370,12 @@ class Projects extends React.Component {
         {this.state.showValidationModal && (
           <ValidationModal
             invalidItems={this.state.invalidItems}
-            afterValidation={this.afterValidation}
+            afterValidation={() => {
+              this.setState({
+                showValidationModal: false,
+                invalidItems: {},
+              });
+            }}
             removeInvalidReferences={this.removeInvalidReferences}
           />
         )}

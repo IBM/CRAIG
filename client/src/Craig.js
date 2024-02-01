@@ -82,6 +82,7 @@ class Craig extends React.Component {
         clickedProject: "",
         clickedWorkspace: "",
         clickedWorkspaceUrl: "",
+        current_project: craig.store.project_name,
       };
     } catch (err) {
       // if there are initialization errors, redirect user to reset state path
@@ -356,89 +357,90 @@ class Craig extends React.Component {
     // update store project name and json
     craig.store.project_name = projectKeyName;
     craig.store.json = projects[projectKeyName].json;
-
-    // callback function for when fetch tasks are complete
-    let updateCheckDone = () => {
-      this.setState(
-        {
-          store: craig.store,
-        },
-        onProjectSelectCallback(projects, this, craig, name, message, () => {
-          if (callback) callback(invalidItems);
-        })
-      );
-    };
-
-    // should check components for update
-    let componentsShouldUpdate =
-      craig.store.json.vsi.length > 0 || craig.store.json.clusters.length > 0;
-
-    // if components need to be updated
-    if (componentsShouldUpdate) {
-      let completedTasks = 0;
-      let tasks = 0;
-
-      // callback function to run when fetch complete
-      let completeTasks = () => {
-        completedTasks++;
-        if (completedTasks === tasks) {
-          updateCheckDone();
-        }
+    this.setState({ current_project: projectKeyName }, () => {
+      // callback function for when fetch tasks are complete
+      let updateCheckDone = () => {
+        this.setState(
+          {
+            store: craig.store,
+          },
+          onProjectSelectCallback(projects, this, craig, name, message, () => {
+            if (callback) callback(invalidItems);
+          })
+        );
       };
 
-      // add number of tasks based on checks that need to be made
-      if (craig.store.json.vsi.length > 0) tasks++;
-      if (craig.store.json.clusters.length > 0) tasks++;
+      // should check components for update
+      let componentsShouldUpdate =
+        craig.store.json.vsi.length > 0 || craig.store.json.clusters.length > 0;
 
-      if (craig.store.json.clusters.length > 0) {
-        // get cluster versions
-        fetch("/api/cluster/versions")
-          .then((res) => res.json())
-          .then((data) => {
-            // replace ` (Default)`
-            let versions = data.map((item) => {
-              return item.replace(/\s.+/g, "");
-            });
-            craig.store.json.clusters.forEach((cluster) => {
-              // if cluster has a kube version and the version is not returned by the API call
-              // add to list
-              if (
-                !contains(versions, cluster.kube_version) &&
-                cluster.kube_version
-              ) {
-                invalidItems.clusters.push(cluster.name);
-              }
-            });
-            completeTasks();
-          })
-          .catch((err) => {
-            console.error("Error fetching cluster versions\n\n", err);
-            completeTasks();
-          });
-      }
+      // if components need to be updated
+      if (componentsShouldUpdate) {
+        let completedTasks = 0;
+        let tasks = 0;
 
-      if (craig.store.json.vsi.length > 0) {
-        // get vsi image names
-        fetch(craig.vsi.image_name.apiEndpoint({}, { craig: craig }))
-          .then((res) => res.json())
-          .then((data) => {
-            craig.store.json.vsi.forEach((vsi) => {
-              // if vsi has an image name and this image is not returned by the API call
-              // add to list
-              if (!contains(data, vsi.image_name) && vsi.image_name) {
-                invalidItems.vsi.push(vsi.name);
-              }
+        // callback function to run when fetch complete
+        let completeTasks = () => {
+          completedTasks++;
+          if (completedTasks === tasks) {
+            updateCheckDone();
+          }
+        };
+
+        // add number of tasks based on checks that need to be made
+        if (craig.store.json.vsi.length > 0) tasks++;
+        if (craig.store.json.clusters.length > 0) tasks++;
+
+        if (craig.store.json.clusters.length > 0) {
+          // get cluster versions
+          fetch("/api/cluster/versions")
+            .then((res) => res.json())
+            .then((data) => {
+              // replace ` (Default)`
+              let versions = data.map((item) => {
+                return item.replace(/\s.+/g, "");
+              });
+              craig.store.json.clusters.forEach((cluster) => {
+                // if cluster has a kube version and the version is not returned by the API call
+                // add to list
+                if (
+                  !contains(versions, cluster.kube_version) &&
+                  cluster.kube_version
+                ) {
+                  invalidItems.clusters.push(cluster.name);
+                }
+              });
+              completeTasks();
+            })
+            .catch((err) => {
+              console.error("Error fetching cluster versions\n\n", err);
+              completeTasks();
             });
-          })
-          .then(() => {
-            completeTasks();
-          })
-          .catch((err) => {
-            console.error("Error fetching VSI images\n\n", err);
-            completeTasks();
-          });
-      }
-    } else updateCheckDone();
+        }
+
+        if (craig.store.json.vsi.length > 0) {
+          // get vsi image names
+          fetch(craig.vsi.image_name.apiEndpoint({}, { craig: craig }))
+            .then((res) => res.json())
+            .then((data) => {
+              craig.store.json.vsi.forEach((vsi) => {
+                // if vsi has an image name and this image is not returned by the API call
+                // add to list
+                if (!contains(data, vsi.image_name) && vsi.image_name) {
+                  invalidItems.vsi.push(vsi.name);
+                }
+              });
+            })
+            .then(() => {
+              completeTasks();
+            })
+            .catch((err) => {
+              console.error("Error fetching VSI images\n\n", err);
+              completeTasks();
+            });
+        }
+      } else updateCheckDone();
+    });
   }
 
   /**
@@ -482,7 +484,7 @@ class Craig extends React.Component {
           notifications={this.state.notifications}
           notify={this.notify}
           onTabClick={this.onTabClick}
-          current_project={craig.store.project_name}
+          current_project={this.state.current_project}
           invalidForms={invalidForms(craig)}
           craig={craig}
           onProjectSave={this.onProjectSave}
