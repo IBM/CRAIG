@@ -159,7 +159,7 @@
   ],
   "power": [
     {
-      "name": "workspace",
+      "name": "dal10",
       "resource_group": "power-rg",
       "zone": "dal10",
       "ssh_keys": [
@@ -168,8 +168,9 @@
           "public_key": "",
           "use_data": false,
           "resource_group": "power-rg",
-          "workspace": "workspace",
-          "zone": "dal10"
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false
         }
       ],
       "network": [
@@ -179,33 +180,69 @@
           "pi_cidr": "192.168.0.0/24",
           "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
-          "workspace": "workspace",
-          "zone": "dal10"
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "use_data": false
         }
       ],
       "cloud_connections": [],
       "images": [
         {
+          "creationDate": "2023-03-07T11:21:01.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/142d55ca-d24c-4114-a2f9-4174e96ed96e",
+          "imageID": "142d55ca-d24c-4114-a2f9-4174e96ed96e",
+          "lastUpdateDate": "2023-03-14T16:27:52.000Z",
           "name": "7300-01-01",
-          "workspace": "workspace",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "aix"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "dal10",
           "zone": "dal10",
-          "pi_image_id": "142d55ca-d24c-4114-a2f9-4174e96ed96e"
+          "workspace_use_data": false
         },
         {
+          "creationDate": "2023-04-03T12:09:04.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/d22a080f-d1b3-4e80-898e-5e8d46cb86ca",
+          "imageID": "d22a080f-d1b3-4e80-898e-5e8d46cb86ca",
+          "lastUpdateDate": "2023-04-03T19:24:22.000Z",
           "name": "IBMi-75-01-2924-2",
-          "workspace": "workspace",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "operatingSystem": "ibmi"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "dal10",
           "zone": "dal10",
-          "pi_image_id": "d22a080f-d1b3-4e80-898e-5e8d46cb86ca"
+          "workspace_use_data": false
         }
       ],
       "attachments": [],
-      "imageNames": ["7300-01-01", "IBMi-75-01-2924-2"]
+      "imageNames": ["7300-01-01", "IBMi-75-01-2924-2"],
+      "use_data": false
     }
   ],
   "power_instances": [
     {
       "name": "aixtarget",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "image": "7300-01-01",
       "network": [
         {
@@ -216,7 +253,7 @@
       "zone": "dal10",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
-      "pi_storage_type": "tier3",
+      "pi_storage_type": "tier1",
       "storage_option": "Storage Type",
       "pi_storage_pool_affinity": false,
       "sap": false,
@@ -237,7 +274,7 @@
       "sap": false,
       "sap_profile": null,
       "name": "ibmitarget",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "network": [
         {
           "name": "pvm",
@@ -267,10 +304,10 @@
   "power_volumes": [
     {
       "name": "aixtgtvols1",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -281,14 +318,17 @@
       "zone": "dal10",
       "pi_volume_size": "100",
       "pi_affinity_instance": "aixtarget",
-      "index": 0
+      "index": 0,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "aixtgtvols2",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -299,14 +339,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "aixtarget",
-      "index": 1
+      "index": 1,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "aixtgtvols3",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -317,14 +360,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "aixtarget",
-      "index": 2
+      "index": 2,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "aixtgtvols4",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -335,14 +381,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "aixtarget",
-      "index": 3
+      "index": 3,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "aixtgtvols5",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -353,14 +402,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "aixtarget",
-      "index": 4
+      "index": 4,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "ibmitgtvols1",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -371,14 +423,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "ibmitarget",
-      "index": 5
+      "index": 5,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "ibmitgtvols2",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -389,14 +444,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "ibmitarget",
-      "index": 6
+      "index": 6,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "ibmitgtvols3",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -407,14 +465,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "ibmitarget",
-      "index": 7
+      "index": 7,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "ibmitgtvols4",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -425,14 +486,17 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "ibmitarget",
-      "index": 8
+      "index": 8,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     },
     {
       "name": "ibmitgtvols5",
-      "workspace": "workspace",
+      "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier1",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -443,7 +507,10 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
       "pi_affinity_instance": "ibmitarget",
-      "index": 9
+      "index": 9,
+      "count": null,
+      "pi_volume_pool": null,
+      "pi_affinity_volume": null
     }
   ],
   "resource_groups": [
@@ -472,6 +539,8 @@
       "transit_gateway_ingress": false,
       "vpc_zone_ingress": true,
       "direct_link_ingress": false,
+      "route_direct_link_ingress": false,
+      "route_vpc_zone_ingress": false,
       "accept_routes_from_resource_type": []
     }
   ],
@@ -763,10 +832,6 @@
         {
           "tgw": "transit-gateway",
           "vpc": "transit"
-        },
-        {
-          "tgw": "transit-gateway",
-          "power": "workspace"
         }
       ],
       "use_data": false,
@@ -781,7 +846,8 @@
       "vpc": "transit",
       "resource_group": "transit-rg",
       "security_groups": ["transit-vpe"],
-      "subnets": ["vpe-zone-1"]
+      "subnets": ["vpe-zone-1"],
+      "instance": null
     }
   ],
   "vpcs": [
