@@ -16,6 +16,7 @@ describe("power vs volumes", () => {
         pi_volume_shareable: true,
         pi_replication_enabled: true,
         pi_volume_type: "tier1",
+        storage_option: "None",
       });
       let expectedData = `
 resource "ibm_pi_volume" "example_volume_test_volume" {

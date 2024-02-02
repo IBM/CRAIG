@@ -5,7 +5,7 @@ const { kebabCase } = require("lazy-z");
 /**
  * create resource instance for scc
  * @param {*} scc
- * @param {string} scc.resource_group
+ * @param {string} scc.resource_group_id
  * @param {string} scc.region
  * @param {*} config
  * @returns {object} terraform object
@@ -18,7 +18,7 @@ function ibmSccInstance(scc_v2, config) {
       service: "compliance",
       plan: "security-compliance-center-standard-plan",
       location: scc_v2.region,
-      resource_group: rgIdRef(scc_v2.resource_group, config),
+      resource_group_id: rgIdRef(scc_v2.resource_group, config),
     },
   };
 }
