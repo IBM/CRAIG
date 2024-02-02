@@ -1,7 +1,14 @@
 /* this file is the main application page */
 
 import React from "react";
-import { kebabCase, titleCase, contains } from "lazy-z";
+import {
+  kebabCase,
+  titleCase,
+  contains,
+  distinct,
+  splatContains,
+  getObjectFromArray,
+} from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
   About,
@@ -269,8 +276,9 @@ class Craig extends React.Component {
    * @param {*} stateData
    * @param {*} componentProps
    * @param {boolean} setCurrentProject
+   * @param {Function} callback
    */
-  saveProject(stateData, componentProps, setCurrentProject) {
+  saveProject(stateData, componentProps, setCurrentProject, callback) {
     let projects = this.getProject(stateData, componentProps);
     this.saveAndSendNotification(
       `Successfully saved project ${stateData.name}`,
@@ -285,7 +293,8 @@ class Craig extends React.Component {
         craig,
         stateData,
         componentProps,
-        setCurrentProject
+        setCurrentProject,
+        callback
       )
     );
   }
@@ -295,8 +304,9 @@ class Craig extends React.Component {
    * @param {*} stateData
    * @param {*} componentProps
    * @param {boolean} setCurrentProject if true, set project as current project
+   * @param {Function} callback
    */
-  onProjectSave(stateData, componentProps, setCurrentProject) {
+  onProjectSave(stateData, componentProps, setCurrentProject, callback) {
     let projects = this.getProject(stateData, componentProps);
     let projectKeyName = kebabCase(stateData.name);
 
@@ -310,7 +320,12 @@ class Craig extends React.Component {
         return this.projectFetch(projects, projectKeyName, resolve, reject);
     })
       .then(() => {
-        this.saveProject(stateData, componentProps, setCurrentProject);
+        this.saveProject(
+          stateData,
+          componentProps,
+          setCurrentProject,
+          callback
+        );
       })
       .catch((err) => {
         this.setState(
@@ -353,6 +368,7 @@ class Craig extends React.Component {
     let invalidItems = {
       vsi: [],
       clusters: [],
+      power_images: [],
     };
     // update store project name and json
     craig.store.project_name = projectKeyName;
@@ -372,12 +388,16 @@ class Craig extends React.Component {
 
       // should check components for update
       let componentsShouldUpdate =
-        craig.store.json.vsi.length > 0 || craig.store.json.clusters.length > 0;
+        craig.store.json.vsi.length > 0 ||
+        craig.store.json.clusters.length > 0 ||
+        craig.store.json.power.length > 0;
 
       // if components need to be updated
       if (componentsShouldUpdate) {
         let completedTasks = 0;
         let tasks = 0;
+        let powerZones = [];
+        let dataPowerWorkspaces = [];
 
         // callback function to run when fetch complete
         let completeTasks = () => {
@@ -390,6 +410,84 @@ class Craig extends React.Component {
         // add number of tasks based on checks that need to be made
         if (craig.store.json.vsi.length > 0) tasks++;
         if (craig.store.json.clusters.length > 0) tasks++;
+        if (craig.store.json.power.length > 0) {
+          craig.store.json.power.forEach((workspace) => {
+            if (!workspace.use_data) {
+              powerZones = distinct(powerZones.concat(workspace.zone));
+            } else {
+              dataPowerWorkspaces.push({
+                zone: workspace.zone,
+                name: workspace.name,
+              });
+            }
+          });
+          tasks += powerZones.length;
+          tasks += dataPowerWorkspaces.length;
+        }
+
+        if (craig.store.json.power.length > 0) {
+          dataPowerWorkspaces.forEach((workspace) => {
+            fetch(`/api/power/${workspace.zone}/images?name=${workspace.name}`)
+              .then((res) => res.json())
+              .then((foundImages) => {
+                let powerWorkspace = getObjectFromArray(
+                  craig.store.json.power,
+                  "name",
+                  workspace.name
+                );
+                powerWorkspace.images.forEach((image) => {
+                  if (
+                    !splatContains(
+                      foundImages,
+                      "imageID",
+                      image.imageID || image.pi_image_id
+                    )
+                  ) {
+                    invalidItems.power_images.push({
+                      workspace: workspace.name,
+                      image: image.name,
+                      zone: workspace.zone,
+                    });
+                  }
+                });
+                completeTasks();
+              })
+              .catch((err) => {
+                console.error("Error fetching Power VS images\n\n", err);
+                completeTasks();
+              });
+          });
+
+          powerZones.forEach((zone) => {
+            fetch(`/api/power/${zone}/images`)
+              .then((res) => res.json())
+              .then((foundImages) => {
+                craig.store.json.power.forEach((workspace) => {
+                  workspace.images.forEach((image) => {
+                    if (
+                      !splatContains(
+                        foundImages,
+                        "imageID",
+                        image.imageID || image.pi_image_id
+                      ) &&
+                      !workspace.use_data
+                    ) {
+                      invalidItems.power_images.push({
+                        workspace: workspace.name,
+                        image: image.name,
+                        zone: workspace.zone,
+                      });
+                    }
+                  });
+                });
+                completeTasks();
+              })
+              .catch((err) => {
+                console.error("Error fetching Power VS images\n\n", err);
+                completeTasks();
+              });
+          });
+        }
 
         if (craig.store.json.clusters.length > 0) {
           // get cluster versions
@@ -407,7 +505,10 @@ class Craig extends React.Component {
                   !contains(versions, cluster.kube_version) &&
                   cluster.kube_version
                 ) {
-                  invalidItems.clusters.push(cluster.name);
+                  invalidItems.clusters.push({
+                    cluster: cluster.name,
+                    kube_version: cluster.kube_version,
+                  });
                 }
               });
               completeTasks();
@@ -427,7 +528,10 @@ class Craig extends React.Component {
                 // if vsi has an image name and this image is not returned by the API call
                 // add to list
                 if (!contains(data, vsi.image_name) && vsi.image_name) {
-                  invalidItems.vsi.push(vsi.name);
+                  invalidItems.vsi.push({
+                    vsi: vsi.name,
+                    image: vsi.image_name,
+                  });
                 }
               });
             })

@@ -85,7 +85,7 @@ export const SubnetRow = (props) => {
 };
 
 SubnetRow.propTypes = {
-  tier: PropTypes.shape({}).isRequired,
+  tier: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]).isRequired,
   vpc: PropTypes.shape({}).isRequired,
   acl: PropTypes.shape({}),
   onClick: PropTypes.func,

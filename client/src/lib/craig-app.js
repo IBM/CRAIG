@@ -141,13 +141,15 @@ function saveProjectCallback(
   craig,
   stateData,
   componentProps,
-  setCurrentProject
+  setCurrentProject,
+  afterValidation
 ) {
   return function () {
     if (setCurrentProject) {
       component.onProjectSelect(
         stateData.project_name,
-        `Successfully saved project ${stateData.name}`
+        `Successfully saved project ${stateData.name}`,
+        afterValidation
       );
     } else {
       if (

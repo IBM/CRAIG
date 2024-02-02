@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@carbon/react";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
-import { azsort, contains, eachKey } from "lazy-z";
+import { azsort, contains, eachKey, splatContains } from "lazy-z";
 import { Add, MagicWandFilled, Upload } from "@carbon/icons-react";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
@@ -160,19 +160,58 @@ class Projects extends React.Component {
   removeInvalidReferences() {
     // for each item that is checked
     eachKey(this.state.invalidItems, (item) => {
-      // for each item in the json store field
-      this.props.craig.store.json[item].forEach((resource) => {
-        // if the resource name is contained in the list of invalid items
-        // set the reference to null
-        if (contains(this.state.invalidItems[item], resource.name)) {
-          if (item === "vsi" && resource.image_name) {
-            resource.image_name = null;
-            resource.image = null;
-          } else if (item === "clusters" && resource.kube_version) {
-            resource.kube_version = null;
+      if (item === "power_images") {
+        this.props.craig.store.json.power.forEach((workspace) => {
+          if (
+            // if the workspace is in the list of invalid items
+            splatContains(
+              this.state.invalidItems.power_images,
+              "workspace",
+              workspace.name
+            )
+          ) {
+            // get a list of image objects for this workspace
+            let workspaceImages = this.state.invalidItems.power_images.filter(
+              (image) => {
+                if (image.workspace === workspace.name) {
+                  return image;
+                }
+              }
+            );
+
+            // set image names to filter out images
+            workspace.imageNames = workspace.imageNames.filter((name) => {
+              if (!splatContains(workspaceImages, "image", name)) {
+                return name;
+              }
+            });
+
+            // remove references in instances to unfound images
+            this.props.craig.store.json.power_instances.forEach((instance) => {
+              if (
+                instance.workspace === workspace.name &&
+                !contains(workspace.imageNames, instance.image)
+              ) {
+                instance.image = null;
+              }
+            });
           }
-        }
-      });
+        });
+      } else {
+        // for each item in the json store field
+        this.props.craig.store.json[item].forEach((resource) => {
+          // if the resource name is contained in the list of invalid items
+          // set the reference to null
+          if (contains(this.state.invalidItems[item], resource.name)) {
+            if (item === "vsi" && resource.image_name) {
+              resource.image_name = null;
+              resource.image = null;
+            } else if (item === "clusters" && resource.kube_version) {
+              resource.kube_version = null;
+            }
+          }
+        });
+      }
     });
     // reset invalid items and hide validation modal
     this.setState({ invalidItems: {}, showValidationModal: false }, () => {
@@ -200,33 +239,6 @@ class Projects extends React.Component {
         this.setState({ showValidationModal: false });
       }, 1000);
     else this.setState({ invalidItems });
-  }
-
-  /**
-   * remove invalid references
-   */
-  removeInvalidReferences() {
-    // for each item that is checked
-    eachKey(this.state.invalidItems, (item) => {
-      // for each item in the json store field
-      this.props.craig.store.json[item].forEach((resource) => {
-        // if the resource name is contained in the list of invalid items
-        // set the reference to null
-        if (contains(this.state.invalidItems[item], resource.name)) {
-          if (item === "vsi" && resource.image_name) {
-            resource.image_name = null;
-            resource.image = null;
-          } else if (item === "clusters" && resource.kube_version) {
-            resource.kube_version = null;
-          }
-        }
-      });
-    });
-    // reset invalid items and hide validation modal
-    this.setState({ invalidItems: {}, showValidationModal: false }, () => {
-      // force update state store to ensure changes are saved
-      this.props.craig.update();
-    });
   }
 
   /**
@@ -364,7 +376,6 @@ class Projects extends React.Component {
 
   render() {
     let projectKeys = Object.keys(this.props.projects).sort(azsort);
-    // console.log(JSON.stringify(this.state, null, 2));
     return (
       <div>
         {this.state.showValidationModal && (
@@ -517,7 +528,22 @@ class Projects extends React.Component {
             import
             open={this.state.importJSONModalOpen}
             onClose={this.toggleImportJSONModal}
-            onProjectSave={this.props.onProjectSave}
+            onProjectSave={(stateData, componentProps, setCurrentProject) => {
+              // validate image names / cluster versions on import
+              this.setState(
+                {
+                  showValidationModal: true,
+                },
+                () => {
+                  this.props.onProjectSave(
+                    stateData,
+                    componentProps,
+                    setCurrentProject,
+                    this.afterValidation
+                  );
+                }
+              );
+            }}
           />
         )}
       </div>

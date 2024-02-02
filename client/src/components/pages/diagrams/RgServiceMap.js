@@ -64,7 +64,7 @@ export const RgServiceMap = (props) => {
     return serviceMap.length === 0 && props.small ? (
       ""
     ) : serviceMap.length === 0 ? (
-      <div style={{ marginBottom: "0.5rem" }} />
+      <div style={{ marginBottom: "0.5rem" }} key={"rg-" + rgIndex} />
     ) : (
       <div
         className={

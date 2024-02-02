@@ -1,8 +1,17 @@
 import React from "react";
-import { Loading, Modal } from "@carbon/react";
+import {
+  Loading,
+  Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@carbon/react";
 import { CheckmarkOutline, CloseOutline } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { eachKey, keys, titleCase } from "lazy-z";
+import { distinct, eachKey, keys, splat, titleCase } from "lazy-z";
 
 export const LoadingModal = (props) => {
   return (
@@ -154,14 +163,67 @@ export const ValidationModal = (props) => {
             {keys(props.invalidItems).map((item) => {
               return props.invalidItems[item].length === 0 ? (
                 ""
+              ) : item === "power_images" ? (
+                <div key={item}>
+                  <h3 className="marginBottomSmall">Power Workspace Images</h3>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableHeader>Workspace</TableHeader>
+                        <TableHeader>Zone</TableHeader>
+                        <TableHeader>Image Name</TableHeader>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {props.invalidItems.power_images
+                        .sort((a, b) => {
+                          if (a.name < b.name) {
+                            return -1;
+                          } else if (a.name > b.name) {
+                            return 1;
+                          }
+                        })
+                        .map((image) => (
+                          <TableRow key={image.workspace + image.image}>
+                            <TableCell>{image.workspace}</TableCell>
+                            <TableCell>{image.zone}</TableCell>
+                            <TableCell>{image.image}</TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </div>
               ) : (
                 <div key={item}>
-                  <h3>{titleCase(item).replace(/Vsi/, "VSI")}</h3>
-                  <ul className="bullets indent">
-                    {props.invalidItems[item].map((resource) => (
-                      <li key={item + "-" + resource}>{resource}</li>
-                    ))}
-                  </ul>
+                  <h3 className="marginBottomSmall">
+                    {titleCase(item).replace(/Vsi/, "VSI")}
+                  </h3>
+                  <Table className="marginBottomSmall">
+                    <TableHead>
+                      <TableRow>
+                        <TableHeader>
+                          {item === "vsi" ? "VSI" : "Cluster"} Deployment
+                        </TableHeader>
+                        <TableHeader>
+                          {item === "vsi" ? "Image" : "Kubernetes Version"}
+                        </TableHeader>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {props.invalidItems[item].map((resource) => (
+                        <TableRow key={JSON.stringify(resource)}>
+                          <TableCell>
+                            {item === "vsi" ? resource.vsi : resource.cluster}
+                          </TableCell>
+                          <TableCell>
+                            {item === "vsi"
+                              ? resource.image.replace(/\[.+/g, "")
+                              : resource.kube_version}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               );
             })}
