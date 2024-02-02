@@ -62,7 +62,9 @@ function ibmIsInstance(vsi, config) {
   };
   let vsiData = {
     name: vsiName,
-    image: contains(vsi.image, "local")
+    image: !vsi.image
+      ? "ERROR: Unfound Ref"
+      : contains(vsi.image, "local")
       ? vsi.image
       : tfRef("ibm_is_image", vsi.image, "id", true),
     profile: vsi.profile,
@@ -228,9 +230,14 @@ function formatVsi(vsi, config) {
  * @returns {string} terraform formatted code
  */
 function formatVsiImage(imageName) {
-  return jsonToTfPrint("data", "ibm_is_image", imageName, {
-    name: imageName,
-  });
+  return jsonToTfPrint(
+    "data",
+    "ibm_is_image",
+    imageName || "ERROR_UNFOUND_REF",
+    {
+      name: imageName || "ERROR: Unfound Ref",
+    }
+  );
 }
 
 /**

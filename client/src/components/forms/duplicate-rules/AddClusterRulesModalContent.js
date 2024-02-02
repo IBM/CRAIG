@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Docs } from "icse-react-assets";
+import { Docs } from "../utils";
 import React from "react";
 
 const AddClusterRulesModalContent = (props) => {

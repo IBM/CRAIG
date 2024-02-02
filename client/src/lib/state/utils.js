@@ -19,7 +19,7 @@ const {
   isFunction,
   isArray,
   capitalize,
-  isString,
+  containsKeys,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
 const {
@@ -27,7 +27,34 @@ const {
   invalidSshPublicKey,
 } = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
-const { storageChangeDisabledCallback } = require("../forms/power-affinity");
+
+/**
+ * check to see if storage for a power vs instance or volume should be disabled
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if disabled
+ */
+function storageChangeDisabledCallback(stateData, componentProps) {
+  if (componentProps.isModal) return false;
+  let isInUse = false;
+  ["power_instances", "power_volumes"].forEach((field) => {
+    (componentProps[field]
+      ? componentProps[field]
+      : // store is for refactored items
+        componentProps.craig.store.json[field]
+    ).forEach((item) => {
+      // get test items, for instance tests check for network field
+      let testItems = containsKeys(stateData, "network")
+        ? [item.pi_anti_affinity_instance, item.pi_affinity_instance]
+        : [item.pi_affinity_volume, item.pi_anti_affinity_volume];
+      if (contains(testItems, componentProps.data.name)) {
+        isInUse = true;
+      }
+    });
+  });
+  return isInUse;
+}
+
 /**
  * set kms from encryption key on store update
  * @param {*} instance
@@ -940,11 +967,11 @@ function powerVsStorageOptions(isVolume) {
     size: "small",
     default: "",
     type: "select",
-    groups: ["Storage Type", "Storage Pool", "Affinity", "Anti-Affinity"],
+    groups: ["None", "Storage Pool", "Affinity", "Anti-Affinity"],
     disabled: storageChangeDisabledCallback,
     invalid: function (stateData) {
       return (
-        isNullOrEmptyString("storage_option") ||
+        isNullOrEmptyString(stateData.storage_option, true) ||
         (stateData.storage_option === "Storage Pool" &&
           isNullOrEmptyString(stateData.workspace))
       );
@@ -955,9 +982,6 @@ function powerVsStorageOptions(isVolume) {
         : "Select a storage option";
     },
     onStateChange: function (stateData) {
-      if (stateData.storage_option !== "Storage Type") {
-        stateData[isVolume ? "pi_volume_type" : "pi_storage_type"] = null;
-      }
       if (stateData.storage_option !== "Storage Pool") {
         stateData[isVolume ? "pi_volume_pool" : "pi_storage_pool"] = null;
       }
@@ -992,16 +1016,9 @@ function powerVsStorageType(isVolume) {
     default: null,
     type: "select",
     labelText: "Storage Type",
-    hideWhen: function (stateData, componentProps) {
-      return stateData.storage_option !== "Storage Type";
-    },
     groups: ["Tier-1", "Tier-3"],
-    disabled: storageChangeDisabledCallback,
     invalid: function (stateData) {
-      return (
-        stateData.storage_option === "Storage Type" &&
-        isNullOrEmptyString(stateData[storageField])
-      );
+      return isNullOrEmptyString(stateData[storageField]);
     },
     invalidText: selectInvalidText("Storage Type"),
     onRender: function (stateData) {
@@ -1092,14 +1109,7 @@ function powerVsInstanceInvalidText(text) {
 function powerVsAffinityVolumesFilter(stateData, componentProps) {
   return splat(
     componentProps.craig.store.json.power_volumes.filter((volume) => {
-      if (
-        isNullOrEmptyString(volume.pi_affinity_policy, true) &&
-        isNullOrEmptyString(volume.pi_anti_affinity_policy, true) &&
-        volume.workspace === stateData.workspace &&
-        !stateData.pi_sys_type &&
-        componentProps.data.name !== volume.name
-      )
-        return volume;
+      if (volume.workspace === stateData.workspace) return volume;
     }),
     "name"
   );
@@ -1113,15 +1123,7 @@ function powerVsAffinityVolumesFilter(stateData, componentProps) {
 function powerVsAffinityInstancesFilter(stateData, componentProps) {
   return splat(
     componentProps.craig.store.json.power_instances.filter((instance) => {
-      if (
-        isNullOrEmptyString(instance.pi_affinity_policy, true) &&
-        isNullOrEmptyString(instance.pi_anti_affinity_policy, true) &&
-        instance.workspace === stateData.workspace &&
-        (!componentProps?.data ||
-          stateData.pi_volume_size ||
-          instance.name !== componentProps?.data?.name)
-      )
-        return instance;
+      if (instance.workspace === stateData.workspace) return instance;
     }),
     "name"
   );
@@ -1345,4 +1347,6 @@ module.exports = {
   cbrValuePlaceholder,
   cbrTitleCase,
   cbrSaveType,
+  storageChangeDisabledCallback,
+  powerAffinityInvalid,
 };

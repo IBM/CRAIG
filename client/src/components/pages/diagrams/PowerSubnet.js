@@ -6,7 +6,10 @@ import HoverClassNameWrapper from "./HoverClassNameWrapper";
 export const PowerSubnet = (props) => {
   return (
     <HoverClassNameWrapper
-      className="powerSubnetBox"
+      className={
+        "powerSubnetBox" +
+        (props.small && props.subnetIndex === 0 ? " marginTopNone" : "")
+      }
       hoverClassName="diagramBoxSelected"
       static={props.static}
     >
@@ -17,16 +20,27 @@ export const PowerSubnet = (props) => {
         }
         onClick={props.onClick ? props.onClick : undefined}
       >
-        <IbmCloudSubnets className="marginRightQuarterRem" />
-        <span className="powerSubnetName">{props.subnet.name}</span>
-        {props.subnet.use_data ? (
-          <span className="powerSubnetName" style={{ fontWeight: "normal" }}>
-            [Imported]
-          </span>
-        ) : (
+        {props.small ? (
           ""
+        ) : (
+          <>
+            <IbmCloudSubnets className="marginRightQuarterRem" />
+            <span className="powerSubnetName">{props.subnet.name}</span>
+            {props.subnet.use_data ? (
+              <span
+                className="powerSubnetName"
+                style={{ fontWeight: "normal" }}
+              >
+                [Imported]
+              </span>
+            ) : (
+              ""
+            )}
+          </>
         )}
-        <div>{props.subnet.pi_cidr}</div>
+        <div style={props.small ? { fontSize: "10px" } : {}}>
+          {props.subnet.pi_cidr}
+        </div>
       </div>
       {props.children}
     </HoverClassNameWrapper>

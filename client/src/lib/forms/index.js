@@ -1,18 +1,11 @@
 const {
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidNameText,
-  cosResourceHelperTextCallback,
-  aclHelperTextCallback,
   invalidSubnetTierText,
-  iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback,
   invalidCidrText,
   invalidProjectNameText,
   invalidCrnText,
-  powerVsWorkspaceHelperText,
-  vpnServersHelperText,
 } = require("./text-callbacks");
 const {
   invalidName,
@@ -24,7 +17,6 @@ const {
   invalidSecurityGroupRuleName,
   invalidNewResourceName,
   invalidIpCommaList,
-  invalidIdentityProviderURI,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
@@ -51,34 +43,27 @@ const {
   copySgModalContent,
 } = require("./format-json");
 const { leftNavItemClassName } = require("./class-names");
-const { notificationText, getCosFromBucket } = require("./utils");
-const { storageChangeDisabledCallback } = require("./power-affinity");
+const { notificationText } = require("./utils");
 const wizard = require("./wizard");
 
 module.exports = {
   wizard,
-  storageChangeDisabledCallback,
   leftNavItemClassName,
   notificationText,
   hasDuplicateName,
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidName,
   propsMatchState,
   disableSave,
-  clusterHelperTestCallback,
   invalidNameText,
-  cosResourceHelperTextCallback,
   invalidSshPublicKey,
   validSshKey,
   invalidTagList,
-  aclHelperTextCallback,
   invalidSubnetTierName,
   invalidSubnetTierText,
   formatConfig,
   getSubnetTierStateData,
   getTierSubnets,
-  iamAccountSettingInvalidText,
   invalidSecurityGroupRuleName,
   invalidSecurityGroupRuleText,
   invalidNewResourceName,
@@ -87,7 +72,6 @@ module.exports = {
   copyRuleCodeMirrorData,
   copySgModalContent,
   forceShowForm,
-  invalidIdentityProviderURI,
   isValidUrl,
   disableSshKeyDelete,
   cidrBlocksOverlap,
@@ -101,9 +85,6 @@ module.exports = {
   invalidCbrZone,
   invalidCidrBlock,
   invalidProjectNameText,
-  getCosFromBucket,
   invalidCrns,
   invalidCrnText,
-  powerVsWorkspaceHelperText,
-  vpnServersHelperText,
 };

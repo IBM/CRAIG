@@ -1,14 +1,9 @@
 const { assert } = require("chai");
 const {
-  resourceGroupHelperTextCallback,
   genericNameCallback,
   invalidNameText,
-  cosResourceHelperTextCallback,
-  aclHelperTextCallback,
   invalidSubnetTierText,
-  iamAccountSettingInvalidText,
   invalidSecurityGroupRuleText,
-  clusterHelperTestCallback,
   invalidCidrText,
   invalidProjectNameText,
 } = require("../../client/src/lib");
@@ -17,57 +12,9 @@ const {
   invalidCbrZoneText,
   cbrValueInvalidText,
 } = require("../../client/src/lib/state/cbr-zones");
-const {
-  invalidDescriptionText,
-  invalidCrnText,
-  labelsInvalidText,
-  powerVsWorkspaceHelperText,
-  vpnServersHelperText,
-} = require("../../client/src/lib/forms/text-callbacks");
+const { invalidCrnText } = require("../../client/src/lib/forms/text-callbacks");
 
 describe("text callbacks", () => {
-  describe("resourceGroupHelperTextCallback", () => {
-    it("should return the correct helper text when using prefix", () => {
-      let actualData = resourceGroupHelperTextCallback(
-        {
-          name: "test",
-          use_prefix: true,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                _options: {
-                  prefix: "iac",
-                },
-              },
-            },
-          },
-        }
-      );
-      assert.deepEqual(actualData, "iac-test", "it should return correct data");
-    });
-    it("should return the correct helper text when not using prefix", () => {
-      let actualData = resourceGroupHelperTextCallback(
-        {
-          name: "test",
-          use_prefix: false,
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                _options: {
-                  prefix: "iac",
-                },
-              },
-            },
-          },
-        }
-      );
-      assert.deepEqual(actualData, "test", "it should return correct data");
-    });
-  });
   describe("genericNameCallback", () => {
     it("should return correct callback text", () => {
       assert.deepEqual(
@@ -495,101 +442,7 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("cosResourceHelperTextCallback", () => {
-    it("should return text if using data", () => {
-      assert.deepEqual(
-        cosResourceHelperTextCallback({ use_data: true, name: "test" }),
-        "test",
-        "it should display data"
-      );
-    });
-    it("should return text if not using data and with random suffix", () => {
-      assert.deepEqual(
-        cosResourceHelperTextCallback(
-          { use_data: false, use_random_suffix: true, name: "test" },
-          {
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "test",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "test-test-<random-suffix>",
-        "it should display data"
-      );
-    });
-    it("should return text if not using data and without random suffix", () => {
-      assert.deepEqual(
-        cosResourceHelperTextCallback(
-          { use_data: false, use_random_suffix: false, name: "test" },
-          {
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "test",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "test-test",
-        "it should display data"
-      );
-    });
-  });
-  describe("aclHelperTextCallback", () => {
-    it("should return correct text", () => {
-      assert.deepEqual(
-        aclHelperTextCallback(
-          { name: "test" },
-          {
-            vpc_name: "vpc",
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "iac",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "iac-vpc-test-acl",
-        "it should return correct text"
-      );
-    });
-  });
-  describe("clusterHelperTestCallback", () => {
-    it("should return correct text", () => {
-      assert.deepEqual(
-        clusterHelperTestCallback(
-          { name: "test" },
-          {
-            vpc_name: "vpc",
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "iac",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "iac-test-cluster",
-        "it should return correct text"
-      );
-    });
-  });
+
   describe("invalidSubnetTierText", () => {
     it("should return true when name invalid", () => {
       let actualData = invalidSubnetTierText(
@@ -640,28 +493,6 @@ describe("text callbacks", () => {
         actualData,
         expectedData,
         "it should return correct data"
-      );
-    });
-  });
-  describe("iamAccountSettingInvalidText", () => {
-    it("should return correct text when max_sessions_per_identity is invalid", () => {
-      let actualData = iamAccountSettingInvalidText(
-        "max_sessions_per_identity"
-      );
-      let expectedData = "Value must be in range [1-10]";
-      assert.deepEqual(
-        actualData,
-        expectedData,
-        "it should return correct text"
-      );
-    });
-    it("should return correct text when any other field is invalid", () => {
-      let actualData = iamAccountSettingInvalidText("frog");
-      let expectedData = "Invalid";
-      assert.deepEqual(
-        actualData,
-        expectedData,
-        "it should return correct text"
       );
     });
   });
@@ -828,18 +659,6 @@ describe("text callbacks", () => {
       );
     });
   });
-  describe("invalidDescriptionText", () => {
-    assert.deepEqual(
-      invalidDescriptionText({}, {}),
-      "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
-    );
-  });
-  describe("labelsInvalidText", () => {
-    assert.deepEqual(
-      labelsInvalidText({}, {}),
-      `Invalid labels. All labels must match regular expression: /^[A-z][a-zA-Z0-9-\._,\s]*$/i`
-    );
-  });
   describe("invalidCrnText", () => {
     it("should return empty string when not invalid", () => {
       assert.deepEqual(
@@ -857,50 +676,6 @@ describe("text callbacks", () => {
         }),
         "Enter a valid comma separated list of CRNs",
         "it should return correct message"
-      );
-    });
-  });
-  describe("powerVsWorkspaceHelperText", () => {
-    it("should return correct helper text", () => {
-      assert.deepEqual(
-        powerVsWorkspaceHelperText(
-          { name: "frog" },
-          {
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "toad",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "toad-power-workspace-frog",
-        "it should return correct helper text"
-      );
-    });
-  });
-  describe("vpnServersWorkspaceHelperText", () => {
-    it("should return correct helper text", () => {
-      assert.deepEqual(
-        vpnServersHelperText(
-          { name: "frog" },
-          {
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "toad",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "toad-vpn-server-frog",
-        "it should return correct helper text"
       );
     });
   });

@@ -438,6 +438,66 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
         "it should return correct data"
       );
     });
+    it("should correctly format vsi with reserved ip and no image", () => {
+      let actualData = formatVsi(
+        {
+          kms: "slz-kms",
+          encryption_key: "slz-vsi-volume-key",
+          image: null,
+          profile: "cx2-4x8",
+          name: "management-server",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          index: 1,
+          resource_group: "slz-management-rg",
+          network_interfaces: [],
+          reserved_ip: "1.2.3.4",
+        },
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
+  subnet  = module.management_vpc.vsi_zone_1_id
+  name    = "\${var.prefix}-management-management-server-vsi-zone-1-1-reserved-ip"
+  address = "1.2.3.4"
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
+  image          = "ERROR: Unfound Ref"
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+    primary_ip {
+      reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_management_server_vsi_1_1_reserved_ip.reserved_ip
+    }
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("formatVsiImage", () => {
     it("it should create a vsi image data block", () => {
@@ -445,6 +505,19 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       let expectedData = `
 data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
   name = "ibm-ubuntu-22-04-1-minimal-amd64-1"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("it should create a vsi image data block when null", () => {
+      let actualData = formatVsiImage(null);
+      let expectedData = `
+data "ibm_is_image" "error_unfound_ref" {
+  name = "ERROR: Unfound Ref"
 }
 `;
       assert.deepEqual(

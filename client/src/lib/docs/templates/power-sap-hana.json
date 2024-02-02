@@ -1,6 +1,6 @@
 {
   "_options": {
-    "prefix": "iac",
+    "prefix": "sap",
     "region": "us-south",
     "tags": ["hello", "world"],
     "zones": 3,
@@ -12,7 +12,8 @@
     "enable_power_vs": true,
     "power_vs_zones": ["us-south"],
     "craig_version": "1.9.0",
-    "power_vs_high_availability": false
+    "power_vs_high_availability": false,
+    "template": "Power VS SAP Hana"
   },
   "access_groups": [],
   "appid": [],
@@ -97,6 +98,8 @@
   ],
   "load_balancers": [],
   "logdna": {
+    "name": "logdna",
+    "archive": false,
     "enabled": false,
     "plan": "lite",
     "endpoints": "private",
@@ -149,6 +152,14 @@
           "name": "workload-bucket",
           "storage_class": "standard",
           "use_random_suffix": true
+        },
+        {
+          "name": "transit-bucket",
+          "storage_class": "standard",
+          "kms_key": "key",
+          "force_delete": true,
+          "use_random_suffix": true,
+          "endpoint": null
         }
       ],
       "use_random_suffix": true,
@@ -168,11 +179,12 @@
       "ssh_keys": [
         {
           "name": "power-ssh-key",
-          "public_key": "NONE",
+          "public_key": "",
           "use_data": false,
           "resource_group": "powervs-rg",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false
         }
       ],
       "network": [
@@ -183,7 +195,9 @@
           "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "use_data": false
         },
         {
           "name": "backup",
@@ -192,7 +206,12 @@
           "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_network.power_network_secure_powervs_management}"
+          ],
+          "use_data": false
         },
         {
           "name": "sap",
@@ -201,11 +220,65 @@
           "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_network.power_network_secure_powervs_backup}"
+          ],
+          "use_data": false
         }
       ],
       "cloud_connections": [],
       "images": [
+        {
+          "creationDate": "2024-01-29T12:26:40.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/d5c94f00-b7ff-41df-a1cc-d17f336729e4",
+          "imageID": "d5c94f00-b7ff-41df-a1cc-d17f336729e4",
+          "lastUpdateDate": "2024-01-29T19:46:36.000Z",
+          "name": "RHEL8-SP4-SAP-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false
+        },
+        {
+          "creationDate": "2024-01-29T17:49:25.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/3b219581-7c10-4b88-97a8-8631190e2aa2",
+          "imageID": "3b219581-7c10-4b88-97a8-8631190e2aa2",
+          "lastUpdateDate": "2024-01-29T19:46:36.000Z",
+          "name": "RHEL8-SP4-SAP-NETWEAVER-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp4_sap_byol}"
+          ]
+        },
         {
           "creationDate": "2022-07-21T15:46:50.000Z",
           "description": "",
@@ -226,7 +299,35 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp4_sap_netweaver_byol}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-29T23:12:18.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/16b56697-32ef-4597-9707-c1a269df481e",
+          "imageID": "16b56697-32ef-4597-9707-c1a269df481e",
+          "lastUpdateDate": "2024-01-30T02:13:33.000Z",
+          "name": "RHEL8-SP6-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_secure_powervs_rhel8_sp6}"]
         },
         {
           "creationDate": "2023-03-22T18:46:00.000Z",
@@ -248,7 +349,37 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_byol}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-30T04:36:31.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/3543f3f4-0640-44c2-9574-1d887ad99cff",
+          "imageID": "3543f3f4-0640-44c2-9574-1d887ad99cff",
+          "lastUpdateDate": "2024-01-30T11:44:51.000Z",
+          "name": "RHEL8-SP6-SAP-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap}"
+          ]
         },
         {
           "creationDate": "2023-03-22T19:13:31.000Z",
@@ -270,7 +401,37 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap_byol}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-30T10:01:12.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/af30c6a7-9108-494b-ab14-4fc0677460c8",
+          "imageID": "af30c6a7-9108-494b-ab14-4fc0677460c8",
+          "lastUpdateDate": "2024-01-30T11:44:51.000Z",
+          "name": "RHEL8-SP6-SAP-NETWEAVER-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap_netweaver}"
+          ]
         },
         {
           "creationDate": "2023-12-13T10:29:52.000Z",
@@ -292,7 +453,35 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap_netweaver_byol}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-30T15:25:25.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/e0dc77cf-60f5-4c0f-8ba3-0081860ef739",
+          "imageID": "e0dc77cf-60f5-4c0f-8ba3-0081860ef739",
+          "lastUpdateDate": "2024-01-30T16:27:53.000Z",
+          "name": "RHEL8-SP8-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_secure_powervs_rhel8_sp8}"]
         },
         {
           "creationDate": "2023-12-13T15:27:06.000Z",
@@ -314,7 +503,11 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp8_byol}"
+          ]
         },
         {
           "creationDate": "2023-12-13T20:24:03.000Z",
@@ -336,7 +529,113 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp8_sap}"
+          ]
+        },
+        {
+          "creationDate": "2023-09-20T16:01:19.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/ed8dd46b-e408-4a89-9bd6-821ee3229ac4",
+          "imageID": "ed8dd46b-e408-4a89-9bd6-821ee3229ac4",
+          "lastUpdateDate": "2023-09-20T16:15:34.000Z",
+          "name": "RHEL9-SP2",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel8_sp8_sap_netweaver}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-30T20:49:07.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/c9ebb84b-2cf6-4a78-8f47-e7581791ee54",
+          "imageID": "c9ebb84b-2cf6-4a78-8f47-e7581791ee54",
+          "lastUpdateDate": "2024-01-31T09:50:53.000Z",
+          "name": "RHEL9-SP2-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_secure_powervs_rhel9_sp2}"]
+        },
+        {
+          "creationDate": "2023-12-14T01:21:01.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/ae23517c-91a0-4545-af15-0253b06f317a",
+          "imageID": "ae23517c-91a0-4545-af15-0253b06f317a",
+          "lastUpdateDate": "2023-12-14T07:02:06.000Z",
+          "name": "RHEL9-SP2-SAP",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel9_sp2_byol}"
+          ]
+        },
+        {
+          "creationDate": "2023-12-14T06:16:45.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/265e2212-8487-481c-a70a-6eb1c24273c1",
+          "imageID": "265e2212-8487-481c-a70a-6eb1c24273c1",
+          "lastUpdateDate": "2023-12-14T07:02:06.000Z",
+          "name": "RHEL9-SP2-SAP-NETWEAVER",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver-fls",
+            "operatingSystem": "rhel"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel9_sp2_sap}"
+          ]
         },
         {
           "creationDate": "2022-06-19T14:17:19.000Z",
@@ -358,7 +657,11 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_rhel9_sp2_sap_netweaver}"
+          ]
         },
         {
           "creationDate": "2022-06-19T13:48:55.000Z",
@@ -380,7 +683,11 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap}"
+          ]
         },
         {
           "creationDate": "2022-09-13T18:49:39.000Z",
@@ -402,7 +709,37 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap_netweaver}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-31T02:12:53.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/830550b9-ebf2-43ec-aace-a2067653f157",
+          "imageID": "830550b9-ebf2-43ec-aace-a2067653f157",
+          "lastUpdateDate": "2024-01-31T09:50:53.000Z",
+          "name": "SLES15-SP4-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp4}"
+          ]
         },
         {
           "creationDate": "2022-11-04T05:37:01.000Z",
@@ -424,7 +761,37 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_byol}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-31T07:40:19.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/83012006-beb8-466b-bd6c-119796adea9a",
+          "imageID": "83012006-beb8-466b-bd6c-119796adea9a",
+          "lastUpdateDate": "2024-01-31T09:50:53.000Z",
+          "name": "SLES15-SP4-SAP-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap}"
+          ]
         },
         {
           "creationDate": "2022-11-04T05:32:31.000Z",
@@ -446,7 +813,37 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap_byol}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-31T13:07:18.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/c43f817c-9c2f-4434-94c6-ab705545a3ac",
+          "imageID": "c43f817c-9c2f-4434-94c6-ab705545a3ac",
+          "lastUpdateDate": "2024-01-31T13:49:37.000Z",
+          "name": "SLES15-SP4-SAP-NETWEAVER-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap_netweaver}"
+          ]
         },
         {
           "creationDate": "2024-01-08T17:35:21.000Z",
@@ -468,7 +865,11 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap_netweaver_byol}"
+          ]
         },
         {
           "creationDate": "2024-01-08T23:03:56.000Z",
@@ -490,7 +891,11 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp5}"
+          ]
         },
         {
           "creationDate": "2024-01-10T10:39:13.000Z",
@@ -512,7 +917,11 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south"
+          "zone": "us-south",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp5_sap}"
+          ]
         }
       ],
       "attachments": [
@@ -520,37 +929,54 @@
           "network": "management",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "connections": []
+          "connections": [],
+          "workspace_use_data": false
         },
         {
           "network": "backup",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "connections": []
+          "connections": [],
+          "workspace_use_data": false
         },
         {
           "network": "sap",
           "workspace": "secure-powervs",
           "zone": "us-south",
-          "connections": []
+          "connections": [],
+          "workspace_use_data": false
         }
       ],
       "imageNames": [
+        "RHEL8-SP4-SAP-BYOL",
+        "RHEL8-SP4-SAP-NETWEAVER-BYOL",
         "RHEL8-SP6",
+        "RHEL8-SP6-BYOL",
         "RHEL8-SP6-SAP",
+        "RHEL8-SP6-SAP-BYOL",
         "RHEL8-SP6-SAP-NETWEAVER",
+        "RHEL8-SP6-SAP-NETWEAVER-BYOL",
         "RHEL8-SP8",
+        "RHEL8-SP8-BYOL",
         "RHEL8-SP8-SAP",
         "RHEL8-SP8-SAP-NETWEAVER",
+        "RHEL9-SP2",
+        "RHEL9-SP2-SAP",
+        "RHEL9-SP2-BYOL",
+        "RHEL9-SP2-SAP-NETWEAVER",
         "SLES15-SP2-SAP",
         "SLES15-SP2-SAP-NETWEAVER",
         "SLES15-SP4",
+        "SLES15-SP4-BYOL",
         "SLES15-SP4-SAP",
+        "SLES15-SP4-SAP-BYOL",
         "SLES15-SP4-SAP-NETWEAVER",
+        "SLES15-SP4-SAP-NETWEAVER-BYOL",
         "SLES15-SP5",
         "SLES15-SP5-SAP",
         "SLES15-SP5-SAP-NETWEAVER"
-      ]
+      ],
+      "use_data": false
     }
   ],
   "power_instances": [
@@ -560,11 +986,11 @@
       "image": "RHEL8-SP6-SAP",
       "network": [
         {
-          "name": "backup",
+          "name": "management",
           "ip_address": ""
         },
         {
-          "name": "management",
+          "name": "backup",
           "ip_address": ""
         }
       ],
@@ -576,7 +1002,7 @@
       "pi_sys_type": "s922",
       "pi_memory": "2",
       "pi_processors": ".5",
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_storage_pool_affinity": false,
       "sap": false,
       "index": 0,
@@ -595,15 +1021,15 @@
       "image": "RHEL8-SP6-SAP",
       "network": [
         {
-          "name": "backup",
-          "ip_address": ""
-        },
-        {
           "name": "management",
           "ip_address": ""
         },
         {
           "name": "sap",
+          "ip_address": ""
+        },
+        {
+          "name": "backup",
           "ip_address": ""
         }
       ],
@@ -619,7 +1045,7 @@
       "pi_affinity_instance": null,
       "pi_anti_affinity_instance": null,
       "pi_anti_affinity_volume": null,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_storage_pool_affinity": false,
       "sap": true,
       "sap_profile": "ush1-4x256",
@@ -634,15 +1060,15 @@
       "image": "RHEL8-SP6-SAP-NETWEAVER",
       "network": [
         {
-          "name": "backup",
-          "ip_address": ""
-        },
-        {
           "name": "management",
           "ip_address": ""
         },
         {
           "name": "sap",
+          "ip_address": ""
+        },
+        {
+          "name": "backup",
           "ip_address": ""
         }
       ],
@@ -654,7 +1080,7 @@
       "pi_sys_type": "s922",
       "pi_processors": "3",
       "pi_memory": "32",
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_storage_pool_affinity": false,
       "sap": false,
       "index": 2,
@@ -673,7 +1099,7 @@
       "name": "sapmnt",
       "mount": "/sapmnt",
       "workspace": "secure-powervs",
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier3",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -681,18 +1107,20 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "attachments": ["sap-hana", "sap-netweaver"],
       "zone": "us-south",
       "pi_volume_size": "300",
       "index": 0,
       "pi_volume_shareable": true,
-      "pi_replication_enabled": false
+      "pi_replication_enabled": false,
+      "count": null
     },
     {
       "name": "trans",
       "mount": "/usr/trans",
       "workspace": "secure-powervs",
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier3",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -700,38 +1128,42 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "attachments": ["sap-hana", "sap-netweaver"],
       "zone": "us-south",
       "pi_volume_size": "50",
       "index": 1,
       "pi_volume_shareable": true,
-      "pi_replication_enabled": false
+      "pi_replication_enabled": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-data-1",
       "mount": "/hana/data",
       "pi_volume_size": 71,
       "pi_volume_type": "tier1",
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_pool": null,
       "affinity_type": null,
       "pi_affinity_volume": null,
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 2,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-data-2",
       "mount": "/hana/data",
       "pi_volume_size": 71,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier1",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -739,19 +1171,21 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 3,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-data-3",
       "mount": "/hana/data",
       "pi_volume_size": 71,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier1",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -759,19 +1193,21 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 4,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-data-4",
       "mount": "/hana/data",
       "pi_volume_size": 71,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier1",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -779,19 +1215,21 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 5,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-log-1",
       "mount": "/hana/log",
       "pi_volume_size": 33,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier1",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -799,19 +1237,21 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 6,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-log-2",
       "mount": "/hana/log",
       "pi_volume_size": 33,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier1",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -819,19 +1259,21 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 7,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-log-3",
       "mount": "/hana/log",
       "pi_volume_size": 33,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier1",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -839,19 +1281,21 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 8,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-log-4",
       "mount": "/hana/log",
       "pi_volume_size": 33,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier1",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -859,20 +1303,22 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 9,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-usrsap",
       "mount": "/usr/sap",
       "workspace": "secure-powervs",
       "pi_volume_size": 50,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier3",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -880,17 +1326,19 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 11,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     },
     {
       "name": "sap-hana-sap-shared",
       "mount": "/hana/shared",
       "pi_volume_size": 256,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier3",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -898,20 +1346,22 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
       "zone": "us-south",
       "index": 10,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": true
+      "pi_volume_shareable": true,
+      "count": null
     },
     {
       "name": "sap-hana-nw-usrsap",
       "mount": "/usr/sap",
       "workspace": "secure-powervs",
       "pi_volume_size": 50,
-      "storage_option": "Storage Type",
+      "storage_option": "None",
       "pi_volume_type": "tier3",
       "pi_volume_pool": null,
       "affinity_type": null,
@@ -919,11 +1369,13 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
       "attachments": ["sap-netweaver"],
       "zone": "us-south",
       "index": 12,
       "pi_replication_enabled": false,
-      "pi_volume_shareable": false
+      "pi_volume_shareable": false,
+      "count": null
     }
   ],
   "resource_groups": [
@@ -946,6 +1398,12 @@
       "use_data": false,
       "name": "powervs-rg",
       "use_prefix": true
+    },
+    {
+      "resource_group": "",
+      "use_data": false,
+      "name": "transit-rg",
+      "use_prefix": true
     }
   ],
   "routing_tables": [],
@@ -962,6 +1420,371 @@
   },
   "secrets_manager": [],
   "security_groups": [
+    {
+      "vpc": "management",
+      "name": "management-vsi",
+      "resource_group": "management-rg",
+      "rules": [
+        {
+          "vpc": "management",
+          "sg": "management-vsi",
+          "direction": "inbound",
+          "name": "allow-ibm-inbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "management",
+          "sg": "management-vsi",
+          "direction": "inbound",
+          "name": "allow-vpc-inbound",
+          "source": "10.0.0.0/8",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "management",
+          "sg": "management-vsi",
+          "direction": "outbound",
+          "name": "allow-vpc-outbound",
+          "source": "10.0.0.0/8",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "management",
+          "sg": "management-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-53-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 53,
+            "port_min": 53
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "management",
+          "sg": "management-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-80-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 80,
+            "port_min": 80
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "management",
+          "sg": "management-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-443-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 443,
+            "port_min": 443
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        }
+      ]
+    },
+    {
+      "vpc": "workload",
+      "name": "workload-vsi",
+      "resource_group": "workload-rg",
+      "rules": [
+        {
+          "vpc": "workload",
+          "sg": "workload-vsi",
+          "direction": "inbound",
+          "name": "allow-ibm-inbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-vsi",
+          "direction": "inbound",
+          "name": "allow-vpc-inbound",
+          "source": "10.0.0.0/8",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-vsi",
+          "direction": "outbound",
+          "name": "allow-vpc-outbound",
+          "source": "10.0.0.0/8",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-53-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 53,
+            "port_min": 53
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-80-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 80,
+            "port_min": 80
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-443-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 443,
+            "port_min": 443
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        }
+      ],
+      "show": false
+    },
+    {
+      "vpc": "transit",
+      "name": "transit-vsi",
+      "resource_group": "transit-rg",
+      "rules": [
+        {
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "direction": "inbound",
+          "name": "allow-ibm-inbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "direction": "inbound",
+          "name": "allow-vpc-inbound",
+          "source": "10.0.0.0/8",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "direction": "outbound",
+          "name": "allow-vpc-outbound",
+          "source": "10.0.0.0/8",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-53-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 53,
+            "port_min": 53
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-80-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 80,
+            "port_min": 80
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        },
+        {
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "direction": "outbound",
+          "name": "allow-ibm-tcp-443-outbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": 443,
+            "port_min": 443
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        }
+      ],
+      "show": false
+    },
     {
       "vpc": "management",
       "name": "management-vpe",
@@ -1205,13 +2028,13 @@
       ]
     },
     {
-      "vpc": "management",
-      "name": "management-vsi",
-      "resource_group": "management-rg",
+      "vpc": "transit",
+      "name": "transit-vpe",
+      "resource_group": "transit-rg",
       "rules": [
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "inbound",
           "name": "allow-ibm-inbound",
           "source": "161.26.0.0/16",
@@ -1229,8 +2052,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "inbound",
           "name": "allow-vpc-inbound",
           "source": "10.0.0.0/8",
@@ -1248,8 +2071,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-vpc-outbound",
           "source": "10.0.0.0/8",
@@ -1267,8 +2090,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-ibm-tcp-53-outbound",
           "source": "161.26.0.0/16",
@@ -1286,8 +2109,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-ibm-tcp-80-outbound",
           "source": "161.26.0.0/16",
@@ -1305,8 +2128,8 @@
           }
         },
         {
-          "vpc": "management",
-          "sg": "management-vsi",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "direction": "outbound",
           "name": "allow-ibm-tcp-443-outbound",
           "source": "161.26.0.0/16",
@@ -1323,13 +2146,14 @@
             "code": null
           }
         }
-      ]
+      ],
+      "show": false
     }
   ],
   "ssh_keys": [
     {
       "name": "ssh-key",
-      "public_key": "NONE",
+      "public_key": "",
       "resource_group": "management-rg",
       "use_data": false
     }
@@ -1355,6 +2179,10 @@
         {
           "tgw": "transit-gateway",
           "vpc": "workload"
+        },
+        {
+          "tgw": "transit-gateway",
+          "vpc": "transit"
         }
       ],
       "use_data": false,
@@ -1378,6 +2206,15 @@
       "vpc": "workload",
       "resource_group": "workload-rg",
       "security_groups": ["workload-vpe"],
+      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "instance": null
+    },
+    {
+      "name": "transit-cos",
+      "vpc": "transit",
+      "service": "cos",
+      "resource_group": "transit-rg",
+      "security_groups": ["transit-vpe"],
       "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
       "instance": null
     }
@@ -1842,6 +2679,228 @@
           ]
         }
       ]
+    },
+    {
+      "name": "transit",
+      "resource_group": "transit-rg",
+      "classic_access": null,
+      "manual_address_prefix_management": false,
+      "default_network_acl_name": null,
+      "default_security_group_name": null,
+      "default_routing_table_name": null,
+      "address_prefixes": [
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "cidr": "10.70.10.0/24",
+          "name": "vsi-zone-1"
+        },
+        {
+          "vpc": "transit",
+          "zone": 2,
+          "cidr": "10.80.10.0/24",
+          "name": "vsi-zone-2"
+        },
+        {
+          "vpc": "transit",
+          "zone": 3,
+          "cidr": "10.90.10.0/24",
+          "name": "vsi-zone-3"
+        },
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "cidr": "10.70.20.0/24",
+          "name": "vpe-zone-1"
+        },
+        {
+          "vpc": "transit",
+          "zone": 2,
+          "cidr": "10.80.20.0/24",
+          "name": "vpe-zone-2"
+        },
+        {
+          "vpc": "transit",
+          "zone": 3,
+          "cidr": "10.90.20.0/24",
+          "name": "vpe-zone-3"
+        }
+      ],
+      "subnets": [
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "cidr": "10.70.10.0/24",
+          "name": "vsi-zone-1",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
+          "public_gateway": false,
+          "has_prefix": true
+        },
+        {
+          "vpc": "transit",
+          "zone": 2,
+          "cidr": "10.80.10.0/24",
+          "name": "vsi-zone-2",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
+          "public_gateway": false,
+          "has_prefix": true
+        },
+        {
+          "vpc": "transit",
+          "zone": 3,
+          "cidr": "10.90.10.0/24",
+          "name": "vsi-zone-3",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
+          "public_gateway": false,
+          "has_prefix": true
+        },
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "cidr": "10.70.20.0/24",
+          "name": "vpe-zone-1",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
+          "public_gateway": false,
+          "has_prefix": true
+        },
+        {
+          "vpc": "transit",
+          "zone": 2,
+          "cidr": "10.80.20.0/24",
+          "name": "vpe-zone-2",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
+          "public_gateway": false,
+          "has_prefix": true
+        },
+        {
+          "vpc": "transit",
+          "zone": 3,
+          "cidr": "10.90.20.0/24",
+          "name": "vpe-zone-3",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
+          "public_gateway": false,
+          "has_prefix": true
+        }
+      ],
+      "public_gateways": [],
+      "acls": [
+        {
+          "resource_group": "transit-rg",
+          "name": "transit",
+          "vpc": "transit",
+          "rules": [
+            {
+              "action": "allow",
+              "destination": "10.0.0.0/8",
+              "direction": "inbound",
+              "name": "allow-ibm-inbound",
+              "source": "161.26.0.0/16",
+              "acl": "transit",
+              "vpc": "transit",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              }
+            },
+            {
+              "action": "allow",
+              "source": "10.0.0.0/8",
+              "direction": "outbound",
+              "name": "allow-ibm-outbound",
+              "destination": "161.26.0.0/16",
+              "acl": "transit",
+              "vpc": "transit",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              }
+            },
+            {
+              "action": "allow",
+              "destination": "10.0.0.0/8",
+              "direction": "inbound",
+              "name": "allow-all-network-inbound",
+              "source": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              }
+            },
+            {
+              "action": "allow",
+              "destination": "10.0.0.0/8",
+              "direction": "outbound",
+              "name": "allow-all-network-outbound",
+              "source": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              }
+            }
+          ]
+        }
+      ],
+      "bucket": "transit-bucket",
+      "publicGateways": [],
+      "cos": "cos"
     }
   ],
   "vpn_gateways": [
@@ -1850,7 +2909,9 @@
       "resource_group": "management-rg",
       "subnet": "vpn-zone-1",
       "vpc": "management",
-      "connections": []
+      "connections": [],
+      "policy_mode": false,
+      "additional_prefixes": []
     }
   ],
   "vpn_servers": [],
@@ -1858,19 +2919,62 @@
     {
       "kms": "kms",
       "encryption_key": "vsi-volume-key",
-      "image": "ibm-ubuntu-22-04-1-minimal-amd64-1",
+      "image": "ibm-ubuntu-22-04-3-minimal-amd64-2",
+      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-2]",
       "profile": "cx2-4x8",
-      "name": "management-server",
+      "name": "management-jump-server",
       "security_groups": ["management-vsi"],
       "ssh_keys": ["ssh-key"],
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
       "vpc": "management",
-      "vsi_per_subnet": 2,
+      "vsi_per_subnet": "2",
       "resource_group": "management-rg",
       "override_vsi_name": null,
-      "user_data": "",
+      "user_data": null,
       "network_interfaces": [],
-      "volumes": []
+      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "volumes": [],
+      "enable_floating_ip": true,
+      "primary_interface_ip_spoofing": false
+    },
+    {
+      "kms": "kms",
+      "encryption_key": "vsi-volume-key",
+      "image": "ibm-ubuntu-22-04-3-minimal-amd64-2",
+      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-2]",
+      "profile": "cx2-4x8",
+      "name": "workload-dns-server",
+      "security_groups": ["workload-vsi"],
+      "ssh_keys": ["ssh-key"],
+      "vpc": "workload",
+      "vsi_per_subnet": "2",
+      "resource_group": "workload-rg",
+      "override_vsi_name": null,
+      "user_data": null,
+      "network_interfaces": [],
+      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "volumes": [],
+      "enable_floating_ip": false,
+      "primary_interface_ip_spoofing": false
+    },
+    {
+      "kms": "kms",
+      "encryption_key": "vsi-volume-key",
+      "image": "ibm-ubuntu-22-04-3-minimal-amd64-2",
+      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-2]",
+      "profile": "cx2-4x8",
+      "name": "transit-proxy-server",
+      "security_groups": ["transit-vsi"],
+      "ssh_keys": ["ssh-key"],
+      "vpc": "transit",
+      "vsi_per_subnet": "2",
+      "resource_group": "transit-rg",
+      "override_vsi_name": null,
+      "user_data": null,
+      "network_interfaces": [],
+      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "volumes": [],
+      "enable_floating_ip": false,
+      "primary_interface_ip_spoofing": false
     }
   ],
   "classic_ssh_keys": [],

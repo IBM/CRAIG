@@ -1,12 +1,6 @@
 import React from "react";
 import { craigForms } from "../CraigForms";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { ClassicMap, ClassicSubnets, SshKeys, docTabs } from "../diagrams";
-import {
-  CraigFormHeading,
-  PrimaryButton,
-  RenderForm,
-} from "../../forms/utils/ToggleFormComponents";
 import { distinct, isNullOrEmptyString, snakeCase, titleCase } from "lazy-z";
 import {
   FirewallClassic,
@@ -14,13 +8,20 @@ import {
   Password,
   VlanIbm,
 } from "@carbon/icons-react";
-import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
+import {
+  StatefulTabs,
+  PrimaryButton,
+  CraigFormHeading,
+  CraigToggleForm,
+  DynamicFormModal,
+  RenderForm,
+} from "../../forms/utils";
 import { classicInfraTf, disableSave, propsMatchState } from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";
 import { IcseSelect } from "icse-react-assets";
 import DynamicForm from "../../forms/DynamicForm";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { classicGatewayTf } from "../../../lib/json-to-iac/classic-gateway";
 
 class ClassicDiagram extends React.Component {

@@ -18,7 +18,11 @@ function formatPowerVsVolume(volume, config) {
     ? true
     : splatContains(config.power, "name", volume.workspace);
   let data = {
-    provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
+    provider: volume.zone
+      ? `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`
+      : `\${ibm.power_vs_${snakeCase(
+          getObjectFromArray(config.power, "name", volume.workspace).zone
+        )}}`,
     pi_cloud_instance_id: foundWorkspace
       ? powerVsWorkspaceRef(
           volume.workspace,
@@ -33,25 +37,26 @@ function formatPowerVsVolume(volume, config) {
     pi_volume_shareable: volume.pi_volume_shareable,
     pi_replication_enabled: volume.pi_replication_enabled,
   };
-  if (!volume.storage_option || volume.storage_option === "Storage Type") {
-    data.pi_volume_type = volume.pi_volume_type;
-  } else if (contains(["Affinity", "Anti-Affinity"], volume.storage_option)) {
-    data.pi_affinity_policy = volume.pi_affinity_policy;
-    // field will be some combination of pi [anti_affinity|affinity] [volume|instance]
-    let affinityField = snakeCase(
-      `pi ${volume.pi_affinity_policy} ${volume.affinity_type}`
-    );
-    if (volume.affinity_type === "Instance") {
-      data[affinityField] = `\${ibm_pi_instance.${snakeCase(
-        `${volume.workspace}_workspace_instance_${volume[affinityField]}`
-      )}.instance_id}`;
+  data.pi_volume_type = volume.pi_volume_type;
+  if (volume.storage_option !== "None") {
+    if (contains(["Affinity", "Anti-Affinity"], volume.storage_option)) {
+      data.pi_affinity_policy = volume.pi_affinity_policy;
+      // field will be some combination of pi [anti_affinity|affinity] [volume|instance]
+      let affinityField = snakeCase(
+        `pi ${volume.pi_affinity_policy} ${volume.affinity_type}`
+      );
+      if (volume.affinity_type === "Instance") {
+        data[affinityField] = `\${ibm_pi_instance.${snakeCase(
+          `${volume.workspace}_workspace_instance_${volume[affinityField]}`
+        )}.instance_id}`;
+      } else {
+        data[affinityField] = `\${ibm_pi_volume.${snakeCase(
+          volume.workspace + " volume " + volume[affinityField]
+        )}.volume_id}`;
+      }
     } else {
-      data[affinityField] = `\${ibm_pi_volume.${snakeCase(
-        volume.workspace + " volume " + volume[affinityField]
-      )}.volume_id}`;
+      data.pi_storage_pool = volume.pi_volume_pool;
     }
-  } else {
-    data.pi_storage_pool = volume.pi_volume_pool;
   }
   delete data.index;
   if (volume.count) {
@@ -92,7 +97,11 @@ function formatPowerVsVolumeAttachment(
   count
 ) {
   let volumeData = {
-    provider: `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`,
+    provider: volume.zone
+      ? `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`
+      : `\${ibm.power_vs_${snakeCase(
+          getObjectFromArray(config.power, "name", volume.workspace).zone
+        )}}`,
     pi_cloud_instance_id: powerVsWorkspaceRef(
       volume.workspace,
       config?.power

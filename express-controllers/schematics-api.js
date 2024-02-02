@@ -152,6 +152,39 @@ function schematicsRoutes(axios, controller) {
   };
 
   /**
+   * gets details about a specific resource group
+   * https://cloud.ibm.com/apidocs/resource-manager#list-resource-groups
+   * @param {string} resourceGroup
+   * @returns {Promise}
+   */
+  controller.getResourceGroupID = function (resourceGroup) {
+    return new Promise((resolve, reject) => {
+      return controller
+        .getBearerToken()
+        .then(() => {
+          let requestConfig = {
+            method: "get",
+            url: "https://resource-controller.cloud.ibm.com/v2/resource_groups",
+            params: { name: resourceGroup },
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${controller.token}`,
+            },
+          };
+
+          return axios(requestConfig);
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          reject(error);
+        });
+    });
+  };
+
+  /**
    * creates schematics workspace https://cloud.ibm.com/apidocs/schematics/schematics#create-workspace
    * @param {object} req express request object
    * @param {object} res express resolve object
@@ -159,7 +192,7 @@ function schematicsRoutes(axios, controller) {
   controller.createWorkspace = function (req, res) {
     let workspaceName = req.params["workspaceName"];
     let region = req.params["region"] || "us-south";
-    let resourceGroup = req.params["resourceGroup"];
+    let resourceGroup = req.params["resourceGroup"] || "Default";
 
     return new Promise((resolve, reject) => {
       if (process.env.NO_SCHEMATICS) {
@@ -168,11 +201,17 @@ function schematicsRoutes(axios, controller) {
       }
 
       return controller
-        .getBearerToken()
-        .then(() => {
+        .getResourceGroupID(resourceGroup)
+        .then((rgData) => {
+          if (rgData.resources.length === 0) {
+            reject("> Provided resource group not found.");
+            return;
+          }
+
+          console.log("> Creating resource group...");
           let data = prettyJSON({
             name: workspaceName,
-            resource_group: resourceGroup,
+            resource_group: rgData.resources[0]["id"],
             type: ["terraform_v1.3"],
             location: region,
             description: "Schematics Workspace for craig.tar uploads",
@@ -185,7 +224,7 @@ function schematicsRoutes(axios, controller) {
             url: "https://schematics.cloud.ibm.com/v1/workspaces",
             headers: {
               Accept: "application/json",
-              Authorization: controller.token,
+              Authorization: `Bearer ${controller.token}`,
             },
             data: data,
           };

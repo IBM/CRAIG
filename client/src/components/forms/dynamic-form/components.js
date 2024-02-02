@@ -1,5 +1,7 @@
 import React from "react";
-import { PopoverWrapper } from "icse-react-assets";
+// popover wrapper needs to be imported this way to prevent an error importing
+// dynamic form before initializtion
+import { default as PopoverWrapper } from "../utils/PopoverWrapper";
 import {
   dynamicTextInputProps,
   dynamicSelectProps,
@@ -22,9 +24,36 @@ import {
 import PropTypes from "prop-types";
 import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
 import { contains, deepEqual, isNullOrEmptyString } from "lazy-z";
-import { RenderForm } from "../utils/ToggleFormComponents";
 import { ToolTipWrapper } from "../utils/ToolTip";
+import { RenderForm } from "../utils";
+
 const tagColors = ["red", "magenta", "purple", "blue", "cyan", "teal", "green"];
+
+const DynamicToolTipWrapper = (props) => {
+  //make sure that either children or innerForm are passed as a prop
+  if (props.children === undefined && props.innerForm === undefined) {
+    throw new Error(
+      "DynamicToolTipWrapper expects either `props.children` or `props.innerForm` when rendering ToolTipWrapper, got neither."
+    );
+  }
+  return props.tooltip ? (
+    <ToolTipWrapper {...props} />
+  ) : props.children ? (
+    props.children
+  ) : (
+    RenderForm(props.innerForm, {})
+  );
+};
+
+DynamicToolTipWrapper.propTypes = {
+  tooltip: PropTypes.shape({
+    content: PropTypes.string,
+    link: PropTypes.string,
+  }),
+  isModal: PropTypes.bool,
+  children: PropTypes.node,
+  innerForm: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+};
 
 const DynamicFormTextInput = (props) => {
   return <TextInput {...dynamicTextInputProps(props)} />;
@@ -36,7 +65,7 @@ DynamicFormTextInput.propTypes = {
   keyIndex: PropTypes.number,
   field: PropTypes.shape({
     invalid: PropTypes.func.isRequired,
-    invalidText: PropTypes.func.isRequired,
+    invalidText: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     optional: PropTypes.bool,
     labelText: PropTypes.string,
     disabled: PropTypes.func.isRequired,
@@ -383,32 +412,6 @@ const DynamicDatePicker = (props) => {
       />
     </DatePicker>
   );
-};
-
-const DynamicToolTipWrapper = (props) => {
-  //make sure that either children or innerForm are passed as a prop
-  if (props.children === undefined && props.innerForm === undefined) {
-    throw new Error(
-      "DynamicToolTipWrapper expects either `props.children` or `props.innerForm` when rendering ToolTipWrapper, got neither."
-    );
-  }
-  return props.tooltip ? (
-    <ToolTipWrapper {...props} />
-  ) : props.children ? (
-    props.children
-  ) : (
-    RenderForm(props.innerForm, {})
-  );
-};
-
-DynamicToolTipWrapper.propTypes = {
-  tooltip: PropTypes.shape({
-    content: PropTypes.string,
-    link: PropTypes.string,
-  }),
-  isModal: PropTypes.bool,
-  children: PropTypes.node,
-  innerForm: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 };
 
 export {

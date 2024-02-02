@@ -225,6 +225,7 @@ function craigForms(craig) {
       ],
     },
     atracker: {
+      name: "Activity Tracker",
       jsonField: "atracker",
       disableSave: disableSave,
       groups: [
@@ -1029,8 +1030,10 @@ function craigForms(craig) {
           },
         },
         {
-          storage_option: craig.power_instances.storage_option,
           pi_storage_type: craig.power_instances.pi_storage_type,
+        },
+        {
+          storage_option: craig.power_instances.storage_option,
           pi_storage_pool: craig.power_instances.pi_storage_pool,
           affinity_type: craig.power_instances.affinity_type,
           pi_affinity_volume: craig.power_instances.pi_affinity_volume,
@@ -1059,8 +1062,11 @@ function craigForms(craig) {
           pi_volume_size: craig.power_volumes.pi_volume_size,
         },
         {
-          storage_option: craig.power_volumes.storage_option,
           pi_volume_type: craig.power_volumes.pi_volume_type,
+          count: craig.power_volumes.count,
+        },
+        {
+          storage_option: craig.power_volumes.storage_option,
           pi_volume_pool: craig.power_volumes.pi_volume_pool,
           affinity_type: craig.power_volumes.affinity_type,
           pi_affinity_volume: craig.power_volumes.pi_affinity_volume,
@@ -1073,9 +1079,6 @@ function craigForms(craig) {
           pi_replication_enabled: craig.power_volumes.pi_replication_enabled,
           pi_volume_shareable: craig.power_volumes.pi_volume_shareable,
           attachments: craig.power_volumes.attachments,
-        },
-        {
-          count: craig.power_volumes.count,
         },
       ],
     },

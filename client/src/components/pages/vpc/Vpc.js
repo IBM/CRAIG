@@ -3,7 +3,6 @@ import {
   SubnetAclRules,
   VirtualPrivateCloud,
 } from "@carbon/icons-react";
-import { RenderForm } from "icse-react-assets";
 import React from "react";
 import {
   codeMirrorAclTf,
@@ -15,16 +14,18 @@ import { DynamicAclForm } from "./DynamicAclForm";
 import { docTabs } from "../diagrams/DocTabs";
 import { DynamicSubnetTierForm } from "./DynamicSubnetTierForm";
 import {
-  CraigFormHeading,
   PrimaryButton,
-} from "../../forms/utils/ToggleFormComponents";
-import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
+  CraigToggleForm,
+  DynamicFormModal,
+  CraigFormHeading,
+  RenderForm,
+  StatefulTabs,
+} from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
 import { AclMap, SubnetTierMap, VpcMap } from "../diagrams";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 
 class VpcDiagramPage extends React.Component {
   constructor(props) {
@@ -391,6 +392,7 @@ class VpcDiagramPage extends React.Component {
                       }}
                     >
                       <SubnetTierMap
+                        foundSubnetsOnly
                         craig={craig}
                         isSelected={(
                           vpcIndex,

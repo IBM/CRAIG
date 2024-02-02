@@ -1,6 +1,8 @@
 import { CaretLeft, CaretRight, Close, ChevronUp } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
-import { PopoverWrapper } from "icse-react-assets";
+// popover wrapper needs to be imported this way to prevent an error importing
+// dynamic form before initializtion
+import { default as PopoverWrapper } from "../forms/utils/PopoverWrapper";
 import React from "react";
 import PropTypes from "prop-types";
 import "./footer.scss";

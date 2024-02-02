@@ -1,7 +1,7 @@
 import React from "react";
 import { isEmpty, isNullOrEmptyString, splatContains } from "lazy-z";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import { SubnetAclRules } from "@carbon/icons-react";
 import "./diagrams.css";
 import PropTypes from "prop-types";

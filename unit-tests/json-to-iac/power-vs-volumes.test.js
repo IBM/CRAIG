@@ -16,6 +16,7 @@ describe("power vs volumes", () => {
         pi_volume_shareable: true,
         pi_replication_enabled: true,
         pi_volume_type: "tier1",
+        storage_option: "None",
       });
       let expectedData = `
 resource "ibm_pi_volume" "example_volume_test_volume" {
@@ -226,6 +227,7 @@ resource "ibm_pi_volume" "workspace_volume_aixtgtvols1" {
   pi_replication_enabled = false
   pi_affinity_policy     = "affinity"
   pi_affinity_instance   = ibm_pi_instance.workspace_workspace_instance_aixtarget.instance_id
+  pi_volume_type         = null
 }
 `;
       assert.deepEqual(
@@ -320,6 +322,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   pi_volume_name         = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable    = true
   pi_replication_enabled = false
+  pi_volume_type         = "tier1"
   pi_affinity_policy     = "affinity"
   pi_affinity_instance   = ibm_pi_instance.oracle_template_workspace_instance_oracle_1.instance_id
 }
@@ -358,6 +361,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   pi_volume_name          = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable     = true
   pi_replication_enabled  = false
+  pi_volume_type          = "tier1"
   pi_affinity_policy      = "anti-affinity"
   pi_anti_affinity_volume = ibm_pi_volume.oracle_template_volume_oracle_2_db_1.volume_id
 }
@@ -396,6 +400,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   pi_volume_shareable    = true
   pi_replication_enabled = false
   pi_storage_pool        = "Tier1-Flash-4"
+  pi_volume_type         = null
 }
 `;
       assert.deepEqual(
@@ -697,6 +702,372 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_2_to_instance_2_inst
   }
   depends_on = [
     ibm_pi_volume_attach.example_attach_test_volume_1_to_instance_2_instance
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return power volume terraform file", () => {
+      let actualData = powerVsVolumeTf({
+        _options: {
+          prefix: "sm",
+          region: "us-south",
+          tags: ["smatzek"],
+          zones: 3,
+          endpoints: "private",
+          account_id: null,
+          fs_cloud: false,
+          enable_classic: false,
+          dynamic_subnets: true,
+          enable_power_vs: true,
+          craig_version: "1.9.0",
+          power_vs_zones: ["dal10"],
+          power_vs_high_availability: false,
+          template: "Empty Project",
+        },
+        access_groups: [],
+        appid: [],
+        atracker: {
+          enabled: false,
+          type: "cos",
+          name: "atracker",
+          target_name: "atracker-cos",
+          bucket: null,
+          add_route: true,
+          cos_key: null,
+          locations: ["global", "us-south"],
+          instance: false,
+          plan: "lite",
+          resource_group: null,
+        },
+        cbr_rules: [],
+        cbr_zones: [],
+        clusters: [],
+        dns: [],
+        event_streams: [],
+        f5_vsi: [],
+        iam_account_settings: {
+          enable: false,
+          mfa: null,
+          allowed_ip_addresses: null,
+          include_history: false,
+          if_match: null,
+          max_sessions_per_identity: null,
+          restrict_create_service_id: null,
+          restrict_create_platform_apikey: null,
+          session_expiration_in_seconds: null,
+          session_invalidation_in_seconds: null,
+        },
+        icd: [],
+        key_management: [],
+        load_balancers: [],
+        logdna: {
+          enabled: false,
+          plan: "lite",
+          endpoints: "private",
+          platform_logs: false,
+          resource_group: null,
+          cos: null,
+          bucket: null,
+        },
+        object_storage: [],
+        power: [
+          {
+            use_data: false,
+            name: "smatzek-storage-test",
+            zone: "dal10",
+            resource_group: "powervs-coe",
+            imageNames: ["7300-00-01"],
+            images: [
+              {
+                creationDate: "2023-02-14T23:16:04.000Z",
+                description: "",
+                href: "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/24083f6f-6ab7-4b59-bbd1-3ccb9e24a8db",
+                imageID: "24083f6f-6ab7-4b59-bbd1-3ccb9e24a8db",
+                lastUpdateDate: "2023-02-15T16:15:55.000Z",
+                name: "7300-00-01",
+                specifications: {
+                  architecture: "ppc64",
+                  containerFormat: "bare",
+                  diskFormat: "raw",
+                  endianness: "big-endian",
+                  hypervisorType: "phyp",
+                  operatingSystem: "aix",
+                },
+                state: "active",
+                storagePool: "Tier3-Flash-1",
+                storageType: "tier3",
+                workspace: "smatzek-storage-test",
+                zone: "dal10",
+                workspace_use_data: false,
+              },
+            ],
+            ssh_keys: [
+              {
+                workspace_use_data: false,
+                use_data: true,
+                name: "smatzek",
+                public_key: null,
+                workspace: "smatzek-storage-test",
+                zone: "dal10",
+              },
+            ],
+            network: [
+              {
+                workspace_use_data: false,
+                name: "test-net",
+                use_data: false,
+                pi_network_type: "vlan",
+                pi_cidr: "192.168.31.0/24",
+                pi_dns: ["127.0.0.1"],
+                pi_network_jumbo: false,
+                workspace: "smatzek-storage-test",
+                zone: "dal10",
+              },
+            ],
+            cloud_connections: [],
+            attachments: [],
+          },
+        ],
+        power_instances: [
+          {
+            sap: false,
+            sap_profile: null,
+            name: "tier0vm",
+            workspace: "smatzek-storage-test",
+            network: [
+              {
+                name: "test-net",
+                ip_address: "",
+              },
+            ],
+            ssh_key: "smatzek",
+            image: "7300-00-01",
+            pi_sys_type: "s922",
+            pi_proc_type: "shared",
+            pi_processors: ".25",
+            pi_memory: "4",
+            pi_storage_pool_affinity: false,
+            pi_storage_type: "tier0",
+            storage_option: "None",
+            pi_storage_pool: null,
+            affinity_type: null,
+            pi_affinity_volume: null,
+            pi_anti_affinity_volume: null,
+            pi_anti_affinity_instance: null,
+            pi_affinity_instance: null,
+            pi_user_data: null,
+            pi_affinity_policy: null,
+            zone: "dal10",
+          },
+        ],
+        power_volumes: [
+          {
+            name: "tier3vol",
+            workspace: "smatzek-storage-test",
+            pi_volume_size: "1",
+            pi_volume_type: "tier3",
+            count: null,
+            storage_option: "Affinity",
+            pi_volume_pool: null,
+            affinity_type: "Instance",
+            pi_affinity_volume: null,
+            pi_anti_affinity_volume: null,
+            pi_anti_affinity_instance: null,
+            pi_affinity_instance: "tier0vm",
+            pi_replication_enabled: false,
+            pi_volume_shareable: false,
+            attachments: ["tier0vm"],
+            pi_affinity_policy: "affinity",
+          },
+          {
+            name: "tier1vol",
+            workspace: "smatzek-storage-test",
+            pi_volume_size: "1",
+            pi_volume_type: "tier1",
+            count: null,
+            storage_option: "Affinity",
+            pi_volume_pool: null,
+            affinity_type: "Instance",
+            pi_affinity_volume: null,
+            pi_anti_affinity_volume: null,
+            pi_anti_affinity_instance: null,
+            pi_affinity_instance: "tier0vm",
+            pi_replication_enabled: false,
+            pi_volume_shareable: false,
+            attachments: ["tier0vm"],
+            pi_affinity_policy: "affinity",
+          },
+          {
+            name: "tier0vol",
+            workspace: "smatzek-storage-test",
+            pi_volume_size: "1",
+            pi_volume_type: "tier0",
+            count: null,
+            storage_option: "Affinity",
+            pi_volume_pool: null,
+            affinity_type: "Instance",
+            pi_affinity_volume: null,
+            pi_anti_affinity_volume: null,
+            pi_anti_affinity_instance: null,
+            pi_affinity_instance: "tier0vm",
+            pi_replication_enabled: false,
+            pi_volume_shareable: false,
+            attachments: ["tier0vm"],
+            pi_affinity_policy: "affinity",
+          },
+        ],
+        resource_groups: [
+          {
+            use_prefix: true,
+            name: "powervs-coe",
+            use_data: true,
+          },
+        ],
+        routing_tables: [],
+        scc: {
+          credential_description: null,
+          id: null,
+          passphrase: null,
+          name: "",
+          location: "us",
+          collector_description: null,
+          is_public: false,
+          scope_description: null,
+          enable: false,
+        },
+        secrets_manager: [],
+        security_groups: [],
+        ssh_keys: [],
+        sysdig: {
+          enabled: false,
+          plan: "graduated-tier",
+          resource_group: null,
+          name: "sysdig",
+          platform_logs: false,
+        },
+        teleport_vsi: [],
+        transit_gateways: [],
+        virtual_private_endpoints: [],
+        vpcs: [],
+        vpn_gateways: [],
+        vpn_servers: [],
+        vsi: [],
+        classic_ssh_keys: [],
+        classic_vlans: [],
+        vtl: [],
+        classic_gateways: [],
+        cis: [],
+        scc_v2: {
+          enable: false,
+          resource_group: null,
+          region: "",
+          account_id: "${var.account_id}",
+          profile_attachments: [],
+        },
+        cis_glbs: [],
+        fortigate_vnf: [],
+      });
+      let expectedData = `##############################################################################
+# Power VS Volume Tier 3vol
+##############################################################################
+
+resource "ibm_pi_volume" "smatzek_storage_test_volume_tier3vol" {
+  provider               = ibm.power_vs_dal10
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_smatzek_storage_test.guid
+  pi_volume_size         = 1
+  pi_volume_name         = "\${var.prefix}-smatzek-storage-test-tier3vol"
+  pi_volume_shareable    = false
+  pi_replication_enabled = false
+  pi_volume_type         = "tier3"
+  pi_affinity_policy     = "affinity"
+  pi_affinity_instance   = ibm_pi_instance.smatzek_storage_test_workspace_instance_tier0vm.instance_id
+}
+
+resource "ibm_pi_volume_attach" "smatzek_storage_test_attach_tier3vol_to_tier0vm_instance" {
+  provider             = ibm.power_vs_dal10
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_smatzek_storage_test.guid
+  pi_volume_id         = ibm_pi_volume.smatzek_storage_test_volume_tier3vol.volume_id
+  pi_instance_id       = ibm_pi_instance.smatzek_storage_test_workspace_instance_tier0vm.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# Power VS Volume Tier 1vol
+##############################################################################
+
+resource "ibm_pi_volume" "smatzek_storage_test_volume_tier1vol" {
+  provider               = ibm.power_vs_dal10
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_smatzek_storage_test.guid
+  pi_volume_size         = 1
+  pi_volume_name         = "\${var.prefix}-smatzek-storage-test-tier1vol"
+  pi_volume_shareable    = false
+  pi_replication_enabled = false
+  pi_volume_type         = "tier1"
+  pi_affinity_policy     = "affinity"
+  pi_affinity_instance   = ibm_pi_instance.smatzek_storage_test_workspace_instance_tier0vm.instance_id
+}
+
+resource "ibm_pi_volume_attach" "smatzek_storage_test_attach_tier1vol_to_tier0vm_instance" {
+  provider             = ibm.power_vs_dal10
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_smatzek_storage_test.guid
+  pi_volume_id         = ibm_pi_volume.smatzek_storage_test_volume_tier1vol.volume_id
+  pi_instance_id       = ibm_pi_instance.smatzek_storage_test_workspace_instance_tier0vm.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+  depends_on = [
+    ibm_pi_volume_attach.smatzek_storage_test_attach_tier3vol_to_tier0vm_instance
+  ]
+}
+
+##############################################################################
+
+##############################################################################
+# Power VS Volume Tier 0vol
+##############################################################################
+
+resource "ibm_pi_volume" "smatzek_storage_test_volume_tier0vol" {
+  provider               = ibm.power_vs_dal10
+  pi_cloud_instance_id   = ibm_resource_instance.power_vs_workspace_smatzek_storage_test.guid
+  pi_volume_size         = 1
+  pi_volume_name         = "\${var.prefix}-smatzek-storage-test-tier0vol"
+  pi_volume_shareable    = false
+  pi_replication_enabled = false
+  pi_volume_type         = "tier0"
+  pi_affinity_policy     = "affinity"
+  pi_affinity_instance   = ibm_pi_instance.smatzek_storage_test_workspace_instance_tier0vm.instance_id
+}
+
+resource "ibm_pi_volume_attach" "smatzek_storage_test_attach_tier0vol_to_tier0vm_instance" {
+  provider             = ibm.power_vs_dal10
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_smatzek_storage_test.guid
+  pi_volume_id         = ibm_pi_volume.smatzek_storage_test_volume_tier0vol.volume_id
+  pi_instance_id       = ibm_pi_instance.smatzek_storage_test_workspace_instance_tier0vm.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+  depends_on = [
+    ibm_pi_volume_attach.smatzek_storage_test_attach_tier1vol_to_tier0vm_instance
   ]
 }
 

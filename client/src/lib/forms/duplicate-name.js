@@ -4,7 +4,6 @@ const {
   isNullOrEmptyString,
   nestedSplat,
   revision,
-  getObjectFromArray,
 } = require("lazy-z");
 const { getAllSecrets } = require("./utils");
 /**

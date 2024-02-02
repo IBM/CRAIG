@@ -29,6 +29,7 @@ export const ClassicGateways = (props) => {
       icon={FirewallClassic}
       name="Classic Gateways"
       static={props.static}
+      small={props.small}
     >
       {gateways.map((gw) => {
         return (
@@ -39,6 +40,7 @@ export const ClassicGateways = (props) => {
           >
             <DeploymentIcon
               key={gw.name + props.vlan}
+              small={props.small}
               icon={FirewallClassic}
               item={gw}
               itemName="classic_gateways"

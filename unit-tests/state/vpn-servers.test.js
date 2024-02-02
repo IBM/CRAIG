@@ -312,6 +312,28 @@ describe("vpn_servers", () => {
     beforeEach(() => {
       craig = newState();
     });
+    describe("vpnServersWorkspaceHelperText", () => {
+      it("should return correct helper text", () => {
+        assert.deepEqual(
+          craig.vpn_servers.name.helperText(
+            { name: "frog" },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "toad",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "toad-vpn-server-frog",
+          "it should return correct helper text"
+        );
+      });
+    });
     it("should set subnets and sgs on vpc change", () => {
       let data = {
         vpc: "frog",

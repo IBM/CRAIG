@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import { InfrastructureClassic } from "@carbon/icons-react";
 import { distinct } from "lazy-z";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
@@ -8,13 +8,19 @@ import HoverClassNameWrapper from "./HoverClassNameWrapper";
 export const ClassicMap = (props) => {
   let craig = props.craig;
   let classicDatacenters = [];
+  let subFormClassName =
+    "subForm" +
+    (props.small ? " widthOneHundredPercent" : " powerSubForm") +
+    (props.big ? " powerSubFormBig" : "");
+
+  // get list of dataceneter
   craig.store.json.classic_vlans.forEach((vlan) => {
     classicDatacenters = distinct(classicDatacenters.concat(vlan.datacenter));
   });
   return classicDatacenters.map((datacenter) => (
     <HoverClassNameWrapper
       static={props.static}
-      className={"subForm powerSubForm" + (props.big ? " powerSubFormBig" : "")}
+      className={subFormClassName}
       key={datacenter}
       hoverClassName="diagramBoxSelected"
     >
@@ -24,12 +30,14 @@ export const ClassicMap = (props) => {
         icon={<InfrastructureClassic className="diagramTitleIcon" />}
         buttons={props.buttons}
       />
-      {React.Children.map(props.children, (child) =>
-        // clone react child
-        React.cloneElement(child, {
-          datacenter: datacenter,
-        })
-      )}
+      <div className="formInSubForm marginTop1Rem">
+        {React.Children.map(props.children, (child) =>
+          // clone react child
+          React.cloneElement(child, {
+            datacenter: datacenter,
+          })
+        )}
+      </div>
     </HoverClassNameWrapper>
   ));
 };

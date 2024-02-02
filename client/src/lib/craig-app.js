@@ -29,9 +29,17 @@ function onProjectDeselect(component, craig) {
  * @param {*} craig
  * @param {*} name
  * @param {string=} message
+ * @param {Function=} callback
  * @returns {Function} callback to run after save state
  */
-function onProjectSelectCallback(projects, component, craig, name, message) {
+function onProjectSelectCallback(
+  projects,
+  component,
+  craig,
+  name,
+  message,
+  callback
+) {
   let projectKeyName = kebabCase(name);
   craig.store.project_name = projectKeyName;
   if (!projects[projectKeyName]) {
@@ -45,6 +53,7 @@ function onProjectSelectCallback(projects, component, craig, name, message) {
       message || `Project ${name} successfully imported`,
       true
     );
+    if (callback) callback();
   };
 }
 
@@ -79,7 +88,9 @@ function updateNotification(pathName, message) {
     text:
       message ||
       `Successfully updated${
-        pathName === "/" ? "" : " " + notificationText(pathName)
+        pathName === "/"
+          ? ""
+          : " " + notificationText(pathName).replace(/v\s2/g, "v2")
       }`,
     timeout: 3000,
   };
@@ -130,13 +141,15 @@ function saveProjectCallback(
   craig,
   stateData,
   componentProps,
-  setCurrentProject
+  setCurrentProject,
+  afterValidation
 ) {
   return function () {
     if (setCurrentProject) {
       component.onProjectSelect(
         stateData.project_name,
-        `Successfully saved project ${stateData.name}`
+        `Successfully saved project ${stateData.name}`,
+        afterValidation
       );
     } else {
       if (

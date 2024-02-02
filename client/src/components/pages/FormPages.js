@@ -13,7 +13,7 @@ import {
   SubnetPageTemplate,
 } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { arraySplatIndex, contains, keys, splat, transpose } from "lazy-z";
+import { arraySplatIndex, keys, splat, transpose } from "lazy-z";
 import {
   disableSshKeyDelete,
   getSubnetTierStateData,
@@ -30,16 +30,16 @@ import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.jso
 import DynamicForm from "../forms/DynamicForm";
 import { NoCisTile, NoPowerNetworkTile } from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
-import { CraigToggleForm, DynamicFormModal } from "../forms/utils";
-import StatefulTabs from "../forms/utils/StatefulTabs";
-import { craigForms } from "./CraigForms";
 import {
-  CraigFormHeading,
   PrimaryButton,
+  CraigFormHeading,
+  CraigToggleForm,
+  DynamicFormModal,
   RenderForm,
-} from "../forms/utils/ToggleFormComponents";
+  StatefulTabs,
+} from "../forms/utils";
+import { craigForms } from "./CraigForms";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
-import FormTemplate from "../forms/utils/FormTemplate";
 
 function cbrPageTemplate(craig) {
   let forms = craigForms(craig);

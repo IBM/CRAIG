@@ -2,8 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { RenderDocs } from "../pages/SimplePages";
 import { forceShowForm } from "../../lib";
-import StatefulTabs from "./utils/StatefulTabs";
-import { CraigToggleForm } from "./utils";
+import { CraigToggleForm, StatefulTabs } from "./utils";
 
 function none() {}
 

@@ -159,13 +159,19 @@ provider "ibm" {
 ##############################################################################
 
 resource "ibm_resource_group" "craig_rg" {
-  name = "craig-rg"
-  tags = [
-    "craig",
-    "development"
-  ]
+  count = var.use_existing_rg ? 0 : 1
+  name  = var.resource_group
+  tags  = ["craig"]
 }
 
+data "ibm_resource_group" "existing_rg" {
+  count = var.use_existing_rg ? 1 : 0
+  name  = var.resource_group
+}
+
+locals {
+  rg_id = var.use_existing_rg ? data.ibm_resource_group.existing_rg[0].id : ibm_resource_group.craig_rg[0].id
+}
 ##############################################################################
 
 
@@ -175,15 +181,12 @@ resource "ibm_resource_group" "craig_rg" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_wdc07" {
   provider          = ibm.power_vs_wdc07
-  name              = "craig-power-workspace-craig-wdc07"
+  name              = "${var.prefix}-power-workspace-craig-wdc07"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "wdc07"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -199,15 +202,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_wdc07" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_tor01" {
   provider          = ibm.power_vs_tor01
-  name              = "craig-power-workspace-craig-tor01"
+  name              = "${var.prefix}-power-workspace-craig-tor01"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "tor01"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -223,15 +223,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_tor01" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_sao01" {
   provider          = ibm.power_vs_sao01
-  name              = "craig-power-workspace-craig-sao01"
+  name              = "${var.prefix}-power-workspace-craig-sao01"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "sao01"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -247,15 +244,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_sao01" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_sao04" {
   provider          = ibm.power_vs_sao04
-  name              = "craig-power-workspace-craig-sao04"
+  name              = "${var.prefix}-power-workspace-craig-sao04"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "sao04"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -271,15 +265,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_sao04" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_tok04" {
   provider          = ibm.power_vs_tok04
-  name              = "craig-power-workspace-craig-tok04"
+  name              = "${var.prefix}-power-workspace-craig-tok04"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "tok04"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -295,15 +286,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_tok04" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_dal12" {
   provider          = ibm.power_vs_dal12
-  name              = "craig-power-workspace-craig-dal12"
+  name              = "${var.prefix}-power-workspace-craig-dal12"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "dal12"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -319,15 +307,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_dal12" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_dal10" {
   provider          = ibm.power_vs_dal10
-  name              = "craig-power-workspace-craig-dal10"
+  name              = "${var.prefix}-power-workspace-craig-dal10"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "dal10"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -343,15 +328,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_dal10" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_us_south" {
   provider          = ibm.power_vs_us_south
-  name              = "craig-power-workspace-craig-us-south"
+  name              = "${var.prefix}-power-workspace-craig-us-south"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "us-south"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -367,15 +349,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_us_south" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_wdc06" {
   provider          = ibm.power_vs_wdc06
-  name              = "craig-power-workspace-craig-wdc06"
+  name              = "${var.prefix}-power-workspace-craig-wdc06"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "wdc06"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -391,15 +370,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_wdc06" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_us_east" {
   provider          = ibm.power_vs_us_east
-  name              = "craig-power-workspace-craig-us-east"
+  name              = "${var.prefix}-power-workspace-craig-us-east"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "us-east"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -415,15 +391,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_us_east" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_lon06" {
   provider          = ibm.power_vs_lon06
-  name              = "craig-power-workspace-craig-lon06"
+  name              = "${var.prefix}-power-workspace-craig-lon06"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "lon06"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -439,15 +412,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_lon06" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_lon04" {
   provider          = ibm.power_vs_lon04
-  name              = "craig-power-workspace-craig-lon04"
+  name              = "${var.prefix}-power-workspace-craig-lon04"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "lon04"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -463,15 +433,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_lon04" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_eu_de_2" {
   provider          = ibm.power_vs_eu_de_2
-  name              = "craig-power-workspace-craig-eu-de-2"
+  name              = "${var.prefix}-power-workspace-craig-eu-de-2"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "eu-de-2"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -487,15 +454,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_eu_de_2" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_eu_de_1" {
   provider          = ibm.power_vs_eu_de_1
-  name              = "craig-power-workspace-craig-eu-de-1"
+  name              = "${var.prefix}-power-workspace-craig-eu-de-1"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "eu-de-1"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -511,15 +475,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_eu_de_1" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_mad02" {
   provider          = ibm.power_vs_mad02
-  name              = "craig-power-workspace-craig-mad02"
+  name              = "${var.prefix}-power-workspace-craig-mad02"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "mad02"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -535,15 +496,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_mad02" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_mad04" {
   provider          = ibm.power_vs_mad04
-  name              = "craig-power-workspace-craig-mad04"
+  name              = "${var.prefix}-power-workspace-craig-mad04"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "mad04"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -559,15 +517,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_mad04" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_syd05" {
   provider          = ibm.power_vs_syd05
-  name              = "craig-power-workspace-craig-syd05"
+  name              = "${var.prefix}-power-workspace-craig-syd05"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "syd05"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"
@@ -583,15 +538,12 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_syd05" {
 
 resource "ibm_resource_instance" "power_vs_workspace_craig_syd04" {
   provider          = ibm.power_vs_syd04
-  name              = "craig-power-workspace-craig-syd04"
+  name              = "${var.prefix}-power-workspace-craig-syd04"
   service           = "power-iaas"
   plan              = "power-virtual-server-group"
   location          = "syd04"
-  resource_group_id = ibm_resource_group.craig_rg.id
-  tags = [
-    "hello",
-    "world"
-  ]
+  resource_group_id = local.rg_id
+  tags              = ["craig"]
   timeouts {
     create = "6m"
     update = "5m"

@@ -1,12 +1,12 @@
 import React from "react";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import {
   NetworkEnterprise,
   Voicemail,
   VirtualMachine,
 } from "@carbon/icons-react";
 import { DeploymentIcon, PowerSubnet, PowerSubnetInnerBox } from "../diagrams";
-import { contains, splatContains } from "lazy-z";
+import { splatContains } from "lazy-z";
 import PropTypes from "prop-types";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 
@@ -31,38 +31,24 @@ export const PowerSubnets = (props) => {
     };
   }
 
-  /**
-   * filter volumes by instance and workspace
-   * @param {string} powerWorkspaceName
-   * @param {string} instanceName
-   * @returns {Function} filter function
-   */
-  function volumeFilter(powerWorkspaceName, instanceName) {
-    return function (volume, volumeIndex) {
-      if (
-        volume.workspace === powerWorkspaceName &&
-        contains(volume.attachments, instanceName)
-      ) {
-        volume.index = volumeIndex;
-        return volume;
-      }
-    };
-  }
-
   return (
     <div className="formInSubForm marginBottomSmall">
-      <CraigFormHeading
-        name="Subnets"
-        type="subHeading"
-        icon={<NetworkEnterprise className="diagramTitleIcon" />}
-        onClick={
-          props.static
-            ? undefined
-            : () => {
-                props.onPowerWorkspaceClick(props.powerIndex);
-              }
-        }
-      />
+      {props.small ? (
+        ""
+      ) : (
+        <CraigFormHeading
+          name="Subnets"
+          type="subHeading"
+          icon={<NetworkEnterprise className="diagramTitleIcon" />}
+          onClick={
+            props.static
+              ? undefined
+              : () => {
+                  props.onPowerWorkspaceClick(props.powerIndex);
+                }
+          }
+        />
+      )}
       {props.power.network.map((subnet, subnetIndex) => {
         let subnetInstances = craig.store.json.power_instances.filter(
           instanceFilter(power.name, subnet.name)
@@ -72,6 +58,8 @@ export const PowerSubnets = (props) => {
         );
         return (
           <PowerSubnet
+            subnetIndex={subnetIndex}
+            small={props.small}
             static={props.static}
             key={power.name + subnetIndex}
             subnet={subnet}
@@ -90,6 +78,7 @@ export const PowerSubnets = (props) => {
                 icon={VirtualMachine}
                 name="Virtual Servers"
                 static={props.static}
+                small={props.small}
               >
                 {subnetInstances.map((instance, subnetInstanceIndex) => {
                   return (
@@ -115,6 +104,7 @@ export const PowerSubnets = (props) => {
                             ? undefined
                             : () => props.onPowerInstanceClick(instance.index)
                         }
+                        small={props.small}
                       />
                     </HoverClassNameWrapper>
                   );
@@ -148,6 +138,7 @@ export const PowerSubnets = (props) => {
                           ? undefined
                           : () => props.onVtlClick(instance.index)
                       }
+                      small={props.small}
                     />
                   </HoverClassNameWrapper>
                 ))}

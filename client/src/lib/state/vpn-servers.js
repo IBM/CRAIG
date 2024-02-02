@@ -204,6 +204,15 @@ function initVpnState(store) {
         invalid: invalidName("vpn_servers"),
         invalidText: invalidNameText("vpn_servers"),
         size: "small",
+        /**
+         * return helper text for vpn servers
+         * @param {*} stateData
+         * @param {*} componentProps
+         * @returns {string} helper text
+         */
+        helperText: function vpnServersHelperText(stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-vpn-server-${stateData.name}`;
+        },
       },
       resource_group: resourceGroupsField(true),
       vpc: {

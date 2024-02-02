@@ -1,4 +1,4 @@
-const { getObjectFromArray, distinct, contains } = require("lazy-z");
+const { distinct, contains, isEmpty } = require("lazy-z");
 
 /**
  * Filters docs obj to render defaults for specific template only.
@@ -10,6 +10,7 @@ const { getObjectFromArray, distinct, contains } = require("lazy-z");
  */
 function filterDocs(template, field, docs) {
   let doc = docs[field];
+  let noDefaults = false;
   if (!template) {
     return doc;
   }
@@ -17,8 +18,10 @@ function filterDocs(template, field, docs) {
   doc.content.forEach((section) => {
     if (section.templates && section.table) {
       let defaultsForTemplate = section.templates[template];
-      if (!defaultsForTemplate) {
-        // doc does not have template, skip filter, return all of docs
+      if (!defaultsForTemplate || isEmpty(defaultsForTemplate)) {
+        // template has no defaults, make defaults table empty [[]]
+        section.table = [[]];
+        noDefaults = true;
         return;
       }
       tableHeader = section.table[0];
@@ -30,6 +33,10 @@ function filterDocs(template, field, docs) {
       section.table = [tableHeader, ...section.table]; // Insert headers back into table
     }
   });
+  if (noDefaults) {
+    // removes 'The default configuration includes:' if no defaults
+    doc.content = doc.content.filter((obj) => obj.text !== "_default_includes");
+  }
   return doc;
 }
 

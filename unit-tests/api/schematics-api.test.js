@@ -225,6 +225,9 @@ describe("schematics api", () => {
           id: "us-south.workspace.testWorkspace",
           name: "testWorkspace",
           region: "us-south",
+          resources: {
+            id: "foo-123-id",
+          },
         },
         false
       );
@@ -254,6 +257,11 @@ describe("schematics api", () => {
           id: "us-south.workspace.testWorkspace",
           name: "testWorkspace",
           region: "us-south",
+          resources: [
+            {
+              id: "foo-123-id",
+            },
+          ],
         },
         false
       );
@@ -274,6 +282,50 @@ describe("schematics api", () => {
               id: "us-south.workspace.testWorkspace",
               name: "testWorkspace",
               region: "us-south",
+              resources: [
+                {
+                  id: "foo-123-id",
+                },
+              ],
+            })
+          );
+        });
+    });
+    it("should return correct data when workspace is created", () => {
+      let { axios } = initMockAxios(
+        {
+          id: "us-south.workspace.testWorkspace",
+          name: "testWorkspace",
+          region: "us-south",
+          resources: [
+            {
+              id: "foo-123-id",
+            },
+          ],
+        },
+        false
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .createWorkspace(
+          {
+            params: {
+              workspaceName: "testWorkspace",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith({
+              id: "us-south.workspace.testWorkspace",
+              name: "testWorkspace",
+              region: "us-south",
+              resources: [
+                {
+                  id: "foo-123-id",
+                },
+              ],
             })
           );
         });
@@ -286,6 +338,32 @@ describe("schematics api", () => {
           location: "us-south",
         },
         true
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .createWorkspace(
+          {
+            params: {
+              workspaceName: "testWorkspace",
+              region: "us-south",
+              resourceGroup: "foo-rg",
+            },
+          },
+          res
+        )
+        .catch(() => {
+          assert.isTrue(res.send.calledOnce);
+        });
+    });
+    it("should respond with error", () => {
+      let { axios } = initMockAxios(
+        {
+          id: "us-south.workspace.testWorkspace",
+          name: "testWorkspace",
+          location: "us-south",
+          resources: [],
+        },
+        false
       );
       let testSchematicsController = new controller(axios);
       return testSchematicsController

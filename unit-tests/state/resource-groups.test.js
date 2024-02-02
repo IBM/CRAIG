@@ -181,4 +181,56 @@ describe("resource_groups", () => {
       );
     });
   });
+  describe("resource groups schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = new newState();
+    });
+    describe("craig.resource_groups.name.helperText", () => {
+      it("should return the correct helper text when using prefix", () => {
+        let actualData = craig.resource_groups.name.helperText(
+          {
+            name: "test",
+            use_prefix: true,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                },
+              },
+            },
+          }
+        );
+        assert.deepEqual(
+          actualData,
+          "iac-test",
+          "it should return correct data"
+        );
+      });
+      it("should return the correct helper text when not using prefix", () => {
+        let actualData = craig.resource_groups.name.helperText(
+          {
+            name: "test",
+            use_prefix: false,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                },
+              },
+            },
+          }
+        );
+        assert.deepEqual(actualData, "test", "it should return correct data");
+      });
+    });
+  });
 });

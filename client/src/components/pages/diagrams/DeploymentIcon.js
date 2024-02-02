@@ -1,5 +1,4 @@
 import React from "react";
-import { RenderForm } from "../../forms/utils/ToggleFormComponents";
 import { contains, isNullOrEmptyString } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
@@ -7,6 +6,7 @@ import { FloatingIp, Security } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
 import { disableSave } from "../../../lib";
+import { RenderForm } from "../../forms";
 
 /**
  * check to see if deployment icon is selected
@@ -87,7 +87,7 @@ export const DeploymentIcon = (props) => {
           className: "margin1rem" + (props.onClick ? " clicky" : ""),
           onClick: props.onClick ? props.onClick : undefined,
         })}
-        {props.small ? "" : <p className="font12px">{nameDisplay(props)}</p>}
+        <p className="font12px">{nameDisplay(props)}</p>
       </div>
       {props.children}
       {hasSecurityGroups
@@ -110,7 +110,9 @@ export const DeploymentIcon = (props) => {
             </Tag>
           ))
         : ""}
-      {props.itemName === "vsi" && props.item.enable_floating_ip ? (
+      {props.itemName === "vsi" &&
+      props.item.enable_floating_ip &&
+      !props.small ? (
         <Tag type={tagColors[3]}>
           <div className="displayFlex font10Px">
             <FloatingIp className="securityTabIconMargin" /> Floating IP

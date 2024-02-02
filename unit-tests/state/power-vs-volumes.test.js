@@ -263,7 +263,6 @@ describe("power_volumes", () => {
           pi_anti_affinity_instance: null,
           pi_anti_affinity_volume: null,
           pi_volume_pool: null,
-          pi_volume_type: null,
         },
         "it should return correct data"
       );
@@ -520,37 +519,6 @@ describe("power_volumes", () => {
       assert.deepEqual(
         craig.power_volumes.pi_anti_affinity_instance.groups(
           {
-            attachments: "",
-            pi_volume_size: "",
-            workspace: "workspace",
-          },
-          {
-            data: {
-              workspace: "workspace",
-              name: "volume",
-            },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      workspace: "workspace",
-                      name: "volume",
-                    },
-                  ],
-                },
-              },
-            },
-          }
-        ),
-        [],
-        "it should return list of groups"
-      );
-    });
-    it("should not return volume groups without current volume", () => {
-      assert.deepEqual(
-        craig.power_volumes.pi_anti_affinity_instance.groups(
-          {
             workspace: "workspace",
             attachments: "",
           },
@@ -570,34 +538,6 @@ describe("power_volumes", () => {
           }
         ),
         ["volume"],
-        "it should return list of groups"
-      );
-    });
-    it("should not return volume groups without current volume", () => {
-      assert.deepEqual(
-        craig.power_volumes.pi_anti_affinity_instance.groups(
-          {
-            workspace: "workspace",
-          },
-          {
-            data: {
-              name: "volume",
-            },
-            craig: {
-              store: {
-                json: {
-                  power_instances: [
-                    {
-                      workspace: "workspace",
-                      name: "volume",
-                    },
-                  ],
-                },
-              },
-            },
-          }
-        ),
-        [],
         "it should return list of groups"
       );
     });

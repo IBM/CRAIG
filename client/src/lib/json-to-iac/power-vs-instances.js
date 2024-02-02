@@ -25,7 +25,7 @@ function powerVsInstanceData(instance, config) {
         foundWorkspace
           ? new revision(config)
               .child("power", instance.workspace)
-              .child("ssh_keys", instance.ssh_key).data.use_data
+              .child("ssh_keys", instance.ssh_key).data?.use_data
           : false
       )
     ? "data."
@@ -36,7 +36,7 @@ function powerVsInstanceData(instance, config) {
         foundWorkspace
           ? new revision(config)
               .child("power", instance.workspace)
-              .child("images", instance.image).data.use_data
+              .child("images", instance.image).data?.use_data
           : false
       )
     ? "data."
@@ -65,6 +65,7 @@ function powerVsInstanceData(instance, config) {
     pi_instance_name: "${var.prefix}-" + instance.name,
   };
   transpose(instance, data);
+  delete data.index;
   // add pi network here to have the items at the bottom of the terraform code
   data.pi_network = [];
   instance.network.forEach((nw) => {
@@ -103,7 +104,6 @@ function powerVsInstanceData(instance, config) {
     delete data[field];
   });
   if (data.pi_affinity_policy) {
-    delete data.pi_storage_type;
     delete data.pi_storage_pool;
     if (data.pi_affinity_policy === "affinity") {
       delete data.pi_anti_affinity_instance;
@@ -203,8 +203,7 @@ function formatFalconStorInstance(instance, config) {
 function powerInstanceTf(config) {
   // for some reason i do not understand this code didn't work in config-to-files
   // after spending about 30 mins debugging i moved it here and now it works great
-  let tf =
-    config.power_instances && config.power_instances.length > 0 ? "" : null;
+  let tf = "";
   (config.power_instances || []).forEach((instance) => {
     tf +=
       tfBlock(

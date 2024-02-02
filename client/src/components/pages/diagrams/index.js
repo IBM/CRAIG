@@ -6,7 +6,7 @@ export { ManageService } from "./ManageService";
 export { VpcMap } from "./VpcMap";
 export { AclMap } from "./AclMap";
 export { SubnetTierMap } from "./SubnetTierMap";
-export { PassThroughWrapper } from "./Overview";
+export { PassThroughWrapper } from "./PassthroughWrapper.js";
 export { SshKeys } from "./SshKeys";
 export { SecurityGroups } from "./SecurityGroups";
 export { Subnet } from "./Subnet";

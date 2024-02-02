@@ -106,6 +106,27 @@ describe("observability", () => {
           "it should set defaults"
         );
       });
+      it("should update logdna on save with found bucket", () => {
+        let state = newState();
+        state.logdna.save({
+          name: "aaa",
+          bucket: "management-bucket",
+        });
+        assert.deepEqual(
+          state.store.json.logdna,
+          {
+            enabled: false,
+            plan: "lite",
+            endpoints: "private",
+            platform_logs: false,
+            resource_group: "service-rg",
+            cos: "cos",
+            bucket: "management-bucket",
+            name: "aaa",
+          },
+          "it should set defaults"
+        );
+      });
     });
   });
   describe("sysdig", () => {

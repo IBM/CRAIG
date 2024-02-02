@@ -17,25 +17,6 @@ function notificationText(pathname) {
 }
 
 /**
- * get cos instance from bucket name
- * this function can be moved to `/state/logging-monitoring`, unused elsewhere
- * @param {String} name
- * @param {Array} objectStoreArray
- * @returns cos name that is associated with supplied bucket name, or null if no instance found
- */
-function getCosFromBucket(name, objectStoreArray) {
-  let cos;
-  objectStoreArray.forEach((instance) => {
-    instance.buckets.forEach((bucket) => {
-      if (name === bucket.name) {
-        cos = instance.name;
-      }
-    });
-  });
-  return cos || null;
-}
-
-/**
  * get names of all secrets in craig
  * @param {object} componentProps
  * @returns array of all secret names in craig
@@ -72,6 +53,5 @@ function getAllSecrets(stateData, componentProps, field) {
 
 module.exports = {
   notificationText,
-  getCosFromBucket,
   getAllSecrets,
 };

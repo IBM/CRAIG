@@ -1,6 +1,6 @@
 import React from "react";
 import { getServices } from "../../../lib/forms/overview";
-import { CraigFormHeading } from "../../forms/utils/ToggleFormComponents";
+import { CraigFormHeading } from "../../forms/utils";
 import {
   GroupResource,
   IbmCloudKeyProtect,
@@ -64,7 +64,7 @@ export const RgServiceMap = (props) => {
     return serviceMap.length === 0 && props.small ? (
       ""
     ) : serviceMap.length === 0 ? (
-      <div style={{ marginBottom: "0.5rem" }} />
+      <div style={{ marginBottom: "0.5rem" }} key={"rg-" + rgIndex} />
     ) : (
       <div
         className={

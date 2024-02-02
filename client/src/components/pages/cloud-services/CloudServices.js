@@ -33,22 +33,20 @@ import {
 } from "../../../lib";
 import { ManageService } from "../diagrams/ManageService";
 import {
-  CraigFormHeading,
-  PrimaryButton,
   RenderForm,
-} from "../../forms/utils/ToggleFormComponents";
-import {
+  PrimaryButton,
+  CraigFormHeading,
   CraigFormGroup,
   CraigToggleForm,
   DynamicFormModal,
+  StatefulTabs,
 } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
 import { craigForms } from "../CraigForms";
 import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import {
   cosTf,
   dnsTf,

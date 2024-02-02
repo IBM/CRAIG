@@ -1,18 +1,19 @@
 import React from "react";
 import {
-  CraigFormHeading,
-  PrimaryButton,
-  RenderForm,
-} from "../../forms/utils/ToggleFormComponents";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
-import {
   FileStorage,
   IbmPowerVs,
   VirtualMachine,
   Voicemail,
 } from "@carbon/icons-react";
 import { craigForms } from "../CraigForms";
-import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
+import {
+  PrimaryButton,
+  CraigToggleForm,
+  DynamicFormModal,
+  CraigFormHeading,
+  RenderForm,
+  StatefulTabs,
+} from "../../forms/utils";
 import { disableSave, powerVsTf, propsMatchState } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";
 import { contains, isNullOrEmptyString, revision } from "lazy-z";
@@ -24,7 +25,7 @@ import { PowerVolumes } from "./PowerVolumes";
 import { IcseSelect } from "icse-react-assets";
 import { NoPowerNetworkTile } from "../../forms/dynamic-form";
 import { PowerVolumeTable } from "./PowerVolumeTable";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { powerInstanceTf, powerVsVolumeTf } from "../../../lib/json-to-iac";
 
 class PowerDiagram extends React.Component {
@@ -191,7 +192,18 @@ class PowerDiagram extends React.Component {
           }`}
           beginDisabled
           show={this.state.showInstanceVolumeModal}
-          onRequestClose={this.resetSelection}
+          onRequestClose={() => {
+            if (this.state.selectWhenDone) {
+              this.setState({
+                modalService: "",
+                showInstanceVolumeModal: false,
+                editing: this.state.selectWhenDone.editing,
+                selectedItem: this.state.selectWhenDone.selectedItem,
+                selectedIndex: this.state.selectWhenDone.selectedIndex,
+                selectWhenDone: {},
+              });
+            } else this.resetSelection();
+          }}
           key={this.state.modalService}
           onRequestSubmit={
             // prevent from loading unfound field
@@ -202,15 +214,26 @@ class PowerDiagram extends React.Component {
                     stateData,
                     componentProps
                   );
-                  this.setState(
-                    {
-                      showInstanceVolumeModal: false,
+                  if (this.state.selectWhenDone) {
+                    this.setState({
                       modalService: "",
-                    },
-                    () => {
-                      this.resetSelection();
-                    }
-                  );
+                      showInstanceVolumeModal: false,
+                      editing: this.state.selectWhenDone.editing,
+                      selectedItem: this.state.selectWhenDone.selectedItem,
+                      selectedIndex: this.state.selectWhenDone.selectedIndex,
+                      selectWhenDone: {},
+                    });
+                  } else {
+                    this.setState(
+                      {
+                        showInstanceVolumeModal: false,
+                        modalService: "",
+                      },
+                      () => {
+                        this.resetSelection();
+                      }
+                    );
+                  }
                 }
           }
         >
@@ -302,6 +325,7 @@ class PowerDiagram extends React.Component {
                     stateData,
                     componentProps
                   );
+
                   this.resetSelection();
                   this.setState({
                     editing: true,
@@ -535,7 +559,11 @@ class PowerDiagram extends React.Component {
                               this.setState({
                                 showInstanceVolumeModal: true,
                                 modalService: "power_volumes",
-                                editing: false,
+                                selectWhenDone: {
+                                  selectedItem: "power_instances",
+                                  editing: true,
+                                  selectedIndex: this.state.selectedIndex,
+                                },
                                 overrideData: {
                                   workspace:
                                     craig.store.json[this.state.selectedItem][

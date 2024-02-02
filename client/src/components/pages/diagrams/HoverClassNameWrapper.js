@@ -35,6 +35,7 @@ class HoverClassNameWrapper extends React.Component {
         onMouseEnter={this.handleMouseOver}
         onMouseLeave={this.handleMouseOut}
         onClick={this.props.onClick ? this.props.onClick : () => {}}
+        style={this.props.style}
       >
         {this.props.children}
       </div>

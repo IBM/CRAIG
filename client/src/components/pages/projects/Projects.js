@@ -1,17 +1,17 @@
 import React from "react";
 import { Button } from "@carbon/react";
-import { DeleteModal } from "icse-react-assets";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
-import { azsort } from "lazy-z";
+import { azsort, contains, eachKey, splatContains } from "lazy-z";
 import { Add, MagicWandFilled, Upload } from "@carbon/icons-react";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
 import { templates } from "../../utils";
-import { LoadingModal } from "./LoadingModal";
+import { LoadingModal, ValidationModal } from "./LoadingModal";
 import PropTypes from "prop-types";
 import Wizard from "./Wizard";
 import "./project.css";
+import { DeleteModal } from "../../forms";
 
 class Projects extends React.Component {
   constructor(props) {
@@ -28,6 +28,8 @@ class Projects extends React.Component {
       clickedWorkspaceUrl: "",
       wizardModal: false,
       importJSONModalOpen: false,
+      showValidationModal: false,
+      invalidItems: {},
     };
 
     /* do not delete, for debugging */
@@ -45,6 +47,8 @@ class Projects extends React.Component {
     this.onCreateWorkspaceClick = this.onCreateWorkspaceClick.bind(this);
     this.toggleWizard = this.toggleWizard.bind(this);
     this.toggleImportJSONModal = this.toggleImportJSONModal.bind(this);
+    this.afterValidation = this.afterValidation.bind(this);
+    this.removeInvalidReferences = this.removeInvalidReferences.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -120,10 +124,121 @@ class Projects extends React.Component {
           // not already selected
           this.props.current_project !== keyName
         ) {
-          this.props.onProjectSelect(this.props.projects[keyName].project_name);
+          this.setState({ showValidationModal: true }, () => {
+            this.props.onProjectSelect(
+              this.props.projects[keyName].project_name,
+              "",
+              this.afterValidation
+            );
+          });
         }
       }
     };
+  }
+
+  /**
+   * on validation modal done
+   * @param {*} invalidItems
+   */
+  afterValidation(invalidItems) {
+    let noItemsInvalid = true;
+    // if any arrays in the map of invalid items have a name contained within
+    // set to false
+    eachKey(invalidItems, (item) => {
+      if (invalidItems[item].length > 0) {
+        noItemsInvalid = false;
+      }
+    });
+    // if no items are invalid, hide modal. otherwise save invalid items to state
+    if (noItemsInvalid) this.setState({ showValidationModal: false });
+    else this.setState({ invalidItems });
+  }
+
+  /**
+   * remove invalid references
+   */
+  removeInvalidReferences() {
+    // for each item that is checked
+    eachKey(this.state.invalidItems, (item) => {
+      if (item === "power_images") {
+        this.props.craig.store.json.power.forEach((workspace) => {
+          if (
+            // if the workspace is in the list of invalid items
+            splatContains(
+              this.state.invalidItems.power_images,
+              "workspace",
+              workspace.name
+            )
+          ) {
+            // get a list of image objects for this workspace
+            let workspaceImages = this.state.invalidItems.power_images.filter(
+              (image) => {
+                if (image.workspace === workspace.name) {
+                  return image;
+                }
+              }
+            );
+
+            // set image names to filter out images
+            workspace.imageNames = workspace.imageNames.filter((name) => {
+              if (!splatContains(workspaceImages, "image", name)) {
+                return name;
+              }
+            });
+
+            // remove references in instances to unfound images
+            this.props.craig.store.json.power_instances.forEach((instance) => {
+              if (
+                instance.workspace === workspace.name &&
+                !contains(workspace.imageNames, instance.image)
+              ) {
+                instance.image = null;
+              }
+            });
+          }
+        });
+      } else {
+        // for each item in the json store field
+        this.props.craig.store.json[item].forEach((resource) => {
+          // if the resource name is contained in the list of invalid items
+          // set the reference to null
+          if (contains(this.state.invalidItems[item], resource.name)) {
+            if (item === "vsi" && resource.image_name) {
+              resource.image_name = null;
+              resource.image = null;
+            } else if (item === "clusters" && resource.kube_version) {
+              resource.kube_version = null;
+            }
+          }
+        });
+      }
+    });
+    // reset invalid items and hide validation modal
+    this.setState({ invalidItems: {}, showValidationModal: false }, () => {
+      // force update state store to ensure changes are saved
+      this.props.craig.update();
+    });
+  }
+
+  /**
+   * on validation modal done
+   * @param {*} invalidItems
+   */
+  afterValidation(invalidItems) {
+    let noItemsInvalid = true;
+    // if any arrays in the map of invalid items have a name contained within
+    // set to false
+    eachKey(invalidItems, (item) => {
+      if (invalidItems[item].length > 0) {
+        noItemsInvalid = false;
+      }
+    });
+    // if no items are invalid, hide modal. otherwise save invalid items to state
+    if (noItemsInvalid)
+      setTimeout(() => {
+        this.setState({ showValidationModal: false });
+      }, 1000);
+    else this.setState({ invalidItems });
   }
 
   /**
@@ -263,6 +378,18 @@ class Projects extends React.Component {
     let projectKeys = Object.keys(this.props.projects).sort(azsort);
     return (
       <div>
+        {this.state.showValidationModal && (
+          <ValidationModal
+            invalidItems={this.state.invalidItems}
+            afterValidation={() => {
+              this.setState({
+                showValidationModal: false,
+                invalidItems: {},
+              });
+            }}
+            removeInvalidReferences={this.removeInvalidReferences}
+          />
+        )}
         <CraigHeader />
         <div id="projects" className="body">
           <h3 className="marginBottomXs">Projects</h3>
@@ -401,7 +528,22 @@ class Projects extends React.Component {
             import
             open={this.state.importJSONModalOpen}
             onClose={this.toggleImportJSONModal}
-            onProjectSave={this.props.onProjectSave}
+            onProjectSave={(stateData, componentProps, setCurrentProject) => {
+              // validate image names / cluster versions on import
+              this.setState(
+                {
+                  showValidationModal: true,
+                },
+                () => {
+                  this.props.onProjectSave(
+                    stateData,
+                    componentProps,
+                    setCurrentProject,
+                    this.afterValidation
+                  );
+                }
+              );
+            }}
           />
         )}
       </div>

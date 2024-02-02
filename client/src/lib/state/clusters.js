@@ -315,6 +315,23 @@ function initClusterStore(store) {
         invalid: invalidName("clusters"),
         invalidText: invalidNameText("clusters"),
         size: "small",
+        /**
+         * get helper text for cluster
+         * @param {Object} stateData
+         * @param {Object} componentProps
+         * @returns {string} composed acl name
+         */
+        helperText: function clusterHelperTestCallback(
+          stateData,
+          componentProps
+        ) {
+          return (
+            componentProps.craig.store.json._options.prefix +
+            "-" +
+            stateData.name +
+            "-cluster"
+          );
+        },
       },
       resource_group: resourceGroupsField(true),
       kube_type: {

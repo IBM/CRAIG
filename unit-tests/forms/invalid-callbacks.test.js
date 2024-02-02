@@ -5,7 +5,6 @@ const {
   invalidTagList,
   invalidCrnList,
   invalidIpCommaList,
-  invalidIdentityProviderURI,
   isValidUrl,
   cidrBlocksOverlap,
   hasOverlappingCidr,
@@ -18,7 +17,6 @@ const {
 } = require("../../client/src/lib/forms");
 const {
   invalidDescription,
-  nullOrEmptyStringCheckCallback,
   invalidCrns,
 } = require("../../client/src/lib/forms/invalid-callbacks");
 
@@ -1238,20 +1236,6 @@ describe("invalid callbacks", () => {
       assert.isFalse(invalidIpCommaList(null));
     });
   });
-  describe("invalidIdentityProviderURI", () => {
-    it("should return true when identity_provider is invalid", () => {
-      let actualData = invalidIdentityProviderURI({
-        identity_provider: "",
-      });
-      assert.isTrue(actualData);
-    });
-    it("should return false when identity_provider is valid", () => {
-      let actualData = invalidIdentityProviderURI({
-        identity_provider: "http://identity",
-      });
-      assert.isFalse(actualData);
-    });
-  });
   describe("isValidUrl", () => {
     it("should be true for empty or null string", () => {
       assert.isTrue(isValidUrl("") && isValidUrl(null) && isValidUrl("null"));
@@ -1519,9 +1503,6 @@ describe("invalid callbacks", () => {
     it("should return true when description has invalid chars", () => {
       assert.isTrue(invalidDescription("@", {}));
     });
-  });
-  describe("nullOrEmptyStringCheckCallback", () => {
-    assert.isTrue(nullOrEmptyStringCheckCallback("rdata")({ rdata: "" }, {}));
   });
   describe("invalidCrns", () => {
     it("should return true if invalid crn list", () => {

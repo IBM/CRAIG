@@ -1,8 +1,5 @@
 const { assert } = require("chai");
-const {
-  notificationText,
-  getCosFromBucket,
-} = require("../../client/src/lib/forms");
+const { notificationText } = require("../../client/src/lib/forms");
 const { getAllSecrets } = require("../../client/src/lib/forms/utils");
 
 describe("utils", () => {
@@ -70,34 +67,6 @@ describe("utils", () => {
     it('should replace "Cbr" with "Context Based Restrictions"', () => {
       const result = notificationText("/form/cbr");
       assert.strictEqual(result, "Context Based Restrictions");
-    });
-  });
-  describe("getCosFromBucket", () => {
-    it("should return correct cos instance for bucket", () => {
-      const result = getCosFromBucket("fake-bucket", [
-        {
-          buckets: [{ name: "fake-bucket" }, { name: "other-bucket" }],
-          name: "cos-1",
-        },
-        {
-          buckets: [{ name: "frog-bucket" }, { name: "foo-bucket" }],
-          name: "cos-2",
-        },
-      ]);
-      assert.strictEqual(result, "cos-1");
-    });
-    it("should return null", () => {
-      const result = getCosFromBucket("dog-bucket", [
-        {
-          buckets: [{ name: "fake-bucket" }, { name: "other-bucket" }],
-          name: "cos-1",
-        },
-        {
-          buckets: [{ name: "frog-bucket" }, { name: "foo-bucket" }],
-          name: "cos-2",
-        },
-      ]);
-      assert.strictEqual(result, null);
     });
   });
   describe("getAllSecrets", () => {

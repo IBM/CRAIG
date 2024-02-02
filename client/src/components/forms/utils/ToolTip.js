@@ -9,7 +9,7 @@ import { Information } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { titleCase } from "lazy-z";
 import { addClassName } from "../../../lib/forms/dynamic-form-fields";
-import { RenderForm } from "./ToggleFormComponents";
+import { RenderForm } from "./RenderForm";
 
 /**
  * render a tooltip around an input field

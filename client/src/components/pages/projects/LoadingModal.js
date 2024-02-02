@@ -1,7 +1,17 @@
 import React from "react";
-import { Loading, Modal } from "@carbon/react";
+import {
+  Loading,
+  Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@carbon/react";
 import { CheckmarkOutline, CloseOutline } from "@carbon/icons-react";
 import PropTypes from "prop-types";
+import { distinct, eachKey, keys, splat, titleCase } from "lazy-z";
 
 export const LoadingModal = (props) => {
   return (
@@ -101,4 +111,125 @@ LoadingModal.propTypes = {
   toggleModal: PropTypes.func.isRequired,
   failed: PropTypes.bool,
   retryCallback: PropTypes.func.isRequired,
+};
+
+export const ValidationModal = (props) => {
+  let hasInvalidItems = false;
+  if (props.invalidItems) {
+    eachKey(props.invalidItems, (item) => {
+      if (props.invalidItems[item].length > 0) {
+        hasInvalidItems = true;
+      }
+    });
+  }
+
+  return (
+    <Modal
+      open
+      preventCloseOnClickOutside
+      passiveModal={hasInvalidItems === false}
+      modalHeading={
+        hasInvalidItems === false
+          ? "Validating Configuration..."
+          : "Invalid Items"
+      }
+      danger={hasInvalidItems}
+      primaryButtonText="Remove invalid references (Recommended)"
+      secondaryButtonText="Do not update"
+      onRequestClose={() => props.afterValidation({})}
+      onRequestSubmit={() => {
+        props.removeInvalidReferences();
+      }}
+    >
+      {Object.keys(props.invalidItems).length === 0 ? (
+        <>
+          <div className="loadingWheel flexDirectionColumn marginBottomSmall">
+            <Loading active={true} withOverlay={false} />
+          </div>
+          <div className="warningText yellowText marginBottomSmall">
+            Warning: Do not close or reload window.
+          </div>
+        </>
+      ) : (
+        <>
+          <div>
+            <h3>
+              The following items have out of date references.{" "}
+              <b style={{ fontWeight: "bold" }}>
+                New resources cannot be provisioned with these settings.
+              </b>
+            </h3>
+            <div className="marginBottomSmall" />
+            {keys(props.invalidItems).map((item) => {
+              return props.invalidItems[item].length === 0 ? (
+                ""
+              ) : item === "power_images" ? (
+                <div key={item}>
+                  <h3 className="marginBottomSmall">Power Workspace Images</h3>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableHeader>Workspace</TableHeader>
+                        <TableHeader>Zone</TableHeader>
+                        <TableHeader>Image Name</TableHeader>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {props.invalidItems.power_images
+                        .sort((a, b) => {
+                          if (a.name < b.name) {
+                            return -1;
+                          } else if (a.name > b.name) {
+                            return 1;
+                          }
+                        })
+                        .map((image) => (
+                          <TableRow key={image.workspace + image.image}>
+                            <TableCell>{image.workspace}</TableCell>
+                            <TableCell>{image.zone}</TableCell>
+                            <TableCell>{image.image}</TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div key={item}>
+                  <h3 className="marginBottomSmall">
+                    {titleCase(item).replace(/Vsi/, "VSI")}
+                  </h3>
+                  <Table className="marginBottomSmall">
+                    <TableHead>
+                      <TableRow>
+                        <TableHeader>
+                          {item === "vsi" ? "VSI" : "Cluster"} Deployment
+                        </TableHeader>
+                        <TableHeader>
+                          {item === "vsi" ? "Image" : "Kubernetes Version"}
+                        </TableHeader>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {props.invalidItems[item].map((resource) => (
+                        <TableRow key={JSON.stringify(resource)}>
+                          <TableCell>
+                            {item === "vsi" ? resource.vsi : resource.cluster}
+                          </TableCell>
+                          <TableCell>
+                            {item === "vsi"
+                              ? resource.image.replace(/\[.+/g, "")
+                              : resource.kube_version}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </Modal>
+  );
 };

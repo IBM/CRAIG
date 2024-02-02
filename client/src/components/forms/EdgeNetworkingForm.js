@@ -1,13 +1,14 @@
 import React from "react";
-import { IcseSelect, StatelessToggleForm } from "icse-react-assets";
+import { dynamicToolTipWrapperProps } from "../../lib/forms/dynamic-form-fields";
+import { DynamicFormSelect, DynamicToolTipWrapper } from "./dynamic-form";
 import { contains, buildNumberDropdownList, kebabCase } from "lazy-z";
 import { Modal, RadioButtonGroup, RadioButton, Tile } from "@carbon/react";
 import { EdgeNetworkingDocs } from "../pages";
 import edgeNetwork from "../../images/edge-network.png";
 import PropTypes from "prop-types";
 import "./edge-network.css";
-import { CraigFormHeading, PrimaryButton } from "./utils/ToggleFormComponents";
-import { CraigFormGroup } from "./utils";
+import { StatelessFormWrapper } from "./utils/StatelessFormWrapper";
+import { PrimaryButton, CraigFormHeading, CraigFormGroup } from "./utils";
 
 const edgePatterns = [
   {
@@ -99,6 +100,7 @@ class EdgeNetworkingForm extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onModalToggle = this.onModalToggle.bind(this);
+    this.disableSave = this.disableSave.bind(this);
   }
 
   onToggle() {
@@ -139,14 +141,48 @@ class EdgeNetworkingForm extends React.Component {
     });
   }
 
+  disableSave() {
+    return this.state.edgeType === "none" ||
+      this.state.zones === this.state.prevZones
+      ? true
+      : this.props.craig.store.edge_vpc_name !== undefined
+      ? this.state.zones === String(this.props.craig.store.edge_zones)
+      : contains([this.state.edgeType, this.state.pattern], "") ||
+        this.state.zones === "0";
+  }
+
   render() {
+    let field = {
+      className: "leftTextAlign",
+      labelText: "Edge Networking Zones",
+      invalid: function (stateData) {
+        return stateData.edgeType === "none" ? false : stateData.zones === "0";
+      },
+      invalidText: function () {
+        return "Select availability zones";
+      },
+      optional: false,
+      disabled: function (stateData) {
+        return stateData.edgeType === "none";
+      },
+      groups:
+        this.state.zones === "0"
+          ? buildNumberDropdownList(4)
+          : buildNumberDropdownList(3, 1),
+      tooltip: {
+        content:
+          "The number of Availability Zones where the Edge Network will be created.",
+      },
+      readOnly: false,
+    };
     return (
       <div className="subForm">
-        <StatelessToggleForm
-          iconType={this.props.craig.store.edge_vpc_name ? "edit" : "add"}
+        <StatelessFormWrapper
           name="(Optional) Transit VPC and Edge Networking"
-          onIconClick={this.onToggle}
           hide={this.state.hideEdgeForm}
+          iconType={this.props.craig.store.edge_vpc_name ? "edit" : "add"}
+          onIconClick={this.onToggle}
+          toggleFormTitle
         >
           <div className="displayFlex edgeFormWidth">
             <CraigFormGroup>
@@ -161,18 +197,7 @@ class EdgeNetworkingForm extends React.Component {
                       <PrimaryButton
                         noDeleteButton
                         name="edge-networking"
-                        disabled={
-                          this.state.edgeType === "none" ||
-                          this.state.zones === this.state.prevZones
-                            ? true
-                            : this.props.craig.store.edge_vpc_name !== undefined
-                            ? this.state.zones ===
-                              String(this.props.craig.store.edge_zones)
-                            : contains(
-                                [this.state.edgeType, this.state.pattern],
-                                ""
-                              ) || this.state.zones === "0"
-                        }
+                        disabled={this.disableSave()}
                         onClick={this.onModalToggle}
                       />
                     }
@@ -208,29 +233,25 @@ class EdgeNetworkingForm extends React.Component {
                     />
                   </CraigFormGroup>
                   <CraigFormGroup>
-                    <IcseSelect
-                      groups={
-                        this.state.zones === "0"
-                          ? buildNumberDropdownList(4)
-                          : buildNumberDropdownList(3, 1)
-                      }
-                      formName="edge-network"
-                      name="zones"
-                      value={this.state.zones.toString()}
-                      labelText="Edge Networking Zones"
-                      handleInputChange={this.onChange}
-                      disabled={this.state.edgeType === "none"}
-                      invalid={
-                        this.state.edgeType === "none"
-                          ? false
-                          : this.state.zones === "0"
-                      }
-                      invalidText="Select availability zones"
-                      tooltip={{
-                        content:
-                          "The number of Availability Zones where the Edge Network will be created.",
-                      }}
-                    />
+                    <DynamicToolTipWrapper
+                      {...dynamicToolTipWrapperProps(
+                        this.props,
+                        "edge-network-zones",
+                        0,
+                        field
+                      )}
+                    >
+                      <DynamicFormSelect
+                        name="zones"
+                        propsName="edge-network"
+                        keyIndex={0}
+                        value={this.state.zones.toString()}
+                        field={field}
+                        parentState={this.state}
+                        parentProps={this.props}
+                        handleInputChange={this.onChange}
+                      />
+                    </DynamicToolTipWrapper>
                   </CraigFormGroup>
                 </div>
               </div>
@@ -253,7 +274,7 @@ class EdgeNetworkingForm extends React.Component {
               </a>
             </div>
           </div>
-        </StatelessToggleForm>
+        </StatelessFormWrapper>
         {this.state.hideModal === false && (
           <Modal
             className="leftTextAlign"

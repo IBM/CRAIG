@@ -1,9 +1,4 @@
 import React from "react";
-import StatefulTabs from "../../forms/utils/StatefulTabs";
-import {
-  CraigFormHeading,
-  PrimaryButton,
-} from "../../forms/utils/ToggleFormComponents";
 import { DeploymentIcon, TransitGatewaysMap, docTabs } from "../diagrams";
 import {
   DirectoryDomain, // cis domain
@@ -13,15 +8,18 @@ import {
 } from "@carbon/icons-react";
 import "../diagrams/diagrams.css";
 import {
+  CraigFormHeading,
+  PrimaryButton,
   CraigFormGroup,
-  CraigToggleForm,
   DynamicFormModal,
+  CraigToggleForm,
+  StatefulTabs,
 } from "../../forms/utils";
 import { craigForms } from "../CraigForms";
 import { disableSave, propsMatchState, tgwTf } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";
 import { isNullOrEmptyString } from "lazy-z";
-import { ScrollFormWrapper } from "../diagrams/ScollFormWrapper";
+import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { cisTf } from "../../../lib/json-to-iac/cis";
 

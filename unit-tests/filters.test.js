@@ -231,7 +231,7 @@ describe("filteredDocs", () => {
     };
     assert.deepEqual(actualData, expectedData);
   });
-  it("should return entire docs object if default for template is not found", () => {
+  it("should return no table data if template not found fo field", () => {
     const actualData = filterDocs("VPN as a service", "ssh_keys", docs);
     const expectedData = {
       relatedLinks: [
@@ -251,9 +251,6 @@ describe("filteredDocs", () => {
           className: "marginBottomSmall",
         },
         {
-          text: "_default_includes",
-        },
-        {
           templates: {
             "Empty Project": [],
             "Power VS Quick Start": ["ssh-key"],
@@ -263,11 +260,85 @@ describe("filteredDocs", () => {
             "VSI Edge": ["ssh-key"],
             VSI: ["ssh-key"],
           },
+          table: [[]],
+        },
+      ],
+      last_updated: "6/9/2023",
+    };
+    assert.deepEqual(actualData, expectedData);
+  });
+  it("should remove table headers if no defaults for template", () => {
+    const actualData = filterDocs("Empty Project", "key_management", docs);
+    const expectedData = {
+      content: [
+        {
+          text: "A key management service is used to create, import, rotate, and manage encryption keys. By default a single instance is created, but users can add additional instances as needed.",
+        },
+        {
+          text: "IBM Cloud offers two solutions for key management:",
+          className: "marginBottomSmall",
+        },
+        {
           table: [
-            ["SSH Key", "Description"],
-            ["ssh-key", "An SSH key to use when provisioning VSI deployments."],
+            ["Service Name", "Description"],
+            [
+              "IBM Cloud Hyper Protect Crypto Services (HPCS)",
+              "A dedicated key management service and hardware security module (HSM) based on IBM Cloud. Built on FIPS 140-2 Level 4-certified hardware, this service allows users to take the ownership of the cloud HSM to fully manage encryption keys and perform cryptographic operations. Users cannot use SLZ to initialize HPCS. In order to use HPCS with Secure Landing Zone users will need to bring an existing instance.",
+            ],
+            [
+              "IBM Cloud Key Protect",
+              "A full-service encryption solution that allows data to be secured and stored in IBM Cloud using the latest envelope encryption techniques that leverage FIPS 140-2 Level 3 certified cloud-based hardware security modules.",
+            ],
           ],
         },
+        {
+          text: "To be FS Cloud compliant, data at rest is to always be encrypted using your keys.",
+        },
+        {
+          templates: {
+            "Empty Project": [],
+            "Power VS Quick Start": ["key", "vsi-volume-key"],
+            "Power VS Oracle Ready": ["key", "vsi-volume-key"],
+            Mixed: ["key", "vsi-volume-key", "roks-key"],
+            "Power VS SAP Hana": ["key", "vsi-volume-key", "roks-key"],
+            "VSI Edge": ["key", "vsi-volume-key"],
+            VSI: ["key", "vsi-volume-key"],
+            "VPN as a Service": ["encryption-key"],
+          },
+          table: [[]],
+        },
+        {
+          text: "To allow keys from your Key Protect Service to encrypt VSI and VPC Block Storage Volumes. The creation of these service authorizations can be enabled and disabled with the Authorize VPC Reader Role toggle.",
+        },
+      ],
+      relatedLinks: [
+        [
+          "https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-shared-encryption-at-rest",
+        ],
+        [
+          "https://cloud.ibm.com/docs/hs-crypto?topic=hs-crypto-get-started",
+          "Get Started With HyperProtect Crypto Servies",
+        ],
+        [
+          "https://cloud.ibm.com/docs/key-protect?topic=key-protect-about",
+          "IBM Cloud Key Protect",
+        ],
+        [
+          "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/resource_instance",
+          "Resource Instance Terraform Documentation",
+        ],
+        [
+          "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key",
+          "Key Management Key Terraform Documentation",
+        ],
+        [
+          "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_policies",
+          "Key Management Key Policy Terraform Documentation",
+        ],
+        [
+          "https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/kms_key_rings",
+          "Key Management Key Ring Terraform Documentation",
+        ],
       ],
       last_updated: "6/9/2023",
     };

@@ -104,6 +104,7 @@ a.tile:is(:link, :visited, :hover, :active) {
   position: relative;
   max-width: 99%;
   min-width: 99%;
+  min-height: 100%;
 }
 
 .textAreaButtons {
@@ -111,6 +112,10 @@ a.tile:is(:link, :visited, :hover, :active) {
   top: 2.5rem;
   right: 1rem;
   z-index: 5;
+}
+
+.topHalfRem {
+  top: 0.5rem;
 }
 
 .textArea {
@@ -141,4 +146,8 @@ a.tile:is(:link, :visited, :hover, :active) {
 
 .clicky {
   cursor: pointer;
+}
+
+#import-json {
+  height: 60vh;
 }

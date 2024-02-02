@@ -6,7 +6,9 @@ import { InlineNotification } from "@carbon/react";
 import { deepEqual } from "lazy-z";
 import { JSONTextArea } from "../../utils/JSONTextArea";
 import { onRequestSubmitJSONModal } from "../../../lib/craig-app";
-import { CraigFormGroup } from "../../forms";
+import { CraigFormGroup, StatefulTabs } from "../../forms";
+import { state } from "../../../lib/state";
+import { Overview } from "../diagrams/Overview";
 
 export class JSONModal extends React.Component {
   constructor(props) {
@@ -72,6 +74,11 @@ export class JSONModal extends React.Component {
   }
 
   render() {
+    let tempCraig = new state();
+    if (!this.props.import) {
+      tempCraig.setUpdateCallback(() => {});
+      tempCraig.hardSetJson(this.props.data.json, true);
+    }
     let textAreaDidChange =
       this.state.json === undefined
         ? true
@@ -85,7 +92,7 @@ export class JSONModal extends React.Component {
           this.props.import
             ? "Import as New Project"
             : this.state.readOnlyJSON
-            ? `View Configuration`
+            ? `Preview Configuration`
             : `Override Configuration`
         }
         danger={!this.props.import && textAreaDidChange}
@@ -115,7 +122,7 @@ export class JSONModal extends React.Component {
         }}
       >
         {!this.props.import && (
-          <CraigFormGroup>
+          <CraigFormGroup className="marginBottomSmall">
             <IcseNameInput
               labelText={"Project Name"}
               invalid={false}
@@ -129,24 +136,67 @@ export class JSONModal extends React.Component {
             />
           </CraigFormGroup>
         )}
-        <JSONTextArea
-          json={this.state.json}
-          projectName={this.state.name}
-          override={!this.props.import && !this.state.readOnlyJSON}
-          readOnly={this.state.readOnlyJSON}
-          wrapped={this.state.usePrettyJson}
-          import={this.props.import}
-          value={
-            this.state.readOnlyJSON && !textAreaDidChange
-              ? formatConfig(this.state.json, !this.state.usePrettyJson)
-              : this.state.textData
-          }
-          invalid={!this.state.isValid}
-          invalidText={this.state.error}
-          onChange={this.handleJSONChange}
-          onClickWrapJSON={this.toggleUsePrettyJson}
-          onEditJSONClick={this.onEditJSONClick}
-        />
+        {this.props.import ? (
+          <JSONTextArea
+            json={this.state.json}
+            projectName={this.state.name}
+            override={!this.props.import && !this.state.readOnlyJSON}
+            readOnly={this.state.readOnlyJSON}
+            wrapped={this.state.usePrettyJson}
+            import={this.props.import}
+            value={
+              this.state.readOnlyJSON && !textAreaDidChange
+                ? formatConfig(this.state.json, !this.state.usePrettyJson)
+                : this.state.textData
+            }
+            invalid={!this.state.isValid}
+            invalidText={this.state.error}
+            onChange={this.handleJSONChange}
+            onClickWrapJSON={this.toggleUsePrettyJson}
+            onEditJSONClick={this.onEditJSONClick}
+          />
+        ) : (
+          <StatefulTabs
+            hideHeading
+            formName="Preview Diagram"
+            secondTabName="Preview JSON"
+            form={
+              <div
+                className="textAreaWithButtons formInSubForm"
+                style={{
+                  maxHeight: "60vh",
+                  overflowY: "scroll",
+                  borderBottom: "0.5rem solid white",
+                }}
+              >
+                <center>
+                  <Overview craig={tempCraig} small />
+                </center>
+              </div>
+            }
+            about={
+              <JSONTextArea
+                big
+                json={this.state.json}
+                projectName={this.state.name}
+                override={!this.props.import && !this.state.readOnlyJSON}
+                readOnly
+                import={this.props.import}
+                value={
+                  this.state.readOnlyJSON && !textAreaDidChange
+                    ? formatConfig(this.state.json, !this.state.usePrettyJson)
+                    : this.state.textData
+                }
+                invalid={!this.state.isValid}
+                invalidText={this.state.error}
+                onChange={this.handleJSONChange}
+                onClickWrapJSON={this.toggleUsePrettyJson}
+                onEditJSONClick={this.onEditJSONClick}
+              />
+            }
+          />
+        )}
+
         {!this.props.import && textAreaDidChange && (
           <InlineNotification
             aria-label="closes notification"

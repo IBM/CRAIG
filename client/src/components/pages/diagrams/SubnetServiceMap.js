@@ -10,7 +10,7 @@ import {
   LoadBalancerVpc,
   AppConnectivity,
 } from "@carbon/icons-react";
-import { buildNumberDropdownList, contains } from "lazy-z";
+import { contains } from "lazy-z";
 import { DeploymentIcon } from "./DeploymentIcon";
 import PropTypes from "prop-types";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
@@ -50,24 +50,34 @@ export const SubnetServiceMap = (props) => {
   ].map((field) =>
     craig.store.json[field].map((item, itemIndex) => {
       if (
+        // if the item has a vpc, the vpc is found, but the item has no valid subnet(s)
+        (!props.subnet &&
+          field !== "fortigate_vnf" &&
+          item.vpc === vpc?.name &&
+          ((item.subnets &&
+            item.subnets.length === 0 &&
+            field !== "vpn_gateways") ||
+            (item.subnet && item.subnet === null))) ||
+        // if the item has no vpc
         (item.vpc === null && !props.vpc) ||
+        // if the item has the parent subnet as part of the config
         ((field === "vpn_gateways" || field === "f5_vsi"
-          ? item.subnet === subnet.name
-          : field === "fortigate_vnf"
-          ? item.primary_subnet === subnet.name ||
-            item.secondary_subnet === subnet.name
-          : contains(item.subnets, subnet.name)) &&
-          item.vpc === vpc.name)
+          ? item.subnet === subnet?.name
+          : field === "fortigate_vnf" && subnet?.name
+          ? item.primary_subnet === subnet?.name ||
+            item.secondary_subnet === subnet?.name
+          : contains(item.subnets, subnet?.name)) &&
+          item.vpc === vpc?.name)
       ) {
         return (
           <HoverClassNameWrapper
             hoverClassName="diagramIconBoxSelected"
             static={props.static}
-            key={subnet.name + vpc?.name + item.name}
+            key={subnet?.name + vpc?.name + item.name}
           >
             <DeploymentIcon
               small={props.small}
-              key={subnet.name + vpc?.name + item.name}
+              key={subnet?.name + vpc?.name + item.name}
               craig={craig}
               itemName={field}
               icon={getIcon(field)}

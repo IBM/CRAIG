@@ -387,6 +387,29 @@ describe("clusters", () => {
     beforeEach(() => {
       craig = newState();
     });
+    describe("clusters.name.helperText", () => {
+      it("should return correct text", () => {
+        assert.deepEqual(
+          craig.clusters.name.helperText(
+            { name: "test" },
+            {
+              vpc_name: "vpc",
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "iac",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "iac-test-cluster",
+          "it should return correct text"
+        );
+      });
+    });
     it("should return correct data on kube type render when empty string", () => {
       assert.deepEqual(
         craig.clusters.kube_type.onRender({}),

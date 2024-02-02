@@ -183,15 +183,16 @@ function variablesDotTf(config, useF5, templateTarMode) {
 
   config.power.forEach((workspace) => {
     workspace.ssh_keys.forEach((key) => {
-      variables[snakeCase(`power ${workspace.name} ${key.name} key`)] = {
-        description: capitalize(
-          titleCase(
-            `${workspace.name} ${key.name} public key value`
-          ).toLowerCase()
-        ),
-        type: "${string}",
-        default: templateTarMode ? undefined : key.public_key,
-      };
+      if (!key.use_data)
+        variables[snakeCase(`power ${workspace.name} ${key.name} key`)] = {
+          description: capitalize(
+            titleCase(
+              `${workspace.name} ${key.name} public key value`
+            ).toLowerCase()
+          ),
+          type: "${string}",
+          default: templateTarMode ? undefined : key.public_key,
+        };
     });
   });
 

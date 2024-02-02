@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Updated the Power SAP HANA template to have current images for zone
 - When using the Terraform deploy scripts as part of environment setup, workspace GUID values will no longer be wrapped in quotes
+- Storage Type is now required for all Power VS Instances and Volumes regardless of affinity
+- Dropdowns with only one possible item will now be automatically selected within a form
 
 ### Features
 
@@ -20,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - Users can now use `PLACEHOLDER` as a placeholder certificate value on the VPN Servers page
 - Users can now specify a peer address using the VPN Gateway connection subform
 - Users can now import a Power VS SSH Key from data even when the parent workspace is not imported
+- When selecting a project and loading it into CRAIG or when importing a project from JSON, users will be prompted to remove invalid VPC VSI images, Cluster Versions, and Power VS Images
+- Users can now see a diagram preview of their architecture by clicking the `Preview Configuration` on the projects page
 
 ### Fixes
 
@@ -31,6 +35,10 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing VPC ACLs and Public Gateways to not update resource group when changing a resource group name
 - Fixed an error causing VPN Gateway page to crash when a gateway has additional prefixes with a deleted subnet
 - Fixed an issue causing invalid Terraform to be generated when COS instance and bucket are unencrypted
+- Fixed an issue causing V2 forms to not display items with a valid VPC that have invalid subnets
+- Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform
+- Fixed an issue causing all Schematics Workspaces to be created in the default resource group even when a resource group was provided
+- Fixed an issue causing a Terraform variable to be generated for Power VS SSH Keys from a data source
 
 ## 1.8.0
 

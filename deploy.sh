@@ -17,6 +17,10 @@ COMMIT=${CRAIG_COMMIT:-"main"}
 IMAGE_TAG=${CRAIG_IMAGE_TAG:-"latest"}
 SCALE_DOWN_DELAY=${CRAIG_SCALE_DOWN_DELAY:-"600"}
 DELETE=false
+CREATE_POWERVS=false
+
+# sleep time between checking Schematics status
+schematics_sleep_time=5
 
 usage() {
   # Display Help
@@ -35,16 +39,18 @@ for the environment variable names.
 Options:
   h     Print help.
   a     IBM Cloud Platform API Key.
-  d     Delete resources.
+  d     Delete resources: Power VS workspaces, IBM Code Engine deployment, IBM Container Registry namespace
 
   g     Resource group to deploy resources in. Default value = 'Default'.
   r     Region to deploy resources in. Default value = 'us-south'.
-  e     Path to a CRAIG environment file for things such as Power Virtual Server Workspace GUIDs. No default.
 
   p     Name of the IBM Code Engine project. Default value = 'craig'.
   x     IBM Code Engine application name for this CRAIG deployment. Default value = 'craig'
   w     Scale down delay for the application. This specifies the time in seconds of user inactivity before
           the application instance shuts down. Default value = '600'.
+
+  z     Create Power Virtual Server Workspaces. This is a flag option and does not take a value. Default: do not create the workspaces
+  e     Path to a CRAIG environment file containing Power Virtual Server Workspace GUIDs. This is only used when deploying multiple instances of CRAIG using the same Power VS workspaces. No default.
 
   n     IBM Cloud Container Registry namespace. Default value = 'craig-namespace'.
   o     IBM Container Registry server name. Default value = 'us.icr.io'.
@@ -63,13 +69,18 @@ fatal() {
 }
 
 initialize_cli() {
-    if ! ibmcloud plugin list | grep code-engine; then
+    if ! ibmcloud plugin list | grep code-engine > /dev/null; then
     echo "y" | ibmcloud plugin install code-engine
   fi
 
-  if ! ibmcloud plugin list | grep container-registry; then
+  if ! ibmcloud plugin list | grep container-registry > /dev/null; then
     echo "y" | ibmcloud plugin install container-registry
   fi
+
+  if ! ibmcloud plugin list | grep schematics > /dev/null; then
+    echo "y" | ibmcloud plugin install schematics
+  fi
+
 }
 
 delete_resources() {
@@ -82,6 +93,9 @@ delete_resources() {
   if ibmcloud ce project list | grep $PROJECT_NAME > /dev/null; then
     ibmcloud ce project delete -n $PROJECT_NAME -f --hard
   fi
+
+  # delete Power VS workspaces
+  delete_powervs_workspaces
 }
 
 create_resources() {
@@ -91,6 +105,10 @@ create_resources() {
     if [ $API_KEY == "" ]; then
       fatal "An IBM Cloud API key is required." 
     fi
+  fi
+
+  if [ $CREATE_POWERVS == true ]; then
+    create_powervs_workspaces
   fi
 
   # create namespace
@@ -124,12 +142,27 @@ create_resources() {
     ibmcloud ce secret create -n "${secret_name}" --from-literal "API_KEY=$API_KEY" || fatal "An error occurred creating the API secret in IBM Code Engine"
   fi
 
+  # Power VS workspace IDs can be set one of two ways: an env file, or be set automatically
+  # by the generated workspaceids.env from the create_powervs_workspaces function. These
+  # options are mutually exclusive enforced by the command line processing.
+
+  # If the environment file is specified use it.
   if [ ! -z "${ENVIRONMENT_FILE}" ]; then
     configmap_name="${APP_NAME}-env"
     if ! ibmcloud ce configmap list | grep $configmap_name > /dev/null ; then
       ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred creating the config map for the application."
     else
       ibmcloud ce configmap update -n "${configmap_name}" --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred updating the config map for the application."  
+    fi
+  fi
+
+  # If the workspaceids file exists, use it for the config map.
+  if [ -f workspaceids.env ]; then
+    configmap_name="${APP_NAME}-env"
+    if ! ibmcloud ce configmap list | grep $configmap_name > /dev/null ; then
+      ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file workspaceids.env || fatal "An error ocurred creating the config map for the application."
+    else
+      ibmcloud ce configmap update -n "${configmap_name}" --from-env-file workspaceids.env || fatal "An error ocurred updating the config map for the application."  
     fi
   fi
 
@@ -161,6 +194,10 @@ create_resources() {
 
   configmap_param=""
   if [ ! -z "${ENVIRONMENT_FILE}" ]; then
+    configmap_param="--env-from-configmap ${configmap_name}"
+  fi
+
+  if [ -f workspaceids.env ]; then
     configmap_param="--env-from-configmap ${configmap_name}"
   fi
 
@@ -202,9 +239,183 @@ create_resources() {
   fi
 }
 
+# Create workspace template file
+# Parameters: 
+# $1 filename
+# $2 workspace name
+# $3 workspace region
+# $4 Source URL
+# $5 source branch
+# $6 API key
+# $7 prefix
+# $8 resource group
+create_workspace_template_file() {
+    # Create a workspace template file for creation of the schematics workspace using the CLI
+    echo "" > $1
+    chmod 600 $1
+    # Write the file with placeholder values
+    cat >> $1 <<EOF
+    {
+        "name": "SED_WS_NAME",
+        "location": "SED_WS_REGION",
+        "resource_group": "SED_RESOURCE_GROUP",
+        "type": ["terraform_v1.5"],
+        "description": "Power Virtual Server Workspace Creation for CRAIG",
+        "template_repo": {
+            "url": "SED_CRAIG_SOURCE",
+            "branch": "SED_CRAIG_BRANCH"
+        },
+        "template_data": [
+            {
+            "folder": "deploy/power_vs_workspaces",
+            "type": "terraform_v1.5",
+            "compact": true,
+            "variablestore": [
+            {
+                "name": "ibmcloud_api_key",
+                "secure": true,
+                "value": "SED_API_KEY",
+                "type": "string",
+                "description": "The IBM Cloud platform API key needed to deploy IAM enabled resources."
+            },
+            {
+                "name": "prefix",
+                "secure": false,
+                "value": "SED_PREFIX",
+                "type": "string",
+                "description": "The name prefix for the IBM Power Virtual Server Workspaces."
+            },
+            {
+                "name": "resource_group",
+                "secure": false,
+                "value": "SED_RESOURCE_GROUP",
+                "type": "string",
+                "description": "The name of the resource group that will be created for the IBM Power Virtual Server Workspaces."
+            },
+            {
+                "name": "use_existing_rg",
+                "secure": false,
+                "value": "true",
+                "type": "bool",
+                "description": "Set to true to use an existing resource group. When false, a resource group will be created automatically"
+            }
+            ]
+        }
+        ]
+    }
+EOF
+    # Use sed to find-replace the "SED_" values with the values from the parameters
+    # Note that # is used as the command separator instead of the usual / because the craig source
+    # variable contains a URL with /
+    sed_exp="s#SED_WS_NAME#$2#g;s#SED_WS_REGION#$3#g;s#SED_CRAIG_SOURCE#$4#g;s#SED_CRAIG_BRANCH#$5#g;s#SED_API_KEY#$6#g;s#SED_PREFIX#$7#g;s#SED_RESOURCE_GROUP#$8#g"
+    sed -i "$sed_exp" "$1"
+}
+
+wait_for_workspace_inactive_status () {
+    # $1 = workspace ID
+    echo "Waiting for Schematics workspace $1 to be ready (reach the inactive state)."
+    while :
+    do
+        status=$(ibmcloud sch ws get -i $1 --output json | jq -r ".status")
+        [[ -z "$status" ]] && fatal "Failed to retrieve the status of the workspace"
+        case $status in
+            INACTIVE)
+                break
+                ;;
+            FAILED)
+                fatal "Schematics workspace creation failed"
+                ;;
+        esac
+        sleep $schematics_sleep_time
+    done
+}
+
+wait_for_schematics_action_complete () {
+    # $1 = action ID
+    # $2 = workspace ID
+    echo "Waiting for Schematics action $1 to complete in workspace $2"
+    while :
+    do
+        status=$(ibmcloud sch ws action -i $2 -a $1 --output json | jq -r ".status")
+        [[ -z "$status" ]] && fatal "Failed to retrieve the status of the action"
+        case $status in
+            COMPLETED)
+                break
+                ;;
+            FAILED)
+                echo "Schematics workpace action failed. Fetching logs."
+                ibmcloud sch logs -i $2 -a $1
+                fatal "Schematics workspace action failed"
+                ;;
+        esac
+        sleep $schematics_sleep_time
+    done
+}
+
+create_powervs_workspaces() {
+    # Create the workspace and wait for it to be ready for Terraform apply
+    echo "Creating a Schematics workspace to manage the Power VS workspaces for CRAIG"
+    ws_template_fn="tmp.workspace.template"
+    create_workspace_template_file $ws_template_fn "$PROJECT_NAME-powervs" $REGION $GIT_SOURCE \
+        $COMMIT $API_KEY $PROJECT_NAME $RESOURCE_GROUP
+
+    workspace_id=$(ibmcloud schematics workspace new --file $ws_template_fn --output json | jq -r ".id")
+    rm $ws_template_fn
+    [[ -z "$workspace_id" ]] && fatal "Failed retrieve the Schematics workspace ID on creation"
+    wait_for_workspace_inactive_status $workspace_id
+
+    # Apply the template
+    echo "Creating the Power VS workspaces"
+    apply_output=$(ibmcloud sch apply -i $workspace_id -f --output json)
+    #echo "Apply output ${apply_output}"
+    apply_id=$(echo $apply_output | jq -r ".activityid")
+    #echo "Apply ID: $apply_id"
+    [[ -z "$apply_id" ]] && fatal "Failed retrieve the ID of the Schematics apply job"
+    wait_for_schematics_action_complete $apply_id $workspace_id
+
+    # Get the workspace IDs into an env file
+    ibmcloud sch output -i $workspace_id --output json |  jq -r '.[]? | .output_values[]? | keys[] as $k | "POWER_WORKSPACE_\($k)=\(.[$k] | .value)"' > workspaceids.env
+
+    # Check if the workspace IDs env file two or fewer lines, if it does something went wrong with getting the output
+    if [[ $(wc -l <workspaceids.env) -le 2 ]]
+    then
+        fatal "Unable to retrieve the Power VS workspace IDs from the Schematics Terraform output"
+    fi
+    echo "Power VS workspace creation successful"
+}
+
+delete_powervs_workspaces() {
+    workspace_id=$(ibmcloud sch ws list --output json | jq -r --arg wsname "$PROJECT_NAME-powervs" '.workspaces[]? | select(.name==$wsname) | "\(.id)"')
+    if [[ $(echo $workspace_id | wc -l) -ge 2 ]]
+    then
+        echo "Multiple workspaces found with name $PROJECT_NAME-powervs: $workspace_id"
+        fatal "Not destroying resources in workspace $PROJECT_NAME-powervs"
+    fi
+    if [[ $(echo $workspace_id | wc -l) -lt 1 ]]
+    then
+        echo "No schematics workspace found for Power VS workspace deletion. Continuing."
+        return
+    fi
+
+    # Destroy the resources
+    echo "Destroying Power VS Workspaces"
+    destroy_submit_output=$(ibmcloud sch destroy -i $workspace_id -f --output json)
+    #echo "Apply output ${apply_output}"
+    destroy_id=$(echo $destroy_submit_output | jq -r ".activityid")
+    wait_for_schematics_action_complete $destroy_id $workspace_id
+
+    # Delete the workspace
+    echo "Deleting the Schematics workspace $workspace_id"
+    ibmcloud sch ws delete -i $workspace_id -f
+    if [[ $? -ne 0 ]] ; then
+        fatal "Error deleting the Schematics workspace"
+    fi
+    echo "Schematics workspace deletion complete"
+}
+
 # get arguments
 # define arguments for getopts to look for
-while getopts ":dha:r:g:e:p:x:w:n:o:i:t:s:c:" opt; do
+while getopts ":dzha:r:g:e:p:x:w:n:o:i:t:s:c:" opt; do
   # for each argument present assign the correct value to override the default value
   # values defined after the flag are stored in $OPTARG
   case $opt in
@@ -213,6 +424,7 @@ while getopts ":dha:r:g:e:p:x:w:n:o:i:t:s:c:" opt; do
     exit 0
     ;;
   d) DELETE=true ;; # if -d set DELETE to true
+  z) CREATE_POWERVS=true ;;
   a) API_KEY=$OPTARG ;;
   r) REGION=$OPTARG ;;
   g) RESOURCE_GROUP=$OPTARG ;;
@@ -233,9 +445,14 @@ while getopts ":dha:r:g:e:p:x:w:n:o:i:t:s:c:" opt; do
   esac
 done
 
+# Check mutually exclusive args
+[ ! -z "${ENVIRONMENT_FILE}" ] && [ "$CREATE_POWERVS" = true ] && fatal "-e and -z command parameters cannot be specified together"
+[ "$DELETE" = true ] && [ "$CREATE_POWERVS" = true ] && fatal "-d and -z command parameters cannot be specified together"
+
 # Check that the environment file exists if specified
 [[ ! -z "${ENVIRONMENT_FILE}" && ! -f "${ENVIRONMENT_FILE}" ]] && fatal "The environment file does not exist: ${ENVIRONMENT_FILE}"
 
+initialize_cli
 
 ibmcloud iam oauth-tokens &> /dev/null || fatal "Please log in with the ibmcloud CLI (ibmcloud login)"
 

@@ -7,6 +7,7 @@ export const CraigFormGroup = (props) => {
       className={`displayFlex ${
         props.noMarginBottom ? "" : "marginBottom"
       } evenSpacing wrap alignItemsTop ${props.className}`}
+      style={props.style}
     >
       {props.children}
     </div>
@@ -15,10 +16,12 @@ export const CraigFormGroup = (props) => {
 
 CraigFormGroup.defaultProps = {
   noMarginBottom: false,
+  style: {},
 };
 
 CraigFormGroup.propTypes = {
   noMarginBottom: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
+  style: PropTypes.shape({}),
 };

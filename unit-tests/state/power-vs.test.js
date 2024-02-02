@@ -183,13 +183,36 @@ describe("power-vs", () => {
     });
   });
   describe("power.schema", () => {
-    it("should return correct helper text for name when use data", () => {
-      let state = newState();
-      assert.deepEqual(
-        state.power.name.helperText({ use_data: true, name: "name" }),
-        "name",
-        "it should return correct helper text"
-      );
+    describe("state.power.name.helperText", () => {
+      it("should return correct helper text for name when use data", () => {
+        let state = newState();
+        assert.deepEqual(
+          state.power.name.helperText({ use_data: true, name: "name" }),
+          "name",
+          "it should return correct helper text"
+        );
+      });
+      it("should return correct helper text", () => {
+        let state = newState();
+        assert.deepEqual(
+          state.power.name.helperText(
+            { name: "frog" },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "toad",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "toad-power-workspace-frog",
+          "it should return correct helper text"
+        );
+      });
     });
     describe("power.zone", () => {
       describe("power.zone.onStateChange", () => {

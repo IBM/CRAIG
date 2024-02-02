@@ -51,6 +51,8 @@
   "key_management": [],
   "load_balancers": [],
   "logdna": {
+    "name": "logdna",
+    "archive": false,
     "enabled": false,
     "plan": "lite",
     "endpoints": "private",

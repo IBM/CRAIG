@@ -25,6 +25,7 @@ const {
   resourceGroupsField,
   selectInvalidText,
   vpcGroups,
+  unconditionalInvalidText,
 } = require("./utils");
 const {
   invalidName,
@@ -242,28 +243,50 @@ function initSecurityGroupStore(store) {
             default: "",
             invalid: invalidSecurityGroupRuleName,
             invalidText: invalidSecurityGroupRuleText,
+            size: "small",
           },
           source: {
             default: "",
             invalid: function (stateData, componentProps) {
               return !isIpv4CidrOrAddress(stateData.source);
             },
+            invalidText: unconditionalInvalidText(
+              "Please provide a valid IPV4 IP address or CIDR notation."
+            ),
+            size: "small",
+            placeholder: "x.x.x.x",
           },
           port_min: {
             default: "",
             invalid: invalidTcpOrUdpPort,
+            size: "small",
+            invalidText: unconditionalInvalidText(
+              "Enter a whole number between 1 and 65536"
+            ),
           },
           port_max: {
+            size: "small",
             default: "",
             invalid: invalidTcpOrUdpPort,
+            invalidText: unconditionalInvalidText(
+              "Enter a whole number between 1 and 65536"
+            ),
           },
           type: {
+            size: "small",
             default: "",
             invalid: invalidIcmpCodeOrType,
+            invalidText: unconditionalInvalidText(
+              "Enter a while number between 0 and 254"
+            ),
           },
           code: {
+            size: "small",
             default: "",
-            invalid: invalidTcpOrUdpPort,
+            invalid: invalidIcmpCodeOrType,
+            invalidText: unconditionalInvalidText(
+              "Enter a while number between 0 and 255"
+            ),
           },
         },
       },
