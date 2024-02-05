@@ -253,8 +253,8 @@ function projectFetch(
     workspace;
   return reactFetch(
     `/api/schematics/${workspace_name}` +
-      (workspace_region ? "/" + workspace_region : "") +
-      (workspace_resource_group ? "/" + workspace_resource_group : ""),
+      (workspace_region ? "/" + workspace_region : "/us-south") +
+      (workspace_resource_group ? "/" + workspace_resource_group : "/Default"),
     { method: "POST" }
   )
     .then((res) => res.json())
