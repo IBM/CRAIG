@@ -32,7 +32,7 @@ The Power VS PoC environment is meant to facilitate a simple migration of AIX an
 ## Configure the deployment using CRAIG
 
 ### CRAIG versions
-This documentation uses the classic CRAIG navigation. CRAIG users can switch between classic and V2 navigation by choosing the version from the top left menu button. Note that the forms fields and generated Terraform are the same regardless of the chosen navigation option.
+This documentation uses the V2 CRAIG navigation. CRAIG users can switch between classic and V2 navigation by choosing the version from the top left menu button. Note that the forms fields and generated Terraform are the same regardless of the chosen navigation option.
 
 ### Initial project creation
 To start configuring this deployment choose the "Create a Project" button from the Projects page.
@@ -42,18 +42,15 @@ Give the project a name and optional description, choose the "Power VS POC" temp
 ### Set public SSH keys
 After the creation of the project you must provide the public SSH keys that will be used to access the VPC and Power VS VSIs.
 
-To set the public SSH key value for the VPC VSI, click on the red SSH key icon on the left navigation bar. Fill in the public key value in the prompt and click the Save button.
+To set the public SSH key value for the VPC VSI, click on the red `VPC Deployments` on the left navigation bar, then click on the red key icon. Fill in the public key value in the prompt and click the Save button.
 
-To set the public SSH key value for the Power VS VSIs, click on the Power VS Workspace icon on the left navigation bar. In the Power VS Workspace panel, expand the SSH Keys section, fill in the public key value, and click the Save button.
+To set the public SSH key value for the Power VS VSIs, click on the red `Power VS` item on the left navigation bar, then click on the key icon. Click on the key icon, expand the SSH Keys section, fill in the public key value, and click the Save button.
 
-### On-premises network CIDRS
-To set network CIDRs that are being used by the on-prem environment, click on the top left menu button and then choose `VPN Gateways`. Expand the gateway and connection. Update the network CIDR in the `Additional Address Prefixes` and `Peer CIDRs` fields, and click the Save button.
-
-### VPN Peer Address
-To set VPN connection Peer Address, the address for the on-prem connection, click on the top left menu button and then choose `VPN Gateways`. Expand the gateway and connection, set the address in the `Peer Address` field and click the Save button.
+### On-premises network CIDRS and Peer Address
+To set network CIDRs that are being used by the on-prem environment, click on `VPC Deployments` on the left navigation bar. Scroll down and click on the gateway icon in the `vpn-zone-1` network. Expand the connection section and update the network CIDR in the `Additional Address Prefixes` and `Peer CIDRs` fields. Set VPN connection Peer Address, the address for the on-prem connection, in the `Peer Address` field. Click on both blue Save buttons when finished.
 
 ### Activity Tracker
-By default the template will create an IBM Cloud Activity Tracker in the us-south region. Since only one activity tracker is allowed per region in an account the project will fail to deploy if the account already has an Activity Tracker instance in the region. If the target account already has an Activity Tracker instance the project must be modified to not create an instance. Navigate to the the Activity Tracker by choosing `Activity Tracker` from the left menu button and set `Create Activity Tracker Instance` to `False`.
+By default the template will create an IBM Cloud Activity Tracker in the us-south region. Since only one activity tracker is allowed per region in an account the project will fail to deploy if the account already has an Activity Tracker instance in the region. If the target account already has an Activity Tracker instance the project must be modified to not create an instance. Navigate to the the Activity Tracker by choosing `Cloud Services` from the left navigation bar and click on the `Activity Tracker` icon. Set `Create Activity Tracker Instance` to `False` and click the Save button.
 
 ## Additional customization
 At this point the project should be ready to deploy. However, additional customizations to the default template resources can be done in CRAIG. The following list of resources are commonly customized before deployment.
@@ -69,37 +66,46 @@ Next, choose the Power VS zones in that region using the Power VS Zone multi-sel
 
 **NOTE:** Only PER enabled Power VS zones should be used for PoCs. See the [Power Virtual Server documentation](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-per) for the current list of PER enabled zones.
 
-After changing the region and zone(s) in the options, the existing Power VS workspace in the project needs to be changed. Click on the Power VS Workspace icon in the left navigation bar, update the zone, and click the Save button.
+After changing the region and zone(s) in the options, the existing Power VS workspace in the project needs to be changed. Click on `Power VS` in the left navigation bar, click on the name of the Power VS workspace (`dal10` by default) update the Availability Zone, choose the images from the `Image Names` selector, and click the Save button.
+
+The default AIX and IBM i virtual servers in the template will also need to be updated with the newly selected images. Click on each of the red Virtual Server icons, set their image, and click the save button for the VSI.
 
 ### VPC network CIDR
-To change CIDR of the VPC networks, click the top left menu button and then choose the `VPC Subnets`. Expand the VSI subnet tier you would like to update, change the "Advanced Configuration" to true, and press the Save button.
+To change CIDR of the VPC networks, click on `VPC Networks` on the left navigation bar. Click on the the network you would like to update, change the "Advanced Configuration" to true, de-select zones 2 and 3 from the Zones seletor and press the Save button.
 
 Finally, change the subnet CIDR and click the Save button next to the subnet name.
 
-The CIDR must also be changed in the VPN Gateway. Click the top left menu button and then choose `VPN Gateways`. Expand the gateway and connection, update the CIDR in the `Local CIDRS` field, and click the save button.
+The CIDR must also be changed in the VPN Gateway. Click on `VPC Deployments` on the left navigation bar. Scroll down and click on the gateway icon in the `vpn-zone-1` network. Expand the connection section and update the network CIDR in the `Local CIDRs` field.
 
 ### Power Virtual Server network CIDR
 
-To change the CIDR of a Power VS network, click on the Power VS Workspace icon in the left navigation bar. Expand the subnet that you wish to modify, change the CIDR, and click the Save button.
+To change the CIDR of a Power VS network, click on the `Power VS`icon in the left navigation bar, and click on the name of the Power VS workspace (`dal10` by default). Expand the subnet that you wish to modify, change the CIDR, and click the Save button.
 
-The CIDR must also be changed in the VPN Gateway. Click the top left menu button and then choose `VPN Gateways`. Expand the gateway and connection, update the CIDR in the `Local CIDRS` field, and click the Save button.
+The CIDR must also be changed in the VPN Gateway. Click on `VPC Deployments` on the left navigation bar. Scroll down and click on the gateway icon in the `vpn-zone-1` network. Expand the connection section and update the network CIDR in the `Local CIDRs` field.
 
 ### Power Virtual Server VSIs / LPARs
 
 The template comes with an AIX and an IBM i VSI. These VSIs are using stock images provided by Power Virtual Server for their boot disk (rootvg or *SYSBAS). The VSIs also have additional storage volumes which will be blank and unformatted when the VSI is provisioned. Specifications such as CPU, memory, storage, image version, and more can be customized in CRAIG before deployment. The VSIs can also be remove and additional VSIs can be added.
 
-To update the VSIs in the project or to add additional VSIs, click on the Power VS Instances icon in the left navigation bar.
+To update the VSIs in the project or to add additional VSIs, click on `Power VS` in the left navigation bar.
 
-To update the VSIs in the project, expand the VSI, change the desired values and click the save button.
+To update the VSIs in the project, click on the VSI, change the desired values and click the save button.
 
-To add a new VSI, click the "Add Resource" (plus) button and fill in the fields to add a new VSI.
+To add a new VSI, click the "Add Resource" (plus) button on the Power VS workspace, choose "Power Instance" for the deployment type, fill in the fields, and click the Submit button.
 
 The VSI's storage volumes are customized using the Power VS Storage panel described in the next section. 
 
 If a custom OVA boot image will be used for the VSI, the VSI should not be created using CRAIG. The project should be deployed without the VSIs that will use custom images. The deploy will create the Power VS workspace and all the other PoC infrastructure. The custom image can then be imported in to the Power VS workspace and the VSI can then be provisioned. For more information about custom OVAs see the [Power Virtual Server documentation](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-migration-strategies-power#migration-powervc-icos) and this [multi-disk AIX OVA creation document](https://community.ibm.com/community/user/power/blogs/samuel-matzek1/2023/10/26/multi-disk-aix-ova-creation-for-powervs-migration).
 
 ### Storage volumes in Power Virtual Server
-To work with additional volumes, click on the Power VS Storage icon on the left navigation bar. Here you can see and modify the volumes in the template. Additional volumes can be added by clicking the "Add Resource" (plus) button.
+To work with additional volumes, click on `Power VS` on the left navigation bar.
+
+There are multiple ways to manage volumes in Power Virtual Server:
+
+* To add new volumes to a virtual server or delete volumes attached to a virutal server, click on the virtual server's icon. In the right panel scroll down to work with the virtual server's volumes. New volumes can be added by clicking the plus icon above the Attached Volumes table. Volumes can be deleted by clicking on Trash icon on the the volume's row.
+* To change volume attributes click on the volume's icon, edit the attributes, and click the save button.
+* To add volumes that will not be attached to a virtual server, click the "Add Resource" (plus) button on the Power VS workspace, choose "Power Volume", fill in the attributes and click Submit.
+* To remove volumes that are not attached to a virtual server, click on the volume's icon and click the delete button in the right panel.
 
 ## Saving the configuration and deploying the resources
 
