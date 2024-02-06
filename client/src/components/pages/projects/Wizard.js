@@ -394,6 +394,7 @@ class Wizard extends React.Component {
                         "au-syd": ["syd04", "syd05"],
                         "eu-de": ["eu-de-1", "eu-de-2"],
                         "eu-gb": ["lon04", "lon06"],
+                        "eu-es": [],
                         "us-east": ["us-east", "wdc06", "wdc07"],
                         "us-south": ["us-south", "dal10", "dal12"],
                         "jp-tok": ["tok04"],
