@@ -15,7 +15,7 @@ function getRegionFromZone(zone) {
     ["us-east", ["wdc06", "wdc07", "us-east"]],
     ["us-south", ["dal10", "dal12", "us-south"]],
     ["eu-de", ["eu-de-1", "eu-de-2"]],
-    ["eu-es", ["mad02", "mad04"]],
+    ["eu-es", []],
     ["eu-gb", ["lon04", "lon06"]],
     ["tor", ["tor01"]],
     ["syd", ["syd04", "syd05"]],

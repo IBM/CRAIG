@@ -226,6 +226,25 @@ describe("options", () => {
           "it should return endpoints"
         );
       });
+      it("should disable Power VS toggle when region is eu-es", () => {
+        assert.isFalse(
+          craig.options.enable_power_vs.disabled(
+            {},
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      region: "eu-es",
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "it should be disabled"
+        );
+      });
       it("should disable dynamic subnets toggle when advanced subnets is true", () => {
         assert.isTrue(
           craig.options.dynamic_subnets.disabled(

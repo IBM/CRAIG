@@ -59,6 +59,9 @@ output "EU_DE_1" {
   value = ibm_resource_instance.power_vs_workspace_craig_eu_de_1.guid
 }
 
+/**
+// Removed until Power API supports Madrid Zones
+
 output "MAD02" {
   value = ibm_resource_instance.power_vs_workspace_craig_mad02.guid
 }
@@ -66,6 +69,8 @@ output "MAD02" {
 output "MAD04" {
   value = ibm_resource_instance.power_vs_workspace_craig_mad04.guid
 }
+
+*/
 
 output "SYD05" {
   value = ibm_resource_instance.power_vs_workspace_craig_syd05.guid
