@@ -194,7 +194,7 @@ function initVpnGatewayStore(store) {
           deleteSubChild(config, "vpn_gateways", "connections", componentProps);
         },
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "peer_cidrs", "local_cidrs"],
+          ["name", "peer_cidrs", "local_cidrs", "peer_address"],
           "vpn_gateways",
           "connections"
         ),

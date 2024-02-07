@@ -27,7 +27,9 @@ export const SubnetTierMap = (props) => {
     });
   });
 
-  let subnetTiers = craig.store.subnetTiers[vpc.name];
+  let subnetTiers = vpc.subnetTiers
+    ? vpc.subnetTiers
+    : craig.store.subnetTiers[vpc.name];
   if (emptySubnetResources && !props.foundSubnetsOnly) {
     subnetTiers = subnetTiers.concat("NO_SUBNETS");
   }

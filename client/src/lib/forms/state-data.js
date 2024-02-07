@@ -15,6 +15,7 @@ function getTierSubnets(tier, vpc) {
   return function (stateData) {
     let subnets = [];
     if (tier.advanced || stateData.advanced) {
+      console.log(vpc);
       vpc.subnets.forEach((subnet) => {
         if (
           stateData.advanced && !tier.advanced

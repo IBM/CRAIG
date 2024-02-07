@@ -696,6 +696,7 @@ describe("vpcs", () => {
         public_gateways: [],
         publicGateways: [],
         acls: [],
+        subnetTiers: [],
       };
       let actualData = state.store.json.vpcs[2];
       assert.deepEqual(actualData, expectedData, "it should create new vpc");
@@ -1363,6 +1364,197 @@ describe("vpcs", () => {
           "10.10.0.16/28",
           "it should be frog"
         );
+      });
+      describe("vpcs.subnets.save (from tier JSON)", () => {
+        let craig;
+        beforeEach(() => {
+          craig = new newState(true);
+          craig.store.json._options.dynamic_subnets = false;
+          craig.hardSetJson(craig.store.json, true);
+        });
+        it("should update an advanced subnet in place", () => {
+          let expectedPrefixes = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "1.2.3.4/5",
+              name: "frog",
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              advanced: true,
+              select_zones: [1],
+              name: "vpn",
+            },
+            {
+              vpc_name: "management",
+              data: {
+                name: "vpn",
+                craig: {
+                  store: craig.store.json.vpcs[0],
+                },
+              },
+            }
+          );
+          craig.store.json.vpcs[0].subnetTiers[1].subnets.push("lol");
+          craig.store.json.dns.push({
+            name: "dns",
+            zones: [],
+            custom_resolvers: [
+              {
+                vpc: "management",
+                subnets: ["vpn-zone-1", "vpe-zone-1"],
+              },
+            ],
+          });
+          craig.store.json.dns.push({
+            name: "dns2",
+            zones: [],
+            custom_resolvers: [
+              {
+                vpc: "management",
+                subnets: [],
+              },
+            ],
+          });
+          craig.vpcs.subnets.save(
+            {
+              name: "frog",
+              acl_name: "",
+              tier: "vpn",
+              cidr: "1.2.3.4/5",
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpn-zone-1" },
+            }
+          );
+
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets[1].name,
+            "frog",
+            "it should be null"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[1].subnets,
+            ["frog", "lol"],
+            "it should update subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.dns[0].custom_resolvers[0].subnets,
+            ["frog", "vpe-zone-1"],
+            "it should update subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].address_prefixes,
+            expectedPrefixes,
+            "it should add address prefix"
+          );
+        });
+        it("should update an advanced subnet in place when no matching prefix", () => {
+          craig.vpcs.subnetTiers.save(
+            {
+              advanced: true,
+              select_zones: [1],
+              name: "vpn",
+            },
+            {
+              vpc_name: "management",
+              data: {
+                name: "vpn",
+                craig: {
+                  store: craig.store.json.vpcs[0],
+                },
+              },
+            }
+          );
+          craig.store.json.vpcs[0].subnetTiers[1].subnets.push("lol");
+          craig.store.json.dns.push({
+            name: "dns",
+            zones: [],
+            custom_resolvers: [
+              {
+                vpc: "management",
+                subnets: ["vpn-zone-1", "vpe-zone-1"],
+              },
+            ],
+          });
+          craig.store.json.dns.push({
+            name: "dns2",
+            zones: [],
+            custom_resolvers: [
+              {
+                vpc: "management",
+                subnets: [],
+              },
+            ],
+          });
+          craig.store.json.vpcs[0].address_prefixes = [];
+          craig.vpcs.subnets.save(
+            {
+              name: "frog",
+              acl_name: "",
+              tier: "vpn",
+              cidr: "1.2.3.4/5",
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpn-zone-1" },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets[1].name,
+            "frog",
+            "it should be null"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[1].subnets,
+            ["frog", "lol"],
+            "it should update subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.dns[0].custom_resolvers[0].subnets,
+            ["frog", "vpe-zone-1"],
+            "it should update subnets"
+          );
+        });
       });
     });
     describe("vpcs.subnets.delete", () => {
@@ -3447,6 +3639,1983 @@ describe("vpcs", () => {
           "it should change subnets"
         );
       });
+      describe("vpcs.subnetTiers.save (from JSON)", () => {
+        let craig;
+        beforeEach(() => {
+          craig = new newState(true);
+          craig.store.json._options.dynamic_subnets = false;
+          craig.hardSetJson(craig.store.json, true);
+        });
+        it("should update a subnet tier in place", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.store.json.dns.push({
+            name: "dns",
+            zones: [],
+            custom_resolvers: [
+              {
+                vpc: "management",
+                subnets: ["vsi-zone-1"],
+              },
+            ],
+          });
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              zones: 2,
+              networkAcl: "management",
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.dns[0].custom_resolvers[0].subnets,
+            ["frog-zone-1"],
+            "it should replace subnet name"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[0],
+            { name: "frog", zones: 2, networkAcl: "management" },
+            "it should have correct subnet tiers"
+          );
+        });
+        it("should update a subnet tier in place and update address prefixes", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              zones: 2,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+
+          assert.deepEqual(
+            craig.store.json.vpcs[0].address_prefixes,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should update a subnet tier in place with nacl and gateway", () => {
+          craig.vpcs.acls.create({ name: "todd" }, { vpc_name: "management" });
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+              network_acl: "todd",
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+              network_acl: "todd",
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.store.json.vpcs[0].publicGateways = [1, 2];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              zones: 2,
+              networkAcl: "todd",
+              addPublicGateway: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should update a subnet tier in place with nacl and gateway when only one gateway is enabled", () => {
+          craig.store.json._options.dynamic_subnets = true;
+          craig.vpcs.acls.create({ name: "todd" }, { vpc_name: "management" });
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.0.0/29",
+              name: "frog-zone-1",
+              network_acl: "todd",
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: false,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.0.16/28",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: false,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.0.0/29",
+              name: "frog-zone-2",
+              network_acl: "todd",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: false,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.0.48/29",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: false,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.0.16/29",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: false,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.0.0/29",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: false,
+            },
+          ];
+          craig.store.json.vpcs[0].publicGateways = [1];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              zones: 2,
+              networkAcl: "todd",
+              addPublicGateway: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should update a subnet tier in place with additional zones and with no acl", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.30.0/24",
+              name: "vpn-zone-2",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vpn",
+              zones: 2,
+              networkAcl: "",
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpn" },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should update a subnet tier address prefixes in place with additional zones and with no acl", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.30.0/24",
+              name: "vpn-zone-2",
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vpn",
+              zones: 2,
+              networkAcl: "",
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpn" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].address_prefixes,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should update a subnet tier in place with additional zones and with no acl and 1 zone pgw", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.30.0/24",
+              name: "vpn-zone-2",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.store.json.vpcs[0].publicGateways = [2];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vpn",
+              zones: 2,
+              networkAcl: "",
+              addPublicGateway: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpn" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should update a subnet tier in place with additional zones and with no acl and 2 zone pgw", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.30.0/24",
+              name: "vpn-zone-2",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+          ];
+          craig.store.json.vpcs[0].publicGateways = [1];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vpn",
+              zones: 2,
+              networkAcl: "",
+              addPublicGateway: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpn" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should expand a reserved edge subnet tier in place with additional zones", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.5.60.0/24",
+              name: "f5-bastion-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.6.60.0/24",
+              name: "f5-bastion-zone-2",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.7.60.0/24",
+              name: "f5-bastion-zone-3",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.store.edge_vpc_name = "management";
+          craig.store.json.vpcs[0].subnetTiers.unshift({
+            name: "f5-bastion",
+            zones: 1,
+          });
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "f5-bastion",
+              zones: 3,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "f5-bastion" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should save advanced subnet tier", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.store.json.dns.push({
+            name: "dns",
+            zones: [],
+            custom_resolvers: [
+              {
+                vpc: "management",
+                subnets: ["vsi-zone-1"],
+              },
+            ],
+          });
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              select_zones: [1, 2],
+              advanced: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          let expectedTier = {
+            name: "frog",
+            select_zones: [1, 2],
+            advanced: true,
+            subnets: ["frog-zone-1", "frog-zone-2"],
+            zones: undefined,
+            networkAcl: "-",
+          };
+          let expectedPrefixes = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.dns[0].custom_resolvers[0].subnets,
+            ["frog-zone-1"],
+            "it should update dns subnet name"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[0],
+            expectedTier,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].address_prefixes,
+            expectedPrefixes,
+            "it should change address prefixes"
+          );
+          assert.isTrue(
+            craig.store.json._options.advanced_subnets,
+            "it should set advanced subnets"
+          );
+        });
+        it("should save advanced subnet tier", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.store.json.dns.push({
+            name: "dns",
+            zones: [],
+            custom_resolvers: [
+              {
+                vpc: "management",
+                subnets: ["vsi-zone-1"],
+              },
+            ],
+          });
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              zones: [1, 2],
+              advanced: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          let expectedTier = {
+            name: "frog",
+            select_zones: [1, 2],
+            advanced: true,
+            subnets: ["frog-zone-1", "frog-zone-2"],
+            zones: undefined,
+            networkAcl: "-",
+          };
+          let expectedPrefixes = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.dns[0].custom_resolvers[0].subnets,
+            ["frog-zone-1"],
+            "it should update dns subnet name"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[0],
+            expectedTier,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].address_prefixes,
+            expectedPrefixes,
+            "it should change address prefixes"
+          );
+          assert.isTrue(
+            craig.store.json._options.advanced_subnets,
+            "it should set advanced subnets"
+          );
+        });
+        it("should save advanced subnet tier", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "vsi",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "vsi",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              zones: ["1", "2", "3"],
+              advanced: true,
+            },
+            {
+              vpc_name: "management",
+              data: {
+                addPublicGateway: false,
+                advanced: false,
+                hide: true,
+                name: "vsi",
+                networkAcl: "workload",
+                select_zones: 3,
+                zones: 3,
+              },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[0],
+            {
+              name: "vsi",
+              zones: undefined,
+              advanced: true,
+              networkAcl: "-",
+              select_zones: ["1", "2", "3"],
+              subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+            },
+            "it should set subnets"
+          );
+
+          craig.vpcs.subnetTiers.save(
+            {
+              hide: true,
+              networkAcl: "-",
+              addPublicGateway: false,
+              name: "vsi",
+              zones: ["1", "3"],
+              advanced: true,
+              select_zones: ["1", "3"],
+              subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+            },
+            {
+              vpc_name: "management",
+              data: {
+                hide: true,
+                networkAcl: "-",
+                addPublicGateway: false,
+                name: "vsi",
+                advanced: true,
+                select_zones: ["1", "3", "2"],
+                subnets: ["vsi-zone-1", "vsi-zone-3", "vsi-zone-2"],
+              },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+
+          let expectedTier = {
+            addPublicGateway: false,
+            name: "vsi",
+            select_zones: ["1", "3"],
+            advanced: true,
+            subnets: ["vsi-zone-1", "vsi-zone-3"],
+            zones: undefined,
+            networkAcl: "-",
+            hide: true,
+            zones: ["1", "3"],
+          };
+          let expectedPrefixes = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[0],
+            expectedTier,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].address_prefixes,
+            expectedPrefixes,
+            "it should change address prefixes"
+          );
+          assert.isTrue(
+            craig.store.json._options.advanced_subnets,
+            "it should set advanced subnets"
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              hide: true,
+              networkAcl: "-",
+              addPublicGateway: false,
+              name: "vsi",
+              zones: ["1", "3", "2"],
+              advanced: true,
+              select_zones: ["1", "3", "2"],
+              subnets: ["vsi-zone-1", "vsi-zone-3"],
+            },
+            {
+              vpc_name: "management",
+              data: {
+                hide: true,
+                networkAcl: "-",
+                addPublicGateway: false,
+                name: "vsi",
+                zones: ["1", "3"],
+                advanced: true,
+                select_zones: ["1", "3"],
+                subnets: ["vsi-zone-1", "vsi-zone-3"],
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[0].subnets,
+            ["vsi-zone-1", "vsi-zone-3", "vsi-zone-2"],
+            "it should return names"
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              hide: true,
+              networkAcl: "-",
+              addPublicGateway: false,
+              name: "frog",
+              zones: ["1", "3", "2"],
+              advanced: true,
+              select_zones: ["1", "3", "2"],
+              subnets: ["vsi-zone-1", "vsi-zone-3"],
+            },
+            {
+              vpc_name: "management",
+              data: {
+                hide: true,
+                networkAcl: "-",
+                addPublicGateway: false,
+                name: "vsi",
+                zones: ["1", "3"],
+                advanced: true,
+                select_zones: ["1", "3"],
+                subnets: ["vsi-zone-1", "vsi-zone-3"],
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[0].subnets,
+            ["frog-zone-1", "frog-zone-3", "frog-zone-2"],
+            "it should return names"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets[0].tier,
+            "frog",
+            "it should have correct tier"
+          );
+        });
+        it("should save advanced subnet tier with an existing advanced tier and both should have correct tier data in store", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "toad-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "toad",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "toad-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "toad",
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              select_zones: [1, 2],
+              advanced: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "frog",
+                select_zones: [1, 2],
+                advanced: true,
+                subnets: ["frog-zone-1", "frog-zone-2"],
+                zones: undefined,
+                networkAcl: "-",
+              },
+              {
+                name: "vpn",
+                zones: 1,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+            ],
+            "it should change subnets"
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "toad",
+              select_zones: [1, 2],
+              advanced: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpe" },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "frog",
+                zones: undefined,
+                advanced: true,
+                networkAcl: "-",
+                select_zones: [1, 2],
+                subnets: ["frog-zone-1", "frog-zone-2"],
+              },
+              { name: "vpn", zones: 1 },
+              {
+                name: "toad",
+                zones: undefined,
+                advanced: true,
+                networkAcl: "-",
+                select_zones: [1, 2],
+                subnets: ["toad-zone-1", "toad-zone-2"],
+              },
+            ],
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should save advanced subnet tier with an existing advanced tier and both should have correct tier data in store", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "frog-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "frog-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "frog",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "toad-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "toad",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "toad-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "toad",
+            },
+          ];
+          craig.store.json.f5_vsi = [
+            {
+              name: "hi",
+              vpc: "no",
+              template: {},
+              ssh_keys: [],
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "frog",
+              select_zones: [1, 2],
+              advanced: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "frog",
+                select_zones: [1, 2],
+                advanced: true,
+                subnets: ["frog-zone-1", "frog-zone-2"],
+                zones: undefined,
+                networkAcl: "-",
+              },
+              {
+                name: "vpn",
+                zones: 1,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+            ],
+            "it should change subnets"
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "toad",
+              select_zones: [1, 2],
+              advanced: true,
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vpe" },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "frog",
+                zones: undefined,
+                advanced: true,
+                networkAcl: "-",
+                select_zones: [1, 2],
+                subnets: ["frog-zone-1", "frog-zone-2"],
+              },
+              { name: "vpn", zones: 1 },
+              {
+                name: "toad",
+                zones: undefined,
+                advanced: true,
+                networkAcl: "-",
+                select_zones: [1, 2],
+                subnets: ["toad-zone-1", "toad-zone-2"],
+              },
+            ],
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should save correct vpn subnet tier subnets when changing to advanced", () => {
+          craig.vpcs.subnetTiers.save(
+            { name: "vpn", advanced: true, select_zones: ["1"], zones: ["1"] },
+            {
+              data: {
+                name: "vpn",
+                zones: 1,
+              },
+              craig: craig,
+              vpc_name: "management",
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "vsi",
+                zones: 3,
+              },
+              {
+                advanced: true,
+                name: "vpn",
+                networkAcl: "-",
+                select_zones: ["1"],
+                subnets: ["vpn-zone-1"],
+                zones: undefined,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+            ],
+            "it should have correct subnet tiers"
+          );
+        });
+        it("should save correct vsi subnet tier subnets when changing to advanced", () => {
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              advanced: true,
+              select_zones: ["1", "2", "3"],
+              zones: ["1", "2", "3"],
+            },
+            {
+              data: {
+                name: "vsi",
+                zones: 3,
+              },
+              craig: craig,
+              vpc_name: "management",
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "vsi",
+                networkAcl: "-",
+                select_zones: ["1", "2", "3"],
+                subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+                zones: undefined,
+                advanced: true,
+              },
+              {
+                name: "vpn",
+                zones: 1,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+            ],
+            "it should have correct subnet tiers"
+          );
+        });
+        it("should save correct vsi subnet tier subnets when changing to advanced", () => {
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              advanced: true,
+              select_zones: ["1", "2", "3"],
+              zones: ["1", "2", "3"],
+            },
+            {
+              data: {
+                name: "vsi",
+                zones: 3,
+              },
+              craig: craig,
+              vpc_name: "management",
+            }
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              advanced: true,
+              select_zones: ["1"],
+              zones: ["1"],
+            },
+            {
+              data: {
+                name: "vsi",
+                zones: 3,
+              },
+              craig: craig,
+              vpc_name: "management",
+            }
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              advanced: true,
+              select_zones: ["1", "2"],
+              zones: ["1", "2"],
+            },
+            {
+              data: {
+                name: "vsi",
+                zones: 3,
+              },
+              craig: craig,
+              vpc_name: "management",
+            }
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              advanced: true,
+              select_zones: ["1", "2", "3"],
+              zones: ["1", "2", "3"],
+            },
+            {
+              data: {
+                name: "vsi",
+                zones: 3,
+              },
+              craig: craig,
+              vpc_name: "management",
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets.length,
+            7,
+            "it should have correct"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "vsi",
+                networkAcl: "-",
+                select_zones: ["1", "2", "3"],
+                subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+                zones: ["1", "2", "3"],
+                advanced: true,
+              },
+              {
+                name: "vpn",
+                zones: 1,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+            ],
+            "it should have correct subnet tiers"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets.length,
+            7,
+            "it should have correct"
+          );
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              advanced: true,
+              select_zones: ["3"],
+              zones: ["3"],
+            },
+            {
+              data: {
+                name: "vsi",
+                zones: ["1", "2", "3"],
+                select_zones: ["1", "2", "3"],
+                advanced: true,
+              },
+              craig: craig,
+              vpc_name: "management",
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets.length,
+            5,
+            "it should have correct"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "vsi",
+                networkAcl: "-",
+                select_zones: ["3"],
+                subnets: ["vsi-zone-3"],
+                zones: ["3"],
+                advanced: true,
+              },
+              {
+                name: "vpn",
+                zones: 1,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+            ],
+            "it should have correct subnet tiers"
+          );
+        });
+      });
     });
     describe("vpcs.subnetTiers.create", () => {
       it("should add a subnet tier to vpc", () => {
@@ -3942,6 +6111,744 @@ describe("vpcs", () => {
           "it should change subnets"
         );
       });
+      describe("vpcs.subnetTiers.create (from JSON)", () => {
+        let craig;
+        beforeEach(() => {
+          craig = new newState(true);
+          craig.store.json._options.dynamic_subnets = false;
+          craig.hardSetJson(craig.store.json, true);
+        });
+        it("should add a subnet tier to vpc", () => {
+          craig.store.json._options.dynamic_subnets = false;
+          craig.vpcs.subnetTiers.create(
+            {
+              name: "test",
+              zones: 3,
+              networkAcl: "management",
+            },
+            { vpc_name: "management" }
+          );
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.40.0/24",
+              name: "test-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.40.0/24",
+              name: "test-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.40.0/24",
+              name: "test-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "vsi",
+                zones: 3,
+              },
+              {
+                name: "vpn",
+                zones: 1,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+              {
+                advanced: false,
+                name: "test",
+                select_zones: 3,
+                subnets: [],
+                zones: 3,
+              },
+            ],
+            "it should have correct subnet tiers"
+          );
+        });
+        it("should add a subnet tier to vpc new", () => {
+          craig.store.json._options.dynamic_subnets = false;
+          craig.vpcs.create({ name: "frog" });
+          craig.vpcs.subnetTiers.create(
+            {
+              name: "test",
+              zones: 3,
+              networkAcl: "management",
+            },
+            { vpc_name: "frog" }
+          );
+          let expectedData = [
+            {
+              cidr: "10.70.10.0/24",
+              has_prefix: true,
+              name: "test-zone-1",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: null,
+              vpc: "frog",
+              zone: 1,
+            },
+            {
+              cidr: "10.80.10.0/24",
+              has_prefix: true,
+              name: "test-zone-2",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: null,
+              vpc: "frog",
+              zone: 2,
+            },
+            {
+              cidr: "10.90.10.0/24",
+              has_prefix: true,
+              name: "test-zone-3",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: null,
+              vpc: "frog",
+              zone: 3,
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.vpcs[2].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[2].subnetTiers,
+            [
+              {
+                name: "test",
+                select_zones: 3,
+                advanced: false,
+                subnets: [],
+                zones: 3,
+              },
+            ],
+            "it should have correct subnet tiers"
+          );
+        });
+        it("should add a subnet tier to vpc with pgw", () => {
+          craig.vpcs.subnetTiers.create(
+            {
+              name: "test",
+              zones: 3,
+              networkAcl: "management",
+              addPublicGateway: true,
+            },
+            { vpc_name: "management" }
+          );
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.40.0/24",
+              name: "test-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: true,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.40.0/24",
+              name: "test-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.40.0/24",
+              name: "test-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers,
+            [
+              {
+                name: "vsi",
+                zones: 3,
+              },
+              {
+                name: "vpn",
+                zones: 1,
+              },
+              {
+                name: "vpe",
+                zones: 3,
+              },
+              {
+                advanced: false,
+                name: "test",
+                select_zones: 3,
+                subnets: [],
+                zones: 3,
+              },
+            ],
+            "it should have correct subnet tiers"
+          );
+        });
+        it("should add a subnet tier to vpc with no subnet tier", () => {
+          craig.vpcs.subnetTiers.create(
+            {
+              name: "test",
+              zones: 3,
+            },
+            { vpc_name: "management" }
+          );
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.40.0/24",
+              name: "test-zone-1",
+              resource_group: "management-rg",
+              network_acl: null,
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.40.0/24",
+              name: "test-zone-2",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.40.0/24",
+              name: "test-zone-3",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should add an advanced subnet tier to vpc", () => {
+          craig.vpcs.subnetTiers.create(
+            {
+              name: "test",
+              advanced: true,
+              select_zones: [1, 2, 3],
+              networkAcl: "management",
+            },
+            { vpc_name: "management" }
+          );
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: null,
+              name: "test-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "test",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: null,
+              name: "test-zone-2",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "test",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: null,
+              name: "test-zone-3",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "test",
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[3],
+            {
+              advanced: true,
+              name: "test",
+              select_zones: [1, 2, 3],
+              subnets: ["test-zone-1", "test-zone-2", "test-zone-3"],
+              zones: undefined,
+            },
+            "it should return correct tiers"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should add an advanced subnet tier to vpc", () => {
+          craig.vpcs.subnetTiers.create(
+            {
+              networkAcl: "management",
+              name: "test",
+              zones: ["1", "2", "3"],
+              advanced: true,
+              addPublicGateway: false,
+              select_zones: ["1", "2", "3"],
+            },
+            { vpc_name: "management" }
+          );
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: null,
+              name: "test-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "test",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: null,
+              name: "test-zone-2",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "test",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: null,
+              name: "test-zone-3",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+              tier: "test",
+            },
+          ];
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers[3],
+            {
+              advanced: true,
+              name: "test",
+              select_zones: ["1", "2", "3"],
+              subnets: ["test-zone-1", "test-zone-2", "test-zone-3"],
+              zones: ["1", "2", "3"],
+            },
+            "it should return correct tiers"
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+      });
     });
     describe("vpcs.subnetTiers.delete", () => {
       it("should delete a subnet tier", () => {
@@ -4232,6 +7139,301 @@ describe("vpcs", () => {
           "it should change subnets"
         );
       });
+      describe("vpc.subnetTiers.delete (from JSON)", () => {
+        let craig;
+        beforeEach(() => {
+          craig = new newState(true);
+          craig.store.json._options.dynamic_subnets = false;
+          craig.hardSetJson(craig.store.json, true);
+        });
+        it("should delete a subnet tier", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.vpcs.subnetTiers.delete(
+            {},
+            { vpc_name: "management", data: { name: "vsi" } }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+          assert.deepEqual(craig.store.json.vpcs[0].subnetTiers, [
+            {
+              name: "vpn",
+              zones: 1,
+            },
+            {
+              name: "vpe",
+              zones: 3,
+            },
+          ]);
+        });
+        it("should delete a subnet tier and update address prefixes", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vpn-zone-1",
+            },
+          ];
+          craig.vpcs.subnetTiers.delete(
+            {},
+            { vpc_name: "management", data: { name: "vsi" } }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].address_prefixes,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should delete a subnet tier and leave F5 subnets in place", () => {
+          // push f5-management to subnets
+          craig.store.json.vpcs[0].subnets.push({
+            cidr: "10.5.60.0/24",
+            has_prefix: true,
+            name: "f5-bastion-zone-1",
+            network_acl: "management",
+            public_gateway: false,
+            resource_group: "edge-rg",
+            vpc: "edge",
+            zone: 1,
+          });
+          craig.store.json.vpcs[0].subnets.push({
+            cidr: "10.6.60.0/24",
+            has_prefix: true,
+            name: "f5-bastion-zone-2",
+            network_acl: "management",
+            public_gateway: false,
+            resource_group: "edge-rg",
+            vpc: "edge",
+            zone: 2,
+          });
+          craig.store.json.vpcs[0].subnets.push({
+            cidr: "10.7.60.0/24",
+            has_prefix: true,
+            name: "f5-bastion-zone-3",
+            network_acl: "management",
+            public_gateway: false,
+            resource_group: "edge-rg",
+            vpc: "edge",
+            zone: 3,
+          });
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              cidr: "10.5.60.0/24",
+              has_prefix: true,
+              name: "f5-bastion-zone-1",
+              network_acl: "management",
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 1,
+            },
+            {
+              cidr: "10.6.60.0/24",
+              has_prefix: true,
+              name: "f5-bastion-zone-2",
+              network_acl: "management",
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 2,
+            },
+            {
+              cidr: "10.7.60.0/24",
+              has_prefix: true,
+              name: "f5-bastion-zone-3",
+              network_acl: "management",
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 3,
+            },
+          ];
+          craig.vpcs.subnetTiers.delete(
+            { name: "vsi", zones: 3 },
+            { vpc_name: "management", data: { name: "vsi", zones: 3 } }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should delete an advanced subnet tier", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vpn-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+          ];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vsi",
+              select_zones: [1, 2],
+              advanced: true,
+              subnets: ["vsi-zone-1", "vsi-zone-2"],
+            },
+            {
+              vpc_name: "management",
+              data: { name: "vsi" },
+              craig: craig,
+            }
+          );
+          craig.vpcs.subnetTiers.delete(
+            { advanced: true, zones: 0 },
+            {
+              vpc_name: "management",
+              data: {
+                name: "vsi",
+                advanced: true,
+                subnets: ["vsi-zone-1", "vsi-zone-2"],
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+      });
     });
     describe("vpcs.subnetTiers.schema", () => {
       let craig;
@@ -4292,6 +7494,13 @@ describe("vpcs", () => {
         assert.deepEqual(
           craig.vpcs.subnetTiers.zones.onRender({ advanced: true, zones: "3" }),
           ["1", "2", "3"],
+          "it should return zones"
+        );
+      });
+      it("should change zones to array when advanced", () => {
+        assert.deepEqual(
+          craig.vpcs.subnetTiers.zones.onRender({ advanced: true, zones: "1" }),
+          ["1"],
           "it should return zones"
         );
       });

@@ -20,7 +20,7 @@ import {
   isFunction,
   getObjectFromArray,
 } from "lazy-z";
-import { propsMatchState } from "../../lib";
+import { forceShowForm, propsMatchState } from "../../lib";
 import {
   dynamicCraigFormGroupsProps,
   dynamicHeadingProps,
@@ -374,6 +374,7 @@ class DynamicForm extends React.Component {
                 <IcseFormTemplate
                   key={subForm.name + JSON.stringify(this.props.data)}
                   tooltip={subForm.tooltip}
+                  forceOpen={forceShowForm}
                   overrideTile={
                     <SubFormOverrideTile
                       subForm={subForm}

@@ -4,6 +4,7 @@ const {
   contains,
   flatten,
   splat,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const { validSshKey } = require("./invalid-callbacks");
 
@@ -188,6 +189,12 @@ function forceShowForm(stateData, componentProps) {
       if (!openForm) {
         openForm = !validSshKey(key.public_key);
       }
+    });
+  }
+
+  if (componentProps.submissionFieldName === "vpn_gateways") {
+    componentProps.innerFormProps.data.connections.forEach((connection) => {
+      openForm = isNullOrEmptyString(connection.peer_address, true);
     });
   }
 

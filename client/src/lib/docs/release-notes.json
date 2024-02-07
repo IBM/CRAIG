@@ -1,5 +1,19 @@
 [
   {
+    "version": "1.10.0",
+    "features": [
+      "When using the Power VS POC Template, the default VPN Gateway will now be highlighted as invalid for missing the required `peer_address` value"
+    ],
+    "fixes": [
+      "When changing a VPC subnet tier to advanced, the current number of zones is retained rather than defaulting to three zones",
+      "Fixed an issue causing errors to the VSI API endpoints to crash the back end server",
+      "Fixed an issue causing overview display for VPC deployments with no subnets selected to be the incorrect width",
+      "Fixed an issue allowing users to navigate to `/v2` pages when no project is selected",
+      "Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.9.0",
     "features": [
       "Users can now provision Power VS resources in PER regions in Madrid and Sao Paolo",

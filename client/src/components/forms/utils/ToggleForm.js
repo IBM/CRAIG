@@ -308,6 +308,7 @@ class CraigToggleForm extends React.Component {
                     enableModal: this.props.enableModal,
                     disableModal: this.props.disableModal,
                     setRefUpstream: this.props.setRefUpstream,
+                    dynamicSubnetFormSubForm: this.props.formInSubForm,
                   })}
                 </StatelessFormWrapper>
               </div>

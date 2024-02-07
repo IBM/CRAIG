@@ -205,6 +205,20 @@
           "name": "vpn-zone-1"
         }
       ],
+      "subnetTiers" : [
+        {
+          "name": "vsi",
+          "zones": 3
+        },
+        {
+          "name": "vpe",
+          "zones": 3
+        },
+        {
+          "name": "vpn",
+          "zones": 1
+        }
+      ],
       "subnets": [
         {
           "vpc": "management",
@@ -410,6 +424,16 @@
           "zone": 3,
           "cidr": "10.60.20.0/24",
           "name": "vpe-zone-3"
+        }
+      ],
+      "subnetTiers" : [
+        {
+          "name": "vsi",
+          "zones": 3
+        },
+        {
+          "name": "vpe",
+          "zones": 3
         }
       ],
       "subnets": [

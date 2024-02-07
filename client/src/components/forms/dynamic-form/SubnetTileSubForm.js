@@ -45,7 +45,11 @@ export const SubnetTileSubForm = (props) => {
   return isSubnetTierForm ? (
     <div
       className={`${
-        props.parentProps.isModal ? "subForm" : "formInSubForm"
+        props.parentProps.dynamicSubnetFormSubForm
+          ? ""
+          : props.parentProps.isModal
+          ? "subForm"
+          : "formInSubForm"
       } marginTop1Rem ${props.parentProps.isModal ? "marginBottomNone" : ""}`}
     >
       <CraigFormHeading name="Subnets" type="subHeading" noMarginBottom />

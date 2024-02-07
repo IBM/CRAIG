@@ -137,7 +137,8 @@ function deleteLegacySubnetTier(
   config,
   oldTierName,
   oldVpcName,
-  vpcIndex
+  vpcIndex,
+  useNewSubnetTiers
 ) {
   subnets.forEach((subnet) => {
     if (
@@ -155,8 +156,14 @@ function deleteLegacySubnetTier(
       ) &&
       !subnet.tier
     ) {
-      let splatTiers = splat(config.store.subnetTiers[oldVpcName], "name");
-      splatTiers.splice(splatTiers.indexOf(oldTierName), 1);
+      let splatTiers = splat(
+        useNewSubnetTiers
+          ? config.store.json.vpcs[0].subnetTiers
+          : config.store.subnetTiers[oldVpcName],
+        "name"
+      );
+      if (!useNewSubnetTiers)
+        splatTiers.splice(splatTiers.indexOf(oldTierName), 1);
 
       let newCidr = formatCidrBlock(
         vpcIndex,

@@ -1,5 +1,5 @@
 import { Button, Modal } from "@carbon/react";
-import { deepEqual } from "lazy-z";
+import { contains, deepEqual } from "lazy-z";
 import React from "react";
 import { ArrowRight, FolderAdd } from "@carbon/icons-react";
 import PropTypes from "prop-types";
@@ -60,8 +60,17 @@ class NoProjectModal extends React.Component {
             <div className="marginBottomSmall">
               <p>
                 No CRAIG project is selected. Create a new project or select an
-                existing one from the <a href="/projects">Projects Page</a> to
-                customize your environment.{" "}
+                existing one from the{" "}
+                <a
+                  href={
+                    contains(window.location.pathname, "/v2")
+                      ? "/v2/projects"
+                      : "/projects"
+                  }
+                >
+                  Projects Page
+                </a>{" "}
+                to customize your environment.{" "}
               </p>
             </div>
             {existingData && (
