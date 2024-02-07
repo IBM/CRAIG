@@ -707,7 +707,14 @@ function sshKeySchema(fieldName) {
     },
   };
   if (fieldName === "ssh_keys" || fieldName === "power_vs_ssh_keys") {
-    if (fieldName === "ssh_keys") schema.resource_group = resourceGroupsField();
+    if (fieldName === "ssh_keys")
+      schema.resource_group = resourceGroupsField(false, {
+        invalid: function (stateData) {
+          return stateData.use_data
+            ? false
+            : fieldIsNullOrEmptyString("resource_group")(stateData);
+        },
+      });
     schema.use_data = {
       type: "toggle",
       labelText: "Use Existing SSH Key",

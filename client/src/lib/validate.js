@@ -478,7 +478,6 @@ const validate = function (json) {
 
   // ssh keys
   json.ssh_keys.forEach((key) => {
-    nullResourceGroupTest("SSH Keys", key);
     if (
       !key.use_data &&
       key.public_key !== null &&

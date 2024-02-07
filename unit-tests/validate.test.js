@@ -1250,15 +1250,6 @@ describe("validate", () => {
     });
   });
   describe("ssh_keys", () => {
-    it("should throw an error if no resource group", () => {
-      let testData = minimumValidJson();
-      delete testData.ssh_keys[0].resource_group;
-      let task = () => validate(testData);
-      assert.throws(
-        task,
-        "SSH Keys requires a resource group, resource_group missing from JSON."
-      );
-    });
     it("should throw an error when not using data and invalid public key", () => {
       let testData = minimumValidJson();
       testData.ssh_keys[0].public_key = "hi";

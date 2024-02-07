@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing overview display for VPC deployments with no subnets selected to be the incorrect width
 - Fixed an issue allowing users to navigate to `/v2` pages when no project is selected
 - Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address
+- Fixed an issue causing imported VPC SSH Keys to incorrectly require a resource group
 
 ## 1.9.0
 
@@ -83,6 +84,7 @@ All notable changes to this project will be documented in this file.
 - Users can now import existing Secrets Manager instances into CRAIG
 - Power zones WDC06, WDC07, eu-de-1, and eu-de-2 now support Power Edge Router
 - Users can now create, update, and delete Fortigate VNF gateways from the `/form/fortigate` page
+- Power zones MAD02 (EU-ES-1), MAD04 (EU-ES-2), and SAO04 now support Power Edge Router
 
 ### Fixes
 

@@ -9,7 +9,8 @@
       "Fixed an issue causing errors to the VSI API endpoints to crash the back end server",
       "Fixed an issue causing overview display for VPC deployments with no subnets selected to be the incorrect width",
       "Fixed an issue allowing users to navigate to `/v2` pages when no project is selected",
-      "Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address"
+      "Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address",
+      "Fixed an issue causing imported VPC SSH Keys to incorrectly require a resource group"
     ],
     "upgrade_notes": []
   },
