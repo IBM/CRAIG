@@ -1,7 +1,6 @@
-const { kebabCase, contains, snakeCase, titleCase } = require("lazy-z");
+const { kebabCase, contains, snakeCase, titleCase, splat } = require("lazy-z");
 const powerImageMap = require("../client/src/lib/docs/power-image-map.json");
 const { powerStoragePoolRegionMap } = require("../client/src/lib/constants");
-const { response } = require("express");
 
 /**
  *
@@ -132,6 +131,8 @@ function powerRoutes(axios, controller) {
             let specificEndpoint = "";
             if (componentType === "images")
               specificEndpoint = `stock-images?sap=true&vtl=true`;
+            else if (componentType === "storage-tiers")
+              specificEndpoint = `storage-tiers`;
             else specificEndpoint = `storage-capacity/${componentType}`;
 
             let requestConfig = {
@@ -143,7 +144,7 @@ function powerRoutes(axios, controller) {
                 Authorization: `Bearer ${controller.token}`,
               },
             };
-            console.log(`> Fetching images...`);
+            console.log(`> Fetching ${componentType}...`);
             return axios(requestConfig);
           })
           .then((response) => {
@@ -188,6 +189,8 @@ function powerRoutes(axios, controller) {
               );
             });
           }
+        } else if (componentType === "storage-tiers") {
+          res.send(splat(response.data, "name"));
         } else {
           let formattedStoragePools = [];
           response.data.storagePoolsCapacity.forEach((pool) => {

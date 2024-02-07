@@ -63,13 +63,13 @@ export class DynamicAclForm extends React.Component {
         />
         {isv2 && (
           <div className="marginTop1rem">
-          <CopyRuleForm
-            craig={craig}
-            isAclForm={true}
-            data={craig.store.json.vpcs[this.props.vpcIndex]}
-            acl={aclObject}
-            v2={isv2}
-          />
+            <CopyRuleForm
+              craig={craig}
+              isAclForm={true}
+              data={craig.store.json.vpcs[this.props.vpcIndex]}
+              acl={aclObject}
+              v2={isv2}
+            />
           </div>
         )}
       </>

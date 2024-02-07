@@ -1719,6 +1719,23 @@ describe("power_instances", () => {
     });
     describe("power_instances.pi_storage_type", () => {
       describe("power_instances.pi_storage_type.onRender", () => {
+        it("should return correct api endpoint", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.apiEndpoint({
+              zone: "dal10",
+            }),
+            `/api/power/dal10/storage-tiers`,
+            "it should return list of tiers"
+          );
+        });
+        it("should hidden when no zone", () => {
+          let craig = state();
+          assert.isTrue(
+            craig.power_instances.pi_storage_type.hideWhen({}),
+            "it should not be hidden"
+          );
+        });
         it("should not be hidden when type is tier-1", () => {
           let craig = state();
           assert.deepEqual(

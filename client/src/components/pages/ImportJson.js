@@ -1,8 +1,7 @@
 import React from "react";
-import { Button, Modal } from "@carbon/react";
+import { Button, Modal, TextInput } from "@carbon/react";
 import { CheckmarkFilled, Misuse } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { IcseTextInput } from "icse-react-assets";
 import { contains, isInRange } from "lazy-z";
 import { slzToCraig, validate } from "../../lib";
 import { JSONTextArea } from "../utils/JSONTextArea";
@@ -102,11 +101,12 @@ class ImportJson extends React.Component {
         <div className="subForm">
           {this.props.slz && (
             <CraigFormGroup>
-              <IcseTextInput
+              <TextInput
                 id="slz-prefix"
+                className="fieldWidth"
                 labelText="Secure Landing Zone Prefix"
                 field="prefix"
-                value={this.state.prefix}
+                value={this.state.prefix || ""}
                 invalid={
                   isInRange(this.state.prefix.length, 2, 16) === false ||
                   this.state.prefix.match(constants.newResourceNameExp) === null

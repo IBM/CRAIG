@@ -6,10 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
+- Updated Terraform version to 1.5
+- Updated IBM Cloud Terraform Provider version to 1.61.0
 
 ### Features
 
 - When using the Power VS POC Template, the default VPN Gateway will now be highlighted as invalid for missing the required `peer_address` value
+- When creating a Power VS Instance or Storage Volume a list of available storage tiers will be dynamically retrieved based on the zone where the resource is provisioned
 
 ### Fixes
 
@@ -310,7 +313,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Updated IBM Provider version to `1.56.1`
+- Updated IBM Provider version to `1.61.0`
 - Added backend functionality to allow users to create schematics workspaces
 - Users can now search for components by using the `Search` box in the left navigation bar
 - Added JSON-to-IaC functionality to allow for cluster ingress secrets that are managed by Secrets Manager

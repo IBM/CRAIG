@@ -13,7 +13,7 @@ import {
   IbmCloudSecurityComplianceCenterWorkloadProtection,
   CloudServices,
 } from "@carbon/icons-react";
-import { EmptyResourceTile, IcseSelect } from "icse-react-assets";
+import { IcseSelect } from "icse-react-assets";
 import {
   azsort,
   contains,
@@ -58,6 +58,7 @@ import {
   secretsManagerTf,
 } from "../../../lib/json-to-iac";
 import { scc2Tf } from "../../../lib/json-to-iac/scc-v2";
+import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 
 const serviceFormMap = {
   resource_groups: {
@@ -620,7 +621,7 @@ class CloudServicesPage extends React.Component {
                           }
                         />
                         {serviceMap[rg].length === 0 ? (
-                          <EmptyResourceTile name="services in this resource group" />
+                          <CraigEmptyResourceTile name="services in this resource group" />
                         ) : (
                           <CraigFormGroup className="overrideGap">
                             {serviceMap[rg]

@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { IcseModal, IcseNameInput } from "icse-react-assets";
 import { formatConfig, validate } from "../../../lib";
-import { InlineNotification } from "@carbon/react";
+import { InlineNotification, Modal, TextInput } from "@carbon/react";
 import { deepEqual } from "lazy-z";
 import { JSONTextArea } from "../../utils/JSONTextArea";
 import { onRequestSubmitJSONModal } from "../../../lib/craig-app";
@@ -85,10 +84,11 @@ export class JSONModal extends React.Component {
         : this.props.data && !deepEqual(this.props.data.json, this.state.json);
 
     return (
-      <IcseModal
+      <Modal
         size="lg"
         open={this.props.open}
-        heading={
+        className="leftTextAlign"
+        modalHeading={
           this.props.import
             ? "Import as New Project"
             : this.state.readOnlyJSON
@@ -106,7 +106,8 @@ export class JSONModal extends React.Component {
         primaryButtonDisabled={
           this.state.readOnlyJSON ? false : !this.state.isValid
         }
-        secondaryButtonText={"Back"}
+        secondaryButtonText="Back"
+        id="json-modal"
         onRequestClose={this.props.onClose}
         onRequestSubmit={(event) => {
           onRequestSubmitJSONModal(
@@ -123,16 +124,15 @@ export class JSONModal extends React.Component {
       >
         {!this.props.import && (
           <CraigFormGroup className="marginBottomSmall">
-            <IcseNameInput
-              labelText={"Project Name"}
-              invalid={false}
-              invalidText=""
+            <TextInput
+              labelText="Project Name"
               id="project-name"
+              name="name"
               componentName="project"
               value={this.state.name}
               onChange={() => {}}
               helperTextCallback={() => {}}
-              readOnly={true}
+              readOnly
             />
           </CraigFormGroup>
         )}
@@ -209,7 +209,7 @@ export class JSONModal extends React.Component {
             title="Overriding Configuration"
           />
         )}
-      </IcseModal>
+      </Modal>
     );
   }
 }

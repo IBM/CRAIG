@@ -550,7 +550,7 @@ terraform {
   required_providers {
     ibm = {
       source  = "IBM-Cloud/ibm"
-      version = "~>1.56.1"
+      version = "~>1.61.0"
     }
     logdna = {
       source                = "logdna/logdna"
@@ -558,7 +558,7 @@ terraform {
       configuration_aliases = [logdna.logdna, logdna.atracker]
     }
   }
-  required_version = ">=1.3"
+  required_version = ">=1.5"
 }
 
 ##############################################################################
@@ -613,7 +613,7 @@ terraform {
   required_providers {
     ibm = {
       source  = "IBM-Cloud/ibm"
-      version = "~>1.56.1"
+      version = "~>1.61.0"
     }
     logdna = {
       source                = "logdna/logdna"
@@ -621,7 +621,7 @@ terraform {
       configuration_aliases = [logdna.logdna]
     }
   }
-  required_version = ">=1.3"
+  required_version = ">=1.5"
 }
 
 ##############################################################################

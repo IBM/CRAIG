@@ -1021,9 +1021,9 @@ function powerVsStorageType(isVolume) {
   return {
     size: "small",
     default: null,
-    type: "select",
+    type: "fetchSelect",
     labelText: "Storage Type",
-    groups: ["Tier-1", "Tier-3"],
+    groups: [],
     invalid: function (stateData) {
       return isNullOrEmptyString(stateData[storageField]);
     },
@@ -1035,6 +1035,12 @@ function powerVsStorageType(isVolume) {
     },
     onInputChange: function (stateData) {
       return stateData[storageField].toLowerCase().replace(/-/, "");
+    },
+    apiEndpoint: function (stateData) {
+      return `/api/power/${stateData.zone}/storage-tiers`;
+    },
+    hideWhen: function (stateData) {
+      return isNullOrEmptyString(stateData.zone, true);
     },
   };
 }

@@ -659,6 +659,7 @@ class NetworkAcls extends React.Component {
 
         {this.props.data.acls.map((acl, aclIndex) => (
           <DynamicAclForm
+            key={"dynamic-acl-form-" + aclIndex}
             nested
             beginHidden
             craig={craig}
