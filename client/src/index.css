@@ -157,6 +157,10 @@ input:read-only {
   width: 11rem;
 }
 
+.fieldWidthCopyRule {
+  width: 10rem;
+}
+
 .fieldWidthSmallest {
   width: 8rem;
 }

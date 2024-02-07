@@ -111,12 +111,11 @@ class CopyRuleForm extends React.Component {
    * @returns {string} x if not unique, check if unique
    */
   hasRuleName(name) {
+    let aclName = this.props.v2
+      ? this.props.acl.name
+      : this.state.addClusterRuleAcl;
     return splatContains(
-      getObjectFromArray(
-        this.props.data.acls,
-        "name",
-        this.state.addClusterRuleAcl
-      ).rules,
+      getObjectFromArray(this.props.data.acls, "name", aclName).rules,
       "name",
       name
     )
@@ -175,10 +174,10 @@ class CopyRuleForm extends React.Component {
         this.state.destinationVpc
       );
     } else if (this.state.modalStyle === "addClusterRules") {
-      this.props.craig.addClusterRules(
-        this.props.data.name,
-        this.state.addClusterRuleAcl
-      );
+      let aclName = this.props.v2
+        ? this.props.acl.name
+        : this.state.addClusterRuleAcl;
+      this.props.craig.addClusterRules(this.props.data.name, aclName);
     } else if (this.state.modalStyle === "copyRule") {
       this.props.craig.copyRule(
         this.props.data.name,
@@ -207,10 +206,17 @@ class CopyRuleForm extends React.Component {
   }
 
   render() {
+    if (this.props.v2) {
+      let source = this.props.isAclForm
+        ? this.props.acl.name
+        : this.props.sourceSg;
+      this.state.source = source;
+      this.state.ruleSource = source;
+    }
     return (
       <div
         className={
-          (this.props.isAclForm
+          (this.props.isAclForm ^ this.props.v2
             ? "formInSubForm "
             : "subForm sgFormTopMargin ") + "positionRelative"
         }
@@ -296,9 +302,14 @@ class CopyRuleForm extends React.Component {
           {this.props.isAclForm && (
             <AddClusterRules
               data={this.props.data}
-              addClusterRuleAcl={this.state.addClusterRuleAcl}
+              addClusterRuleAcl={
+                this.props.v2
+                  ? this.props.acl.name
+                  : this.state.addClusterRuleAcl
+              }
               handleSelect={this.handleSelect}
               openModal={this.openModal}
+              v2={this.props.v2}
             />
           )}
 
@@ -311,6 +322,7 @@ class CopyRuleForm extends React.Component {
             craig={this.props.craig}
             hoverText={this.duplicateCopyAclName()}
             isSecurityGroup={this.props.isAclForm === false}
+            v2={this.props.v2}
           />
           <CopyRule
             data={this.props.data}
@@ -324,6 +336,7 @@ class CopyRuleForm extends React.Component {
             openModal={this.openModal}
             craig={this.props.craig}
             isSecurityGroup={this.props.isAclForm === false}
+            v2={this.props.v2}
           />
         </StatelessFormWrapper>
       </div>

@@ -40,7 +40,12 @@ const CopyRule = (props) => {
           value={props.ruleSource}
           handleInputChange={props.handleSelect}
           name="ruleSource"
-          className="fieldWidthSmaller"
+          className={
+            props.v2 && props.isSecurityGroup
+              ? "fieldWidthCopyRule"
+              : "fieldWidthSmaller"
+          }
+          disabled={props.v2}
           disableInvalid
         />
         <IcseSelect

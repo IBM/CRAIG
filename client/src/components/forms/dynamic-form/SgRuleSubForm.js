@@ -1,6 +1,7 @@
 import React from "react";
 import { disableSave, propsMatchState } from "../../../lib";
 import { NetworkingRulesOrderCard } from "icse-react-assets";
+import CopyRuleForm from "../CopyRuleForm";
 
 export const SgRulesSubForm = (props) => {
   return !props.parentProps.isModal &&
@@ -33,6 +34,13 @@ export const SgRulesSubForm = (props) => {
         invalidCallback={() => {}}
         disableModalSubmitCallback={() => {}}
         invalidTextCallback={() => {}}
+      />
+      <div className="marginBottomSmall" />
+      <CopyRuleForm
+        craig={props.parentProps.craig}
+        sourceSg={props.parentState.name}
+        isAclForm={false}
+        v2={true}
       />
     </>
   ) : (
