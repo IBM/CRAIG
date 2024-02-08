@@ -163,10 +163,6 @@ function initOptions(store) {
       },
       region: {
         default: "",
-        tooltip: {
-          content:
-            "Note: eu-es is not a supported Power VS region at the moment. This will be available once supported by IBM Power API.",
-        },
         invalid: fieldIsNullOrEmptyString("region"),
         invalidText: selectInvalidText("region"),
         groups: function (stateData) {
@@ -251,9 +247,6 @@ function initOptions(store) {
             stateData.enable_power_vs = true;
           }
         },
-        disabled: function (stateData) {
-          return stateData.region === "eu-es";
-        },
       },
       power_vs_high_availability: {
         size: "small",
@@ -304,7 +297,7 @@ function initOptions(store) {
                 "au-syd": ["syd04", "syd05"],
                 "eu-de": ["eu-de-1", "eu-de-2"],
                 "eu-gb": ["lon04", "lon06"],
-                "eu-es": [],
+                "eu-es": ["mad02", "mad04"],
                 "us-east": ["us-east", "wdc06", "wdc07"],
                 "us-south": ["us-south", "dal10", "dal12"],
                 "jp-tok": ["tok04"],

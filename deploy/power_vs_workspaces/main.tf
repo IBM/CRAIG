@@ -120,9 +120,6 @@ provider "ibm" {
   ibmcloud_timeout = 60
 }
 
-/**
-// Removed until Power API supports Madrid Zones
-
 provider "ibm" {
   alias            = "power_vs_mad02"
   ibmcloud_api_key = var.ibmcloud_api_key
@@ -138,8 +135,6 @@ provider "ibm" {
   zone             = "mad04"
   ibmcloud_timeout = 60
 }
-
-*/
 
 provider "ibm" {
   alias            = "power_vs_syd05"
@@ -474,9 +469,6 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_eu_de_1" {
 
 ##############################################################################
 
-/**
-// Removed until Power API supports Madrid Zones
-
 ##############################################################################
 # Power VS Workspace Craig Mad 02
 ##############################################################################
@@ -518,8 +510,6 @@ resource "ibm_resource_instance" "power_vs_workspace_craig_mad04" {
 }
 
 ##############################################################################
-
-*/
 
 ##############################################################################
 # Power VS Workspace Craig Syd 05

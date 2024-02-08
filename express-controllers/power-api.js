@@ -14,7 +14,7 @@ function getRegionFromZone(zone) {
     ["us-east", ["wdc06", "wdc07", "us-east"]],
     ["us-south", ["dal10", "dal12", "us-south"]],
     ["eu-de", ["eu-de-1", "eu-de-2"]],
-    ["eu-es", []],
+    ["mad", ["mad02", "mad04"]],
     ["eu-gb", ["lon04", "lon06"]],
     ["tor", ["tor01"]],
     ["syd", ["syd04", "syd05"]],
@@ -25,7 +25,6 @@ function getRegionFromZone(zone) {
   regionZoneMap.forEach((values, key) => {
     if (contains(values, zone)) region = key;
   });
-
   return region;
 }
 
@@ -134,7 +133,6 @@ function powerRoutes(axios, controller) {
             else if (componentType === "storage-tiers")
               specificEndpoint = `storage-tiers`;
             else specificEndpoint = `storage-capacity/${componentType}`;
-
             let requestConfig = {
               method: "get",
               url: `https://${region}.power-iaas.cloud.ibm.com/pcloud/v1/cloud-instances/${powerWorkspaceData["guid"]}/${specificEndpoint}`,

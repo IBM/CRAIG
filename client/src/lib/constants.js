@@ -723,6 +723,8 @@ module.exports = {
     "wdc07",
     "eu-de-1",
     "eu-de-2",
+    "mad02",
+    "mad04",
     "sao04",
     "dal12",
   ],
