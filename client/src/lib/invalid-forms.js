@@ -26,6 +26,7 @@ const subComponents = {
   cis: ["domains", "dns_records"],
   cis_glbs: ["origins", "glbs", "health_checks"],
   object_storage: ["buckets", "keys"],
+  vpn_gateways: ["connections"],
 };
 
 /**

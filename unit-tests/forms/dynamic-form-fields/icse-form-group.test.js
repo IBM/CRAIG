@@ -48,7 +48,11 @@ describe("dynamicCraigFormGroupsProps", () => {
       dynamicCraigFormGroupsProps(
         {
           form: {
-            groups: ["hi"],
+            groups: [
+              {
+                hi: "mom",
+              },
+            ],
             subForms: ["hi"],
           },
           data: {
@@ -115,6 +119,41 @@ describe("dynamicCraigFormGroupsProps", () => {
       "it should return correct props"
     );
   });
+  it("should return for middle group when all are hidden", () => {
+    assert.deepEqual(
+      dynamicCraigFormGroupsProps(
+        {
+          form: {
+            groups: [
+              {
+                hidden: false,
+              },
+              {
+                hidden: {
+                  hideWhen: function () {
+                    return true;
+                  },
+                },
+              },
+              {
+                hidden: false,
+              },
+            ],
+            subForms: [],
+          },
+          data: {
+            name: "frog",
+          },
+        },
+        1
+      ),
+      {
+        key: "frog-group-1",
+        noMarginBottom: true,
+      },
+      "it should return correct props"
+    );
+  });
   it("should return for next to last group for subnets", () => {
     assert.deepEqual(
       dynamicCraigFormGroupsProps(
@@ -122,7 +161,9 @@ describe("dynamicCraigFormGroupsProps", () => {
           formName: "subnet",
           form: {
             groups: [
-              {},
+              {
+                not_hidden: true,
+              },
               {
                 hidden: {
                   hideWhen: function () {
@@ -153,7 +194,9 @@ describe("dynamicCraigFormGroupsProps", () => {
         {
           form: {
             groups: [
-              {},
+              {
+                notHidden: {},
+              },
               {
                 hidden: {
                   hideWhen: function () {

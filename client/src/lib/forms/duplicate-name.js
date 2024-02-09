@@ -143,9 +143,10 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         splat(componentProps.craig.store.json.routing_tables, "name")
       );
   } else if (field === "acl_rules") {
-    let craigRef = componentProps.isModal
-      ? componentProps.craig
-      : componentProps.innerFormProps.craig;
+    let craigRef =
+      componentProps.isModal || !componentProps.innerFormProps
+        ? componentProps.craig
+        : componentProps.innerFormProps.craig;
     craigRef.store.json.vpcs.forEach((network) => {
       network.acls.forEach((acl) => {
         if (acl.name === componentProps.parent_name) {

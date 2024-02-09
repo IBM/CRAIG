@@ -718,6 +718,7 @@ describe("power_instances", () => {
     });
     it("should update power vs volume workspace when changing instance workspace", () => {
       let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
       state.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
@@ -772,7 +773,7 @@ describe("power_instances", () => {
             workspace: "toad",
             sap: true,
             sap_profile: "ush1-4x128",
-            zone: null,
+            zone: "dal12",
           },
         ],
         "it should create instance"
@@ -1135,6 +1136,7 @@ describe("power_instances", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1186,6 +1188,7 @@ describe("power_instances", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1233,6 +1236,7 @@ describe("power_instances", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1719,6 +1723,23 @@ describe("power_instances", () => {
     });
     describe("power_instances.pi_storage_type", () => {
       describe("power_instances.pi_storage_type.onRender", () => {
+        it("should return correct api endpoint", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.apiEndpoint({
+              zone: "dal10",
+            }),
+            `/api/power/dal10/storage-tiers`,
+            "it should return list of tiers"
+          );
+        });
+        it("should hidden when no zone", () => {
+          let craig = state();
+          assert.isTrue(
+            craig.power_instances.pi_storage_type.hideWhen({}),
+            "it should not be hidden"
+          );
+        });
         it("should not be hidden when type is tier-1", () => {
           let craig = state();
           assert.deepEqual(
@@ -1727,6 +1748,39 @@ describe("power_instances", () => {
               pi_storage_type: "tier1",
             }),
             "Tier-1",
+            "it should return correct text"
+          );
+        });
+        it("should render for tier5k", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.onRender({
+              storage_option: "",
+              pi_storage_type: "tier5k",
+            }),
+            "Fixed IOPs",
+            "it should return correct text"
+          );
+        });
+        it("should render for tier5k", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.onRender({
+              storage_option: "",
+              pi_storage_type: "tier5k",
+            }),
+            "Fixed IOPs",
+            "it should return correct text"
+          );
+        });
+        it("should return value for tier5k", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.onInputChange({
+              storage_option: "",
+              pi_storage_type: "Fixed IOPs",
+            }),
+            "tier5k",
             "it should return correct text"
           );
         });

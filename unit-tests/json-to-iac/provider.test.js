@@ -169,4 +169,51 @@ provider "ibm" {
 `;
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
+  it("should return the correct data when power vs is enabled in mad02 region is eu-es", () => {
+    let actualData = ibmCloudProvider({
+      _options: {
+        prefix: "iac",
+        region: "eu-es",
+        tags: ["hello", "world"],
+        zones: 3,
+        endpoints: "private",
+        account_id: "",
+        fs_cloud: false,
+        enable_classic: true,
+        dynamic_subnets: true,
+        enable_power_vs: true,
+        craig_version: "1.6.0",
+        power_vs_zones: ["mad02"],
+        power_vs_high_availability: true,
+      },
+    });
+    let expectedData = `##############################################################################
+# IBM Cloud Provider
+##############################################################################
+
+provider "ibm" {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias                 = "classic"
+  ibmcloud_timeout      = 60
+  iaas_classic_username = var.iaas_classic_username
+  iaas_classic_api_key  = var.iaas_classic_api_key
+}
+
+provider "ibm" {
+  alias            = "power_vs_mad02"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "mad"
+  zone             = "mad02"
+  ibmcloud_timeout = 60
+}
+
+##############################################################################
+`;
+    assert.deepEqual(actualData, expectedData, "it should return correct data");
+  });
 });

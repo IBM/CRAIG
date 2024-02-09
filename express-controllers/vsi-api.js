@@ -1,5 +1,4 @@
-const { azsort, prettyJSON } = require("lazy-z");
-const tar = require("tar-stream");
+const { azsort } = require("lazy-z");
 
 function vsiRoutes(axios, controller) {
   /**
@@ -36,7 +35,7 @@ function vsiRoutes(axios, controller) {
           res.send(instanceProfiles);
         })
         .catch((error) => {
-          res.send(error.response);
+          res.send(JSON.stringify(error.response));
         });
     });
   };

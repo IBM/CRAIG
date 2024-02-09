@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Set up defaults
 # The defaults may be overriden by environment variables
@@ -386,12 +386,13 @@ create_powervs_workspaces() {
 
 delete_powervs_workspaces() {
     workspace_id=$(ibmcloud sch ws list --output json | jq -r --arg wsname "$PROJECT_NAME-powervs" '.workspaces[]? | select(.name==$wsname) | "\(.id)"')
-    if [[ $(echo $workspace_id | wc -l) -ge 2 ]]
+
+    if [[ $(echo -n $workspace_id | wc -l) -ge 2 ]]
     then
         echo "Multiple workspaces found with name $PROJECT_NAME-powervs: $workspace_id"
         fatal "Not destroying resources in workspace $PROJECT_NAME-powervs"
     fi
-    if [[ $(echo $workspace_id | wc -l) -lt 1 ]]
+    if [[ $(echo -n $workspace_id | wc -l) -lt 1 ]]
     then
         echo "No schematics workspace found for Power VS workspace deletion. Continuing."
         return
@@ -400,7 +401,6 @@ delete_powervs_workspaces() {
     # Destroy the resources
     echo "Destroying Power VS Workspaces"
     destroy_submit_output=$(ibmcloud sch destroy -i $workspace_id -f --output json)
-    #echo "Apply output ${apply_output}"
     destroy_id=$(echo $destroy_submit_output | jq -r ".activityid")
     wait_for_schematics_action_complete $destroy_id $workspace_id
 

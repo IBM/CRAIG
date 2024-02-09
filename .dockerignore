@@ -1,0 +1,5 @@
+*.md
+unit-tests/
+old/
+node_modules/
+client/node_modules/

@@ -314,6 +314,13 @@ describe("transit_gateways", () => {
             "it should return correct data"
           );
         });
+        it("should not have invalid resource group when use data", () => {
+          let craig = newState();
+          assert.isFalse(
+            craig.transit_gateways.resource_group.invalid({ use_data: true }),
+            "it should be invalid"
+          );
+        });
       });
       describe("hideWhen", () => {
         it("should return resource groups", () => {

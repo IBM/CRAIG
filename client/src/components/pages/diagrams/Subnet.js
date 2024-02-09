@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 import "./diagrams.css";
 
 export const Subnet = (props) => {
-  let subnetClassName = props.small
-    ? "subnetBoxSmall"
-    : props.subnet
-    ? "subnetBox"
-    : "powerSubnetBox";
+  let subnetClassName =
+    props.small && props.subnet
+      ? "subnetBoxSmall"
+      : props.subnet
+      ? "subnetBox"
+      : "powerSubnetBox";
   let subnetName = props?.subnet?.name || "No Subnets Selected";
   return (
     <div

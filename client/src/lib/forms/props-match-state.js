@@ -92,6 +92,7 @@ function propsMatchState(field, stateData, componentProps) {
   if (field === "logdna") {
     componentProps.data.archive = stateData.archive;
   }
+
   try {
     return deepEqual(stateData, componentProps.data);
   } catch (err) {

@@ -130,3 +130,20 @@ After deploying the PoC resources additional configuration in the VSI operating 
 Any additional non-boot disk (rootvg, *SYSBAS, etc) volumes will be blank and require formatting, volume group restores, mount point configuration, ASP configuration, etc depending on the operating system and intended use case.
 
 The VPC VSIs can also be configured to serve utility purposes such as acting as an internet proxy for the Power VSIs, as a jump host, an NFS server, or any other utility functions.
+
+### Configuring the on-premises VPN gateway
+
+Now that the PowerVS POC environment is setup. The next step is to configure on-premises VPN gateway peer to connect to your IBM Cloud VPN Gateway for Power Virtual Server workspace.
+
+Here are the list of fields and values to be used to setup on-prem VPN gateway:
+
+* VPN Mode: Policy based routing.
+* Peer gateway address: Use IBM VPN gateway active public <IP address> as peer address. 
+    > * You can find this address from [IBM cloud console](https://cloud.ibm.com/).
+    > * From left menu click on `VPC Infrastructures > VPNs`. 
+    > * Select the region where VPN has been deployed and all VPNs in that region will be listed. 
+    > * Read the `Gateway IP` of the peer VPN from the list. 
+    
+* Preshared Key: Shared between both VPNs to establish connection.
+* Peer CIDR: IBM VPC CIDRs + IBM PowerVS CIDRs to allow communication into IBM cloud environment via VPN.
+* IKE policy: IKEv2

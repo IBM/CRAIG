@@ -3,12 +3,7 @@ import { CraigFormHeading } from "../../forms/utils";
 import { GatewayPublic, VirtualPrivateCloud } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
-import {
-  contains,
-  containsKeys,
-  isNullOrEmptyString,
-  splatContains,
-} from "lazy-z";
+import { isNullOrEmptyString, splatContains } from "lazy-z";
 import { DeploymentIcon } from "./DeploymentIcon";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";

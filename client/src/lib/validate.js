@@ -398,7 +398,7 @@ const validate = function (json) {
 
   // transit gateways
   json.transit_gateways.forEach((instance) => {
-    nullResourceGroupTest("Transit Gateways", instance);
+    if (!instance.use_data) nullResourceGroupTest("Transit Gateways", instance);
   });
 
   // security groups
@@ -478,7 +478,6 @@ const validate = function (json) {
 
   // ssh keys
   json.ssh_keys.forEach((key) => {
-    nullResourceGroupTest("SSH Keys", key);
     if (
       !key.use_data &&
       key.public_key !== null &&

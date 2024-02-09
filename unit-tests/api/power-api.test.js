@@ -131,6 +131,78 @@ describe("power api", () => {
           );
         });
     });
+    it("should respond with a list of storage pools when using req", () => {
+      let usSouthImages = powerImageJson["us-south"];
+      let { axios } = initMockAxios(
+        {
+          resources: [
+            {
+              guid: "1234",
+              crn: "fooCrn",
+              id: "power-iaas",
+            },
+            {
+              id: "no",
+            },
+          ],
+          images: usSouthImages,
+        },
+        false
+      );
+      let testPowerController = new controller(axios);
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { zone: "us-south", component: "" },
+            query: {
+              name: "egg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isFalse(
+            res.send.calledOnceWith(usSouthImages),
+            "it should be true"
+          );
+        });
+    });
+    it("should respond with a list of storage tiers when using req", () => {
+      let usSouthImages = powerImageJson["us-south"];
+      let { axios } = initMockAxios(
+        {
+          resources: [
+            {
+              guid: "1234",
+              crn: "fooCrn",
+              id: "power-iaas",
+            },
+            {
+              id: "no",
+            },
+          ],
+          images: usSouthImages,
+        },
+        false
+      );
+      let testPowerController = new controller(axios);
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { zone: "us-south", component: "storage_tiers" },
+            query: {
+              name: "egg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isFalse(
+            res.send.calledOnceWith(usSouthImages),
+            "it should be true"
+          );
+        });
+    });
     it("should send storage pools", () => {
       process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
       let { axios } = initMockAxios(

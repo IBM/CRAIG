@@ -212,11 +212,11 @@ function schematicsRoutes(axios, controller) {
           let data = prettyJSON({
             name: workspaceName,
             resource_group: rgData.resources[0]["id"],
-            type: ["terraform_v1.3"],
+            type: ["terraform_v1.5"],
             location: region,
             description: "Schematics Workspace for craig.tar uploads",
             tags: ["craig"],
-            template_data: [{ type: "terraform_v1.3" }],
+            template_data: [{ type: "terraform_v1.5" }],
           });
 
           let requestConfig = {

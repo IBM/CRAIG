@@ -19,20 +19,28 @@ const {
   updateNetworkingRule,
   formatNetworkingRule,
   shouldDisableComponentSave,
-  invalidTcpOrUdpPort,
-  invalidIcmpCodeOrType,
   fieldIsNullOrEmptyString,
   resourceGroupsField,
   selectInvalidText,
   vpcGroups,
   unconditionalInvalidText,
+  kebabCaseInput,
+  titleCaseRender,
+  networkingRuleProtocolField,
+  networkingRulePortField,
+  networkingRuleTypeField,
+  networkingRuleCodeField,
+  getRuleProtocol,
 } = require("./utils");
 const {
   invalidName,
   invalidNameText,
-  invalidSecurityGroupRuleName,
-  invalidSecurityGroupRuleText,
+  invalidNewResourceName,
 } = require("../forms");
+const {
+  duplicateNameCallback,
+  genericNameCallback,
+} = require("../forms/text-callbacks");
 
 /**
  * intialize security groups
@@ -65,6 +73,16 @@ function securityGroupOnStoreUpdate(config) {
       if (containsKeys(securityGroupMap, sg.vpc)) {
         securityGroupMap[sg.vpc].push(sg.name);
       } else securityGroupMap[sg.vpc] = [sg.name];
+      sg.rules.forEach((rule) => {
+        if (!rule.ruleProtocol) {
+          rule.ruleProtocol = getRuleProtocol(rule);
+        }
+        ["port_min", "port_max", "type", "code"].forEach((field) => {
+          if (!containsKeys(rule, field)) {
+            rule[field] = null;
+          }
+        });
+      });
     }
   });
   config.store.securityGroups = securityGroupMap;
@@ -196,6 +214,36 @@ function securityGroupRulesDelete(config, stateData, componentProps) {
 }
 
 /**
+ * check if security group rule name is invalid
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true if invalid
+ */
+function invalidSecurityGroupRuleName(stateData, componentProps) {
+  let duplicateRuleName = false;
+  let ruleRef = componentProps.rules;
+  if (stateData.name !== componentProps.data.name) {
+    duplicateRuleName = splatContains(ruleRef, "name", stateData.name);
+  }
+  return duplicateRuleName || invalidNewResourceName(stateData.name);
+}
+
+/**
+ * get invalid sg rule text
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {string} invalid text
+ */
+function invalidSecurityGroupRuleText(stateData, componentProps) {
+  if (
+    invalidSecurityGroupRuleName(stateData, componentProps) &&
+    !invalidNewResourceName(stateData.name)
+  ) {
+    return duplicateNameCallback(stateData.name);
+  } else return genericNameCallback();
+}
+
+/**
  * init sg store
  * @param {*} store
  */
@@ -246,9 +294,10 @@ function initSecurityGroupStore(store) {
             size: "small",
           },
           source: {
+            labelText: "CIDR",
             default: "",
             invalid: function (stateData, componentProps) {
-              return !isIpv4CidrOrAddress(stateData.source);
+              return !isIpv4CidrOrAddress(stateData.source || "");
             },
             invalidText: unconditionalInvalidText(
               "Please provide a valid IPV4 IP address or CIDR notation."
@@ -256,38 +305,21 @@ function initSecurityGroupStore(store) {
             size: "small",
             placeholder: "x.x.x.x",
           },
-          port_min: {
-            default: "",
-            invalid: invalidTcpOrUdpPort,
+          direction: {
             size: "small",
-            invalidText: unconditionalInvalidText(
-              "Enter a whole number between 1 and 65536"
-            ),
-          },
-          port_max: {
-            size: "small",
+            type: "select",
             default: "",
-            invalid: invalidTcpOrUdpPort,
-            invalidText: unconditionalInvalidText(
-              "Enter a whole number between 1 and 65536"
-            ),
+            groups: ["Inbound", "Outbound"],
+            invalid: fieldIsNullOrEmptyString("direction"),
+            invalidText: selectInvalidText("direction"),
+            onInputChange: kebabCaseInput("direction"),
+            onRender: titleCaseRender("direction"),
           },
-          type: {
-            size: "small",
-            default: "",
-            invalid: invalidIcmpCodeOrType,
-            invalidText: unconditionalInvalidText(
-              "Enter a while number between 0 and 254"
-            ),
-          },
-          code: {
-            size: "small",
-            default: "",
-            invalid: invalidIcmpCodeOrType,
-            invalidText: unconditionalInvalidText(
-              "Enter a while number between 0 and 255"
-            ),
-          },
+          ruleProtocol: networkingRuleProtocolField(),
+          port_min: networkingRulePortField(),
+          port_max: networkingRulePortField(true),
+          type: networkingRuleTypeField(),
+          code: networkingRuleCodeField(),
         },
       },
     },

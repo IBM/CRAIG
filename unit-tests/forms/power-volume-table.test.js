@@ -64,6 +64,7 @@ describe("getVolumeDisplayName", () => {
         {
           storage_option: "Affinity",
           pi_affinity_instance: "frog",
+          pi_volume_type: "tier1",
         },
         {
           store: {
@@ -89,6 +90,7 @@ describe("getVolumeDisplayName", () => {
         {
           storage_option: "Affinity",
           pi_affinity_instance: "frog",
+          pi_volume_type: "tier1",
         },
         {
           store: {
@@ -108,12 +110,40 @@ describe("getVolumeDisplayName", () => {
       "it should return correct data"
     );
   });
+  it("should show correct display name for affinity volume with instance affinity for storage pool instance", () => {
+    assert.deepEqual(
+      getVolumeDisplayName(
+        {
+          storage_option: "Affinity",
+          pi_affinity_instance: "frog",
+          pi_volume_type: "tier5k",
+        },
+        {
+          store: {
+            json: {
+              power_instances: [
+                {
+                  name: "frog",
+                  storage_option: "Storage Pool",
+                  pi_storage_pool: "tier5k",
+                },
+              ],
+            },
+          },
+        }
+      ),
+      "Affinity Instance frog (Fixed IOPs)",
+      "it should return correct data"
+    );
+  });
+
   it("should show correct display name for affinity volume with volume affinity for storage type volume", () => {
     assert.deepEqual(
       getVolumeDisplayName(
         {
           storage_option: "Affinity",
           pi_affinity_volume: "frog",
+          pi_volume_type: "tier1",
         },
         {
           store: {
@@ -139,6 +169,7 @@ describe("getVolumeDisplayName", () => {
         {
           storage_option: "Affinity",
           pi_affinity_volume: "frog",
+          pi_volume_type: "tier1",
         },
         {
           store: {
@@ -164,6 +195,7 @@ describe("getVolumeDisplayName", () => {
         {
           storage_option: "Anti-Affinity",
           pi_anti_affinity_instance: "frog",
+          pi_volume_type: "tier1",
         },
         {
           store: {
@@ -183,12 +215,39 @@ describe("getVolumeDisplayName", () => {
       "it should return correct data"
     );
   });
+  it("should show correct display name for anti-affinity volume with instance affinity for storage type instance", () => {
+    assert.deepEqual(
+      getVolumeDisplayName(
+        {
+          storage_option: "Anti-Affinity",
+          pi_anti_affinity_instance: "frog",
+          pi_volume_type: "tier5k",
+        },
+        {
+          store: {
+            json: {
+              power_instances: [
+                {
+                  name: "frog",
+                  storage_option: "Storage Type",
+                  pi_storage_type: "tier5k",
+                },
+              ],
+            },
+          },
+        }
+      ),
+      "Anti-Affinity Instance frog (Fixed IOPs)",
+      "it should return correct data"
+    );
+  });
   it("should show correct display name for anti-affinity volume with instance affinity for storage pool instance", () => {
     assert.deepEqual(
       getVolumeDisplayName(
         {
           storage_option: "Anti-Affinity",
           pi_anti_affinity_instance: "frog",
+          pi_volume_type: "tier5k",
         },
         {
           store: {
@@ -204,7 +263,7 @@ describe("getVolumeDisplayName", () => {
           },
         }
       ),
-      "Anti-Affinity Instance frog (Tier 1)",
+      "Anti-Affinity Instance frog (Fixed IOPs)",
       "it should return correct data"
     );
   });
@@ -214,6 +273,7 @@ describe("getVolumeDisplayName", () => {
         {
           storage_option: "Anti-Affinity",
           pi_anti_affinity_volume: "frog",
+          pi_volume_type: "tier1",
         },
         {
           store: {
@@ -239,6 +299,7 @@ describe("getVolumeDisplayName", () => {
         {
           storage_option: "Anti-Affinity",
           pi_anti_affinity_volume: "frog",
+          pi_volume_type: "tier1",
         },
         {
           store: {

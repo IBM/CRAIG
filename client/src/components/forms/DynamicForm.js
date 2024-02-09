@@ -1,6 +1,30 @@
 import React from "react";
 import { IcseFormTemplate } from "icse-react-assets";
 import {
+  eachKey,
+  isBoolean,
+  contains,
+  isFunction,
+  getObjectFromArray,
+} from "lazy-z";
+import { forceShowForm, propsMatchState } from "../../lib";
+import {
+  dynamicCraigFormGroupsProps,
+  dynamicHeadingProps,
+  dynamicToolTipWrapperProps,
+} from "../../lib/forms/dynamic-form-fields";
+import { edgeRouterEnabledZones } from "../../lib/constants";
+import {
+  DynamicFetchMultiSelect,
+  DynamicFetchSelect,
+} from "./dynamic-form/components";
+import {
+  SubnetTileSubForm,
+  SubnetTileTitle,
+} from "./dynamic-form/SubnetTileSubForm";
+import { Tile } from "@carbon/react";
+import { CraigFormGroup, CraigFormHeading, RenderForm } from "./utils";
+import {
   DynamicFormTextInput,
   DynamicFormSelect,
   DynamicFormToggle,
@@ -13,32 +37,7 @@ import {
   DynamicDatePicker,
   DynamicToolTipWrapper,
 } from "./dynamic-form";
-import {
-  eachKey,
-  isBoolean,
-  contains,
-  isFunction,
-  getObjectFromArray,
-} from "lazy-z";
-import { propsMatchState } from "../../lib";
-import {
-  dynamicCraigFormGroupsProps,
-  dynamicHeadingProps,
-  dynamicToolTipWrapperProps,
-} from "../../lib/forms/dynamic-form-fields";
-import { edgeRouterEnabledZones } from "../../lib/constants";
-import {
-  DynamicFetchMultiSelect,
-  DynamicFetchSelect,
-} from "./dynamic-form/components";
-import { NaclRulesSubForm } from "./dynamic-form/NaclRulesSubForm";
-import {
-  SubnetTileSubForm,
-  SubnetTileTitle,
-} from "./dynamic-form/SubnetTileSubForm";
-import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
-import { Tile } from "@carbon/react";
-import { CraigFormGroup, CraigFormHeading, RenderForm } from "./utils";
+import { NetworkingRuleOrderCard } from "./network-rules-order-card";
 
 /**
  * build functions for modal forms
@@ -166,7 +165,11 @@ class DynamicForm extends React.Component {
         if (group[field].onInputChange && targetName === field) {
           // if the item has onInputChange function, set field on next state
           // to that value
-          nextState[field] = group[field].onInputChange(nextState, targetData);
+          nextState[field] = group[field].onInputChange(
+            nextState,
+            targetData,
+            this.props
+          );
           madeChanges = true;
         } else if (group[field].onStateChange && targetName === field) {
           // if the item has onStateChange function, run against whole
@@ -350,8 +353,10 @@ class DynamicForm extends React.Component {
           componentProps={this.props}
           handleInputChange={this.handleInputChange}
         />
-        <NaclRulesSubForm parentProps={this.props} parentState={this.state} />
-        <SgRulesSubForm parentProps={this.props} parentState={this.state} />
+        <NetworkingRuleOrderCard
+          parentProps={this.props}
+          parentState={this.state}
+        />
         {/* <OptionsButton parentProps={this.props} parentState={this.state} /> */}
         <SubnetTileSubForm
           parentProps={this.props}
@@ -374,6 +379,7 @@ class DynamicForm extends React.Component {
                 <IcseFormTemplate
                   key={subForm.name + JSON.stringify(this.props.data)}
                   tooltip={subForm.tooltip}
+                  forceOpen={forceShowForm}
                   overrideTile={
                     <SubFormOverrideTile
                       subForm={subForm}

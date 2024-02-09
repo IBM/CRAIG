@@ -11,6 +11,9 @@ import { PrimaryButton } from "./PrimaryButton";
 import { RenderForm } from "./RenderForm";
 import { DynamicRender } from "./DynamicRender";
 import { SecondaryButton } from "./SecondaryButton";
+import { Button } from "@carbon/react";
+import { ArrowDown, ArrowUp } from "@carbon/icons-react";
+import { contains } from "lazy-z";
 
 class CraigToggleForm extends React.Component {
   constructor(props) {
@@ -205,7 +208,9 @@ class CraigToggleForm extends React.Component {
               )}
               <div
                 className={
-                  this.props.type === "formInSubForm"
+                  this.props.aclClassicCraig
+                    ? "subForm marginBottomNone"
+                    : this.props.type === "formInSubForm"
                     ? "formInSubForm positionRelative marginBottomSmall"
                     : "subForm marginBottomSmall"
                 }
@@ -216,54 +221,92 @@ class CraigToggleForm extends React.Component {
                   iconType={this.props.useAddButton ? "add" : "edit"}
                   onIconClick={this.toggleChildren}
                   toggleFormTitle
+                  alwaysShowButtons={
+                    this.props.submissionFieldName === "acl_rules"
+                  }
+                  noMarginBottom={this.props.aclClassicCraig}
                   name={this.props.name}
                   hideIcon={this.props.hideChevron}
                   buttons={
-                    <>
-                      <DynamicRender
-                        hide={this.props.addButtonAtFormTitle !== true}
-                        content={
-                          <PrimaryButton
-                            name={this.props.name}
-                            type="add"
-                            onClick={this.onToggleSubModal}
-                            noDeleteButton
-                          />
-                        }
-                      />
-                      {/* save / add button */}
-                      <DynamicRender
-                        hide={
-                          this.props.noSaveButton ||
-                          this.props.addButtonAtFormTitle
-                        }
-                        content={
-                          <PrimaryButton
-                            name={this.props.name}
-                            onClick={this.onSave}
-                            disabled={this.state.disableSave}
-                            noDeleteButton={this.props.noDeleteButton}
-                          />
-                        }
-                      />
-                      {/* delete button */}
-                      <DynamicRender
-                        hide={this.props.noDeleteButton}
-                        content={
-                          <SecondaryButton
-                            onClick={this.toggleDeleteModal}
-                            name={this.props.name}
-                            disabled={this.props.deleteDisabled({
-                              ...this.props,
-                              ...this.props.innerFormProps,
-                            })}
-                            disableDeleteMessage={
-                              this.props.deleteDisabledMessage
-                            }
-                          />
-                        }
-                      />
-                    </>
+                    contains(
+                      ["acl_rules", "sg_rules"],
+                      this.props.submissionFieldName
+                    ) &&
+                    !this.props.isModal &&
+                    this.state.hide ? (
+                      <>
+                        <Button
+                          aria-label={"rule-up-" + this.props.name}
+                          key={"rule-up-" + this.props.name}
+                          disabled={this.props.disableUp}
+                          kind="ghost"
+                          size="sm"
+                          id={this.props.name + "-up"}
+                          onClick={this.props.handleUp}
+                          className="focus forceTertiaryButtonStyles marginRightSmall"
+                        >
+                          <ArrowUp key={"up-" + this.props.name} />
+                        </Button>
+                        <Button
+                          aria-label={"rule-down-" + this.props.name}
+                          kind="ghost"
+                          disabled={this.props.disableDown}
+                          key={"rule-down-" + this.props.name}
+                          size="sm"
+                          id={this.props.name + "-down"}
+                          onClick={this.props.handleDown}
+                          className="focus forceTertiaryButtonStyles"
+                        >
+                          <ArrowDown key={"down-" + this.props.name} />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <DynamicRender
+                          hide={this.props.addButtonAtFormTitle !== true}
+                          content={
+                            <PrimaryButton
+                              name={this.props.name}
+                              type="add"
+                              onClick={this.onToggleSubModal}
+                              noDeleteButton
+                            />
+                          }
+                        />
+                        {/* save / add button */}
+                        <DynamicRender
+                          hide={
+                            this.props.noSaveButton ||
+                            this.props.addButtonAtFormTitle
+                          }
+                          content={
+                            <PrimaryButton
+                              name={this.props.name}
+                              onClick={this.onSave}
+                              disabled={this.state.disableSave}
+                              noDeleteButton={this.props.noDeleteButton}
+                            />
+                          }
+                        />
+                        {/* delete button */}
+                        <DynamicRender
+                          hide={this.props.noDeleteButton}
+                          content={
+                            <SecondaryButton
+                              onClick={this.toggleDeleteModal}
+                              name={this.props.name}
+                              disabled={this.props.deleteDisabled({
+                                ...this.props,
+                                ...this.props.innerFormProps,
+                              })}
+                              disableDeleteMessage={
+                                this.props.deleteDisabledMessage
+                              }
+                            />
+                          }
+                        />
+                      </>
+                    )
                   }
                 >
                   {/* unsaved changes */}
@@ -308,6 +351,8 @@ class CraigToggleForm extends React.Component {
                     enableModal: this.props.enableModal,
                     disableModal: this.props.disableModal,
                     setRefUpstream: this.props.setRefUpstream,
+                    dynamicSubnetFormSubForm: this.props.formInSubForm,
+                    classicCraig: this.props.classicCraig,
                   })}
                 </StatelessFormWrapper>
               </div>

@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.10.0",
+    "features": [
+      "When using the Power VS POC Template, the default VPN Gateway will now be highlighted as invalid for missing the required `peer_address` value",
+      "When using the Pover VS POC Template, the default SSH Key will now be highlighted as invalid for missing the SSH Key public key value",
+      "When creating a Power VS Instance or Storage Volume a list of available storage tiers will be dynamically retrieved based on the zone where the resource is provisioned"
+    ],
+    "fixes": [
+      "When changing a VPC subnet tier to advanced, the current number of zones is retained rather than defaulting to three zones",
+      "Fixed an issue causing errors to the VSI API endpoints to crash the back end server",
+      "Fixed an issue causing overview display for VPC deployments with no subnets selected to be the incorrect width",
+      "Fixed an issue allowing users to navigate to `/v2` pages when no project is selected",
+      "Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address",
+      "Fixed an issue causing imported VPC SSH Keys to incorrectly require a resource group",
+      "Fixed an issue causing Power VS Volume zones to not update when changing the zone of the workspace where a volume is provisioned",
+      "Fixed an issue causing Power VS Zones to not update visually on the options page when changing region",
+      "Fixed an issue causing imported Transit Gateways resources to incorrectly require a resource group"
+    ],
+    "upgrade_notes": [
+      "Updated Terraform version to 1.5",
+      "Updated IBM Cloud Terraform Provider version to 1.61.0",
+      "CRAIG now supports Tier 0 and Fixed IOPs volume types for zones where these resource are available"
+    ]
+  },
+  {
     "version": "1.9.0",
     "features": [
       "Users can now provision Power VS resources in PER regions in Madrid and Sao Paolo",
@@ -26,7 +50,8 @@
       "Fixed an issue causing V2 forms to not display items with a valid VPC that have invalid subnets",
       "Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform",
       "Fixed an issue causing all Schematics Workspaces to be created in the default resource group even when a resource group was provided",
-      "Fixed an issue causing a Terraform variable to be generated for Power VS SSH Keys from a data source"
+      "Fixed an issue causing a Terraform variable to be generated for Power VS SSH Keys from a data source",
+      "Fixed an issue with Power API calls within Madrid region to point to `mad`"
     ],
     "upgrade_notes": [
       "Updated the Power SAP HANA template to have current images for zone",
@@ -264,7 +289,7 @@
       "Object Storage instances are no longer required for template validation"
     ],
     "features": [
-      "Updated IBM Provider version to `1.56.1`",
+      "Updated IBM Provider version to `1.61.0`",
       "Added backend functionality to allow users to create schematics workspaces",
       "Users can now search for components by using the `Search` box in the left navigation bar",
       "Added JSON-to-IaC functionality to allow for cluster ingress secrets that are managed by Secrets Manager",

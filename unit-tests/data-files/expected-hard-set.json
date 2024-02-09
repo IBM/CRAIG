@@ -205,6 +205,20 @@
           "name": "vpn-zone-1"
         }
       ],
+      "subnetTiers" : [
+        {
+          "name": "vsi",
+          "zones": 3
+        },
+        {
+          "name": "vpe",
+          "zones": 3
+        },
+        {
+          "name": "vpn",
+          "zones": 1
+        }
+      ],
       "subnets": [
         {
           "vpc": "management",
@@ -307,7 +321,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null,
+              "type": null,
+              "code": null,
+              "ruleProtocol": "all"
             },
             {
               "action": "allow",
@@ -332,7 +353,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null,
+              "type": null,
+              "code": null,
+              "ruleProtocol": "all"
             },
             {
               "action": "allow",
@@ -357,7 +385,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null,
+              "type": null,
+              "code": null,
+              "ruleProtocol": "all"
             }
           ]
         }
@@ -410,6 +445,16 @@
           "zone": 3,
           "cidr": "10.60.20.0/24",
           "name": "vpe-zone-3"
+        }
+      ],
+      "subnetTiers" : [
+        {
+          "name": "vsi",
+          "zones": 3
+        },
+        {
+          "name": "vpe",
+          "zones": 3
         }
       ],
       "subnets": [
@@ -504,7 +549,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null,
+              "type": null,
+              "code": null,
+              "ruleProtocol": "all"
             },
             {
               "action": "allow",
@@ -529,7 +581,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null,
+              "type": null,
+              "code": null,
+              "ruleProtocol": "all"
             },
             {
               "action": "allow",
@@ -554,7 +613,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "port_min": null,
+              "port_max": null,
+              "source_port_min": null,
+              "source_port_max": null,
+              "type": null,
+              "code": null,
+              "ruleProtocol": "all"
             }
           ]
         }
@@ -614,7 +680,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+            "port_min": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
         },
         {
           "vpc": "management",
@@ -633,7 +704,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "all"
         },
         {
           "vpc": "management",
@@ -652,7 +728,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "all"
         },
         {
           "vpc": "management",
@@ -671,7 +752,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "tcp"
         },
         {
           "vpc": "management",
@@ -690,7 +776,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "tcp"
         },
         {
           "vpc": "management",
@@ -709,7 +800,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "tcp"
         }
       ]
     },
@@ -735,7 +831,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "all"
         },
         {
           "vpc": "workload",
@@ -754,7 +855,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "all"
         },
         {
           "vpc": "workload",
@@ -773,7 +879,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "all"
         },
         {
           "vpc": "workload",
@@ -792,7 +903,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "tcp"
         },
         {
           "vpc": "workload",
@@ -811,7 +927,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "tcp"
         },
         {
           "vpc": "workload",
@@ -830,7 +951,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "port_max": null,
+          "port_min": null,
+          "type": null,
+          "code": null,
+          "ruleProtocol": "tcp"
         }
       ]
     }

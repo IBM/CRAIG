@@ -181,6 +181,9 @@ const state = function (legacy) {
     transpose(json, store.store.json);
     store.store.json.vpcs.forEach((network) => {
       subnetTiers[network.name] = buildSubnetTiers(network);
+      if (!network.subnetTiers) {
+        network.subnetTiers = buildSubnetTiers(network);
+      }
     });
     let edgeZones = 0;
     store.store.edge_pattern = undefined;

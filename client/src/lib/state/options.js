@@ -275,7 +275,9 @@ function initOptions(store) {
         hideWhen: hideWhenNotPowerVs,
         default: [],
         forceUpdateKey: function (stateData) {
-          return stateData.power_vs_high_availability;
+          return (
+            String(stateData.power_vs_high_availability) + stateData.region
+          );
         },
         invalid: function (stateData) {
           return (

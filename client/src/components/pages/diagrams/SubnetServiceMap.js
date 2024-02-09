@@ -119,7 +119,6 @@ export const SubnetServiceMap = (props) => {
             />
           </HoverClassNameWrapper>
         );
-        //});
       }
     })
   );

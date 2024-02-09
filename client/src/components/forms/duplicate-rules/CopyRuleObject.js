@@ -47,6 +47,7 @@ const CopyRuleObject = (props) => {
           name="source"
           className="fieldWidthSmaller"
           disableInvalid={isNullOrEmptyString(props.destinationVpc)}
+          disabled={props.v2}
           invalidText={
             props.isSecurityGroup
               ? "Select a source Security Group"

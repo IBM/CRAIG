@@ -460,7 +460,10 @@ class PowerDiagram extends React.Component {
                           );
                         }}
                       >
-                        <PowerSshKeys onClick={this.onPowerWorkspaceClick} />
+                        <PowerSshKeys
+                          onClick={this.onPowerWorkspaceClick}
+                          craig={craig}
+                        />
                         <PowerSubnets
                           craig={craig}
                           onPowerWorkspaceClick={this.onPowerWorkspaceClick}

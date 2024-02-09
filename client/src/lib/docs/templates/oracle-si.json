@@ -10,7 +10,7 @@
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal12", "dal10", "us-south"],
-    "craig_version": "1.9.0",
+    "craig_version": "1.10.0",
     "power_vs_high_availability": false
   },
   "access_groups": [],

@@ -13,6 +13,7 @@ const {
   resourceGroupsField,
   nameField,
   shouldDisableComponentSave,
+  fieldIsNullOrEmptyString,
 } = require("../utils");
 const {
   pushToChildFieldModal,
@@ -325,7 +326,13 @@ function initTransitGateway(store) {
         labelText: "Use Existing Transit Gateway",
       },
       name: nameField("transit_gateways"),
-      resource_group: resourceGroupsField(),
+      resource_group: resourceGroupsField(false, {
+        invalid: function (stateData) {
+          return stateData.use_data
+            ? false
+            : fieldIsNullOrEmptyString("resource_group")(stateData);
+        },
+      }),
       global: {
         default: true,
         type: "toggle",

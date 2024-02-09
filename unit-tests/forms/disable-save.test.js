@@ -65,6 +65,48 @@ describe("disableSave", () => {
         "it should be true"
       );
     });
+    it("should force a vpn gateway form open when a connection has an invalid peer address", () => {
+      assert.isTrue(
+        forceShowForm(
+          {},
+          {
+            submissionFieldName: "vpn_gateways",
+            innerFormProps: {
+              data: {
+                name: "vpn-gw",
+                connections: [
+                  {
+                    name: "hi",
+                  },
+                ],
+              },
+            },
+          }
+        )
+      );
+    });
+    it("should not force a vpn gateway form open when a connection has a valid peer address", () => {
+      assert.isFalse(
+        forceShowForm(
+          {},
+          {
+            submissionFieldName: "vpn_gateways",
+            innerFormProps: {
+              data: {
+                name: "vpn-gw",
+                connections: [
+                  {
+                    name: "hi",
+                    peer_address: "yes",
+                  },
+                ],
+              },
+              craig: new state(),
+            },
+          }
+        )
+      );
+    });
     it("should force a power vs form open when an ssh key is invalid", () => {
       assert.isTrue(
         forceShowForm(

@@ -1,5 +1,5 @@
 import React from "react";
-import { contains, isNullOrEmptyString } from "lazy-z";
+import { contains, isNullOrEmptyString, splatContains } from "lazy-z";
 import { Tag } from "@carbon/react";
 import { tagColors } from "../../forms/dynamic-form/components";
 import { FloatingIp, Security } from "@carbon/icons-react";
@@ -40,6 +40,13 @@ function deploymentIconBoxClassName(props) {
     })
   ) {
     boxClassName += " diagramIconBoxInvalid";
+  } else if (props.itemName === "vpn_gateways") {
+    let addBoxClassName = "";
+    props.item.connections.forEach((connection) => {
+      if (isNullOrEmptyString(connection.peer_address, true))
+        addBoxClassName = " diagramIconBoxInvalid";
+    });
+    boxClassName += addBoxClassName;
   }
   return boxClassName;
 }

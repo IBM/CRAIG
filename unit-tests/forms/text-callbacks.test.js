@@ -3,7 +3,6 @@ const {
   genericNameCallback,
   invalidNameText,
   invalidSubnetTierText,
-  invalidSecurityGroupRuleText,
   invalidCidrText,
   invalidProjectNameText,
 } = require("../../client/src/lib");
@@ -493,28 +492,6 @@ describe("text callbacks", () => {
         actualData,
         expectedData,
         "it should return correct data"
-      );
-    });
-  });
-  describe("invalidSecurityGroupRuleText", () => {
-    it("should return generic name callback when an invalid name is passed", () => {
-      assert.deepEqual(
-        invalidSecurityGroupRuleText(
-          { name: "@@@" },
-          { innerFormProps: { rules: [] }, data: { name: "" } }
-        ),
-        "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-        "it should return error text"
-      );
-    });
-    it("should return generic name callback when an invalid duplicate name is passed", () => {
-      assert.deepEqual(
-        invalidSecurityGroupRuleText(
-          { name: "aaa" },
-          { innerFormProps: { rules: [{ name: "aaa" }] }, data: { name: "" } }
-        ),
-        'Name "aaa" already in use',
-        "it should return error text"
       );
     });
   });

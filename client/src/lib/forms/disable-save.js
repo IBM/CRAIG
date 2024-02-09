@@ -4,6 +4,7 @@ const {
   contains,
   flatten,
   splat,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const { validSshKey } = require("./invalid-callbacks");
 
@@ -105,7 +106,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.classic_ssh_keys
         : field === "volumes"
         ? componentProps.craig.vsi.volumes
-        : field === "acl_rules" && componentProps.isModal
+        : field === "acl_rules" &&
+          (componentProps.isModal || componentProps.craig)
         ? componentProps.craig.vpcs.acls.rules
         : field === "acl_rules"
         ? componentProps.innerFormProps.craig.vpcs.acls.rules
@@ -188,6 +190,12 @@ function forceShowForm(stateData, componentProps) {
       if (!openForm) {
         openForm = !validSshKey(key.public_key);
       }
+    });
+  }
+
+  if (componentProps.submissionFieldName === "vpn_gateways") {
+    componentProps.innerFormProps.data.connections.forEach((connection) => {
+      openForm = isNullOrEmptyString(connection.peer_address, true);
     });
   }
 

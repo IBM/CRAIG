@@ -19,54 +19,11 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 
 ## Installation
 
-1. [Power VS Workspace Deployment](#power-vs-workspace-deployment)
-2. [Running CRAIG Application Locally](#running-craig-application-locally)
-3. [Setting Up CRAIG Development Environment](#setting-up-craig-development-environment)
-4. [Building Local CRAIG Container Image](#building-local-container-image)
-5. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
-
----
-
-### Power VS Workspace Deployment
-
-To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Power VS APIs require a workspace to be created. CRAIG provides Terraform scripts to automatically provision these workspaces and an environment file that can be used for both IBM Code Engine deployments and local deployments.
-
->* _**Note:** this only needs to be done once per IBM Cloud Account, not per user of CRAIG._
->* _This is a recommended but optional step. If these workspaces are not deployed CRAIG will use a static list which may include options that are not available in a specific zone._
->* _The deploy.sh script used to deploy CRAIG in IBM Code Engine can also automatically deploy the workspaces using its `-z` parameter._
-
-#### Prerequisites
-- [Create an IBM Cloud API Key](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key) 
-
-<br /> _Note: If you plan on [deploying CRAIG To IBM Code Engine](#deploying-to-ibm-code-engine), ensure you are using the same account you intend to use for CRAIG deployment in Code Engine when creating the API key and doing the PowerVS Workspace Deployment setup below._
-
-
-#### Automated Deployment
-
-The `terraform.sh` script found in the `/deploy` folder of the CRAIG root directory provisions a Power VS Workspace in each zone and sets the needed environment variables with the format of `POWER_WORKSPACE_<zone>=<workspace-guid>`.
-
-Use the following command to run the script:
-```shell
-sh deploy/terraform.sh -a "<Your IBM Cloud Platform API key>"
-```
-
-This will produce a file named `.env` that can be passed to the `deploy.sh` script when deploying CRAIG in Code Engine.
-
-#### Bring Your Own Workspace
-
-To bring your own Power VS Workspace into CRAIG to fetch images, you will need to set a field in your `.env` with the following format. To see an example, see [.env.example](./.env.example)
-
-```
-POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
-```
-
-To find the GUIDs and locations of your workspaces, the following IBM Cloud CLI command can be run in a terminal window or an IBM Cloud Shell: 
-
-```
-ibmcloud resource service-instances --service-name power-iaas --output json | jq -r '.[]? | "\(.guid), \(.name), \(.region_id)"'
-```
-
-*For instructions on how to install the IBM Cloud CLI, click [here](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)*
+1. [Running CRAIG Application Locally](#running-craig-application-locally)
+2. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
+3. [Building Local CRAIG Container Image](#building-local-container-image)
+4. [Setting Up CRAIG Development Environment](.docs/dev-env-setup.md)
+5. [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md)
 
 ---
 
@@ -91,9 +48,9 @@ npm run setup
 
 #### 2. Creating .env file
 
-Make sure to set the following fields in a `.env` file to be used as environment variables by the backend API server. These fields are used to populate dynamic information to the frontend from cloud account where the API key originates. To automatically deploy the CRAIG Power VS workspaces and set the appropriate environment variables run the `terraform.sh` script in `/deploy`.
+To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Power VS APIs require a workspace to be created and its GUID to be in an environment file. If CRAIG is used for Power VS configuration, the Power VS workspaces must be created. See [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md) for more information.
 
-see `.env.example` found [here](./.env.example)
+Make sure to set the `API_KEY` variable in a `.env` file to be used for IBM Cloud integration. If the Power VS workspaces creation automation is run, add the `API_KEY` variable to the `.env` file that the automation creates. If Power VS workspace automation is not used, create an `.env` following the example found [here](./.env.example).
 
 #### 3. Start the application
 
@@ -109,83 +66,9 @@ Congratulations! Your application is now available at localhost:8080!
 
 ---
 
-### Setting Up CRAIG Development Environment
-
-CRAIG is a flexible application that can be used directly from your local environment or containerized an deployed to your platform of choice. 
-
-To run CRAIG in your development environment, follow these steps:
-
-#### 1. Install Dependencies
-
-To install needed dependencies, use the command
-```shell
-npm run setup
-```
-
-#### 2. Creating .env file
-
-Make sure to set the following fields in a `.env` file to be used as environment variables by the backend API server. These fields are used to populate dynamic information to the frontend from cloud account where the API key originates. To automatically deploy the CRAIG Power VS workspaces and set the appropriate environment variables run the `terraform.sh` script in `/deploy`.
-
-see `.env.example` found [here](./.env.example)
-
-#### 3. Starting the Back-End Server
-
-In order to make sure the Back-End API calls are successful, the server needs to be started. To start the server run the following command from the root directory:
-
-```shell
-node server.js
-```
-
-#### 4. Starting the Front-End Application
-
-CRAIG uses [craco](https://www.npmjs.com/package/@craco/craco) to setup and run the development environment. To start the development build server, run the following command in parallel with [Step 3](#3-starting-the-back-end-server):
-
-```shell
-npm run dev-start
-```
-
-#### 5. Opening the Application
-
-Congratulations! CRAIG is now running at `localhost:3000`
-
-#### 6. Testing the Development Environment
-
-CRAIG uses [mocha](https://mochajs.org/) and [chai](https://www.chaijs.com/) for unit testing. To run unit tests use the command:
-
-```shell
-npm run test
-```
-
-Craig uses [nyc](https://www.npmjs.com/package/nyc) for unit test coverage. To get a report of unit test coverage run the command
-
-```shell
-npm run coverage
-```
-
-#### 7. Install Pre-commit Hook
-```shell
-git config --local core.hooksPath .githooks/
-```
-
----
-
-### Building Local Container Image
-
-To build CRAIG locally the following Docker command can be used. The Dockerfile accepts `api_key` as a build argument.
-
-```shell
-docker build . --build-arg api_key=$API_KEY -t craig
-```
-
-#### Running the Container Image Locally
-
-```shell
-docker run -it craig
-```
-
----
-
 ### Deploying to IBM Code Engine
+
+IBM Code Engine is a fully managed serverless platform. CRAIG "scales to zero" in Code Engine when not in use, making this a very cost-effective and simple method of running CRAIG. 
 
 Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. 
 
@@ -225,14 +108,19 @@ chmod 755 deploy.sh
 
 By default the script will securely prompt you for your API key. It may also be read from an environment variable or specified as a command line argument. See the `deploy.sh -h` usage for more information.
 
+ If CRAIG is used for Power VS configuration, the Power VS workspaces must be created. The deploy script can create the Power Virtual Server workspaces and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
+
+```bash
+./deploy.sh -z
+```
+
+If CRAIG will not be used for Power VS configuration, `deploy.sh` can be run without parameters to deploy CRAIG into Code Engine:
+
 ```bash
 ./deploy.sh
 ```
 
-The deploy script can also create the Power Virtual Server workspaces and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
-```bash
-./deploy.sh -z
-```
+You can bring your own existing Power VS workspace into CRAIG which allows you to choose custom images for Power VSIs. To bring your own workspace you can update the Code Engine configuration after deployment. See [Bring Your Own Power VS Workspace](.docs/craig-code-engine.md#bring-your-own-power-vs-workspace) for more information.
 
 For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
 
@@ -254,64 +142,46 @@ For example, to delete the CRAIG Code Engine and Container Registry resources wi
 ./deploy.sh -d -g test-rg -n craig-demo-namespace -p craig-demo-project
 ```
 
+#### Updating and managing the Code Engine deployment
+As CRAIG releases updates the Code Engine deployment can be updated to the latest version. For more information on updating and managing the CRAIG application in Code Engine see the [CRAIG in IBM Code Engine](.docs/craig-code-engine.md#craig-in-ibm-code-engine).
+
+---
+
+### Building Local Container Image
+
+To build CRAIG locally the following Docker command can be used.
+
+```shell
+docker build . -t craig
+```
+
+#### Running the Container Image Locally
+
+Make sure to set the `API_KEY` variable in a `.env` file to be used for IBM Cloud integration. To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Power VS APIs require a workspace to be created and its GUID to be in an environment file. See [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md) for more information.
+
+See `.env.example` found [here](./.env.example)
+
+```shell
+docker run -it --env-file .env -- craig
+```
+
+---
+
+### Setting Up CRAIG Development Environment
+
+To run CRAIG in your development environment, follow the [development environment setup steps](.docs/dev-env-setup.md).
+
 ---
 
 ## Running the Terraform Files
 
-After creating a deployment using the GUI, users can download a file called `craig.zip`. Included in this file are all the Terraform files needed to create you environment. In addition, your environment configuration is saved as `craig.json` and can easily be imported into the GUI for further customization.
-
-### Prerequisites
-
-- Terraform v1.3 or higher
-- Terraform CLI
-- IBM Cloud Platform API Key
-
-#### 1. Initializing the Directory
-
-After unzipping craig.zip, enter the containing folder from your terminal. In your directory, run the following command to install needed providers and to initialize the directory:
-```
-terraform init
-```
-
-#### 2. Adding Environment Variables
-
-Once your environment has been initialized, add your IBM Cloud Platform API key to the environment. This can be done by exporting your API key as an environment variable. Once that's complete, run the following command to plan your terraform directory.
-
-```
-terraform plan
-```
-
-#### 3. Creating Resources
-
-Resources can be created from the directory by running the Terraform Apply command after a successful plan
-
-```
-terraform apply
-```
-
-#### 4. Destroying Resources
-
-To destroy you resources, use the following command. This will **delete all resources** provisioned by the template.
-
-```
-terraform destroy
-```
+After creating a deployment using the GUI, users can download a file called `craig.zip`. Included in this file are all the Terraform files needed to create your environment. See the [Running the Terraform Files](.docs/running-terraform-files.md) for more information on using Terraform with the CRAIG generated Terraform.
 
 ---
 
 ## Schematics Integration
 
-In order to allow Schematics integration, users should make sure they have the following access policy roles for the Schematics service set within their IBM Cloud Account:
-
-- IBM Cloud Platform Roles: Editor or Higher
-- Schematics Service Roles: Writer or Higher
-
-These roles allow the integration with Schematics including the Schematics workspace creation and the upload of the project. However, to create and manage the IBM Cloud resources in a CRAIG project, you must be assigned the IAM platform or service access role for the individual IBM Cloud resources being provisioned in the project. 
-
- Refer to the [User permissions for Schematics Workspaces documentation](https://cloud.ibm.com/docs/schematics?topic=schematics-access) for more information.
-
-### Prerequisites
-- `.env` file is created and all fields to be used as environment variables by the backend API server are filled (see [Step 2 of Setting Up CRAIG Development Environment](#2-creating-env-file-1))
+Using [IBM Cloud Schematics](https://cloud.ibm.com/docs/schematics?topic=schematics-getting-started) with CRAIG can be powerful way to automate and manage Infrastructure as code deployments. With Schematics you don't have to worry about setting up and maintaining the Terraform command-line. See [Integrate Schematics with CRAIG](.docs/schematics-how-to.md) for more information.
 
 ---
 

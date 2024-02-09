@@ -23,7 +23,7 @@ import {
 } from "@carbon/react";
 import PropTypes from "prop-types";
 import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
-import { contains, deepEqual, isNullOrEmptyString } from "lazy-z";
+import { contains, deepEqual, isFunction, isNullOrEmptyString } from "lazy-z";
 import { ToolTipWrapper } from "../utils/ToolTip";
 import { RenderForm } from "../utils";
 
@@ -297,7 +297,15 @@ export class DynamicFetchSelect extends React.Component {
           !deepEqual(this.state.data, ["Loading..."])
             ? [""]
             : []
-        ).concat(this.state.data)
+        )
+          .concat(this.state.data)
+          .map((item) => {
+            if (isFunction(this.props.field.onRender)) {
+              return this.props.field.onRender({
+                [this.props.name]: item,
+              });
+            } else return item;
+          })
       );
     }
   }
@@ -421,7 +429,7 @@ export {
   DynamicTextArea,
   DynamicMultiSelect,
   DynamicPublicKey,
-  DynamicDatePicker,
   DynamicToolTipWrapper,
   tagColors,
+  DynamicDatePicker,
 };

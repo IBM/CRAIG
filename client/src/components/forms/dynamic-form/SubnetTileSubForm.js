@@ -1,9 +1,9 @@
 import React from "react";
 import { disableSave, propsMatchState } from "../../../lib";
-import DynamicForm from "../DynamicForm";
 import { Tile } from "@carbon/react";
 import { CraigFormHeading, PrimaryButton } from "../utils";
 import { getSubnetData } from "../../../lib/forms/dynamic-subnet-tile-sub-form";
+import DynamicForm from "../DynamicForm";
 
 export const SubnetTileTitle = (props) => {
   return props.parentProps.formName === "subnet" ? (
@@ -45,7 +45,11 @@ export const SubnetTileSubForm = (props) => {
   return isSubnetTierForm ? (
     <div
       className={`${
-        props.parentProps.isModal ? "subForm" : "formInSubForm"
+        props.parentProps.dynamicSubnetFormSubForm
+          ? ""
+          : props.parentProps.isModal
+          ? "subForm"
+          : "formInSubForm"
       } marginTop1Rem ${props.parentProps.isModal ? "marginBottomNone" : ""}`}
     >
       <CraigFormHeading name="Subnets" type="subHeading" noMarginBottom />

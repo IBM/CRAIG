@@ -15,6 +15,7 @@ const {
   isNullOrEmptyString,
   isArray,
   isEmpty,
+  containsKeys,
 } = require("lazy-z");
 const {
   newDefaultEdgeAcl,
@@ -34,11 +35,16 @@ const {
   updateNetworkingRule,
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
-  invalidTcpOrUdpPort,
-  invalidIcmpCodeOrType,
   resourceGroupsField,
   selectInvalidText,
   unconditionalInvalidText,
+  kebabCaseInput,
+  titleCaseRender,
+  networkingRuleProtocolField,
+  networkingRulePortField,
+  networkingRuleTypeField,
+  networkingRuleCodeField,
+  getRuleProtocol,
 } = require("../utils");
 const { calculateNeededSubnetIps, getNextCidr } = require("../../json-to-iac");
 const {
@@ -59,6 +65,7 @@ const {
   invalidSubnetTierText,
 } = require("../../forms/text-callbacks");
 const { vpcSchema } = require("./vpc-schema");
+const { newSubnetTierSave } = require("./subnets");
 
 /**
  * read only when
@@ -165,6 +172,7 @@ function vpcCreate(config, stateData) {
     subnets: [],
     public_gateways: [],
     acls: [],
+    subnetTiers: [],
   };
   transpose(stateData, vpc);
   pgwNumberToZone(vpc);
@@ -228,6 +236,21 @@ function vpcOnStoreUpdate(config) {
       acl.rules.forEach((rule) => {
         rule.acl = acl.name;
         rule.vpc = network.name;
+        if (!containsKeys(rule, "ruleProtocol")) {
+          rule.ruleProtocol = getRuleProtocol(rule);
+        }
+        [
+          "port_min",
+          "port_max",
+          "type",
+          "code",
+          "source_port_min",
+          "source_port_max",
+        ].forEach((field) => {
+          if (!containsKeys(rule, field)) {
+            rule[field] = null;
+          }
+        });
       });
       if (
         !splatContains(
@@ -415,10 +438,17 @@ function subnetSave(config, stateData, componentProps) {
     .child("subnets", subnetName, "name")
     .update(stateData)
     .then(() => {
-      let tier = new revision(config.store.subnetTiers).child(
-        componentProps.vpc_name,
-        stateData.tier
-      ).data;
+      let tier = new revision(config.store.json).child(
+        "vpcs",
+        componentProps.vpc_name
+      ).data.subnetTiers
+        ? new revision(config.store.json)
+            .child("vpcs", componentProps.vpc_name)
+            .child("subnetTiers", stateData.tier).data
+        : new revision(config.store.subnetTiers).child(
+            componentProps.vpc_name,
+            stateData.tier
+          ).data;
       if (tier.advanced) {
         let newSubnets = [];
         tier.subnets.forEach((subnet) => {
@@ -533,7 +563,66 @@ function subnetTierCreate(config, stateData, componentProps) {
   let vpcName = componentProps.vpc_name;
   // get index of vpc for CIDR calculation
   let vpcIndex = splat(config.store.json.vpcs, "name").indexOf(vpcName);
-  if (stateData.advanced) {
+  // all new creation
+  if (config.store.json.vpcs[vpcIndex].subnetTiers) {
+    let vpc = config.store.json.vpcs[vpcIndex];
+    let tier = {
+      name: stateData.name,
+      zones: stateData.zones,
+      select_zones: stateData.zones || stateData.select_zones,
+      advanced: stateData.advanced || false,
+      subnets: [],
+    };
+    if (tier.advanced) {
+      config.store.json._options.advanced_subnets = true;
+      tier.select_zones.forEach((zone) => {
+        tier.subnets.push(stateData.name + "-zone-" + zone);
+        config.store.json.vpcs[vpcIndex].address_prefixes.push({
+          name: stateData.name + "-zone-" + zone,
+          cidr: null,
+          zone: Number(zone),
+          vpc: componentProps.vpc_name,
+        });
+        config.store.json.vpcs[vpcIndex].subnets.push({
+          name: stateData.name + "-zone-" + zone,
+          cidr: null,
+          network_acl: null,
+          public_gateway: false,
+          zone: Number(zone),
+          vpc: componentProps.vpc_name,
+          resource_group: config.store.json.vpcs[vpcIndex].resource_group,
+          has_prefix: true,
+          tier: stateData.name,
+        });
+      });
+    } else {
+      for (let i = 0; i < stateData.zones; i++) {
+        // add subnet to that zone
+        config.store.json.vpcs[vpcIndex].subnets.push(
+          buildSubnet(
+            vpcName,
+            vpcIndex,
+            stateData.name,
+            vpc.subnetTiers.length,
+            stateData?.networkAcl ? stateData.networkAcl : null,
+            config.store.json.vpcs[vpcIndex].resource_group,
+            i + 1,
+            stateData.addPublicGateway,
+            stateData.use_prefix // prefix
+          )
+        );
+        let lastSubnet = config.store.json.vpcs[vpcIndex].subnets.length - 1;
+        config.store.json.vpcs[vpcIndex].address_prefixes.push({
+          vpc: vpcName,
+          zone: i + 1,
+          cidr: config.store.json.vpcs[vpcIndex].subnets[lastSubnet].cidr,
+          name: config.store.json.vpcs[vpcIndex].subnets[lastSubnet].name,
+        });
+      }
+    }
+    config.store.json.vpcs[vpcIndex].subnetTiers.push(tier);
+    config.store.subnetTiers[vpc.name].push(tier);
+  } else if (stateData.advanced) {
     config.store.json._options.advanced_subnets = true;
     let tier = {
       name: stateData.name,
@@ -617,79 +706,91 @@ function subnetTierCreate(config, stateData, componentProps) {
 function subnetTierSave(config, stateData, componentProps) {
   let { newTierName, oldTierName, vpcName, zones, vpcIndex, oldTiers } =
     getSubnetTierData(config, stateData, componentProps);
-  let newTiers = []; // new subnet tiers
-  // for each subnet tier
-  oldTiers.forEach((tier) => {
-    // if not being deleted
-    if (
-      (tier.name === oldTierName && zones !== 0) || // if zones is not 0 and tier name is old name
-      tier.name !== oldTierName // or if tiername is different
-    ) {
-      let tierData = getUpdatedTierData(tier, oldTierName, newTierName, zones);
-      if (config.store.json._options.dynamic_subnets) {
-        newTiers.push(tierData);
-      } else if (stateData.advanced && componentProps.data.name === tier.name) {
-        config.store.json._options.advanced_subnets = true;
-        newTiers.push(
-          updateAdvancedSubnetTier(
-            tierData,
-            config,
-            stateData,
-            componentProps,
-            oldTierName,
-            vpcName,
-            newTierName,
-            vpcIndex
-          )
-        );
-      } else if (tier.advanced) {
-        config.store.json._options.advanced_subnets = true;
-        newTiers.push(tier);
-      } else newTiers.push(tierData);
-    }
-  });
-
-  // edit subnets
-  new revision(config.store.json)
-    .child("vpcs", vpcName, "name") // get vpc
-    .then((vpc) => {
-      let { subnets, isEdgeVpcTier } = getSubnetRevisionData(
-        vpc,
-        newTierName,
-        vpcName,
-        config
-      );
-      if (componentProps.data.advanced && stateData.zones === 0) {
-        deleteAdvancedTier(oldTiers, componentProps.data.name, vpc);
-      } else if (!stateData.advanced) {
-        // add subnets until they have the correct number of zones
-        editSubnets(
-          vpc,
-          zones,
-          isEdgeVpcTier,
+  if (config.store.json.vpcs[vpcIndex].subnetTiers) {
+    newSubnetTierSave(config, stateData, componentProps, vpcIndex);
+  } else {
+    let newTiers = []; // new subnet tiers
+    // for each subnet tier
+    oldTiers.forEach((tier) => {
+      // if not being deleted
+      if (
+        (tier.name === oldTierName && zones !== 0) || // if zones is not 0 and tier name is old name
+        tier.name !== oldTierName // or if tiername is different
+      ) {
+        let tierData = getUpdatedTierData(
+          tier,
+          oldTierName,
           newTierName,
-          newTiers,
-          vpcName,
-          vpcIndex,
-          oldTierName,
-          config,
-          stateData,
-          componentProps
+          zones
         );
-      }
-      // if deleting a tier
-      if (zones === 0) {
-        deleteLegacySubnetTier(
-          subnets,
-          config,
-          oldTierName,
-          componentProps.vpc_name,
-          vpcIndex
-        );
+        if (config.store.json._options.dynamic_subnets) {
+          newTiers.push(tierData);
+        } else if (
+          stateData.advanced &&
+          componentProps.data.name === tier.name
+        ) {
+          config.store.json._options.advanced_subnets = true;
+          newTiers.push(
+            updateAdvancedSubnetTier(
+              tierData,
+              config,
+              stateData,
+              componentProps,
+              oldTierName,
+              vpcName,
+              newTierName,
+              vpcIndex
+            )
+          );
+        } else if (tier.advanced) {
+          config.store.json._options.advanced_subnets = true;
+          newTiers.push(tier);
+        } else newTiers.push(tierData);
       }
     });
 
-  config.store.subnetTiers[vpcName] = newTiers;
+    // edit subnets
+    new revision(config.store.json)
+      .child("vpcs", vpcName, "name") // get vpc
+      .then((vpc) => {
+        let { subnets, isEdgeVpcTier } = getSubnetRevisionData(
+          vpc,
+          newTierName,
+          vpcName,
+          config
+        );
+        if (componentProps.data.advanced && stateData.zones === 0) {
+          deleteAdvancedTier(oldTiers, componentProps.data.name, vpc);
+        } else if (!stateData.advanced) {
+          // add subnets until they have the correct number of zones
+          editSubnets(
+            vpc,
+            zones,
+            isEdgeVpcTier,
+            newTierName,
+            newTiers,
+            vpcName,
+            vpcIndex,
+            oldTierName,
+            config,
+            stateData,
+            componentProps
+          );
+        }
+        // if deleting a tier
+        if (zones === 0) {
+          deleteLegacySubnetTier(
+            subnets,
+            config,
+            oldTierName,
+            componentProps.vpc_name,
+            vpcIndex
+          );
+        }
+      });
+
+    config.store.subnetTiers[vpcName] = newTiers;
+  }
 }
 
 /**
@@ -1122,7 +1223,7 @@ function naclRuleSubComponents() {
         source: {
           default: "",
           invalid: function (stateData, componentProps) {
-            return !isIpv4CidrOrAddress(stateData.source);
+            return !isIpv4CidrOrAddress(stateData.source || "");
           },
           invalidText: unconditionalInvalidText(
             "Please provide a valid IPV4 IP address or CIDR notation."
@@ -1130,10 +1231,31 @@ function naclRuleSubComponents() {
           size: "small",
           placeholder: "x.x.x.x",
         },
+        action: {
+          size: "small",
+          type: "select",
+          default: "",
+          groups: ["Allow", "Deny"],
+          invalid: fieldIsNullOrEmptyString("action"),
+          invalidText: unconditionalInvalidText("Select an action"),
+          onInputChange: kebabCaseInput("action"),
+          onRender: titleCaseRender("action"),
+        },
+        direction: {
+          size: "small",
+          type: "select",
+          default: "",
+          groups: ["Inbound", "Outbound"],
+          invalid: fieldIsNullOrEmptyString("direction"),
+          invalidText: selectInvalidText("direction"),
+          onInputChange: kebabCaseInput("direction"),
+          onRender: titleCaseRender("direction"),
+        },
+        ruleProtocol: networkingRuleProtocolField(true),
         destination: {
           default: "",
           invalid: function (stateData, componentProps) {
-            return !isIpv4CidrOrAddress(stateData.destination);
+            return !isIpv4CidrOrAddress(stateData.destination || "");
           },
           invalidText: unconditionalInvalidText(
             "Please provide a valid IPV4 IP address or CIDR notation."
@@ -1141,54 +1263,12 @@ function naclRuleSubComponents() {
           size: "small",
           placeholder: "x.x.x.x",
         },
-        port_min: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        port_max: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        source_port_min: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        source_port_max: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        type: {
-          size: "small",
-          default: "",
-          invalid: invalidIcmpCodeOrType,
-          invalidText: unconditionalInvalidText(
-            "Enter a while number between 0 and 254"
-          ),
-        },
-        code: {
-          size: "small",
-          default: "",
-          invalid: invalidIcmpCodeOrType,
-          invalidText: unconditionalInvalidText(
-            "Enter a while number between 0 and 255"
-          ),
-        },
+        port_min: networkingRulePortField(),
+        port_max: networkingRulePortField(true),
+        source_port_min: networkingRulePortField(false, true),
+        source_port_max: networkingRulePortField(true, true),
+        type: networkingRuleTypeField(),
+        code: networkingRuleCodeField(),
       },
     },
   };
@@ -1385,9 +1465,13 @@ function initVpcStore(store) {
             groups: buildNumberDropdownList(3, 1),
             onRender: function (stateData) {
               if (stateData.advanced && !isArray(stateData.zones)) {
+                let nextZones = [];
+                for (let i = 0; i < stateData.zones; i++) {
+                  nextZones.push(String(i + 1));
+                }
                 stateData.zones = isArray(stateData.select_zones)
                   ? stateData.select_zones
-                  : ["1", "2", "3"];
+                  : nextZones;
               } else if (!stateData.advanced && isArray(stateData.zones)) {
                 stateData.zones = String(stateData.zones.length);
               }
@@ -1395,6 +1479,12 @@ function initVpcStore(store) {
               return stateData.zones;
             },
             readOnly: readOnlyWhenEdgeTier,
+            disabled: function (stateData, componentProps) {
+              return (
+                stateData.advanced === true &&
+                stateData.advanced !== componentProps.data.advanced
+              );
+            },
           },
           advanced: {
             size: "small",
@@ -1419,6 +1509,10 @@ function initVpcStore(store) {
               return (
                 stateData.advanced === true && stateData.zones.length === 0
               );
+            },
+            onInputChange(stateData, targetData, componentProps) {
+              stateData.zones = componentProps.data.zones;
+              return !stateData.advanced;
             },
           },
           networkAcl: {

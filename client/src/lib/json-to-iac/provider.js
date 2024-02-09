@@ -51,6 +51,8 @@ function ibmCloudProvider(config) {
           ? "us-east"
           : zone.match(/dal\d+/g)
           ? "us-south"
+          : contains(["mad02", "mad04"], zone)
+          ? "mad"
           : "${var.region}",
         zone: zone,
         ibmcloud_timeout: 60,

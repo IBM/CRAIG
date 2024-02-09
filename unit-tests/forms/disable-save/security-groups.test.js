@@ -64,7 +64,7 @@ describe("security groups", () => {
           {
             name: "@@@",
           },
-          { innerFormProps: { rules: [] }, data: { name: "" }, craig: state() }
+          { rules: [], data: { name: "" }, craig: state() }
         )
       );
     });
@@ -73,7 +73,7 @@ describe("security groups", () => {
         disableSave(
           "sg_rules",
           { name: "aa", source: "mm" },
-          { innerFormProps: { rules: [] }, data: { name: "" }, craig: state() }
+          { rules: [], data: { name: "" }, craig: state() }
         )
       );
     });

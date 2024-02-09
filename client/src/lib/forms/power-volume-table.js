@@ -9,21 +9,10 @@ function getAffinityName(vol, craig) {
   let isVolumeAffinity = isNullOrEmptyString(vol.pi_affinity_instance, true);
   let volumeAffinityData =
     vol[isVolumeAffinity ? "pi_affinity_volume" : "pi_affinity_instance"];
-  let data = new revision(craig.store.json).child(
-    isVolumeAffinity ? "power_volumes" : "power_instances",
-    volumeAffinityData
-  ).data;
-  let titleName = titleCase(
-    !data?.storage_option
-      ? ""
-      : isVolumeAffinity && data.storage_option === "Storage Type"
-      ? data.pi_volume_type
-      : isVolumeAffinity
-      ? data.pi_volume_pool
-      : data.storage_option === "Storage Type"
-      ? data.pi_storage_type
-      : data.pi_storage_pool
-  );
+  let titleName =
+    vol.pi_volume_type === "tier5k"
+      ? "Fixed IOPs"
+      : titleCase(vol.pi_volume_type);
   return `Affinity ${
     isVolumeAffinity ? "Volume" : "Instance"
   } ${volumeAffinityData} (${titleName})`;
@@ -43,19 +32,10 @@ function getAntiAffinityName(vol, craig) {
     vol[
       isVolumeAffinity ? "pi_anti_affinity_volume" : "pi_anti_affinity_instance"
     ];
-  let data = new revision(craig.store.json).child(
-    isVolumeAffinity ? "power_volumes" : "power_instances",
-    volumeAffinityData
-  ).data;
-  let titleName = titleCase(
-    isVolumeAffinity && data.storage_option === "Storage Type"
-      ? data.pi_volume_type
-      : isVolumeAffinity
-      ? data.pi_volume_pool
-      : data.storage_option === "Storage Type"
-      ? data.pi_storage_type
-      : data.pi_storage_pool
-  );
+  let titleName =
+    vol.pi_volume_type === "tier5k"
+      ? "Fixed IOPs"
+      : titleCase(vol.pi_volume_type);
   return `Anti-Affinity ${
     isVolumeAffinity ? "Volume" : "Instance"
   } ${volumeAffinityData} (${titleName})`;

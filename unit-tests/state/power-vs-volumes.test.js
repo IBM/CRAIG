@@ -34,6 +34,7 @@ describe("power_volumes", () => {
     });
     it("should not remove found workspaces on store update", () => {
       let state = newState();
+      state.store.json._options.power_vs_zones = ["dal10"];
       state.power.create({
         name: "example",
         imageNames: ["7100-05-09"],
@@ -50,6 +51,47 @@ describe("power_volumes", () => {
             name: "frog",
             workspace: "example",
             attachments: [],
+            zone: "dal10",
+            pi_volume_type: null,
+          },
+        ],
+        "it should create instance"
+      );
+    });
+    it("should update workspace zone found workspaces on store update", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal10"];
+      state.power.create({
+        name: "example",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
+      state.store.json._options.power_vs_zones = ["eu-de-1"];
+      state.power.save(
+        {
+          name: "example",
+          zone: "eu-de-1",
+        },
+        {
+          data: {
+            name: "example",
+          },
+          craig: state,
+        }
+      );
+      state.power_volumes.create({
+        name: "frog",
+        workspace: "example",
+      });
+      assert.deepEqual(
+        state.store.json.power_volumes,
+        [
+          {
+            name: "frog",
+            workspace: "example",
+            attachments: [],
+            zone: "eu-de-1",
+            pi_volume_type: null,
           },
         ],
         "it should create instance"
@@ -57,6 +99,7 @@ describe("power_volumes", () => {
     });
     it("should remove unfound workspaces on store update", () => {
       let state = newState();
+      state.store.json._options.power_vs_zones = ["dal10"];
       state.power.create({
         name: "example",
         imageNames: ["7100-05-09"],
@@ -80,6 +123,7 @@ describe("power_volumes", () => {
     });
     it("should not remove found instances on store update", () => {
       let state = newState();
+      state.store.json._options.power_vs_zones = ["dal10"];
       state.power.create({
         name: "example",
         imageNames: ["7100-05-09"],
@@ -110,6 +154,8 @@ describe("power_volumes", () => {
             name: "frog",
             workspace: "example",
             attachments: ["toad"],
+            zone: "dal10",
+            pi_volume_type: null,
           },
         ],
         "it should create instance"
@@ -117,6 +163,7 @@ describe("power_volumes", () => {
     });
     it("should remove unfound instances on store update", () => {
       let state = newState();
+      state.store.json._options.power_vs_zones = ["dal10"];
       state.power.create({
         name: "example",
         imageNames: ["7100-05-09"],
@@ -147,6 +194,8 @@ describe("power_volumes", () => {
             name: "frog",
             workspace: "example",
             attachments: [],
+            zone: "dal10",
+            pi_volume_type: null,
           },
         ],
         "it should create instance"

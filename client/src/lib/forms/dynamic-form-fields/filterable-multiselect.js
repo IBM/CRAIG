@@ -48,7 +48,7 @@ function dynamicMultiSelectProps(props, fetchedData) {
   // hide text when tooltip so that multiple name labels are not rendered
   let labelText = props.field.tooltip
     ? null
-    : isDisabled
+    : isDisabled && props.field.type === "fetchMultiSelect"
     ? `Loading ${props.field.labelText || props.name}...` // Add Loading... while values are being fetched
     : titleCase(props.field.labelText || props.name);
   let dynamicKeyProp = props.field.forceUpdateKey

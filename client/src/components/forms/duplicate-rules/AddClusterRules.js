@@ -28,6 +28,7 @@ const AddClusterRules = (props) => {
           handleInputChange={props.handleSelect}
           name="addClusterRuleAcl"
           className="fieldWidthSmaller"
+          disabled={props.v2}
           disableInvalid
         />
         <div className="align-row">

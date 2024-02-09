@@ -22,11 +22,18 @@ function subnetTierName(tierName) {
 export class DynamicSubnetTierForm extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      hide: this.props.hide || false,
+    };
   }
   render() {
     let vpcName = this.props.craig.store.json.vpcs[this.props.vpcIndex].name;
-    let subnetTier =
-      this.props.craig.store.subnetTiers[vpcName][this.props.subnetTierIndex];
+    let subnetTier = this.props.craig.store.json.vpcs[this.props.vpcIndex]
+      .subnetTiers
+      ? this.props.craig.store.json.vpcs[this.props.vpcIndex].subnetTiers[
+          this.props.subnetTierIndex
+        ]
+      : this.props.craig.store.subnetTiers[vpcName][this.props.subnetTierIndex];
     let innerFormProps = {
       data:
         this.props.subnetTierIndex === -1
@@ -80,12 +87,16 @@ export class DynamicSubnetTierForm extends React.Component {
         }
         onSave={this.props.craig.vpcs.subnetTiers.save}
         onDelete={this.props.onDelete}
-        hideChevron
-        hide={false}
+        hideChevron={this.props.formInSubForm ? false : true}
+        hide={this.state.hide}
         isModal={this.props.subnetTierIndex === -1}
         noSaveButton={noButtons}
         noDeleteButton={noButtons}
-        type={this.props.subnetTierIndex === -1 ? "formInSubForm" : "subForm"}
+        type={
+          this.props.formInSubForm || this.props.subnetTierIndex === -1
+            ? "formInSubForm"
+            : "subForm"
+        }
         hideName
         submissionFieldName="subnetTier"
         tabPanel={{ hideAbout: true }}
@@ -96,6 +107,9 @@ export class DynamicSubnetTierForm extends React.Component {
         disableModal={this.props.disableModal}
         enableModal={this.props.enableModal}
         setRefUpstream={this.props.setRefUpstream}
+        formInSubForm={this.props.formInSubForm}
+        onShowToggle={this.props.onShowToggle}
+        index={this.props.subnetTierIndex}
       />
     );
   }

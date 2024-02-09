@@ -1,34 +1,19 @@
 import React from "react";
-import {
-  buildSubnet,
-  disableSave,
-  forceShowForm,
-  invalidName,
-  invalidNameText,
-  propsMatchState,
-} from "../../lib";
-import {
-  IcseFormTemplate,
-  SecurityGroupTemplate,
-  SubnetPageTemplate,
-} from "icse-react-assets";
+import { disableSave, forceShowForm, propsMatchState } from "../../lib";
+import { IcseFormTemplate } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { arraySplatIndex, keys, splat, transpose } from "lazy-z";
-import {
-  disableSshKeyDelete,
-  getSubnetTierStateData,
-  getTierSubnets,
-  invalidSecurityGroupRuleName,
-  invalidSecurityGroupRuleText,
-} from "../../lib/forms";
-import { invalidCidr } from "../../lib/forms/invalid-callbacks";
-import { invalidCidrText } from "../../lib/forms/text-callbacks";
+import { arraySplatIndex, contains, transpose } from "lazy-z";
+import { disableSshKeyDelete } from "../../lib/forms";
 import { CopyRuleForm } from "../forms";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
 import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.json";
 import DynamicForm from "../forms/DynamicForm";
-import { NoCisTile, NoPowerNetworkTile } from "../forms/dynamic-form/tiles";
+import {
+  CraigEmptyResourceTile,
+  NoCisTile,
+  NoPowerNetworkTile,
+} from "../forms/dynamic-form/tiles";
 import PropTypes from "prop-types";
 import {
   PrimaryButton,
@@ -40,6 +25,7 @@ import {
 } from "../forms/utils";
 import { craigForms } from "./CraigForms";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
+import { DynamicSubnetTierForm } from "./vpc/DynamicSubnetTierForm";
 
 function cbrPageTemplate(craig) {
   let forms = craigForms(craig);
@@ -669,6 +655,7 @@ class NetworkAcls extends React.Component {
 
         {this.props.data.acls.map((acl, aclIndex) => (
           <DynamicAclForm
+            key={"dynamic-acl-form-" + aclIndex}
             nested
             beginHidden
             craig={craig}
@@ -937,35 +924,13 @@ const SecretsManagerPage = (craig) => {
 const SecurityGroupPage = (craig) => {
   return (
     <>
-      <SecurityGroupTemplate
-        docs={RenderDocs("security_groups", craig.store.json._options.template)}
-        security_groups={craig.store.json.security_groups}
-        disableSave={disableSave}
-        onDelete={craig.security_groups.delete}
-        onSave={craig.security_groups.save}
-        onSubmit={craig.security_groups.create}
-        propsMatchState={propsMatchState}
-        forceOpen={forceShowForm}
-        craig={craig}
-        resourceGroups={splat(craig.store.json.resource_groups, "name")}
-        invalidCallback={craig.security_groups.name.invalid}
-        invalidTextCallback={craig.security_groups.name.invalidText}
-        disableSaveCallback={function (stateData, componentProps) {
-          return (
-            propsMatchState("sg_rules", stateData, componentProps) ||
-            disableSave("sg_rules", stateData, componentProps)
-          );
-        }}
-        // due to the complex table and the way these are rendered it is
-        // unlikely that a dynamic form is practical to use for the creation
-        // of sg rules, so I'm fine leaving these as is
-        invalidRuleText={invalidSecurityGroupRuleName}
-        invalidRuleTextCallback={invalidSecurityGroupRuleText}
-        onSubmitCallback={craig.security_groups.rules.create}
-        onRuleSave={craig.security_groups.rules.save}
-        onRuleDelete={craig.security_groups.rules.delete}
-        vpcList={craig.store.vpcList}
-      />
+      {formPageTemplate(craig, {
+        name: "Security Groups",
+        addText: "Create a Security Group",
+        jsonField: "security_groups",
+        formName: "Security Groups",
+        hideFormTitleButton: craig.store.json.vpcs.length === 0,
+      })}
       {craig.store.json.security_groups.length > 0 && (
         <CopyRuleForm craig={craig} isAclForm={false} />
       )}
@@ -974,50 +939,156 @@ const SecurityGroupPage = (craig) => {
 };
 
 const SubnetsPage = (craig) => {
+  class Subnets extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        shownForms: [],
+        showModal: false,
+      };
+      this.onModalSubmit = this.onModalSubmit.bind(this);
+      this.onShowToggle = this.onShowToggle.bind(this);
+    }
+
+    onModalSubmit(data) {
+      this.props.craig.vpcs.subnetTiers.create(data, {
+        vpc_name: this.props.data.name,
+      });
+      this.setState({ showModal: false });
+    }
+
+    onShowToggle(index) {
+      let forms = [...this.state.shownForms];
+      if (!contains(this.state.shownForms, index)) {
+        forms.push(index);
+      } else {
+        forms.splice(forms.indexOf(index), 1);
+      }
+      this.setState({ shownForms: forms });
+    }
+
+    render() {
+      let tiers = this.props.data.subnetTiers
+        ? this.props.data.subnetTiers
+        : this.props.craig.store.subnetTiers;
+      let craig = this.props.craig;
+      return (
+        <>
+          {this.state.showModal ? (
+            <DynamicFormModal
+              name={`Create a Subnet Tier in ${this.props.data.name} VPC`}
+              show
+              beginDisabled
+              submissionFieldName="subnetTiers"
+              onRequestSubmit={this.onModalSubmit}
+              onRequestClose={() => {
+                this.setState({ showModal: false });
+              }}
+            >
+              {RenderForm(DynamicSubnetTierForm, {
+                craig: craig,
+                vpcIndex: arraySplatIndex(
+                  craig.store.json.vpcs,
+                  "name",
+                  this.props.data.name
+                ),
+                subnetTierIndex: -1,
+                aclName: "",
+                isModal: true,
+                innerFormProps: {
+                  isModal: true,
+                  shouldDisableSubmit: function () {
+                    // see above
+                    this.props.setRefUpstream(this.state);
+                    if (
+                      disableSave("subnetTier", this.state, this.props) ===
+                      false
+                    ) {
+                      this.props.enableModal();
+                    } else {
+                      this.props.disableModal();
+                    }
+                  },
+                },
+              })}
+            </DynamicFormModal>
+          ) : (
+            ""
+          )}
+          {this.props.data.acls.length === 0 ? (
+            <CraigEmptyResourceTile
+              name="Network ACLs"
+              customClick={
+                <p>
+                  Add one from the <a href="/form/nacls">ACL Page</a>{" "}
+                </p>
+              }
+            />
+          ) : (
+            <CraigFormHeading
+              name="Subnet Tiers"
+              type="subHeading"
+              className={tiers.length === 0 ? "" : "marginBottomSmall"}
+              buttons={
+                <PrimaryButton
+                  type="add"
+                  noDeleteButton
+                  onClick={() => {
+                    this.setState({ showModal: true });
+                  }}
+                />
+              }
+            />
+          )}
+          {tiers.map((tier, tierIndex) => (
+            <DynamicSubnetTierForm
+              craig={craig}
+              key={"tier-" + tierIndex}
+              vpcIndex={arraySplatIndex(
+                craig.store.json.vpcs,
+                "name",
+                this.props.data.name
+              )}
+              subnetTierIndex={tierIndex}
+              onDelete={craig.vpcs.subnetTiers.delete}
+              onSave={craig.vpcs.subnetTiers.save}
+              formInSubForm
+              onShowToggle={this.onShowToggle}
+              hide={!contains(this.state.shownForms, tierIndex)}
+            />
+          ))}
+        </>
+      );
+    }
+  }
+
+  let none = () => {};
   return (
-    <SubnetPageTemplate
-      vpcs={craig.store.json.vpcs}
+    <IcseFormTemplate
+      name="VPC Subnets"
+      arrayData={craig.store.json.vpcs}
       docs={RenderDocs("subnets", craig.store.json._options.template)}
+      onSubmit={none}
+      onDelete={none}
+      onSave={none}
+      disableSave={none}
+      propsMatchState={none}
       forceOpen={forceShowForm}
-      subnetTiers={craig.store.subnetTiers}
-      dynamicSubnets={craig.store.json._options.dynamic_subnets}
-      subnetListCallback={(stateData, componentProps) => {
-        let nextTier = [craig.store.subnetTiers[componentProps.data.name]]
-          .length;
-        let subnets = [];
-        while (subnets.length < stateData.zones) {
-          subnets.push(
-            buildSubnet(
-              componentProps.vpc_name,
-              keys(craig.store.subnetTiers).indexOf(componentProps.vpc_name),
-              stateData.name,
-              nextTier,
-              stateData.networkAcl,
-              componentProps.data.resource_group,
-              subnets.length + 1,
-              stateData.addPublicGateway
-            )
-          );
-        }
-        return subnets;
+      hideFormTitleButton
+      innerForm={Subnets}
+      innerFormProps={{
+        craig: craig,
       }}
-      craig={craig}
-      propsMatchState={propsMatchState}
-      disableSave={disableSave}
-      invalidSubnetTierText={craig.vpcs.subnetTiers.name.invalidText}
-      invalidSubnetTierName={craig.vpcs.subnetTiers.name.invalid}
-      invalidCidr={invalidCidr}
-      invalidName={invalidName} // needed due to deeply rooted logic with subnet tier names
-      // not changing below invalid name text for now due to complexity, likely
-      // these forms will be easier to manage whem moving to dynamic forms
-      invalidCidrText={invalidCidrText}
-      invalidNameText={invalidNameText}
-      getSubnetTierStateData={getSubnetTierStateData}
-      getTierSubnets={getTierSubnets}
-      onSubnetSubmit={craig.vpcs.subnetTiers}
-      onSubnetSave={craig.vpcs.subnets.save}
-      onSubnetTierSave={craig.vpcs.subnetTiers.save}
-      onSubnetTierDelete={craig.vpcs.subnetTiers.delete}
+      toggleFormProps={{
+        craig: craig,
+        noDeleteButton: true,
+        noSaveButton: true,
+        hideName: true,
+        submissionFieldName: "subnets",
+        disableSave: none,
+        propsMatchState: none,
+        nullRef: true,
+      }}
     />
   );
 };
