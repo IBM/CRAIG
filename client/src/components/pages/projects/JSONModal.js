@@ -95,14 +95,7 @@ export class JSONModal extends React.Component {
             ? `Preview Configuration`
             : `Override Configuration`
         }
-        danger={!this.props.import && textAreaDidChange}
-        primaryButtonText={
-          this.props.import
-            ? "Create Project"
-            : textAreaDidChange
-            ? `Override`
-            : "Done"
-        }
+        primaryButtonText={this.props.import ? "Create Project" : "Done"}
         primaryButtonDisabled={
           this.state.readOnlyJSON ? false : !this.state.isValid
         }
@@ -194,19 +187,6 @@ export class JSONModal extends React.Component {
                 onEditJSONClick={this.onEditJSONClick}
               />
             }
-          />
-        )}
-
-        {!this.props.import && textAreaDidChange && (
-          <InlineNotification
-            aria-label="closes notification"
-            kind="warning"
-            className="fullMinWidth marginBottomXs"
-            onClose={function noRefCheck() {}}
-            onCloseButtonClick={function noRefCheck() {}}
-            statusIconDescription="notification"
-            subtitle="This action cannot be undone once submitted."
-            title="Overriding Configuration"
           />
         )}
       </Modal>

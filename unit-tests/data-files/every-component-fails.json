@@ -1025,7 +1025,7 @@
           "pi_dns": [
             "127.0.0.1"
           ],
-          "pi_network_mtu": false,
+          "pi_network_jumbo": false,
           "workspace": "test",
           "zone": "us-south"
         }
@@ -1073,7 +1073,7 @@
           "pi_dns": [
             "127.0.0.1"
           ],
-          "pi_network_mtu": false,
+          "pi_network_jumbo": false,
           "workspace": "test",
           "zone": "us-south"
         }

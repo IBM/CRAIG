@@ -98,53 +98,59 @@ class NetworkingRuleOrderCard extends React.Component {
     let craig = this.props.parentProps.craig;
     let isSecurityGroup =
       this.props.parentProps.form.jsonField === "security_groups";
-    let form = isSecurityGroup
-      ? {
-          groups: [
-            {
-              name: craig.security_groups.rules.name,
-              direction: craig.security_groups.rules.direction,
-              source: craig.security_groups.rules.source,
-            },
-            {
-              ruleProtocol: craig.security_groups.rules.ruleProtocol,
-            },
-            {
-              port_min: craig.security_groups.rules.port_min,
-              port_max: craig.security_groups.rules.port_max,
-            },
-            {
-              type: craig.security_groups.rules.type,
-              code: craig.security_groups.rules.code,
-            },
-          ],
-        }
-      : {
-          groups: [
-            {
-              name: craig.vpcs.acls.rules.name,
-              action: craig.vpcs.acls.rules.action,
-              direction: craig.vpcs.acls.rules.direction,
-            },
-            {
-              source: craig.vpcs.acls.rules.source,
-              destination: craig.vpcs.acls.rules.destination,
-              ruleProtocol: craig.vpcs.acls.rules.ruleProtocol,
-            },
-            {
-              port_min: craig.vpcs.acls.rules.port_min,
-              port_max: craig.vpcs.acls.rules.port_max,
-            },
-            {
-              source_port_min: craig.vpcs.acls.rules.source_port_min,
-              source_port_max: craig.vpcs.acls.rules.source_port_max,
-            },
-            {
-              type: craig.vpcs.acls.rules.type,
-              code: craig.vpcs.acls.rules.code,
-            },
-          ],
-        };
+    let form =
+      (!this.props.parentProps.isModal &&
+        (this.props.parentProps.form.jsonField === "acls" ||
+          this.props.parentProps.form.jsonField === "security_groups")) ===
+      false
+        ? {}
+        : isSecurityGroup
+        ? {
+            groups: [
+              {
+                name: craig.security_groups.rules.name,
+                direction: craig.security_groups.rules.direction,
+                source: craig.security_groups.rules.source,
+              },
+              {
+                ruleProtocol: craig.security_groups.rules.ruleProtocol,
+              },
+              {
+                port_min: craig.security_groups.rules.port_min,
+                port_max: craig.security_groups.rules.port_max,
+              },
+              {
+                type: craig.security_groups.rules.type,
+                code: craig.security_groups.rules.code,
+              },
+            ],
+          }
+        : {
+            groups: [
+              {
+                name: craig.vpcs.acls.rules.name,
+                action: craig.vpcs.acls.rules.action,
+                direction: craig.vpcs.acls.rules.direction,
+              },
+              {
+                source: craig.vpcs.acls.rules.source,
+                destination: craig.vpcs.acls.rules.destination,
+                ruleProtocol: craig.vpcs.acls.rules.ruleProtocol,
+              },
+              {
+                port_min: craig.vpcs.acls.rules.port_min,
+                port_max: craig.vpcs.acls.rules.port_max,
+              },
+              {
+                source_port_min: craig.vpcs.acls.rules.source_port_min,
+                source_port_max: craig.vpcs.acls.rules.source_port_max,
+              },
+              {
+                type: craig.vpcs.acls.rules.type,
+                code: craig.vpcs.acls.rules.code,
+              },
+            ],
+          };
     return !this.props.parentProps.isModal &&
       (this.props.parentProps.form.jsonField === "acls" ||
         this.props.parentProps.form.jsonField === "security_groups") ? (

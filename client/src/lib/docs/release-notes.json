@@ -18,7 +18,7 @@
     "upgrade_notes": [
       "Updated Terraform version to 1.5",
       "Updated IBM Cloud Terraform Provider version to 1.61.0",
-      "Changed the deprecated `pi_network_jumbo` in Power VS Subnet Terraform to supported `pi_network_mtu` field"
+      "CRAIG now supports Tier 0 and Fixed IOPs volume types for zones where these resource are available"
     ]
   },
   {

@@ -1748,6 +1748,39 @@ describe("power_instances", () => {
             "it should return correct text"
           );
         });
+        it("should render for tier5k", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.onRender({
+              storage_option: "",
+              pi_storage_type: "tier5k",
+            }),
+            "Fixed IOPs",
+            "it should return correct text"
+          );
+        });
+        it("should render for tier5k", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.onRender({
+              storage_option: "",
+              pi_storage_type: "tier5k",
+            }),
+            "Fixed IOPs",
+            "it should return correct text"
+          );
+        });
+        it("should return value for tier5k", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.pi_storage_type.onInputChange({
+              storage_option: "",
+              pi_storage_type: "Fixed IOPs",
+            }),
+            "tier5k",
+            "it should return correct text"
+          );
+        });
         it("should not be hidden when type is not selected", () => {
           let craig = state();
           assert.deepEqual(

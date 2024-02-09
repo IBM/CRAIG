@@ -1,11 +1,6 @@
 const { titleCase, splatContains, isNullOrEmptyString } = require("lazy-z");
 const { datacenters } = require("../constants");
 const {
-  invalidNameText,
-  invalidName,
-  invalidSshPublicKey,
-} = require("../forms");
-const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
   selectInvalidText,

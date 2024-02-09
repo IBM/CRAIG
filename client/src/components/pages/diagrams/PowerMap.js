@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import "./diagrams.css";
 import { isNullOrEmptyString } from "lazy-z";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
+import { disableSave } from "../../../lib";
 
 export const PowerMap = (props) => {
   let craig = props.craig;
@@ -15,7 +16,7 @@ export const PowerMap = (props) => {
       powerSubFormClassName += " diagramBoxSelected";
     }
     if (props.big) powerSubFormClassName += " powerSubFormBig";
-    if (isNullOrEmptyString(power.resource_group, true) && !power.use_data) {
+    if (disableSave("power", power, { data: power, craig: craig })) {
       isRed = true;
     }
     return (

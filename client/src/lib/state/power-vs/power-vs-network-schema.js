@@ -74,7 +74,7 @@ function powerVsNetworkSchema() {
       },
       hideWhen: hideWhenUseData,
     },
-    pi_network_mtu: {
+    pi_network_jumbo: {
       type: "toggle",
       default: false,
       labelText: "MTU Jumbo",

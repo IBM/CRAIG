@@ -939,7 +939,7 @@ function craigForms(craig) {
               },
               {
                 pi_dns: craig.power.network.pi_dns,
-                pi_network_mtu: craig.power.network.pi_network_mtu,
+                pi_network_jumbo: craig.power.network.pi_network_jumbo,
               },
             ],
           },

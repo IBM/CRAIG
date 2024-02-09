@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Updated Terraform version to 1.5
 - Updated IBM Cloud Terraform Provider version to 1.61.0
-- Changed the deprecated `pi_network_jumbo` in Power VS Subnet Terraform to supported `pi_network_mtu` field
+- CRAIG now supports Tier 0 and Fixed IOPs volume types for zones where these resource are available
 
 ### Features
 
@@ -63,7 +63,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing SCC V2 resources to have an incorrectly formatted resource group in Terraform
 - Fixed an issue causing all Schematics Workspaces to be created in the default resource group even when a resource group was provided
 - Fixed an issue causing a Terraform variable to be generated for Power VS SSH Keys from a data source
-- Fixed an issue with Power API calls within Madrid region to point to `mad` 
+- Fixed an issue with Power API calls within Madrid region to point to `mad`
 
 ## 1.8.0
 

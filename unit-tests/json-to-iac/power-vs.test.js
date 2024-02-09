@@ -183,7 +183,7 @@ resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
         pi_cidr: "1.2.3.4/5",
         pi_dns: ["127.0.0.1"],
         pi_network_type: "vlan",
-        pi_network_mtu: true,
+        pi_network_jumbo: true,
         zone: "dal10",
       });
       let expectedData = `
@@ -193,7 +193,36 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
   pi_network_name      = "\${var.prefix}-power-network-dev-nw"
   pi_cidr              = "1.2.3.4/5"
   pi_network_type      = "vlan"
-  pi_network_mtu       = true
+  pi_network_jumbo     = true
+  pi_dns = [
+    "127.0.0.1"
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+    it("should format pi network resource", () => {
+      let actualData = formatPowerVsNetwork({
+        workspace: "example",
+        name: "dev-nw",
+        pi_cidr: "1.2.3.4/5",
+        pi_dns: ["127.0.0.1"],
+        pi_network_type: "vlan",
+        pi_network_jumbo: true,
+        zone: "dal10",
+      });
+      let expectedData = `
+resource "ibm_pi_network" "power_network_example_dev_nw" {
+  provider             = ibm.power_vs_dal10
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_network_name      = "\${var.prefix}-power-network-dev-nw"
+  pi_cidr              = "1.2.3.4/5"
+  pi_network_type      = "vlan"
+  pi_network_jumbo     = true
   pi_dns = [
     "127.0.0.1"
   ]
@@ -212,7 +241,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
         pi_cidr: "1.2.3.4/5",
         pi_dns: ["127.0.0.1"],
         pi_network_type: "vlan",
-        pi_network_mtu: true,
+        pi_network_jumbo: true,
         zone: "dal10",
         workspace_use_data: true,
       });
@@ -223,7 +252,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
   pi_network_name      = "\${var.prefix}-power-network-dev-nw"
   pi_cidr              = "1.2.3.4/5"
   pi_network_type      = "vlan"
-  pi_network_mtu       = true
+  pi_network_jumbo     = true
   pi_dns = [
     "127.0.0.1"
   ]
@@ -242,7 +271,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
         pi_cidr: "1.2.3.4/5",
         pi_dns: ["127.0.0.1"],
         pi_network_type: "vlan",
-        pi_network_mtu: true,
+        pi_network_jumbo: true,
         zone: "dal10",
         workspace_use_data: true,
         use_data: true,
@@ -592,7 +621,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
                 pi_cidr: "1.2.3.4/5",
                 pi_dns: ["127.0.0.1"],
                 pi_network_type: "vlan",
-                pi_network_mtu: true,
+                pi_network_jumbo: true,
                 zone: "dal10",
               },
             ],
@@ -675,7 +704,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
   pi_network_name      = "\${var.prefix}-power-network-dev-nw"
   pi_cidr              = "1.2.3.4/5"
   pi_network_type      = "vlan"
-  pi_network_mtu       = true
+  pi_network_jumbo     = true
   pi_dns = [
     "127.0.0.1"
   ]
@@ -810,7 +839,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
                 pi_cidr: "1.2.3.4/5",
                 pi_dns: ["127.0.0.1"],
                 pi_network_type: "vlan",
-                pi_network_mtu: true,
+                pi_network_jumbo: true,
                 zone: "dal10",
               },
             ],
@@ -893,7 +922,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
   pi_network_name      = "\${var.prefix}-power-network-dev-nw"
   pi_cidr              = "1.2.3.4/5"
   pi_network_type      = "vlan"
-  pi_network_mtu       = true
+  pi_network_jumbo     = true
   pi_dns = [
     "127.0.0.1"
   ]
@@ -1000,7 +1029,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
                 pi_cidr: "1.2.3.4/5",
                 pi_dns: ["127.0.0.1"],
                 pi_network_type: "vlan",
-                pi_network_mtu: true,
+                pi_network_jumbo: true,
                 zone: "dal10",
               },
               {
@@ -1009,7 +1038,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
                 pi_cidr: "1.2.3.4/5",
                 pi_dns: ["127.0.0.1"],
                 pi_network_type: "vlan",
-                pi_network_mtu: true,
+                pi_network_jumbo: true,
                 zone: "dal10",
               },
             ],
@@ -1098,7 +1127,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
   pi_network_name      = "\${var.prefix}-power-network-dev-nw"
   pi_cidr              = "1.2.3.4/5"
   pi_network_type      = "vlan"
-  pi_network_mtu       = true
+  pi_network_jumbo     = true
   pi_dns = [
     "127.0.0.1"
   ]
@@ -1110,7 +1139,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw2" {
   pi_network_name      = "\${var.prefix}-power-network-dev-nw2"
   pi_cidr              = "1.2.3.4/5"
   pi_network_type      = "vlan"
-  pi_network_mtu       = true
+  pi_network_jumbo     = true
   pi_dns = [
     "127.0.0.1"
   ]

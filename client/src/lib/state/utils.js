@@ -1036,10 +1036,14 @@ function powerVsStorageType(isVolume) {
     onRender: function (stateData) {
       return isNullOrEmptyString(stateData[storageField])
         ? ""
+        : stateData[storageField] === "tier5k"
+        ? "Fixed IOPs"
         : capitalize(stateData[storageField].split(/(?=\d)/).join("-"));
     },
     onInputChange: function (stateData) {
-      return stateData[storageField].toLowerCase().replace(/-/, "");
+      return stateData[storageField] === "Fixed IOPs"
+        ? "tier5k"
+        : stateData[storageField].toLowerCase().replace(/-/, "");
     },
     apiEndpoint: function (stateData) {
       return `/api/power/${stateData.zone}/storage-tiers`;
