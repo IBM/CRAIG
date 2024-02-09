@@ -49,21 +49,6 @@ function invalidSubnetTierText(stateData, componentProps) {
 }
 
 /**
- * get invalid sg rule text
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {string} invalid text
- */
-function invalidSecurityGroupRuleText(stateData, componentProps) {
-  if (
-    invalidSecurityGroupRuleName(stateData, componentProps) &&
-    !invalidNewResourceName(stateData.name)
-  ) {
-    return duplicateNameCallback(stateData.name);
-  } else return genericNameCallback();
-}
-
-/**
  * create invalid text
  * @param {string} field json field name
  * @param {*=} craig used for subnet
@@ -208,7 +193,6 @@ module.exports = {
   duplicateNameCallback,
   invalidNameText,
   invalidSubnetTierText,
-  invalidSecurityGroupRuleText,
   invalidCidrText,
   invalidProjectNameText,
   invalidCrnText,

@@ -15,6 +15,7 @@ const {
   isNullOrEmptyString,
   isArray,
   isEmpty,
+  containsKeys,
 } = require("lazy-z");
 const {
   newDefaultEdgeAcl,
@@ -34,11 +35,16 @@ const {
   updateNetworkingRule,
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
-  invalidTcpOrUdpPort,
-  invalidIcmpCodeOrType,
   resourceGroupsField,
   selectInvalidText,
   unconditionalInvalidText,
+  kebabCaseInput,
+  titleCaseRender,
+  networkingRuleProtocolField,
+  networkingRulePortField,
+  networkingRuleTypeField,
+  networkingRuleCodeField,
+  getRuleProtocol,
 } = require("../utils");
 const { calculateNeededSubnetIps, getNextCidr } = require("../../json-to-iac");
 const {
@@ -230,6 +236,21 @@ function vpcOnStoreUpdate(config) {
       acl.rules.forEach((rule) => {
         rule.acl = acl.name;
         rule.vpc = network.name;
+        if (!containsKeys(rule, "ruleProtocol")) {
+          rule.ruleProtocol = getRuleProtocol(rule);
+        }
+        [
+          "port_min",
+          "port_max",
+          "type",
+          "code",
+          "source_port_min",
+          "source_port_max",
+        ].forEach((field) => {
+          if (!containsKeys(rule, field)) {
+            rule[field] = null;
+          }
+        });
       });
       if (
         !splatContains(
@@ -1202,7 +1223,7 @@ function naclRuleSubComponents() {
         source: {
           default: "",
           invalid: function (stateData, componentProps) {
-            return !isIpv4CidrOrAddress(stateData.source);
+            return !isIpv4CidrOrAddress(stateData.source || "");
           },
           invalidText: unconditionalInvalidText(
             "Please provide a valid IPV4 IP address or CIDR notation."
@@ -1210,10 +1231,31 @@ function naclRuleSubComponents() {
           size: "small",
           placeholder: "x.x.x.x",
         },
+        action: {
+          size: "small",
+          type: "select",
+          default: "",
+          groups: ["Allow", "Deny"],
+          invalid: fieldIsNullOrEmptyString("action"),
+          invalidText: unconditionalInvalidText("Select an action"),
+          onInputChange: kebabCaseInput("action"),
+          onRender: titleCaseRender("action"),
+        },
+        direction: {
+          size: "small",
+          type: "select",
+          default: "",
+          groups: ["Inbound", "Outbound"],
+          invalid: fieldIsNullOrEmptyString("direction"),
+          invalidText: selectInvalidText("direction"),
+          onInputChange: kebabCaseInput("direction"),
+          onRender: titleCaseRender("direction"),
+        },
+        ruleProtocol: networkingRuleProtocolField(true),
         destination: {
           default: "",
           invalid: function (stateData, componentProps) {
-            return !isIpv4CidrOrAddress(stateData.destination);
+            return !isIpv4CidrOrAddress(stateData.destination || "");
           },
           invalidText: unconditionalInvalidText(
             "Please provide a valid IPV4 IP address or CIDR notation."
@@ -1221,54 +1263,12 @@ function naclRuleSubComponents() {
           size: "small",
           placeholder: "x.x.x.x",
         },
-        port_min: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        port_max: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        source_port_min: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        source_port_max: {
-          default: "",
-          invalid: invalidTcpOrUdpPort,
-          size: "small",
-          invalidText: unconditionalInvalidText(
-            "Enter a whole number between 1 and 65536"
-          ),
-        },
-        type: {
-          size: "small",
-          default: "",
-          invalid: invalidIcmpCodeOrType,
-          invalidText: unconditionalInvalidText(
-            "Enter a while number between 0 and 254"
-          ),
-        },
-        code: {
-          size: "small",
-          default: "",
-          invalid: invalidIcmpCodeOrType,
-          invalidText: unconditionalInvalidText(
-            "Enter a while number between 0 and 255"
-          ),
-        },
+        port_min: networkingRulePortField(),
+        port_max: networkingRulePortField(true),
+        source_port_min: networkingRulePortField(false, true),
+        source_port_max: networkingRulePortField(true, true),
+        type: networkingRuleTypeField(),
+        code: networkingRuleCodeField(),
       },
     },
   };

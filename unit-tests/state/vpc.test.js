@@ -338,6 +338,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
               {
                 action: "allow",
@@ -363,6 +370,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
               {
                 action: "allow",
@@ -388,6 +402,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
               {
                 action: "allow",
@@ -413,6 +434,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
             ],
           },
@@ -589,6 +617,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
               {
                 action: "allow",
@@ -614,6 +649,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
               {
                 action: "allow",
@@ -639,6 +681,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
               {
                 action: "allow",
@@ -664,6 +713,13 @@ describe("vpcs", () => {
                   source_port_min: null,
                   source_port_max: null,
                 },
+                port_min: null,
+                port_max: null,
+                source_port_min: null,
+                source_port_max: null,
+                type: null,
+                code: null,
+                ruleProtocol: "all",
               },
             ],
           },
@@ -850,6 +906,13 @@ describe("vpcs", () => {
                     source_port_min: null,
                     source_port_max: null,
                   },
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                  type: null,
+                  code: null,
+                  ruleProtocol: "all",
                 },
                 {
                   action: "allow",
@@ -875,6 +938,13 @@ describe("vpcs", () => {
                     source_port_min: null,
                     source_port_max: null,
                   },
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                  type: null,
+                  code: null,
+                  ruleProtocol: "all",
                 },
                 {
                   action: "allow",
@@ -900,6 +970,13 @@ describe("vpcs", () => {
                     source_port_min: null,
                     source_port_max: null,
                   },
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                  type: null,
+                  code: null,
+                  ruleProtocol: "all",
                 },
                 {
                   action: "allow",
@@ -925,6 +1002,13 @@ describe("vpcs", () => {
                     source_port_min: null,
                     source_port_max: null,
                   },
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                  type: null,
+                  code: null,
+                  ruleProtocol: "all",
                 },
               ],
             },
@@ -7835,6 +7919,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               action: "allow",
@@ -7860,6 +7951,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -7885,6 +7983,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -7910,6 +8015,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -7935,6 +8047,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
           ];
           assert.deepEqual(
@@ -7983,6 +8102,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               action: "allow",
@@ -8008,6 +8134,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8033,6 +8166,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8058,6 +8198,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8083,6 +8230,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
           ];
           assert.deepEqual(
@@ -8135,6 +8289,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               action: "allow",
@@ -8160,6 +8321,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8185,6 +8353,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8210,6 +8385,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
           ];
           assert.deepEqual(
@@ -8232,6 +8414,8 @@ describe("vpcs", () => {
                 port_max: 8080,
                 port_min: null,
               },
+              port_max: 8080,
+              port_min: null,
             },
             {
               vpc_name: "management",
@@ -8264,6 +8448,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               action: "allow",
@@ -8289,6 +8480,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8314,6 +8512,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8328,10 +8533,10 @@ describe("vpcs", () => {
                 code: null,
               },
               tcp: {
-                port_min: null,
+                port_min: 1,
                 port_max: 8080,
-                source_port_min: null,
-                source_port_max: null,
+                source_port_min: 1,
+                source_port_max: 65535,
               },
               udp: {
                 port_min: null,
@@ -8339,6 +8544,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: 8080,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
           ];
           assert.deepEqual(
@@ -8393,6 +8605,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               action: "allow",
@@ -8418,6 +8637,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8443,6 +8669,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8457,10 +8690,10 @@ describe("vpcs", () => {
                 code: null,
               },
               tcp: {
-                port_min: null,
+                port_min: 1,
                 port_max: 8080,
-                source_port_min: null,
-                source_port_max: null,
+                source_port_min: 1,
+                source_port_max: 65535,
               },
               udp: {
                 port_min: null,
@@ -8468,6 +8701,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
           ];
           assert.deepEqual(
@@ -8522,6 +8762,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               action: "allow",
@@ -8547,6 +8794,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8572,6 +8826,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8586,10 +8847,10 @@ describe("vpcs", () => {
                 code: null,
               },
               tcp: {
-                port_min: null,
+                port_min: 1,
                 port_max: 8080,
-                source_port_min: null,
-                source_port_max: null,
+                source_port_min: 1,
+                source_port_max: 65535,
               },
               udp: {
                 port_min: null,
@@ -8597,6 +8858,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
           ];
           assert.deepEqual(
@@ -8642,6 +8910,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               action: "allow",
@@ -8667,6 +8942,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               acl: "management",
@@ -8692,6 +8974,13 @@ describe("vpcs", () => {
                 source_port_min: null,
                 source_port_max: null,
               },
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
           ];
           assert.deepEqual(
@@ -9070,6 +9359,223 @@ describe("vpcs", () => {
         ),
         "iac-vpc-test-acl",
         "it should return correct text"
+      );
+    });
+    it("should set data when changing rule protocol", () => {
+      let data = { ruleProtocol: "all" };
+      craig.vpcs.acls.rules.ruleProtocol.onInputChange(data);
+      assert.deepEqual(
+        data,
+        {
+          rule: {
+            port_max: null,
+            port_min: null,
+            source_port_max: null,
+            source_port_min: null,
+            type: null,
+            code: null,
+          },
+          ruleProtocol: "all",
+          tcp: {
+            port_min: null,
+            port_max: null,
+            source_port_max: null,
+            source_port_min: null,
+          },
+          udp: {
+            port_min: null,
+            source_port_max: null,
+            source_port_min: null,
+            port_max: null,
+          },
+          icmp: {
+            type: null,
+            code: null,
+          },
+        },
+        "it should return data"
+      );
+    });
+    it("should render value for each type when present on sub rule but not main", () => {
+      assert.deepEqual(
+        craig.vpcs.acls.rules.type.onRender({
+          icmp: {
+            type: "443",
+          },
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.type.onRender({
+          icmp: {
+            type: "null",
+          },
+        }),
+        "",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.type.onRender({
+          icmp: {
+            type: "null",
+          },
+          type: "1234",
+        }),
+        "1234",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.code.onRender({
+          icmp: {
+            code: "null",
+          },
+        }),
+        "",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.type.onRender({
+          icmp: {
+            type: null,
+          },
+          type: "443",
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.code.onRender({
+          icmp: {
+            code: "443",
+          },
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.code.onRender({
+          icmp: {},
+          code: "443",
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.port_max.onRender({
+          tcp: {
+            port_max: "443",
+          },
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.port_min.onRender({
+          tcp: {
+            port_min: "443",
+          },
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.source_port_max.onRender({
+          tcp: {
+            source_port_max: "443",
+          },
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.source_port_min.onRender({
+          tcp: {
+            source_port_min: "443",
+          },
+        }),
+        "443",
+        "it should set sub rule"
+      );
+      assert.deepEqual(
+        craig.vpcs.acls.rules.source_port_min.onRender({
+          tcp: {
+            source_port_min: null,
+          },
+          source_port_min: "443",
+        }),
+        "443",
+        "it should set sub rule"
+      );
+    });
+    it("should set rule data on input change", () => {
+      let data = {
+        ruleProtocol: "all",
+      };
+      craig.vpcs.acls.rules.ruleProtocol.onInputChange(data);
+      assert.deepEqual(
+        data,
+        {
+          rule: {
+            port_max: null,
+            port_min: null,
+            source_port_max: null,
+            source_port_min: null,
+            type: null,
+            code: null,
+          },
+          ruleProtocol: "all",
+          tcp: {
+            port_max: null,
+            port_min: null,
+            source_port_max: null,
+            source_port_min: null,
+          },
+          udp: {
+            port_max: null,
+            port_min: null,
+            source_port_max: null,
+            source_port_min: null,
+          },
+          icmp: {
+            type: null,
+            code: null,
+          },
+        },
+        "it should set rule"
+      );
+    });
+    it("should render all as rule protocol", () => {
+      assert.deepEqual(
+        "ALL",
+        craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "all" }),
+        "it should return protocol"
+      );
+    });
+    it("should render TCP as rule protocol", () => {
+      assert.deepEqual(
+        "TCP",
+        craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "tcp" }),
+        "it should return protocol"
+      );
+    });
+    it("should render empty string as rule protocol", () => {
+      assert.deepEqual(
+        "",
+        craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "" }),
+        "it should return protocol"
+      );
+    });
+    it("should return invalid for object when no source", () => {
+      assert.isTrue(
+        craig.vpcs.acls.rules.source.invalid({}),
+        "it should be true"
+      );
+    });
+    it("should return invalid for object when no destination", () => {
+      assert.isTrue(
+        craig.vpcs.acls.rules.destination.invalid({}),
+        "it should be true"
       );
     });
   });

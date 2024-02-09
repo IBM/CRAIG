@@ -429,7 +429,7 @@ export {
   DynamicTextArea,
   DynamicMultiSelect,
   DynamicPublicKey,
-  DynamicDatePicker,
   DynamicToolTipWrapper,
   tagColors,
+  DynamicDatePicker,
 };

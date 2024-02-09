@@ -106,7 +106,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.classic_ssh_keys
         : field === "volumes"
         ? componentProps.craig.vsi.volumes
-        : field === "acl_rules" && componentProps.isModal
+        : field === "acl_rules" &&
+          (componentProps.isModal || componentProps.craig)
         ? componentProps.craig.vpcs.acls.rules
         : field === "acl_rules"
         ? componentProps.innerFormProps.craig.vpcs.acls.rules

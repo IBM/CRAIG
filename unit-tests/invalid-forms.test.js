@@ -579,7 +579,7 @@ describe("invalidForms", () => {
               pi_network_type: "pub-vlan",
               pi_cidr: "172.40.10.0/24",
               pi_dns: ["127.0.0.1"],
-              pi_network_jumbo: false,
+              pi_network_mtu: false,
               workspace: "oracle-22",
               zone: "dal12",
             },
@@ -588,7 +588,7 @@ describe("invalidForms", () => {
               pi_network_type: "vlan",
               pi_cidr: "10.80.10.0/28",
               pi_dns: ["127.0.0.1"],
-              pi_network_jumbo: false,
+              pi_network_mtu: false,
               workspace: "oracle-22",
               zone: "dal12",
               depends_on: [
@@ -600,7 +600,7 @@ describe("invalidForms", () => {
               pi_network_type: "vlan",
               pi_cidr: "10.90.10.0/28",
               pi_dns: ["127.0.0.1"],
-              pi_network_jumbo: false,
+              pi_network_mtu: false,
               workspace: "oracle-22",
               zone: "dal12",
               depends_on: [

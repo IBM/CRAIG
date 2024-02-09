@@ -73,7 +73,14 @@ describe("formatJson", () => {
     "port_max": null,
     "source_port_min": null,
     "source_port_max": null
-  }
+  },
+  "ruleProtocol": "all",
+  "port_min": null,
+  "port_max": null,
+  "type": null,
+  "code": null,
+  "source_port_min": null,
+  "source_port_max": null
 }`;
       assert.deepEqual(
         actualData,
@@ -107,7 +114,12 @@ describe("formatJson", () => {
   "icmp": {
     "type": null,
     "code": null
-  }
+  },
+  "port_min": null,
+  "port_max": null,
+  "type": null,
+  "code": null,
+  "ruleProtocol": "all"
 }`;
       assert.deepEqual(
         actualData,
@@ -152,7 +164,14 @@ describe("formatJson", () => {
         "port_max": null,
         "source_port_min": null,
         "source_port_max": null
-      }
+      },
+      "ruleProtocol": "all",
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "source_port_min": null,
+      "source_port_max": null
     },
     {
       "action": "allow",
@@ -175,7 +194,14 @@ describe("formatJson", () => {
         "port_max": null,
         "source_port_min": null,
         "source_port_max": null
-      }
+      },
+      "ruleProtocol": "all",
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "source_port_min": null,
+      "source_port_max": null
     },
     {
       "action": "allow",
@@ -198,7 +224,14 @@ describe("formatJson", () => {
         "port_max": null,
         "source_port_min": null,
         "source_port_max": null
-      }
+      },
+      "ruleProtocol": "all",
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "source_port_min": null,
+      "source_port_max": null
     },
     {
       "action": "allow",
@@ -221,7 +254,14 @@ describe("formatJson", () => {
         "port_max": null,
         "source_port_min": null,
         "source_port_max": null
-      }
+      },
+      "ruleProtocol": "all",
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "source_port_min": null,
+      "source_port_max": null
     }
   ]
 }`;
@@ -259,7 +299,12 @@ describe("formatJson", () => {
       "icmp": {
         "type": null,
         "code": null
-      }
+      },
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "ruleProtocol": "all"
     },
     {
       "direction": "inbound",
@@ -276,7 +321,12 @@ describe("formatJson", () => {
       "icmp": {
         "type": null,
         "code": null
-      }
+      },
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "ruleProtocol": "all"
     },
     {
       "direction": "outbound",
@@ -293,7 +343,12 @@ describe("formatJson", () => {
       "icmp": {
         "type": null,
         "code": null
-      }
+      },
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "ruleProtocol": "all"
     },
     {
       "direction": "outbound",
@@ -310,7 +365,12 @@ describe("formatJson", () => {
       "icmp": {
         "type": null,
         "code": null
-      }
+      },
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "ruleProtocol": "tcp"
     },
     {
       "direction": "outbound",
@@ -327,7 +387,12 @@ describe("formatJson", () => {
       "icmp": {
         "type": null,
         "code": null
-      }
+      },
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "ruleProtocol": "tcp"
     },
     {
       "direction": "outbound",
@@ -344,7 +409,12 @@ describe("formatJson", () => {
       "icmp": {
         "type": null,
         "code": null
-      }
+      },
+      "port_min": null,
+      "port_max": null,
+      "type": null,
+      "code": null,
+      "ruleProtocol": "tcp"
     }
   ]
 }`;

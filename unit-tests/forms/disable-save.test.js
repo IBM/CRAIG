@@ -143,7 +143,7 @@ describe("disableSave", () => {
                     pi_network_type: "pub-vlan",
                     pi_cidr: "172.40.10.0/24",
                     pi_dns: ["127.0.0.1"],
-                    pi_network_jumbo: false,
+                    pi_network_mtu: false,
                     workspace: "oracle-template",
                     zone: "dal12",
                   },
@@ -152,7 +152,7 @@ describe("disableSave", () => {
                     pi_network_type: "vlan",
                     pi_cidr: "10.80.10.0/28",
                     pi_dns: ["127.0.0.1"],
-                    pi_network_jumbo: false,
+                    pi_network_mtu: false,
                     workspace: "oracle-template",
                     zone: "dal12",
                     depends_on: [
@@ -164,7 +164,7 @@ describe("disableSave", () => {
                     pi_network_type: "vlan",
                     pi_cidr: "10.90.10.0/28",
                     pi_dns: ["127.0.0.1"],
-                    pi_network_jumbo: false,
+                    pi_network_mtu: false,
                     workspace: "oracle-template",
                     zone: "dal12",
                     depends_on: [

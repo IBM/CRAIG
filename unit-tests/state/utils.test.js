@@ -8,6 +8,9 @@ const {
   cbrTitleCase,
   cbrSaveType,
   powerAffinityInvalid,
+  onRuleFieldInputChange,
+  hideWhenNotAllIcmp,
+  hideWhenTcpOrUdp,
 } = require("../../client/src/lib/state/utils");
 
 describe("utils", () => {
@@ -54,6 +57,64 @@ describe("utils", () => {
         source: "161.26.0.0/16",
         ruleProtocol: "icmp",
         rule: {},
+        icmp: {
+          type: null,
+          code: null,
+        },
+        tcp: {
+          port_min: null,
+          port_max: null,
+          source_port_min: null,
+          source_port_max: null,
+        },
+        udp: {
+          port_min: null,
+          port_max: null,
+          source_port_min: null,
+          source_port_max: null,
+        },
+      };
+      assert.deepEqual(networkingRule, expectedData, "they should be equal");
+    });
+    it("should delete extra fields when icmp and new rule style", () => {
+      let networkingRule = {
+        acl: "management",
+        vpc: "management",
+        action: "allow",
+        destination: "10.0.0.0/8",
+        direction: "inbound",
+        name: "allow-ibm-inbound",
+        source: "161.26.0.0/16",
+        ruleProtocol: "icmp",
+        port_max: 22,
+        port_min: 22,
+        icmp: {
+          type: null,
+          code: null,
+        },
+        tcp: {
+          port_min: null,
+          port_max: null,
+          source_port_min: null,
+          source_port_max: null,
+        },
+        udp: {
+          port_min: null,
+          port_max: null,
+          source_port_min: null,
+          source_port_max: null,
+        },
+      };
+      formatNetworkingRule(networkingRule, { isSecurityGroup: false });
+      let expectedData = {
+        acl: "management",
+        vpc: "management",
+        action: "allow",
+        destination: "10.0.0.0/8",
+        direction: "inbound",
+        name: "allow-ibm-inbound",
+        source: "161.26.0.0/16",
+        ruleProtocol: "icmp",
         icmp: {
           type: null,
           code: null,
@@ -285,6 +346,7 @@ describe("utils", () => {
           port_min: null,
           port_max: null,
         },
+        ruleProtocol: "icmp",
       };
       updateNetworkingRule(false, data, networkRule);
       assert.deepEqual(data, expectedData, "it should be equal");
@@ -342,6 +404,7 @@ describe("utils", () => {
           port_min: null,
           port_max: null,
         },
+        ruleProtocol: "tcp",
       };
       updateNetworkingRule(false, data, networkRule);
       assert.deepEqual(data, expectedData, "it should be equal");
@@ -426,6 +489,18 @@ describe("utils", () => {
         "it should be false"
       );
     });
+    it("should return true if rule protocol is not icmp and invalid field and security group when no rule object", () => {
+      assert.isTrue(
+        invalidPort(
+          {
+            ruleProtocol: "udp",
+            port_min: 1000000,
+          },
+          true
+        ),
+        "it should be false"
+      );
+    });
   });
   describe("isRangeInvalid", () => {
     it("should return false if range is valid", () => {
@@ -500,6 +575,88 @@ describe("utils", () => {
           "good"
         ),
         "it should be false"
+      );
+    });
+  });
+  describe("onRuleFieldInputChange", () => {
+    it("should set rule when no rule is found", () => {
+      let task = onRuleFieldInputChange("port_max");
+      let data = {
+        port_max: "1",
+      };
+      assert.deepEqual(task(data), "1", "it should return correct data");
+      assert.deepEqual(
+        data,
+        {
+          port_max: "1",
+          rule: {
+            port_max: "1",
+            port_min: null,
+            source_port_max: null,
+            source_port_min: null,
+            type: null,
+            code: null,
+          },
+        },
+        "it should send correct data"
+      );
+    });
+    it("should set rule when no rule found", () => {
+      let task = onRuleFieldInputChange("port_max");
+      let data = {
+        port_max: "2",
+        rule: {
+          port_max: "1",
+          port_min: null,
+          source_port_max: null,
+          source_port_min: null,
+          type: null,
+          code: null,
+        },
+      };
+      assert.deepEqual(task(data), "2", "it should return correct data");
+      assert.deepEqual(
+        data,
+        {
+          port_max: "2",
+          rule: {
+            port_max: "2",
+            port_min: null,
+            source_port_max: null,
+            source_port_min: null,
+            type: null,
+            code: null,
+          },
+        },
+        "it should send correct data"
+      );
+    });
+  });
+  describe("hideWhenNotAllIcmp", () => {
+    it("should be true when all", () => {
+      assert.isTrue(
+        hideWhenNotAllIcmp({ ruleProtocol: "all" }),
+        "it should be hidden"
+      );
+    });
+    it("should be true when icmp", () => {
+      assert.isTrue(
+        hideWhenNotAllIcmp({ ruleProtocol: "icmp" }),
+        "it should be hidden"
+      );
+    });
+  });
+  describe("hideWhenTcpOrUdp", () => {
+    it("should be true when all", () => {
+      assert.isTrue(
+        hideWhenTcpOrUdp({ ruleProtocol: "all" }),
+        "it should be hidden"
+      );
+    });
+    it("should be true when icmp", () => {
+      assert.isTrue(
+        hideWhenTcpOrUdp({ ruleProtocol: "udp" }),
+        "it should be hidden"
       );
     });
   });

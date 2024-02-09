@@ -167,6 +167,7 @@ describe("edge network", () => {
       state.store.json._options.dynamic_subnets = false;
       state.setUpdateCallback(() => {});
       state.createEdgeVpc("waf", false, 3);
+      state.update();
       assert.deepEqual(
         state.store.json.vpcs[0],
         defaultEdgeWaf,

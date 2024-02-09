@@ -44,7 +44,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -69,7 +76,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -94,7 +108,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           }
         ]
       },
@@ -126,7 +147,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -151,7 +179,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -176,7 +211,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -201,7 +243,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "tcp"
           }
         ]
       }
@@ -465,7 +514,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -490,7 +546,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -515,7 +578,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           }
         ]
       },
@@ -547,7 +617,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -572,7 +649,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -597,7 +681,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -622,7 +713,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "tcp"
           }
         ]
       }
@@ -884,7 +982,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -909,7 +1014,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -934,7 +1046,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           }
         ]
       },
@@ -966,7 +1085,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -991,7 +1117,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1016,7 +1149,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1041,7 +1181,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "tcp"
           }
         ]
       }
@@ -1164,7 +1311,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "acl": "edge-acl",
@@ -1189,7 +1343,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "acl": "edge-acl",
@@ -1214,7 +1375,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           }
         ]
       },
@@ -1246,7 +1414,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1271,7 +1446,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1296,7 +1478,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1321,7 +1510,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "tcp"
           }
         ]
       }
@@ -1494,7 +1690,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1519,7 +1722,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1544,7 +1754,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           }
         ]
       },
@@ -1576,7 +1793,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1601,7 +1825,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1626,7 +1857,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -1651,7 +1889,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "tcp"
           }
         ]
       }
@@ -2173,7 +2418,14 @@
               "port_max": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -2198,7 +2450,14 @@
               "port_max": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -2223,7 +2482,14 @@
               "port_max": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -2248,7 +2514,14 @@
               "port_max": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           }
         ]
       },
@@ -2280,7 +2553,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -2305,7 +2585,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -2330,7 +2617,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "all"
           },
           {
             "action": "allow",
@@ -2355,7 +2649,14 @@
               "port_min": null,
               "source_port_min": null,
               "source_port_max": null
-            }
+            },
+            "port_min": null,
+            "port_max": null,
+            "source_port_min": null,
+            "source_port_max": null,
+            "type": null,
+            "code": null,
+            "ruleProtocol": "tcp"
           }
         ]
       }

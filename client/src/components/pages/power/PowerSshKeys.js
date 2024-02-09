@@ -27,7 +27,8 @@ export const PowerSshKeys = (props) => {
             key={props.power.name + "key" + sshIndex}
             item={sshKey}
             icon={Password}
-            itemName="ssh_key"
+            itemName="ssh_keys"
+            craig={props.craig}
           />
         ))}
       </div>

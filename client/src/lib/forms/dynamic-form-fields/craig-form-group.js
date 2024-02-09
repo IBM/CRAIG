@@ -31,7 +31,12 @@ function dynamicCraigFormGroupsProps(componentProps, index, stateData) {
       allNextGroupsHidden ||
       (isLast &&
         (!componentProps.form.subForms ||
-          componentProps.form.subForms.length === 0)),
+          componentProps.form.subForms.length === 0)) ||
+      allGroupItemsHidden(
+        componentProps.form.groups[index],
+        stateData,
+        componentProps
+      ),
   };
   if (componentProps.formName === "subnet") {
     // add margin for subnet subform groups

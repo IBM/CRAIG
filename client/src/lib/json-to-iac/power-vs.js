@@ -99,7 +99,7 @@ function formatPowerVsSshKey(key) {
  * @param {string} network.pi_cidr
  * @param {Array<string>} network.pi_dns
  * @param {string} network.pi_network_type
- * @param {boolean} network.pi_network_jumbo
+ * @param {boolean} network.pi_network_mtu
  * @returns {string} terrraform formatted resource
  */
 function formatPowerVsNetwork(network) {
@@ -125,7 +125,7 @@ function formatPowerVsNetwork(network) {
           pi_network_name: kebabName(["power-network", network.name]),
           pi_cidr: network.pi_cidr,
           pi_network_type: network.pi_network_type,
-          pi_network_jumbo: network.pi_network_jumbo,
+          pi_network_mtu: network.pi_network_mtu,
           pi_dns: network.pi_dns,
           depends_on: network.depends_on,
         }

@@ -31,7 +31,7 @@
             "127.0.0.1"
           ],
           "pi_network_type": "vlan",
-          "pi_network_jumbo": true,
+          "pi_network_mtu": true,
           "zone": "dal10"
         }
       ],

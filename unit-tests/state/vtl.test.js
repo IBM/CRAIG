@@ -714,6 +714,7 @@ describe("vtl", () => {
     });
     it("should update power vs volume workspace when changing instance workspace", () => {
       let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
       state.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
@@ -768,7 +769,7 @@ describe("vtl", () => {
             workspace: "toad",
             sap: true,
             sap_profile: "ush1-4x128",
-            zone: null,
+            zone: "dal12",
           },
         ],
         "it should create instance"

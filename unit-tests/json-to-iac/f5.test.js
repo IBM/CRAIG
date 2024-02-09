@@ -1929,7 +1929,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
                 pi_network_type: "vlan",
                 pi_cidr: "10.51.0.0/24",
                 pi_dns: ["127.0.0.1"],
-                pi_network_jumbo: false,
+                pi_network_mtu: false,
                 workspace: "secure-powervs",
                 zone: "us-south",
               },
@@ -1938,7 +1938,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
                 pi_network_type: "vlan",
                 pi_cidr: "10.52.0.0/24",
                 pi_dns: ["127.0.0.1"],
-                pi_network_jumbo: false,
+                pi_network_mtu: false,
                 workspace: "secure-powervs",
                 zone: "us-south",
                 depends_on: [
@@ -1950,7 +1950,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
                 pi_network_type: "vlan",
                 pi_cidr: "10.53.0.0/24",
                 pi_dns: ["127.0.0.1"],
-                pi_network_jumbo: false,
+                pi_network_mtu: false,
                 workspace: "secure-powervs",
                 zone: "us-south",
                 depends_on: [

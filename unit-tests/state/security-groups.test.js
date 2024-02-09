@@ -50,6 +50,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "management",
@@ -69,6 +74,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "management",
@@ -88,6 +98,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "management",
@@ -107,6 +122,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
             {
               vpc: "management",
@@ -126,6 +146,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
             {
               vpc: "management",
@@ -145,6 +170,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
           ],
         },
@@ -171,6 +201,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "workload",
@@ -190,6 +225,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "workload",
@@ -209,6 +249,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "workload",
@@ -228,6 +273,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
             {
               vpc: "workload",
@@ -247,6 +297,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
             {
               vpc: "workload",
@@ -266,6 +321,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
           ],
         },
@@ -292,6 +352,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "management",
@@ -311,6 +376,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "management",
@@ -330,6 +400,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
             {
               vpc: "management",
@@ -349,6 +424,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
             {
               vpc: "management",
@@ -368,6 +448,11 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
             {
               vpc: "management",
@@ -387,10 +472,16 @@ describe("security groups", () => {
                 type: null,
                 code: null,
               },
+              port_min: null,
+              port_max: null,
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
             },
           ],
         },
       ];
+      store.update();
       assert.deepEqual(
         store.store.json.security_groups,
         expectedData,
@@ -493,7 +584,14 @@ describe("security groups", () => {
           data: {
             name: "management-vpe",
             rules: [
-              { name: "test-rule", vpc: "management", sg: "management-vpe" },
+              {
+                name: "test-rule",
+                vpc: "management",
+                sg: "management-vpe",
+                tcp: {},
+                udp: {},
+                icmp: {},
+              },
             ],
           },
         }
@@ -546,6 +644,11 @@ describe("security groups", () => {
               tcp: { port_min: null, port_max: null },
               udp: { port_min: null, port_max: null },
               source: "8.8.8.8",
+              port_max: null,
+              port_min: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
           ],
           "it should create rule"
@@ -586,6 +689,11 @@ describe("security groups", () => {
               source: "8.8.8.8",
               sg: "frog",
               vpc: "management",
+              port_max: null,
+              port_min: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
           ],
           "it should update rule"
@@ -598,6 +706,25 @@ describe("security groups", () => {
           {
             name: "test-rule",
             source: "8.8.8.8",
+            ruleProtocol: "tcp",
+            port_max: null,
+            port_min: null,
+            rule: {
+              port_max: null,
+              port_min: null,
+            },
+            tcp: {
+              port_min: 8080,
+              port_max: 8080,
+            },
+            udp: {
+              port_max: null,
+              port_min: null,
+            },
+            icmp: {
+              code: null,
+              type: null,
+            },
           },
           {
             parent_name: "frog",
@@ -608,9 +735,23 @@ describe("security groups", () => {
             name: "test-rule",
             inbound: true,
             ruleProtocol: "tcp",
+            port_min: 8080,
+            port_max: 8080,
             rule: {
               port_min: 8080,
               port_max: 8080,
+            },
+            tcp: {
+              port_min: 8080,
+              port_max: 8080,
+            },
+            udp: {
+              port_max: null,
+              port_min: null,
+            },
+            icmp: {
+              code: null,
+              type: null,
             },
           },
           {
@@ -631,6 +772,11 @@ describe("security groups", () => {
               source: "8.8.8.8",
               sg: "frog",
               vpc: "management",
+              type: null,
+              code: null,
+              ruleProtocol: "tcp",
+              port_min: 8080,
+              port_max: 8080,
             },
           ],
           "it should update rule"
@@ -643,6 +789,18 @@ describe("security groups", () => {
           {
             name: "test-rule",
             source: "8.8.8.8",
+            ruleProtocol: "icmp",
+            source: "1.2.3.4",
+            code: 8080,
+            type: 8080,
+            rule: {
+              code: 8080,
+              type: 8080,
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+            },
           },
           {
             parent_name: "frog",
@@ -654,6 +812,8 @@ describe("security groups", () => {
             inbound: true,
             ruleProtocol: "icmp",
             source: "1.2.3.4",
+            code: null,
+            type: null,
             rule: {
               code: 8080,
               type: 8080,
@@ -662,7 +822,6 @@ describe("security groups", () => {
               source_port_min: null,
               source_port_max: null,
             },
-
             showDeleteModal: true,
           },
           {
@@ -683,6 +842,75 @@ describe("security groups", () => {
               source: "1.2.3.4",
               sg: "frog",
               vpc: "management",
+              port_max: null,
+              port_min: null,
+              type: null,
+              code: null,
+              ruleProtocol: "icmp",
+            },
+          ],
+          "it should update rule"
+        );
+      });
+      it("should update a rule in place with icmp protocol", () => {
+        let slz = new newState();
+        lazyAddSg(slz);
+        slz.security_groups.rules.create(
+          {
+            name: "test-rule",
+            source: "8.8.8.8",
+            ruleProtocol: "icmp",
+            source: "1.2.3.4",
+            code: 8080,
+            type: 8080,
+            rule: {
+              code: 8080,
+              type: 8080,
+              port_min: null,
+              port_max: null,
+              source_port_min: null,
+              source_port_max: null,
+            },
+          },
+          {
+            parent_name: "frog",
+          }
+        );
+        slz.security_groups.rules.save(
+          {
+            name: "test-rule",
+            inbound: true,
+            ruleProtocol: "icmp",
+            source: "1.2.3.4",
+            code: null,
+            type: null,
+            code: 8080,
+            type: 8080,
+            showDeleteModal: true,
+          },
+          {
+            parent_name: "frog",
+            data: { name: "test-rule" },
+            isSecurityGroup: true,
+          }
+        );
+        assert.deepEqual(
+          slz.store.json.security_groups[3].rules,
+          [
+            {
+              name: "test-rule",
+              direction: "inbound",
+              icmp: { type: 8080, code: 8080 },
+              tcp: { port_min: null, port_max: null },
+              udp: { port_min: null, port_max: null },
+              source: "1.2.3.4",
+              sg: "frog",
+              vpc: "management",
+              port_max: null,
+              port_min: null,
+              type: 8080,
+              code: 8080,
+              ruleProtocol: "icmp",
             },
           ],
           "it should update rule"
@@ -722,6 +950,11 @@ describe("security groups", () => {
               source: "8.8.8.8",
               vpc: "management",
               sg: "frog",
+              port_max: null,
+              port_min: null,
+              type: null,
+              code: null,
+              ruleProtocol: "all",
             },
           ],
           "it should update rule"
@@ -752,6 +985,75 @@ describe("security groups", () => {
           slz.store.json.security_groups[3].rules,
           [],
           "it should delete rule"
+        );
+      });
+    });
+    describe("security_groups.rules.schema", () => {
+      let craig = new newState();
+      it("should set data when changing rule protocol", () => {
+        let data = { ruleProtocol: "all" };
+        craig.security_groups.rules.ruleProtocol.onInputChange(data);
+        assert.deepEqual(
+          data,
+          {
+            rule: {
+              port_max: null,
+              port_min: null,
+              type: null,
+              source_port_max: null,
+              source_port_min: null,
+              code: null,
+            },
+            ruleProtocol: "all",
+            tcp: {
+              port_min: null,
+              port_max: null,
+            },
+            udp: {
+              port_min: null,
+              port_max: null,
+            },
+            icmp: {
+              type: null,
+              code: null,
+            },
+          },
+          "it should return data"
+        );
+      });
+      it("should return true if icmp type is not a number", () => {
+        assert.isTrue(
+          craig.security_groups.rules.type.invalid({
+            ruleProtocol: "icmp",
+            type: "asdf",
+          }),
+          "it should be invalid"
+        );
+      });
+      it("should return true if no source", () => {
+        assert.isTrue(
+          craig.security_groups.rules.source.invalid({}),
+          "it should be invalid and not crash"
+        );
+      });
+      it("should return generic name callback when an invalid name is passed", () => {
+        assert.deepEqual(
+          craig.security_groups.rules.name.invalidText(
+            { name: "@@@" },
+            { rules: [], data: { name: "" } }
+          ),
+          "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+          "it should return error text"
+        );
+      });
+      it("should return generic name callback when an invalid duplicate name is passed", () => {
+        assert.deepEqual(
+          craig.security_groups.rules.name.invalidText(
+            { name: "aaa" },
+            { rules: [{ name: "aaa" }], data: { name: "" } }
+          ),
+          'Name "aaa" already in use',
+          "it should return error text"
         );
       });
     });

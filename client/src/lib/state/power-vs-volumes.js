@@ -5,6 +5,7 @@ const {
   splat,
   revision,
   isNullOrEmptyString,
+  getObjectFromArray,
 } = require("lazy-z");
 const {
   shouldDisableComponentSave,
@@ -58,6 +59,18 @@ function powerVsVolumesOnStoreUpdate(config) {
         }
       });
       volume.attachments = newAttachments;
+    }
+
+    if (
+      volume.workspace &&
+      splatContains(config.store.json.power, "name", volume.workspace)
+    ) {
+      let workspace = getObjectFromArray(
+        config.store.json.power,
+        "name",
+        volume.workspace
+      );
+      volume.zone = workspace.zone;
     }
   });
 }

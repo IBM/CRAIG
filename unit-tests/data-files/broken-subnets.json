@@ -196,7 +196,7 @@
           "pi_dns": [
             "127.0.0.0"
           ],
-          "pi_network_jumbo": false,
+          "pi_network_mtu": false,
           "workspace": "prod",
           "zone": "dal10"
         },
@@ -207,7 +207,7 @@
           "pi_dns": [
             "127.0.0.0"
           ],
-          "pi_network_jumbo": false,
+          "pi_network_mtu": false,
           "workspace": "prod",
           "zone": "dal10",
           "depends_on": [
@@ -221,7 +221,7 @@
           "pi_dns": [
             "127.0.0.1"
           ],
-          "pi_network_jumbo": false,
+          "pi_network_mtu": false,
           "workspace": "prod",
           "zone": "dal10",
           "depends_on": [

@@ -90,6 +90,7 @@ const StatelessFormWrapper = (props) => {
               content={props.buttons || ""}
             />
           }
+          noMarginBottom={props.noMarginBottom}
         />
       </div>
       <DynamicRender hide={props.hide} content={props.children} />

@@ -1,19 +1,6 @@
 import React from "react";
 import { IcseFormTemplate } from "icse-react-assets";
 import {
-  DynamicFormTextInput,
-  DynamicFormSelect,
-  DynamicFormToggle,
-  DynamicTextArea,
-  DynamicMultiSelect,
-  DynamicPublicKey,
-  SubFormOverrideTile,
-  PowerInterfaces,
-  PerCloudConnections,
-  DynamicDatePicker,
-  DynamicToolTipWrapper,
-} from "./dynamic-form";
-import {
   eachKey,
   isBoolean,
   contains,
@@ -31,14 +18,26 @@ import {
   DynamicFetchMultiSelect,
   DynamicFetchSelect,
 } from "./dynamic-form/components";
-import { NaclRulesSubForm } from "./dynamic-form/NaclRulesSubForm";
 import {
   SubnetTileSubForm,
   SubnetTileTitle,
 } from "./dynamic-form/SubnetTileSubForm";
-import { SgRulesSubForm } from "./dynamic-form/SgRuleSubForm";
 import { Tile } from "@carbon/react";
 import { CraigFormGroup, CraigFormHeading, RenderForm } from "./utils";
+import {
+  DynamicFormTextInput,
+  DynamicFormSelect,
+  DynamicFormToggle,
+  DynamicTextArea,
+  DynamicMultiSelect,
+  DynamicPublicKey,
+  SubFormOverrideTile,
+  PowerInterfaces,
+  PerCloudConnections,
+  DynamicDatePicker,
+  DynamicToolTipWrapper,
+} from "./dynamic-form";
+import { NetworkingRuleOrderCard } from "./network-rules-order-card";
 
 /**
  * build functions for modal forms
@@ -350,8 +349,10 @@ class DynamicForm extends React.Component {
           componentProps={this.props}
           handleInputChange={this.handleInputChange}
         />
-        <NaclRulesSubForm parentProps={this.props} parentState={this.state} />
-        <SgRulesSubForm parentProps={this.props} parentState={this.state} />
+        <NetworkingRuleOrderCard
+          parentProps={this.props}
+          parentState={this.state}
+        />
         {/* <OptionsButton parentProps={this.props} parentState={this.state} /> */}
         <SubnetTileSubForm
           parentProps={this.props}

@@ -653,7 +653,7 @@
           "workspace": "string",
           "pi_cidr": "string",
           "pi_network_type": "string",
-          "pi_network_jumbo": "boolean",
+          "pi_network_mtu": "boolean",
           "pi_dns": "Array<string>",
           "zone": "string"
         }

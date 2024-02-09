@@ -8,10 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - Updated Terraform version to 1.5
 - Updated IBM Cloud Terraform Provider version to 1.61.0
+- Changed the deprecated `pi_network_jumbo` in Power VS Subnet Terraform to supported `pi_network_mtu` field
 
 ### Features
 
 - When using the Power VS POC Template, the default VPN Gateway will now be highlighted as invalid for missing the required `peer_address` value
+- When using the Pover VS POC Template, the default SSH Key will now be highlighted as invalid for missing the SSH Key public key value
 - When creating a Power VS Instance or Storage Volume a list of available storage tiers will be dynamically retrieved based on the zone where the resource is provisioned
 
 ### Fixes
@@ -22,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue allowing users to navigate to `/v2` pages when no project is selected
 - Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address
 - Fixed an issue causing imported VPC SSH Keys to incorrectly require a resource group
+- Fixed an issue causing Power VS Volume zones to not update when changing the zone of the workspace where a volume is provisioned
 
 ## 1.9.0
 

@@ -42,6 +42,7 @@ export class DynamicAclForm extends React.Component {
               ? "formInSubForm"
               : "subForm"
           }
+          classicCraig={this.props.nested}
           key={this.props.vpcIndex + "-acl-form-" + this.props.aclIndex}
           onDelete={this.props.onDelete}
           onSave={craig.vpcs.acls.save}
@@ -62,7 +63,7 @@ export class DynamicAclForm extends React.Component {
           setRefUpstream={this.props.setRefUpstream}
         />
         {isv2 && (
-          <div className="marginTop1rem">
+          <div className="marginTop1Rem" style={{ marginTop: "1.5rem" }}>
             <CopyRuleForm
               craig={craig}
               isAclForm={true}

@@ -1,13 +1,9 @@
 import React from "react";
 import { disableSave, forceShowForm, propsMatchState } from "../../lib";
-import { IcseFormTemplate, SecurityGroupTemplate } from "icse-react-assets";
+import { IcseFormTemplate } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
-import { arraySplatIndex, contains, splat, transpose } from "lazy-z";
-import {
-  disableSshKeyDelete,
-  invalidSecurityGroupRuleName,
-  invalidSecurityGroupRuleText,
-} from "../../lib/forms";
+import { arraySplatIndex, contains, transpose } from "lazy-z";
+import { disableSshKeyDelete } from "../../lib/forms";
 import { CopyRuleForm } from "../forms";
 import { Tile } from "@carbon/react";
 import { CloudAlerting } from "@carbon/icons-react";
@@ -928,35 +924,13 @@ const SecretsManagerPage = (craig) => {
 const SecurityGroupPage = (craig) => {
   return (
     <>
-      <SecurityGroupTemplate
-        docs={RenderDocs("security_groups", craig.store.json._options.template)}
-        security_groups={craig.store.json.security_groups}
-        disableSave={disableSave}
-        onDelete={craig.security_groups.delete}
-        onSave={craig.security_groups.save}
-        onSubmit={craig.security_groups.create}
-        propsMatchState={propsMatchState}
-        forceOpen={forceShowForm}
-        craig={craig}
-        resourceGroups={splat(craig.store.json.resource_groups, "name")}
-        invalidCallback={craig.security_groups.name.invalid}
-        invalidTextCallback={craig.security_groups.name.invalidText}
-        disableSaveCallback={function (stateData, componentProps) {
-          return (
-            propsMatchState("sg_rules", stateData, componentProps) ||
-            disableSave("sg_rules", stateData, componentProps)
-          );
-        }}
-        // due to the complex table and the way these are rendered it is
-        // unlikely that a dynamic form is practical to use for the creation
-        // of sg rules, so I'm fine leaving these as is
-        invalidRuleText={invalidSecurityGroupRuleName}
-        invalidRuleTextCallback={invalidSecurityGroupRuleText}
-        onSubmitCallback={craig.security_groups.rules.create}
-        onRuleSave={craig.security_groups.rules.save}
-        onRuleDelete={craig.security_groups.rules.delete}
-        vpcList={craig.store.vpcList}
-      />
+      {formPageTemplate(craig, {
+        name: "Security Groups",
+        addText: "Create a Security Group",
+        jsonField: "security_groups",
+        formName: "Security Groups",
+        hideFormTitleButton: craig.store.json.vpcs.length === 0,
+      })}
       {craig.store.json.security_groups.length > 0 && (
         <CopyRuleForm craig={craig} isAclForm={false} />
       )}

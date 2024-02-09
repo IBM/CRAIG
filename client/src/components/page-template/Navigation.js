@@ -244,6 +244,8 @@ class Navigation extends React.Component {
             >
               <Debug />
             </HeaderGlobalAction>
+            {/* 
+            not currently in use
             <HeaderGlobalAction
               aria-label="Reset State"
               isActive
@@ -251,7 +253,7 @@ class Navigation extends React.Component {
               tooltipAlignment="end"
             >
               <Reset />
-            </HeaderGlobalAction>
+            </HeaderGlobalAction> */}
           </HeaderGlobalBar>
           <LeftNav
             expanded={this.state.expanded}
