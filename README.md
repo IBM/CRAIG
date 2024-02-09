@@ -68,6 +68,8 @@ Congratulations! Your application is now available at localhost:8080!
 
 ### Deploying to IBM Code Engine
 
+IBM Code Engine is a fully managed serverless platform. CRAIG "scales to zero" in Code Engine when not in use, making this a very cost-effective and simple method of running CRAIG. 
+
 Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. 
 
 Users should make sure they have the following access policy roles for the IBM Code Engine service set within their IBM Cloud Account:
@@ -115,6 +117,8 @@ The deploy script can also create the Power Virtual Server workspaces and automa
 ./deploy.sh -z
 ```
 
+You can bring your own existing Power VS workspace into CRAIG which allows you to choose custom images for Power VSIs. To bring your own workspace you can update the Code Engine configuration after deployment. See [Bring Your Own Power VS Workspace](.docs/craig-code-engine.md#bring-your-own-power-vs-workspace) for more information.
+
 For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
 
 ```
@@ -134,6 +138,9 @@ For example, to delete the CRAIG Code Engine and Container Registry resources wi
 ```bash
 ./deploy.sh -d -g test-rg -n craig-demo-namespace -p craig-demo-project
 ```
+
+#### Updating and managing the Code Engine deployment
+As CRAIG releases updates the Code Engine deployment can be updated to the latest version. For more information on updating and managing the CRAIG application in Code Engine see the [CRAIG in IBM Code Engine](.docs/craig-code-engine.md#craig-in-ibm-code-engine).
 
 ---
 
