@@ -352,10 +352,11 @@ describe("options", () => {
         );
       });
       it("should force update zones on power vs high availability toggle", () => {
-        assert.isTrue(
+        assert.deepEqual(
           craig.options.power_vs_zones.forceUpdateKey({
             power_vs_high_availability: true,
           }),
+          "trueundefined",
           "it should return value"
         );
       });

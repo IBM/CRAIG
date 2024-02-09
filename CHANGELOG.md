@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address
 - Fixed an issue causing imported VPC SSH Keys to incorrectly require a resource group
 - Fixed an issue causing Power VS Volume zones to not update when changing the zone of the workspace where a volume is provisioned
+- Fixed an issue causing Power VS Zones to not update visually on the options page when changing region
 
 ## 1.9.0
 

@@ -13,7 +13,8 @@
       "Fixed an issue allowing users to navigate to `/v2` pages when no project is selected",
       "Fixed an issue allowing users to create a VPN Gateway connection with an invalid peer address",
       "Fixed an issue causing imported VPC SSH Keys to incorrectly require a resource group",
-      "Fixed an issue causing Power VS Volume zones to not update when changing the zone of the workspace where a volume is provisioned"
+      "Fixed an issue causing Power VS Volume zones to not update when changing the zone of the workspace where a volume is provisioned",
+      "Fixed an issue causing Power VS Zones to not update visually on the options page when changing region"
     ],
     "upgrade_notes": [
       "Updated Terraform version to 1.5",
