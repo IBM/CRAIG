@@ -1120,6 +1120,7 @@ describe("vtl", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1172,6 +1173,7 @@ describe("vtl", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1219,6 +1221,7 @@ describe("vtl", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"

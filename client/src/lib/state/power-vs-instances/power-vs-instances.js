@@ -58,6 +58,9 @@ function powerVsInstanceOnStoreUpdate(vtl) {
           "name",
           instance.workspace
         );
+        if (instance.zone !== workspace.zone) {
+          instance.pi_storage_type = null;
+        }
         instance.zone = workspace.zone;
         if (!contains(workspace.imageNames, instance.image))
           instance.image = null;

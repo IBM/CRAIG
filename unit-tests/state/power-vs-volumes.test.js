@@ -52,6 +52,7 @@ describe("power_volumes", () => {
             workspace: "example",
             attachments: [],
             zone: "dal10",
+            pi_volume_type: null,
           },
         ],
         "it should create instance"
@@ -90,6 +91,7 @@ describe("power_volumes", () => {
             workspace: "example",
             attachments: [],
             zone: "eu-de-1",
+            pi_volume_type: null,
           },
         ],
         "it should create instance"
@@ -153,6 +155,7 @@ describe("power_volumes", () => {
             workspace: "example",
             attachments: ["toad"],
             zone: "dal10",
+            pi_volume_type: null,
           },
         ],
         "it should create instance"
@@ -192,6 +195,7 @@ describe("power_volumes", () => {
             workspace: "example",
             attachments: [],
             zone: "dal10",
+            pi_volume_type: null,
           },
         ],
         "it should create instance"

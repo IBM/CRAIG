@@ -70,6 +70,9 @@ function powerVsVolumesOnStoreUpdate(config) {
         "name",
         volume.workspace
       );
+      if (volume.zone !== workspace.zone) {
+        volume.pi_volume_type = null;
+      }
       volume.zone = workspace.zone;
     }
   });

@@ -1136,6 +1136,7 @@ describe("power_instances", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1187,6 +1188,7 @@ describe("power_instances", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1234,6 +1236,7 @@ describe("power_instances", () => {
             ],
             workspace: "toad",
             zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"

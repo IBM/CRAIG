@@ -1901,6 +1901,15 @@ describe("validate", () => {
       );
     });
   });
+  describe("tgw", () => {
+    it("should not throw data if no tgw rg and use data", () => {
+      let overrideJson = minimumValidJson();
+      overrideJson.transit_gateways[0].resource_group = null;
+      overrideJson.transit_gateways[0].use_data = true;
+      let task = () => validate(overrideJson);
+      assert.doesNotThrow(task, "it should not throw");
+    });
+  });
   describe("key_management", () => {
     it("should set use data to true if not found and using hs crypto", () => {
       let overrideJson = minimumValidJson();
