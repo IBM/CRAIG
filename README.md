@@ -48,9 +48,9 @@ npm run setup
 
 #### 2. Creating .env file
 
-Make sure to set the `API_KEY` variable in a `.env` file to be used for IBM Cloud integration. To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Power VS APIs require a workspace to be created and its GUID to be in an environment file. See [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md) for more information.
+To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Power VS APIs require a workspace to be created and its GUID to be in an environment file. If CRAIG is used for Power VS configuration, the Power VS workspaces must be created. See [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md) for more information.
 
-See `.env.example` found [here](./.env.example)
+Make sure to set the `API_KEY` variable in a `.env` file to be used for IBM Cloud integration. If the Power VS workspaces creation automation is run, add the `API_KEY` variable to the `.env` file that the automation creates. If Power VS workspace automation is not used, create an `.env` following the example found [here](./.env.example).
 
 #### 3. Start the application
 
@@ -108,13 +108,16 @@ chmod 755 deploy.sh
 
 By default the script will securely prompt you for your API key. It may also be read from an environment variable or specified as a command line argument. See the `deploy.sh -h` usage for more information.
 
-```bash
-./deploy.sh
-```
+ If CRAIG is used for Power VS configuration, the Power VS workspaces must be created. The deploy script can create the Power Virtual Server workspaces and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
 
-The deploy script can also create the Power Virtual Server workspaces and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
 ```bash
 ./deploy.sh -z
+```
+
+If CRAIG will not be used for Power VS configuration, `deploy.sh` can be run without parameters to deploy CRAIG into Code Engine:
+
+```bash
+./deploy.sh
 ```
 
 You can bring your own existing Power VS workspace into CRAIG which allows you to choose custom images for Power VSIs. To bring your own workspace you can update the Code Engine configuration after deployment. See [Bring Your Own Power VS Workspace](.docs/craig-code-engine.md#bring-your-own-power-vs-workspace) for more information.

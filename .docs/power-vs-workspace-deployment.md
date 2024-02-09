@@ -3,7 +3,6 @@
 To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Power VS APIs require a workspace to be created. CRAIG provides Terraform scripts to automatically provision these workspaces and an environment file that can be used for both IBM Code Engine deployments and local deployments.
 
 >* _**Note:** this only needs to be done once per IBM Cloud Account, not per user of CRAIG._
->* _This is a recommended but optional step. If these workspaces are not deployed CRAIG will use a static list which may include options that are not available in a specific zone._
 >* _The deploy.sh script used to deploy CRAIG in IBM Code Engine can also automatically deploy the workspaces using its `-z` parameter._
 
 ## Prerequisites

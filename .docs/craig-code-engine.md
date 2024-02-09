@@ -5,7 +5,7 @@ The default setup of CRAIG in Code Engine pulls the latest CRAIG source, builds 
 ![craig-ce-project](images/craig-ce-project.png)
 
 ## Updating CRAIG
-CRAIG is continually being enhanced with new features. To update your CRAIG deployment with the latest CRAIG code level, navigate to the `craig` project's image build. The navigation flow from the Code Engine project page is:
+CRAIG is continually being enhanced with new features. To update your CRAIG deployment with the latest CRAIG code level, navigate to the `craig` project's image build. The navigation flow from the [Code Engine project page](https://cloud.ibm.com/codeengine/projects) is:
 1. Click on the `craig` project name
 2. Click `Image builds` on the left panel
 3. Click the `Image build` tab in the main panel
