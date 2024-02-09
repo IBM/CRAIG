@@ -1479,6 +1479,12 @@ function initVpcStore(store) {
               return stateData.zones;
             },
             readOnly: readOnlyWhenEdgeTier,
+            disabled: function (stateData, componentProps) {
+              return (
+                stateData.advanced === true &&
+                stateData.advanced !== componentProps.data.advanced
+              );
+            },
           },
           advanced: {
             size: "small",
@@ -1503,6 +1509,10 @@ function initVpcStore(store) {
               return (
                 stateData.advanced === true && stateData.zones.length === 0
               );
+            },
+            onInputChange(stateData, targetData, componentProps) {
+              stateData.zones = componentProps.data.zones;
+              return !stateData.advanced;
             },
           },
           networkAcl: {

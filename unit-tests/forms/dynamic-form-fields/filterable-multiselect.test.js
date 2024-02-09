@@ -700,6 +700,7 @@ describe("filterable multiselect", () => {
       {
         name: "frog",
         field: {
+          type: "fetchMultiSelect",
           optional: true,
           disabled: function () {
             return false;

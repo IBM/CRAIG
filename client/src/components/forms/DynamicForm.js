@@ -165,7 +165,11 @@ class DynamicForm extends React.Component {
         if (group[field].onInputChange && targetName === field) {
           // if the item has onInputChange function, set field on next state
           // to that value
-          nextState[field] = group[field].onInputChange(nextState, targetData);
+          nextState[field] = group[field].onInputChange(
+            nextState,
+            targetData,
+            this.props
+          );
           madeChanges = true;
         } else if (group[field].onStateChange && targetName === field) {
           // if the item has onStateChange function, run against whole

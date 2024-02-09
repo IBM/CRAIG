@@ -7609,6 +7609,33 @@ describe("vpcs", () => {
           "it should return zones"
         );
       });
+      it("should be disabled when state data is advanced and component props is not", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.zones.disabled(
+            {
+              advanced: true,
+              zones: ["3"],
+            },
+            {
+              data: {
+                advanced: false,
+              },
+            }
+          ),
+          "it should return zones"
+        );
+      });
+      it("should reset zones to component props zones when changing state data.advanced to true", () => {
+        let data = {
+          zones: 3,
+        };
+        craig.vpcs.subnetTiers.advanced.onInputChange(
+          data,
+          {},
+          { data: { zones: 2 } }
+        );
+        assert.deepEqual(data.zones, 2, "it should reset zones");
+      });
       it("should change zones to string when not advanced", () => {
         assert.deepEqual(
           craig.vpcs.subnetTiers.zones.onRender({
