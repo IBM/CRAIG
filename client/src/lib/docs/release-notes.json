@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.11.0",
+    "features": [],
+    "fixes": [
+      "Fixed an issue causing local Transit Gateways to not allow connections to VPCs already connected to another local Transit Gateway",
+      "Fixed an issue causing local Transit Gateways to not allow connections to Power VS Workspaces already connected to another local Transit Gateway",
+      "Fixed an issue causing Transit Gateway selections to continue to be visible when not selected",
+      "Fixed an issue causing Power VS Affinity references to not update when the affinity source is deleted"
+    ],
+    "upgrade_notes": [
+      "CRAIG Terraform no longer uses the depricated field `pi_network_jumbo`. Existing networks with `pi_network_jumbo` selected will be converted to use `pi_network_mtu`."
+    ]
+  },
+  {
     "version": "1.10.0",
     "features": [
       "When using the Power VS POC Template, the default VPN Gateway will now be highlighted as invalid for missing the required `peer_address` value",

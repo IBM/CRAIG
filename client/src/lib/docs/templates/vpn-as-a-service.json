@@ -9,7 +9,7 @@
     "fs_cloud": false,
     "dynamic_subnets": false,
     "enable_power_vs": true,
-    "craig_version": "1.10.0",
+    "craig_version": "1.11.0",
     "power_vs_zones": ["dal12", "dal10", "us-south"],
     "advanced_subnets": true,
     "power_vs_high_availability": false

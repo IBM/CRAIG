@@ -201,8 +201,12 @@ function vpcConnectionGroups(stateData, componentProps) {
       // remove vpc from list if the VPC is found in another transit gateway
       // with the same global value
       if (
+        // if the vpc list las the connection vpc
         contains(vpcList, connection.vpc) &&
+        // the transit gateway and state data are global
         tgw.global === stateData.global &&
+        stateData.global &&
+        // and transit gateway name is not the one being edited
         (componentProps.isModal || tgw.name !== componentProps.data.name)
       ) {
         vpcList.splice(vpcList.indexOf(connection.vpc), 1);
@@ -224,6 +228,7 @@ function powerConnectionGroups(stateData, componentProps) {
     gateway.connections.forEach((connection) => {
       if (
         gateway.global === stateData.global &&
+        stateData.global &&
         connection.power &&
         (componentProps.isModal || componentProps.data.name !== gateway.name)
       ) {
@@ -342,6 +347,10 @@ function initTransitGateway(store) {
           content:
             "Must be enabled in order to connect your IBM Cloud and on-premises networks in all IBM Cloud multizone regions.",
         },
+        onInputChange: function (stateData) {
+          stateData.connections = [];
+          return !stateData.global;
+        },
       },
       crns: {
         default: "",
@@ -369,6 +378,9 @@ function initTransitGateway(store) {
           );
         },
         onStateChange: onConnectionStateChange("vpc", "vpc_connections"),
+        forceUpdateKey: function (stateData) {
+          return String(stateData.global);
+        },
       },
       power_connections: {
         optional: true,
@@ -384,6 +396,9 @@ function initTransitGateway(store) {
           );
         },
         onStateChange: onConnectionStateChange("power", "power_connections"),
+        forceUpdateKey: function (stateData) {
+          return String(stateData.global);
+        },
       },
     },
     subComponents: {

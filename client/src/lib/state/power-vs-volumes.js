@@ -75,6 +75,47 @@ function powerVsVolumesOnStoreUpdate(config) {
       }
       volume.zone = workspace.zone;
     }
+    if (
+      volume.storage_option === "Affinity" &&
+      volume.pi_affinity_instance &&
+      !splatContains(
+        config.store.json.power_instances,
+        "name",
+        volume.pi_affinity_instance
+      )
+    ) {
+      volume.pi_affinity_instance = null;
+    } else if (
+      volume.storage_option === "Anti-Affinity" &&
+      volume.pi_anti_affinity_instance &&
+      !splatContains(
+        config.store.json.power_instances,
+        "name",
+        volume.pi_anti_affinity_instance
+      )
+    ) {
+      volume.pi_anti_affinity_instance = null;
+    } else if (
+      volume.storage_option === "Anti-Affinity" &&
+      volume.pi_anti_affinity_volume &&
+      !splatContains(
+        config.store.json.power_volumes,
+        "name",
+        volume.pi_anti_affinity_volume
+      )
+    ) {
+      volume.pi_anti_affinity_volume = null;
+    } else if (
+      volume.storage_option === "Affinity" &&
+      volume.pi_affinity_volume &&
+      !splatContains(
+        config.store.json.power_volumes,
+        "name",
+        volume.pi_affinity_volume
+      )
+    ) {
+      volume.pi_affinity_volume = null;
+    }
   });
 }
 

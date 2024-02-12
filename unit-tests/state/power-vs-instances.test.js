@@ -898,6 +898,259 @@ describe("power_instances", () => {
         "it should create correct volumes"
       );
     });
+    it("should update power vs instance affinity values when deleting instance affinity source", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      state.power.create({
+        name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        zone: "dal12",
+      });
+      state.power_volumes.create({
+        attachments: [],
+        workspace: "frog",
+        name: "ignore-me",
+      });
+      state.power_volumes.create({
+        attachments: [],
+        workspace: "frog",
+        name: "ignore-me2",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Affinity",
+        pi_affinity_volume: "ignore-me",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_volume: "ignore-me",
+      });
+      state.power_volumes.delete({}, { data: { name: "ignore-me" } });
+      state.power_volumes.delete({}, { data: { name: "ignore-me2" } });
+      assert.deepEqual(
+        state.store.json.power_instances,
+        [
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            storage_option: "Affinity",
+            pi_affinity_volume: null,
+            ssh_key: null,
+            image: null,
+          },
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            storage_option: "Anti-Affinity",
+            pi_anti_affinity_volume: null,
+            ssh_key: null,
+            image: null,
+          },
+        ],
+        "it should return correct instances"
+      );
+    });
+    it("should update power vs instance affinity values when deleting instance affinity source", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      state.power.create({
+        name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        zone: "dal12",
+      });
+      state.power_instances.create({
+        attachments: [],
+        workspace: "frog",
+        name: "ignore-me",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Affinity",
+        pi_affinity_instance: "ignore-me",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_instance: "ignore-me",
+      });
+      state.power_instances.delete({}, { data: { name: "ignore-me" } });
+      assert.deepEqual(
+        state.store.json.power_instances,
+        [
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            storage_option: "Affinity",
+            pi_affinity_instance: null,
+            ssh_key: null,
+            image: null,
+          },
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            storage_option: "Anti-Affinity",
+            pi_anti_affinity_instance: null,
+            ssh_key: null,
+            image: null,
+          },
+        ],
+        "it should return correct instances"
+      );
+    });
+    it("should update power vs volume affinity values when deleting instance affinity source", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      state.power.create({
+        name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        zone: "dal12",
+      });
+      state.power.create({
+        name: "frog",
+        images: [{ name: "7100-05-09", workspace: "frog" }],
+        zone: "dal12",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+      });
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me",
+        storage_option: "Affinity",
+        pi_affinity_instance: "frog",
+      });
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me2",
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_instance: "frog",
+      });
+      state.power_instances.delete({}, { data: { name: "frog" } });
+
+      assert.deepEqual(
+        state.store.json.power_instances,
+        [],
+        "it should create instance"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes,
+        [
+          {
+            attachments: [],
+            name: "ignore-me",
+            workspace: "frog",
+            zone: "dal12",
+            pi_volume_type: null,
+            pi_affinity_instance: null,
+            storage_option: "Affinity",
+          },
+          {
+            attachments: [],
+            name: "ignore-me2",
+            workspace: "frog",
+            zone: "dal12",
+            pi_volume_type: null,
+            pi_anti_affinity_instance: null,
+            storage_option: "Anti-Affinity",
+          },
+        ],
+        "it should create correct volumes"
+      );
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me3",
+        storage_option: "Affinity",
+        pi_affinity_volume: "ignore-me",
+      });
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me4",
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_volume: "ignore-me",
+      });
+      state.power_volumes.delete(
+        {},
+        {
+          data: {
+            attachments: ["frog"],
+            workspace: "frog",
+            name: "ignore-me",
+            storage_option: "Affinity",
+            pi_affinity_instance: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes,
+        [
+          {
+            attachments: [],
+            name: "ignore-me2",
+            workspace: "frog",
+            zone: "dal12",
+            pi_volume_type: null,
+            pi_anti_affinity_instance: null,
+            storage_option: "Anti-Affinity",
+          },
+          {
+            attachments: [],
+            workspace: "frog",
+            zone: "dal12",
+            name: "ignore-me3",
+            storage_option: "Affinity",
+            pi_volume_type: null,
+            pi_affinity_volume: null,
+          },
+          {
+            attachments: [],
+            workspace: "frog",
+            zone: "dal12",
+            name: "ignore-me4",
+            pi_volume_type: null,
+            pi_anti_affinity_volume: null,
+            storage_option: "Anti-Affinity",
+          },
+        ],
+        "it should create correct volumes"
+      );
+    });
     it("should delete power vs volumes when converting sap volume to non-sap", () => {
       let state = newState();
       state.store.json.power_volumes.push({

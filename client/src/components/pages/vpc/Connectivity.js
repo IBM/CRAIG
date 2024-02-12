@@ -22,6 +22,7 @@ import { isNullOrEmptyString } from "lazy-z";
 import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { cisTf } from "../../../lib/json-to-iac/cis";
+import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 
 class VpcConnectivityPage extends React.Component {
   constructor(props) {
@@ -164,6 +165,14 @@ class VpcConnectivityPage extends React.Component {
                   id="left-connectivity"
                   className="marginRight1Rem width580"
                 >
+                  {craig.store.json.transit_gateways.length === 0 ? (
+                    <CraigEmptyResourceTile
+                      name="Tranist Gateways"
+                      className="width580 marginTopHalfRem"
+                    />
+                  ) : (
+                    ""
+                  )}
                   <TransitGatewaysMap
                     craig={craig}
                     onClick={(tgwIndex) => {
@@ -195,6 +204,14 @@ class VpcConnectivityPage extends React.Component {
                       />
                     }
                   />
+                  {craig.store.json.cis.length === 0 ? (
+                    <CraigEmptyResourceTile
+                      name="Cloud Internet Services Instances"
+                      className="width580 marginTopHalfRem"
+                    />
+                  ) : (
+                    ""
+                  )}
                   {craig.store.json.cis.map((cis, cisIndex) => {
                     return (
                       <HoverClassNameWrapper

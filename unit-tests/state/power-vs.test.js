@@ -503,6 +503,7 @@ describe("power-vs", () => {
         zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         use_data: true,
+        pi_network_jumbo: false,
       });
       state.power.network.create(
         { name: "test-network" },
@@ -516,6 +517,7 @@ describe("power-vs", () => {
             workspace: "power-vs",
             zone: "us-south",
             workspace_use_data: true,
+            pi_network_mtu: "",
           },
         ],
         "it should create a network interface"
@@ -539,7 +541,7 @@ describe("power-vs", () => {
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
       state.power.network.save(
-        { name: "new-network-name" },
+        { name: "new-network-name", pi_network_mtu: "2000" },
         {
           arrayParentName: "power-vs",
           data: { name: "test-network" },
@@ -553,6 +555,7 @@ describe("power-vs", () => {
             workspace: "power-vs",
             zone: "us-south",
             workspace_use_data: false,
+            pi_network_mtu: "2000",
           },
         ],
         "it should update network name"
@@ -578,7 +581,7 @@ describe("power-vs", () => {
       );
       state.store.json.power[0].attachments = [];
       state.power.network.save(
-        { name: "new-network-name" },
+        { name: "new-network-name", pi_network_jumbo: true },
         {
           arrayParentName: "power-vs",
           data: { name: "test-network" },
@@ -592,6 +595,8 @@ describe("power-vs", () => {
             workspace: "power-vs",
             zone: "us-south",
             workspace_use_data: false,
+            pi_network_mtu: "9000",
+            pi_network_jumbo: true,
           },
         ],
         "it should update network name"
@@ -617,6 +622,7 @@ describe("power-vs", () => {
             workspace: "power-vs",
             zone: "us-south",
             workspace_use_data: false,
+            pi_network_mtu: "",
           },
         ],
         "it should update network name"
@@ -651,6 +657,55 @@ describe("power-vs", () => {
       );
     });
     describe("power.network.schema", () => {
+      describe("pi_network_mtu", () => {
+        let craig;
+        beforeEach(() => {
+          craig = newState();
+        });
+        it("should have correct invalid value for network mtu", () => {
+          assert.isFalse(
+            craig.power.network.pi_network_mtu.invalid({}),
+            "it should be valid"
+          );
+          assert.isTrue(
+            craig.power.network.pi_network_mtu.invalid({
+              pi_network_mtu: "fff",
+            }),
+            "it should be invalid"
+          );
+        });
+        it("should show correct on render if network jumbo", () => {
+          assert.deepEqual(
+            craig.power.network.pi_network_mtu.onRender({
+              pi_network_jumbo: true,
+            }),
+            "9000",
+            "it should return correct data"
+          );
+          assert.deepEqual(
+            craig.power.network.pi_network_mtu.onRender({
+              pi_network_jumbo: true,
+              pi_network_mtu: "8000",
+            }),
+            "8000",
+            "it should return correct data"
+          );
+          assert.deepEqual(
+            craig.power.network.pi_network_mtu.onRender({
+              pi_network_jumbo: false,
+            }),
+            "",
+            "it should return correct data"
+          );
+          assert.deepEqual(
+            craig.power.network.pi_network_mtu.onRender({
+              pi_network_mtu: "1400",
+            }),
+            "1400",
+            "it should return correct data"
+          );
+        });
+      });
       describe("pi_cidr", () => {
         describe("invalidText", () => {
           it("should return correct invalid text for invalid pi cidr", () => {

@@ -23,6 +23,7 @@ import DynamicForm from "../../forms/DynamicForm";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { classicGatewayTf } from "../../../lib/json-to-iac/classic-gateway";
+import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 
 class ClassicDiagram extends React.Component {
   constructor(props) {
@@ -294,6 +295,14 @@ class ClassicDiagram extends React.Component {
                         onKeyClick={this.onKeyClick}
                       />
                     </HoverClassNameWrapper>
+                    {craig.store.json.classic_vlans.length === 0 ? (
+                      <CraigEmptyResourceTile
+                        name="Classic VLANS"
+                        className="width580 marginTopHalfRem"
+                      />
+                    ) : (
+                      ""
+                    )}
                     <ClassicMap
                       craig={craig}
                       buttons={

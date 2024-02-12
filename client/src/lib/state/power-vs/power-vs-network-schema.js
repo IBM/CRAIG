@@ -1,9 +1,15 @@
-const { contains, isIpv4CidrOrAddress, isString } = require("lazy-z");
+const {
+  contains,
+  isIpv4CidrOrAddress,
+  isString,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const {
   fieldIsNullOrEmptyString,
   unconditionalInvalidText,
   selectInvalidText,
   hideWhenUseData,
+  fieldIsNotWholeNumber,
 } = require("../utils");
 const {
   invalidName,
@@ -74,11 +80,39 @@ function powerVsNetworkSchema() {
       },
       hideWhen: hideWhenUseData,
     },
+    pi_network_mtu: {
+      default: "",
+      labelText: "Network MTU",
+      tooltip: {
+        content: "Maximum Transmission Unit",
+      },
+      hideWhen: hideWhenUseData,
+      onRender: function (stateData, componentProps) {
+        if (stateData.pi_network_jumbo && !stateData.pi_network_mtu) {
+          stateData.pi_network_mtu = "9000";
+          return "9000";
+        } else if (
+          stateData.pi_network_jumbo === false &&
+          !stateData.pi_network_mtu
+        ) {
+          stateData.pi_network_mtu = "";
+          return "";
+        } else return stateData.pi_network_mtu;
+      },
+      helperText: unconditionalInvalidText(""),
+      placeholder: "1450",
+      invalidText: unconditionalInvalidText(
+        "Select a whole number between 1400 and 9000"
+      ),
+      invalid: function (stateData) {
+        return isNullOrEmptyString(stateData.pi_network_mtu, true)
+          ? false
+          : fieldIsNotWholeNumber("pi_network_mtu", 1400, 9000)(stateData);
+      },
+    },
     pi_network_jumbo: {
       type: "toggle",
       default: false,
-      labelText: "MTU Jumbo",
-      hideWhen: hideWhenUseData,
     },
   };
 }

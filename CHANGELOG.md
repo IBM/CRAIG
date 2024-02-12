@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.11.0
+
+### Upgrade Notes
+
+- CRAIG Terraform no longer uses the depricated field `pi_network_jumbo`. Existing networks with `pi_network_jumbo` selected will be converted to use `pi_network_mtu`.
+
+### Features
+
+
+### Fixes
+
+- Fixed an issue causing local Transit Gateways to not allow connections to VPCs already connected to another local Transit Gateway
+- Fixed an issue causing local Transit Gateways to not allow connections to Power VS Workspaces already connected to another local Transit Gateway
+- Fixed an issue causing Transit Gateway selections to continue to be visible when not selected
+- Fixed an issue causing Power VS Affinity references to not update when the affinity source is deleted
+
 ## 1.10.0
 
 ### Upgrade Notes

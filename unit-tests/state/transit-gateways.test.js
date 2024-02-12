@@ -345,6 +345,36 @@ describe("transit_gateways", () => {
             "it should return correct groups"
           );
         });
+        it("should return groups when tgw is global and management is already attached to a different global transit gateway", () => {
+          let craig = newState();
+          craig.transit_gateways.create({
+            name: "transit-gateway2",
+            resource_group: "service-rg",
+            global: true,
+            connections: [
+              {
+                tgw: "transit-gateway",
+                vpc: "management",
+              },
+            ],
+          });
+          assert.deepEqual(
+            craig.transit_gateways.vpc_connections.groups(
+              {
+                global: true,
+                connections: [],
+              },
+              {
+                craig: craig,
+                data: {
+                  name: "transit-gateway",
+                },
+              }
+            ),
+            ["workload"],
+            "it should return correct groups"
+          );
+        });
         it("should return groups when tgw is local and management is already attached to a different local transit gateway", () => {
           let craig = newState();
           craig.transit_gateways.create({
@@ -371,7 +401,7 @@ describe("transit_gateways", () => {
                 },
               }
             ),
-            ["workload"],
+            ["management", "workload"],
             "it should return correct groups"
           );
         });
@@ -399,8 +429,40 @@ describe("transit_gateways", () => {
                 isModal: true,
               }
             ),
-            ["workload"],
+            ["management", "workload"],
             "it should return correct groups"
+          );
+        });
+        it("should set connections on input change for global", () => {
+          let craig = newState();
+          let data = {
+            global: false,
+          };
+          craig.transit_gateways.global.onInputChange(data);
+          assert.deepEqual(
+            data,
+            {
+              connections: [],
+              global: false,
+            },
+            "it should set data"
+          );
+        });
+        it("should have force update key for connections", () => {
+          let craig = newState();
+          assert.deepEqual(
+            craig.transit_gateways.vpc_connections.forceUpdateKey({
+              global: true,
+            }),
+            "true",
+            "it should have correct force update key"
+          );
+          assert.deepEqual(
+            craig.transit_gateways.power_connections.forceUpdateKey({
+              global: true,
+            }),
+            "true",
+            "it should have correct force update key"
           );
         });
       });
@@ -518,7 +580,7 @@ describe("transit_gateways", () => {
               { global: false },
               { craig: craig, isModal: true }
             ),
-            ["power"],
+            ["power", "power-also"],
             "it should return correct groups"
           );
         });
@@ -540,7 +602,7 @@ describe("transit_gateways", () => {
           craig.transit_gateways.create({
             name: "transit-gateway2",
             resource_group: "service-rg",
-            global: false,
+            global: true,
             connections: [
               {
                 tgw: "transit-gateway",
@@ -550,7 +612,7 @@ describe("transit_gateways", () => {
           });
           assert.deepEqual(
             craig.transit_gateways.power_connections.groups(
-              { global: false },
+              { global: true },
               {
                 craig: craig,
                 data: {

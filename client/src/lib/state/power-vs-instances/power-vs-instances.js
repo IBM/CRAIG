@@ -74,6 +74,48 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         });
         instance.network = newNetworks;
       }
+
+      if (
+        instance.storage_option === "Affinity" &&
+        instance.pi_affinity_instance &&
+        !splatContains(
+          config.store.json.power_instances,
+          "name",
+          instance.pi_affinity_instance
+        )
+      ) {
+        instance.pi_affinity_instance = null;
+      } else if (
+        instance.storage_option === "Anti-Affinity" &&
+        instance.pi_anti_affinity_instance &&
+        !splatContains(
+          config.store.json.power_instances,
+          "name",
+          instance.pi_anti_affinity_instance
+        )
+      ) {
+        instance.pi_anti_affinity_instance = null;
+      } else if (
+        instance.storage_option === "Anti-Affinity" &&
+        instance.pi_anti_affinity_volume &&
+        !splatContains(
+          config.store.json.power_volumes,
+          "name",
+          instance.pi_anti_affinity_volume
+        )
+      ) {
+        instance.pi_anti_affinity_volume = null;
+      } else if (
+        instance.storage_option === "Affinity" &&
+        instance.pi_affinity_volume &&
+        !splatContains(
+          config.store.json.power_volumes,
+          "name",
+          instance.pi_affinity_volume
+        )
+      ) {
+        instance.pi_affinity_volume = null;
+      }
     });
   };
 }
