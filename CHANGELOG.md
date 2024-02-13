@@ -116,11 +116,23 @@ All notable changes to this project will be documented in this file.
 
 - Users can now view Power VS Resources with no selected workspace on the CRAIG V2 Power VS page
 - Users can now view Power VS Resources with no selected subnets on the CRAIG V2 Power VS page
+<<<<<<< HEAD
 - When updating a Power VS Workspace name, Transit Gateway connections will now replace the existing name with the new one
+<<<<<<< HEAD
 - Graphs of CRAIG usage statistics (clones, views, references) are now available at `/stats` and `/v2/stats`
+=======
+<<<<<<< HEAD
+>>>>>>> 46074a54 (feat: power vs v2 enhancements)
 - When using CRAIG V2 an empty space will now display in subnet tiers where all three possible zones are not present
 - When fetching VSI Images, the CRAIG API will now respond with up to 100 results instead of the default of 50
+<<<<<<< HEAD
 - Users can now manage the primary subnet for Power VS Instances from the Power VS Instance form
+=======
+=======
+=======
+>>>>>>> 4f89d000 (feat: power vs v2 enhancements)
+>>>>>>> b85c0f61 (feat: power vs v2 enhancements)
+>>>>>>> dc9379a5 (feat: power vs v2 enhancements)
 
 ### Fixes
 
