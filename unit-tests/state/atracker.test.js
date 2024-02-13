@@ -126,7 +126,12 @@ describe("atracker", () => {
   describe("atracker.schema", () => {
     it("should return correct name on render", () => {
       assert.deepEqual(
-        craig.atracker.name.onRender(),
+        craig.atracker.name.onRender(
+          {},
+          {
+            craig: craig,
+          }
+        ),
         "iac-atracker",
         "it should return correct text"
       );

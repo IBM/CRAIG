@@ -664,7 +664,9 @@ describe("power-vs", () => {
         });
         it("should have correct invalid value for network mtu", () => {
           assert.isFalse(
-            craig.power.network.pi_network_mtu.invalid({}),
+            craig.power.network.pi_network_mtu.invalid({
+              use_data: true,
+            }),
             "it should be valid"
           );
           assert.isTrue(
@@ -694,7 +696,7 @@ describe("power-vs", () => {
             craig.power.network.pi_network_mtu.onRender({
               pi_network_jumbo: false,
             }),
-            "",
+            "1500",
             "it should return correct data"
           );
           assert.deepEqual(

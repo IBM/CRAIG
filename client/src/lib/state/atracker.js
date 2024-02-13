@@ -98,8 +98,8 @@ function initAtracker(store) {
         size: "small",
         readOnly: true,
         hideWhen: hideWhenDisabled,
-        onRender: function () {
-          return "iac-atracker";
+        onRender: function (stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-atracker`;
         },
       },
       resource_group: {

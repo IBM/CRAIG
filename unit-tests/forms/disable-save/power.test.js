@@ -199,6 +199,7 @@ describe("power", () => {
           name: "egg",
           pi_cidr: "10.10.10.10/24",
           pi_dns: ["10.02.03.04"],
+          pi_network_mtu: "9000",
         },
         {
           arrayParentName: "workspace",

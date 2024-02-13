@@ -67,9 +67,9 @@ function powerVsOnStoreUpdate(config) {
     workspace.network.forEach((nw) => {
       if (nw.pi_network_jumbo && !nw.pi_network_mtu) {
         nw.pi_network_mtu = "9000";
-      } else if (!nw.pi_network_mtu) {
-        nw.pi_network_mtu = "";
-      }
+      } else if (!nw.pi_network_mtu && nw.pi_network_jumbo === false) {
+        nw.pi_network_mtu = "1500";
+      } else if (!nw.pi_network_mtu) nw.pi_network_mtu = "";
       if (!splatContains(workspace.attachments, "network", nw.name)) {
         workspace.attachments.push({
           network: nw.name,

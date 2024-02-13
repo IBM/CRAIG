@@ -95,19 +95,19 @@ function powerVsNetworkSchema() {
           stateData.pi_network_jumbo === false &&
           !stateData.pi_network_mtu
         ) {
-          stateData.pi_network_mtu = "";
-          return "";
+          stateData.pi_network_mtu = "1500";
+          return "1500";
         } else return stateData.pi_network_mtu;
       },
       helperText: unconditionalInvalidText(""),
-      placeholder: "1450",
+      placeholder: "9000",
       invalidText: unconditionalInvalidText(
-        "Select a whole number between 1400 and 9000"
+        "Select a whole number between 1450 and 9000"
       ),
       invalid: function (stateData) {
-        return isNullOrEmptyString(stateData.pi_network_mtu, true)
+        return stateData.use_data
           ? false
-          : fieldIsNotWholeNumber("pi_network_mtu", 1400, 9000)(stateData);
+          : fieldIsNotWholeNumber("pi_network_mtu", 1450, 9000)(stateData);
       },
     },
     pi_network_jumbo: {
