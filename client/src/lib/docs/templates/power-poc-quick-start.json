@@ -125,7 +125,7 @@
       "keys": [
         {
           "name": "power",
-          "role": "Manager",
+          "role": "Writer",
           "enable_hmac": true,
           "use_random_suffix": true
         }
@@ -179,11 +179,11 @@
           "pi_network_type": "vlan",
           "pi_cidr": "192.168.0.0/24",
           "pi_dns": ["127.0.0.1"],
-          "pi_network_jumbo": false,
           "workspace": "dal10",
           "zone": "dal10",
           "workspace_use_data": false,
-          "use_data": false
+          "use_data": false,
+          "pi_network_mtu": "9000"
         }
       ],
       "cloud_connections": [],
@@ -231,7 +231,8 @@
           "storageType": "tier3",
           "workspace": "dal10",
           "zone": "dal10",
-          "workspace_use_data": false
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_dal10_7300_01_01}"]
         }
       ],
       "attachments": [],
@@ -253,7 +254,7 @@
       "zone": "dal10",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
-      "pi_storage_type": "tier1",
+      "pi_storage_type": "tier5k",
       "storage_option": "Storage Type",
       "pi_storage_pool_affinity": false,
       "sap": false,
@@ -268,7 +269,8 @@
       "pi_storage_pool": null,
       "affinity_type": null,
       "pi_affinity_instance": null,
-      "pi_user_data": null
+      "pi_user_data": null,
+      "index": 0
     },
     {
       "sap": false,
@@ -289,7 +291,7 @@
       "pi_memory": "128",
       "pi_storage_pool_affinity": false,
       "storage_option": "Storage Type",
-      "pi_storage_type": "tier1",
+      "pi_storage_type": "tier5k",
       "pi_storage_pool": null,
       "affinity_type": null,
       "pi_affinity_volume": null,
@@ -298,7 +300,8 @@
       "pi_affinity_instance": null,
       "zone": "dal10",
       "pi_affinity_policy": null,
-      "pi_user_data": null
+      "pi_user_data": null,
+      "index": 1
     }
   ],
   "power_volumes": [
@@ -307,7 +310,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -328,7 +331,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -349,7 +352,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -370,7 +373,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -391,7 +394,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["aixtarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -412,7 +415,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -433,7 +436,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -454,7 +457,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -475,7 +478,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -496,7 +499,7 @@
       "workspace": "dal10",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": "tier1",
+      "pi_volume_type": "tier0",
       "attachments": ["ibmitarget"],
       "storage_option": "Affinity",
       "affinity_type": "Instance",
@@ -586,7 +589,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -605,7 +613,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -624,7 +637,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -643,7 +661,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -662,7 +685,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -681,7 +709,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
       ]
     },
@@ -707,7 +740,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -726,7 +764,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -745,7 +788,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -764,7 +812,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -783,7 +836,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
@@ -802,7 +860,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
       ]
     }
@@ -832,6 +895,10 @@
         {
           "tgw": "transit-gateway",
           "vpc": "transit"
+        },
+        {
+          "tgw": "transit-gateway",
+          "power": "dal10"
         }
       ],
       "use_data": false,
@@ -939,7 +1006,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -964,7 +1038,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -989,7 +1070,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -1014,9 +1102,30 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
           ]
+        }
+      ],
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": 1
+        },
+        {
+          "name": "vpe",
+          "zones": 1
+        },
+        {
+          "name": "vpn",
+          "zones": 1
         }
       ]
     }
