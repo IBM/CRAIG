@@ -3,7 +3,6 @@ import {
   IcseNameInput,
   IcseTextInput,
   IcseModal,
-  IcseSelect,
   IcseToggle,
 } from "icse-react-assets";
 import {
@@ -22,6 +21,11 @@ import {
 } from "../../../lib/constants";
 import PropTypes from "prop-types";
 import { CraigFormGroup } from "../../forms";
+import {
+  DynamicFormSelect,
+  DynamicToolTipWrapper,
+} from "../../forms/dynamic-form";
+import { dynamicToolTipWrapperProps } from "../../../lib/forms/dynamic-form-fields";
 
 export class ProjectFormModal extends React.Component {
   constructor(props) {
@@ -72,6 +76,28 @@ export class ProjectFormModal extends React.Component {
       : false;
     let primaryButtonDisabled =
       invalidProjectNameVal || invalidDescription || invalidSchematicsName;
+    let field = {
+      labelText: "Choose an Initial Project Template",
+      className: "projectSelectMarginBottom",
+      groups: keys(this.props.templates),
+      disabled: (stateData, componentProps) => {
+        return (
+          componentProps.data.use_template &&
+          !isNullOrEmptyString(componentProps.data.last_save) &&
+          !isNullOrEmptyString(componentProps.data.template)
+        );
+      },
+      invalid: (stateData) => {
+        return false;
+      },
+      invalidText: (stateData) => {
+        return "";
+      },
+      tooltip: {
+        content:
+          "Choose a Project Template to initialize this Project with. Projects can be edited to deviate from the configuration of the Initial Project Template.",
+      },
+    };
     return (
       <IcseModal
         size="lg" // template no longer optional
@@ -131,24 +157,20 @@ export class ProjectFormModal extends React.Component {
           />
         </CraigFormGroup>
         <CraigFormGroup className="formInSubForm">
-          <IcseSelect
-            name="template"
-            tooltip={{
-              content:
-                "Choose a Project Template to initialize this Project with. Projects can be edited to deviate from the configuration of the Initial Project Template.",
-            }}
-            formName="project"
-            labelText="Choose an Initial Project Template"
-            groups={keys(this.props.templates)}
-            value={this.state.template || ""}
-            handleInputChange={this.handleTextInput}
-            disabled={
-              this.props.data.use_template &&
-              !isNullOrEmptyString(this.props.data.last_save) &&
-              !isNullOrEmptyString(this.props.data.template)
-            } // do not allow removal of template once saved with template
-            className="projectSelectMarginBottom"
-          />
+          <DynamicToolTipWrapper
+            {...dynamicToolTipWrapperProps(this.props, "project", 0, field)}
+          >
+            <DynamicFormSelect
+              name="template"
+              propsName="project"
+              keyIndex={0}
+              value={this.state.template}
+              field={field}
+              parentProps={this.props}
+              parentState={this.state}
+              handleInputChange={this.handleTextInput}
+            />
+          </DynamicToolTipWrapper>
           <TemplateAbout smallImage template={templates[this.state.template]} />
         </CraigFormGroup>
         <>
@@ -194,12 +216,26 @@ export class ProjectFormModal extends React.Component {
                 />
               </CraigFormGroup>
               <CraigFormGroup>
-                <IcseSelect
+                <DynamicFormSelect
                   name="workspace_region"
-                  labelText={"Workspace Region"}
-                  formName={"projects"}
+                  propsName="projects"
+                  keyIndex={0}
                   value={this.state.workspace_region || "us-south"}
-                  groups={["us-south", "eu-de", "eu-gb"].sort(azsort)}
+                  field={{
+                    labelText: "Workspace Region",
+                    groups: ["us-south", "eu-de", "eu-gb"].sort(azsort),
+                    disabled: (stateData) => {
+                      return false;
+                    },
+                    invalid: (stateData) => {
+                      return false;
+                    },
+                    invalidText: (stateData) => {
+                      return "";
+                    },
+                  }}
+                  parentProps={this.props}
+                  parentState={this.state}
                   handleInputChange={this.handleTextInput}
                 />
               </CraigFormGroup>

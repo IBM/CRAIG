@@ -13,7 +13,6 @@ import {
   IbmCloudSecurityComplianceCenterWorkloadProtection,
   CloudServices,
 } from "@carbon/icons-react";
-import { IcseSelect } from "icse-react-assets";
 import {
   azsort,
   contains,
@@ -58,6 +57,7 @@ import {
   secretsManagerTf,
 } from "../../../lib/json-to-iac";
 import { scc2Tf } from "../../../lib/json-to-iac/scc-v2";
+import { DynamicFormSelect } from "../../forms/dynamic-form";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 
 const serviceFormMap = {
@@ -370,28 +370,42 @@ class CloudServicesPage extends React.Component {
           onRequestClose={this.toggleModal}
           onRequestSubmit={this.onRequestSubmit()}
         >
-          <IcseSelect
-            formName="cloud-services"
-            value={
-              this.state.modalService === "appid"
-                ? "AppID"
-                : this.state.modalService === "icd"
-                ? "Cloud Databases"
-                : this.state.modalService === "dns"
-                ? "DNS"
-                : this.state.modalService === "logdna"
-                ? "LogDNA"
-                : this.state.modalService === "atracker"
-                ? "Activity Tracker"
-                : this.state.modalService === "scc_v2"
-                ? "Security & Compliance Center"
-                : titleCase(this.state.modalService)
-            }
-            labelText="Service"
+          <DynamicFormSelect
             name="modalService"
+            propsName="cloud-services"
+            keyIndex={0}
+            value={this.state.modalService}
+            field={{
+              labelText: "Service",
+              groups: modalGroups.sort(azsort),
+              disabled: (stateData) => {
+                return false;
+              },
+              invalid: (stateData) => {
+                return false;
+              },
+              invalidText: (stateData) => {
+                return "";
+              },
+              onRender: (stateData) => {
+                return stateData.modalService === "appid"
+                  ? "AppID"
+                  : stateData.modalService === "icd"
+                  ? "Cloud Databases"
+                  : stateData.modalService === "dns"
+                  ? "DNS"
+                  : stateData.modalService === "logdna"
+                  ? "LogDNA"
+                  : stateData.modalService === "atracker"
+                  ? "Activity Tracker"
+                  : stateData.modalService === "scc_v2"
+                  ? "Security & Compliance Center"
+                  : titleCase(stateData.modalService);
+              },
+            }}
+            parentProps={this.props}
+            parentState={this.state}
             handleInputChange={this.handleInputChange}
-            disableInvalid
-            groups={modalGroups.sort(azsort)}
           />
           <div className="marginBottomSmall" />
           {isNullOrEmptyString(this.state.modalService, true) ? (

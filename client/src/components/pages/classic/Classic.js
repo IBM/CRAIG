@@ -18,11 +18,11 @@ import {
 } from "../../forms/utils";
 import { classicInfraTf, disableSave, propsMatchState } from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";
-import { IcseSelect } from "icse-react-assets";
 import DynamicForm from "../../forms/DynamicForm";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { classicGatewayTf } from "../../../lib/json-to-iac/classic-gateway";
+import { DynamicFormSelect } from "../../forms/dynamic-form";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 
 class ClassicDiagram extends React.Component {
@@ -181,15 +181,31 @@ class ClassicDiagram extends React.Component {
                 }
           }
         >
-          <IcseSelect
-            labelText="Resource Type"
-            formName="classic"
-            value={titleCase(this.state.modalService)
-              .replace("Vlans", "VLANs")
-              .replace("Ssh", "SSH")}
+          <DynamicFormSelect
             name="modalService"
-            disableInvalid
-            groups={["Classic SSH Keys", "Classic VLANs", "Classic Gateways"]}
+            propsName="classic"
+            keyIndex={0}
+            value={this.state.modalService}
+            field={{
+              labelText: "Resource Type",
+              groups: ["Classic SSH Keys", "Classic VLANs", "Classic Gateways"],
+              disabled: (stateData) => {
+                return false;
+              },
+              invalid: (stateData) => {
+                return false;
+              },
+              invalidText: (stateData) => {
+                return "";
+              },
+              onRender: (stateData) => {
+                return titleCase(stateData.modalService)
+                  .replace("Vlans", "VLANs")
+                  .replace("Ssh", "SSH");
+              },
+            }}
+            parentProps={this.props}
+            parentState={this.state}
             handleInputChange={this.handleInputChange}
           />
           <div className="marginBottomSmall" />

@@ -40,7 +40,6 @@ import {
   snakeCase,
   titleCase,
 } from "lazy-z";
-import { IcseSelect } from "icse-react-assets";
 import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import { craigForms } from "../CraigForms";
@@ -62,6 +61,7 @@ import { PassThroughHoverWrapper } from "../diagrams/PassthroughWrapper";
 import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { fortigateTf } from "../../../lib/json-to-iac/fortigate";
 import { vpnServerTf } from "../../../lib/json-to-iac";
+import { DynamicFormSelect } from "../../forms/dynamic-form";
 
 function F5Icon() {
   return <img src={f5} className="vpcDeploymentIcon" />;
@@ -294,23 +294,38 @@ class VpcDeploymentsDiagramPage extends React.Component {
                 }
           }
         >
-          <IcseSelect
-            formName="VPC Deployment"
-            value={this.selectRenderValue()}
-            labelText="Deployment Type"
+          <DynamicFormSelect
             name="selectedItem"
-            groups={[
-              "Cluster",
-              "Fortigate VNF",
-              "Security Group",
-              "SSH Key",
-              "Virtual Private Endpoint",
-              "Load Balancer",
-              "VPN Gateway",
-              "VPN Server",
-              "VSI",
-              "Routing Table",
-            ].sort(azsort)}
+            propsName="VPC Deployment"
+            keyIndex={0}
+            value={this.state.selectedItem}
+            field={{
+              labelText: "Deployment Type",
+              groups: [
+                "Cluster",
+                "Fortigate VNF",
+                "Security Group",
+                "SSH Key",
+                "Virtual Private Endpoint",
+                "Load Balancer",
+                "VPN Gateway",
+                "VPN Server",
+                "VSI",
+                "Routing Table",
+              ].sort(azsort),
+              disabled: (stateData) => {
+                return false;
+              },
+              invalid: (stateData) => {
+                return isNullOrEmptyString(stateData.selectedItem);
+              },
+              invalidText: (stateData) => {
+                return "Invalid Selection";
+              },
+              onRender: this.selectRenderValue,
+            }}
+            parentProps={this.props}
+            parentState={this.state}
             handleInputChange={this.handleInputChange}
           />
           <div className="marginBottomSmall" />
