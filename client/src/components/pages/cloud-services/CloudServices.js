@@ -635,7 +635,7 @@ class CloudServicesPage extends React.Component {
                           }
                         />
                         {serviceMap[rg].length === 0 ? (
-                          <CraigEmptyResourceTile name="services in this resource group" />
+                          <CraigEmptyResourceTile name="Cloud Services in this resource group" />
                         ) : (
                           <CraigFormGroup className="overrideGap">
                             {serviceMap[rg]

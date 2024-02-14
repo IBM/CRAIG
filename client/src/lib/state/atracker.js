@@ -1,5 +1,9 @@
-const { transpose, isEmpty, isNullOrEmptyString } = require("lazy-z");
-const { shouldDisableComponentSave } = require("./utils");
+const { transpose, isEmpty, isNullOrEmptyString, contains } = require("lazy-z");
+const {
+  shouldDisableComponentSave,
+  titleCaseRender,
+  kebabCaseInput,
+} = require("./utils");
 const { splatContains, nestedSplat, splat } = require("lazy-z");
 
 /**
@@ -193,7 +197,11 @@ function initAtracker(store) {
         size: "small",
         default: [],
         type: "multiselect",
-        groups: ["global", "us-south"],
+        groups: function (stateData, componentProps) {
+          return ["global"].concat(
+            componentProps?.craig?.store?.json?._options?.region || ""
+          );
+        },
         hideWhen: hideWhenDisabled,
         invalid: function (stateData) {
           return stateData.enabled === true
@@ -220,6 +228,8 @@ function initAtracker(store) {
         default: "lite",
         type: "select",
         groups: ["Lite", "7 Day", "14 Day", "30 Day"],
+        onRender: titleCaseRender("plan"),
+        onInputChange: kebabCaseInput("plan"),
         hideWhen: hideWhenNoInstance,
         invalidText: function () {
           return "Select a plan.";

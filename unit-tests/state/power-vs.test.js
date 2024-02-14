@@ -124,23 +124,37 @@ describe("power-vs", () => {
     });
   });
   describe("power.save", () => {
-    it("should save a workspace and update instances and volumes with new name", () => {
+    it("should save a workspace and update instances, volumes, and tgw connections with new name", () => {
       let state = new newState();
-      state.power.create({ name: "toad", zone: "us-south", imageNames: [] });
+      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
       state.power_instances.create({
         name: "frog",
-        zone: "us-south",
+        zone: "dal10",
         workspace: "toad",
         network: [],
       });
       state.power_instances.create({
         name: "frog",
-        zone: "us-south",
+        zone: "dal10",
         workspace: "bog",
         network: [],
       });
+      state.transit_gateways.save(
+        {
+          connections: [
+            { tgw: "todd", vpc: "management" },
+            { tgw: "todd", vpc: "workload" },
+            { tgw: "transit-gateway", power: "toad" },
+          ],
+        },
+        {
+          data: {
+            name: "transit-gateway",
+          },
+        }
+      );
       state.power.save(
-        { name: "frog", zone: "us-south" },
+        { name: "frog", zone: "dal10" },
         { data: { name: "toad" } }
       );
       let expectedData = {
@@ -152,7 +166,7 @@ describe("power-vs", () => {
         images: [],
         imageNames: [],
         attachments: [],
-        zone: "us-south",
+        zone: "dal10",
       };
       assert.deepEqual(
         state.store.json.power[0],
@@ -163,6 +177,14 @@ describe("power-vs", () => {
         state.store.json.power_instances[0].workspace,
         "frog",
         "it should update name"
+      );
+      assert.deepEqual(
+        state.store.json.transit_gateways[0].connections[2],
+        {
+          power: "frog",
+          tgw: "transit-gateway",
+        },
+        "it should return correct data"
       );
     });
   });

@@ -42,11 +42,7 @@ export const SubnetRow = (props) => {
   )
     subnetRowClassName += " diagramBoxSelected";
 
-  return allSubnetsHaveAcl &&
-    (!props.tier.advanced ||
-      // prevent advanced tiers from rendering in unfound groups
-      (props.acl &&
-        splatContains(tierSubnets, "network_acl", props.acl.name))) ? (
+  return allSubnetsHaveAcl ? (
     <HoverClassNameWrapper
       key={props.vpc.name + (props.acl ? props.acl.name : "") + props.tier.name}
       className={subnetRowClassName}

@@ -1,15 +1,23 @@
 [
   {
     "version": "1.11.0",
-    "features": [],
+    "features": [
+      "Users can now view Power VS Resources with no selected workspace on the CRAIG V2 Power VS page",
+      "Users can now view Power VS Resources with no selected subnets on the CRAIG V2 Power VS page",
+      "When updating a Power VS Workspace name, Transit Gateway connections will now replace the existing name with the new one"
+    ],
     "fixes": [
       "Fixed an issue causing local Transit Gateways to not allow connections to VPCs already connected to another local Transit Gateway",
       "Fixed an issue causing local Transit Gateways to not allow connections to Power VS Workspaces already connected to another local Transit Gateway",
       "Fixed an issue causing Transit Gateway selections to continue to be visible when not selected",
-      "Fixed an issue causing Power VS Affinity references to not update when the affinity source is deleted"
+      "Fixed an issue causing Power VS Affinity references to not update when the affinity source is deleted",
+      "Fixed an issue causing Activity Tracker locations to only contain `global` and `us-south`",
+      "Fixed an issue causing Activity Tracker Terraform Resouce to be generated without a valid plan",
+      "Fixed an issue preventing advanced subnet tiers from rendering correctly on the V2 VPC Deployments Page"
     ],
     "upgrade_notes": [
-      "CRAIG Terraform no longer uses the depricated field `pi_network_jumbo`. Existing networks with `pi_network_jumbo` selected will be converted to use `pi_network_mtu`."
+      "CRAIG Terraform no longer uses the depricated field `pi_network_jumbo`. Existing networks with `pi_network_jumbo` selected will be converted to use `pi_network_mtu`.",
+      "CRAIG no longer supports variable `validation` block within Terraform. This was causing some issues when importing into schematics"
     ]
   },
   {

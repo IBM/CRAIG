@@ -123,6 +123,13 @@ function powerVsSave(config, stateData, componentProps) {
       }
     });
   });
+  config.store.json.transit_gateways.forEach((tgw) => {
+    tgw.connections.forEach((connection) => {
+      if (connection.power === componentProps.data.name) {
+        connection.power = stateData.name;
+      }
+    });
+  });
   config.updateChild(["json", "power"], componentProps.data.name, stateData);
 }
 

@@ -78,6 +78,15 @@ function optionsSave(config, stateData, componentProps) {
   if (stateData.showModal !== undefined) {
     delete stateData.showModal;
   }
+  if (
+    contains(config.store.json.atracker.locations, componentProps.data.region)
+  ) {
+    config.store.json.atracker.locations =
+      config.store.json.atracker.locations.map((location) => {
+        if (location === componentProps.data.region) return stateData.region;
+        else return location;
+      });
+  }
   config.updateChild(["json", "_options"], componentProps.data.name, stateData);
   if (stateData.zones !== componentProps.data.zones) {
     let zones = config.store.json._options.zones;
