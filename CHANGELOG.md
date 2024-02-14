@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Activity Tracker locations to only contain `global` and `us-south`
 - Fixed an issue causing Activity Tracker Terraform Resouce to be generated without a valid plan
 - Fixed an issue preventing advanced subnet tiers from rendering correctly on the V2 VPC Deployments Page
+- Importing a craig.json file where an Object Storage instance has no connected key management instance will no longer fail
 
 ## 1.10.0
 
