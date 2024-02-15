@@ -16,7 +16,7 @@ function vsiRoutes(axios, controller) {
           let region = req.params["region"];
           let requestConfig = {
             method: "get",
-            url: `http://${region}.iaas.cloud.ibm.com/v1/instance/profiles?version=2022-11-15&generation=2`,
+            url: `http://${region}.iaas.cloud.ibm.com/v1/instance/profiles?version=2022-11-15&generation=2&limit=100&status=available`,
             headers: {
               "Accept-Encoding": "application/json",
             },

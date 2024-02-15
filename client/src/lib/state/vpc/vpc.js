@@ -286,7 +286,7 @@ function vpcOnStoreUpdate(config) {
           cidr:
             "10." +
             (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) * 3 +
-              zone) +
+              Number(zone)) +
             "0.0.0/22",
         });
       }
@@ -296,7 +296,7 @@ function vpcOnStoreUpdate(config) {
         let lastCidr = // automatically set to first in zone for vpc
           "10." +
           (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) * 3 +
-            subnet.zone) +
+            Number(subnet.zone)) +
           "0.0.0/x";
         // if new subnets has subnets and the zone exists within array
         if (

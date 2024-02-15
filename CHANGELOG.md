@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 - Users can now view Power VS Resources with no selected workspace on the CRAIG V2 Power VS page
 - Users can now view Power VS Resources with no selected subnets on the CRAIG V2 Power VS page
 - When updating a Power VS Workspace name, Transit Gateway connections will now replace the existing name with the new one
+- When using CRAIG V2 an empty space will now display in subnet tiers where all three possible zones are not present
+- When fetching VSI Images, the CRAIG API will now respond with up to 100 results instead of the default of 50
 
 ### Fixes
 
@@ -25,6 +27,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Activity Tracker Terraform Resouce to be generated without a valid plan
 - Fixed an issue preventing advanced subnet tiers from rendering correctly on the V2 VPC Deployments Page
 - Importing a craig.json file where an Object Storage instance has no connected key management instance will no longer fail
+- Fixed an issue causing dynamically addressed advanced subnets to have an extra `0` prepended to part of the CIDR address
+- Fixed an issue causing VPN Gateways with no selected subnet to not be rendered as part of the v2 VPC Deployments page
 
 ## 1.10.0
 
