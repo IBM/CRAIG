@@ -43,6 +43,7 @@ import {
   IbmCloudSecurityComplianceCenterWorkloadProtection,
   LoadBalancerPool,
   AppConnectivity,
+  ChartLine,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import {
@@ -128,6 +129,11 @@ let pageOrder = [
     title: "Options",
     path: "/",
     icon: Settings,
+  },
+  {
+    title: "Stats",
+    path: "/stats",
+    icon: ChartLine,
   },
 ].concat(
   contains(window.location.pathname, "/v2")

@@ -24,6 +24,7 @@ import {
 import { invalidForms, state } from "./lib";
 import { ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
+import Stats from "./components/pages/Stats";
 import Tutorial from "./components/pages/tutorial/Tutorial";
 import { LoadingModal } from "./components/pages/projects/LoadingModal";
 import {
@@ -647,6 +648,10 @@ class Craig extends React.Component {
             <Overview craig={craig} />
           ) : window.location.pathname === "/form/observability" ? (
             <ObservabilityForm craig={craig} />
+          ) : window.location.pathname === "/stats" ? (
+            <Stats craig={craig} />
+          ) : window.location.pathname === "/v2/stats" ? (
+            <Stats craig={craig} />
           ) : this.props.params.form ? (
             <NewFormPage form={this.props.params.form} craig={craig} />
           ) : (
