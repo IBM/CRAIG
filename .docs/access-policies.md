@@ -16,21 +16,23 @@ The API key used for the `ibmcloud_api_key` variable during Terraform or Schemat
     - Name the access group "base-infrastructure"
     - Add users +
     - Navigate to Access tab -> Assign access +
-    - Create access for each of the following below
-        - Resource group only, All, Editor
-        - All Identity and Access enabled services, All, Writer, Editor, Operator, Administrator
-        - All IAM Account Management services, All, UserApiKeyCreator
-        - All Account Management services, All, Editor
-        - VPC Infrastructure Services, All, Administrator, Manager, IP Spoofing Operator
-        - Workspace for Power Systems Virtual Server, All, Manager, Editor
-        - Transit Gateway, All, Editor
-        - Cloud Object Storage, All, Administrator
-        - Internet Services, All, Manager
-        - Key Protect, All, Manager and Administrator
-        - Secrets Manager, All, Manager and Administrator
-        - Hyper Protect Crypto Services, All, Manager, Vault Administrator, Key Custodian - Deployer, KMS Key Purge Role, Certificate Manager, Administrator
-        - Direct Link, All, Editor
-        - IBM Cloud Monitoring, All, Editor
+    - Create access for each of the following:
+  
+| Service | Resources | Access |
+|- |- |- |
+| All Account Management services | All | Administrator |
+| All IAM Account Management services | All | UserApiKeyCreator |
+| All Identity and Access enabled services | All | Writer, Editor, Operator, Administrator  |
+| Cloud Object Storage | All | Administrator |
+| Direct Link | All | Editor |
+| Hyper Protect Crypto Services | All | Manager, Vault Administrator, Key Custodian - Deployer, KMS Key Purge Role, Certificate Manager, Administrator |
+| IBM Cloud Monitoring | All | Editor |
+| Internet Services | All | Manager |
+| Key Protect | All | Manager, Administrator |
+| Secrets Manager | All | Manager, Administrator |
+| Transit Gateway | All | Editor |
+| VPC Infrastructure Services | All | Administrator, Manager, IP Spoofing Operator |
+| Workspace for Power Systems Virtual Server | All | Manager, Editor |
 
 ## Authorization Policies
 The following authorization policies should be created.
