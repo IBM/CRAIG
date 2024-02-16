@@ -6,7 +6,7 @@ import {
   VirtualMachine,
 } from "@carbon/icons-react";
 import { DeploymentIcon, PowerSubnet, PowerSubnetInnerBox } from "../diagrams";
-import { splatContains } from "lazy-z";
+import { isEmpty, splatContains } from "lazy-z";
 import PropTypes from "prop-types";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 
@@ -19,17 +19,37 @@ export const PowerSubnets = (props) => {
    * @param {string} networkName
    * @returns {Function} filter function
    */
-  function instanceFilter(powerWorkspaceName, networkName) {
+  function instanceFilter(powerWorkspaceName, networkName, noSubnetsSelected) {
     return function (instance, instanceIndex) {
       if (
-        splatContains(instance.network, "name", networkName) &&
-        instance.workspace === powerWorkspaceName
+        (noSubnetsSelected && isEmpty(instance.network)) ||
+        ((splatContains(instance.network, "name", networkName) ||
+          powerWorkspaceName === null) &&
+          instance.workspace === powerWorkspaceName)
       ) {
         instance.index = instanceIndex;
         return instance;
       }
     };
   }
+
+  let networkSubnets = [];
+  ["vtl", "power_instances"].forEach((field) => {
+    craig.store.json[field].forEach((instance) => {
+      if (
+        instance.workspace === props.power.name &&
+        isEmpty(instance.network)
+      ) {
+        networkSubnets = [
+          {
+            name: "No Subnets Selected",
+          },
+        ];
+      }
+    });
+  });
+
+  networkSubnets = networkSubnets.concat(props.power.network);
 
   return (
     <div className="formInSubForm marginBottomSmall">
@@ -39,6 +59,9 @@ export const PowerSubnets = (props) => {
         <CraigFormHeading
           name="Subnets"
           type="subHeading"
+          className={
+            props.power.name === null ? "diagramIconBoxInvalid" : undefined
+          }
           icon={<NetworkEnterprise className="diagramTitleIcon" />}
           onClick={
             props.static
@@ -49,12 +72,27 @@ export const PowerSubnets = (props) => {
           }
         />
       )}
-      {props.power.network.map((subnet, subnetIndex) => {
+      {(props.power.name === null
+        ? [
+            {
+              name: "No Workspace",
+            },
+          ]
+        : networkSubnets
+      ).map((subnet, subnetIndex) => {
         let subnetInstances = craig.store.json.power_instances.filter(
-          instanceFilter(power.name, subnet.name)
+          instanceFilter(
+            power.name,
+            subnet.name,
+            subnet.name === "No Subnets Selected"
+          )
         );
         let subnetVtl = craig.store.json.vtl.filter(
-          instanceFilter(power.name, subnet.name)
+          instanceFilter(
+            power.name,
+            subnet.name,
+            subnet.name === "No Subnets Selected"
+          )
         );
         return (
           <PowerSubnet

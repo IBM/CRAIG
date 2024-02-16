@@ -36,6 +36,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
           },
@@ -58,6 +59,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -211,6 +213,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
           },
@@ -253,6 +256,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -417,6 +421,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "bh1-140x14000",
@@ -588,6 +593,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -898,6 +904,263 @@ describe("power_instances", () => {
         "it should create correct volumes"
       );
     });
+    it("should update power vs instance affinity values when deleting instance affinity source", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      state.power.create({
+        name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        zone: "dal12",
+      });
+      state.power_volumes.create({
+        attachments: [],
+        workspace: "frog",
+        name: "ignore-me",
+      });
+      state.power_volumes.create({
+        attachments: [],
+        workspace: "frog",
+        name: "ignore-me2",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Affinity",
+        pi_affinity_volume: "ignore-me",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_volume: "ignore-me",
+      });
+      state.power_volumes.delete({}, { data: { name: "ignore-me" } });
+      state.power_volumes.delete({}, { data: { name: "ignore-me2" } });
+      assert.deepEqual(
+        state.store.json.power_instances,
+        [
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            primary_subnet: null,
+            storage_option: "Affinity",
+            pi_affinity_volume: null,
+            ssh_key: null,
+            image: null,
+          },
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            primary_subnet: null,
+            storage_option: "Anti-Affinity",
+            pi_anti_affinity_volume: null,
+            ssh_key: null,
+            image: null,
+          },
+        ],
+        "it should return correct instances"
+      );
+    });
+    it("should update power vs instance affinity values when deleting instance affinity source", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      state.power.create({
+        name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        zone: "dal12",
+      });
+      state.power_instances.create({
+        attachments: [],
+        workspace: "frog",
+        name: "ignore-me",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Affinity",
+        pi_affinity_instance: "ignore-me",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_instance: "ignore-me",
+      });
+      state.power_instances.delete({}, { data: { name: "ignore-me" } });
+      assert.deepEqual(
+        state.store.json.power_instances,
+        [
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            primary_subnet: null,
+            storage_option: "Affinity",
+            pi_affinity_instance: null,
+            ssh_key: null,
+            image: null,
+          },
+          {
+            name: "frog",
+            sap: false,
+            zone: null,
+            workspace: null,
+            network: [],
+            primary_subnet: null,
+            storage_option: "Anti-Affinity",
+            pi_anti_affinity_instance: null,
+            ssh_key: null,
+            image: null,
+          },
+        ],
+        "it should return correct instances"
+      );
+    });
+    it("should update power vs volume affinity values when deleting instance affinity source", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      state.power.create({
+        name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        zone: "dal12",
+      });
+      state.power.create({
+        name: "frog",
+        images: [{ name: "7100-05-09", workspace: "frog" }],
+        zone: "dal12",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "frog",
+        network: [],
+      });
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me",
+        storage_option: "Affinity",
+        pi_affinity_instance: "frog",
+      });
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me2",
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_instance: "frog",
+      });
+      state.power_instances.delete({}, { data: { name: "frog" } });
+
+      assert.deepEqual(
+        state.store.json.power_instances,
+        [],
+        "it should create instance"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes,
+        [
+          {
+            attachments: [],
+            name: "ignore-me",
+            workspace: "frog",
+            zone: "dal12",
+            pi_volume_type: null,
+            pi_affinity_instance: null,
+            storage_option: "Affinity",
+          },
+          {
+            attachments: [],
+            name: "ignore-me2",
+            workspace: "frog",
+            zone: "dal12",
+            pi_volume_type: null,
+            pi_anti_affinity_instance: null,
+            storage_option: "Anti-Affinity",
+          },
+        ],
+        "it should create correct volumes"
+      );
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me3",
+        storage_option: "Affinity",
+        pi_affinity_volume: "ignore-me",
+      });
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "frog",
+        name: "ignore-me4",
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_volume: "ignore-me",
+      });
+      state.power_volumes.delete(
+        {},
+        {
+          data: {
+            attachments: ["frog"],
+            workspace: "frog",
+            name: "ignore-me",
+            storage_option: "Affinity",
+            pi_affinity_instance: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes,
+        [
+          {
+            attachments: [],
+            name: "ignore-me2",
+            workspace: "frog",
+            zone: "dal12",
+            pi_volume_type: null,
+            pi_anti_affinity_instance: null,
+            storage_option: "Anti-Affinity",
+          },
+          {
+            attachments: [],
+            workspace: "frog",
+            zone: "dal12",
+            name: "ignore-me3",
+            storage_option: "Affinity",
+            pi_volume_type: null,
+            pi_affinity_volume: null,
+          },
+          {
+            attachments: [],
+            workspace: "frog",
+            zone: "dal12",
+            name: "ignore-me4",
+            pi_volume_type: null,
+            pi_anti_affinity_volume: null,
+            storage_option: "Anti-Affinity",
+          },
+        ],
+        "it should create correct volumes"
+      );
+    });
     it("should delete power vs volumes when converting sap volume to non-sap", () => {
       let state = newState();
       state.store.json.power_volumes.push({
@@ -930,6 +1193,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -1028,7 +1292,7 @@ describe("power_instances", () => {
         "it should initialize data"
       );
     });
-    it("should update ssh key, network, image, and workspace when unfound", () => {
+    it("should update ssh key, network, image, primary_subnet, and workspace when unfound", () => {
       let state = newState();
       state.power_instances.create({
         name: "toad",
@@ -1042,6 +1306,7 @@ describe("power_instances", () => {
         ],
         workspace: "oops",
         zone: "oops",
+        primary_subnet: "oops",
       });
       assert.deepEqual(
         state.store.json.power_instances,
@@ -1051,6 +1316,7 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
           },
@@ -1058,7 +1324,7 @@ describe("power_instances", () => {
         "it should initialize data"
       );
     });
-    it("should update ssh key, network, image, when workspace is unfound", () => {
+    it("should update ssh key, network, image, and primary_subnet when workspace is unfound", () => {
       let state = newState();
       state.power.create({
         name: "toad",
@@ -1077,6 +1343,7 @@ describe("power_instances", () => {
         ],
         workspace: "oops",
         zone: "oops",
+        primary_subnet: "oops",
       });
       assert.deepEqual(
         state.store.json.power_instances,
@@ -1086,8 +1353,47 @@ describe("power_instances", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
+          },
+        ],
+        "it should initialize data"
+      );
+    });
+    it("should update primary_subnet when network interface is unfound", () => {
+      let state = newState();
+      state.power.create({
+        name: "toad",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
+      state.power_instances.create({
+        name: "toad",
+        image: "oops",
+        ssh_key: "oops",
+        network: [
+          {
+            name: "oops",
+            ip_address: "1.2.3.4",
+          },
+        ],
+        workspace: "toad",
+        zone: "oops",
+        primary_subnet: "oops",
+      });
+      assert.deepEqual(
+        state.store.json.power_instances,
+        [
+          {
+            name: "toad",
+            image: null,
+            ssh_key: null,
+            network: [],
+            primary_subnet: null,
+            workspace: "toad",
+            zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1134,6 +1440,7 @@ describe("power_instances", () => {
                 name: "test-network",
               },
             ],
+            primary_subnet: null,
             workspace: "toad",
             zone: null,
             pi_storage_type: null,
@@ -1186,6 +1493,7 @@ describe("power_instances", () => {
                 name: "test-network",
               },
             ],
+            primary_subnet: null,
             workspace: "toad",
             zone: null,
             pi_storage_type: null,
@@ -1234,6 +1542,7 @@ describe("power_instances", () => {
                 name: "test-network",
               },
             ],
+            primary_subnet: null,
             workspace: "toad",
             zone: null,
             pi_storage_type: null,
@@ -1286,7 +1595,7 @@ describe("power_instances", () => {
         });
       });
       describe("power_instance.workspace.onStateChange", () => {
-        it("should set networks and ssh key", () => {
+        it("should set networks, primary subnet, image, and ssh key", () => {
           let craig = newState();
           craig.store.json._options.power_vs_zones = ["dal12"];
           craig.power.create({
@@ -1298,6 +1607,7 @@ describe("power_instances", () => {
           });
           let data = {
             network: [{ name: "frog" }],
+            primary_subnet: "frog",
             ssh_key: "toad",
             workspace: "toad",
           };
@@ -1306,6 +1616,7 @@ describe("power_instances", () => {
             data,
             {
               network: [],
+              primary_subnet: "",
               ssh_key: "",
               image: "",
               workspace: "toad",
@@ -1417,39 +1728,52 @@ describe("power_instances", () => {
           );
         });
       });
-      describe("power_instance.network.onInputChange", () => {
-        it("should return new networks", () => {
+      describe("power_instance.network.onStateChange", () => {
+        it("should return new networks and update primary subnet with first network name value", () => {
           let craig = state();
+          let data = {
+            network: [{ name: "frog" }],
+            primary_subnet: "frog",
+          };
+          craig.power_instances.network.onStateChange(data, { craig: craig }, [
+            "frog",
+            "toad",
+          ]);
           assert.deepEqual(
-            craig.power_instances.network.onInputChange(
-              {
-                network: [{ name: "frog" }],
-              },
-              ["frog", "toad"]
-            ),
-            [
-              {
-                name: "frog",
-              },
-              {
-                name: "toad",
-                ip_address: "",
-              },
-            ],
-            "it should return a list of networks"
+            data,
+            {
+              network: [
+                {
+                  name: "frog",
+                },
+                {
+                  name: "toad",
+                  ip_address: "",
+                },
+              ],
+              primary_subnet: "frog",
+            },
+            "it should return new network, clear primary subnet"
           );
         });
-        it("should return new networks when deleting one", () => {
+        it("should return new networks when deleting one and update primary subnet with first network name value or empty string", () => {
           let craig = state();
+          let data = {
+            network: [{ name: "frog" }],
+            primary_subnet: "frog",
+          };
+          craig.power_instances.network.onStateChange(
+            data,
+            { craig: craig },
+            []
+          );
           assert.deepEqual(
-            craig.power_instances.network.onInputChange(
-              {
-                network: [{ name: "frog" }],
-              },
-              []
-            ),
-            [],
-            "it should return a list of networks"
+            data,
+            {
+              network: [],
+              primary_subnet: "",
+            },
+            "it should return a list of networks and clear primary subnet"
           );
         });
       });
@@ -1462,6 +1786,18 @@ describe("power_instances", () => {
             }),
             ["frog"],
             "it should return a list of networks"
+          );
+        });
+      });
+      describe("power_instance.network.forceUpdateKey", () => {
+        it("should have force update key for network", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.network.forceUpdateKey({
+              workspace: "toad",
+            }),
+            "toad",
+            "it should have correct force update key"
           );
         });
       });
@@ -1512,6 +1848,145 @@ describe("power_instances", () => {
               ],
             }),
             "it should be true"
+          );
+        });
+      });
+    });
+    describe("power_instance.primary_subnet", () => {
+      describe("power_instance.primary_subnet.groups", () => {
+        it("should return groups when no network", () => {
+          let craig = state();
+          let data = {
+            name: "toad",
+            imageNames: ["7100-05-09"],
+            zone: "dal12",
+            network: [],
+          };
+          assert.deepEqual(
+            craig.power_instances.primary_subnet.groups(data, { craig: craig }),
+            [],
+            "it should return list of networks"
+          );
+        });
+        it("should return groups when network", () => {
+          let craig = state();
+          let data = {
+            name: "toad",
+            imageNames: ["7100-05-09"],
+            zone: "dal12",
+            network: [{ name: "frog" }],
+          };
+          assert.deepEqual(
+            craig.power_instances.primary_subnet.groups(data, { craig: craig }),
+            ["frog"],
+            "it should return list of networks"
+          );
+        });
+      });
+      describe("power_instance.primary_subnet.onRender", () => {
+        it("should return empty string if no network and no primary_subnet", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.primary_subnet.onRender({
+              network: [],
+              primary_subnet: "",
+            }),
+            "",
+            "it should return a list of networks"
+          );
+        });
+        it("should return first string in network if no primary subnet selected", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.primary_subnet.onRender({
+              network: [{ name: "frog" }, { name: "toad" }, { name: "turtle" }],
+              primary_subnet: "",
+            }),
+            "frog",
+            "it should return a list of networks"
+          );
+        });
+        it("should return primary subnet if already selected", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.primary_subnet.onRender({
+              network: [{ name: "frog" }, { name: "toad" }, { name: "turtle" }],
+              primary_subnet: "frog",
+            }),
+            "frog",
+            "it should return a list of networks"
+          );
+        });
+      });
+      describe("power_instance.primary_subnet.onStateChange", () => {
+        it("should return updated network array and update primary subnet", () => {
+          let craig = state();
+          let data = {
+            network: [{ name: "frog" }, { name: "toad" }, { name: "turtle" }],
+            primary_subnet: "",
+          };
+          craig.power_instances.primary_subnet.onStateChange(
+            data,
+            { craig: craig },
+            "turtle"
+          );
+          assert.deepEqual(
+            data,
+            {
+              network: [
+                {
+                  name: "turtle",
+                },
+                {
+                  name: "frog",
+                },
+                {
+                  name: "toad",
+                },
+              ],
+              primary_subnet: "turtle",
+            },
+            "it should return new network and update primary subnet"
+          );
+        });
+        it("should update primary subnet when no network", () => {
+          let craig = state();
+          let data = {
+            network: [],
+            primary_subnet: "toad",
+          };
+          craig.power_instances.primary_subnet.onStateChange(data);
+          assert.deepEqual(
+            data,
+            {
+              network: [],
+              primary_subnet: "",
+            },
+            "it should return empty primary subnet"
+          );
+        });
+      });
+      describe("power_instance.primary_subnet.invalidText", () => {
+        it("should return invalidText when no workspace", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.primary_subnet.invalidText(
+              { workspace: "" },
+              { craig: craig }
+            ),
+            "Select a workspace",
+            "it should return invalid text"
+          );
+        });
+        it("should return invalidText when no network", () => {
+          let craig = state();
+          assert.deepEqual(
+            craig.power_instances.primary_subnet.invalidText(
+              { workspace: "a", network: [] },
+              { craig: craig }
+            ),
+            "Select at least one subnet",
+            "it should return invalid text"
           );
         });
       });

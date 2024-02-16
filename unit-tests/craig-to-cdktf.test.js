@@ -1646,6 +1646,7 @@ describe("craigToCdktf", () => {
           ibm_is_vpc: {
             management_vpc: {
               name: "${var.prefix}-management-vpc",
+              no_sg_acl_rules: true,
               resource_group: "${var.slz_management_rg_id}",
               default_network_acl_name: null,
               default_security_group_name: null,

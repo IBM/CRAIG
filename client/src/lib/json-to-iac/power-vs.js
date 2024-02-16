@@ -1,4 +1,4 @@
-const { snakeCase } = require("lazy-z");
+const { snakeCase, isNullOrEmptyString } = require("lazy-z");
 const {
   jsonToTfPrint,
   kebabName,
@@ -125,8 +125,21 @@ function formatPowerVsNetwork(network) {
           pi_network_name: kebabName(["power-network", network.name]),
           pi_cidr: network.pi_cidr,
           pi_network_type: network.pi_network_type,
-          pi_network_jumbo: network.pi_network_jumbo,
+          pi_network_mtu:
+            !network.pi_network_mtu && network.pi_network_jumbo
+              ? 9000
+              : isNullOrEmptyString(network.pi_network_mtu, true)
+              ? undefined
+              : Number(network.pi_network_mtu),
           pi_dns: network.pi_dns,
+          pi_network_jumbo:
+            (!network.pi_network_mtu && network.pi_network_jumbo
+              ? 9000
+              : isNullOrEmptyString(network.pi_network_mtu, true)
+              ? undefined
+              : Number(network.pi_network_mtu)) === undefined
+              ? network.pi_network_jumbo
+              : undefined,
           depends_on: network.depends_on,
         }
   );

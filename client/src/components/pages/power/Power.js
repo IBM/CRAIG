@@ -22,11 +22,11 @@ import { PowerMap } from "../diagrams/PowerMap";
 import { PowerSshKeys } from "./PowerSshKeys";
 import { PowerSubnets } from "./PowerSubnets";
 import { PowerVolumes } from "./PowerVolumes";
-import { IcseSelect } from "icse-react-assets";
 import { NoPowerNetworkTile } from "../../forms/dynamic-form";
 import { PowerVolumeTable } from "./PowerVolumeTable";
 import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { powerInstanceTf, powerVsVolumeTf } from "../../../lib/json-to-iac";
+import { DynamicFormSelect } from "../../forms/dynamic-form";
 
 class PowerDiagram extends React.Component {
   constructor(props) {
@@ -237,21 +237,35 @@ class PowerDiagram extends React.Component {
                 }
           }
         >
-          <IcseSelect
-            formName="power-modal"
-            value={
-              this.state.modalService === "power_volumes"
-                ? "Power Volume"
-                : this.state.modalService === "vtl"
-                ? "FalconStor VTL"
-                : isNullOrEmptyString(this.state.modalService, true)
-                ? ""
-                : "Power Instance"
-            }
-            labelText="Deployment Type"
+          <DynamicFormSelect
             name="modalService"
-            disableInvalid
-            groups={["Power Instance", "Power Volume", "FalconStor VTL"]}
+            propsName="power-modal"
+            keyIndex={0}
+            value={this.state.modalService}
+            field={{
+              labelText: "Deployment Type",
+              groups: ["Power Instance", "Power Volume", "FalconStor VTL"],
+              disabled: (stateData) => {
+                return false;
+              },
+              invalid: (stateData) => {
+                return false;
+              },
+              invalidText: (stateData) => {
+                return "";
+              },
+              onRender: (stateData) => {
+                return this.state.modalService === "power_volumes"
+                  ? "Power Volume"
+                  : this.state.modalService === "vtl"
+                  ? "FalconStor VTL"
+                  : isNullOrEmptyString(this.state.modalService, true)
+                  ? ""
+                  : "Power Instance";
+              },
+            }}
+            parentProps={this.props}
+            parentState={this.state}
             handleInputChange={this.handleInputChange}
           />
           <div className="marginBottomSmall" />

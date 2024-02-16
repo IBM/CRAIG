@@ -939,7 +939,7 @@ function craigForms(craig) {
               },
               {
                 pi_dns: craig.power.network.pi_dns,
-                pi_network_jumbo: craig.power.network.pi_network_jumbo,
+                pi_network_mtu: craig.power.network.pi_network_mtu,
               },
             ],
           },
@@ -1007,7 +1007,10 @@ function craigForms(craig) {
         {
           name: craig.power_instances.name,
           workspace: craig.power_instances.workspace,
+        },
+        {
           network: craig.power_instances.network,
+          primary_subnet: craig.power_instances.primary_subnet,
         },
         {
           ssh_key: craig.power_instances.ssh_key,

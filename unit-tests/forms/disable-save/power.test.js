@@ -199,6 +199,7 @@ describe("power", () => {
           name: "egg",
           pi_cidr: "10.10.10.10/24",
           pi_dns: ["10.02.03.04"],
+          pi_network_mtu: "9000",
         },
         {
           arrayParentName: "workspace",
@@ -426,6 +427,41 @@ describe("power", () => {
         );
         assert.isTrue(actualData, "it should be disabled");
       });
+      it("should be disabled when primary subnet is not selected", () => {
+        let actualData = disableSave(
+          "power_instances",
+          {
+            name: "toad",
+            workspace: "good",
+            ssh_key: "good",
+            image: "good",
+            pi_sys_type: "good",
+            pi_health_status: "good",
+            storage_option: "Storage Type",
+            pi_storage_type: "good",
+            network: [
+              {
+                name: "good",
+                ip_address: "",
+              },
+              {
+                name: "two",
+                ip_address: "",
+              },
+            ],
+            primary_subnet: "",
+            pi_processors: "7",
+            pi_memory: "12",
+          },
+          {
+            data: {
+              name: "egg",
+            },
+            craig: state(),
+          }
+        );
+        assert.isTrue(actualData, "it should not be disabled");
+      });
       it("should not be disabled when ip address is empty string", () => {
         let actualData = disableSave(
           "power_instances",
@@ -443,7 +479,12 @@ describe("power", () => {
                 name: "good",
                 ip_address: "",
               },
+              {
+                name: "two",
+                ip_address: "",
+              },
             ],
+            primary_subnet: "good",
             pi_processors: "7",
             pi_memory: "12",
           },

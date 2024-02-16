@@ -216,7 +216,7 @@ class CopyRuleForm extends React.Component {
     return (
       <div
         className={
-          (this.props.isAclForm ^ this.props.v2
+          (this.props.isAclForm && !this.props.v2
             ? "formInSubForm "
             : "subForm sgFormTopMargin ") + "positionRelative"
         }

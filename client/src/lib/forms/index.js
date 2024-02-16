@@ -43,8 +43,16 @@ const {
 const { leftNavItemClassName } = require("./class-names");
 const { notificationText } = require("./utils");
 const wizard = require("./wizard");
+const {
+  getDisplaySubnetTiers,
+  getDisplayTierSubnetList,
+  shouldDisplayService,
+} = require("./diagrams");
 
 module.exports = {
+  shouldDisplayService,
+  getDisplayTierSubnetList,
+  getDisplaySubnetTiers,
   wizard,
   leftNavItemClassName,
   notificationText,

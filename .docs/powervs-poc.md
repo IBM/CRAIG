@@ -117,7 +117,7 @@ Resources can also be provisioned using a local Terraform install. The downloade
 
 ### Inputs Required at Deployment Time
 >**Note:** The following input fields (Terraform values) must be set in IBM Schematics or Terraform at Generate Plan / Apply Plan time.
->* `ibmcloud_api_key`: The IBM Cloud platform API key that will be used to deploy the project resources.
+>* `ibmcloud_api_key`: The IBM Cloud platform API key that will be used to deploy the project resources. See [Access Policies](access-policies.md) for access policies and account settings required for creating and managing resources created in CRAIG projects.
 >* `dal10gw_on_prem_connection_preshared_key`: This is the preshared key for the VPN Gateway connection (site-to-site VPN). The variable name will be different if you change the name of the VPN gateway or the connection. This variable will also not be present if the VPN Gateway is removed from the project.
 
 ### Cost estimation

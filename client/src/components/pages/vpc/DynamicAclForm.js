@@ -62,7 +62,7 @@ export class DynamicAclForm extends React.Component {
           enableModal={this.props.enableModal}
           setRefUpstream={this.props.setRefUpstream}
         />
-        {isv2 && (
+        {isv2 && !this.props.isModal && (
           <div className="marginTop1Rem" style={{ marginTop: "1.5rem" }}>
             <CopyRuleForm
               craig={craig}

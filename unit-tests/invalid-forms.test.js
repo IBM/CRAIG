@@ -582,6 +582,7 @@ describe("invalidForms", () => {
               pi_network_jumbo: false,
               workspace: "oracle-22",
               zone: "dal12",
+              pi_network_mtu: "9000",
             },
             {
               name: "oracle-private-1",
@@ -594,6 +595,7 @@ describe("invalidForms", () => {
               depends_on: [
                 "${ibm_pi_network.power_network_oracle_22_oracle_public}",
               ],
+              pi_network_mtu: "9000",
             },
             {
               name: "oracle-private-2",
@@ -606,6 +608,7 @@ describe("invalidForms", () => {
               depends_on: [
                 "${ibm_pi_network.power_network_oracle_22_oracle_private_1}",
               ],
+              pi_network_mtu: "9000",
             },
           ],
           cloud_connections: [

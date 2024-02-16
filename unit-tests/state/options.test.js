@@ -156,6 +156,17 @@ describe("options", () => {
         "it should have correct craig version"
       );
     });
+    it("should update atracker location when changing region", () => {
+      oState.options.save(
+        { region: "eu-de" },
+        { data: { region: "us-south" } }
+      );
+      assert.deepEqual(
+        oState.store.json.atracker.locations,
+        ["global", "eu-de"],
+        "it should update region"
+      );
+    });
     describe("options.schema", () => {
       let craig;
       beforeEach(() => {

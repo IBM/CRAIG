@@ -32,6 +32,9 @@ const {
   invalidCrns,
   invalidCrnText,
   wizard,
+  getDisplaySubnetTiers,
+  getDisplayTierSubnetList,
+  shouldDisplayService,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -117,7 +120,10 @@ const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
 const { state } = require("./state");
 const { invalidForms } = require("./invalid-forms");
+
 module.exports = {
+  shouldDisplayService,
+  getDisplaySubnetTiers,
   formatClassicSshKey,
   formatClassicNetworkVlan,
   classicInfraTf,
@@ -235,4 +241,5 @@ module.exports = {
   invalidCrns,
   invalidCrnText,
   powerVsTf,
+  getDisplayTierSubnetList,
 };

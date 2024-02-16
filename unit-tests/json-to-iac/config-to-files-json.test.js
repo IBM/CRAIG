@@ -196,20 +196,12 @@ variable "region" {
   description = "IBM Cloud Region where resources will be provisioned"
   type        = string
   default     = "us-south"
-  validation {
-    error_message = "Region must be in a supported IBM VPC region."
-    condition     = contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "eu-es", "jp-tok", "jp-osa", "au-syd"], var.region)
-  }
 }
 
 variable "prefix" {
   description = "Name prefix that will be prepended to named resources"
   type        = string
   default     = "slz"
-  validation {
-    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
-    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16
-  }
 }
 
 variable "slz_ssh_key_public_key" {
@@ -217,10 +209,6 @@ variable "slz_ssh_key_public_key" {
   type        = string
   sensitive   = true
   default     = "public-key"
-  validation {
-    error_message = "Public SSH Key must be a valid ssh rsa public key."
-    condition     = "\${var.slz_ssh_key_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.slz_ssh_key_public_key))}"
-  }
 }
 
 variable "secrets_manager_imported_cert_data" {
@@ -940,7 +928,7 @@ data "ibm_resource_instance" "icd_psql" {
         let actualData = configToFilesJson(pgwNw);
         assert.deepEqual(
           actualData.management_vpc["main.tf"],
-          '##############################################################################\n# Management VPC\n##############################################################################\n\nresource "ibm_is_vpc" "management_vpc" {\n  name                        = "${var.prefix}-management-vpc"\n  resource_group              = var.slz_management_rg_id\n  tags                        = var.tags\n  address_prefix_management   = "manual"\n  default_network_acl_name    = null\n  default_security_group_name = null\n  default_routing_table_name  = null\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_1_prefix" {\n  name = "${var.prefix}-management-vsi-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_2_prefix" {\n  name = "${var.prefix}-management-vsi-zone-2"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.10.20.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_3_prefix" {\n  name = "${var.prefix}-management-vsi-zone-3"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-3"\n  cidr = "10.10.30.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_1_prefix" {\n  name = "${var.prefix}-management-vpe-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_2_prefix" {\n  name = "${var.prefix}-management-vpe-zone-2"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.20.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_3_prefix" {\n  name = "${var.prefix}-management-vpe-zone-3"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-3"\n  cidr = "10.20.30.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpn_zone_1_prefix" {\n  name = "${var.prefix}-management-vpn-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.30.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_1" {\n  name           = "${var.prefix}-management-gateway-zone-1"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-1"\n  tags           = var.tags\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_2" {\n  name           = "${var.prefix}-management-gateway-zone-2"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_3" {\n  name           = "${var.prefix}-management-gateway-zone-3"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-3"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpn_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpn-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpn_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_2" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_2_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_3" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-3"\n  zone            = "${var.region}-3"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_3_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_2" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_2_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_3" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-3"\n  zone            = "${var.region}-3"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_3_prefix.cidr\n}\n\n##############################################################################\n',
+          '##############################################################################\n# Management VPC\n##############################################################################\n\nresource "ibm_is_vpc" "management_vpc" {\n  name                        = "${var.prefix}-management-vpc"\n  resource_group              = var.slz_management_rg_id\n  tags                        = var.tags\n  no_sg_acl_rules             = true\n  address_prefix_management   = "manual"\n  default_network_acl_name    = null\n  default_security_group_name = null\n  default_routing_table_name  = null\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_1_prefix" {\n  name = "${var.prefix}-management-vsi-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_2_prefix" {\n  name = "${var.prefix}-management-vsi-zone-2"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.10.20.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_3_prefix" {\n  name = "${var.prefix}-management-vsi-zone-3"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-3"\n  cidr = "10.10.30.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_1_prefix" {\n  name = "${var.prefix}-management-vpe-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_2_prefix" {\n  name = "${var.prefix}-management-vpe-zone-2"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.20.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_3_prefix" {\n  name = "${var.prefix}-management-vpe-zone-3"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-3"\n  cidr = "10.20.30.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpn_zone_1_prefix" {\n  name = "${var.prefix}-management-vpn-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.30.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_1" {\n  name           = "${var.prefix}-management-gateway-zone-1"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-1"\n  tags           = var.tags\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_2" {\n  name           = "${var.prefix}-management-gateway-zone-2"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_3" {\n  name           = "${var.prefix}-management-gateway-zone-3"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-3"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpn_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpn-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpn_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_2" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_2_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_3" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-3"\n  zone            = "${var.region}-3"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_3_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_2" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_2_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_3" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-3"\n  zone            = "${var.region}-3"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_3_prefix.cidr\n}\n\n##############################################################################\n',
           "it should return correct data"
         );
       });
@@ -964,19 +952,11 @@ variable "tags" {
 variable "region" {
   description = "IBM Cloud Region where resources will be provisioned"
   type        = string
-  validation {
-    error_message = "Region must be in a supported IBM VPC region."
-    condition     = contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "eu-es", "jp-tok", "jp-osa", "au-syd"], var.region)
-  }
 }
 
 variable "prefix" {
   description = "Name prefix that will be prepended to named resources"
   type        = string
-  validation {
-    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
-    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16
-  }
 }
 
 variable "slz_management_rg_id" {
@@ -1027,20 +1007,12 @@ variable "region" {
   description = "IBM Cloud Region where resources will be provisioned"
   type        = string
   default     = "us-south"
-  validation {
-    error_message = "Region must be in a supported IBM VPC region."
-    condition     = contains(["us-south", "us-east", "br-sao", "ca-tor", "eu-gb", "eu-de", "eu-es", "jp-tok", "jp-osa", "au-syd"], var.region)
-  }
 }
 
 variable "prefix" {
   description = "Name prefix that will be prepended to named resources"
   type        = string
   default     = "slz"
-  validation {
-    error_message = "Prefix must begin with a lowercase letter and contain only lowercase letters, numbers, and - characters. Prefixes must end with a lowercase letter or number and be 16 or fewer characters."
-    condition     = can(regex("^([a-z]|[a-z][-a-z0-9]*[a-z0-9])", var.prefix)) && length(var.prefix) <= 16
-  }
 }
 
 variable "account_id" {
@@ -1054,10 +1026,6 @@ variable "slz_ssh_key_public_key" {
   type        = string
   sensitive   = true
   default     = "public-key"
-  validation {
-    error_message = "Public SSH Key must be a valid ssh rsa public key."
-    condition     = "\${var.slz_ssh_key_public_key == null || can(regex("ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3} ?([^@]+@[^@]+)?", var.slz_ssh_key_public_key))}"
-  }
 }
 
 variable "tmos_admin_password" {
@@ -1065,10 +1033,6 @@ variable "tmos_admin_password" {
   type        = string
   sensitive   = true
   default     = "Goodpassword1234!"
-  validation {
-    error_message = "Value for tmos_password must be at least 15 characters, contain one numeric, one uppercase, and one lowercase character."
-    condition     = var.tmos_admin_password == null ? true : (length(var.tmos_admin_password) >= 15 && can(regex("[A-Z]", var.tmos_admin_password)) && can(regex("[a-z]", var.tmos_admin_password)) && can(regex("[0-9]", var.tmos_admin_password)))
-  }
 }
 
 ##############################################################################

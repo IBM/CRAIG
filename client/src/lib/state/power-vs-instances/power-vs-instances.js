@@ -43,6 +43,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
       instance.workspace = null;
       instance.zone = null;
       instance.image = null;
+      instance.primary_subnet = null;
     }
 
     config.store.json[field].forEach((instance) => {
@@ -70,9 +71,51 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         instance.network.forEach((nw) => {
           if (splatContains(workspace.network, "name", nw.name)) {
             newNetworks.push(nw);
-          }
+          } else instance.primary_subnet = null;
         });
         instance.network = newNetworks;
+      }
+
+      if (
+        instance.storage_option === "Affinity" &&
+        instance.pi_affinity_instance &&
+        !splatContains(
+          config.store.json.power_instances,
+          "name",
+          instance.pi_affinity_instance
+        )
+      ) {
+        instance.pi_affinity_instance = null;
+      } else if (
+        instance.storage_option === "Anti-Affinity" &&
+        instance.pi_anti_affinity_instance &&
+        !splatContains(
+          config.store.json.power_instances,
+          "name",
+          instance.pi_anti_affinity_instance
+        )
+      ) {
+        instance.pi_anti_affinity_instance = null;
+      } else if (
+        instance.storage_option === "Anti-Affinity" &&
+        instance.pi_anti_affinity_volume &&
+        !splatContains(
+          config.store.json.power_volumes,
+          "name",
+          instance.pi_anti_affinity_volume
+        )
+      ) {
+        instance.pi_anti_affinity_volume = null;
+      } else if (
+        instance.storage_option === "Affinity" &&
+        instance.pi_affinity_volume &&
+        !splatContains(
+          config.store.json.power_volumes,
+          "name",
+          instance.pi_affinity_volume
+        )
+      ) {
+        instance.pi_affinity_volume = null;
       }
     });
   };
@@ -267,6 +310,7 @@ function initPowerVsInstance(store) {
         "sap_profile",
         "workspace",
         "network",
+        "primary_subnet",
         "ssh_key",
         "image",
         "pi_sys_type",

@@ -6,7 +6,7 @@ Using [IBM Cloud Schematics](https://cloud.ibm.com/docs/schematics?topic=schemat
 ### API_KEY set in CRAIG's environment
 The `API_KEY` variable must be set in the `.env`. If CRAIG is deployed in IBM Code Engine, the API key will automatically be set in CRAIG's environment. The user or service ID owning the API key must have the following authorization policies.
 
-### Authorization Policy
+### Access Policy
 In order to allow Schematics integration, users should make sure they have the following access policy roles for the Schematics service:
 >* `Editor` or greater Platform access
 >* `Writer` or greater Service access
@@ -34,7 +34,7 @@ To upload the project to Schematics in your cloud account, click the `Upload to 
 4) Click on `Launch workspace in new Tab`. This will take you to the workspace where Terraform project has been uploaded. 
 
 ## Working with Schematics in IBM Cloud
-On Schematics Workspace console, Click on `Settings` menu item on left. You will see there are list of variables listed. You need to edit the `ibmcloud_api_key` variable using the 3 dots on the right. Set the API key that will be used for creation of the PoC resources and mark it as Sensitive. The API key can be different from the API key that is used for CRAIG to Schematics integration. The API key used set in this variable must have the IAM access policies to allow it to create and manage the resources in the template.
+On Schematics Workspace console, Click on `Settings` menu item on left. You will see there are list of variables listed. You need to edit the `ibmcloud_api_key` variable using the 3 dots on the right. Set the API key that will be used for creation of the PoC resources and mark it as Sensitive. The API key can be different from the API key that is used for CRAIG to Schematics integration. The API key used set in this variable must have the IAM access policies to allow it to create and manage the resources in the template. See [Access Policies](access-policies.md) for access policies and account settings required for creating and managing resources created in CRAIG projects.
 
 ![Schematics Settings page](images/schematics-setting-page.png)
 

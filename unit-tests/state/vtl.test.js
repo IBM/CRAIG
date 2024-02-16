@@ -32,6 +32,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
           },
@@ -54,6 +55,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -207,6 +209,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
           },
@@ -249,6 +252,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -413,6 +417,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "bh1-140x14000",
@@ -584,6 +589,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -926,6 +932,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             sap: true,
             sap_profile: "ush1-4x128",
@@ -1012,7 +1019,7 @@ describe("vtl", () => {
       state.update();
       assert.deepEqual(state.store.json.vtl, [], "it should initialize data");
     });
-    it("should update ssh key, network, image, and workspace when unfound", () => {
+    it("should update ssh key, network, image, primary subnet, and workspace when unfound", () => {
       let state = newState();
       state.vtl.create({
         name: "toad",
@@ -1026,6 +1033,7 @@ describe("vtl", () => {
         ],
         workspace: "oops",
         zone: "oops",
+        primary_subnet: "oops",
       });
       assert.deepEqual(
         state.store.json.vtl,
@@ -1035,6 +1043,7 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
           },
@@ -1042,7 +1051,7 @@ describe("vtl", () => {
         "it should initialize data"
       );
     });
-    it("should update ssh key, network, image, when workspace is unfound", () => {
+    it("should update ssh key, network, image, and priamry subnet when workspace is unfound", () => {
       let state = newState();
       state.power.create({
         name: "toad",
@@ -1061,6 +1070,7 @@ describe("vtl", () => {
         ],
         workspace: "oops",
         zone: "oops",
+        primary_subnet: "oops",
       });
       assert.deepEqual(
         state.store.json.vtl,
@@ -1070,8 +1080,47 @@ describe("vtl", () => {
             image: null,
             ssh_key: null,
             network: [],
+            primary_subnet: null,
             workspace: null,
             zone: null,
+          },
+        ],
+        "it should initialize data"
+      );
+    });
+    it("should update primary_subnet when network interface is unfound", () => {
+      let state = newState();
+      state.power.create({
+        name: "toad",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
+      state.vtl.create({
+        name: "toad",
+        image: "oops",
+        ssh_key: "oops",
+        network: [
+          {
+            name: "oops",
+            ip_address: "1.2.3.4",
+          },
+        ],
+        workspace: "toad",
+        zone: "oops",
+        primary_subnet: "oops",
+      });
+      assert.deepEqual(
+        state.store.json.vtl,
+        [
+          {
+            name: "toad",
+            image: null,
+            ssh_key: null,
+            network: [],
+            primary_subnet: null,
+            workspace: "toad",
+            zone: null,
+            pi_storage_type: null,
           },
         ],
         "it should initialize data"
@@ -1118,6 +1167,7 @@ describe("vtl", () => {
                 name: "test-network",
               },
             ],
+            primary_subnet: null,
             workspace: "toad",
             zone: null,
             pi_storage_type: null,
@@ -1171,6 +1221,7 @@ describe("vtl", () => {
                 name: "test-network",
               },
             ],
+            primary_subnet: null,
             workspace: "toad",
             zone: null,
             pi_storage_type: null,
@@ -1219,6 +1270,7 @@ describe("vtl", () => {
                 name: "test-network",
               },
             ],
+            primary_subnet: null,
             workspace: "toad",
             zone: null,
             pi_storage_type: null,

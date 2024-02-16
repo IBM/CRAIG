@@ -4,6 +4,7 @@ export { default as ReleaseNotes } from "./ReleaseNotes";
 export { default as ResetState } from "./ResetState";
 export { default as Summary } from "./summary/Summary";
 export { default as Projects } from "./projects/Projects";
+export { default as Stats } from "./Stats";
 export { EdgeNetworkingDocs } from "./SimplePages";
 export { default as SplashPage } from "./SplashPage";
 export { NewFormPage } from "./FormPages";

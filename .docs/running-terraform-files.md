@@ -6,7 +6,7 @@ After creating a deployment using the GUI, users can download a file called `cra
 
 - Terraform v1.3 or higher
 - Terraform CLI
-- IBM Cloud Platform API Key
+- IBM Cloud Platform API Key. See [Access Policies](access-policies.md) for access policies and account settings required for creating and managing resources created in CRAIG projects.
 
 ### 1. Initializing the Directory
 

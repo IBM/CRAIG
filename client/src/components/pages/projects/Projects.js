@@ -472,7 +472,18 @@ class Projects extends React.Component {
             open={this.state.modalOpen}
             data={this.state.modalData}
             onClose={this.toggleModal}
-            onSubmit={this.props.onProjectSave}
+            onSubmit={(stateData, componentProps) => {
+              this.setState({ showValidationModal: true }, () => {
+                this.props.onProjectSave(
+                  stateData,
+                  componentProps,
+                  true,
+                  () => {
+                    this.setState({ showValidationModal: false });
+                  }
+                );
+              });
+            }}
             projects={this.props.projects}
             templates={templates}
           />

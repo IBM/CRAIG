@@ -8,7 +8,11 @@ export const PowerSubnet = (props) => {
     <HoverClassNameWrapper
       className={
         "powerSubnetBox" +
-        (props.small && props.subnetIndex === 0 ? " marginTopNone" : "")
+        (props.small && props.subnetIndex === 0 ? " marginTopNone" : "") +
+        (props.subnet.name === "No Workspace" ||
+        props.subnet.name === "No Subnets Selected"
+          ? " diagramIconBoxInvalid"
+          : "")
       }
       hoverClassName="diagramBoxSelected"
       static={props.static}
@@ -25,7 +29,7 @@ export const PowerSubnet = (props) => {
         ) : (
           <>
             <IbmCloudSubnets className="marginRightQuarterRem" />
-            <span className="powerSubnetName">{props.subnet.name}</span>
+            <span className={"powerSubnetName"}>{props.subnet.name}</span>
             {props.subnet.use_data ? (
               <span
                 className="powerSubnetName"

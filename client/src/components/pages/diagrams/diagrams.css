@@ -186,6 +186,18 @@
   max-width: 150px;
 }
 
+.emptySubnetBox {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 150px;
+}
+
+.emptySmallSubnetBox {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 150px;
+}
+
 .subnetBox {
   border: 2px solid #00882b;
   margin: 0.5rem;

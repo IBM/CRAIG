@@ -1,6 +1,6 @@
 import React from "react";
-import { getTierSubnets } from "../../../lib";
-import { isString, splatContains } from "lazy-z";
+import { getDisplayTierSubnetList } from "../../../lib";
+import { isString } from "lazy-z";
 import { Subnet } from "./Subnet";
 import PropTypes from "prop-types";
 import "./diagrams.css";
@@ -22,15 +22,25 @@ export const SubnetRow = (props) => {
     );
   }
 
-  let tierSubnets = getTierSubnets(props.tier, props.vpc)(props.tier);
+  let tierSubnets = getDisplayTierSubnetList(props);
   let allSubnetsHaveAcl = true;
   tierSubnets.forEach((subnet) => {
     if (
       props.hasAcl &&
-      subnet.acl_name !== props.acl.name &&
-      props.tier.advanced !== true
-    )
+      subnet.network_acl !== props.acl.name &&
+      props.tier.advanced !== true &&
+      !subnet.display
+    ) {
       allSubnetsHaveAcl = false;
+    } else if (
+      props.tier &&
+      props.acl &&
+      props.tier.advanced &&
+      subnet.network_acl !== props.acl.name &&
+      !subnet.display
+    ) {
+      allSubnetsHaveAcl = false;
+    }
   });
 
   let subnetRowClassName = "displayFlex subnetRowBox";
@@ -42,11 +52,7 @@ export const SubnetRow = (props) => {
   )
     subnetRowClassName += " diagramBoxSelected";
 
-  return allSubnetsHaveAcl &&
-    (!props.tier.advanced ||
-      // prevent advanced tiers from rendering in unfound groups
-      (props.acl &&
-        splatContains(tierSubnets, "network_acl", props.acl.name))) ? (
+  return allSubnetsHaveAcl ? (
     <HoverClassNameWrapper
       key={props.vpc.name + (props.acl ? props.acl.name : "") + props.tier.name}
       className={subnetRowClassName}
@@ -61,7 +67,11 @@ export const SubnetRow = (props) => {
       }
     >
       {tierSubnets.map((subnet) => {
-        return (
+        return subnet.display === "none" ? (
+          <div
+            className={props.small ? "emptySmallSubnetBox" : "emptySubnetBox"}
+          />
+        ) : (
           <Subnet
             grayNames={props.grayNames}
             subnet={subnet}

@@ -124,9 +124,27 @@ describe("atracker", () => {
     });
   });
   describe("atracker.schema", () => {
+    it("should return correct groups for region", () => {
+      assert.deepEqual(
+        craig.atracker.locations.groups({}, { craig: craig }),
+        ["global", "us-south"],
+        "it should return correct groups"
+      );
+      assert.deepEqual(
+        craig.atracker.locations.groups({}, {}),
+        ["global", ""],
+        "it should return correct groups"
+      );
+    });
+
     it("should return correct name on render", () => {
       assert.deepEqual(
-        craig.atracker.name.onRender(),
+        craig.atracker.name.onRender(
+          {},
+          {
+            craig: craig,
+          }
+        ),
         "iac-atracker",
         "it should return correct text"
       );

@@ -19,6 +19,9 @@ export const PowerVolumes = (props) => {
         name="Storage Volumes"
         type="subHeading"
         icon={<FileStorage className="diagramTitleIcon" />}
+        className={
+          props.power.name === null ? "diagramIconBoxInvalid" : undefined
+        }
       />
       <CraigFormGroup className="displayFlex alignItemsCenter overrideGap">
         {craig.store.json.power_volumes

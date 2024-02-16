@@ -1,5 +1,5 @@
 import React from "react";
-import { IcseSelect } from "icse-react-assets";
+import { DynamicFormSelect } from "../dynamic-form";
 import { isNullOrEmptyString, splat, contains } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
@@ -29,56 +29,93 @@ const CopyRule = (props) => {
         }}
       />
       <CraigFormGroup noMarginBottom className="align-row">
-        <IcseSelect
-          formName={getFormName("source")}
-          labelText={"Rule Source " + ruleType}
-          groups={
-            props.isSecurityGroup
-              ? splat(props.craig.store.json.security_groups, "name")
-              : splat(props.data.acls, "name")
-          }
-          value={props.ruleSource}
-          handleInputChange={props.handleSelect}
+        <DynamicFormSelect
           name="ruleSource"
-          className={
-            props.v2 && props.isSecurityGroup
-              ? "fieldWidthCopyRule"
-              : "fieldWidthSmaller"
-          }
-          disabled={props.v2}
-          disableInvalid
-        />
-        <IcseSelect
-          formName={getFormName("rule")}
-          labelText="Rule to Copy"
-          groups={
-            isNullOrEmptyString(props.ruleSource) ? [] : props.allRuleNames
-          }
-          value={props.ruleCopyName}
+          propsName={getFormName("source")}
+          keyIndex={0}
+          value={props.ruleSource}
+          field={{
+            labelText: "Rule Source " + ruleType,
+            className: "fieldWidthSmaller",
+            groups: props.isSecurityGroup
+              ? splat(props.craig.store.json.security_groups, "name")
+              : splat(props.data.acls, "name"),
+            disabled: () => {
+              return props.v2;
+            },
+            invalid: () => {
+              return false;
+            },
+            invalidText: () => {
+              return "";
+            },
+          }}
+          parentProps={props}
+          parentState={props}
           handleInputChange={props.handleSelect}
+        />
+        <DynamicFormSelect
           name="ruleCopyName"
-          className="fieldWidthSmaller"
-          disableInvalid={
-            isNullOrEmptyString(props.ruleSource) ||
-            contains(props.destinationRuleNames, props.ruleCopyName)
-          }
-          invalid={contains(props.destinationRuleNames, props.ruleCopyName)}
-          invalidText={
-            contains(props.destinationRuleNames, props.ruleCopyName)
-              ? `Duplicate rule name "${props.ruleCopyName}" in destination "${props.ruleDestination}"`
-              : "Select a rule"
-          }
-        />
-        <IcseSelect
-          formName={getFormName("destination")}
-          labelText={"Destination " + ruleType}
-          groups={props.allOtherAcls}
-          value={props.ruleDestination}
+          propsName={getFormName("rule")}
+          keyIndex={0}
+          value={props.ruleCopyName}
+          field={{
+            labelText: "Rule to Copy",
+            className: "fieldWidthSmaller",
+            groups: isNullOrEmptyString(props.ruleSource)
+              ? []
+              : props.allRuleNames,
+            disabled: (stateData) => {
+              return false;
+            },
+            invalid: (stateData) => {
+              return (
+                !isNullOrEmptyString(stateData.ruleSource) &&
+                (contains(
+                  stateData.destinationRuleNames,
+                  stateData.ruleCopyName
+                ) ||
+                  isNullOrEmptyString(stateData.ruleCopyName))
+              );
+            },
+            invalidText: (stateData) => {
+              return contains(
+                stateData.destinationRuleNames,
+                stateData.ruleCopyName
+              )
+                ? `Duplicate rule name "${stateData.ruleCopyName}" in destination "${stateData.ruleDestination}"`
+                : "Select a rule";
+            },
+          }}
+          parentProps={props}
+          parentState={props}
           handleInputChange={props.handleSelect}
+        />
+        <DynamicFormSelect
           name="ruleDestination"
-          className="fieldWidthSmaller"
-          disableInvalid={isNullOrEmptyString(props.ruleSource)}
-          invalidText="Select a destination"
+          propsName={getFormName("destination")}
+          keyIndex={0}
+          value={props.ruleDestination}
+          field={{
+            labelText: "Destination " + ruleType,
+            className: "fieldWidthSmaller",
+            groups: props.allOtherAcls,
+            disabled: (stateData) => {
+              return false;
+            },
+            invalid: (stateData) => {
+              return (
+                !isNullOrEmptyString(stateData.ruleSource) &&
+                isNullOrEmptyString(stateData.ruleDestination)
+              );
+            },
+            invalidText: () => {
+              return "Select a destination";
+            },
+          }}
+          parentProps={props}
+          parentState={props}
+          handleInputChange={props.handleSelect}
         />
         <div className="align-row">
           <PrimaryButton

@@ -5,7 +5,9 @@ import { DeploymentIcon } from "../diagrams";
 import PropTypes from "prop-types";
 
 export const PowerSshKeys = (props) => {
-  return (
+  return props.power.name === null ? (
+    ""
+  ) : (
     <div
       className="formInSubForm marginBottomSmall"
       style={{ textAlign: "center" }}

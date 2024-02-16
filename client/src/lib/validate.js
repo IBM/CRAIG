@@ -317,10 +317,10 @@ const validate = function (json) {
         throw new Error(simpleErrors.unfoundAtrackerKey);
       }
       nullResourceGroupTest("Object Storage", instance);
-      validationTest("Object Storage", instance, "kms", "kms"); // check if key management service provided
       instance.buckets.forEach((bucket) => {
         if (
           bucket.kms_key &&
+          instance.kms &&
           !contains(
             splat(
               getObjectFromArray(json.key_management, "name", instance.kms)
