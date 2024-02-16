@@ -8,6 +8,7 @@ const {
   isInRange,
   revision,
   splatContains,
+  carve,
 } = require("lazy-z");
 const { invalidName, invalidNameText } = require("../../forms");
 const {
@@ -191,6 +192,7 @@ function powerVsInstanceSchema(vtl) {
         ).child("power", stateData.workspace).data.zone;
         stateData.zone = powerWorkspaceZone;
         stateData.network = [];
+        stateData.primary_subnet = "", 
         stateData.ssh_key = "";
         stateData.image = "";
       },
@@ -231,7 +233,7 @@ function powerVsInstanceSchema(vtl) {
       onRender: function (stateData) {
         return splat(stateData.network, "name");
       },
-      onInputChange: function (stateData, value) {
+      onStateChange: function (stateData, componentProps, value) {
         let newItems = [];
         let oldItems = [...stateData.network];
         oldItems.forEach((item) => {
@@ -247,8 +249,43 @@ function powerVsInstanceSchema(vtl) {
             });
           }
         });
-        return newItems;
+        stateData.network = newItems;
+        stateData.primary_subnet = newItems[0]?.name || "";
       },
+      forceUpdateKey: function (stateData) {
+        return stateData.workspace;
+      },
+    },
+    primary_subnet: {
+      labelText: "Primary Subnet",
+      type: "select",
+      default: "",
+      invalid: fieldIsNullOrEmptyString("primary_subnet"),
+      invalidText: powerVsInstanceInvalidText("at least one subnet"),
+      groups: function (stateData, componentProps) {
+        if (isEmpty(stateData.network)) {
+          return [];
+        } else {
+          return splat(stateData.network, "name");
+        }
+      },
+      onRender: function (stateData) {
+        if (isNullOrEmptyString(stateData.primary_subnet)) {
+          let primarySubnet = stateData.network[0]?.name || "";
+          stateData.primary_subnet = primarySubnet;
+        }
+        return stateData.primary_subnet;
+      },
+      onStateChange: function (stateData, componentProps, value) {
+        if (!isEmpty(stateData.network)) {
+          let newNetwork = [...stateData.network];
+          let primarySubnet = carve(newNetwork, "name", value);
+          newNetwork.unshift(primarySubnet[0]);
+          stateData.network = newNetwork;
+          stateData.primary_subnet = value;
+        } else stateData.primary_subnet = "";
+      },
+      size: "small",
     },
     ssh_key: {
       labelText: "SSH Key",

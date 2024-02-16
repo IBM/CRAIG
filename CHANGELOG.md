@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Graphs of CRAIG usage statistics (clones, views, references) are now available at `/stats` and `/v2/stats`
 - When using CRAIG V2 an empty space will now display in subnet tiers where all three possible zones are not present
 - When fetching VSI Images, the CRAIG API will now respond with up to 100 results instead of the default of 50
+- Users can now manage the primary subnet for Power VS Instances from the Power VS Instance form
 
 ### Fixes
 

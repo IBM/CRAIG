@@ -27,6 +27,7 @@ function initVtlStore(store) {
         "name",
         "workspace",
         "network",
+        "primary_subnet",
         "ssh_key",
         "image",
         "pi_sys_type",

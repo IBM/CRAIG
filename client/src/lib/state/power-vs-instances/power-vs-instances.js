@@ -43,6 +43,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
       instance.workspace = null;
       instance.zone = null;
       instance.image = null;
+      instance.primary_subnet = null;
     }
 
     config.store.json[field].forEach((instance) => {
@@ -70,7 +71,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         instance.network.forEach((nw) => {
           if (splatContains(workspace.network, "name", nw.name)) {
             newNetworks.push(nw);
-          }
+          } else instance.primary_subnet = null;
         });
         instance.network = newNetworks;
       }
@@ -309,6 +310,7 @@ function initPowerVsInstance(store) {
         "sap_profile",
         "workspace",
         "network",
+        "primary_subnet",
         "ssh_key",
         "image",
         "pi_sys_type",

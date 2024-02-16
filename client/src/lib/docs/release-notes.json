@@ -7,7 +7,8 @@
       "When updating a Power VS Workspace name, Transit Gateway connections will now replace the existing name with the new one",
       "Graphs of CRAIG usage statistics (clones, views, references) are now available at `/stats` and `/v2/stats`",
       "When using CRAIG V2 an empty space will now display in subnet tiers where all three possible zones are not present",
-      "When fetching VSI Images, the CRAIG API will now respond with up to 100 results instead of the default of 50"
+      "When fetching VSI Images, the CRAIG API will now respond with up to 100 results instead of the default of 50",
+      "Users can now manage the primary subnet for Power VS Instances from the Power VS Instance form"
     ],
     "fixes": [
       "Fixed an issue causing local Transit Gateways to not allow connections to VPCs already connected to another local Transit Gateway",
