@@ -62,6 +62,7 @@ import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { fortigateTf } from "../../../lib/json-to-iac/fortigate";
 import { vpnServerTf } from "../../../lib/json-to-iac";
 import { DynamicFormSelect } from "../../forms/dynamic-form";
+import { CopyRuleForm } from "../../forms";
 
 function F5Icon() {
   return <img src={f5} className="vpcDeploymentIcon" />;
@@ -651,6 +652,16 @@ class VpcDeploymentsDiagramPage extends React.Component {
                               vpc_name: this.vpcName(),
                             }}
                           />
+                          {this.state.selectedItem === "security_groups" ? (
+                            <CopyRuleForm
+                              craig={this.props.craig}
+                              sourceSg={this.getServiceData().name}
+                              isAclForm={false}
+                              v2={true}
+                            />
+                          ) : (
+                            ""
+                          )}
                         </div>
                       ) : (
                         ""

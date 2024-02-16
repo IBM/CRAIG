@@ -36,10 +36,7 @@ const CopyRule = (props) => {
           value={props.ruleSource}
           field={{
             labelText: "Rule Source " + ruleType,
-            className:
-              props.v2 && props.isSecurityGroup
-                ? "fieldWidthCopyRule"
-                : "fieldWidthSmaller",
+            className: "fieldWidthSmaller",
             groups: props.isSecurityGroup
               ? splat(props.craig.store.json.security_groups, "name")
               : splat(props.data.acls, "name"),
