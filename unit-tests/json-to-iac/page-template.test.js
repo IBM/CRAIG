@@ -56,6 +56,7 @@ describe("page template", () => {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.management_rg_id
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -148,6 +149,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.management_rg_id
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -212,6 +214,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.management_rg_id
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null

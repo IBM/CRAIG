@@ -23,7 +23,8 @@
     ],
     "upgrade_notes": [
       "CRAIG Terraform no longer uses the depricated field `pi_network_jumbo`. Existing networks with `pi_network_jumbo` selected will be converted to use `pi_network_mtu`.",
-      "CRAIG no longer supports variable `validation` block within Terraform. This was causing some issues when importing into schematics"
+      "CRAIG no longer supports variable `validation` block within Terraform. This was causing some issues when importing into schematics",
+      "Default VPC Security Group and Network ACLs now are secure by default and include no networking rules"
     ]
   },
   {

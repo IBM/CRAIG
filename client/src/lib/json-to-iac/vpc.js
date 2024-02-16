@@ -56,6 +56,7 @@ function ibmIsVpc(vpc, config, useVarRef) {
         ? vpc.default_routing_table_name
         : null,
       tags: getTags(config, useVarRef),
+      no_sg_acl_rules: true,
     },
   };
   if (vpc.classic_access) {

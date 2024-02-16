@@ -43,6 +43,7 @@ describe("vpc", () => {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
+  no_sg_acl_rules             = true
   default_network_acl_name    = null
   default_security_group_name = null
   default_routing_table_name  = null
@@ -90,6 +91,7 @@ resource "ibm_is_vpc" "management_vpc" {
   default_network_acl_name    = "null"
   default_security_group_name = "null"
   default_routing_table_name  = "null"
+  no_sg_acl_rules             = true
   tags = [
     "hello",
     "world"
@@ -131,6 +133,7 @@ resource "ibm_is_vpc" "management_vpc" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
+  no_sg_acl_rules             = true
   classic_access              = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
@@ -1144,6 +1147,7 @@ resource "ibm_is_public_gateway" "management_override_gw" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -1376,6 +1380,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 resource "ibm_is_vpc" "management_vpc" {
   name                        = "\${var.prefix}-management-vpc"
   resource_group              = var.slz_management_rg_id
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -1446,6 +1451,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 resource "ibm_is_vpc" "workload_vpc" {
   name                        = "\${var.prefix}-workload-vpc"
   resource_group              = var.slz_management_rg_id
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -2264,6 +2270,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
 resource "ibm_is_vpc" "edge_vpc" {
   name                        = "\${var.prefix}-edge-vpc"
   resource_group              = var.edge_rg_id
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
@@ -3121,6 +3128,7 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
 resource "ibm_is_vpc" "customer_a_vpc" {
   name                        = "\${var.prefix}-customer-a-vpc"
   resource_group              = var.craig_rg_id
+  no_sg_acl_rules             = true
   default_network_acl_name    = null
   default_security_group_name = null
   default_routing_table_name  = null
@@ -3622,7 +3630,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
       let expectedData = {
         customer_a_vpc: {
           "main.tf":
-            '##############################################################################\n# Customer AVPC\n##############################################################################\n\nresource "ibm_is_vpc" "customer_a_vpc" {\n  name                        = "${var.prefix}-customer-a-vpc"\n  resource_group              = var.craig_rg_id\n  tags                        = var.tags\n  default_network_acl_name    = null\n  default_security_group_name = null\n  default_routing_table_name  = null\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_1_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  vpc  = ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_2_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  vpc  = ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "customer_a_gateway_zone_2" {\n  name           = "${var.prefix}-customer-a-gateway-zone-2"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_1" {\n  vpc             = ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {\n  vpc             = ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_2_prefix.cidr\n  public_gateway  = ibm_is_public_gateway.customer_a_gateway_zone_2.id\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Customer AVPC\n##############################################################################\n\nresource "ibm_is_vpc" "customer_a_vpc" {\n  name                        = "${var.prefix}-customer-a-vpc"\n  resource_group              = var.craig_rg_id\n  tags                        = var.tags\n  no_sg_acl_rules             = true\n  default_network_acl_name    = null\n  default_security_group_name = null\n  default_routing_table_name  = null\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_1_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  vpc  = ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_2_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  vpc  = ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "customer_a_gateway_zone_2" {\n  name           = "${var.prefix}-customer-a-gateway-zone-2"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_1" {\n  vpc             = ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {\n  vpc             = ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_2_prefix.cidr\n  public_gateway  = ibm_is_public_gateway.customer_a_gateway_zone_2.id\n}\n\n##############################################################################\n',
           "versions.tf":
             '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
           "variables.tf":
@@ -6103,6 +6111,7 @@ resource "ibm_is_vpc" "edge_vpc" {
   name                        = "$\{var.prefix}-edge-vpc"
   resource_group              = var.edge_rg_id
   tags                        = var.tags
+  no_sg_acl_rules             = true
   address_prefix_management   = "manual"
   default_network_acl_name    = null
   default_security_group_name = null
