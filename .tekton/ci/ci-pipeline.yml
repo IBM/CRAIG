@@ -224,71 +224,71 @@ spec:
       workspaces:
         - name: output
           workspace: pipeline-ws
-    - name: code-risk-analyzer
-      runAfter:
-        - git-clone
-      taskRef:
-        name: cra-v2-cra
-      params:
-        - name: pipeline-debug
-          value: $(params.pipeline-debug)
-        - name: ibmcloud-region
-          value: $(params.ibmcloud-region)
-        - name: registry-region
-          value: $(params.registry-region)
-        - name: env-props
-          value: $(params.env-props)
-        - name: fileignore
-          value: $(params.fileignore)
-        - name: ibmcloud-trace
-          value: $(params.ibmcloud-trace)
-        - name: output
-          value: $(params.output)
-        - name: path
-          value: $(params.path)
-        - name: strict
-          value: $(params.strict)
-        - name: toolchainid
-          value: $(params.toolchainid)
-        - name: verbose
-          value: $(params.verbose)
-        - name: asset-type
-          value: $(params.asset-type)
-        - name: bom-report
-          value: $(params.bom-report)
-        - name: docker-build-flags
-          value: $(params.docker-build-flags)
-        - name: docker-build-context
-          value: $(params.docker-build-context)
-        - name: dockerfile-pattern
-          value: $(params.dockerfile-pattern)
-        - name: docker-registry-url
-          value: $(params.docker-registry-url)
-        - name: docker-registry-username
-          value: $(params.docker-registry-username)
-        - name: gradle-exclude-configs
-          value: $(params.gradle-exclude-configs)
-        - name: maven-exclude-scopes
-          value: $(params.maven-exclude-scopes)
-        - name: nodejs-create-package-lock
-          value: $(params.nodejs-create-package-lock)
-        - name: prev-report
-          value: $(params.prev-report)
-        - name: deploy-report
-          value: $(params.deploy-report)
-        - name: cveignore
-          value: $(params.cveignore)
-        - name: exclude-dev
-          value: $(params.exclude-dev)
-        - name: vulnerability-report
-          value: $(params.vulnerability-report)
-        - name: cra-scan-image
-          value: $(params.cra-scan-image)
-        - name: custom-script
-          value: $(params.custom-script)
-      workspaces:
-        - name: artifacts
-          workspace: pipeline-ws
+    # - name: code-risk-analyzer
+    #   runAfter:
+    #     - git-clone
+    #   taskRef:
+    #     name: cra-v2-cra
+    #   params:
+    #     - name: pipeline-debug
+    #       value: $(params.pipeline-debug)
+    #     - name: ibmcloud-region
+    #       value: $(params.ibmcloud-region)
+    #     - name: registry-region
+    #       value: $(params.registry-region)
+    #     - name: env-props
+    #       value: $(params.env-props)
+    #     - name: fileignore
+    #       value: $(params.fileignore)
+    #     - name: ibmcloud-trace
+    #       value: $(params.ibmcloud-trace)
+    #     - name: output
+    #       value: $(params.output)
+    #     - name: path
+    #       value: $(params.path)
+    #     - name: strict
+    #       value: $(params.strict)
+    #     - name: toolchainid
+    #       value: $(params.toolchainid)
+    #     - name: verbose
+    #       value: $(params.verbose)
+    #     - name: asset-type
+    #       value: $(params.asset-type)
+    #     - name: bom-report
+    #       value: $(params.bom-report)
+    #     - name: docker-build-flags
+    #       value: $(params.docker-build-flags)
+    #     - name: docker-build-context
+    #       value: $(params.docker-build-context)
+    #     - name: dockerfile-pattern
+    #       value: $(params.dockerfile-pattern)
+    #     - name: docker-registry-url
+    #       value: $(params.docker-registry-url)
+    #     - name: docker-registry-username
+    #       value: $(params.docker-registry-username)
+    #     - name: gradle-exclude-configs
+    #       value: $(params.gradle-exclude-configs)
+    #     - name: maven-exclude-scopes
+    #       value: $(params.maven-exclude-scopes)
+    #     - name: nodejs-create-package-lock
+    #       value: $(params.nodejs-create-package-lock)
+    #     - name: prev-report
+    #       value: $(params.prev-report)
+    #     - name: deploy-report
+    #       value: $(params.deploy-report)
+    #     - name: cveignore
+    #       value: $(params.cveignore)
+    #     - name: exclude-dev
+    #       value: $(params.exclude-dev)
+    #     - name: vulnerability-report
+    #       value: $(params.vulnerability-report)
+    #     - name: cra-scan-image
+    #       value: $(params.cra-scan-image)
+    #     - name: custom-script
+    #       value: $(params.custom-script)
+    #   workspaces:
+    #     - name: artifacts
+    #       workspace: pipeline-ws
     - name: extract-doi-enablement
       taskRef:
         name: toolchain-extract-value

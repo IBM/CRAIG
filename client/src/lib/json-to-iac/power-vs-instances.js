@@ -159,6 +159,7 @@ function powerVsInstanceData(instance, config) {
   }
   delete data.sap;
   delete data.sap_profile;
+  delete data.primary_subnet;
   delete data.pi_user_data;
   if (!isNullOrEmptyString(instance.pi_user_data, true)) {
     data.pi_user_data = `\${<<USER_DATA\n${instance.pi_user_data}\n  USER_DATA}`;

@@ -10,7 +10,7 @@
     "enable_power_vs": true,
     "enable_classic": false,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.11.0",
+    "craig_version": "1.11.1",
     "power_vs_high_availability": false,
     "template": "Power VS POC",
     "fs_cloud": false
@@ -144,7 +144,8 @@
           "storage_class": "standard",
           "kms_key": "atracker-key",
           "force_delete": false,
-          "use_random_suffix": false
+          "use_random_suffix": false,
+          "endpoint": null
         }
       ],
       "keys": [
@@ -535,11 +536,21 @@
   ],
   "routing_tables": [
     {
-      "routes": [],
+      "routes": [
+        {
+          "name": "on-prem",
+          "zone": "1",
+          "destination": "10.40.0.0/16",
+          "action": "deliver",
+          "next_hop": "10.250.0.1",
+          "routing_table": "poweringress",
+          "vpc": "transit"
+        }
+      ],
       "name": "poweringress",
       "vpc": "transit",
       "internet_ingress": false,
-      "transit_gateway_ingress": false,
+      "transit_gateway_ingress": true,
       "vpc_zone_ingress": true,
       "direct_link_ingress": false,
       "route_direct_link_ingress": false,
@@ -573,23 +584,23 @@
       "resource_group": "transit-rg",
       "rules": [
         {
-          "vpc": "transit",
-          "sg": "transit-vpe",
+          "name": "general-inbound",
           "direction": "inbound",
-          "name": "allow-ibm-inbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
           "icmp": {
             "type": null,
             "code": null
           },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "10.0.0.0/8",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "ruleProtocol": "all",
           "port_min": null,
           "port_max": null,
@@ -597,23 +608,23 @@
           "code": null
         },
         {
-          "vpc": "transit",
-          "sg": "transit-vpe",
+          "name": "powervs-inbound",
           "direction": "inbound",
-          "name": "allow-vpc-inbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
           "icmp": {
             "type": null,
             "code": null
           },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "192.168.0.0/24",
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "ruleProtocol": "all",
           "port_min": null,
           "port_max": null,
@@ -621,96 +632,24 @@
           "code": null
         },
         {
-          "vpc": "transit",
-          "sg": "transit-vpe",
+          "name": "general-outbound",
           "direction": "outbound",
-          "name": "allow-vpc-outbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
           "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          },
+          "vpc": "transit",
+          "sg": "transit-vpe",
           "ruleProtocol": "all",
-          "port_min": null,
-          "port_max": null,
-          "type": null,
-          "code": null
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          },
-          "ruleProtocol": "tcp",
-          "port_min": null,
-          "port_max": null,
-          "type": null,
-          "code": null
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 80,
-            "port_min": 80
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          },
-          "ruleProtocol": "tcp",
-          "port_min": null,
-          "port_max": null,
-          "type": null,
-          "code": null
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          },
-          "ruleProtocol": "tcp",
           "port_min": null,
           "port_max": null,
           "type": null,
@@ -724,23 +663,23 @@
       "resource_group": "transit-rg",
       "rules": [
         {
-          "vpc": "transit",
-          "sg": "transit-vsi",
+          "name": "general-inbound",
           "direction": "inbound",
-          "name": "allow-ibm-inbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
           "icmp": {
             "type": null,
             "code": null
           },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "10.0.0.0/8",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "ruleProtocol": "all",
           "port_min": null,
           "port_max": null,
@@ -748,23 +687,23 @@
           "code": null
         },
         {
-          "vpc": "transit",
-          "sg": "transit-vsi",
+          "name": "ibm-inbound",
           "direction": "inbound",
-          "name": "allow-vpc-inbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
           "icmp": {
             "type": null,
             "code": null
           },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "ruleProtocol": "all",
           "port_min": null,
           "port_max": null,
@@ -772,23 +711,23 @@
           "code": null
         },
         {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "outbound",
-          "name": "allow-vpc-outbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
+          "name": "powervs-inbound",
+          "direction": "inbound",
           "icmp": {
             "type": null,
             "code": null
           },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "192.168.0.0/24",
+          "vpc": "transit",
+          "sg": "transit-vsi",
           "ruleProtocol": "all",
           "port_min": null,
           "port_max": null,
@@ -796,72 +735,24 @@
           "code": null
         },
         {
-          "vpc": "transit",
-          "sg": "transit-vsi",
+          "name": "all-outbound",
           "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
           "icmp": {
             "type": null,
             "code": null
           },
-          "ruleProtocol": "tcp",
-          "port_min": null,
-          "port_max": null,
-          "type": null,
-          "code": null
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
           "tcp": {
-            "port_max": 80,
-            "port_min": 80
+            "port_min": null,
+            "port_max": null
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
-          "icmp": {
-            "type": null,
-            "code": null
-          },
-          "ruleProtocol": "tcp",
-          "port_min": null,
-          "port_max": null,
-          "type": null,
-          "code": null
-        },
-        {
+          "source": "0.0.0.0/0",
           "vpc": "transit",
           "sg": "transit-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          },
-          "ruleProtocol": "tcp",
+          "ruleProtocol": "all",
           "port_min": null,
           "port_max": null,
           "type": null,
@@ -984,13 +875,9 @@
           "vpc": "transit",
           "rules": [
             {
+              "name": "all-inbound",
               "action": "allow",
-              "destination": "10.0.0.0/8",
               "direction": "inbound",
-              "name": "allow-ibm-inbound",
-              "source": "161.26.0.0/16",
-              "acl": "transit",
-              "vpc": "transit",
               "icmp": {
                 "type": null,
                 "code": null
@@ -1007,70 +894,10 @@
                 "source_port_min": null,
                 "source_port_max": null
               },
-              "ruleProtocol": "all",
-              "port_min": null,
-              "port_max": null,
-              "type": null,
-              "code": null,
-              "source_port_min": null,
-              "source_port_max": null
-            },
-            {
-              "action": "allow",
-              "source": "10.0.0.0/8",
-              "direction": "outbound",
-              "name": "allow-ibm-outbound",
-              "destination": "161.26.0.0/16",
-              "acl": "transit",
-              "vpc": "transit",
-              "icmp": {
-                "type": null,
-                "code": null
-              },
-              "tcp": {
-                "port_min": null,
-                "port_max": null,
-                "source_port_min": null,
-                "source_port_max": null
-              },
-              "udp": {
-                "port_min": null,
-                "port_max": null,
-                "source_port_min": null,
-                "source_port_max": null
-              },
-              "ruleProtocol": "all",
-              "port_min": null,
-              "port_max": null,
-              "type": null,
-              "code": null,
-              "source_port_min": null,
-              "source_port_max": null
-            },
-            {
-              "action": "allow",
+              "source": "0.0.0.0/0",
               "destination": "10.0.0.0/8",
-              "direction": "inbound",
-              "name": "allow-all-network-inbound",
-              "source": "10.0.0.0/8",
               "acl": "transit",
               "vpc": "transit",
-              "icmp": {
-                "type": null,
-                "code": null
-              },
-              "tcp": {
-                "port_min": null,
-                "port_max": null,
-                "source_port_min": null,
-                "source_port_max": null
-              },
-              "udp": {
-                "port_min": null,
-                "port_max": null,
-                "source_port_min": null,
-                "source_port_max": null
-              },
               "ruleProtocol": "all",
               "port_min": null,
               "port_max": null,
@@ -1080,13 +907,9 @@
               "source_port_max": null
             },
             {
+              "name": "all-outbound",
               "action": "allow",
-              "destination": "10.0.0.0/8",
               "direction": "outbound",
-              "name": "allow-all-network-outbound",
-              "source": "10.0.0.0/8",
-              "acl": "transit",
-              "vpc": "transit",
               "icmp": {
                 "type": null,
                 "code": null
@@ -1103,6 +926,10 @@
                 "source_port_min": null,
                 "source_port_max": null
               },
+              "source": "10.0.0.0/8",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
               "ruleProtocol": "all",
               "port_min": null,
               "port_max": null,
@@ -1147,7 +974,8 @@
             "10.10.0.128/29",
             "10.10.0.144/28"
           ],
-          "vpn": "dal10gw"
+          "vpn": "dal10gw",
+          "peer_address": ""
         }
       ],
       "additional_prefixes": ["10.40.0.0/16"]

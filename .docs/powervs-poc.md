@@ -47,7 +47,15 @@ To set the public SSH key value for the VPC VSI, click on the red `VPC Deploymen
 To set the public SSH key value for the Power VS VSIs, click on the red `Power VS` item on the left navigation bar, then click on the key icon. Click on the key icon, expand the SSH Keys section, fill in the public key value, and click the Save button.
 
 ### On-premises network CIDRS and Peer Address
-To set network CIDRs that are being used by the on-prem environment, click on `VPC Deployments` on the left navigation bar. Scroll down and click on the gateway icon in the `vpn-zone-1` network. Expand the connection section and update the network CIDR in the `Additional Address Prefixes` and `Peer CIDRs` fields. Set VPN connection Peer Address, the address for the on-prem connection, in the `Peer Address` field. Click on both blue Save buttons when finished.
+To set network CIDRs that are being used by the on-prem environment the VPN Gateway and a routing table must be updated.
+
+To update the VPN Gateway, click on `VPC Deployments` on the left navigation bar. Scroll down and click on the gateway icon in the `vpn-zone-1` network. Expand the connection section and update the network CIDR in the `Additional Address Prefixes` and `Peer CIDRs` fields. Set VPN connection Peer Address, the address for the on-prem connection, in the `Peer Address` field. Click on both blue Save buttons when finished.
+
+To update the VPN Gateway, click on `VPC Deployments` on the left navigation bar then click on the `poweringress` routing table icon. Change the on-prem CIDR in the `Destination` field and click the blue Save button.
+
+#### On-premises network CIDR outside of 10.0.0.0/8
+If you are using an on-premises network CIDR outside of the `10.0.0.0/8` range in addition to the changes above you will need to add inbound and outbound rules to the `transit-vsi` and `transit-vpe` security groups. These security groups can be found by clicking on `VPC Deployments` on the left navigation bar and then clicking on each security group icon.
+
 
 ### Activity Tracker
 By default the template will create an IBM Cloud Activity Tracker in the us-south region. Since only one activity tracker is allowed per region in an account the project will fail to deploy if the account already has an Activity Tracker instance in the region. If the target account already has an Activity Tracker instance the project must be modified to not create an instance. Navigate to the the Activity Tracker by choosing `Cloud Services` from the left navigation bar and click on the `Activity Tracker` icon. Set `Create Activity Tracker Instance` to `False` and click the Save button.
@@ -82,6 +90,8 @@ The CIDR must also be changed in the VPN Gateway. Click on `VPC Deployments` on 
 To change the CIDR of a Power VS network, click on the `Power VS`icon in the left navigation bar, and click on the name of the Power VS workspace (`dal10` by default). Expand the subnet that you wish to modify, change the CIDR, and click the Save button.
 
 The CIDR must also be changed in the VPN Gateway. Click on `VPC Deployments` on the left navigation bar. Scroll down and click on the gateway icon in the `vpn-zone-1` network. Expand the connection section and update the network CIDR in the `Local CIDRs` field.
+
+The CIDR must be changed on both the `transit-vpe` and `transit-vsi` security groups. To modify a security group, click on `VPC Deployments` on the left navigation bar and click on the icon for the security group you want to modify. To modify the security group rules, click the `Manage Rules` button above the table. Expand the rule you want to modify, modify the rule, and click the Save button. Modify the CIDR in the `powervs-inbound` rule in both security groups.
 
 ### Power Virtual Server VSIs / LPARs
 
@@ -125,6 +135,24 @@ IBM Cloud Schematics provides a cost estimation for the project resources after 
 
 ## Post-deployment configuration
 
+### Update Power VS route to VPN Gateway
+After deploying the PoC resources the routing table for traffic from Power VS to the VPN Gateway for on-premises must be updated.
+
+First, find the VPN Gateway for VPC's active private address.
+> * You can find this address from [IBM cloud console](https://cloud.ibm.com/).
+> * From left menu click on `VPC Infrastructures > VPNs`. 
+> * Select the region where VPN has been deployed and all VPNs in that region will be listed. 
+> * Select the VPN that was deployed.
+> * Copy or write down the Private IP of the active gateway member
+
+Update the routing table:
+> * From left menu click on `VPC Infrastructures > Routing Tables`. 
+> * Select the VPC that was deployed.
+> * Select the routing table with `poweringress` in its name.
+> Modify the route by clicking the 3 vertical dot icon and choosing Edit.
+> Set the Next hop IP address to the private IP address of the active VPN gateway member
+
+### Virtual server configuration
 After deploying the PoC resources additional configuration in the VSI operating systems is usually required. IBM i VSIs deployed using the stock images have [required post-deployment configuration](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-ibmi).
 
 Any additional non-boot disk (rootvg, *SYSBAS, etc) volumes will be blank and require formatting, volume group restores, mount point configuration, ASP configuration, etc depending on the operating system and intended use case.
