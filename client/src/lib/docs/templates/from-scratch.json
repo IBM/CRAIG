@@ -10,7 +10,7 @@
     "enable_classic": false,
     "dynamic_subnets": true,
     "enable_power_vs": false,
-    "craig_version": "1.11.0",
+    "craig_version": "1.11.1",
     "power_vs_zones": [],
     "power_vs_high_availability": false
   },

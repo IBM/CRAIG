@@ -1,6 +1,6 @@
 {
   "_options": {
-    "craig_version": "1.11.0",
+    "craig_version": "1.11.1",
     "prefix": "iac",
     "region": "us-south",
     "tags": ["hello", "world"],

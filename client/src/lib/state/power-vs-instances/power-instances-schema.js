@@ -192,7 +192,7 @@ function powerVsInstanceSchema(vtl) {
         ).child("power", stateData.workspace).data.zone;
         stateData.zone = powerWorkspaceZone;
         stateData.network = [];
-        stateData.primary_subnet = "", 
+        stateData.primary_subnet = "",
         stateData.ssh_key = "";
         stateData.image = "";
       },

@@ -1,6 +1,6 @@
 [
   {
-    "version": "1.11.0",
+    "version": "1.11.1",
     "features": [
       "Users can now view Power VS Resources with no selected workspace on the CRAIG V2 Power VS page",
       "Users can now view Power VS Resources with no selected subnets on the CRAIG V2 Power VS page",
