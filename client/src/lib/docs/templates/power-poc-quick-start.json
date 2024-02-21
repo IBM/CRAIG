@@ -986,8 +986,8 @@
     {
       "kms": "kms",
       "encryption_key": "key",
-      "image": "ibm-centos-stream-9-amd64-5",
-      "image_name": "CentOS Stream 9 - Minimal Install (amd64) [ibm-centos-stream-9-amd64-5]",
+      "image": "ibm-redhat-9-2-minimal-amd64-3",
+      "image_name": "Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-2-minimal-amd64-3]",
       "profile": "bx2-4x16",
       "name": "example-deployment",
       "security_groups": ["transit-vsi"],
