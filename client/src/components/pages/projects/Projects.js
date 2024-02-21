@@ -312,7 +312,7 @@ class Projects extends React.Component {
           this.props.notify(notification);
 
           return fetch(
-            `/api/schematics/tar/${this.props.projects[keyName].workspace_name}`,
+            `/api/schematics/tar/${this.props.projects[keyName].workspace_name}/${this.props.projects[keyName].workspace_region}`,
             {
               method: "PUT",
               headers: { "Content-Type": "application/json" },

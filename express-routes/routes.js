@@ -22,7 +22,7 @@ router.get("/cluster/:region/flavors", controller.clusterFlavors);
 router.get("/cluster/versions", controller.clusterVersions);
 
 // schematics
-router.put("/schematics/tar/:workspaceName", controller.uploadTar);
+router.put("/schematics/tar/:workspaceName/:region", controller.uploadTar);
 router.post(
   "/schematics/:workspaceName/:region/:resourceGroup",
   controller.createWorkspace

@@ -5,7 +5,7 @@ info:
     Cloud Resources and Infrastructure as Code Generator.
 
     In order to use the CRAIG API, you must set the environment variable `API_KEY` to your IBM Cloud API Key
-  version: 1.2.0
+  version: 1.11.0
 externalDocs:
   description: To get started with CRAIG, visit here
   url: https://github.ibm.com/craig-automation/CRAIG/blob/main/README.md
@@ -36,26 +36,26 @@ paths:
           description: Successfully created tar file
         "404":
           description: Supplied template does not exist or not found
-  /api/power/{region}/{component}:
+  /api/power/{zone}/{component}:
     get:
       tags:
         - Power VS
       summary: Returns a list of images or storage pools
-      description: Get a list of images or storage pools based on the value passed to component
+      description: Get a list of images, storage pools, or storage tiers based on the value passed to component
       operationId: getPowerComponent
       parameters:
         - in: path
-          name: region
+          name: zone
           required: true
           schema:
             type: string
-          description: Region to get flavors from
+          description: Zone to retrieve data from
         - in: path
           name: component
           required: true
           schema:
             type: string
-          description: Type of data to return
+          description: Component to return data for (images, storage_pools, storage_tiers)
       responses:
         "200":
           description: successful operation
@@ -87,6 +87,8 @@ paths:
                     - Tier1-Flash-2
                     - Tier3-Flash-1
                     - Tier1-Flash-2
+                storage-tiers:
+                  value: ["tier3", tier1]
         "401":
           description: Unauthorized
   /api/craig/tar:
@@ -123,6 +125,44 @@ paths:
           description: Successfully rendered CRAIG API Spec
         "404":
           description: Page not found
+  /api/stats:
+    get:
+      tags:
+        - Stats
+      summary: Returns an object of CRAIG usage statistics
+      description: Returns on object of CRAIG usage statistics, including daily views, daily clones, and reference origins
+      operationId: stats
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {
+                    "views":
+                      {
+                        "2024-02-08": "200",
+                        "2024-02-09": "139",
+                        "2024-02-10": "22",
+                        "2024-02-11": "156",
+                      },
+                    "clones":
+                      {
+                        "2024-02-08": "9",
+                        "2024-02-09": "13",
+                        "2024-02-10": "6",
+                        "2024-02-11": "3",
+                      },
+                    "refs":
+                      {
+                        "github.ibm.com": 388,
+                        "github.com": 943,
+                        "Google": 800,
+                        "research.ibm.com": 9,
+                      },
+                  }
   /api/vsi/{region}/instanceProfiles:
     get:
       tags:
@@ -235,7 +275,7 @@ paths:
                   type: string
         "401":
           description: Unauthorized
-  /api/schematics/{workspaceName}:
+  /api/schematics/tar/{workspaceName}/{region}:
     put:
       tags:
         - Schematics
@@ -249,6 +289,12 @@ paths:
           schema:
             type: string
           description: Name of workspace to upload tar file into
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region of workspace to upload tar file into
       requestBody:
         content:
           application/json:
@@ -274,7 +320,7 @@ paths:
           description: Too many requests
         "500":
           description: IBM Cloud Schematics currently unavailable
-  /api/schematics/createWorkspace/{workspaceName}/{region}{resourceGroup}:
+  /api/schematics/{workspaceName}/{region}/{resourceGroup}:
     post:
       tags:
         - Schematics
@@ -321,58 +367,6 @@ paths:
           description: Too many requests
         "500":
           description: IBM Cloud Schematics currently unavailable
-  /api/schematics/newWorkspaceUpload:
-    post:
-      tags:
-        - Schematics
-      summary: Creates schematics workspace and uploads tar file of CRAIG data
-      description: Creates schematics workspace and uploads tar file of CRAIG data
-      operationId: createUsersWithListInput
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                workspaceName:
-                  description: Name or workspace to create
-                  type: string
-                  example: my-workspace
-                region:
-                  description: Region to create workspace in
-                  type: string
-                  example: us-south
-                resourceGroup:
-                  description: Resource group workspace will belong to
-                  type: string
-                  example: defualt
-                craigJSON:
-                  description: JSON produced by CRAIG
-                  type: object
-                  example: {}
-              required:
-                - workspaceName
-                - region
-                - resourceGroup
-      responses:
-        "201":
-          description: Successfully created workspace and uploaded tar file
-        "400":
-          description: Tar file could not be read
-        "401":
-          description: Missing IBM Cloud token
-        "403":
-          description: Unauthorized
-        "404":
-          description: Workspace not found
-        "429":
-          description: Too many requests
-        "500":
-          description: IBM Cloud Schematics currently unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Workspace"
 components:
   schemas:
     Workspace:

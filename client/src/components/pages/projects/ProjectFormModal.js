@@ -71,11 +71,15 @@ export class ProjectFormModal extends React.Component {
   render() {
     let invalidProjectNameVal = invalidProjectName(this.state, this.props);
     let invalidDescription = invalidProjectDescription(this.state.description);
+    let invalidRegion = !this.state.workspace_region;
     let invalidSchematicsName = this.state.use_schematics
       ? invalidNewResourceName(this.state.workspace_name)
       : false;
     let primaryButtonDisabled =
-      invalidProjectNameVal || invalidDescription || invalidSchematicsName;
+      invalidProjectNameVal ||
+      invalidDescription ||
+      invalidSchematicsName ||
+      (invalidRegion && this.state.use_schematics);
     let field = {
       labelText: "Choose an Initial Project Template",
       className: "projectSelectMarginBottom",
@@ -194,6 +198,7 @@ export class ProjectFormModal extends React.Component {
                   invalidText={"Invalid Name"}
                   componentName="workspace"
                   field="workspace_name"
+                  disabled={this.state.workspace_url !== undefined}
                   id="workspace-name"
                   onChange={this.handleTextInput}
                   value={this.state.workspace_name || ""}
@@ -208,6 +213,7 @@ export class ProjectFormModal extends React.Component {
                   onChange={this.handleTextInput}
                   value={this.state.workspace_resource_group}
                   placeholder={"default"}
+                  disabled={this.state.workspace_url !== undefined}
                   optional={true}
                   tooltip={{
                     content: `Must correspond to an existing resource group. If not provided, the workspace will be deployed to the "default" resource group in the account.`,
@@ -225,13 +231,13 @@ export class ProjectFormModal extends React.Component {
                     labelText: "Workspace Region",
                     groups: ["us-south", "eu-de", "eu-gb"].sort(azsort),
                     disabled: (stateData) => {
-                      return false;
+                      return stateData.workspace_url !== undefined;
                     },
                     invalid: (stateData) => {
-                      return false;
+                      return !stateData.workspace_region;
                     },
                     invalidText: (stateData) => {
-                      return "";
+                      return "Select a region";
                     },
                   }}
                   parentProps={this.props}
