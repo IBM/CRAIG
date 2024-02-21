@@ -8,7 +8,7 @@ REGION=${CRAIG_REGION:-"us-south"}
 RESOURCE_GROUP=${CRAIG_RESOURCE_GROUP:-"Default"}
 ENVIRONMENT_FILE=${CRAIG_ENVIRONMENT_FILE}
 PROJECT_NAME=${CRAIG_PROJECT_NAME:-"craig"}
-ICR_NAMESPACE=${CRAIG_ICR_NAMESPACE:-"craig-namespace"}
+ICR_NAMESPACE=${CRAIG_ICR_NAMESPACE:-"NOT-SET"}
 ICR=${CRAIG_ICR:-"us.icr.io"}
 GIT_SOURCE=${CRAIG_GIT_SOURCE:="https://github.com/IBM/CRAIG"}
 APP_NAME=${CRAIG_APP_NAME:-"craig"}
@@ -52,7 +52,7 @@ Options:
   z     Create Power Virtual Server Workspaces. This is a flag option and does not take a value. Default: do not create the workspaces
   e     Path to a CRAIG environment file containing Power Virtual Server Workspace GUIDs. This is only used when deploying multiple instances of CRAIG using the same Power VS workspaces. No default.
 
-  n     IBM Cloud Container Registry namespace. Default value = 'craig-namespace'.
+  n     IBM Cloud Container Registry namespace. Default value = 'craig-<Softlayer/IMS account number>'.
   o     IBM Container Registry server name. Default value = 'us.icr.io'.
   i     Name of the CRAIG container image. Default value = 'craig'.
   t     Tag for the CRAIG container image. Default value = 'latest'.
@@ -84,9 +84,19 @@ initialize_cli() {
 }
 
 delete_resources() {
+  ibmcloud cr region-set $ICR > /dev/null || fatal "Failed to set the IBM Container Registroy region to $ICR"
+
+  # Set the default ICR_NAMESPACE if one was not provided
+  if [ $ICR_NAMESPACE == "NOT-SET" ]; then
+    # Get the ims account number
+    ims_id=$(ibmcloud account show --output json | jq -r .ims_account_id)
+    [[ -z "$ims_id" ]] && fatal "Failed to retrieve the Account's IMS ID. To avoid this error, the -n parameter should be used to provide a unique container registry namespace."
+    ICR_NAMESPACE="craig-${ims_id}"
+  fi
+
   # remove namespace if present
   if ibmcloud cr namespace-list | grep $ICR_NAMESPACE > /dev/null; then
-    ibmcloud cr namespace-rm $ICR_NAMESPACE -f
+    ibmcloud cr namespace-rm $ICR_NAMESPACE
   fi
 
   # remove code engine project if present
@@ -101,21 +111,31 @@ delete_resources() {
 create_resources() {
   if [ $API_KEY == "NOT-SET" ]; then
     read -s -p "Enter an IBM Cloud API key for CRAIG-IBM Cloud integration:" API_KEY
-
+    echo ""
     if [ $API_KEY == "" ]; then
       fatal "An IBM Cloud API key is required." 
     fi
   fi
 
-  if [ $CREATE_POWERVS == true ]; then
-    create_powervs_workspaces
+  ibmcloud cr region-set $ICR > /dev/null || fatal "Failed to set the IBM Container Registroy region to $ICR"
+
+  # Set the default ICR_NAMESPACE if one was not provided
+  if [ $ICR_NAMESPACE == "NOT-SET" ]; then
+    # Get the ims account number
+    ims_id=$(ibmcloud account show --output json | jq -r .ims_account_id)
+    [[ -z "$ims_id" ]] && fatal "Failed to retrieve the Account's IMS ID. To avoid this error, the -n parameter should be used to provide a unique container registry namespace."
+    ICR_NAMESPACE="craig-${ims_id}"
   fi
 
   # create namespace
   if ! ibmcloud cr namespace-list | grep $ICR_NAMESPACE > /dev/null; then
     # no namespace found add it
     echo "No ICR namespace found creating one..."
-    ibmcloud cr namespace-add $ICR_NAMESPACE || fatal "An error occurred creating the IBM Container Registry namespace"
+    ibmcloud cr namespace-add -g $RESOURCE_GROUP $ICR_NAMESPACE || fatal "An error occurred creating the IBM Container Registry namespace. The -n parameter may be used to specify the name for the namespace."
+  fi
+
+  if [ $CREATE_POWERVS == true ]; then
+    create_powervs_workspaces
   fi
 
   # create/check Code Engine project and select it
@@ -365,7 +385,7 @@ create_powervs_workspaces() {
     wait_for_workspace_inactive_status $workspace_id
 
     # Apply the template
-    echo "Creating the Power VS workspaces"
+    echo "Creating the Power VS workspaces for CRAIG integration"
     apply_output=$(ibmcloud sch apply -i $workspace_id -f --output json)
     #echo "Apply output ${apply_output}"
     apply_id=$(echo $apply_output | jq -r ".activityid")
@@ -399,7 +419,7 @@ delete_powervs_workspaces() {
     fi
 
     # Destroy the resources
-    echo "Destroying Power VS Workspaces"
+    echo "Destroying Power VS Workspaces used for CRAIG integration"
     destroy_submit_output=$(ibmcloud sch destroy -i $workspace_id -f --output json)
     destroy_id=$(echo $destroy_submit_output | jq -r ".activityid")
     wait_for_schematics_action_complete $destroy_id $workspace_id
