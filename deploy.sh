@@ -328,7 +328,7 @@ EOF
     # Note that # is used as the command separator instead of the usual / because the craig source
     # variable contains a URL with /
     sed_exp="s#SED_WS_NAME#$2#g;s#SED_WS_REGION#$3#g;s#SED_CRAIG_SOURCE#$4#g;s#SED_CRAIG_BRANCH#$5#g;s#SED_API_KEY#$6#g;s#SED_PREFIX#$7#g;s#SED_RESOURCE_GROUP#$8#g"
-    sed -i "$sed_exp" "$1"
+    sed -i".bak" "$sed_exp" "$1"
 }
 
 wait_for_workspace_inactive_status () {
@@ -381,6 +381,7 @@ create_powervs_workspaces() {
 
     workspace_id=$(ibmcloud schematics workspace new --file $ws_template_fn --output json | jq -r ".id")
     rm $ws_template_fn
+    rm "${ws_template_fn}.bak"
     [[ -z "$workspace_id" ]] && fatal "Failed retrieve the Schematics workspace ID on creation"
     wait_for_workspace_inactive_status $workspace_id
 
@@ -405,14 +406,17 @@ create_powervs_workspaces() {
 }
 
 delete_powervs_workspaces() {
+    # Fetch the count and ID(s) separately because of platform/shell differences in handling of echo -n
+    # and whitespace characters between multiple workspace names
+    workspace_count=$(ibmcloud sch ws list --output json | jq -r --arg wsname "$PROJECT_NAME-powervs" '.workspaces[]? | select(.name==$wsname) | "\(.id)"' | wc -l)
     workspace_id=$(ibmcloud sch ws list --output json | jq -r --arg wsname "$PROJECT_NAME-powervs" '.workspaces[]? | select(.name==$wsname) | "\(.id)"')
 
-    if [[ $(echo -n $workspace_id | wc -l) -ge 2 ]]
+    if [[ $workspace_count -ge 2 ]]
     then
         echo "Multiple workspaces found with name $PROJECT_NAME-powervs: $workspace_id"
         fatal "Not destroying resources in workspace $PROJECT_NAME-powervs"
     fi
-    if [[ $(echo -n $workspace_id | wc -l) -lt 1 ]]
+    if [[ $workspace_count -lt 1 ]]
     then
         echo "No schematics workspace found for Power VS workspace deletion. Continuing."
         return
