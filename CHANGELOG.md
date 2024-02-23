@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.11.2
+
+### Upgrade Notes
+
+- Updated deploy script to create the ICR namespace in the user provided region and resource group
+- Updated deploy script to generate a unique ICR namespace value if the `-n` flag is not provided to avoid existing namespace conflicts within the selected region
+
+
+### Features
+
+
+### Fixes
+
+- Fixed an issue causing Schematics to fail provisioning Power VS Workspaces in every zone
+
 ## 1.11.1
 
 ### Upgrade Notes

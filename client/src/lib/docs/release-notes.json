@@ -1,5 +1,16 @@
 [
   {
+    "version": "1.11.2",
+    "features": [],
+    "fixes": [
+      "Fixed an issue causing Schematics to fail provisioning Power VS Workspaces in every zone"
+    ],
+    "upgrade_notes": [
+      "Updated deploy script to create the ICR namespace in the user provided region and resource group",
+      "Updated deploy script to generate a unique ICR namespace value if the `-n` flag is not provided to avoid existing namespace conflicts within the selected region"
+    ]
+  },  
+  {
     "version": "1.11.1",
     "features": [
       "Users can now view Power VS Resources with no selected workspace on the CRAIG V2 Power VS page",
