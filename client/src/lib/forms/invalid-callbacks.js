@@ -135,68 +135,6 @@ function validSshKey(str) {
 }
 
 /**
- * check if ssh key is invalid
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {Object} invalid boolean invalidText string
- */
-function invalidSshPublicKey(stateData, componentProps) {
-  let invalid = {
-    invalid: false,
-    invalidText:
-      "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region",
-  };
-  if (stateData.public_key === "NONE") {
-    return {
-      invalid: false,
-      invalidText: "",
-    };
-  } else if (!validSshKey(stateData.public_key)) {
-    invalid.invalid = true;
-  } else if (
-    // if public key already used
-    contains(
-      splat(
-        componentProps.arrayParentName
-          ? getObjectFromArray(
-              componentProps.craig.store.json.power,
-              "name",
-              componentProps.arrayParentName
-            ).ssh_keys
-          : containsKeys(stateData, "use_data")
-          ? componentProps.craig.store.json.ssh_keys
-          : componentProps.craig.store.json.classic_ssh_keys,
-        "public_key"
-      ),
-      stateData.public_key
-    )
-  ) {
-    let key = getObjectFromArray(
-      componentProps.arrayParentName
-        ? getObjectFromArray(
-            componentProps.craig.store.json.power,
-            "name",
-            componentProps.arrayParentName
-          ).ssh_keys
-        : containsKeys(stateData, "use_data")
-        ? componentProps.craig.store.json.ssh_keys
-        : componentProps.craig.store.json.classic_ssh_keys,
-      "public_key",
-      stateData.public_key
-    );
-
-    if (componentProps.data && componentProps.data.name === key.name) {
-      return invalid; // This is the current key, escape
-    } else {
-      // duplicate key
-      invalid.invalid = true;
-      invalid.invalidText = "SSH Public Key in use";
-    }
-  }
-  return invalid;
-}
-
-/**
  * check if subnet tier name is invalid
  * @param {*} stateData
  * @param {*} componentProps
@@ -554,7 +492,6 @@ function invalidCrns(stateData) {
 module.exports = {
   invalidName,
   invalidNewResourceName,
-  invalidSshPublicKey,
   invalidTagList,
   invalidCrnList,
   validSshKey,

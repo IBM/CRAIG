@@ -222,6 +222,12 @@ class ClassicDiagram extends React.Component {
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (
             <></>
+          ) : this.state.modalService === "classic_gateways" &&
+            this.props.craig.store.json.classic_ssh_keys.length === 0 ? (
+            <CraigEmptyResourceTile
+              noClick
+              name="Classic SSH keys. To enable creation of this resource, create an SSH key"
+            />
           ) : (
             <DynamicForm
               className="formInSubForm"

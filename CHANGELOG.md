@@ -6,16 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
-- Updated deploy script to create the ICR namespace in the user provided region and resource group
-- Updated deploy script to generate a unique ICR namespace value if the `-n` flag is not provided to avoid existing namespace conflicts within the selected region
-
-
 ### Features
 
+- When attempting to create a resource that requires an SSH Key using the V2 pages, users will now be directed to first create an SSH key instead of viewing the form
+- CRAIG deploy script now creates an ICR namespace in the user provided region and resource group
+- CRAIG deploy script now generates a unique ICR namespace value if the `-n` flag is not provided to avoid existing namespace conflicts within the selected region
 
 ### Fixes
 
-- Fixed an issue causing Schematics to fail provisioning Power VS Workspaces in every zone
+- Fixed an issue causing Power VS Workspace deploy scripts to fail in schematics
+- Fixed an issue causing CIDR blocks and IP addresses to be incorrectly marked as invalid
+- Fixed an issue causing SSH Keys to incorrectly display as invalid on V2 pages when using the same public key for VPC, Power, or Classic
+- Fixed an issue causing invalid VPC VSI images to persist after removing references when importing a project
+
 
 ## 1.11.1
 

@@ -11,7 +11,7 @@
     "dynamic_subnets": true,
     "enable_power_vs": false,
     "power_vs_zones": [],
-    "craig_version": "1.11.1",
+    "craig_version": "1.11.2",
     "power_vs_high_availability": false
   },
   "access_groups": [],

@@ -31,6 +31,10 @@ export const PowerSshKeys = (props) => {
             icon={Password}
             itemName="ssh_keys"
             craig={props.craig}
+            isInvalid={props.craig.power.ssh_keys.public_key.invalid(sshKey, {
+              data: sshKey,
+              craig: props.craig,
+            })}
           />
         ))}
       </div>

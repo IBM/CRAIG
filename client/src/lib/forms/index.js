@@ -8,7 +8,6 @@ const {
 } = require("./text-callbacks");
 const {
   invalidName,
-  invalidSshPublicKey,
   validSshKey,
   invalidTagList,
   invalidCrnList,
@@ -62,7 +61,6 @@ module.exports = {
   propsMatchState,
   disableSave,
   invalidNameText,
-  invalidSshPublicKey,
   validSshKey,
   invalidTagList,
   invalidSubnetTierName,

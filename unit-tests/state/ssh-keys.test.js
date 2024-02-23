@@ -118,6 +118,21 @@ describe("ssh_keys", () => {
   });
   describe("ssh_keys.schema", () => {
     describe("public_key", () => {
+      it("should not be invalid if the key is NONE and another NONE key exists", () => {
+        let craig = newState();
+        craig.store.json.ssh_keys.push({ name: "test", public_key: "NONE" });
+        assert.isFalse(
+          craig.ssh_keys.public_key.invalid(
+            { public_key: "NONE" },
+            {
+              data: {},
+              isModal: true,
+              craig: craig,
+            }
+          ),
+          "it should be valid"
+        );
+      });
       describe("hideWhen", () => {
         it("should return true when use data is true", () => {
           let craig = newState();

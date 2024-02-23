@@ -433,6 +433,10 @@ describe("power-vs", () => {
                         public_key:
                           "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
                       },
+                      {
+                        name: "aaa",
+                        public_key: "NONE",
+                      },
                     ],
                   },
                 ],
@@ -455,6 +459,54 @@ describe("power-vs", () => {
                 }
               ),
               "SSH Public Key in use",
+              "it should return correct text"
+            );
+          });
+          it("should return correct invalid text when not a duplicate ssh key is added", () => {
+            let tempState = newState();
+            tempState.store = {
+              resourceGroups: ["hi"],
+              json: {
+                ssh_keys: [],
+                power: [
+                  {
+                    name: "workspace",
+                    ssh_keys: [
+                      {
+                        name: "honk",
+                        public_key:
+                          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                      },
+                      {
+                        name: "ddd",
+                        public_key:
+                          "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
+                      },
+                      {
+                        name: "aaa",
+                        public_key: "NONE",
+                      },
+                    ],
+                  },
+                ],
+              },
+            };
+            assert.deepEqual(
+              tempState.power.ssh_keys.public_key.invalidText(
+                {
+                  name: "test",
+                  resource_group: "hi",
+                  public_key: "NONE",
+                },
+                {
+                  data: {
+                    data: "test",
+                  },
+                  arrayParentName: "workspace",
+                  craig: tempState,
+                }
+              ),
+              "",
               "it should return correct text"
             );
           });

@@ -434,7 +434,15 @@ describe("vpn_gateways", () => {
           "it should be invalid"
         );
       });
-      it("should be invalid when peer address is cidr", () => {
+      it("should be valid when peer address is cidr", () => {
+        assert.isFalse(
+          craig.vpn_gateways.connections.peer_address.invalid({
+            peer_address: "131.239.211.196",
+          }),
+          "it should be valid"
+        );
+      });
+      it("should be valid when peer address is valid ip", () => {
         assert.isTrue(
           craig.vpn_gateways.connections.peer_address.invalid({
             peer_address: "1.2.3.4/5",
