@@ -7,12 +7,7 @@ const port = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
 const guiBuild = path.join(__dirname, "build");
 const routes = require("./express-routes/routes");
-const { getImagesAndStoragePools } = require("./lib/power-utils");
-const fs = require("fs");
 const { snakeCase } = require("lazy-z");
-const axios = require("axios");
-const apiController = require("./express-controllers/controller");
-const controller = new apiController(axios);
 
 const defaultZones = [
   "wdc06",
@@ -23,15 +18,15 @@ const defaultZones = [
   "us-south",
   "eu-de-1",
   "eu-de-2",
-  //"mad02",
-  //"mad04",
+  "mad02",
+  "mad04",
   "lon04",
   "lon06",
   "tor01",
   "syd04",
   "syd05",
   "tok04",
-  // "sao01",
+  "sao01",
   // "sao04",
 ];
 
@@ -45,8 +40,9 @@ function startServer() {
       }
     });
     try {
+      app.use(bodyParser.json({ limit: "50mb" }));
+      app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
       app.use(express.static(guiBuild));
-      app.use(bodyParser.json());
 
       // create a GET route
       app.get("/express_backend", (req, res) => {

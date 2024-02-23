@@ -915,6 +915,7 @@ module.exports = {
         "A dns-server Virtual Server instance deployment in the workload VPC",
         "A proxy-server Virtual Server instance deployment in the transit VPC",
         "A VPN Gateway in the Management VPC",
+        "A Public Gateway in the Transit VPC",
       ],
     },
     "Power VS Oracle Ready": {
