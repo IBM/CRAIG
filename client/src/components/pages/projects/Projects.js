@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@carbon/react";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
-import { azsort, contains, eachKey, splatContains } from "lazy-z";
+import { azsort, contains, eachKey, splat, splatContains } from "lazy-z";
 import { Add, MagicWandFilled, Upload } from "@carbon/icons-react";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
@@ -202,7 +202,15 @@ class Projects extends React.Component {
         this.props.craig.store.json[item].forEach((resource) => {
           // if the resource name is contained in the list of invalid items
           // set the reference to null
-          if (contains(this.state.invalidItems[item], resource.name)) {
+          if (
+            item === "vsi"
+              ? splatContains(
+                  this.state.invalidItems[item],
+                  "vsi",
+                  resource.name
+                )
+              : contains(this.state.invalidItems[item], resource.name)
+          ) {
             if (item === "vsi" && resource.image_name) {
               resource.image_name = null;
               resource.image = null;
@@ -312,7 +320,7 @@ class Projects extends React.Component {
           this.props.notify(notification);
 
           return fetch(
-            `/api/schematics/tar/${this.props.projects[keyName].workspace_name}`,
+            `/api/schematics/tar/${this.props.projects[keyName].workspace_name}/${this.props.projects[keyName].workspace_region}`,
             {
               method: "PUT",
               headers: { "Content-Type": "application/json" },

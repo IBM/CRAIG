@@ -10,13 +10,26 @@
     "enable_classic": false,
     "dynamic_subnets": false,
     "enable_power_vs": true,
-    "power_vs_zones": ["us-south"],
-    "craig_version": "1.11.1",
+    "power_vs_zones": ["dal10"],
+    "craig_version": "1.11.2",
     "power_vs_high_availability": false,
     "template": "Power VS SAP Hana"
   },
   "access_groups": [],
-  "appid": [],
+  "appid": [
+    {
+      "use_data": false,
+      "name": "appid",
+      "resource_group": "service-rg",
+      "encryption_key": null,
+      "keys": [
+        {
+          "name": "sap-appid-key",
+          "appid": "appid"
+        }
+      ]
+    }
+  ],
   "atracker": {
     "enabled": true,
     "type": "cos",
@@ -81,15 +94,6 @@
           "root_key": true,
           "force_delete": true,
           "endpoint": "public",
-          "rotation": 1,
-          "dual_auth_delete": false
-        },
-        {
-          "key_ring": "ring",
-          "name": "roks-key",
-          "root_key": true,
-          "force_delete": null,
-          "endpoint": null,
           "rotation": 1,
           "dual_auth_delete": false
         }
@@ -175,7 +179,7 @@
     {
       "name": "secure-powervs",
       "resource_group": "powervs-rg",
-      "zone": "us-south",
+      "zone": "dal10",
       "ssh_keys": [
         {
           "name": "power-ssh-key",
@@ -183,7 +187,7 @@
           "use_data": false,
           "resource_group": "powervs-rg",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false
         }
       ],
@@ -195,9 +199,10 @@
           "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
-          "use_data": false
+          "use_data": false,
+          "pi_network_mtu": "1500"
         },
         {
           "name": "backup",
@@ -206,12 +211,13 @@
           "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_network.power_network_secure_powervs_management}"
           ],
-          "use_data": false
+          "use_data": false,
+          "pi_network_mtu": "1500"
         },
         {
           "name": "sap",
@@ -220,22 +226,70 @@
           "pi_dns": ["127.0.0.1"],
           "pi_network_jumbo": false,
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_network.power_network_secure_powervs_backup}"
           ],
-          "use_data": false
+          "use_data": false,
+          "pi_network_mtu": "1500"
         }
       ],
       "cloud_connections": [],
       "images": [
         {
-          "creationDate": "2024-01-29T12:26:40.000Z",
+          "creationDate": "2023-02-14T18:39:48.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/d5c94f00-b7ff-41df-a1cc-d17f336729e4",
-          "imageID": "d5c94f00-b7ff-41df-a1cc-d17f336729e4",
-          "lastUpdateDate": "2024-01-29T19:46:36.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
+          "imageID": "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
+          "lastUpdateDate": "2023-02-14T22:29:20.000Z",
+          "name": "7100-05-09",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "operatingSystem": "aix"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "dal10",
+          "workspace_use_data": false
+        },
+        {
+          "creationDate": "2023-09-16T18:38:33.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/69866375-0cec-4db9-93e9-a55c63c13d6e",
+          "imageID": "69866375-0cec-4db9-93e9-a55c63c13d6e",
+          "lastUpdateDate": "2023-09-16T21:38:22.000Z",
+          "name": "IBMi-71-11-2924-8",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "operatingSystem": "ibmi"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_7100_05_09}"
+          ]
+        },
+        {
+          "creationDate": "2024-01-30T12:46:02.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/70c5f204-38c8-469d-8561-c647222589c8",
+          "imageID": "70c5f204-38c8-469d-8561-c647222589c8",
+          "lastUpdateDate": "2024-01-30T12:54:29.000Z",
           "name": "RHEL8-SP4-SAP-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -247,18 +301,21 @@
             "operatingSystem": "rhel"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
-          "workspace_use_data": false
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_ibmi_71_11_2924_8}"
+          ]
         },
         {
-          "creationDate": "2024-01-29T17:49:25.000Z",
+          "creationDate": "2024-01-30T14:31:23.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/3b219581-7c10-4b88-97a8-8631190e2aa2",
-          "imageID": "3b219581-7c10-4b88-97a8-8631190e2aa2",
-          "lastUpdateDate": "2024-01-29T19:46:36.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/b761fbfa-8918-4669-8ae9-66d7a8d8e273",
+          "imageID": "b761fbfa-8918-4669-8ae9-66d7a8d8e273",
+          "lastUpdateDate": "2024-01-30T14:54:09.000Z",
           "name": "RHEL8-SP4-SAP-NETWEAVER-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -270,21 +327,21 @@
             "operatingSystem": "rhel"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp4_sap_byol}"
           ]
         },
         {
-          "creationDate": "2022-07-21T15:46:50.000Z",
+          "creationDate": "2023-06-22T15:33:23.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/f185cb0f-25b3-42f3-b105-45156187a1ab",
-          "imageID": "f185cb0f-25b3-42f3-b105-45156187a1ab",
-          "lastUpdateDate": "2022-07-21T19:47:33.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/c51f22a4-79f3-46a1-9afd-d3a91fba9208",
+          "imageID": "c51f22a4-79f3-46a1-9afd-d3a91fba9208",
+          "lastUpdateDate": "2023-06-22T16:44:30.000Z",
           "name": "RHEL8-SP6",
           "specifications": {
             "architecture": "ppc64",
@@ -299,18 +356,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp4_sap_netweaver_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-29T23:12:18.000Z",
+          "creationDate": "2024-01-30T16:16:41.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/16b56697-32ef-4597-9707-c1a269df481e",
-          "imageID": "16b56697-32ef-4597-9707-c1a269df481e",
-          "lastUpdateDate": "2024-01-30T02:13:33.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/8d923e9a-bdb3-4325-9594-1cae6beda10a",
+          "imageID": "8d923e9a-bdb3-4325-9594-1cae6beda10a",
+          "lastUpdateDate": "2024-01-30T16:34:53.000Z",
           "name": "RHEL8-SP6-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -322,19 +379,19 @@
             "operatingSystem": "rhel"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": ["${ibm_pi_image.power_image_secure_powervs_rhel8_sp6}"]
         },
         {
-          "creationDate": "2023-03-22T18:46:00.000Z",
+          "creationDate": "2023-06-22T15:32:16.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/268144b8-6223-48e4-a26e-bdc8f71f6c60",
-          "imageID": "268144b8-6223-48e4-a26e-bdc8f71f6c60",
-          "lastUpdateDate": "2023-09-19T14:14:50.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/6ab8e302-616c-4d4b-9a04-716a72f5e436",
+          "imageID": "6ab8e302-616c-4d4b-9a04-716a72f5e436",
+          "lastUpdateDate": "2023-06-22T16:46:01.000Z",
           "name": "RHEL8-SP6-SAP",
           "specifications": {
             "architecture": "ppc64",
@@ -349,18 +406,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-30T04:36:31.000Z",
+          "creationDate": "2024-01-30T18:02:07.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/3543f3f4-0640-44c2-9574-1d887ad99cff",
-          "imageID": "3543f3f4-0640-44c2-9574-1d887ad99cff",
-          "lastUpdateDate": "2024-01-30T11:44:51.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/d2426987-56f2-4000-8911-55e4db178067",
+          "imageID": "d2426987-56f2-4000-8911-55e4db178067",
+          "lastUpdateDate": "2024-01-30T18:27:06.000Z",
           "name": "RHEL8-SP6-SAP-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -372,21 +429,21 @@
             "operatingSystem": "rhel"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap}"
           ]
         },
         {
-          "creationDate": "2023-03-22T19:13:31.000Z",
+          "creationDate": "2023-06-23T05:39:45.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/658ba2a0-4add-40b9-a177-a28a856c26de",
-          "imageID": "658ba2a0-4add-40b9-a177-a28a856c26de",
-          "lastUpdateDate": "2023-09-19T14:15:33.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/89f60785-6e36-4bd7-807b-0c48f05dc29c",
+          "imageID": "89f60785-6e36-4bd7-807b-0c48f05dc29c",
+          "lastUpdateDate": "2023-06-23T06:30:55.000Z",
           "name": "RHEL8-SP6-SAP-NETWEAVER",
           "specifications": {
             "architecture": "ppc64",
@@ -401,18 +458,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-30T10:01:12.000Z",
+          "creationDate": "2024-01-30T19:47:31.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/af30c6a7-9108-494b-ab14-4fc0677460c8",
-          "imageID": "af30c6a7-9108-494b-ab14-4fc0677460c8",
-          "lastUpdateDate": "2024-01-30T11:44:51.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/b5f5d76b-fb54-4b58-bac1-e08d482eb6e0",
+          "imageID": "b5f5d76b-fb54-4b58-bac1-e08d482eb6e0",
+          "lastUpdateDate": "2024-01-30T20:53:28.000Z",
           "name": "RHEL8-SP6-SAP-NETWEAVER-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -424,21 +481,21 @@
             "operatingSystem": "rhel"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap_netweaver}"
           ]
         },
         {
-          "creationDate": "2023-12-13T10:29:52.000Z",
+          "creationDate": "2023-12-05T21:08:16.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/0f70afc6-732f-4080-830a-50ccc5d4a400",
-          "imageID": "0f70afc6-732f-4080-830a-50ccc5d4a400",
-          "lastUpdateDate": "2023-12-13T13:01:08.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/9fce83ea-7a5f-4f26-a14a-d14cc471b1e5",
+          "imageID": "9fce83ea-7a5f-4f26-a14a-d14cc471b1e5",
+          "lastUpdateDate": "2023-12-05T21:29:53.000Z",
           "name": "RHEL8-SP8",
           "specifications": {
             "architecture": "ppc64",
@@ -453,18 +510,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp6_sap_netweaver_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-30T15:25:25.000Z",
+          "creationDate": "2024-01-30T21:33:02.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/e0dc77cf-60f5-4c0f-8ba3-0081860ef739",
-          "imageID": "e0dc77cf-60f5-4c0f-8ba3-0081860ef739",
-          "lastUpdateDate": "2024-01-30T16:27:53.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/3be1bd33-55b8-482e-a400-ef27f9fd9352",
+          "imageID": "3be1bd33-55b8-482e-a400-ef27f9fd9352",
+          "lastUpdateDate": "2024-01-30T21:36:20.000Z",
           "name": "RHEL8-SP8-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -476,19 +533,19 @@
             "operatingSystem": "rhel"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": ["${ibm_pi_image.power_image_secure_powervs_rhel8_sp8}"]
         },
         {
-          "creationDate": "2023-12-13T15:27:06.000Z",
+          "creationDate": "2023-12-05T22:48:44.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/ee35fbfe-4c6a-45d0-9485-7d2235f4f1d1",
-          "imageID": "ee35fbfe-4c6a-45d0-9485-7d2235f4f1d1",
-          "lastUpdateDate": "2023-12-13T16:08:28.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/0acf14cc-1638-4755-80e0-cf305a830cdc",
+          "imageID": "0acf14cc-1638-4755-80e0-cf305a830cdc",
+          "lastUpdateDate": "2023-12-05T23:02:42.000Z",
           "name": "RHEL8-SP8-SAP",
           "specifications": {
             "architecture": "ppc64",
@@ -503,18 +560,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp8_byol}"
           ]
         },
         {
-          "creationDate": "2023-12-13T20:24:03.000Z",
+          "creationDate": "2023-12-06T00:29:23.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/fedf5303-d9b9-4ab4-ad31-b8759a3a05f2",
-          "imageID": "fedf5303-d9b9-4ab4-ad31-b8759a3a05f2",
-          "lastUpdateDate": "2023-12-13T20:54:25.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/6d180e6b-f6a2-4cc8-a99e-6bbaac5caf90",
+          "imageID": "6d180e6b-f6a2-4cc8-a99e-6bbaac5caf90",
+          "lastUpdateDate": "2023-12-06T04:26:13.000Z",
           "name": "RHEL8-SP8-SAP-NETWEAVER",
           "specifications": {
             "architecture": "ppc64",
@@ -529,18 +586,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp8_sap}"
           ]
         },
         {
-          "creationDate": "2023-09-20T16:01:19.000Z",
+          "creationDate": "2023-09-20T15:49:34.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/ed8dd46b-e408-4a89-9bd6-821ee3229ac4",
-          "imageID": "ed8dd46b-e408-4a89-9bd6-821ee3229ac4",
-          "lastUpdateDate": "2023-09-20T16:15:34.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/2dee28bc-417b-4979-b3da-3a28919151e1",
+          "imageID": "2dee28bc-417b-4979-b3da-3a28919151e1",
+          "lastUpdateDate": "2023-09-20T17:18:09.000Z",
           "name": "RHEL9-SP2",
           "specifications": {
             "architecture": "ppc64",
@@ -555,18 +612,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel8_sp8_sap_netweaver}"
           ]
         },
         {
-          "creationDate": "2024-01-30T20:49:07.000Z",
+          "creationDate": "2024-01-30T23:18:25.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/c9ebb84b-2cf6-4a78-8f47-e7581791ee54",
-          "imageID": "c9ebb84b-2cf6-4a78-8f47-e7581791ee54",
-          "lastUpdateDate": "2024-01-31T09:50:53.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/bd66e44a-c8ba-48e2-a1c5-22a41f825240",
+          "imageID": "bd66e44a-c8ba-48e2-a1c5-22a41f825240",
+          "lastUpdateDate": "2024-01-31T02:14:12.000Z",
           "name": "RHEL9-SP2-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -578,19 +635,19 @@
             "operatingSystem": "rhel"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": ["${ibm_pi_image.power_image_secure_powervs_rhel9_sp2}"]
         },
         {
-          "creationDate": "2023-12-14T01:21:01.000Z",
+          "creationDate": "2023-12-06T02:09:55.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/ae23517c-91a0-4545-af15-0253b06f317a",
-          "imageID": "ae23517c-91a0-4545-af15-0253b06f317a",
-          "lastUpdateDate": "2023-12-14T07:02:06.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/f623bd8e-4a64-4661-8463-6f469e8b395a",
+          "imageID": "f623bd8e-4a64-4661-8463-6f469e8b395a",
+          "lastUpdateDate": "2023-12-06T04:26:13.000Z",
           "name": "RHEL9-SP2-SAP",
           "specifications": {
             "architecture": "ppc64",
@@ -605,18 +662,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel9_sp2_byol}"
           ]
         },
         {
-          "creationDate": "2023-12-14T06:16:45.000Z",
+          "creationDate": "2023-12-06T03:49:59.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/265e2212-8487-481c-a70a-6eb1c24273c1",
-          "imageID": "265e2212-8487-481c-a70a-6eb1c24273c1",
-          "lastUpdateDate": "2023-12-14T07:02:06.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/b4512246-e2e7-4f67-ba51-0cdab141cd04",
+          "imageID": "b4512246-e2e7-4f67-ba51-0cdab141cd04",
+          "lastUpdateDate": "2023-12-06T04:26:13.000Z",
           "name": "RHEL9-SP2-SAP-NETWEAVER",
           "specifications": {
             "architecture": "ppc64",
@@ -631,18 +688,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel9_sp2_sap}"
           ]
         },
         {
-          "creationDate": "2022-06-19T14:17:19.000Z",
+          "creationDate": "2023-02-15T06:41:24.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/5d548cc2-e813-4c09-beb5-8f22b094905d",
-          "imageID": "5d548cc2-e813-4c09-beb5-8f22b094905d",
-          "lastUpdateDate": "2022-06-23T20:13:59.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/ff05ab81-791d-4e91-b04b-56cf1dc11047",
+          "imageID": "ff05ab81-791d-4e91-b04b-56cf1dc11047",
+          "lastUpdateDate": "2023-02-22T04:20:17.000Z",
           "name": "SLES15-SP2-SAP",
           "specifications": {
             "architecture": "ppc64",
@@ -657,18 +714,44 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_rhel9_sp2_sap_netweaver}"
           ]
         },
         {
-          "creationDate": "2022-06-19T13:48:55.000Z",
+          "creationDate": "2024-02-05T16:13:39.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/52579206-7efd-43ae-8417-ce5acac95d31",
-          "imageID": "52579206-7efd-43ae-8417-ce5acac95d31",
-          "lastUpdateDate": "2022-06-23T20:14:22.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/2d3d4b49-e637-4083-b506-130cebd07b17",
+          "imageID": "2d3d4b49-e637-4083-b506-130cebd07b17",
+          "lastUpdateDate": "2024-02-05T16:15:07.000Z",
+          "name": "SLES15-SP2-SAP-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "General-Flash-50",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap}"
+          ]
+        },
+        {
+          "creationDate": "2023-02-15T09:28:39.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/2c2d175e-62e7-4d03-931b-6a256ee9735e",
+          "imageID": "2c2d175e-62e7-4d03-931b-6a256ee9735e",
+          "lastUpdateDate": "2023-02-17T16:14:46.000Z",
           "name": "SLES15-SP2-SAP-NETWEAVER",
           "specifications": {
             "architecture": "ppc64",
@@ -683,18 +766,96 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
-            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap}"
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap_byol}"
           ]
         },
         {
-          "creationDate": "2022-09-13T18:49:39.000Z",
+          "creationDate": "2024-02-05T18:00:26.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/65c1f031-9154-45cb-8bb8-d2b9dae5728f",
-          "imageID": "65c1f031-9154-45cb-8bb8-d2b9dae5728f",
-          "lastUpdateDate": "2022-09-13T20:11:59.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/a69a903e-d288-4881-9700-87378d40b12b",
+          "imageID": "a69a903e-d288-4881-9700-87378d40b12b",
+          "lastUpdateDate": "2024-02-05T18:03:23.000Z",
+          "name": "SLES15-SP2-SAP-NETWEAVER-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "General-Flash-50",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap_netweaver}"
+          ]
+        },
+        {
+          "creationDate": "2024-02-05T19:47:17.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/49a7979d-eacd-4722-a377-163724c816fa",
+          "imageID": "49a7979d-eacd-4722-a377-163724c816fa",
+          "lastUpdateDate": "2024-02-05T20:16:16.000Z",
+          "name": "SLES15-SP3-SAP-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "General-Flash-50",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap_netweaver_byol}"
+          ]
+        },
+        {
+          "creationDate": "2024-02-05T21:34:16.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/6049b7cc-67a9-4878-9f3f-a28d417c2278",
+          "imageID": "6049b7cc-67a9-4878-9f3f-a28d417c2278",
+          "lastUpdateDate": "2024-02-06T04:39:46.000Z",
+          "name": "SLES15-SP3-SAP-NETWEAVER-BYOL",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-sap-netweaver",
+            "operatingSystem": "sles"
+          },
+          "state": "active",
+          "storagePool": "General-Flash-50",
+          "storageType": "tier3",
+          "workspace": "secure-powervs",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": [
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp3_sap_byol}"
+          ]
+        },
+        {
+          "creationDate": "2023-06-23T04:52:05.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/e00178e1-f763-41b7-adb0-b5da0edde4c9",
+          "imageID": "e00178e1-f763-41b7-adb0-b5da0edde4c9",
+          "lastUpdateDate": "2023-06-23T04:53:20.000Z",
           "name": "SLES15-SP4",
           "specifications": {
             "architecture": "ppc64",
@@ -709,18 +870,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
-            "${ibm_pi_image.power_image_secure_powervs_sles15_sp2_sap_netweaver}"
+            "${ibm_pi_image.power_image_secure_powervs_sles15_sp3_sap_netweaver_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-31T02:12:53.000Z",
+          "creationDate": "2024-01-31T01:04:02.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/830550b9-ebf2-43ec-aace-a2067653f157",
-          "imageID": "830550b9-ebf2-43ec-aace-a2067653f157",
-          "lastUpdateDate": "2024-01-31T09:50:53.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/b8f1333c-078b-42c5-86b4-a0c76617f374",
+          "imageID": "b8f1333c-078b-42c5-86b4-a0c76617f374",
+          "lastUpdateDate": "2024-01-31T02:14:12.000Z",
           "name": "SLES15-SP4-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -732,21 +893,21 @@
             "operatingSystem": "sles"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp4}"
           ]
         },
         {
-          "creationDate": "2022-11-04T05:37:01.000Z",
+          "creationDate": "2023-06-23T04:55:27.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/a6b8f8d5-86e0-4fb2-b335-2ce3f1a88612",
-          "imageID": "a6b8f8d5-86e0-4fb2-b335-2ce3f1a88612",
-          "lastUpdateDate": "2023-09-19T14:17:38.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/8d828fb4-e2de-4748-8ae7-609499a19f5d",
+          "imageID": "8d828fb4-e2de-4748-8ae7-609499a19f5d",
+          "lastUpdateDate": "2023-06-23T04:56:26.000Z",
           "name": "SLES15-SP4-SAP",
           "specifications": {
             "architecture": "ppc64",
@@ -761,18 +922,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-31T07:40:19.000Z",
+          "creationDate": "2024-01-31T02:50:47.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/83012006-beb8-466b-bd6c-119796adea9a",
-          "imageID": "83012006-beb8-466b-bd6c-119796adea9a",
-          "lastUpdateDate": "2024-01-31T09:50:53.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/1d599a9f-8ab2-479b-a8c3-ec2629122671",
+          "imageID": "1d599a9f-8ab2-479b-a8c3-ec2629122671",
+          "lastUpdateDate": "2024-01-31T05:16:46.000Z",
           "name": "SLES15-SP4-SAP-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -784,21 +945,21 @@
             "operatingSystem": "sles"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap}"
           ]
         },
         {
-          "creationDate": "2022-11-04T05:32:31.000Z",
+          "creationDate": "2023-06-23T05:18:22.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/071e1eac-8aa2-4259-9c0e-5ec268f610e2",
-          "imageID": "071e1eac-8aa2-4259-9c0e-5ec268f610e2",
-          "lastUpdateDate": "2023-09-19T14:18:26.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/3f5b2725-cc62-48f3-83b9-2376cf6d2be2",
+          "imageID": "3f5b2725-cc62-48f3-83b9-2376cf6d2be2",
+          "lastUpdateDate": "2023-06-23T05:19:13.000Z",
           "name": "SLES15-SP4-SAP-NETWEAVER",
           "specifications": {
             "architecture": "ppc64",
@@ -813,18 +974,18 @@
           "storagePool": "Tier3-Flash-1",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-31T13:07:18.000Z",
+          "creationDate": "2024-01-31T04:37:34.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/c43f817c-9c2f-4434-94c6-ab705545a3ac",
-          "imageID": "c43f817c-9c2f-4434-94c6-ab705545a3ac",
-          "lastUpdateDate": "2024-01-31T13:49:37.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/3bc4bb34-28a8-4589-bb9f-cf24b418f0c1",
+          "imageID": "3bc4bb34-28a8-4589-bb9f-cf24b418f0c1",
+          "lastUpdateDate": "2024-01-31T05:09:29.000Z",
           "name": "SLES15-SP4-SAP-NETWEAVER-BYOL",
           "specifications": {
             "architecture": "ppc64",
@@ -836,21 +997,21 @@
             "operatingSystem": "sles"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap_netweaver}"
           ]
         },
         {
-          "creationDate": "2024-01-08T17:35:21.000Z",
+          "creationDate": "2024-01-08T14:36:21.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/73480807-1560-49ab-9119-b5df796c7e55",
-          "imageID": "73480807-1560-49ab-9119-b5df796c7e55",
-          "lastUpdateDate": "2024-01-08T17:45:01.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/4adda2e3-1603-430d-9502-907b4a2d0ba7",
+          "imageID": "4adda2e3-1603-430d-9502-907b4a2d0ba7",
+          "lastUpdateDate": "2024-01-08T14:37:44.000Z",
           "name": "SLES15-SP5",
           "specifications": {
             "architecture": "ppc64",
@@ -862,21 +1023,21 @@
             "operatingSystem": "sles"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp4_sap_netweaver_byol}"
           ]
         },
         {
-          "creationDate": "2024-01-08T23:03:56.000Z",
+          "creationDate": "2024-01-08T16:23:19.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/fa1e5433-de7a-4fce-ac2c-33407bdc3fcf",
-          "imageID": "fa1e5433-de7a-4fce-ac2c-33407bdc3fcf",
-          "lastUpdateDate": "2024-01-08T23:47:38.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/1d886b99-ce12-499a-8b34-45578af54f0e",
+          "imageID": "1d886b99-ce12-499a-8b34-45578af54f0e",
+          "lastUpdateDate": "2024-01-08T16:25:18.000Z",
           "name": "SLES15-SP5-SAP",
           "specifications": {
             "architecture": "ppc64",
@@ -888,21 +1049,21 @@
             "operatingSystem": "sles"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp5}"
           ]
         },
         {
-          "creationDate": "2024-01-10T10:39:13.000Z",
+          "creationDate": "2024-01-08T18:11:13.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/804b4619410344388ac946fcdc2fc3a7/stock-images/8c727c9a-8065-4fb4-b782-69ac8eb51674",
-          "imageID": "8c727c9a-8065-4fb4-b782-69ac8eb51674",
-          "lastUpdateDate": "2024-01-10T13:19:53.000Z",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/20549699-e90e-42a4-bdd1-c29d4d584335",
+          "imageID": "20549699-e90e-42a4-bdd1-c29d4d584335",
+          "lastUpdateDate": "2024-01-08T18:13:58.000Z",
           "name": "SLES15-SP5-SAP-NETWEAVER",
           "specifications": {
             "architecture": "ppc64",
@@ -914,40 +1075,20 @@
             "operatingSystem": "sles"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "secure-powervs",
-          "zone": "us-south",
+          "zone": "dal10",
           "workspace_use_data": false,
           "depends_on": [
             "${ibm_pi_image.power_image_secure_powervs_sles15_sp5_sap}"
           ]
         }
       ],
-      "attachments": [
-        {
-          "network": "management",
-          "workspace": "secure-powervs",
-          "zone": "us-south",
-          "connections": [],
-          "workspace_use_data": false
-        },
-        {
-          "network": "backup",
-          "workspace": "secure-powervs",
-          "zone": "us-south",
-          "connections": [],
-          "workspace_use_data": false
-        },
-        {
-          "network": "sap",
-          "workspace": "secure-powervs",
-          "zone": "us-south",
-          "connections": [],
-          "workspace_use_data": false
-        }
-      ],
+      "attachments": [],
       "imageNames": [
+        "7100-05-09",
+        "IBMi-71-11-2924-8",
         "RHEL8-SP4-SAP-BYOL",
         "RHEL8-SP4-SAP-NETWEAVER-BYOL",
         "RHEL8-SP6",
@@ -956,19 +1097,23 @@
         "RHEL8-SP6-SAP-BYOL",
         "RHEL8-SP6-SAP-NETWEAVER",
         "RHEL8-SP6-SAP-NETWEAVER-BYOL",
-        "RHEL8-SP8",
         "RHEL8-SP8-BYOL",
+        "RHEL8-SP8",
         "RHEL8-SP8-SAP",
         "RHEL8-SP8-SAP-NETWEAVER",
         "RHEL9-SP2",
-        "RHEL9-SP2-SAP",
         "RHEL9-SP2-BYOL",
+        "RHEL9-SP2-SAP",
         "RHEL9-SP2-SAP-NETWEAVER",
         "SLES15-SP2-SAP",
+        "SLES15-SP2-SAP-BYOL",
         "SLES15-SP2-SAP-NETWEAVER",
+        "SLES15-SP2-SAP-NETWEAVER-BYOL",
+        "SLES15-SP3-SAP-BYOL",
+        "SLES15-SP3-SAP-NETWEAVER-BYOL",
         "SLES15-SP4",
-        "SLES15-SP4-BYOL",
         "SLES15-SP4-SAP",
+        "SLES15-SP4-BYOL",
         "SLES15-SP4-SAP-BYOL",
         "SLES15-SP4-SAP-NETWEAVER",
         "SLES15-SP4-SAP-NETWEAVER-BYOL",
@@ -986,15 +1131,15 @@
       "image": "RHEL8-SP6-SAP",
       "network": [
         {
-          "name": "management",
+          "name": "backup",
           "ip_address": ""
         },
         {
-          "name": "backup",
+          "name": "management",
           "ip_address": ""
         }
       ],
-      "zone": "us-south",
+      "zone": "dal10",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
       "pi_storage_type": "tier3",
@@ -1013,7 +1158,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
-      "pi_user_data": null
+      "pi_user_data": null,
+      "primary_subnet": "backup"
     },
     {
       "name": "sap-hana",
@@ -1033,12 +1179,12 @@
           "ip_address": ""
         }
       ],
-      "zone": "us-south",
+      "zone": "dal10",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
       "pi_storage_type": "tier1",
       "ssh_key": "power-ssh-key",
-      "pi_sys_type": "e880",
+      "pi_sys_type": "e980",
       "pi_memory": "256",
       "pi_processors": "4",
       "pi_affinity_volume": null,
@@ -1052,7 +1198,8 @@
       "index": 1,
       "pi_storage_pool": null,
       "affinity_type": null,
-      "pi_user_data": null
+      "pi_user_data": null,
+      "primary_subnet": "management"
     },
     {
       "name": "sap-netweaver",
@@ -1072,7 +1219,7 @@
           "ip_address": ""
         }
       ],
-      "zone": "us-south",
+      "zone": "dal10",
       "pi_health_status": "OK",
       "pi_proc_type": "shared",
       "pi_storage_type": "tier3",
@@ -1091,7 +1238,8 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
-      "pi_user_data": null
+      "pi_user_data": null,
+      "primary_subnet": "management"
     }
   ],
   "power_volumes": [
@@ -1108,8 +1256,8 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
       "pi_affinity_policy": null,
-      "attachments": ["sap-hana", "sap-netweaver"],
-      "zone": "us-south",
+      "attachments": ["sap-hana", "sap-netweaver", "secure-file-share"],
+      "zone": "dal10",
       "pi_volume_size": "300",
       "index": 0,
       "pi_volume_shareable": true,
@@ -1129,8 +1277,8 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
       "pi_affinity_policy": null,
-      "attachments": ["sap-hana", "sap-netweaver"],
-      "zone": "us-south",
+      "attachments": ["sap-hana", "sap-netweaver", "secure-file-share"],
+      "zone": "dal10",
       "pi_volume_size": "50",
       "index": 1,
       "pi_volume_shareable": true,
@@ -1153,7 +1301,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 2,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1175,7 +1323,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 3,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1197,7 +1345,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 4,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1219,7 +1367,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 5,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1241,7 +1389,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 6,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1263,7 +1411,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 7,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1285,7 +1433,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 8,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1307,7 +1455,7 @@
       "workspace": "secure-powervs",
       "sap": true,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
+      "zone": "dal10",
       "index": 9,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
@@ -1328,8 +1476,29 @@
       "pi_affinity_instance": null,
       "pi_affinity_policy": null,
       "attachments": ["sap-hana"],
-      "zone": "us-south",
-      "index": 11,
+      "zone": "dal10",
+      "index": 10,
+      "pi_replication_enabled": false,
+      "pi_volume_shareable": false,
+      "count": null
+    },
+    {
+      "name": "sap-hana-nw-usrsap",
+      "mount": "/usr/sap",
+      "workspace": "secure-powervs",
+      "pi_volume_size": 50,
+      "storage_option": "None",
+      "pi_volume_type": "tier3",
+      "pi_volume_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "pi_affinity_policy": null,
+      "attachments": ["sap-netweaver"],
+      "zone": "dal10",
+      "index": 12,
       "pi_replication_enabled": false,
       "pi_volume_shareable": false,
       "count": null
@@ -1349,32 +1518,11 @@
       "pi_affinity_policy": null,
       "workspace": "secure-powervs",
       "sap": true,
-      "attachments": ["sap-hana"],
-      "zone": "us-south",
-      "index": 10,
+      "attachments": ["sap-hana", "sap-netweaver"],
+      "zone": "dal10",
+      "index": 11,
       "pi_replication_enabled": false,
       "pi_volume_shareable": true,
-      "count": null
-    },
-    {
-      "name": "sap-hana-nw-usrsap",
-      "mount": "/usr/sap",
-      "workspace": "secure-powervs",
-      "pi_volume_size": 50,
-      "storage_option": "None",
-      "pi_volume_type": "tier3",
-      "pi_volume_pool": null,
-      "affinity_type": null,
-      "pi_affinity_volume": null,
-      "pi_anti_affinity_volume": null,
-      "pi_anti_affinity_instance": null,
-      "pi_affinity_instance": null,
-      "pi_affinity_policy": null,
-      "attachments": ["sap-netweaver"],
-      "zone": "us-south",
-      "index": 12,
-      "pi_replication_enabled": false,
-      "pi_volume_shareable": false,
       "count": null
     }
   ],
@@ -1422,12 +1570,12 @@
   "security_groups": [
     {
       "vpc": "management",
-      "name": "management-vsi",
+      "name": "management-sg",
       "resource_group": "management-rg",
       "rules": [
         {
           "vpc": "management",
-          "sg": "management-vsi",
+          "sg": "management-sg",
           "direction": "inbound",
           "name": "allow-ibm-inbound",
           "source": "161.26.0.0/16",
@@ -1442,599 +1590,239 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
-          "sg": "management-vsi",
+          "sg": "management-sg",
           "direction": "inbound",
-          "name": "allow-vpc-inbound",
+          "name": "allow-private1-inbound",
           "source": "10.0.0.0/8",
           "tcp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
-          "sg": "management-vsi",
-          "direction": "outbound",
-          "name": "allow-vpc-outbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "management",
-          "sg": "management-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "management",
-          "sg": "management-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 80,
-            "port_min": 80
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "management",
-          "sg": "management-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        }
-      ]
-    },
-    {
-      "vpc": "workload",
-      "name": "workload-vsi",
-      "resource_group": "workload-rg",
-      "rules": [
-        {
-          "vpc": "workload",
-          "sg": "workload-vsi",
+          "sg": "management-sg",
           "direction": "inbound",
-          "name": "allow-ibm-inbound",
-          "source": "161.26.0.0/16",
+          "name": "allow-private2-inbound",
+          "source": "172.16.0.0/12",
           "tcp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "icmp": {
             "type": null,
             "code": null
-          }
-        },
-        {
-          "vpc": "workload",
-          "sg": "workload-vsi",
-          "direction": "inbound",
-          "name": "allow-vpc-inbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
           },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "workload",
-          "sg": "workload-vsi",
-          "direction": "outbound",
-          "name": "allow-vpc-outbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "workload",
-          "sg": "workload-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "workload",
-          "sg": "workload-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 80,
-            "port_min": 80
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "workload",
-          "sg": "workload-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        }
-      ],
-      "show": false
-    },
-    {
-      "vpc": "transit",
-      "name": "transit-vsi",
-      "resource_group": "transit-rg",
-      "rules": [
-        {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "inbound",
-          "name": "allow-ibm-inbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "inbound",
-          "name": "allow-vpc-inbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "outbound",
-          "name": "allow-vpc-outbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 80,
-            "port_min": 80
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "transit",
-          "sg": "transit-vsi",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        }
-      ],
-      "show": false
-    },
-    {
-      "vpc": "management",
-      "name": "management-vpe",
-      "resource_group": "management-rg",
-      "rules": [
-        {
-          "vpc": "management",
-          "sg": "management-vpe",
-          "direction": "inbound",
-          "name": "allow-ibm-inbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
-          "sg": "management-vpe",
+          "sg": "management-sg",
           "direction": "inbound",
-          "name": "allow-vpc-inbound",
-          "source": "10.0.0.0/8",
+          "name": "allow-private3-inbound",
+          "source": "192.168.0.0/16",
           "tcp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
-          "sg": "management-vpe",
-          "direction": "outbound",
-          "name": "allow-vpc-outbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "management",
-          "sg": "management-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "management",
-          "sg": "management-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 80,
-            "port_min": 80
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "management",
-          "sg": "management-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        }
-      ]
-    },
-    {
-      "vpc": "workload",
-      "name": "workload-vpe",
-      "resource_group": "workload-rg",
-      "rules": [
-        {
-          "vpc": "workload",
-          "sg": "workload-vpe",
+          "sg": "management-sg",
           "direction": "inbound",
-          "name": "allow-ibm-inbound",
-          "source": "161.26.0.0/16",
+          "name": "allow-ibm-tcp-22-inbound",
+          "source": "0.0.0.0/0",
           "tcp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": 22,
+            "port_max": 22
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": "22",
+          "port_max": "22",
+          "type": null,
+          "code": null
         },
         {
-          "vpc": "workload",
-          "sg": "workload-vpe",
+          "name": "allow-ibm-tcp-80-inbound",
           "direction": "inbound",
-          "name": "allow-vpc-inbound",
-          "source": "10.0.0.0/8",
-          "tcp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
           "icmp": {
             "type": null,
             "code": null
-          }
-        },
-        {
-          "vpc": "workload",
-          "sg": "workload-vpe",
-          "direction": "outbound",
-          "name": "allow-vpc-outbound",
-          "source": "10.0.0.0/8",
+          },
           "tcp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": 80,
+            "port_max": 80
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
-        },
-        {
-          "vpc": "workload",
-          "sg": "workload-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
           "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
+          "vpc": "management",
+          "sg": "management-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
-          "vpc": "workload",
-          "sg": "workload-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 80,
-            "port_min": 80
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
+          "name": "allow-ibm-tcp-443-inbound",
+          "direction": "inbound",
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "tcp": {
+            "port_min": 443,
+            "port_max": 443
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "management",
+          "sg": "management-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
-          "vpc": "workload",
-          "sg": "workload-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
+          "name": "allow-ibm-tcp-8443-inbound",
+          "direction": "inbound",
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "tcp": {
+            "port_min": 8443,
+            "port_max": 8443
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "management",
+          "sg": "management-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-ibm-udp-53-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": 53,
+            "port_max": 53
+          },
+          "source": "0.0.0.0/0",
+          "vpc": "management",
+          "sg": "management-sg",
+          "ruleProtocol": "udp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-all-outbound",
+          "direction": "outbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "0.0.0.0/0",
+          "vpc": "management",
+          "sg": "management-sg",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
       ]
     },
     {
       "vpc": "transit",
-      "name": "transit-vpe",
+      "name": "transit-sg",
       "resource_group": "transit-rg",
       "rules": [
         {
           "vpc": "transit",
-          "sg": "transit-vpe",
+          "sg": "transit-sg",
           "direction": "inbound",
           "name": "allow-ibm-inbound",
           "source": "161.26.0.0/16",
@@ -2049,105 +1837,477 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
-          "sg": "transit-vpe",
+          "sg": "transit-sg",
           "direction": "inbound",
-          "name": "allow-vpc-inbound",
+          "name": "allow-private1-inbound",
           "source": "10.0.0.0/8",
           "tcp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
-          "sg": "transit-vpe",
-          "direction": "outbound",
-          "name": "allow-vpc-outbound",
-          "source": "10.0.0.0/8",
+          "sg": "transit-sg",
+          "direction": "inbound",
+          "name": "allow-private2-inbound",
+          "source": "172.16.0.0/12",
           "tcp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "udp": {
-            "port_max": null,
-            "port_min": null
+            "port_min": null,
+            "port_max": null
           },
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "transit",
-          "sg": "transit-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-53-outbound",
+          "sg": "transit-sg",
+          "direction": "inbound",
+          "name": "allow-private3-inbound",
+          "source": "192.168.0.0/16",
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "vpc": "transit",
+          "sg": "transit-sg",
+          "direction": "inbound",
+          "name": "allow-ibm-tcp-22-inbound",
+          "source": "0.0.0.0/0",
+          "tcp": {
+            "port_min": 22,
+            "port_max": 22
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "ruleProtocol": "tcp",
+          "port_min": "22",
+          "port_max": "22",
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-ibm-tcp-80-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": 80,
+            "port_max": 80
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
           "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 53,
-            "port_min": 53
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
-          "icmp": {
-            "type": null,
-            "code": null
-          }
+          "vpc": "transit",
+          "sg": "transit-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
-          "vpc": "transit",
-          "sg": "transit-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-80-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 80,
-            "port_min": 80
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
+          "name": "allow-ibm-tcp-443-inbound",
+          "direction": "inbound",
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "tcp": {
+            "port_min": 443,
+            "port_max": 443
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "transit",
+          "sg": "transit-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
-          "vpc": "transit",
-          "sg": "transit-vpe",
-          "direction": "outbound",
-          "name": "allow-ibm-tcp-443-outbound",
-          "source": "161.26.0.0/16",
-          "tcp": {
-            "port_max": 443,
-            "port_min": 443
-          },
-          "udp": {
-            "port_max": null,
-            "port_min": null
-          },
+          "name": "allow-ibm-tcp-8443-inbound",
+          "direction": "inbound",
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "tcp": {
+            "port_min": 8443,
+            "port_max": 8443
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "transit",
+          "sg": "transit-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-ibm-udp-53-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": 53,
+            "port_max": 53
+          },
+          "source": "0.0.0.0/0",
+          "vpc": "transit",
+          "sg": "transit-sg",
+          "ruleProtocol": "udp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-all-outbound",
+          "direction": "outbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "0.0.0.0/0",
+          "vpc": "transit",
+          "sg": "transit-sg",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
-      ],
-      "show": false
+      ]
+    },
+    {
+      "vpc": "workload",
+      "name": "workload-sg",
+      "resource_group": "workload-rg",
+      "rules": [
+        {
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "direction": "inbound",
+          "name": "allow-ibm-inbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "direction": "inbound",
+          "name": "allow-private1-inbound",
+          "source": "10.0.0.0/8",
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "direction": "inbound",
+          "name": "allow-private2-inbound",
+          "source": "172.16.0.0/12",
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "direction": "inbound",
+          "name": "allow-private3-inbound",
+          "source": "192.168.0.0/16",
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "direction": "inbound",
+          "name": "allow-ibm-tcp-22-inbound",
+          "source": "0.0.0.0/0",
+          "tcp": {
+            "port_min": 22,
+            "port_max": 22
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "ruleProtocol": "tcp",
+          "port_min": "22",
+          "port_max": "22",
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-ibm-tcp-80-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": 80,
+            "port_max": 80
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-ibm-tcp-443-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": 443,
+            "port_max": 443
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-ibm-tcp-8443-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": 8443,
+            "port_max": 8443
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-ibm-udp-53-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": 53,
+            "port_max": 53
+          },
+          "source": "0.0.0.0/0",
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "ruleProtocol": "udp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "allow-all-outbound",
+          "direction": "outbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "0.0.0.0/0",
+          "vpc": "workload",
+          "sg": "workload-sg",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        }
+      ]
     }
   ],
   "ssh_keys": [
@@ -2183,6 +2343,10 @@
         {
           "tgw": "transit-gateway",
           "vpc": "transit"
+        },
+        {
+          "tgw": "transit-gateway",
+          "power": "secure-powervs"
         }
       ],
       "use_data": false,
@@ -2196,8 +2360,8 @@
       "service": "cos",
       "vpc": "management",
       "resource_group": "management-rg",
-      "security_groups": ["management-vpe"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "security_groups": ["management-sg"],
+      "subnets": ["vpe-zone-1"],
       "instance": null
     },
     {
@@ -2205,8 +2369,8 @@
       "service": "cos",
       "vpc": "workload",
       "resource_group": "workload-rg",
-      "security_groups": ["workload-vpe"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "security_groups": ["workload-sg"],
+      "subnets": ["vpe-zone-1"],
       "instance": null
     },
     {
@@ -2214,8 +2378,8 @@
       "vpc": "transit",
       "service": "cos",
       "resource_group": "transit-rg",
-      "security_groups": ["transit-vpe"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "security_groups": ["transit-sg"],
+      "subnets": ["vpe-zone-1"],
       "instance": null
     }
   ],
@@ -2245,33 +2409,9 @@
           "vpc": "management"
         },
         {
-          "name": "vsi-zone-2",
-          "cidr": "10.20.0.0/29",
-          "zone": 2,
-          "vpc": "management"
-        },
-        {
-          "name": "vsi-zone-3",
-          "cidr": "10.30.0.0/29",
-          "zone": 3,
-          "vpc": "management"
-        },
-        {
           "name": "vpe-zone-1",
           "cidr": "10.10.0.48/29",
           "zone": 1,
-          "vpc": "management"
-        },
-        {
-          "name": "vpe-zone-2",
-          "cidr": "10.20.0.16/29",
-          "zone": 2,
-          "vpc": "management"
-        },
-        {
-          "name": "vpe-zone-3",
-          "cidr": "10.30.0.16/29",
-          "zone": 3,
           "vpc": "management"
         }
       ],
@@ -2298,51 +2438,11 @@
         },
         {
           "vpc": "management",
-          "zone": 2,
-          "cidr": "10.20.0.0/29",
-          "name": "vsi-zone-2",
-          "network_acl": "management",
-          "resource_group": "management-rg",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "management",
-          "zone": 3,
-          "cidr": "10.30.0.0/29",
-          "name": "vsi-zone-3",
-          "network_acl": "management",
-          "resource_group": "management-rg",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "management",
           "zone": 1,
           "cidr": "10.10.0.48/29",
           "name": "vpe-zone-1",
           "resource_group": "management-rg",
           "network_acl": "management",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "management",
-          "zone": 2,
-          "cidr": "10.20.0.16/29",
-          "name": "vpe-zone-2",
-          "network_acl": "management",
-          "resource_group": "management-rg",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "management",
-          "zone": 3,
-          "cidr": "10.30.0.16/29",
-          "name": "vpe-zone-3",
-          "network_acl": "management",
-          "resource_group": "management-rg",
           "public_gateway": false,
           "has_prefix": false
         }
@@ -2377,7 +2477,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -2402,13 +2509,1556 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics1",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.45.235.176/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics1",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.45.235.176/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics2",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.55.82.128/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics2",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.55.82.128/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics3",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.60.115.32/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics3",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.60.115.32/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics4",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.63.150.144/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics4",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.63.150.144/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics5",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.62.1.224/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics5",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.62.1.224/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics6",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.62.53.64/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics6",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.62.53.64/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics7",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": "22",
+                "port_max": "22",
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "150.238.230.128/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics7",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": "22",
+                "source_port_max": "22"
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "150.238.230.128/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics8",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.63.254.64/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics8",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.63.254.64/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics9",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.47.104.160/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics9",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.47.104.160/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics10",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.61.191.64/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics10",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.61.191.64/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics11",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "169.60.172.144/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics11",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "169.60.172.144/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics13",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "158.175.106.64/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics13",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "158.175.106.64/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics14",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "158.175.138.176/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics14",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "158.175.138.176/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics15",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "141.125.79.160/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics15",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "141.125.79.160/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics16",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "141.125.142.96/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics16",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "141.125.142.96/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics17",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "158.176.111.64/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics17",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "158.176.111.64/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics18",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "158.176.134.80/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics18",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "158.176.134.80/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics19",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "149.81.123.64/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics19",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "149.81.123.64/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics20",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "149.81.135.64/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics20",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "149.81.135.64/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics21",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "158.177.210.176/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics21",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "158.177.210.176/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics22",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "158.177.216.144/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics22",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "158.177.216.144/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics23",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "161.156.138.80/28",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics23",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "161.156.138.80/28",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics24",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "159.122.111.224/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics24",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "159.122.111.224/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-inbound-schematics25",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 22,
+                "port_max": 22,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "161.156.37.160/27",
+              "destination": "10.10.10.0/24",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-ssh-outbound-schematics25",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 22,
+                "source_port_max": 22
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.10.10.0/24",
+              "destination": "161.156.37.160/27",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
               "destination": "10.0.0.0/8",
               "direction": "inbound",
-              "name": "allow-all-network-inbound",
+              "name": "allow-private-net-1-inbound",
               "source": "10.0.0.0/8",
               "acl": "management",
               "vpc": "management",
@@ -2427,13 +4077,20 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
               "destination": "10.0.0.0/8",
               "direction": "outbound",
-              "name": "allow-all-network-outbound",
+              "name": "allow-private-net-1-outbound",
               "source": "10.0.0.0/8",
               "acl": "management",
               "vpc": "management",
@@ -2452,9 +4109,232 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-2-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "172.16.0.0/12",
+              "destination": "10.0.0.0/8",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-2-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "172.16.0.0/12",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-3-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "192.168.0.0/16",
+              "destination": "10.0.0.0/8",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-3-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "192.168.0.0/16",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "default-inbound-deny",
+              "action": "deny",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "0.0.0.0/0",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "default-outbound-deny",
+              "action": "deny",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "0.0.0.0/0",
+              "acl": "management",
+              "vpc": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
           ]
+        }
+      ],
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": "1",
+          "hide": true,
+          "networkAcl": "management",
+          "addPublicGateway": false,
+          "advanced": false,
+          "select_zones": "1"
+        },
+        {
+          "name": "vpn",
+          "zones": 1
+        },
+        {
+          "name": "vpe",
+          "zones": "1",
+          "hide": true,
+          "networkAcl": "management",
+          "addPublicGateway": false,
+          "advanced": false,
+          "select_zones": "1"
         }
       ]
     },
@@ -2477,33 +4357,9 @@
           "vpc": "workload"
         },
         {
-          "name": "vsi-zone-2",
-          "cidr": "10.50.0.0/28",
-          "zone": 2,
-          "vpc": "workload"
-        },
-        {
-          "name": "vsi-zone-3",
-          "cidr": "10.60.0.0/28",
-          "zone": 3,
-          "vpc": "workload"
-        },
-        {
           "name": "vpe-zone-1",
           "cidr": "10.40.0.32/29",
           "zone": 1,
-          "vpc": "workload"
-        },
-        {
-          "name": "vpe-zone-2",
-          "cidr": "10.50.0.32/29",
-          "zone": 2,
-          "vpc": "workload"
-        },
-        {
-          "name": "vpe-zone-3",
-          "cidr": "10.60.0.32/29",
-          "zone": 3,
           "vpc": "workload"
         }
       ],
@@ -2520,49 +4376,9 @@
         },
         {
           "vpc": "workload",
-          "zone": 2,
-          "cidr": "10.50.0.0/28",
-          "name": "vsi-zone-2",
-          "network_acl": "workload",
-          "resource_group": "workload-rg",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "workload",
-          "zone": 3,
-          "cidr": "10.60.0.0/28",
-          "name": "vsi-zone-3",
-          "network_acl": "workload",
-          "resource_group": "workload-rg",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "workload",
           "zone": 1,
           "cidr": "10.40.0.32/29",
           "name": "vpe-zone-1",
-          "network_acl": "workload",
-          "resource_group": "workload-rg",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "workload",
-          "zone": 2,
-          "cidr": "10.50.0.32/29",
-          "name": "vpe-zone-2",
-          "network_acl": "workload",
-          "resource_group": "workload-rg",
-          "public_gateway": false,
-          "has_prefix": false
-        },
-        {
-          "vpc": "workload",
-          "zone": 3,
-          "cidr": "10.60.0.32/29",
-          "name": "vpe-zone-3",
           "network_acl": "workload",
           "resource_group": "workload-rg",
           "public_gateway": false,
@@ -2599,7 +4415,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -2624,13 +4447,84 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-udp-dns-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 53,
+                "source_port_max": 53
+              },
+              "source": "0.0.0.0/0",
+              "destination": "10.0.0.0/8",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "udp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-udp-dns-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": 53,
+                "port_max": 53,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "0.0.0.0/0",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "udp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
               "destination": "10.0.0.0/8",
               "direction": "inbound",
-              "name": "allow-all-network-inbound",
+              "name": "allow-private-net-1-inbound",
               "source": "10.0.0.0/8",
               "acl": "workload",
               "vpc": "workload",
@@ -2649,13 +4543,20 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
               "destination": "10.0.0.0/8",
               "direction": "outbound",
-              "name": "allow-all-network-outbound",
+              "name": "allow-private-net-1-outbound",
               "source": "10.0.0.0/8",
               "acl": "workload",
               "vpc": "workload",
@@ -2674,9 +4575,228 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-2-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "172.16.0.0/12",
+              "destination": "10.0.0.0/8",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-2-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "172.16.0.0/12",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-3-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "192.168.0.0/16",
+              "destination": "10.0.0.0/8",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-3-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "192.168.0.0/16",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "default-inbound-deny",
+              "action": "deny",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "0.0.0.0/0",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "default-outbound-deny",
+              "action": "deny",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "0.0.0.0/0",
+              "acl": "workload",
+              "vpc": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
           ]
+        }
+      ],
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": "1",
+          "hide": true,
+          "networkAcl": "workload",
+          "addPublicGateway": false,
+          "advanced": false,
+          "select_zones": "1"
+        },
+        {
+          "name": "vpe",
+          "zones": "1",
+          "hide": true,
+          "networkAcl": "workload",
+          "addPublicGateway": false,
+          "advanced": false,
+          "select_zones": "1"
         }
       ]
     },
@@ -2697,33 +4817,9 @@
         },
         {
           "vpc": "transit",
-          "zone": 2,
-          "cidr": "10.80.10.0/24",
-          "name": "vsi-zone-2"
-        },
-        {
-          "vpc": "transit",
-          "zone": 3,
-          "cidr": "10.90.10.0/24",
-          "name": "vsi-zone-3"
-        },
-        {
-          "vpc": "transit",
           "zone": 1,
           "cidr": "10.70.20.0/24",
           "name": "vpe-zone-1"
-        },
-        {
-          "vpc": "transit",
-          "zone": 2,
-          "cidr": "10.80.20.0/24",
-          "name": "vpe-zone-2"
-        },
-        {
-          "vpc": "transit",
-          "zone": 3,
-          "cidr": "10.90.20.0/24",
-          "name": "vpe-zone-3"
         }
       ],
       "subnets": [
@@ -2739,26 +4835,6 @@
         },
         {
           "vpc": "transit",
-          "zone": 2,
-          "cidr": "10.80.10.0/24",
-          "name": "vsi-zone-2",
-          "network_acl": "transit",
-          "resource_group": "transit-rg",
-          "public_gateway": false,
-          "has_prefix": true
-        },
-        {
-          "vpc": "transit",
-          "zone": 3,
-          "cidr": "10.90.10.0/24",
-          "name": "vsi-zone-3",
-          "network_acl": "transit",
-          "resource_group": "transit-rg",
-          "public_gateway": false,
-          "has_prefix": true
-        },
-        {
-          "vpc": "transit",
           "zone": 1,
           "cidr": "10.70.20.0/24",
           "name": "vpe-zone-1",
@@ -2766,29 +4842,15 @@
           "resource_group": "transit-rg",
           "public_gateway": false,
           "has_prefix": true
-        },
-        {
-          "vpc": "transit",
-          "zone": 2,
-          "cidr": "10.80.20.0/24",
-          "name": "vpe-zone-2",
-          "network_acl": "transit",
-          "resource_group": "transit-rg",
-          "public_gateway": false,
-          "has_prefix": true
-        },
-        {
-          "vpc": "transit",
-          "zone": 3,
-          "cidr": "10.90.20.0/24",
-          "name": "vpe-zone-3",
-          "network_acl": "transit",
-          "resource_group": "transit-rg",
-          "public_gateway": false,
-          "has_prefix": true
         }
       ],
-      "public_gateways": [],
+      "public_gateways": [
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "resource_group": "transit-rg"
+        }
+      ],
       "acls": [
         {
           "resource_group": "transit-rg",
@@ -2818,7 +4880,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -2843,13 +4912,276 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-udp-dns-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 53,
+                "source_port_max": 53
+              },
+              "source": "0.0.0.0/0",
+              "destination": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "udp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-udp-dns-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": 53,
+                "port_max": 53,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "udp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-tcp-8443-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 8443,
+                "source_port_max": 8443
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-tcp-8443-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 8443,
+                "port_max": 8443,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-tcp-443-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 443,
+                "source_port_max": 443
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-tcp-443-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 443,
+                "port_max": 443,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-tcp-80-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": 80,
+                "source_port_max": 80
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-tcp-80-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": 80,
+                "port_max": 80,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "tcp",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
               "destination": "10.0.0.0/8",
               "direction": "inbound",
-              "name": "allow-all-network-inbound",
+              "name": "allow-private-net-1-inbound",
               "source": "10.0.0.0/8",
               "acl": "transit",
               "vpc": "transit",
@@ -2868,13 +5200,20 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
               "destination": "10.0.0.0/8",
               "direction": "outbound",
-              "name": "allow-all-network-outbound",
+              "name": "allow-private-net-1-outbound",
               "source": "10.0.0.0/8",
               "acl": "transit",
               "vpc": "transit",
@@ -2893,14 +5232,233 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-2-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "172.16.0.0/12",
+              "destination": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-2-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "172.16.0.0/12",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-3-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "192.168.0.0/16",
+              "destination": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "allow-private-net-3-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "192.168.0.0/16",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "default-inbound-deny",
+              "action": "deny",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "default-outbound-deny",
+              "action": "deny",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
           ]
         }
       ],
       "bucket": "transit-bucket",
-      "publicGateways": [],
-      "cos": "cos"
+      "publicGateways": [1],
+      "cos": "cos",
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": "1",
+          "hide": true,
+          "networkAcl": "transit",
+          "addPublicGateway": false,
+          "advanced": false,
+          "select_zones": "1"
+        },
+        {
+          "name": "vpe",
+          "zones": "1",
+          "hide": true,
+          "networkAcl": "transit",
+          "addPublicGateway": false,
+          "advanced": false,
+          "select_zones": "1"
+        }
+      ]
     }
   ],
   "vpn_gateways": [
@@ -2919,11 +5477,11 @@
     {
       "kms": "kms",
       "encryption_key": "vsi-volume-key",
-      "image": "ibm-ubuntu-22-04-3-minimal-amd64-2",
-      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-2]",
-      "profile": "cx2-4x8",
+      "image": "ibm-redhat-8-6-amd64-sap-applications-5",
+      "image_name": "Red Hat Enterprise Linux 8.6 for SAP Applications (amd64) [ibm-redhat-8-6-amd64-sap-applications-5]",
+      "profile": "cx2-2x4",
       "name": "management-jump-server",
-      "security_groups": ["management-vsi"],
+      "security_groups": ["management-sg"],
       "ssh_keys": ["ssh-key"],
       "vpc": "management",
       "vsi_per_subnet": "1",
@@ -2939,11 +5497,11 @@
     {
       "kms": "kms",
       "encryption_key": "vsi-volume-key",
-      "image": "ibm-ubuntu-22-04-3-minimal-amd64-2",
-      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-2]",
-      "profile": "cx2-4x8",
+      "image": "ibm-redhat-8-6-amd64-sap-applications-5",
+      "image_name": "Red Hat Enterprise Linux 8.6 for SAP Applications (amd64) [ibm-redhat-8-6-amd64-sap-applications-5]",
+      "profile": "cx2-2x4",
       "name": "workload-dns-server",
-      "security_groups": ["workload-vsi"],
+      "security_groups": ["workload-sg"],
       "ssh_keys": ["ssh-key"],
       "vpc": "workload",
       "vsi_per_subnet": "1",
@@ -2959,11 +5517,11 @@
     {
       "kms": "kms",
       "encryption_key": "vsi-volume-key",
-      "image": "ibm-ubuntu-22-04-3-minimal-amd64-2",
-      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-2]",
-      "profile": "cx2-4x8",
+      "image": "ibm-redhat-8-4-amd64-sap-applications-9",
+      "image_name": "Red Hat Enterprise Linux 8.4 for SAP Applications (amd64) [ibm-redhat-8-4-amd64-sap-applications-9]",
+      "profile": "cx2-2x4",
       "name": "transit-proxy-server",
-      "security_groups": ["transit-vsi"],
+      "security_groups": ["transit-sg"],
       "ssh_keys": ["ssh-key"],
       "vpc": "transit",
       "vsi_per_subnet": "1",

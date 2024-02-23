@@ -64,6 +64,9 @@ function setupRowsAndHeaders(componentProps) {
         ? "ALL"
         : row.protocol === "icmp"
         ? row.icmp.code
+        : contains(["null", null], row[row.protocol].port_min) ||
+          contains(["null", null], row[row.protocol].port_max)
+        ? "ALL"
         : `${row[row.protocol].port_min}-${row[row.protocol].port_max}`;
     delete row.icmp;
     delete row.tcp;

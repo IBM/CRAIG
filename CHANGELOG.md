@@ -2,13 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.11.2
+
+### Upgrade Notes
+
+- SAP Hana Template now uses RHEL VSI images
+
+### Features
+
+- When attempting to create a resource that requires an SSH Key using the V2 pages, users will now be directed to first create an SSH key instead of viewing the form
+- CRAIG deploy script now creates an ICR namespace in the user provided region and resource group
+- CRAIG deploy script now generates a unique ICR namespace value if the `-n` flag is not provided to avoid existing namespace conflicts within the selected region
+
+### Fixes
+
+- Fixed an issue causing Power VS Workspace deploy scripts to fail in schematics
+- Fixed an issue causing CIDR blocks and IP addresses to be incorrectly marked as invalid
+- Fixed an issue causing SSH Keys to incorrectly display as invalid on V2 pages when using the same public key for VPC, Power, or Classic
+- Fixed an issue causing invalid VPC VSI images to persist after removing references when importing a project
+- Fixed an issue casing TCP and UDP networking rules with no specified port to be rendered incorrectly when using the data view
+- Fixed an issue causing some large craig.json files to not be able to generate Terraform files
+
 ## 1.11.1
 
 ### Upgrade Notes
 
-- CRAIG Terraform no longer uses the depricated field `pi_network_jumbo`. Existing networks with `pi_network_jumbo` selected will be converted to use `pi_network_mtu`.
+- CRAIG Terraform no longer uses the depricated field `pi_network_jumbo`. Existing networks with `pi_network_jumbo` selected will be converted to use `pi_network_mtu`
 - CRAIG no longer supports variable `validation` block within Terraform. This was causing some issues when importing into schematics
 - Default VPC Security Group and Network ACLs now are secure by default and include no networking rules
+- Updated the Power VS PoC template and documentation for successful Power VS and on-prem networking
 
 ### Features
 

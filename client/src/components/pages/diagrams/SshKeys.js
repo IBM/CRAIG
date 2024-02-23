@@ -33,10 +33,17 @@ export const SshKeys = (props) => {
               >
                 <DeploymentIcon
                   isSelected={props.isSelected}
-                  isInvalid={disableSave("ssh_keys", sshKey, {
-                    craig: craig,
-                    data: sshKey,
-                  })}
+                  isInvalid={
+                    props.classic
+                      ? craig.classic_ssh_keys.public_key.invalid(sshKey, {
+                          data: sshKey,
+                          craig: craig,
+                        })
+                      : disableSave("ssh_keys", sshKey, {
+                          craig: craig,
+                          data: sshKey,
+                        })
+                  }
                   craig={craig}
                   itemName="ssh_keys"
                   itemIndex={sshKeyIndex}

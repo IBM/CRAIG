@@ -22,10 +22,7 @@ const {
   containsKeys,
 } = require("lazy-z");
 const { commaSeparatedIpListExp } = require("../constants");
-const {
-  invalidName,
-  invalidSshPublicKey,
-} = require("../forms/invalid-callbacks");
+const { invalidName, validSshKey } = require("../forms/invalid-callbacks");
 const { invalidNameText } = require("../forms/text-callbacks");
 
 /**
@@ -689,6 +686,56 @@ function hideWhenUseData(stateData) {
  * @returns {object} object for schema
  */
 function sshKeySchema(fieldName) {
+  function invalidSshKey(stateData, componentProps) {
+    if (stateData.use_data) {
+      return false;
+    } else if (
+      // if key is not valud and is not NONE
+      !validSshKey(stateData.public_key) &&
+      stateData.public_key !== "NONE"
+    ) {
+      return true;
+    } else if (fieldName === "power_vs_ssh_keys") {
+      let otherPublicKeys = [];
+      // for each power workspace
+      componentProps.craig.store.json.power.forEach((workspace) => {
+        // if the workspace matches the workspace
+        if (workspace.name === componentProps.arrayParentName)
+          // create a list of ssh keys that does not include NONE and
+          // does not have the same name as the array parent
+          otherPublicKeys = otherPublicKeys.concat(
+            splat(
+              workspace.ssh_keys.filter((sshKey) => {
+                if (sshKey.name !== componentProps.data.name) {
+                  return sshKey;
+                }
+              }),
+              "public_key"
+            ).filter((pubKey) => {
+              if (pubKey !== "NONE") return pubKey;
+            })
+          );
+      });
+      return contains(otherPublicKeys, stateData.public_key);
+    } else {
+      let otherPublicKeys = [];
+      otherPublicKeys = otherPublicKeys.concat(
+        splat(
+          // add keys that do not have the name of the current key
+          componentProps.craig.store.json[fieldName].filter((sshKey) => {
+            if (sshKey.name !== componentProps.data.name) {
+              return sshKey;
+            }
+          }),
+          "public_key"
+        ).filter((pubKey) => {
+          // remove none keys
+          if (pubKey !== "NONE") return pubKey;
+        })
+      );
+      return contains(otherPublicKeys, stateData.public_key);
+    }
+  }
   let schema = {
     name: {
       default: "",
@@ -698,13 +745,14 @@ function sshKeySchema(fieldName) {
     public_key: {
       type: "public-key",
       default: null,
-      invalid: function (stateData, componentProps) {
-        return stateData.use_data
-          ? false
-          : invalidSshPublicKey(stateData, componentProps).invalid;
-      },
+      invalid: invalidSshKey,
       invalidText: function (stateData, componentProps) {
-        return invalidSshPublicKey(stateData, componentProps).invalidText;
+        return !validSshKey(stateData.public_key) &&
+          stateData.public_key !== "NONE"
+          ? "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region"
+          : invalidSshKey(stateData, componentProps)
+          ? "SSH Public Key in use"
+          : "";
       },
       hideWhen: function (stateData) {
         return stateData.use_data;

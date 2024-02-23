@@ -1,7 +1,7 @@
 import MixedPattern from "../../images/mixed.png";
 import VsiPattern from "../../images/VsiPattern.png";
 import VsiEdgePattern from "../../images/VsiEdgePattern.png";
-import PowerSAP_HanaPattern from "../../images/PowerSAP_HanaPattern.png";
+import SapHanaPattern from "../../images/SapHanaPattern.png";
 import OracleRac from "../../images/oracle-rac.png";
 import Empty from "../../images/empty.png";
 import PowerVsQuickStart from "../../images/quick-start-power.png";
@@ -15,7 +15,7 @@ const templateImages = {
   Mixed: MixedPattern,
   VSI: VsiPattern,
   "VSI Edge": VsiEdgePattern,
-  "Power VS SAP Hana": PowerSAP_HanaPattern,
+  "Power VS SAP Hana": SapHanaPattern,
   "Power VS Oracle Ready": OracleRac,
   "Empty Project": Empty,
   "Power VS Quick Start": PowerVsQuickStart,

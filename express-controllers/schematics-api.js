@@ -1,4 +1,4 @@
-const { prettyJSON } = require("lazy-z");
+const { prettyJSON, isNullOrEmptyString } = require("lazy-z");
 const tar = require("tar-stream");
 const { packTar } = require("../lib/tar-utils");
 const FormData = require("form-data");
@@ -11,14 +11,14 @@ function schematicsRoutes(axios, controller) {
    * @param {string} workspaceName
    * @returns {Promise}
    */
-  controller.getWorkspaceData = function (workspaceName) {
+  controller.getWorkspaceData = function (workspaceName, region) {
     return new Promise((resolve, reject) => {
       return controller
         .getBearerToken()
         .then(() => {
           let requestConfig = {
             method: "get",
-            url: "https://schematics.cloud.ibm.com/v1/workspaces",
+            url: `https://${region}.schematics.cloud.ibm.com/v1/workspaces`,
             headers: {
               Accept: "application/json",
               Authorization: controller.token,
@@ -73,6 +73,7 @@ function schematicsRoutes(axios, controller) {
    */
   controller.uploadTar = function (req, res) {
     let workspaceName = req.params["workspaceName"];
+    let region = req.params["region"];
     let craigJson = req.body;
     let tarFile = "craig.tar";
     let forceTarPackFail = req.params?.forceFail;
@@ -85,7 +86,7 @@ function schematicsRoutes(axios, controller) {
       }
 
       return controller
-        .getWorkspaceData(workspaceName)
+        .getWorkspaceData(workspaceName, region)
         .then((wsData) => {
           workspaceData = wsData;
           return controller.getBearerToken();
@@ -119,7 +120,7 @@ function schematicsRoutes(axios, controller) {
 
           let requestConfig = {
             method: "put",
-            url: `https://schematics.cloud.ibm.com/v1/workspaces/${workspaceData.w_id}/template_data/${workspaceData.t_id}/template_repo_upload`,
+            url: `https://${region}.schematics.cloud.ibm.com/v1/workspaces/${workspaceData.w_id}/template_data/${workspaceData.t_id}/template_repo_upload`,
             headers: {
               Authorization: controller.token,
               "Content-Type": "multipart/form-data",
@@ -191,12 +192,16 @@ function schematicsRoutes(axios, controller) {
    */
   controller.createWorkspace = function (req, res) {
     let workspaceName = req.params["workspaceName"];
-    let region = req.params["region"] || "us-south";
+    let region = req.params["region"];
     let resourceGroup = req.params["resourceGroup"] || "Default";
 
     return new Promise((resolve, reject) => {
       if (process.env.NO_SCHEMATICS) {
         reject("Schematics feature not supported on development.");
+        return;
+      }
+      if (isNullOrEmptyString(region) || !region) {
+        reject("No region provided for workspace.");
         return;
       }
 
@@ -221,7 +226,7 @@ function schematicsRoutes(axios, controller) {
 
           let requestConfig = {
             method: "post",
-            url: "https://schematics.cloud.ibm.com/v1/workspaces",
+            url: `https://${region}.schematics.cloud.ibm.com/v1/workspaces`,
             headers: {
               Accept: "application/json",
               Authorization: `Bearer ${controller.token}`,

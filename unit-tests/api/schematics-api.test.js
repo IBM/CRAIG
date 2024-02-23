@@ -251,6 +251,36 @@ describe("schematics api", () => {
           );
         });
     });
+    it("should throw error if no region is provided", () => {
+      let { axios } = initMockAxios(
+        {
+          id: "us-south.workspace.testWorkspace",
+          name: "testWorkspace",
+          resources: {
+            id: "foo-123-id",
+          },
+        },
+        false
+      );
+      let testSchematicsController = new controller(axios);
+      return testSchematicsController
+        .createWorkspace(
+          {
+            params: {
+              workspaceName: "testWorkspace",
+              resourceGroup: "foo-rg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith({
+              error: "No region provided for workspace.",
+            })
+          );
+        });
+    });
     it("should return correct data when workspace is created", () => {
       let { axios } = initMockAxios(
         {
@@ -272,6 +302,7 @@ describe("schematics api", () => {
             params: {
               workspaceName: "testWorkspace",
               resourceGroup: "foo-rg",
+              region: "us-south",
             },
           },
           res
@@ -311,6 +342,7 @@ describe("schematics api", () => {
           {
             params: {
               workspaceName: "testWorkspace",
+              region: "us-south",
             },
           },
           res

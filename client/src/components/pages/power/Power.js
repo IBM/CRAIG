@@ -22,7 +22,10 @@ import { PowerMap } from "../diagrams/PowerMap";
 import { PowerSshKeys } from "./PowerSshKeys";
 import { PowerSubnets } from "./PowerSubnets";
 import { PowerVolumes } from "./PowerVolumes";
-import { NoPowerNetworkTile } from "../../forms/dynamic-form";
+import {
+  CraigEmptyResourceTile,
+  NoPowerNetworkTile,
+} from "../../forms/dynamic-form";
 import { PowerVolumeTable } from "./PowerVolumeTable";
 import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { powerInstanceTf, powerVsVolumeTf } from "../../../lib/json-to-iac";
@@ -286,6 +289,13 @@ class PowerDiagram extends React.Component {
           {isNullOrEmptyString(this.state.modalService, true) ? (
             // need to pass html element
             <></>
+          ) : craig.store.json.power[this.state.powerIndex]?.ssh_keys
+              ?.length === 0 &&
+            contains(["vtl", "power_instances"], this.state.modalService) ? (
+            <CraigEmptyResourceTile
+              name="Power VS SSH keys. To enable creation of this resource, create an SSH key"
+              noClick
+            />
           ) : (
             <DynamicForm
               className="formInSubForm"
@@ -452,62 +462,70 @@ class PowerDiagram extends React.Component {
                   </div>
                   <div className="displayFlex" style={{ width: "100%" }}>
                     <div id="left-power">
-                      <PowerMap
-                        craig={craig}
-                        onClick={this.onPowerWorkspaceClick}
-                        isSelected={(powerIndex) => {
-                          return (
-                            this.state.selectedItem === "power" &&
-                            this.state.selectedIndex === powerIndex
-                          );
-                        }}
-                        buttons={(powerIndex) => {
-                          return (
-                            <PrimaryButton
-                              noDeleteButton
-                              type="add"
-                              name="Create a Deployment"
-                              onClick={() =>
-                                this.onWorkspaceButtonClick(powerIndex)
-                              }
-                            />
-                          );
-                        }}
-                      >
-                        <PowerSshKeys
+                      {craig.store.json.power.length === 0 &&
+                      craig.store.json._options.enable_power_vs ? (
+                        <CraigEmptyResourceTile
+                          name="Power VS Workspaces"
+                          className="width580 marginTop1Rem"
+                        />
+                      ) : (
+                        <PowerMap
+                          craig={craig}
                           onClick={this.onPowerWorkspaceClick}
-                          craig={craig}
-                        />
-                        <PowerSubnets
-                          craig={craig}
-                          onPowerWorkspaceClick={this.onPowerWorkspaceClick}
-                          onPowerInstanceClick={this.onPowerInstanceClick}
-                          onVolumeClick={this.onVolumeClick}
-                          onVtlClick={this.onVtlClick}
-                          isSelected={(props) => {
+                          isSelected={(powerIndex) => {
                             return (
-                              this.state.selectedIndex === props.index &&
-                              this.state.selectedItem === props.itemName
+                              this.state.selectedItem === "power" &&
+                              this.state.selectedIndex === powerIndex
                             );
                           }}
-                          volumeIsSelected={(volumeIndex) => {
+                          buttons={(powerIndex) => {
                             return (
-                              this.state.selectedItem === "power_volumes" &&
-                              volumeIndex === this.state.selectedIndex
+                              <PrimaryButton
+                                noDeleteButton
+                                type="add"
+                                name="Create a Deployment"
+                                onClick={() =>
+                                  this.onWorkspaceButtonClick(powerIndex)
+                                }
+                              />
                             );
                           }}
-                        />
-                        <PowerVolumes
-                          craig={craig}
-                          isSelected={(props) => {
-                            return (
-                              this.state.selectedIndex === props.index &&
-                              this.state.selectedItem === props.itemName
-                            );
-                          }}
-                          onVolumeClick={this.onVolumeClick}
-                        />
-                      </PowerMap>
+                        >
+                          <PowerSshKeys
+                            onClick={this.onPowerWorkspaceClick}
+                            craig={craig}
+                          />
+                          <PowerSubnets
+                            craig={craig}
+                            onPowerWorkspaceClick={this.onPowerWorkspaceClick}
+                            onPowerInstanceClick={this.onPowerInstanceClick}
+                            onVolumeClick={this.onVolumeClick}
+                            onVtlClick={this.onVtlClick}
+                            isSelected={(props) => {
+                              return (
+                                this.state.selectedIndex === props.index &&
+                                this.state.selectedItem === props.itemName
+                              );
+                            }}
+                            volumeIsSelected={(volumeIndex) => {
+                              return (
+                                this.state.selectedItem === "power_volumes" &&
+                                volumeIndex === this.state.selectedIndex
+                              );
+                            }}
+                          />
+                          <PowerVolumes
+                            craig={craig}
+                            isSelected={(props) => {
+                              return (
+                                this.state.selectedIndex === props.index &&
+                                this.state.selectedItem === props.itemName
+                              );
+                            }}
+                            onVolumeClick={this.onVolumeClick}
+                          />
+                        </PowerMap>
+                      )}
                     </div>
                     <div id="right-power">
                       {this.state.editing === true ? (

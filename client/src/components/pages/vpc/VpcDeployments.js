@@ -52,7 +52,10 @@ import {
   docTabs,
 } from "../diagrams";
 import { NoSecretsManagerTile } from "../../utils/NoSecretsManagerTile";
-import { NoVpcVsiTile } from "../../forms/dynamic-form/tiles";
+import {
+  CraigEmptyResourceTile,
+  NoVpcVsiTile,
+} from "../../forms/dynamic-form/tiles";
 import { RoutingTables } from "../diagrams/RoutingTables";
 import { F5BigIp } from "../FormPages";
 import f5 from "../../../images/f5.png";
@@ -352,6 +355,12 @@ class VpcDeploymentsDiagramPage extends React.Component {
           ) : this.state.selectedItem === "vpn_servers" &&
             craig.store.json.secrets_manager.length === 0 ? (
             <NoSecretsManagerTile />
+          ) : contains(["fortigate_vnf", "vsi"], this.state.selectedItem) &&
+            craig.store.json.ssh_keys.length === 0 ? (
+            <CraigEmptyResourceTile
+              name="VPC SSH keys. To enable creation of this resource, create an SSH key"
+              noClick
+            />
           ) : (
             <DynamicForm
               key={this.state.selectedItem}

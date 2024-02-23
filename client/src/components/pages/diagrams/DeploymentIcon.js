@@ -34,10 +34,12 @@ function deploymentIconBoxClassName(props) {
     boxClassName += " diagramIconBoxSelected";
   }
   if (
-    disableSave(props.itemName, props.item, {
-      craig: props.craig,
-      data: props.item,
-    })
+    typeof props.isInvalid === "boolean"
+      ? props.isInvalid
+      : disableSave(props.itemName, props.item, {
+          craig: props.craig,
+          data: props.item,
+        })
   ) {
     boxClassName += " diagramIconBoxInvalid";
   } else if (props.itemName === "vpn_gateways") {
