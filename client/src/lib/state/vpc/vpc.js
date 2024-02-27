@@ -1494,9 +1494,9 @@ function initVpcStore(store) {
             tooltip: {
               content:
                 "Enable advanced subnet configuration such as custom CIDR blocks. " +
-                "Advanced configuration cannot be set when using dynamically scaled subnets.",
+                "Advanced configuration cannot be set when using CRAIG Managed Network Addresses.",
               alignModal: "bottom",
-              align: "left",
+              align: "bottom-right",
             },
             disabled: function (stateData, componentProps) {
               return (
