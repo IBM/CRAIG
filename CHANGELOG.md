@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.12.0
+
+### Upgrade Notes
+
+- Removed dependency on the front-end library `icse-react-assets`. This should result in faster build times
+
+### Features
+
+- Users can now import existing VPCs and VPC ACLs within existing VPCs within CRAIG
+
+### Fixes
+
+- Fixed an issue causing VPN Servers to fail provisioning when selecting a protocol
+
 ## 1.11.2
 
 ### Upgrade Notes

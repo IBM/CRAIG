@@ -19,10 +19,12 @@ const ObservabilityForm = (props) => {
         form={
           <div>
             <CraigToggleForm
+              hideHeading
               type="subForm"
               name="LogDNA"
               submissionFieldName="logdna"
               hideName
+              wrapperClassName="marginBottomNone"
               noDeleteButton
               useAddButton={craig.store.json.logdna.enabled === false}
               onShowToggle={none}
@@ -55,11 +57,10 @@ const ObservabilityForm = (props) => {
                   ],
                 },
               }}
-              forceOpen={
-                craig.store.json.logdna.enabled ? forceShowForm : undefined
-              }
             />
+            <div style={{ marginBottom: "-1rem" }} />
             <CraigToggleForm
+              hideHeading
               type="subForm"
               name="Sysdig"
               submissionFieldName="sysdig"
@@ -94,7 +95,6 @@ const ObservabilityForm = (props) => {
                   ],
                 },
               }}
-              forceOpen={forceShowForm}
             />
           </div>
         }

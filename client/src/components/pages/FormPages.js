@@ -1,6 +1,5 @@
 import React from "react";
 import { disableSave, forceShowForm, propsMatchState } from "../../lib";
-import { IcseFormTemplate } from "icse-react-assets";
 import { RenderDocs } from "./SimplePages";
 import { arraySplatIndex, contains, transpose } from "lazy-z";
 import { disableSshKeyDelete } from "../../lib/forms";
@@ -26,6 +25,7 @@ import {
 import { craigForms } from "./CraigForms";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
 import { DynamicSubnetTierForm } from "./vpc/DynamicSubnetTierForm";
+import FormTemplate from "../forms/utils/FormTemplate";
 
 function cbrPageTemplate(craig) {
   let forms = craigForms(craig);
@@ -46,14 +46,12 @@ function cbrPageTemplate(craig) {
     form: forms[zoneOptions.jsonField],
     disableSave: disableSave,
     formName: zoneOptions.formName,
-    className: "subForm",
   };
   let ruleInnerFormProps = {
     craig: craig,
     form: forms[ruleOptions.jsonField],
     disableSave: disableSave,
     formName: ruleOptions.formName,
-    className: "subForm",
   };
 
   return (
@@ -63,20 +61,20 @@ function cbrPageTemplate(craig) {
         about={RenderDocs("cbr", craig.store.json._options.template)()}
         form={
           <>
-            <div className="subForm">
-              <IcseFormTemplate
+            <div
+              className="subForm marginBottomNone"
+              style={{ marginBottom: "0" }}
+            >
+              <FormTemplate
                 name={zoneOptions.name}
                 addText={zoneOptions.addText}
                 arrayData={craig.store.json[zoneOptions.jsonField]}
                 onDelete={craig[zoneOptions.jsonField].delete}
                 onSave={craig[zoneOptions.jsonField].save}
                 onSubmit={craig[zoneOptions.jsonField].create}
-                disableSave={disableSave}
                 subHeading={true}
                 innerForm={DynamicForm}
                 hideAbout={true}
-                propsMatchState={propsMatchState}
-                forceOpen={forceShowForm}
                 hideFormTitleButton={zoneOptions.hideFormTitleButton}
                 overrideTile={zoneOptions.overrideTile}
                 innerFormProps={zoneInnerFormProps}
@@ -84,27 +82,24 @@ function cbrPageTemplate(craig) {
                 deleteDisabled={zoneOptions.deleteDisabled}
                 toggleFormProps={{
                   craig: craig,
-                  disableSave: disableSave,
                   submissionFieldName: zoneOptions.jsonField,
                   hideName: true,
                   type: "formInSubForm",
+                  isMiddleForm: true,
                 }}
               />
             </div>
             <div className="subForm">
-              <IcseFormTemplate
+              <FormTemplate
                 name={ruleOptions.name}
+                innerForm={DynamicForm}
                 addText={ruleOptions.addText}
                 arrayData={craig.store.json[ruleOptions.jsonField]}
                 onDelete={craig[ruleOptions.jsonField].delete}
                 onSave={craig[ruleOptions.jsonField].save}
                 onSubmit={craig[ruleOptions.jsonField].create}
-                disableSave={disableSave}
                 subHeading={true}
-                innerForm={DynamicForm}
                 hideAbout={true}
-                propsMatchState={propsMatchState}
-                forceOpen={forceShowForm}
                 hideFormTitleButton={false}
                 overrideTile={ruleOptions.overrideTile}
                 innerFormProps={ruleInnerFormProps}
@@ -112,12 +107,12 @@ function cbrPageTemplate(craig) {
                 deleteDisabled={ruleOptions.deleteDisabled}
                 toggleFormProps={{
                   craig: craig,
-                  disableSave: disableSave,
                   submissionFieldName: ruleOptions.jsonField,
                   hideName: true,
                   type: "formInSubForm",
+                  isMiddleForm: true,
                 }}
-              ></IcseFormTemplate>
+              />
             </div>
           </>
         }
@@ -136,7 +131,7 @@ export const formPageTemplate = (craig, options, form) => {
   };
   if (options.innerFormProps) transpose(options.innerFormProps, innerFormProps);
   return (
-    <IcseFormTemplate
+    <FormTemplate
       name={options.name}
       addText={options.addText}
       docs={RenderDocs(options.jsonField, craig.store.json._options.template)}
@@ -672,6 +667,9 @@ class NetworkAcls extends React.Component {
                 jsonField: "acls",
                 groups: [
                   {
+                    use_data: craig.vpcs.acls.use_data,
+                  },
+                  {
                     name: craig.vpcs.acls.name,
                     resource_group: craig.vpcs.acls.resource_group,
                   },
@@ -695,7 +693,7 @@ class NetworkAcls extends React.Component {
 const NetworkAclPage = (craig) => {
   let none = () => {};
   return (
-    <IcseFormTemplate
+    <FormTemplate
       name="Network Access Control Lists"
       innerForm={NetworkAcls}
       arrayData={craig.store.json.vpcs}
@@ -932,7 +930,13 @@ const SecurityGroupPage = (craig) => {
         hideFormTitleButton: craig.store.json.vpcs.length === 0,
       })}
       {craig.store.json.security_groups.length > 0 && (
-        <CopyRuleForm craig={craig} isAclForm={false} />
+        <div
+          style={{
+            marginTop: "-1.5rem",
+          }}
+        >
+          <CopyRuleForm craig={craig} isAclForm={false} />
+        </div>
       )}
     </>
   );
@@ -1064,7 +1068,7 @@ const SubnetsPage = (craig) => {
 
   let none = () => {};
   return (
-    <IcseFormTemplate
+    <FormTemplate
       name="VPC Subnets"
       arrayData={craig.store.json.vpcs}
       docs={RenderDocs("subnets", craig.store.json._options.template)}

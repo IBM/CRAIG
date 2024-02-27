@@ -27,10 +27,10 @@
 }
 
 .updateBanner {
-  position: fixed;
-  z-index: 10000;
-  left: 4rem;
-  max-width: 93vw;
+  position: fixed !important;
+  z-index: 10000 !important;
+  left: 4rem !important;
+  max-width: 93vw !important;
   text-align: center;
 }
 

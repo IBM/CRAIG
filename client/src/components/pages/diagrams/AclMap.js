@@ -32,10 +32,9 @@ export const AclMap = (props) => {
         : aclIndex;
       let aclClassName =
         "formInSubForm " + (props.small ? "aclBoxSmall" : "aclBox");
-      let isRed = isNullOrEmptyString(
-        acl ? acl.resource_group : undefined,
-        true
-      );
+      let isRed = acl.use_data
+        ? false
+        : isNullOrEmptyString(acl ? acl.resource_group : undefined, true);
       if (aclIndex !== 0) aclClassName += " aclBoxTop";
       if (
         props.isSelected &&
@@ -48,7 +47,10 @@ export const AclMap = (props) => {
       return (
         <HoverClassNameWrapper
           key={acl.name + vpc.name + aclIndex + props.vpc_index}
-          className={aclClassName}
+          className={
+            aclClassName +
+            (aclIndex + 1 < aclList.length ? " marginBottomSmall" : "")
+          }
           hoverClassName="diagramBoxSelected"
           static={props.static}
         >
@@ -64,7 +66,11 @@ export const AclMap = (props) => {
               className="clicky"
             >
               <CraigFormHeading
-                name={acl?.name ? acl.name + " ACL" : "No ACL Selected"}
+                name={
+                  acl?.name
+                    ? acl.name + " ACL" + (acl.use_data ? " [Imported]" : "")
+                    : "No ACL Selected"
+                }
                 icon={<SubnetAclRules className="diagramTitleIcon" />}
                 className="marginBottomSmall"
                 type="subHeading"

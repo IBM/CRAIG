@@ -57,7 +57,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -116,6 +116,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "management-bucket",
           name: "management",
@@ -211,6 +212,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "management-rg",
               name: "management",
               vpc: "management",
@@ -336,6 +338,7 @@ describe("setup wizard", () => {
           ],
         },
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -431,6 +434,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -967,7 +971,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -1026,6 +1030,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "management-bucket",
           name: "management",
@@ -1121,6 +1126,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "management-rg",
               name: "management",
               vpc: "management",
@@ -1246,6 +1252,7 @@ describe("setup wizard", () => {
           ],
         },
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -1341,6 +1348,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -1876,7 +1884,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -1926,6 +1934,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -2021,6 +2030,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -2381,7 +2391,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2431,6 +2441,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -2526,6 +2537,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -2877,7 +2889,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -2927,6 +2939,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "management-bucket",
           name: "management",
@@ -3022,6 +3035,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "management-rg",
               name: "management",
               vpc: "management",
@@ -3450,7 +3464,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -3616,7 +3630,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -3666,6 +3680,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "management-bucket",
           name: "management",
@@ -3761,6 +3776,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "management-rg",
               name: "management",
               vpc: "management",
@@ -4181,7 +4197,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4266,6 +4282,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -4361,6 +4378,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -4720,7 +4738,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -4805,6 +4823,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -4900,6 +4919,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -5264,7 +5284,7 @@ describe("setup wizard", () => {
         enable_classic: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -5348,6 +5368,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -5391,6 +5412,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -5750,7 +5772,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -5835,6 +5857,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -5878,6 +5901,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -6246,7 +6270,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.11.2",
+        craig_version: "1.12.0",
         power_vs_high_availability: false,
       },
       resource_groups: [
@@ -6332,6 +6356,7 @@ describe("setup wizard", () => {
       ],
       vpcs: [
         {
+          use_data: false,
           cos: null,
           bucket: null,
           name: "edge",
@@ -6347,6 +6372,7 @@ describe("setup wizard", () => {
           ],
           acls: [
             {
+              use_data: false,
               name: "edge-acl",
               vpc: "edge",
               resource_group: "edge-rg",
@@ -6441,6 +6467,7 @@ describe("setup wizard", () => {
               ],
             },
             {
+              use_data: false,
               name: "f5-external-acl",
               vpc: "edge",
               resource_group: "edge-rg",
@@ -6639,6 +6666,7 @@ describe("setup wizard", () => {
           public_gateways: [],
         },
         {
+          use_data: false,
           cos: "cos",
           bucket: "workload-bucket",
           name: "workload",
@@ -6682,6 +6710,7 @@ describe("setup wizard", () => {
           public_gateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",

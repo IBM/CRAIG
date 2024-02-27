@@ -1,11 +1,5 @@
 import React from "react";
 import {
-  IcseNameInput,
-  IcseTextInput,
-  IcseModal,
-  IcseToggle,
-} from "icse-react-assets";
-import {
   invalidProjectName,
   invalidProjectDescription,
   invalidProjectNameText,
@@ -13,14 +7,14 @@ import {
 import { invalidNewResourceName } from "../../../lib/forms";
 import { azsort, isNullOrEmptyString, keys } from "lazy-z";
 import { Launch } from "@carbon/icons-react";
-import { Button } from "@carbon/react";
+import { Button, Modal, TextInput, Toggle } from "@carbon/react";
 import { templates, TemplateAbout } from "../../utils";
 import {
   projectDescriptionRegex,
   template_dropdown_map,
 } from "../../../lib/constants";
 import PropTypes from "prop-types";
-import { CraigFormGroup } from "../../forms";
+import { CraigFormGroup, ToolTipWrapper } from "../../forms";
 import {
   DynamicFormSelect,
   DynamicToolTipWrapper,
@@ -103,10 +97,10 @@ export class ProjectFormModal extends React.Component {
       },
     };
     return (
-      <IcseModal
+      <Modal
         size="lg" // template no longer optional
         open={this.props.open}
-        heading={
+        modalHeading={
           this.state.last_save === undefined
             ? "Create a New Project"
             : "Edit Project Details"
@@ -120,39 +114,42 @@ export class ProjectFormModal extends React.Component {
         onRequestSubmit={() => {
           this.props.onSubmit(this.state, this.props, true);
           this.props.onClose();
-
           if (this.props.nav !== undefined) {
             this.props.nav("/projects");
           }
         }}
         primaryButtonDisabled={primaryButtonDisabled}
+        secondaryButtonText="Dismiss"
       >
         <CraigFormGroup>
-          <IcseNameInput
+          <TextInput
             invalid={invalidProjectNameVal}
             invalidText={invalidProjectNameText(this.state, this.props)}
             id="project-name"
+            name="name"
+            labelText="Project Name"
             componentName="project"
             value={this.state.name || ""}
             onChange={this.handleTextInput}
-            helperTextCallback={() => {
-              return this.state.last_save
+            helperText={
+              this.state.last_save
                 ? "Last Saved: " +
-                    new Date(this.state.last_save).toLocaleString()
-                : "";
-            }}
+                  new Date(this.state.last_save).toLocaleString()
+                : ""
+            }
           />
         </CraigFormGroup>
         <CraigFormGroup>
-          <IcseTextInput
+          <TextInput
             invalid={invalidDescription}
             invalidText={
               "Project description must follow the regex pattern: " +
               projectDescriptionRegex
             }
             componentName="project"
-            field="description"
-            placeholder="Brief project description"
+            name="description"
+            labelText="Project Description"
+            placeholder="(Optional) Brief project description"
             id="project-description"
             onChange={this.handleTextInput}
             value={this.state.description || ""}
@@ -180,7 +177,7 @@ export class ProjectFormModal extends React.Component {
         <>
           <CraigFormGroup>
             {this.props.noProjectSave === false && (
-              <IcseToggle
+              <Toggle
                 labelText="Integrate with Schematics"
                 defaultToggled={this.state.use_schematics}
                 onToggle={() => this.handleToggle("use_schematics")}
@@ -193,33 +190,42 @@ export class ProjectFormModal extends React.Component {
           {this.state.use_schematics && (
             <div className="formInSubForm">
               <CraigFormGroup>
-                <IcseTextInput
+                <TextInput
+                  name="workspace_name"
+                  labelText="Workspace Name"
                   invalid={invalidNewResourceName(this.state.workspace_name)}
                   invalidText={"Invalid Name"}
                   componentName="workspace"
                   field="workspace_name"
-                  disabled={this.state.workspace_url !== undefined}
                   id="workspace-name"
+                  className="fieldWidth"
                   onChange={this.handleTextInput}
                   value={this.state.workspace_name || ""}
+                  placeholder="my-workspace-name"
                 />
               </CraigFormGroup>
               <CraigFormGroup>
-                <IcseTextInput
-                  invalid={false}
-                  componentName="workspace"
-                  field="workspace_resource_group"
-                  id="workspace-resource-group"
-                  onChange={this.handleTextInput}
-                  value={this.state.workspace_resource_group}
-                  placeholder={"default"}
-                  disabled={this.state.workspace_url !== undefined}
-                  optional={true}
+                <ToolTipWrapper
                   tooltip={{
                     content: `Must correspond to an existing resource group. If not provided, the workspace will be deployed to the "default" resource group in the account.`,
                     link: "https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui",
                   }}
-                />
+                  labelText="Workspace Resource Group"
+                >
+                  <TextInput
+                    invalid={false}
+                    labelText="Workspace Resource Group"
+                    name="workspace_resource_group"
+                    componentName="workspace"
+                    field="workspace_resource_group"
+                    id="workspace-resource-group"
+                    onChange={this.handleTextInput}
+                    className="fieldWidth"
+                    value={this.state.workspace_resource_group}
+                    placeholder={"default"}
+                    optional={true}
+                  />
+                </ToolTipWrapper>
               </CraigFormGroup>
               <CraigFormGroup>
                 <DynamicFormSelect
@@ -247,9 +253,10 @@ export class ProjectFormModal extends React.Component {
               </CraigFormGroup>
               {this.state.workspace_url && (
                 <div className="displayFlex alignItemsEnd">
-                  <IcseTextInput
+                  <TextInput
                     invalid={false}
                     readOnly={true}
+                    labelText="Workspace URL"
                     componentName="project"
                     field="workspace_url"
                     id="workspace-url"
@@ -263,13 +270,13 @@ export class ProjectFormModal extends React.Component {
                     }}
                     renderIcon={Launch}
                     iconDescription="Launch workspace in new tab"
-                  ></Button>
+                  />
                 </div>
               )}
             </div>
           )}
         </>
-      </IcseModal>
+      </Modal>
     );
   }
 }

@@ -2,10 +2,11 @@ import React from "react";
 import { contains, kebabCase } from "lazy-z";
 import PropTypes from "prop-types";
 import DynamicFormModal from "./DynamicFormModal";
-import { RenderForm } from "./StatelessFormWrapper";
 import StatefulTabs from "./StatefulTabs";
 import { CraigEmptyResourceTile } from "../dynamic-form";
 import CraigToggleForm from "./ToggleForm";
+import { RenderForm } from "./RenderForm";
+import { disableSave } from "../../../lib";
 
 class FormTemplate extends React.Component {
   constructor(props) {
@@ -93,7 +94,7 @@ class FormTemplate extends React.Component {
     // child array components without needing to reference `this` directly
     let formModalProps = {
       ...this.props.innerFormProps,
-      disableSave: this.props.disableSave,
+      disableSave: disableSave,
       arrayParentName:
         this.props.arrayParentName || this.props.innerFormProps.arrayParentName,
       isModal: true,
@@ -109,7 +110,7 @@ class FormTemplate extends React.Component {
         // and disableModal, which are dynamically added to the component
         // at time of render
         if (
-          this.props.disableSave(
+          disableSave(
             this.props.submissionFieldName,
             this.state,
             this.props
@@ -136,6 +137,7 @@ class FormTemplate extends React.Component {
           name={this.props.name}
           onClick={this.toggleModal}
           addText={this.props.addText}
+          headingType={this.props.subHeading ? "subHeading" : ""}
           hideButtons={this.props.hideFormTitleButton}
           className={
             this.props.arrayData.length === 0 ? "subHeading" : tabPanelClassName
@@ -151,6 +153,7 @@ class FormTemplate extends React.Component {
                 <CraigEmptyResourceTile
                   name={this.props.name}
                   show={this.props.arrayData.length === 0}
+                  className="marginTop1Rem"
                 />
               )}
 
@@ -160,8 +163,6 @@ class FormTemplate extends React.Component {
                 return (
                   <CraigToggleForm
                     {...this.props.toggleFormProps}
-                    propsMatchState={this.props.propsMatchState}
-                    disableSave={this.props.disableSave}
                     name={data[this.props.toggleFormFieldName]}
                     tabPanel={{
                       name: this.props.name,
@@ -169,7 +170,7 @@ class FormTemplate extends React.Component {
                       hasBuiltInHeading: true, // passed to ignore second tabPanel
                     }}
                     key={this.props.name + "-" + index}
-                    innerForm={this.props.innerForm}
+                    overrideDynamicForm={this.props.innerForm}
                     innerFormProps={{
                       ...this.props.innerFormProps,
                       data: { ...data },
@@ -182,13 +183,13 @@ class FormTemplate extends React.Component {
                         : false
                     }
                     index={index}
-                    forceOpen={this.props.forceOpen}
                     show={this.shouldShow(index)}
                     shownChildren={this.state.shownChildForms}
                     onSave={this.props?.onSave}
                     onDelete={this.props?.onDelete}
                     deleteDisabled={this.props?.deleteDisabled}
                     deleteDisabledMessage={this.props?.deleteDisabledMessage}
+                    isLast={index + 1 === this.props.arrayData.length}
                   />
                 );
               })}
@@ -220,9 +221,6 @@ FormTemplate.defaultProps = {
   isMiddleForm: false,
   hideAbout: false,
   toggleFormFieldName: "name",
-  forceOpen: () => {
-    return false;
-  },
 };
 
 FormTemplate.propTypes = {
@@ -249,7 +247,6 @@ FormTemplate.propTypes = {
   toggleFormFieldName: PropTypes.string.isRequired,
   hideAbout: PropTypes.bool,
   deleteDisabled: PropTypes.func,
-  forceOpen: PropTypes.func,
   deleteDisabledMessage: PropTypes.string,
   overrideTile: PropTypes.node,
   defaultModalValues: PropTypes.shape({}),

@@ -22,6 +22,9 @@ export class DynamicAclForm extends React.Component {
         jsonField: "acls",
         groups: [
           {
+            use_data: craig.vpcs.acls.use_data,
+          },
+          {
             name: craig.vpcs.acls.name,
             resource_group: craig.vpcs.acls.resource_group,
           },
@@ -62,17 +65,19 @@ export class DynamicAclForm extends React.Component {
           enableModal={this.props.enableModal}
           setRefUpstream={this.props.setRefUpstream}
         />
-        {isv2 && !this.props.isModal && (
-          <div className="marginTop1Rem" style={{ marginTop: "1.5rem" }}>
-            <CopyRuleForm
-              craig={craig}
-              isAclForm={true}
-              data={craig.store.json.vpcs[this.props.vpcIndex]}
-              acl={aclObject}
-              v2={isv2}
-            />
-          </div>
-        )}
+        {isv2 &&
+          !this.props.isModal &&
+          innerFormProps.data.use_data !== true && (
+            <div className="marginTop1Rem" style={{ marginTop: "1.5rem" }}>
+              <CopyRuleForm
+                craig={craig}
+                isAclForm={true}
+                data={craig.store.json.vpcs[this.props.vpcIndex]}
+                acl={aclObject}
+                v2={isv2}
+              />
+            </div>
+          )}
       </>
     );
   }

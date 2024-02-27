@@ -1,5 +1,4 @@
 import React from "react";
-import { IcseFormTemplate } from "icse-react-assets";
 import {
   eachKey,
   isBoolean,
@@ -38,6 +37,7 @@ import {
   DynamicToolTipWrapper,
 } from "./dynamic-form";
 import { NetworkingRuleOrderCard } from "./network-rules-order-card";
+import FormTemplate from "./utils/FormTemplate";
 
 /**
  * build functions for modal forms
@@ -268,6 +268,8 @@ class DynamicForm extends React.Component {
         {this.props.form.groups.map((group, index) =>
           group.hideWhen && group.hideWhen(this.state) ? (
             ""
+          ) : group.heading && group.hideWhen && group.hideWhen(this.state) ? (
+            ""
           ) : group.heading ? (
             <CraigFormHeading {...dynamicHeadingProps(group)} />
           ) : group.vsi_tiles ? (
@@ -366,17 +368,17 @@ class DynamicForm extends React.Component {
         />
         {this.props.isModal === true || !this.props.form.subForms
           ? ""
-          : this.props.form.subForms.map((subForm) =>
+          : this.props.form.subForms.map((subForm, subFormIndex) => {
               // prevent template from rendering when edge router
-              subForm.jsonField === "cloud_connections" &&
-              contains(edgeRouterEnabledZones, this.state.zone) ? (
+              return subForm.jsonField === "cloud_connections" &&
+                contains(edgeRouterEnabledZones, this.state.zone) ? (
                 <PerCloudConnections />
               ) : subForm.hideWhen &&
                 // hide when hidden
                 subForm.hideWhen(this.state, this.props) ? (
                 ""
               ) : (
-                <IcseFormTemplate
+                <FormTemplate
                   key={subForm.name + JSON.stringify(this.props.data)}
                   tooltip={subForm.tooltip}
                   forceOpen={forceShowForm}
@@ -384,6 +386,7 @@ class DynamicForm extends React.Component {
                     <SubFormOverrideTile
                       subForm={subForm}
                       componentProps={this.props}
+                      isMiddleForm={this.props.isMiddleForm}
                     />
                   }
                   hideFormTitleButton={
@@ -428,8 +431,12 @@ class DynamicForm extends React.Component {
                     hideName: true,
                     submissionFieldName: subForm.jsonField,
                     disableSave: this.props.disableSave,
-                    type: "formInSubForm",
+                    type: this.props.isMiddleForm ? "subForm" : "formInSubForm",
                     noDeleteButton: subForm.noDeleteButton,
+                    // add classname to middle form children for consistent spacing
+                    wrapperClassName: this.props.isMiddleForm
+                      ? "marginBottomSmall"
+                      : "",
                     // here for testing
                     // hide: false,
                   }}
@@ -441,8 +448,8 @@ class DynamicForm extends React.Component {
                       : undefined
                   }
                 />
-              )
-            )}
+              );
+            })}
       </div>
     );
   }

@@ -10,7 +10,7 @@
     "enable_power_vs": true,
     "enable_classic": false,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.11.2",
+    "craig_version": "1.12.0",
     "power_vs_high_availability": false,
     "template": "Power VS POC",
     "fs_cloud": false

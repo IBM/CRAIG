@@ -211,12 +211,23 @@ function vpcOnStoreUpdate(config) {
   config.store.json.vpcs.forEach((network) => {
     pgwNumberToZone(network);
     network.cos = getVpcCosName(config, network.bucket);
+
     if (network.cos === null && network.bucket !== "$disabled") {
       network.bucket = null;
     }
+
     if (!config.store.networkAcls) {
       config.store.networkAcls = {};
     }
+
+    if (isNullOrEmptyString(network.use_data, true)) {
+      network.use_data = false;
+    }
+
+    if (network.use_data) {
+      network.bucket = "$disabled";
+    }
+
     config.store.networkAcls[network.name] = splat(network.acls, "name");
     let subnetList = []; // create a new list
     // for each zone
@@ -232,6 +243,9 @@ function vpcOnStoreUpdate(config) {
       }
     });
     network.acls.forEach((acl) => {
+      if (isNullOrEmptyString(acl.use_data, true)) {
+        acl.use_data = false;
+      }
       acl.vpc = network.name;
       acl.rules.forEach((rule) => {
         rule.acl = acl.name;
@@ -810,9 +824,10 @@ function naclCreate(config, stateData, componentProps) {
     .then((data) => {
       data.acls.push({
         name: stateData.name,
-        resource_group: data.resource_group,
+        resource_group: stateData.resource_group || data.resource_group,
         vpc: componentProps.vpc_name,
         rules: [],
+        use_data: stateData.use_data,
       });
     });
 }
@@ -1334,6 +1349,20 @@ function initVpcStore(store) {
           "acls"
         ),
         schema: {
+          use_data: {
+            type: "toggle",
+            default: false,
+            labelText: "Use Existing ACL",
+            hideWhen: function (stateData, componentProps) {
+              return (
+                getObjectFromArray(
+                  componentProps.craig.store.json.vpcs,
+                  "name",
+                  componentProps.vpc_name
+                ).use_data !== true
+              );
+            },
+          },
           name: {
             default: "",
             invalid: invalidName("acls"),
@@ -1348,14 +1377,14 @@ function initVpcStore(store) {
               stateData,
               componentProps
             ) {
-              return (
-                componentProps.craig.store.json._options.prefix +
-                "-" +
-                componentProps.vpc_name +
-                "-" +
-                stateData.name +
-                "-acl"
-              );
+              return stateData.use_data
+                ? stateData.name
+                : componentProps.craig.store.json._options.prefix +
+                    "-" +
+                    componentProps.vpc_name +
+                    "-" +
+                    stateData.name +
+                    "-acl";
             },
           },
           resource_group: resourceGroupsField(),
@@ -1494,9 +1523,9 @@ function initVpcStore(store) {
             tooltip: {
               content:
                 "Enable advanced subnet configuration such as custom CIDR blocks. " +
-                "Advanced configuration cannot be set when using dynamically scaled subnets.",
+                "Advanced configuration cannot be set when using CRAIG Managed Network Addresses.",
               alignModal: "bottom",
-              align: "left",
+              align: "bottom-right",
             },
             disabled: function (stateData, componentProps) {
               return (

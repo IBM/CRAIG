@@ -1,11 +1,12 @@
 // schema files should be used when files are large
-const { contains } = require("lazy-z");
+const { contains, isNullOrEmptyString } = require("lazy-z");
 const { invalidName } = require("../../forms/invalid-callbacks");
 const { invalidNameText } = require("../../forms/text-callbacks");
 const {
   resourceGroupsField,
   fieldIsNullOrEmptyString,
   selectInvalidText,
+  hideWhenUseData,
 } = require("../utils");
 
 /**
@@ -66,6 +67,7 @@ function pgwToggle(zone) {
     onRender: function (stateData) {
       return contains(stateData.publicGateways, zone);
     },
+    hideWhen: hideWhenUseData,
   };
 }
 
@@ -75,6 +77,19 @@ function pgwToggle(zone) {
  */
 function vpcSchema() {
   return {
+    use_data: {
+      type: "toggle",
+      default: false,
+      labelText: "Use Existing VPC",
+      tooltip: {
+        content: "Get VPC from Data Source",
+        align: "bottom-left",
+        alignModal: "bottom-left",
+      },
+      disabled: function (stateData, componentProps) {
+        return componentProps?.data?.use_data;
+      },
+    },
     name: {
       default: "",
       invalid: invalidVpcName("name"),
@@ -106,6 +121,7 @@ function vpcSchema() {
         } else return stateData.bucket;
       },
       size: "small",
+      hideWhen: hideWhenUseData,
     },
     default_network_acl_name: {
       optional: true,
@@ -113,6 +129,7 @@ function vpcSchema() {
       invalid: invalidVpcName("default_network_acl_name"),
       invalidText: invalidVpcNameText("default_network_acl_name"),
       size: "small",
+      hideWhen: hideWhenUseData,
     },
     default_security_group_name: {
       optional: true,
@@ -120,6 +137,7 @@ function vpcSchema() {
       invalid: invalidVpcName("default_security_group_name"),
       invalidText: invalidVpcNameText("default_security_group_name"),
       size: "small",
+      hideWhen: hideWhenUseData,
     },
     default_routing_table_name: {
       optional: true,
@@ -127,6 +145,7 @@ function vpcSchema() {
       invalid: invalidVpcName("default_routing_table_name"),
       invalidText: invalidVpcNameText("default_routing_table_name"),
       size: "small",
+      hideWhen: hideWhenUseData,
     },
     pgw_zone_1: pgwToggle(1),
     pgw_zone_2: pgwToggle(2),
@@ -135,6 +154,7 @@ function vpcSchema() {
       type: "toggle",
       size: "small",
       labelText: "Classic Infrastructure Access",
+      hideWhen: hideWhenUseData,
     },
   };
 }

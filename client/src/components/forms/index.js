@@ -17,5 +17,6 @@ export {
   StatefulTabs,
   Docs,
   ToolTipWrapper,
+  CannotBeUndoneModal,
 } from "./utils";
 export { OrderCardDataTable } from "./network-rules-order-card";

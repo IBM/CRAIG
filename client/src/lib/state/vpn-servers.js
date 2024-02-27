@@ -7,6 +7,7 @@ const {
   snakeCase,
   contains,
   splat,
+  isString,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const {
@@ -72,6 +73,9 @@ function vpnServerOnStoreUpdate(config) {
         vpcSgs,
         server.security_groups
       );
+    }
+    if (isString(server.protocol)) {
+      server.protocol = server.protocol.toLowerCase();
     }
   });
 }
@@ -351,6 +355,12 @@ function initVpnState(store) {
         invalid: fieldIsNullOrEmptyString("protocol"),
         invalidText: selectInvalidText("protocol"),
         groups: ["TCP", "UDP"],
+        onRender: function (stateData) {
+          return stateData.protocol.toUpperCase();
+        },
+        onInputChange: function (stateData) {
+          return stateData.protocol.toLowerCase();
+        },
       },
       enable_split_tunneling: {
         type: "toggle",

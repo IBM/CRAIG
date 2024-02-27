@@ -56,7 +56,7 @@ export const VpcMap = (props) => {
           "subForm marginBottomSmall marginRight1Rem " +
           (props.small ? " width300" : " width580");
         let isRed =
-          isNullOrEmptyString(vpc.resource_group, true) ||
+          (isNullOrEmptyString(vpc.resource_group, true) && !vpc.use_data) ||
           isNullOrEmptyString(vpc.bucket, true) ||
           vpc.name === null;
         // vpc index needs to be modified when there are rresources with no vpc
@@ -89,7 +89,7 @@ export const VpcMap = (props) => {
                 name={
                   nullVpcResources && !vpc.name
                     ? "No VPC Selected"
-                    : vpc.name + " VPC"
+                    : vpc.name + " VPC" + (vpc.use_data ? " [Imported]" : "")
                 }
                 buttons={props.buttons ? props.buttons(vpcIndex) : ""}
                 onClick={

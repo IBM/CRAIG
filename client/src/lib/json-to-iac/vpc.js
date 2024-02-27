@@ -4,6 +4,7 @@ const {
   allFieldsNull,
   getObjectFromArray,
   contains,
+  revision,
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -43,27 +44,31 @@ const { varDotRegion, varDotPrefix } = require("../constants");
 function ibmIsVpc(vpc, config, useVarRef) {
   let data = {
     name: `${vpc.name}-vpc`,
-    data: {
-      name: kebabName([vpc.name, "vpc"]),
-      resource_group: `\${var.${snakeCase(vpc.resource_group)}_id}`,
-      default_network_acl_name: vpc.default_network_acl_name
-        ? vpc.default_network_acl_name
-        : null,
-      default_security_group_name: vpc.default_security_group_name
-        ? vpc.default_security_group_name
-        : null,
-      default_routing_table_name: vpc.default_routing_table_name
-        ? vpc.default_routing_table_name
-        : null,
-      tags: getTags(config, useVarRef),
-      no_sg_acl_rules: true,
-    },
+    data: vpc.use_data
+      ? { name: vpc.name }
+      : {
+          name: kebabName([vpc.name, "vpc"]),
+          resource_group: `\${var.${snakeCase(vpc.resource_group)}_id}`,
+          default_network_acl_name: vpc.default_network_acl_name
+            ? vpc.default_network_acl_name
+            : null,
+          default_security_group_name: vpc.default_security_group_name
+            ? vpc.default_security_group_name
+            : null,
+          default_routing_table_name: vpc.default_routing_table_name
+            ? vpc.default_routing_table_name
+            : null,
+          tags: getTags(config, useVarRef),
+          no_sg_acl_rules: true,
+        },
   };
-  if (vpc.classic_access) {
-    data.data.classic_access = true;
-  }
-  if (vpc.manual_address_prefix_management) {
-    data.data.address_prefix_management = "manual";
+  if (!vpc.use_data) {
+    if (vpc.classic_access) {
+      data.data.classic_access = true;
+    }
+    if (vpc.manual_address_prefix_management) {
+      data.data.address_prefix_management = "manual";
+    }
   }
   return data;
 }
@@ -77,7 +82,12 @@ function ibmIsVpc(vpc, config, useVarRef) {
  */
 function formatVpc(vpc, config, useVarRef) {
   let data = ibmIsVpc(vpc, config, useVarRef);
-  return jsonToTfPrint("resource", "ibm_is_vpc", data.name, data.data);
+  return jsonToTfPrint(
+    vpc.use_data ? "data" : "resource",
+    "ibm_is_vpc",
+    data.name,
+    data.data
+  );
 }
 
 /**
@@ -116,6 +126,8 @@ function formatAddressPrefix(address, config, isOutsideVpc) {
   let prefix = ibmIsVpcAddressPrefix(address, config);
   if (isOutsideVpc) {
     prefix.data.vpc = prefix.data.vpc.replace("ibm_is_vpc", "module");
+  } else if (getObjectFromArray(config.vpcs, "name", address.vpc)?.use_data) {
+    prefix.data.vpc = prefix.data.vpc.replace(/\{ibm/, "{data.ibm");
   }
   return jsonToTfPrint(
     "resource",
@@ -145,6 +157,14 @@ function formatAddressPrefix(address, config, isOutsideVpc) {
 
 function ibmIsSubnet(subnet, config, useVarRef) {
   let subnetName = kebabCase(`${subnet.vpc}-${subnet.name}`);
+  let shouldUseData = false;
+  try {
+    shouldUseData = new revision(config)
+      .child("vpcs", subnet.vpc)
+      .child("acls", subnet.network_acl).data.use_data;
+  } catch (err) {
+    // no catch case
+  }
   let data = {
     name: subnetName,
     data: {
@@ -155,7 +175,9 @@ function ibmIsSubnet(subnet, config, useVarRef) {
       tags: getTags(config, useVarRef),
       network_acl: tfRef(
         "ibm_is_network_acl",
-        snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`)
+        snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`),
+        "id",
+        shouldUseData
       ),
     },
   };
@@ -201,6 +223,11 @@ function ibmIsSubnet(subnet, config, useVarRef) {
         );
     });
   }
+
+  if (getObjectFromArray(config.vpcs, "name", subnet.vpc)?.use_data) {
+    data.data.vpc = data.data.vpc.replace(/\{ibm/, "{data.ibm");
+  }
+
   return data;
 }
 
@@ -213,6 +240,7 @@ function ibmIsSubnet(subnet, config, useVarRef) {
  */
 function formatSubnet(subnet, config, useVarRef) {
   let data = ibmIsSubnet(subnet, config, useVarRef);
+
   return jsonToTfPrint("resource", "ibm_is_subnet", data.name, data.data);
 }
 
@@ -231,13 +259,13 @@ function ibmIsNetworkAcl(acl, config, useRules) {
   let aclData = {
     name: `${acl.vpc} ${acl.name} acl`,
     data: {
-      name: kebabName([acl.vpc, acl.name, "acl"]),
+      name: acl.use_data ? acl.name : kebabName([acl.vpc, acl.name, "acl"]),
       vpc: vpcRef(acl.vpc),
       resource_group: `\${var.${snakeCase(acl.resource_group)}_id}`,
       tags: getTags(config),
     },
   };
-  if (useRules) {
+  if (useRules && !acl.use_data) {
     aclData.data.rules = [];
     acl.rules.forEach((rule) => {
       let ruleValues = {
@@ -270,6 +298,9 @@ function ibmIsNetworkAcl(acl, config, useRules) {
       aclData.data.rules.push(ruleValues);
     });
   }
+  if (getObjectFromArray(config.vpcs, "name", acl.vpc)?.use_data) {
+    aclData.data.vpc = aclData.data.vpc.replace(/\{ibm/, "{data.ibm");
+  }
   return aclData;
 }
 
@@ -282,7 +313,16 @@ function ibmIsNetworkAcl(acl, config, useRules) {
  */
 function formatAcl(acl, config, useRules) {
   let data = ibmIsNetworkAcl(acl, config, useRules);
-  return jsonToTfPrint("resource", "ibm_is_network_acl", data.name, data.data);
+  return jsonToTfPrint(
+    acl.use_data ? "data" : "resource",
+    "ibm_is_network_acl",
+    data.name,
+    acl.use_data
+      ? {
+          name: data.data.name,
+        }
+      : data.data
+  );
 }
 
 /**
@@ -430,9 +470,10 @@ function vpcTf(config) {
     });
     vpc.acls.forEach((acl) => {
       blockData += formatAcl(acl, config);
-      acl.rules.forEach((rule) => {
-        blockData += formatAclRule(rule);
-      });
+      if (!acl.use_data)
+        acl.rules.forEach((rule) => {
+          blockData += formatAclRule(rule);
+        });
     });
     vpc.public_gateways.forEach((gateway) => {
       blockData += formatPgw(gateway, config);
@@ -486,7 +527,9 @@ function vpcModuleOutputs(vpc, securityGroups) {
   let outputs = {};
   ["id", "crn"].forEach((field) => {
     outputs[field] = {
-      value: `\${ibm_is_vpc.${snakeCase(vpc.name + "-vpc")}.${field}}`,
+      value: `\${${vpc.use_data ? "data." : ""}ibm_is_vpc.${snakeCase(
+        vpc.name + "-vpc"
+      )}.${field}}`,
     };
   });
   vpc.subnets.forEach((subnet) => {
@@ -504,9 +547,9 @@ function vpcModuleOutputs(vpc, securityGroups) {
   securityGroups.forEach((sg) => {
     if (sg.vpc === vpc.name) {
       outputs[snakeCase(`${sg.name}_id`)] = {
-        value: `\${ibm_is_security_group.${snakeCase(
-          `${sg.vpc} vpc ${sg.name} sg`
-        )}.id}`,
+        value: `\${${
+          sg.use_data ? "data." : ""
+        }ibm_is_security_group.${snakeCase(`${sg.vpc} vpc ${sg.name} sg`)}.id}`,
       };
     }
   });
@@ -620,6 +663,7 @@ function vpcModuleTf(files, config) {
       "\n";
     files["main.tf"] += "\n" + tfBlock(`${vpc.name} VPC module`, moduleData);
   });
+  files["main.tf"] = files["main.tf"].replace(/^undefined\n/i, "");
 }
 
 module.exports = {

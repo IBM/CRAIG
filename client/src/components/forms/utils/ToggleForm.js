@@ -14,6 +14,7 @@ import { SecondaryButton } from "./SecondaryButton";
 import { Button } from "@carbon/react";
 import { ArrowDown, ArrowUp } from "@carbon/icons-react";
 import { contains } from "lazy-z";
+import { CannotBeUndoneModal } from "./CannotBeUndoneModal";
 
 class CraigToggleForm extends React.Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class CraigToggleForm extends React.Component {
       propsMatchState: true,
       useDefaultUnsavedMessage: true,
       ruleOrderChange: false,
+      showImportConfirmationModal: false,
     };
 
     this.toggleChildren = this.toggleChildren.bind(this);
@@ -42,7 +44,17 @@ class CraigToggleForm extends React.Component {
     this.networkRuleOrderDidChange = this.networkRuleOrderDidChange.bind(this);
     this.toggleShowChildren = this.toggleShowChildren.bind(this);
     this.onToggleSubModal = this.onToggleSubModal.bind(this);
+    this.dismissImportConfirmationChanges =
+      this.dismissImportConfirmationChanges.bind(this);
     this.childRef = React.createRef();
+  }
+
+  /**
+   * dismiss import confirmation changes
+   */
+
+  dismissImportConfirmationChanges() {
+    this.setState({ showImportConfirmationModal: false });
   }
 
   /**
@@ -120,8 +132,23 @@ class CraigToggleForm extends React.Component {
    * on save
    */
   onSave() {
-    this.props.onSave(this.childRef.current.state, this.childRef.current.props);
-    this.setState({ useDefaultUnsavedMessage: true });
+    if (
+      this.props.submissionFieldName === "vpcs" &&
+      this.childRef.current.state.use_data &&
+      !this.childRef.current.props.data.use_data &&
+      !this.state.showImportConfirmationModal
+    ) {
+      this.setState({ showImportConfirmationModal: true });
+    } else {
+      this.props.onSave(
+        this.childRef.current.state,
+        this.childRef.current.props
+      );
+      this.setState({
+        useDefaultUnsavedMessage: true,
+        showImportConfirmationModal: false,
+      });
+    }
   }
 
   /**
@@ -210,9 +237,12 @@ class CraigToggleForm extends React.Component {
                 className={
                   this.props.aclClassicCraig
                     ? "subForm marginBottomNone"
-                    : this.props.type === "formInSubForm"
-                    ? "formInSubForm positionRelative marginBottomSmall"
-                    : "subForm marginBottomSmall"
+                    : (this.props.type === "formInSubForm"
+                        ? "formInSubForm positionRelative "
+                        : "subForm ") +
+                      (this.props.isLast ? "" : "marginBottomSmall") +
+                      " " +
+                      this.props.wrapperClassName
                 }
               >
                 <StatelessFormWrapper
@@ -309,6 +339,27 @@ class CraigToggleForm extends React.Component {
                     )
                   }
                 >
+                  <CannotBeUndoneModal
+                    name={"Import VPC from Data"}
+                    modalOpen={this.state.showImportConfirmationModal}
+                    text={
+                      <>
+                        <span>
+                          By selecting this option, data for your existing VPC{" "}
+                          <code style={{ padding: "0.33rem", color: "blue" }}>
+                            {this.props.name.replace(/\sVPC/g, "")}
+                          </code>{" "}
+                          will be dynamically retrieved by Terraform at run
+                          time.
+                        </span>
+                        <br />
+                        <br />
+                        <span className="bold">This cannot be undone</span>
+                      </>
+                    }
+                    onModalClose={this.dismissImportConfirmationChanges}
+                    onModalSubmit={this.onSave}
+                  />
                   {/* unsaved changes */}
                   <UnsavedChangesModal
                     name={
@@ -353,6 +404,7 @@ class CraigToggleForm extends React.Component {
                     setRefUpstream: this.props.setRefUpstream,
                     dynamicSubnetFormSubForm: this.props.formInSubForm,
                     classicCraig: this.props.classicCraig,
+                    isMiddleForm: this.props.isMiddleForm,
                   })}
                 </StatelessFormWrapper>
               </div>

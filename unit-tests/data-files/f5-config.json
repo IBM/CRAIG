@@ -1,5 +1,5 @@
 {
-  "vpn-and-waf": {
+  "vpn-and-waf": {"use_data": false,
     "cos": null,
     "bucket": null,
     "name": "edge",
@@ -17,6 +17,7 @@
     ],
     "acls": [
       {
+        "use_data": false,
         "name": "edge-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -120,6 +121,7 @@
         ]
       },
       {
+        "use_data": false,
         "name": "f5-external-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -469,7 +471,7 @@
     ],
     "public_gateways": []
   },
-  "3-zone-vpn-and-waf": {
+  "3-zone-vpn-and-waf": {"use_data": false,
     "cos": null,
     "bucket": null,
     "name": "edge",
@@ -487,6 +489,7 @@
     ],
     "acls": [
       {
+        "use_data": false,
         "name": "edge-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -590,6 +593,7 @@
         ]
       },
       {
+        "use_data": false,
         "name": "f5-external-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -939,7 +943,7 @@
     ],
     "public_gateways": []
   },
-  "1-zone-vpn-and-waf": {
+  "1-zone-vpn-and-waf": {"use_data": false,
     "cos": null,
     "bucket": null,
     "name": "edge",
@@ -955,6 +959,7 @@
     ],
     "acls": [
       {
+        "use_data": false,
         "name": "edge-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -1058,6 +1063,7 @@
         ]
       },
       {
+        "use_data": false,
         "name": "f5-external-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -1267,7 +1273,7 @@
     ],
     "public_gateways": []
   },
-  "waf": {
+  "waf": {"use_data": false,
     "cos": null,
     "bucket": null,
     "name": "edge",
@@ -1284,6 +1290,7 @@
     ],
     "acls": [
       {
+        "use_data": false,
         "name": "edge-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -1387,6 +1394,7 @@
         ]
       },
       {
+        "use_data": false,
         "name": "f5-external-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -1647,7 +1655,7 @@
     "public_gateways": [],
     "publicGateways": []
   },
-  "full-tunnel": {
+  "full-tunnel": {"use_data": false,
     "classic_access": false,
     "default_network_acl_name": null,
     "default_routing_table_name": null,
@@ -1663,6 +1671,7 @@
     "bucket": null,
     "acls": [
       {
+        "use_data": false,
         "name": "edge-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -1766,6 +1775,7 @@
         ]
       },
       {
+        "use_data": false,
         "name": "f5-external-acl",
         "vpc": "edge",
         "resource_group": "edge-rg",
@@ -2088,6 +2098,7 @@
     "public_gateways": []
   },
   "management-vpn-and-waf": {
+    "use_data": false,
     "cos": "cos",
     "bucket": "management-bucket",
     "name": "management",
@@ -2391,6 +2402,7 @@
     "public_gateways": [],
     "acls": [
       {
+        "use_data": false,
         "resource_group": "management-rg",
         "name": "management",
         "vpc": "management",
@@ -2526,6 +2538,7 @@
         ]
       },
       {
+        "use_data": false,
         "name": "f5-external-acl",
         "vpc": "management",
         "resource_group": "management-rg",

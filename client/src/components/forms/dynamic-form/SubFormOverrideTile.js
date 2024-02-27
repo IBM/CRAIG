@@ -20,7 +20,10 @@ export const SubFormOverrideTile = (props) => {
     <NoClassicGatewaysTile />
   ) : (
     // have to pass in tile here otherwise will not render
-    <CraigEmptyResourceTile name={props.subForm.name} />
+    <CraigEmptyResourceTile
+      name={props.subForm.name}
+      className={props.isMiddleForm ? "marginTop1Rem" : ""}
+    />
   );
 };
 
