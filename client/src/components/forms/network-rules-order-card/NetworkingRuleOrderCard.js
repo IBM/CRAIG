@@ -153,7 +153,8 @@ class NetworkingRuleOrderCard extends React.Component {
           };
     return !this.props.parentProps.isModal &&
       (this.props.parentProps.form.jsonField === "acls" ||
-        this.props.parentProps.form.jsonField === "security_groups") ? (
+        this.props.parentProps.form.jsonField === "security_groups") &&
+      this.props.parentState.use_data !== true ? (
       <>
         <DynamicFormModal
           name={

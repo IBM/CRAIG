@@ -667,6 +667,9 @@ class NetworkAcls extends React.Component {
                 jsonField: "acls",
                 groups: [
                   {
+                    use_data: craig.vpcs.acls.use_data,
+                  },
+                  {
                     name: craig.vpcs.acls.name,
                     resource_group: craig.vpcs.acls.resource_group,
                   },

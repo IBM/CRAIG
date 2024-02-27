@@ -263,7 +263,8 @@ describe("formatJson", () => {
       "source_port_min": null,
       "source_port_max": null
     }
-  ]
+  ],
+  "use_data": false
 }`;
       assert.deepEqual(
         actualData,

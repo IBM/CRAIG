@@ -151,6 +151,7 @@
   },
   "vpcs": [
     {
+      "use_data": false,
       "cos": "cos",
       "bucket": "management-bucket",
       "name": "management",
@@ -297,6 +298,7 @@
           "resource_group": "slz-management-rg",
           "name": "management",
           "vpc": "management",
+          "use_data": false,
           "rules": [
             {
               "action": "allow",
@@ -398,7 +400,7 @@
         }
       ]
     },
-    {
+    {"use_data": false,
       "cos": "cos",
       "publicGateways": [],
       "bucket": "management-bucket",
@@ -525,6 +527,7 @@
           "resource_group": "slz-workload-rg",
           "name": "workload",
           "vpc": "workload",
+          "use_data": false,
           "rules": [
             {
               "action": "allow",

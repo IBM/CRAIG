@@ -25,7 +25,7 @@ const ResetState = (props) => {
         <div className="marginTop">
           <Button
             kind="danger"
-            className="marginRight"
+            className="marginRight1Rem"
             onClick={() => {
               window.localStorage.removeItem(
                 process.env.NODE_ENV === "development"

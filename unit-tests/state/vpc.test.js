@@ -63,6 +63,54 @@ describe("vpcs", () => {
         "it should update subnet tiers"
       );
     });
+    it("should rename a vpc", () => {
+      let state = new newState();
+      state.store.json.dns = [
+        {
+          name: "frog",
+          resource_group: "frog",
+          custom_resolvers: [
+            {
+              vpc: "management",
+              subnets: [],
+            },
+          ],
+          zones: [],
+        },
+      ];
+      state.vpcs.save(
+        { name: "todd", default_network_acl_name: "", use_data: false },
+        { data: { name: "management" } }
+      );
+      assert.isTrue(
+        contains(state.store.vpcList, "todd"),
+        "todd should be there"
+      );
+      assert.isNull(
+        state.store.json.vpcs[0].default_network_acl_name,
+        "it should be null"
+      );
+      assert.deepEqual(
+        state.store.json.dns[0].custom_resolvers[0].vpc,
+        "todd",
+        "it should update custom resolvers"
+      );
+      assert.deepEqual(
+        state.store.subnetTiers,
+        {
+          todd: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+            { name: "vpn", zones: 1 },
+          ],
+          workload: [
+            { name: "vsi", zones: 3 },
+            { name: "vpe", zones: 3 },
+          ],
+        },
+        "it should update subnet tiers"
+      );
+    });
     it("should add a pgw to a vpc", () => {
       let state = new newState();
       state.vpcs.save(
@@ -179,8 +227,10 @@ describe("vpcs", () => {
     });
     it("should update pgw vpc on store update", () => {
       let craig = newState();
+      craig.store.json.vpcs[0].use_data = false;
+      craig.store.json.vpcs[0].acls[0].use_data = true;
       craig.vpcs.save(
-        { publicGateways: [1, 2, 3] },
+        { publicGateways: [1, 2, 3], use_data: false },
         {
           data: {
             name: "management",
@@ -198,6 +248,7 @@ describe("vpcs", () => {
         default_network_acl_name: null,
         default_security_group_name: null,
         default_routing_table_name: null,
+        use_data: false,
         publicGateways: [1, 2, 3],
         address_prefixes: [
           {
@@ -443,6 +494,7 @@ describe("vpcs", () => {
                 ruleProtocol: "all",
               },
             ],
+            use_data: true,
           },
         ],
       };
@@ -472,6 +524,7 @@ describe("vpcs", () => {
         bucket: "management-bucket",
         name: "management",
         resource_group: "frog",
+        use_data: false,
         classic_access: false,
         manual_address_prefix_management: true,
         default_network_acl_name: null,
@@ -592,6 +645,7 @@ describe("vpcs", () => {
             resource_group: "frog",
             name: "management",
             vpc: "management",
+            use_data: false,
             rules: [
               {
                 action: "allow",
@@ -731,6 +785,21 @@ describe("vpcs", () => {
         "it should return correct data"
       );
     });
+    it("should disable bucket when use data", () => {
+      let state = newState();
+      state.vpcs.save(
+        { use_data: true },
+        {
+          data: state.store.json.vpcs[0],
+          craig: state,
+        }
+      );
+      assert.deepEqual(
+        state.store.json.vpcs[0].bucket,
+        "$disabled",
+        "it should be disabled"
+      );
+    });
   });
   describe("vpcs.create", () => {
     it("should create a new vpc with a name and resource group", () => {
@@ -753,6 +822,7 @@ describe("vpcs", () => {
         publicGateways: [],
         acls: [],
         subnetTiers: [],
+        use_data: false,
       };
       let actualData = state.store.json.vpcs[2];
       assert.deepEqual(actualData, expectedData, "it should create new vpc");
@@ -774,6 +844,7 @@ describe("vpcs", () => {
           default_network_acl_name: null,
           default_security_group_name: null,
           default_routing_table_name: null,
+          use_data: false,
           address_prefixes: [
             {
               vpc: "workload",
@@ -878,6 +949,7 @@ describe("vpcs", () => {
           publicGateways: [],
           acls: [
             {
+              use_data: false,
               resource_group: "workload-rg",
               name: "workload",
               vpc: "workload",
@@ -1023,6 +1095,20 @@ describe("vpcs", () => {
     });
   });
   describe("vpcs.schema", () => {
+    it("should disable use data when use data is true", () => {
+      let craig = newState();
+      assert.isTrue(
+        craig.vpcs.use_data.disabled(
+          {},
+          {
+            data: {
+              use_data: true,
+            },
+          }
+        ),
+        "it should be disabled"
+      );
+    });
     describe("vpcs.schema.name", () => {
       describe("vpcs.schema.name.invalidText", () => {
         it("should return vpc invalid name text", () => {
@@ -7737,6 +7823,27 @@ describe("vpcs", () => {
           resource_group: "management-rg",
           vpc: "management",
           rules: [],
+          use_data: false,
+        };
+        assert.deepEqual(
+          state.store.json.vpcs[0].acls[1],
+          expectedData,
+          "it should create acl"
+        );
+      });
+      it("should create an acl with rg", () => {
+        let state = newState();
+        state.store.json.vpcs[0].resource_group = null;
+        state.vpcs.acls.create(
+          { name: "new", resource_group: "workload-rg" },
+          { vpc_name: "management" }
+        );
+        let expectedData = {
+          name: "new",
+          resource_group: "workload-rg",
+          vpc: "management",
+          rules: [],
+          use_data: false,
         };
         assert.deepEqual(
           state.store.json.vpcs[0].acls[1],
@@ -7753,6 +7860,7 @@ describe("vpcs", () => {
           resource_group: null,
           vpc: "management",
           rules: [],
+          use_data: false,
         };
         assert.deepEqual(
           state.store.json.vpcs[0].acls[1],
@@ -9367,6 +9475,31 @@ describe("vpcs", () => {
   });
   describe("acl shcema", () => {
     let craig = newState();
+    it("should hide use data when vpc does not use data", () => {
+      assert.isTrue(
+        craig.vpcs.acls.use_data.hideWhen(
+          {},
+          {
+            vpc_name: "vpc",
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                  vpcs: [
+                    {
+                      name: "vpc",
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        ),
+        "it should be hidden"
+      );
+    });
     it("should return correct text", () => {
       assert.deepEqual(
         craig.vpcs.acls.name.helperText(
@@ -9385,6 +9518,27 @@ describe("vpcs", () => {
           }
         ),
         "iac-vpc-test-acl",
+        "it should return correct text"
+      );
+    });
+    it("should return correct text when use data", () => {
+      assert.deepEqual(
+        craig.vpcs.acls.name.helperText(
+          { name: "test", use_data: true },
+          {
+            vpc_name: "vpc",
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "test",
         "it should return correct text"
       );
     });

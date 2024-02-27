@@ -1,8 +1,12 @@
 [
   {
     "version": "1.12.0",
-    "features": [],
-    "fixes": [],
+    "features": [
+      "Users can now import existing VPCs and VPC ACLs within existing VPCs within CRAIG"
+    ],
+    "fixes": [
+      "Fixed an issue causing VPN Servers to fail provisioning when selecting a protocol"
+    ],
     "upgrade_notes": [
       "Removed dependency on the front-end library `icse-react-assets`. This should result in faster build times"
     ]

@@ -10,9 +10,11 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Users can now import existing VPCs and VPC ACLs within existing VPCs within CRAIG
 
 ### Fixes
 
+- Fixed an issue causing VPN Servers to fail provisioning when selecting a protocol
 
 ## 1.11.2
 

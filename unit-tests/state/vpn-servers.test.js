@@ -312,6 +312,20 @@ describe("vpn_servers", () => {
     beforeEach(() => {
       craig = newState();
     });
+    it("should return protocol on render", () => {
+      assert.deepEqual(
+        craig.vpn_servers.protocol.onRender({ protocol: "tcp" }),
+        "TCP",
+        "it should render correctly"
+      );
+    });
+    it("should return protocol on input change", () => {
+      assert.deepEqual(
+        craig.vpn_servers.protocol.onInputChange({ protocol: "TCP" }),
+        "tcp",
+        "it should render correctly"
+      );
+    });
     describe("vpnServersWorkspaceHelperText", () => {
       it("should return correct helper text", () => {
         assert.deepEqual(

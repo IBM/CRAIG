@@ -1330,6 +1330,9 @@ function craigForms(craig) {
       },
       groups: [
         {
+          use_data: craig.vpcs.use_data,
+        },
+        {
           name: craig.vpcs.name,
           resource_group: craig.vpcs.resource_group,
           bucket: craig.vpcs.bucket,
@@ -1348,7 +1351,9 @@ function craigForms(craig) {
                 "Public Gateways allow for all resources in a zone to communicate with the public internet. " +
                 "Public Gateways are not needed for subnets where a VPN gateway is created.",
             },
+            hideWhen: craig.vpcs.pgw_zone_1.hideWhen,
           },
+          hideWhen: craig.vpcs.pgw_zone_1.hideWhen,
         },
         {
           pgw_zone_1: craig.vpcs.pgw_zone_1,
@@ -1359,7 +1364,9 @@ function craigForms(craig) {
           heading: {
             name: "Classic Access",
             type: "subHeading",
+            hideWhen: craig.vpcs.pgw_zone_1.hideWhen,
           },
+          hideWhen: craig.vpcs.pgw_zone_1.hideWhen,
         },
         {
           classic_access: craig.vpcs.classic_access,

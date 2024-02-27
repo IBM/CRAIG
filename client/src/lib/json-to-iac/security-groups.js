@@ -1,4 +1,4 @@
-const { snakeCase, allFieldsNull } = require("lazy-z");
+const { snakeCase, allFieldsNull, getObjectFromArray } = require("lazy-z");
 const {
   kebabName,
   vpcRef,
@@ -24,12 +24,21 @@ const {
 function ibmIsSecurityGroup(sg, config) {
   return {
     name: `${sg.vpc} vpc ${sg.name} sg`,
-    data: {
-      name: kebabName([sg.vpc, sg.name, "sg"]),
-      vpc: vpcRef(sg.vpc),
-      resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
-      tags: getTags(config),
-    },
+    data: sg.use_data
+      ? {
+          name: sg.name,
+          vpc: vpcRef(sg.vpc).replace(
+            // if vpcs and use data replace opening with data.
+            "${",
+            "${data."
+          ),
+        }
+      : {
+          name: kebabName([sg.vpc, sg.name, "sg"]),
+          vpc: vpcRef(sg.vpc),
+          resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
+          tags: getTags(config),
+        },
   };
 }
 
@@ -47,7 +56,7 @@ function ibmIsSecurityGroup(sg, config) {
 function formatSecurityGroup(sg, config) {
   let group = ibmIsSecurityGroup(sg, config);
   return jsonToTfPrint(
-    "resource",
+    sg.use_data ? "data" : "resource",
     "ibm_is_security_group",
     group.name,
     group.data
@@ -74,13 +83,20 @@ function formatSecurityGroup(sg, config) {
  * @param {number} rule.udp.port_max
  * @param {number} rule.udp.source_port_min
  * @param {number} rule.udp.source_port_max
+ * @param {object} config
  * @returns {object} terraform formatted sg rule
  */
 
-function ibmIsSecurityGroupRule(rule) {
+function ibmIsSecurityGroupRule(rule, config) {
   let sgAddress = `${rule.vpc} vpc ${rule.sg} sg`;
   let sgRule = {
-    group: tfRef("ibm_is_security_group", snakeCase(sgAddress), "id"),
+    group: tfRef(
+      "ibm_is_security_group",
+      snakeCase(sgAddress),
+      "id",
+      config?.security_groups &&
+        getObjectFromArray(config.security_groups, "name", rule.sg).use_data
+    ),
     remote: rule.source,
     direction: rule.direction,
   };
@@ -111,10 +127,11 @@ function ibmIsSecurityGroupRule(rule) {
 /**
  * create network sg rule
  * @param {Object} rule
+ * @param {Object} config
  * @returns {string} terraform formatted sg rule
  */
-function formatSgRule(rule) {
-  let data = ibmIsSecurityGroupRule(rule);
+function formatSgRule(rule, config) {
+  let data = ibmIsSecurityGroupRule(rule, config);
   return jsonToTfPrint(
     "resource",
     "ibm_is_security_group_rule",

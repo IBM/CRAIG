@@ -511,6 +511,11 @@ resource "ibm_is_network_acl" "management_management_acl" {
                   has_prefix: true,
                 },
               ],
+              acls: [
+                {
+                  name: "management",
+                },
+              ],
             },
           ],
         };
