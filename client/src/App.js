@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Craig from "./Craig";
 import "./app.scss";
+import "@carbon/styles/css/styles.css";
+import "./index.css";
 import { ResetState, PageNotFound } from "./components";
 import { Buffer } from "buffer";
 import Tutorial from "./components/pages/tutorial/Tutorial";
-import "@carbon/styles/css/styles.css";
-import "./index.css";
 window.Buffer = Buffer; // Buffer is used to download zip file
 
 /**

@@ -84,7 +84,7 @@ export const RgServiceMap = (props) => {
             className="marginBottomSmall"
           />
         )}
-        <CraigFormGroup className="overrideGap">
+        <div className="displayFlex overrideGap wrap center">
           {serviceMap.length === 0 ? (
             <CraigEmptyResourceTile
               name="services in this resource group"
@@ -114,7 +114,7 @@ export const RgServiceMap = (props) => {
                 );
               })
           )}
-        </CraigFormGroup>
+        </div>
       </div>
     );
   });

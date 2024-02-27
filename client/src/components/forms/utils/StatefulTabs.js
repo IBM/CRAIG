@@ -46,8 +46,8 @@ class StatefulTabs extends React.Component {
             icon={this.props.icon}
             buttons={
               <DynamicRender
-                hide={this.props.hideButtons}
-                show={
+                hide={props.hideButtons}
+                content={
                   <PrimaryButton
                     name={kebabCase(this.props.name)}
                     type="add"

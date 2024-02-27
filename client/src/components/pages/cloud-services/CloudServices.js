@@ -637,7 +637,7 @@ class CloudServicesPage extends React.Component {
                         {serviceMap[rg].length === 0 ? (
                           <CraigEmptyResourceTile name="Cloud Services in this resource group" />
                         ) : (
-                          <CraigFormGroup className="overrideGap">
+                          <div className="displayFlex overrideGap wrap">
                             {serviceMap[rg]
                               .sort((a, b) => {
                                 // sort resources by name within the same resource type
@@ -674,7 +674,7 @@ class CloudServicesPage extends React.Component {
                                   />
                                 </HoverClassNameWrapper>
                               ))}
-                          </CraigFormGroup>
+                          </div>
                         )}
                       </HoverClassNameWrapper>
                     );

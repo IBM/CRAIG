@@ -1,3 +1,12 @@
+@use "@carbon/react";
+@use "@carbon/styles/scss/grid";
+@include grid.flex-grid();
+
+.minHeight {
+  // height of the screen - footer size
+  min-height: calc(100vh - 3rem);
+}
+
 :root {
   --background: #ffffff;
   --subForm: #f4f4f4;
@@ -150,4 +159,2348 @@ a.tile:is(:link, :visited, :hover, :active) {
 
 #import-json {
   height: 60vh;
+}
+
+/* Old ICSE React Styles */
+
+/* vars and themes */
+:root {
+  --background: #ffffff;
+  --subForm: #f4f4f4;
+  --formInSubForm: #fffdfd;
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-field: #f4f4f4;
+  --cds-border-strong: #8d8d8d;
+  --blue: #0f62fe;
+  --red: #da1e28;
+  --white: #ffffff;
+}
+
+.dark {
+  --background: #161616;
+  --subForm: #262626;
+  --formInSubForm: #414141;
+  --cds-text-primary: #f4f4f4;
+  --cds-text-secondary: #c6c6c6;
+  --cds-field: #363636;
+  --cds-border-strong: #8897a2;
+  --cds-layer: #262626;
+  --cds-layer-hover: #363636;
+  --cds-field-02: #363636;
+  --cds-icon-secondary: #c6c6c6;
+  --cds-icon-primary: #c6c6c6;
+  --placeholder: #565656;
+  --cds-field-hover: #464646;
+  --cds-layer-selected: #525252;
+  --cds-background-inverse: #f4f4f4;
+  --cds-text-inverse: #262626;
+}
+
+.subForm {
+  /* white background for subform input fields */
+  --cds-field: #ffffff;
+}
+
+.formInSubForm {
+  /* gray for formInSubForm input fields */
+  --cds-field: #f4f4f4;
+}
+
+input:read-only {
+  /* read only fields should only have text */
+  --cds-border-strong: transparent;
+}
+
+.dark {
+  background-color: var(--background);
+}
+
+.dark p {
+  color: #f4f4f4;
+}
+
+.dark i.chevron > svg {
+  fill: #f4f4f4;
+}
+
+.dark h4 {
+  color: #f4f4f4;
+}
+
+.dark .underConstruction > svg {
+  fill: #ffffff;
+}
+/* styling for tooltip content in dark mode */
+.dark .cds--toggletip-content > p {
+  color: #363636;
+}
+
+.dark .subForm {
+  /* alternate background for dark subforms */
+  --cds-field: #414141;
+}
+
+.dark .formInSubForm {
+  /* alternate background for dark formInSubForm */
+  --cds-field: #363636;
+}
+
+.dark ::placeholder {
+  color: var(--placeholder);
+}
+
+/* general alignment classes */
+
+.displayFlex {
+  display: flex;
+}
+
+.alignItemsTop {
+  align-items: top;
+}
+
+.fitContent {
+  width: fit-content;
+}
+
+.alignItemsCenter {
+  align-items: center;
+}
+
+.widthOneHundredPercent {
+  width: 100%;
+}
+
+.marginBottom {
+  margin-bottom: 2rem;
+}
+
+.marginBottomSmall {
+  margin-bottom: 1rem;
+}
+
+.evenSpacing {
+  gap: 3vw;
+}
+
+.positionRelative {
+  position: relative;
+}
+
+.icseFormTitleMinHeight {
+  min-height: 32px;
+}
+
+.spaceBetween {
+  justify-content: space-between;
+}
+
+.leftTextAlign {
+  text-align: left;
+}
+
+.fieldWidth {
+  width: 14rem;
+}
+
+.fieldWidthSmaller {
+  width: 11rem;
+}
+
+.fieldWidthSmallest {
+  width: 8rem;
+}
+
+.fieldWidthBigger {
+  width: 40rem;
+}
+
+.textInputWide {
+  width: 30rem;
+}
+
+.textInputMedium {
+  width: 20rem;
+}
+
+/* backhground classes */
+.formInSubForm {
+  margin-top: 0rem;
+  background: var(--formInSubForm);
+  padding: 1rem;
+}
+
+.subForm {
+  background: var(--subForm);
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Tooltips */
+.labelRow {
+  display: inline-flex !important;
+  align-items: center;
+}
+
+.tooltip > div div.cds--password-input-wrapper {
+  margin-top: -8px;
+}
+
+.tooltip.cds--toggle {
+  margin-top: -8px;
+}
+
+.tooltip.cds--text-input-wrapper {
+  margin-top: -8px;
+}
+
+.subHeadingTooltip {
+  margin: 0.2rem 0 0 0.2rem;
+}
+
+.tooltipMarginLeft {
+  margin-left: 3px;
+}
+
+/* subnet tile form */
+
+.tileFormMargin {
+  margin-bottom: -0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tileFormMargin.subForm {
+  padding: 0px;
+}
+
+.marginRightSubnetTile {
+  margin-right: 10px;
+}
+
+/* StatefulTabPanel */
+
+.cds--tab-content.doc {
+  padding: 0.5rem 0;
+}
+
+.cds--tab-content:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+/* popover wrappers */
+
+.popover-box {
+  padding: 5px;
+  position: relative;
+  font-size: 80%;
+  top: 20px;
+}
+
+.cds--popover--open .cds--popover-content {
+  z-index: 9001;
+}
+
+/* buttons */
+.edit-view-btn:focus {
+  background-color: var(--white);
+}
+
+i.chevron > svg {
+  display: block; /* remove extra padding on bottom of i which misaligns icon */
+  margin-right: 1rem;
+  margin-top: 0.15rem;
+}
+
+.chevron {
+  cursor: pointer;
+}
+
+.tertiaryButtonColors {
+  color: var(--blue) !important;
+  fill: var(--white) !important;
+  border-color: var(--blue) !important;
+}
+
+.pointerEventsNone {
+  pointer-events: none;
+}
+
+.cursorNotAllowed {
+  cursor: not-allowed;
+}
+
+.forceTertiaryButtonStyles {
+  padding: 0.4375rem !important;
+  align-items: center;
+}
+
+.inlineBlock {
+  display: inline-block;
+}
+
+.redFill {
+  fill: var(--red) !important;
+}
+
+.alignButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CSS for overriding default component styles */
+.cds--btn--ghost:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+.cds--tabs__nav-link:focus {
+  outline: none !important;
+}
+
+.marginRightSmall {
+  margin-right: 0.5rem !important;
+}
+
+/* docs */
+.about {
+  padding: 2rem 1rem;
+  line-height: 1.5;
+}
+
+.smallerText {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+/* empty resource tile */
+.iconMargin {
+  margin: 0 0.5rem -0.4rem 0;
+}
+
+.inlineIconMargin {
+  margin: -0.4rem 0.05rem;
+}
+
+.marginBottomXs {
+  margin-bottom: 0.5rem;
+}
+
+.tileBackground {
+  background-color: var(--subForm);
+}
+
+.marginTop {
+  margin-top: 1rem;
+}
+
+/* under construction */
+
+.underConstruction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexDirectionColumn {
+  flex-direction: column;
+}
+
+/* f5 vsi */
+.wide {
+  width: 20rem !important;
+}
+
+.tight {
+  width: min-content; /* force invalid text to split line */
+}
+
+.passwordGenerateButton {
+  margin-top: 1.25rem;
+  margin-left: calc(-4rem - 3vw);
+}
+
+.passwordGenerateButton svg {
+  fill: var(--cds-icon-secondary, #525252) !important;
+}
+
+.passwordGenerateButton.invalid {
+  margin-left: calc(-5.75rem - 3vw);
+}
+
+.wrap {
+  flex-flow: wrap;
+}
+
+.docsUpdated {
+  display: flex;
+  align-items: flex-end;
+}
+
+.cds--list-box__menu {
+  width: fit-content;
+  text-align: left;
+}
+
+@media screen and (max-width: 1024px) {
+  .fieldWidth {
+    width: 11rem;
+  }
+
+  .fieldWidthSmaller {
+    width: 8rem;
+  }
+
+  .fieldWidthSmallest {
+    width: 5rem;
+  }
+
+  .textInputWide {
+    width: 20rem;
+  }
+
+  .fieldWidthBigger {
+    width: 30rem;
+  }
+
+  .textInputMedium {
+    width: 15rem;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .fieldWidth {
+    width: 100%;
+  }
+
+  .fieldWidthSmaller {
+    width: 100%;
+  }
+
+  .fieldWidthSmallest {
+    width: 100%;
+  }
+
+  .textInputMedium {
+    width: 100%;
+  }
+
+  .fieldWidthBigger {
+    width: 100%;
+  }
+
+  .textInputWide {
+    width: 100%;
+  }
+
+  .formGroup {
+    /* items 1 wide */
+    flex-direction: column !important;
+  }
+
+  .popover-obj.select {
+    /* need to adjust size for popover container at small widths */
+    width: 100%;
+  }
+
+  .popover-obj.select > span {
+    width: 100%;
+  }
+
+  /* items with tooltip should also be full width */
+  .cds--form-item {
+    flex: none;
+    width: 100%;
+  }
+}
+
+.cds--form-item {
+  flex: none; /* overwrite flex to fix inconsistent widths */
+}
+
+/* data table */
+div .dt-security-group {
+  background-color: white !important;
+}
+
+.tileTitle {
+  font-size: 80%;
+  font-weight: bold;
+}
+
+.tileContent {
+  font-size: 90%;
+}
+
+/* page template */
+.leftPanelWidth {
+  width: 60%;
+  max-width: 60%; /* do not expand any larger or allow overflow above 60% */
+  margin-right: 2rem;
+}
+
+.widthOneHundredPercent {
+  width: 100%;
+}
+
+/* Alignment */
+.displayFlex {
+  display: flex;
+}
+
+/* Margin and padding */
+.navBarAlign {
+  margin: 3.5rem 1rem 0rem 3.5rem;
+}
+
+.boxShadow {
+  box-shadow: -1px 1px 9px 2px #d5d2d2;
+}
+
+.fieldPadding {
+  padding: 1.5rem 0.5rem 2rem 1rem;
+}
+
+.updateBanner {
+  position: fixed !important;
+  z-index: 10000 !important;
+  left: 4rem !important;
+  max-width: 93vw !important;
+  text-align: center;
+}
+
+.buttonIcon {
+  margin-left: 0.5rem;
+}
+
+.modalButtonLeft {
+  margin-right: 0.5rem;
+}
+
+.newLeftNav {
+  background-color: yellow;
+}
+
+.cds--side-nav--ux .cds--side-nav__items {
+  width: fit-content;
+  text-align: left;
+  padding-bottom: 6rem; // ensure scrollable
+}
+
+.cds--side-nav.expanded {
+  width: 16rem;
+}
+
+.cds--side-nav.rail {
+  width: 3rem;
+  overflow: visible;
+}
+
+.popover-box {
+  padding: 5px;
+  position: relative;
+  top: 20px;
+  z-index: 9001;
+  /* navbar is 9000 */
+  font-size: 80%;
+}
+
+.left-nav-search > #craig-search {
+  border-width: 0px;
+  background-color: #f4f4f4;
+  height: fit-content;
+  width: fit-content;
+  padding: 0.5rem 0.5rem 0.5rem 3.5rem;
+}
+
+.left-nav-search > .cds--search-close {
+  height: 100%;
+}
+
+// hide scrollbar for chrome, other webkit browsers (safari, opera)
+.cds--side-nav__items::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.cds--side-nav__items {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.nav-popover-obj {
+  // make the container wide enough for text
+  width: 25rem;
+}
+
+.sideNavLinkRequired:after {
+  content: "*";
+  padding-left: 0.1rem;
+  color: red;
+}
+
+a.cds--side-nav__link {
+  outline: none !important;
+  border: none !important;
+}
+
+// make navigation wide enough, hide scroll bar
+.cds--side-nav--ux .cds--side-nav__items {
+  width: fit-content;
+}
+
+.cds--side-nav.expanded {
+  width: 16rem;
+}
+
+.cds--side-nav.rail {
+  width: 3rem;
+}
+
+a.cds--side-nav__link {
+  outline: none !important;
+  border: none !important;
+}
+
+.blueTileRail {
+  background-color: #0f62fe !important; // necessary to override default hovering
+  width: 3rem;
+}
+
+.blueTileExpanded {
+  background-color: #0f62fe !important; // necessary to override default hovering
+  width: 16rem;
+}
+
+// Target direct div beneath the link and then the svg
+.cds--side-nav__link.whiteFill > div > svg {
+  fill: white;
+}
+
+// Target spans beneath to set color of text to white
+.cds--side-nav__link.whiteFill span {
+  color: white !important; // necessary to override default hovering
+}
+
+.cds--side-nav__divider.railDivider {
+  width: 3rem;
+  margin: 0;
+}
+
+.cds--side-nav__divider.expandedDivider {
+  margin: 0;
+}
+
+.navPopoverAlign {
+  left: 75% !important; // overwrite
+}
+
+// crazy popover hover fix
+.cds--side-nav__link.rail {
+  width: 3rem;
+  margin-right: 1.5rem;
+}
+
+// links take up whole sidenav
+.cds--side-nav__link.expanded {
+  width: 16rem; // full width
+}
+
+div .cds--side-nav__overlay-active {
+  /* specify application to div to raise class priority */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(22, 22, 22, 0.5);
+  background-color: var(--cds-overlay, rgba(22, 22, 22, 0.5));
+  opacity: 1;
+  transition: opacity 300ms cubic-bezier(0.5, 0, 0.1, 1),
+    background-color 300ms cubic-bezier(0.5, 0, 0.1, 1);
+}
+
+// Styles for header menu box
+.no-marker {
+  list-style-type: none;
+}
+
+.projectMenu {
+  height: 100%;
+}
+
+.headerMenuBox {
+  width: fit-content;
+  height: fit-content;
+  background-color: var(--white);
+  box-shadow: -1px 1px 9px 2px #d5d2d2;
+  padding: 0.5rem;
+  min-width: 19rem;
+}
+
+.headerMenuBoxItemText {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.headerMenuBoxItemLink > a {
+  color: var(--blue);
+}
+
+.marginBottomXs {
+  margin-bottom: 0.5rem;
+}
+
+.invalid-form-left-nav {
+  background-color: var(--red);
+}
+
+/* code mirror */
+
+:root {
+  --tab-header: #161616;
+  --tab-text: #c6c6c6;
+  --cm-background: #262626;
+}
+
+.rightPanelWidth {
+  width: 40%;
+  min-width: 40%; /* do not resize when json code mirror can be smaller */
+  text-align: left;
+}
+
+.tabPanel {
+  background-color: var(--tab-header);
+  position: sticky;
+  position: -webkit-sticky; /* safari */
+  top: 3rem; /* beneath navbar */
+  height: 3.5rem;
+  align-items: center;
+  z-index: 201; /* z-index above cm */
+  padding: 0 0.5rem;
+}
+
+.ͼ1.cm-focused {
+  outline: none;
+}
+
+/* override default button styles */
+button {
+  padding: 0;
+  border: 0;
+  background: inherit;
+  font-family: inherit;
+}
+
+button.tabButton {
+  font-weight: 400;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  width: 6rem;
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  color: var(--tab-text);
+}
+
+.tabButton:hover {
+  transition: 200ms cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  border-bottom: 2px solid var(--tab-text);
+}
+
+.tabButton.active {
+  transition: 200ms cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  border-bottom: 2px solid var(--blue);
+}
+
+.copyButton {
+  background: inherit;
+}
+
+.copyButton > svg {
+  fill: var(--tab-text);
+}
+
+.copyButton:hover > svg {
+  fill: black;
+}
+
+.cm-editor {
+  overflow-y: scroll;
+  min-height: fit-content;
+  max-height: 100vh;
+}
+
+.cm-editor::-webkit-scrollbar {
+  /* remove the scrollbar for the part that actually overflows */
+  display: none;
+}
+
+.cm-scroller::-webkit-scrollbar {
+  /* remove the scroller display but keep functionality */
+  display: none;
+}
+
+.cm-editor {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.cm-scroller {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* home */
+
+div.tab-panel {
+  padding: 16px;
+}
+
+div.banner {
+  display: flex;
+  margin: 16px 32px;
+}
+
+div.banner-icon {
+  width: 40px;
+  align-self: center;
+}
+
+div.banner-text {
+  line-height: 1.5;
+  margin-left: 1rem;
+}
+
+.diagramTitleIcon {
+  margin-right: 0.5rem;
+  margin-top: 0.33rem;
+}
+
+/* footer */
+
+/* CSS for footer and back/next buttons */
+.footerButton {
+  left: 3.5rem;
+  right: 1.5rem;
+  width: calc(100vw - 4.5rem);
+  position: sticky;
+  bottom: 0;
+}
+
+.footer {
+  background-color: #ffffff;
+  height: 2.75rem;
+  border-top: 2px solid var(--blue);
+}
+
+.buttonRight {
+  display: flex;
+  justify-content: right;
+  position: sticky;
+}
+
+.backButton {
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  display: flex;
+  align-items: center;
+  width: 50%;
+  float: left;
+  height: 100%;
+}
+
+.nextButton {
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  width: 50%;
+  float: right;
+  height: 100%;
+}
+
+.highlight {
+  background-color: #f4f4f4;
+}
+
+.smallerTextFooter {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.caretMargin {
+  margin: 4px;
+}
+
+.footerPopoverDismiss {
+  right: 450% !important; // important to override auto align
+}
+
+.footerPopoverShow {
+  right: 412.5% !important; // important to override auto align
+}
+
+.popover-text {
+  font-size: 80%;
+}
+
+// applied to divs with transparent parts to allow them to be clicked through
+.pointerEventsNone {
+  pointer-events: none;
+}
+
+// applied to children of transparent divs so they can be clicked
+.pointerEventsAuto {
+  pointer-events: auto;
+}
+
+.leftTextAlign {
+  text-align: left;
+}
+
+.rightTextAlign {
+  text-align: right;
+}
+
+/* copy rules */
+
+.align-row {
+  margin-top: 26px;
+  font-size: 100%;
+}
+
+.p-width {
+  width: 7.5vw;
+}
+
+div .sgFormTopMargin {
+  margin-top: -1vh;
+}
+
+/* edge network */
+
+.edgeTileImage {
+  height: 375px;
+}
+
+.edgeTileMargin {
+  margin-top: 0rem;
+}
+
+.edgeTile {
+  background-color: #fcfcfc;
+  width: 25rem;
+  text-align: center;
+  position: relative;
+}
+
+.magnifier {
+  cursor: zoom-in;
+}
+
+.imageMargin {
+  margin: 0.5rem 0 0 -0.5rem;
+}
+
+.borderGray {
+  border: 0.1px solid #d5d2d2;
+  box-shadow: 0 0.2px 0.2px 0 #d5d2d2;
+}
+
+/* options */
+
+.magnifier {
+  cursor: zoom-in;
+}
+
+.borderGray {
+  border: 0.1px solid #d5d2d2;
+  box-shadow: 0 0.2px 0.2px 0 #d5d2d2;
+}
+
+.imageTileSize {
+  max-width: 40vw;
+}
+
+.tileStyles {
+  margin: 0rem 1.5rem 0 1rem;
+  text-align: center !important;
+  position: relative;
+}
+
+.rocketIcon {
+  margin-left: 0.6rem;
+}
+
+/* navigation redirect modal */
+
+/* select only the modal content and override its margin-bottom */
+.navigationRedirectModal div div.cds--modal-content {
+  margin-bottom: 1rem;
+}
+
+.cds--btn--primary.navigationRedirectModal {
+  min-width: 100%;
+  padding-left: 40%;
+}
+
+/* cloud services */
+.big-icon {
+  height: 80px;
+  width: 80px;
+}
+
+.small-icon {
+  height: 30px;
+  width: 30px;
+}
+
+.border-none {
+  border: none;
+  margin: 1rem;
+}
+
+.none-right {
+  margin-right: 0px !important;
+}
+
+.icon-div {
+  width: 100px;
+}
+
+.icon-text {
+  width: 120px;
+}
+
+.manageService {
+  background-color: white;
+  padding: 0.9rem;
+  border-radius: 5px;
+  box-shadow: none;
+  color: black;
+}
+
+.manageService:hover {
+  cursor: pointer;
+}
+
+.noRgService {
+  color: #da1e28;
+}
+
+.serviceOpen {
+  color: #0f62fe;
+  box-shadow: 0 10px 14px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.overrideGap {
+  gap: 1.5rem;
+  margin-bottom: 0px !important;
+}
+
+/* diagrams */
+
+.diagramBoxSelected {
+  box-shadow: 0 10px 14px 0 rgba(0, 0, 100, 0.24),
+    0 17px 50px 0 rgba(0, 0, 100, 0.19);
+}
+
+.aclBoxTop {
+  margin-top: 0px;
+}
+
+.aclBox {
+  min-width: 535px;
+  border: 2px dashed blue;
+  margin-top: 0.75rem;
+}
+
+.aclBoxSmall {
+  max-width: 535px;
+  border: 2px dashed blue;
+  margin-top: 0.75rem;
+}
+
+.noAclBox {
+  border: 2px dashed red;
+}
+
+.deploymentIconBox {
+  color: inherit;
+  text-align: center;
+}
+
+.diagramIconBoxSelected {
+  color: blue;
+  text-shadow: 0 10px 14px 0 rgba(0, 0, 100, 0.24),
+    0 17px 50px 0 rgba(0, 0, 100, 0.19);
+}
+
+.diagramIconBoxInvalid {
+  color: red;
+}
+
+.maxWith150 {
+  max-width: 150px;
+}
+
+.font10Px {
+  font-size: 10px;
+}
+
+.font12px {
+  font-size: 12px;
+}
+
+.securityTabIconMargin {
+  margin-right: 0.33rem;
+}
+
+.margin1rem {
+  margin: 1rem;
+}
+
+.diagramBox {
+  border: 1px solid lightgray;
+  padding: 0.25rem;
+  padding-left: 1rem;
+}
+
+.marginBottomHalfRem {
+  margin-bottom: 0.5rem;
+}
+
+.marginBottomNone {
+  margin-bottom: 0rem;
+}
+
+.marginTop1Rem {
+  margin-top: 1rem;
+}
+
+.marginLeftHalfRem {
+  margin-left: 0.5rem;
+}
+
+.powerMapPassthrough {
+  width: 50%;
+  max-width: 850px;
+}
+
+.marginRight1Rem {
+  margin-right: 1rem;
+}
+
+.textAlignCenter {
+  text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.marginRightQuarterRem {
+  margin-right: 0.25rem;
+}
+
+.powerSubForm {
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  width: 580px;
+}
+
+.powerSubFormBig {
+  width: 100%;
+  max-width: 1775px;
+}
+
+.powerSubnetName {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.widthOneThird {
+  width: 33%;
+}
+
+.powerSubnetBox {
+  margin-top: 1rem;
+  border: 2px solid #00882b;
+  padding: 0.5rem;
+  background: #e6f0e2;
+}
+
+.marginTopNone {
+  margin-top: 0;
+}
+
+.marginBottomThreeQuarterRem {
+  margin-bottom: 0.75rem;
+}
+
+.powerSubnetInnerBox {
+  border: 2px dashed gray;
+  width: 100%;
+  text-align: left;
+}
+
+.marginTopThreeQuartersRem {
+  margin-top: 0.75rem;
+}
+
+.powerSubnetTitleMargin {
+  margin-top: 0.25rem;
+  margin-left: 0.25rem;
+}
+
+.powerSubnetIconMargin {
+  margin-top: 0.25rem;
+  margin-left: 0.33rem;
+  margin-right: 0.33rem;
+}
+
+.powerSubnetChildren {
+  justify-content: center;
+  padding-bottom: 0.5rem;
+}
+
+.paddingBottomNone {
+  padding-bottom: 0;
+}
+
+.serviceBox {
+  width: 580px;
+  margin: 1rem;
+  margin-left: 0;
+}
+
+.serviceBoxSmall {
+  margin: 1rem;
+  margin-left: 0;
+}
+
+.securityGroupsBoxWidth {
+  width: 535px;
+}
+
+.sgDeploymentBox {
+  text-align: center;
+  max-width: 150px;
+}
+
+.emptySubnetBox {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 150px;
+}
+
+.emptySmallSubnetBox {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 150px;
+}
+
+.subnetBox {
+  border: 2px solid #00882b;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 150px;
+  background: #e6f0e2;
+}
+
+.subnetBoxSmall {
+  border: 2px solid #00882b;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: 33%;
+  background: #e6f0e2;
+  font-size: 10px;
+}
+
+.width300 {
+  width: 400px;
+  max-width: 49%;
+  min-width: 400px;
+}
+
+.grayText {
+  color: gray;
+}
+
+.subnetRowBox {
+  border: 2px dotted gray;
+  margin-top: 0.5rem;
+}
+
+.marginTopHalfRem {
+  margin-top: 0.5rem;
+}
+
+.width580 {
+  width: 580px;
+}
+
+.diagramSubFormInvalid {
+  color: red;
+}
+
+.rightForm {
+  width: 50vw;
+  padding: 0;
+}
+
+.vpcDeploymentIcon {
+  margin-top: 0.4rem;
+  margin-right: 0.5rem;
+}
+
+.width140 {
+  width: 140px;
+}
+
+.width535 {
+  width: 535px;
+}
+
+.scrollFormWrapper {
+  width: 45vw;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 10rem;
+  height: 75%;
+  padding-bottom: 4rem;
+}
+
+.marginRightThreeQuarterRem {
+  margin-right: 0.75rem;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+/* projects */
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.line {
+  border-top: 0.9px solid black;
+  padding-top: 0.8rem;
+  padding-left: 6.5rem;
+  padding-right: 6.5rem;
+  width: 40rem;
+}
+
+.headerItem {
+  width: auto;
+  margin: 5px;
+  text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.body {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+}
+
+.craigBlue {
+  color: var(--blue);
+}
+
+.projectSelect {
+  margin-top: 1.5rem;
+}
+
+.projectTiles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 1rem;
+}
+
+.projectTile {
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: break-word;
+  justify-content: space-between;
+  max-width: 16rem;
+  width: 16rem;
+}
+
+.projectTileHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.starMinWidth {
+  min-width: 2rem;
+}
+
+.selected {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
+.notSelected {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+.projectDetails {
+  height: fit-content;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.projectActions {
+  display: flex;
+  flex-direction: column;
+  min-height: 15rem;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.projectButton {
+  width: 14rem !important;
+  max-width: 14rem !important;
+}
+
+.noMarginBottom {
+  margin-bottom: 0px;
+}
+
+.alignItemsEnd {
+  align-items: end;
+}
+
+.loadingWheel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexDirectionColumn {
+  flex-direction: column;
+}
+
+.warningText {
+  font-weight: bold;
+  text-align: center;
+}
+
+.yellowText {
+  color: #c7ab19;
+}
+
+.projectSelectMarginBottom {
+  margin-bottom: -1.5rem;
+}
+
+#inline-p {
+  display: inline;
+}
+
+/* summary */
+#summary p {
+  font-size: var(--cds-body-02-font-size, 1rem);
+  font-weight: var(--cds-body-02-font-weight, 400);
+  letter-spacing: var(--cds-body-02-letter-spacing, 0);
+  line-height: var(--cds-body-02-line-height, 1.5);
+}
+
+.redFill {
+  fill: red;
+}
+
+.greenFill {
+  fill: green;
+}
+
+.marginTopXs {
+  margin-top: 0.5rem;
+}
+
+.marginBottomSmall {
+  margin-bottom: 1rem;
+}
+
+.marginLeft {
+  margin-left: 2rem;
+}
+
+.marginLeftMed {
+  margin-left: 1rem !important;
+}
+
+.marginRightMed {
+  margin-right: 1rem;
+}
+
+.marginRightSmall {
+  margin-right: 0.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.marginLeftIcon {
+  margin-left: 5px;
+}
+
+/* tutorial */
+
+.tutorial-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.splash-tutorial {
+  margin-top: 4rem;
+}
+
+/* controls */
+.control-box-container {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.controls-container {
+  width: 100%;
+  height: 1rem;
+}
+
+.controls {
+  height: fit-content;
+  overflow: hidden; /* hide overflow on hover over next button */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  z-index: 1000;
+}
+
+/* indicator */
+.progress-indicator {
+  padding-right: 3rem;
+  padding-left: 3rem;
+  height: 3rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.marginRight {
+  margin-right: 2rem;
+}
+
+/* text classes for tile */
+.bold {
+  font-weight: bold;
+}
+
+.center {
+  text-align: center;
+}
+
+.justify {
+  text-align: justify;
+}
+
+/* tile */
+.tile-container {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  padding: 0 3rem 0 3rem;
+  justify-content: center;
+}
+
+.tutorial-tile-container {
+  display: flex;
+  align-items: center;
+  width: 33%;
+  height: 100vh;
+}
+
+.tutorial-tile {
+  border-left: 1px solid var(--subForm);
+  border-right: 1px solid var(--subForm);
+  width: 100%;
+  padding: 1rem;
+  height: 65%;
+}
+
+.image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: var(--subForm);
+  margin-bottom: 1rem;
+}
+
+.fit-images {
+  object-fit: cover;
+  width: 50%;
+  height: 50%;
+}
+
+/* add css to center within progress bar */
+.cds--progress-step > button {
+  justify-content: center;
+  display: flex;
+}
+
+li.cds--progress-step > button > svg {
+  margin-top: 1.11rem;
+}
+
+li.cds--progress-step > button > div.cds--progress-text {
+  margin-top: 0.5rem;
+}
+
+/* animations */
+@keyframes inAnimation {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes outAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* vpc */
+
+.dynamic-form-modal {
+  padding: 0.5rem;
+}
+
+/* import json */
+.slz-warn {
+  font-weight: bolder;
+}
+
+.import-btn {
+  padding: 1rem;
+}
+
+/* json docs */
+.kerning {
+  line-height: 1.5;
+}
+
+/* no secrets manager tile */
+
+.no-secrets-link {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+/* index */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* vars and themes */
+:root {
+  --background: #ffffff;
+  --subForm: #f4f4f4;
+  --formInSubForm: #fffdfd;
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-field: #f4f4f4;
+  --cds-border-strong: #8d8d8d;
+  --blue: #0f62fe;
+  --red: #da1e28;
+  --white: #ffffff;
+}
+
+.dark {
+  --background: #161616;
+  --subForm: #262626;
+  --formInSubForm: #414141;
+  --cds-text-primary: #f4f4f4;
+  --cds-text-secondary: #c6c6c6;
+  --cds-field: #363636;
+  --cds-border-strong: #8897a2;
+  --cds-layer: #262626;
+  --cds-layer-hover: #363636;
+  --cds-field-02: #363636;
+  --cds-icon-secondary: #c6c6c6;
+  --cds-icon-primary: #c6c6c6;
+  --placeholder: #565656;
+  --cds-field-hover: #464646;
+  --cds-layer-selected: #525252;
+  --cds-background-inverse: #f4f4f4;
+  --cds-text-inverse: #262626;
+}
+
+.subForm {
+  /* white background for subform input fields */
+  --cds-field: #ffffff;
+}
+
+.formInSubForm {
+  /* gray for formInSubForm input fields */
+  --cds-field: #f4f4f4;
+}
+
+input:read-only {
+  /* read only fields should only have text */
+  --cds-border-strong: transparent;
+}
+
+.dark {
+  background-color: var(--background);
+}
+
+.dark p {
+  color: #f4f4f4;
+}
+
+.dark i.chevron > svg {
+  fill: #f4f4f4;
+}
+
+.dark h4 {
+  color: #f4f4f4;
+}
+
+.dark .underConstruction > svg {
+  fill: #ffffff;
+}
+/* styling for tooltip content in dark mode */
+.dark .cds--toggletip-content > p {
+  color: #363636;
+}
+
+.dark .subForm {
+  /* alternate background for dark subforms */
+  --cds-field: #414141;
+}
+
+.dark .formInSubForm {
+  /* alternate background for dark formInSubForm */
+  --cds-field: #363636;
+}
+
+.dark ::placeholder {
+  color: var(--placeholder);
+}
+
+/* general alignment classes */
+
+.displayFlex {
+  display: flex;
+}
+
+.flexWrap {
+  flex-wrap: wrap;
+}
+
+.alignItemsTop {
+  align-items: top;
+}
+
+.fitContent {
+  width: fit-content;
+}
+
+.alignItemsCenter {
+  align-items: center;
+}
+
+.widthOneHundredPercent {
+  width: 100% !important;
+}
+
+.marginBottom {
+  margin-bottom: 2rem;
+}
+
+.marginBottomSmall {
+  margin-bottom: 1rem;
+}
+
+.evenSpacing {
+  gap: 3vw;
+}
+
+.positionRelative {
+  position: relative;
+}
+
+.icseFormTitleMinHeight {
+  min-height: 32px;
+}
+
+.spaceBetween {
+  justify-content: space-between;
+}
+
+.leftTextAlign {
+  text-align: left;
+}
+
+.fieldWidth {
+  width: 14rem;
+}
+
+.fieldWidthSmaller {
+  width: 11rem;
+}
+
+.fieldWidthCopyRule {
+  width: 10rem;
+}
+
+.fieldWidthSmallest {
+  width: 8rem;
+}
+
+.fieldWidthBigger {
+  width: 40rem;
+}
+
+.textInputWide {
+  width: 30rem;
+}
+
+.textInputMedium {
+  width: 20rem;
+}
+
+/* backhground classes */
+.formInSubForm {
+  margin-top: 0rem;
+  background: var(--formInSubForm);
+  padding: 1rem;
+}
+
+.subForm {
+  background: var(--subForm);
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Tooltips */
+.labelRow {
+  display: inline-flex !important;
+  align-items: center;
+}
+
+.tooltip > div div.cds--password-input-wrapper {
+  margin-top: -8px;
+}
+
+.tooltip.cds--toggle {
+  margin-top: -8px;
+}
+
+.tooltip.cds--text-input-wrapper {
+  margin-top: -8px;
+}
+
+.subHeadingTooltip {
+  margin: 0.2rem 0 0 0.2rem;
+}
+
+.tooltipMarginLeft {
+  margin-left: 3px;
+}
+
+/* subnet tile form */
+
+.tileFormMargin {
+  margin-bottom: -0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tileFormMargin.subForm {
+  padding: 0px;
+}
+
+.marginRightSubnetTile {
+  margin-right: 10px;
+}
+
+/* StatefulTabPanel */
+
+.cds--tab-content.doc {
+  padding: 0.5rem 0;
+}
+
+.cds--tab-content:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+/* popover wrappers */
+
+.popover-box {
+  padding: 5px;
+  position: relative;
+  font-size: 80%;
+  top: 20px;
+}
+
+.cds--popover--open .cds--popover-content {
+  z-index: 9001;
+}
+
+/* buttons */
+.edit-view-btn:focus {
+  background-color: var(--white);
+}
+
+i.chevron > svg {
+  display: block; /* remove extra padding on bottom of i which misaligns icon */
+  margin-right: 1rem;
+  margin-top: 0.15rem;
+}
+
+.chevron {
+  cursor: pointer;
+}
+
+.tertiaryButtonColors {
+  color: var(--blue) !important;
+  fill: var(--white) !important;
+  border-color: var(--blue) !important;
+}
+
+.pointerEventsNone {
+  pointer-events: none;
+}
+
+.cursorNotAllowed {
+  cursor: not-allowed;
+}
+
+.forceTertiaryButtonStyles {
+  padding: 0.4375rem !important;
+  align-items: center;
+}
+
+.inlineBlock {
+  display: inline-block;
+}
+
+.redFill {
+  fill: var(--red) !important;
+}
+
+.alignButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CSS for overriding default component styles */
+.cds--btn--ghost:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+.cds--tabs__nav-link:focus {
+  outline: none !important;
+}
+
+.marginRightSmall {
+  margin-right: 0.5rem !important;
+}
+
+/* docs */
+.about {
+  padding: 2rem 1rem;
+  line-height: 1.5;
+}
+
+.smallerText {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+/* empty resource tile */
+.iconMargin {
+  margin: 0 0.5rem -0.4rem 0;
+}
+
+.inlineIconMargin {
+  margin: -0.4rem 0.05rem;
+}
+
+.marginBottomXs {
+  margin-bottom: 0.5rem;
+}
+
+.tileBackground {
+  background-color: var(--subForm);
+}
+
+.marginTop {
+  margin-top: 1rem;
+}
+
+/* under construction */
+
+.underConstruction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexDirectionColumn {
+  flex-direction: column;
+}
+
+/* f5 vsi */
+.wide {
+  width: 20rem !important;
+}
+
+.tight {
+  width: min-content; /* force invalid text to split line */
+}
+
+.passwordGenerateButton {
+  margin-top: 1.25rem;
+  margin-left: calc(-4rem - 3vw);
+}
+
+.passwordGenerateButton svg {
+  fill: var(--cds-icon-secondary, #525252) !important;
+}
+
+.passwordGenerateButton.invalid {
+  margin-left: calc(-5.75rem - 3vw);
+}
+
+.wrap {
+  flex-flow: wrap;
+}
+
+.docsUpdated {
+  display: flex;
+  align-items: flex-end;
+}
+
+.cds--list-box__menu {
+  width: fit-content;
+  text-align: left;
+}
+
+@media screen and (max-width: 1024px) {
+  .fieldWidth {
+    width: 11rem;
+  }
+
+  .fieldWidthSmaller {
+    width: 8rem;
+  }
+
+  .fieldWidthSmallest {
+    width: 5rem;
+  }
+
+  .textInputWide {
+    width: 20rem;
+  }
+
+  .fieldWidthBigger {
+    width: 30rem;
+  }
+
+  .textInputMedium {
+    width: 15rem;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .fieldWidth {
+    width: 100%;
+  }
+
+  .fieldWidthSmaller {
+    width: 100%;
+  }
+
+  .fieldWidthSmallest {
+    width: 100%;
+  }
+
+  .textInputMedium {
+    width: 100%;
+  }
+
+  .fieldWidthBigger {
+    width: 100%;
+  }
+
+  .textInputWide {
+    width: 100%;
+  }
+
+  .formGroup {
+    /* items 1 wide */
+    flex-direction: column !important;
+  }
+
+  .popover-obj.select {
+    /* need to adjust size for popover container at small widths */
+    width: 100%;
+  }
+
+  .popover-obj.select > span {
+    width: 100%;
+  }
+
+  /* items with tooltip should also be full width */
+  .cds--form-item {
+    flex: none;
+    width: 100%;
+  }
+}
+
+.cds--form-item {
+  flex: none; /* overwrite flex to fix inconsistent widths */
+}
+
+/* data table */
+div .dt-security-group {
+  background-color: white !important;
+}
+
+/* about */
+#craig-about {
+  strong {
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  h3 {
+    font-size: 1.2em;
+  }
+
+  h4 {
+    font-size: 1em;
+  }
+
+  p {
+    font-size: 1.25em;
+    line-height: 2.5rem;
+  }
+
+  li {
+    font-size: 14px;
+  }
+
+  .bold {
+    font-weight: 600;
+  }
+
+  code {
+    font-family: Consolas, "courier new";
+    color: rgb(0, 0, 0);
+    background-color: #f1f1f1;
+    font-size: 105%;
+  }
+
+  .verticalAlign {
+    height: calc(100vh - 7.5em);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+
+  .infoPadding {
+    padding: 0 4rem 0 4rem;
+    width: 65%;
+  }
+
+  .splash-text-container {
+    align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: justify;
+  }
+
+  .section {
+    height: calc(100vh - 3rem);
+    width: 100%;
+  }
+
+  .half {
+    width: 50%;
+  }
+
+  ul.bullets {
+    list-style-type: circle;
+  }
+
+  ul.indent {
+    margin-left: 2rem;
+  }
+
+  ul.indentLarge {
+    margin-left: 4rem;
+  }
+
+  p.indent {
+    margin-left: 2rem;
+  }
+
+  // do not allow the accordion title to go over the footer
+  .cds--accordion__title {
+    z-index: 0;
+  }
+
+  .stackedAcronym {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .verticalLine {
+    border-right: 2px solid black;
+  }
+
+  .third {
+    width: 33%;
+  }
+
+  p .textContainer {
+    width: 100%;
+  }
+
+  .verticalFlex {
+    flex-direction: column;
+  }
+
+  div .center {
+    justify-content: center;
+  }
+
+  @media screen and (min-width: 1800px) {
+    h1.bigger {
+      font-size: 3.5em;
+    }
+
+    p.textContainer,
+    p.accordionItem,
+    li {
+      font-size: 1.25em;
+      line-height: 2.5rem;
+    }
+
+    li.small {
+      font-size: 0.8em;
+    }
+
+    p.textContainer {
+      text-align: center;
+    }
+
+    div .cds--accordion__title,
+    .cds--accordion-content {
+      font-size: 1.25em;
+    }
+  }
+
+  #craig-about .cds--accordion__title {
+    font-size: 1.25rem;
+  }
+}
+
+#release-notes {
+  ul.bullets {
+    list-style-type: circle !important;
+    line-height: 1.5 !important;
+  }
+
+  ul.indent {
+    margin-left: 2rem !important;
+  }
+}
+
+strong {
+  font-weight: 400 !important;
+}
+
+h1 {
+  font-size: 2em !important;
+}
+
+h2 {
+  font-size: 1.5em !important;
+}
+
+h3 {
+  font-size: 1.2em !important;
+}
+
+h4 {
+  font-size: 1em !important;
+}
+
+p {
+  font-size: 1.25em;
+  line-height: 2.5rem;
 }

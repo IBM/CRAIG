@@ -210,9 +210,12 @@ class CraigToggleForm extends React.Component {
                 className={
                   this.props.aclClassicCraig
                     ? "subForm marginBottomNone"
-                    : this.props.type === "formInSubForm"
-                    ? "formInSubForm positionRelative marginBottomSmall"
-                    : "subForm marginBottomSmall"
+                    : (this.props.type === "formInSubForm"
+                        ? "formInSubForm positionRelative "
+                        : "subForm ") +
+                      (this.props.isLast ? "" : "marginBottomSmall") +
+                      " " +
+                      this.props.wrapperClassName
                 }
               >
                 <StatelessFormWrapper
@@ -353,6 +356,7 @@ class CraigToggleForm extends React.Component {
                     setRefUpstream: this.props.setRefUpstream,
                     dynamicSubnetFormSubForm: this.props.formInSubForm,
                     classicCraig: this.props.classicCraig,
+                    isMiddleForm: this.props.isMiddleForm,
                   })}
                 </StatelessFormWrapper>
               </div>

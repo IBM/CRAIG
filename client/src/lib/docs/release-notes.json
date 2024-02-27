@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.12.0",
+    "features": [],
+    "fixes": [],
+    "upgrade_notes": [
+      "Removed dependency on the front-end library `icse-react-assets`. This should result in faster build times"
+    ]
+  },
+  {
     "version": "1.11.2",
     "features": [
       "When attempting to create a resource that requires an SSH Key using the V2 pages, users will now be directed to first create an SSH key instead of viewing the form",
