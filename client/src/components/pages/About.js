@@ -498,6 +498,51 @@ const About = () => {
           </AccordionItem>
         </Accordion>
       </div>
+      <div id="troubleshooting" className="marginBottomSmall">
+        <h2 className="marginBottomXs">Troubleshooting</h2>
+        <Accordion size="lg" align="start">
+          <AccordionItem title="CRAIG-generated Terraform is unable to create an Activity Tracker target">
+            <p className="marginBottomSmall">
+              When creating an Activity Tracker target with a public endpoint,
+              you may see this error when attempting to apply your Terraform
+              configuration, even if your Activity Tracker instance is set to
+              public:
+            </p>
+            <CodeSnippet
+              type="single"
+              feedback="Copied to clipboard"
+              className="marginBottomSmall"
+            >
+              Error: CreateTargetWithContext failed Your account has the API
+              public endpoint disabled. Try again by using the private endpoint.
+            </CodeSnippet>
+            <p className="marginBottomSmall">
+              This error is caused by a setting in your IBM Cloud Account that
+              only allows private endpoints for Activity Tracker instances. You
+              can rectify this issue by accessing the{" "}
+              <a
+                href="https://cloud.ibm.com/docs/cloud-shell?topic=cloud-shell-getting-started"
+                target="_blank"
+              >
+                IBM Cloud Shell
+              </a>{" "}
+              and enabling public endpoints with the following command:
+            </p>
+            <CodeSnippet
+              type="single"
+              feedback="Copied to clipboard"
+              className="marginBottomSmall"
+            >
+              ibmcloud atracker setting update --private-api-endpoint-only FALSE
+            </CodeSnippet>
+            <p>
+              After enabling public endpoints on your account, your Terraform
+              configuration should be able to create an Activity Tracker target
+              successfully.
+            </p>
+          </AccordionItem>
+        </Accordion>
+      </div>
     </div>
   );
 };
