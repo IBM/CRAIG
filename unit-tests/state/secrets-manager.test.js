@@ -154,4 +154,96 @@ describe("secrets_manager", () => {
       );
     });
   });
+  describe("schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    describe("name", () => {
+      it("should return true if a secrets manager instance has an invalid name", () => {
+        assert.isTrue(
+          craig.secrets_manager.name.invalid(
+            {
+              name: "@@@",
+              resource_group: "managment-rg",
+              encryption_key: "key",
+            },
+            {
+              craig: craig,
+              data: {
+                name: "frog",
+              },
+            }
+          ),
+          "it should be true"
+        );
+      });
+    });
+    describe("resource_group", () => {
+      it("should return true if a secrets manager instance has an invalid resource group", () => {
+        assert.isTrue(
+          craig.secrets_manager.resource_group.invalid(
+            { name: "frog", resource_group: null, use_data: false },
+            {
+              craig: state(),
+              data: {
+                name: "test",
+              },
+            }
+          ),
+          "it should be false"
+        );
+      });
+    });
+    describe("encryption_key", () => {
+      it("should return true if a secrets manager instance has an invalid encryption key", () => {
+        assert.isTrue(
+          craig.secrets_manager.encryption_key.invalid(
+            {
+              name: "frog2",
+              resource_group: "management-rg",
+              encryption_key: null,
+              use_data: false,
+            },
+            {
+              craig: state(),
+              data: {
+                name: "test",
+              },
+            }
+          ),
+          "it should be false"
+        );
+      });
+    });
+    describe("plan", () => {
+      it("should return correct data on render when no plan in data", () => {
+        assert.deepEqual(
+          craig.secrets_manager.plan.onRender({ plan: "standard" }, {}),
+          "Standard",
+          "it should return correct plan"
+        );
+      });
+      it("should return correct data on render when no plan in data", () => {
+        assert.deepEqual(
+          craig.secrets_manager.plan.onRender(
+            { plan: "standard" },
+            { data: {} }
+          ),
+          "Standard",
+          "it should return correct plan"
+        );
+      });
+      it("should return correct data on render when no plan in data", () => {
+        assert.deepEqual(
+          craig.secrets_manager.plan.onRender(
+            { plan: "standard" },
+            { data: { plan: "standard" } }
+          ),
+          "Standard",
+          "it should return correct plan"
+        );
+      });
+    });
+  });
 });

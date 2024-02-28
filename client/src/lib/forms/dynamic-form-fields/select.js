@@ -62,7 +62,7 @@ function dynamicSelectProps(props, isMounted, stateData) {
 
   // state value
   let stateValue = props.field.onRender
-    ? props.field.onRender(props.parentState)
+    ? props.field.onRender(props.parentState, props.parentProps)
     : props.parentState[props.name];
 
   let groups = groupsEvaluatesToArrayCheck(

@@ -244,6 +244,79 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
         "it should return auth policy tf"
       );
     });
+    it("should return correct data for secrets manager with trial plan", () => {
+      let actualData = formatSecretsManagerInstance(
+        {
+          name: "secrets-manager",
+          resource_group: "slz-service-rg",
+          kms: "kms",
+          encryption_key: "key",
+          plan: "trial",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: false,
+              use_hs_crypto: false,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
+  name              = "\${var.prefix}-secrets-manager"
+  location          = var.region
+  plan              = "trial"
+  service           = "secrets-manager"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  parameters = {
+    kms_key = ibm_kms_key.kms_key_key.crn
+  }
+  timeouts {
+    create = "1h"
+    delete = "1h"
+  }
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return auth policy tf"
+      );
+    });
     it("should return correct data for secrets manager with invalid encryption key", () => {
       let actualData = formatSecretsManagerInstance(
         {

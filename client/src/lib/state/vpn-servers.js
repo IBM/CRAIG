@@ -356,7 +356,7 @@ function initVpnState(store) {
         invalidText: selectInvalidText("protocol"),
         groups: ["TCP", "UDP"],
         onRender: function (stateData) {
-          return stateData.protocol.toUpperCase();
+          return (stateData.protocol || "").toUpperCase();
         },
         onInputChange: function (stateData) {
           return stateData.protocol.toLowerCase();

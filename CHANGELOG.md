@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.12.1
+
+### Upgrade Notes
+
+
+### Features
+
+- Users can now use the `Trial` plan for secrets manager
+
+### Fixes
+
+- Fixed an issue causing the VPN Server page to crash when opening the creation modal
+
 ## 1.12.0
 
 ### Upgrade Notes

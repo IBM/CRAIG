@@ -1,6 +1,4 @@
 const {
-  splat,
-  getObjectFromArray,
   isNullOrEmptyString,
   contains,
   containsKeys,
@@ -30,22 +28,6 @@ const { hasDuplicateName } = require("./duplicate-name");
  */
 function invalidNewResourceName(str) {
   return str ? str.match(newResourceNameExp) === null : true;
-}
-
-/**
- * invalid tags
- * @param {Array<string>} tags list of tags
- * @returns {boolean} true if any tags in list are invalid
- */
-function invalidTagList(tags) {
-  if (!tags || tags.length === 0) return false;
-  let invalid = false;
-  tags.forEach((tag) => {
-    if (tag.match(newResourceNameExp) === null || tag.length > 128) {
-      invalid = true;
-    }
-  });
-  return invalid;
 }
 
 /**
@@ -492,7 +474,6 @@ function invalidCrns(stateData) {
 module.exports = {
   invalidName,
   invalidNewResourceName,
-  invalidTagList,
   invalidCrnList,
   validSshKey,
   invalidSubnetTierName,

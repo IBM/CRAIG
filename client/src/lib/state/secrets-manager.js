@@ -8,6 +8,8 @@ const {
   encryptionKeyGroups,
   hideWhenUseData,
   selectInvalidText,
+  kebabCaseInput,
+  titleCaseRender,
 } = require("./utils");
 
 /**
@@ -94,15 +96,36 @@ function initSecretsManagerStore(store) {
         default: "",
         invalid: invalidName("secrets_manager"),
         invalidText: invalidNameText("secrets_manager"),
-        size: "small",
       },
-      resource_group: resourceGroupsField(true),
+      resource_group: resourceGroupsField(),
+      plan: {
+        type: "select",
+        default: "standard",
+        invalid: fieldIsNullOrEmptyString("plan"),
+        invalidText: selectInvalidText("plan"),
+        hideWhen: hideWhenUseData,
+        groups: ["Standard", "Trial"],
+        onRender: function (stateData, componentProps) {
+          if (!componentProps?.data?.plan) {
+            // add to plan to component props prevent button from highlighting
+            // when no plan is selected
+            if (componentProps.data) componentProps.data.plan = stateData.plan;
+          }
+          return titleCaseRender("plan")(stateData);
+        },
+        onInputChange: kebabCaseInput("plan"),
+        tooltip: {
+          content:
+            "You can have one Trial instance provisioned in your account at any time. After your 30 day trial expires, functionality is removed but your instance remains available to upgrade for an additional 30 days.",
+          align: "right",
+          alignModal: "right",
+        },
+      },
       encryption_key: {
         type: "select",
         default: "",
         invalid: fieldIsNullOrEmptyString("encryption_key"),
         invalidText: selectInvalidText("encryption key"),
-        size: "small",
         groups: encryptionKeyGroups,
         hideWhen: hideWhenUseData,
       },

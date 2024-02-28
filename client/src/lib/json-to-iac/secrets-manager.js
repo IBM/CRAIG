@@ -115,7 +115,7 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
     : {
         name: kebabName([secretsManager.name]),
         location: varDotRegion,
-        plan: "standard",
+        plan: secretsManager.plan ? secretsManager.plan : "standard",
         service: "secrets-manager",
         resource_group_id: rgIdRef(secretsManager.resource_group, config),
         parameters: {

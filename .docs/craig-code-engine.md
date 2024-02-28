@@ -37,12 +37,33 @@ The Code Engine image build and application settings can be used to manage the C
 ### Background
 You can bring your own existing Power VS workspace into CRAIG which allows you to choose custom images for Power VSIs.
 
-The IBM Code Engine deployment script will automatically create Power VS workspaces for CRAIG use when using the `-z` parameter. The script also allows specifying environment variables with the workspace IDs in a file with the `-e` parameter. In both cases the Power VS workspace zones and corresponding workspace IDs are placed in a Code Engine configmap.
+The IBM Code Engine deployment script will automatically create Power VS workspaces in every Power VS zone worldwide for CRAIG's use when using the `-z` parameter.
+
+If you do not want Power VS workspaces created in every zone, you can create the Power VS Workspaces in your chosen zone(s) using the Clould console, CLI, or other means. The [generate-env.sh](../generate-env.sh) script can generate an environment file that can be used with the `deploy.sh` script to configure CRAIG to use the workspaces.
+
+#### generate-env.sh prerequisites
+- [jq](https://jqlang.github.io/jq/) v1.7 or higher
+- ibmcloud CLI
+- Bash version 4 or higher
+
+To generate an env containing all of the workspaces in your account, you can run the following command:
+
+```
+./generate-env.sh env
+```
+
+The `env` file should then be modified to remove or comment out any workspaces that CRAIG should not use, and to ensure it contains only one workspace per zone.
+
+The `env` file can then be used on the `deploy.sh` script:
+
+```
+./deploy.sh -e env
+```
 
 ### Modifying the configmap
 If you want to bring your own workspace after CRAIG deployment in Code Engine you can update the configmap with the GUID of your workspace.
 
-To find the GUIDs and locations of your workspaces, the following IBM Cloud CLI command can be run in a terminal window or an IBM Cloud Shell: 
+To find the GUIDs and locations of your workspaces, the following IBM Cloud CLI command can be run in a terminal window or an IBM Cloud Shell:
 
 ```
 ibmcloud resource service-instances --service-name power-iaas --output json | jq -r '.[]? | "\(.guid), \(.name), \(.region_id)"'
@@ -50,4 +71,4 @@ ibmcloud resource service-instances --service-name power-iaas --output json | jq
 
 To modify the configmap to add your workspace GUID, click on `Secrets and configmaps` on left navigation pane of the Code Engine project. Click on the `craig-env` Configmap. Find the key that matches your workspace's zone and set your workspace's GUID as the value for the key. Click the `Save` button. The CRAIG instance can then be [redeployed](#redeploying-the-craig-instance) to pick up the configmap change.
 
-If CRAIG was deployed without specifying `-z` or `-e`, a configmap can be manually created and set with the correct key-value for the zone. See the [.example.env](../.example.env) for the possible keys and the [IBM Code Engine documentation](https://cloud.ibm.com/docs/codeengine?topic=codeengine-configmap) for how to create the configmap and add the reference to the `craig` application.
+If CRAIG was deployed without specifying `-z` or `-e`, a configmap can be manually created and set with the correct key-value for the zone. See the [.env.example](../.env.example) for the possible keys and the [IBM Code Engine documentation](https://cloud.ibm.com/docs/codeengine?topic=codeengine-configmap) for how to create the configmap and add the reference to the `craig` application.

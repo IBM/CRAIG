@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.12.1",
+    "features": ["Users can now use the `Trial` plan for secrets manager"],
+    "fixes": [
+      "Fixed an issue causing the VPN Server page to crash when opening the creation modal"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.12.0",
     "features": [
       "Users can now import existing VPCs and VPC ACLs within existing VPCs within CRAIG"

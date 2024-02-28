@@ -15,7 +15,7 @@ To dynamically fetch Power VS images and storage pools within CRAIG, the IBM Pow
 
 ## Automated Deployment
 
-The `terraform.sh` script found in the `/deploy` folder of the CRAIG root directory provisions a Power VS Workspace in each zone and sets the needed environment variables with the format of `POWER_WORKSPACE_<zone>=<workspace-guid>`.
+The `terraform.sh` script found in the `/deploy` folder of the CRAIG root directory provisions a Power VS Workspace in each zone worldwide and sets the needed environment variables with the format of `POWER_WORKSPACE_<zone>=<workspace-guid>`.
 
 Use the following command to run the script:
 ```shell
@@ -26,16 +26,18 @@ This will produce a file named `.env` that can be passed to the `deploy.sh` scri
 
 #### Bring Your Own Workspace
 
-To bring your own Power VS Workspace into CRAIG to fetch images, you will need to set a field in your `.env` with the following format. To see an example, see [.env.example](../.env.example)
+If you do not want Power VS workspaces created in every zone or if you want to use custom images you can bring your own Power VS Workspace into CRAIG. The [generate-env.sh](../generate-env.sh) script can generate a `.env` environment file containing all of the workspaces in your account.
+
+#### generate-env.sh prerequisites
+- [jq](https://jqlang.github.io/jq/) v1.7 or higher
+- [IBM Cloud CLI](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
+- Bash version 4 or higher
+
+To generate a `.env` file containing all of the workspaces in your account, you can run the following command:
 
 ```
-POWER_WORKSPACE_<zone-of-workspace>=<workspace-guid>
+./generate-env.sh .env
 ```
 
-To find the GUIDs and locations of your workspaces, the following IBM Cloud CLI command can be run in a terminal window or an IBM Cloud Shell: 
+The `.env` file should then be modified to remove or comment out any workspaces that CRAIG should not use, and to ensure it contains only one workspace per zone. The `API_KEY` key and value should also be added to the file, see [.env.example](../.env.example) for more information.
 
-```
-ibmcloud resource service-instances --service-name power-iaas --output json | jq -r '.[]? | "\(.guid), \(.name), \(.region_id)"'
-```
-
-*For instructions on how to install the IBM Cloud CLI, click [here](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)*

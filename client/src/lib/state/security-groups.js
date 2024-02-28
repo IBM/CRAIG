@@ -26,11 +26,6 @@ const {
   unconditionalInvalidText,
   kebabCaseInput,
   titleCaseRender,
-  networkingRuleProtocolField,
-  networkingRulePortField,
-  networkingRuleTypeField,
-  networkingRuleCodeField,
-  getRuleProtocol,
 } = require("./utils");
 const {
   invalidName,
@@ -41,6 +36,13 @@ const {
   duplicateNameCallback,
   genericNameCallback,
 } = require("../forms/text-callbacks");
+const {
+  networkingRuleProtocolField,
+  networkingRulePortField,
+  networkingRuleTypeField,
+  networkingRuleCodeField,
+  getRuleProtocol,
+} = require("./reusable-fields");
 
 /**
  * intialize security groups
