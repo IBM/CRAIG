@@ -1,4 +1,4 @@
-const { distinct, contains, isEmpty } = require("lazy-z");
+const { contains, isEmpty } = require("lazy-z");
 
 /**
  * Filters docs obj to render defaults for specific template only.
@@ -40,28 +40,4 @@ function filterDocs(template, field, docs) {
   return doc;
 }
 
-/*
- * filter vpcs with connections to extant tgws
- * @param {*} craig
- * @returns {Array<string>} list of vpcs not currently
- */
-function tgwVpcFilter(craig) {
-  let unconnectedVpcs = [];
-  let allTgwVpcs = [];
-  craig.store.json.transit_gateways.forEach((tgw) => {
-    let connectionVpcs = [];
-    tgw.connections.forEach((connection) => {
-      if (connection.vpc) {
-        // not using splat to avoid picking up `null` for crn connections
-        connectionVpcs.push(connection.vpc);
-      }
-    });
-    allTgwVpcs = distinct(allTgwVpcs.concat(connectionVpcs));
-  });
-  craig.store.vpcList.forEach((vpc) => {
-    if (!contains(allTgwVpcs, vpc)) unconnectedVpcs.push(vpc);
-  });
-  return unconnectedVpcs;
-}
-
-module.exports = { filterDocs, tgwVpcFilter };
+module.exports = { filterDocs };

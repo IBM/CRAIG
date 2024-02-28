@@ -5,11 +5,10 @@ const {
   buildNumberDropdownList,
   titleCase,
   contains,
-  isNullOrEmptyString,
 } = require("lazy-z");
 const { subnetTierSave } = require("./vpc/vpc");
 const { RegexButWithWords } = require("regex-but-with-words");
-const { invalidNewResourceName, invalidTagList } = require("../forms");
+const { invalidNewResourceName } = require("../forms");
 const releaseNotes = require("../docs/release-notes.json");
 const {
   shouldDisableComponentSave,
@@ -18,6 +17,7 @@ const {
   selectInvalidText,
   kebabCaseInput,
   onArrayInputChange,
+  invalidTagList,
 } = require("./utils");
 
 const powerVsZones = [

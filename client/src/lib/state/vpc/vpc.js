@@ -40,11 +40,6 @@ const {
   unconditionalInvalidText,
   kebabCaseInput,
   titleCaseRender,
-  networkingRuleProtocolField,
-  networkingRulePortField,
-  networkingRuleTypeField,
-  networkingRuleCodeField,
-  getRuleProtocol,
 } = require("../utils");
 const { calculateNeededSubnetIps, getNextCidr } = require("../../json-to-iac");
 const {
@@ -66,6 +61,13 @@ const {
 } = require("../../forms/text-callbacks");
 const { vpcSchema } = require("./vpc-schema");
 const { newSubnetTierSave } = require("./subnets");
+const {
+  networkingRuleProtocolField,
+  networkingRulePortField,
+  networkingRuleTypeField,
+  networkingRuleCodeField,
+  getRuleProtocol,
+} = require("../reusable-fields");
 
 /**
  * read only when

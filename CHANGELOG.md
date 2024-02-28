@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.12.1
+
+### Upgrade Notes
+
+
+### Features
+
+- Users can now use the `Trial` plan for secrets manager
+
+### Fixes
+
+
 ## 1.12.0
 
 ### Upgrade Notes

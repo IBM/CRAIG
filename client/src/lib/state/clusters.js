@@ -30,8 +30,9 @@ const {
   encryptionKeyGroups,
   onArrayInputChange,
   fieldIsNotWholeNumber,
+  invalidTagList,
 } = require("./utils");
-const { invalidName, invalidNameText, invalidTagList } = require("../forms");
+const { invalidName, invalidNameText } = require("../forms");
 const { invalidDescription } = require("../forms/invalid-callbacks");
 
 /**

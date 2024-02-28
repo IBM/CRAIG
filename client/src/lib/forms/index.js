@@ -9,7 +9,6 @@ const {
 const {
   invalidName,
   validSshKey,
-  invalidTagList,
   invalidCrnList,
   invalidSubnetTierName,
   invalidNewResourceName,
@@ -62,7 +61,6 @@ module.exports = {
   disableSave,
   invalidNameText,
   validSshKey,
-  invalidTagList,
   invalidSubnetTierName,
   invalidSubnetTierText,
   formatConfig,

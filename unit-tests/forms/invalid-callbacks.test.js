@@ -1,7 +1,6 @@
 const { assert } = require("chai");
 const {
   invalidName,
-  invalidTagList,
   invalidCrnList,
   invalidIpCommaList,
   isValidUrl,
@@ -698,14 +697,6 @@ describe("invalid callbacks", () => {
       }
     );
     assert.isTrue(actualData, "it should be true");
-  });
-  describe("invalidTagList", () => {
-    it("should return true when invalid tag list", () => {
-      assert.isTrue(invalidTagList(["hi", "2@@@2"]));
-    });
-    it("should return false when no tags", () => {
-      assert.isFalse(invalidTagList([]));
-    });
   });
   describe("invalidCrnList", () => {
     it("should return true when invalid crn in list", () => {
