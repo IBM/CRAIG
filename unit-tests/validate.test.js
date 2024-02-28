@@ -1137,44 +1137,6 @@ describe("validate", () => {
       };
       assert.doesNotThrow(task);
     });
-    it("should throw an error if no encryption key", () => {
-      let testData = minimumValidJson({
-        secrets_manager: [
-          {
-            name: "asdf",
-            resource_group: "hi",
-            use_secrets_manager: true,
-            kms: "kms",
-          },
-        ],
-      });
-      let task = () => {
-        validate(testData);
-      };
-      assert.throws(
-        task,
-        "Secrets Manager requires a encryption key, encryption_key missing from JSON."
-      );
-    });
-    it("should throw an error if no kms", () => {
-      let testData = minimumValidJson({
-        secrets_manager: [
-          {
-            name: "asdf",
-            resource_group: "hi",
-            encryption_key: "key",
-            use_secrets_manager: true,
-          },
-        ],
-      });
-      let task = () => {
-        validate(testData);
-      };
-      assert.throws(
-        task,
-        "Secrets Manager requires a Key Management, kms missing from JSON."
-      );
-    });
   });
   describe("event_streams", () => {
     it("should throw an error if no resource group", () => {

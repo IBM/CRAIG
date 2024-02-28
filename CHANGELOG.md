@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue causing the VPN Server page to crash when opening the creation modal
+- Fixed an issue causing Secrets Manager data sources to always be invalid on validation
 
 ## 1.12.0
 

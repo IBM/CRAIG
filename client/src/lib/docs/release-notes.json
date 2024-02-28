@@ -3,7 +3,8 @@
     "version": "1.12.1",
     "features": ["Users can now use the `Trial` plan for secrets manager"],
     "fixes": [
-      "Fixed an issue causing the VPN Server page to crash when opening the creation modal"
+      "Fixed an issue causing the VPN Server page to crash when opening the creation modal",
+      "Fixed an issue causing Secrets Manager data sources to always be invalid on validation"
     ],
     "upgrade_notes": []
   },

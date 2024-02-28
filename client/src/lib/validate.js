@@ -348,8 +348,6 @@ const validate = function (json) {
     nullResourceGroupTest("Secrets Manager", instance, {
       overrideName: "Secrets Manager Resource Group",
     });
-    nullEncryptionKeyTest("Secrets Manager", instance, {}, "encryption_key");
-    validationTest("Secrets Manager", instance, "Key Management", "kms"); // check for null kms
   });
 
   // event streams

@@ -69,7 +69,7 @@ class ImportJson extends React.Component {
   }
 
   handleSubmit() {
-    this.props.craig.hardSetJson(this.state.validJson, this.props.slz);
+    this.props.craig.hardSetJson(this.state.validJson, true);
     this.toggleModal();
     window.location.pathname = contains(window.location.pathname, "/v2")
       ? "/v2/services"
