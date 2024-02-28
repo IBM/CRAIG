@@ -108,20 +108,19 @@ chmod 755 deploy.sh
 
 By default the script will securely prompt you for your API key. It may also be read from an environment variable or specified as a command line argument. See the `deploy.sh -h` usage for more information.
 
- If CRAIG is used for Power VS configuration, the Power VS workspaces must be created. The deploy script can create the Power Virtual Server workspaces and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
+ If CRAIG is used for Power VS configuration, Power VS workspaces must exist in the zones that CRAIG projects will use. The deploy script can create the Power Virtual Server workspaces in every Power VS zone worldwide and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
 
 ```bash
 ./deploy.sh -z
 ```
+
+If CRAIG is used for Power VS configuration and you do not want Power VS workspaces created in every zone, you can bring your own existing Power VS workspace into CRAIG. This also allows you to choose custom images for Power VSIs. See [Bring Your Own Power VS Workspace](.docs/craig-code-engine.md#bring-your-own-power-vs-workspace) for more information.
 
 If CRAIG will not be used for Power VS configuration, `deploy.sh` can be run without parameters to deploy CRAIG into Code Engine:
 
 ```bash
 ./deploy.sh
 ```
-
-You can bring your own existing Power VS workspace into CRAIG which allows you to choose custom images for Power VSIs. To bring your own workspace you can update the Code Engine configuration after deployment. See [Bring Your Own Power VS Workspace](.docs/craig-code-engine.md#bring-your-own-power-vs-workspace) for more information.
-
 For the full list of parameters which allows full customization of the IBM Code Engine deployment, specify the `-h` parameter:
 
 ```
