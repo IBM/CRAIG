@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+- Fixed an issue causing the VPN Server page to crash when opening the creation modal
 
 ## 1.12.0
 

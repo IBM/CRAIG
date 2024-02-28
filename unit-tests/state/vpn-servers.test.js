@@ -326,6 +326,13 @@ describe("vpn_servers", () => {
         "it should render correctly"
       );
     });
+    it("should return protocol null on render", () => {
+      assert.deepEqual(
+        craig.vpn_servers.protocol.onRender({}),
+        "",
+        "it should render correctly"
+      );
+    });
     describe("vpnServersWorkspaceHelperText", () => {
       it("should return correct helper text", () => {
         assert.deepEqual(
