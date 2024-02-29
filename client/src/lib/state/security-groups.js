@@ -27,21 +27,16 @@ const {
   kebabCaseInput,
   titleCaseRender,
 } = require("./utils");
+const { invalidNewResourceName } = require("../forms");
 const {
-  invalidName,
-  invalidNameText,
-  invalidNewResourceName,
-} = require("../forms");
-const {
-  duplicateNameCallback,
   genericNameCallback,
-} = require("../forms/text-callbacks");
-const {
   networkingRuleProtocolField,
   networkingRulePortField,
   networkingRuleTypeField,
   networkingRuleCodeField,
   getRuleProtocol,
+  nameField,
+  duplicateNameCallback,
 } = require("./reusable-fields");
 
 /**
@@ -261,12 +256,7 @@ function initSecurityGroupStore(store) {
       "security_groups"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("security_groups"),
-        invalidText: invalidNameText("security_groups"),
-        size: "small",
-      },
+      name: nameField("security_groups", { size: "small" }),
       resource_group: resourceGroupsField(true),
       vpc: {
         type: "select",

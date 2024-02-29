@@ -23,8 +23,8 @@ const {
   powerStoragePoolSelect,
   fieldIsNotWholeNumber,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
 const { replicationEnabledStoragePoolMap } = require("../constants");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize power vs volumes
@@ -190,12 +190,7 @@ function initPowerVsVolumeStore(store) {
       "power_volumes"
     ),
     schema: {
-      name: {
-        size: "small",
-        default: "",
-        invalid: invalidName("power_volumes"),
-        invalidText: invalidNameText("power_volumes"),
-      },
+      name: nameField("power_volumes", { size: "small" }),
       workspace: {
         size: "small",
         type: "select",

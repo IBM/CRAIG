@@ -20,8 +20,13 @@ const {
   containsKeys,
 } = require("lazy-z");
 const { commaSeparatedIpListExp, newResourceNameExp } = require("../constants");
-const { invalidName, validSshKey } = require("../forms/invalid-callbacks");
-const { invalidNameText } = require("../forms/text-callbacks");
+const { validSshKey } = require("../forms/invalid-callbacks");
+const { nameField } = require("./reusable-fields");
+const {
+  unconditionalInvalidText,
+  fieldIsNullOrEmptyString,
+  selectInvalidText,
+} = require("./reusable-fields");
 
 /**
  * set kms from encryption key on store update
@@ -368,20 +373,6 @@ function saveAdvancedSubnetTier(
 }
 
 /**
- * shortcut for field is null or empty string
- * @param {*} fieldName
- * @param {boolean} lazy  true if field cannot be undefined
- * @returns {Function}
- */
-function fieldIsNullOrEmptyString(fieldName, lazy) {
-  return function (stateData) {
-    return stateData.use_data && !lazy
-      ? false
-      : isNullOrEmptyString(stateData[fieldName], lazy);
-  };
-}
-
-/**
  * shortcut for form field is empty
  * @param {*} fieldName
  * @returns {Function}
@@ -426,45 +417,6 @@ function isIpStringInvalid(value) {
     return true;
   }
   return false;
-}
-
-/**
- * name helper text
- * @param {*} stateData
- * @param {*} componentProps
- * @returns {string} composed name with prefix prepended
- */
-function nameHelperText(stateData, componentProps) {
-  return `${
-    stateData.use_data
-      ? ""
-      : componentProps.craig.store.json._options.prefix + "-"
-  }${stateData.name || ""}`;
-}
-
-/**
- * default for select
- * @param {*} field
- * @returns {string} select text
- */
-function selectInvalidText(field) {
-  return function () {
-    return `Select a ${field}`;
-  };
-}
-
-/**
- * name field
- * @param {*} jsonField
- * @returns {Object} name field
- */
-function nameField(jsonField) {
-  return {
-    default: "",
-    invalid: invalidName(jsonField),
-    invalidText: invalidNameText(jsonField),
-    helperText: nameHelperText,
-  };
 }
 
 /**
@@ -582,17 +534,6 @@ function kebabCaseInput(field) {
 }
 
 /**
- * callback function for unconditional invalid text
- * @param {string} text
- * @returns {Function} function that return text
- */
-function unconditionalInvalidText(text) {
-  return function () {
-    return text;
-  };
-}
-
-/**
  * hide when use data
  * @param {*} stateData
  * @returns
@@ -658,11 +599,7 @@ function sshKeySchema(fieldName) {
     }
   }
   let schema = {
-    name: {
-      default: "",
-      invalid: invalidName(fieldName),
-      invalidText: invalidNameText(fieldName),
-    },
+    name: nameField(fieldName),
     public_key: {
       type: "public-key",
       default: null,
@@ -1347,10 +1284,8 @@ module.exports = {
   shouldDisableComponentSave,
   isIpStringInvalid,
   fieldIsEmpty,
-  nameHelperText,
   selectInvalidText,
   resourceGroupsField,
-  nameField,
   wholeNumberField,
   wholeNumberText,
   titleCaseRender,

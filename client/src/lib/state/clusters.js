@@ -5,7 +5,6 @@ const {
   transpose,
   deleteUnfoundArrayItems,
   splatContains,
-  isEmpty,
   isNullOrEmptyString,
   buildNumberDropdownList,
 } = require("lazy-z");
@@ -32,8 +31,12 @@ const {
   fieldIsNotWholeNumber,
   invalidTagList,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
 const { invalidDescription } = require("../forms/invalid-callbacks");
+const {
+  nameField,
+  invalidName,
+  invalidNameText,
+} = require("./reusable-fields");
 
 /**
  * initialize cluster
@@ -311,10 +314,7 @@ function initClusterStore(store) {
         default: "",
         invalid: fieldIsNullOrEmptyString("kube_type"),
       },
-      name: {
-        default: "",
-        invalid: invalidName("clusters"),
-        invalidText: invalidNameText("clusters"),
+      name: nameField("clusters", {
         size: "small",
         /**
          * get helper text for cluster
@@ -333,7 +333,7 @@ function initClusterStore(store) {
             "-cluster"
           );
         },
-      },
+      }),
       resource_group: resourceGroupsField(true),
       kube_type: {
         size: "small",
@@ -456,12 +456,7 @@ function initClusterStore(store) {
           "worker_pools"
         ),
         schema: {
-          name: {
-            size: "small",
-            default: "",
-            invalid: invalidName("worker_pools"),
-            invalidText: invalidNameText("worker_pools"),
-          },
+          name: nameField("worker_pools", { size: "small" }),
           flavor: flavor(),
           subnets: subnetMultiSelect({
             invalid: openshiftWorkersInvalid,

@@ -2,7 +2,6 @@ const { newDefaultVpe } = require("./defaults");
 const {
   splatContains,
   deleteUnfoundArrayItems,
-  isEmpty,
   isNullOrEmptyString,
   splat,
 } = require("lazy-z");
@@ -11,13 +10,11 @@ const {
   fieldIsNullOrEmptyString,
   resourceGroupsField,
   selectInvalidText,
-  unconditionalInvalidText,
   vpcGroups,
   subnetMultiSelect,
-  forceUpdateOnVpcChange,
   securityGroupsMultiselect,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 const vpeServiceMap = {
   hpcs: "Hyper Protect Crypto Services",
@@ -145,12 +142,9 @@ function initVpe(store) {
       "virtual_private_endpoints"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("virtual_private_endpoints"),
-        invalidText: invalidNameText("virtual_private_endpoints"),
+      name: nameField("virtual_private_endpoints", {
         size: "small",
-      },
+      }),
       resource_group: resourceGroupsField(true),
       service: {
         size: "small",

@@ -323,6 +323,101 @@ describe("cbr_zones", () => {
       });
     });
     describe("cbr-zones.schema", () => {
+      let craig;
+      beforeEach(() => {
+        craig = newState();
+      });
+      it("should return true when a cbr zone with the same name", () => {
+        let actualData = craig.cbr_zones.name.invalid(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  cbr_zones: [
+                    {
+                      name: "test",
+                    },
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        );
+        assert.isTrue(actualData, "it should be true");
+      });
+      it("should return true when a cbr exclusion with the same name", () => {
+        let actualData = craig.cbr_zones.exclusions.name.invalid(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  cbr_zones: [
+                    {
+                      name: "hi",
+                      exclusions: [
+                        {
+                          name: "test",
+                        },
+                        {
+                          name: "frog",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        );
+        assert.isTrue(actualData, "it should be true");
+      });
+      it("should return true when a cbr address with the same name", () => {
+        let actualData = craig.cbr_zones.addresses.name.invalid(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  cbr_zones: [
+                    {
+                      name: "hi",
+                      addresses: [
+                        {
+                          name: "test",
+                        },
+                        {
+                          name: "frog",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        );
+        assert.isTrue(actualData, "it should be true");
+      });
       it("should return correct placeholder for address value", () => {
         let state = new newState();
         assert.deepEqual(

@@ -16,13 +16,7 @@ const {
   pushToChildFieldModal,
   hasUnfoundVpc,
 } = require("./store.utils");
-const {
-  invalidName,
-  invalidNameText,
-  invalidCidrBlock,
-  invalidCrnList,
-  invalidCrnText,
-} = require("../forms");
+const { invalidCidrBlock, invalidCrnList, invalidCrns } = require("../forms");
 const {
   fieldIsNullOrEmptyString,
   resourceGroupsField,
@@ -40,6 +34,18 @@ const {
   commaSeparatedIpListExp,
   commaSeparatedCidrListExp,
 } = require("../constants");
+const { nameField } = require("./reusable-fields");
+
+/**
+ * invalid crn text
+ * @param {*} stateData
+ * @returns {Function} text function
+ */
+function invalidCrnText(stateData) {
+  return invalidCrns(stateData)
+    ? "Enter a valid comma separated list of CRNs"
+    : "";
+}
 
 /**
  * initialize vpn servers in store
@@ -203,10 +209,7 @@ function initVpnState(store) {
       "vpn_servers"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("vpn_servers"),
-        invalidText: invalidNameText("vpn_servers"),
+      name: nameField("vpn_servers", {
         size: "small",
         /**
          * return helper text for vpn servers
@@ -217,7 +220,7 @@ function initVpnState(store) {
         helperText: function vpnServersHelperText(stateData, componentProps) {
           return `${componentProps.craig.store.json._options.prefix}-vpn-server-${stateData.name}`;
         },
-      },
+      }),
       resource_group: resourceGroupsField(true),
       vpc: {
         default: "",
@@ -456,12 +459,9 @@ function initVpnState(store) {
           "routes"
         ),
         schema: {
-          name: {
+          name: nameField("vpn_server_routes", {
             size: "small",
-            default: "",
-            invalid: invalidName("vpn_server_routes"),
-            invalidText: invalidNameText("vpn_server_routes"),
-          },
+          }),
           destination: {
             size: "small",
             default: "",

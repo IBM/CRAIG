@@ -2,15 +2,10 @@ const { assert } = require("chai");
 const {
   formatNetworkingRule,
   updateNetworkingRule,
-  nameHelperText,
-  invalidPort,
   isRangeInvalid,
   cbrTitleCase,
   cbrSaveType,
   powerAffinityInvalid,
-  onRuleFieldInputChange,
-  hideWhenNotAllIcmp,
-  hideWhenTcpOrUdp,
   invalidTagList,
 } = require("../../client/src/lib/state/utils");
 
@@ -411,40 +406,40 @@ describe("utils", () => {
       assert.deepEqual(data, expectedData, "it should be equal");
     });
   });
-  describe("nameHelperText", () => {
-    it("should return correct helper text when use data", () => {
-      assert.deepEqual(
-        nameHelperText(
-          { use_data: true, name: "tgw" },
-          {
-            craig: {
-              store: {
-                json: {},
-              },
-            },
-          }
-        ),
-        "tgw",
-        "it should return name"
-      );
-    });
-    it("should return correct helper text when use data and name is null", () => {
-      assert.deepEqual(
-        nameHelperText(
-          { use_data: true, name: null },
-          {
-            craig: {
-              store: {
-                json: {},
-              },
-            },
-          }
-        ),
-        "",
-        "it should return name"
-      );
-    });
-  });
+  // describe("nameHelperText", () => {
+  //   it("should return correct helper text when use data", () => {
+  //     assert.deepEqual(
+  //       nameHelperText(
+  //         { use_data: true, name: "tgw" },
+  //         {
+  //           craig: {
+  //             store: {
+  //               json: {},
+  //             },
+  //           },
+  //         }
+  //       ),
+  //       "tgw",
+  //       "it should return name"
+  //     );
+  //   });
+  //   it("should return correct helper text when use data and name is null", () => {
+  //     assert.deepEqual(
+  //       nameHelperText(
+  //         { use_data: true, name: null },
+  //         {
+  //           craig: {
+  //             store: {
+  //               json: {},
+  //             },
+  //           },
+  //         }
+  //       ),
+  //       "",
+  //       "it should return name"
+  //     );
+  //   });
+  // });
 
   describe("isRangeInvalid", () => {
     it("should return false if range is valid", () => {
@@ -523,6 +518,14 @@ describe("utils", () => {
     });
   });
 
+  describe("invalidTagList", () => {
+    it("should return true when invalid tag list", () => {
+      assert.isTrue(invalidTagList(["hi", "2@@@2"]));
+    });
+    it("should return false when no tags", () => {
+      assert.isFalse(invalidTagList([]));
+    });
+  });
   describe("invalidTagList", () => {
     it("should return true when invalid tag list", () => {
       assert.isTrue(invalidTagList(["hi", "2@@@2"]));

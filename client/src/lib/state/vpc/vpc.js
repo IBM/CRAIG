@@ -51,14 +51,7 @@ const {
   updateAdvancedSubnetTier,
   editSubnets,
 } = require("../subnets");
-const {
-  invalidName,
-  invalidSubnetTierName,
-} = require("../../forms/invalid-callbacks");
-const {
-  invalidNameText,
-  invalidSubnetTierText,
-} = require("../../forms/text-callbacks");
+const { invalidSubnetTierName } = require("../../forms/invalid-callbacks");
 const { vpcSchema } = require("./vpc-schema");
 const { newSubnetTierSave } = require("./subnets");
 const {
@@ -67,6 +60,10 @@ const {
   networkingRuleTypeField,
   networkingRuleCodeField,
   getRuleProtocol,
+  nameField,
+  invalidName,
+  duplicateNameCallback,
+  genericNameCallback,
 } = require("../reusable-fields");
 
 /**
@@ -1231,12 +1228,7 @@ function naclRuleSubComponents() {
         return shouldBeDisabled;
       },
       schema: {
-        name: {
-          size: "small",
-          default: "",
-          invalid: invalidName("acl_rules"),
-          invalidText: invalidNameText("acl_rules"),
-        },
+        name: nameField("acl_rules", { size: "small" }),
         source: {
           default: "",
           invalid: function (stateData, componentProps) {
@@ -1365,10 +1357,7 @@ function initVpcStore(store) {
               );
             },
           },
-          name: {
-            default: "",
-            invalid: invalidName("acls"),
-            invalidText: invalidNameText("acls"),
+          name: nameField("acls", {
             /**
              * get helper text for network acl
              * @param {Object} stateData
@@ -1388,7 +1377,7 @@ function initVpcStore(store) {
                     stateData.name +
                     "-acl";
             },
-          },
+          }),
           resource_group: resourceGroupsField(),
         },
       },
@@ -1402,16 +1391,15 @@ function initVpcStore(store) {
           "subnets"
         ),
         schema: {
-          name: {
+          name: nameField("subnet", {
             size: "small",
-            default: "",
             invalid: function (stateData, componentProps) {
               componentProps.craig = store;
               return invalidName("subnet", store)(stateData, componentProps);
             },
             disabledText: unconditionalInvalidText(""),
             hideWhen: disableWhenNotAdvaned,
-          },
+          }),
           cidr: {
             size: "small",
             labelText: "Subnet CIDR",
@@ -1484,7 +1472,28 @@ function initVpcStore(store) {
             size: "small",
             default: "",
             invalid: invalidSubnetTierName,
-            invalidText: invalidSubnetTierText,
+            /**
+             * get invalid subnet tier text
+             * @param {*} stateData
+             * @param {*} componentProps
+             * @returns {string} invalid text
+             */
+            invalidText: function invalidSubnetTierText(
+              stateData,
+              componentProps
+            ) {
+              if (
+                splatContains(
+                  componentProps.craig.store.subnetTiers[
+                    componentProps.vpc_name
+                  ],
+                  "name",
+                  stateData.name
+                )
+              )
+                return duplicateNameCallback(stateData.name);
+              else return genericNameCallback();
+            },
             readOnly: readOnlyWhenEdgeTier,
           },
           zones: {

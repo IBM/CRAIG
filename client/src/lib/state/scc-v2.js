@@ -6,8 +6,8 @@ const {
   selectInvalidText,
   titleCaseRender,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
 const { setUnfoundResourceGroup } = require("./store.utils");
+const { nameField } = require("./reusable-fields");
 
 /**
  * init scc v2 store
@@ -98,11 +98,7 @@ function initSccV2(store) {
           "profile_attachments"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("profile_attachments"),
-            invalidText: invalidNameText("profile_attachments"),
-          },
+          name: nameField("profile_attachments"),
           profile: {
             type: "select",
             default: "",

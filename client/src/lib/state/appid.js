@@ -7,13 +7,11 @@ const {
 } = require("./store.utils");
 const {
   shouldDisableComponentSave,
-  fieldIsNullOrEmptyString,
   resourceGroupsField,
   hideWhenUseData,
-  nameHelperText,
   encryptionKeyGroups,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * atracker on store update
@@ -129,13 +127,7 @@ function initAppIdStore(store) {
         labelText: "Use Existing Instance",
         size: "small",
       },
-      name: {
-        default: "",
-        invalid: invalidName("appid"),
-        invalidText: invalidNameText("appid"),
-        helperText: nameHelperText,
-        size: "small",
-      },
+      name: nameField("appid", { size: "small" }),
       resource_group: resourceGroupsField(true),
       encryption_key: {
         labelText: "(Optional) Encryption Key",
@@ -157,11 +149,7 @@ function initAppIdStore(store) {
           "keys"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("appid_key"),
-            invalidText: invalidNameText("appid_key"),
-          },
+          name: nameField("appid_key"),
         },
       },
     },

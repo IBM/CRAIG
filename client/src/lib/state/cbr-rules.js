@@ -8,7 +8,7 @@ const {
   unconditionalInvalidText,
 } = require("./utils");
 const { invalidCbrRule } = require("../forms/invalid-callbacks");
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize cbr rules in store
@@ -246,11 +246,7 @@ function initCbrRules(store) {
       "cbr_rules"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("cbr_rules"),
-        invalidText: invalidNameText("cbr_rules"),
-      },
+      name: nameField("cbr_rules"),
       description: {
         default: "",
         type: "textArea",
@@ -300,11 +296,7 @@ function initCbrRules(store) {
           "contexts"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("contexts"),
-            invalidText: invalidNameText("contexts"),
-          },
+          name: nameField("contexts"),
           value: {
             default: "",
             invalid: function (stateData) {
@@ -324,11 +316,7 @@ function initCbrRules(store) {
           "resource_attributes"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("resource_attributes"),
-            invalidText: invalidNameText("resource_attributes"),
-          },
+          name: nameField("resource_attributes"),
           value: {
             default: "",
             invalid: function (stateData) {
@@ -348,11 +336,7 @@ function initCbrRules(store) {
           "tags"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("tags"),
-            invalidText: invalidNameText("tags"),
-          },
+          name: nameField("tags"),
           value: {
             default: "",
             invalid: function (stateData) {

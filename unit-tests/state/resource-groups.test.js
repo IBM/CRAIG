@@ -186,8 +186,176 @@ describe("resource_groups", () => {
     beforeEach(() => {
       craig = new newState();
     });
+    it("should return true if resource group has a duplicate name", () => {
+      let actualData = craig.resource_groups.name.invalid(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                resource_groups: [
+                  {
+                    name: "test",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if resource group has empty string as name", () => {
+      let actualData = craig.resource_groups.name.invalid(
+        {
+          name: "",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                resource_groups: [
+                  {
+                    name: "egg",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "egg",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if resource group is not using data and name invalid", () => {
+      let actualData = craig.resource_groups.name.invalid(
+        {
+          name: "AAA",
+          use_data: false,
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                resource_groups: [
+                  {
+                    name: "egg",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "egg",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
     describe("craig.resource_groups.name.helperText", () => {
+      it("should return the correct text when an otherwise invalid name is passed", () => {
+        let actualData = craig.resource_groups.name.invalidText(
+          {
+            name: "AAAAAA",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  resource_groups: [
+                    {
+                      name: "test",
+                    },
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        );
+        assert.deepEqual(
+          actualData,
+          "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+          "it should return correct message"
+        );
+      });
+      it("should return the correct text when a duplicate name is passed", () => {
+        let actualData = craig.resource_groups.name.invalidText(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  resource_groups: [
+                    {
+                      name: "test",
+                    },
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "frog",
+            },
+          }
+        );
+        assert.deepEqual(
+          actualData,
+          'Name "test" already in use',
+          "it should return correct message"
+        );
+      });
       it("should return the correct helper text when using prefix", () => {
+        let actualData = craig.resource_groups.name.helperText(
+          {
+            name: "test",
+            use_prefix: true,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "iac",
+                  },
+                },
+              },
+            },
+          }
+        );
+        assert.deepEqual(
+          actualData,
+          "iac-test",
+          "it should return correct data"
+        );
+      });
+      it("should return the correct helper text when using data", () => {
         let actualData = craig.resource_groups.name.helperText(
           {
             name: "test",

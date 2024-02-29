@@ -296,6 +296,129 @@ describe("cbr_rules", () => {
     });
   });
   describe("cbr-rules.schema", () => {
+    it("should return true when a cbr context with the same name", () => {
+      let actualData = craig.cbr_rules.contexts.name.invalid(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "hi",
+                    contexts: [
+                      {
+                        name: "test",
+                      },
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true when a cbr rule with the same name", () => {
+      let actualData = craig.cbr_rules.name.invalid(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "test",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true when a cbr resource attribute with the same name", () => {
+      let actualData = craig.cbr_rules.resource_attributes.name.invalid(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "hi",
+                    resource_attributes: [
+                      {
+                        name: "test",
+                      },
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true when a cbr tag with the same name", () => {
+      let actualData = craig.cbr_rules.tags.name.invalid(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                cbr_rules: [
+                  {
+                    name: "hi",
+                    tags: [
+                      {
+                        name: "test",
+                      },
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
     it("should return correct groups for enfocement mode", () => {
       assert.deepEqual(
         craig.cbr_rules.enforcement_mode.groups(),

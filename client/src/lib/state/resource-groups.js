@@ -1,6 +1,6 @@
 const { splat } = require("lazy-z");
 const { shouldDisableComponentSave, hideWhenUseData } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize resource groups
@@ -132,10 +132,7 @@ function initResourceGroup(store) {
     delete: resourceGroupDelete,
     shouldDisableSave: shouldDisableComponentSave(["name"], "resource_groups"),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("resource_groups"),
-        invalidText: invalidNameText("resource_groups"),
+      name: nameField("resource_groups", {
         helperText:
           /**
            * create helper text for resource group name
@@ -156,7 +153,7 @@ function initResourceGroup(store) {
                 : "") + stateData.name
             );
           },
-      },
+      }),
       use_data: {
         type: "toggle",
         default: false,

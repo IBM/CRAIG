@@ -6,7 +6,6 @@ const {
   contains,
   isNullOrEmptyString,
 } = require("lazy-z");
-const { invalidName, invalidNameText } = require("../forms");
 const {
   resourceGroupsField,
   selectInvalidText,
@@ -24,6 +23,7 @@ const {
   updateSubChild,
   deleteSubChild,
 } = require("./store.utils");
+const { nameField } = require("./reusable-fields");
 
 /**
  * init cis
@@ -62,12 +62,7 @@ function initCis(store) {
       "cis"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("cis"),
-        invalidText: invalidNameText("cis"),
-        size: "small",
-      },
+      name: nameField("cis", { size: "small" }),
       resource_group: resourceGroupsField(true, true),
       plan: {
         type: "select",
@@ -179,11 +174,7 @@ function initCis(store) {
           "dns_records"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("cis_dns_record"),
-            invalidText: invalidNameText("cis_dns_record"),
-          },
+          name: nameField("cis_dns_record"),
           type: {
             default: "",
             labelText: "DNS Record Type",

@@ -1,13 +1,12 @@
 // schema files should be used when files are large
-const { contains, isNullOrEmptyString } = require("lazy-z");
-const { invalidName } = require("../../forms/invalid-callbacks");
-const { invalidNameText } = require("../../forms/text-callbacks");
+const { contains } = require("lazy-z");
 const {
   resourceGroupsField,
   fieldIsNullOrEmptyString,
   selectInvalidText,
   hideWhenUseData,
 } = require("../utils");
+const { invalidName, invalidNameText } = require("../reusable-fields");
 
 /**
  * check if vpc name field is invalid

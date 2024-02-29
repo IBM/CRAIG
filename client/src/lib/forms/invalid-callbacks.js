@@ -1,10 +1,8 @@
 const {
   isNullOrEmptyString,
   contains,
-  containsKeys,
   splatContains,
   isIpv4CidrOrAddress,
-  transpose,
   isEmpty,
   kebabCase,
   isString,
@@ -19,7 +17,6 @@ const {
   ipRangeExpression,
   sccScopeDescriptionValidation,
 } = require("../constants");
-const { hasDuplicateName } = require("./duplicate-name");
 
 /**
  * check to see if a resource has a valid name
@@ -28,78 +25,6 @@ const { hasDuplicateName } = require("./duplicate-name");
  */
 function invalidNewResourceName(str) {
   return str ? str.match(newResourceNameExp) === null : true;
-}
-
-/**
- * create invalid bool for resource
- * @param {string} field json field name
- * @param {*} craig subnet craig data
- * @returns {Function} text should be invalid function
- */
-function invalidName(field, craig) {
-  /**
-   * create invalid for resource
-   * @param {Object} stateData
-   * @param {boolean} stateData.use_prefix
-   * @param {Object} componentProps
-   * @param {string=} overrideField field to override
-   * @returns {string} invalid text
-   */
-  function nameCheck(stateData, componentProps, overrideField) {
-    let stateField = overrideField || "name";
-    if (!stateData.name) {
-      return true;
-    } else if (containsKeys(stateData, "scope_description")) {
-      // easiest way to get scc
-      return (
-        stateData[stateField] === "" ||
-        invalidNewResourceName(stateData[stateField])
-      );
-    } else {
-      return (
-        hasDuplicateName(field, stateData, componentProps, overrideField) ||
-        // prevent classic vlans with names that include prefix longer than 20 characters
-        (field === "classic_vlans" &&
-          stateData.name &&
-          stateData.name.length +
-            1 +
-            componentProps.craig.store.json._options.prefix.length >
-            20) ||
-        stateData[stateField] === "" ||
-        (!stateData.use_data && invalidNewResourceName(stateData[stateField]))
-      );
-    }
-  }
-
-  if (field === "vpcs") {
-    /**
-     * invalid vpc field check
-     * @param {string} field name
-     * @param {Object} stateData
-     * @param {Object} componentProps
-     */
-    return function (field, stateData, componentProps) {
-      if (field === "name") {
-        return invalidName("vpc_name")(stateData, componentProps);
-      } else if (isNullOrEmptyString(stateData[field])) {
-        return false;
-      } else if (field === "default_network_acl_name") {
-        return invalidName("acls")(stateData, componentProps, field);
-      } else if (field === "default_security_group_name") {
-        return invalidName("security_groups")(stateData, componentProps, field);
-      } else {
-        return invalidName("routing_tables")(stateData, componentProps, field);
-      }
-    };
-  } else if (field === "subnet") {
-    return function (stateData, componentProps) {
-      let propsCopy = { craig: craig };
-      transpose(componentProps, propsCopy);
-      if (componentProps.vpc_name)
-        return invalidName("subnet_name")(stateData, propsCopy);
-      else return false;
-    };
-  } else return nameCheck;
 }
 
 /**
@@ -472,7 +397,6 @@ function invalidCrns(stateData) {
 }
 
 module.exports = {
-  invalidName,
   invalidNewResourceName,
   invalidCrnList,
   validSshKey,

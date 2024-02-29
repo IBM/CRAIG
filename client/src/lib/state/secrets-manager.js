@@ -1,4 +1,4 @@
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 const { setUnfoundResourceGroup } = require("./store.utils");
 const {
   setKmsFromKeyOnStoreUpdate,
@@ -92,11 +92,7 @@ function initSecretsManagerStore(store) {
         default: false,
         labelText: "Use Existing Instance",
       },
-      name: {
-        default: "",
-        invalid: invalidName("secrets_manager"),
-        invalidText: invalidNameText("secrets_manager"),
-      },
+      name: nameField("secrets_manager"),
       resource_group: resourceGroupsField(),
       plan: {
         type: "select",

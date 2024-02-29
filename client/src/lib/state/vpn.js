@@ -21,7 +21,7 @@ const {
   ipCidrListTextArea,
   unconditionalInvalidText,
 } = require("./utils");
-const { invalidName, invalidNameText, invalidCidrBlock } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize vpn gateway
@@ -117,11 +117,7 @@ function initVpnGatewayStore(store) {
       "vpn_gateways"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("vpn_gateways"),
-        invaidText: invalidNameText("vpn_gateways"),
-      },
+      name: nameField("vpn_gateways"),
       resource_group: resourceGroupsField(),
       vpc: {
         labelText: "VPC",
@@ -199,11 +195,7 @@ function initVpnGatewayStore(store) {
           "connections"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("connections"),
-            invalidText: invalidNameText("connections"),
-          },
+          name: nameField("connections"),
           peer_address: {
             default: "",
             invalid: function (stateData) {

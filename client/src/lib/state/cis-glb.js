@@ -21,10 +21,10 @@ const {
   selectInvalidText,
   timeToLive,
 } = require("./utils");
-const { invalidNameText, invalidName } = require("../forms");
 const { invalidDescription } = require("../forms/invalid-callbacks");
 const { RegexButWithWords } = require("regex-but-with-words");
 const { domainValidationExp } = require("../constants");
+const { nameField } = require("./reusable-fields");
 
 /**
  * get list of cis pool names
@@ -82,11 +82,7 @@ function initCisGlbStore(store) {
       "cis_glbs"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("cis_glbs"),
-        invalidName: invalidNameText("cis_glbs"),
-      },
+      name: nameField("cis_glbs"),
       cis: {
         labelText: "CIS Instance",
         type: "select",
@@ -186,11 +182,7 @@ function initCisGlbStore(store) {
           "origins"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("origins"),
-            invalidText: invalidNameText("origins"),
-          },
+          name: nameField("origins"),
           address: {
             default: "",
             placeholder: "X.X.X.X",
@@ -343,12 +335,7 @@ function initCisGlbStore(store) {
           "health_checks"
         ),
         schema: {
-          name: {
-            size: "small",
-            default: "",
-            invalid: invalidName("health_checks"),
-            invalidText: invalidNameText("health_checks"),
-          },
+          name: nameField("health_checks"),
           allow_insecure: {
             size: "small",
             type: "toggle",
