@@ -110,6 +110,7 @@ export class DynamicSubnetTierForm extends React.Component {
         formInSubForm={this.props.formInSubForm}
         onShowToggle={this.props.onShowToggle}
         index={this.props.subnetTierIndex}
+        isLast={this.props.isLast}
       />
     );
   }

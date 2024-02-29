@@ -52,6 +52,7 @@ function optionsInit(config) {
     enable_power_vs: false,
     power_vs_zones: [],
     craig_version: releaseNotes[0].version,
+    no_vpn_secrets_manager_auth: false,
   };
 }
 
@@ -339,6 +340,15 @@ function initOptions(store) {
           content:
             "Tags are used to identify resources. These tags will be added to each resource in your configuration that supports tags",
           align: "right",
+        },
+      },
+      no_vpn_secrets_manager_auth: {
+        type: "toggle",
+        default: false,
+        labelText: "Disable VPN Server to Secrets Manager Authorization",
+        tooltip: {
+          content:
+            "By default when creating a VPN Server, an authorization policy is created to allow for VPN Servers to read from Secrets Manager instances within the target cloud account. Use this toggle to disable this behavior",
         },
       },
     },

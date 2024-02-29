@@ -1059,6 +1059,7 @@ const SubnetsPage = (craig) => {
               formInSubForm
               onShowToggle={this.onShowToggle}
               hide={!contains(this.state.shownForms, tierIndex)}
+              isLast={tierIndex + 1 === tiers.length}
             />
           ))}
         </>

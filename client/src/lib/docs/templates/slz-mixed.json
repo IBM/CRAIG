@@ -12,7 +12,8 @@
     "enable_power_vs": false,
     "power_vs_zones": [],
     "craig_version": "1.12.0",
-    "power_vs_high_availability": false
+    "power_vs_high_availability": false,
+    "no_vpn_secrets_manager_auth": false
   },
   "access_groups": [],
   "appid": [],

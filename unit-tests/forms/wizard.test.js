@@ -59,6 +59,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -973,6 +974,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -1886,6 +1888,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -2393,6 +2396,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -2891,6 +2895,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -3465,6 +3470,7 @@ describe("setup wizard", () => {
         enable_classic: false,
         power_vs_zones: [],
         craig_version: "1.12.1",
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -3632,6 +3638,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -4199,6 +4206,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -4740,6 +4748,7 @@ describe("setup wizard", () => {
         power_vs_zones: [],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -5285,6 +5294,7 @@ describe("setup wizard", () => {
         enable_classic: false,
         power_vs_zones: [],
         craig_version: "1.12.1",
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -5774,6 +5784,7 @@ describe("setup wizard", () => {
         power_vs_zones: ["dal10"],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },
@@ -6272,6 +6283,7 @@ describe("setup wizard", () => {
         power_vs_zones: ["dal10"],
         craig_version: "1.12.1",
         power_vs_high_availability: false,
+        no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
         { use_prefix: true, name: "service-rg", use_data: false },

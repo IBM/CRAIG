@@ -218,6 +218,8 @@ class ClassicDiagram extends React.Component {
                 .replace("Vlans", "VLANs")
                 .replace("Ssh", "SSH")
                 .replace(/s$/g, "")}`}
+              className="marginBottomSmall"
+              type="subHeading"
             />
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (

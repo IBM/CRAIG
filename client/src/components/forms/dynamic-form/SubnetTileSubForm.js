@@ -50,7 +50,7 @@ export const SubnetTileSubForm = (props) => {
           : props.parentProps.isModal
           ? "subForm"
           : "formInSubForm"
-      } marginTop1Rem ${props.parentProps.isModal ? "marginBottomNone" : ""}`}
+      } marginTop1Rem marginBottomNone`}
     >
       <CraigFormHeading name="Subnets" type="subHeading" noMarginBottom />
       <div className="displayFlex">

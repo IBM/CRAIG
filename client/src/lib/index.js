@@ -111,8 +111,11 @@ const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
 const { state } = require("./state");
 const { invalidForms } = require("./invalid-forms");
+const { allDocText, filterDocs } = require("./docs");
 
 module.exports = {
+  allDocText,
+  filterDocs,
   shouldDisplayService,
   getDisplaySubnetTiers,
   formatClassicSshKey,

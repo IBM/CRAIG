@@ -10,11 +10,13 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users can now use the `Trial` plan for secrets manager
+- Users can now disable the VPN Server to Secrets Manager Authorization policy from the Options form
 
 ### Fixes
 
 - Fixed an issue causing the VPN Server page to crash when opening the creation modal
 - Fixed an issue causing Secrets Manager data sources to always be invalid on validation
+- Various visual bug fixes
 
 ## 1.12.0
 

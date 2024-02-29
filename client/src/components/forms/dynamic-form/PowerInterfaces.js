@@ -7,12 +7,17 @@ import { CraigFormGroup } from "../utils";
 
 export const PowerInterfaces = (props) => {
   return contains(["Power Instances", "VTL"], props.componentProps.formName) ? (
-    <div className="formInSubForm">
+    <div className="formInSubForm marginTop1Rem">
       {props.stateData.network.map((nw, index) => {
         return (
           <CraigFormGroup
             key={nw.name + "-group"}
-            className="alignItemsCenter marginBottomSmall"
+            className={
+              "alignItemsCenter " +
+              (index + 1 === props.stateData.network.length
+                ? "marginBottomNone"
+                : "")
+            }
           >
             <Network_3 className="powerIpMargin" />
             <div className="powerIpMargin fieldWidth">

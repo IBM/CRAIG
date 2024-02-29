@@ -425,9 +425,16 @@ class CloudServicesPage extends React.Component {
                   : this.state.modalService === "scc_v2"
                   ? "Security & Compliance Center"
                   : titleCase(this.state.modalService)
-              )}${
+              )
+                .replace(
+                  contains(["dns", "event_streams"]) ? "" : /s(?=$)/g,
+                  ""
+                )
+                .replace("Dns", "DNS")}${
                 this.state.modalService === "resource_groups" ? "" : " Service"
               }`}
+              type="subHeading"
+              className="marginBottomSmall"
             />
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (
