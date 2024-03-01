@@ -689,6 +689,194 @@ describe("clusters", () => {
       beforeEach(() => {
         craig = newState();
       });
+      it("should return true if arbitrary_secret_name has empty string as name", () => {
+        let actualData =
+          craig.clusters.opaque_secrets.arbitrary_secret_name.invalid(
+            {
+              arbitrary_secret_name: "",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    secrets_manager: [],
+                    clusters: [
+                      {
+                        opaque_secrets: [{ arbitrary_secret_name: "frog" }],
+                      },
+                    ],
+                  },
+                },
+              },
+              data: {
+                arbitrary_secret_name: "egg",
+              },
+            }
+          );
+        assert.isTrue(actualData, "it should be true");
+      });
+      it("should return true if opaque_secrets has a duplicate name", () => {
+        let actualData = craig.clusters.opaque_secrets.name.invalid(
+          {
+            name: "frog",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  clusters: [
+                    {
+                      opaque_secrets: [{ name: "frog" }],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "egg",
+            },
+          }
+        );
+        assert.isTrue(actualData, "it should be true");
+      });
+      it("should return true if opaque_secrets has an invalid name", () => {
+        let actualData = craig.clusters.opaque_secrets.name.invalid(
+          {
+            name: "AAAA",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  clusters: [
+                    {
+                      opaque_secrets: [{ name: "frog" }],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              name: "egg",
+            },
+          }
+        );
+        assert.isTrue(actualData, "it should be true");
+      });
+      it("should return true if secrets_group has is empty", () => {
+        let actualData = craig.clusters.opaque_secrets.secrets_group.invalid(
+          {
+            secrets_group: "",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  clusters: [
+                    {
+                      opaque_secrets: [{ secrets_group: "frog" }],
+                    },
+                  ],
+                },
+              },
+            },
+            data: {
+              secerts_group: "egg",
+            },
+          }
+        );
+        assert.isTrue(actualData, "it should be true");
+      });
+      it("should return true if username_password_secret_name is a duplicate", () => {
+        let actualData =
+          craig.clusters.opaque_secrets.username_password_secret_name.invalid(
+            {
+              username_password_secret_name: "frog",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    secrets_manager: [],
+                    clusters: [
+                      {
+                        opaque_secrets: [
+                          { username_password_secret_name: "frog" },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+              data: {
+                username_password_secret_name: "egg",
+              },
+            }
+          );
+        assert.isTrue(actualData, "it should be true");
+      });
+      it("should return correct text if arbitrary_secret_name is invalid", () => {
+        let actualData =
+          craig.clusters.opaque_secrets.arbitrary_secret_name.invalidText(
+            {
+              arbitrary_secret_name: "AAAA",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    secrets_manager: [],
+                    clusters: [
+                      {
+                        opaque_secrets: [{ arbitrary_secret_name: "frog" }],
+                      },
+                    ],
+                  },
+                },
+              },
+              data: {
+                arbitrary_secret_name: "egg",
+              },
+            }
+          );
+        assert.deepEqual(
+          actualData,
+          "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+          "it should return the correct text"
+        );
+      });
+      it("should return correct text if arbitrary_secret_name is a duplicate", () => {
+        let actualData =
+          craig.clusters.opaque_secrets.arbitrary_secret_name.invalidText(
+            {
+              name: "frog",
+              secrets_group: "frog",
+              arbitrary_secret_name: "frog",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    secrets_manager: [],
+                    clusters: [
+                      {
+                        opaque_secrets: [{ arbitrary_secret_name: "frog" }],
+                      },
+                    ],
+                  },
+                },
+              },
+              data: {
+                arbitrary_secret_name: "egg",
+              },
+            }
+          );
+        assert.deepEqual(
+          actualData,
+          `Name "frog" already in use`,
+          "it should return the correct text"
+        );
+      });
       it("should return groups for secrets manager", () => {
         assert.deepEqual(
           craig.clusters.opaque_secrets.secrets_manager.groups(

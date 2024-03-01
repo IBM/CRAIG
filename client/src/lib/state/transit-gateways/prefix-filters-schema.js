@@ -5,7 +5,6 @@ const {
   isIpv4CidrOrAddress,
   contains,
 } = require("lazy-z");
-const { invalidName, invalidNameText } = require("../../forms");
 const {
   fieldIsNullOrEmptyString,
   selectInvalidText,
@@ -13,14 +12,11 @@ const {
   wholeNumberText,
   unconditionalInvalidText,
 } = require("../utils");
+const { nameField } = require("../reusable-fields");
 
 function prefixFiltersSchema() {
   return {
-    name: {
-      default: "",
-      invalid: invalidName("prefix_filters"),
-      invalidText: invalidNameText("prefix_filters"),
-    },
+    name: nameField("prefix_filters"),
     connection_type: {
       type: "select",
       default: "",

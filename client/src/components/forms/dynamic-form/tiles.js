@@ -1,6 +1,7 @@
 import { Add, CloudAlerting } from "@carbon/icons-react";
 import { Tile } from "@carbon/react";
 import { contains } from "lazy-z";
+import { RenderForm } from "../utils";
 
 export const ClassicDisabledTile = (isSubComponent) => {
   return (
@@ -91,7 +92,10 @@ export const CraigEmptyResourceTile = (props) => {
       ) : (
         <>
           Click
-          <Add size="24" className="inlineIconMargin" />
+          {RenderForm(props.customIcon ? props.customIcon : Add, {
+            size: "24",
+            className: "inlineIconMargin",
+          })}
           button to add one.
         </>
       )}

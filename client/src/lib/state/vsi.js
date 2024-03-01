@@ -30,6 +30,7 @@ const {
   vpcSshKeyMultiselect,
 } = require("./utils");
 const { invalidNameText, invalidName } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize vsi
@@ -376,12 +377,9 @@ function initVsiStore(store) {
       "vsi"
     ),
     schema: {
-      name: {
+      name: nameField("vsi", {
         size: "small",
-        default: "",
-        invalid: invalidName("vsi"),
-        invalidText: invalidNameText("vsi"),
-      },
+      }),
       resource_group: resourceGroupsField(true),
       vpc: {
         type: "select",
@@ -471,11 +469,7 @@ function initVsiStore(store) {
           "volumes"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("volume"),
-            invalidText: invalidNameText("volume"),
-          },
+          name: nameField("volume"),
           profile: {
             type: "select",
             groups: ["3iops-tier", "5iops-tier", "10iops-tier"],

@@ -96,6 +96,17 @@ function Home(props) {
                     {
                       tags: craig.options.tags,
                     },
+                    {
+                      heading: {
+                        name: "Additional Options",
+                        type: "subHeading",
+                        className: "marginBottomSmall",
+                      },
+                    },
+                    {
+                      no_vpn_secrets_manager_auth:
+                        craig.options.no_vpn_secrets_manager_auth,
+                    },
                   ],
                 },
               }}

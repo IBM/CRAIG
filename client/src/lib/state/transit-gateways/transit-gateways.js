@@ -11,7 +11,6 @@ const { edgeRouterEnabledZones } = require("../../constants");
 const { invalidCrnList } = require("../../forms");
 const {
   resourceGroupsField,
-  nameField,
   shouldDisableComponentSave,
   fieldIsNullOrEmptyString,
 } = require("../utils");
@@ -22,6 +21,7 @@ const {
 } = require("../store.utils");
 const { greTunnelSchema } = require("./gre-tunnel-schema");
 const { prefixFiltersSchema } = require("./prefix-filters-schema");
+const { nameField } = require("../reusable-fields");
 
 /**
  * initialize transit gateway

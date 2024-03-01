@@ -354,7 +354,10 @@ class CraigToggleForm extends React.Component {
                         </span>
                         <br />
                         <br />
-                        <span className="bold">This cannot be undone</span>
+                        <span className="bold">
+                          This will disable CRAIG managed subnets. This cannot
+                          be undone
+                        </span>
                       </>
                     }
                     onModalClose={this.dismissImportConfirmationChanges}

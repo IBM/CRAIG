@@ -14,8 +14,6 @@ const {
   isEmpty,
   isInRange,
   revision,
-  isWholeNumber,
-  nestedSplat,
   contains,
 } = require("lazy-z");
 const {
@@ -31,13 +29,13 @@ const {
   fieldIsNotWholeNumber,
   timeToLive,
 } = require("./utils");
-const {
-  invalidName,
-  invalidDescription,
-} = require("../forms/invalid-callbacks");
-const { invalidNameText } = require("../forms/text-callbacks");
-const { hasDuplicateName } = require("../forms");
+const { invalidDescription } = require("../forms/invalid-callbacks");
 const { dnsZoneNameExp } = require("../constants");
+const {
+  nameField,
+  hasDuplicateName,
+  invalidNameText,
+} = require("./reusable-fields");
 
 function dnsInit(config) {
   config.store.json.dns = [];
@@ -267,12 +265,7 @@ function initDnsStore(store) {
       "dns"
     ),
     schema: {
-      name: {
-        size: "small",
-        default: "",
-        invalid: invalidName("dns"),
-        invalidText: invalidNameText("dns"),
-      },
+      name: nameField("dns", { size: "small" }),
       plan: {
         size: "small",
         type: "select",
@@ -435,12 +428,7 @@ function initDnsStore(store) {
             },
             hideWhen: hideWhenNotVsi,
           },
-          name: {
-            size: "small",
-            default: "",
-            invalid: invalidName("records"),
-            invalidText: invalidNameText("records"),
-          },
+          name: nameField("records", { size: "small" }),
           dns_zone: {
             size: "small",
             labelText: "DNS Zone",
@@ -581,12 +569,7 @@ function initDnsStore(store) {
           "custom_resolvers"
         ),
         schema: {
-          name: {
-            size: "small",
-            default: "",
-            invalid: invalidName("custom_resolvers"),
-            invalidText: invalidNameText("custom_resolvers"),
-          },
+          name: nameField("custom_resolvers", { size: "small" }),
           vpc: {
             size: "small",
             type: "select",

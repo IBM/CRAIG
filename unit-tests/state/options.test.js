@@ -29,6 +29,7 @@ describe("options", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: releaseNotes[0].version,
+        no_vpn_secrets_manager_auth: false,
       };
       assert.deepEqual(
         state.store.json._options,
@@ -149,6 +150,7 @@ describe("options", () => {
         enable_power_vs: false,
         power_vs_zones: [],
         craig_version: "1.3.0",
+        no_vpn_secrets_manager_auth: false,
       };
       assert.deepEqual(
         oState.store.json._options,

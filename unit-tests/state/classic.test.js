@@ -292,6 +292,33 @@ describe("classic", () => {
     });
     describe("classic_vlans.schema", () => {
       describe("classic_vlans.name", () => {
+        it("should return the correct text when a classic vlan that has a name greater than 20 characters is passed", () => {
+          let actualData = newState().classic_vlans.name.invalidText(
+            {
+              name: "sixteencharacters",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "iac",
+                    },
+                    classic_vlans: [],
+                  },
+                },
+              },
+              data: {
+                name: "frog",
+              },
+            }
+          );
+          assert.deepEqual(
+            actualData,
+            "Classic VLAN names must be 20 or fewer characters including the environment prefix",
+            "it should return correct message"
+          );
+        });
         describe("classic_vlans.name.helperText", () => {
           it("should return helper text", () => {
             let craig = newState();
@@ -311,6 +338,48 @@ describe("classic", () => {
                 }
               ),
               "frog-frog",
+              "it should return correct helper text"
+            );
+          });
+          it("should return helper text", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.name.helperText(
+                {},
+                {
+                  craig: {
+                    store: {
+                      json: {
+                        _options: {
+                          prefix: "frog",
+                        },
+                      },
+                    },
+                  },
+                }
+              ),
+              "frog-",
+              "it should return correct helper text"
+            );
+          });
+          it("should return helper text", () => {
+            let craig = newState();
+            assert.deepEqual(
+              craig.classic_vlans.name.helperText(
+                { use_data: true },
+                {
+                  craig: {
+                    store: {
+                      json: {
+                        _options: {
+                          prefix: "frog",
+                        },
+                      },
+                    },
+                  },
+                }
+              ),
+              "",
               "it should return correct helper text"
             );
           });

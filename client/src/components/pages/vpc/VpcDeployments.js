@@ -343,6 +343,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                   ? "New SSH Key"
                   : "New " + this.selectRenderValue() + " Deployment"
               }
+              type="subHeading"
               className="marginBottomSmall"
             />
           )}

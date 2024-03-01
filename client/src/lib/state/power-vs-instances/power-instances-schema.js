@@ -10,7 +10,6 @@ const {
   splatContains,
   carve,
 } = require("lazy-z");
-const { invalidName, invalidNameText } = require("../../forms");
 const {
   fieldIsNullOrEmptyString,
   selectInvalidText,
@@ -28,6 +27,7 @@ const {
   powerStoragePoolSelect,
 } = require("../utils");
 const { sapProfiles, systemTypes } = require("../../constants");
+const { nameField } = require("../reusable-fields");
 
 /**
  * Network invalidation for powerVs instance
@@ -142,12 +142,7 @@ function powerVsInstanceInvalidText(text) {
  */
 function powerVsInstanceSchema(vtl) {
   return {
-    name: {
-      default: "",
-      invalid: invalidName("power_instances"),
-      invalidText: invalidNameText("power_instances"),
-      size: "small",
-    },
+    name: nameField("power_instances", { size: "small" }),
     sap: {
       default: false,
       type: "toggle",

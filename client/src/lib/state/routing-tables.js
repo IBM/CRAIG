@@ -21,7 +21,7 @@ const {
   vpcGroups,
   unconditionalInvalidText,
 } = require("./utils");
-const { invalidNameText, invalidName } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize routing table in slz store
@@ -131,11 +131,7 @@ function initRoutingTable(store) {
       "routing_tables"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("routing_tables"),
-        invalidText: invalidNameText("routing_tables"),
-      },
+      name: nameField("routing_tables"),
       vpc: {
         type: "select",
         default: "",
@@ -216,12 +212,9 @@ function initRoutingTable(store) {
           "routes"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("routes"),
-            invalidText: invalidNameText("routes"),
+          name: nameField("routes", {
             size: "small",
-          },
+          }),
           zone: {
             default: "",
             invalid: fieldIsNullOrEmptyString("zone"),

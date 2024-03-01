@@ -1,7 +1,7 @@
 import React from "react";
 import { Docs } from "../forms/utils";
 const { docs } = require("../../lib");
-const { filterDocs } = require("../../lib/forms/filters");
+const { filterDocs } = require("../../lib");
 
 /**
  * return render docs function

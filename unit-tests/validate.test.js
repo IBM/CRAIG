@@ -395,6 +395,7 @@ const minimumValidJson = (data) => {
             resource_group: "slz-workload-rg",
             public_gateway: false,
             has_prefix: true,
+            use_data: true,
           },
           {
             vpc: "workload",

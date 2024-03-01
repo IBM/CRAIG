@@ -3,7 +3,6 @@ const {
   kebabCase,
   isNullOrEmptyString,
   titleCase,
-  keyCheck,
   contains,
 } = require("lazy-z");
 const { rgIdRef, tfBlock, jsonToTfPrint, kebabName } = require("./utils");
@@ -305,7 +304,10 @@ function formatVpnServerRoute(server, route, config) {
  */
 function vpnServerTf(config) {
   let tf = "";
-  if (config.vpn_servers.length > 0) {
+  if (
+    config.vpn_servers.length > 0 &&
+    !config._options.no_vpn_secrets_manager_auth
+  ) {
     tf += jsonToTfPrint(
       "resource",
       "ibm_iam_authorization_policy",

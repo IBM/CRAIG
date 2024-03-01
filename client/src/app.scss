@@ -1276,11 +1276,11 @@ div .sgFormTopMargin {
 }
 
 .marginBottomNone {
-  margin-bottom: 0rem;
+  margin-bottom: 0rem !important;
 }
 
 .marginTop1Rem {
-  margin-top: 1rem;
+  margin-top: 1rem !important;
 }
 
 .marginLeftHalfRem {
@@ -1326,6 +1326,10 @@ div .sgFormTopMargin {
 
 .widthOneThird {
   width: 33%;
+}
+
+.minWidth6Rem {
+  min-width: 6rem;
 }
 
 .powerSubnetBox {

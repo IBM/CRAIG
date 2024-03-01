@@ -14,11 +14,8 @@ const {
   kebabCaseInput,
   titleCaseRender,
 } = require("./utils");
-const {
-  invalidName,
-  invalidNameText,
-  invalidNewResourceName,
-} = require("../forms");
+const { invalidNewResourceName } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize key management in slz store
@@ -254,11 +251,7 @@ function initKeyManagement(store) {
           return stateData.use_hs_crypto;
         },
       },
-      name: {
-        default: "",
-        invalid: invalidName("key_management"),
-        invalidText: invalidNameText("key_management"),
-      },
+      name: nameField("key_management"),
       resource_group: resourceGroupsField(),
       authorize_vpc_reader_role: {
         type: "toggle",
@@ -282,11 +275,7 @@ function initKeyManagement(store) {
           "keys"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("encryption_keys"),
-            invalidText: invalidNameText("encryption_keys"),
-          },
+          name: nameField("encryption_keys"),
           key_ring: {
             default: "",
             invalid: function (stateData) {

@@ -10,7 +10,7 @@ const {
   titleCaseRender,
   kebabCaseInput,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * event streams on store update
@@ -94,12 +94,7 @@ function initEventStreams(store) {
       "event_streams"
     ),
     schema: {
-      name: {
-        size: "small",
-        default: "",
-        invalid: invalidName("event_streams"),
-        invalidText: invalidNameText("event_streams"),
-      },
+      name: nameField("event_streams", { size: "small" }),
       plan: {
         size: "small",
         type: "select",

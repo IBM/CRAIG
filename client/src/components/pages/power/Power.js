@@ -284,6 +284,8 @@ class PowerDiagram extends React.Component {
                   ? "FalconStor VTL"
                   : "Power Instance"
               }`}
+              className="marginBottomSmall"
+              type="subHeading"
             />
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (

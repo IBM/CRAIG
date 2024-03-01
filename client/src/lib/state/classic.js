@@ -4,9 +4,9 @@ const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
   selectInvalidText,
-  nameField,
   sshKeySchema,
 } = require("./utils");
+const { nameField } = require("./reusable-fields");
 
 /**
  * init store

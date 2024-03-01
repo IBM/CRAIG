@@ -1,12 +1,23 @@
 import React from "react";
-import { CraigFormHeading } from "../../forms/utils";
-import { GatewayPublic, VirtualPrivateCloud } from "@carbon/icons-react";
+import { CraigFormHeading, PrimaryButton } from "../../forms/utils";
+import {
+  GatewayPublic,
+  IbmCloudSubnets,
+  VirtualPrivateCloud,
+  FetchUploadCloud,
+} from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import "./diagrams.css";
-import { isNullOrEmptyString, splatContains } from "lazy-z";
+import {
+  arraySplatIndex,
+  contains,
+  isNullOrEmptyString,
+  splatContains,
+} from "lazy-z";
 import { DeploymentIcon } from "./DeploymentIcon";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
+import { Subnet } from "./Subnet";
 
 export const VpcMap = (props) => {
   let craig = props.craig;
@@ -132,6 +143,102 @@ export const VpcMap = (props) => {
                 );
               })}
             </div>
+            {vpc.use_data ? (
+              <div className="marginTop1Rem">
+                <HoverClassNameWrapper
+                  className={
+                    "formInSubForm " +
+                    (props.small ? "aclBoxSmall" : "aclBox") +
+                    (contains(vpcBoxClassName, "diagramBoxSelected")
+                      ? " diagramBoxSelected"
+                      : "")
+                  }
+                  hoverClassName="diagramBoxSelected"
+                  static={props.static}
+                >
+                  <CraigFormHeading
+                    name={"Imported Subnets"}
+                    icon={
+                      props.small ? undefined : (
+                        <IbmCloudSubnets className="diagramTitleIcon" />
+                      )
+                    }
+                    className={
+                      splatContains(vpc.subnets, "use_data", true) &&
+                      !props.small
+                        ? "marginBottomSmall"
+                        : ""
+                    }
+                    type={props.small ? "" : "subHeading"}
+                    buttons={
+                      props.small || !props.onImportModalClick ? (
+                        ""
+                      ) : (
+                        <PrimaryButton
+                          type="custom"
+                          customIcon={FetchUploadCloud}
+                          noDeleteButton
+                          hoverText="Import Existing Subnet"
+                          onClick={() => {
+                            props.onImportModalClick(vpcIndex);
+                          }}
+                        />
+                      )
+                    }
+                  />
+                  <div className="">
+                    <div className="displayFlex wrap overrideGap">
+                      {vpc.subnets
+                        .filter((subnet) => {
+                          if (subnet.use_data) return subnet;
+                        })
+                        .map((subnet, subnetIndex) => {
+                          return (
+                            <HoverClassNameWrapper
+                              style={
+                                props.small
+                                  ? {
+                                      maxWidth: "150px",
+                                    }
+                                  : {}
+                              }
+                              hoverClassName={
+                                props.small ? "" : "diagramBoxSelected"
+                              }
+                            >
+                              <Subnet
+                                onClick={
+                                  props.onImportedSubnetClick
+                                    ? () => {
+                                        props.onImportedSubnetClick(
+                                          vpcIndex,
+                                          arraySplatIndex(
+                                            vpc.subnets,
+                                            "name",
+                                            subnet.name
+                                          )
+                                        );
+                                      }
+                                    : undefined
+                                }
+                                key={
+                                  vpc.name + "-imported-subnet-" + subnetIndex
+                                }
+                                subnet={subnet}
+                                vpc={vpc}
+                                small={props.small}
+                                imported
+                              />
+                            </HoverClassNameWrapper>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </HoverClassNameWrapper>
+              </div>
+            ) : (
+              ""
+            )}
           </HoverClassNameWrapper>
         );
       })

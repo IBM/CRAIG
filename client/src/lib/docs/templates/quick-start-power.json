@@ -12,7 +12,8 @@
     "power_vs_zones": ["dal12"],
     "craig_version": "1.12.0",
     "power_vs_high_availability": false,
-    "fs_cloud": false
+    "fs_cloud": false,
+    "no_vpn_secrets_manager_auth": false
   },
   "access_groups": [],
   "appid": [],

@@ -28,6 +28,24 @@ describe("propsMatchState", () => {
       "it should be true"
     );
   });
+  it("should return true if vpc uses data", () => {
+    assert.isTrue(
+      propsMatchState(
+        "vpcs",
+        {
+          name: "test",
+          use_data: true,
+        },
+        {
+          data: {
+            name: "test",
+            use_data: true,
+          },
+        }
+      ),
+      "it should be true"
+    );
+  });
   it("should return true if vpc and default_network_acl_name is empty string", () => {
     assert.isTrue(
       propsMatchState(

@@ -5,7 +5,6 @@ const {
   isInRange,
   splat,
 } = require("lazy-z");
-const { invalidName, invalidNameText } = require("../forms");
 const { RegexButWithWords } = require("regex-but-with-words");
 const {
   fieldIsNullOrEmptyString,
@@ -14,6 +13,7 @@ const {
   selectInvalidText,
 } = require("./utils");
 const { datacenters } = require("../constants");
+const { nameField } = require("./reusable-fields");
 
 /**
  * init store
@@ -141,15 +141,12 @@ function initClassicGateways(store) {
       "classic_gateways"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("classic_gateways"),
-        invalidText: invalidNameText("classic_gateways"),
+      name: nameField("classic_gateways", {
         helperText: function (stateData, componentProps) {
           return `${componentProps.craig.store.json._options.prefix}-gateway-${stateData.name}`;
         },
         size: "small",
-      },
+      }),
       domain: {
         default: "",
         invalid: function (stateData) {

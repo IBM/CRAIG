@@ -9,7 +9,7 @@ const {
   vpcSshKeyMultiselect,
   vpcGroups,
 } = require("./utils");
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 
 /**
  * get vnf subnet groups
@@ -114,12 +114,7 @@ function initFortigateStore(store) {
       "fortigate_vnf"
     ),
     schema: {
-      name: {
-        size: "small",
-        default: "",
-        invalid: invalidName("fortigate_vnf"),
-        invalidText: invalidNameText("fortigate_vnf"),
-      },
+      name: nameField("fortigate_vnf", { size: "small" }),
       resource_group: resourceGroupsField(true),
       vpc: {
         type: "select",

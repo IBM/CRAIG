@@ -8,6 +8,9 @@ const { deepEqual, isNullOrEmptyString, contains } = require("lazy-z");
  * @returns {boolean} true if match
  */
 function propsMatchState(field, stateData, componentProps) {
+  if (field === "vpcs" && stateData.use_data && componentProps.data.use_data) {
+    return stateData.name === componentProps.data.name;
+  }
   if (field === "vpcs") {
     [
       "default_network_acl_name",

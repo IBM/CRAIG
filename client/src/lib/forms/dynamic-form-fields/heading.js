@@ -9,6 +9,7 @@ function dynamicHeadingProps(group) {
     type: group.heading.type,
     tooltip: group.heading.tooltip,
     key: "heading-" + group.heading.name,
+    className: group.heading.className,
   };
 }
 

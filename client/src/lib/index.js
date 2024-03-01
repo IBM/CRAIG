@@ -1,13 +1,8 @@
 const {
-  hasDuplicateName,
-  genericNameCallback,
-  invalidName,
   propsMatchState,
   disableSave,
-  invalidNameText,
   validSshKey,
   invalidSubnetTierName,
-  invalidSubnetTierText,
   formatConfig,
   getSubnetTierStateData,
   getTierSubnets,
@@ -21,14 +16,12 @@ const {
   cidrBlocksOverlap,
   hasOverlappingCidr,
   invalidCidr,
-  invalidCidrText,
   invalidProjectName,
   invalidProjectNameText,
   invalidProjectDescription,
   invalidCidrBlock,
   invalidCrnList,
   invalidCrns,
-  invalidCrnText,
   wizard,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
@@ -118,8 +111,11 @@ const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
 const { state } = require("./state");
 const { invalidForms } = require("./invalid-forms");
+const { allDocText, filterDocs } = require("./docs");
 
 module.exports = {
+  allDocText,
+  filterDocs,
   shouldDisplayService,
   getDisplaySubnetTiers,
   formatClassicSshKey,
@@ -186,15 +182,10 @@ module.exports = {
   codeMirrorEventStreamsTf,
   codeMirrorFormatIamAccountSettingsTf,
   codeMirrorGetDisplay,
-  hasDuplicateName,
-  genericNameCallback,
-  invalidName,
   propsMatchState,
   disableSave,
-  invalidNameText,
   validSshKey,
   invalidSubnetTierName,
-  invalidSubnetTierText,
   formatConfig,
   getSubnetTierStateData,
   getTierSubnets,
@@ -219,7 +210,6 @@ module.exports = {
   cidrBlocksOverlap,
   hasOverlappingCidr,
   invalidCidr,
-  invalidCidrText,
   invalidProjectName,
   invalidProjectNameText,
   invalidProjectDescription,
@@ -235,7 +225,6 @@ module.exports = {
   getNextCidr,
   invalidForms,
   invalidCrns,
-  invalidCrnText,
   powerVsTf,
   getDisplayTierSubnetList,
 };

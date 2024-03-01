@@ -434,9 +434,12 @@ class DynamicForm extends React.Component {
                     type: this.props.isMiddleForm ? "subForm" : "formInSubForm",
                     noDeleteButton: subForm.noDeleteButton,
                     // add classname to middle form children for consistent spacing
-                    wrapperClassName: this.props.isMiddleForm
-                      ? "marginBottomSmall"
-                      : "",
+                    // and between title headings for sub forms
+                    wrapperClassName:
+                      this.props.isMiddleForm ||
+                      subFormIndex + 1 < this.props.form.subForms.length
+                        ? "marginBottomSmall"
+                        : "",
                     // here for testing
                     // hide: false,
                   }}

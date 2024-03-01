@@ -1,4 +1,4 @@
-const { invalidName, invalidNameText } = require("../forms");
+const { nameField } = require("./reusable-fields");
 const { setUnfoundResourceGroup } = require("./store.utils");
 const {
   setKmsFromKeyOnStoreUpdate,
@@ -114,12 +114,7 @@ function initIcdStore(store) {
         labelText: "Use Existing Instance",
         size: "small",
       },
-      name: {
-        size: "small",
-        default: "",
-        invalid: invalidName("icd"),
-        invalidText: invalidNameText("icd"),
-      },
+      name: nameField("icd", { size: "small" }),
       service: {
         size: "small",
         type: "select",

@@ -389,8 +389,10 @@ const validate = function (json) {
     network.subnets.forEach((subnet) => {
       nullResourceGroupTest("Subnets", subnet);
       validationTest("Subnets", subnet, "vpc", "vpc");
-      validationTest("Subnets", subnet, "network_acl", "network_acl");
-      validationTest("Subnets", subnet, "zone", "zone"); // mark zone required
+      if (!subnet.use_data) {
+        validationTest("Subnets", subnet, "network_acl", "network_acl");
+        validationTest("Subnets", subnet, "zone", "zone"); // mark zone required
+      }
     });
   });
 

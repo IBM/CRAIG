@@ -44,14 +44,17 @@ module.exports = {
     .done("g"),
   newResourceNameExp: new RegexButWithWords()
     .stringBegin()
-    .set("A-z")
     .group((exp) => {
       exp
-        .group((exp) => exp.set("a-z0-9-").or().literal("\\").any())
-        .anyNumber()
-        .set("a-z0-9");
+        .set("A-z")
+        .group((exp) => {
+          exp
+            .group((exp) => exp.set("a-z0-9-").or().literal("\\").any())
+            .anyNumber()
+            .set("a-z0-9");
+        })
+        .anyNumber();
     })
-    .anyNumber()
     .stringEnd()
     .done("s"),
   dnsZoneNameExp: new RegexButWithWords()

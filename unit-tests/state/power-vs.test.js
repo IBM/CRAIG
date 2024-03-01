@@ -736,6 +736,68 @@ describe("power-vs", () => {
         beforeEach(() => {
           craig = newState();
         });
+        describe("power.network.pi_cidr.invalidText", () => {
+          it("should return correct text if cidr is null", () => {
+            assert.deepEqual(
+              craig.power.network.pi_cidr.invalidText(
+                { cidr: null },
+                { data: { cidr: "1.2.3.4/5" } }
+              ),
+              "Invalid CIDR block",
+              "it should return correct data"
+            );
+          });
+          it("should return correct text if cidr is not valid", () => {
+            assert.deepEqual(
+              craig.power.network.pi_cidr.invalidText(
+                { cidr: "aaa" },
+                { data: { cidr: "1.2.3.4/5" } }
+              ),
+              "Invalid CIDR block",
+              "it should return correct data"
+            );
+          });
+          it("should return correct text if cidr is too many addresses", () => {
+            assert.deepEqual(
+              craig.power.network.pi_cidr.invalidText(
+                { cidr: "10.0.0.0/11" },
+                { data: { cidr: "1.2.3.4/5" } }
+              ),
+              "CIDR ranges of /17 or less are not supported",
+              "it should return correct data"
+            );
+          });
+          it("should return correct text if cidr overlaps with existing cidr", () => {
+            assert.deepEqual(
+              craig.power.network.pi_cidr.invalidText(
+                { cidr: "10.10.30.0/24" },
+                { data: {}, craig: craig }
+              ),
+              "Warning: CIDR overlaps with 10.10.30.0/24",
+              "it should return correct data"
+            );
+          });
+          it("should return correct text if cidr does not overlap with existing cidr", () => {
+            assert.deepEqual(
+              craig.power.network.pi_cidr.invalidText(
+                { cidr: "10.10.80.0/24" },
+                { data: {}, craig: craig }
+              ),
+              "",
+              "it should return correct data"
+            );
+          });
+          it("should return correct text if cidr matches previous cidr", () => {
+            assert.deepEqual(
+              craig.power.network.pi_cidr.invalidText(
+                { cidr: "10.10.80.0/24" },
+                { data: { cidr: "10.10.80.0/24" } }
+              ),
+              "",
+              "it should return correct data"
+            );
+          });
+        });
         it("should have correct invalid value for network mtu", () => {
           assert.isFalse(
             craig.power.network.pi_network_mtu.invalid({

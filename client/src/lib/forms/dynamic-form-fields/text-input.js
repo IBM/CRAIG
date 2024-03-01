@@ -84,7 +84,12 @@ function dynamicTextInputProps(props) {
   return {
     name: props.name,
     id: dynamicFieldId(props),
-    className: addClassName("leftTextAlign", props.field),
+    className: addClassName(
+      "leftTextAlign",
+      props.field,
+      props.parentState.use_data === true &&
+        props.parentProps.formName === "subnet"
+    ),
     labelText: labelText,
     placeholder: isFunction(placeholder)
       ? placeholder(props.parentState)

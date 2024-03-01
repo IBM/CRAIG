@@ -82,6 +82,42 @@ resource "ibm_atracker_route" "atracker_cos_route" {
         "it should return correct data"
       );
     });
+    it("should format a route", () => {
+      let actualData = formatAtrackerRoute({
+        atracker: {
+          enabled: true,
+          name: "atracker",
+          type: "cos",
+          target_name: "cos",
+          bucket: "atracker",
+          cos_key: "atracker-cos-key",
+          add_route: true,
+          locations: null,
+        },
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+      });
+      let expectedData = `
+resource "ibm_atracker_route" "atracker_cos_route" {
+  name = "\${var.prefix}-atracker-cos-route"
+  rules {
+    locations = [
+    ]
+    target_ids = [
+      ibm_atracker_target.atracker_cos_target.id
+    ]
+  }
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("atrackerTf", () => {
     it("should create the correct terraform for atracker", () => {

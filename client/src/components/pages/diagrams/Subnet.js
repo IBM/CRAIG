@@ -5,18 +5,28 @@ import "./diagrams.css";
 
 export const Subnet = (props) => {
   let subnetClassName =
-    props.small && props.subnet
+    props.small && props.imported
+      ? "powerSubnetBox marginRight1Rem minWidth6Rem"
+      : props.small && props.subnet
       ? "subnetBoxSmall"
       : props.subnet
-      ? "subnetBox"
+      ? "subnetBox" + (props.imported ? " marginRight1Rem" : "")
       : "powerSubnetBox";
   let subnetName = props?.subnet?.name || "No Subnets Selected";
   return (
     <div
       className={subnetClassName}
       key={props?.subnet?.name + props.vpc.name + props.acl?.name}
+      style={
+        props.imported && !props.small
+          ? {
+              margin: "0",
+            }
+          : {}
+      }
+      onClick={props.onClick && !props.small ? props.onClick : undefined}
     >
-      {props.small ? (
+      {props.small && !props.imported ? (
         ""
       ) : (
         <div

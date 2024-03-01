@@ -14,8 +14,8 @@ const {
   hideHelperText,
 } = require("./utils");
 const { invalidIpCommaList } = require("../forms/invalid-callbacks");
-const { invalidName, invalidNameText } = require("../forms");
 const { isNullOrEmptyString, buildNumberDropdownList } = require("lazy-z");
+const { nameField } = require("./reusable-fields");
 const conditionOperators = {
   EQUALS: "Equals",
   EQUALS_IGNORE_CASE: "Equals (Ignore Case)",
@@ -525,11 +525,7 @@ function initAccessGroups(store) {
     onStoreUpdate: accessGroupOnStoreUpdate,
     shouldDisableSave: shouldDisableComponentSave(["name"], "access_groups"),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("access_groups"),
-        invalidText: invalidNameText("access_groups"),
-      },
+      name: nameField("access_groups"),
       description: {
         default: "",
         optional: true,
@@ -553,12 +549,9 @@ function initAccessGroups(store) {
           "policies"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("policies"),
-            invalidText: invalidNameText("policies"),
+          name: nameField("policies", {
             helperText: accessGroupHelperText,
-          },
+          }),
           resource: {
             optional: true,
             default: "",
@@ -613,12 +606,9 @@ function initAccessGroups(store) {
           "dynamic_policies"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("dynamic_policies"),
-            invalidText: invalidNameText("dynamic_policies"),
+          name: nameField("dynamic_policies", {
             helperText: accessGroupHelperText,
-          },
+          }),
           identity_provider: {
             tooltip: {
               content: "URI for identity provider",

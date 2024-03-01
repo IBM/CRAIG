@@ -1,11 +1,10 @@
-const { isEmpty, isNullOrEmptyString, splat, distinct } = require("lazy-z");
-const powerImages = require("../../docs/power-image-map.json");
+const { isEmpty, splat } = require("lazy-z");
 const {
   fieldIsNullOrEmptyString,
   unconditionalInvalidText,
   resourceGroupsField,
 } = require("../utils");
-const { invalidName, invalidNameText } = require("../../forms");
+const { nameField } = require("../reusable-fields");
 
 function powerVsWorkspaceSchema() {
   return {
@@ -14,10 +13,7 @@ function powerVsWorkspaceSchema() {
       labelText: "Use Existing Workspace",
       default: false,
     },
-    name: {
-      default: "",
-      invalid: invalidName("power"),
-      invalidText: invalidNameText("power"),
+    name: nameField("power", {
       /**
        * return helper text for power workspace
        * @param {*} stateData
@@ -32,7 +28,7 @@ function powerVsWorkspaceSchema() {
           ? stateData.name
           : `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
       },
-    },
+    }),
     resource_group: resourceGroupsField(),
     zone: {
       type: "select",

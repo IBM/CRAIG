@@ -12,7 +12,6 @@ const {
   setUnfoundEncryptionKey,
   pushToChildFieldModal,
 } = require("./store.utils");
-const { invalidName, invalidNameText } = require("../forms");
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
@@ -23,6 +22,7 @@ const {
   unconditionalInvalidText,
 } = require("./utils");
 const { cosPlans } = require("../constants");
+const { nameField } = require("./reusable-fields");
 
 /**
  * set cosBuckets and cosKeys in slz store
@@ -294,10 +294,7 @@ function initObjectStorageStore(store) {
           alignModal: "bottom",
         },
       },
-      name: {
-        default: "",
-        invalid: invalidName("object_storage"),
-        invalidText: invalidNameText("object_storage"),
+      name: nameField("object_storage", {
         /**
          * get cos resource helper text
          * @param {*} stateData
@@ -316,7 +313,7 @@ function initObjectStorageStore(store) {
             stateData.use_random_suffix ? "-<random-suffix>" : ""
           }`;
         },
-      },
+      }),
       resource_group: resourceGroupsField(),
       kms: {
         type: "select",
@@ -366,11 +363,7 @@ function initObjectStorageStore(store) {
           "buckets"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("buckets"),
-            invalidText: invalidNameText("buckets"),
-          },
+          name: nameField("buckets"),
           storage_class: {
             default: "",
             type: "select",
@@ -445,11 +438,7 @@ function initObjectStorageStore(store) {
           "keys"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("cos_keys"),
-            invalidText: invalidNameText("cos_keys"),
-          },
+          name: nameField("cos_keys"),
           role: {
             type: "select",
             default: "",

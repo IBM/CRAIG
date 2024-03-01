@@ -1,17 +1,13 @@
 const { splat, isEmpty } = require("lazy-z");
-const { invalidName, invalidNameText } = require("../../forms");
 const {
   fieldIsNullOrEmptyString,
   unconditionalInvalidText,
 } = require("../utils");
+const { nameField } = require("../reusable-fields");
 
 function powerVsCloudConnectionsSchema() {
   return {
-    name: {
-      default: "",
-      invalid: invalidName("cloud_connections"),
-      invalidText: invalidNameText("cloud_connections"),
-    },
+    name: nameField("cloud_connections"),
     pi_cloud_connection_speed: {
       default: "",
       type: "select",

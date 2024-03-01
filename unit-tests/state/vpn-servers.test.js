@@ -312,6 +312,42 @@ describe("vpn_servers", () => {
     beforeEach(() => {
       craig = newState();
     });
+    it("should return empty string when not invalid", () => {
+      assert.deepEqual(
+        craig.vpn_servers.certificate_crn.invalidText({
+          crns: undefined,
+        }),
+        "",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when invalid", () => {
+      assert.deepEqual(
+        craig.vpn_servers.certificate_crn.invalidText({
+          crns: ["aaa"],
+        }),
+        "Enter a valid comma separated list of CRNs",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when not invalid", () => {
+      assert.deepEqual(
+        craig.vpn_servers.certificate_crn.invalidText({
+          crns: undefined,
+        }),
+        "",
+        "it should return correct message"
+      );
+    });
+    it("should return empty string when invalid", () => {
+      assert.deepEqual(
+        craig.vpn_servers.certificate_crn.invalidText({
+          crns: ["aaa"],
+        }),
+        "Enter a valid comma separated list of CRNs",
+        "it should return correct message"
+      );
+    });
     it("should return protocol on render", () => {
       assert.deepEqual(
         craig.vpn_servers.protocol.onRender({ protocol: "tcp" }),

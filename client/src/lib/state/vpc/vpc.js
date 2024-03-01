@@ -51,14 +51,7 @@ const {
   updateAdvancedSubnetTier,
   editSubnets,
 } = require("../subnets");
-const {
-  invalidName,
-  invalidSubnetTierName,
-} = require("../../forms/invalid-callbacks");
-const {
-  invalidNameText,
-  invalidSubnetTierText,
-} = require("../../forms/text-callbacks");
+const { invalidSubnetTierName } = require("../../forms/invalid-callbacks");
 const { vpcSchema } = require("./vpc-schema");
 const { newSubnetTierSave } = require("./subnets");
 const {
@@ -67,6 +60,11 @@ const {
   networkingRuleTypeField,
   networkingRuleCodeField,
   getRuleProtocol,
+  nameField,
+  invalidName,
+  duplicateNameCallback,
+  genericNameCallback,
+  nameHelperText,
 } = require("../reusable-fields");
 
 /**
@@ -332,7 +330,8 @@ function vpcOnStoreUpdate(config) {
         }
         let nextSubnet = {}; // transpose subnet to get old data
         transpose(subnet, nextSubnet);
-        nextSubnet.cidr = getNextCidr(lastCidr, vpcCidr[subnet.name]);
+        if (!subnet.use_data)
+          nextSubnet.cidr = getNextCidr(lastCidr, vpcCidr[subnet.name]);
         nextSubnet.has_prefix = false;
         newSubnets.push(nextSubnet);
       });
@@ -637,7 +636,6 @@ function subnetTierCreate(config, stateData, componentProps) {
       }
     }
     config.store.json.vpcs[vpcIndex].subnetTiers.push(tier);
-    config.store.subnetTiers[vpc.name].push(tier);
   } else if (stateData.advanced) {
     config.store.json._options.advanced_subnets = true;
     let tier = {
@@ -1231,12 +1229,7 @@ function naclRuleSubComponents() {
         return shouldBeDisabled;
       },
       schema: {
-        name: {
-          size: "small",
-          default: "",
-          invalid: invalidName("acl_rules"),
-          invalidText: invalidNameText("acl_rules"),
-        },
+        name: nameField("acl_rules", { size: "small" }),
         source: {
           default: "",
           invalid: function (stateData, componentProps) {
@@ -1313,7 +1306,7 @@ function vpcAclGroups(stateData, componentProps) {
  * @returns {boolean} true if not advanced
  */
 function disableWhenNotAdvaned(stateData) {
-  return !stateData.tier;
+  return !stateData.tier && !stateData.use_data;
 }
 
 /**
@@ -1365,10 +1358,7 @@ function initVpcStore(store) {
               );
             },
           },
-          name: {
-            default: "",
-            invalid: invalidName("acls"),
-            invalidText: invalidNameText("acls"),
+          name: nameField("acls", {
             /**
              * get helper text for network acl
              * @param {Object} stateData
@@ -1388,7 +1378,7 @@ function initVpcStore(store) {
                     stateData.name +
                     "-acl";
             },
-          },
+          }),
           resource_group: resourceGroupsField(),
         },
       },
@@ -1402,22 +1392,28 @@ function initVpcStore(store) {
           "subnets"
         ),
         schema: {
-          name: {
+          name: nameField("subnet", {
+            helperText: function (stateData, componentProps) {
+              if (stateData.use_data) {
+                return "";
+              } else return nameHelperText(stateData, componentProps);
+            },
             size: "small",
-            default: "",
             invalid: function (stateData, componentProps) {
-              componentProps.craig = store;
-              return invalidName("subnet", store)(stateData, componentProps);
+              return invalidName("subnet", componentProps.craig)(
+                stateData,
+                componentProps
+              );
             },
             disabledText: unconditionalInvalidText(""),
             hideWhen: disableWhenNotAdvaned,
-          },
+          }),
           cidr: {
             size: "small",
             labelText: "Subnet CIDR",
             default: "",
             invalid: function (stateData, componentProps) {
-              if (!stateData.tier) {
+              if (!stateData.tier || stateData.use_data) {
                 return false;
               } else if (!isIpv4CidrOrAddress(stateData.cidr || "")) {
                 return true;
@@ -1484,7 +1480,28 @@ function initVpcStore(store) {
             size: "small",
             default: "",
             invalid: invalidSubnetTierName,
-            invalidText: invalidSubnetTierText,
+            /**
+             * get invalid subnet tier text
+             * @param {*} stateData
+             * @param {*} componentProps
+             * @returns {string} invalid text
+             */
+            invalidText: function invalidSubnetTierText(
+              stateData,
+              componentProps
+            ) {
+              if (
+                splatContains(
+                  componentProps.craig.store.subnetTiers[
+                    componentProps.vpc_name
+                  ],
+                  "name",
+                  stateData.name
+                )
+              )
+                return duplicateNameCallback(stateData.name);
+              else return genericNameCallback();
+            },
             readOnly: readOnlyWhenEdgeTier,
           },
           zones: {

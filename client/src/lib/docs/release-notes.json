@@ -1,10 +1,16 @@
 [
   {
     "version": "1.12.1",
-    "features": ["Users can now use the `Trial` plan for secrets manager"],
+    "features": [
+      "Users can now use the `Trial` plan for secrets manager",
+      "Users can now disable the VPN Server to Secrets Manager Authorization policy from the Options form",
+      "Users can now add existing Subnets to VPCs from a data source",
+      "Users can now provide project names that use only uppercase letters (ex: `ACRONYM`)"
+    ],
     "fixes": [
       "Fixed an issue causing the VPN Server page to crash when opening the creation modal",
-      "Fixed an issue causing Secrets Manager data sources to always be invalid on validation"
+      "Fixed an issue causing Secrets Manager data sources to always be invalid on validation",
+      "Various visual bug fixes"
     ],
     "upgrade_notes": []
   },

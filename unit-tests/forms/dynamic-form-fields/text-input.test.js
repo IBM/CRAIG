@@ -651,6 +651,58 @@ describe("text input functions", () => {
         "it should return correctly formatted data"
       );
     });
+    it("should return the correct props for text input when not disabled and no helper text and is imported subnet", () => {
+      let actualData = dynamicTextInputProps({
+        name: "frog",
+        field: {
+          optional: true,
+          disabled: function () {
+            return false;
+          },
+          invalid: function () {
+            return false;
+          },
+          invalidText: function () {
+            return "uh oh";
+          },
+          disabledText: function () {
+            return "oops";
+          },
+          size: "small",
+        },
+        parentState: {
+          use_data: true,
+        },
+        parentProps: {
+          formName: "subnet",
+        },
+        handleInputChange: function () {},
+        keyIndex: 0,
+        name: "name",
+        propsName: "frog",
+      });
+      let expectedData = {
+        className: "leftTextAlign fieldWidth",
+        disabled: false,
+        helperText: null,
+        id: "frog-name-0",
+        invalid: false,
+        invalidText: "uh oh",
+        labelText: "Name",
+        maxLength: undefined,
+        name: "name",
+        placeholder: "(Optional) my-subnet-name",
+        readOnly: false,
+        value: "",
+      };
+      assert.isFunction(actualData.onChange, "it should be a function");
+      delete actualData.onChange;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
     it("should return the correct props for text input when not disabled and no helper text and wide", () => {
       let actualData = dynamicTextInputProps({
         name: "frog",

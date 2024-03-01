@@ -5,7 +5,7 @@ import { arraySplatIndex, contains, transpose } from "lazy-z";
 import { disableSshKeyDelete } from "../../lib/forms";
 import { CopyRuleForm } from "../forms";
 import { Tile } from "@carbon/react";
-import { CloudAlerting } from "@carbon/icons-react";
+import { CloudAlerting, FetchUploadCloud } from "@carbon/icons-react";
 import powerStoragePoolRegionMap from "../../lib/docs/power-storage-pool-map.json";
 import DynamicForm from "../forms/DynamicForm";
 import {
@@ -21,6 +21,7 @@ import {
   DynamicFormModal,
   RenderForm,
   StatefulTabs,
+  StatelessFormWrapper,
 } from "../forms/utils";
 import { craigForms } from "./CraigForms";
 import { DynamicAclForm } from "./vpc/DynamicAclForm";
@@ -949,9 +950,11 @@ const SubnetsPage = (craig) => {
       this.state = {
         shownForms: [],
         showModal: false,
+        showSubnetModal: false,
       };
       this.onModalSubmit = this.onModalSubmit.bind(this);
       this.onShowToggle = this.onShowToggle.bind(this);
+      this.onImportModalSubmit = this.onImportModalSubmit.bind(this);
     }
 
     onModalSubmit(data) {
@@ -959,6 +962,13 @@ const SubnetsPage = (craig) => {
         vpc_name: this.props.data.name,
       });
       this.setState({ showModal: false });
+    }
+
+    onImportModalSubmit(data) {
+      this.props.craig.vpcs.subnets.create(data, {
+        name: this.props.data.name,
+      });
+      this.setState({ showSubnetModal: false });
     }
 
     onShowToggle(index) {
@@ -978,6 +988,46 @@ const SubnetsPage = (craig) => {
       let craig = this.props.craig;
       return (
         <>
+          {this.state.showSubnetModal ? (
+            <DynamicFormModal
+              name={`Import a Subnet in ${this.props.data.name} VPC`}
+              show
+              beginDisabled
+              submissionFieldName="subnets"
+              onRequestSubmit={this.onImportModalSubmit}
+              onRequestClose={() => {
+                this.setState({ showSubnetModal: false });
+              }}
+            >
+              {RenderForm(DynamicForm, {
+                craig: craig,
+                vpc_name: this.props.data.name,
+                shouldDisableSubmit: function () {
+                  // see abovec
+                  this.props.setRefUpstream(this.state);
+                  if (disableSave("subnet", this.state, this.props) === false) {
+                    this.props.enableModal();
+                  } else {
+                    this.props.disableModal();
+                  }
+                },
+                data: {
+                  use_data: true,
+                  name: "",
+                  has_prefix: false,
+                },
+                form: {
+                  groups: [
+                    {
+                      name: craig.vpcs.subnets.name,
+                    },
+                  ],
+                },
+              })}
+            </DynamicFormModal>
+          ) : (
+            ""
+          )}
           {this.state.showModal ? (
             <DynamicFormModal
               name={`Create a Subnet Tier in ${this.props.data.name} VPC`}
@@ -1019,7 +1069,7 @@ const SubnetsPage = (craig) => {
           ) : (
             ""
           )}
-          {this.props.data.acls.length === 0 ? (
+          {this.props.data.acls.length === 0 && !this.props.data.use_data ? (
             <CraigEmptyResourceTile
               name="Network ACLs"
               customClick={
@@ -1034,13 +1084,31 @@ const SubnetsPage = (craig) => {
               type="subHeading"
               className={tiers.length === 0 ? "" : "marginBottomSmall"}
               buttons={
-                <PrimaryButton
-                  type="add"
-                  noDeleteButton
-                  onClick={() => {
-                    this.setState({ showModal: true });
-                  }}
-                />
+                <>
+                  {this.props.data.acls.length === 0 ? (
+                    ""
+                  ) : (
+                    <PrimaryButton
+                      type="add"
+                      noDeleteButton={this.props.data.use_data !== true}
+                      onClick={() => {
+                        this.setState({ showModal: true });
+                      }}
+                      hoverText="Create a Subnet Tier"
+                    />
+                  )}
+                  {this.props.data.use_data && (
+                    <PrimaryButton
+                      type="custom"
+                      customIcon={FetchUploadCloud}
+                      noDeleteButton
+                      hoverText="Import Existing Subnet"
+                      onClick={() => {
+                        this.setState({ showSubnetModal: true });
+                      }}
+                    />
+                  )}
+                </>
               }
             />
           )}
@@ -1059,8 +1127,70 @@ const SubnetsPage = (craig) => {
               formInSubForm
               onShowToggle={this.onShowToggle}
               hide={!contains(this.state.shownForms, tierIndex)}
+              isLast={tierIndex + 1 === tiers.length}
             />
           ))}
+          {this.props.data.use_data ? (
+            <div className="marginTop1Rem">
+              <StatelessFormWrapper
+                onIconClick={() => {
+                  this.onShowToggle(tiers.length);
+                }}
+                hide={!contains(this.state.shownForms, tiers.length)}
+                className="formInSubForm"
+                name="Imported Subnets"
+              >
+                <div
+                  className="formInSubForm displayFlex"
+                  style={{ marginTop: "-2rem" }}
+                >
+                  {this.props.data.subnets.filter((subnet) => {
+                    if (subnet.use_data) return subnet;
+                  }).length === 0 ? (
+                    <CraigEmptyResourceTile
+                      name="Imported Subnets"
+                      customIcon={FetchUploadCloud}
+                      className="widthOneHundredPercent"
+                    />
+                  ) : (
+                    this.props.data.subnets
+                      .filter((subnet) => {
+                        if (subnet.use_data) return subnet;
+                      })
+                      .map((subnet) => {
+                        return (
+                          <Tile
+                            key={subnet.name}
+                            className="marginRightSubnetTile marginBottomNone subForm"
+                            style={{
+                              width: "50%",
+                            }}
+                          >
+                            <DynamicForm
+                              importedSubnet
+                              vpc_name={this.props.data.name}
+                              formName="subnet"
+                              data={subnet}
+                              craig={craig}
+                              form={{
+                                groups: [
+                                  {
+                                    name: craig.vpcs.subnets.name,
+                                  },
+                                ],
+                              }}
+                              name={this.props.data.name}
+                            />
+                          </Tile>
+                        );
+                      })
+                  )}
+                </div>
+              </StatelessFormWrapper>
+            </div>
+          ) : (
+            ""
+          )}
         </>
       );
     }

@@ -12,9 +12,9 @@ const {
   deleteSubChild,
   pushToChildFieldModal,
 } = require("./store.utils");
-const { invalidName, invalidNameText } = require("../forms");
 const { isNullOrEmptyString, isIpv4CidrOrAddress } = require("lazy-z");
 const { ipRangeExpression } = require("../constants");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize cbr zones in store
@@ -220,11 +220,7 @@ function initCbrZones(store) {
       "cbr_zones"
     ),
     schema: {
-      name: {
-        default: "",
-        invalid: invalidName("cbr_zones"),
-        invalidText: invalidNameText("cbr_zones"),
-      },
+      name: nameField("cbr_zones"),
       description: {
         default: "",
         type: "textArea",
@@ -267,11 +263,7 @@ function initCbrZones(store) {
           "addresses"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("addresses"),
-            invalidText: invalidNameText("addresses"),
-          },
+          name: nameField("addresses"),
           account_id: {
             default: "",
             labelText: "Account ID",
@@ -346,11 +338,7 @@ function initCbrZones(store) {
           "exclusions"
         ),
         schema: {
-          name: {
-            default: "",
-            invalid: invalidName("exclusions"),
-            invalidText: invalidNameText("exclusions"),
-          },
+          name: nameField("exclusions"),
           account_id: {
             default: "",
             labelText: "Account ID",

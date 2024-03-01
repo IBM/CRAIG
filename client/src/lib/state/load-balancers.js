@@ -13,7 +13,6 @@ const {
   splat,
   contains,
 } = require("lazy-z");
-const { invalidNameText, invalidName } = require("../forms");
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
@@ -24,6 +23,7 @@ const {
   unconditionalInvalidText,
   titleCaseRender,
 } = require("./utils");
+const { nameField } = require("./reusable-fields");
 
 /**
  * initialize loadBalancer
@@ -207,17 +207,14 @@ function initLoadBalancers(store) {
       "load_balancers"
     ),
     schema: {
-      name: {
+      name: nameField("load_balancers", {
         size: "small",
-        default: "",
-        invalid: invalidName("load_balancers"),
-        invalidText: invalidNameText("load_balancers"),
         tooltip: {
           content:
             "Name for the load balancer service. This name will be prepended to the components provisioned as part of the load balancer.",
           align: "right",
         },
-      },
+      }),
       resource_group: resourceGroupsField(true),
       type: {
         size: "small",

@@ -1095,6 +1095,425 @@ describe("vpcs", () => {
     });
   });
   describe("vpcs.schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should return true if vpc has a duplicate name", () => {
+      let actualData = craig.vpcs.name.invalid(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if vpc acl has a duplicate name", () => {
+      let actualData = craig.vpcs.default_network_acl_name.invalid(
+        {
+          name: "test2",
+          default_network_acl_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                  },
+                  {
+                    name: "frog",
+                    default_network_acl_name: "frog",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if vpc acl has a duplicate name with existing acl", () => {
+      let actualData = craig.vpcs.default_network_acl_name.invalid(
+        {
+          name: "test2",
+          default_network_acl_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    default_network_acl_name: "egg",
+                    acls: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                  {
+                    name: "frog",
+                    default_network_acl_name: null,
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return false if vpc routing table name is empty string", () => {
+      let actualData = craig.vpcs.default_routing_table_name.invalid({
+        default_routing_table_name: "",
+      });
+      assert.isFalse(actualData, "it should be false");
+    });
+    it("should return true if vpc routing table has a duplicate name", () => {
+      let actualData = craig.vpcs.default_routing_table_name.invalid(
+        {
+          name: "test2",
+          default_routing_table_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                    default_routing_table_name: null,
+                  },
+                  {
+                    name: "frog",
+                    default_routing_table_name: "frog",
+                    acls: [],
+                  },
+                ],
+                security_groups: [],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if vpc security group has a duplicate name", () => {
+      let actualData = craig.vpcs.default_security_group_name.invalid(
+        {
+          name: "test2",
+          default_security_group_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                  },
+                  {
+                    name: "frog",
+                    default_security_group_name: "frog",
+                    acls: [],
+                  },
+                ],
+                security_groups: [],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if vpc acl has a duplicate name with existing sg", () => {
+      let actualData = craig.vpcs.default_security_group_name.invalid(
+        {
+          name: "test2",
+          default_security_group_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    default_security_group_name: "egg",
+                    acls: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                  {
+                    name: "frog",
+                    default_security_group_name: null,
+                    acls: [],
+                  },
+                ],
+                security_groups: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.isTrue(actualData, "it should be true");
+    });
+    it("should return true if vpc has a duplicate name", () => {
+      let actualData = craig.vpcs.name.invalidText(
+        {
+          name: "test",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                  },
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "test" already in use',
+        "it should be true"
+      );
+    });
+    it("should return true if vpc acl has a duplicate name", () => {
+      let actualData = craig.vpcs.default_network_acl_name.invalidText(
+        {
+          name: "test2",
+          default_network_acl_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                  },
+                  {
+                    name: "frog",
+                    default_network_acl_name: "frog",
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
+    it("should return false if vpc routing table name is empty string", () => {
+      let actualData = craig.vpcs.default_network_acl_name.invalidText(
+        {
+          default_routing_table_name: "",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [],
+              },
+            },
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+        "it should be false"
+      );
+    });
+    it("should return true if vpc acl has a duplicate name with existing acl", () => {
+      let actualData = craig.vpcs.default_network_acl_name.invalidText(
+        {
+          name: "test2",
+          default_network_acl_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    default_network_acl_name: "egg",
+                    acls: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                  {
+                    name: "frog",
+                    default_network_acl_name: null,
+                    acls: [],
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
+    it("should return true if vpc routing table has a duplicate name", () => {
+      let actualData = craig.vpcs.default_routing_table_name.invalidText(
+        {
+          name: "test2",
+          default_routing_table_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    acls: [],
+                    default_routing_table_name: null,
+                  },
+                  {
+                    name: "frog",
+                    default_routing_table_name: "frog",
+                    acls: [],
+                  },
+                ],
+                security_groups: [],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
+    it("should return true if vpc sg has a duplicate name with existing sg", () => {
+      let actualData = craig.vpcs.default_security_group_name.invalidText(
+        {
+          name: "test2",
+          default_security_group_name: "frog",
+        },
+        {
+          craig: {
+            store: {
+              json: {
+                vpcs: [
+                  {
+                    name: "test",
+                    default_security_group_name: "egg",
+                    acls: [
+                      {
+                        name: "frog",
+                      },
+                    ],
+                  },
+                  {
+                    name: "frog",
+                    default_security_group_name: null,
+                    acls: [],
+                  },
+                ],
+                security_groups: [
+                  {
+                    name: "frog",
+                  },
+                ],
+              },
+            },
+          },
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        'Name "frog" already in use',
+        "it should be true"
+      );
+    });
     it("should disable use data when use data is true", () => {
       let craig = newState();
       assert.isTrue(
@@ -1834,6 +2253,70 @@ describe("vpcs", () => {
       let craig;
       beforeEach(() => {
         craig = newState();
+      });
+      it("should return correct helper text for subnet", () => {
+        assert.deepEqual(
+          craig.vpcs.subnets.name.helperText(
+            { name: "iac-subnet" },
+            { craig: craig }
+          ),
+          "iac-iac-subnet",
+          "it should return correct helper text"
+        );
+      });
+      it("should return correct helper text if subnet is imported", () => {
+        assert.deepEqual(
+          craig.vpcs.subnets.name.helperText({ use_data: true }),
+          "",
+          "it should return correct helper text"
+        );
+      });
+      it("should return false if subnet and no vpc_name (unloaded modals)", () => {
+        let actualData = craig.vpcs.subnets.name.invalid(
+          {},
+          {
+            craig: {
+              store: {
+                json: {
+                  vpcs: [],
+                },
+              },
+            },
+          }
+        );
+        assert.isFalse(actualData, "it should be false");
+      });
+      it("should return true if subnet has a duplicate name", () => {
+        let actualData = craig.vpcs.subnets.name.invalidText(
+          { tier: "frog", cidr: "1.2.3.4/15", name: "@@@@" },
+          {
+            data: {
+              name: "",
+            },
+            vpc_name: "test",
+            craig: {
+              store: {
+                json: {
+                  vpcs: [
+                    {
+                      name: "test",
+                      subnets: [
+                        {
+                          name: "egg",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        );
+        assert.deepEqual(
+          actualData,
+          "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
+          "it should be true"
+        );
       });
       it("should hide name when not advanced tier", () => {
         assert.isTrue(
@@ -3814,6 +4297,10 @@ describe("vpcs", () => {
         beforeEach(() => {
           craig = new newState(true);
           craig.store.json._options.dynamic_subnets = false;
+          craig.store.json.vpcs[0].subnets.push({
+            name: "test",
+            use_data: true,
+          });
           craig.hardSetJson(craig.store.json, true);
         });
         it("should update a subnet tier in place", () => {
@@ -3877,6 +4364,13 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               public_gateway: false,
               has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
             },
           ];
           craig.store.json.dns.push({
@@ -4048,6 +4542,13 @@ describe("vpcs", () => {
               public_gateway: false,
               has_prefix: true,
             },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+            },
           ];
           craig.store.json.vpcs[0].publicGateways = [1, 2];
           craig.vpcs.subnetTiers.save(
@@ -4132,6 +4633,14 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               public_gateway: false,
               has_prefix: false,
+            },
+            {
+              has_prefix: false,
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
             },
           ];
           craig.store.json.vpcs[0].publicGateways = [1];
@@ -4225,6 +4734,13 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               public_gateway: false,
               has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
             },
             {
               vpc: "management",
@@ -4408,6 +4924,13 @@ describe("vpcs", () => {
               has_prefix: true,
             },
             {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+            },
+            {
               vpc: "management",
               zone: 2,
               cidr: "10.20.30.0/24",
@@ -4511,6 +5034,13 @@ describe("vpcs", () => {
               has_prefix: true,
             },
             {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+            },
+            {
               vpc: "management",
               zone: 2,
               cidr: "10.20.30.0/24",
@@ -4612,6 +5142,13 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               public_gateway: false,
               has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
             },
             {
               vpc: "management",
@@ -4729,6 +5266,13 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               public_gateway: false,
               has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
             },
           ];
           craig.store.json.dns.push({
@@ -4899,6 +5443,13 @@ describe("vpcs", () => {
               public_gateway: false,
               has_prefix: true,
             },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+            },
           ];
           craig.store.json.dns.push({
             name: "dns",
@@ -5067,6 +5618,13 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               public_gateway: false,
               has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
             },
           ];
           craig.vpcs.subnetTiers.save(
@@ -5340,6 +5898,13 @@ describe("vpcs", () => {
               has_prefix: true,
               tier: "toad",
             },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+            },
           ];
           craig.vpcs.subnetTiers.save(
             {
@@ -5482,6 +6047,13 @@ describe("vpcs", () => {
               public_gateway: false,
               has_prefix: true,
               tier: "toad",
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
             },
           ];
           craig.store.json.f5_vsi = [
@@ -5709,7 +6281,7 @@ describe("vpcs", () => {
           );
           assert.deepEqual(
             craig.store.json.vpcs[0].subnets.length,
-            7,
+            8,
             "it should have correct"
           );
           assert.deepEqual(
@@ -5736,7 +6308,7 @@ describe("vpcs", () => {
           );
           assert.deepEqual(
             craig.store.json.vpcs[0].subnets.length,
-            7,
+            8,
             "it should have correct"
           );
           craig.vpcs.subnetTiers.save(
@@ -5759,7 +6331,7 @@ describe("vpcs", () => {
           );
           assert.deepEqual(
             craig.store.json.vpcs[0].subnets.length,
-            5,
+            6,
             "it should have correct"
           );
           assert.deepEqual(
@@ -7018,6 +7590,30 @@ describe("vpcs", () => {
             "it should change subnets"
           );
         });
+        it("should not have the double create error from state store", () => {
+          craig.vpcs.subnetTiers.delete(
+            {},
+            { vpc_name: "management", data: { name: "vsi" } }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers.length,
+            2,
+            "it should have correct tiers"
+          );
+          craig.vpcs.subnetTiers.create(
+            {
+              name: "test",
+              zones: 3,
+              networkAcl: "management",
+            },
+            { vpc_name: "management" }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnetTiers.length,
+            3,
+            "it should have correct tiers"
+          );
+        });
       });
     });
     describe("vpcs.subnetTiers.delete", () => {
@@ -7609,6 +8205,57 @@ describe("vpcs", () => {
       let craig;
       beforeEach(() => {
         craig = newState();
+      });
+      it("should return true when name invalid", () => {
+        let actualData = craig.vpcs.subnetTiers.name.invalidText(
+          { name: "@@@" },
+          {
+            vpc_name: "test",
+            craig: {
+              store: {
+                subnetTiers: {
+                  test: [
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        );
+        let expectedData =
+          "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s";
+        assert.deepEqual(
+          actualData,
+          expectedData,
+          "it should return correct data"
+        );
+      });
+      it("should return true when name duplicate", () => {
+        let actualData = craig.vpcs.subnetTiers.name.invalidText(
+          { name: "frog" },
+          {
+            vpc_name: "test",
+            craig: {
+              store: {
+                subnetTiers: {
+                  test: [
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
+              },
+            },
+          }
+        );
+        let expectedData = 'Name "frog" already in use';
+        assert.deepEqual(
+          actualData,
+          expectedData,
+          "it should return correct data"
+        );
       });
       it("should disable advanced toggle when dynamic subnets", () => {
         assert.isTrue(

@@ -1,9 +1,4 @@
-const {
-  contains,
-  isIpv4CidrOrAddress,
-  isString,
-  isNullOrEmptyString,
-} = require("lazy-z");
+const { contains, isIpv4CidrOrAddress, isString } = require("lazy-z");
 const {
   fieldIsNullOrEmptyString,
   unconditionalInvalidText,
@@ -11,12 +6,8 @@ const {
   hideWhenUseData,
   fieldIsNotWholeNumber,
 } = require("../utils");
-const {
-  invalidName,
-  invalidNameText,
-  invalidCidrBlock,
-  invalidCidrText,
-} = require("../../forms");
+const { invalidCidrBlock, hasOverlappingCidr } = require("../../forms");
+const { nameField } = require("../reusable-fields");
 
 function powerVsNetworkSchema() {
   return {
@@ -28,11 +19,7 @@ function powerVsNetworkSchema() {
         return stateData.workspace_use_data !== true;
       },
     },
-    name: {
-      default: "",
-      invalid: invalidName("network"),
-      invalidText: invalidNameText("network"),
-    },
+    name: nameField("network"),
     pi_network_type: {
       type: "select",
       default: "",
@@ -53,7 +40,32 @@ function powerVsNetworkSchema() {
         return stateData.use_data ? false : invalidCidrBlock(stateData.pi_cidr);
       },
       invalidText: function (stateData, componentProps) {
-        return invalidCidrText(componentProps.craig)(stateData, componentProps);
+        let cidrField = stateData.cidr ? "cidr" : "pi_cidr";
+        if (!stateData[cidrField]) {
+          return "Invalid CIDR block";
+        }
+        let cidrRange = Number(stateData[cidrField].split("/")[1]) > 17;
+        if (
+          componentProps.data &&
+          componentProps.data[cidrField] === stateData[cidrField] &&
+          stateData[cidrField]
+        ) {
+          // by checking if matching here prevent hasOverlappingCidr from running
+          // to decrease load times
+          return "";
+        } else if (isIpv4CidrOrAddress(stateData[cidrField]) === false) {
+          return "Invalid CIDR block";
+        } else if (isIpv4CidrOrAddress(stateData[cidrField]) && cidrRange) {
+          let invalidCidr = hasOverlappingCidr(componentProps.craig)(
+            stateData,
+            componentProps
+          );
+          if (invalidCidr.invalid) {
+            return `Warning: CIDR overlaps with ` + invalidCidr.cidr;
+          } else return "";
+        } else {
+          return "CIDR ranges of /17 or less are not supported";
+        }
       },
     },
     pi_dns: {

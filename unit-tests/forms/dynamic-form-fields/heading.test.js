@@ -18,6 +18,7 @@ describe("dynamicHeadingProps", () => {
         type: "type",
         tooltip: {},
         key: "heading-heading",
+        className: undefined,
       },
       "it should return props"
     );

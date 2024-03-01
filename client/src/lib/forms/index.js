@@ -1,13 +1,5 @@
+const { invalidProjectNameText } = require("./text-callbacks");
 const {
-  genericNameCallback,
-  invalidNameText,
-  invalidSubnetTierText,
-  invalidCidrText,
-  invalidProjectNameText,
-  invalidCrnText,
-} = require("./text-callbacks");
-const {
-  invalidName,
   validSshKey,
   invalidCrnList,
   invalidSubnetTierName,
@@ -30,7 +22,6 @@ const {
   disableSshKeyDelete,
   invalidCidrBlock,
 } = require("./disable-save");
-const { hasDuplicateName } = require("./duplicate-name");
 const { getSubnetTierStateData, getTierSubnets } = require("./state-data");
 const {
   formatConfig,
@@ -54,15 +45,10 @@ module.exports = {
   wizard,
   leftNavItemClassName,
   notificationText,
-  hasDuplicateName,
-  genericNameCallback,
-  invalidName,
   propsMatchState,
   disableSave,
-  invalidNameText,
   validSshKey,
   invalidSubnetTierName,
-  invalidSubnetTierText,
   formatConfig,
   getSubnetTierStateData,
   getTierSubnets,
@@ -77,7 +63,6 @@ module.exports = {
   cidrBlocksOverlap,
   hasOverlappingCidr,
   invalidCidr,
-  invalidCidrText,
   invalidCrnList,
   invalidProjectName,
   invalidProjectDescription,
@@ -86,5 +71,4 @@ module.exports = {
   invalidCidrBlock,
   invalidProjectNameText,
   invalidCrns,
-  invalidCrnText,
 };
