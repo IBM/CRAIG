@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 
 - Users can now use the `Trial` plan for secrets manager
 - Users can now disable the VPN Server to Secrets Manager Authorization policy from the Options form
+- Users can now add existing Subnets to VPCs from a data source
+- Users can now provide project names that use only uppercase letters (ex: `ACRONYM`)
 
 ### Fixes
 

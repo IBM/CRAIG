@@ -1,7 +1,7 @@
 import React from "react";
 import { disableSave, propsMatchState } from "../../../lib";
 import { Tile } from "@carbon/react";
-import { CraigFormHeading, PrimaryButton } from "../utils";
+import { CraigFormHeading, PrimaryButton, SecondaryButton } from "../utils";
 import { getSubnetData } from "../../../lib/forms/dynamic-subnet-tile-sub-form";
 import DynamicForm from "../DynamicForm";
 
@@ -14,20 +14,35 @@ export const SubnetTileTitle = (props) => {
         props.parentProps.isModal ? (
           ""
         ) : (
-          <PrimaryButton
-            noDeleteButton
-            name={props.parentProps.data.name || "New Subnet"}
-            disabled={
-              disableSave("subnet", props.parentState, props.parentProps) ||
-              propsMatchState("subnet", props.parentState, props.parentProps)
-            }
-            onClick={() => {
-              props.parentProps.craig.vpcs.subnets.save(
-                props.parentState,
-                props.parentProps
-              );
-            }}
-          />
+          <>
+            <PrimaryButton
+              noDeleteButton={props.parentProps.importedSubnet !== true}
+              name={props.parentProps.data.name || "New Subnet"}
+              disabled={
+                disableSave("subnet", props.parentState, props.parentProps) ||
+                propsMatchState("subnet", props.parentState, props.parentProps)
+              }
+              onClick={() => {
+                props.parentProps.craig.vpcs.subnets.save(
+                  props.parentState,
+                  props.parentProps
+                );
+              }}
+            />
+            {props.parentProps.importedSubnet ? (
+              <SecondaryButton
+                name={props.parentProps.data.name}
+                onClick={() => {
+                  props.parentProps.craig.vpcs.subnets.delete(
+                    props.parentState,
+                    props.parentProps
+                  );
+                }}
+              />
+            ) : (
+              ""
+            )}
+          </>
         )
       }
     />

@@ -64,6 +64,7 @@ const {
   invalidName,
   duplicateNameCallback,
   genericNameCallback,
+  nameHelperText,
 } = require("../reusable-fields");
 
 /**
@@ -329,7 +330,8 @@ function vpcOnStoreUpdate(config) {
         }
         let nextSubnet = {}; // transpose subnet to get old data
         transpose(subnet, nextSubnet);
-        nextSubnet.cidr = getNextCidr(lastCidr, vpcCidr[subnet.name]);
+        if (!subnet.use_data)
+          nextSubnet.cidr = getNextCidr(lastCidr, vpcCidr[subnet.name]);
         nextSubnet.has_prefix = false;
         newSubnets.push(nextSubnet);
       });
@@ -634,7 +636,6 @@ function subnetTierCreate(config, stateData, componentProps) {
       }
     }
     config.store.json.vpcs[vpcIndex].subnetTiers.push(tier);
-    config.store.subnetTiers[vpc.name].push(tier);
   } else if (stateData.advanced) {
     config.store.json._options.advanced_subnets = true;
     let tier = {
@@ -1305,7 +1306,7 @@ function vpcAclGroups(stateData, componentProps) {
  * @returns {boolean} true if not advanced
  */
 function disableWhenNotAdvaned(stateData) {
-  return !stateData.tier;
+  return !stateData.tier && !stateData.use_data;
 }
 
 /**
@@ -1392,10 +1393,17 @@ function initVpcStore(store) {
         ),
         schema: {
           name: nameField("subnet", {
+            helperText: function (stateData, componentProps) {
+              if (stateData.use_data) {
+                return "";
+              } else return nameHelperText(stateData, componentProps);
+            },
             size: "small",
             invalid: function (stateData, componentProps) {
-              componentProps.craig = store;
-              return invalidName("subnet", store)(stateData, componentProps);
+              return invalidName("subnet", componentProps.craig)(
+                stateData,
+                componentProps
+              );
             },
             disabledText: unconditionalInvalidText(""),
             hideWhen: disableWhenNotAdvaned,
@@ -1405,7 +1413,7 @@ function initVpcStore(store) {
             labelText: "Subnet CIDR",
             default: "",
             invalid: function (stateData, componentProps) {
-              if (!stateData.tier) {
+              if (!stateData.tier || stateData.use_data) {
                 return false;
               } else if (!isIpv4CidrOrAddress(stateData.cidr || "")) {
                 return true;

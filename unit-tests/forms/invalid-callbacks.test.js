@@ -249,6 +249,15 @@ describe("invalid callbacks", () => {
         "it should be true"
       );
     });
+    it("it should be false if name is in all caps", () => {
+      assert.isFalse(
+        invalidProjectName(
+          { name: "ALLCAPSNAME", description: "test description", json: {} },
+          { projects: { test: { name: "test", last_save } } }
+        ),
+        "it should be false"
+      );
+    });
   });
   describe("invalidProjectDescription", () => {
     it("should be false if description is empty string", () => {

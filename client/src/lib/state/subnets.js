@@ -154,7 +154,8 @@ function deleteLegacySubnetTier(
         ],
         subnet.name.replace(/-zone-\d/g, "")
       ) &&
-      !subnet.tier
+      !subnet.tier &&
+      !subnet.use_data
     ) {
       let splatTiers = splat(
         useNewSubnetTiers

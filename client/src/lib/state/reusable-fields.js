@@ -780,4 +780,5 @@ module.exports = {
   selectInvalidText,
   genericNameCallback,
   duplicateNameCallback,
+  nameHelperText,
 };

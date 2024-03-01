@@ -241,7 +241,16 @@ function ibmIsSubnet(subnet, config, useVarRef) {
 function formatSubnet(subnet, config, useVarRef) {
   let data = ibmIsSubnet(subnet, config, useVarRef);
 
-  return jsonToTfPrint("resource", "ibm_is_subnet", data.name, data.data);
+  return jsonToTfPrint(
+    subnet.use_data ? "data" : "resource",
+    "ibm_is_subnet",
+    data.name,
+    subnet.use_data
+      ? {
+          name: subnet.name,
+        }
+      : data.data
+  );
 }
 
 /**
@@ -534,12 +543,12 @@ function vpcModuleOutputs(vpc, securityGroups) {
   });
   vpc.subnets.forEach((subnet) => {
     outputs[snakeCase(subnet.name) + `_id`] = {
-      value: `\${ibm_is_subnet.${snakeCase(
+      value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
         `${subnet.vpc}-${subnet.name}`
       )}.id}`,
     };
     outputs[snakeCase(subnet.name) + `_crn`] = {
-      value: `\${ibm_is_subnet.${snakeCase(
+      value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
         `${subnet.vpc}-${subnet.name}`
       )}.crn}`,
     };

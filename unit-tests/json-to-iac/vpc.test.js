@@ -378,6 +378,55 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
         "it should return correct data"
       );
     });
+    it("should create subnet from data with vpc from data", () => {
+      let actualData = formatSubnet(
+        {
+          vpc: "management",
+          name: "vsi-subnet-1",
+          resource_group: "slz-management-rg",
+          cidr: "1.2.3.4/5",
+          network_acl: "management",
+          public_gateway: true,
+          has_prefix: true,
+          zone: 1,
+          use_data: true,
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-management-rg",
+            },
+          ],
+          vpcs: [
+            {
+              name: "management",
+              use_data: true,
+              acls: [
+                {
+                  name: "management",
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+data "ibm_is_subnet" "management_vsi_subnet_1" {
+  name = "vsi-subnet-1"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should create subnet with dynamic subnets", () => {
       let actualData = formatSubnet(
         {
@@ -5068,6 +5117,390 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
             '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\ndata "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name = "vsi-sg"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
           "outputs.tf":
             '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_id" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
+        },
+        "main.tf":
+          '##############################################################################\n# Customer AVPC Module\n##############################################################################\n\nmodule "customer_a_vpc" {\n  source      = "./customer_a_vpc"\n  region      = var.region\n  prefix      = var.prefix\n  craig_rg_id = ibm_resource_group.craig_rg.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################\n',
+      };
+      assert.deepEqual(actualData, expectedData, "should return correct data");
+    });
+    it("should return craig terraform for one vpc with only one data subnet and vpc from data and sg from data", () => {
+      let actualData = {};
+      vpcModuleTf(actualData, {
+        _options: {
+          prefix: "t1",
+          region: "us-south",
+          tags: ["hello", "world"],
+          zones: 1,
+          endpoints: "private",
+          account_id: "",
+          fs_cloud: false,
+          enable_classic: false,
+          dynamic_subnets: false,
+          enable_power_vs: false,
+          craig_version: "1.6.0",
+          power_vs_zones: [],
+          advanced_subnets: true,
+        },
+        access_groups: [],
+        appid: [],
+        atracker: {
+          enabled: false,
+          type: "cos",
+          name: "atracker",
+          target_name: "atracker-cos",
+          bucket: null,
+          add_route: true,
+          cos_key: null,
+          locations: ["global", "us-south"],
+        },
+        cbr_rules: [],
+        cbr_zones: [],
+        clusters: [],
+        dns: [],
+        event_streams: [],
+        f5_vsi: [],
+        iam_account_settings: {
+          enable: false,
+          mfa: null,
+          allowed_ip_addresses: null,
+          include_history: false,
+          if_match: null,
+          max_sessions_per_identity: null,
+          restrict_create_service_id: null,
+          restrict_create_platform_apikey: null,
+          session_expiration_in_seconds: null,
+          session_invalidation_in_seconds: null,
+        },
+        icd: [],
+        key_management: [
+          {
+            use_hs_crypto: false,
+            use_data: false,
+            name: "customer-a-kms",
+            resource_group: "craig-rg",
+            authorize_vpc_reader_role: false,
+            keys: [
+              {
+                name: "vsi-key",
+                root_key: false,
+                key_ring: "",
+                force_delete: false,
+                endpoint: null,
+                rotation: 1,
+                dual_auth_delete: false,
+              },
+            ],
+          },
+        ],
+        load_balancers: [
+          {
+            name: "customer-a-public-lb",
+            resource_group: "craig-rg",
+            vpc: "customer-a",
+            type: "public",
+            security_groups: ["vsi-sg"],
+            algorithm: "round_robin",
+            protocol: "tcp",
+            proxy_protocol: null,
+            health_type: "tcp",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["connect-vsi"],
+            listener_protocol: "tcp",
+            connection_limit: null,
+            port: 80,
+            health_timeout: 5,
+            health_delay: 6,
+            health_retries: 5,
+            listener_port: 80,
+            subnets: ["subnet-tier-zone-2"],
+          },
+          {
+            name: "customer-a-private-lb",
+            resource_group: "craig-rg",
+            vpc: "customer-a",
+            type: "private",
+            security_groups: ["vsi-sg"],
+            algorithm: "round_robin",
+            protocol: "tcp",
+            proxy_protocol: null,
+            health_type: "tcp",
+            session_persistence_app_cookie_name: "",
+            target_vsi: ["compass-vsi"],
+            listener_protocol: "tcp",
+            connection_limit: null,
+            port: 80,
+            health_timeout: 5,
+            health_delay: 6,
+            health_retries: 5,
+            listener_port: 80,
+            subnets: ["subnet-tier-zone-1"],
+          },
+        ],
+        logdna: {
+          enabled: false,
+          plan: "lite",
+          endpoints: "private",
+          platform_logs: false,
+          resource_group: null,
+          cos: null,
+          bucket: null,
+        },
+        object_storage: [],
+        power: [],
+        power_instances: [],
+        power_volumes: [],
+        resource_groups: [
+          {
+            use_prefix: true,
+            name: "craig-rg",
+            use_data: false,
+          },
+        ],
+        routing_tables: [],
+        scc: {
+          credential_description: null,
+          id: null,
+          passphrase: null,
+          name: "",
+          location: "us",
+          collector_description: null,
+          is_public: false,
+          scope_description: null,
+          enable: false,
+        },
+        secrets_manager: [],
+        security_groups: [
+          {
+            use_data: true,
+            resource_group: "craig-rg",
+            rules: [
+              {
+                name: "ssh",
+                direction: "inbound",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                tcp: {
+                  port_min: 22,
+                  port_max: 22,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                },
+                source: "0.0.0.0",
+                vpc: "customer-a",
+                sg: "vsi-sg",
+              },
+              {
+                name: "ping",
+                direction: "inbound",
+                icmp: {
+                  type: 8,
+                  code: 8,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                },
+                source: "0.0.0.0",
+                vpc: "customer-a",
+                sg: "vsi-sg",
+              },
+            ],
+            name: "vsi-sg",
+            vpc: "customer-a",
+            show: false,
+          },
+        ],
+        ssh_keys: [
+          {
+            name: "customer-a-ssh-key",
+            public_key: "",
+            use_data: false,
+            resource_group: "craig-rg",
+          },
+        ],
+        sysdig: {
+          enabled: false,
+          plan: "graduated-tier",
+          resource_group: null,
+        },
+        teleport_vsi: [],
+        transit_gateways: [],
+        virtual_private_endpoints: [],
+        vpcs: [
+          {
+            name: "customer-a",
+            use_data: true,
+            resource_group: "craig-rg",
+            classic_access: false,
+            manual_address_prefix_management: false,
+            default_network_acl_name: null,
+            default_security_group_name: null,
+            default_routing_table_name: null,
+            address_prefixes: [],
+            subnets: [
+              {
+                vpc: "customer-a",
+                zone: 1,
+                cidr: "10.10.10.0/24",
+                name: "subnet-tier-zone-1",
+                network_acl: "subnet-acl",
+                resource_group: "craig-rg",
+                public_gateway: false,
+                has_prefix: true,
+                tier: "subnet-tier",
+                use_data: true,
+              },
+            ],
+            public_gateways: [
+              {
+                vpc: "customer-a",
+                zone: 2,
+                resource_group: "craig-rg",
+              },
+            ],
+            acls: [
+              {
+                name: "subnet-acl",
+                resource_group: "craig-rg",
+                vpc: "customer-a",
+                rules: [
+                  {
+                    name: "allow-all-inbound",
+                    action: "allow",
+                    direction: "inbound",
+                    icmp: {
+                      type: null,
+                      code: null,
+                    },
+                    tcp: {
+                      port_min: null,
+                      port_max: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    udp: {
+                      port_min: null,
+                      port_max: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    source: "0.0.0.0",
+                    destination: "0.0.0.0",
+                    acl: "subnet-acl",
+                    vpc: "customer-a",
+                  },
+                  {
+                    name: "allow-all-outbound",
+                    action: "allow",
+                    direction: "outbound",
+                    icmp: {
+                      type: null,
+                      code: null,
+                    },
+                    tcp: {
+                      port_min: null,
+                      port_max: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    udp: {
+                      port_min: null,
+                      port_max: null,
+                      source_port_min: null,
+                      source_port_max: null,
+                    },
+                    source: "0.0.0.0",
+                    destination: "0.0.0.0",
+                    acl: "subnet-acl",
+                    vpc: "customer-a",
+                  },
+                ],
+              },
+            ],
+            bucket: "$disabled",
+            publicGateways: [2],
+            cos: null,
+          },
+        ],
+        vpn_gateways: [
+          {
+            name: "customer-a-vpn-gw",
+            resource_group: "craig-rg",
+            vpc: "customer-a",
+            subnet: "subnet-tier-zone-1",
+            policy_mode: true,
+          },
+        ],
+        vpn_servers: [],
+        vsi: [
+          {
+            kms: "customer-a-kms",
+            encryption_key: "vsi-key",
+            image: "eagle-cent-os-7",
+            image_name:
+              "CentOS 7.x - Minimal Install (amd64) [eagle-cent-os-7]",
+            profile: "bx2-2x8",
+            name: "compass-vsi",
+            security_groups: ["vsi-sg"],
+            ssh_keys: ["customer-a-ssh-key"],
+            vpc: "customer-a",
+            vsi_per_subnet: 1,
+            resource_group: "craig-rg",
+            override_vsi_name: null,
+            user_data: null,
+            network_interfaces: [],
+            subnets: ["subnet-tier-zone-1"],
+            volumes: [],
+            subnet: "",
+            enable_floating_ip: false,
+          },
+          {
+            kms: "customer-a-kms",
+            encryption_key: "vsi-key",
+            image: "eagle-cent-os-7",
+            image_name:
+              "CentOS 7.x - Minimal Install (amd64) [eagle-cent-os-7]",
+            profile: "bx2-2x8",
+            name: "connect-vsi",
+            security_groups: ["vsi-sg"],
+            ssh_keys: ["customer-a-ssh-key"],
+            vpc: "customer-a",
+            vsi_per_subnet: 1,
+            resource_group: "craig-rg",
+            override_vsi_name: null,
+            user_data: null,
+            network_interfaces: [],
+            subnets: ["subnet-tier-zone-2"],
+            volumes: [],
+            subnet: "",
+            enable_floating_ip: false,
+          },
+        ],
+        classic_vlans: [],
+        classic_ssh_keys: [],
+      });
+      let expectedData = {
+        customer_a_vpc: {
+          "main.tf":
+            '##############################################################################\n# Customer AVPC\n##############################################################################\n\ndata "ibm_is_vpc" "customer_a_vpc" {\n  name = "customer-a"\n}\n\nresource "ibm_is_public_gateway" "customer_a_gateway_zone_2" {\n  name           = "${var.prefix}-customer-a-gateway-zone-2"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\ndata "ibm_is_subnet" "customer_a_subnet_tier_zone_1" {\n  name = "subnet-tier-zone-1"\n}\n\n##############################################################################\n',
+          "versions.tf":
+            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+          "variables.tf":
+            '##############################################################################\n# Customer AVPC Variables\n##############################################################################\n\nvariable "tags" {\n  description = "List of tags"\n  type        = list(string)\n}\n\nvariable "region" {\n  description = "IBM Cloud Region where resources will be provisioned"\n  type        = string\n}\n\nvariable "prefix" {\n  description = "Name prefix that will be prepended to named resources"\n  type        = string\n}\n\nvariable "craig_rg_id" {\n  description = "ID for the resource group craig-rg"\n  type        = string\n}\n\n##############################################################################\n',
+          "acl_customer_a_subnet_acl.tf":
+            '##############################################################################\n# Customer A Subnet Acl ACL\n##############################################################################\n\nresource "ibm_is_network_acl" "customer_a_subnet_acl_acl" {\n  name           = "${var.prefix}-customer-a-subnet-acl-acl"\n  vpc            = data.ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  tags = [\n    "hello",\n    "world"\n  ]\n  rules {\n    source      = "0.0.0.0"\n    action      = "allow"\n    destination = "0.0.0.0"\n    direction   = "inbound"\n    name        = "allow-all-inbound"\n  }\n  rules {\n    source      = "0.0.0.0"\n    action      = "allow"\n    destination = "0.0.0.0"\n    direction   = "outbound"\n    name        = "allow-all-outbound"\n  }\n}\n\n##############################################################################\n',
+          "sg_vsi_sg.tf":
+            '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\ndata "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name = "vsi-sg"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
+          "outputs.tf":
+            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = data.ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = data.ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "vsi_sg_id" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
         },
         "main.tf":
           '##############################################################################\n# Customer AVPC Module\n##############################################################################\n\nmodule "customer_a_vpc" {\n  source      = "./customer_a_vpc"\n  region      = var.region\n  prefix      = var.prefix\n  craig_rg_id = ibm_resource_group.craig_rg.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################\n',

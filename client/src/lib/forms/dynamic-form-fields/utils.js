@@ -129,16 +129,17 @@ function dynamicFieldId(props) {
  * add classname from component
  * @param {*} className
  * @param {*} field field object
+ * @param {boolean} isImportedSubnetName override for imported subnet form
  * @returns {string} className string
  */
-function addClassName(className, field) {
+function addClassName(className, field, isImportedSubnetName) {
   let composedClassName = className;
   if (field?.className) {
     composedClassName += " " + field.className;
   }
 
   composedClassName +=
-    field?.size === "small"
+    field?.size === "small" && !isImportedSubnetName
       ? " fieldWidthSmaller"
       : field?.size === "wide"
       ? " textInputWide"

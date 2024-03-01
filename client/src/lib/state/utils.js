@@ -192,7 +192,7 @@ function buildSubnetTiers(vpcObject) {
       // add zone and name
       advancedTiers[subnet.tier].select_zones.push(subnet.zone);
       advancedTiers[subnet.tier].subnets.push(subnet.name);
-    } else {
+    } else if (!subnet.use_data) {
       let tierName = subnet.name.replace(/-zone-\d/g, ""); // get tier name by replacing zone
       let arrayMethod = "push";
       // in order to make sure that subnet tiers are translated to be in

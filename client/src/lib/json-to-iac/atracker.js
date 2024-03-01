@@ -1,3 +1,4 @@
+const { isArray } = require("lazy-z");
 const { varDotRegion } = require("../constants");
 const {
   kebabName,
@@ -89,11 +90,12 @@ function ibmAtrackerRoute(config) {
       ],
     },
   };
-  config.atracker.locations.forEach((location) => {
-    if (location === config._options.region) {
-      routeData.data.rules[0].locations.push(varDotRegion);
-    } else routeData.data.rules[0].locations.push(location);
-  });
+  if (isArray(config?.atracker?.locations))
+    config.atracker.locations.forEach((location) => {
+      if (location === config._options.region) {
+        routeData.data.rules[0].locations.push(varDotRegion);
+      } else routeData.data.rules[0].locations.push(location);
+    });
   return routeData;
 }
 

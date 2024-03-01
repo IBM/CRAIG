@@ -280,7 +280,10 @@ function invalidProjectName(stateData, componentProps) {
   let name = stateData.name;
   let invalid = false;
 
-  if (invalidNewResourceName(name)) {
+  if (
+    invalidNewResourceName(name) &&
+    name.match(/[A-Z][A-Z_]*[A-Z]+/) === null
+  ) {
     invalid = true;
   } else {
     // check if dupe

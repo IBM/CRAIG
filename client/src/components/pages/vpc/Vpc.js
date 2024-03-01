@@ -38,6 +38,8 @@ class VpcDiagramPage extends React.Component {
       subnetTierCreateModal: false,
       aclCreateModal: false,
       vpcModal: false,
+      showSubnetModal: false,
+      subnetIndex: -1,
     };
     this.onAclEditClick = this.onAclEditClick.bind(this);
     this.onSubnetTierEditClick = this.onSubnetTierEditClick.bind(this);
@@ -51,6 +53,9 @@ class VpcDiagramPage extends React.Component {
     this.onAclCreateClick = this.onAclCreateClick.bind(this);
     this.onVpcEditClick = this.onVpcEditClick.bind(this);
     this.onAclButtonClick = this.onAclButtonClick.bind(this);
+    this.onImportModalSubmit = this.onImportModalSubmit.bind(this);
+    this.onImportSubnetEditClick = this.onImportSubnetEditClick.bind(this);
+    this.onImportedSubnetDelete = this.onImportedSubnetDelete.bind(this);
   }
 
   onAclCreateClick(vpcIndex) {
@@ -72,6 +77,7 @@ class VpcDiagramPage extends React.Component {
       subnetTierIndex: -1,
       aclCreateModal: false,
       vpcIndex: vpcIndex ? vpcIndex : this.state.vpcIndex,
+      subnetIndex: -1,
     });
   }
 
@@ -90,6 +96,21 @@ class VpcDiagramPage extends React.Component {
       this.setState({
         vpcIndex: vpcIndex,
         subnetTierIndex: tierIndex,
+        editing: true,
+      });
+    }
+  }
+
+  onImportSubnetEditClick(vpcIndex, subnetIndex) {
+    if (
+      vpcIndex === this.state.vpcIndex &&
+      subnetIndex === this.state.subnetIndex
+    ) {
+      this.resetValues();
+    } else {
+      this.setState({
+        vpcIndex: vpcIndex,
+        subnetIndex: subnetIndex,
         editing: true,
       });
     }
@@ -133,6 +154,13 @@ class VpcDiagramPage extends React.Component {
     }
   }
 
+  onImportModalSubmit(data) {
+    this.props.craig.vpcs.subnets.create(data, {
+      name: this.props.craig.store.json.vpcs[this.state.vpcIndex].name,
+    });
+    this.setState({ showSubnetModal: false });
+  }
+
   onSubnetTierSubmit(data) {
     this.props.craig.vpcs.subnetTiers.create(data, {
       vpc_name: this.props.craig.store.json.vpcs[this.state.vpcIndex].name,
@@ -157,6 +185,11 @@ class VpcDiagramPage extends React.Component {
   onSubnetTierDelete(stateData, componentProps) {
     this.resetValues();
     this.props.craig.vpcs.subnetTiers.delete(stateData, componentProps);
+  }
+
+  onImportedSubnetDelete(stateData, componentProps) {
+    this.resetValues();
+    this.props.craig.vpcs.subnets.delete(stateData, componentProps);
   }
 
   onAclDelete(stateData, componentProps) {
@@ -191,8 +224,52 @@ class VpcDiagramPage extends React.Component {
         ? craig.store.json.vpcs[this.state.vpcIndex].name
         : "";
     let vpcFormData = craigForms(craig).vpcs;
+    // need to
+    // - add function to open import subnet form in scroll form on click
     return (
       <>
+        {this.state.showSubnetModal ? (
+          <DynamicFormModal
+            name={`Import a Subnet in ${
+              craig.store.json.vpcs[this.state.vpcIndex].name
+            } VPC`}
+            show
+            beginDisabled
+            submissionFieldName="subnets"
+            onRequestSubmit={this.onImportModalSubmit}
+            onRequestClose={() => {
+              this.setState({ showSubnetModal: false });
+            }}
+          >
+            {RenderForm(DynamicForm, {
+              craig: craig,
+              vpc_name: craig.store.json.vpcs[this.state.vpcIndex].name,
+              shouldDisableSubmit: function () {
+                // see abovec
+                this.props.setRefUpstream(this.state);
+                if (disableSave("subnet", this.state, this.props) === false) {
+                  this.props.enableModal();
+                } else {
+                  this.props.disableModal();
+                }
+              },
+              data: {
+                use_data: true,
+                name: "",
+                has_prefix: false,
+              },
+              form: {
+                groups: [
+                  {
+                    name: craig.vpcs.subnets.name,
+                  },
+                ],
+              },
+            })}
+          </DynamicFormModal>
+        ) : (
+          ""
+        )}
         <DynamicFormModal
           name="Create a VPC"
           show={this.state.vpcModal}
@@ -349,6 +426,13 @@ class VpcDiagramPage extends React.Component {
                     key={JSON.stringify(craig.store.json.vpcs)}
                     craig={craig}
                     onTitleClick={(vpcIndex) => this.onVpcEditClick(vpcIndex)}
+                    onImportedSubnetClick={this.onImportSubnetEditClick}
+                    onImportModalClick={(vpcIndex) => {
+                      this.setState({
+                        showSubnetModal: true,
+                        vpcIndex: vpcIndex,
+                      });
+                    }}
                     isSelected={(vpcIndex) => {
                       return vpcIndex === this.state.vpcIndex;
                     }}
@@ -421,7 +505,8 @@ class VpcDiagramPage extends React.Component {
                         noMarginBottom
                         type="subHeading"
                         icon={
-                          this.state.subnetTierIndex > -1 ? (
+                          this.state.subnetTierIndex > -1 ||
+                          this.state.subnetIndex > -1 ? (
                             <IbmCloudSubnets className="diagramTitleIcon" />
                           ) : this.state.aclIndex > -1 ? (
                             <SubnetAclRules className="diagramTitleIcon" />
@@ -430,7 +515,9 @@ class VpcDiagramPage extends React.Component {
                           )
                         }
                         name={`Editing ${
-                          this.state.aclIndex > -1
+                          this.state.subnetIndex > -1
+                            ? "Imported Subnet for "
+                            : this.state.aclIndex > -1
                             ? "ACL for"
                             : this.state.subnetTierIndex > -1
                             ? "Subnet Tier for"
@@ -453,6 +540,40 @@ class VpcDiagramPage extends React.Component {
                             aclIndex={this.state.aclIndex}
                             craig={craig}
                             onDelete={this.onAclDelete}
+                          />
+                        ) : this.state.subnetIndex !== -1 ? (
+                          <CraigToggleForm
+                            key={this.state.vpcIndex}
+                            tabPanel={{
+                              hideAbout: true,
+                            }}
+                            onSave={craig.vpcs.subnets.save}
+                            onDelete={this.onImportedSubnetDelete}
+                            hide={false}
+                            hideChevron
+                            hideName
+                            submissionFieldName="subnets"
+                            name={
+                              craig.store.json.vpcs[this.state.vpcIndex]
+                                .subnets[this.state.subnetIndex].name +
+                              " [Imported]"
+                            }
+                            innerFormProps={{
+                              form: {
+                                groups: [
+                                  {
+                                    name: craig.vpcs.subnets.name,
+                                  },
+                                ],
+                              },
+                              vpc_name:
+                                craig.store.json.vpcs[this.state.vpcIndex].name,
+                              name: craig.store.json.vpcs[this.state.vpcIndex]
+                                .name,
+                              craig: craig,
+                              data: craig.store.json.vpcs[this.state.vpcIndex]
+                                .subnets[this.state.subnetIndex],
+                            }}
                           />
                         ) : this.state.vpcIndex !== -1 ? (
                           <CraigToggleForm
