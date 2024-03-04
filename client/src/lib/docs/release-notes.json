@@ -1,5 +1,16 @@
 [
   {
+    "version": "1.12.2",
+    "features": [
+      "A new file `outputs.tf` is now added to each CRAIG Terraform template",
+      "VPC names, IDs, and CRNs are exported as outputs",
+      "Subnet names, IDs, and CRNS are exported as outputs",
+      "VPC Security Group names, and IDs are exported as outputs"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.12.1",
     "features": [
       "Users can now use the `Trial` plan for secrets manager",

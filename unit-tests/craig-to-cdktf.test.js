@@ -1883,31 +1883,17 @@ describe("craigToCdktf", () => {
           },
         },
         output: {
-          id: { value: "${ibm_is_vpc.management_vpc.id}" },
-          crn: { value: "${ibm_is_vpc.management_vpc.crn}" },
-          vsi_zone_1_id: {
-            value: "${ibm_is_subnet.management_vsi_zone_1.id}",
+          name: {
+            value: "${ibm_is_vpc.management_vpc.name}",
           },
-          vsi_zone_1_crn: {
-            value: "${ibm_is_subnet.management_vsi_zone_1.crn}",
+          id: {
+            value: "${ibm_is_vpc.management_vpc.id}",
           },
-          vpn_zone_1_id: {
-            value: "${ibm_is_subnet.management_vpn_zone_1.id}",
+          crn: {
+            value: "${ibm_is_vpc.management_vpc.crn}",
           },
-          vpn_zone_1_crn: {
-            value: "${ibm_is_subnet.management_vpn_zone_1.crn}",
-          },
-          vsi_zone_2_id: {
-            value: "${ibm_is_subnet.management_vsi_zone_2.id}",
-          },
-          vsi_zone_2_crn: {
-            value: "${ibm_is_subnet.management_vsi_zone_2.crn}",
-          },
-          vsi_zone_3_id: {
-            value: "${ibm_is_subnet.management_vsi_zone_3.id}",
-          },
-          vsi_zone_3_crn: {
-            value: "${ibm_is_subnet.management_vsi_zone_3.crn}",
+          vpe_zone_1_name: {
+            value: "${ibm_is_subnet.management_vpe_zone_1.name}",
           },
           vpe_zone_1_id: {
             value: "${ibm_is_subnet.management_vpe_zone_1.id}",
@@ -1915,17 +1901,63 @@ describe("craigToCdktf", () => {
           vpe_zone_1_crn: {
             value: "${ibm_is_subnet.management_vpe_zone_1.crn}",
           },
+          vpe_zone_2_name: {
+            value: "${ibm_is_subnet.management_vpe_zone_2.name}",
+          },
           vpe_zone_2_id: {
             value: "${ibm_is_subnet.management_vpe_zone_2.id}",
           },
           vpe_zone_2_crn: {
             value: "${ibm_is_subnet.management_vpe_zone_2.crn}",
           },
+          vpe_zone_3_name: {
+            value: "${ibm_is_subnet.management_vpe_zone_3.name}",
+          },
           vpe_zone_3_id: {
             value: "${ibm_is_subnet.management_vpe_zone_3.id}",
           },
           vpe_zone_3_crn: {
             value: "${ibm_is_subnet.management_vpe_zone_3.crn}",
+          },
+          vsi_zone_1_name: {
+            value: "${ibm_is_subnet.management_vsi_zone_1.name}",
+          },
+          vsi_zone_1_id: {
+            value: "${ibm_is_subnet.management_vsi_zone_1.id}",
+          },
+          vsi_zone_1_crn: {
+            value: "${ibm_is_subnet.management_vsi_zone_1.crn}",
+          },
+          vsi_zone_2_name: {
+            value: "${ibm_is_subnet.management_vsi_zone_2.name}",
+          },
+          vsi_zone_2_id: {
+            value: "${ibm_is_subnet.management_vsi_zone_2.id}",
+          },
+          vsi_zone_2_crn: {
+            value: "${ibm_is_subnet.management_vsi_zone_2.crn}",
+          },
+          vsi_zone_3_name: {
+            value: "${ibm_is_subnet.management_vsi_zone_3.name}",
+          },
+          vsi_zone_3_id: {
+            value: "${ibm_is_subnet.management_vsi_zone_3.id}",
+          },
+          vsi_zone_3_crn: {
+            value: "${ibm_is_subnet.management_vsi_zone_3.crn}",
+          },
+          vpn_zone_1_name: {
+            value: "${ibm_is_subnet.management_vpn_zone_1.name}",
+          },
+          vpn_zone_1_id: {
+            value: "${ibm_is_subnet.management_vpn_zone_1.id}",
+          },
+          vpn_zone_1_crn: {
+            value: "${ibm_is_subnet.management_vpn_zone_1.crn}",
+          },
+          management_vpe_sg_name: {
+            value:
+              "${ibm_is_security_group.management_vpc_management_vpe_sg_sg.name}",
           },
           management_vpe_sg_id: {
             value:

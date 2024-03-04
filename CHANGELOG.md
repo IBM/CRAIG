@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.12.2
+
+### Upgrade Notes
+
+
+### Features
+
+- A new file `outputs.tf` is now added to each CRAIG Terraform template
+- VPC names, IDs, and CRNs are exported as outputs
+- Subnet names, IDs, and CRNS are exported as outputs
+- VPC Security Group names, and IDs are exported as outputs
+
+### Fixes
+
+
 ## 1.12.1
 
 ### Upgrade Notes

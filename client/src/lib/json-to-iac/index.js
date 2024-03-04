@@ -186,7 +186,10 @@ const {
   formatClassicNetworkVlan,
   classicInfraTf,
 } = require("./classic");
+const { outputsTf } = require("./outputs");
+
 module.exports = {
+  outputsTf,
   formatClassicSshKey,
   formatClassicNetworkVlan,
   classicInfraTf,

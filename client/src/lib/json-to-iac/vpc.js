@@ -534,7 +534,7 @@ function vpcModuleJson(vpc, rgs, config) {
  */
 function vpcModuleOutputs(vpc, securityGroups) {
   let outputs = {};
-  ["id", "crn"].forEach((field) => {
+  ["name", "id", "crn"].forEach((field) => {
     outputs[field] = {
       value: `\${${vpc.use_data ? "data." : ""}ibm_is_vpc.${snakeCase(
         vpc.name + "-vpc"
@@ -542,6 +542,11 @@ function vpcModuleOutputs(vpc, securityGroups) {
     };
   });
   vpc.subnets.forEach((subnet) => {
+    outputs[snakeCase(subnet.name) + `_name`] = {
+      value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
+        `${subnet.vpc}-${subnet.name}`
+      )}.name}`,
+    };
     outputs[snakeCase(subnet.name) + `_id`] = {
       value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
         `${subnet.vpc}-${subnet.name}`
@@ -555,6 +560,13 @@ function vpcModuleOutputs(vpc, securityGroups) {
   });
   securityGroups.forEach((sg) => {
     if (sg.vpc === vpc.name) {
+      outputs[snakeCase(`${sg.name}_name`)] = {
+        value: `\${${
+          sg.use_data ? "data." : ""
+        }ibm_is_security_group.${snakeCase(
+          `${sg.vpc} vpc ${sg.name} sg`
+        )}.name}`,
+      };
       outputs[snakeCase(`${sg.name}_id`)] = {
         value: `\${${
           sg.use_data ? "data." : ""

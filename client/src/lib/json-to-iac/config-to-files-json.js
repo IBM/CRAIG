@@ -34,6 +34,7 @@ const { cisTf } = require("./cis");
 const { cisGlbTf } = require("./cis-glb");
 const { scc2Tf } = require("./scc-v2");
 const { fortigateTf } = require("./fortigate");
+const { outputsTf } = require("./outputs");
 const apacheLicense = `                                 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -310,6 +311,7 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "cis_global_load_balancers.tf": cisGlbTf(config),
       "scc_v2.tf": scc2Tf(config),
       "fortigate_vnf.tf": fortigateTf(config),
+      "outputs.tf": outputsTf(config),
     };
     vpcModuleTf(files, config);
     return files;

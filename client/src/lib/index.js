@@ -106,6 +106,7 @@ const {
   formatClassicSshKey,
   formatClassicNetworkVlan,
   classicInfraTf,
+  outputsTf,
 } = require("./json-to-iac");
 const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
@@ -114,6 +115,7 @@ const { invalidForms } = require("./invalid-forms");
 const { allDocText, filterDocs } = require("./docs");
 
 module.exports = {
+  outputsTf,
   allDocText,
   filterDocs,
   shouldDisplayService,
