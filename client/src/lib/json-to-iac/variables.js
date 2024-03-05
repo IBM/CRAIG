@@ -6,7 +6,6 @@ const {
   isNullOrEmptyString,
   capitalize,
 } = require("lazy-z");
-const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * create variables dot tf
@@ -181,7 +180,13 @@ function variablesDotTf(config, useF5, templateTarMode) {
 
   config.vpn_servers.forEach((server) => {
     if (server.bring_your_own_cert) {
-      ["cert_pem", "private_key_pem", "intermediate_pem"].forEach((certVar) => {
+      [
+        "cert_pem",
+        "private_key_pem",
+        "intermediate_pem",
+        "client_ca_cert_pem",
+        "client_ca_private_key_pem",
+      ].forEach((certVar) => {
         variables[
           snakeCase(`${server.vpc} vpn_server ${server.name} ${certVar}`)
         ] = {

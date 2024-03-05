@@ -756,6 +756,18 @@ variable "management_vpn_server_abc_intermediate_pem" {
   sensitive   = true
 }
 
+variable "management_vpn_server_abc_client_ca_cert_pem" {
+  description = "Imported certificate client ca PEM for Management Vpn Server Abc. Certificate will be stored in Secrets Manager"
+  type        = string
+  sensitive   = true
+}
+
+variable "management_vpn_server_abc_client_ca_private_key_pem" {
+  description = "Imported certificate client ca private key PEM for Management Vpn Server Abc. Certificate will be stored in Secrets Manager"
+  type        = string
+  sensitive   = true
+}
+
 ##############################################################################
 `;
     assert.deepEqual(

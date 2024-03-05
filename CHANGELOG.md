@@ -13,9 +13,12 @@ All notable changes to this project will be documented in this file.
 - VPC names, IDs, and CRNs are exported as outputs
 - Subnet names, IDs, and CRNS are exported as outputs
 - VPC Security Group names, and IDs are exported as outputs
+- When bringing your own certificate for VPN Servers, two separate certificates are now imported. Additional variables have been added to support the new imported certificate
 
 ### Fixes
 
+- Fixed an issue causing certificates imported into an existing Secrets Manager instance to have incorrect references within Terraform
+- Fixed an issue causing nested forms to not be shown by default when invalid
 
 ## 1.12.1
 
