@@ -406,6 +406,12 @@ function initVsiStore(store) {
         apiEndpoint: function (stateData, componentProps) {
           return `/api/vsi/${componentProps.craig.store.json._options.region}/images`;
         },
+        tooltip: {
+          content:
+            "When using a Red Had Enterprise Linux Image, additional networking rules must be added to successfully provision your VSI. Ensure outbound traffic is allowed in Security Groups at CIDR range 161.26.0.0/16 for TCP ports 80, 443, and 8443, and for UDP port 53.",
+          align: "top-left",
+          alignModal: "top-left",
+        },
       },
       profile: {
         size: "small",
