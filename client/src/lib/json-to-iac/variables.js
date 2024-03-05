@@ -179,7 +179,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
   });
 
   config.vpn_servers.forEach((server) => {
-    if (server.bring_your_own_cert) {
+    if (server.bring_your_own_cert || server.method === "byo") {
       [
         "cert_pem",
         "private_key_pem",
