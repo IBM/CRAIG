@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Subnet names, IDs, and CRNS are exported as outputs
 - VPC Security Group names, and IDs are exported as outputs
 - When bringing your own certificate for VPN Servers, two separate certificates are now imported. Additional variables have been added to support the new imported certificate
+- Users can now create, update, and delete Classic Security Groups and their rules from the Classic Security Groups page `/forms/classicSecurityGroups`
 
 ### Fixes
 

@@ -50,6 +50,7 @@ const { initVtlStore } = require("./vtl.js");
 const { initSccV2 } = require("./scc-v2.js");
 const { initCisGlbStore } = require("./cis-glb.js");
 const { initFortigateStore } = require("./fortigate.js");
+const { initClassicSecurityGroups } = require("./classic-security-groups.js");
 
 /**
  * get state for craig
@@ -166,6 +167,7 @@ const state = function (legacy) {
   initSccV2(store);
   initCisGlbStore(store);
   initFortigateStore(store);
+  initClassicSecurityGroups(store);
 
   /**
    * hard set config dot json in state store

@@ -954,5 +954,6 @@
     "resource_group": ""
   },
   "cis_glbs": [],
-  "fortigate_vnf": []
+  "fortigate_vnf": [],
+  "classic_security_groups": []
 }

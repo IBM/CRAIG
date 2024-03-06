@@ -21,9 +21,9 @@ const {
 const {
   f5Tf,
   f5CloudInitYaml,
-  f5TemplateFile,
   f5Locals,
   f5ImageLocals,
+  f5TemplateFile,
   f5Images,
 } = require("./f5");
 const {
@@ -187,8 +187,16 @@ const {
   classicInfraTf,
 } = require("./classic");
 const { outputsTf } = require("./outputs");
+const {
+  formatClassicSg,
+  formatClassicSgRule,
+  classicSecurityGroupTf,
+} = require("./classic-security-group");
 
 module.exports = {
+  classicSecurityGroupTf,
+  formatClassicSgRule,
+  formatClassicSg,
   outputsTf,
   formatClassicSshKey,
   formatClassicNetworkVlan,

@@ -35,6 +35,7 @@ const { cisGlbTf } = require("./cis-glb");
 const { scc2Tf } = require("./scc-v2");
 const { fortigateTf } = require("./fortigate");
 const { outputsTf } = require("./outputs");
+const { classicSecurityGroupTf } = require("./classic-security-group");
 const apacheLicense = `                                 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -312,6 +313,7 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "scc_v2.tf": scc2Tf(config),
       "fortigate_vnf.tf": fortigateTf(config),
       "outputs.tf": outputsTf(config),
+      "classic_security_groups.tf": classicSecurityGroupTf(config),
     };
     vpcModuleTf(files, config);
     return files;

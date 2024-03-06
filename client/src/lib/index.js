@@ -107,6 +107,9 @@ const {
   formatClassicNetworkVlan,
   classicInfraTf,
   outputsTf,
+  formatClassicSgRule,
+  formatClassicSg,
+  classicSecurityGroupTf,
 } = require("./json-to-iac");
 const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
@@ -115,6 +118,9 @@ const { invalidForms } = require("./invalid-forms");
 const { allDocText, filterDocs } = require("./docs");
 
 module.exports = {
+  classicSecurityGroupTf,
+  formatClassicSgRule,
+  formatClassicSg,
   outputsTf,
   allDocText,
   filterDocs,

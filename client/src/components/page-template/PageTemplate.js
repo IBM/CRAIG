@@ -44,6 +44,7 @@ import {
   LoadBalancerPool,
   AppConnectivity,
   ChartLine,
+  SecurityServices,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import {
@@ -110,6 +111,7 @@ const navIcons = {
     IbmCloudSecurityComplianceCenterWorkloadProtection,
   LoadBalancerPool: LoadBalancerPool,
   AppConnectivity: AppConnectivity,
+  SecurityServices: SecurityServices,
 };
 
 let pageOrder = [

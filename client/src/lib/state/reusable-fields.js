@@ -307,12 +307,21 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "cloud_connections",
       "name"
     );
+  } else if (field === "classic_sg_rules") {
+    allOtherNames = splat(
+      new revision(componentProps.craig.store.json).child(
+        "classic_security_groups",
+        componentProps.arrayParentName
+      ).data.classic_sg_rules,
+      "name"
+    );
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],
       "name"
     );
   }
+
   if (stateData && componentProps) {
     if (
       // component props.data is not available on load, this line
@@ -724,7 +733,7 @@ function networkingRuleTypeField() {
     default: "",
     invalid: invalidIcmpCodeOrType,
     invalidText: unconditionalInvalidText(
-      "Enter a while number between 0 and 254"
+      "Enter a whole number between 0 and 254"
     ),
     hideWhen: hideWhenTcpOrUdp,
     onInputChange: onRuleFieldInputChange("type"),
@@ -747,7 +756,7 @@ function networkingRuleCodeField() {
     default: "",
     invalid: invalidIcmpCodeOrType,
     invalidText: unconditionalInvalidText(
-      "Enter a while number between 0 and 255"
+      "Enter a whole number between 0 and 255"
     ),
     hideWhen: hideWhenTcpOrUdp,
     onInputChange: onRuleFieldInputChange("code"),

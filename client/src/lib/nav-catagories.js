@@ -29,6 +29,7 @@ const {
   powerVsTf,
   powerVsVolumeTf,
   classicInfraTf,
+  classicSecurityGroupTf,
 } = require("./json-to-iac");
 const { cisTf } = require("./json-to-iac/cis");
 const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
@@ -289,6 +290,15 @@ const navCatagories = [
           return classicGatewayTf(config) || "";
         },
         jsonField: "classic_gateways",
+      },
+      {
+        title: "Classic Security Groups",
+        path: "/form/classicSecurityGroups",
+        react_icon: "SecurityServices",
+        toTf: (config) => {
+          return classicSecurityGroupTf(config) || "";
+        },
+        jsonField: "classic_security_groups",
       },
     ],
   },
