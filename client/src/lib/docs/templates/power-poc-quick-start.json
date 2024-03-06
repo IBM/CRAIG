@@ -10,11 +10,10 @@
     "enable_power_vs": true,
     "enable_classic": false,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.12.0",
+    "craig_version": "1.12.2",
     "power_vs_high_availability": false,
     "template": "Power VS POC",
-    "fs_cloud": false,
-    "no_vpn_secrets_manager_auth": false
+    "fs_cloud": false
   },
   "access_groups": [],
   "appid": [],
@@ -537,17 +536,7 @@
   ],
   "routing_tables": [
     {
-      "routes": [
-        {
-          "name": "on-prem",
-          "zone": "1",
-          "destination": "10.40.0.0/16",
-          "action": "deliver",
-          "next_hop": "10.250.0.1",
-          "routing_table": "poweringress",
-          "vpc": "transit"
-        }
-      ],
+      "routes": [],
       "name": "poweringress",
       "vpc": "transit",
       "internet_ingress": false,
@@ -556,7 +545,7 @@
       "direct_link_ingress": false,
       "route_direct_link_ingress": false,
       "route_vpc_zone_ingress": false,
-      "accept_routes_from_resource_type": []
+      "accept_routes_from_resource_type": ["vpn_gateway", "vpn_server"]
     }
   ],
   "scc": {
@@ -939,7 +928,8 @@
               "source_port_min": null,
               "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
       ],
       "subnetTiers": [
@@ -955,7 +945,8 @@
           "name": "vpn",
           "zones": 1
         }
-      ]
+      ],
+      "use_data": false
     }
   ],
   "vpn_gateways": [
