@@ -3352,5 +3352,37 @@ describe("power_instances", () => {
         });
       });
     });
+    describe("power_instances ibmi license fields", () => {
+      it("should hide toggle when image is not ibmi", () => {
+        assert.isTrue(
+          craig.power_instances.pi_ibmi_css.hideWhen({}),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_ibmi_css.hideWhen({
+            image: "other",
+          }),
+          "it should be hidden"
+        );
+      });
+      it("should return invalid for pi_ibmi_rds_users", () => {
+        assert.isFalse(
+          craig.power_instances.pi_ibmi_rds_users.invalid({}),
+          "it should be false when no state object"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_ibmi_rds_users.invalid({
+            pi_ibmi_rds_users: "aaa",
+          }),
+          "it should be true when not a number"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_ibmi_rds_users.invalid({
+            pi_ibmi_rds_users: "-1",
+          }),
+          "it should be true when not in range"
+        );
+      });
+    });
   });
 });

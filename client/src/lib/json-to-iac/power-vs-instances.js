@@ -66,6 +66,18 @@ function powerVsInstanceData(instance, config) {
   };
   transpose(instance, data);
   delete data.index;
+  if (data.pi_ibmi_css === false) {
+    delete data.pi_ibmi_css;
+  }
+
+  if (data.pi_ibmi_pha === false) {
+    delete data.pi_ibmi_pha;
+  }
+
+  if (isNullOrEmptyString(data.pi_ibmi_rds_users)) {
+    delete data.pi_ibmi_rds_users;
+  }
+
   // add pi network here to have the items at the bottom of the terraform code
   data.pi_network = [];
   instance.network.forEach((nw) => {

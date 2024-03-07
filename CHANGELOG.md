@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
+- IBM Cloud Terraform provider version updated to `1.63.0` to add support for Power VS IBM i Licenses
 
 ### Features
 
@@ -15,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - VPC Security Group names, and IDs are exported as outputs
 - When bringing your own certificate for VPN Servers, two separate certificates are now imported. Additional variables have been added to support the new imported certificate
 - Users can now create, update, and delete Classic Security Groups and their rules from the Classic Security Groups page `/forms/classicSecurityGroups`
+- Users can now add IBM i licenses to Power VS instances with IBM i images
 
 ### Fixes
 

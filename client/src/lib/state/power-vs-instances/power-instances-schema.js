@@ -136,6 +136,15 @@ function powerVsInstanceInvalidText(text) {
 }
 
 /**
+ * hide field when not ibm i
+ * @param {*} stateData
+ * @returns {boolean} true when should be hidden
+ */
+function hideWhenNotIbmi(stateData) {
+  return !contains(stateData.image || "", "IBMi");
+}
+
+/**
  * create power vs instance schema
  * @param {bool} vtl true when vtl
  * @returns {object} schema object
@@ -397,6 +406,35 @@ function powerVsInstanceSchema(vtl) {
           : !isWholeNumber(parseInt(stateData.pi_license_repository_capacity));
       },
       invalidText: unconditionalInvalidText("Enter a whole number"),
+    },
+    pi_ibmi_css: {
+      size: "small",
+      type: "toggle",
+      default: false,
+      hideWhen: hideWhenNotIbmi,
+      labelText: "IBM i Cloud Storage Solution License",
+    },
+    pi_ibmi_pha: {
+      size: "small",
+      type: "toggle",
+      default: false,
+      hideWhen: hideWhenNotIbmi,
+      labelText: "IBM i Power High Availability",
+    },
+    pi_ibmi_rds_users: {
+      size: "small",
+      labelText: "IBM i Rational Dev Studio Number of User Licenses",
+      optional: true,
+      invalid: function (stateData) {
+        if (isNullOrEmptyString(stateData?.pi_ibmi_rds_users, true)) {
+          return false;
+        } else return !isInRange(Number(stateData.pi_ibmi_rds_users), 1, 500);
+      },
+      invalidText: unconditionalInvalidText(
+        "Enter a whole number between 1 and 500"
+      ),
+      placeholder: "1",
+      hideWhen: hideWhenNotIbmi,
     },
     pi_user_data: {
       type: "textArea",

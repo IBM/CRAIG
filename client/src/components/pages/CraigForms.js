@@ -1064,6 +1064,11 @@ function craigForms(craig) {
             craig.power_instances.pi_storage_pool_affinity,
         },
         {
+          pi_ibmi_css: craig.power_instances.pi_ibmi_css,
+          pi_ibmi_pha: craig.power_instances.pi_ibmi_pha,
+          pi_ibmi_rds_users: craig.power_instances.pi_ibmi_rds_users,
+        },
+        {
           heading: {
             name: "Boot Volume",
             type: "subHeading",

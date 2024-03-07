@@ -324,6 +324,7 @@ function initPowerVsInstance(store) {
         "pi_anti_affinity_instance",
         "pi_anti_affinity_volume",
         "storage_option",
+        "pi_ibmi_rds_users",
       ],
       "power_instances"
     ),

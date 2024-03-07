@@ -83,7 +83,7 @@ describe("craig api", () => {
         },
         {
           name: "craig/versions.tf",
-          data: '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+          data: '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.63.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
         },
         {
           name: "craig/ssh_keys.tf",
@@ -113,7 +113,7 @@ describe("craig api", () => {
         },
         {
           name: "craig/management_vpc/versions.tf",
-          data: '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+          data: '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.63.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
         },
         {
           name: "craig/management_vpc/variables.tf",
@@ -143,7 +143,7 @@ describe("craig api", () => {
         },
         {
           name: "craig/workload_vpc/versions.tf",
-          data: '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+          data: '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.63.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
         },
         {
           name: "craig/workload_vpc/variables.tf",
@@ -266,7 +266,7 @@ describe("craig api", () => {
             "  required_providers {\n" +
             "    ibm = {\n" +
             '      source  = "IBM-Cloud/ibm"\n' +
-            '      version = "~>1.61.0"\n' +
+            '      version = "~>1.63.0"\n' +
             "    }\n" +
             "  }\n" +
             '  required_version = ">=1.5"\n' +
