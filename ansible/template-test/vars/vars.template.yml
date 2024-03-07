@@ -1,6 +1,5 @@
 ---
-# For the playbook to execute correctly, you must set the 5 variables in brackets below. Do not alter the others.
-# Specify the template name exactly how it is spelled below in the template_map variable
+# Copy this file to `vars.yml` and fill in your data
 
 api_key: <api-key>
 ssh_key: <ssh-key>
