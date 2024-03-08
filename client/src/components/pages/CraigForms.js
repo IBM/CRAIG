@@ -1287,6 +1287,9 @@ function craigForms(craig) {
           vpc_connections: craig.transit_gateways.vpc_connections,
           power_connections: craig.transit_gateways.power_connections,
         },
+        {
+          classic: craig.transit_gateways.classic,
+        },
         // the patterns where existing infrastructure exists are more likely
         // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
         // is still supported, but will not be displayed. If we have a request

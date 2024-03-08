@@ -289,6 +289,35 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
       );
     });
   });
+  it("should return correctly formatted transit gateway classic connection", () => {
+    let actualData = formatTgwConnection(
+      {
+        name: "transit-gateway",
+        resource_group: "slz-service-rg",
+        global: false,
+        classic: true,
+        connections: [
+          {
+            tgw: "transit-gateway",
+            classic: true,
+          },
+        ],
+      }.connections[0],
+      slzNetwork
+    );
+    let expectedData = `
+resource "ibm_tg_connection" "transit_gateway_to_classic_connection" {
+  gateway      = ibm_tg_gateway.transit_gateway.id
+  network_type = "classic"
+  name         = "\${var.prefix}-transit-gateway-classic-hub-connection"
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+`;
+    assert.deepEqual(actualData, expectedData, "it should return correct data");
+  });
   describe("formatTgwPrefixFilter", () => {
     it("should return a vpc prefix filter", () => {
       let actualData = formatTgwPrefixFilter(

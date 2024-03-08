@@ -77,6 +77,8 @@ function ibmTgConnection(connection, tgw) {
     ? connection.gateway + " unbound gre"
     : connection.crn
     ? connection.crn.replace(/.+vpc:/g, "")
+    : connection.classic
+    ? "classic"
     : connection.vpc;
   let connectionResourceName = kebabName(
     [connection.tgw]
@@ -105,6 +107,8 @@ function ibmTgConnection(connection, tgw) {
         ? "unbound_gre_tunnel"
         : connection.power
         ? "power_virtual_server"
+        : connection.classic
+        ? "classic"
         : "vpc",
       name: connectionResourceName,
       network_id: networkId,

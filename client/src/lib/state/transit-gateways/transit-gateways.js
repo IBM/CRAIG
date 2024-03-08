@@ -400,6 +400,24 @@ function initTransitGateway(store) {
           return String(stateData.global);
         },
       },
+      classic: {
+        default: false,
+        type: "toggle",
+        labelText: "Enable Classic Connections",
+        onStateChange: function (stateData) {
+          stateData.classic = !stateData.classic;
+          let newConnections = [];
+          stateData.connections.forEach((connection) => {
+            if (!connection.classic) {
+              newConnections.push(connection);
+            }
+          });
+          if (stateData.classic) {
+            newConnections.push({ tgw: stateData.name, classic: true });
+          }
+          stateData.connections = newConnections;
+        },
+      },
     },
     subComponents: {
       gre_tunnels: {

@@ -10,6 +10,7 @@ import {
   IbmCloudTransitGateway,
   IbmPowerVs,
   VirtualPrivateCloud,
+  InfrastructureClassic,
 } from "@carbon/icons-react";
 import { CraigFormHeading } from "../../forms/utils";
 import { tagColors } from "../../forms/dynamic-form/components";
@@ -89,10 +90,16 @@ export const TransitGatewaysMap = (props) => {
                         ? connection.vpc
                         : connection.power
                         ? connection.power
-                        : "",
+                        : "Classic Network",
                     }}
                     itemName="connection"
-                    icon={connection.vpc ? VirtualPrivateCloud : IbmPowerVs}
+                    icon={
+                      connection.vpc
+                        ? VirtualPrivateCloud
+                        : connection.classic
+                        ? InfrastructureClassic
+                        : IbmPowerVs
+                    }
                     size="30"
                   />
                 ))}
