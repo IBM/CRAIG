@@ -2,6 +2,40 @@ const { assert } = require("chai");
 const { getDisplaySubnetTiers } = require("../../../client/src/lib");
 
 describe("subnet tier map functions", () => {
+  it("should return correct data when no tier object present", () => {
+    let actualData = getDisplaySubnetTiers({
+      vpc: {},
+      craig: {
+        store: {
+          subnetTiers: {
+            test: undefined,
+          },
+          json: {
+            virtual_private_endpoints: [],
+            vsi: [
+              {
+                vpc: "test",
+                subnets: [],
+              },
+              {
+                vpc: "test",
+                subnets: ["hello"],
+              },
+            ],
+            vpn_servers: [],
+            clusters: [],
+            vpn_gateways: [],
+          },
+        },
+      },
+    });
+    let expectedData = { emptySubnetResources: false, subnetTiers: [] };
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should return correct subnet tiers"
+    );
+  });
   it("should return empty subnet resources as true when a vsi has a matching vpc and no subnets", () => {
     let data = getDisplaySubnetTiers({
       vpc: {

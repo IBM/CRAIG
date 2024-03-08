@@ -1563,7 +1563,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
 ##############################################################################
 
 ##############################################################################
-# Optionally Add Floating IPs
+# Floating IPs
 ##############################################################################
 
 resource "ibm_is_floating_ip" "management_vpc_management_server_vsi_1_1_fip" {

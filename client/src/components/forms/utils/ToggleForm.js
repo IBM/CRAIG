@@ -347,7 +347,10 @@ class CraigToggleForm extends React.Component {
                         <span>
                           By selecting this option, data for your existing VPC{" "}
                           <code style={{ padding: "0.33rem", color: "blue" }}>
-                            {this.props.name.replace(/\sVPC/g, "")}
+                            {(
+                              this.props.name || // override for imported slz
+                              ""
+                            ).replace(/\sVPC/g, "")}
                           </code>{" "}
                           will be dynamically retrieved by Terraform at run
                           time.

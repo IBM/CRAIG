@@ -9,7 +9,7 @@ import {
   TableContainer,
 } from "@carbon/react";
 import React, { Component } from "react";
-import { contains, allFieldsNull, transpose } from "lazy-z";
+import { contains, allFieldsNull } from "lazy-z";
 import PropTypes from "prop-types";
 
 /**
@@ -22,7 +22,7 @@ function getRuleProtocol(rule) {
   // for each possible protocol
   ["icmp", "tcp", "udp"].forEach((field) => {
     // set protocol to that field if not all fields are null
-    if (allFieldsNull(rule[field]) === false) {
+    if (rule[field] && allFieldsNull(rule[field]) === false) {
       protocol = field;
     }
   });

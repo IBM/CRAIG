@@ -9,10 +9,107 @@ const {
   vpcTf,
   vpcModuleJson,
   vpcModuleTf,
+  ibmIsNetworkAcl,
 } = require("../../client/src/lib/json-to-iac/vpc");
 const f5Nw = require("../data-files/f5-nw.json");
 
 describe("vpc", () => {
+  describe("ibmIsNetworkAcl", () => {
+    it("should be fine when rule does not have protocol object", () => {
+      let task = () =>
+        ibmIsNetworkAcl(
+          {
+            name: "management",
+            resource_group: "slz-management-rg",
+            vpc: "management",
+            rules: [
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound",
+                source: "161.26.0.0/16",
+              },
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound-8080",
+                source: "161.26.0.0/16",
+              },
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound-8080",
+                source: "161.26.0.0/16",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                udp: {
+                  port_min: 8080,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                tcp: null,
+              },
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound-8080",
+                source: "161.26.0.0/16",
+                icmp: {
+                  type: 1,
+                  code: 2,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+            ],
+          },
+          {
+            _options: {
+              region: "us-south",
+              prefix: "iac",
+              tags: ["hello", "world"],
+            },
+            resource_groups: [
+              {
+                use_data: false,
+                name: "slz-management-rg",
+              },
+            ],
+            vpcs: [
+              {
+                name: "managment",
+              },
+            ],
+          }
+        );
+      assert.doesNotThrow(task, "it should not throw an error");
+    });
+  });
   describe("formatVpc", () => {
     it("should create vpc terraform", () => {
       let actualData = formatVpc(

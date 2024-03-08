@@ -285,7 +285,8 @@ function ibmIsNetworkAcl(acl, config, useRules) {
         source: rule.source,
       };
       ["icmp", "tcp", "udp"].forEach((protocol) => {
-        let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
+        let ruleHasProtocolData =
+          rule[protocol] && !allFieldsNull(rule[protocol]);
         if (ruleHasProtocolData && protocol === "icmp") {
           ruleValues.icmp = [
             {
