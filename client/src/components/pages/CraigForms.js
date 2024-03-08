@@ -397,32 +397,6 @@ function craigForms(craig) {
           description: craig.classic_security_groups.description,
         },
       ],
-      subForms: [
-        {
-          name: "Rules",
-          jsonField: "classic_sg_rules",
-          addText: "Create a Rule",
-          form: {
-            groups: [
-              {
-                name: craig.classic_security_groups.classic_sg_rules.name,
-                direction:
-                  craig.classic_security_groups.classic_sg_rules.direction,
-              },
-              {
-                ruleProtocol:
-                  craig.classic_security_groups.classic_sg_rules.ruleProtocol,
-              },
-              {
-                port_range_min:
-                  craig.classic_security_groups.classic_sg_rules.port_range_min,
-                port_range_max:
-                  craig.classic_security_groups.classic_sg_rules.port_range_max,
-              },
-            ],
-          },
-        },
-      ],
     },
     classic_gateways: {
       jsonField: "classic_gateways",

@@ -1,11 +1,18 @@
 import React from "react";
 import { craigForms } from "../CraigForms";
-import { ClassicMap, ClassicSubnets, SshKeys, docTabs } from "../diagrams";
+import {
+  ClassicMap,
+  ClassicSecurityGroups,
+  ClassicSubnets,
+  SshKeys,
+  docTabs,
+} from "../diagrams";
 import { distinct, isNullOrEmptyString, snakeCase, titleCase } from "lazy-z";
 import {
   FirewallClassic,
   InfrastructureClassic,
   Password,
+  SecurityServices,
   VlanIbm,
 } from "@carbon/icons-react";
 import {
@@ -16,7 +23,12 @@ import {
   DynamicFormModal,
   RenderForm,
 } from "../../forms/utils";
-import { classicInfraTf, disableSave, propsMatchState } from "../../../lib";
+import {
+  classicInfraTf,
+  classicSecurityGroupTf,
+  disableSave,
+  propsMatchState,
+} from "../../../lib";
 import { ClassicGateways } from "../diagrams/ClassicGateways";
 import DynamicForm from "../../forms/DynamicForm";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
@@ -38,6 +50,7 @@ class ClassicDiagram extends React.Component {
     this.onKeyClick = this.onKeyClick.bind(this);
     this.resetSelection = this.resetSelection.bind(this);
     this.onVlanClick = this.onVlanClick.bind(this);
+    this.onSgClick = this.onSgClick.bind(this);
     this.getIcon = this.getIcon.bind(this);
     this.onGwClick = this.onGwClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -71,7 +84,9 @@ class ClassicDiagram extends React.Component {
   }
 
   getIcon() {
-    return this.state.selectedItem === "classic_ssh_keys"
+    return this.state.selectedItem === "classic_security_groups"
+      ? SecurityServices
+      : this.state.selectedItem === "classic_ssh_keys"
       ? Password
       : this.state.selectedItem === "classic_vlans"
       ? VlanIbm
@@ -127,6 +142,26 @@ class ClassicDiagram extends React.Component {
         editing: true,
         selectedIndex: vlanIndex,
         selectedItem: "classic_vlans",
+      });
+    }
+  }
+
+  /**
+   * on vlan click
+   * @param {number} sgIndex
+   */
+  onSgClick(sgIndex) {
+    if (
+      this.state.editing &&
+      this.state.selectedItem === "classic_security_groups" &&
+      sgIndex === this.state.selectedIndex
+    ) {
+      this.resetSelection();
+    } else {
+      this.setState({
+        editing: true,
+        selectedIndex: sgIndex,
+        selectedItem: "classic_security_groups",
       });
     }
   }
@@ -188,7 +223,12 @@ class ClassicDiagram extends React.Component {
             value={this.state.modalService}
             field={{
               labelText: "Resource Type",
-              groups: ["Classic SSH Keys", "Classic VLANs", "Classic Gateways"],
+              groups: [
+                "Classic SSH Keys",
+                "Classic VLANs",
+                "Classic Gateways",
+                "Classic Security Groups",
+              ],
               disabled: (stateData) => {
                 return false;
               },
@@ -272,7 +312,12 @@ class ClassicDiagram extends React.Component {
             name="Classic Network"
             formName="Manage Classic Network"
             nestedDocs={docTabs(
-              ["Classic SSH Keys", "Classic VLANs", "Classic Gateways"],
+              [
+                "Classic SSH Keys",
+                "Classic VLANs",
+                "Classic Gateways",
+                "Classic Security Groups",
+              ],
               craig
             )}
             tfTabs={[
@@ -283,6 +328,10 @@ class ClassicDiagram extends React.Component {
               {
                 name: "Classic Gateways",
                 tf: classicGatewayTf(craig.store.json) || "",
+              },
+              {
+                name: "Classic Security Groups",
+                tf: classicSecurityGroupTf(craig.store.json) || "",
               },
             ]}
             form={
@@ -319,6 +368,17 @@ class ClassicDiagram extends React.Component {
                         onKeyClick={this.onKeyClick}
                       />
                     </HoverClassNameWrapper>
+                    <ClassicSecurityGroups
+                      craig={craig}
+                      isSelected={(sgIndex) => {
+                        return (
+                          this.state.selectedItem ===
+                            "classic_security_groups" &&
+                          this.state.selectedIndex === sgIndex
+                        );
+                      }}
+                      onClick={this.onSgClick}
+                    />
                     {craig.store.json.classic_vlans.length === 0 ? (
                       <CraigEmptyResourceTile
                         name="Classic VLANS"
@@ -380,7 +440,10 @@ class ClassicDiagram extends React.Component {
                             })}
                             noMarginBottom
                             name={`Editing ${
-                              this.state.selectedItem === "classic_ssh_keys"
+                              this.state.selectedItem ===
+                              "classic_security_groups"
+                                ? "Classic Security Group"
+                                : this.state.selectedItem === "classic_ssh_keys"
                                 ? "Classic SSH Key"
                                 : this.state.selectedItem === "classic_vlans"
                                 ? "VLAN"
