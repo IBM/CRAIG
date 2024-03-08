@@ -10,15 +10,11 @@
 - name: Upload CRAIG template to schematics workspace
   hosts: localhost
   vars_files: ./vars/vars.yml
-  tasks:
-    - name: Get IAM Access Token
-      uri:
-        url: https://iam.cloud.ibm.com/identity/token
-        method: POST
-        headers:
-          Content-Type: application/x-www-form-urlencoded
-        body: "grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey={{api_key}}"
-      register: token
+- name: Get IAM token
+  hosts: localhost
+  vars_files: ./vars/vars.yml # variables declared in variables file are added to role automatically
+  roles:
+    - role: get_iam_token
 - name: "Download Template Tarball"
   hosts: localhost
   vars_files: ./vars/vars.yml
