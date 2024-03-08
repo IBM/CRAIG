@@ -9,7 +9,7 @@ import {
   TableContainer,
 } from "@carbon/react";
 import React, { Component } from "react";
-import { contains, allFieldsNull, transpose } from "lazy-z";
+import { contains, allFieldsNull, carve } from "lazy-z";
 import PropTypes from "prop-types";
 
 /**
@@ -22,7 +22,7 @@ function getRuleProtocol(rule) {
   // for each possible protocol
   ["icmp", "tcp", "udp"].forEach((field) => {
     // set protocol to that field if not all fields are null
-    if (allFieldsNull(rule[field]) === false) {
+    if (rule[field] && allFieldsNull(rule[field]) === false) {
       protocol = field;
     }
   });
@@ -37,7 +37,7 @@ function getRuleProtocol(rule) {
  * @returns {object} rows, headers for data table
  */
 function setupRowsAndHeaders(componentProps) {
-  const { rules, isSecurityGroup } = { ...componentProps };
+  const { rules, isSecurityGroup, isClassicSg } = { ...componentProps };
 
   const headers = [
     {
@@ -57,10 +57,14 @@ function setupRowsAndHeaders(componentProps) {
 
   // set up required data for each row
   rows.forEach((row) => {
-    row.protocol = getRuleProtocol(row);
+    row.protocol = isClassicSg ? row.ruleProtocol : getRuleProtocol(row);
     row.id = row.name;
     row.port =
-      row.protocol === "all"
+      isClassicSg && row.ruleProtocol === "all"
+        ? "ALL"
+        : isClassicSg
+        ? `${row.port_range_min}-${row.port_range_max}`
+        : row.protocol === "all"
         ? "ALL"
         : row.protocol === "icmp"
         ? row.icmp.code
@@ -74,13 +78,17 @@ function setupRowsAndHeaders(componentProps) {
   });
 
   // add in action and destination if not security group
-  if (!isSecurityGroup) {
+  if (!isSecurityGroup && !isClassicSg) {
     headers.splice(1, 0, {
       // add extra fields if not security group
       key: "action",
       header: "Action",
     });
     headers.splice(4, 0, { key: "destination", header: "Destination" });
+  }
+
+  if (isClassicSg) {
+    carve(headers, "key", "source");
   }
 
   return { rows: rows, headers: headers };
@@ -120,27 +128,34 @@ class OrderCardDataTable extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
-                  <TableRow
-                    key={row.name + "-" + index}
-                    {...getRowProps({ row })}
-                  >
-                    {row.cells.map((cell) => (
-                      <TableCell
-                        key={JSON.stringify(cell)}
-                        className={
-                          this.props.isSecurityGroup ? "dt-security-group" : ""
-                        }
-                      >
-                        <div key={JSON.stringify(cell) + "-port"}>
-                          {contains(["tcp", "udp", "all", "icmp"], cell.value)
-                            ? cell.value.toUpperCase()
-                            : cell.value}
-                        </div>
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+                {rows.map((row, index) => {
+                  return (
+                    <TableRow
+                      key={row.name + "-" + index}
+                      {...getRowProps({ row })}
+                    >
+                      {row.cells.map((cell) => (
+                        <TableCell
+                          key={JSON.stringify(cell)}
+                          className={
+                            this.props.isSecurityGroup || this.props.isClassicSg
+                              ? "dt-security-group"
+                              : ""
+                          }
+                        >
+                          <div key={JSON.stringify(cell) + "-port"}>
+                            {contains(
+                              ["tcp", "udp", "all", "icmp"],
+                              cell.value
+                            ) && !contains(cell.id, ":name") // prevent name from being transformed into ALL CAPS
+                              ? cell.value.toUpperCase()
+                              : cell.value}
+                          </div>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -150,7 +165,7 @@ class OrderCardDataTable extends Component {
   }
 }
 
-OrderCardDataTable.defaultPRops = {
+OrderCardDataTable.defaultProps = {
   isSecurityGroup: false,
 };
 

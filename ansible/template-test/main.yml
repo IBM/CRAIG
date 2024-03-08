@@ -1,0 +1,138 @@
+---
+# To setup this directory to run locally, copy /vars/vars.template.yml to /vars/vars.yml and fill in needed
+# values
+# To run the playbook locally, run `ansible-playbook main.yml` in this directory.
+# This playbook creates a schematics workspace, uploads a craig .tar file for a specific template to 
+# that workspace, generates a plan, applies the plan to create the resources in the template, and destroys 
+# the newly created resources.
+# If any step fails, the playbook will stop and print the error to the terminal.
+
+- name: Upload CRAIG template to schematics workspace
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+- name: Get IAM token
+  hosts: localhost
+  vars_files: ./vars/vars.yml # variables declared in variables file are added to role automatically
+  roles:
+    - role: get_iam_token
+- name: "Download Template Tarball"
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  tasks:
+    - name: Download {{template}}.tar to current directory
+      get_url:
+        url: "{{craig_url}}/{{template}}"
+        dest: "{{playbook_dir}}/{{template}}.tar"
+      async: 120
+      retries: 10
+- name: Create Schematics Workspace
+  hosts: localhost
+  vars_files: ./vars/vars.yml # variables declared in variables file are added to role automatically
+  roles:
+    - role: create_schematics_workspace
+      vars:
+        description: Automated CRAIG Testing Workspace
+        tags: ["craig"]
+- name: TODO - convert to roles
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  tasks: 
+    - name: Upload {{template}}.tar to Schematics Workspace
+      command: "curl -s --request PUT \
+                --url 'https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/template_data/{{ workspace.json.template_data[0].id }}/template_repo_upload' \
+                -H 'Authorization: Bearer {{ token.json.access_token }}' \
+                -H 'Content-Type: multipart/form-data' \
+                --form 'file=@{{playbook_dir}}/{{template}}.tar'"
+      async: 120
+    - name: Wait until {{template}}.tar has been successfully uploaded
+      uri:
+        url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}
+        method: GET
+        body_format: json
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+      register: workspace_status
+      until: workspace_status.json.status == "INACTIVE"
+      delay: 10
+      retries: 50
+    - name: Update variablestore
+      set_fact:
+        variablestore: "{{ variablestore +  [{'name': item, 'secure': true, 'use_default': false,  'value': ssh_key}] }}"
+      loop: "{{template_map[template]}}"
+    - name: Update vars in workspace
+      uri:
+        url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/template_data/{{ workspace.json.template_data[0].id }}/values
+        method: PUT
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+          Content-Type: application/json
+        body_format: json
+        body: 
+          variablestore: "{{ variablestore }}"
+    - name: Start generate plan action
+      uri:
+        url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/plan
+        method: POST
+        body_format: json
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+        status_code: 202
+      register: job
+    - name: Ensure generate plan finishes
+      uri:
+        url: https://schematics.cloud.ibm.com/v2/jobs/{{job.json.activityid}}
+        method: GET
+        body_format: json
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+      register: plan
+      until: plan.json.status.workspace_job_status.status_code == "job_finished" or plan.json.status.workspace_job_status.status_code == "job_failed"
+      failed_when: plan.json.status.workspace_job_status.status_code == "job_failed"
+      delay: 90
+      retries: 50
+    - name: Start apply plan action
+      uri:
+        url: https://schematics.cloud.ibm.com/v1/workspaces/{{workspace.json.id}}/apply
+        method: PUT
+        body_format: json
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+        status_code: 202
+      register: apply
+    - name: Ensure apply plan finishes
+      uri:
+        url: https://schematics.cloud.ibm.com/v2/jobs/{{apply.json.activityid}}
+        method: GET
+        body_format: json
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+      register: apply_plan
+      until: apply_plan.json.status.workspace_job_status.status_code == "job_finished" or apply_plan.json.status.workspace_job_status.status_code == "job_failed"
+      failed_when: apply_plan.json.status.workspace_job_status.status_code == "job_failed"
+      delay: 120
+      retries: 50
+    - name: Start destroy action
+      uri:
+        url: https://schematics.cloud.ibm.com/v1/workspaces/{{workspace.json.id}}/destroy
+        method: PUT
+        body_format: json
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+        status_code: 202
+      register: destroy
+    - name: Ensure destory finishes
+      uri:
+        url: https://schematics.cloud.ibm.com/v2/jobs/{{destroy.json.activityid}}
+        method: GET
+        body_format: json
+        headers:
+          Authorization: Bearer {{token.json.access_token}}
+      register: destroy_plan
+      until: destroy_plan.json.status.workspace_job_status.status_code == "job_finished" or destroy_plan.json.status.workspace_job_status.status_code == "job_failed"
+      failed_when: destroy_plan.json.status.workspace_job_status.status_code == "job_failed"
+      delay: 120
+      retries: 50
+    - name: Delete local {{template}}.tar file
+      file:
+        state: absent
+        path: /{{playbook_dir}}/{{template}}.tar

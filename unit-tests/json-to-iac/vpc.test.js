@@ -9,10 +9,107 @@ const {
   vpcTf,
   vpcModuleJson,
   vpcModuleTf,
+  ibmIsNetworkAcl,
 } = require("../../client/src/lib/json-to-iac/vpc");
 const f5Nw = require("../data-files/f5-nw.json");
 
 describe("vpc", () => {
+  describe("ibmIsNetworkAcl", () => {
+    it("should be fine when rule does not have protocol object", () => {
+      let task = () =>
+        ibmIsNetworkAcl(
+          {
+            name: "management",
+            resource_group: "slz-management-rg",
+            vpc: "management",
+            rules: [
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound",
+                source: "161.26.0.0/16",
+              },
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound-8080",
+                source: "161.26.0.0/16",
+              },
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound-8080",
+                source: "161.26.0.0/16",
+                icmp: {
+                  type: null,
+                  code: null,
+                },
+                udp: {
+                  port_min: 8080,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                tcp: null,
+              },
+              {
+                acl: "management",
+                vpc: "management",
+                action: "allow",
+                destination: "10.0.0.0/8",
+                direction: "inbound",
+                name: "allow-ibm-inbound-8080",
+                source: "161.26.0.0/16",
+                icmp: {
+                  type: 1,
+                  code: 2,
+                },
+                udp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+                tcp: {
+                  port_min: null,
+                  port_max: null,
+                  source_port_min: null,
+                  source_port_max: null,
+                },
+              },
+            ],
+          },
+          {
+            _options: {
+              region: "us-south",
+              prefix: "iac",
+              tags: ["hello", "world"],
+            },
+            resource_groups: [
+              {
+                use_data: false,
+                name: "slz-management-rg",
+              },
+            ],
+            vpcs: [
+              {
+                name: "managment",
+              },
+            ],
+          }
+        );
+      assert.doesNotThrow(task, "it should not throw an error");
+    });
+  });
   describe("formatVpc", () => {
     it("should create vpc terraform", () => {
       let actualData = formatVpc(
@@ -4269,7 +4366,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "main.tf":
             '##############################################################################\n# Customer AVPC\n##############################################################################\n\nresource "ibm_is_vpc" "customer_a_vpc" {\n  name                        = "${var.prefix}-customer-a-vpc"\n  resource_group              = var.craig_rg_id\n  tags                        = var.tags\n  no_sg_acl_rules             = true\n  default_network_acl_name    = null\n  default_security_group_name = null\n  default_routing_table_name  = null\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_1_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  vpc  = ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_2_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  vpc  = ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "customer_a_gateway_zone_2" {\n  name           = "${var.prefix}-customer-a-gateway-zone-2"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_1" {\n  vpc             = ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {\n  vpc             = ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_2_prefix.cidr\n  public_gateway  = ibm_is_public_gateway.customer_a_gateway_zone_2.id\n}\n\n##############################################################################\n',
           "versions.tf":
-            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.63.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
           "variables.tf":
             '##############################################################################\n# Customer AVPC Variables\n##############################################################################\n\nvariable "tags" {\n  description = "List of tags"\n  type        = list(string)\n}\n\nvariable "region" {\n  description = "IBM Cloud Region where resources will be provisioned"\n  type        = string\n}\n\nvariable "prefix" {\n  description = "Name prefix that will be prepended to named resources"\n  type        = string\n}\n\nvariable "craig_rg_id" {\n  description = "ID for the resource group craig-rg"\n  type        = string\n}\n\n##############################################################################\n',
           "acl_customer_a_subnet_acl.tf":
@@ -4277,7 +4374,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "sg_vsi_sg.tf":
             '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\nresource "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name           = "${var.prefix}-customer-a-vsi-sg-sg"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
           "outputs.tf":
-            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "id" {\n  value = ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_id" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "name" {\n  value = ibm_is_vpc.customer_a_vpc.name\n}\n\noutput "id" {\n  value = ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.name\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.name\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_name" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.name\n}\n\noutput "vsi_sg_id" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
         },
         "main.tf":
           '##############################################################################\n# Customer AVPC Module\n##############################################################################\n\nmodule "customer_a_vpc" {\n  source      = "./customer_a_vpc"\n  region      = var.region\n  prefix      = var.prefix\n  craig_rg_id = ibm_resource_group.craig_rg.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################\n',
@@ -4688,7 +4785,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "main.tf":
             '##############################################################################\n# Customer AVPC\n##############################################################################\n\ndata "ibm_is_vpc" "customer_a_vpc" {\n  name = "customer-a"\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_1_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_2_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "customer_a_gateway_zone_2" {\n  name           = "${var.prefix}-customer-a-gateway-zone-2"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_1" {\n  vpc             = data.ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {\n  vpc             = data.ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_2_prefix.cidr\n  public_gateway  = ibm_is_public_gateway.customer_a_gateway_zone_2.id\n}\n\n##############################################################################\n',
           "versions.tf":
-            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.63.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
           "variables.tf":
             '##############################################################################\n# Customer AVPC Variables\n##############################################################################\n\nvariable "tags" {\n  description = "List of tags"\n  type        = list(string)\n}\n\nvariable "region" {\n  description = "IBM Cloud Region where resources will be provisioned"\n  type        = string\n}\n\nvariable "prefix" {\n  description = "Name prefix that will be prepended to named resources"\n  type        = string\n}\n\nvariable "craig_rg_id" {\n  description = "ID for the resource group craig-rg"\n  type        = string\n}\n\n##############################################################################\n',
           "acl_customer_a_subnet_acl.tf":
@@ -4696,7 +4793,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "sg_vsi_sg.tf":
             '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\nresource "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name           = "${var.prefix}-customer-a-vsi-sg-sg"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
           "outputs.tf":
-            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_id" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "name" {\n  value = data.ibm_is_vpc.customer_a_vpc.name\n}\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.name\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.name\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_name" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.name\n}\n\noutput "vsi_sg_id" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
         },
         "main.tf":
           '##############################################################################\n# Customer AVPC Module\n##############################################################################\n\nmodule "customer_a_vpc" {\n  source      = "./customer_a_vpc"\n  region      = var.region\n  prefix      = var.prefix\n  craig_rg_id = ibm_resource_group.craig_rg.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################\n',
@@ -5108,7 +5205,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "main.tf":
             '##############################################################################\n# Customer AVPC\n##############################################################################\n\ndata "ibm_is_vpc" "customer_a_vpc" {\n  name = "customer-a"\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_1_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "customer_a_subnet_tier_zone_2_prefix" {\n  name = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "customer_a_gateway_zone_2" {\n  name           = "${var.prefix}-customer-a-gateway-zone-2"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_1" {\n  vpc             = data.ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {\n  vpc             = data.ibm_is_vpc.customer_a_vpc.id\n  name            = "${var.prefix}-customer-a-subnet-tier-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.craig_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.customer_a_subnet_acl_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.customer_a_subnet_tier_zone_2_prefix.cidr\n  public_gateway  = ibm_is_public_gateway.customer_a_gateway_zone_2.id\n}\n\n##############################################################################\n',
           "versions.tf":
-            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.63.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
           "variables.tf":
             '##############################################################################\n# Customer AVPC Variables\n##############################################################################\n\nvariable "tags" {\n  description = "List of tags"\n  type        = list(string)\n}\n\nvariable "region" {\n  description = "IBM Cloud Region where resources will be provisioned"\n  type        = string\n}\n\nvariable "prefix" {\n  description = "Name prefix that will be prepended to named resources"\n  type        = string\n}\n\nvariable "craig_rg_id" {\n  description = "ID for the resource group craig-rg"\n  type        = string\n}\n\n##############################################################################\n',
           "acl_customer_a_subnet_acl.tf":
@@ -5116,7 +5213,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "sg_vsi_sg.tf":
             '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\ndata "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name = "vsi-sg"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
           "outputs.tf":
-            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_id" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "name" {\n  value = data.ibm_is_vpc.customer_a_vpc.name\n}\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.name\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.name\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_name" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.name\n}\n\noutput "vsi_sg_id" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
         },
         "main.tf":
           '##############################################################################\n# Customer AVPC Module\n##############################################################################\n\nmodule "customer_a_vpc" {\n  source      = "./customer_a_vpc"\n  region      = var.region\n  prefix      = var.prefix\n  craig_rg_id = ibm_resource_group.craig_rg.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################\n',
@@ -5492,7 +5589,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "main.tf":
             '##############################################################################\n# Customer AVPC\n##############################################################################\n\ndata "ibm_is_vpc" "customer_a_vpc" {\n  name = "customer-a"\n}\n\nresource "ibm_is_public_gateway" "customer_a_gateway_zone_2" {\n  name           = "${var.prefix}-customer-a-gateway-zone-2"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\ndata "ibm_is_subnet" "customer_a_subnet_tier_zone_1" {\n  name = "subnet-tier-zone-1"\n}\n\n##############################################################################\n',
           "versions.tf":
-            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.61.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Terraform Providers\n##############################################################################\n\nterraform {\n  required_providers {\n    ibm = {\n      source  = "IBM-Cloud/ibm"\n      version = "~>1.63.0"\n    }\n  }\n  required_version = ">=1.5"\n}\n\n##############################################################################\n',
           "variables.tf":
             '##############################################################################\n# Customer AVPC Variables\n##############################################################################\n\nvariable "tags" {\n  description = "List of tags"\n  type        = list(string)\n}\n\nvariable "region" {\n  description = "IBM Cloud Region where resources will be provisioned"\n  type        = string\n}\n\nvariable "prefix" {\n  description = "Name prefix that will be prepended to named resources"\n  type        = string\n}\n\nvariable "craig_rg_id" {\n  description = "ID for the resource group craig-rg"\n  type        = string\n}\n\n##############################################################################\n',
           "acl_customer_a_subnet_acl.tf":
@@ -5500,7 +5597,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "sg_vsi_sg.tf":
             '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\ndata "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name = "vsi-sg"\n  vpc  = data.ibm_is_vpc.customer_a_vpc.id\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
           "outputs.tf":
-            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = data.ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = data.ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "vsi_sg_id" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "name" {\n  value = data.ibm_is_vpc.customer_a_vpc.name\n}\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_name" {\n  value = data.ibm_is_subnet.customer_a_subnet_tier_zone_1.name\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = data.ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = data.ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "vsi_sg_name" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.name\n}\n\noutput "vsi_sg_id" {\n  value = data.ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
         },
         "main.tf":
           '##############################################################################\n# Customer AVPC Module\n##############################################################################\n\nmodule "customer_a_vpc" {\n  source      = "./customer_a_vpc"\n  region      = var.region\n  prefix      = var.prefix\n  craig_rg_id = ibm_resource_group.craig_rg.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################\n',

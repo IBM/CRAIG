@@ -619,6 +619,46 @@ describe("security groups", () => {
       );
     });
   });
+  describe("security_groups.schema", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should hide use_data", () => {
+      assert.isTrue(
+        craig.security_groups.use_data.hideWhen({}, { craig: craig }),
+        "it should hide when in modal"
+      );
+      assert.isTrue(
+        craig.security_groups.use_data.hideWhen(
+          { vpc: "management" },
+          { craig: craig }
+        ),
+        "it should hide when vpc does not use data"
+      );
+      craig.store.json.vpcs.push({
+        name: "data",
+        use_data: true,
+      });
+      assert.isFalse(
+        craig.security_groups.use_data.hideWhen(
+          { vpc: "data" },
+          { craig: craig }
+        ),
+        "it should be shown"
+      );
+    });
+    it("should disable vpc when using data for security group", () => {
+      assert.isFalse(
+        craig.security_groups.vpc.disabled({ use_data: true, vpc: "" }),
+        "it should not be disabled"
+      );
+      assert.isTrue(
+        craig.security_groups.vpc.disabled({ use_data: true, vpc: "frog" }),
+        "it should be disabled"
+      );
+    });
+  });
   describe("security_group.rules", () => {
     describe("security_groups.rules.create", () => {
       it("should add a new rule", () => {

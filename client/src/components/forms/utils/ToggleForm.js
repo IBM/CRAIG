@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { disableSave, propsMatchState } from "../../../lib";
+import { disableSave, forceShowForm, propsMatchState } from "../../../lib";
 import StatefulTabs from "./StatefulTabs";
 import { StatelessFormWrapper } from "./StatelessFormWrapper";
 import DynamicForm from "../DynamicForm";
@@ -192,7 +192,7 @@ class CraigToggleForm extends React.Component {
   }
 
   shouldShow() {
-    return this.props.forceOpen(this.state, this.props);
+    return forceShowForm(this.state, this.props);
   }
 
   networkRuleOrderDidChange(didNotChange) {
@@ -247,7 +247,7 @@ class CraigToggleForm extends React.Component {
               >
                 <StatelessFormWrapper
                   hideTitle={this.props.hideTitle}
-                  hide={this.state.hide}
+                  hide={this.shouldShow() ? false : this.state.hide}
                   iconType={this.props.useAddButton ? "add" : "edit"}
                   onIconClick={this.toggleChildren}
                   toggleFormTitle
@@ -347,7 +347,10 @@ class CraigToggleForm extends React.Component {
                         <span>
                           By selecting this option, data for your existing VPC{" "}
                           <code style={{ padding: "0.33rem", color: "blue" }}>
-                            {this.props.name.replace(/\sVPC/g, "")}
+                            {(
+                              this.props.name || // override for imported slz
+                              ""
+                            ).replace(/\sVPC/g, "")}
                           </code>{" "}
                           will be dynamically retrieved by Terraform at run
                           time.

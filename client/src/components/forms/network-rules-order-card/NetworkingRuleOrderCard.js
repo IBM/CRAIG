@@ -71,7 +71,9 @@ class NetworkingRuleOrderCard extends React.Component {
       direction === "down" ? index + 1 : index - 1
     );
     let component =
-      this.props.parentProps.form.jsonField === "security_groups"
+      this.props.parentProps.form.jsonField === "classic_security_groups"
+        ? this.props.parentProps.craig.classis_security_groups
+        : this.props.parentProps.form.jsonField === "security_groups"
         ? this.props.parentProps.craig.security_groups
         : this.props.parentProps.craig.vpcs.acls;
 
@@ -101,9 +103,30 @@ class NetworkingRuleOrderCard extends React.Component {
     let form =
       (!this.props.parentProps.isModal &&
         (this.props.parentProps.form.jsonField === "acls" ||
-          this.props.parentProps.form.jsonField === "security_groups")) ===
-      false
+          this.props.parentProps.form.jsonField === "security_groups" ||
+          this.props.parentProps.form.jsonField ===
+            "classic_security_groups")) === false
         ? {}
+        : this.props.parentProps.form.jsonField === "classic_security_groups"
+        ? {
+            groups: [
+              {
+                name: craig.classic_security_groups.classic_sg_rules.name,
+                direction:
+                  craig.classic_security_groups.classic_sg_rules.direction,
+              },
+              {
+                ruleProtocol:
+                  craig.classic_security_groups.classic_sg_rules.ruleProtocol,
+              },
+              {
+                port_range_min:
+                  craig.classic_security_groups.classic_sg_rules.port_range_min,
+                port_range_max:
+                  craig.classic_security_groups.classic_sg_rules.port_range_max,
+              },
+            ],
+          }
         : isSecurityGroup
         ? {
             groups: [
@@ -151,34 +174,53 @@ class NetworkingRuleOrderCard extends React.Component {
               },
             ],
           };
+    let rulesField =
+      this.props.parentProps.form.jsonField === "classic_security_groups"
+        ? "classic_sg_rules"
+        : "rules";
+    let isClassicSg =
+      this.props.parentProps.form.jsonField === "classic_security_groups";
     return !this.props.parentProps.isModal &&
       (this.props.parentProps.form.jsonField === "acls" ||
-        this.props.parentProps.form.jsonField === "security_groups") &&
+        this.props.parentProps.form.jsonField === "security_groups" ||
+        this.props.parentProps.form.jsonField === "classic_security_groups") &&
       this.props.parentState.use_data !== true ? (
       <>
         <DynamicFormModal
           name={
-            isSecurityGroup
+            isSecurityGroup || isClassicSg
               ? "Create a Security Group Rule"
               : "Create an ACL Rule"
           }
           show={this.state.showModal}
           beginDisabled
-          submissionFieldName={isSecurityGroup ? "sg_rules" : "acl_rules"}
+          submissionFieldName={
+            isClassicSg
+              ? "classic_sg_rules"
+              : isSecurityGroup
+              ? "sg_rules"
+              : "acl_rules"
+          }
           onRequestClose={this.handleModalToggle}
           onRequestSubmit={(stateData) => {
-            let resource = isSecurityGroup
+            let resource = isClassicSg
+              ? craig.classic_security_groups
+              : isSecurityGroup
               ? craig.security_groups
               : craig.vpcs.acls;
-            resource.rules.create(stateData, {
+            resource[rulesField].create(stateData, {
               parent_name: this.props.parentProps.data.name,
               vpc_name: this.props.parentProps.data.vpc,
+              innerFormProps: {
+                arrayParentName: this.props.parentProps.data.name,
+              },
             });
             this.handleModalToggle();
           }}
         >
           {RenderForm(DynamicForm, {
             craig: craig,
+            arrayParentName: this.props.parentProps.data.name,
             data: {
               ruleProtocol: "",
               source: "",
@@ -187,7 +229,11 @@ class NetworkingRuleOrderCard extends React.Component {
             shouldDisableSubmit: function () {
               if (
                 disableSave(
-                  isSecurityGroup ? "sg_rules" : "acl_rules",
+                  isClassicSg
+                    ? "classic_sg_rules"
+                    : isSecurityGroup
+                    ? "sg_rules"
+                    : "acl_rules",
                   this.state,
                   this.props
                 ) === false
@@ -220,7 +266,7 @@ class NetworkingRuleOrderCard extends React.Component {
                 customIcon={this.state.showTable ? Edit : DataView}
                 hoverText={this.state.showTable ? "Edit" : "Manage Rules"}
                 className="edit-view-btn"
-                hide={this.props.parentProps.data.rules.length < 0} // do not show edit if no rules
+                hide={this.props.parentProps.data[rulesField].length < 0} // do not show edit if no rules
               />
               <PrimaryButton
                 type="add"
@@ -233,66 +279,81 @@ class NetworkingRuleOrderCard extends React.Component {
         />
         {this.state.displayMode ? (
           <OrderCardDataTable
-            key={JSON.stringify(this.props.parentProps.data.rules)}
-            rules={this.props.parentProps.data.rules}
+            key={JSON.stringify(this.props.parentProps.data[rulesField])}
+            rules={this.props.parentProps.data[rulesField]}
             vpc_name={this.props.parentProps.data.vpc}
             isSecurityGroup={isSecurityGroup}
+            isClassicSg={isClassicSg}
           />
         ) : (
-          [...this.props.parentProps.data.rules].map((rule, ruleIndex) => {
-            if (!rule.ruleProtocol) {
-              rule.ruleProtocol = getRuleProtocol(rule);
+          [...this.props.parentProps.data[rulesField]].map(
+            (rule, ruleIndex) => {
+              if (!rule.ruleProtocol) {
+                rule.ruleProtocol = getRuleProtocol(rule);
+              }
+              return (
+                <CraigToggleForm
+                  key={JSON.stringify(rule)}
+                  onDelete={
+                    isClassicSg
+                      ? craig.classic_security_groups.classic_sg_rules.delete
+                      : isSecurityGroup
+                      ? craig.security_groups.rules.delete
+                      : craig.vpcs.acls.rules.delete
+                  }
+                  onSave={
+                    isClassicSg
+                      ? craig.classic_security_groups.classic_sg_rules.save
+                      : isSecurityGroup
+                      ? craig.security_groups.rules.save
+                      : craig.vpcs.acls.rules.save
+                  }
+                  onShowToggle={() => {
+                    this.openForm(ruleIndex);
+                  }}
+                  craig={craig}
+                  hide={!contains(this.state.openForms, ruleIndex)}
+                  hideName
+                  submissionFieldName={
+                    isClassicSg
+                      ? "classic_sg_rules"
+                      : isSecurityGroup
+                      ? "sg_rules"
+                      : "acl_rules"
+                  }
+                  tabPanel={{
+                    hideAbout: true,
+                  }}
+                  disableUp={ruleIndex === 0}
+                  handleUp={() => {
+                    this.saveRuleOrder("up", ruleIndex);
+                  }}
+                  disableDown={
+                    ruleIndex ===
+                    this.props.parentProps.data[rulesField].length - 1
+                  }
+                  handleDown={() => {
+                    this.saveRuleOrder("down", ruleIndex);
+                  }}
+                  name={rule.name}
+                  type={
+                    this.props.parentProps.classicCraig
+                      ? "subForm"
+                      : "formInSubForm"
+                  }
+                  aclClassicCraig={this.props.parentProps.classicCraig}
+                  innerFormProps={{
+                    craig: craig,
+                    data: rule,
+                    parent_name: this.props.parentProps.data.name,
+                    form: form,
+                    rules: this.props.parentProps.data.rules,
+                    arrayParentName: this.props.parentProps.data.name,
+                  }}
+                />
+              );
             }
-            return (
-              <CraigToggleForm
-                key={JSON.stringify(rule)}
-                onDelete={
-                  isSecurityGroup
-                    ? craig.security_groups.rules.delete
-                    : craig.vpcs.acls.rules.delete
-                }
-                onSave={
-                  isSecurityGroup
-                    ? craig.security_groups.rules.save
-                    : craig.vpcs.acls.rules.save
-                }
-                onShowToggle={() => {
-                  this.openForm(ruleIndex);
-                }}
-                craig={craig}
-                hide={!contains(this.state.openForms, ruleIndex)}
-                hideName
-                submissionFieldName={isSecurityGroup ? "sg_rules" : "acl_rules"}
-                tabPanel={{
-                  hideAbout: true,
-                }}
-                disableUp={ruleIndex === 0}
-                handleUp={() => {
-                  this.saveRuleOrder("up", ruleIndex);
-                }}
-                disableDown={
-                  ruleIndex === this.props.parentProps.data.rules.length - 1
-                }
-                handleDown={() => {
-                  this.saveRuleOrder("down", ruleIndex);
-                }}
-                name={rule.name}
-                type={
-                  this.props.parentProps.classicCraig
-                    ? "subForm"
-                    : "formInSubForm"
-                }
-                aclClassicCraig={this.props.parentProps.classicCraig}
-                innerFormProps={{
-                  craig: craig,
-                  data: rule,
-                  parent_name: this.props.parentProps.data.name,
-                  form: form,
-                  rules: this.props.parentProps.data.rules,
-                }}
-              />
-            );
-          })
+          )
         )}
       </>
     ) : (

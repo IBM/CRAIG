@@ -1,5 +1,27 @@
 [
   {
+    "version": "1.12.2",
+    "features": [
+      "A new file `outputs.tf` is now added to each CRAIG Terraform template",
+      "VPC names, IDs, and CRNs are exported as outputs",
+      "Subnet names, IDs, and CRNS are exported as outputs",
+      "VPC Security Group names, and IDs are exported as outputs",
+      "VPC Virtual Server primary IPs and floating IPs are exported as outputs",
+      "When bringing your own certificate for VPN Servers, two separate certificates are now imported. Additional variables have been added to support the new imported certificate",
+      "Users can now create, update, and delete Classic Security Groups and their rules from the Classic Security Groups page `/forms/classicSecurityGroups`",
+      "Users can now add IBM i licenses to Power VS instances with IBM i images",
+      "Users can now import existing VPC security groups for existing VPCs"
+    ],
+    "fixes": [
+      "Fixed an issue causing certificates imported into an existing Secrets Manager instance to have incorrect references within Terraform",
+      "Fixed an issue causing nested forms to not be shown by default when invalid",
+      "Fixed issues causing imported SLZ JSON files to crash the application on import"
+    ],
+    "upgrade_notes": [
+      "IBM Cloud Terraform provider version updated to `1.63.0` to add support for Power VS IBM i Licenses"
+    ]
+  },
+  {
     "version": "1.12.1",
     "features": [
       "Users can now use the `Trial` plan for secrets manager",

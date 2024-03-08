@@ -6,7 +6,6 @@ const {
   isNullOrEmptyString,
   capitalize,
 } = require("lazy-z");
-const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * create variables dot tf
@@ -51,11 +50,12 @@ function variablesDotTf(config, useF5, templateTarMode) {
   let useAccountId = false;
   // only add account id when in use
   ["virtual_private_endpoints", "cbr_zones"].forEach((field) => {
-    config[field].forEach((item) => {
-      if (item.account_id && !isNullOrEmptyString(item.account_id)) {
-        useAccountId = true;
-      }
-    });
+    if (config[field])
+      config[field].forEach((item) => {
+        if (item.account_id && !isNullOrEmptyString(item.account_id)) {
+          useAccountId = true;
+        }
+      });
   });
   if (useAccountId)
     variables.account_id = {
@@ -153,20 +153,21 @@ function variablesDotTf(config, useF5, templateTarMode) {
     }
   });
 
-  config.power.forEach((workspace) => {
-    workspace.ssh_keys.forEach((key) => {
-      if (!key.use_data)
-        variables[snakeCase(`power ${workspace.name} ${key.name} key`)] = {
-          description: capitalize(
-            titleCase(
-              `${workspace.name} ${key.name} public key value`
-            ).toLowerCase()
-          ),
-          type: "${string}",
-          default: templateTarMode ? undefined : key.public_key,
-        };
+  if (config.power)
+    config.power.forEach((workspace) => {
+      workspace.ssh_keys.forEach((key) => {
+        if (!key.use_data)
+          variables[snakeCase(`power ${workspace.name} ${key.name} key`)] = {
+            description: capitalize(
+              titleCase(
+                `${workspace.name} ${key.name} public key value`
+              ).toLowerCase()
+            ),
+            type: "${string}",
+            default: templateTarMode ? undefined : key.public_key,
+          };
+      });
     });
-  });
 
   (config.classic_ssh_keys || []).forEach((sshKey) => {
     variables[snakeCase(`classic ${sshKey.name} public key`)] = {
@@ -179,27 +180,34 @@ function variablesDotTf(config, useF5, templateTarMode) {
     };
   });
 
-  config.vpn_servers.forEach((server) => {
-    if (server.bring_your_own_cert) {
-      ["cert_pem", "private_key_pem", "intermediate_pem"].forEach((certVar) => {
-        variables[
-          snakeCase(`${server.vpc} vpn_server ${server.name} ${certVar}`)
-        ] = {
-          description:
-            "Imported certificate " +
-            titleCase(certVar)
-              .toLowerCase()
-              .replace("pem", "PEM")
-              .replace("cert PEM", "PEM") +
-            " for " +
-            titleCase(`${server.vpc} vpn server ${server.name}.`) +
-            " Certificate will be stored in Secrets Manager",
-          type: "${string}",
-          sensitive: "${true}",
-        };
-      });
-    }
-  });
+  if (config.vpn_servers)
+    config.vpn_servers.forEach((server) => {
+      if (server.bring_your_own_cert || server.method === "byo") {
+        [
+          "cert_pem",
+          "private_key_pem",
+          "intermediate_pem",
+          "client_ca_cert_pem",
+          "client_ca_private_key_pem",
+        ].forEach((certVar) => {
+          variables[
+            snakeCase(`${server.vpc} vpn_server ${server.name} ${certVar}`)
+          ] = {
+            description:
+              "Imported certificate " +
+              titleCase(certVar)
+                .toLowerCase()
+                .replace("pem", "PEM")
+                .replace("cert PEM", "PEM") +
+              " for " +
+              titleCase(`${server.vpc} vpn server ${server.name}.`) +
+              " Certificate will be stored in Secrets Manager",
+            type: "${string}",
+            sensitive: "${true}",
+          };
+        });
+      }
+    });
 
   return tfBlock(
     "variables",

@@ -224,8 +224,7 @@ class VpcDiagramPage extends React.Component {
         ? craig.store.json.vpcs[this.state.vpcIndex].name
         : "";
     let vpcFormData = craigForms(craig).vpcs;
-    // need to
-    // - add function to open import subnet form in scroll form on click
+
     return (
       <>
         {this.state.showSubnetModal ? (

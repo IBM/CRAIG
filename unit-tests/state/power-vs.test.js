@@ -23,6 +23,16 @@ describe("power-vs", () => {
     });
   });
   describe("power.onStoreUpdate", () => {
+    it("should be able to update power vs when no power vs zones", () => {
+      let state = newState();
+      state.power.create({
+        name: "toad",
+        zone: "us-south",
+      });
+      state.store.json._options.power_vs_zones = undefined;
+      let task = () => state.update();
+      assert.doesNotThrow(task, "it should not throw");
+    });
     it("should update images to only contain the selected image names", () => {
       let state = new newState();
       state.store.json._options.power_vs_zones = ["dal10", "us-south"];

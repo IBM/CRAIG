@@ -961,12 +961,12 @@ function powerVsStorageType(isVolume) {
     size: "small",
     default: null,
     type: "fetchSelect",
-    labelText: "Storage Type",
+    labelText: "Storage Tiers",
     groups: [],
     invalid: function (stateData) {
       return isNullOrEmptyString(stateData[storageField]);
     },
-    invalidText: selectInvalidText("Storage Type"),
+    invalidText: selectInvalidText("Storage Tier"),
     onRender: function (stateData) {
       return isNullOrEmptyString(stateData[storageField])
         ? ""

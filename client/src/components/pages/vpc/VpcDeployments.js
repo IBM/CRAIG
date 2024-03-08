@@ -662,7 +662,10 @@ class VpcDeploymentsDiagramPage extends React.Component {
                               vpc_name: this.vpcName(),
                             }}
                           />
-                          {this.state.selectedItem === "security_groups" ? (
+                          {this.state.selectedItem === "security_groups" &&
+                          !craig.store.json[this.state.selectedItem][
+                            this.state.selectedIndex
+                          ].use_data ? (
                             <CopyRuleForm
                               craig={this.props.craig}
                               sourceSg={this.getServiceData().name}

@@ -33,7 +33,7 @@ function getDisplaySubnetTiers(props) {
 
   let subnetTiers = vpc.subnetTiers
     ? vpc.subnetTiers
-    : craig.store.subnetTiers[vpc.name];
+    : craig.store.subnetTiers[vpc.name] || [];
 
   if (emptySubnetResources && !props.foundSubnetsOnly) {
     subnetTiers = subnetTiers.concat("NO_SUBNETS");

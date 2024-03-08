@@ -1,0 +1,19 @@
+---
+# tasks file for create_schematics_workspace 
+- name: Create Schematics Workspace
+  uri:
+    url: https://schematics.cloud.ibm.com/v1/workspaces
+    method: POST
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+    body_format: json
+    body:
+      "name": "{{ workspace_name }}"
+      "resource_group": "{{ resource_group }}"
+      "type": ["terraform_v1.5"]
+      "location": "{{ region }}"
+      "description": "{{ description }}"
+      "tags": "{{ tags }}"
+      "template_data": [{ "type": "terraform_v1.5"}]
+    status_code: 201
+  register: workspace

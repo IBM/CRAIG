@@ -4,6 +4,8 @@ const {
   isNullOrEmptyString,
   titleCase,
   contains,
+  splatContains,
+  revision,
 } = require("lazy-z");
 const { rgIdRef, tfBlock, jsonToTfPrint, kebabName } = require("./utils");
 const { formatAddressPrefix } = require("./vpc");
@@ -84,7 +86,11 @@ function ibmIsVpnServer(server, craig) {
     contains(["byo", "INSECURE"], server.method)
   ) {
     serverData.client_authentication[0].client_ca_crn =
-      overrideCert || server.client_ca_crn;
+      overrideCert && server.method === "certificate"
+        ? overrideCert.replace(/imported(?=\w+\.crn)/, "client_ca_imported")
+        : overrideCert
+        ? overrideCert.replace(/imported(?=\w+\.crn)/, "client_ca_imported")
+        : server.client_ca_crn;
   } else {
     serverData.client_authentication[0].identity_provider = "iam";
   }
@@ -128,7 +134,7 @@ function ibmIsVpnServerRoute(server, route) {
  * @param {*} server
  * @returns {string} Terraform code
  */
-function DANGER_formatDevRsaCertificate(server) {
+function DANGER_formatDevRsaCertificate(server, config) {
   let dangerCertTf = "";
   ["ca_key", "client_key", "server_key"].forEach((key) => {
     dangerCertTf += jsonToTfPrint(
@@ -209,7 +215,13 @@ function DANGER_formatDevRsaCertificate(server) {
     "ibm_sm_imported_certificate",
     `danger ${server.vpc} vpn server ${server.name} dev cert`,
     {
-      instance_id: `\${ibm_resource_instance.${snakeCase(
+      instance_id: `\${${
+        splatContains(config.secrets_manager, "name", server.secrets_manager) &&
+        new revision(config).child("secrets_manager", server.secrets_manager)
+          .data.use_data
+          ? "data."
+          : ""
+      }ibm_resource_instance.${snakeCase(
         server.secrets_manager
       )}_secrets_manager.guid}`,
       region: varDotRegion,
@@ -254,9 +266,21 @@ function formatVpnServer(server, config) {
       ? jsonToTfPrint(
           "resource",
           "ibm_sm_imported_certificate",
-          data.name + "_imported_certificate",
+          snakeCase(data.name) + "_imported_certificate",
           {
-            instance_id: `\${ibm_resource_instance.${snakeCase(
+            instance_id: `\${${
+              splatContains(
+                config.secrets_manager,
+                "name",
+                server.secrets_manager
+              ) &&
+              new revision(config).child(
+                "secrets_manager",
+                server.secrets_manager
+              ).data.use_data
+                ? "data."
+                : ""
+            }ibm_resource_instance.${snakeCase(
               server.secrets_manager
             )}_secrets_manager.guid}`,
             region: varDotRegion,
@@ -268,9 +292,45 @@ function formatVpnServer(server, config) {
             private_key: `\${var.${data.name}_private_key_pem}`,
             intermediate: `\${var.${data.name}_intermediate_pem}`,
           }
+        ) +
+        jsonToTfPrint(
+          "resource",
+          "ibm_sm_imported_certificate",
+          snakeCase(data.name) + "_client_ca_imported_certificate",
+          {
+            instance_id: `\${${
+              splatContains(
+                config.secrets_manager,
+                "name",
+                server.secrets_manager
+              ) &&
+              new revision(config).child(
+                "secrets_manager",
+                server.secrets_manager
+              ).data.use_data
+                ? "data."
+                : ""
+            }ibm_resource_instance.${snakeCase(
+              server.secrets_manager
+            )}_secrets_manager.guid}`,
+            region: varDotRegion,
+            name: kebabName([
+              server.vpc,
+              server.name,
+              "server",
+              "client-ca",
+              "cert",
+            ]),
+            description: `Secret for \${var.prefix} ${titleCase(
+              server.vpc + " " + server.name
+            )} Server Client CA authentication`,
+            certificate: `\${var.${data.name}_client_ca_cert_pem}`,
+            private_key: `\${var.${data.name}_client_ca_private_key_pem}`,
+            intermediate: `\${var.${data.name}_intermediate_pem}`,
+          }
         )
       : server.DANGER_developer_certificate || server.method === "INSECURE"
-      ? DANGER_formatDevRsaCertificate(server)
+      ? DANGER_formatDevRsaCertificate(server, config)
       : "";
 
   return (

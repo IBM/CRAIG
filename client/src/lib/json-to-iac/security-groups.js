@@ -101,7 +101,7 @@ function ibmIsSecurityGroupRule(rule, config) {
     direction: rule.direction,
   };
   ["icmp", "tcp", "udp"].forEach((protocol) => {
-    let ruleHasProtocolData = !allFieldsNull(rule[protocol]);
+    let ruleHasProtocolData = rule[protocol] && !allFieldsNull(rule[protocol]);
     if (ruleHasProtocolData && protocol === "icmp") {
       sgRule.icmp = [
         {

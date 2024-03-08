@@ -538,7 +538,7 @@ terraform {
   required_providers {
     ibm = {
       source  = "IBM-Cloud/ibm"
-      version = "~>1.61.0"
+      version = "~>1.63.0"
     }
     logdna = {
       source                = "logdna/logdna"
@@ -601,7 +601,7 @@ terraform {
   required_providers {
     ibm = {
       source  = "IBM-Cloud/ibm"
-      version = "~>1.61.0"
+      version = "~>1.63.0"
     }
     logdna = {
       source                = "logdna/logdna"

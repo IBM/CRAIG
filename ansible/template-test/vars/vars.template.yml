@@ -1,0 +1,36 @@
+---
+# Copy this file to `vars.yml` and fill in your data
+
+api_key: <api-key>
+ssh_key: <ssh-key>
+prefix: <unique-prefix>
+template: <template>
+workspace_name: <workspace-name>
+
+craig_url: https://craig.119gqgw56ti1.us-south.codeengine.appdomain.cloud/api/craig/template-tar
+region: us-south
+resource_group: craig-rg
+variablestore: [
+            {
+              "name": "ibmcloud_api_key", 
+              "secure": true,
+              "use_default": false,
+              "value": "{{api_key}}"
+            },
+            {
+              "name": "prefix",
+              "use_default": false,
+              "value": "{{prefix}}"
+            }
+          ]
+template_map:
+  from-scratch: []
+  mixed: ["ssh_key_public_key"]
+  vsi: ["slz_ssh_key_public_key"]
+  vsi-edge: ["slz_ssh_key_public_key"]
+  power-vs-sap-hana: ["ssh_key_public_key", "power_secure_powervs_power_ssh_key_key"]
+  oracle-rac: ["power_oracle_template_power_ssh_key"]
+  oracle-si: ["power_oracle_template_power_ssh_key"]
+  power-vs-poc: ["vsi_ssh_key_public_key", "dal10gw_on_prem_connection_preshared_key", "power_dal10_powervs_ssh_key_key"]
+  quick-start-power: ["vsi_ssh_key_public_key"]
+  vpnaas: []

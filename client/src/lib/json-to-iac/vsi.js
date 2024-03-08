@@ -475,7 +475,7 @@ function vsiTf(config) {
         blockData
       ) + "\n";
   });
-  fipTf === "" ? "" : (tf += tfBlock("optionally add floating IPs", fipTf));
+  fipTf === "" ? "" : (tf += tfBlock("floating IPs", fipTf));
   return tfDone(tf);
 }
 

@@ -387,6 +387,17 @@ function craigForms(craig) {
         },
       ],
     },
+    classic_security_groups: {
+      jsonField: "classic_security_groups",
+      groups: [
+        {
+          name: craig.classic_security_groups.name,
+        },
+        {
+          description: craig.classic_security_groups.description,
+        },
+      ],
+    },
     classic_gateways: {
       jsonField: "classic_gateways",
       groups: [
@@ -1027,6 +1038,11 @@ function craigForms(craig) {
             craig.power_instances.pi_storage_pool_affinity,
         },
         {
+          pi_ibmi_css: craig.power_instances.pi_ibmi_css,
+          pi_ibmi_pha: craig.power_instances.pi_ibmi_pha,
+          pi_ibmi_rds_users: craig.power_instances.pi_ibmi_rds_users,
+        },
+        {
           heading: {
             name: "Boot Volume",
             type: "subHeading",
@@ -1244,6 +1260,9 @@ function craigForms(craig) {
         {
           vpc_connections: craig.transit_gateways.vpc_connections,
           power_connections: craig.transit_gateways.power_connections,
+        },
+        {
+          classic: craig.transit_gateways.classic,
         },
         // the patterns where existing infrastructure exists are more likely
         // to import a transit gateway than a vpc CRN. JSON-to-IaC for CRNs
@@ -1576,6 +1595,9 @@ function craigForms(craig) {
     security_groups: {
       jsonField: "security_groups",
       groups: [
+        {
+          use_data: craig.security_groups.use_data,
+        },
         {
           name: craig.security_groups.name,
           resource_group: craig.security_groups.resource_group,

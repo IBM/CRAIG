@@ -448,6 +448,48 @@ describe("transit_gateways", () => {
             "it should set data"
           );
         });
+        it("should set connections when enabling classic connections", () => {
+          let craig = newState();
+          let data = {
+            classic: false,
+            connections: [{ tgw: "transit-gateway", vpc: "vpc" }],
+            name: "transit-gateway",
+          };
+          craig.transit_gateways.classic.onStateChange(data);
+          assert.deepEqual(
+            data,
+            {
+              classic: true,
+              connections: [
+                { tgw: "transit-gateway", vpc: "vpc" },
+                { tgw: "transit-gateway", classic: true },
+              ],
+              name: "transit-gateway",
+            },
+            "it should add a classic connection"
+          );
+        });
+        it("should set connections when disabling classic connections", () => {
+          let craig = newState();
+          let data = {
+            classic: true,
+            connections: [
+              { tgw: "transit-gateway", vpc: "vpc" },
+              { tgw: "transit-gateway", classic: true },
+            ],
+            name: "transit-gateway",
+          };
+          craig.transit_gateways.classic.onStateChange(data);
+          assert.deepEqual(
+            data,
+            {
+              classic: false,
+              connections: [{ tgw: "transit-gateway", vpc: "vpc" }],
+              name: "transit-gateway",
+            },
+            "it should remove a classic connection"
+          );
+        });
         it("should have force update key for connections", () => {
           let craig = newState();
           assert.deepEqual(

@@ -35,55 +35,60 @@ function powerVsOnStoreUpdate(config) {
   if (!config.store.json.power) {
     config.store.json.power = [];
     config.store.json._options.power_vs_zones = [];
-  }
-  config.store.json.power.forEach((workspace) => {
-    setUnfoundResourceGroup(config, workspace);
-    if (!contains(config.store.json._options.power_vs_zones, workspace.zone)) {
-      workspace.zone = null;
-    }
-
-    [
-      "ssh_keys",
-      "cloud_connections",
-      "network",
-      "images",
-      "attachments",
-    ].forEach((field) => {
-      workspace[field].forEach((item) => {
-        item.workspace = workspace.name;
-        item.zone = workspace.zone;
-        item.workspace_use_data = workspace.use_data || false;
-      });
-    });
-
-    let selectedImages = [];
-    workspace.images.forEach((image) => {
-      if (contains(workspace.imageNames, image.name)) {
-        selectedImages.push(image);
+  } else
+    config.store.json.power.forEach((workspace) => {
+      setUnfoundResourceGroup(config, workspace);
+      if (
+        !contains(
+          config.store.json._options.power_vs_zones || "",
+          workspace.zone
+        )
+      ) {
+        workspace.zone = null;
       }
-    });
-    workspace.images = selectedImages;
-    // add unfound networks to attachments
-    workspace.network.forEach((nw) => {
-      if (nw.pi_network_jumbo && !nw.pi_network_mtu) {
-        nw.pi_network_mtu = "9000";
-      } else if (!nw.pi_network_mtu && nw.pi_network_jumbo === false) {
-        nw.pi_network_mtu = "1500";
-      } else if (!nw.pi_network_mtu) nw.pi_network_mtu = "";
-      if (!splatContains(workspace.attachments, "network", nw.name)) {
-        workspace.attachments.push({
-          network: nw.name,
-          workspace: workspace.name,
-          zone: workspace.zone,
-          connections: [],
+
+      [
+        "ssh_keys",
+        "cloud_connections",
+        "network",
+        "images",
+        "attachments",
+      ].forEach((field) => {
+        workspace[field].forEach((item) => {
+          item.workspace = workspace.name;
+          item.zone = workspace.zone;
+          item.workspace_use_data = workspace.use_data || false;
         });
+      });
+
+      let selectedImages = [];
+      workspace.images.forEach((image) => {
+        if (contains(workspace.imageNames, image.name)) {
+          selectedImages.push(image);
+        }
+      });
+      workspace.images = selectedImages;
+      // add unfound networks to attachments
+      workspace.network.forEach((nw) => {
+        if (nw.pi_network_jumbo && !nw.pi_network_mtu) {
+          nw.pi_network_mtu = "9000";
+        } else if (!nw.pi_network_mtu && nw.pi_network_jumbo === false) {
+          nw.pi_network_mtu = "1500";
+        } else if (!nw.pi_network_mtu) nw.pi_network_mtu = "";
+        if (!splatContains(workspace.attachments, "network", nw.name)) {
+          workspace.attachments.push({
+            network: nw.name,
+            workspace: workspace.name,
+            zone: workspace.zone,
+            connections: [],
+          });
+        }
+      });
+      if (contains(edgeRouterEnabledZones, workspace.zone)) {
+        workspace.cloud_connections = [];
+        workspace.attachments = [];
       }
     });
-    if (contains(edgeRouterEnabledZones, workspace.zone)) {
-      workspace.cloud_connections = [];
-      workspace.attachments = [];
-    }
-  });
 }
 
 /**

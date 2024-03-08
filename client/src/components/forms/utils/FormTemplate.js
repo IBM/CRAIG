@@ -125,8 +125,9 @@ class FormTemplate extends React.Component {
     if (this.props.defaultModalValues) {
       formModalProps.data = { ...this.props.defaultModalValues };
     }
+    // or templating like this is to allow for imported slz
     let arrayIsEmpty =
-      this.props.arrayData.length === 0 && this.props.overrideTile;
+      (this.props.arrayData || []).length === 0 && this.props.overrideTile;
     let tabPanelClassName = this.props.subHeading
       ? "subHeading marginBottomSmall"
       : "";
@@ -140,7 +141,9 @@ class FormTemplate extends React.Component {
           headingType={this.props.subHeading ? "subHeading" : ""}
           hideButtons={this.props.hideFormTitleButton}
           className={
-            this.props.arrayData.length === 0 ? "subHeading" : tabPanelClassName
+            (this.props.arrayData || []).length === 0
+              ? "subHeading"
+              : tabPanelClassName
           }
           tooltip={this.props.tooltip}
           about={this.props.docs ? this.props.docs() : false}
@@ -152,13 +155,13 @@ class FormTemplate extends React.Component {
               ) : (
                 <CraigEmptyResourceTile
                   name={this.props.name}
-                  show={this.props.arrayData.length === 0}
+                  show={(this.props.arrayData || []).length === 0}
                   className="marginTop1Rem"
                 />
               )}
 
               {/* for each props passed into the array */}
-              {this.props.arrayData.map((data, index) => {
+              {(this.props.arrayData || []).map((data, index) => {
                 // return a form with the index and props
                 return (
                   <CraigToggleForm

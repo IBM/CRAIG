@@ -281,6 +281,16 @@ resource "ibm_sm_imported_certificate" "management_vpn_server_abc_imported_certi
   intermediate = var.management_vpn_server_abc_intermediate_pem
 }
 
+resource "ibm_sm_imported_certificate" "management_vpn_server_abc_client_ca_imported_certificate" {
+  instance_id  = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region       = var.region
+  name         = "\${var.prefix}-management-abc-server-client-ca-cert"
+  description  = "Secret for \${var.prefix} Management Abc Server Client CA authentication"
+  certificate  = var.management_vpn_server_abc_client_ca_cert_pem
+  private_key  = var.management_vpn_server_abc_client_ca_private_key_pem
+  intermediate = var.management_vpn_server_abc_intermediate_pem
+}
+
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   certificate_crn        = ibm_sm_imported_certificate.management_vpn_server_abc_imported_certificate.crn
   client_idle_timeout    = 2000
@@ -292,7 +302,81 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   resource_group         = ibm_resource_group.slz_management_rg.id
   client_authentication {
     method        = "certificate"
-    client_ca_crn = ibm_sm_imported_certificate.management_vpn_server_abc_imported_certificate.crn
+    client_ca_crn = ibm_sm_imported_certificate.management_vpn_server_abc_client_ca_imported_certificate.crn
+  }
+  client_dns_server_ips = [
+    "optional"
+  ]
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
+      assert.deepEqual(actualData, expectedData, "should return correct data");
+    });
+    it("should return correct tf for vpn server using bring your own certificate and secrets manager from data", () => {
+      slzNetwork.secrets_manager.push({
+        use_data: true,
+        name: "secrets-manager",
+      });
+      let actualData = formatVpnServer(
+        {
+          name: "abc",
+          certificate_crn: "xyz",
+          method: "certificate",
+          client_ca_crn: "hij",
+          client_ip_pool: "xyz",
+          client_dns_server_ips: "optional",
+          client_idle_timeout: 2000,
+          enable_split_tunneling: true,
+          port: 255,
+          protocol: "udp",
+          resource_group: "slz-management-rg",
+          security_groups: ["management-vpe-sg"],
+          subnets: ["vsi-zone-1"],
+          vpc: "management",
+          routes: [],
+          bring_your_own_cert: true,
+          secrets_manager: "secrets-manager",
+        },
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_sm_imported_certificate" "management_vpn_server_abc_imported_certificate" {
+  instance_id  = data.ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region       = var.region
+  name         = "\${var.prefix}-management-abc-server-cert"
+  description  = "Secret for \${var.prefix} Management Abc Server authentication"
+  certificate  = var.management_vpn_server_abc_cert_pem
+  private_key  = var.management_vpn_server_abc_private_key_pem
+  intermediate = var.management_vpn_server_abc_intermediate_pem
+}
+
+resource "ibm_sm_imported_certificate" "management_vpn_server_abc_client_ca_imported_certificate" {
+  instance_id  = data.ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region       = var.region
+  name         = "\${var.prefix}-management-abc-server-client-ca-cert"
+  description  = "Secret for \${var.prefix} Management Abc Server Client CA authentication"
+  certificate  = var.management_vpn_server_abc_client_ca_cert_pem
+  private_key  = var.management_vpn_server_abc_client_ca_private_key_pem
+  intermediate = var.management_vpn_server_abc_intermediate_pem
+}
+
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = ibm_sm_imported_certificate.management_vpn_server_abc_imported_certificate.crn
+  client_idle_timeout    = 2000
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method        = "certificate"
+    client_ca_crn = ibm_sm_imported_certificate.management_vpn_server_abc_client_ca_imported_certificate.crn
   }
   client_dns_server_ips = [
     "optional"
@@ -308,6 +392,12 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
     it("should return correct tf for vpn server using bring your own certificate from method", () => {
+      slzNetwork.secrets_manager = [
+        {
+          name: "secrets-manager",
+          use_data: false,
+        },
+      ];
       let actualData = formatVpnServer(
         {
           name: "abc",
@@ -340,6 +430,16 @@ resource "ibm_sm_imported_certificate" "management_vpn_server_abc_imported_certi
   intermediate = var.management_vpn_server_abc_intermediate_pem
 }
 
+resource "ibm_sm_imported_certificate" "management_vpn_server_abc_client_ca_imported_certificate" {
+  instance_id  = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region       = var.region
+  name         = "\${var.prefix}-management-abc-server-client-ca-cert"
+  description  = "Secret for \${var.prefix} Management Abc Server Client CA authentication"
+  certificate  = var.management_vpn_server_abc_client_ca_cert_pem
+  private_key  = var.management_vpn_server_abc_client_ca_private_key_pem
+  intermediate = var.management_vpn_server_abc_intermediate_pem
+}
+
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   certificate_crn        = ibm_sm_imported_certificate.management_vpn_server_abc_imported_certificate.crn
   client_idle_timeout    = 2000
@@ -351,7 +451,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   resource_group         = ibm_resource_group.slz_management_rg.id
   client_authentication {
     method        = "certificate"
-    client_ca_crn = ibm_sm_imported_certificate.management_vpn_server_abc_imported_certificate.crn
+    client_ca_crn = ibm_sm_imported_certificate.management_vpn_server_abc_client_ca_imported_certificate.crn
   }
   client_dns_server_ips = [
     "optional"
@@ -497,7 +597,282 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
 `;
       assert.deepEqual(actualData, expectedData, "should return correct data");
     });
+    it("should return correct tf for vpn server using developer certificate", () => {
+      slzNetwork.secrets_manager = [
+        {
+          name: "secrets-manager",
+          use_data: false,
+        },
+      ];
+      let actualData = formatVpnServer(
+        {
+          name: "abc",
+          certificate_crn: "xyz",
+          method: "certificate",
+          client_ca_crn: "hij",
+          client_ip_pool: "xyz",
+          client_dns_server_ips: "optional",
+          client_idle_timeout: 2000,
+          enable_split_tunneling: true,
+          port: 255,
+          protocol: "udp",
+          resource_group: "slz-management-rg",
+          security_groups: ["management-vpe-sg"],
+          subnets: ["vsi-zone-1"],
+          vpc: "management",
+          routes: [],
+          DANGER_developer_certificate: true,
+          secrets_manager: "secrets-manager",
+        },
+        slzNetwork
+      );
+      let expectedData = `##############################################################################
+# DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION
+##############################################################################
+
+resource "tls_private_key" "DANGER_management_vpn_abc_ca_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_private_key" "DANGER_management_vpn_abc_client_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_private_key" "DANGER_management_vpn_abc_server_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_self_signed_cert" "DANGER_management_vpn_abc_ca_cert" {
+  is_ca_certificate     = true
+  private_key_pem       = tls_private_key.DANGER_management_vpn_abc_ca_key.private_key_pem
+  validity_period_hours = 3 * 365 * 24
+  subject {
+    common_name  = "My Cert Authority"
+    organization = "My, Inc"
+  }
+  allowed_uses = [
+    "cert_signing",
+    "crl_signing"
+  ]
+}
+
+resource "tls_cert_request" "DANGER_management_vpn_abc_client_request" {
+  private_key_pem = tls_private_key.DANGER_management_vpn_abc_client_key.private_key_pem
+  subject {
+    common_name  = "my.vpn.client"
+    organization = "My, Inc"
+  }
+}
+
+resource "tls_cert_request" "DANGER_management_vpn_abc_server_request" {
+  private_key_pem = tls_private_key.DANGER_management_vpn_abc_server_key.private_key_pem
+  subject {
+    common_name  = "my.vpn.server"
+    organization = "My, Inc"
+  }
+}
+
+resource "tls_locally_signed_cert" "DANGER_management_vpn_abc_client_cert" {
+  cert_request_pem      = tls_cert_request.DANGER_management_vpn_abc_client_request.cert_request_pem
+  ca_private_key_pem    = tls_private_key.DANGER_management_vpn_abc_ca_key.private_key_pem
+  ca_cert_pem           = tls_self_signed_cert.DANGER_management_vpn_abc_ca_cert.cert_pem
+  validity_period_hours = 3 * 365 * 24
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "client_auth"
+  ]
+}
+
+resource "tls_locally_signed_cert" "DANGER_management_vpn_abc_server_cert" {
+  cert_request_pem      = tls_cert_request.DANGER_management_vpn_abc_server_request.cert_request_pem
+  ca_private_key_pem    = tls_private_key.DANGER_management_vpn_abc_ca_key.private_key_pem
+  ca_cert_pem           = tls_self_signed_cert.DANGER_management_vpn_abc_ca_cert.cert_pem
+  validity_period_hours = 3 * 365 * 24
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth"
+  ]
+}
+
+resource "ibm_sm_imported_certificate" "DANGER_management_vpn_server_abc_dev_cert" {
+  instance_id  = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region       = var.region
+  name         = "\${var.prefix}-management-abc-server-dev-cert"
+  description  = "DANGER - INSECURE - FOR DEVELOPMENT USE ONLY - Secret for \${var.prefix} Management Abc Server authentication"
+  certificate  = tls_locally_signed_cert.DANGER_management_vpn_abc_server_cert.cert_pem
+  private_key  = tls_private_key.DANGER_management_vpn_abc_server_key.private_key_pem
+  intermediate = tls_self_signed_cert.DANGER_management_vpn_abc_ca_cert.cert_pem
+}
+
+##############################################################################
+
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = ibm_sm_imported_certificate.DANGER_management_vpn_server_abc_dev_cert.crn
+  client_idle_timeout    = 2000
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method        = "certificate"
+    client_ca_crn = ibm_sm_imported_certificate.DANGER_management_vpn_server_abc_dev_cert.crn
+  }
+  client_dns_server_ips = [
+    "optional"
+  ]
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
+      assert.deepEqual(actualData, expectedData, "should return correct data");
+    });
+    it("should return correct tf for vpn server using developer certificate with secrets manager from data", () => {
+      slzNetwork.secrets_manager = [
+        {
+          name: "secrets-manager",
+          use_data: true,
+        },
+      ];
+      let actualData = formatVpnServer(
+        {
+          name: "abc",
+          certificate_crn: "xyz",
+          method: "certificate",
+          client_ca_crn: "hij",
+          client_ip_pool: "xyz",
+          client_dns_server_ips: "optional",
+          client_idle_timeout: 2000,
+          enable_split_tunneling: true,
+          port: 255,
+          protocol: "udp",
+          resource_group: "slz-management-rg",
+          security_groups: ["management-vpe-sg"],
+          subnets: ["vsi-zone-1"],
+          vpc: "management",
+          routes: [],
+          DANGER_developer_certificate: true,
+          secrets_manager: "secrets-manager",
+        },
+        slzNetwork
+      );
+      let expectedData = `##############################################################################
+# DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION
+##############################################################################
+
+resource "tls_private_key" "DANGER_management_vpn_abc_ca_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_private_key" "DANGER_management_vpn_abc_client_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_private_key" "DANGER_management_vpn_abc_server_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_self_signed_cert" "DANGER_management_vpn_abc_ca_cert" {
+  is_ca_certificate     = true
+  private_key_pem       = tls_private_key.DANGER_management_vpn_abc_ca_key.private_key_pem
+  validity_period_hours = 3 * 365 * 24
+  subject {
+    common_name  = "My Cert Authority"
+    organization = "My, Inc"
+  }
+  allowed_uses = [
+    "cert_signing",
+    "crl_signing"
+  ]
+}
+
+resource "tls_cert_request" "DANGER_management_vpn_abc_client_request" {
+  private_key_pem = tls_private_key.DANGER_management_vpn_abc_client_key.private_key_pem
+  subject {
+    common_name  = "my.vpn.client"
+    organization = "My, Inc"
+  }
+}
+
+resource "tls_cert_request" "DANGER_management_vpn_abc_server_request" {
+  private_key_pem = tls_private_key.DANGER_management_vpn_abc_server_key.private_key_pem
+  subject {
+    common_name  = "my.vpn.server"
+    organization = "My, Inc"
+  }
+}
+
+resource "tls_locally_signed_cert" "DANGER_management_vpn_abc_client_cert" {
+  cert_request_pem      = tls_cert_request.DANGER_management_vpn_abc_client_request.cert_request_pem
+  ca_private_key_pem    = tls_private_key.DANGER_management_vpn_abc_ca_key.private_key_pem
+  ca_cert_pem           = tls_self_signed_cert.DANGER_management_vpn_abc_ca_cert.cert_pem
+  validity_period_hours = 3 * 365 * 24
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "client_auth"
+  ]
+}
+
+resource "tls_locally_signed_cert" "DANGER_management_vpn_abc_server_cert" {
+  cert_request_pem      = tls_cert_request.DANGER_management_vpn_abc_server_request.cert_request_pem
+  ca_private_key_pem    = tls_private_key.DANGER_management_vpn_abc_ca_key.private_key_pem
+  ca_cert_pem           = tls_self_signed_cert.DANGER_management_vpn_abc_ca_cert.cert_pem
+  validity_period_hours = 3 * 365 * 24
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth"
+  ]
+}
+
+resource "ibm_sm_imported_certificate" "DANGER_management_vpn_server_abc_dev_cert" {
+  instance_id  = data.ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region       = var.region
+  name         = "\${var.prefix}-management-abc-server-dev-cert"
+  description  = "DANGER - INSECURE - FOR DEVELOPMENT USE ONLY - Secret for \${var.prefix} Management Abc Server authentication"
+  certificate  = tls_locally_signed_cert.DANGER_management_vpn_abc_server_cert.cert_pem
+  private_key  = tls_private_key.DANGER_management_vpn_abc_server_key.private_key_pem
+  intermediate = tls_self_signed_cert.DANGER_management_vpn_abc_ca_cert.cert_pem
+}
+
+##############################################################################
+
+resource "ibm_is_vpn_server" "management_vpn_server_abc" {
+  certificate_crn        = ibm_sm_imported_certificate.DANGER_management_vpn_server_abc_dev_cert.crn
+  client_idle_timeout    = 2000
+  client_ip_pool         = "xyz"
+  enable_split_tunneling = true
+  name                   = "\${var.prefix}-management-abc-server"
+  port                   = 255
+  protocol               = "udp"
+  resource_group         = ibm_resource_group.slz_management_rg.id
+  client_authentication {
+    method        = "certificate"
+    client_ca_crn = ibm_sm_imported_certificate.DANGER_management_vpn_server_abc_dev_cert.crn
+  }
+  client_dns_server_ips = [
+    "optional"
+  ]
+  subnets = [
+    module.management_vpc.vsi_zone_1_id
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+}
+`;
+      assert.deepEqual(actualData, expectedData, "should return correct data");
+    });
     it("should return correct tf for vpn server using developer certificate from method", () => {
+      slzNetwork.secrets_manager = [];
       let actualData = formatVpnServer(
         {
           name: "abc",

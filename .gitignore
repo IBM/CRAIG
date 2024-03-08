@@ -34,3 +34,4 @@ tfxjs.tfvars
 tf-test/
 dev/
 
+vars.yml

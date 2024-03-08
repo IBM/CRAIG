@@ -34,6 +34,8 @@ const { cisTf } = require("./cis");
 const { cisGlbTf } = require("./cis-glb");
 const { scc2Tf } = require("./scc-v2");
 const { fortigateTf } = require("./fortigate");
+const { outputsTf } = require("./outputs");
+const { classicSecurityGroupTf } = require("./classic-security-group");
 const apacheLicense = `                                 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -258,7 +260,9 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "clusters.tf": clusterTf(config),
       "vpn_gateways.tf": config.vpn_gateways.length > 0 ? vpnTf(config) : null,
       "vpn_servers.tf":
-        config.vpn_servers.length > 0 ? vpnServerTf(config) : null,
+        config.vpn_servers && config.vpn_servers.length > 0
+          ? vpnServerTf(config)
+          : null,
       "variables.tf": variablesDotTf(config, useF5, templateTarMode),
       "key_management.tf": kmsTf(config) + "\n",
       "object_storage.tf": cosTf(config) + "\n",
@@ -292,14 +296,17 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "f5_big_ip.tf": useF5 ? f5Tf(config) : null,
       "f5_user_data.yaml": useF5 ? f5CloudInitYaml() : null,
       "cbr.tf":
-        config.cbr_zones.length > 0 && config.cbr_rules.length > 0
+        config.cbr_zones &&
+        config.cbr_zones.length > 0 &&
+        config.cbr_rules &&
+        config.cbr_rules.length > 0
           ? cbrTf(config)
           : null,
       "dns.tf": config.dns && config.dns.length > 0 ? dnsTf(config) : null,
       "observability.tf": loggingMonitoringTf(config),
-      "icd.tf": config.icd.length > 0 ? icdTf(config) : null,
+      "icd.tf": config.icd && config.icd.length > 0 ? icdTf(config) : null,
       "power_infrastructure.tf":
-        config.power.length > 0 ? powerVsTf(config) : null,
+        config.power && config.power.length > 0 ? powerVsTf(config) : null,
       "power_instances.tf": powerInstanceTf(config),
       "power_volumes.tf": powerVsVolumeTf(config),
       "iam.tf": iamTf(config),
@@ -310,6 +317,8 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "cis_global_load_balancers.tf": cisGlbTf(config),
       "scc_v2.tf": scc2Tf(config),
       "fortigate_vnf.tf": fortigateTf(config),
+      "outputs.tf": outputsTf(config),
+      "classic_security_groups.tf": classicSecurityGroupTf(config),
     };
     vpcModuleTf(files, config);
     return files;

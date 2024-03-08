@@ -94,6 +94,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "health_checks",
     "connections",
     "fortigate_vnf",
+    "classic_security_groups",
+    "classic_sg_rules",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
@@ -158,6 +160,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.cis_glbs[field]
         : field === "connections"
         ? componentProps.craig.vpn_gateways.connections
+        : field === "classic_sg_rules"
+        ? componentProps.craig.classic_security_groups.classic_sg_rules
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;

@@ -44,8 +44,18 @@ const CopyRuleObject = (props) => {
             className: "fieldWidthSmaller",
             groups: (props.source ? [""] : []).concat(
               props.isSecurityGroup
-                ? splat(props.craig.store.json.security_groups, "name")
-                : splat(props.data.acls, "name")
+                ? splat(
+                    props.craig.store.json.security_groups.filter((sg) => {
+                      if (!sg.use_data) return sg;
+                    }),
+                    "name"
+                  )
+                : splat(
+                    props.data.acls.filter((acl) => {
+                      if (!acl.use_data) return acl;
+                    }),
+                    "name"
+                  )
             ),
             disabled: (stateData) => {
               return stateData.v2;
