@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - When bringing your own certificate for VPN Servers, two separate certificates are now imported. Additional variables have been added to support the new imported certificate
 - Users can now create, update, and delete Classic Security Groups and their rules from the Classic Security Groups page `/forms/classicSecurityGroups`
 - Users can now add IBM i licenses to Power VS instances with IBM i images
+- Users can now import existing VPC security groups for existing VPCs
 
 ### Fixes
 

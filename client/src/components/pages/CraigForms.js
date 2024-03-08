@@ -1596,6 +1596,9 @@ function craigForms(craig) {
       jsonField: "security_groups",
       groups: [
         {
+          use_data: craig.security_groups.use_data,
+        },
+        {
           name: craig.security_groups.name,
           resource_group: craig.security_groups.resource_group,
           vpc: craig.security_groups.vpc,

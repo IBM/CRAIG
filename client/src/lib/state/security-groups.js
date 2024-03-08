@@ -7,6 +7,7 @@ const {
   getObjectFromArray,
   contains,
   isIpv4CidrOrAddress,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultVpeSecurityGroups } = require("./defaults");
@@ -61,6 +62,7 @@ function securityGroupOnStoreUpdate(config) {
     setUnfoundResourceGroup(config, sg);
     if (!splatContains(config.store.json.vpcs, "name", sg.vpc)) {
       sg.vpc = null;
+      sg.use_data = false;
       sg.rules.forEach((rule) => {
         rule.vpc = null;
         rule.sg = sg.name;
@@ -256,6 +258,20 @@ function initSecurityGroupStore(store) {
       "security_groups"
     ),
     schema: {
+      use_data: {
+        type: "toggle",
+        default: false,
+        labelText: "Use Existing Security Group",
+        hideWhen: function (stateData, componentProps) {
+          return (
+            getObjectFromArray(
+              componentProps.craig.store.json.vpcs,
+              "name",
+              stateData.vpc || "" // modal
+            )?.use_data !== true
+          );
+        },
+      },
       name: nameField("security_groups", { size: "small" }),
       resource_group: resourceGroupsField(true),
       vpc: {
@@ -266,6 +282,9 @@ function initSecurityGroupStore(store) {
         invalidText: selectInvalidText("vpc"),
         size: "small",
         groups: vpcGroups,
+        disabled: function (stateData) {
+          return stateData.use_data && !isNullOrEmptyString(stateData.vpc);
+        },
       },
     },
     subComponents: {
