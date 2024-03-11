@@ -1,0 +1,8 @@
+---
+# tasks file for download_tar
+- name: Download {{template}}.tar to current directory
+  get_url:
+    url: "{{craig_url}}/{{template}}"
+    dest: "{{playbook_dir}}/{{template}}.tar"
+  async: 120
+  retries: 10

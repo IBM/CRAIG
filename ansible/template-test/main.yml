@@ -18,13 +18,8 @@
 - name: "Download Template Tarball"
   hosts: localhost
   vars_files: ./vars/vars.yml
-  tasks:
-    - name: Download {{template}}.tar to current directory
-      get_url:
-        url: "{{craig_url}}/{{template}}"
-        dest: "{{playbook_dir}}/{{template}}.tar"
-      async: 120
-      retries: 10
+  roles:
+    - role: download_tar
 - name: Create Schematics Workspace
   hosts: localhost
   vars_files: ./vars/vars.yml # variables declared in variables file are added to role automatically
