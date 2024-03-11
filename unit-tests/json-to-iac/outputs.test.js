@@ -6,7 +6,7 @@ describe("outputs", () => {
     it("should return correct outputs file", () => {
       let config = {
         _options: {
-          craig_version: "1.12.1",
+          craig_version: "1.13.0",
           prefix: "jv-dev",
           region: "eu-de",
           tags: ["hello", "world"],
@@ -599,7 +599,7 @@ output "management_vpc_jv_dev_server_vsi_1_1_floating_ip_address" {
     it("should return correct outputs file with multiple deployments", () => {
       let config = {
         _options: {
-          craig_version: "1.12.1",
+          craig_version: "1.13.0",
           prefix: "jv-dev",
           region: "eu-de",
           tags: ["hello", "world"],
@@ -1463,7 +1463,7 @@ output "power_vs_workspace_iac_power_workspace_test_output_crn" {
     it("should return correct outputs for power vs workspaces and vpc", () => {
       let config = {
         _options: {
-          craig_version: "1.12.1",
+          craig_version: "1.13.0",
           prefix: "jv-dev",
           region: "eu-de",
           tags: ["hello", "world"],

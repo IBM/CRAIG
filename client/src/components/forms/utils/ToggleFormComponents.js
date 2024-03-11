@@ -13,7 +13,7 @@ import {
   dynamicSecondaryButtonProps,
   statelessWrapperProps,
 } from "../../../lib/components/toggle-form-components";
-import { kebabCase } from "lazy-z";
+import { contains, kebabCase } from "lazy-z";
 import { DynamicToolTipWrapper } from "../dynamic-form/components";
 import PopoverWrapper from "./PopoverWrapper";
 
@@ -100,7 +100,7 @@ PrimaryButton.defaultProps = {
   hoverText: "Save Changes",
   inline: false,
   disabled: false,
-  hoverTextAlign: "bottom",
+  hoverTextAlign: "bottom-right",
 };
 
 PrimaryButton.propTypes = {
@@ -114,7 +114,10 @@ PrimaryButton.propTypes = {
 };
 
 const SecondaryButton = (props) => {
-  let buttonProps = dynamicSecondaryButtonProps(props);
+  let isV2Page =
+    contains(window.location.pathname, "/v2") ||
+    contains(window.location.search, "v2");
+  let buttonProps = dynamicSecondaryButtonProps(props, isV2Page);
   return (
     <div className="delete-area">
       <PopoverWrapper
@@ -139,7 +142,7 @@ const SecondaryButton = (props) => {
 
 SecondaryButton.defaultProps = {
   disabled: false,
-  hoverTextAlign: "bottom",
+  hoverTextAlign: "bottom-right",
 };
 
 SecondaryButton.propTypes = {

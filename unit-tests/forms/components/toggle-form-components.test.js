@@ -107,11 +107,14 @@ describe("toggle form component functions", () => {
     });
   });
   describe("dynamicSecondaryButtonProps", () => {
-    it("should return correct data with no props", () => {
+    it("should return correct data with no props in CRAIG v2", () => {
       assert.deepEqual(
-        dynamicSecondaryButtonProps({
-          name: "Resource",
-        }),
+        dynamicSecondaryButtonProps(
+          {
+            name: "frog",
+          },
+          true
+        ),
         {
           buttonClassName:
             "cds--btn--danger--tertiary forceTertiaryButtonStyles",
@@ -124,12 +127,35 @@ describe("toggle form component functions", () => {
         "it should return correct data"
       );
     });
+    it("should return correct data with no props in Classic CRAIG", () => {
+      assert.deepEqual(
+        dynamicSecondaryButtonProps(
+          {
+            name: "frog",
+          },
+          false
+        ),
+        {
+          buttonClassName:
+            "cds--btn--danger--tertiary forceTertiaryButtonStyles",
+          iconClassName: "redFill",
+          popoverProps: {
+            className: "",
+            hoverText: "Delete frog",
+          },
+        },
+        "it should return correct data"
+      );
+    });
     it("should return correct data when disabled", () => {
       assert.deepEqual(
-        dynamicSecondaryButtonProps({
-          disabled: true,
-          name: "Resource",
-        }),
+        dynamicSecondaryButtonProps(
+          {
+            disabled: true,
+            name: "Resource",
+          },
+          false
+        ),
         {
           buttonClassName:
             "cds--btn--danger--tertiary forceTertiaryButtonStyles pointerEventsNone",
@@ -144,10 +170,13 @@ describe("toggle form component functions", () => {
     });
     it("should return correct data when disabled and disabled delete message", () => {
       assert.deepEqual(
-        dynamicSecondaryButtonProps({
-          disabled: true,
-          disableDeleteMessage: "no",
-        }),
+        dynamicSecondaryButtonProps(
+          {
+            disabled: true,
+            disableDeleteMessage: "no",
+          },
+          false
+        ),
         {
           buttonClassName:
             "cds--btn--danger--tertiary forceTertiaryButtonStyles pointerEventsNone",

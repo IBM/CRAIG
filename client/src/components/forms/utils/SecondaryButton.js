@@ -1,12 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { contains } from "lazy-z";
 import { default as PopoverWrapper } from "./PopoverWrapper";
 import { TrashCan } from "@carbon/icons-react";
 import { Button } from "@carbon/react";
 import { dynamicSecondaryButtonProps } from "../../../lib/components/toggle-form-components";
 
 export const SecondaryButton = (props) => {
-  let buttonProps = dynamicSecondaryButtonProps(props);
+  let isV2Page =
+    contains(window.location.pathname, "/v2") ||
+    contains(window.location.search, "v2");
+  let buttonProps = dynamicSecondaryButtonProps(props, isV2Page);
   return (
     <div className="delete-area">
       <PopoverWrapper
@@ -31,7 +35,7 @@ export const SecondaryButton = (props) => {
 
 SecondaryButton.defaultProps = {
   disabled: false,
-  hoverTextAlign: "bottom",
+  hoverTextAlign: "bottom-right",
 };
 
 SecondaryButton.propTypes = {

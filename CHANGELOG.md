@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+Fixed an issue with button hoverText alignment causing overflow in forms
 
 ## 1.12.2
 

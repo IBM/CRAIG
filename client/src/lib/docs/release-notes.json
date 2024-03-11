@@ -4,7 +4,9 @@
     "features": [
       "Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form"
     ],
-    "fixes": [],
+    "fixes": [
+      "Fixed an issue with button hoverText alignment causing overflow in forms"
+    ],
     "upgrade_notes": []
   },
   {
