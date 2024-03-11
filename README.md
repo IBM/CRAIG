@@ -161,8 +161,10 @@ Make sure to set the `API_KEY` variable in a `.env` file to be used for IBM Clou
 See `.env.example` found [here](./.env.example)
 
 ```shell
-docker run -it --env-file .env -- craig
+docker run -t -d -p 8080:8080 --env-file .env -- craig
 ```
+
+CRAIG is now available at http://localhost:8080.
 
 ---
 
