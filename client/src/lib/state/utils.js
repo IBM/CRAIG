@@ -878,9 +878,10 @@ function powerVsWorkspaceGroups(stateData, componentProps) {
 /**
  * get power vs storage options field
  * @param {boolean=} isVolume true if is volume
+ * @param {Function=} hideWhen override hidewhen function
  * @returns {object} schema object
  */
-function powerVsStorageOptions(isVolume) {
+function powerVsStorageOptions(isVolume, hideWhen) {
   return {
     size: "small",
     default: "",
@@ -947,6 +948,7 @@ function powerVsStorageOptions(isVolume) {
       }
       stateData.affinity_type = null;
     },
+    hideWhen: hideWhen,
   };
 }
 
@@ -955,7 +957,7 @@ function powerVsStorageOptions(isVolume) {
  * @param {boolean=} isVolume true if is volume
  * @returns {object} schema object
  */
-function powerVsStorageType(isVolume) {
+function powerVsStorageType(isVolume, hideWhen) {
   let storageField = isVolume ? "pi_volume_type" : "pi_storage_type";
   return {
     size: "small",
@@ -982,8 +984,11 @@ function powerVsStorageType(isVolume) {
     apiEndpoint: function (stateData) {
       return `/api/power/${stateData.zone}/storage-tiers`;
     },
-    hideWhen: function (stateData) {
-      return isNullOrEmptyString(stateData.zone, true);
+    hideWhen: function (stateData, componentProps) {
+      return (
+        (hideWhen && hideWhen(stateData, componentProps)) ||
+        isNullOrEmptyString(stateData.zone, true)
+      );
     },
   };
 }

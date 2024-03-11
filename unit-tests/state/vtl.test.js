@@ -1285,6 +1285,55 @@ describe("vtl", () => {
     beforeEach(() => {
       craig = newState();
     });
+    describe("vtl.pi_proc_type.hideWhen", () => {
+      it("should hide when no workspace is selected or no vtl images", () => {
+        assert.isTrue(
+          craig.vtl.pi_proc_type.hideWhen({}, {}),
+          "it should be hidden"
+        );
+        craig.power.create({ name: "bad" });
+        assert.isTrue(
+          craig.vtl.pi_proc_type.hideWhen(
+            { workspace: "bad" },
+            { craig: craig }
+          ),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.vtl.pi_processors.hideWhen(
+            { workspace: "bad" },
+            { craig: craig }
+          ),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.vtl.pi_memory.hideWhen({ workspace: "bad" }, { craig: craig }),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.vtl.storage_option.hideWhen(
+            { workspace: "bad" },
+            { craig: craig }
+          ),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.vtl.storage_option.hideWhen(
+            { workspace: "bad", zone: "" },
+            { craig: craig }
+          ),
+          "it should be hidden"
+        );
+        craig.store.json.power[0].imageNames = ["VTL"];
+        assert.isFalse(
+          craig.vtl.storage_option.hideWhen(
+            { workspace: "bad", zone: "yes" },
+            { craig: craig }
+          ),
+          "it should not be hidden"
+        );
+      });
+    });
     describe("vtl.pi_license_repository_capacity.invalid", () => {
       it("should return true when empty string", () => {
         assert.isTrue(

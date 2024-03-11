@@ -928,7 +928,7 @@ variable "secrets_manager_example_secret_password" {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.12.2",
+        craig_version: "1.13.0",
         power_vs_high_availability: false,
         template: "Empty Project",
         fs_cloud: false,

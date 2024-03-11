@@ -1237,7 +1237,7 @@ output "management_vpc_jv_dev_server2_vsi_1_1_floating_ip_address" {
           enable_classic: false,
           dynamic_subnets: true,
           enable_power_vs: true,
-          craig_version: "1.12.2",
+          craig_version: "1.13.0",
           power_vs_zones: ["us-south", "dal10", "dal12"],
           power_vs_high_availability: false,
           no_vpn_secrets_manager_auth: false,

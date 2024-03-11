@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.13.0
+
+### Upgrade Notes
+
+
+### Features
+
+- Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form
+
+### Fixes
+
+
 ## 1.12.2
 
 ### Upgrade Notes

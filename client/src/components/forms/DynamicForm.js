@@ -266,9 +266,11 @@ class DynamicForm extends React.Component {
       <div className={this.props.className}>
         <SubnetTileTitle parentProps={this.props} parentState={this.state} />
         {this.props.form.groups.map((group, index) =>
-          group.hideWhen && group.hideWhen(this.state) ? (
+          group.hideWhen && group.hideWhen(this.state, this.props) ? (
             ""
-          ) : group.heading && group.hideWhen && group.hideWhen(this.state) ? (
+          ) : group.heading &&
+            group.hideWhen &&
+            group.hideWhen(this.state, this.props) ? (
             ""
           ) : group.heading ? (
             <CraigFormHeading {...dynamicHeadingProps(group)} />

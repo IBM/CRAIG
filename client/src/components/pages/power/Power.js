@@ -306,7 +306,9 @@ class PowerDiagram extends React.Component {
               craig={craig}
               modalService={this.state.modalService}
               formName={
-                this.state.modalService === "power_volumes"
+                this.state.modalService === "vtl"
+                  ? "VTL"
+                  : this.state.modalService === "power_volumes"
                   ? undefined
                   : "Power Instances"
               }

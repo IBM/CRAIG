@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.13.0",
+    "features": [
+      "Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.12.2",
     "features": [
       "A new file `outputs.tf` is now added to each CRAIG Terraform template",

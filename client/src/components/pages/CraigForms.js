@@ -1,4 +1,4 @@
-const { contains } = require("lazy-z");
+const { contains, isNullOrEmptyString, isEmpty } = require("lazy-z");
 const { edgeRouterEnabledZones } = require("../../lib/constants");
 const { disableSave } = require("../../lib");
 
@@ -1017,6 +1017,7 @@ function craigForms(craig) {
         },
         {
           name: craig.power_instances.name,
+          ssh_key: craig.power_instances.ssh_key,
           workspace: craig.power_instances.workspace,
         },
         {
@@ -1024,18 +1025,15 @@ function craigForms(craig) {
           primary_subnet: craig.power_instances.primary_subnet,
         },
         {
-          ssh_key: craig.power_instances.ssh_key,
           image: craig.power_instances.image,
           pi_sys_type: craig.power_instances.pi_sys_type,
+          pi_storage_pool_affinity:
+            craig.power_instances.pi_storage_pool_affinity,
         },
         {
           pi_proc_type: craig.power_instances.pi_proc_type,
           pi_processors: craig.power_instances.pi_processors,
           pi_memory: craig.power_instances.pi_memory,
-        },
-        {
-          pi_storage_pool_affinity:
-            craig.power_instances.pi_storage_pool_affinity,
         },
         {
           pi_ibmi_css: craig.power_instances.pi_ibmi_css,
@@ -1046,6 +1044,9 @@ function craigForms(craig) {
           heading: {
             name: "Boot Volume",
             type: "subHeading",
+          },
+          hideWhen: function (stateData) {
+            return isNullOrEmptyString(stateData.workspace, true);
           },
         },
         {
@@ -1069,6 +1070,9 @@ function craigForms(craig) {
           heading: {
             name: "IP Interface Options",
             type: "subHeading",
+          },
+          hideWhen: function (stateData) {
+            return isNullOrEmptyString(stateData.workspace, true);
           },
         },
       ],
@@ -1572,6 +1576,12 @@ function craigForms(craig) {
             name: "Boot Volume",
             type: "subHeading",
           },
+          hideWhen: function (stateData, componentProps) {
+            return (
+              isNullOrEmptyString(stateData.workspace, true) ||
+              isEmpty(craig.vtl.image.groups(stateData, componentProps))
+            );
+          },
         },
         {
           storage_option: craig.vtl.storage_option,
@@ -1587,6 +1597,12 @@ function craigForms(craig) {
           heading: {
             name: "IP Interface Options",
             type: "subHeading",
+          },
+          hideWhen: function (stateData, componentProps) {
+            return (
+              isNullOrEmptyString(stateData.workspace, true) ||
+              isEmpty(craig.vtl.image.groups(stateData, componentProps))
+            );
           },
         },
       ],

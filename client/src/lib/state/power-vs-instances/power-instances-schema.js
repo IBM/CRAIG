@@ -30,6 +30,23 @@ const { sapProfiles, systemTypes } = require("../../constants");
 const { nameField } = require("../reusable-fields");
 
 /**
+ * hide field for vtl forms when no workspace is selected
+ * @param {*} vtl
+ * @returns {Function} hideWhen function
+ */
+function hideWhenNoWorkspaceAndVtl(vtl) {
+  return function (stateData, componentProps) {
+    return (
+      vtl &&
+      (isNullOrEmptyString(stateData.workspace, true) ||
+        isEmpty(
+          componentProps.craig.vtl.image.groups(stateData, componentProps)
+        ))
+    );
+  };
+}
+
+/**
  * Network invalidation for powerVs instance
  * @returns {boolean} function will evaluate to true if should be disabled
  */
@@ -258,6 +275,7 @@ function powerVsInstanceSchema(vtl) {
       forceUpdateKey: function (stateData) {
         return stateData.workspace;
       },
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     primary_subnet: {
       labelText: "Primary Subnet",
@@ -289,6 +307,7 @@ function powerVsInstanceSchema(vtl) {
         } else stateData.primary_subnet = "";
       },
       size: "small",
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     ssh_key: {
       labelText: "SSH Key",
@@ -310,6 +329,7 @@ function powerVsInstanceSchema(vtl) {
         }
       },
       size: "small",
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     image: {
       size: "small",
@@ -330,6 +350,7 @@ function powerVsInstanceSchema(vtl) {
             });
         }
       },
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_sys_type: {
       size: "small",
@@ -339,6 +360,7 @@ function powerVsInstanceSchema(vtl) {
       invalidText: selectInvalidText("systen type"),
       groups: vtl ? ["s922", "e980"] : systemTypes,
       type: "select",
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_proc_type: {
       default: "",
@@ -349,12 +371,16 @@ function powerVsInstanceSchema(vtl) {
       type: "select",
       onRender: titleCaseRender("pi_proc_type"),
       onInputChange: kebabCaseInput("pi_proc_type"),
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_processors: {
       labelText: "Processors",
       placeholder: vtl ? 1 : "0.25",
-      hideWhen: function (stateData) {
-        return stateData.sap === true;
+      hideWhen: function (stateData, componentProps) {
+        return (
+          stateData.sap === true ||
+          hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps)
+        );
       },
       size: "small",
       default: "",
@@ -362,8 +388,11 @@ function powerVsInstanceSchema(vtl) {
       invalidText: invalidPowerVsProcessorTextCallback(true),
     },
     pi_memory: {
-      hideWhen: function (stateData) {
-        return stateData.sap === true;
+      hideWhen: function (stateData, componentProps) {
+        return (
+          stateData.sap === true ||
+          hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps)
+        );
       },
       labelText: "Memory (GB)",
       placeholder: "4",
@@ -383,10 +412,14 @@ function powerVsInstanceSchema(vtl) {
         content:
           "To attach data volumes from different storage pools, set to false. When this is set to false it cannot be set to true without re-creation of instance.",
       },
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_storage_pool: powerStoragePoolSelect(),
-    storage_option: powerVsStorageOptions(),
-    pi_storage_type: powerVsStorageType(),
+    storage_option: powerVsStorageOptions(
+      false,
+      hideWhenNoWorkspaceAndVtl(vtl)
+    ),
+    pi_storage_type: powerVsStorageType(false, hideWhenNoWorkspaceAndVtl(vtl)),
     affinity_type: powerVsAffinityType(),
     pi_affinity_policy: {
       default: null,
@@ -406,6 +439,7 @@ function powerVsInstanceSchema(vtl) {
           : !isWholeNumber(parseInt(stateData.pi_license_repository_capacity));
       },
       invalidText: unconditionalInvalidText("Enter a whole number"),
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_ibmi_css: {
       size: "small",
