@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form
+- Icons for deployments within imported subnets are now rendered within that subnet on the `/v2/vpcDeployments` page
 
 ### Fixes
 

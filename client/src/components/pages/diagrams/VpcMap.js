@@ -18,6 +18,7 @@ import { DeploymentIcon } from "./DeploymentIcon";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
 import { Subnet } from "./Subnet";
+import { SubnetServiceMap } from "./SubnetServiceMap";
 
 export const VpcMap = (props) => {
   let craig = props.craig;
@@ -203,7 +204,9 @@ export const VpcMap = (props) => {
                                   : {}
                               }
                               hoverClassName={
-                                props.small ? "" : "diagramBoxSelected"
+                                props.small || props.static
+                                  ? ""
+                                  : "diagramBoxSelected"
                               }
                             >
                               <Subnet
@@ -228,7 +231,28 @@ export const VpcMap = (props) => {
                                 vpc={vpc}
                                 small={props.small}
                                 imported
-                              />
+                                craig={craig}
+                                vpcIndex={vpcIndex}
+                              >
+                                <SubnetServiceMap
+                                  onClick={
+                                    props.onImportedSubnetItemClick
+                                      ? (vpcIndex, field, itemIndex) => {
+                                          props.onImportedSubnetItemClick(
+                                            vpcIndex,
+                                            field,
+                                            itemIndex
+                                          );
+                                        }
+                                      : undefined
+                                  }
+                                  parentState={props.parentState}
+                                  small={props.small}
+                                  static={props.static}
+                                  tabSelected={props.tabSelected}
+                                  onTabClick={props.onTabClick}
+                                />
+                              </Subnet>
                             </HoverClassNameWrapper>
                           );
                         })}

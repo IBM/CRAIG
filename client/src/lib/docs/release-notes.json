@@ -2,7 +2,8 @@
   {
     "version": "1.13.0",
     "features": [
-      "Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form"
+      "Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form",
+      "Icons for deployments within imported subnets are now rendered within that subnet on the `/v2/vpcDeployments` page"
     ],
     "fixes": [
       "Fixed an issue with button hoverText alignment causing overflow in forms"
