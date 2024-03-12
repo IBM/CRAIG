@@ -17,16 +17,6 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 
 ---
 
-## Installation
-
-1. [Running CRAIG Application Locally](#running-craig-application-locally)
-2. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
-3. [Building Local CRAIG Container Image](#building-local-container-image)
-4. [Setting Up CRAIG Development Environment](.docs/dev-env-setup.md)
-5. [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md)
-
----
-
 ### Tutorial Video
 
 [Follow this tutorial](https://ibm.box.com/v/craigTutorialVideo) for step-by-step instructions on how to get started with CRAIG.
@@ -34,6 +24,16 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 ***Ensure `Quality: 1080p` is selected within Box video player settings for the best viewing experience.***
 
 ***Last Updated: March 11th, 2024***
+
+---
+
+## Installation
+
+1. [Running CRAIG Application Locally](#running-craig-application-locally)
+2. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
+3. [Building Local CRAIG Container Image](#building-local-container-image)
+4. [Setting Up CRAIG Development Environment](.docs/dev-env-setup.md)
+5. [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md)
 
 ---
 
