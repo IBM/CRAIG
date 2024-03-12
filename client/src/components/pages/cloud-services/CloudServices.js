@@ -424,10 +424,12 @@ class CloudServicesPage extends React.Component {
                   ? "Activity Tracker"
                   : this.state.modalService === "scc_v2"
                   ? "Security & Compliance Center"
+                  : this.state.modalService === "dns"
+                  ? "DNS"
                   : titleCase(this.state.modalService)
               )
                 .replace(
-                  contains(["dns", "event_streams"]) ? "" : /s(?=$)/g,
+                  contains(["DNS", "event_streams"]) ? "" : /s(?=$)/g,
                   ""
                 )
                 .replace("Dns", "DNS")}${

@@ -1,4 +1,9 @@
-const { contains, splatContains, getObjectFromArray } = require("lazy-z");
+const {
+  contains,
+  splatContains,
+  getObjectFromArray,
+  carve,
+} = require("lazy-z");
 const { shouldDisableComponentSave } = require("../utils");
 const { getSapVolumeList } = require("../../forms/sap");
 const { RegexButWithWords } = require("regex-but-with-words");
@@ -263,6 +268,34 @@ function powerVsInstanceSave(vtl) {
         }
       });
     }
+    config.store.json.power_volumes.forEach((vol) => {
+      let nextAttachments = [];
+      vol.attachments.forEach((attachment) => {
+        if (attachment === componentProps.data.name) {
+          nextAttachments.push(stateData.name);
+        } else nextAttachments.push(attachment);
+      });
+      ["pi_affinity_instance", "pi_anti_affinity_instance"].forEach((field) => {
+        if (vol[field] === componentProps.data.name) {
+          vol[field] = stateData.name;
+        }
+      });
+      vol.attachments = nextAttachments;
+    });
+    ["vtl", "power_instances"].forEach((field) => {
+      config.store.json[field].forEach((instance) => {
+        if (instance.name !== componentProps.data.name) {
+          ["pi_affinity_instance", "pi_anti_affinity_instance"].forEach(
+            (subField) => {
+              if (instance[subField] === componentProps.data.name) {
+                instance[subField] = stateData.name;
+              }
+            }
+          );
+        }
+      });
+    });
+
     config.updateChild(
       ["json", vtl ? "vtl" : "power_instances"],
       componentProps.data.name,

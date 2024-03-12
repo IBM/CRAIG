@@ -16,10 +16,12 @@ All notable changes to this project will be documented in this file.
 - Users can now create Classic VSI from the form page `/form/classicVsi`
 - Power VS Workspace names, ids, and CRNs are now included as outputs in the `outputs.tf` file of any CRAIG Terraform template
 - Power VS High Availability is now supported for `mad02`, `mad04`, `us-east`, `wdc06`, `us-south`, `eu-de-1`, and `eu-de-2`
+- When updating a Power VS Instance name, references to that instance are now updated to match the new name
 
 ### Fixes
 
 - Fixed an issue with button hoverText alignment causing overflow in forms
+- Fixed an issue causing an incorrect name for DNS Services in the `/v2/services` page
 
 ## 1.12.2
 

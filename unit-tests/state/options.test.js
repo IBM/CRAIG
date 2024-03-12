@@ -272,6 +272,7 @@ describe("options", () => {
           data,
           {
             enable_power_vs: true,
+            power_vs_zones: [],
           },
           "it should change value"
         );
@@ -469,13 +470,13 @@ describe("options", () => {
         );
       });
       it("should have correct invalid for ha zone 1", () => {
-        assert.isTrue(
+        assert.isFalse(
           craig.options.power_vs_ha_zone_1.invalid({}),
-          "it should be true when no power vs"
+          "it should be false when no power vs"
         );
-        assert.isTrue(
+        assert.isFalse(
           craig.options.power_vs_ha_zone_1.invalid({ enable_power_vs: true }),
-          "it should be true when no power vs ha"
+          "it should be false when no power vs ha"
         );
         assert.isTrue(
           craig.options.power_vs_ha_zone_1.invalid({

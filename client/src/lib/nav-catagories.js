@@ -302,7 +302,7 @@ const navCatagories = [
         jsonField: "classic_security_groups",
       },
       {
-        title: "Classic Virtual Severs",
+        title: "Classic Virtual Servers",
         path: "/form/classicVsi",
         react_icon: "InstanceClassic",
         toTf: (config) => {

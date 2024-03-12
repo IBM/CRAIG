@@ -275,6 +275,7 @@ function initOptions(store) {
             stateData.power_vs_zones = [];
             stateData.enable_power_vs = false;
           } else {
+            stateData.power_vs_zones = [];
             stateData.enable_power_vs = true;
           }
         },
@@ -315,11 +316,10 @@ function initOptions(store) {
           );
         },
         invalid: function (stateData) {
-          return (
-            !stateData?.enable_power_vs ||
-            !stateData?.power_vs_high_availability ||
-            stateData.power_vs_zones.length === 0
-          );
+          return !stateData.enable_power_vs ||
+            !stateData.power_vs_high_availability
+            ? false
+            : stateData.power_vs_zones.length === 0;
         },
       },
       power_vs_ha_zone_2: {
