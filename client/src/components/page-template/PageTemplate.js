@@ -45,6 +45,7 @@ import {
   AppConnectivity,
   ChartLine,
   SecurityServices,
+  InstanceClassic,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import {
@@ -112,6 +113,7 @@ const navIcons = {
   LoadBalancerPool: LoadBalancerPool,
   AppConnectivity: AppConnectivity,
   SecurityServices: SecurityServices,
+  InstanceClassic: InstanceClassic,
 };
 
 let pageOrder = [

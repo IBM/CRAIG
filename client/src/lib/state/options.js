@@ -32,6 +32,14 @@ const powerVsZones = [
   "ca-tor",
 ];
 
+const powerHaMap = {
+  mad02: "eu-de-1",
+  mad04: "eu-de-2",
+  "us-east": "us-south",
+  wdc06: "dal12",
+  wdc07: "dal10",
+};
+
 /**
  * initialize options
  * @param {lazyZstate} config
@@ -135,6 +143,19 @@ function hideWhenNotPowerVs(stateData) {
 }
 
 /**
+ * hide a field when power vs ha not enabled
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true when not enabled
+ */
+function hideWhenNotPowerHa(stateData) {
+  return (
+    hideWhenNotPowerVs(stateData) ||
+    stateData.power_vs_high_availability !== true
+  );
+}
+
+/**
  * init options store
  * @param {*} store
  */
@@ -143,7 +164,7 @@ function initOptions(store) {
     init: optionsInit,
     save: optionsSave,
     shouldDisableSave: shouldDisableComponentSave(
-      ["prefix", "tags", "power_vs_zones", "region"],
+      ["prefix", "tags", "power_vs_zones", "region", "power_vs_ha_zone_1"],
       "options"
     ),
     schema: {
@@ -265,24 +286,62 @@ function initOptions(store) {
         labelText: "High Availability",
         tooltip: {
           content:
-            "Enable High Availability and Disaster Recovery for Power VS by using enabled zones Dallas 12 and Washington DC 6",
+            "Enable High Availability and Disaster Recovery for Power VS by using enabled zones",
         },
         hideWhen: hideWhenNotPowerVs,
         onStateChange: function (stateData) {
           if (!stateData.power_vs_high_availability) {
             stateData.power_vs_high_availability = true;
-            stateData.power_vs_zones = ["dal12", "wdc06"];
+            stateData.power_vs_zones = [];
           } else {
             stateData.power_vs_high_availability = false;
             stateData.power_vs_zones = [];
           }
         },
       },
+      power_vs_ha_zone_1: {
+        size: "small",
+        type: "select",
+        labelText: "Power VS Site 1",
+        hideWhen: hideWhenNotPowerHa,
+        groups: ["mad02", "mad04", "us-east", "wdc06", "wdc07"],
+        onRender: function (stateData) {
+          return stateData.power_vs_zones[0] || "";
+        },
+        onStateChange: function (stateData) {
+          stateData.power_vs_zones = [stateData.power_vs_ha_zone_1];
+          stateData.power_vs_zones.push(
+            powerHaMap[stateData.power_vs_ha_zone_1]
+          );
+        },
+        invalid: function (stateData) {
+          return (
+            !stateData?.enable_power_vs ||
+            !stateData?.power_vs_high_availability ||
+            stateData.power_vs_zones.length === 0
+          );
+        },
+      },
+      power_vs_ha_zone_2: {
+        size: "small",
+        type: "select",
+        labelText: "Power VS Site 2",
+        hideWhen: hideWhenNotPowerHa,
+        groups: ["eu-de-1", "eu-de-2", "us-south", "dal10", "dal12"],
+        onRender: function (stateData) {
+          return stateData.power_vs_zones[1] || "";
+        },
+        readOnly: true,
+      },
       power_vs_zones: {
         size: "small",
         type: "multiselect",
         labelText: "Power VS Zones",
-        hideWhen: hideWhenNotPowerVs,
+        hideWhen: function (stateData) {
+          return (
+            !stateData.enable_power_vs || stateData.power_vs_high_availability
+          );
+        },
         default: [],
         forceUpdateKey: function (stateData) {
           return (
@@ -292,6 +351,7 @@ function initOptions(store) {
         invalid: function (stateData) {
           return (
             stateData.enable_power_vs &&
+            !stateData.power_vs_high_availability &&
             (!stateData.power_vs_zones ||
               isEmpty(stateData.power_vs_zones) ||
               !contains(powerVsZones, stateData.region))

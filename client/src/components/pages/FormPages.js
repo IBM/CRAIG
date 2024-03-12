@@ -271,6 +271,15 @@ const ClassicSecurityGroups = (craig) => {
   });
 };
 
+const ClassicVsi = (craig) => {
+  return formPageTemplate(craig, {
+    name: "Classic Virtual Servers",
+    addText: "Create a Virtual Server",
+    formName: "classic-vsi",
+    jsonField: "classic_vsi",
+  });
+};
+
 const ClassicGateways = (craig) => {
   return formPageTemplate(craig, {
     name: "Classic Gateways",
@@ -1341,6 +1350,8 @@ export const NewFormPage = (props) => {
     return CisGlbs(craig);
   } else if (form === "classicSecurityGroups") {
     return ClassicSecurityGroups(craig);
+  } else if (form === "classicVsi") {
+    return ClassicVsi(craig);
   } else if (form === "classicGateways") {
     return ClassicGateways(craig);
   } else if (form === "classicSshKeys") {

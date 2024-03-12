@@ -581,7 +581,7 @@ output "management_vpc_security_group_management_vsi_id" {
 ##############################################################################
 
 output "management_vpc_jv_dev_server_vsi_1_1_primary_ip_address" {
-  value = ibm_is_instance.management_vpc_jv_dev_server_vsi_1_1.primary_network_interface[0].primary_ipv4_address
+  value = ibm_is_instance.management_vpc_jv_dev_server_vsi_1_1.primary_network_interface[0].primary_ip[0].address
 }
 
 output "management_vpc_jv_dev_server_vsi_1_1_floating_ip_address" {
@@ -1195,7 +1195,7 @@ output "management_vpc_security_group_management_vsi_id" {
 ##############################################################################
 
 output "management_vpc_jv_dev_server_vsi_1_1_primary_ip_address" {
-  value = ibm_is_instance.management_vpc_jv_dev_server_vsi_1_1.primary_network_interface[0].primary_ipv4_address
+  value = ibm_is_instance.management_vpc_jv_dev_server_vsi_1_1.primary_network_interface[0].primary_ip[0].address
 }
 
 output "management_vpc_jv_dev_server_vsi_1_1_floating_ip_address" {
@@ -1209,7 +1209,7 @@ output "management_vpc_jv_dev_server_vsi_1_1_floating_ip_address" {
 ##############################################################################
 
 output "management_vpc_jv_dev_server2_vsi_1_1_primary_ip_address" {
-  value = ibm_is_instance.management_vpc_jv_dev_server2_vsi_1_1.primary_network_interface[0].primary_ipv4_address
+  value = ibm_is_instance.management_vpc_jv_dev_server2_vsi_1_1.primary_network_interface[0].primary_ip[0].address
 }
 
 output "management_vpc_jv_dev_server2_vsi_1_1_floating_ip_address" {
@@ -2317,7 +2317,7 @@ output "management2_vpc_subnet_vsi_zone_1_crn" {
 ##############################################################################
 
 output "management2_vpc_jv_dev_server2_vsi_1_1_primary_ip_address" {
-  value = ibm_is_instance.management2_vpc_jv_dev_server2_vsi_1_1.primary_network_interface[0].primary_ipv4_address
+  value = ibm_is_instance.management2_vpc_jv_dev_server2_vsi_1_1.primary_network_interface[0].primary_ip[0].address
 }
 
 output "management2_vpc_jv_dev_server2_vsi_1_1_floating_ip_address" {

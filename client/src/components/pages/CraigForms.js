@@ -398,6 +398,35 @@ function craigForms(craig) {
         },
       ],
     },
+    classic_vsi: {
+      jsonField: "classic_vsi",
+      groups: [
+        {
+          name: craig.classic_vsi.name,
+          domain: craig.classic_vsi.domain,
+          datacenter: craig.classic_vsi.datacenter,
+        },
+        {
+          cores: craig.classic_vsi.cores,
+          memory: craig.classic_vsi.memory,
+          image_id: craig.classic_vsi.image_id,
+        },
+        {
+          network_speed: craig.classic_vsi.network_speed,
+          local_disk: craig.classic_vsi.local_disk,
+          ssh_keys: craig.classic_vsi.ssh_keys,
+        },
+        {
+          private_vlan: craig.classic_vsi.private_vlan,
+          private_security_groups: craig.classic_vsi.private_security_groups,
+          private_network_only: craig.classic_vsi.private_network_only,
+        },
+        {
+          public_vlan: craig.classic_vsi.public_vlan,
+          public_security_groups: craig.classic_vsi.public_security_groups,
+        },
+      ],
+    },
     classic_gateways: {
       jsonField: "classic_gateways",
       groups: [

@@ -2,15 +2,15 @@ const {
   contains,
   allFieldsNull,
   validPortRange,
-  containsKeys,
   splat,
   isNullOrEmptyString,
   nestedSplat,
   revision,
   transpose,
 } = require("lazy-z");
-const { newResourceNameExp } = require("../constants");
+const { newResourceNameExp, datacenters } = require("../constants");
 const { getAllSecrets } = require("../forms/utils");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * callback function for unconditional invalid text
@@ -769,6 +769,127 @@ function networkingRuleCodeField() {
   };
 }
 
+/**
+ * shortcut for domain field
+ */
+function domainField() {
+  return {
+    default: "",
+    invalid: function (stateData) {
+      return (
+        // prevent returning error
+        (stateData.domain || "").match(
+          new RegexButWithWords()
+            .stringBegin()
+            .set("a-z")
+            .oneOrMore()
+            .literal(".")
+            .set("a-z")
+            .oneOrMore()
+            .stringEnd()
+            .done("g")
+        ) === null
+      );
+    },
+    invalidText: unconditionalInvalidText("Enter a valid domain"),
+    size: "small",
+  };
+}
+
+/**
+ * create field for classic datacenters
+ * @returns {Object} field object for classic datacenters
+ */
+function classicDatacenterField() {
+  return {
+    default: "",
+    type: "select",
+    invalid: fieldIsNullOrEmptyString("datacenter"),
+    invalidText: selectInvalidText("datacenter"),
+    onStateChange: function (stateData) {
+      stateData.private_vlan = "";
+      stateData.public_vlan = "";
+    },
+    groups: datacenters,
+    size: "small",
+  };
+}
+
+/**
+ * classic vlan filter function
+ * @param {string} type
+ * @returns {Function} groups function
+ */
+function classicVlanFilter(type) {
+  return function (stateData, componentProps) {
+    return splat(
+      componentProps.craig.store.json.classic_vlans.filter((vlan) => {
+        if (vlan.datacenter === stateData.datacenter && vlan.type === type)
+          return vlan;
+      }),
+      "name"
+    );
+  };
+}
+
+/**
+ * create field for classic private vlan
+ * @returns {Object} field object for classic private vlan
+ */
+function classicPrivateVlan() {
+  return {
+    labelText: "Private VLAN",
+    default: "",
+    type: "select",
+    invalid: fieldIsNullOrEmptyString("private_vlan"),
+    invalidText: selectInvalidText("private VLAN"),
+    groups: classicVlanFilter("PRIVATE"),
+    size: "small",
+  };
+}
+
+/**
+ * create field for classic public vlan
+ * @returns {Object} field object for classic public vlan
+ */
+function classicPublicVlan() {
+  return {
+    labelText: "Public VLAN",
+    default: "",
+    type: "select",
+    invalid: function (stateData) {
+      return stateData.private_network_only
+        ? false
+        : fieldIsNullOrEmptyString("public_vlan")(stateData);
+    },
+    invalidText: selectInvalidText("public VLAN"),
+    groups: classicVlanFilter("PUBLIC"),
+    size: "small",
+    hideWhen: function (stateData) {
+      return stateData.private_network_only;
+    },
+  };
+}
+
+/**
+ * classic private network toggle
+ * @returns {Object} field object
+ */
+function classicPrivateNetworkOnly() {
+  return {
+    type: "toggle",
+    labelText: "Private Network Only",
+    default: false,
+    onStateChange: function (stateData) {
+      if (stateData.private_network_only !== true) {
+        stateData.private_network_only = true;
+        stateData.public_vlan = "";
+      } else stateData.private_network_only = false;
+    },
+    size: "small",
+  };
+}
+
 module.exports = {
   networkingRuleProtocolField,
   networkingRulePortField,
@@ -790,4 +911,9 @@ module.exports = {
   genericNameCallback,
   duplicateNameCallback,
   nameHelperText,
+  domainField,
+  classicDatacenterField,
+  classicPrivateVlan,
+  classicPublicVlan,
+  classicPrivateNetworkOnly,
 };

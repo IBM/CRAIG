@@ -3,12 +3,17 @@
     "version": "1.13.0",
     "features": [
       "Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form",
-      "Icons for deployments within imported subnets are now rendered within that subnet on the `/v2/vpcDeployments` page"
+      "Icons for deployments within imported subnets are now rendered within that subnet on the `/v2/vpcDeployments` page",
+      "Users can now create Classic VSI from the form page `/form/classicVsi`",
+      "Power VS Workspace names, ids, and CRNs are now included as outputs in the `outputs.tf` file of any CRAIG Terraform template",
+      "Power VS High Availability is now supported for `mad02`, `mad04`, `us-east`, `wdc06`, `us-south`, `eu-de-1`, and `eu-de-2`"
     ],
     "fixes": [
       "Fixed an issue with button hoverText alignment causing overflow in forms"
     ],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "Deprecated field for VSI primary IPs has been change to a version that no longer throws Terraform warnings"
+    ]
   },
   {
     "version": "1.12.2",

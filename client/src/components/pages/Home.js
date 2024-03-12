@@ -88,9 +88,20 @@ function Home(props) {
                       account_id: craig.options.account_id,
                     },
                     {
+                      heading: {
+                        name: "Power VS",
+                        type: "subHeading",
+                        className: "marginBottomSmall",
+                      },
+                    },
+                    {
                       enable_power_vs: craig.options.enable_power_vs,
                       power_vs_high_availability:
                         craig.options.power_vs_high_availability,
+                    },
+                    {
+                      power_vs_ha_zone_1: craig.options.power_vs_ha_zone_1,
+                      power_vs_ha_zone_2: craig.options.power_vs_ha_zone_2,
                       power_vs_zones: craig.options.power_vs_zones,
                     },
                     {

@@ -74,7 +74,7 @@ function outputsTf(config) {
             `${deployment.vpc} vpc ${deployment.name} vsi ${subnetIndex + 1} ${
               i + 1
             }`
-          )}.primary_network_interface[0].primary_ipv4_address}`,
+          )}.primary_network_interface[0].primary_ip[0].address}`,
         };
         if (deployment.enable_floating_ip) {
           deploymentOutputs[

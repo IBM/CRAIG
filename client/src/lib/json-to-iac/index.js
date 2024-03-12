@@ -192,8 +192,9 @@ const {
   formatClassicSgRule,
   classicSecurityGroupTf,
 } = require("./classic-security-group");
-
+const { classicVsiTf } = require("./classic-vsi");
 module.exports = {
+  classicVsiTf,
   classicSecurityGroupTf,
   formatClassicSgRule,
   formatClassicSg,
