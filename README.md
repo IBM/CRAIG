@@ -33,6 +33,8 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 
 ***Ensure `Quality: 1080p` is selected within Box video player settings for the best viewing experience.***
 
+***Last Updated: March 11th, 2024***
+
 ---
 
 ### Running CRAIG Application Locally

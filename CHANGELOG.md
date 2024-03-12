@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
+- A new, improved version of the CRAIG tutorial is available in the README. This tutorial shows users how to install CRAIG, use the new V2 GUI, and integrate deployments with schematics
 - Deprecated field for VSI primary IPs has been change to a version that no longer throws Terraform warnings
 
 ### Features
