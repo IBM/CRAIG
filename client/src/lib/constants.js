@@ -730,6 +730,8 @@ module.exports = {
     "mad04",
     "sao04",
     "dal12",
+    "sao01",
+    "tok04",
   ],
   cosPlans: [
     "standard",
