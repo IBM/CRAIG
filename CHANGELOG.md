@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue with button hoverText alignment causing overflow in forms
 - Fixed an issue causing an incorrect name for DNS Services in the `/v2/services` page
+- Fixed an issue preventing users from inputing decimal values for CPU when creating a FalconStor VTL instance with a shared processor type
 
 ## 1.12.2
 

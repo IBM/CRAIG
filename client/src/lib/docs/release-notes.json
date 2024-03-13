@@ -11,7 +11,8 @@
     ],
     "fixes": [
       "Fixed an issue with button hoverText alignment causing overflow in forms",
-      "Fixed an issue causing an incorrect name for DNS Services in the `/v2/services` page"
+      "Fixed an issue causing an incorrect name for DNS Services in the `/v2/services` page",
+      "Fixed an issue preventing users from inputing decimal values for CPU when creating a FalconStor VTL instance with a shared processor type"
     ],
     "upgrade_notes": [
       "A new, improved version of the CRAIG tutorial is available in the README. This tutorial shows users how to install CRAIG, use the new V2 GUI, and integrate deployments with schematics",

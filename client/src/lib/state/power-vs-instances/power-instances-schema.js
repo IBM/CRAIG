@@ -69,21 +69,18 @@ function powerVsNetworkInvalid(stateData) {
  * Processor invalidation for powerVs instance
  * @returns {boolean} function will evaluate to true if should be disabled
  */
-function powerVsCoresInvalid(vtl) {
-  return function (stateData) {
-    if (stateData.sap) return false;
-    let isDedicated = stateData.pi_proc_type === "dedicated";
-    let coreMax =
-      stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
-    let coreMin = isDedicated || vtl ? 1 : 0.25;
-    let processorsFloat = parseFloat(stateData.pi_processors);
-    return (
-      stateData.pi_processors === "" ||
-      (coreMin === 1 && !isWholeNumber(processorsFloat)) ||
-      (!stateData.sap &&
-        (processorsFloat < coreMin || processorsFloat > coreMax))
-    );
-  };
+function powerVsCoresInvalid(stateData) {
+  if (stateData.sap) return false;
+  let isDedicated = stateData.pi_proc_type === "dedicated";
+  let coreMax =
+    stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
+  let coreMin = isDedicated ? 1 : 0.25;
+  let processorsFloat = parseFloat(stateData.pi_processors);
+  return (
+    stateData.pi_processors === "" ||
+    (isDedicated && !isWholeNumber(processorsFloat)) ||
+    (!stateData.sap && (processorsFloat < coreMin || processorsFloat > coreMax))
+  );
 }
 
 /**
@@ -109,12 +106,11 @@ function powerVsMemoryInvalid(stateData) {
 /**
  * return power_instances processor input invalid text
  * @param {Object} stateData
- * @param {boolean=} vtl
  * @returns {string} invalid text
  */
-function invalidPowerVsProcessorTextCallback(stateData, vtl) {
+function invalidPowerVsProcessorTextCallback(stateData) {
   let isDedicated = stateData.pi_proc_type === "dedicated";
-  let coreMin = isDedicated || vtl ? 1 : 0.25;
+  let coreMin = isDedicated ? 1 : 0.25;
   let coreMax =
     stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
   return `Must be a ${
@@ -384,8 +380,8 @@ function powerVsInstanceSchema(vtl) {
       },
       size: "small",
       default: "",
-      invalid: powerVsCoresInvalid(vtl),
-      invalidText: invalidPowerVsProcessorTextCallback(true),
+      invalid: powerVsCoresInvalid,
+      invalidText: invalidPowerVsProcessorTextCallback,
     },
     pi_memory: {
       hideWhen: function (stateData, componentProps) {
