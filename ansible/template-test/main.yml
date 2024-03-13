@@ -64,18 +64,21 @@
         body_format: json
         body: 
           variablestore: "{{ variablestore }}"
-    - name: Start generate plan action
-      uri:
-        url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/plan
-        method: POST
-        body_format: json
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-        status_code: 202
-      register: job
+- name: Start generate plan action
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  roles:
+    - role: get_iam_token
+    - role: action
+      vars:
+        action: plan
+- name: Await task finish
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  tasks:
     - name: Ensure generate plan finishes
       uri:
-        url: https://schematics.cloud.ibm.com/v2/jobs/{{job.json.activityid}}
+        url: https://schematics.cloud.ibm.com/v2/jobs/{{action_result.json.activityid}}
         method: GET
         body_format: json
         headers:
@@ -85,18 +88,21 @@
       failed_when: plan.json.status.workspace_job_status.status_code == "job_failed"
       delay: 90
       retries: 50
-    - name: Start apply plan action
-      uri:
-        url: https://schematics.cloud.ibm.com/v1/workspaces/{{workspace.json.id}}/apply
-        method: PUT
-        body_format: json
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-        status_code: 202
-      register: apply
+- name: Start apply plan action
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  roles:
+    - role: get_iam_token
+    - role: action
+      vars:
+        action: apply
+- name: Await task finish
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  tasks:
     - name: Ensure apply plan finishes
       uri:
-        url: https://schematics.cloud.ibm.com/v2/jobs/{{apply.json.activityid}}
+        url: https://schematics.cloud.ibm.com/v2/jobs/{{action_result.json.activityid}}
         method: GET
         body_format: json
         headers:
@@ -106,18 +112,21 @@
       failed_when: apply_plan.json.status.workspace_job_status.status_code == "job_failed"
       delay: 120
       retries: 50
-    - name: Start destroy action
+- name: Start destroy action
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  roles:
+    - role: get_iam_token
+    - role: action
+      vars:
+        action: destroy
+- name: Await task finish
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  tasks:
+    - name: Ensure destroy finishes
       uri:
-        url: https://schematics.cloud.ibm.com/v1/workspaces/{{workspace.json.id}}/destroy
-        method: PUT
-        body_format: json
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-        status_code: 202
-      register: destroy
-    - name: Ensure destory finishes
-      uri:
-        url: https://schematics.cloud.ibm.com/v2/jobs/{{destroy.json.activityid}}
+        url: https://schematics.cloud.ibm.com/v2/jobs/{{action_result.json.activityid}}
         method: GET
         body_format: json
         headers:
