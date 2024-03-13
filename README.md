@@ -76,12 +76,12 @@ Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Clo
 
 Users should make sure they have the following access policy roles for the IBM Code Engine service set within their IBM Cloud Account:
 
-- IBM Cloud Platform Roles: Editor or Higher
-- Code Engine Service Roles: Writer or Higher
+>* `Writer` or greater Service access
+>* `Editor` or greater Platform access
 
 Users should also make sure they have the following access policy roles for the IBM Cloud Container Registry service set within their IBM Cloud Account:
 
-- Container Registry Service: Manager
+>* `Manager` Service access
 
 These permissions are the minimum requirements needed in order to provision a Code Engine project, Container Registry namespace, application, image build, and secrets using the `deploy.sh` script. 
 
@@ -110,7 +110,14 @@ chmod 755 deploy.sh
 
 By default the script will securely prompt you for your API key. It may also be read from an environment variable or specified as a command line argument. See the `deploy.sh -h` usage for more information.
 
- If CRAIG is used for Power VS configuration, Power VS workspaces must exist in the zones that CRAIG projects will use. The deploy script can create the Power Virtual Server workspaces in every Power VS zone worldwide and automatically integrate them with the CRAIG deployment. The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. Specify the `-z` parameter to automatically create the Power Virtual Server workspaces:
+ If CRAIG is used for Power VS configuration, Power Virtual Server workspaces must exist in the zones that CRAIG projects will use. The deploy script can create the Power Virtual Server workspaces in every Power VS zone worldwide and automatically integrate them with the CRAIG deployment. 
+ 
+ The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. In order to allow Schematics integration, users should make sure they have the following access policy roles for the Schematics service set within their IBM Cloud Account:
+ 
+>* `Writer` or greater Service access
+>* `Editor` or greater Platform access
+ 
+ Once access policy roles for the Schematics service are properly configured, users can specify the `-z` parameter to automatically create the Power Virtual Server workspaces alongside your CRAIG deployment:
 
 ```bash
 ./deploy.sh -z

@@ -77,7 +77,7 @@ After changing the region and zone(s) in the options, the existing Power VS work
 The default AIX and IBM i virtual servers in the template will also need to be updated with the newly selected images. Click on each of the red Virtual Server icons, set their image, and click the save button for the VSI.
 
 ### VPC network CIDR
-To change CIDR of the VPC networks, click on `VPC Networks` on the left navigation bar. Click on the the network you would like to update, change the "Advanced Configuration" to true, de-select zones 2 and 3 from the Zones seletor and press the Save button.
+To change CIDR of the VPC networks, click on `VPC Networks` on the left navigation bar. Click on the the network you would like to update, change the "Advanced Configuration" to true, de-select zones 2 and 3 from the Zones selector and press the Save button.
 
 Finally, change the subnet CIDR and click the Save button next to the subnet name.
 
