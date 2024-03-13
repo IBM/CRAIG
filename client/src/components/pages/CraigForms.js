@@ -387,6 +387,34 @@ function craigForms(craig) {
         },
       ],
     },
+    classic_bare_metal: {
+      jsonField: "classic_bare_metal",
+      groups: [
+        {
+          name: craig.classic_bare_metal.name,
+          domain: craig.classic_bare_metal.domain,
+          datacenter: craig.classic_bare_metal.datacenter,
+        },
+        {
+          os_key_name: craig.classic_bare_metal.os_key_name,
+          package_key_name: craig.classic_bare_metal.package_key_name,
+          process_key_name: craig.classic_bare_metal.process_key_name,
+        },
+        {
+          memory: craig.classic_bare_metal.memory,
+          network_speed: craig.classic_bare_metal.network_speed,
+          private_network_only: craig.classic_bare_metal.private_network_only,
+        },
+        {
+          private_vlan: craig.classic_bare_metal.private_vlan,
+          public_vlan: craig.classic_bare_metal.public_vlan,
+          public_bandwidth: craig.classic_bare_metal.public_bandwidth,
+        },
+        {
+          disk_key_names: craig.classic_bare_metal.disk_key_names,
+        },
+      ],
+    },
     classic_security_groups: {
       jsonField: "classic_security_groups",
       groups: [

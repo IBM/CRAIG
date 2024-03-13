@@ -262,6 +262,15 @@ const CisGlbs = (craig) => {
   });
 };
 
+const ClassicBareMetal = (craig) => {
+  return formPageTemplate(craig, {
+    name: "Classic Bare Metal Servers",
+    addText: "Create a Bare Metal Server",
+    formName: "classic-bare-metal",
+    jsonField: "classic_bare_metal",
+  });
+};
+
 const ClassicSecurityGroups = (craig) => {
   return formPageTemplate(craig, {
     name: "Classic Security Groups",
@@ -1348,6 +1357,8 @@ export const NewFormPage = (props) => {
     return Cis(craig);
   } else if (form === "cisGlbs") {
     return CisGlbs(craig);
+  } else if (form === "classicBareMetal") {
+    return ClassicBareMetal(craig);
   } else if (form === "classicSecurityGroups") {
     return ClassicSecurityGroups(craig);
   } else if (form === "classicVsi") {

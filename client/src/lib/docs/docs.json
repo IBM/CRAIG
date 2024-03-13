@@ -2322,5 +2322,13 @@
       }
     ],
     "relatedLinks": []
+  },
+  "classic_bare_metal": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": []
   }
 }

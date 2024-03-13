@@ -111,6 +111,7 @@ const {
   formatClassicSg,
   classicSecurityGroupTf,
   classicVsiTf,
+  classicBareMetalTf,
 } = require("./json-to-iac");
 const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
@@ -120,6 +121,7 @@ const { allDocText, filterDocs } = require("./docs");
 
 module.exports = {
   classicVsiTf,
+  classicBareMetalTf,
   classicSecurityGroupTf,
   formatClassicSgRule,
   formatClassicSg,

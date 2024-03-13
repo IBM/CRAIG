@@ -37,6 +37,7 @@ const { fortigateTf } = require("./fortigate");
 const { outputsTf } = require("./outputs");
 const { classicSecurityGroupTf } = require("./classic-security-group");
 const { classicVsiTf } = require("./classic-vsi");
+const { classicBareMetalTf } = require("./classic-bare-metal");
 const apacheLicense = `                                 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -321,6 +322,7 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "outputs.tf": outputsTf(config),
       "classic_security_groups.tf": classicSecurityGroupTf(config),
       "classic_vsi.tf": classicVsiTf(config),
+      "classic_bare_metal.tf": classicBareMetalTf(config),
     };
     vpcModuleTf(files, config);
     return files;

@@ -46,6 +46,7 @@ import {
   ChartLine,
   SecurityServices,
   InstanceClassic,
+  IbmCloudBareMetalServer,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import {
@@ -114,6 +115,7 @@ const navIcons = {
   AppConnectivity: AppConnectivity,
   SecurityServices: SecurityServices,
   InstanceClassic: InstanceClassic,
+  IbmCloudBareMetalServer: IbmCloudBareMetalServer,
 };
 
 let pageOrder = [

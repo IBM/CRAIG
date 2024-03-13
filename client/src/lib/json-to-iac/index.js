@@ -193,8 +193,10 @@ const {
   classicSecurityGroupTf,
 } = require("./classic-security-group");
 const { classicVsiTf } = require("./classic-vsi");
+const { classicBareMetalTf } = require("./classic-bare-metal");
 module.exports = {
   classicVsiTf,
+  classicBareMetalTf,
   classicSecurityGroupTf,
   formatClassicSgRule,
   formatClassicSg,
