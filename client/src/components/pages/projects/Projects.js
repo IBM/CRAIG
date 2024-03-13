@@ -2,8 +2,13 @@ import React from "react";
 import { Button } from "@carbon/react";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
-import { azsort, contains, eachKey, splat, splatContains } from "lazy-z";
-import { Add, MagicWandFilled, Upload } from "@carbon/icons-react";
+import { azsort, contains, eachKey, splatContains } from "lazy-z";
+import {
+  Add,
+  DocumentImport,
+  MagicWandFilled,
+  Upload,
+} from "@carbon/icons-react";
 import { ProjectTile } from "./ProjectTile";
 import { CraigHeader } from "../SplashPage";
 import { templates } from "../../utils";
@@ -49,6 +54,24 @@ class Projects extends React.Component {
     this.toggleImportJSONModal = this.toggleImportJSONModal.bind(this);
     this.afterValidation = this.afterValidation.bind(this);
     this.removeInvalidReferences = this.removeInvalidReferences.bind(this);
+    this.onFileUpload = this.onFileUpload.bind(this);
+    this.fileClick = React.createRef();
+  }
+
+  onFileUpload(event) {
+    let parsedJson;
+    try {
+      parsedJson = JSON.parse(event.target.result);
+    } catch (err) {
+      parsedJson = {
+        error: err,
+      };
+    }
+    this.setState({
+      showValidationModal: false,
+      importJSONModalOpen: true,
+      uploadedJsonData: parsedJson,
+    });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -83,9 +106,19 @@ class Projects extends React.Component {
   }
 
   toggleImportJSONModal() {
-    this.setState({
-      importJSONModalOpen: !this.state.importJSONModalOpen,
-    });
+    this.setState(
+      {
+        importJSONModalOpen: !this.state.importJSONModalOpen,
+      },
+      () => {
+        // clear uploaded data only when closing the modal
+        if (this.state.importJSONModalOpen === false) {
+          this.setState({
+            uploadedJsonData: undefined,
+          });
+        }
+      }
+    );
   }
 
   newProject() {
@@ -401,7 +434,7 @@ class Projects extends React.Component {
         <CraigHeader />
         <div id="projects" className="body">
           <h3 className="marginBottomXs">Projects</h3>
-          <div className="marginBottomXs">
+          <div className="marginBottomSmall">
             <legend className="cds--label marginBottomSmall">
               Create a New Project
             </legend>
@@ -425,6 +458,8 @@ class Projects extends React.Component {
             >
               Import from JSON
             </Button>
+          </div>
+          <div className="marginBottomXs">
             <Button
               id="project-wizard"
               kind="tertiary"
@@ -435,6 +470,41 @@ class Projects extends React.Component {
             >
               Setup Wizard
             </Button>
+            <Button
+              id="upload-json"
+              kind="tertiary"
+              className="projectButton marginLeftMed"
+              iconDescription="Upload CRAIG JSON"
+              renderIcon={DocumentImport}
+              onClick={() => {
+                // trigger click event for the hidden file input
+                this.fileClick.click();
+              }}
+            >
+              Upload JSON File
+            </Button>
+            <input
+              type="file"
+              hidden
+              accept="application/json"
+              ref={(input) => (this.fileClick = input)}
+              onChange={(event) => {
+                // prevent default
+                event.preventDefault(event);
+                // show validation modal
+                this.setState({ showValidationModal: true }, () => {
+                  // get file and create file reader
+                  let jsonFile = event.target.files[0];
+                  let reader = new FileReader();
+                  reader.onload = (event) => {
+                    // callback function on event trigger
+                    this.onFileUpload(event);
+                  };
+                  // read file
+                  reader.readAsText(jsonFile, "application/json");
+                });
+              }}
+            />
           </div>
           {/* hide projects section if there are none */}
           {projectKeys.length > 0 && (
@@ -545,6 +615,12 @@ class Projects extends React.Component {
         {this.state.importJSONModalOpen && (
           <JSONModal
             import
+            uploadedJsonData={this.state.uploadedJsonData}
+            data={
+              this.state.uploadedJsonData
+                ? { json: this.state.uploadedJsonData }
+                : undefined
+            }
             open={this.state.importJSONModalOpen}
             onClose={this.toggleImportJSONModal}
             onProjectSave={(stateData, componentProps, setCurrentProject) => {
@@ -552,6 +628,7 @@ class Projects extends React.Component {
               this.setState(
                 {
                   showValidationModal: true,
+                  uploadedJsonData: undefined,
                 },
                 () => {
                   this.props.onProjectSave(

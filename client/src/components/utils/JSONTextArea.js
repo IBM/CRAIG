@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, TextArea } from "@carbon/react";
 import { DownloadCopyButtonSet } from "./downloadCopyButtons/DownloadCopyButtonSet";
-import { Locked, TextWrap, Unlocked } from "@carbon/icons-react";
 
 export const JSONTextArea = (props) => {
   let label = props.big

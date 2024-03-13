@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Power VS Workspace names, ids, and CRNs are now included as outputs in the `outputs.tf` file of any CRAIG Terraform template
 - Power VS High Availability is now supported for `mad02`, `mad04`, `us-east`, `wdc06`, `us-south`, `eu-de-1`, and `eu-de-2`
 - When updating a Power VS Instance name, references to that instance are now updated to match the new name
+- Users can now upload JSON directly to CRAIG from the local file explorer from the Projects page by clicking the new `Upload JSON` button
 
 ### Fixes
 
