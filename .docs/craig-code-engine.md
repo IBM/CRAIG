@@ -44,7 +44,13 @@ If you do not want Power VS workspaces created in every zone, you can create the
 #### generate-env.sh prerequisites
 - [jq](https://jqlang.github.io/jq/) v1.7 or higher
 - ibmcloud CLI
-- Bash version 4 or higher
+
+#### Downloading generate-env.sh in IBM Cloud Shell
+From within IBM Cloud Shell run the following two commands to download the script and make it executable:
+```bash
+wget https://raw.githubusercontent.com/IBM/CRAIG/main/generate-env.sh
+chmod 755 generate-env.sh
+```
 
 To generate an env containing all of the workspaces in your account, you can run the following command:
 
