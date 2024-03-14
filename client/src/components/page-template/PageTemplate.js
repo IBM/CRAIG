@@ -253,6 +253,7 @@ const PageTemplate = (props) => {
         isResetState={isResetState}
         formPathNotPresent={formPathNotPresent}
         invalidForms={props.invalidForms}
+        showAndSnapshot={props.showAndSnapshot}
       />
       {!isResetState && (
         <>

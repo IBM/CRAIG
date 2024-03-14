@@ -10,7 +10,8 @@
       "When updating a Power VS Instance name, references to that instance are now updated to match the new name",
       "Users can now upload JSON directly to CRAIG from the local file explorer from the Projects page by clicking the new `Upload JSON` button",
       "Users can now create Classic Bare Metal Servers from the form page `/form/classicBareMetal`",
-      "Power VS Instance Primary IP addresses are now included as outputs in the `outputs.tf` file of any CRAIG Terraform template"
+      "Power VS Instance Primary IP addresses are now included as outputs in the `outputs.tf` file of any CRAIG Terraform template",
+      "When downloading a `.zip` file of an environment from the CRAIG GUI, an image of the current environment is now included in "
     ],
     "fixes": [
       "Fixed an issue with button hoverText alignment causing overflow in forms",

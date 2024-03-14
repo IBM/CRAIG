@@ -45,6 +45,8 @@ import { Overview } from "./components/pages/diagrams/Overview.js";
 import PowerDiagram from "./components/pages/power/Power.js";
 import VpcConnectivityPage from "./components/pages/vpc/Connectivity.js";
 import ClassicDiagram from "./components/pages/classic/Classic.js";
+import * as htmlToImage from "html-to-image";
+import FileSaver from "file-saver";
 
 const withRouter = (Page) => (props) => {
   const params = useParams();
@@ -91,6 +93,7 @@ class Craig extends React.Component {
         clickedWorkspace: "",
         clickedWorkspaceUrl: "",
         current_project: craig.store.project_name,
+        showOverviewForDownload: false,
       };
     } catch (err) {
       // if there are initialization errors, redirect user to reset state path
@@ -111,6 +114,7 @@ class Craig extends React.Component {
     this.getProject = this.getProject.bind(this);
     this.projectFetch = this.projectFetch.bind(this);
     this.saveProject = this.saveProject.bind(this);
+    this.showAndSnapshot = this.showAndSnapshot.bind(this);
   }
 
   // when react component mounts, set update callback for store
@@ -122,6 +126,19 @@ class Craig extends React.Component {
     });
     craig.setErrorCallback(() => {
       this.onError();
+    });
+  }
+
+  showAndSnapshot(callback) {
+    this.setState({ showOverviewForDownload: true }, () => {
+      htmlToImage
+        .toBlob(document.getElementById("overview-big"))
+        .then(function (blob) {
+          callback(blob);
+        })
+        .then(() => {
+          this.setState({ showOverviewForDownload: false });
+        });
     });
   }
 
@@ -569,6 +586,39 @@ class Craig extends React.Component {
       <Tutorial />
     ) : (
       <>
+        {this.state.showOverviewForDownload ? (
+          // this is only shown when getting an image for the screengrab,
+          // otherwise will not be rendered
+          // the first div is a container for the overview image
+          // the second div is there to mask the first while creting the image
+          <>
+            <div
+              id="hide-me"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                zIndex: "-1000",
+              }}
+            >
+              <Overview craig={craig} imagePadding />
+            </div>
+            <div
+              id="overview-front"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                zIndex: "-999",
+                height: "100%",
+                width: "100%",
+                backgroundColor: "white",
+              }}
+            ></div>
+          </>
+        ) : (
+          ""
+        )}
         <NavigationRedirectModal craig={craig} />
         <PageTemplate
           hideCodeMirror={
@@ -595,6 +645,7 @@ class Craig extends React.Component {
           onProjectSave={this.onProjectSave}
           saveAndSendNotification={this.saveAndSendNotification}
           beta={this.props.params.v2Page}
+          showAndSnapshot={this.showAndSnapshot}
         >
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
