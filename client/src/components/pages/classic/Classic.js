@@ -4,6 +4,8 @@ import {
   ClassicMap,
   ClassicSecurityGroups,
   ClassicSubnets,
+  ClassicBareMetal,
+  ClassicVsi,
   SshKeys,
   docTabs,
 } from "../diagrams";
@@ -14,6 +16,8 @@ import {
   Password,
   SecurityServices,
   VlanIbm,
+  IbmCloudBareMetalServer,
+  InstanceClassic,
 } from "@carbon/icons-react";
 import {
   StatefulTabs,
@@ -26,6 +30,8 @@ import {
 import {
   classicInfraTf,
   classicSecurityGroupTf,
+  classicBareMetalTf,
+  classicVsiTf,
   disableSave,
   propsMatchState,
 } from "../../../lib";
@@ -51,6 +57,8 @@ class ClassicDiagram extends React.Component {
     this.resetSelection = this.resetSelection.bind(this);
     this.onVlanClick = this.onVlanClick.bind(this);
     this.onSgClick = this.onSgClick.bind(this);
+    this.onBareMetalClick = this.onBareMetalClick.bind(this);
+    this.onVsiClick = this.onVsiClick.bind(this);
     this.getIcon = this.getIcon.bind(this);
     this.onGwClick = this.onGwClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -90,6 +98,10 @@ class ClassicDiagram extends React.Component {
       ? Password
       : this.state.selectedItem === "classic_vlans"
       ? VlanIbm
+      : this.state.selectedItem === "classic_bare_metal"
+      ? IbmCloudBareMetalServer
+      : this.state.selectedItem === "classic_vsi"
+      ? InstanceClassic
       : FirewallClassic;
   }
 
@@ -167,6 +179,46 @@ class ClassicDiagram extends React.Component {
   }
 
   /**
+   * on bare metal click
+   * @param {number} bareMetalIndex
+   */
+  onBareMetalClick(bareMetalIndex) {
+    if (
+      this.state.editing &&
+      this.state.selectedItem === "classic_bare_metal" &&
+      bareMetalIndex === this.state.selectedIndex
+    ) {
+      this.resetSelection();
+    } else {
+      this.setState({
+        editing: true,
+        selectedIndex: bareMetalIndex,
+        selectedItem: "classic_bare_metal",
+      });
+    }
+  }
+
+  /**
+   * on classic vsi click
+   * @param {number} vsiIndex
+   */
+  onVsiClick(vsiIndex) {
+    if (
+      this.state.editing &&
+      this.state.selectedItem === "classic_vsi" &&
+      vsiIndex === this.state.selectedIndex
+    ) {
+      this.resetSelection();
+    } else {
+      this.setState({
+        editing: true,
+        selectedIndex: vsiIndex,
+        selectedItem: "classic_vsi",
+      });
+    }
+  }
+
+  /**
    * on ssh key click
    * @param {number} keyIndex
    */
@@ -228,6 +280,8 @@ class ClassicDiagram extends React.Component {
                 "Classic VLANs",
                 "Classic Gateways",
                 "Classic Security Groups",
+                "Classic Bare Metal",
+                "Classic VSI",
               ],
               disabled: (stateData) => {
                 return false;
@@ -257,6 +311,7 @@ class ClassicDiagram extends React.Component {
               name={`New ${titleCase(this.state.modalService)
                 .replace("Vlans", "VLANs")
                 .replace("Ssh", "SSH")
+                .replace("Vsi", "VSI")
                 .replace(/s$/g, "")}`}
               className="marginBottomSmall"
               type="subHeading"
@@ -317,6 +372,8 @@ class ClassicDiagram extends React.Component {
                 "Classic VLANs",
                 "Classic Gateways",
                 "Classic Security Groups",
+                "Classic Bare Metal",
+                "Classic VSIs",
               ],
               craig
             )}
@@ -332,6 +389,14 @@ class ClassicDiagram extends React.Component {
               {
                 name: "Classic Security Groups",
                 tf: classicSecurityGroupTf(craig.store.json) || "",
+              },
+              {
+                name: "Classic Bare Metal",
+                tf: classicBareMetalTf(craig.store.json) || "",
+              },
+              {
+                name: "Classic VSIs",
+                tf: classicVsiTf(craig.store.json) || "",
               },
             ]}
             form={
@@ -418,6 +483,27 @@ class ClassicDiagram extends React.Component {
                             );
                           }}
                         />
+                        <ClassicVsi
+                          craig={craig}
+                          isSelected={(vsiIndex) => {
+                            return (
+                              this.state.selectedItem === "classic_vsi" &&
+                              this.state.selectedIndex === vsiIndex
+                            );
+                          }}
+                          onClick={this.onVsiClick}
+                        />
+                        <ClassicBareMetal
+                          craig={craig}
+                          isSelected={(bareMetalIndex) => {
+                            return (
+                              this.state.selectedItem ===
+                                "classic_bare_metal" &&
+                              this.state.selectedIndex === bareMetalIndex
+                            );
+                          }}
+                          onClick={this.onBareMetalClick}
+                        />
                       </ClassicSubnets>
                     </ClassicMap>
                   </div>
@@ -447,6 +533,11 @@ class ClassicDiagram extends React.Component {
                                 ? "Classic SSH Key"
                                 : this.state.selectedItem === "classic_vlans"
                                 ? "VLAN"
+                                : this.state.selectedItem ===
+                                  "classic_bare_metal"
+                                ? "Classic Bare Metal"
+                                : this.state.selectedItem === "classic_vsi"
+                                ? "Classic VSI"
                                 : "Classic Gateway"
                             } ${
                               craig.store.json[this.state.selectedItem][

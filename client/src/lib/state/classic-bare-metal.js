@@ -49,6 +49,9 @@ function initClassicBareMetalStore(store) {
         "public_vlan",
         "private_vlan",
         "disk_key_names",
+        "public_bandwidth",
+        "memory",
+        "network_speed",
       ],
       "classic_bare_metal"
     ),
@@ -100,12 +103,16 @@ function initClassicBareMetalStore(store) {
         default: "",
         labelText: "Memory (GB)",
         placeholder: "64",
+        invalid: fieldIsNullOrEmptyString("memory"),
+        invalidText: unconditionalInvalidText("Invalid memory value"),
       },
       network_speed: {
         size: "small",
         default: "",
         labelText: "Network Speed (Mbs)",
         placeholder: "100",
+        invalid: fieldIsNullOrEmptyString("network_speed"),
+        invalidText: unconditionalInvalidText("Invalid network speed value"),
       },
       disk_key_names: {
         placeholder: "disk-key-1, disk-key-2",
@@ -142,6 +149,13 @@ function initClassicBareMetalStore(store) {
         hideWhen: function (stateData) {
           return stateData.private_network_only;
         },
+        invalid: (stateData) => {
+          return (
+            !stateData.private_network_only &&
+            isNullOrEmptyString(stateData.public_bandwidth)
+          );
+        },
+        invalidText: unconditionalInvalidText("Invalid public bandwidth value"),
       },
     },
   });

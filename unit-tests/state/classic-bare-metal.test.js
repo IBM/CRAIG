@@ -142,5 +142,14 @@ describe("classic bare metal state", () => {
         "it should return true"
       );
     });
+    it("should return true if private_network_only is false and bandwidth is empty", () => {
+      assert.isTrue(
+        craig.classic_bare_metal.public_bandwidth.invalid({
+          private_network_only: false,
+          public_bandwidth: "",
+        }),
+        "it should return true"
+      );
+    });
   });
 });

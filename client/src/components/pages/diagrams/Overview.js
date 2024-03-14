@@ -26,6 +26,8 @@ import { ClassicSubnets } from "./ClassicSubnets";
 import { ClassicGateways } from "./ClassicGateways";
 import { RoutingTables } from "./RoutingTables";
 import { PassThroughWrapper } from "./PassthroughWrapper";
+import { ClassicVsi } from "./ClassicVsi";
+import { ClassicBareMetal } from "./ClassicBareMetal";
 
 export class Overview extends React.Component {
   constructor(props) {
@@ -190,6 +192,12 @@ export class Overview extends React.Component {
               <ClassicMap craig={craig} static small={this.props.small}>
                 <ClassicSubnets craig={craig} static small={this.props.small}>
                   <ClassicGateways
+                    craig={craig}
+                    static
+                    small={this.props.small}
+                  />
+                  <ClassicVsi craig={craig} static small={this.props.small} />
+                  <ClassicBareMetal
                     craig={craig}
                     static
                     small={this.props.small}

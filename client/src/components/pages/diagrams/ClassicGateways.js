@@ -30,6 +30,7 @@ export const ClassicGateways = (props) => {
       name="Classic Gateways"
       static={props.static}
       small={props.small}
+      marginBottom={props.craig.store.json.classic_vsi.length !== 0}
     >
       {gateways.map((gw) => {
         return (
