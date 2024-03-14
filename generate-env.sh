@@ -23,6 +23,9 @@ install_ibmcloud_plugin () {
     fi
 }
 
+[[ -z "$1" ]] && fatal "An output file name is required as the first parameter."
+ibmcloud iam oauth-tokens &> /dev/null || fatal "Please log in with the ibmcloud CLI (ibmcloud login)"
+
 check_runtime_prereqs
 
 # Install ibmcloud plugins if necessary
@@ -36,10 +39,10 @@ echo "" >> $outputfile
 
 echo "Fetching workspace information"
 # Look up all Power VS workspaces and get their name, region (zone), and ID
-workspaces=$(ibmcloud pi wss --json | jq -r '.[]? | "\(.name) \(.location.region) \(.id)"')
+workspaces=$(ibmcloud pi wss --json | jq -r '.[]? | "\(.name),\(.location.region),\(.id)"')
 
 # Cycle through all the workspaces
-while read name region id;
+while IFS=, read name region id;
 do
     echo "# Workspace: ${name}" >> $outputfile
     # the ${region^^} makes all characters in the region upper case
