@@ -1,0 +1,15 @@
+- name: Ensure {{ action }} finishes
+  uri:
+    url: https://schematics.cloud.ibm.com/v2/jobs/{{ action_result.json.activityid }}
+    method: GET
+    body_format: json
+    headers:
+      Authorization: Bearer {{ token.json.access_token }}
+  register: dynamic_value
+  until: dynamic_value.json.status.workspace_job_status.status_code == "job_finished" or dynamic_value.json.status.workspace_job_status.status_code == "job_failed"
+  failed_when: dynamic_value.json.status.workspace_job_status.status_code == "job_failed"
+  delay: 120
+  retries: 50
+- name: Set Variable
+  set_fact: 
+    "{{ register_name }}": "{{ dynamic_value }}"

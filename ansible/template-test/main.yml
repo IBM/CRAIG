@@ -10,20 +10,9 @@
 - name: Upload CRAIG template to schematics workspace
   hosts: localhost
   vars_files: ./vars/vars.yml
-- name: Get IAM token
-  hosts: localhost
-  vars_files: ./vars/vars.yml # variables declared in variables file are added to role automatically
   roles:
     - role: get_iam_token
-- name: "Download Template Tarball"
-  hosts: localhost
-  vars_files: ./vars/vars.yml
-  roles:
     - role: download_tar
-- name: Create Schematics Workspace
-  hosts: localhost
-  vars_files: ./vars/vars.yml # variables declared in variables file are added to role automatically
-  roles:
     - role: create_schematics_workspace
       vars:
         description: Automated CRAIG Testing Workspace
@@ -72,71 +61,26 @@
     - role: action
       vars:
         action: plan
-- name: Await task finish
-  hosts: localhost
-  vars_files: ./vars/vars.yml
-  tasks:
-    - name: Ensure generate plan finishes
-      uri:
-        url: https://schematics.cloud.ibm.com/v2/jobs/{{action_result.json.activityid}}
-        method: GET
-        body_format: json
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-      register: plan
-      until: plan.json.status.workspace_job_status.status_code == "job_finished" or plan.json.status.workspace_job_status.status_code == "job_failed"
-      failed_when: plan.json.status.workspace_job_status.status_code == "job_failed"
-      delay: 90
-      retries: 50
-- name: Start apply plan action
-  hosts: localhost
-  vars_files: ./vars/vars.yml
-  roles:
+    - role: get_iam_token
+    - role: await_action
+      vars:
+        action: plan
+        register_name: await_plan
     - role: get_iam_token
     - role: action
       vars:
         action: apply
-- name: Await task finish
-  hosts: localhost
-  vars_files: ./vars/vars.yml
-  tasks:
-    - name: Ensure apply plan finishes
-      uri:
-        url: https://schematics.cloud.ibm.com/v2/jobs/{{action_result.json.activityid}}
-        method: GET
-        body_format: json
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-      register: apply_plan
-      until: apply_plan.json.status.workspace_job_status.status_code == "job_finished" or apply_plan.json.status.workspace_job_status.status_code == "job_failed"
-      failed_when: apply_plan.json.status.workspace_job_status.status_code == "job_failed"
-      delay: 120
-      retries: 50
-- name: Start destroy action
-  hosts: localhost
-  vars_files: ./vars/vars.yml
-  roles:
+    - role: get_iam_token
+    - role: await_action
+      vars:
+        action: apply
+        register_name: await_apply
     - role: get_iam_token
     - role: action
       vars:
         action: destroy
-- name: Await task finish
-  hosts: localhost
-  vars_files: ./vars/vars.yml
-  tasks:
-    - name: Ensure destroy finishes
-      uri:
-        url: https://schematics.cloud.ibm.com/v2/jobs/{{action_result.json.activityid}}
-        method: GET
-        body_format: json
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-      register: destroy_plan
-      until: destroy_plan.json.status.workspace_job_status.status_code == "job_finished" or destroy_plan.json.status.workspace_job_status.status_code == "job_failed"
-      failed_when: destroy_plan.json.status.workspace_job_status.status_code == "job_failed"
-      delay: 120
-      retries: 50
-    - name: Delete local {{template}}.tar file
-      file:
-        state: absent
-        path: /{{playbook_dir}}/{{template}}.tar
+    - role: get_iam_token
+    - role: await_action
+      vars:
+        action: destroy
+        register_name: await_destroy
