@@ -9,7 +9,8 @@ import {
   dynamicToggleProps,
   dynamicTextAreaProps,
   dynamicMultiSelectProps,
-} from "../../../lib/forms/dynamic-form-fields";
+  dynamicPasswordInputProps,
+} from "../../../lib";
 import {
   FilterableMultiSelect,
   SelectItem,
@@ -18,12 +19,8 @@ import {
   TextInput,
   Select,
   Tag,
-  DatePicker,
-  DatePickerInput,
 } from "@carbon/react";
 import PropTypes from "prop-types";
-import { dynamicPasswordInputProps } from "../../../lib/forms/dynamic-form-fields/password-input";
-import { contains, deepEqual, isFunction, isNullOrEmptyString } from "lazy-z";
 import { ToolTipWrapper } from "../utils/ToolTip";
 import { RenderForm } from "../utils";
 
@@ -224,204 +221,6 @@ DynamicPublicKey.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
 };
 
-export class DynamicFetchSelect extends React.Component {
-  _isMounted = false;
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: ["Loading..."],
-    };
-    this.dataToGroups = this.dataToGroups.bind(this);
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-    // on mount if not items have been set
-    if (deepEqual(this.state.data, ["Loading..."]))
-      fetch(
-        // generate api endpoint based on state and props
-        this.props.field.apiEndpoint(
-          this.props.parentState,
-          this.props.parentProps
-        )
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          // set state with data if mounted
-          if (this._isMounted) {
-            this.setState({ data: data });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  dataToGroups() {
-    let apiEndpoint = this.props.field.apiEndpoint(
-      this.props.parentState,
-      this.props.parentProps
-    );
-    if (apiEndpoint === "/api/cluster/versions") {
-      // add "" if kube version is reset
-      return (
-        this.props.parentProps.isModal ||
-        isNullOrEmptyString(this.props.parentState.kube_version)
-          ? [""]
-          : []
-      ).concat(
-        // filter version based on kube type
-        this.state.data.filter((version) => {
-          if (
-            (this.props.parentState.kube_type === "openshift" &&
-              contains(version, "openshift")) ||
-            (this.props.parentState.kube_type === "iks" &&
-              !contains(version, "openshift")) ||
-            version === "default"
-          ) {
-            return version.replace(/\s\(Default\)/g, "");
-          }
-        })
-      );
-    } else {
-      return (
-        // to prevent storage pools from being loaded incorrectly,
-        // prevent first item in storage groups from being loaded when not selected
-        (
-          dynamicSelectProps(this.props).value === "" &&
-          this._isMounted &&
-          !deepEqual(this.state.data, ["Loading..."])
-            ? [""]
-            : []
-        )
-          .concat(this.state.data)
-          .map((item) => {
-            if (isFunction(this.props.field.onRender)) {
-              return this.props.field.onRender({
-                [this.props.name]: item,
-              });
-            } else return item;
-          })
-      );
-    }
-  }
-
-  render() {
-    let props = { ...this.props };
-    return (
-      <PopoverWrapper
-        key={this.dataToGroups()}
-        hoverText={dynamicSelectProps(props).value || ""}
-        className={props.field.tooltip ? " tooltip" : "select"}
-      >
-        <Select
-          {...dynamicSelectProps(props, this._isMounted, this.state.data)}
-        >
-          {this.dataToGroups().map((value) => (
-            <SelectItem
-              text={value}
-              value={value}
-              key={dynamicFieldId(props) + "-" + value + this.dataToGroups()}
-            />
-          ))}
-        </Select>
-      </PopoverWrapper>
-    );
-  }
-}
-
-export class DynamicFetchMultiSelect extends React.Component {
-  _isMounted = false;
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: ["Loading..."],
-    };
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-    // on mount if not items have been set
-    if (deepEqual(this.state.data, ["Loading..."])) {
-      fetch(
-        // generate api endpoint based on state and props
-        this.props.field.apiEndpoint(
-          this.props.parentState,
-          this.props.parentProps
-        )
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          // set state with data if mounted
-          if (this._isMounted) {
-            this.setState({ data: data }, () => {
-              this.props.onPowerImageLoad(data);
-            });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  // Force re-fetch of images on zone change
-  componentDidUpdate(prevProps) {
-    if (prevProps.parentState.zone != this.props.parentState.zone) {
-      this._isMounted = false;
-      this.setState({ data: ["Loading..."] }, () => {
-        this.componentDidMount();
-      });
-    }
-  }
-
-  render() {
-    let props = { ...this.props };
-    return (
-      <FilterableMultiSelect
-        {...dynamicMultiSelectProps(props, this.state.data)}
-      />
-    );
-  }
-}
-
-const DynamicDatePicker = (props) => {
-  // only used in opaque secrets, if we use this in other places we can
-  // change it to be more dynamic
-  return (
-    <DatePicker
-      datePickerType="single"
-      dateFormat="Y-m-d"
-      value={props.parentState.expiration_date}
-      onChange={(selectEvent) => {
-        let event = {
-          target: {
-            name: "expiration_date",
-            value: selectEvent[0],
-          },
-        };
-        props.handleInputChange(event);
-      }}
-    >
-      <DatePickerInput
-        placeholder="YYYY-MM-DD"
-        labelText="Expiration Date"
-        id={"expiration-date"}
-        invalid={!props.parentState.expiration_date}
-        invalidText={"Select an expiration date"}
-      />
-    </DatePicker>
-  );
-};
-
 export {
   DynamicFormTextInput,
   DynamicFormSelect,
@@ -431,5 +230,4 @@ export {
   DynamicPublicKey,
   DynamicToolTipWrapper,
   tagColors,
-  DynamicDatePicker,
 };

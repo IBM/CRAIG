@@ -15,8 +15,10 @@ const { dynamicTextAreaProps } = require("./text-area");
 const { dynamicHeadingProps } = require("./heading");
 const { dynamicCraigFormGroupsProps } = require("./craig-form-group");
 const { dynamicToolTipWrapperProps } = require("./dynamic-tooltip-wrapper");
+const { dynamicPasswordInputProps } = require("./password-input");
 
 module.exports = {
+  dynamicPasswordInputProps,
   dynamicToolTipWrapperProps,
   dynamicCraigFormGroupsProps,
   dynamicHeadingProps,

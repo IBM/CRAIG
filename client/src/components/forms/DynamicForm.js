@@ -6,17 +6,15 @@ import {
   isFunction,
   getObjectFromArray,
 } from "lazy-z";
-import { forceShowForm, propsMatchState } from "../../lib";
 import {
+  forceShowForm,
+  propsMatchState,
   dynamicCraigFormGroupsProps,
   dynamicHeadingProps,
   dynamicToolTipWrapperProps,
-} from "../../lib/forms/dynamic-form-fields";
+} from "../../lib";
 import { edgeRouterEnabledZones } from "../../lib/constants";
-import {
-  DynamicFetchMultiSelect,
-  DynamicFetchSelect,
-} from "./dynamic-form/components";
+import { DynamicFetchMultiSelect, DynamicFetchSelect } from "./dynamic-form";
 import {
   SubnetTileSubForm,
   SubnetTileTitle,

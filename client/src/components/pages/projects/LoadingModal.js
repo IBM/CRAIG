@@ -11,9 +11,12 @@ import {
 } from "@carbon/react";
 import { CheckmarkOutline, CloseOutline } from "@carbon/icons-react";
 import PropTypes from "prop-types";
-import { distinct, eachKey, keys, splat, titleCase } from "lazy-z";
+import { eachKey, keys, titleCase } from "lazy-z";
 
 export const LoadingModal = (props) => {
+  let isUpload = props.action === "upload";
+  let task = isUpload ? "Upload" : "Create";
+  let isFailed = props.failed === true;
   return (
     <Modal
       preventCloseOnClickOutside
@@ -21,17 +24,13 @@ export const LoadingModal = (props) => {
       open={props.open}
       passiveModal={!props.completed}
       modalHeading={
-        props.action === "upload"
-          ? props.completed === false
-            ? `Upload to Schematics Workspace: ${props.workspace}`
-            : "Upload " + (props.failed === true ? "Failed!" : "Completed!")
-          : props.completed === false
-          ? `Create Schematics Workspace: ${props.workspace}`
-          : "Create " + (props.failed === true ? "Failed!" : "Completed!")
+        props.completed === false
+          ? `${task} Schematics Workspace: ${props.workspace}`
+          : `${task} ` + (isFailed ? "Failed!" : "Completed!")
       }
       // complete
       onRequestSubmit={() => {
-        if (props.failed === true) {
+        if (isFailed) {
           if (props.action === "create") {
             // for fake state for onProjectSave when action is "create"
             let fakeState = {
@@ -50,16 +49,15 @@ export const LoadingModal = (props) => {
           } else props.retryCallback();
         } else {
           // didn't fail so only need onRequestSubmit for upload
-          props.action === "upload"
-            ? window.open(props.workspace_url + "/jobs", "_blank")
-            : window.open(props.workspace_url, "_blank");
+          window.open(
+            props.workspace_url + (isUpload ? "/jobs" : ""),
+            "_blank"
+          );
         }
       }}
       onSecondarySubmit={props.toggleModal}
-      primaryButtonText={
-        props.failed === true ? "Retry" : "Launch Workspace in New Tab"
-      }
-      secondaryButtonText={props.failed === true ? "Cancel" : "Close"}
+      primaryButtonText={isFailed ? "Retry" : "Launch Workspace in New Tab"}
+      secondaryButtonText={isFailed ? "Cancel" : "Close"}
       onRequestClose={props.toggleModal}
     >
       {props.completed === false ? (
@@ -73,7 +71,7 @@ export const LoadingModal = (props) => {
         </>
       ) : (
         <>
-          {props.failed === true ? (
+          {isFailed ? (
             <>
               {/* when complete but failed show X */}
               <div className="loadingWheel flexDirectionColumn">

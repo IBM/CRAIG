@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - When updating a Power VS Instance name, references to that instance are now updated to match the new name
 - Users can now upload JSON directly to CRAIG from the local file explorer from the Projects page by clicking the new `Upload JSON` button
 - Users can now create Classic Bare Metal Servers from the form page `/form/classicBareMetal`
+- Power VS Instance Primary IP addresses are now included as outputs in the `outputs.tf` file of any CRAIG Terraform template
 
 ### Fixes
 

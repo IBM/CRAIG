@@ -1074,8 +1074,8 @@ function craigForms(craig) {
         },
         {
           name: craig.power_instances.name,
-          ssh_key: craig.power_instances.ssh_key,
           workspace: craig.power_instances.workspace,
+          ssh_key: craig.power_instances.ssh_key,
         },
         {
           network: craig.power_instances.network,
