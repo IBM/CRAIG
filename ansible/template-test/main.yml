@@ -84,3 +84,5 @@
       vars:
         action: destroy
         register_name: await_destroy
+    - role: get_iam_token
+    - role: delete_schematics_workspace
