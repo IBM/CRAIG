@@ -1,4 +1,4 @@
-const { kebabCase, paramTest } = require("lazy-z");
+const { kebabCase, paramTest, isFunction } = require("lazy-z");
 const { disabledReturnsBooleanCheck, addClassName } = require("./utils");
 
 /**
@@ -70,6 +70,9 @@ function dynamicToggleProps(props) {
       ? props.field.onRender(props.parentState, props.parentProps)
       : props.parentState[props.name],
     disabled: isDisabled,
+    key: isFunction(props.field.forceUpdateKey)
+      ? props.field.forceUpdateKey(props.parentState, props.parentProps)
+      : undefined,
   };
 }
 

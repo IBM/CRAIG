@@ -2314,5 +2314,21 @@
       }
     ],
     "relatedLinks": []
+  },
+  "classic_vsi": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": []
+  },
+  "classic_bare_metal": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": []
   }
 }

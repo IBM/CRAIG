@@ -730,6 +730,8 @@ module.exports = {
     "mad04",
     "sao04",
     "dal12",
+    "sao01",
+    "tok04",
   ],
   cosPlans: [
     "standard",
@@ -839,10 +841,40 @@ module.exports = {
     wdc07: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
   },
   replicationEnabledStoragePoolMap: {
-    "us-east": ["Tier1-Flash-8"],
-    wdc06: ["Tier1-Flash-1", "Tier3-Flash-2", "Tier3-Flash-1"],
-    "us-south": ["Tier1-Flash-6"],
-    dal12: ["Tier1-Flash-3", "Tier3-Flash-4", "Tier3-Flash-3"],
+    "us-east": ["Tier1-Flash-8", "General-Flash-185", "General-Flash-182"],
+    wdc06: [
+      "Tier1-Flash-1",
+      "Tier3-Flash-2",
+      "Tier3-Flash-1",
+      "General-Flash-83",
+      "General-Flash-77",
+      "General-Flash-74",
+    ],
+    wdc07: [
+      "General-Flash-83",
+      "General-Flash-80",
+      "General-Flash-77",
+      "General-Flash-74",
+    ],
+    "us-south": ["Tier1-Flash-6", "General-Flash-26", "General-Flash-23"],
+    dal12: [
+      "Tier1-Flash-3",
+      "Tier3-Flash-4",
+      "Tier3-Flash-3",
+      "General-Flash-93",
+      "General-Flash-87",
+      "General-Flash-84",
+    ],
+    dal10: [
+      "General-Flash-53",
+      "General-Flash-59",
+      "General-Flash-56",
+      "General-Flash-50",
+    ],
+    mad02: ["General-Flash-56", "General-Flash-53", "General-Flash-50"],
+    mad04: ["General-Flash-59", "General-Flash-56", "General-Flash-50"],
+    "eu-de-1": ["General-Flash-90", "General-Flash-96", "General-Flash-87"],
+    "eu-de-2": ["General-Flash-96", "General-Flash-93", "General-Flash-90"],
   },
   template_dropdown_map: {
     Mixed: {

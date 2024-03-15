@@ -11,7 +11,7 @@ export const ClassicSecurityGroups = (props) => {
   return (
     <HoverClassNameWrapper
       className={
-        "subForm marginBottomSmall" +
+        "subForm marginBottomSmall width580 " +
         (props.width ? " securityGroupsBoxWidth" : "")
       }
       hoverClassName="diagramBoxSelected"

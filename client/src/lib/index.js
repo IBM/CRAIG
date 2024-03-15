@@ -26,6 +26,22 @@ const {
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
+  dynamicToolTipWrapperProps,
+  dynamicCraigFormGroupsProps,
+  dynamicHeadingProps,
+  dynamicTextAreaProps,
+  dynamicSelectProps,
+  dynamicMultiSelectProps,
+  dynamicToggleProps,
+  fieldFunctionReturnsBooleanCheck,
+  disabledReturnsBooleanCheck,
+  invalidReturnsBooleanCheck,
+  fieldFunctionReturnsStringCheck,
+  groupsEvaluatesToArrayCheck,
+  dynamicFieldId,
+  addClassName,
+  dynamicTextInputProps,
+  dynamicPasswordInputProps,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -110,6 +126,8 @@ const {
   formatClassicSgRule,
   formatClassicSg,
   classicSecurityGroupTf,
+  classicVsiTf,
+  classicBareMetalTf,
 } = require("./json-to-iac");
 const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
@@ -118,6 +136,24 @@ const { invalidForms } = require("./invalid-forms");
 const { allDocText, filterDocs } = require("./docs");
 
 module.exports = {
+  dynamicPasswordInputProps,
+  dynamicToolTipWrapperProps,
+  dynamicCraigFormGroupsProps,
+  dynamicHeadingProps,
+  dynamicTextAreaProps,
+  dynamicSelectProps,
+  dynamicMultiSelectProps,
+  dynamicToggleProps,
+  fieldFunctionReturnsBooleanCheck,
+  disabledReturnsBooleanCheck,
+  invalidReturnsBooleanCheck,
+  fieldFunctionReturnsStringCheck,
+  groupsEvaluatesToArrayCheck,
+  dynamicFieldId,
+  addClassName,
+  dynamicTextInputProps,
+  classicVsiTf,
+  classicBareMetalTf,
   classicSecurityGroupTf,
   formatClassicSgRule,
   formatClassicSg,

@@ -53,6 +53,19 @@ class Wizard extends React.Component {
     this.handleToggle = this.handleToggle.bind(this);
     this.handlePowerZonesChange = this.handlePowerZonesChange.bind(this);
     this.onRequestSubmit = this.onRequestSubmit.bind(this);
+    this.modalShouldBeDisabled = this.modalShouldBeDisabled.bind(this);
+  }
+
+  modalShouldBeDisabled() {
+    return (
+      // if project name is invalid
+      invalidProjectName(this.state, this.props) ||
+      // if is power vs and no zones
+      (this.state.enable_power_vs && isEmpty(this.state.power_vs_zones)) ||
+      // or is fs cloud and no key management service
+      (this.state.fs_cloud &&
+        isNullOrEmptyString(this.state.key_management_service))
+    );
   }
 
   onRequestSubmit() {
@@ -80,7 +93,7 @@ class Wizard extends React.Component {
     if (name === "region") {
       this.setState({
         region: value,
-        power_vs_zones: [],
+        power_vs_zones: ["dal12", "wdc06"],
       });
     } else this.setState({ [name]: value });
   }
@@ -94,7 +107,7 @@ class Wizard extends React.Component {
     } else if (name === "power_vs_high_availability" && !this.state[name]) {
       this.setState({
         [name]: !this.state.name,
-        power_vs_zones: ["dal12", "wdc06"],
+        power_vs_zones: [],
       });
     } else this.setState({ [name]: !this.state[name] });
   }
@@ -125,12 +138,7 @@ class Wizard extends React.Component {
         primaryButtonText="Get Started"
         onRequestClose={this.props.onRequestClose}
         onRequestSubmit={this.onRequestSubmit}
-        primaryButtonDisabled={
-          invalidProjectName(this.state, this.props) ||
-          (this.state.enable_power_vs && isEmpty(this.state.power_vs_zones)) ||
-          (this.state.fs_cloud &&
-            isNullOrEmptyString(this.state.key_management_service))
-        }
+        primaryButtonDisabled={this.modalShouldBeDisabled()}
         size="lg"
         className="leftTextAlign"
       >

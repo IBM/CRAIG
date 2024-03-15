@@ -30,6 +30,23 @@ const { sapProfiles, systemTypes } = require("../../constants");
 const { nameField } = require("../reusable-fields");
 
 /**
+ * hide field for vtl forms when no workspace is selected
+ * @param {*} vtl
+ * @returns {Function} hideWhen function
+ */
+function hideWhenNoWorkspaceAndVtl(vtl) {
+  return function (stateData, componentProps) {
+    return (
+      vtl &&
+      (isNullOrEmptyString(stateData.workspace, true) ||
+        isEmpty(
+          componentProps.craig.vtl.image.groups(stateData, componentProps)
+        ))
+    );
+  };
+}
+
+/**
  * Network invalidation for powerVs instance
  * @returns {boolean} function will evaluate to true if should be disabled
  */
@@ -52,21 +69,18 @@ function powerVsNetworkInvalid(stateData) {
  * Processor invalidation for powerVs instance
  * @returns {boolean} function will evaluate to true if should be disabled
  */
-function powerVsCoresInvalid(vtl) {
-  return function (stateData) {
-    if (stateData.sap) return false;
-    let isDedicated = stateData.pi_proc_type === "dedicated";
-    let coreMax =
-      stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
-    let coreMin = isDedicated || vtl ? 1 : 0.25;
-    let processorsFloat = parseFloat(stateData.pi_processors);
-    return (
-      stateData.pi_processors === "" ||
-      (coreMin === 1 && !isWholeNumber(processorsFloat)) ||
-      (!stateData.sap &&
-        (processorsFloat < coreMin || processorsFloat > coreMax))
-    );
-  };
+function powerVsCoresInvalid(stateData) {
+  if (stateData.sap) return false;
+  let isDedicated = stateData.pi_proc_type === "dedicated";
+  let coreMax =
+    stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
+  let coreMin = isDedicated ? 1 : 0.25;
+  let processorsFloat = parseFloat(stateData.pi_processors);
+  return (
+    stateData.pi_processors === "" ||
+    (isDedicated && !isWholeNumber(processorsFloat)) ||
+    (!stateData.sap && (processorsFloat < coreMin || processorsFloat > coreMax))
+  );
 }
 
 /**
@@ -92,12 +106,11 @@ function powerVsMemoryInvalid(stateData) {
 /**
  * return power_instances processor input invalid text
  * @param {Object} stateData
- * @param {boolean=} vtl
  * @returns {string} invalid text
  */
-function invalidPowerVsProcessorTextCallback(stateData, vtl) {
+function invalidPowerVsProcessorTextCallback(stateData) {
   let isDedicated = stateData.pi_proc_type === "dedicated";
-  let coreMin = isDedicated || vtl ? 1 : 0.25;
+  let coreMin = isDedicated ? 1 : 0.25;
   let coreMax =
     stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
   return `Must be a ${
@@ -258,6 +271,7 @@ function powerVsInstanceSchema(vtl) {
       forceUpdateKey: function (stateData) {
         return stateData.workspace;
       },
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     primary_subnet: {
       labelText: "Primary Subnet",
@@ -289,6 +303,7 @@ function powerVsInstanceSchema(vtl) {
         } else stateData.primary_subnet = "";
       },
       size: "small",
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     ssh_key: {
       labelText: "SSH Key",
@@ -310,6 +325,7 @@ function powerVsInstanceSchema(vtl) {
         }
       },
       size: "small",
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     image: {
       size: "small",
@@ -330,6 +346,7 @@ function powerVsInstanceSchema(vtl) {
             });
         }
       },
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_sys_type: {
       size: "small",
@@ -339,6 +356,7 @@ function powerVsInstanceSchema(vtl) {
       invalidText: selectInvalidText("systen type"),
       groups: vtl ? ["s922", "e980"] : systemTypes,
       type: "select",
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_proc_type: {
       default: "",
@@ -349,21 +367,28 @@ function powerVsInstanceSchema(vtl) {
       type: "select",
       onRender: titleCaseRender("pi_proc_type"),
       onInputChange: kebabCaseInput("pi_proc_type"),
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_processors: {
       labelText: "Processors",
       placeholder: vtl ? 1 : "0.25",
-      hideWhen: function (stateData) {
-        return stateData.sap === true;
+      hideWhen: function (stateData, componentProps) {
+        return (
+          stateData.sap === true ||
+          hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps)
+        );
       },
       size: "small",
       default: "",
-      invalid: powerVsCoresInvalid(vtl),
-      invalidText: invalidPowerVsProcessorTextCallback(true),
+      invalid: powerVsCoresInvalid,
+      invalidText: invalidPowerVsProcessorTextCallback,
     },
     pi_memory: {
-      hideWhen: function (stateData) {
-        return stateData.sap === true;
+      hideWhen: function (stateData, componentProps) {
+        return (
+          stateData.sap === true ||
+          hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps)
+        );
       },
       labelText: "Memory (GB)",
       placeholder: "4",
@@ -383,10 +408,14 @@ function powerVsInstanceSchema(vtl) {
         content:
           "To attach data volumes from different storage pools, set to false. When this is set to false it cannot be set to true without re-creation of instance.",
       },
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_storage_pool: powerStoragePoolSelect(),
-    storage_option: powerVsStorageOptions(),
-    pi_storage_type: powerVsStorageType(),
+    storage_option: powerVsStorageOptions(
+      false,
+      hideWhenNoWorkspaceAndVtl(vtl)
+    ),
+    pi_storage_type: powerVsStorageType(false, hideWhenNoWorkspaceAndVtl(vtl)),
     affinity_type: powerVsAffinityType(),
     pi_affinity_policy: {
       default: null,
@@ -406,6 +435,7 @@ function powerVsInstanceSchema(vtl) {
           : !isWholeNumber(parseInt(stateData.pi_license_repository_capacity));
       },
       invalidText: unconditionalInvalidText("Enter a whole number"),
+      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     pi_ibmi_css: {
       size: "small",
@@ -442,6 +472,19 @@ function powerVsInstanceSchema(vtl) {
       default: null,
       labelText: "User Data",
       placeholder: "Cloud init data",
+    },
+    pi_pin_policy: {
+      labelText: "Pin Policy",
+      type: "select",
+      size: "small",
+      groups: ["Soft", "Hard", "None"],
+      default: "none",
+      onRender: titleCaseRender("pi_pin_policy"),
+      onInputChange: kebabCaseInput("pi_pin_policy"),
+      tooltip: {
+        content:
+          "When you soft pin an instance for high availability, the instance automatically migrates back to the original host once the host is back to its operating state. If the instance has a licensing restriction with the host, the hard pin option restricts the movement of the instance during remote restart, automated remote restart, DRO, and live partition migration. The default pinning policy is none",
+      },
     },
   };
 }

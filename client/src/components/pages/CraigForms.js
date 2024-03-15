@@ -1,4 +1,4 @@
-const { contains } = require("lazy-z");
+const { contains, isNullOrEmptyString, isEmpty } = require("lazy-z");
 const { edgeRouterEnabledZones } = require("../../lib/constants");
 const { disableSave } = require("../../lib");
 
@@ -387,6 +387,34 @@ function craigForms(craig) {
         },
       ],
     },
+    classic_bare_metal: {
+      jsonField: "classic_bare_metal",
+      groups: [
+        {
+          name: craig.classic_bare_metal.name,
+          domain: craig.classic_bare_metal.domain,
+          datacenter: craig.classic_bare_metal.datacenter,
+        },
+        {
+          os_key_name: craig.classic_bare_metal.os_key_name,
+          package_key_name: craig.classic_bare_metal.package_key_name,
+          process_key_name: craig.classic_bare_metal.process_key_name,
+        },
+        {
+          memory: craig.classic_bare_metal.memory,
+          network_speed: craig.classic_bare_metal.network_speed,
+          private_network_only: craig.classic_bare_metal.private_network_only,
+        },
+        {
+          private_vlan: craig.classic_bare_metal.private_vlan,
+          public_vlan: craig.classic_bare_metal.public_vlan,
+          public_bandwidth: craig.classic_bare_metal.public_bandwidth,
+        },
+        {
+          disk_key_names: craig.classic_bare_metal.disk_key_names,
+        },
+      ],
+    },
     classic_security_groups: {
       jsonField: "classic_security_groups",
       groups: [
@@ -395,6 +423,35 @@ function craigForms(craig) {
         },
         {
           description: craig.classic_security_groups.description,
+        },
+      ],
+    },
+    classic_vsi: {
+      jsonField: "classic_vsi",
+      groups: [
+        {
+          name: craig.classic_vsi.name,
+          domain: craig.classic_vsi.domain,
+          datacenter: craig.classic_vsi.datacenter,
+        },
+        {
+          cores: craig.classic_vsi.cores,
+          memory: craig.classic_vsi.memory,
+          image_id: craig.classic_vsi.image_id,
+        },
+        {
+          network_speed: craig.classic_vsi.network_speed,
+          local_disk: craig.classic_vsi.local_disk,
+          ssh_keys: craig.classic_vsi.ssh_keys,
+        },
+        {
+          private_vlan: craig.classic_vsi.private_vlan,
+          private_security_groups: craig.classic_vsi.private_security_groups,
+          private_network_only: craig.classic_vsi.private_network_only,
+        },
+        {
+          public_vlan: craig.classic_vsi.public_vlan,
+          public_security_groups: craig.classic_vsi.public_security_groups,
         },
       ],
     },
@@ -1018,24 +1075,23 @@ function craigForms(craig) {
         {
           name: craig.power_instances.name,
           workspace: craig.power_instances.workspace,
+          ssh_key: craig.power_instances.ssh_key,
         },
         {
           network: craig.power_instances.network,
           primary_subnet: craig.power_instances.primary_subnet,
+          pi_pin_policy: craig.power_instances.pi_pin_policy,
         },
         {
-          ssh_key: craig.power_instances.ssh_key,
           image: craig.power_instances.image,
           pi_sys_type: craig.power_instances.pi_sys_type,
+          pi_storage_pool_affinity:
+            craig.power_instances.pi_storage_pool_affinity,
         },
         {
           pi_proc_type: craig.power_instances.pi_proc_type,
           pi_processors: craig.power_instances.pi_processors,
           pi_memory: craig.power_instances.pi_memory,
-        },
-        {
-          pi_storage_pool_affinity:
-            craig.power_instances.pi_storage_pool_affinity,
         },
         {
           pi_ibmi_css: craig.power_instances.pi_ibmi_css,
@@ -1046,6 +1102,9 @@ function craigForms(craig) {
           heading: {
             name: "Boot Volume",
             type: "subHeading",
+          },
+          hideWhen: function (stateData) {
+            return isNullOrEmptyString(stateData.workspace, true);
           },
         },
         {
@@ -1069,6 +1128,9 @@ function craigForms(craig) {
           heading: {
             name: "IP Interface Options",
             type: "subHeading",
+          },
+          hideWhen: function (stateData) {
+            return isNullOrEmptyString(stateData.workspace, true);
           },
         },
       ],
@@ -1572,6 +1634,12 @@ function craigForms(craig) {
             name: "Boot Volume",
             type: "subHeading",
           },
+          hideWhen: function (stateData, componentProps) {
+            return (
+              isNullOrEmptyString(stateData.workspace, true) ||
+              isEmpty(craig.vtl.image.groups(stateData, componentProps))
+            );
+          },
         },
         {
           storage_option: craig.vtl.storage_option,
@@ -1587,6 +1655,12 @@ function craigForms(craig) {
           heading: {
             name: "IP Interface Options",
             type: "subHeading",
+          },
+          hideWhen: function (stateData, componentProps) {
+            return (
+              isNullOrEmptyString(stateData.workspace, true) ||
+              isEmpty(craig.vtl.image.groups(stateData, componentProps))
+            );
           },
         },
       ],

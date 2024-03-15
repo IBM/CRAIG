@@ -5,15 +5,20 @@ const {
   isInRange,
   splat,
 } = require("lazy-z");
-const { RegexButWithWords } = require("regex-but-with-words");
 const {
   fieldIsNullOrEmptyString,
   shouldDisableComponentSave,
   unconditionalInvalidText,
   selectInvalidText,
 } = require("./utils");
-const { datacenters } = require("../constants");
-const { nameField } = require("./reusable-fields");
+const {
+  nameField,
+  domainField,
+  classicDatacenterField,
+  classicPublicVlan,
+  classicPrivateVlan,
+  classicPrivateNetworkOnly,
+} = require("./reusable-fields");
 
 /**
  * init store
@@ -95,23 +100,6 @@ function classicGatewayDelete(config, stateData, componentProps) {
 }
 
 /**
- * classic vlan filter function
- * @param {string} type
- * @returns {Function} groups function
- */
-function classicVlanFilter(type) {
-  return function (stateData, componentProps) {
-    return splat(
-      componentProps.craig.store.json.classic_vlans.filter((vlan) => {
-        if (vlan.datacenter === stateData.datacenter && vlan.type === type)
-          return vlan;
-      }),
-      "name"
-    );
-  };
-}
-
-/**
  * init classic gateway store
  * @param {*} store
  */
@@ -147,39 +135,8 @@ function initClassicGateways(store) {
         },
         size: "small",
       }),
-      domain: {
-        default: "",
-        invalid: function (stateData) {
-          return (
-            // prevent returning error
-            (stateData.domain || "").match(
-              new RegexButWithWords()
-                .stringBegin()
-                .set("a-z")
-                .oneOrMore()
-                .literal(".")
-                .set("a-z")
-                .oneOrMore()
-                .stringEnd()
-                .done("g")
-            ) === null
-          );
-        },
-        invalidText: unconditionalInvalidText("Enter a valid domain"),
-        size: "small",
-      },
-      datacenter: {
-        default: "",
-        type: "select",
-        invalid: fieldIsNullOrEmptyString("datacenter"),
-        invalidText: selectInvalidText("datacenter"),
-        onStateChange: function (stateData) {
-          stateData.private_vlan = "";
-          stateData.public_vlan = "";
-        },
-        groups: datacenters,
-        size: "small",
-      },
+      domain: domainField(),
+      datacenter: classicDatacenterField(),
       network_speed: {
         default: "",
         type: "select",
@@ -232,15 +189,7 @@ function initClassicGateways(store) {
         groups: ["INTEL_XEON_4210_2_20"],
         size: "small",
       },
-      private_vlan: {
-        labelText: "Private VLAN",
-        default: "",
-        type: "select",
-        invalid: fieldIsNullOrEmptyString("private_vlan"),
-        invalidText: selectInvalidText("private VLAN"),
-        groups: classicVlanFilter("PRIVATE"),
-        size: "small",
-      },
+      private_vlan: classicPrivateVlan(),
       ssh_key: {
         labelText: "SSH Key",
         default: "",
@@ -255,22 +204,7 @@ function initClassicGateways(store) {
         },
         size: "small",
       },
-      public_vlan: {
-        labelText: "Public VLAN",
-        default: "",
-        type: "select",
-        invalid: function (stateData) {
-          return stateData.private_network_only
-            ? false
-            : fieldIsNullOrEmptyString("public_vlan")(stateData);
-        },
-        invalidText: selectInvalidText("public VLAN"),
-        groups: classicVlanFilter("PUBLIC"),
-        size: "small",
-        hideWhen: function (stateData) {
-          return stateData.private_network_only;
-        },
-      },
+      public_vlan: classicPublicVlan(),
       disk_key_names: {
         default: [],
         type: "multiselect",
@@ -281,18 +215,7 @@ function initClassicGateways(store) {
         groups: ["HARD_DRIVE_2_00_TB_SATA_2"],
         size: "small",
       },
-      private_network_only: {
-        type: "toggle",
-        labelText: "Private Network Only",
-        default: false,
-        onStateChange: function (stateData) {
-          if (stateData.private_network_only !== true) {
-            stateData.private_network_only = true;
-            stateData.public_vlan = "";
-          } else stateData.private_network_only = false;
-        },
-        size: "small",
-      },
+      private_network_only: classicPrivateNetworkOnly(),
       tcp_monitoring: {
         size: "small",
         default: false,

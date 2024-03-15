@@ -20,9 +20,10 @@ export class JSONModal extends React.Component {
       error: "",
     };
 
-    if (this.props.import) {
+    if (this.props.import && !this.props.uploadedJsonData) {
       this.state.name = "";
     } else if (this.state.json) {
+      if (this.props.uploadedJsonData) this.state.name = "";
       try {
         validate(this.state.json);
         this.state.isValid = true;
@@ -82,7 +83,6 @@ export class JSONModal extends React.Component {
       this.state.json === undefined
         ? true
         : this.props.data && !deepEqual(this.props.data.json, this.state.json);
-
     return (
       <Modal
         size="lg"
@@ -138,7 +138,8 @@ export class JSONModal extends React.Component {
             wrapped={this.state.usePrettyJson}
             import={this.props.import}
             value={
-              this.state.readOnlyJSON && !textAreaDidChange
+              this.props.uploadedJsonData ||
+              (this.state.readOnlyJSON && !textAreaDidChange)
                 ? formatConfig(this.state.json, !this.state.usePrettyJson)
                 : this.state.textData
             }

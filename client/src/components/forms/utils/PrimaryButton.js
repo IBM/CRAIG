@@ -57,7 +57,7 @@ PrimaryButton.defaultProps = {
   hoverText: "Save Changes",
   inline: false,
   disabled: false,
-  hoverTextAlign: "bottom",
+  hoverTextAlign: "bottom-right",
 };
 
 PrimaryButton.propTypes = {

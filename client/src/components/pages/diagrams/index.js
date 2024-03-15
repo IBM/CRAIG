@@ -17,3 +17,5 @@ export { PowerSubnetInnerBox } from "./PowerSubnetInnerBox";
 export { TransitGatewaysMap } from "./TransitGatewaysMap";
 export { ScrollFormWrapper } from "./ScrollFormWrapper";
 export { ClassicSecurityGroups } from "./ClassicSecurityGroups";
+export { ClassicBareMetal } from "./ClassicBareMetal.js";
+export { ClassicVsi } from "./ClassicVsi.js";

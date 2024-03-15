@@ -1,0 +1,11 @@
+---
+# tasks file for action
+- name: Start {{ action }} action
+  uri:
+    url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/{{ action }}
+    method: "{{ 'POST' if action == 'plan' else 'PUT' }}"
+    body_format: json
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+    status_code: 202
+  register: action_result

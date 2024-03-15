@@ -246,6 +246,9 @@ function initPowerVsVolumeStore(store) {
         labelText: "Enable Volume Replication",
         default: false,
         type: "toggle",
+        forceUpdateKey: function (stateData) {
+          return JSON.stringify(stateData);
+        },
         disabled: function (stateData, componentProps) {
           let pool = stateData.pi_volume_pool;
           if (!stateData.zone) {

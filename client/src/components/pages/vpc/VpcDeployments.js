@@ -532,6 +532,16 @@ class VpcDeploymentsDiagramPage extends React.Component {
                       isSelected={(vpcIndex) => {
                         return vpcIndex === this.state.vpcIndex;
                       }}
+                      onImportedSubnetItemClick={(
+                        vpcIndex,
+                        field,
+                        itemIndex
+                      ) => {
+                        this.setSelection(vpcIndex, field, itemIndex);
+                      }}
+                      parentState={this.state}
+                      tabSelected={this.tabSelected}
+                      onTabClick={this.onSgTabClick}
                     >
                       <RoutingTables
                         craig={craig}

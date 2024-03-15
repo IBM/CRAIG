@@ -9,6 +9,9 @@ export const PowerSubnetInnerBox = (props) => {
   if (props.marginTop) {
     powerInnerBoxClassName += " marginTopThreeQuartersRem";
   }
+  if (props.marginBottom && !props.small) {
+    powerInnerBoxClassName += " marginBottomSmall";
+  }
   return (
     <HoverClassNameWrapper
       className={powerInnerBoxClassName}

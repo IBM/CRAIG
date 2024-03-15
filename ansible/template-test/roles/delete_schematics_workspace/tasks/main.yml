@@ -1,0 +1,13 @@
+---
+# tasks file for delete_schematics_workspace
+- name: Delete Schematics Workspace
+  uri:
+    url: https://schematics.cloud.ibm.com/v1/workspaces/{{workspace.json.id}}
+    method: DELETE
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+    status_code: 200
+  register: delete_response
+  until: delete_response.status == 200
+  retries: 2
+  delay: 120

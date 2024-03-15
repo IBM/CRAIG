@@ -1,6 +1,6 @@
 {
   "name": "craig",
-  "version": "1.12.1",
+  "version": "1.13.0",
   "private": true,
   "license": "Apache-2.0",
   "scripts": {
@@ -23,6 +23,7 @@
     "chart.js": "^4.4.1",
     "file-saver": "^2.0.5",
     "graphql": "15.5.2",
+    "html-to-image": "^1.11.11",
     "json-to-tf": "^0.3.1",
     "jszip": "^3.10.1",
     "lazy-z": "^1.11.17",

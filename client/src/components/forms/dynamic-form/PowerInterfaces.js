@@ -2,11 +2,35 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Network_3 } from "@carbon/icons-react";
 import { DynamicFormTextInput } from "./components";
-import { contains } from "lazy-z";
+import { contains, isEmpty, isNullOrEmptyString } from "lazy-z";
 import { CraigFormGroup } from "../utils";
+import { CraigEmptyResourceTile } from "./tiles";
 
 export const PowerInterfaces = (props) => {
-  return contains(["Power Instances", "VTL"], props.componentProps.formName) ? (
+  let isVtl = contains(["VTL"], props.componentProps.formName);
+  return isVtl &&
+    (!props.stateData.workspace ||
+      isEmpty(
+        props.componentProps.craig.vtl.image.groups(
+          props.stateData,
+          props.componentProps
+        )
+      )) ? (
+    <CraigEmptyResourceTile
+      noClick
+      name={
+        isNullOrEmptyString(props.stateData.workspace) ? (
+          "workspace selected"
+        ) : (
+          <span style={{ marginLeft: "0.25rem" }}>
+            VTL images selected in Power VS workspace{" "}
+            <code style={{ color: "blue" }}>{props.stateData.workspace}</code>.
+            Add images from the Power VS form
+          </span>
+        )
+      }
+    />
+  ) : contains(["Power Instances", "VTL"], props.componentProps.formName) ? (
     <div className="formInSubForm marginTop1Rem">
       {props.stateData.network.map((nw, index) => {
         return (

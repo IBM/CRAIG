@@ -397,6 +397,7 @@ input:read-only {
   position: relative;
   font-size: 80%;
   top: 20px;
+  left: -62px;
 }
 
 .cds--popover--open .cds--popover-content {
@@ -1037,10 +1038,12 @@ div.banner-text {
 }
 
 .footerPopoverDismiss {
+  left: -143px !important; // important to override auto align
   right: 450% !important; // important to override auto align
 }
 
 .footerPopoverShow {
+  left: -130px !important; // important to override auto align
   right: 412.5% !important; // important to override auto align
 }
 
@@ -2095,6 +2098,7 @@ input:read-only {
   position: relative;
   font-size: 80%;
   top: 20px;
+  left: -62px;
 }
 
 .cds--popover--open .cds--popover-content {

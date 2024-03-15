@@ -168,6 +168,7 @@ describe("classic_gateways", () => {
     );
   });
   it("should return true if a gw has no private_vlan", () => {
+    craig.store.json.classic_vlans = [];
     assert.isTrue(
       disableSave(
         "classic_gateways",

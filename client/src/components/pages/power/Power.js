@@ -306,7 +306,9 @@ class PowerDiagram extends React.Component {
               craig={craig}
               modalService={this.state.modalService}
               formName={
-                this.state.modalService === "power_volumes"
+                this.state.modalService === "vtl"
+                  ? "VTL"
+                  : this.state.modalService === "power_volumes"
                   ? undefined
                   : "Power Instances"
               }
@@ -441,6 +443,10 @@ class PowerDiagram extends React.Component {
                                 craig.options.power_vs_high_availability,
                             },
                             {
+                              power_vs_ha_zone_1:
+                                craig.options.power_vs_ha_zone_1,
+                              power_vs_ha_zone_2:
+                                craig.options.power_vs_ha_zone_2,
                               power_vs_zones: craig.options.power_vs_zones,
                             },
                           ],

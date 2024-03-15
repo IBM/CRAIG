@@ -36,6 +36,8 @@ export const docTabs = (tabs, craig) => {
             ? "subnets"
             : tab === "Virtual Servers"
             ? "vsi"
+            : tab === "Classic VSIs"
+            ? "classic_vsi"
             : tab
         ),
         craig.store.json._options.template

@@ -7,18 +7,21 @@ const JSZip = require("jszip");
  * Download configuration object
  * @returns (Object|undefined) error
  */
-export const downloadContent = (json, projectName) => {
+export const downloadContent = (json, projectName, imageBlob) => {
   const zip = new JSZip();
   try {
     let files = configToFilesJson(json); // get files
+    if (imageBlob) {
+      zip.file(`${projectName}.png`, imageBlob);
+    }
     eachKey(files, (file) => {
       // add each file's contents to the zip if it is not null or empty string
       if (
         isNullOrEmptyString(files[file]) === false &&
         (contains(file, ".") || contains(file, "LICENSE"))
-      )
+      ) {
         zip.file(file, files[file]);
-      else if (isNullOrEmptyString(files[file]) === false) {
+      } else if (isNullOrEmptyString(files[file]) === false) {
         zip.folder(file);
         eachKey(files[file], (subFile) => {
           zip.file(file + "/" + subFile, files[file][subFile]);

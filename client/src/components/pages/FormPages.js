@@ -262,12 +262,30 @@ const CisGlbs = (craig) => {
   });
 };
 
+const ClassicBareMetal = (craig) => {
+  return formPageTemplate(craig, {
+    name: "Classic Bare Metal Servers",
+    addText: "Create a Bare Metal Server",
+    formName: "classic-bare-metal",
+    jsonField: "classic_bare_metal",
+  });
+};
+
 const ClassicSecurityGroups = (craig) => {
   return formPageTemplate(craig, {
     name: "Classic Security Groups",
     addText: "Create a Security Group",
     formName: "classic-security-groups",
     jsonField: "classic_security_groups",
+  });
+};
+
+const ClassicVsi = (craig) => {
+  return formPageTemplate(craig, {
+    name: "Classic Virtual Servers",
+    addText: "Create a Virtual Server",
+    formName: "classic-vsi",
+    jsonField: "classic_vsi",
   });
 };
 
@@ -1339,8 +1357,12 @@ export const NewFormPage = (props) => {
     return Cis(craig);
   } else if (form === "cisGlbs") {
     return CisGlbs(craig);
+  } else if (form === "classicBareMetal") {
+    return ClassicBareMetal(craig);
   } else if (form === "classicSecurityGroups") {
     return ClassicSecurityGroups(craig);
+  } else if (form === "classicVsi") {
+    return ClassicVsi(craig);
   } else if (form === "classicGateways") {
     return ClassicGateways(craig);
   } else if (form === "classicSshKeys") {

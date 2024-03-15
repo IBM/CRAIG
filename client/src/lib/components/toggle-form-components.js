@@ -47,14 +47,17 @@ function dynamicPrimaryButtonProps(props) {
 /**
  * get props for delete button
  * @param {*} props
+ * @param {*} isV2Page
  * @returns {object} props object
  */
-function dynamicSecondaryButtonProps(props) {
+function dynamicSecondaryButtonProps(props, isV2Page) {
   return {
     popoverProps: {
       hoverText:
         props.disabled && props.disableDeleteMessage
           ? props.disableDeleteMessage
+          : isV2Page
+          ? "Delete Resource"
           : "Delete " + props.name,
       className: props.disabled ? "inlineBlock cursorNotAllowed" : "",
     },

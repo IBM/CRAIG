@@ -29,7 +29,6 @@ const {
   encryptionKeyGroups,
   vpcSshKeyMultiselect,
 } = require("./utils");
-const { invalidNameText, invalidName } = require("../forms");
 const { nameField } = require("./reusable-fields");
 
 /**

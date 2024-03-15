@@ -272,6 +272,7 @@ describe("options", () => {
           data,
           {
             enable_power_vs: true,
+            power_vs_zones: [],
           },
           "it should change value"
         );
@@ -295,7 +296,7 @@ describe("options", () => {
           data,
           {
             power_vs_high_availability: true,
-            power_vs_zones: ["dal12", "wdc06"],
+            power_vs_zones: [],
           },
           "it should change value"
         );
@@ -373,6 +374,19 @@ describe("options", () => {
           "it should return value"
         );
       });
+      it("should hide power vs zones", () => {
+        assert.isTrue(
+          craig.options.power_vs_zones.hideWhen({}),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.options.power_vs_zones.hideWhen({
+            enable_power_vs: true,
+            power_vs_high_availability: true,
+          }),
+          "it should be hidden"
+        );
+      });
       it("should return correct power_vs_zones groups when power_vs_high_availability true", () => {
         assert.deepEqual(
           craig.options.power_vs_zones.groups({
@@ -406,6 +420,71 @@ describe("options", () => {
           }),
           ["hello", "world"],
           "it should return empty array"
+        );
+      });
+      it("should hide power_vs_ha_zone_1 when not ha", () => {
+        assert.isTrue(
+          craig.options.power_vs_ha_zone_1.hideWhen({
+            enable_power_vs: true,
+            power_vs_high_availability: false,
+          }),
+          "it should be hidden"
+        );
+      });
+      it("should return correct value for power_vs_ha_zone_1 on render", () => {
+        assert.deepEqual(
+          craig.options.power_vs_ha_zone_1.onRender({ power_vs_zones: [] }),
+          "",
+          "it should return correct data"
+        );
+        assert.deepEqual(
+          craig.options.power_vs_ha_zone_2.onRender({ power_vs_zones: [] }),
+          "",
+          "it should return correct data"
+        );
+        assert.deepEqual(
+          craig.options.power_vs_ha_zone_1.onRender({
+            power_vs_zones: ["mad02", "eu-de-1"],
+          }),
+          "mad02",
+          "it should return correct data"
+        );
+        assert.deepEqual(
+          craig.options.power_vs_ha_zone_2.onRender({
+            power_vs_zones: ["mad02", "eu-de-1"],
+          }),
+          "eu-de-1",
+          "it should return correct data"
+        );
+      });
+      it("should change power vs zones when changing power_vs_ha_zone_1", () => {
+        let data = {
+          power_vs_ha_zone_1: "mad02",
+          power_vs_zones: [],
+        };
+        craig.options.power_vs_ha_zone_1.onStateChange(data);
+        assert.deepEqual(
+          data.power_vs_zones,
+          ["mad02", "eu-de-1"],
+          "it should set zones"
+        );
+      });
+      it("should have correct invalid for ha zone 1", () => {
+        assert.isFalse(
+          craig.options.power_vs_ha_zone_1.invalid({}),
+          "it should be false when no power vs"
+        );
+        assert.isFalse(
+          craig.options.power_vs_ha_zone_1.invalid({ enable_power_vs: true }),
+          "it should be false when no power vs ha"
+        );
+        assert.isTrue(
+          craig.options.power_vs_ha_zone_1.invalid({
+            enable_power_vs: true,
+            power_vs_high_availability: true,
+            power_vs_zones: [],
+          }),
+          "it should be true when no power vs zones"
         );
       });
     });

@@ -89,17 +89,22 @@ class Navigation extends React.Component {
       };
     }
     if (validated) {
-      let error = downloadContent(this.props.json, this.props.project?.name);
-      if (error) {
-        console.error(error);
-        notification = {
-          title: "Error",
-          kind: "error",
-          text: `Unable to download configuration.\n${error.message}`,
-        };
-      }
+      this.props.showAndSnapshot((imageBlob) => {
+        let error = downloadContent(
+          this.props.json,
+          this.props.project?.name,
+          imageBlob
+        );
+        if (error) {
+          console.error(error);
+          notification = {
+            title: "Error",
+            kind: "error",
+            text: `Unable to download configuration.\n${error.message}`,
+          };
+        }
+      });
     }
-    this.props.notify(notification);
   }
 
   resetSearch() {

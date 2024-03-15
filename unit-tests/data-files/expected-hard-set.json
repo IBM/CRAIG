@@ -1103,5 +1103,7 @@
     "resource_group": null
   },"cis_glbs": [],
   "fortigate_vnf": [],
-  "classic_security_groups": []
+  "classic_security_groups": [],
+  "classic_vsi": [],
+  "classic_bare_metal": []
 }

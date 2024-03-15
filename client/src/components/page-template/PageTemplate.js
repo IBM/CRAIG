@@ -45,6 +45,8 @@ import {
   AppConnectivity,
   ChartLine,
   SecurityServices,
+  InstanceClassic,
+  IbmCloudBareMetalServer,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import {
@@ -112,6 +114,8 @@ const navIcons = {
   LoadBalancerPool: LoadBalancerPool,
   AppConnectivity: AppConnectivity,
   SecurityServices: SecurityServices,
+  InstanceClassic: InstanceClassic,
+  IbmCloudBareMetalServer: IbmCloudBareMetalServer,
 };
 
 let pageOrder = [
@@ -249,6 +253,7 @@ const PageTemplate = (props) => {
         isResetState={isResetState}
         formPathNotPresent={formPathNotPresent}
         invalidForms={props.invalidForms}
+        showAndSnapshot={props.showAndSnapshot}
       />
       {!isResetState && (
         <>

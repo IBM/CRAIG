@@ -1214,6 +1214,87 @@ describe("power_instances", () => {
         "it should create correct volumes"
       );
     });
+    it("should update volume reference when changing a power vs instance name", () => {
+      let state = newState();
+      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      state.power.create({
+        name: "toad",
+        images: [{ name: "7100-05-09", workspace: "toad" }],
+        zone: "dal12",
+      });
+      state.power_instances.create({
+        name: "frog",
+        sap: false,
+        zone: "dal12",
+        workspace: "toad",
+        network: [],
+        storage_option: "Affinity",
+        pi_affinity_volume: "ignore-me",
+      });
+      state.power_instances.create({
+        name: "honk",
+        sap: false,
+        zone: "dal12",
+        workspace: "toad",
+        network: [],
+        storage_option: "Anti-Affinity",
+        pi_affinity_instance: "frog",
+      });
+      state.vtl.create({
+        name: "boop",
+        sap: false,
+        zone: "dal12",
+        workspace: "toad",
+        network: [],
+        storage_option: "Anti-Affinity",
+        pi_anti_affinity_instance: "frog",
+      });
+      state.power_volumes.create({
+        attachments: ["frog"],
+        workspace: "toad",
+        name: "ignore-me",
+        pi_anti_affinity_instance: "frog",
+      });
+      state.power_volumes.create({
+        attachments: ["honk", "beep"],
+        workspace: "toad",
+        name: "ignore-me2",
+        pi_affinity_instance: "frog",
+      });
+      state.power_instances.save(
+        { name: "toad" },
+        {
+          data: {
+            name: "frog",
+          },
+        }
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[0].attachments,
+        ["toad"],
+        "it should update name"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[0].pi_anti_affinity_instance,
+        "toad",
+        "it should update name"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[1].pi_affinity_instance,
+        "toad",
+        "it should update name"
+      );
+      assert.deepEqual(
+        state.store.json.power_instances[1].pi_affinity_instance,
+        "toad",
+        "it should update name"
+      );
+      assert.deepEqual(
+        state.store.json.vtl[0].pi_anti_affinity_instance,
+        "toad",
+        "it should update name"
+      );
+    });
   });
   describe("power_instances.delete", () => {
     it("should delete a power vs instance", () => {

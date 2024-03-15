@@ -59,6 +59,8 @@ function outputsTf(config) {
           "\n"
       ) + (config.vpcs[index + 1] ? "\n" : "");
   });
+
+  // vsi outputs
   config.vsi.forEach((deployment) => {
     let deploymentOutputs = {};
     deployment.subnets.sort(azsort).forEach((subnet, subnetIndex) => {
@@ -74,7 +76,7 @@ function outputsTf(config) {
             `${deployment.vpc} vpc ${deployment.name} vsi ${subnetIndex + 1} ${
               i + 1
             }`
-          )}.primary_network_interface[0].primary_ipv4_address}`,
+          )}.primary_network_interface[0].primary_ip[0].address}`,
         };
         if (deployment.enable_floating_ip) {
           deploymentOutputs[
@@ -106,9 +108,10 @@ function outputsTf(config) {
           "\n"
       );
   });
+
+  // power workspaces
   config.power.forEach((workspace, index) => {
     let outputs = {};
-
     // power workspace outputs
     ["name", "guid", "crn"].forEach((field) => {
       outputs["power_vs_workspace_" + snakeCase(workspace.name) + "_" + field] =
@@ -135,6 +138,26 @@ function outputsTf(config) {
       ) +
       (config.power[index + 1] ? "\n" : "");
   });
+
+  let powerInstanceOutputs = {};
+  // power instances
+  if (config.power_instances)
+    config.power_instances.forEach((instance, index) => {
+      let vsiRef = `${snakeCase(
+        instance.workspace
+      )}_workspace_instance_${snakeCase(instance.name)}`;
+      powerInstanceOutputs[vsiRef + "_primary_ip"] = {
+        value: `\${ibm_pi_instance.${vsiRef}.pi_network[0].ip_address}`,
+      };
+    });
+  if (Object.keys(powerInstanceOutputs).length > 0)
+    tf +=
+      "\n" +
+      tfBlock(
+        "Power VS Instance Outputs",
+        "\n" + jsonToTf(JSON.stringify({ output: powerInstanceOutputs })) + "\n"
+      );
+
   return tf;
 }
 
