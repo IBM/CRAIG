@@ -39,6 +39,10 @@ describe("dynamic toggle", () => {
     });
     it("should return props form properly formatted toggle", () => {
       let toggleData;
+      let keyData;
+      let forceUpdateKey = function () {
+        return "foo";
+      };
       let actualData = dynamicToggleProps({
         parentProps: {},
         parentState: {},
@@ -49,6 +53,7 @@ describe("dynamic toggle", () => {
             return false;
           },
           labelText: "Use Data",
+          forceUpdateKey: forceUpdateKey,
         },
         handleInputChange: function (name) {
           toggleData = name;
@@ -62,12 +67,18 @@ describe("dynamic toggle", () => {
         labelB: "True",
         labelText: "Use Data",
         disabled: false,
+        key: "foo",
       };
       assert.isFunction(actualData.onToggle, "it should be a function");
       actualData.onToggle();
       assert.deepEqual(
         toggleData,
         "use_data",
+        "it should return name to parent function"
+      );
+      assert.deepEqual(
+        actualData.key,
+        "foo",
         "it should return name to parent function"
       );
       delete actualData.onToggle;
@@ -102,6 +113,7 @@ describe("dynamic toggle", () => {
         labelB: "CRAIG Managed Network Addresses",
         labelText: "VPC Network Address Management",
         disabled: false,
+        key: undefined,
       };
       assert.isFunction(actualData.onToggle, "it should be a function");
       actualData.onToggle();
@@ -145,6 +157,7 @@ describe("dynamic toggle", () => {
         labelB: "True",
         labelText: "Use Data",
         disabled: false,
+        key: undefined,
       };
       assert.isFunction(actualData.onToggle, "it should be a function");
       actualData.onToggle();
@@ -186,6 +199,7 @@ describe("dynamic toggle", () => {
         labelB: "True",
         labelText: " ",
         disabled: false,
+        key: undefined,
       };
       assert.isFunction(actualData.onToggle, "it should be a function");
       actualData.onToggle();
@@ -227,6 +241,7 @@ describe("dynamic toggle", () => {
         labelB: "True",
         labelText: " ",
         disabled: false,
+        key: undefined,
       };
       assert.isFunction(actualData.onToggle, "it should be a function");
       actualData.onToggle();
@@ -269,6 +284,7 @@ describe("dynamic toggle", () => {
         labelB: "On",
         labelText: " ",
         disabled: false,
+        key: undefined,
       };
       assert.isFunction(actualData.onToggle, "it should be a function");
       actualData.onToggle();

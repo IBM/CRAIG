@@ -27,6 +27,7 @@ const {
   fieldIsNullOrEmptyString,
   selectInvalidText,
 } = require("./reusable-fields");
+const { replicationEnabledStoragePoolMap } = require("../constants");
 
 /**
  * set kms from encryption key on store update
@@ -1212,6 +1213,15 @@ function powerStoragePoolSelect(isVolume) {
       return isNullOrEmptyString(stateData.workspace, true)
         ? "Select a workspace"
         : selectInvalidText("storage pool")(stateData, componentProps);
+    },
+    onInputChange: function (stateData) {
+      let replicationEnabledPools =
+        replicationEnabledStoragePoolMap[stateData.zone] || [];
+      if (!contains(replicationEnabledPools, stateData[field])) {
+        stateData.pi_replication_enabled = false;
+      }
+
+      return stateData[field];
     },
     apiEndpoint: function (stateData, componentProps) {
       return `/api/power/${stateData.zone}/storage-pools`;

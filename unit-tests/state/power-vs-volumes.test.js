@@ -360,6 +360,26 @@ describe("power_volumes", () => {
         "it should return correct invalid text"
       );
     });
+    it("should not disable replication on input change when zone is replication enabled", () => {
+      let data = {
+        zone: "dal10",
+        pi_volume_pool: "General-Flash-53",
+        pi_replication_enabled: true,
+      };
+      let actualData = craig.power_volumes.pi_volume_pool.onInputChange(data);
+      assert.deepEqual(actualData, "General-Flash-53", "should return pool");
+      assert.isTrue(data.pi_replication_enabled, "should be true");
+    });
+    it("should disable replication on input change when zone is not replication enabled", () => {
+      let data = {
+        zone: "eu-es",
+        pi_volume_pool: "General-Flash-53",
+        pi_replication_enabled: true,
+      };
+      let actualData = craig.power_volumes.pi_volume_pool.onInputChange(data);
+      assert.deepEqual(actualData, "General-Flash-53", "should return pool");
+      assert.isFalse(data.pi_replication_enabled, "should be false");
+    });
     it("should update state on workspace change", () => {
       let actualData = {};
       craig.power_volumes.workspace.onStateChange(
@@ -619,10 +639,21 @@ describe("power_volumes", () => {
     it("should be true for when the workspace's zone does not have replication enabled", () => {
       let data = {
         pi_volume_pool: "Tier1-Flash-8",
-        zone: "dal10",
+        zone: "eu-es",
       };
       assert.isTrue(
         craig.power_volumes.pi_replication_enabled.disabled(data, {})
+      );
+    });
+    it("should return correct JSON string from forceUpdateKey", () => {
+      let data = {
+        foo: "bar",
+      };
+      let expectedData = '{"foo":"bar"}';
+      assert.deepEqual(
+        craig.power_volumes.pi_replication_enabled.forceUpdateKey(data),
+        expectedData,
+        "should be equal"
       );
     });
   });
