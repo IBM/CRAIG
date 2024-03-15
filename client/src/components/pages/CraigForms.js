@@ -1080,6 +1080,7 @@ function craigForms(craig) {
         {
           network: craig.power_instances.network,
           primary_subnet: craig.power_instances.primary_subnet,
+          pi_pin_policy: craig.power_instances.pi_pin_policy,
         },
         {
           image: craig.power_instances.image,

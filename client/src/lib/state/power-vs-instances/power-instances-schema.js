@@ -473,6 +473,19 @@ function powerVsInstanceSchema(vtl) {
       labelText: "User Data",
       placeholder: "Cloud init data",
     },
+    pi_pin_policy: {
+      labelText: "Pin Policy",
+      type: "select",
+      size: "small",
+      groups: ["Soft", "Hard", "None"],
+      default: "none",
+      onRender: titleCaseRender("pi_pin_policy"),
+      onInputChange: kebabCaseInput("pi_pin_policy"),
+      tooltip: {
+        content:
+          "When you soft pin an instance for high availability, the instance automatically migrates back to the original host once the host is back to its operating state. If the instance has a licensing restriction with the host, the hard pin option restricts the movement of the instance during remote restart, automated remote restart, DRO, and live partition migration. The default pinning policy is none",
+      },
+    },
   };
 }
 
