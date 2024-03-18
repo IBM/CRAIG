@@ -925,19 +925,34 @@ By default, IBM Cloud Security and Compliance Center is not enabled but can be e
 
 ## Cis Glbs
 
-NYI
+A global load balancer manages traffic across server resources located in multiple regions. A global load balancer manages an origin pool implementation that allows for the traffic to be distributed to multiple origins. An origin pool is a group of origin servers that traffic is intelligently routed to when attached to a global load balancer. The benefits of a Global Load Balancer are minimized response time, higher availability through redundancy, and maximized traffic throughput.
+
+A global load balancer health check helps gain insight into the availability of pools so that traffic can be routed to the healthy ones. These checks periodically send HTTP, HTTPS, or TCP requests and monitor the responses. They can be configured with a customized port, interval, timeout, status code, and more. As soon as a pool is marked unhealthy, traffic is intelligently rerouted to another available pool.
+
+By default, no CIS Global Load Balancers are created.
 
 ### Related Links
 
+- [Global Load Balancer Concepts](https://cloud.ibm.com/docs/cis?topic=cis-global-load-balancer-glb-concepts#:~:text=A%20global%20load%20balancer%20manages,is%20not%20a%20primary%20concern.)
+- [Configuring a Gloabl Load Balancer](https://cloud.ibm.com/docs/cis?topic=cis-configure-glb)
+- [Setting up Origin Pools](https://cloud.ibm.com/docs/cis?topic=cis-glb-features-pools)
+- [Setting up Health Checks](https://cloud.ibm.com/docs/cis?topic=cis-glb-features-healthchecks)
+- [IBM Cloud Global Load Balancer Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/cis_global_load_balancer)
 
 -----
 
 ## Fortigate Vnf
 
-NYI
+FortiGate® Virtual Appliance on IBM Cloud® deploys a pair of FortiGate Virtual Appliances to your environment, which can help you reduce risk by implementing critical security controls within your virtual infrastructure. FortiGate Virtual Appliance on IBM Cloud is a non-IBM product that is offered under terms and conditions from Fortinet, not IBM.
+
+By combining stateful inspection with a comprehensive suite of powerful security features, FortiGate next generation firewall technology delivers complete content and network protection. In addition to advanced features such as an extreme threat database, vulnerability management, and flow-based inspection, features including application control, firewall, antivirus, IPS, web filter, and VPN work in concert to identify and mitigate the latest complex security threats.
+
+In order to provision a Fortigate Instance, you must have a VPC, SSH Key, and 2 Subnets created in CRAIG
 
 ### Related Links
 
+- [Fortigate Virtual Appliance Overview](https://cloud.ibm.com/docs/vmwaresolutions?topic=vmwaresolutions-fortinetvm_considerations)
+- [About Fortigate on IBM Cloud (Fortinet Documentation)](https://docs.fortinet.com/document/fortigate-public-cloud/7.4.0/ibm-cloud-administration-guide/123172/about-fortigate-for-ibm-cloud)
 
 -----
 
