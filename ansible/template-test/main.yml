@@ -17,6 +17,7 @@
       vars:
         description: Automated CRAIG Testing Workspace
         tags: ["craig"]
+
 - name: TODO - convert to roles
   hosts: localhost
   vars_files: ./vars/vars.yml
@@ -39,20 +40,19 @@
       until: workspace_status.json.status == "INACTIVE"
       delay: 10
       retries: 50
-    - name: Update variablestore
-      set_fact:
-        variablestore: "{{ variablestore +  [{'name': item, 'secure': true, 'use_default': false,  'value': ssh_key}] }}"
-      loop: "{{template_map[template]}}"
-    - name: Update vars in workspace
-      uri:
-        url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/template_data/{{ workspace.json.template_data[0].id }}/values
-        method: PUT
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-          Content-Type: application/json
-        body_format: json
-        body: 
-          variablestore: "{{ variablestore }}"
+- name: Update variablestore
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  roles:
+    - role: update_variablestore
+      vars:
+      # Additional variables can be added to the variablestore by adding elements to the array below.
+      # Each element must be a map of the following key/value pairs: 
+      # {'name': string, 'secure': bool, 'use_default': bool, 'value': variable_value}
+      # Note: If using a variable defined in /vars/vars.yml, specify the map using the following syntax: 
+      # {'name': string, 'secure': bool, 'use_default': bool, 'value': "{{variable}}"}
+        additional_variables: [{'name': ssh_key_public_key, 'secure': true, 'use_default': false, 'value': "{{ssh_key}}"}]
+    - role: update_workspace_variables
 - name: Start generate plan action
   hosts: localhost
   vars_files: ./vars/vars.yml

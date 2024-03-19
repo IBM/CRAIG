@@ -1,0 +1,6 @@
+---
+# tasks file for update_variablestore
+- name: Add variable to variable store
+  set_fact:
+    variablestore: "{{ variablestore + additional_variables }}"
+  loop: "{{template_map[template]}}"
