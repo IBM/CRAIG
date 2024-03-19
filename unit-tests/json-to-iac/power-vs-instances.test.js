@@ -24,10 +24,12 @@ describe("Power VS Instances", () => {
         pi_processors: "2",
         pi_proc_type: "shared",
         pi_sys_type: "s922",
-        pi_pin_policy: "none",
+        pi_pin_policy: "",
         pi_health_status: "WARNING",
         pi_storage_type: "tier1",
         pi_user_data: "",
+        pi_license_repository_capacity: null,
+        pi_storage_pool: null,
       });
       let expectedData = `
 resource "ibm_pi_instance" "example_workspace_instance_test" {
@@ -40,7 +42,6 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
   pi_processors        = "2"
   pi_proc_type         = "shared"
   pi_sys_type          = "s922"
-  pi_pin_policy        = "none"
   pi_health_status     = "WARNING"
   pi_storage_type      = "tier1"
   pi_network {

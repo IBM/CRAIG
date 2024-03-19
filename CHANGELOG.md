@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.13.1
+
+### Upgrade Notes
+
+- A new script `/lib/template-updater.js` has been added to update most unfound fields in CRAIG defined template JSON files
+
+### Features
+
+
+### Fixes
+
+
 ## 1.13.0
 
 ### Upgrade Notes

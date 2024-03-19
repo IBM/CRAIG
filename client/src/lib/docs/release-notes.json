@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.13.1",
+    "features": [],
+    "fixes": [],
+    "upgrade_notes": [
+      "A new script `/lib/template-updater.js` has been added to update most unfound fields in CRAIG defined template JSON files"
+    ]
+  },
+  {
     "version": "1.13.0",
     "features": [
       "Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form",

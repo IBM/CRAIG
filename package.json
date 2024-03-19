@@ -19,7 +19,9 @@
     "i-all": "npm i && cd client && npm i",
     "pretty": "npx prettier --write .",
     "dev-start": "cd client && npm start",
-    "pre-commit-build": "cd client && npm run build"
+    "pre-commit-build": "cd client && npm run build",
+    "update-templates": "node lib/template-updater.js",
+    "before-commit": "npm run changelog && npm run update-templates && npm run pretty"
   },
   "authors": [
     "Jennifer Valle",

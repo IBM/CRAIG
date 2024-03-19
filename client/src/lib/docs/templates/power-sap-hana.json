@@ -14,7 +14,9 @@
     "craig_version": "1.12.0",
     "power_vs_high_availability": false,
     "template": "Power VS SAP Hana",
-    "no_vpn_secrets_manager_auth": false
+    "no_vpn_secrets_manager_auth": false,
+    "power_vs_ha_zone_1": null,
+    "power_vs_ha_zone_2": null
   },
   "access_groups": [],
   "appid": [
@@ -42,14 +44,21 @@
     "locations": ["global", "us-south"],
     "instance": false,
     "plan": "lite",
-    "resource_group": null
+    "resource_group": null,
+    "archive": false
   },
   "cbr_rules": [],
   "cbr_zones": [],
+  "cis": [],
+  "cis_glbs": [],
+  "classic_gateways": [],
+  "classic_ssh_keys": [],
+  "classic_vlans": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
   "f5_vsi": [],
+  "fortigate_vnf": [],
   "iam_account_settings": {
     "enable": false,
     "mfa": null,
@@ -1160,7 +1169,13 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
       "pi_user_data": null,
-      "primary_subnet": "backup"
+      "primary_subnet": "backup",
+      "pi_affinity_policy": null,
+      "pi_ibmi_css": false,
+      "pi_ibmi_pha": false,
+      "pi_ibmi_rds_users": null,
+      "pi_pin_policy": "none",
+      "pi_license_repository_capacity": null
     },
     {
       "name": "sap-hana",
@@ -1200,7 +1215,13 @@
       "pi_storage_pool": null,
       "affinity_type": null,
       "pi_user_data": null,
-      "primary_subnet": "management"
+      "primary_subnet": "management",
+      "pi_affinity_policy": null,
+      "pi_ibmi_css": false,
+      "pi_ibmi_pha": false,
+      "pi_ibmi_rds_users": null,
+      "pi_pin_policy": "none",
+      "pi_license_repository_capacity": null
     },
     {
       "name": "sap-netweaver",
@@ -1240,7 +1261,13 @@
       "pi_anti_affinity_instance": null,
       "pi_affinity_instance": null,
       "pi_user_data": null,
-      "primary_subnet": "management"
+      "primary_subnet": "management",
+      "pi_affinity_policy": null,
+      "pi_ibmi_css": false,
+      "pi_ibmi_pha": false,
+      "pi_ibmi_rds_users": null,
+      "pi_pin_policy": "none",
+      "pi_license_repository_capacity": null
     }
   ],
   "power_volumes": [
@@ -1567,6 +1594,14 @@
     "scope_description": null,
     "enable": false
   },
+  "scc_v2": {
+    "enable": true,
+    "resource_group": "service-rg",
+    "region": "us-south",
+    "account_id": "${var.account_id}",
+    "profile_attachments": [],
+    "name": null
+  },
   "secrets_manager": [],
   "security_groups": [
     {
@@ -1814,7 +1849,8 @@
           "type": null,
           "code": null
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "vpc": "transit",
@@ -2061,7 +2097,8 @@
           "type": null,
           "code": null
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "vpc": "workload",
@@ -2308,13 +2345,14 @@
           "type": null,
           "code": null
         }
-      ]
+      ],
+      "use_data": false
     }
   ],
   "ssh_keys": [
     {
       "name": "ssh-key",
-      "public_key": "",
+      "public_key": null,
       "resource_group": "management-rg",
       "use_data": false
     }
@@ -2352,7 +2390,9 @@
       ],
       "use_data": false,
       "prefix_filters": [],
-      "gre_tunnels": []
+      "gre_tunnels": [],
+      "crns": null,
+      "classic": false
     }
   ],
   "virtual_private_endpoints": [
@@ -4311,7 +4351,8 @@
               "source_port_min": null,
               "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
       ],
       "subnetTiers": [
@@ -4337,7 +4378,8 @@
           "advanced": false,
           "select_zones": "1"
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "cos": "cos",
@@ -4777,7 +4819,8 @@
               "source_port_min": null,
               "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
       ],
       "subnetTiers": [
@@ -4799,7 +4842,8 @@
           "advanced": false,
           "select_zones": "1"
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "name": "transit",
@@ -5434,7 +5478,8 @@
               "source_port_min": null,
               "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
       ],
       "bucket": "transit-bucket",
@@ -5459,7 +5504,8 @@
           "advanced": false,
           "select_zones": "1"
         }
-      ]
+      ],
+      "use_data": false
     }
   ],
   "vpn_gateways": [
@@ -5536,19 +5582,5 @@
       "primary_interface_ip_spoofing": false
     }
   ],
-  "classic_ssh_keys": [],
-  "classic_vlans": [],
-  "vtl": [],
-  "classic_gateways": [],
-  "cis": [],
-  "scc_v2": {
-    "enable": true,
-    "resource_group": "service-rg",
-    "region": "us-south",
-    "account_id": "${var.account_id}",
-    "profile_attachments": [],
-    "name": null
-  },
-  "cis_glbs": [],
-  "fortigate_vnf": []
+  "vtl": []
 }

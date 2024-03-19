@@ -78,6 +78,18 @@ function powerVsInstanceData(instance, config) {
     delete data.pi_ibmi_rds_users;
   }
 
+  if (isNullOrEmptyString(data.pi_pin_policy)) {
+    delete data.pi_pin_policy;
+  }
+
+  if (!data.pi_license_repository_capacity) {
+    delete data.pi_license_repository_capacity;
+  }
+
+  if (!data.pi_storage_pool) {
+    delete data.pi_storage_pool;
+  }
+
   // add pi network here to have the items at the bottom of the terraform code
   data.pi_network = [];
   instance.network.forEach((nw) => {

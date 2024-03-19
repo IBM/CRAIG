@@ -8,6 +8,10 @@ formatted_print() {
 }
 
 # run pretty
+formatted_print "Updating Templates"
+npm run update-templates
+formatted_print "Updating Changelog"
+npm run changelog
 formatted_print "Prettifying Code"
 npm run pretty
 

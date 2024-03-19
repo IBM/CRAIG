@@ -427,7 +427,6 @@ function powerVsInstanceSchema(vtl) {
     pi_license_repository_capacity: {
       labelText: "Repository Capacity (TB)",
       size: "small",
-      default: "1",
       invalid: function (stateData) {
         return stateData.pi_license_repository_capacity === "" ||
           stateData.pi_license_repository_capacity.match(/^\d+$/g) === null

@@ -13,7 +13,9 @@
     "craig_version": "1.12.0",
     "power_vs_high_availability": false,
     "fs_cloud": false,
-    "no_vpn_secrets_manager_auth": false
+    "no_vpn_secrets_manager_auth": false,
+    "power_vs_ha_zone_1": null,
+    "power_vs_ha_zone_2": null
   },
   "access_groups": [],
   "appid": [],
@@ -28,10 +30,13 @@
     "locations": ["global", "us-south"],
     "instance": false,
     "plan": "lite",
-    "resource_group": null
+    "resource_group": null,
+    "archive": false
   },
   "cbr_rules": [],
   "cbr_zones": [],
+  "classic_ssh_keys": [],
+  "classic_vlans": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
@@ -150,11 +155,13 @@
           "name": "7100-05-09",
           "workspace": "workspace",
           "zone": "dal12",
-          "pi_image_id": "35eca797-6599-4597-af1f-d2eb5e292dfc"
+          "pi_image_id": "35eca797-6599-4597-af1f-d2eb5e292dfc",
+          "workspace_use_data": false
         }
       ],
       "attachments": [],
-      "imageNames": ["7100-05-09"]
+      "imageNames": ["7100-05-09"],
+      "use_data": false
     }
   ],
   "power_instances": [],
@@ -207,7 +214,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -226,7 +238,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -245,7 +262,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -264,7 +286,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -283,7 +310,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -302,9 +334,15 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "vpc": "management",
@@ -328,7 +366,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -347,7 +390,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -366,7 +414,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -385,7 +438,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -404,7 +462,12 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "vpc": "management",
@@ -423,15 +486,21 @@
           "icmp": {
             "type": null,
             "code": null
-          }
+          },
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
-      ]
+      ],
+      "use_data": false
     }
   ],
   "ssh_keys": [
     {
       "name": "vsi-ssh-key",
-      "public_key": "",
+      "public_key": null,
       "use_data": false,
       "resource_group": "management-rg"
     }
@@ -454,7 +523,12 @@
           "tgw": "transit-gateway",
           "vpc": "management"
         }
-      ]
+      ],
+      "use_data": false,
+      "prefix_filters": [],
+      "gre_tunnels": [],
+      "crns": null,
+      "classic": false
     }
   ],
   "virtual_private_endpoints": [
@@ -563,7 +637,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -588,7 +669,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -613,7 +701,14 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -638,11 +733,34 @@
                 "port_max": null,
                 "source_port_min": null,
                 "source_port_max": null
-              }
+              },
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
-      ]
+      ],
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": 1
+        },
+        {
+          "name": "vpe",
+          "zones": 1
+        },
+        {
+          "name": "vpn",
+          "zones": 1
+        }
+      ],
+      "use_data": false
     }
   ],
   "vpn_gateways": [],
@@ -666,9 +784,8 @@
       "subnets": ["vsi-zone-1"],
       "volumes": [],
       "subnet": "",
-      "enable_floating_ip": false
+      "enable_floating_ip": false,
+      "primary_interface_ip_spoofing": false
     }
-  ],
-  "classic_ssh_keys": [],
-  "classic_vlans": []
+  ]
 }

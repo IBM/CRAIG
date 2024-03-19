@@ -35,7 +35,7 @@ function vsiRoutes(axios, controller) {
           res.send(instanceProfiles);
         })
         .catch((error) => {
-          res.send(JSON.stringify(error.response));
+          res.send(error.response);
         });
     });
   };
