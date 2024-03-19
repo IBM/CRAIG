@@ -2,7 +2,17 @@ import { CarbonCodeMirror } from "carbon-react-code-mirror";
 import { prettyJSON, keys, azsort, getType } from "lazy-z";
 import React from "react";
 import "./json-docs.css";
-const schema = require("../../lib/docs/schema.json");
+import { state } from "../../lib";
+
+/**
+ * initialize store
+ * @returns {lazyZState} state store
+ */
+function newState() {
+  let store = new state();
+  store.setUpdateCallback(() => {});
+  return store;
+}
 
 export const JsonDocs = (props) => {
   /**
@@ -62,7 +72,7 @@ export const JsonDocs = (props) => {
         with CRAIG and may cause application crashes or errors.
       </p>
       <br />
-      <CarbonCodeMirror light code={prettyJSON(recursiveAzSort(schema))} />
+      <CarbonCodeMirror light code={prettyJSON(newState().buildSchema())} />
     </div>
   );
 };

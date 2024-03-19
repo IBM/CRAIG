@@ -7,9 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - A new script `/lib/template-updater.js` has been added to update most unfound fields in CRAIG defined template JSON files
+- The CRAIG JSON schema is now configured dynamically using the state store on the `/docs/json` page. Additional fields will now be added automatically
 
 ### Features
 
+- Terraform code for Power VS Instances and FalconStor VTL instances now have a 3 hour create timeout instead of the default 2 hour timeout
 
 ### Fixes
 

@@ -193,7 +193,7 @@ describe("observability", () => {
         assert.deepEqual(
           craig.logdna.name.helperText({}, { craig: craig }),
           "iac-logdna",
-          "it should retrun"
+          "it should return"
         );
       });
       it("should return list of cos buckets", () => {
@@ -207,7 +207,7 @@ describe("observability", () => {
         assert.deepEqual(
           craig.sysdig.name.helperText({}, { craig: craig }),
           "iac-sysdig",
-          "it should retrun"
+          "it should return"
         );
       });
       it("should return plan on render", () => {

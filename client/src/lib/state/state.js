@@ -1,5 +1,15 @@
 const { lazyZstate } = require("lazy-z/lib/store");
-const { contains, typeCheck, transpose, snakeCase } = require("lazy-z");
+const {
+  contains,
+  typeCheck,
+  transpose,
+  snakeCase,
+  isArray,
+  eachKey,
+  isBoolean,
+  containsKeys,
+  azsort,
+} = require("lazy-z");
 const { initOptions } = require("./options");
 const { initKeyManagement } = require("./key-management");
 const { initResourceGroup } = require("./resource-groups");
@@ -53,6 +63,22 @@ const { initFortigateStore } = require("./fortigate.js");
 const { initClassicSecurityGroups } = require("./classic-security-groups.js");
 const { initClassicVsi } = require("./classic-vsi.js");
 const { initClassicBareMetalStore } = require("./classic-bare-metal.js");
+
+// fields not to add to craig json sub object
+const doNotRenderFields = [
+  "heading",
+  "vsi_tiles",
+  "vpc_connections",
+  "power_connections",
+  "hideWhen",
+  "pgw_zone_1",
+  "pgw_zone_2",
+  "pgw_zone_3",
+  "ip_address",
+];
+
+// reserved field names for lazy-z state methods
+const reservedStateFields = ["create", "save", "delete", "shouldDisableSave"];
 
 /**
  * get state for craig
@@ -356,6 +382,153 @@ const state = function (legacy) {
       });
     }
     return allKeys;
+  };
+
+  /**
+   * get field type
+   * @param {*} ref craig field reference
+   * @returns {string} type string
+   */
+  function getFieldType(ref) {
+    return ref.type === "toggle" || isBoolean(ref.default)
+      ? "boolean"
+      : isArray(ref.default)
+      ? "Array"
+      : "string";
+  }
+
+  /**
+   * get groups for schema
+   * @param {*} ref craig ref
+   * @param {string} key key name
+   * @returns {Array<string>|string} groups
+   */
+  function getSchemaGroups(ref, key) {
+    return isArray(ref.groups)
+      ? ref.groups.map((item) => {
+          if (ref.onInputChange) {
+            return ref.onInputChange({
+              [key]: item,
+            });
+          } else return item;
+        })
+      : "<calculated>";
+  }
+
+  /**
+   * build field schema
+   * @param {string} field field name
+   * @returns {Object} schema object
+   */
+  store.buildFieldSchema = function (field) {
+    // top level type
+    let schemaType = isArray(store.store.json[field]) ? "Array" : "object";
+    // field JSON
+    let fieldJson = {
+      [field]: {
+        [schemaType]: {},
+      },
+    };
+    // shortcut to ref
+    let innerFieldRef = fieldJson[field][schemaType];
+    // subcomponents to add to object after other fields are done
+    let subComponents = [];
+    // for each item
+    if (!store[field]) return {};
+    else
+      eachKey(store[field], (key) => {
+        if (
+          !contains(reservedStateFields, key) && // if is not reserved name
+          !containsKeys(store[field][key], "save") // and is not a sub component
+        ) {
+          // create object
+          innerFieldRef[key] = {
+            type: getFieldType(store[field][key]),
+            default: store[field][key].default,
+          };
+
+          // if is select, add groups when possible
+          if (
+            store[field][key].type === "select" &&
+            !isBoolean(innerFieldRef[key].default)
+          ) {
+            innerFieldRef[key].groups = getSchemaGroups(store[field][key], key);
+          }
+        } else if (containsKeys(store[field][key], "save")) {
+          // add subcomponents to list
+          subComponents.push(key);
+        }
+      });
+
+    // for each sub component
+    subComponents.forEach((subField) => {
+      // create item
+      innerFieldRef[subField] = {
+        Array: {},
+      };
+      // shortcut to item
+      let subComponentRef = innerFieldRef[subField].Array;
+      // for each key in the sub field
+      eachKey(store[field][subField], (key) => {
+        // if not a reserved field
+        if (
+          !contains(reservedStateFields, key) &&
+          !containsKeys(store[field][subField][key], "save")
+        ) {
+          // create item
+          subComponentRef[key] = {
+            type: getFieldType(store[field][subField][key]),
+            default: store[field][subField][key].default,
+          };
+          // if is select add groups when possible
+          if (store[field][subField][key]?.type === "select") {
+            subComponentRef[key].groups = getSchemaGroups(
+              store[field][subField][key],
+              key
+            );
+          }
+        }
+      });
+    });
+
+    if (field === "vpcs") {
+      innerFieldRef.acls.Array.rules = {
+        Array: {},
+      };
+      eachKey(store.vpcs.acls.rules, (key) => {
+        if (!contains(reservedStateFields, key)) {
+          innerFieldRef.acls.Array.rules.Array[key] = {
+            type: getFieldType(store.vpcs.acls.rules[key]),
+            default: store.vpcs.acls.rules[key].default,
+          };
+          // if is select add groups when possible
+          if (store.vpcs.acls.rules[key]?.type === "select") {
+            innerFieldRef.acls.Array.rules.Array[key].groups = getSchemaGroups(
+              store.vpcs.acls.rules[key],
+              key
+            );
+          }
+        }
+      });
+    }
+
+    return fieldJson;
+  };
+
+  store.buildSchema = function () {
+    let schema = {};
+    // console.log(store.store.json)
+    Object.keys(store.store.json)
+      .sort(azsort)
+      .forEach((key) => {
+        if (key !== "_options") {
+          transpose(store.buildFieldSchema(key), schema);
+        } else {
+          let optionsSchema = store.buildFieldSchema("options");
+          schema._options = optionsSchema.options;
+        }
+      });
+    return schema;
   };
 
   // this line enforces scalable subnets without causing application to rerender

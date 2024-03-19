@@ -1,5 +1,5 @@
 const { powerVsWorkspaceRef } = require("./power-vs");
-const { jsonToTfPrint, tfBlock } = require("./utils");
+const { jsonToTfPrint, tfBlock, timeouts } = require("./utils");
 const {
   snakeCase,
   isNullOrEmptyString,
@@ -116,6 +116,9 @@ function powerVsInstanceData(instance, config) {
     }
     data.pi_network.push(nwData);
   });
+
+  data.timeouts = timeouts("3h");
+
   [
     "network",
     "zone",
