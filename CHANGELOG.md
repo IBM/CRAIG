@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - A new script `/lib/template-updater.js` has been added to update most unfound fields in CRAIG defined template JSON files
 - The CRAIG JSON schema is now configured dynamically using the state store on the `/docs/json` page. Additional fields will now be added automatically
 - `.env.example` has been updated to include a warning that included quotation marks in .env values will cause the application to crash
+- When fetching VSI Images, the Craig API has no limit on the number of images that can be retrieved. In addition, only available images are retrieved
 
 ### Features
 

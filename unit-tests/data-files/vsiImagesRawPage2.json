@@ -1,6 +1,6 @@
 {
   "first": {
-    "href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=100"
+    "href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=100&start=123456"
   },
   "images": [
     {
@@ -18,7 +18,7 @@
       "operating_system": {
         "architecture": "amd64",
         "dedicated_host_only": false,
-        "display_name": "Windows Server 2016 Standard Edition (amd64)",
+        "display_name": "Windows Server 2016 Standard Edition (amd64) 2",
         "family": "Windows Server",
         "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/windows-2016-amd64",
         "name": "windows-2016-amd64",
@@ -49,7 +49,7 @@
       "operating_system": {
         "architecture": "amd64",
         "dedicated_host_only": false,
-        "display_name": "Debian GNU/Linux 9.x Stretch/Stable - Minimal Install (amd64)",
+        "display_name": "Debian GNU/Linux 9.x Stretch/Stable - Minimal Install (amd64) 2",
         "family": "Debian GNU/Linux",
         "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/debian-9-amd64",
         "name": "debian-9-amd64",
@@ -80,7 +80,7 @@
       "operating_system": {
         "architecture": "amd64",
         "dedicated_host_only": false,
-        "display_name": "Ubuntu Linux 16.04 LTS Xenial Xerus Minimal Install (amd64)",
+        "display_name": "Ubuntu Linux 16.04 LTS Xenial Xerus Minimal Install (amd64) 2",
         "family": "Ubuntu Linux",
         "href": "https://us-south.iaas.cloud.ibm.com/v1/operating_systems/ubuntu-16-04-amd64",
         "name": "ubuntu-16-04-amd64",
@@ -98,8 +98,5 @@
     }
   ],
   "limit": 50,
-  "total_count": 101,
-  "next": {
-    "href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=100&start=123456"
-  }
+  "total_count": 1
 }
