@@ -124,6 +124,20 @@ function outputsTf(config) {
         };
     });
 
+    workspace.network.forEach((nw) => {
+      ["name", "id"].forEach((field) => {
+        outputs[
+          snakeCase(
+            `power vs workspace ${nw.workspace} network ${nw.name} ${field}`
+          )
+        ] = {
+          value: `\${${nw.use_data ? "data." : ""}ibm_pi_network.${snakeCase(
+            `power network ${nw.workspace} ${nw.name}`
+          )}.${field}}`,
+        };
+      });
+    });
+
     tf +=
       (tf.length > 0 && index < 1 ? "\n" : "") +
       tfBlock(

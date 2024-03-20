@@ -8,10 +8,13 @@ All notable changes to this project will be documented in this file.
 
 - A new script `/lib/template-updater.js` has been added to update most unfound fields in CRAIG defined template JSON files
 - The CRAIG JSON schema is now configured dynamically using the state store on the `/docs/json` page. Additional fields will now be added automatically
+- `.env.example` has been updated to include a warning that included quotation marks in .env values will cause the application to crash
 
 ### Features
 
 - Terraform code for Power VS Instances and FalconStor VTL instances now have a 3 hour create timeout instead of the default 2 hour timeout
+- Power VS Network names and IDs are now included as outputs in CRAIG generated Terraform
+- Items highlighted for emphasis in the markdown for CRAIG `CHANGELOG.md` are now also highlighted on the `/docs/releaseNotes` page
 
 ### Fixes
 
