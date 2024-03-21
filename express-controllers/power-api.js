@@ -192,8 +192,12 @@ function powerRoutes(axios, controller) {
         } else {
           let formattedStoragePools = [];
           response.data.storagePoolsCapacity.forEach((pool) => {
-            formattedStoragePools.push(pool.poolName);
+            let name =
+              pool.poolName +
+              (pool.replicationEnabled ? " (Replication Enabled)" : "");
+            formattedStoragePools.push(name);
           });
+
           res.send(formattedStoragePools);
         }
       })

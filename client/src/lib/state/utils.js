@@ -1217,7 +1217,10 @@ function powerStoragePoolSelect(isVolume) {
     onInputChange: function (stateData) {
       let replicationEnabledPools =
         replicationEnabledStoragePoolMap[stateData.zone] || [];
-      if (!contains(replicationEnabledPools, stateData[field])) {
+      if (
+        !contains(replicationEnabledPools, stateData[field]) &&
+        !stateData[field].includes("(Replication Enabled)")
+      ) {
         stateData.pi_replication_enabled = false;
       }
 

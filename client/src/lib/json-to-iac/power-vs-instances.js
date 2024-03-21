@@ -88,6 +88,11 @@ function powerVsInstanceData(instance, config) {
 
   if (!data.pi_storage_pool) {
     delete data.pi_storage_pool;
+  } else {
+    data.pi_storage_pool = data.pi_storage_pool.replace(
+      " (Replication Enabled)",
+      ""
+    );
   }
 
   // add pi network here to have the items at the bottom of the terraform code
