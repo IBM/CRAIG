@@ -83,7 +83,7 @@ function initClassicBareMetalStore(store) {
         invalidText: unconditionalInvalidText("Enter a Package Key Name"),
         tooltip: {
           content:
-            "The key name for the monthly Bare Metal server's package. You can find available package key names in the IBM Cloud Classic API'",
+            "The key name for the monthly Bare Metal server's package. You can find available package key names in the IBM Cloud Classic API.",
           align: "right",
         },
       },
@@ -94,8 +94,8 @@ function initClassicBareMetalStore(store) {
         invalidText: unconditionalInvalidText("Enter a Process Key Name"),
         tooltip: {
           content:
-            "The key name for the monthly Bare Metal server's process. To get a process key name, find the package key name in the IBM Cloud Classic API",
-          align: "right",
+            "The key name for the monthly Bare Metal server's process. To get a process key name, find the package key name in the IBM Cloud Classic API.",
+          align: "left",
         },
       },
       memory: {
@@ -109,7 +109,7 @@ function initClassicBareMetalStore(store) {
       network_speed: {
         size: "small",
         default: "",
-        labelText: "Network Speed (Mbs)",
+        labelText: "Network Speed (Mbps)",
         placeholder: "100",
         invalid: fieldIsNullOrEmptyString("network_speed"),
         invalidText: unconditionalInvalidText("Invalid network speed value"),
@@ -133,7 +133,7 @@ function initClassicBareMetalStore(store) {
         onInputChange: onArrayInputChange("disk_key_names"),
         tooltip: {
           content:
-            "The internal key names for the monthly Bare Metal server's disk. To get disk key names, find the package key name in the IBM Cloud Classic API",
+            "The internal key names for the monthly Bare Metal server's disk. To get disk key names, find the package key name in the IBM Cloud Classic API.",
           align: "right",
           alignModal: "right",
         },

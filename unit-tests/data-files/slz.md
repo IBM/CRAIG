@@ -838,7 +838,7 @@ By default, no Classic SSH Keys are created.
 
 Classic network gateways control network traffic and can improve network performance and security by routing VLAN traffic. Gateways can be created in either standalone or high-availability (HA) mode. Enabling HA allows for nodes to take over for other failing nodes in the cluster, in cases where your service may be experiencing an outage or high volumes of traffic. HA ensures that your service remains available even during unexpected scenarios.
 
-When creating a classic gateway, you will need to have first created a classic SSH key and a private classic VLAN. If you wish to also attach a public classic VLAN to your gateway, you will have create that beforehand as well. You also will need to attach a domain and select a datacenter.
+When creating a classic gateway, you will need to have first created a classic SSH key and a private classic VLAN. If you wish to also attach a public classic VLAN to your gateway, you will have to create that beforehand as well. You also will need to attach a domain and select a datacenter.
 
 You will need to select a disk key name, package name, OS key name, and process key name. These fields will be determined by the hardware specifications you'd like to allocate to your gateway. Currently, only IBM Cloud Juniper vSRX gateways are supported in CRAIG.
 
@@ -958,27 +958,79 @@ In order to provision a Fortigate Instance, you must have a VPC, SSH Key, and 2 
 
 ## Classic Security Groups
 
-NYI
+An IBM Cloud Security Group is a set of IP filter rules that define how to handle incoming and outgoing traffic to both the public and private interfaces of a virtual server instance (VSI).
+
+By default, no Classic Security Groups are created.
 
 ### Related Links
 
+- [Docs](https://cloud.ibm.com/docs/security-groups?topic=security-groups-about-ibm-security-groups)
+- [Classic Security Group Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/security_group)
+- [Classic Security Group Rule Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/security_group_rule)
 
 -----
 
 ## Classic Vsi
 
-NYI
+Classic Virtual Servers are scalable virtual servers that are purchased with cores and memory allocations. Virtual servers are deployed to the same VLANs as physical servers, which spread workloads across virtual servers and bare metal servers, while interoperability is maintained.
+
+When creating a Classic VSI, you will need to have first created a classic SSH key and a private classic VLAN. If you wish to also attach a public classic VLAN to your gateway, you will have to create that beforehand as well.
+
+### Required Fields
+
+Field                   | Description
+------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Name                    | The host name for the compute instance.
+Domain                  | The domain of the compute instance.
+Datacenter              | The data center in which you want to provision the instance.
+Cores                   | The number of CPU cores that you want to allocate.
+Memory                  | The amount of memory, expressed in megabytes, that you want to allocate.
+Image ID                | The image template ID that you want to use to provision the computing instance. This is not the global identifier (UUID), but the image template group ID that should point to a valid global identifier. To retrieve the image template ID from the IBM Cloud infrastructure customer portal, navigate to Classic Infrastructure > Devices > Manage > Images, click the image that you want, and note the ID number in the resulting URL.
+Network Speed           | The connection speed (in Mbps) for the instance's network components. The default value is 100.
+Local Disk              | The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned.
+SSH Keys                | The SSH key IDs to install on the computing instance when the instance provisions.
+Private VLAN            | The private VLAN to be used for the private network interface of the instance.
+Private Security Groups | The IDs of security groups to apply on the private interface. This attribute can't be updated. You can use this parameter to add a security group to your virtual server instance when you create it.
+Private Network Only    | When set to true, a compute instance only has access to the private network. The default value is false.
+Public VLAN             | The public VLAN to be used for the public network interface of the instance.
+Public Security Groups  | The IDs of security groups to apply on the public interface. This attribute can't be updated. You can use this parameter to add a security group to your virtual server instance when you create it.
 
 ### Related Links
 
+- [Docs](https://cloud.ibm.com/docs/virtual-servers?topic=virtual-servers-getting-started-tutorial)
+- [Classic VSI Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/compute_vm_instance)
+- [IBM Cloud Classic Infrastructure (SoftLayer) API docs](https://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/)
 
 -----
 
 ## Classic Bare Metal
 
-NYI
+Classic Bare Metal Servers are single-tenant, dedicated physical servers that can be deployed and managed as cloud services.
+
+When creating a Classic Bare Metal, you will need to have first created a private classic VLAN. If you wish to also attach a public classic VLAN to your gateway, you will have to create that beforehand as well.
+
+### Required Fields
+
+Field                | Description
+---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Name                 | The host name for the compute instance.
+Domain               | The domain of the compute instance.
+Datacenter           | The data center in which you want to provision the instance.
+OS Key Name          | The operating system key name that you want to use to provision the compute instance. To find available OS key names use IBM Cloud Classic SoftLayer API by referring to the instructions in the Terraform documentation linked below.
+Package Key Name     | The key name for the monthly Bare Metal server's package. To find available package key names use IBM Cloud Classic SoftLayer API by referring to the instructions in the Terraform documentation linked below.
+Process Key Name     | The key name for the monthly Bare Metal server's process. To find available process key names use IBM Cloud Classic SoftLayer API by referring to the instructions in the Terraform documentation linked below.
+Memory               | The amount of memory, which is specified in gigabytes, for the server.
+Network Speed        | The connection speed, expressed in Mbps, for the instance's network components.
+Private Network Only | When set to true, a compute instance only has access to the private network. The default value is false.
+Private VLAN         | The private VLAN to be used for the private network interface of the instance.
+Public VLAN          | The public VLAN to be used for the public network interface of the instance.
+Public Bandwidth     | The amount of public network traffic, which is specified in gigabytes, allowed per month.
+Disk Key Names       | The internal key names for the monthly Bare Metal server's disk. Use this argument when you create a new monthly Bare Metal server. To get disk key names, use IBM Cloud Classic SoftLayer API by referring to the instructions in the Terraform documentation linked below.
 
 ### Related Links
 
+- [Docs](https://cloud.ibm.com/docs/bare-metal?topic=bare-metal-getting-started)
+- [Classic Bare Metal Product Page](https://www.ibm.com/products/bare-metal-servers/classic)
+- [Classic Bare Metal Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/compute_bare_metal)
 
 -----
