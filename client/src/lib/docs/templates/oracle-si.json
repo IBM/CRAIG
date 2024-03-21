@@ -236,7 +236,7 @@
       "pi_storage_pool_affinity": true,
       "sap": false,
       "sap_profile": null,
-      "primary_subnet": null,
+      "primary_subnet": "oracle-vlan",
       "pi_storage_pool": null,
       "pi_affinity_policy": null,
       "pi_affinity_volume": null,
