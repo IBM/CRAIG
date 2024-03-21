@@ -1099,6 +1099,9 @@ function craigForms(craig) {
           pi_ibmi_rds_users: craig.power_instances.pi_ibmi_rds_users,
         },
         {
+          pi_health_status: craig.power_instances.pi_health_status,
+        },
+        {
           heading: {
             name: "Boot Volume",
             type: "subHeading",
@@ -1628,6 +1631,7 @@ function craigForms(craig) {
           pi_license_repository_capacity:
             craig.vtl.pi_license_repository_capacity,
           pi_storage_pool_affinity: craig.vtl.pi_storage_pool_affinity,
+          pi_health_status: craig.vtl.pi_health_status,
         },
         {
           heading: {

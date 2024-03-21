@@ -16,9 +16,11 @@ All notable changes to this project will be documented in this file.
 - Terraform code for Power VS Instances and FalconStor VTL instances now have a 3 hour create timeout instead of the default 2 hour timeout
 - Power VS Network names and IDs are now included as outputs in CRAIG generated Terraform
 - Items highlighted for emphasis in the markdown for CRAIG `CHANGELOG.md` are now also highlighted on the `/docs/releaseNotes` page
+- Users can now select a Health Status for Power VS Instances and FalconStor VTL instances
 
 ### Fixes
 
+- Fixed an issue causing FalconStor VTL form in modals to crash
 
 ## 1.13.0
 

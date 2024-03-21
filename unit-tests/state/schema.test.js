@@ -1466,6 +1466,11 @@ describe("automate schema generation", () => {
               default: "none",
               groups: ["soft", "hard", "none"],
             },
+            pi_health_status: {
+              type: "string",
+              default: "OK",
+              groups: ["OK", "WARNING"],
+            },
           },
         },
         power_volumes: {
@@ -2067,6 +2072,11 @@ describe("automate schema generation", () => {
               type: "string",
               default: "none",
               groups: ["soft", "hard", "none"],
+            },
+            pi_health_status: {
+              type: "string",
+              default: "OK",
+              groups: ["OK", "WARNING"],
             },
           },
         },

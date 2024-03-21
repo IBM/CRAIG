@@ -319,7 +319,8 @@
       "pi_ibmi_pha": false,
       "pi_ibmi_rds_users": null,
       "pi_pin_policy": "none",
-      "pi_license_repository_capacity": null
+      "pi_license_repository_capacity": null,
+      "pi_health_status": "OK"
     }
   ],
   "power_volumes": [
