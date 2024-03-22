@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - The CRAIG JSON schema is now configured dynamically using the state store on the `/docs/json` page. Additional fields will now be added automatically
 - `.env.example` has been updated to include a warning that included quotation marks in .env values will cause the application to crash
 - When fetching VSI Images, the Craig API has no limit on the number of images that can be retrieved. In addition, only available images are retrieved
+- Power VS Network interface outputs now use the Terraform field `pi_network_name` instead of the depricated field `name`
 
 ### Features
 

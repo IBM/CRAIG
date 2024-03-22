@@ -133,7 +133,7 @@ function outputsTf(config) {
         ] = {
           value: `\${${nw.use_data ? "data." : ""}ibm_pi_network.${snakeCase(
             `power network ${nw.workspace} ${nw.name}`
-          )}.${field}}`,
+          )}.${field === "name" ? "pi_network_name" : field}}`,
         };
       });
     });

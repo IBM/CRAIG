@@ -2603,7 +2603,7 @@ output "power_vs_workspace_vsi_crn" {
 }
 
 output "power_vs_workspace_vsi_network_nw_name" {
-  value = ibm_pi_network.power_network_vsi_nw.name
+  value = ibm_pi_network.power_network_vsi_nw.pi_network_name
 }
 
 output "power_vs_workspace_vsi_network_nw_id" {
@@ -2863,7 +2863,7 @@ output "power_vs_workspace_vsi_crn" {
 }
 
 output "power_vs_workspace_vsi_network_nw_name" {
-  value = data.ibm_pi_network.power_network_vsi_nw.name
+  value = data.ibm_pi_network.power_network_vsi_nw.pi_network_name
 }
 
 output "power_vs_workspace_vsi_network_nw_id" {
