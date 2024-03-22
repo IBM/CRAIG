@@ -427,10 +427,11 @@ function powerVsInstanceSchema(vtl) {
     pi_license_repository_capacity: {
       labelText: "Repository Capacity (TB)",
       size: "small",
-      default: "1",
       invalid: function (stateData) {
-        return stateData.pi_license_repository_capacity === "" ||
-          stateData.pi_license_repository_capacity.match(/^\d+$/g) === null
+        return isNullOrEmptyString(
+          stateData.pi_license_repository_capacity,
+          true
+        ) || stateData.pi_license_repository_capacity.match(/^\d+$/g) === null
           ? true
           : !isWholeNumber(parseInt(stateData.pi_license_repository_capacity));
       },
@@ -485,6 +486,13 @@ function powerVsInstanceSchema(vtl) {
         content:
           "When you soft pin an instance for high availability, the instance automatically migrates back to the original host once the host is back to its operating state. If the instance has a licensing restriction with the host, the hard pin option restricts the movement of the instance during remote restart, automated remote restart, DRO, and live partition migration. The default pinning policy is none",
       },
+    },
+    pi_health_status: {
+      labelText: "Health Status",
+      type: "select",
+      size: "small",
+      groups: ["OK", "WARNING"],
+      default: "OK",
     },
   };
 }

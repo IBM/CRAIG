@@ -113,6 +113,7 @@ function initClassicVsi(store) {
       },
       memory: {
         default: "",
+        labelText: "Memory (Mb)",
         invalid: fieldIsNullOrEmptyString("memory"),
         size: "small",
       },

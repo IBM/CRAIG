@@ -589,6 +589,28 @@ output "management_vpc_jv_dev_server_vsi_1_1_floating_ip_address" {
 }
 
 ##############################################################################
+
+##############################################################################
+# Cos Object Storage Outputs
+##############################################################################
+
+output "cos_object_storage_bucket_management_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_management_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.region_location
+}
+
+output "cos_object_storage_bucket_workload_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_workload_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.region_location
+}
+
+##############################################################################
 `;
       assert.deepEqual(
         actualData,
@@ -1217,6 +1239,28 @@ output "management_vpc_jv_dev_server2_vsi_1_1_floating_ip_address" {
 }
 
 ##############################################################################
+
+##############################################################################
+# Cos Object Storage Outputs
+##############################################################################
+
+output "cos_object_storage_bucket_management_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_management_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.region_location
+}
+
+output "cos_object_storage_bucket_workload_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_workload_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.region_location
+}
+
+##############################################################################
 `;
       assert.deepEqual(
         actualData,
@@ -1434,6 +1478,10 @@ output "power_vs_workspace_test_output_crn" {
   value = ibm_resource_instance.power_vs_workspace_test_output.crn
 }
 
+output "power_vs_workspace_test_output_location" {
+  value = ibm_resource_instance.power_vs_workspace_test_output.location
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -1450,6 +1498,10 @@ output "power_vs_workspace_iac_power_workspace_test_output_guid" {
 
 output "power_vs_workspace_iac_power_workspace_test_output_crn" {
   value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.crn
+}
+
+output "power_vs_workspace_iac_power_workspace_test_output_location" {
+  value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.location
 }
 
 ##############################################################################
@@ -2342,6 +2394,10 @@ output "power_vs_workspace_test_output_crn" {
   value = ibm_resource_instance.power_vs_workspace_test_output.crn
 }
 
+output "power_vs_workspace_test_output_location" {
+  value = ibm_resource_instance.power_vs_workspace_test_output.location
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -2358,6 +2414,32 @@ output "power_vs_workspace_iac_power_workspace_test_output_guid" {
 
 output "power_vs_workspace_iac_power_workspace_test_output_crn" {
   value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.crn
+}
+
+output "power_vs_workspace_iac_power_workspace_test_output_location" {
+  value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.location
+}
+
+##############################################################################
+
+##############################################################################
+# Cos Object Storage Outputs
+##############################################################################
+
+output "cos_object_storage_bucket_management_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_management_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.region_location
+}
+
+output "cos_object_storage_bucket_workload_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_workload_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.region_location
 }
 
 ##############################################################################
@@ -2600,6 +2682,290 @@ output "power_vs_workspace_vsi_guid" {
 
 output "power_vs_workspace_vsi_crn" {
   value = ibm_resource_instance.power_vs_workspace_vsi.crn
+}
+
+output "power_vs_workspace_vsi_location" {
+  value = ibm_resource_instance.power_vs_workspace_vsi.location
+}
+
+output "power_vs_workspace_vsi_ssh_key_vsi" {
+  value = ibm_pi_key.power_vs_ssh_key_vsi.name
+}
+
+output "power_vs_workspace_vsi_network_nw_name" {
+  value = ibm_pi_network.power_network_vsi_nw.pi_network_name
+}
+
+output "power_vs_workspace_vsi_network_nw_id" {
+  value = ibm_pi_network.power_network_vsi_nw.id
+}
+
+##############################################################################
+
+##############################################################################
+# Power VS Instance Outputs
+##############################################################################
+
+output "vsi_workspace_instance_output_test_primary_ip" {
+  value = ibm_pi_instance.vsi_workspace_instance_output_test.pi_network[0].ip_address
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should create correct outputs"
+      );
+    });
+    it("should return the correct outputs for power vs instances with ws and nw from data", () => {
+      let actualData = outputsTf({
+        _options: {
+          prefix: "jvdev",
+          region: "us-south",
+          tags: ["hello", "world"],
+          zones: 3,
+          endpoints: "private",
+          account_id: null,
+          fs_cloud: false,
+          enable_classic: false,
+          dynamic_subnets: true,
+          enable_power_vs: true,
+          craig_version: "1.13.0",
+          power_vs_zones: ["dal10"],
+          power_vs_high_availability: false,
+          no_vpn_secrets_manager_auth: false,
+          template: "Empty Project",
+          power_vs_ha_zone_1: null,
+          power_vs_ha_zone_2: null,
+        },
+        access_groups: [],
+        appid: [],
+        atracker: {
+          enabled: false,
+          type: "cos",
+          name: "atracker",
+          target_name: "atracker-cos",
+          bucket: null,
+          add_route: true,
+          cos_key: null,
+          locations: ["global", "us-south"],
+          instance: false,
+          plan: "lite",
+          resource_group: null,
+        },
+        cbr_rules: [],
+        cbr_zones: [],
+        clusters: [],
+        dns: [],
+        event_streams: [],
+        f5_vsi: [],
+        iam_account_settings: {
+          enable: false,
+          mfa: null,
+          allowed_ip_addresses: null,
+          include_history: false,
+          if_match: null,
+          max_sessions_per_identity: null,
+          restrict_create_service_id: null,
+          restrict_create_platform_apikey: null,
+          session_expiration_in_seconds: null,
+          session_invalidation_in_seconds: null,
+        },
+        icd: [],
+        key_management: [],
+        load_balancers: [],
+        logdna: {
+          name: "logdna",
+          archive: false,
+          enabled: false,
+          plan: "lite",
+          endpoints: "private",
+          platform_logs: false,
+          resource_group: null,
+          cos: null,
+          bucket: null,
+        },
+        object_storage: [],
+        power: [
+          {
+            use_data: true,
+            name: "vsi",
+            zone: "dal10",
+            resource_group: "asset-development",
+            imageNames: ["CentOS-Stream-8"],
+            images: [
+              {
+                creationDate: "2023-09-20T22:15:08.000Z",
+                description: "",
+                href: "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/ecb9553c-9b7d-4a53-bf0c-0ab2c748bbc7",
+                imageID: "ecb9553c-9b7d-4a53-bf0c-0ab2c748bbc7",
+                lastUpdateDate: "2023-09-21T09:35:17.000Z",
+                name: "CentOS-Stream-8",
+                specifications: {
+                  architecture: "ppc64",
+                  containerFormat: "bare",
+                  diskFormat: "raw",
+                  endianness: "little-endian",
+                  hypervisorType: "phyp",
+                  operatingSystem: "rhel",
+                },
+                state: "active",
+                storagePool: "Tier3-Flash-1",
+                storageType: "tier3",
+                workspace: "vsi",
+                zone: "dal10",
+                workspace_use_data: true,
+              },
+            ],
+            ssh_keys: [
+              {
+                workspace_use_data: false,
+                use_data: true,
+                name: "vsi",
+                public_key: "NONE",
+                workspace: "vsi",
+                zone: "dal10",
+              },
+            ],
+            network: [
+              {
+                workspace_use_data: true,
+                name: "nw",
+                use_data: true,
+                pi_network_type: "vlan",
+                pi_cidr: "10.10.10.10/25",
+                pi_dns: ["127.0.0.1"],
+                pi_network_mtu: "1450",
+                workspace: "vsi",
+                zone: "dal10",
+              },
+            ],
+            cloud_connections: [],
+            attachments: [],
+          },
+        ],
+        power_instances: [
+          {
+            sap: false,
+            sap_profile: null,
+            name: "output-test",
+            ssh_key: "vsi",
+            workspace: "vsi",
+            network: [
+              {
+                name: "nw",
+                ip_address: "",
+              },
+            ],
+            primary_subnet: "nw",
+            image: "CentOS-Stream-8",
+            pi_sys_type: "e880",
+            pi_storage_pool_affinity: false,
+            pi_proc_type: "shared",
+            pi_processors: "0.25",
+            pi_memory: "2",
+            pi_ibmi_css: false,
+            pi_ibmi_pha: false,
+            pi_ibmi_rds_users: null,
+            pi_storage_type: "tier1",
+            storage_option: "None",
+            pi_storage_pool: null,
+            affinity_type: null,
+            pi_affinity_volume: null,
+            pi_anti_affinity_volume: null,
+            pi_anti_affinity_instance: null,
+            pi_affinity_instance: null,
+            pi_user_data: null,
+            zone: "dal10",
+            pi_affinity_policy: null,
+          },
+        ],
+        power_volumes: [],
+        resource_groups: [
+          {
+            use_prefix: false,
+            name: "asset-development",
+            use_data: true,
+          },
+        ],
+        routing_tables: [],
+        scc: {
+          credential_description: null,
+          id: null,
+          passphrase: null,
+          name: "",
+          location: "us",
+          collector_description: null,
+          is_public: false,
+          scope_description: null,
+          enable: false,
+        },
+        secrets_manager: [],
+        security_groups: [],
+        ssh_keys: [],
+        sysdig: {
+          enabled: false,
+          plan: "graduated-tier",
+          resource_group: null,
+          name: "sysdig",
+          platform_logs: false,
+        },
+        teleport_vsi: [],
+        transit_gateways: [],
+        virtual_private_endpoints: [],
+        vpcs: [],
+        vpn_gateways: [],
+        vpn_servers: [],
+        vsi: [],
+        classic_ssh_keys: [],
+        classic_vlans: [],
+        vtl: [],
+        classic_gateways: [],
+        cis: [],
+        scc_v2: {
+          enable: false,
+          resource_group: null,
+          region: "",
+          account_id: "${var.account_id}",
+          profile_attachments: [],
+        },
+        cis_glbs: [],
+        fortigate_vnf: [],
+        classic_security_groups: [],
+        classic_vsi: [],
+        classic_bare_metal: [],
+      });
+      let expectedData = `##############################################################################
+# VSI Power Workspace Outputs
+##############################################################################
+
+output "power_vs_workspace_vsi_name" {
+  value = data.ibm_resource_instance.power_vs_workspace_vsi.name
+}
+
+output "power_vs_workspace_vsi_guid" {
+  value = data.ibm_resource_instance.power_vs_workspace_vsi.guid
+}
+
+output "power_vs_workspace_vsi_crn" {
+  value = data.ibm_resource_instance.power_vs_workspace_vsi.crn
+}
+
+output "power_vs_workspace_vsi_location" {
+  value = data.ibm_resource_instance.power_vs_workspace_vsi.location
+}
+
+output "power_vs_workspace_vsi_ssh_key_vsi" {
+  value = data.ibm_pi_key.power_vs_ssh_key_vsi.name
+}
+
+output "power_vs_workspace_vsi_network_nw_name" {
+  value = data.ibm_pi_network.power_network_vsi_nw.pi_network_name
+}
+
+output "power_vs_workspace_vsi_network_nw_id" {
+  value = data.ibm_pi_network.power_network_vsi_nw.id
 }
 
 ##############################################################################

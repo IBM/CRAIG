@@ -24,9 +24,8 @@ function classicSshKeyOnStoreUpdate(config) {
   if (!config.store.json.classic_ssh_keys) {
     config.store.json.classic_ssh_keys = [];
   } else if (
-    config.store.json?.classic_ssh_keys.length === 0 &&
-    config.store.json?.classic_vlans.length === 0 &&
-    config.store.json?.classic_gateways.length === 0
+    config.store.json?.classic_ssh_keys?.length === 0 &&
+    config.store.json?.classic_vlans?.length === 0
   ) {
     config.store.json._options.enable_classic = false;
   }

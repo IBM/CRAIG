@@ -13,7 +13,10 @@
     "craig_version": "1.13.0",
     "power_vs_high_availability": false,
     "template": "Power VS POC",
-    "fs_cloud": false
+    "fs_cloud": false,
+    "power_vs_ha_zone_1": null,
+    "power_vs_ha_zone_2": null,
+    "no_vpn_secrets_manager_auth": false
   },
   "access_groups": [],
   "appid": [],
@@ -28,7 +31,8 @@
     "locations": ["global", "us-south"],
     "instance": true,
     "plan": "lite",
-    "resource_group": "service-rg"
+    "resource_group": "service-rg",
+    "archive": false
   },
   "cbr_rules": [],
   "cbr_zones": [],
@@ -271,7 +275,14 @@
       "affinity_type": null,
       "pi_affinity_instance": null,
       "pi_user_data": null,
-      "index": 0
+      "index": 0,
+      "primary_subnet": "pvm",
+      "pi_affinity_policy": null,
+      "pi_ibmi_css": false,
+      "pi_ibmi_pha": false,
+      "pi_ibmi_rds_users": null,
+      "pi_pin_policy": "none",
+      "pi_license_repository_capacity": null
     },
     {
       "sap": false,
@@ -302,7 +313,14 @@
       "zone": "dal10",
       "pi_affinity_policy": null,
       "pi_user_data": null,
-      "index": 1
+      "index": 1,
+      "primary_subnet": "pvm",
+      "pi_ibmi_css": false,
+      "pi_ibmi_pha": false,
+      "pi_ibmi_rds_users": null,
+      "pi_pin_policy": "none",
+      "pi_license_repository_capacity": null,
+      "pi_health_status": "OK"
     }
   ],
   "power_volumes": [
@@ -562,9 +580,10 @@
   "scc_v2": {
     "enable": false,
     "resource_group": null,
-    "region": "",
+    "region": null,
     "account_id": "${var.account_id}",
-    "profile_attachments": []
+    "profile_attachments": [],
+    "name": null
   },
   "secrets_manager": [],
   "security_groups": [
@@ -645,7 +664,8 @@
           "type": null,
           "code": null
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "vpc": "transit",
@@ -748,13 +768,14 @@
           "type": null,
           "code": null
         }
-      ]
+      ],
+      "use_data": false
     }
   ],
   "ssh_keys": [
     {
       "name": "vsi-ssh-key",
-      "public_key": "",
+      "public_key": null,
       "use_data": false,
       "resource_group": "transit-rg"
     }
@@ -784,7 +805,9 @@
       ],
       "use_data": false,
       "gre_tunnels": [],
-      "prefix_filters": []
+      "prefix_filters": [],
+      "crns": null,
+      "classic": false
     }
   ],
   "virtual_private_endpoints": [

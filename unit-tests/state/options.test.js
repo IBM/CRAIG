@@ -487,6 +487,13 @@ describe("options", () => {
           "it should be true when no power vs zones"
         );
       });
+      it("should return correct invalid text for ha zone 1", () => {
+        assert.deepEqual(
+          craig.options.power_vs_ha_zone_1.invalidText({ region: "us-south" }),
+          "Select an Availability Zone",
+          "it should return correct invalid text"
+        );
+      });
     });
   });
 });

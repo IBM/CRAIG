@@ -457,6 +457,24 @@ describe("power-vs", () => {
                 {
                   name: "test",
                   resource_group: "hi",
+                  public_key: "sssss",
+                },
+                {
+                  data: {
+                    data: "test",
+                  },
+                  arrayParentName: "workspace",
+                  craig: tempState,
+                }
+              ),
+              "Provide a unique SSH public key for this workspace",
+              "it should return correct text"
+            );
+            assert.deepEqual(
+              tempState.power.ssh_keys.public_key.invalidText(
+                {
+                  name: "test",
+                  resource_group: "hi",
                   public_key:
                     "ssh-rsa AAAAB3NzaC1yc2thisisafakesshkeyDSKLFHSJSADFHGASJDSHDBASJKDASDASWDAS+/DSFSDJKFGXFVJDZHXCDZVZZCDKJFGSDJFZDHCVBSDUCZCXZKCHT= test@fakeemail.com",
                 },

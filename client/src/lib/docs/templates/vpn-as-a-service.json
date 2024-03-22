@@ -13,7 +13,10 @@
     "power_vs_zones": ["dal12", "dal10", "us-south"],
     "advanced_subnets": true,
     "power_vs_high_availability": false,
-    "no_vpn_secrets_manager_auth": false
+    "no_vpn_secrets_manager_auth": false,
+    "enable_classic": false,
+    "power_vs_ha_zone_1": null,
+    "power_vs_ha_zone_2": null
   },
   "access_groups": [],
   "appid": [],
@@ -28,7 +31,8 @@
     "locations": ["global", "us-south"],
     "instance": false,
     "plan": "lite",
-    "resource_group": null
+    "resource_group": null,
+    "archive": false
   },
   "cbr_rules": [],
   "cbr_zones": [],
@@ -111,34 +115,29 @@
       "zone": "dal12",
       "ssh_keys": [],
       "network": [],
-      "cloud_connections": [
-        {
-          "name": "power-to-tgw",
-          "pi_cloud_connection_speed": "1000",
-          "pi_cloud_connection_global_routing": false,
-          "pi_cloud_connection_metered": false,
-          "pi_cloud_connection_transit_enabled": true,
-          "transit_gateways": ["tgw"],
-          "workspace": "vpnaas",
-          "zone": "dal12"
-        }
-      ],
+      "cloud_connections": [],
       "images": [
         {
           "name": "7200-05-03",
           "workspace": "vpnaas",
           "zone": "dal12",
-          "pi_image_id": "ab5777c4-60ef-45a1-90aa-4a144dbe3104"
+          "pi_image_id": "ab5777c4-60ef-45a1-90aa-4a144dbe3104",
+          "workspace_use_data": false
         }
       ],
       "attachments": [],
-      "imageNames": ["7200-05-03"]
+      "imageNames": ["7200-05-03"],
+      "use_data": false
     }
   ],
   "power_instances": [],
   "power_volumes": [],
   "resource_groups": [
-    { "use_prefix": true, "name": "vpnaas-rg", "use_data": false }
+    {
+      "use_prefix": true,
+      "name": "vpnaas-rg",
+      "use_data": false
+    }
   ],
   "routing_tables": [
     {
@@ -149,7 +148,9 @@
       "transit_gateway_ingress": false,
       "vpc_zone_ingress": false,
       "direct_link_ingress": false,
-      "accept_routes_from_resource_type": ["vpn_gateway", "vpn_server"]
+      "accept_routes_from_resource_type": ["vpn_gateway", "vpn_server"],
+      "route_direct_link_ingress": false,
+      "route_vpc_zone_ingress": false
     },
     {
       "routes": [],
@@ -159,7 +160,9 @@
       "transit_gateway_ingress": false,
       "vpc_zone_ingress": false,
       "direct_link_ingress": false,
-      "accept_routes_from_resource_type": ["vpn_server"]
+      "accept_routes_from_resource_type": ["vpn_server"],
+      "route_direct_link_ingress": false,
+      "route_vpc_zone_ingress": false
     }
   ],
   "scc": {
@@ -179,7 +182,9 @@
       "resource_group": "vpnaas-rg",
       "encryption_key": "encryption-key",
       "kms": "kms",
-      "secrets": []
+      "secrets": [],
+      "use_data": false,
+      "plan": "standard"
     }
   ],
   "security_groups": [
@@ -189,27 +194,56 @@
         {
           "name": "allow-all-inbound",
           "direction": "inbound",
-          "icmp": { "type": null, "code": null },
-          "tcp": { "port_min": null, "port_max": null },
-          "udp": { "port_min": null, "port_max": null },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
           "source": "0.0.0.0/0",
           "vpc": "vpc",
-          "sg": "vpn-server-sg"
+          "sg": "vpn-server-sg",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "name": "allow-all-outbounr",
           "direction": "inbound",
-          "icmp": { "type": null, "code": null },
-          "tcp": { "port_min": null, "port_max": null },
-          "udp": { "port_min": null, "port_max": null },
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
           "source": "0.0.0.0/0",
           "vpc": "vpc",
-          "sg": "vpn-server-sg"
+          "sg": "vpn-server-sg",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
       ],
       "name": "vpn-server-sg",
       "vpc": "vpc",
-      "show": false
+      "show": false,
+      "use_data": false
     }
   ],
   "ssh_keys": [],
@@ -224,10 +258,19 @@
   "transit_gateways": [
     {
       "global": true,
-      "connections": [{ "tgw": "tgw", "vpc": "vpc" }],
+      "connections": [
+        {
+          "tgw": "tgw",
+          "vpc": "vpc"
+        }
+      ],
       "resource_group": "vpnaas-rg",
       "name": "tgw",
-      "crns": []
+      "crns": [],
+      "use_data": false,
+      "prefix_filters": [],
+      "gre_tunnels": [],
+      "classic": false
     }
   ],
   "virtual_private_endpoints": [],
@@ -289,7 +332,10 @@
               "name": "allow-ibm-inbound",
               "action": "allow",
               "direction": "inbound",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -305,13 +351,23 @@
               "source": "161.26.0.0/16",
               "destination": "10.0.0.0/8",
               "acl": "vpn-nw",
-              "vpc": "vpc"
+              "vpc": "vpc",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "name": "allow-ibm-outbound",
               "action": "allow",
               "direction": "outbound",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -327,13 +383,23 @@
               "source": "10.0.0.0/8",
               "destination": "161.26.0.0/16",
               "acl": "vpn-nw",
-              "vpc": "vpc"
+              "vpc": "vpc",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "name": "allow-network-inbound",
               "action": "allow",
               "direction": "inbound",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -349,13 +415,23 @@
               "source": "10.0.0.0/8",
               "destination": "10.0.0.0/8",
               "acl": "vpn-nw",
-              "vpc": "vpc"
+              "vpc": "vpc",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "name": "allow-network-outbound",
               "action": "allow",
               "direction": "outbound",
-              "icmp": { "type": null, "code": null },
+              "icmp": {
+                "type": null,
+                "code": null
+              },
               "tcp": {
                 "port_min": null,
                 "port_max": null,
@@ -371,14 +447,35 @@
               "source": "10.0.0.0/8",
               "destination": "10.0.0.0/8",
               "acl": "vpn-nw",
-              "vpc": "vpc"
+              "vpc": "vpc",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
       ],
       "bucket": "vpc-bucket",
       "publicGateways": [],
-      "cos": "object-storage"
+      "cos": "object-storage",
+      "subnetTiers": [
+        {
+          "name": "vpn",
+          "zones": 1
+        },
+        {
+          "name": "vpn-server",
+          "select_zones": [1],
+          "advanced": true,
+          "subnets": ["vpn-server-zone-1"]
+        }
+      ],
+      "use_data": false
     }
   ],
   "vpn_gateways": [
@@ -387,7 +484,9 @@
       "resource_group": "vpnaas-rg",
       "vpc": "vpc",
       "subnet": "vpn-zone-1",
-      "policy_mode": true
+      "policy_mode": true,
+      "connections": [],
+      "additional_prefixes": []
     }
   ],
   "vpn_servers": [
@@ -395,18 +494,22 @@
       "name": "client-to-site",
       "certificate_crn": "CHEATER",
       "method": "certificate",
-      "client_ca_crn": "",
+      "client_ca_crn": null,
       "client_ip_pool": "192.168.8.0/22",
       "enable_split_tunneling": false,
-      "client_idle_timeout": "",
+      "client_idle_timeout": null,
       "port": "443",
       "protocol": "tcp",
       "resource_group": "vpnaas-rg",
       "vpc": "vpc",
       "security_groups": ["vpn-server-sg"],
-      "client_dns_server_ips": "",
+      "client_dns_server_ips": null,
       "routes": [
-        { "name": "route", "destination": "10.0.0.0/8", "action": "deliver" }
+        {
+          "name": "route",
+          "destination": "10.0.0.0/8",
+          "action": "deliver"
+        }
       ],
       "subnets": ["vpn-server-zone-1"],
       "additional_prefixes": ["192.168.8.0/22"],

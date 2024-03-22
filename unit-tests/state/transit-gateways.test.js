@@ -736,6 +736,11 @@ describe("transit_gateways", () => {
               crns: ["crn:v1:bluemix:public:abcdf", "mooseeeeeeeeeeeeeeeeee"],
             })
           );
+          assert.isFalse(
+            state.transit_gateways.crns.invalidText({
+              crns: undefined,
+            })
+          );
         });
       });
     });

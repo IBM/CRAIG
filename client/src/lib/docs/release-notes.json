@@ -1,5 +1,25 @@
 [
   {
+    "version": "1.13.1",
+    "features": [
+      "Terraform code for Power VS Instances and FalconStor VTL instances now have a 3 hour create timeout instead of the default 2 hour timeout",
+      "Power VS Network names and IDs are now included as outputs in CRAIG generated Terraform",
+      "Items highlighted for emphasis in the markdown for CRAIG `CHANGELOG.md` are now also highlighted on the `/docs/releaseNotes` page",
+      "Users can now select a Health Status for Power VS Instances and FalconStor VTL instances",
+      "Power VS SSH Key names are now output in Terraform `outputs.tf` files",
+      "Power VS Workspace locations are now output in Terraform `outputs.tf` files",
+      "Object Storage Bucket names and region locations are now output in Terraform `outputs.tf` files"
+    ],
+    "fixes": ["Fixed an issue causing FalconStor VTL form in modals to crash"],
+    "upgrade_notes": [
+      "A new script `/lib/template-updater.js` has been added to update most unfound fields in CRAIG defined template JSON files",
+      "The CRAIG JSON schema is now configured dynamically using the state store on the `/docs/json` page. Additional fields will now be added automatically",
+      "`.env.example` has been updated to include a warning that included quotation marks in .env values will cause the application to crash",
+      "When fetching VSI Images, the Craig API has no limit on the number of images that can be retrieved. In addition, only available images are retrieved",
+      "Power VS Network interface outputs now use the Terraform field `pi_network_name` instead of the depricated field `name`"
+    ]
+  },
+  {
     "version": "1.13.0",
     "features": [
       "Users will now get feedback when a Power VS Workspace has no VTL images when trying to create or update a VTL instance. Images can be added from the Power VS Workspace form",

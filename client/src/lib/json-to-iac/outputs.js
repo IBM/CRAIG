@@ -113,7 +113,7 @@ function outputsTf(config) {
   config.power.forEach((workspace, index) => {
     let outputs = {};
     // power workspace outputs
-    ["name", "guid", "crn"].forEach((field) => {
+    ["name", "guid", "crn", "location"].forEach((field) => {
       outputs["power_vs_workspace_" + snakeCase(workspace.name) + "_" + field] =
         {
           value: `\${${
@@ -122,6 +122,30 @@ function outputsTf(config) {
             workspace.name
           )}.${field}}`,
         };
+    });
+
+    workspace.ssh_keys.forEach((sshKey) => {
+      outputs[
+        snakeCase(`power vs workspace ${workspace.name} ssh key ${sshKey.name}`)
+      ] = {
+        value: `\${${sshKey.use_data ? "data." : ""}ibm_pi_key.${snakeCase(
+          `power vs ssh key ${sshKey.name}`
+        )}.name}`,
+      };
+    });
+
+    workspace.network.forEach((nw) => {
+      ["name", "id"].forEach((field) => {
+        outputs[
+          snakeCase(
+            `power vs workspace ${nw.workspace} network ${nw.name} ${field}`
+          )
+        ] = {
+          value: `\${${nw.use_data ? "data." : ""}ibm_pi_network.${snakeCase(
+            `power network ${nw.workspace} ${nw.name}`
+          )}.${field === "name" ? "pi_network_name" : field}}`,
+        };
+      });
     });
 
     tf +=
@@ -150,13 +174,35 @@ function outputsTf(config) {
         value: `\${ibm_pi_instance.${vsiRef}.pi_network[0].ip_address}`,
       };
     });
-  if (Object.keys(powerInstanceOutputs).length > 0)
+  if (Object.keys(powerInstanceOutputs).length > 0) {
     tf +=
       "\n" +
       tfBlock(
         "Power VS Instance Outputs",
         "\n" + jsonToTf(JSON.stringify({ output: powerInstanceOutputs })) + "\n"
       );
+  }
+
+  config.object_storage.forEach((cos) => {
+    let cosOutputs = {};
+    cos.buckets.forEach((bucket) => {
+      ["bucket_name", "region_location"].forEach((field) => {
+        cosOutputs[
+          snakeCase(`${cos.name} object storage bucket ${bucket.name} ${field}`)
+        ] = {
+          value: `\${ibm_cos_bucket.${snakeCase(
+            `${cos.name} object storage ${bucket.name} bucket`
+          )}.${field}}`,
+        };
+      });
+    });
+    tf +=
+      "\n" +
+      tfBlock(
+        `${cos.name} Object Storage Outputs`,
+        "\n" + jsonToTf(JSON.stringify({ output: cosOutputs })) + "\n"
+      );
+  });
 
   return tf;
 }

@@ -1,6 +1,6 @@
 {
   "first": {
-    "href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=50"
+    "href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=100"
   },
   "images": [
     {
@@ -97,5 +97,9 @@
       "visibility": "public"
     }
   ],
-  "limit": 50
+  "limit": 50,
+  "total_count": 101,
+  "next": {
+    "href": "https://us-south.iaas.cloud.ibm.com/v1/images?limit=100&start=123456"
+  }
 }

@@ -214,10 +214,10 @@ describe("power api", () => {
             },
           ],
           storagePoolsCapacity: [
-            { poolName: "Tier1-Flash-1" },
-            { poolName: "Tier1-Flash-2" },
-            { poolName: "Tier3-Flash-1" },
-            { poolName: "Tier1-Flash-2" },
+            { poolName: "Tier1-Flash-1", replicationEnabled: true },
+            { poolName: "Tier1-Flash-2", replicationEnabled: true },
+            { poolName: "Tier3-Flash-1", replicationEnabled: false },
+            { poolName: "Tier1-Flash-2", replicationEnabled: false },
           ],
         },
         false
@@ -233,8 +233,8 @@ describe("power api", () => {
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith([
-              "Tier1-Flash-1",
-              "Tier1-Flash-2",
+              "Tier1-Flash-1 (Replication Enabled)",
+              "Tier1-Flash-2 (Replication Enabled)",
               "Tier3-Flash-1",
               "Tier1-Flash-2",
             ]),

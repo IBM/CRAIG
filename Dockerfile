@@ -2,7 +2,6 @@
 FROM node as build
 WORKDIR /app
 COPY . ./
-RUN npm install react-scripts sass cdktf cdktf-cli@latest -g
 RUN npm run build
 
 FROM node:alpine

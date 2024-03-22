@@ -12,7 +12,10 @@
     "power_vs_high_availability": false,
     "fs_cloud": false,
     "enable_power_vs": false,
-    "no_vpn_secrets_manager_auth": false
+    "no_vpn_secrets_manager_auth": false,
+    "enable_classic": false,
+    "power_vs_ha_zone_1": null,
+    "power_vs_ha_zone_2": null
   },
   "access_groups": [],
   "appid": [],
@@ -27,10 +30,13 @@
     "target_name": "atracker-cos",
     "instance": false,
     "plan": "lite",
-    "resource_group": null
+    "resource_group": null,
+    "archive": false
   },
   "cbr_rules": [],
   "cbr_zones": [],
+  "classic_ssh_keys": [],
+  "classic_vlans": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
@@ -209,7 +215,12 @@
             "port_min": null
           },
           "sg": "management-vpe",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "inbound",
@@ -228,7 +239,12 @@
             "port_min": null
           },
           "sg": "management-vpe",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -247,7 +263,12 @@
             "port_min": null
           },
           "sg": "management-vpe",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -266,7 +287,12 @@
             "port_min": null
           },
           "sg": "management-vpe",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -285,7 +311,12 @@
             "port_min": null
           },
           "sg": "management-vpe",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -304,9 +335,15 @@
             "port_min": null
           },
           "sg": "management-vpe",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "vpc": "workload",
@@ -330,7 +367,12 @@
             "port_min": null
           },
           "sg": "workload-vpe",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "inbound",
@@ -349,7 +391,12 @@
             "port_min": null
           },
           "sg": "workload-vpe",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -368,7 +415,12 @@
             "port_min": null
           },
           "sg": "workload-vpe",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -387,7 +439,12 @@
             "port_min": null
           },
           "sg": "workload-vpe",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -406,7 +463,12 @@
             "port_min": null
           },
           "sg": "workload-vpe",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -425,9 +487,15 @@
             "port_min": null
           },
           "sg": "workload-vpe",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "vpc": "management",
@@ -451,7 +519,12 @@
             "port_min": null
           },
           "sg": "management-vsi",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "inbound",
@@ -470,7 +543,12 @@
             "port_min": null
           },
           "sg": "management-vsi",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -489,7 +567,12 @@
             "port_min": null
           },
           "sg": "management-vsi",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -508,7 +591,12 @@
             "port_min": null
           },
           "sg": "management-vsi",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -527,7 +615,12 @@
             "port_min": null
           },
           "sg": "management-vsi",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -546,9 +639,15 @@
             "port_min": null
           },
           "sg": "management-vsi",
-          "vpc": "management"
+          "vpc": "management",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
-      ]
+      ],
+      "use_data": false
     },
     {
       "vpc": "workload",
@@ -572,7 +671,12 @@
             "port_min": null
           },
           "sg": "workload-vsi",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "inbound",
@@ -591,7 +695,12 @@
             "port_min": null
           },
           "sg": "workload-vsi",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -610,7 +719,12 @@
             "port_min": null
           },
           "sg": "workload-vsi",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -629,7 +743,12 @@
             "port_min": null
           },
           "sg": "workload-vsi",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -648,7 +767,12 @@
             "port_min": null
           },
           "sg": "workload-vsi",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         },
         {
           "direction": "outbound",
@@ -667,9 +791,15 @@
             "port_min": null
           },
           "sg": "workload-vsi",
-          "vpc": "workload"
+          "vpc": "workload",
+          "ruleProtocol": "tcp",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
         }
-      ]
+      ],
+      "use_data": false
     }
   ],
   "ssh_keys": [
@@ -677,7 +807,7 @@
       "name": "slz-ssh-key",
       "use_data": false,
       "resource_group": "management-rg",
-      "public_key": ""
+      "public_key": null
     }
   ],
   "sysdig": {
@@ -702,7 +832,12 @@
           "tgw": "transit-gateway",
           "vpc": "workload"
         }
-      ]
+      ],
+      "use_data": false,
+      "prefix_filters": [],
+      "gre_tunnels": [],
+      "crns": null,
+      "classic": false
     }
   ],
   "virtual_private_endpoints": [
@@ -758,7 +893,14 @@
                 "source_port_max": null
               },
               "vpc": "management",
-              "acl": "management"
+              "acl": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -783,7 +925,14 @@
                 "source_port_max": null
               },
               "vpc": "management",
-              "acl": "management"
+              "acl": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -808,9 +957,17 @@
                 "source_port_max": null
               },
               "vpc": "management",
-              "acl": "management"
+              "acl": "management",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
       ],
       "subnets": [
@@ -937,7 +1094,22 @@
       "default_routing_table_name": null,
       "default_security_group_name": null,
       "resource_group": "management-rg",
-      "publicGateways": []
+      "publicGateways": [],
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": 3
+        },
+        {
+          "name": "vpe",
+          "zones": 3
+        },
+        {
+          "name": "vpn",
+          "zones": 1
+        }
+      ],
+      "use_data": false
     },
     {
       "name": "workload",
@@ -971,7 +1143,14 @@
                 "source_port_max": null
               },
               "vpc": "workload",
-              "acl": "workload"
+              "acl": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -996,7 +1175,14 @@
                 "source_port_max": null
               },
               "vpc": "workload",
-              "acl": "workload"
+              "acl": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             },
             {
               "action": "allow",
@@ -1021,9 +1207,17 @@
                 "source_port_max": null
               },
               "vpc": "workload",
-              "acl": "workload"
+              "acl": "workload",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
             }
-          ]
+          ],
+          "use_data": false
         }
       ],
       "subnets": [
@@ -1134,7 +1328,18 @@
       "default_routing_table_name": null,
       "default_security_group_name": null,
       "resource_group": "workload-rg",
-      "publicGateways": []
+      "publicGateways": [],
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": 3
+        },
+        {
+          "name": "vpe",
+          "zones": 3
+        }
+      ],
+      "use_data": false
     }
   ],
   "vpn_gateways": [
@@ -1142,7 +1347,10 @@
       "name": "management-gateway",
       "resource_group": "management-rg",
       "subnet": "vpn-zone-1",
-      "vpc": "management"
+      "vpc": "management",
+      "connections": [],
+      "policy_mode": false,
+      "additional_prefixes": []
     }
   ],
   "vpn_servers": [],
@@ -1154,15 +1362,18 @@
       "profile": "cx2-4x8",
       "name": "management-server",
       "security_groups": ["management-vsi"],
-      "ssh_keys": ["ssh-key"],
+      "ssh_keys": [],
       "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
       "vpc": "management",
       "vsi_per_subnet": 1,
       "resource_group": "management-rg",
       "override_vsi_name": null,
-      "user_data": "",
+      "user_data": null,
       "network_interfaces": [],
-      "volumes": []
+      "volumes": [],
+      "image_name": null,
+      "enable_floating_ip": false,
+      "primary_interface_ip_spoofing": false
     },
     {
       "kms": "kms",
@@ -1172,7 +1383,7 @@
       "profile": "cx2-4x8",
       "name": "workload-server",
       "security_groups": ["workload-vsi"],
-      "ssh_keys": ["ssh-key"],
+      "ssh_keys": [],
       "vpc": "workload",
       "vsi_per_subnet": 1,
       "resource_group": "workload-rg",
@@ -1182,9 +1393,8 @@
       "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
       "volumes": [],
       "subnet": "",
-      "enable_floating_ip": false
+      "enable_floating_ip": false,
+      "primary_interface_ip_spoofing": false
     }
-  ],
-  "classic_ssh_keys": [],
-  "classic_vlans": []
+  ]
 }

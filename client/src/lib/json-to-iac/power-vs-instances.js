@@ -1,5 +1,5 @@
 const { powerVsWorkspaceRef } = require("./power-vs");
-const { jsonToTfPrint, tfBlock } = require("./utils");
+const { jsonToTfPrint, tfBlock, timeouts } = require("./utils");
 const {
   snakeCase,
   isNullOrEmptyString,
@@ -78,6 +78,23 @@ function powerVsInstanceData(instance, config) {
     delete data.pi_ibmi_rds_users;
   }
 
+  if (isNullOrEmptyString(data.pi_pin_policy)) {
+    delete data.pi_pin_policy;
+  }
+
+  if (!data.pi_license_repository_capacity) {
+    delete data.pi_license_repository_capacity;
+  }
+
+  if (!data.pi_storage_pool) {
+    delete data.pi_storage_pool;
+  } else {
+    data.pi_storage_pool = data.pi_storage_pool.replace(
+      " (Replication Enabled)",
+      ""
+    );
+  }
+
   // add pi network here to have the items at the bottom of the terraform code
   data.pi_network = [];
   instance.network.forEach((nw) => {
@@ -104,6 +121,9 @@ function powerVsInstanceData(instance, config) {
     }
     data.pi_network.push(nwData);
   });
+
+  data.timeouts = timeouts("3h");
+
   [
     "network",
     "zone",

@@ -93,8 +93,17 @@ class Wizard extends React.Component {
     if (name === "region") {
       this.setState({
         region: value,
-        power_vs_zones: ["dal12", "wdc06"],
       });
+    }
+    if (name === "ha_power_zone_site_1" && value !== "") {
+      let powerHaMap = {
+        mad02: "eu-de-1",
+        mad04: "eu-de-2",
+        "us-east": "us-south",
+        wdc06: "dal12",
+        wdc07: "dal10",
+      };
+      this.setState({ power_vs_zones: [value].concat([powerHaMap[value]]) });
     } else this.setState({ [name]: value });
   }
 
@@ -106,7 +115,7 @@ class Wizard extends React.Component {
       });
     } else if (name === "power_vs_high_availability" && !this.state[name]) {
       this.setState({
-        [name]: !this.state.name,
+        [name]: !this.state[name],
         power_vs_zones: [],
       });
     } else this.setState({ [name]: !this.state[name] });
@@ -386,66 +395,107 @@ class Wizard extends React.Component {
               </ToolTipWrapper>
             )}
           </CraigFormGroup>
-          {this.state.enable_power_vs && (
+          {this.state.enable_power_vs &&
+            !this.state.power_vs_high_availability && (
+              <CraigFormGroup>
+                <FilterableMultiSelect
+                  className="fieldWidth leftTextAlign"
+                  id="options-power-zones"
+                  titleText="Power VS Zone"
+                  onChange={this.handlePowerZonesChange}
+                  initialSelectedItems={this.state.power_vs_zones || []}
+                  key={JSON.stringify(this.state.power_vs_zones)}
+                  items={
+                    {
+                      "au-syd": ["syd04", "syd05"],
+                      "eu-de": ["eu-de-1", "eu-de-2"],
+                      "eu-gb": ["lon04", "lon06"],
+                      "eu-es": ["mad02", "mad04"],
+                      "us-east": ["us-east", "wdc06", "wdc07"],
+                      "us-south": ["us-south", "dal10", "dal12"],
+                      "jp-tok": ["tok04"],
+                      "br-sao": ["sao01", "sao04"],
+                      "ca-tor": ["tor01"],
+                    }[this.state.region]
+                  }
+                  itemToString={(item) => (item ? item : "")}
+                  invalid={
+                    !contains(
+                      [
+                        "au-syd",
+                        "us-south",
+                        "eu-de",
+                        "eu-gb",
+                        "eu-es",
+                        "us-east",
+                        "br-sao",
+                        "jp-tok",
+                        "ca-tor",
+                      ],
+                      this.state.region
+                    ) || isEmpty(this.state.power_vs_zones)
+                  }
+                  invalidText={
+                    !contains(
+                      [
+                        "au-syd",
+                        "us-south",
+                        "eu-de",
+                        "eu-gb",
+                        "eu-es",
+                        "us-east",
+                        "br-sao",
+                        "jp-tok",
+                        "ca-tor",
+                      ],
+                      this.state.region
+                    )
+                      ? `The region ${this.state.region} does not have any available Power VS zones`
+                      : "Select at least one Availability Zone"
+                  }
+                />
+              </CraigFormGroup>
+            )}
+          {this.state.power_vs_high_availability && (
             <CraigFormGroup>
-              <FilterableMultiSelect
+              <Select
                 className="fieldWidth leftTextAlign"
-                id="options-power-zones"
-                titleText="Power VS Zone"
-                onChange={this.handlePowerZonesChange}
-                initialSelectedItems={this.state.power_vs_zones || []}
-                key={JSON.stringify(this.state.power_vs_zones)}
-                items={
-                  this.state.power_vs_high_availability
-                    ? ["dal12", "wdc06"]
-                    : {
-                        "au-syd": ["syd04", "syd05"],
-                        "eu-de": ["eu-de-1", "eu-de-2"],
-                        "eu-gb": ["lon04", "lon06"],
-                        "eu-es": ["mad02", "mad04"],
-                        "us-east": ["us-east", "wdc06", "wdc07"],
-                        "us-south": ["us-south", "dal10", "dal12"],
-                        "jp-tok": ["tok04"],
-                        "br-sao": ["sao01", "sao04"],
-                        "ca-tor": ["tor01"],
-                      }[this.state.region]
-                }
-                itemToString={(item) => (item ? item : "")}
-                invalid={
-                  !contains(
-                    [
-                      "au-syd",
-                      "us-south",
-                      "eu-de",
-                      "eu-gb",
-                      "eu-es",
-                      "us-east",
-                      "br-sao",
-                      "jp-tok",
-                      "ca-tor",
-                    ],
-                    this.state.region
-                  ) || isEmpty(this.state.power_vs_zones)
-                }
-                invalidText={
-                  !contains(
-                    [
-                      "au-syd",
-                      "us-south",
-                      "eu-de",
-                      "eu-gb",
-                      "eu-es",
-                      "us-east",
-                      "br-sao",
-                      "jp-osa",
-                      "ca-tor",
-                    ],
-                    this.state.region
+                id="ha_power_zone_site_1"
+                name="ha_power_zone_site_1"
+                labelText="Power VS Site 1"
+                onChange={this.handleChange}
+                value={this.state.power_vs_zones[0] || ""}
+                invalid={isEmpty(this.state.power_vs_zones)}
+                invalidText="Select an Availability Zone"
+              >
+                {["", "mad02", "mad04", "us-east", "wdc06", "wdc07"].map(
+                  (value) => (
+                    <SelectItem
+                      key={`ha_power_zone_site_1-${value}`}
+                      text={value}
+                      value={value}
+                    />
                   )
-                    ? `The region ${this.state.region} does not have any available Power VS zones`
-                    : "Select at least one Availability Zone"
-                }
-              />
+                )}
+              </Select>
+              <Select
+                className="fieldWidth leftTextAlign"
+                id="ha_power_zone_site_2"
+                name="ha_power_zone_site_2"
+                labelText="Power VS Site 2"
+                value={this.state.power_vs_zones[1] || ""}
+                readOnly
+              >
+                {["", "eu-de-1", "eu-de-2", "us-south", "dal10", "dal12"].map(
+                  (value) => (
+                    <SelectItem
+                      key={`ha_power_zone_site_2-${value}`}
+                      text={value}
+                      value={value}
+                    />
+                  )
+                )}
+              </Select>
             </CraigFormGroup>
           )}
         </div>

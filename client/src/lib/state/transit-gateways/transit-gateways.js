@@ -355,10 +355,10 @@ function initTransitGateway(store) {
       crns: {
         default: "",
         invalid: function (stateData) {
-          return invalidCrnList(stateData.crns);
+          return invalidCrnList(stateData.crns || []);
         },
         invalidText: function (stateData) {
-          return invalidCrnList(stateData.crns);
+          return invalidCrnList(stateData.crns || []);
         },
       },
       connections: {

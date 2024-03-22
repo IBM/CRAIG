@@ -607,7 +607,11 @@ function sshKeySchema(fieldName) {
       invalid: invalidSshKey,
       invalidText: function (stateData, componentProps) {
         return !validSshKey(stateData.public_key) &&
-          stateData.public_key !== "NONE"
+          stateData.public_key !== "NONE" &&
+          fieldName === "power_vs_ssh_keys"
+          ? "Provide a unique SSH public key for this workspace"
+          : !validSshKey(stateData.public_key) &&
+            stateData.public_key !== "NONE"
           ? "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region"
           : invalidSshKey(stateData, componentProps)
           ? "SSH Public Key in use"
@@ -1217,7 +1221,10 @@ function powerStoragePoolSelect(isVolume) {
     onInputChange: function (stateData) {
       let replicationEnabledPools =
         replicationEnabledStoragePoolMap[stateData.zone] || [];
-      if (!contains(replicationEnabledPools, stateData[field])) {
+      if (
+        !contains(replicationEnabledPools, stateData[field]) &&
+        !stateData[field].includes("(Replication Enabled)")
+      ) {
         stateData.pi_replication_enabled = false;
       }
 

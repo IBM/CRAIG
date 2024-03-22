@@ -321,6 +321,7 @@ function initOptions(store) {
             ? false
             : stateData.power_vs_zones.length === 0;
         },
+        invalidText: unconditionalInvalidText("Select an Availability Zone"),
       },
       power_vs_ha_zone_2: {
         size: "small",
