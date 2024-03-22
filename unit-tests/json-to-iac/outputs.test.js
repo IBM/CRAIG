@@ -589,6 +589,28 @@ output "management_vpc_jv_dev_server_vsi_1_1_floating_ip_address" {
 }
 
 ##############################################################################
+
+##############################################################################
+# Cos Object Storage Outputs
+##############################################################################
+
+output "cos_object_storage_bucket_management_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_management_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.region_location
+}
+
+output "cos_object_storage_bucket_workload_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_workload_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.region_location
+}
+
+##############################################################################
 `;
       assert.deepEqual(
         actualData,
@@ -1217,6 +1239,28 @@ output "management_vpc_jv_dev_server2_vsi_1_1_floating_ip_address" {
 }
 
 ##############################################################################
+
+##############################################################################
+# Cos Object Storage Outputs
+##############################################################################
+
+output "cos_object_storage_bucket_management_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_management_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.region_location
+}
+
+output "cos_object_storage_bucket_workload_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_workload_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.region_location
+}
+
+##############################################################################
 `;
       assert.deepEqual(
         actualData,
@@ -1434,6 +1478,10 @@ output "power_vs_workspace_test_output_crn" {
   value = ibm_resource_instance.power_vs_workspace_test_output.crn
 }
 
+output "power_vs_workspace_test_output_location" {
+  value = ibm_resource_instance.power_vs_workspace_test_output.location
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -1450,6 +1498,10 @@ output "power_vs_workspace_iac_power_workspace_test_output_guid" {
 
 output "power_vs_workspace_iac_power_workspace_test_output_crn" {
   value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.crn
+}
+
+output "power_vs_workspace_iac_power_workspace_test_output_location" {
+  value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.location
 }
 
 ##############################################################################
@@ -2342,6 +2394,10 @@ output "power_vs_workspace_test_output_crn" {
   value = ibm_resource_instance.power_vs_workspace_test_output.crn
 }
 
+output "power_vs_workspace_test_output_location" {
+  value = ibm_resource_instance.power_vs_workspace_test_output.location
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -2358,6 +2414,32 @@ output "power_vs_workspace_iac_power_workspace_test_output_guid" {
 
 output "power_vs_workspace_iac_power_workspace_test_output_crn" {
   value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.crn
+}
+
+output "power_vs_workspace_iac_power_workspace_test_output_location" {
+  value = data.ibm_resource_instance.power_vs_workspace_iac_power_workspace_test_output.location
+}
+
+##############################################################################
+
+##############################################################################
+# Cos Object Storage Outputs
+##############################################################################
+
+output "cos_object_storage_bucket_management_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_management_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_management_bucket_bucket.region_location
+}
+
+output "cos_object_storage_bucket_workload_bucket_bucket_name" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.bucket_name
+}
+
+output "cos_object_storage_bucket_workload_bucket_region_location" {
+  value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.region_location
 }
 
 ##############################################################################
@@ -2602,6 +2684,14 @@ output "power_vs_workspace_vsi_crn" {
   value = ibm_resource_instance.power_vs_workspace_vsi.crn
 }
 
+output "power_vs_workspace_vsi_location" {
+  value = ibm_resource_instance.power_vs_workspace_vsi.location
+}
+
+output "power_vs_workspace_vsi_ssh_key_vsi" {
+  value = ibm_pi_key.power_vs_ssh_key_vsi.name
+}
+
 output "power_vs_workspace_vsi_network_nw_name" {
   value = ibm_pi_network.power_network_vsi_nw.pi_network_name
 }
@@ -2731,7 +2821,7 @@ output "vsi_workspace_instance_output_test_primary_ip" {
             ssh_keys: [
               {
                 workspace_use_data: false,
-                use_data: false,
+                use_data: true,
                 name: "vsi",
                 public_key: "NONE",
                 workspace: "vsi",
@@ -2860,6 +2950,14 @@ output "power_vs_workspace_vsi_guid" {
 
 output "power_vs_workspace_vsi_crn" {
   value = data.ibm_resource_instance.power_vs_workspace_vsi.crn
+}
+
+output "power_vs_workspace_vsi_location" {
+  value = data.ibm_resource_instance.power_vs_workspace_vsi.location
+}
+
+output "power_vs_workspace_vsi_ssh_key_vsi" {
+  value = data.ibm_pi_key.power_vs_ssh_key_vsi.name
 }
 
 output "power_vs_workspace_vsi_network_nw_name" {

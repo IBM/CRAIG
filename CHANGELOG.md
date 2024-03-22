@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 - Power VS Network names and IDs are now included as outputs in CRAIG generated Terraform
 - Items highlighted for emphasis in the markdown for CRAIG `CHANGELOG.md` are now also highlighted on the `/docs/releaseNotes` page
 - Users can now select a Health Status for Power VS Instances and FalconStor VTL instances
+- Power VS SSH Key names are now output in Terraform `outputs.tf` files
+- Power VS Workspace locations are now output in Terraform `outputs.tf` files
+- Object Storage Bucket names and region locations are now output in Terraform `outputs.tf` files
 
 ### Fixes
 
