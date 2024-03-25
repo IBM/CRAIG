@@ -33,6 +33,7 @@ const { leftNavItemClassName } = require("./class-names");
 const { notificationText } = require("./utils");
 const wizard = require("./wizard");
 const {
+  classicGatewaysFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
@@ -105,4 +106,5 @@ module.exports = {
   invalidCidrBlock,
   invalidProjectNameText,
   invalidCrns,
+  classicGatewaysFilter,
 };
