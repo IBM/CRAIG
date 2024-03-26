@@ -19,7 +19,7 @@ function getRegionFromZone(zone) {
     ["tor", ["tor01"]],
     ["syd", ["syd04", "syd05"]],
     ["tok", ["tok04"]],
-    ["br-sao", ["sao01", "sao04"]],
+    //["br-sao", ["sao01", "sao04"]], removed sao from power until public endpoint available
   ]);
 
   regionZoneMap.forEach((values, key) => {

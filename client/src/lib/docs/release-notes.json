@@ -6,7 +6,9 @@
       "From the options page, users can now enable Manual Power VSI naming. When this is enabled, the environment prefix will not be prepended to the names of Power VS Virtual Server or FalconStor VTL instances"
     ],
     "fixes": [],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "Power VS Support for `br-sao` has been temporarily removed, as there is no public service endpoint for Power VS in this region. Support will be restored when there is a public endpoint"
+    ]
   },
   {
     "version": "1.13.1",
