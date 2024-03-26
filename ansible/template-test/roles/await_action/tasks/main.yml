@@ -1,4 +1,4 @@
-- name: Ensure {{ action }} finishes
+- name: Ensure {{ action_type }} finishes
   uri:
     url: https://schematics.cloud.ibm.com/v2/jobs/{{ action_result.json.activityid }}
     method: GET

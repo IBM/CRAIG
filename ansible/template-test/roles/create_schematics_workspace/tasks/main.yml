@@ -12,8 +12,8 @@
       "resource_group": "{{ resource_group }}"
       "type": ["terraform_v1.5"]
       "location": "{{ region }}"
-      "description": "{{ description }}"
-      "tags": "{{ tags }}"
+      "description": "Automated CRAIG Testing Workspace"
+      "tags": ["craig"]
       "template_data": [{ "type": "terraform_v1.5"}]
     status_code: 201
   register: workspace

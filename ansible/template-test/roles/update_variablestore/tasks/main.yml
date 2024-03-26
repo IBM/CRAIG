@@ -1,6 +1,6 @@
 ---
 # tasks file for update_variablestore
-- name: Add variable to variable store
+- name: Update variablestore
   set_fact:
-    variablestore: "{{ variablestore + additional_variables }}"
+    variablestore: "{{ variablestore +  [{'name': item, 'secure': true, 'use_default': false,  'value': tf_var_ssh_key}] }}"
   loop: "{{template_map[template]}}"
