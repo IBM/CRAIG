@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 - `.env.example` has been updated to include a warning that included quotation marks in .env values will cause the application to crash
 - When fetching VSI Images, the Craig API has no limit on the number of images that can be retrieved. In addition, only available images are retrieved
 - Power VS Network interface outputs now use the Terraform field `pi_network_name` instead of the depricated field `name`
+- When updating a project's region, VSI images are now reset to ensure that images are available in the selected region
+- When updating a Power VS workspace availability zone, storage tiers and storage pools are now reset for Power VS Instances, Volumes, and FalconStor VTLs
 
 ### Features
 

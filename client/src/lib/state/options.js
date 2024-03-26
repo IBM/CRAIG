@@ -5,6 +5,7 @@ const {
   buildNumberDropdownList,
   titleCase,
   contains,
+  deepEqual,
 } = require("lazy-z");
 const { subnetTierSave } = require("./vpc/vpc");
 const { RegexButWithWords } = require("regex-but-with-words");
@@ -71,6 +72,13 @@ function optionsInit(config) {
  * @param {object} componentProps props from component form
  */
 function optionsSave(config, stateData, componentProps) {
+  // on region change, set vsi image and image_name to null
+  if (componentProps.data.region !== stateData.region) {
+    config.store.json.vsi.forEach((deployment) => {
+      deployment.image = "";
+      deployment.image_name = "";
+    });
+  }
   if (componentProps.data.dynamic_subnets && !stateData.dynamic_subnets) {
     config.store.json.vpcs.forEach((vpc) => {
       vpc.address_prefixes = [];

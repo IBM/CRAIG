@@ -10,6 +10,7 @@ const {
   getObjectFromArray,
   contains,
   splat,
+  deepEqual,
 } = require("lazy-z");
 const { edgeRouterEnabledZones } = require("../../constants");
 const { shouldDisableComponentSave, sshKeySchema } = require("../utils");
@@ -135,6 +136,25 @@ function powerVsSave(config, stateData, componentProps) {
       }
     });
   });
+  //  if state zone and props zone are different
+  //  go through power volumes and reset storage_pool (and tier as well)
+  //  go through power instances and vtl and do the same thing
+  if (componentProps.data.zone !== stateData.zone) {
+    config.store.json.power_volumes.forEach((volume) => {
+      if (volume.workspace === componentProps.data.name) {
+        volume.pi_volume_pool = "";
+        volume.pi_volume_type = "";
+      }
+    });
+    ["power_instances", "vtl"].forEach((field) => {
+      config.store.json[field].forEach((instance) => {
+        if (instance.workspace === componentProps.data.name) {
+          instance.pi_storage_pool = "";
+          instance.pi_storage_type = "";
+        }
+      });
+    });
+  }
   config.updateChild(["json", "power"], componentProps.data.name, stateData);
 }
 
