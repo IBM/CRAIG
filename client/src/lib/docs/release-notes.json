@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.14.0",
+    "features": [
+      "Users can now update existing CRAIG templates and download the updated tar file by using the endpoint POST `/api/craig/template-tar/:template` "
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.13.1",
     "features": [
       "Terraform code for Power VS Instances and FalconStor VTL instances now have a 3 hour create timeout instead of the default 2 hour timeout",

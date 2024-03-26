@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.14.0
+
+### Upgrade Notes
+
+
+### Features
+
+- Users can now update existing CRAIG templates and download the updated tar file by using the endpoint POST `/api/craig/template-tar/:template` 
+
+### Fixes
+
+
 ## 1.13.1
 
 ### Upgrade Notes

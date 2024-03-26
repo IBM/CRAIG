@@ -34,6 +34,7 @@ router.get("/power/:zone/:component", controller.getPowerComponent);
 // craig
 router.post("/craig/tar", craigRoutes.craigTar);
 router.get("/craig/template-tar/:template", craigRoutes.templateTar);
+router.post("/craig/template-tar/:template", craigRoutes.updateTemplateTar);
 
 // stats
 router.get("/stats", controller.getStats);

@@ -8,7 +8,7 @@ const quickStartPower = require("../client/src/lib/docs/templates/quick-start-po
 const slzMixed = require("../client/src/lib/docs/templates/slz-mixed.json");
 const slzVsiEdge = require("../client/src/lib/docs/templates/slz-vsi-edge.json");
 const slzVsi = require("../client/src/lib/docs/templates/slz-vsi.json");
-
+const { transpose } = require("lazy-z");
 const templateNameToJson = {
   "from-scratch": fromScratch,
   "oracle-rac": oracleRac,
@@ -87,6 +87,43 @@ function craigApi(controller, tar) {
       })
       .catch((err) => {
         res.status(404);
+        res.send(err);
+      });
+  };
+
+  this.updateTemplateTar = function (req, res) {
+    let fieldsToUpdate = req.body;
+    let template = req.params["template"];
+    let pack = tar.pack();
+
+    return new Promise((resolve, reject) => {
+      if (!templateNameToJson[template]) {
+        let err = new Error();
+        err.message = `No template found with name ${template}`;
+        err.status = 404;
+        console.error(err);
+        reject(err);
+      }
+      let templateJson = templateNameToJson[template];
+      try {
+        transpose(fieldsToUpdate, templateJson);
+        let craigData = configToFilesJson(templateJson, false, true);
+        let tarFile = `${template}.tar`;
+        packTar(pack, tarFile.slice(0, tarFile.length - 4), craigData);
+        pack.finalize();
+        resolve(controller.createBlob(pack));
+      } catch (err) {
+        err.status = 400;
+        console.error(err);
+        reject(err);
+      }
+    })
+      .then((data) => {
+        let dataFromBuffer = Buffer.from(data);
+        res.type("tar");
+        res.send(dataFromBuffer);
+      })
+      .catch((err) => {
         res.send(err);
       });
   };
