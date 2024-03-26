@@ -16,6 +16,7 @@ const apiSpec = yaml.load(
 // vsi
 router.get("/vsi/:region/instanceProfiles", controller.vsiInstanceProfiles);
 router.get("/vsi/:region/images", controller.vsiImages);
+router.get("/vsi/:region/snapshots", controller.vsiSnapShots);
 
 // cluster
 router.get("/cluster/:region/flavors", controller.clusterFlavors);

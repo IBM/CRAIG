@@ -96,6 +96,39 @@ function vsiRoutes(axios, controller) {
       return controller.imageGet(req, res);
     });
   };
+
+  /**
+   * route for getting vsi snapshots
+   * @param {*} req
+   * @param {*} res
+   * @returns {Promise} get promise
+   */
+  controller.vsiSnapShots = (req, res) => {
+    return controller
+      .getBearerToken()
+      .then(() => {
+        let region = req.params["region"];
+        let requestConfig = {
+          method: "get",
+          url: `https://${region}.iaas.cloud.ibm.com/v1/snapshots?version=2024-03-19&generation=2`,
+          headers: {
+            "Accept-Encoding": "application/json",
+            Authorization: `Bearer ${controller.token}`,
+          },
+        };
+        return axios(requestConfig);
+      })
+      .then((response) => {
+        let snapshots = [];
+        response.data.snapshots.forEach((item) => {
+          snapshots.push(item.name);
+        });
+        res.send(snapshots);
+      })
+      .catch((err) => {
+        res.send(err.data);
+      });
+  };
 }
 
 module.exports = {

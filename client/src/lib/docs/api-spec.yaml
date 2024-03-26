@@ -276,6 +276,34 @@ paths:
                   type: string
         "401":
           description: Unauthorized
+  /api/vsi/{region}/snapshots:
+    get:
+      tags:
+        - VSI
+      summary: Returns a list of VSI snapshots in a region for the cloud account linked to the API key
+      description: Get a list of VSI snapshots in a region for the cloud account linked to the API key
+      operationId: getImages
+      parameters:
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region to get images from
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  - my-restore-volume
+                  - another-restore-volume
+                items:
+                  type: string
+        "401":
+          description: Unauthorized
   /api/cluster/versions:
     get:
       tags:

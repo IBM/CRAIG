@@ -1,4 +1,3 @@
-//simple backend express server which hosts production build version of slzgui, to test locally go to http://localhost:3000
 require("dotenv").config(); // import env
 const express = require("express");
 const path = require("path");
