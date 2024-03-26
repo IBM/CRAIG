@@ -387,6 +387,16 @@ function initOptions(store) {
               }[stateData.region];
         },
       },
+      manual_power_vsi_naming: {
+        type: "toggle",
+        default: false,
+        labelText: "Manual Power VS Server Naming",
+        tooltip: {
+          content:
+            "By default CRAIG resources have the environment prefix prepended to the name of the resource. Toggle this to true to remove the prefix for Power VS Virtual Server and FalconStor VTL instances.",
+        },
+        hideWhen: hideWhenNotPowerVs,
+      },
       enable_classic: {
         type: "toggle",
         default: false,

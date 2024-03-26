@@ -2561,6 +2561,47 @@ describe("power_instances", () => {
           );
         });
       });
+      describe("power_instance.name.helperText", () => {
+        it("should return correct helper text", () => {
+          assert.deepEqual(
+            craig.power_instances.name.helperText(
+              { name: "frog" },
+              {
+                craig: {
+                  store: {
+                    json: {
+                      _options: {
+                        prefix: "hi",
+                      },
+                    },
+                  },
+                },
+              }
+            ),
+            "hi-frog",
+            "it should return correct helper text"
+          );
+          assert.deepEqual(
+            craig.power_instances.name.helperText(
+              { name: "frog" },
+              {
+                craig: {
+                  store: {
+                    json: {
+                      _options: {
+                        prefix: "hi",
+                        manual_power_vsi_naming: true,
+                      },
+                    },
+                  },
+                },
+              }
+            ),
+            "frog",
+            "it should return correct helper text"
+          );
+        });
+      });
       describe("power_instance.network.onStateChange", () => {
         it("should return new networks and update primary subnet with first network name value", () => {
           let craig = state();

@@ -16,6 +16,7 @@ const {
  * @returns {object} data object
  */
 function powerVsInstanceData(instance, config) {
+  let manualVsiNaming = config?._options?.manual_power_vsi_naming;
   let foundWorkspace = !config?.power
     ? true
     : splatContains(config.power, "name", instance.workspace);
@@ -62,7 +63,7 @@ function powerVsInstanceData(instance, config) {
             : false
         )
       : "${ERROR: Unfound Ref}",
-    pi_instance_name: "${var.prefix}-" + instance.name,
+    pi_instance_name: (manualVsiNaming ? "" : "${var.prefix}-") + instance.name,
   };
   transpose(instance, data);
   delete data.index;

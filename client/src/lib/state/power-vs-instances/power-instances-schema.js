@@ -164,7 +164,14 @@ function hideWhenNotIbmi(stateData) {
  */
 function powerVsInstanceSchema(vtl) {
   return {
-    name: nameField("power_instances", { size: "small" }),
+    name: nameField("power_instances", {
+      size: "small",
+      helperText: function (stateData, componentProps) {
+        return componentProps.craig.store.json._options.manual_power_vsi_naming
+          ? stateData.name
+          : `${componentProps.craig.store.json._options.prefix}-${stateData.name}`;
+      },
+    }),
     sap: {
       default: false,
       type: "toggle",

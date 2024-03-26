@@ -74,13 +74,13 @@ paths:
                       "connections":
                         [
                           { "tgw": "transit-gateway", "vpc": "transit" },
-                          { "tgw": "transit-gateway", "power": "dal10" }
+                          { "tgw": "transit-gateway", "power": "dal10" },
                         ],
                       "use_data": false,
                       "gre_tunnels": [],
                       "prefix_filters": [],
                       "crns": null,
-                      "classic": false
+                      "classic": false,
                     },
                   ]
 

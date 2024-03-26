@@ -254,6 +254,10 @@ describe("automate schema generation", () => {
             power_vs_zones: { type: "Array", default: [] },
             enable_classic: { type: "boolean", default: false },
             tags: { type: "Array", default: ["hello", "world"] },
+            manual_power_vsi_naming: {
+              default: false,
+              type: "boolean",
+            },
             no_vpn_secrets_manager_auth: { type: "boolean", default: false },
           },
         },

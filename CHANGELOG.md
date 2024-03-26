@@ -9,7 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Users can now update existing CRAIG templates and download the updated tar file by using the endpoint POST `/api/craig/template-tar/:template` 
+- Users can now update existing CRAIG templates and download the updated tar file by using the endpoint POST `/api/craig/template-tar/:template`
+- From the options page, users can now enable Manual Power VSI naming. When this is enabled, the environment prefix will not be prepended to the names of Power VS Virtual Server or FalconStor VTL instances
 
 ### Fixes
 
