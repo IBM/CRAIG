@@ -1564,6 +1564,7 @@ function craigForms(craig) {
         {
           name: craig.vsi.name,
           resource_group: craig.vsi.resource_group,
+          use_variable_names: craig.vsi.use_variable_names,
         },
         {
           vpc: craig.vsi.vpc,
@@ -1571,13 +1572,15 @@ function craigForms(craig) {
           security_groups: craig.vsi.security_groups,
         },
         {
-          vsi_per_subnet: craig.vsi.vsi_per_subnet,
-          image_name: craig.vsi.image_name,
-          profile: craig.vsi.profile,
-        },
-        {
           ssh_keys: craig.vsi.ssh_keys,
           encryption_key: craig.vsi.encryption_key,
+          vsi_per_subnet: craig.vsi.vsi_per_subnet,
+        },
+        {
+          use_snapshot: craig.vsi.use_snapshot,
+          image_name: craig.vsi.image_name,
+          snapshot: craig.vsi.snapshot,
+          profile: craig.vsi.profile,
         },
         {
           enable_floating_ip: craig.vsi.enable_floating_ip,

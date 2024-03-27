@@ -1,5 +1,10 @@
 const { assert } = require("chai");
-const { classicGatewaysFilter, state } = require("../../../client/src/lib");
+const {
+  classicGatewaysFilter,
+  state,
+  powerSubnetFilter,
+  powerMapFilter,
+} = require("../../../client/src/lib");
 
 function newState() {
   let store = new state();
@@ -126,6 +131,103 @@ describe("filter functions", () => {
         actualData,
         [],
         "it should return list of filtered classic gateways"
+      );
+    });
+  });
+  describe("powerSubnetFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should return a list of subnets when no vtl or instances have unfound subnets", () => {
+      assert.deepEqual(
+        powerSubnetFilter({
+          craig: craig,
+          power: {
+            name: "test",
+            network: [
+              {
+                name: "hi",
+              },
+            ],
+          },
+        }),
+        [{ name: "hi" }],
+        "it should return list"
+      );
+    });
+    it("should return a list of subnets when no vtl has unfound subnets in a different workspace subnets", () => {
+      craig.store.json.vtl = [
+        {
+          subnets: [],
+          workspace: "oops",
+        },
+      ];
+      assert.deepEqual(
+        powerSubnetFilter({
+          craig: craig,
+          power: {
+            name: "test",
+            network: [
+              {
+                name: "hi",
+              },
+            ],
+          },
+        }),
+        [{ name: "hi" }],
+        "it should return list"
+      );
+    });
+    it("should return a list of subnets when no vtl has unfound subnets in workspace", () => {
+      craig.store.json.vtl = [
+        {
+          subnets: [],
+          workspace: "test",
+          network: [],
+        },
+      ];
+      assert.deepEqual(
+        powerSubnetFilter({
+          craig: craig,
+          power: {
+            name: "test",
+            network: [
+              {
+                name: "hi",
+              },
+            ],
+          },
+        }),
+        [
+          {
+            name: "No Subnets Selected",
+          },
+          { name: "hi" },
+        ],
+        "it should return list"
+      );
+    });
+  });
+  describe("powerMapFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should return a list of workspaces when no instances", () => {
+      assert.deepEqual(
+        powerMapFilter({ craig: craig }),
+        [],
+        "it should send list of workspaces"
+      );
+    });
+    it("should return a list of workspaces when instances have null workspace", () => {
+      craig.store.json.power_instances = [{ workspace: null }];
+      craig.store.json.vtl = [{ workspace: null }];
+      assert.deepEqual(
+        powerMapFilter({ craig: craig }),
+        [{ name: null }],
+        "it should send list of workspaces"
       );
     });
   });

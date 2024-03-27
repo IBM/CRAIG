@@ -372,6 +372,7 @@ function initVsiStore(store) {
         "security_groups",
         "subnets",
         "ssh_keys",
+        "snapshot",
       ],
       "vsi"
     ),
@@ -399,7 +400,11 @@ function initVsiStore(store) {
         size: "small",
         type: "fetchSelect",
         default: "",
-        invalid: fieldIsNullOrEmptyString("image_name"),
+        invalid: function (stateData) {
+          return stateData.use_snapshot
+            ? false
+            : fieldIsNullOrEmptyString("image_name")(stateData);
+        },
         invalidText: selectInvalidText("image"),
         groups: [],
         apiEndpoint: function (stateData, componentProps) {
@@ -410,6 +415,28 @@ function initVsiStore(store) {
             "When using a Red Had Enterprise Linux Image, additional networking rules must be added to successfully provision your VSI. Ensure outbound traffic is allowed in Security Groups at CIDR range 161.26.0.0/16 for TCP ports 80, 443, and 8443, and for UDP port 53.",
           align: "top-left",
           alignModal: "top-left",
+        },
+        hideWhen: function (stateData) {
+          return stateData.use_snapshot;
+        },
+      },
+      snapshot: {
+        labelText: "Snapshot",
+        size: "small",
+        type: "fetchSelect",
+        default: "",
+        invalid: function (stateData) {
+          return stateData.use_snapshot
+            ? fieldIsNullOrEmptyString("snapshot", true)(stateData)
+            : false;
+        },
+        invalidText: selectInvalidText("snapshot"),
+        groups: [],
+        apiEndpoint: function (stateData, componentProps) {
+          return `/api/vsi/${componentProps.craig.store.json._options.region}/snapshots`;
+        },
+        hideWhen: function (stateData) {
+          return stateData.use_snapshot !== true;
         },
       },
       profile: {
@@ -428,7 +455,11 @@ function initVsiStore(store) {
         type: "select",
         size: "small",
         default: "",
-        invalid: fieldIsNullOrEmptyString("encryption_key"),
+        invalid: function (stateData) {
+          return stateData.use_snapshot
+            ? false
+            : fieldIsNullOrEmptyString("encryption_key")(stateData);
+        },
         invalidText: unconditionalInvalidText("Select an encryption key"),
         groups: encryptionKeyGroups,
       },
@@ -461,6 +492,23 @@ function initVsiStore(store) {
         default: "",
         labelText: "User Data",
         placeholder: "Cloud init data",
+      },
+      use_variable_names: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Include Name Variables",
+        tooltip: {
+          alignModal: "bottom-right",
+          content:
+            "When this toggle is set to true, the name for each server in this deployment will be populated as a variable in Terraform and can be edited via IBM Cloud Schematics",
+        },
+      },
+      use_snapshot: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Create VSI From Snapshot",
       },
     },
     subComponents: {

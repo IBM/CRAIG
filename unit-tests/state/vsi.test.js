@@ -405,6 +405,52 @@ describe("vsi", () => {
         "it should return api endpoint"
       );
     });
+    it("should return api endpoint for snapshot name with region", () => {
+      assert.deepEqual(
+        craig.vsi.snapshot.apiEndpoint({}, { craig: craig }),
+        "/api/vsi/us-south/snapshots",
+        "it should return api endpoint"
+      );
+    });
+    it("should hide image name when use snapshot", () => {
+      assert.isTrue(
+        craig.vsi.image_name.hideWhen({ use_snapshot: true }, { craig: craig }),
+        "it should be hidden"
+      );
+    });
+    it("should not have invalid image name when use snapshot", () => {
+      assert.isFalse(
+        craig.vsi.image_name.invalid({ use_snapshot: true }, { craig: craig }),
+        "it should not be invalid"
+      );
+    });
+    it("should not have invalid snapshot name when not using snapshot", () => {
+      assert.isFalse(
+        craig.vsi.snapshot.invalid({ use_snapshot: false }, { craig: craig }),
+        "it should not be invalid"
+      );
+    });
+    it("should have invalid snapshot name when using snapshot", () => {
+      assert.isTrue(
+        craig.vsi.snapshot.invalid({ use_snapshot: true }, { craig: craig }),
+        "it should not be invalid"
+      );
+    });
+    it("should not have invalid encryption key name when using snapshot", () => {
+      assert.isFalse(
+        craig.vsi.encryption_key.invalid(
+          { use_snapshot: true },
+          { craig: craig }
+        ),
+        "it should not be invalid"
+      );
+    });
+    it("should hide snapshot when not using snapshot", () => {
+      assert.isTrue(
+        craig.vsi.snapshot.hideWhen({ use_snapshot: false }, { craig: craig }),
+        "it should be hidden"
+      );
+    });
     it("should return api endpoint for profile with region", () => {
       assert.deepEqual(
         craig.vsi.profile.apiEndpoint({}, { craig: craig }),

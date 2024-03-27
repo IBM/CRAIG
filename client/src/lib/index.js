@@ -43,6 +43,8 @@ const {
   addClassName,
   dynamicTextInputProps,
   dynamicPasswordInputProps,
+  powerSubnetFilter,
+  powerMapFilter,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
 const validate = require("./validate");
@@ -273,4 +275,6 @@ module.exports = {
   powerVsTf,
   getDisplayTierSubnetList,
   classicGatewaysFilter,
+  powerSubnetFilter,
+  powerMapFilter,
 };

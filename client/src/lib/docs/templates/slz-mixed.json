@@ -1283,7 +1283,10 @@
       "volumes": [],
       "image_name": null,
       "enable_floating_ip": false,
-      "primary_interface_ip_spoofing": false
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false
     }
   ]
 }

@@ -37,6 +37,8 @@ const {
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
+  powerSubnetFilter,
+  powerMapFilter,
 } = require("./diagrams");
 const {
   dynamicToolTipWrapperProps,
@@ -58,6 +60,7 @@ const {
 } = require("./dynamic-form-fields");
 
 module.exports = {
+  powerSubnetFilter,
   dynamicPasswordInputProps,
   dynamicToolTipWrapperProps,
   dynamicCraigFormGroupsProps,
@@ -107,4 +110,5 @@ module.exports = {
   invalidProjectNameText,
   invalidCrns,
   classicGatewaysFilter,
+  powerMapFilter,
 };

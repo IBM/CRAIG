@@ -9,6 +9,7 @@ import { DeploymentIcon, PowerSubnet, PowerSubnetInnerBox } from "../diagrams";
 import { isEmpty, splatContains } from "lazy-z";
 import PropTypes from "prop-types";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
+import { powerSubnetFilter } from "../../../lib";
 
 export const PowerSubnets = (props) => {
   let craig = props.craig;
@@ -33,23 +34,7 @@ export const PowerSubnets = (props) => {
     };
   }
 
-  let networkSubnets = [];
-  ["vtl", "power_instances"].forEach((field) => {
-    craig.store.json[field].forEach((instance) => {
-      if (
-        instance.workspace === props.power.name &&
-        isEmpty(instance.network)
-      ) {
-        networkSubnets = [
-          {
-            name: "No Subnets Selected",
-          },
-        ];
-      }
-    });
-  });
-
-  networkSubnets = networkSubnets.concat(props.power.network);
+  let networkSubnets = powerSubnetFilter(props);
 
   return (
     <div className="formInSubForm marginBottomSmall">

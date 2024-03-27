@@ -1926,6 +1926,9 @@ describe("automate schema generation", () => {
             enable_floating_ip: { type: "boolean", default: false },
             primary_interface_ip_spoofing: { type: "boolean", default: false },
             user_data: { type: "string", default: null },
+            use_variable_names: { type: "boolean", default: false },
+            use_snapshot: { type: "boolean", default: false },
+            snapshot: { type: "string", default: null },
             volumes: {
               Array: {
                 name: { type: "string", default: null },

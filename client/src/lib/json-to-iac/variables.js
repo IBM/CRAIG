@@ -5,6 +5,8 @@ const {
   titleCase,
   isNullOrEmptyString,
   capitalize,
+  buildNumberDropdownList,
+  kebabCase,
 } = require("lazy-z");
 
 /**
@@ -120,6 +122,35 @@ function variablesDotTf(config, useF5, templateTarMode) {
     }
   });
 
+  config.vsi.forEach((deployment) => {
+    if (deployment.use_variable_names) {
+      let allVsiNames = [];
+      deployment.subnets.forEach((subnet) => {
+        buildNumberDropdownList(Number(deployment.vsi_per_subnet), 1).forEach(
+          (vsi) => {
+            allVsiNames.push({
+              name: snakeCase(
+                `${deployment.vpc} vpc vsi deployment ${deployment.name} ${subnet} subnet server ${vsi} name`
+              ),
+              vpc: deployment.vpc,
+              subnet: subnet,
+              default: kebabCase(
+                `${config._options.prefix} ${deployment.vpc} ${deployment.name} server ${subnet} ${vsi}`
+              ),
+            });
+          }
+        );
+      });
+      allVsiNames.forEach((vsi) => {
+        variables[vsi.name] = {
+          description: `Override name for ${deployment.name} server. VPC: ${vsi.vpc} Subnet: ${vsi.subnet}`,
+          type: "${string}",
+          default: vsi.default,
+        };
+      });
+    }
+  });
+
   config.clusters.forEach((cluster) => {
     if (cluster.opaque_secrets) {
       cluster.opaque_secrets.forEach((secret) => {
@@ -180,7 +211,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
     };
   });
 
-  if (config.vpn_servers)
+  if (config.vpn_servers) {
     config.vpn_servers.forEach((server) => {
       if (server.bring_your_own_cert || server.method === "byo") {
         [
@@ -208,6 +239,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
         });
       }
     });
+  }
 
   return tfBlock(
     "variables",

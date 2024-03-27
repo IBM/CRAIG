@@ -1,4 +1,8 @@
-const { classicGatewaysFilter } = require("./filters");
+const {
+  classicGatewaysFilter,
+  powerSubnetFilter,
+  powerMapFilter,
+} = require("./filters");
 const { getDisplayTierSubnetList } = require("./subnet-row");
 const { shouldDisplayService } = require("./subnet-service-map");
 const { getDisplaySubnetTiers } = require("./subnet-tier-map");
@@ -8,4 +12,6 @@ module.exports = {
   getDisplayTierSubnetList,
   getDisplaySubnetTiers,
   shouldDisplayService,
+  powerSubnetFilter,
+  powerMapFilter,
 };

@@ -77,6 +77,7 @@ function optionsSave(config, stateData, componentProps) {
     config.store.json.vsi.forEach((deployment) => {
       deployment.image = "";
       deployment.image_name = "";
+      deployment.snapshot = null;
     });
   }
   if (componentProps.data.dynamic_subnets && !stateData.dynamic_subnets) {
