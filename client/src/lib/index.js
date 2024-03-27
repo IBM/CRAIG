@@ -24,6 +24,7 @@ const {
   invalidCrns,
   wizard,
   classicGatewaysFilter,
+  classicBareMetalFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
@@ -275,6 +276,7 @@ module.exports = {
   powerVsTf,
   getDisplayTierSubnetList,
   classicGatewaysFilter,
+  classicBareMetalFilter,
   powerSubnetFilter,
   powerMapFilter,
 };

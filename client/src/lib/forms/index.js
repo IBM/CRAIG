@@ -34,6 +34,7 @@ const { notificationText } = require("./utils");
 const wizard = require("./wizard");
 const {
   classicGatewaysFilter,
+  classicBareMetalFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
@@ -110,5 +111,6 @@ module.exports = {
   invalidProjectNameText,
   invalidCrns,
   classicGatewaysFilter,
+  classicBareMetalFilter,
   powerMapFilter,
 };

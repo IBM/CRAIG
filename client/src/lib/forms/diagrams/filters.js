@@ -27,6 +27,28 @@ function classicGatewaysFilter(props) {
 }
 
 /**
+ * filter classic bare metals
+ * @param {*} componentProps
+ * @returns {Object} list of filtered bare metals
+ */
+function classicBareMetalFilter(componentProps) {
+  let bareMetals = [];
+  componentProps.craig.store.json.classic_bare_metal.forEach(
+    (server, serverIndex) => {
+      if (
+        server.private_vlan === componentProps.vlan ||
+        server.public_vlan === componentProps.vlan
+      ) {
+        let copyServer = { ...server };
+        copyServer.index = serverIndex;
+        bareMetals.push(copyServer);
+      }
+    }
+  );
+  return bareMetals;
+}
+
+/**
  * filter for power subnets
  * @param {*} props component props
  * @returns {Array<object>} list of power vs subnets
@@ -72,6 +94,7 @@ function powerMapFilter(props) {
 
 module.exports = {
   classicGatewaysFilter,
+  classicBareMetalFilter,
   powerSubnetFilter,
   powerMapFilter,
 };

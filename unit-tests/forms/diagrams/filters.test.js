@@ -1,6 +1,7 @@
 const { assert } = require("chai");
 const {
   classicGatewaysFilter,
+  classicBareMetalFilter,
   state,
   powerSubnetFilter,
   powerMapFilter,
@@ -130,6 +131,83 @@ describe("filter functions", () => {
       assert.deepEqual(
         actualData,
         [],
+        "it should return list of filtered classic gateways"
+      );
+    });
+  });
+  describe("classicBareMetalFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+      craig.store.json.classic_vlans[0] = {
+        name: "classic-priv-vlan",
+        datacenter: "dal10",
+        type: "PRIVATE",
+      };
+      craig.store.json.classic_vlans[1] = {
+        name: "classic-pub-vlan",
+        datacenter: "dal10",
+        type: "PUBLIC",
+      };
+      craig.store.json.classic_vlans[2] = {
+        name: "other-priv-vlan",
+        datacenter: "dal10",
+        type: "PRIVATE",
+      };
+      craig.store.json.classic_vlans[3] = {
+        name: "other-pub-vlan",
+        datacenter: "dal10",
+        type: "PRIVATE",
+      };
+    });
+    it("should return a list of filtered bare metals that match the public or private vlan", () => {
+      craig.store.json.classic_bare_metal[0] = {
+        name: "bm1",
+        datacenter: "dal10",
+        private_vlan: "classic-priv-vlan",
+        public_vlan: "classic-pub-vlan",
+      };
+      craig.store.json.classic_bare_metal[1] = {
+        name: "bm2",
+        datacenter: "dal10",
+        private_vlan: "classic-priv-vlan",
+        public_vlan: "other-pub-vlan",
+      };
+      craig.store.json.classic_bare_metal[2] = {
+        name: "bm3",
+        datacenter: "dal10",
+        private_vlan: "other-priv-vlan",
+        public_vlan: "classic-pub-vlan",
+      };
+      craig.store.json.classic_bare_metal[3] = {
+        name: "bm4",
+        datacenter: "dal10",
+        private_vlan: "other-priv-vlan",
+        public_vlan: "other-pub-vlan",
+      };
+      let actualData = classicBareMetalFilter({
+        craig: craig,
+        datacenter: "dal10",
+        vlan: craig.store.json.classic_vlans[0].name,
+      });
+      assert.deepEqual(
+        actualData,
+        [
+          {
+            name: "bm1",
+            datacenter: "dal10",
+            private_vlan: "classic-priv-vlan",
+            public_vlan: "classic-pub-vlan",
+            index: 0,
+          },
+          {
+            name: "bm2",
+            datacenter: "dal10",
+            private_vlan: "classic-priv-vlan",
+            public_vlan: "other-pub-vlan",
+            index: 1,
+          },
+        ],
         "it should return list of filtered classic gateways"
       );
     });
