@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ### Upgrade Notes
 
-- Power VS Support for `br-sao` has been temporarily removed, as there is no public service endpoint for Power VS in this region. Support will be restored when there is a public endpoint
 
 ### Features
 
@@ -19,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes
 
+- Fixed an issue causing Power VS API endpoints for Sao Palo availability zones to fail
 
 ## 1.13.1
 

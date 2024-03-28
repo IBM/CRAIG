@@ -9,10 +9,10 @@
       "Power VS Virtual Server and FalconStor VTL system types are now retrieved dynamically using the Power VS API based on the zone",
       "Power Edge Router is now supported for `syd05`"
     ],
-    "fixes": [],
-    "upgrade_notes": [
-      "Power VS Support for `br-sao` has been temporarily removed, as there is no public service endpoint for Power VS in this region. Support will be restored when there is a public endpoint"
-    ]
+    "fixes": [
+      "Fixed an issue causing Power VS API endpoints for Sao Palo availability zones to fail"
+    ],
+    "upgrade_notes": []
   },
   {
     "version": "1.13.1",

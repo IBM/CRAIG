@@ -28,7 +28,7 @@ const powerVsZones = [
   "eu-gb",
   "eu-es",
   "us-east",
-  //"br-sao", removed sao from power until public endpoint available
+  "br-sao",
   "jp-tok",
   "ca-tor",
 ];
@@ -383,7 +383,7 @@ function initOptions(store) {
                 "us-east": ["us-east", "wdc06", "wdc07"],
                 "us-south": ["us-south", "dal10", "dal12"],
                 "jp-tok": ["tok04"],
-                "br-sao": [], //["sao01", "sao04"], removed sao from power until public endpoint available
+                "br-sao": ["sao01", "sao04"],
                 "ca-tor": ["tor01"],
               }[stateData.region];
         },

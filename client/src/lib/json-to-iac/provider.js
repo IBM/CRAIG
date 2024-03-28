@@ -53,6 +53,8 @@ function ibmCloudProvider(config) {
           ? "us-south"
           : contains(["mad02", "mad04"], zone)
           ? "mad"
+          : contains(["sao01", "sao04"], zone)
+          ? "sao"
           : "${var.region}",
         zone: zone,
         ibmcloud_timeout: 60,
