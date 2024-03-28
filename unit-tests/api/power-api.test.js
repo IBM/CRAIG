@@ -242,6 +242,40 @@ describe("power api", () => {
           );
         });
     });
+    it("should send system pools", () => {
+      process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
+      let { axios } = initMockAxios(
+        {
+          resources: [
+            {
+              guid: "fooGuid",
+              crn: "fooCrn",
+            },
+          ],
+          storagePoolsCapacity: [
+            { poolName: "Tier1-Flash-1", replicationEnabled: true },
+            { poolName: "Tier1-Flash-2", replicationEnabled: true },
+            { poolName: "Tier3-Flash-1", replicationEnabled: false },
+            { poolName: "Tier1-Flash-2", replicationEnabled: false },
+          ],
+        },
+        false
+      );
+      let testPowerController = new controller(axios);
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { zone: "us-south", component: "system_pools" },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith(["resources", "storagePoolsCapacity"]),
+            "it should be true"
+          );
+        });
+    });
     it("should respond with error when no environment variable is present", () => {
       let { axios } = initMockAxios(
         {

@@ -1417,7 +1417,6 @@ describe("automate schema generation", () => {
             pi_sys_type: {
               type: "string",
               default: null,
-              groups: ["e880", "e980", "s922", "s1022"],
             },
             pi_proc_type: {
               type: "string",
@@ -2027,7 +2026,6 @@ describe("automate schema generation", () => {
             pi_sys_type: {
               type: "string",
               default: null,
-              groups: ["s922", "e980"],
             },
             pi_proc_type: {
               type: "string",

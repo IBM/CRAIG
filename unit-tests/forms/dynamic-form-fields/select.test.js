@@ -579,6 +579,7 @@ describe("dynamic select", () => {
         {
           name: "hi",
           field: {
+            name: "hi",
             apiEndpoint: function () {
               return "/api/frog/toad";
             },
@@ -671,6 +672,45 @@ describe("dynamic select", () => {
             },
           },
           parentProps: {},
+          parentState: {
+            hi: "frog",
+          },
+          handleInputChange: () => {},
+        },
+        true
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct list for other endpoints when mounted and loaded but selected and is vtl", () => {
+      let expectedData = ["", "s922", "e980"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["frog", "toad", "s922", "e980"],
+        },
+        {
+          name: "pi_sys_type",
+          field: {
+            apiEndpoint: function () {
+              return "/api/frog/toad";
+            },
+            disabled: () => {
+              return false;
+            },
+            invalid: () => {
+              return false;
+            },
+            invalidText: () => {
+              return "oops";
+            },
+            groups: [],
+          },
+          parentProps: {
+            formName: "VTL",
+          },
           parentState: {
             hi: "frog",
           },

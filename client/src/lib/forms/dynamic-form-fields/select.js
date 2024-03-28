@@ -148,25 +148,33 @@ function dynamicFetchSelectDataToGroups(stateData, componentProps, isMounted) {
       })
     );
   } else {
-    return (
-      // to prevent storage pools from being loaded incorrectly,
-      // prevent first item in storage groups from being loaded when not selected
-      (
-        dynamicSelectProps(componentProps).value === "" &&
-        isMounted &&
-        !deepEqual(stateData.data, ["Loading..."])
-          ? [""]
-          : []
-      )
-        .concat(stateData.data)
-        .map((item) => {
-          if (isFunction(componentProps.field.onRender)) {
-            return componentProps.field.onRender({
-              [componentProps.name]: item,
-            });
-          } else return item;
-        })
-    );
+    // to prevent storage pools from being loaded incorrectly,
+    // prevent first item in storage groups from being loaded when not selected
+    let data = (
+      dynamicSelectProps(componentProps).value === "" &&
+      isMounted &&
+      !deepEqual(stateData.data, ["Loading..."])
+        ? [""]
+        : []
+    )
+      .concat(stateData.data)
+      .map(
+        componentProps.parentProps.formName === "VTL" &&
+          componentProps.name === "pi_sys_type"
+          ? (item) => {
+              if (contains(["", "s922", "e980"], item)) return item;
+            }
+          : (item) => {
+              if (isFunction(componentProps.field.onRender)) {
+                return componentProps.field.onRender({
+                  [componentProps.name]: item,
+                });
+              } else return item;
+            }
+      );
+    return data.filter((item) => {
+      if (item !== undefined) return true;
+    });
   }
 }
 

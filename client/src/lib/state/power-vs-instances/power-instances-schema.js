@@ -358,12 +358,20 @@ function powerVsInstanceSchema(vtl) {
     pi_sys_type: {
       size: "small",
       labelText: "System Type",
+      type: "fetchSelect",
+      apiEndpoint: function (stateData, componentProps) {
+        return `/api/power/${stateData.zone}/system_pools`;
+      },
       default: "",
       invalid: fieldIsNullOrEmptyString("pi_sys_type"),
-      invalidText: selectInvalidText("systen type"),
+      invalidText: selectInvalidText("system type"),
       groups: vtl ? ["s922", "e980"] : systemTypes,
-      type: "select",
-      hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
+      hideWhen: function (stateData, componentProps) {
+        return (
+          isNullOrEmptyString(stateData.workspace, true) ||
+          hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps)
+        );
+      },
     },
     pi_proc_type: {
       default: "",

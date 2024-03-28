@@ -8,11 +8,12 @@ import { disableSave, powerMapFilter } from "../../../lib";
 
 export const PowerMap = (props) => {
   let craig = props.craig;
+  let nullPowerWorkspaceResource =
+    powerMapFilter(props).length > craig.store.json.power.length;
   return powerMapFilter(props).map((power, powerIndex) => {
-    let actualPowerIndex =
-      powerMapFilter(props).length > craig.store.json.power.length
-        ? powerIndex - 1
-        : powerIndex;
+    let actualPowerIndex = nullPowerWorkspaceResource
+      ? powerIndex - 1
+      : powerIndex;
     let powerSubFormClassName = "subForm powerSubForm";
     let isRed = false;
     if (props.isSelected && props.isSelected(actualPowerIndex)) {

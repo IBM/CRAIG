@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 - From the options page, users can now enable Manual Power VSI naming. When this is enabled, the environment prefix will not be prepended to the names of Power VS Virtual Server or FalconStor VTL instances
 - Users can now provision VPC VSI deployments using an existing volume snapshot by using the `Create VSI From Snapshot` toggle. A list of snapshots will be dynamically retrieved using the IBM Cloud API based on the region selected in your project
 - When creating a VSI Deployment, users can select a new toggle `Include Name Variables`. When this value is set to true, VSI names will be populated as variables in Terrafrom. This allows for users to have full control over VSI names without needing to directly modify Terraform scripts
+- Power VS Virtual Server and FalconStor VTL system types are now retrieved dynamically using the Power VS API based on the zone
+- Power Edge Router is now supported for `syd05`
 
 ### Fixes
 
