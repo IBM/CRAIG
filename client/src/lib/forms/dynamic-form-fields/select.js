@@ -4,6 +4,7 @@ const {
   paramTest,
   isFunction,
   deepEqual,
+  isNullOrEmptyString,
 } = require("lazy-z");
 const {
   dynamicFieldId,
@@ -112,6 +113,64 @@ function dynamicSelectProps(props, isMounted, stateData) {
   };
 }
 
+/**
+ * dynamicFetchSelect data to groups function
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @param {boolean} isMounted
+ * @returns {Array<string>}
+ */
+function dynamicFetchSelectDataToGroups(stateData, componentProps, isMounted) {
+  let apiEndpoint = componentProps.field.apiEndpoint(
+    componentProps.parentState,
+    componentProps.parentProps
+  );
+
+  if (apiEndpoint === "/api/cluster/versions") {
+    let initialArray =
+      componentProps.parentProps.isModal ||
+      isNullOrEmptyString(componentProps.parentState.kube_version)
+        ? [""]
+        : [];
+    // add "" if kube version is reset
+    return initialArray.concat(
+      // filter version based on kube type
+      stateData.data.filter((version) => {
+        if (
+          (componentProps.parentState.kube_type === "openshift" &&
+            contains(version, "openshift")) ||
+          (componentProps.parentState.kube_type === "iks" &&
+            !contains(version, "openshift")) ||
+          version === "default"
+        ) {
+          return version.replace(/\s\(Default\)/g, "");
+        }
+      })
+    );
+  } else {
+    return (
+      // to prevent storage pools from being loaded incorrectly,
+      // prevent first item in storage groups from being loaded when not selected
+      (
+        dynamicSelectProps(componentProps).value === "" &&
+        isMounted &&
+        !deepEqual(stateData.data, ["Loading..."])
+          ? [""]
+          : []
+      )
+        .concat(stateData.data)
+        .map((item) => {
+          if (isFunction(componentProps.field.onRender)) {
+            return componentProps.field.onRender({
+              [componentProps.name]: item,
+            });
+          } else return item;
+        })
+    );
+  }
+}
+
 module.exports = {
   dynamicSelectProps,
+  dynamicFetchSelectDataToGroups,
 };

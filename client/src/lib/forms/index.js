@@ -58,6 +58,7 @@ const {
   addClassName,
   dynamicTextInputProps,
   dynamicPasswordInputProps,
+  dynamicFetchSelectDataToGroups,
 } = require("./dynamic-form-fields");
 
 module.exports = {
@@ -113,4 +114,5 @@ module.exports = {
   classicGatewaysFilter,
   classicBareMetalFilter,
   powerMapFilter,
+  dynamicFetchSelectDataToGroups,
 };

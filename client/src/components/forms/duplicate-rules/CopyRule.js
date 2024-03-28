@@ -4,20 +4,10 @@ import { isNullOrEmptyString, splat, contains } from "lazy-z";
 import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { CraigFormHeading, CraigFormGroup, PrimaryButton } from "../utils";
+import { copyRuleFormName } from "../../../lib";
 
 const CopyRule = (props) => {
   let ruleType = props.isSecurityGroup ? "Security Group" : "ACL";
-
-  /**
-   * get form name for icse props
-   * @param {string} field name of field
-   * @returns {string} form name string
-   */
-  function getFormName(field) {
-    return `copy-rule-${props.isSecurityGroup ? "sg" : "acl"}-${field}${
-      props.isSecurityGroup ? "" : "-" + props.data.name
-    }`;
-  }
 
   return (
     <>
@@ -31,7 +21,7 @@ const CopyRule = (props) => {
       <CraigFormGroup noMarginBottom className="align-row">
         <DynamicFormSelect
           name="ruleSource"
-          propsName={getFormName("source")}
+          propsName={copyRuleFormName(props)("source")}
           keyIndex={0}
           value={props.ruleSource}
           field={{
@@ -56,7 +46,7 @@ const CopyRule = (props) => {
         />
         <DynamicFormSelect
           name="ruleCopyName"
-          propsName={getFormName("rule")}
+          propsName={copyRuleFormName(props)("rule")}
           keyIndex={0}
           value={props.ruleCopyName}
           field={{
@@ -93,7 +83,7 @@ const CopyRule = (props) => {
         />
         <DynamicFormSelect
           name="ruleDestination"
-          propsName={getFormName("destination")}
+          propsName={copyRuleFormName(props)("destination")}
           keyIndex={0}
           value={props.ruleDestination}
           field={{
