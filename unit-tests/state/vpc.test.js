@@ -4937,7 +4937,7 @@ describe("vpcs", () => {
               name: "vpn-zone-2",
               network_acl: null,
               resource_group: "management-rg",
-              public_gateway: false,
+              public_gateway: true,
               has_prefix: true,
             },
           ];
@@ -4980,7 +4980,7 @@ describe("vpcs", () => {
               name: "vpn-zone-1",
               network_acl: null,
               resource_group: "management-rg",
-              public_gateway: true,
+              public_gateway: false,
               has_prefix: true,
             },
             {
@@ -5051,11 +5051,12 @@ describe("vpcs", () => {
               has_prefix: true,
             },
           ];
-          craig.store.json.vpcs[0].publicGateways = [1];
+          craig.store.json.vpcs[0].publicGateways = [2];
           craig.vpcs.subnetTiers.save(
             {
               name: "vpn",
-              zones: 2,
+              zones: "2",
+              select_zones: "2",
               networkAcl: "",
               addPublicGateway: true,
             },
@@ -6355,6 +6356,147 @@ describe("vpcs", () => {
               },
             ],
             "it should have correct subnet tiers"
+          );
+        });
+        it("should save an existing subnet tier when increasing zones and setting pgw to true when no pgw in that zone", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+            },
+            {
+              cidr: "10.20.30.0/24",
+              has_prefix: true,
+              name: "vpn-zone-2",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 2,
+            },
+            {
+              cidr: "10.30.30.0/24",
+              has_prefix: true,
+              name: "vpn-zone-3",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 3,
+            },
+          ];
+          craig.store.json.vpcs[0].publicGateways = [1];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vpn",
+              zones: "3",
+              networkAcl: "",
+              addPublicGateway: true,
+              select_zones: "3",
+              advanced: false,
+            },
+            {
+              vpc_name: "management",
+              data: {
+                hide: true,
+                networkAcl: "transit",
+                addPublicGateway: false,
+                name: "vpn",
+                zones: "1",
+                advanced: false,
+                select_zones: "3",
+              },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
           );
         });
       });

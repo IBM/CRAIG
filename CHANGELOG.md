@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue causing Power VS API endpoints for Sao Palo availability zones to fail
+- Fixed an issue causing VPC subnets to incorrectly have `public_gateway` set to true when no public gateway is created in the corresponding zone
 
 ## 1.13.1
 
