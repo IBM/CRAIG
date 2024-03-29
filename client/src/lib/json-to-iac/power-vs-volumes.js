@@ -55,7 +55,7 @@ function formatPowerVsVolume(volume, config) {
         )}.volume_id}`;
       }
     } else {
-      data.pi_storage_pool = volume.pi_volume_pool?.replace(
+      data.pi_volume_pool = volume.pi_volume_pool?.replace(
         " (Replication Enabled)",
         ""
       );

@@ -230,7 +230,7 @@ provider "ibm" {
         dynamic_subnets: true,
         enable_power_vs: true,
         craig_version: "1.6.0",
-        power_vs_zones: ["sao01"],
+        power_vs_zones: ["sao01", "sao04"],
         power_vs_high_availability: true,
       },
     });
@@ -256,6 +256,14 @@ provider "ibm" {
   ibmcloud_api_key = var.ibmcloud_api_key
   region           = "sao"
   zone             = "sao01"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_sao04"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "sao"
+  zone             = "sao04"
   ibmcloud_timeout = 60
 }
 

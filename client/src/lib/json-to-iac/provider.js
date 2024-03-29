@@ -39,7 +39,16 @@ function ibmCloudProvider(config) {
         region: zone.match(
           new RegexButWithWords()
             .group((exp) => {
-              exp.literal("lon").or().literal("syd").or().literal("tok");
+              exp
+                .literal("lon")
+                .or()
+                .literal("syd")
+                .or()
+                .literal("tok")
+                .or()
+                .literal("osa")
+                .or()
+                .literal("sao");
             })
             .digit()
             .oneOrMore()
@@ -53,8 +62,6 @@ function ibmCloudProvider(config) {
           ? "us-south"
           : contains(["mad02", "mad04"], zone)
           ? "mad"
-          : contains(["sao01", "sao04"], zone)
-          ? "sao"
           : "${var.region}",
         zone: zone,
         ibmcloud_timeout: 60,

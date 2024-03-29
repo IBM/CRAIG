@@ -19,6 +19,7 @@ function getRegionFromZone(zone) {
     ["tor", ["tor01"]],
     ["syd", ["syd04", "syd05"]],
     ["tok", ["tok04"]],
+    ["osa", ["osa21"]],
     ["sao", ["sao01", "sao04"]],
   ]);
 

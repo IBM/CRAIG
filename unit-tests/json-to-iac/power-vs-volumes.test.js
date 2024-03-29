@@ -399,7 +399,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
   pi_volume_name         = "\${var.prefix}-oracle-template-oracle-1-db-1"
   pi_volume_shareable    = true
   pi_replication_enabled = false
-  pi_storage_pool        = "Tier1-Flash-4"
+  pi_volume_pool         = "Tier1-Flash-4"
   pi_volume_type         = null
 }
 `;

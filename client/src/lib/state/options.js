@@ -31,6 +31,7 @@ const powerVsZones = [
   "br-sao",
   "jp-tok",
   "ca-tor",
+  "jp-osa",
 ];
 
 const powerHaMap = {
@@ -385,6 +386,7 @@ function initOptions(store) {
                 "jp-tok": ["tok04"],
                 "br-sao": ["sao01", "sao04"],
                 "ca-tor": ["tor01"],
+                "jp-osa": ["osa21"],
               }[stateData.region];
         },
       },

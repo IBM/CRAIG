@@ -26,6 +26,7 @@ const defaultZones = [
   "syd05",
   "tok04",
   "sao01",
+  "osa21",
   // "sao04",
 ];
 
