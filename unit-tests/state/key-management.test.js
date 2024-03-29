@@ -459,6 +459,12 @@ describe("key_management", () => {
       beforeEach(() => {
         craig = newState();
       });
+      it("should not be hidden when use data", () => {
+        assert.isUndefined(
+          craig.key_management.resource_group.hideWhen,
+          "it should be undefined"
+        );
+      });
       it("should not have invalid key ring when empty string", () => {
         assert.isFalse(
           craig.key_management.keys.key_ring.invalid({ key_ring: "" }),

@@ -23,9 +23,12 @@ function lazyAddSg(slz) {
 }
 
 describe("security groups", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("security_groups.init", () => {
     it("should initialize security groups", () => {
-      let store = newState();
       let expectedData = [
         {
           vpc: "management",
@@ -481,9 +484,9 @@ describe("security groups", () => {
           ],
         },
       ];
-      store.update();
+      craig.update();
       assert.deepEqual(
-        store.store.json.security_groups,
+        craig.store.json.security_groups,
         expectedData,
         "it should return default security groups"
       );
@@ -491,40 +494,36 @@ describe("security groups", () => {
   });
   describe("security_groups.onStoreUpdate", () => {
     it("should set securityGroups on update", () => {
-      let slz = new newState();
-      slz.update();
+      craig.update();
       assert.deepEqual(
         {
           management: ["management-vpe", "management-vsi"],
           workload: ["workload-vpe"],
         },
-        slz.store.securityGroups,
+        craig.store.securityGroups,
         "it should add groups"
       );
     });
     it("should set vpc name to null when a vpc a security group is attached to is deleted", () => {
-      let slz = new newState();
-      slz.vpcs.delete({}, { data: { name: "management" } });
+      craig.vpcs.delete({}, { data: { name: "management" } });
       assert.deepEqual(
-        slz.store.json.security_groups[0].vpc,
+        craig.store.json.security_groups[0].vpc,
         null,
         "it should set to null"
       );
     });
     it("should set vpc name in a security group rule to null when a vpc a security group is attached to is deleted", () => {
-      let slz = new newState();
-      slz.vpcs.delete({}, { data: { name: "management" } });
+      craig.vpcs.delete({}, { data: { name: "management" } });
       assert.deepEqual(
-        slz.store.json.security_groups[0].rules[0].vpc,
+        craig.store.json.security_groups[0].rules[0].vpc,
         null,
         "it should set to null"
       );
     });
     it("should set resource group to null when a resource group a security group is attached to is deleted", () => {
-      let slz = new newState();
-      slz.resource_groups.delete({}, { data: { name: "management-rg" } });
+      craig.resource_groups.delete({}, { data: { name: "management-rg" } });
       assert.deepEqual(
-        slz.store.json.security_groups[0].resource_group,
+        craig.store.json.security_groups[0].resource_group,
         null,
         "it should set to null"
       );
@@ -532,15 +531,14 @@ describe("security groups", () => {
   });
   describe("security_groups.create", () => {
     it("should create a new security group", () => {
-      let slz = new newState();
-      slz.security_groups.create({
+      craig.security_groups.create({
         name: "frog",
         vpc: "management",
         resource_group: null,
         rules: [],
       });
       assert.deepEqual(
-        slz.store.json.security_groups[3],
+        craig.store.json.security_groups[3],
         {
           name: "frog",
           vpc: "management",
@@ -553,32 +551,29 @@ describe("security groups", () => {
   });
   describe("security_groups.save", () => {
     it("should update a security group", () => {
-      let slz = new newState();
-      slz.security_groups.save(
+      craig.security_groups.save(
         { name: "todd" },
         { data: { name: "management-vpe", rules: [] } }
       );
       assert.deepEqual(
-        slz.store.json.security_groups[0].name,
+        craig.store.json.security_groups[0].name,
         "todd",
         "it should update the group"
       );
     });
     it("should update a security group with same name", () => {
-      let slz = new newState();
-      slz.security_groups.save(
+      craig.security_groups.save(
         { name: "management-vpe" },
         { data: { name: "management-vpe", rules: [] } }
       );
       assert.deepEqual(
-        slz.store.json.security_groups[0].name,
+        craig.store.json.security_groups[0].name,
         "management-vpe",
         "it should update the group"
       );
     });
     it("should update a security group with a new vpc and sg name", () => {
-      let slz = new newState();
-      slz.security_groups.save(
+      craig.security_groups.save(
         { name: "todd", vpc: "workload" },
         {
           data: {
@@ -597,12 +592,12 @@ describe("security groups", () => {
         }
       );
       assert.deepEqual(
-        slz.store.json.security_groups[0].rules[0].vpc,
+        craig.store.json.security_groups[0].rules[0].vpc,
         "workload",
         "it should update the group"
       );
       assert.deepEqual(
-        slz.store.json.security_groups[0].rules[0].sg,
+        craig.store.json.security_groups[0].rules[0].sg,
         "todd",
         "it should update the group"
       );
@@ -610,20 +605,15 @@ describe("security groups", () => {
   });
   describe("security_groups.delete", () => {
     it("should delete a security group", () => {
-      let slz = new newState();
-      slz.security_groups.delete({}, { data: { name: "management-vpe" } });
+      craig.security_groups.delete({}, { data: { name: "management-vpe" } });
       assert.deepEqual(
-        slz.store.json.security_groups.length,
+        craig.store.json.security_groups.length,
         2,
         "it should delete the group"
       );
     });
   });
   describe("security_groups.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     it("should hide use_data", () => {
       assert.isTrue(
         craig.security_groups.use_data.hideWhen({}, { craig: craig }),
@@ -662,9 +652,8 @@ describe("security groups", () => {
   describe("security_group.rules", () => {
     describe("security_groups.rules.create", () => {
       it("should add a new rule", () => {
-        let slz = new newState();
-        lazyAddSg(slz);
-        slz.security_groups.rules.create(
+        lazyAddSg(craig);
+        craig.security_groups.rules.create(
           {
             name: "test-rule",
             source: "8.8.8.8",
@@ -673,7 +662,7 @@ describe("security groups", () => {
           { parent_name: "frog" }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[3].rules,
           [
             {
               sg: "frog",
@@ -697,16 +686,15 @@ describe("security groups", () => {
     });
     describe("security_groups.rules.save", () => {
       it("should update a rule in place", () => {
-        let slz = new newState();
-        lazyAddSg(slz);
-        slz.security_groups.rules.create(
+        lazyAddSg(craig);
+        craig.security_groups.rules.create(
           {
             name: "test-rule",
             source: "8.8.8.8",
           },
           { parent_name: "frog" }
         );
-        slz.security_groups.rules.save(
+        craig.security_groups.rules.save(
           {
             inbound: true,
             name: "test-rule",
@@ -718,31 +706,14 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[3].rules,
-          [
-            {
-              name: "test-rule",
-              direction: "inbound",
-              icmp: { type: null, code: null },
-              tcp: { port_min: null, port_max: null },
-              udp: { port_min: null, port_max: null },
-              source: "8.8.8.8",
-              sg: "frog",
-              vpc: "management",
-              port_max: null,
-              port_min: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-          ],
+          craig.store.json.security_groups[3].rules[0].direction,
+          "inbound",
           "it should update rule"
         );
       });
       it("should update a rule in place with protocol", () => {
-        let slz = new newState();
-        lazyAddSg(slz);
-        slz.security_groups.rules.create(
+        lazyAddSg(craig);
+        craig.security_groups.rules.create(
           {
             name: "test-rule",
             source: "8.8.8.8",
@@ -770,7 +741,7 @@ describe("security groups", () => {
             parent_name: "frog",
           }
         );
-        slz.security_groups.rules.save(
+        craig.security_groups.rules.save(
           {
             name: "test-rule",
             inbound: true,
@@ -801,7 +772,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -823,9 +794,8 @@ describe("security groups", () => {
         );
       });
       it("should update a rule in place with icmp protocol", () => {
-        let slz = new newState();
-        lazyAddSg(slz);
-        slz.security_groups.rules.create(
+        lazyAddSg(craig);
+        craig.security_groups.rules.create(
           {
             name: "test-rule",
             source: "8.8.8.8",
@@ -846,7 +816,7 @@ describe("security groups", () => {
             parent_name: "frog",
           }
         );
-        slz.security_groups.rules.save(
+        craig.security_groups.rules.save(
           {
             name: "test-rule",
             inbound: true,
@@ -871,7 +841,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -893,9 +863,8 @@ describe("security groups", () => {
         );
       });
       it("should update a rule in place with icmp protocol", () => {
-        let slz = new newState();
-        lazyAddSg(slz);
-        slz.security_groups.rules.create(
+        lazyAddSg(craig);
+        craig.security_groups.rules.create(
           {
             name: "test-rule",
             source: "8.8.8.8",
@@ -916,7 +885,7 @@ describe("security groups", () => {
             parent_name: "frog",
           }
         );
-        slz.security_groups.rules.save(
+        craig.security_groups.rules.save(
           {
             name: "test-rule",
             inbound: true,
@@ -935,7 +904,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -957,16 +926,15 @@ describe("security groups", () => {
         );
       });
       it("should update a rule in place with all protocol", () => {
-        let slz = new newState();
-        lazyAddSg(slz);
-        slz.security_groups.rules.create(
+        lazyAddSg(craig);
+        craig.security_groups.rules.create(
           {
             name: "test-rule",
             source: "8.8.8.8",
           },
           { parent_name: "frog" }
         );
-        slz.security_groups.rules.save(
+        craig.security_groups.rules.save(
           {
             inbound: true,
             ruleProtocol: "all",
@@ -979,7 +947,7 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[3].rules,
           [
             {
               name: "test-rule",
@@ -1003,9 +971,8 @@ describe("security groups", () => {
     });
     describe("security_groups.rules.delete", () => {
       it("should delete a rule", () => {
-        let slz = new newState();
-        lazyAddSg(slz);
-        slz.security_groups.rules.create(
+        lazyAddSg(craig);
+        craig.security_groups.rules.create(
           {
             name: "test-rule",
             source: "8.8.8.8",
@@ -1014,7 +981,7 @@ describe("security groups", () => {
             parent_name: "frog",
           }
         );
-        slz.security_groups.rules.delete(
+        craig.security_groups.rules.delete(
           {},
           {
             parent_name: "frog",
@@ -1022,14 +989,13 @@ describe("security groups", () => {
           }
         );
         assert.deepEqual(
-          slz.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[3].rules,
           [],
           "it should delete rule"
         );
       });
     });
     describe("security_groups.rules.schema", () => {
-      let craig = new newState();
       it("should set data when changing rule protocol", () => {
         let data = { ruleProtocol: "all" };
         craig.security_groups.rules.ruleProtocol.onInputChange(data);

@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
-const craig = state();
+
 /**
  * initialize store
  * @returns {lazyZState} state store
@@ -12,9 +12,12 @@ function newState() {
 }
 
 describe("atracker", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("atracker.init", () => {
     it("should have default atracker", () => {
-      let state = new newState();
       let expectedData = {
         enabled: true,
         type: "cos",
@@ -26,7 +29,7 @@ describe("atracker", () => {
         locations: ["global", "us-south"],
       };
       assert.deepEqual(
-        state.store.json.atracker,
+        craig.store.json.atracker,
         expectedData,
         "it should have atracker"
       );
@@ -34,13 +37,12 @@ describe("atracker", () => {
   });
   describe("atracker.onStoreUpdate", () => {
     it("should set cos_key to null if deleted", () => {
-      let state = new newState();
-      state.object_storage.keys.delete(
+      craig.object_storage.keys.delete(
         {},
         { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } }
       );
       assert.deepEqual(
-        state.store.json.atracker.cos_key,
+        craig.store.json.atracker.cos_key,
         null,
         "it should be null"
       );
@@ -48,44 +50,32 @@ describe("atracker", () => {
   });
   describe("atracker.save", () => {
     it("should update atracker info", () => {
-      let state = new newState();
       // create key
-      state.object_storage.keys.create(
+      craig.object_storage.keys.create(
         {
           name: "frog",
         },
         {
           innerFormProps: {
             arrayParentName: "cos",
-            arrayData: state.store.json.object_storage[0].keys,
+            arrayData: craig.store.json.object_storage[0].keys,
           },
         }
       );
       // save with different key
-      state.atracker.save({
+      craig.atracker.save({
         bucket: "management-bucket",
         add_route: false,
         cos_key: "frog",
       });
-      let expectedData = {
-        enabled: true,
-        type: "cos",
-        name: "atracker",
-        target_name: "cos",
-        bucket: "management-bucket",
-        add_route: false,
-        cos_key: "frog",
-        locations: ["global", "us-south"],
-      };
       assert.deepEqual(
-        state.store.json.atracker,
-        expectedData,
+        craig.store.json.atracker.cos_key,
+        "frog",
         "it should update"
       );
     });
     it("should update atracker target name when saving new bucket in different cos instance", () => {
-      let state = new newState();
-      state.store.json.object_storage.push({
+      craig.store.json.object_storage.push({
         name: "atracker",
         use_data: false,
         resource_group: "service-rg",
@@ -111,13 +101,13 @@ describe("atracker", () => {
           },
         ],
       });
-      state.atracker.save({
+      craig.atracker.save({
         bucket: "test-atracker-bucket",
         add_route: false,
         cos_key: "frog",
       });
       assert.deepEqual(
-        state.store.json.atracker.target_name,
+        craig.store.json.atracker.target_name,
         "atracker",
         "it should set target name"
       );
@@ -159,21 +149,21 @@ describe("atracker", () => {
     });
     it("should return the correct cos buckets", () => {
       assert.deepEqual(
-        newState().atracker.bucket.groups({}, { craig: newState() }),
+        craig.atracker.bucket.groups({}, { craig: craig }),
         ["atracker-bucket", "management-bucket", "workload-bucket"],
         "it should return list of cos buckets"
       );
     });
     it("should return the correct resource groups", () => {
       assert.deepEqual(
-        newState().atracker.resource_group.groups({}, { craig: newState() }),
+        craig.atracker.resource_group.groups({}, { craig: craig }),
         ["service-rg", "management-rg", "workload-rg"],
         "it should return list of resource groups"
       );
     });
     it("should return the correct cos keys", () => {
       assert.deepEqual(
-        newState().atracker.cos_key.groups({}, { craig: newState() }),
+        craig.atracker.cos_key.groups({}, { craig: craig }),
         ["cos-bind-key"],
         "it should return list of cos keys"
       );

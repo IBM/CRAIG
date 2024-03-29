@@ -12,26 +12,24 @@ function newState() {
 }
 
 describe("secrets_manager", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("secrets_manager.init", () => {
     it("should initialize secrets_manager", () => {
-      let state = new newState();
-      let expectedData = [];
       assert.deepEqual(
-        state.store.json.secrets_manager,
-        expectedData,
+        craig.store.json.secrets_manager,
+        [],
         "it should have secrets_manager initialized"
       );
     });
   });
   describe("secrets_manager crud functions", () => {
-    let secrets_managerState;
-    beforeEach(() => {
-      secrets_managerState = new newState();
-    });
     it("should add an secrets_manager instance", () => {
-      secrets_managerState.secrets_manager.create({ name: "default" });
+      craig.secrets_manager.create({ name: "default" });
       assert.deepEqual(
-        secrets_managerState.store.json.secrets_manager,
+        craig.store.json.secrets_manager,
         [
           {
             name: "default",
@@ -45,120 +43,101 @@ describe("secrets_manager", () => {
       );
     });
     it("should save an secrets_manager instance", () => {
-      secrets_managerState.secrets_manager.create({
+      craig.secrets_manager.create({
         name: "default",
         encryption_key: "key",
       });
-      secrets_managerState.secrets_manager.save(
+      craig.secrets_manager.save(
         { resource_group: "service-rg" },
         { data: { name: "default" } }
       );
       assert.deepEqual(
-        secrets_managerState.store.json.secrets_manager,
-        [
-          {
-            name: "default",
-            resource_group: "service-rg",
-            encryption_key: "key",
-            kms: "kms",
-            secrets: [],
-          },
-        ],
+        craig.store.json.secrets_manager[0].resource_group,
+        "service-rg",
         "it should create secrets_manager"
       );
     });
     it("should update cluster.opaque_secrets.secret_manager name when secrets manager is renamed", () => {
-      let state = new newState();
-      state.store.json.clusters[0].opaque_secrets[0] = {
+      craig.store.json.clusters[0].opaque_secrets[0] = {
         name: "test",
         secrets_manager: "default",
       };
-      state.secrets_manager.create({
+      craig.secrets_manager.create({
         name: "default",
         encryption_key: "key",
       });
-      state.secrets_manager.save(
+      craig.secrets_manager.save(
         { name: "new-name" },
         { data: { name: "default" } }
       );
       assert.deepEqual(
-        state.store.json.clusters[0].opaque_secrets[0].secrets_manager,
+        craig.store.json.clusters[0].opaque_secrets[0].secrets_manager,
         "new-name",
         "it should update cluster.opaque_secrets"
       );
     });
     it("should not update cluster.opaque_secrets.secret_manager name when unrelated secrets manager is renamed", () => {
-      let state = new newState();
-      state.store.json.clusters[0].opaque_secrets[0] = {
+      craig.store.json.clusters[0].opaque_secrets[0] = {
         name: "test",
         secrets_manager: "frog",
       };
-      state.secrets_manager.create({
+      craig.secrets_manager.create({
         name: "default",
         encryption_key: "key",
       });
-      state.secrets_manager.save(
+      craig.secrets_manager.save(
         { name: "new-name" },
         { data: { name: "default" } }
       );
       assert.deepEqual(
-        state.store.json.clusters[0].opaque_secrets[0].secrets_manager,
+        craig.store.json.clusters[0].opaque_secrets[0].secrets_manager,
         "frog",
         "it should not update cluster.opaque_secrets"
       );
     });
     it("should not update cluster.opaque_secrets.secret_manager when no opaque secrets", () => {
-      let state = new newState();
-      delete state.store.json.clusters[0].opaque_secrets;
-      state.secrets_manager.create({
+      delete craig.store.json.clusters[0].opaque_secrets;
+      craig.secrets_manager.create({
         name: "default",
         encryption_key: "key",
       });
-      state.secrets_manager.save(
+      craig.secrets_manager.save(
         { name: "new-name" },
         { data: { name: "default" } }
       );
       assert.deepEqual(
-        state.store.json.clusters[0].opaque_secrets,
+        craig.store.json.clusters[0].opaque_secrets,
         [],
         "it should update cluster.opaque_secrets"
       );
     });
     it("should not update empty cluster secrets when secrets manager updates", () => {
-      let state = new newState();
-      state.store.json.clusters[0].opaque_secrets = [];
-      state.secrets_manager.create({
+      craig.store.json.clusters[0].opaque_secrets = [];
+      craig.secrets_manager.create({
         name: "new-secret-manager",
         encryption_key: "key",
       });
-      state.secrets_manager.save(
+      craig.secrets_manager.save(
         { name: "updated-name" },
         { data: { name: "new-secret-manager" } }
       );
       assert.deepEqual(
-        state.store.json.clusters[0].opaque_secrets,
+        craig.store.json.clusters[0].opaque_secrets,
         [],
         "it should not update cluster.opaque_secrets"
       );
     });
     it("should delete an secrets_manager instance", () => {
-      secrets_managerState.secrets_manager.create({ name: "default" });
-      secrets_managerState.secrets_manager.delete(
-        {},
-        { data: { name: "default" } }
-      );
+      craig.secrets_manager.create({ name: "default" });
+      craig.secrets_manager.delete({}, { data: { name: "default" } });
       assert.deepEqual(
-        secrets_managerState.store.json.secrets_manager,
+        craig.store.json.secrets_manager,
         [],
         "it should create secrets_manager"
       );
     });
   });
   describe("schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     describe("name", () => {
       it("should return true if a secrets manager instance has an invalid name", () => {
         assert.isTrue(

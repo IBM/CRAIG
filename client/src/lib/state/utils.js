@@ -429,7 +429,9 @@ function isIpStringInvalid(value) {
 function resourceGroupsField(small, options) {
   return {
     default: "",
-    invalid: options?.invalid
+    invalid: options?.noHideWhen
+      ? fieldIsNullOrEmptyString("resource_group", true)
+      : options?.invalid
       ? options.invalid
       : fieldIsNullOrEmptyString("resource_group"),
     invalidText: selectInvalidText("resource group"),
@@ -437,7 +439,7 @@ function resourceGroupsField(small, options) {
     groups: function (stateData, componentProps) {
       return splat(componentProps.craig.store.json.resource_groups, "name");
     },
-    hideWhen: hideWhenUseData,
+    hideWhen: options?.noHideWhen ? undefined : hideWhenUseData,
     size: small ? "small" : undefined,
     labelText: options?.labelText || undefined,
   };

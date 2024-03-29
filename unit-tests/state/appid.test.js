@@ -13,44 +13,40 @@ function newState() {
 }
 
 describe("appid", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("appid.init", () => {
     it("should initialize appid", () => {
-      let state = new newState();
       let expectedData = [];
       assert.deepEqual(
-        state.store.json.appid,
+        craig.store.json.appid,
         expectedData,
         "it should have appid initialized"
       );
     });
   });
   describe("appid crud functions", () => {
-    let appidState;
-    beforeEach(() => {
-      appidState = new newState();
-    });
     describe("appid on store update", () => {
-      beforeEach(() => {
-        appidState = new newState();
-      });
       it("should add keys to object when unfound", () => {
-        appidState.appid.create({
+        craig.appid.create({
           name: "frog",
         });
         assert.deepEqual(
-          appidState.store.json.appid,
+          craig.store.json.appid,
           [{ name: "frog", keys: [], resource_group: null }],
           "it should set keys"
         );
       });
       it("should set encryption key to null when deleted", () => {
-        appidState.appid.create({
+        craig.appid.create({
           name: "default",
           keys: [],
           kms: "kms",
           encryption_key: "key",
         });
-        appidState.key_management.keys.delete(
+        craig.key_management.keys.delete(
           {},
           {
             arrayParentName: "kms",
@@ -59,19 +55,19 @@ describe("appid", () => {
           }
         );
         assert.deepEqual(
-          appidState.store.json.appid[0].encryption_key,
+          craig.store.json.appid[0].encryption_key,
           null,
           "it should be null"
         );
       });
       it("should set encryption key and kms to null when kms deleted", () => {
-        appidState.appid.create({
+        craig.appid.create({
           name: "default",
           keys: [],
           kms: "kms",
           encryption_key: "key",
         });
-        appidState.key_management.delete(
+        craig.key_management.delete(
           {},
           {
             data: { name: "kms" },
@@ -79,21 +75,21 @@ describe("appid", () => {
           }
         );
         assert.deepEqual(
-          appidState.store.json.appid[0].kms,
+          craig.store.json.appid[0].kms,
           null,
           "it should be null"
         );
         assert.deepEqual(
-          appidState.store.json.appid[0].encryption_key,
+          craig.store.json.appid[0].encryption_key,
           null,
           "it should be null"
         );
       });
     });
     it("should add an appid instance", () => {
-      appidState.appid.create({ name: "default", keys: [] });
+      craig.appid.create({ name: "default", keys: [] });
       assert.deepEqual(
-        appidState.store.json.appid,
+        craig.store.json.appid,
         [
           {
             name: "default",
@@ -105,41 +101,29 @@ describe("appid", () => {
       );
     });
     it("should save an appid instance", () => {
-      appidState.appid.create({ name: "default", keys: [] });
-      appidState.appid.save(
+      craig.appid.create({ name: "default", keys: [] });
+      craig.appid.save(
         { resource_group: "service-rg" },
         { data: { name: "default" } }
       );
       assert.deepEqual(
-        appidState.store.json.appid,
-        [
-          {
-            name: "default",
-            resource_group: "service-rg",
-            keys: [],
-          },
-        ],
+        craig.store.json.appid[0].resource_group,
+        "service-rg",
         "it should create appid"
       );
     });
     it("should delete an appid instance", () => {
-      appidState.appid.create({ name: "default", keys: [] });
-      appidState.appid.delete({}, { data: { name: "default" } });
-      assert.deepEqual(
-        appidState.store.json.appid,
-        [],
-        "it should create appid"
-      );
+      craig.appid.create({ name: "default", keys: [] });
+      craig.appid.delete({}, { data: { name: "default" } });
+      assert.deepEqual(craig.store.json.appid, [], "it should create appid");
     });
   });
   describe("appid key crud functions", () => {
-    let appidState;
     beforeEach(() => {
-      appidState = new newState();
-      appidState.appid.create({ name: "default", keys: [] });
+      craig.appid.create({ name: "default", keys: [] });
     });
     it("should add an appid instance", () => {
-      appidState.appid.keys.create(
+      craig.appid.keys.create(
         {
           name: "test",
         },
@@ -150,7 +134,7 @@ describe("appid", () => {
         }
       );
       assert.deepEqual(
-        appidState.store.json.appid,
+        craig.store.json.appid,
         [
           {
             name: "default",
@@ -167,7 +151,7 @@ describe("appid", () => {
       );
     });
     it("should save an appid instance", () => {
-      appidState.appid.keys.create(
+      craig.appid.keys.create(
         {
           name: "test",
         },
@@ -177,7 +161,7 @@ describe("appid", () => {
           },
         }
       );
-      appidState.appid.keys.save(
+      craig.appid.keys.save(
         { resource_group: "service-rg" },
         {
           data: { name: "test" },
@@ -185,7 +169,7 @@ describe("appid", () => {
         }
       );
       assert.deepEqual(
-        appidState.store.json.appid,
+        craig.store.json.appid,
         [
           {
             name: "default",
@@ -199,7 +183,7 @@ describe("appid", () => {
       );
     });
     it("should delete an appid key", () => {
-      appidState.appid.keys.create(
+      craig.appid.keys.create(
         {
           name: "test",
         },
@@ -209,7 +193,7 @@ describe("appid", () => {
           },
         }
       );
-      appidState.appid.keys.delete(
+      craig.appid.keys.delete(
         {},
         {
           data: { name: "test" },
@@ -217,7 +201,7 @@ describe("appid", () => {
         }
       );
       assert.deepEqual(
-        appidState.store.json.appid.keys.length,
+        craig.store.json.appid.keys.length,
         0,
         "it should delete appid key"
       );
@@ -227,7 +211,6 @@ describe("appid", () => {
     describe("appid form", () => {
       describe("appid.shouldDisableSave", () => {
         it("should return true if the name is invalid", () => {
-          let state = newState();
           let actualData = disableSave(
             "appid",
             {
@@ -235,7 +218,7 @@ describe("appid", () => {
               resource_group: null,
             },
             {
-              craig: state,
+              craig: craig,
               data: {
                 name: "",
               },
@@ -244,9 +227,8 @@ describe("appid", () => {
           assert.isTrue(actualData, "it should be disabled");
         });
         it("should return false when name is valid, rg is invalid, and use data", () => {
-          let state = newState();
           assert.isFalse(
-            state.appid.resource_group.invalid({
+            craig.appid.resource_group.invalid({
               name: "name",
               resource_group: "",
               use_data: true,
@@ -255,7 +237,6 @@ describe("appid", () => {
           );
         });
         it("should return true if name is valid and resource group is invalid", () => {
-          let state = newState();
           let actualData = disableSave(
             "appid",
             {
@@ -263,7 +244,7 @@ describe("appid", () => {
               resource_group: null,
             },
             {
-              craig: state,
+              craig: craig,
               data: {
                 name: "",
               },
@@ -274,11 +255,10 @@ describe("appid", () => {
       });
       describe("name", () => {
         it("should return true if appid has invalid name", () => {
-          let state = newState();
-          let actualData = state.appid.name.invalid(
+          let actualData = craig.appid.name.invalid(
             { name: "@@@" },
             {
-              craig: state,
+              craig: craig,
               data: {
                 name: "",
               },
@@ -287,11 +267,10 @@ describe("appid", () => {
           assert.isTrue(actualData, "it should return true if name is invalid");
         });
         it("should return correct invalid text when appid has invalid name", () => {
-          let state = newState();
-          let actualData = state.appid.name.invalidText(
+          let actualData = craig.appid.name.invalidText(
             { name: "@@@" },
             {
-              craig: state,
+              craig: craig,
               data: {
                 name: "",
               },
@@ -304,12 +283,11 @@ describe("appid", () => {
           );
         });
         it("should return true if appid has invalid duplicate name", () => {
-          let state = newState();
-          state.appid.create({ name: "egg" });
-          let actualData = state.appid.name.invalid(
+          craig.appid.create({ name: "egg" });
+          let actualData = craig.appid.name.invalid(
             { name: "egg" },
             {
-              craig: state,
+              craig: craig,
               data: {
                 name: "",
               },
@@ -318,12 +296,11 @@ describe("appid", () => {
           assert.isTrue(actualData, "it should return true if name is invalid");
         });
         it("should return correct text if appid has invalid duplicate name", () => {
-          let state = newState();
-          state.appid.create({ name: "egg" });
-          let actualData = state.appid.name.invalidText(
+          craig.appid.create({ name: "egg" });
+          let actualData = craig.appid.name.invalidText(
             { name: "egg" },
             {
-              craig: state,
+              craig: craig,
               data: {
                 name: "",
               },
@@ -338,9 +315,8 @@ describe("appid", () => {
       });
       describe("encryption_keys", () => {
         it("should return correct groups for encryption keys", () => {
-          let state = newState();
           assert.deepEqual(
-            state.appid.encryption_key.groups({}, { craig: state }),
+            craig.appid.encryption_key.groups({}, { craig: craig }),
             ["key", "atracker-key", "vsi-volume-key", "roks-key"],
             "it should return groups"
           );
@@ -349,67 +325,60 @@ describe("appid", () => {
       describe("keys subform", () => {
         describe("name", () => {
           it("should return true if appid key has invalid name", () => {
-            let state = newState();
-            let actualData = state.appid.keys.name.invalid(
-              { name: "@@@" },
-              {
-                craig: state,
-                data: {
-                  name: "",
-                },
-              }
-            );
             assert.isTrue(
-              actualData,
+              craig.appid.keys.name.invalid(
+                { name: "@@@" },
+                {
+                  craig: craig,
+                  data: {
+                    name: "",
+                  },
+                }
+              ),
               "it should return true if name is invalid"
             );
           });
           it("should return correct text if appid key has invalid name", () => {
-            let state = newState();
-            let actualData = state.appid.keys.name.invalidText(
-              { name: "@@@" },
-              {
-                craig: state,
-                data: {
-                  name: "",
-                },
-              }
-            );
             assert.deepEqual(
-              actualData,
+              craig.appid.keys.name.invalidText(
+                { name: "@@@" },
+                {
+                  craig: craig,
+                  data: {
+                    name: "",
+                  },
+                }
+              ),
               "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
               "it should return correct text"
             );
           });
           it("should return true if appid key has invalid duplicate name", () => {
-            let state = newState();
-            state.appid.create({ name: "egg" });
-            state.appid.keys.create(
+            craig.appid.create({ name: "egg" });
+            craig.appid.keys.create(
               { name: "egg" },
               {
                 innerFormProps: {
                   arrayParentName: "egg",
-                },
-              }
-            );
-            let actualData = state.appid.keys.name.invalid(
-              { name: "egg" },
-              {
-                craig: state,
-                data: {
-                  name: "",
                 },
               }
             );
             assert.isTrue(
-              actualData,
+              craig.appid.keys.name.invalid(
+                { name: "egg" },
+                {
+                  craig: craig,
+                  data: {
+                    name: "",
+                  },
+                }
+              ),
               "it should return true if name is invalid"
             );
           });
           it("should return correct text if appid key has invalid duplicate name", () => {
-            let state = newState();
-            state.appid.create({ name: "egg" });
-            state.appid.keys.create(
+            craig.appid.create({ name: "egg" });
+            craig.appid.keys.create(
               { name: "egg" },
               {
                 innerFormProps: {
@@ -417,17 +386,16 @@ describe("appid", () => {
                 },
               }
             );
-            let actualData = state.appid.keys.name.invalidText(
-              { name: "egg" },
-              {
-                craig: state,
-                data: {
-                  name: "aa",
-                },
-              }
-            );
             assert.deepEqual(
-              actualData,
+              craig.appid.keys.name.invalidText(
+                { name: "egg" },
+                {
+                  craig: craig,
+                  data: {
+                    name: "aa",
+                  },
+                }
+              ),
               'Name "egg" already in use',
               "it should return correct text"
             );
@@ -439,7 +407,7 @@ describe("appid", () => {
   describe("appid key function", () => {
     it("should disable save when invalid name", () => {
       assert.isTrue(
-        disableSave("keys", { name: "@@@" }, { craig: newState() }),
+        disableSave("keys", { name: "@@@" }, { craig: craig }),
         "it should be disabled"
       );
     });

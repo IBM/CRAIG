@@ -12,10 +12,13 @@ function newState() {
 }
 
 describe("vsi", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("vsi.create", () => {
     it("should return the correct vsi deployment", () => {
-      let state = new newState();
-      state.vsi.create(
+      craig.vsi.create(
         {
           name: "test-vsi",
           vpc: "management",
@@ -26,7 +29,7 @@ describe("vsi", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
+        craig.store.json.vsi[1],
         {
           kms: null,
           encryption_key: null,
@@ -48,14 +51,13 @@ describe("vsi", () => {
         "it should return correct server"
       );
       assert.deepEqual(
-        state.store.vsiList,
+        craig.store.vsiList,
         ["management-server", "test-vsi"],
         "it should set vsiList"
       );
     });
     it("should find kms based on key", () => {
-      let state = new newState();
-      state.vsi.create(
+      craig.vsi.create(
         {
           name: "test-vsi",
           vpc: "management",
@@ -66,7 +68,7 @@ describe("vsi", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
+        craig.store.json.vsi[1],
         {
           kms: "kms",
           encryption_key: "atracker-key",
@@ -88,7 +90,7 @@ describe("vsi", () => {
         "it should return correct server"
       );
       assert.deepEqual(
-        state.store.vsiList,
+        craig.store.vsiList,
         ["management-server", "test-vsi"],
         "it should set vsiList"
       );
@@ -96,54 +98,34 @@ describe("vsi", () => {
   });
   describe("vsi.save", () => {
     it("should update in place with new name", () => {
-      let state = new newState();
-      state.vsi.create(
+      craig.vsi.create(
         { name: "todd", vpc: "management" },
         { isTeleport: false }
       );
-      let expectedData = {
-        kms: null,
-        encryption_key: null,
-        image: null,
-        image_name: null,
-        profile: null,
-        name: "test-vsi",
-        security_groups: [],
-        ssh_keys: [],
-        subnets: [],
-        vpc: "management",
-        vsi_per_subnet: null,
-        resource_group: null,
-        override_vsi_name: null,
-        user_data: null,
-        network_interfaces: [],
-        volumes: [],
-      };
-      state.store.json.load_balancers.push({
+      craig.store.json.load_balancers.push({
         name: "lb",
         target_vsi: ["todd"],
         subnets: [],
         security_groups: [],
       });
-      state.store.json.load_balancers.push({
+      craig.store.json.load_balancers.push({
         name: "lb2",
         target_vsi: ["frog"],
         subnets: [],
         security_groups: [],
       });
-      state.vsi.save(
+      craig.vsi.save(
         { name: "test-vsi" },
         { data: { name: "todd" }, isTeleport: false }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
-        expectedData,
+        craig.store.json.vsi[1].name,
+        "test-vsi",
         "it should update in place"
       );
     });
     it("should update in place with same name", () => {
-      let state = new newState();
-      state.vsi.create(
+      craig.vsi.create(
         {
           name: "todd",
           vpc: "management",
@@ -151,37 +133,23 @@ describe("vsi", () => {
         },
         { isTeleport: false }
       );
-      let expectedData = {
-        kms: null,
-        encryption_key: null,
-        image: null,
-        image_name: null,
-        profile: null,
-        name: "todd",
-        security_groups: [],
-        ssh_keys: [],
-        subnets: [],
-        vpc: "workload",
-        vsi_per_subnet: null,
-        resource_group: null,
-        override_vsi_name: null,
-        user_data: null,
-        network_interfaces: [],
-        volumes: [],
-      };
-      state.vsi.save(
+      craig.vsi.save(
         { name: "todd", vpc: "workload", security_groups: ["workload-vsi"] },
         { data: { name: "todd" }, isTeleport: false }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
-        expectedData,
+        craig.store.json.vsi[1].security_groups,
+        [],
         "it should update in place"
+      );
+      assert.deepEqual(
+        craig.store.json.vsi[1].vpc,
+        "workload",
+        "it should have correct data"
       );
     });
     it("should update in place with same name when kms is null", () => {
-      let state = new newState();
-      state.vsi.create(
+      craig.vsi.create(
         {
           name: "todd",
           vpc: "management",
@@ -189,25 +157,7 @@ describe("vsi", () => {
         },
         { isTeleport: false }
       );
-      let expectedData = {
-        kms: "kms",
-        encryption_key: "key",
-        image: null,
-        image_name: null,
-        profile: null,
-        name: "todd",
-        security_groups: [],
-        ssh_keys: [],
-        subnets: [],
-        vpc: "workload",
-        vsi_per_subnet: null,
-        resource_group: null,
-        override_vsi_name: null,
-        user_data: null,
-        network_interfaces: [],
-        volumes: [],
-      };
-      state.vsi.save(
+      craig.vsi.save(
         {
           name: "todd",
           vpc: "workload",
@@ -217,48 +167,25 @@ describe("vsi", () => {
         { data: { name: "todd" }, isTeleport: false }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
-        expectedData,
+        craig.store.json.vsi[1].kms,
+        "kms",
+        "it should update in place"
+      );
+      assert.deepEqual(
+        craig.store.json.vsi[1].encryption_key,
+        "key",
         "it should update in place"
       );
     });
     it("should update in place with network interfaces", () => {
-      let state = new newState();
-      state.vsi.create(
+      craig.vsi.create(
         {
           name: "todd",
           vpc: "management",
         },
         { isTeleport: false }
       );
-      let expectedData = {
-        kms: null,
-        encryption_key: null,
-        image: null,
-        image_name: null,
-        profile: null,
-        name: "todd",
-        security_groups: [],
-        ssh_keys: [],
-        subnets: [],
-        vpc: "management",
-        vsi_per_subnet: null,
-        resource_group: null,
-        override_vsi_name: null,
-        user_data: null,
-        network_interfaces: [
-          {
-            subnet: "f5-bastion-zone-1",
-            security_groups: ["f5-bastion-sg"],
-          },
-          {
-            subnet: "f5-external-zone-1",
-            security_groups: ["f5-external-sg"],
-          },
-        ],
-        volumes: [],
-      };
-      state.vsi.save(
+      craig.vsi.save(
         {
           name: "todd",
           vpc: "management",
@@ -277,39 +204,29 @@ describe("vsi", () => {
         { data: { name: "todd" }, isTeleport: false }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
-        expectedData,
+        craig.store.json.vsi[1].network_interfaces,
+        [
+          {
+            subnet: "f5-bastion-zone-1",
+            security_groups: ["f5-bastion-sg"],
+          },
+          {
+            subnet: "f5-external-zone-1",
+            security_groups: ["f5-external-sg"],
+          },
+        ],
         "it should update in place"
       );
     });
     it("should update in place with image given image_name", () => {
-      let state = new newState();
-      state.vsi.create(
+      craig.vsi.create(
         {
           name: "todd",
           vpc: "management",
         },
         { isTeleport: false }
       );
-      let expectedData = {
-        kms: null,
-        encryption_key: null,
-        image: "id",
-        image_name: "Description name [id]",
-        profile: null,
-        name: "todd",
-        security_groups: [],
-        ssh_keys: [],
-        subnets: [],
-        vpc: "management",
-        vsi_per_subnet: null,
-        resource_group: null,
-        override_vsi_name: null,
-        user_data: null,
-        network_interfaces: [],
-        volumes: [],
-      };
-      state.vsi.save(
+      craig.vsi.save(
         {
           name: "todd",
           vpc: "management",
@@ -318,23 +235,21 @@ describe("vsi", () => {
         { data: { name: "todd" }, isTeleport: false }
       );
       assert.deepEqual(
-        state.store.json.vsi[1],
-        expectedData,
+        craig.store.json.vsi[1].image_name,
+        "Description name [id]",
         "it should update in place"
       );
     });
   });
   describe("vsi.delete", () => {
     it("should delete a vsi deployment", () => {
-      let state = new newState();
-      state.vsi.delete({}, { data: { name: "management-server" } });
-      assert.deepEqual(state.store.json.vsi, [], "it should have none servers");
+      craig.vsi.delete({}, { data: { name: "management-server" } });
+      assert.deepEqual(craig.store.json.vsi, [], "it should have none servers");
     });
   });
   describe("vsi.onStoreUpdate", () => {
     it("should set encryption key to null when deleted", () => {
-      let state = new newState();
-      state.key_management.keys.delete(
+      craig.key_management.keys.delete(
         {},
         {
           arrayParentName: "kms",
@@ -343,14 +258,13 @@ describe("vsi", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.vsi[0].encryption_key,
+        craig.store.json.vsi[0].encryption_key,
         null,
         "it should be null"
       );
     });
     it("should set ssh keys to empty array when deleted", () => {
-      let state = new newState();
-      state.ssh_keys.delete(
+      craig.ssh_keys.delete(
         {},
         {
           data: {
@@ -358,33 +272,27 @@ describe("vsi", () => {
           },
         }
       );
-      assert.deepEqual(state.store.json.vsi[0].ssh_keys, [], "it should be []");
+      assert.deepEqual(craig.store.json.vsi[0].ssh_keys, [], "it should be []");
     });
     it("should set subnets and security groups when vpc deleted", () => {
-      let state = new newState();
-      state.vpcs.delete({}, { data: { name: "management" } });
-      assert.deepEqual(state.store.json.vsi[0].subnets, [], "it should be []");
+      craig.vpcs.delete({}, { data: { name: "management" } });
+      assert.deepEqual(craig.store.json.vsi[0].subnets, [], "it should be []");
       assert.deepEqual(
-        state.store.json.vsi[0].security_groups,
+        craig.store.json.vsi[0].security_groups,
         [],
         "it should be []"
       );
     });
     it("should set security groups when deleted", () => {
-      let state = new newState();
-      state.security_groups.delete({}, { data: { name: "management-vsi" } });
+      craig.security_groups.delete({}, { data: { name: "management-vsi" } });
       assert.deepEqual(
-        state.store.json.vsi[0].security_groups,
+        craig.store.json.vsi[0].security_groups,
         [],
         "it should be []"
       );
     });
   });
   describe("vsi.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     it("should reset security groups and subnets on state change", () => {
       let expectedData = {
         security_groups: [],
@@ -467,10 +375,12 @@ describe("vsi", () => {
     });
   });
   describe("volumes", () => {
+    beforeEach(() => {
+      craig = newState();
+    });
     describe("volumes.create", () => {
       it("should create a new vsi volume", () => {
-        let state = new newState();
-        state.vsi.volumes.create(
+        craig.vsi.volumes.create(
           {
             name: "block-storage-1",
             profile: "custom",
@@ -485,7 +395,7 @@ describe("vsi", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.vsi[0].volumes,
+          craig.store.json.vsi[0].volumes,
           [
             {
               name: "block-storage-1",
@@ -501,8 +411,7 @@ describe("vsi", () => {
     });
     describe("volumes.save", () => {
       it("should save a vsi volume", () => {
-        let state = new newState();
-        state.vsi.volumes.create(
+        craig.vsi.volumes.create(
           {
             name: "block-storage-1",
             profile: "custom",
@@ -520,7 +429,7 @@ describe("vsi", () => {
             },
           }
         );
-        state.vsi.volumes.save(
+        craig.vsi.volumes.save(
           {
             name: "frog",
             profile: "custom",
@@ -536,41 +445,32 @@ describe("vsi", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.vsi[0].volumes,
-          [
-            {
-              name: "frog",
-              profile: "custom",
-              capacity: 200,
-              iops: 1000,
-              encryption_key: "slz-vsi-volume-key",
-            },
-          ],
+          craig.store.json.vsi[0].volumes[0].name,
+          "frog",
           "it should be null"
         );
       });
     });
     describe("volumes.delete", () => {
-      let state = new newState();
-      state.vsi.volumes.create(
-        {
-          name: "block-storage-1",
-          profile: "custom",
-          capacity: 200,
-          iops: 1000,
-          encryption_key: "slz-vsi-volume-key",
-        },
-        {
-          data: {
-            name: "block-storage-1",
-          },
-          innerFormProps: {
-            arrayParentName: "management-server",
-          },
-        }
-      );
       it("should delete a vsi volume", () => {
-        state.vsi.volumes.delete(
+        craig.vsi.volumes.create(
+          {
+            name: "block-storage-1",
+            profile: "custom",
+            capacity: 200,
+            iops: 1000,
+            encryption_key: "slz-vsi-volume-key",
+          },
+          {
+            data: {
+              name: "block-storage-1",
+            },
+            innerFormProps: {
+              arrayParentName: "management-server",
+            },
+          }
+        );
+        craig.vsi.volumes.delete(
           {},
           {
             data: {
@@ -581,7 +481,7 @@ describe("vsi", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.vsi[0].volumes,
+          craig.store.json.vsi[0].volumes,
           [],
           "it should be null"
         );

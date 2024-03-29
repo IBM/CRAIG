@@ -15,11 +15,13 @@ All notable changes to this project will be documented in this file.
 - When creating a VSI Deployment, users can select a new toggle `Include Name Variables`. When this value is set to true, VSI names will be populated as variables in Terrafrom. This allows for users to have full control over VSI names without needing to directly modify Terraform scripts
 - Power VS Virtual Server and FalconStor VTL system types are now retrieved dynamically using the Power VS API based on the zone
 - Power Edge Router is now supported for `syd05`
+- When updating a VPC's Public Gateways, invalid gateways will automatically be removed from subnets where they are enabled
 
 ### Fixes
 
 - Fixed an issue causing Power VS API endpoints for Sao Palo availability zones to fail
 - Fixed an issue causing VPC subnets to incorrectly have `public_gateway` set to true when no public gateway is created in the corresponding zone
+- Fixed an issue causing the Resource Group field for Key Management services to not be rendered when using a resource from data
 
 ## 1.13.1
 

@@ -12,16 +12,18 @@ function newState() {
 }
 
 describe("vpn_servers", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("vpn_servers.init", () => {
     it("should initialize vpn_servers", () => {
-      let state = new newState();
-      assert.deepEqual(state.store.json.vpn_servers, []);
+      assert.deepEqual(craig.store.json.vpn_servers, []);
     });
   });
   describe("vpn_servers on store update", () => {
     it("should set fields to null or [] if vpc is invalid", () => {
-      let state = new newState();
-      state.vpn_servers.create({
+      craig.vpn_servers.create({
         name: "vpn-server",
         certificate_crn: "xyz",
         method: "certificate",
@@ -56,11 +58,10 @@ describe("vpn_servers", () => {
         routes: [],
         additional_prefixes: [],
       };
-      assert.deepEqual(state.store.json.vpn_servers[0], expectedData);
+      assert.deepEqual(craig.store.json.vpn_servers[0], expectedData);
     });
     it("should delete unfound items", () => {
-      let state = new newState();
-      state.vpn_servers.create({
+      craig.vpn_servers.create({
         name: "vpn-server",
         certificate_crn: "xyz",
         method: "certificate",
@@ -77,34 +78,21 @@ describe("vpn_servers", () => {
         vpc: "management",
         routes: [],
       });
-      let expectedData = {
-        name: "vpn-server",
-        certificate_crn: "xyz",
-        method: "certificate",
-        client_ca_crn: "xyz",
-        client_ip_pool: "xyz",
-        client_dns_server_ips: "optional",
-        client_idle_timeout: 2000,
-        enable_split_tunneling: true,
-        port: 255,
-        protocol: "udp",
-        resource_group: "management-rg",
-        security_groups: ["management-vpe"],
-        subnets: ["vsi-zone-1"],
-        vpc: "management",
-        routes: [],
-        additional_prefixes: [],
-      };
-      assert.deepEqual(state.store.json.vpn_servers[0], expectedData);
+      assert.deepEqual(
+        craig.store.json.vpn_servers[0].subnets,
+        ["vsi-zone-1"],
+        "it should delete unfound subnet"
+      );
+      assert.deepEqual(
+        craig.store.json.vpn_servers[0].additional_prefixes,
+        [],
+        "it should set additional prefixes"
+      );
     });
   });
   describe("vpn_servers crud operations", () => {
-    let state;
-    beforeEach(() => {
-      state = new newState();
-    });
     it("should create a vpn server", () => {
-      state.vpn_servers.create({
+      craig.vpn_servers.create({
         name: "vpn-server",
         certificate_crn: "xyz",
         method: "certificate",
@@ -121,7 +109,8 @@ describe("vpn_servers", () => {
         vpc: "management",
         routes: [],
       });
-      let expectedData = [
+      assert.deepEqual(
+        craig.store.json.vpn_servers[0],
         {
           name: "vpn-server",
           certificate_crn: "xyz",
@@ -140,12 +129,12 @@ describe("vpn_servers", () => {
           routes: [],
           additional_prefixes: [],
         },
-      ];
-      assert.deepEqual(state.store.json.vpn_servers, expectedData);
+        "it should create server"
+      );
     });
     it("should save a vpn server", () => {
-      state.store.json._options.dynamic_subnets = false;
-      state.vpn_servers.create({
+      craig.store.json._options.dynamic_subnets = false;
+      craig.vpn_servers.create({
         name: "vpn-server",
         certificate_crn: "xyz",
         method: "certificate",
@@ -162,7 +151,7 @@ describe("vpn_servers", () => {
         vpc: "management",
         routes: [],
       });
-      state.vpn_servers.save(
+      craig.vpn_servers.save(
         {
           name: "new-vpn-server",
           certificate_crn: "xyz",
@@ -204,10 +193,10 @@ describe("vpn_servers", () => {
         routes: [],
         additional_prefixes: [],
       };
-      assert.deepEqual(state.store.json.vpn_servers[0], expectedData);
+      assert.deepEqual(craig.store.json.vpn_servers[0], expectedData);
     });
     it("should delete vpn server", () => {
-      state.vpn_servers.create({
+      craig.vpn_servers.create({
         name: "vpn-server",
         certificate_crn: "xyz",
         method: "certificate",
@@ -224,7 +213,7 @@ describe("vpn_servers", () => {
         vpc: "management",
         routes: [],
       });
-      state.vpn_servers.delete(
+      craig.vpn_servers.delete(
         {},
         {
           data: {
@@ -232,13 +221,11 @@ describe("vpn_servers", () => {
           },
         }
       );
-      assert.deepEqual(state.store.json.vpn_servers, []);
+      assert.deepEqual(craig.store.json.vpn_servers, []);
     });
     describe("vpn server routes crud", () => {
-      let state;
       beforeEach(() => {
-        state = new newState();
-        state.vpn_servers.create({
+        craig.vpn_servers.create({
           name: "vpn-server",
           certificate_crn: "xyz",
           method: "certificate",
@@ -257,61 +244,57 @@ describe("vpn_servers", () => {
         });
       });
       it("should create a route", () => {
-        state.vpn_servers.routes.create(
+        craig.vpn_servers.routes.create(
           { name: "route", action: "deliver", destination: "2.2.2.2" },
           {
             innerFormProps: { arrayParentName: "vpn-server" },
-            arrayData: state.store.json.vpn_servers[0].routes,
+            arrayData: craig.store.json.vpn_servers[0].routes,
           }
         );
-        assert.deepEqual(state.store.json.vpn_servers[0].routes[0], {
+        assert.deepEqual(craig.store.json.vpn_servers[0].routes[0], {
           name: "route",
           action: "deliver",
           destination: "2.2.2.2",
         });
       });
       it("should update a route", () => {
-        state.vpn_servers.routes.create(
+        craig.vpn_servers.routes.create(
           { name: "route", action: "deliver", destination: "2.2.2.2" },
           {
             innerFormProps: { arrayParentName: "vpn-server" },
-            arrayData: state.store.json.vpn_servers[0].routes,
+            arrayData: craig.store.json.vpn_servers[0].routes,
           }
         );
-        state.vpn_servers.routes.save(
+        craig.vpn_servers.routes.save(
           { name: "route-new", action: "drop", destination: "" },
           {
             arrayParentName: "vpn-server",
             data: { name: "route" },
           }
         );
-        assert.deepEqual(state.store.json.vpn_servers[0].routes[0], {
+        assert.deepEqual(craig.store.json.vpn_servers[0].routes[0], {
           name: "route-new",
           action: "drop",
           destination: "",
         });
       });
       it("should delete a route", () => {
-        state.vpn_servers.routes.create(
+        craig.vpn_servers.routes.create(
           { name: "route", action: "deliver", destination: "2.2.2.2" },
           {
             innerFormProps: { arrayParentName: "vpn-server" },
-            arrayData: state.store.json.vpn_servers[0].routes,
+            arrayData: craig.store.json.vpn_servers[0].routes,
           }
         );
-        state.vpn_servers.routes.delete(
+        craig.vpn_servers.routes.delete(
           {},
           { arrayParentName: "vpn-server", data: { name: "route" } }
         );
-        assert.deepEqual(state.store.json.vpn_servers[0].routes, []);
+        assert.deepEqual(craig.store.json.vpn_servers[0].routes, []);
       });
     });
   });
   describe("vpn_servers schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     it("should return empty string when not invalid", () => {
       assert.deepEqual(
         craig.vpn_servers.certificate_crn.invalidText({

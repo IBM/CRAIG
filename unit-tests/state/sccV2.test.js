@@ -92,7 +92,6 @@ describe("scc_v2", () => {
   });
   describe("scc_v2.profile_attachments", () => {
     beforeEach(() => {
-      craig = newState();
       craig.scc_v2.save({
         enable: true,
         region: "eu-de",
