@@ -216,4 +216,59 @@ provider "ibm" {
 `;
     assert.deepEqual(actualData, expectedData, "it should return correct data");
   });
+  it("should return the correct data when power vs is enabled in sao01 region is br-sao", () => {
+    let actualData = ibmCloudProvider({
+      _options: {
+        prefix: "iac",
+        region: "br-sao",
+        tags: ["hello", "world"],
+        zones: 3,
+        endpoints: "private",
+        account_id: "",
+        fs_cloud: false,
+        enable_classic: true,
+        dynamic_subnets: true,
+        enable_power_vs: true,
+        craig_version: "1.6.0",
+        power_vs_zones: ["sao01", "sao04"],
+        power_vs_high_availability: true,
+      },
+    });
+    let expectedData = `##############################################################################
+# IBM Cloud Provider
+##############################################################################
+
+provider "ibm" {
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = var.region
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias                 = "classic"
+  ibmcloud_timeout      = 60
+  iaas_classic_username = var.iaas_classic_username
+  iaas_classic_api_key  = var.iaas_classic_api_key
+}
+
+provider "ibm" {
+  alias            = "power_vs_sao01"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "sao"
+  zone             = "sao01"
+  ibmcloud_timeout = 60
+}
+
+provider "ibm" {
+  alias            = "power_vs_sao04"
+  ibmcloud_api_key = var.ibmcloud_api_key
+  region           = "sao"
+  zone             = "sao04"
+  ibmcloud_timeout = 60
+}
+
+##############################################################################
+`;
+    assert.deepEqual(actualData, expectedData, "it should return correct data");
+  });
 });

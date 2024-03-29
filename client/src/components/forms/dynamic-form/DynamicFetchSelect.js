@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 // dynamic form before initializtion
 import { default as PopoverWrapper } from "../utils/PopoverWrapper";
 import { contains, deepEqual, isFunction, isNullOrEmptyString } from "lazy-z";
-import { dynamicFieldId, dynamicSelectProps } from "../../../lib";
+import {
+  dynamicFetchSelectDataToGroups,
+  dynamicFieldId,
+  dynamicSelectProps,
+} from "../../../lib";
 import { Select, SelectItem } from "@carbon/react";
 
 class DynamicFetchSelect extends React.Component {
@@ -46,52 +50,11 @@ class DynamicFetchSelect extends React.Component {
   }
 
   dataToGroups() {
-    let apiEndpoint = this.props.field.apiEndpoint(
-      this.props.parentState,
-      this.props.parentProps
+    return dynamicFetchSelectDataToGroups(
+      this.state,
+      this.props,
+      this._isMounted
     );
-    if (apiEndpoint === "/api/cluster/versions") {
-      // add "" if kube version is reset
-      return (
-        this.props.parentProps.isModal ||
-        isNullOrEmptyString(this.props.parentState.kube_version)
-          ? [""]
-          : []
-      ).concat(
-        // filter version based on kube type
-        this.state.data.filter((version) => {
-          if (
-            (this.props.parentState.kube_type === "openshift" &&
-              contains(version, "openshift")) ||
-            (this.props.parentState.kube_type === "iks" &&
-              !contains(version, "openshift")) ||
-            version === "default"
-          ) {
-            return version.replace(/\s\(Default\)/g, "");
-          }
-        })
-      );
-    } else {
-      return (
-        // to prevent storage pools from being loaded incorrectly,
-        // prevent first item in storage groups from being loaded when not selected
-        (
-          dynamicSelectProps(this.props).value === "" &&
-          this._isMounted &&
-          !deepEqual(this.state.data, ["Loading..."])
-            ? [""]
-            : []
-        )
-          .concat(this.state.data)
-          .map((item) => {
-            if (isFunction(this.props.field.onRender)) {
-              return this.props.field.onRender({
-                [this.props.name]: item,
-              });
-            } else return item;
-          })
-      );
-    }
   }
 
   render() {

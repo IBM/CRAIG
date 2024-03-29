@@ -5,7 +5,9 @@ info:
     Cloud Resources and Infrastructure as Code Generator.
 
     In order to use the CRAIG API, you must set the environment variable `API_KEY` to your IBM Cloud API Key
-  version: 1.11.0
+  version: 1.14.0
+servers:
+  - url: http://localhost:8080
 externalDocs:
   description: To get started with CRAIG, visit here
   url: https://github.ibm.com/craig-automation/CRAIG/blob/main/README.md
@@ -30,18 +32,72 @@ paths:
           required: true
           schema:
             type: string
-          description: Name of template to crete tar file for. Possible values `from-scratch`, `oracle-rac`, `power-vs-sap-hana`, `quick-start-power`, `mixed`, `vsi-edge`, and `vsi`
+          description: Name of template to crete tar file for. Possible values `from-scratch`, `oracle-rac`, `oracle-si`, `power-vs-sap-hana`, `quick-start-power`, `mixed`, `vsi-edge`, and `vsi`
       responses:
         "200":
           description: Successfully created tar file
         "404":
           description: Supplied template does not exist or not found
+    post:
+      tags:
+        - CRAIG
+      summary: Update a specific template and download the template tar file with the provided updates
+      description: |
+        Updates the provided template based on the fields provided in the request body, and downloads the updated template tar file to your machine. The fields provided in the request body will replace the entire contents of that field in the CRAIG json. If you wish to add a resource to a field, include the original fields as well.
+
+        To use locally, use this command : `curl -X POST -H Content-Type:application/json -d '{field-to-update: [], field-to-update-2: []}' --url  http://localhost:8080/api/craig/template-tar/<template-name> --output craig.tar` 
+
+        The below example body replaces whatever transit gateways that may or may not exist for the template with one transit gateway named `transit-gateway`.
+
+        Note: API Call will fail if JSON is not properly formatted. Make sure that you remove all trailing commas at the end of lists and objects, otherwise you may get an `Unexpected token` error
+      operationId: updateTemplateTar
+      parameters:
+        - in: path
+          name: template
+          required: true
+          schema:
+            type: string
+          description: Name of template to crete tar file for. Possible values `from-scratch`, `oracle-rac`, `oracle-si`, `power-vs-sap-hana`, `quick-start-power`, `mixed`, `vsi-edge`, and `vsi`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: JSON field(s) to update in CRAIG
+              example:
+                "transit_gateways":
+                  [
+                    {
+                      "name": "transit-gateway",
+                      "resource_group": "service-rg",
+                      "global": false,
+                      "connections":
+                        [
+                          { "tgw": "transit-gateway", "vpc": "transit" },
+                          { "tgw": "transit-gateway", "power": "dal10" },
+                        ],
+                      "use_data": false,
+                      "gre_tunnels": [],
+                      "prefix_filters": [],
+                      "crns": null,
+                      "classic": false,
+                    },
+                  ]
+
+      responses:
+        "200":
+          description: Successfully updated and created tar file
+        "400":
+          description: The request body is incorrectly formatted in JSON or the resource(s) provided in the request do not contain all required fields
+        "404":
+          description: Supplied template does not exist or not found
+
   /api/power/{zone}/{component}:
     get:
       tags:
         - Power VS
-      summary: Returns a list of images or storage pools
-      description: Get a list of images, storage pools, or storage tiers based on the value passed to component
+      summary: Returns a list of images, storage pools, storage tiers, or system pools
+      description: Get a list of images, storage pools, storage tiers, or system pools based on the value passed to component
       operationId: getPowerComponent
       parameters:
         - in: path
@@ -55,7 +111,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Component to return data for (images, storage_pools, storage_tiers)
+          description: Component to return data for (images, storage_pools, storage_tiers, system_pools)
       responses:
         "200":
           description: successful operation
@@ -216,6 +272,34 @@ paths:
                 example:
                   - CentOS 7.x - Minimal Install (amd64) [ibm-centos-7-9-minimal-amd64-11]
                   - CentOS Stream 8 - Minimal Install (amd64) [ibm-centos-stream-8-amd64-4]
+                items:
+                  type: string
+        "401":
+          description: Unauthorized
+  /api/vsi/{region}/snapshots:
+    get:
+      tags:
+        - VSI
+      summary: Returns a list of VSI snapshots in a region for the cloud account linked to the API key
+      description: Get a list of VSI snapshots in a region for the cloud account linked to the API key
+      operationId: getImages
+      parameters:
+        - in: path
+          name: region
+          required: true
+          schema:
+            type: string
+          description: Region to get images from
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  - my-restore-volume
+                  - another-restore-volume
                 items:
                   type: string
         "401":

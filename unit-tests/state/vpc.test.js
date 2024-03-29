@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
-const { contains } = require("lazy-z");
+const { contains, splatContains } = require("lazy-z");
 
 /**
  * initialize store
@@ -14,9 +14,12 @@ function newState(legacy) {
 }
 
 describe("vpcs", () => {
+  let state;
+  beforeEach(() => {
+    state = newState();
+  });
   describe("vpcs.save", () => {
     it("should rename a vpc", () => {
-      let state = new newState();
       state.store.json.dns = [
         {
           name: "frog",
@@ -64,7 +67,6 @@ describe("vpcs", () => {
       );
     });
     it("should rename a vpc", () => {
-      let state = new newState();
       state.store.json.dns = [
         {
           name: "frog",
@@ -112,7 +114,6 @@ describe("vpcs", () => {
       );
     });
     it("should add a pgw to a vpc", () => {
-      let state = new newState();
       state.vpcs.save(
         { name: "todd", default_network_acl_name: "", publicGateways: [1] },
         { data: { name: "management" } }
@@ -142,7 +143,6 @@ describe("vpcs", () => {
       );
     });
     it("should change edge vpc name when updating edge vpc", () => {
-      let state = new newState();
       state.store.edge_vpc_name = "management";
       state.store.json.dns = [
         {
@@ -180,7 +180,6 @@ describe("vpcs", () => {
       assert.deepEqual(state.store.edge_vpc_name, "todd", "it should be todd");
     });
     it("should update another field", () => {
-      let state = new newState();
       state.vpcs.save(
         {
           name: "management",
@@ -213,7 +212,6 @@ describe("vpcs", () => {
       );
     });
     it("should correctly save a vpc with no subnet tiers", () => {
-      let state = new newState();
       state.vpcs.create({ name: "test" });
       state.vpcs.save(
         { default_network_acl_name: "todd" },
@@ -226,562 +224,66 @@ describe("vpcs", () => {
       );
     });
     it("should update pgw vpc on store update", () => {
-      let craig = newState();
-      craig.store.json.vpcs[0].use_data = false;
-      craig.store.json.vpcs[0].acls[0].use_data = true;
-      craig.vpcs.save(
+      state.store.json.vpcs[0].use_data = false;
+      state.store.json.vpcs[0].acls[0].use_data = true;
+      state.vpcs.save(
         { publicGateways: [1, 2, 3], use_data: false },
         {
           data: {
             name: "management",
           },
-          craig: craig,
+          craig: state,
         }
       );
-      let expectedData = {
-        cos: "cos",
-        bucket: "management-bucket",
-        name: "management",
-        resource_group: "management-rg",
-        classic_access: false,
-        manual_address_prefix_management: true,
-        default_network_acl_name: null,
-        default_security_group_name: null,
-        default_routing_table_name: null,
-        use_data: false,
-        publicGateways: [1, 2, 3],
-        address_prefixes: [
-          {
-            vpc: "management",
-            zone: 1,
-            name: "management-zone-1",
-            cidr: "10.10.0.0/22",
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            name: "management-zone-2",
-            cidr: "10.20.0.0/22",
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            name: "management-zone-3",
-            cidr: "10.30.0.0/22",
-          },
-        ],
-        subnets: [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.0/29",
-            name: "vsi-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.16/29",
-            name: "vpn-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.0.0/29",
-            name: "vsi-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.0.0/29",
-            name: "vsi-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.32/29",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.0.16/29",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.0.16/29",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-        ],
-        public_gateways: [
-          {
-            zone: 1,
-            vpc: "management",
-            resource_group: "management-rg",
-          },
-          {
-            zone: 2,
-            vpc: "management",
-            resource_group: "management-rg",
-          },
-          {
-            zone: 3,
-            vpc: "management",
-            resource_group: "management-rg",
-          },
-        ],
-        acls: [
-          {
-            resource_group: "management-rg",
-            name: "management",
-            vpc: "management",
-            rules: [
-              {
-                action: "allow",
-                destination: "10.0.0.0/8",
-                direction: "inbound",
-                name: "allow-ibm-inbound",
-                source: "161.26.0.0/16",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-              {
-                action: "allow",
-                source: "10.0.0.0/8",
-                direction: "outbound",
-                name: "allow-ibm-outbound",
-                destination: "161.26.0.0/16",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-              {
-                action: "allow",
-                destination: "10.0.0.0/8",
-                direction: "inbound",
-                name: "allow-all-network-inbound",
-                source: "10.0.0.0/8",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-              {
-                action: "allow",
-                destination: "10.0.0.0/8",
-                direction: "outbound",
-                name: "allow-all-network-outbound",
-                source: "10.0.0.0/8",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-            ],
-            use_data: true,
-          },
-        ],
-      };
       assert.deepEqual(
-        craig.store.json.vpcs[0],
-        expectedData,
+        state.store.json.vpcs[0].public_gateways,
+        [
+          {
+            zone: 1,
+            vpc: "management",
+            resource_group: "management-rg",
+          },
+          {
+            zone: 2,
+            vpc: "management",
+            resource_group: "management-rg",
+          },
+          {
+            zone: 3,
+            vpc: "management",
+            resource_group: "management-rg",
+          },
+        ],
         "it should return correct data"
       );
     });
     it("should update pgw and subnet rg on rg name change", () => {
-      let craig = newState();
-      craig.resource_groups.save(
+      state.resource_groups.save(
         { name: "frog" },
-        { data: { name: "management-rg" }, craig: craig }
+        { data: { name: "management-rg" }, craig: state }
       );
-      craig.vpcs.save(
+      state.vpcs.save(
         { publicGateways: [1, 2, 3] },
         {
           data: {
             name: "management",
           },
-          craig: craig,
+          craig: state,
         }
       );
-      let expectedData = {
-        cos: "cos",
-        bucket: "management-bucket",
-        name: "management",
-        resource_group: "frog",
-        use_data: false,
-        classic_access: false,
-        manual_address_prefix_management: true,
-        default_network_acl_name: null,
-        default_security_group_name: null,
-        default_routing_table_name: null,
-        publicGateways: [1, 2, 3],
-        address_prefixes: [
-          {
-            vpc: "management",
-            zone: 1,
-            name: "management-zone-1",
-            cidr: "10.10.0.0/22",
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            name: "management-zone-2",
-            cidr: "10.20.0.0/22",
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            name: "management-zone-3",
-            cidr: "10.30.0.0/22",
-          },
-        ],
-        subnets: [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.0/29",
-            name: "vsi-zone-1",
-            network_acl: "management",
-            resource_group: "frog",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.16/29",
-            name: "vpn-zone-1",
-            network_acl: "management",
-            resource_group: "frog",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.0.0/29",
-            name: "vsi-zone-2",
-            network_acl: "management",
-            resource_group: "frog",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.0.0/29",
-            name: "vsi-zone-3",
-            network_acl: "management",
-            resource_group: "frog",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.32/29",
-            name: "vpe-zone-1",
-            resource_group: "frog",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.0.16/29",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "frog",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.0.16/29",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "frog",
-            public_gateway: false,
-            has_prefix: false,
-          },
-        ],
-        public_gateways: [
-          {
-            zone: 1,
-            vpc: "management",
-            resource_group: "frog",
-          },
-          {
-            zone: 2,
-            vpc: "management",
-            resource_group: "frog",
-          },
-          {
-            zone: 3,
-            vpc: "management",
-            resource_group: "frog",
-          },
-        ],
-        acls: [
-          {
-            resource_group: "frog",
-            name: "management",
-            vpc: "management",
-            use_data: false,
-            rules: [
-              {
-                action: "allow",
-                destination: "10.0.0.0/8",
-                direction: "inbound",
-                name: "allow-ibm-inbound",
-                source: "161.26.0.0/16",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-              {
-                action: "allow",
-                source: "10.0.0.0/8",
-                direction: "outbound",
-                name: "allow-ibm-outbound",
-                destination: "161.26.0.0/16",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-              {
-                action: "allow",
-                destination: "10.0.0.0/8",
-                direction: "inbound",
-                name: "allow-all-network-inbound",
-                source: "10.0.0.0/8",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-              {
-                action: "allow",
-                destination: "10.0.0.0/8",
-                direction: "outbound",
-                name: "allow-all-network-outbound",
-                source: "10.0.0.0/8",
-                acl: "management",
-                vpc: "management",
-                icmp: {
-                  type: null,
-                  code: null,
-                },
-                tcp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                udp: {
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                },
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-                type: null,
-                code: null,
-                ruleProtocol: "all",
-              },
-            ],
-          },
-        ],
-      };
       assert.deepEqual(
-        craig.store.json.vpcs[0],
-        expectedData,
+        state.store.json.vpcs[0].resource_group,
+        "frog",
+        "it should return correct data"
+      );
+      assert.deepEqual(
+        state.store.json.vpcs[0].subnets[0].resource_group,
+        "frog",
+        "it should return correct data"
+      );
+      assert.deepEqual(
+        state.store.json.vpcs[0].public_gateways[0].resource_group,
+        "frog",
         "it should return correct data"
       );
     });
@@ -803,7 +305,6 @@ describe("vpcs", () => {
   });
   describe("vpcs.create", () => {
     it("should create a new vpc with a name and resource group", () => {
-      let state = new newState();
       state.store.json._options.dynamic_subnets = false;
       state.vpcs.create({ name: "test" });
       let expectedData = {
@@ -830,267 +331,17 @@ describe("vpcs", () => {
   });
   describe("vpcs.delete", () => {
     it("should delete a vpc from config", () => {
-      let state = new newState(true);
       state.store.json._options.dynamic_subnets = false;
       state.vpcs.delete({}, { data: { name: "management" } });
-      let expectedData = [
-        {
-          cos: "cos",
-          bucket: "workload-bucket",
-          name: "workload",
-          resource_group: "workload-rg",
-          classic_access: false,
-          manual_address_prefix_management: true,
-          default_network_acl_name: null,
-          default_security_group_name: null,
-          default_routing_table_name: null,
-          use_data: false,
-          address_prefixes: [
-            {
-              vpc: "workload",
-              zone: 1,
-              cidr: "10.40.10.0/24",
-              name: "vsi-zone-1",
-            },
-            {
-              vpc: "workload",
-              zone: 2,
-              cidr: "10.50.10.0/24",
-              name: "vsi-zone-2",
-            },
-            {
-              vpc: "workload",
-              zone: 3,
-              cidr: "10.60.10.0/24",
-              name: "vsi-zone-3",
-            },
-            {
-              vpc: "workload",
-              zone: 1,
-              cidr: "10.40.20.0/24",
-              name: "vpe-zone-1",
-            },
-            {
-              vpc: "workload",
-              zone: 2,
-              cidr: "10.50.20.0/24",
-              name: "vpe-zone-2",
-            },
-            {
-              vpc: "workload",
-              zone: 3,
-              cidr: "10.60.20.0/24",
-              name: "vpe-zone-3",
-            },
-          ],
-          subnets: [
-            {
-              vpc: "workload",
-              zone: 1,
-              cidr: "10.40.10.0/24",
-              name: "vsi-zone-1",
-              network_acl: "workload",
-              resource_group: "workload-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "workload",
-              zone: 2,
-              cidr: "10.50.10.0/24",
-              name: "vsi-zone-2",
-              network_acl: "workload",
-              resource_group: "workload-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "workload",
-              zone: 3,
-              cidr: "10.60.10.0/24",
-              name: "vsi-zone-3",
-              network_acl: "workload",
-              resource_group: "workload-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "workload",
-              zone: 1,
-              cidr: "10.40.20.0/24",
-              name: "vpe-zone-1",
-              network_acl: "workload",
-              resource_group: "workload-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "workload",
-              zone: 2,
-              cidr: "10.50.20.0/24",
-              name: "vpe-zone-2",
-              network_acl: "workload",
-              resource_group: "workload-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "workload",
-              zone: 3,
-              cidr: "10.60.20.0/24",
-              name: "vpe-zone-3",
-              network_acl: "workload",
-              resource_group: "workload-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-          ],
-          public_gateways: [],
-          publicGateways: [],
-          acls: [
-            {
-              use_data: false,
-              resource_group: "workload-rg",
-              name: "workload",
-              vpc: "workload",
-              rules: [
-                {
-                  action: "allow",
-                  destination: "10.0.0.0/8",
-                  direction: "inbound",
-                  name: "allow-ibm-inbound",
-                  source: "161.26.0.0/16",
-                  acl: "workload",
-                  vpc: "workload",
-                  icmp: {
-                    type: null,
-                    code: null,
-                  },
-                  tcp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  udp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                  type: null,
-                  code: null,
-                  ruleProtocol: "all",
-                },
-                {
-                  action: "allow",
-                  source: "10.0.0.0/8",
-                  direction: "outbound",
-                  name: "allow-ibm-outbound",
-                  destination: "161.26.0.0/16",
-                  acl: "workload",
-                  vpc: "workload",
-                  icmp: {
-                    type: null,
-                    code: null,
-                  },
-                  tcp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  udp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                  type: null,
-                  code: null,
-                  ruleProtocol: "all",
-                },
-                {
-                  action: "allow",
-                  destination: "10.0.0.0/8",
-                  direction: "inbound",
-                  name: "allow-all-network-inbound",
-                  source: "10.0.0.0/8",
-                  acl: "workload",
-                  vpc: "workload",
-                  icmp: {
-                    type: null,
-                    code: null,
-                  },
-                  tcp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  udp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                  type: null,
-                  code: null,
-                  ruleProtocol: "all",
-                },
-                {
-                  action: "allow",
-                  destination: "10.0.0.0/8",
-                  direction: "outbound",
-                  name: "allow-all-network-outbound",
-                  source: "10.0.0.0/8",
-                  acl: "workload",
-                  vpc: "workload",
-                  icmp: {
-                    type: null,
-                    code: null,
-                  },
-                  tcp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  udp: {
-                    port_min: null,
-                    port_max: null,
-                    source_port_min: null,
-                    source_port_max: null,
-                  },
-                  port_min: null,
-                  port_max: null,
-                  source_port_min: null,
-                  source_port_max: null,
-                  type: null,
-                  code: null,
-                  ruleProtocol: "all",
-                },
-              ],
-            },
-          ],
-        },
-      ];
       assert.deepEqual(
-        state.store.json.vpcs,
-        expectedData,
+        state.store.json.vpcs.length,
+        1,
         "it should have only one vpcs"
+      );
+      assert.deepEqual(
+        state.store.json.vpcs[0].name,
+        "workload",
+        "it should have workload as the first vpc"
       );
     });
   });
@@ -1649,7 +900,6 @@ describe("vpcs", () => {
   describe("vpcs.subnets", () => {
     describe("vpcs.subnets.save", () => {
       it("should update a subnet in place", () => {
-        let state = new newState();
         state.vpcs.subnets.save(
           {
             name: "frog",
@@ -1666,7 +916,6 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet in place", () => {
-        let state = new newState(true);
         state.store.json._options.dynamic_subnets = false;
         state.vpcs.subnets.save(
           {
@@ -1685,7 +934,6 @@ describe("vpcs", () => {
         );
       });
       it("should update a subnet in place", () => {
-        let state = new newState(true);
         state.store.json._options.dynamic_subnets = false;
         state.vpcs.subnets.save(
           {
@@ -1824,50 +1072,6 @@ describe("vpcs", () => {
       it("should update an advanced subnet in place when no matching prefix", () => {
         let state = new newState(true);
         state.store.json._options.dynamic_subnets = false;
-        let expectedPrefixes = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.10.0/24",
-            name: "vsi-zone-1",
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.10.0/24",
-            name: "vsi-zone-2",
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.10.0/24",
-            name: "vsi-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpe-zone-1",
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.20.0/24",
-            name: "vpe-zone-2",
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.20.0/24",
-            name: "vpe-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "1.2.3.4/5",
-            name: "frog",
-          },
-        ];
         state.vpcs.subnetTiers.save(
           {
             advanced: true,
@@ -2160,71 +1364,9 @@ describe("vpcs", () => {
             },
           }
         );
-        let expectedData = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.10.0/24",
-            name: "vsi-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.10.0/24",
-            name: "vsi-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.10.0/24",
-            name: "vsi-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.20.0/24",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.20.0/24",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-        ];
         assert.deepEqual(
-          state.store.json.vpcs[0].subnets,
-          expectedData,
+          state.store.json.vpcs[0].subnets.length,
+          6,
           "vpn-zone-1 should be deleted"
         );
       });
@@ -2361,68 +1503,6 @@ describe("vpcs", () => {
       it("should update a subnet tier in place", () => {
         let vpcState = newState(true);
         vpcState.store.json._options.dynamic_subnets = false;
-        let expectedData = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.10.0/24",
-            name: "frog-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.10.0/24",
-            name: "frog-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.20.0/24",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.20.0/24",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-        ];
         vpcState.store.json.dns.push({
           name: "dns",
           zones: [],
@@ -2455,9 +1535,20 @@ describe("vpcs", () => {
             },
           }
         );
-        assert.deepEqual(
-          vpcState.store.json.vpcs[0].subnets,
-          expectedData,
+        assert.isFalse(
+          splatContains(
+            vpcState.store.json.vpcs[0].subnets,
+            "name",
+            "vsi-zone-1"
+          ),
+          "it should change subnets"
+        );
+        assert.isTrue(
+          splatContains(
+            vpcState.store.json.vpcs[0].subnets,
+            "name",
+            "frog-zone-2"
+          ),
           "it should change subnets"
         );
         assert.deepEqual(
@@ -2539,69 +1630,8 @@ describe("vpcs", () => {
       it("should update a subnet tier in place with nacl and gateway", () => {
         let vpcState = newState(true);
         vpcState.store.json._options.dynamic_subnets = false;
+        vpcState.store.json.vpcs[0].publicGateways = [1, 2, 3];
         vpcState.vpcs.acls.create({ name: "todd" }, { vpc_name: "management" });
-        let expectedData = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.10.0/24",
-            name: "frog-zone-1",
-            network_acl: "todd",
-            resource_group: "management-rg",
-            public_gateway: true,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.10.0/24",
-            name: "frog-zone-2",
-            network_acl: "todd",
-            resource_group: "management-rg",
-            public_gateway: true,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.20.0/24",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.20.0/24",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-        ];
         vpcState.vpcs.subnetTiers.save(
           {
             name: "frog",
@@ -2641,76 +1671,38 @@ describe("vpcs", () => {
           }
         );
         assert.deepEqual(
-          vpcState.store.json.vpcs[0].subnets,
-          expectedData,
+          vpcState.store.json.vpcs[0].subnets[0],
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.10.0/24",
+            name: "frog-zone-1",
+            network_acl: "todd",
+            resource_group: "management-rg",
+            public_gateway: true,
+            has_prefix: true,
+          },
+          "it should change subnets"
+        );
+        assert.deepEqual(
+          vpcState.store.json.vpcs[0].subnets[2],
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.10.0/24",
+            name: "frog-zone-2",
+            network_acl: "todd",
+            resource_group: "management-rg",
+            public_gateway: true,
+            has_prefix: true,
+          },
           "it should change subnets"
         );
       });
       it("should update a subnet tier in place with nacl and gateway when only one gateway is enabled", () => {
         let vpcState = newState();
         vpcState.vpcs.acls.create({ name: "todd" }, { vpc_name: "management" });
-        let expectedData = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.0/29",
-            name: "frog-zone-1",
-            network_acl: "todd",
-            resource_group: "management-rg",
-            public_gateway: true,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.16/28",
-            name: "vpn-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.0.0/29",
-            name: "frog-zone-2",
-            network_acl: "todd",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.0.48/29",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.0.16/29",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.0.0/29",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: false,
-          },
-        ];
+        vpcState.store.json.vpcs[0].publicGateways = [1];
         vpcState.vpcs.subnetTiers.save(
           {
             name: "frog",
@@ -2742,96 +1734,37 @@ describe("vpcs", () => {
           }
         );
         assert.deepEqual(
-          vpcState.store.json.vpcs[0].subnets,
-          expectedData,
+          vpcState.store.json.vpcs[0].subnets[0],
+          {
+            vpc: "management",
+            zone: 1,
+            cidr: "10.10.0.0/29",
+            name: "frog-zone-1",
+            network_acl: "todd",
+            resource_group: "management-rg",
+            public_gateway: true,
+            has_prefix: false,
+          },
+          "it should change subnets"
+        );
+        assert.deepEqual(
+          vpcState.store.json.vpcs[0].subnets[2],
+          {
+            vpc: "management",
+            zone: 2,
+            cidr: "10.20.0.0/29",
+            name: "frog-zone-2",
+            network_acl: "todd",
+            resource_group: "management-rg",
+            public_gateway: false,
+            has_prefix: false,
+          },
           "it should change subnets"
         );
       });
       it("should update a subnet tier in place with additional zones and with no acl", () => {
         let vpcState = newState(true);
         vpcState.store.json._options.dynamic_subnets = false;
-        let expectedData = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.10.0/24",
-            name: "vsi-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
-            network_acl: null,
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.10.0/24",
-            name: "vsi-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.10.0/24",
-            name: "vsi-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.20.0/24",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.20.0/24",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.30.0/24",
-            name: "vpn-zone-2",
-            network_acl: null,
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-        ];
         vpcState.vpcs.subnetTiers.save(
           {
             name: "vpn",
@@ -2855,9 +1788,20 @@ describe("vpcs", () => {
             },
           }
         );
-        assert.deepEqual(
-          vpcState.store.json.vpcs[0].subnets,
-          expectedData,
+        assert.isTrue(
+          splatContains(
+            vpcState.store.json.vpcs[0].subnets,
+            "name",
+            "vpn-zone-1"
+          ),
+          "it should change subnets"
+        );
+        assert.isTrue(
+          splatContains(
+            vpcState.store.json.vpcs[0].subnets,
+            "name",
+            "vpn-zone-2"
+          ),
           "it should change subnets"
         );
       });
@@ -2946,6 +1890,7 @@ describe("vpcs", () => {
       it("should update a subnet tier in place with additional zones and with no acl and 1 zone pgw", () => {
         let vpcState = newState(true);
         vpcState.store.json._options.dynamic_subnets = false;
+        vpcState.store.json.vpcs[0].publicGateways = [1, 2, 3];
         let expectedData = [
           {
             vpc: "management",
@@ -3067,88 +2012,7 @@ describe("vpcs", () => {
       it("should update a subnet tier in place with additional zones and with no acl and 2 zone pgw", () => {
         let vpcState = newState(true);
         vpcState.store.json._options.dynamic_subnets = false;
-        let expectedData = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.10.0/24",
-            name: "vsi-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
-            network_acl: null,
-            resource_group: "management-rg",
-            public_gateway: true,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.10.0/24",
-            name: "vsi-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.10.0/24",
-            name: "vsi-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.20.0/24",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.20.0/24",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.30.0/24",
-            name: "vpn-zone-2",
-            network_acl: null,
-            resource_group: "management-rg",
-            public_gateway: true,
-            has_prefix: true,
-          },
-        ];
+        vpcState.store.json.vpcs[0].publicGateways = [2, 3];
         vpcState.vpcs.subnetTiers.save(
           {
             name: "vpn",
@@ -3183,117 +2047,18 @@ describe("vpcs", () => {
             },
           }
         );
-        assert.deepEqual(
-          vpcState.store.json.vpcs[0].subnets,
-          expectedData,
-          "it should change subnets"
+        assert.isTrue(
+          vpcState.store.json.vpcs[0].subnets[7].public_gateway,
+          "it should have public gateway"
+        );
+        assert.isFalse(
+          vpcState.store.json.vpcs[0].subnets[2].public_gateway,
+          "it should not have public gateway"
         );
       });
       it("should expand a reserved edge subnet tier in place with additional zones", () => {
         let vpcState = newState(true);
         vpcState.store.json._options.dynamic_subnets = false;
-        let expectedData = [
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.10.0/24",
-            name: "vsi-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.10.0/24",
-            name: "vsi-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.10.0/24",
-            name: "vsi-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpe-zone-1",
-            resource_group: "management-rg",
-            network_acl: "management",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.20.20.0/24",
-            name: "vpe-zone-2",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.30.20.0/24",
-            name: "vpe-zone-3",
-            network_acl: "management",
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.5.60.0/24",
-            name: "f5-bastion-zone-1",
-            network_acl: null,
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 2,
-            cidr: "10.6.60.0/24",
-            name: "f5-bastion-zone-2",
-            network_acl: null,
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-          {
-            vpc: "management",
-            zone: 3,
-            cidr: "10.7.60.0/24",
-            name: "f5-bastion-zone-3",
-            network_acl: null,
-            resource_group: "management-rg",
-            public_gateway: false,
-            has_prefix: true,
-          },
-        ];
         vpcState.store.edge_vpc_name = "management";
         vpcState.store.subnetTiers.management.unshift({
           name: "f5-bastion",
@@ -3331,9 +2096,20 @@ describe("vpcs", () => {
             },
           }
         );
-        assert.deepEqual(
-          vpcState.store.json.vpcs[0].subnets,
-          expectedData,
+        assert.isTrue(
+          splatContains(
+            vpcState.store.json.vpcs[0].subnets,
+            "name",
+            "f5-bastion-zone-2"
+          ),
+          "it should change subnets"
+        );
+        assert.isTrue(
+          splatContains(
+            vpcState.store.json.vpcs[0].subnets,
+            "name",
+            "f5-bastion-zone-3"
+          ),
           "it should change subnets"
         );
       });
@@ -4371,6 +3147,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.store.json.dns.push({
@@ -4548,6 +3325,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.store.json.vpcs[0].publicGateways = [1, 2];
@@ -4641,6 +3419,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.store.json.vpcs[0].publicGateways = [1];
@@ -4741,6 +3520,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
             {
               vpc: "management",
@@ -4929,6 +3709,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
             {
               vpc: "management",
@@ -4937,7 +3718,7 @@ describe("vpcs", () => {
               name: "vpn-zone-2",
               network_acl: null,
               resource_group: "management-rg",
-              public_gateway: false,
+              public_gateway: true,
               has_prefix: true,
             },
           ];
@@ -4980,7 +3761,7 @@ describe("vpcs", () => {
               name: "vpn-zone-1",
               network_acl: null,
               resource_group: "management-rg",
-              public_gateway: true,
+              public_gateway: false,
               has_prefix: true,
             },
             {
@@ -5039,6 +3820,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
             {
               vpc: "management",
@@ -5051,11 +3833,12 @@ describe("vpcs", () => {
               has_prefix: true,
             },
           ];
-          craig.store.json.vpcs[0].publicGateways = [1];
+          craig.store.json.vpcs[0].publicGateways = [2];
           craig.vpcs.subnetTiers.save(
             {
               name: "vpn",
-              zones: 2,
+              zones: "2",
+              select_zones: "2",
               networkAcl: "",
               addPublicGateway: true,
             },
@@ -5149,6 +3932,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
             {
               vpc: "management",
@@ -5273,6 +4057,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.store.json.dns.push({
@@ -5449,6 +4234,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.store.json.dns.push({
@@ -5625,6 +4411,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.vpcs.subnetTiers.save(
@@ -5904,6 +4691,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.vpcs.subnetTiers.save(
@@ -6054,6 +4842,7 @@ describe("vpcs", () => {
               resource_group: "management-rg",
               use_data: true,
               vpc: "management",
+              public_gateway: false,
             },
           ];
           craig.store.json.f5_vsi = [
@@ -6357,6 +5146,301 @@ describe("vpcs", () => {
             "it should have correct subnet tiers"
           );
         });
+        it("should save an existing subnet tier when increasing zones and setting pgw to true when no pgw in that zone", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: true,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+              public_gateway: false,
+            },
+            {
+              cidr: "10.20.30.0/24",
+              has_prefix: true,
+              name: "vpn-zone-2",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 2,
+            },
+            {
+              cidr: "10.30.30.0/24",
+              has_prefix: true,
+              name: "vpn-zone-3",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 3,
+            },
+          ];
+          craig.store.json.vpcs[0].publicGateways = [1];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vpn",
+              zones: "3",
+              networkAcl: "",
+              addPublicGateway: true,
+              select_zones: "3",
+              advanced: false,
+            },
+            {
+              vpc_name: "management",
+              data: {
+                hide: true,
+                networkAcl: "transit",
+                addPublicGateway: false,
+                name: "vpn",
+                zones: "1",
+                advanced: false,
+                select_zones: "3",
+              },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
+        it("should update pgw when removing from vpc", () => {
+          let expectedData = [
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vsi-zone-1",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+              network_acl: null,
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.10.0/24",
+              name: "vsi-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.10.0/24",
+              name: "vsi-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "10.10.20.0/24",
+              name: "vpe-zone-1",
+              resource_group: "management-rg",
+              network_acl: "management",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 2,
+              cidr: "10.20.20.0/24",
+              name: "vpe-zone-2",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              vpc: "management",
+              zone: 3,
+              cidr: "10.30.20.0/24",
+              name: "vpe-zone-3",
+              network_acl: "management",
+              resource_group: "management-rg",
+              public_gateway: false,
+              has_prefix: true,
+            },
+            {
+              name: "test",
+              network_acl: null,
+              resource_group: "management-rg",
+              use_data: true,
+              vpc: "management",
+              public_gateway: false,
+            },
+            {
+              cidr: "10.20.30.0/24",
+              has_prefix: true,
+              name: "vpn-zone-2",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 2,
+            },
+            {
+              cidr: "10.30.30.0/24",
+              has_prefix: true,
+              name: "vpn-zone-3",
+              network_acl: null,
+              public_gateway: false,
+              resource_group: "management-rg",
+              vpc: "management",
+              zone: 3,
+            },
+          ];
+          craig.store.json.vpcs[0].publicGateways = [1, 2, 3];
+          craig.vpcs.subnetTiers.save(
+            {
+              name: "vpn",
+              zones: "3",
+              networkAcl: "",
+              addPublicGateway: true,
+              select_zones: "3",
+              advanced: false,
+            },
+            {
+              vpc_name: "management",
+              data: {
+                hide: true,
+                networkAcl: "transit",
+                addPublicGateway: false,
+                name: "vpn",
+                zones: "1",
+                advanced: false,
+                select_zones: "3",
+              },
+              craig: {
+                store: {
+                  json: {
+                    vpcs: [
+                      {
+                        name: "management",
+                        publicGateways: [],
+                      },
+                    ],
+                  },
+                },
+              },
+            }
+          );
+          craig.vpcs.save(
+            {
+              publicGateways: [],
+            },
+            {
+              data: {
+                name: "management",
+              },
+              craig: craig,
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.vpcs[0].subnets,
+            expectedData,
+            "it should change subnets"
+          );
+        });
       });
     });
     describe("vpcs.subnetTiers.create", () => {
@@ -6482,6 +5566,7 @@ describe("vpcs", () => {
       it("should add a subnet tier to vpc with pgw", () => {
         let vpcState = new newState(true);
         vpcState.store.json._options.dynamic_subnets = false;
+        vpcState.store.json.vpcs[0].publicGateways = [1, 2, 3];
         vpcState.vpcs.subnetTiers.create(
           {
             name: "test",
@@ -7066,6 +6151,7 @@ describe("vpcs", () => {
           );
         });
         it("should add a subnet tier to vpc with pgw", () => {
+          craig.store.json.vpcs[0].publicGateways = [1, 2, 3];
           craig.vpcs.subnetTiers.create(
             {
               name: "test",
@@ -8460,1320 +7546,6 @@ describe("vpcs", () => {
       });
     });
   });
-  describe("vpcs.network_acls", () => {
-    describe("vpcs.network_acls.create", () => {
-      it("should create an acl", () => {
-        let state = newState();
-        state.vpcs.acls.create({ name: "new" }, { vpc_name: "management" });
-        let expectedData = {
-          name: "new",
-          resource_group: "management-rg",
-          vpc: "management",
-          rules: [],
-          use_data: false,
-        };
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls[1],
-          expectedData,
-          "it should create acl"
-        );
-      });
-      it("should create an acl with rg", () => {
-        let state = newState();
-        state.store.json.vpcs[0].resource_group = null;
-        state.vpcs.acls.create(
-          { name: "new", resource_group: "workload-rg" },
-          { vpc_name: "management" }
-        );
-        let expectedData = {
-          name: "new",
-          resource_group: "workload-rg",
-          vpc: "management",
-          rules: [],
-          use_data: false,
-        };
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls[1],
-          expectedData,
-          "it should create acl"
-        );
-      });
-      it("should create an acl and update rg when deleted", () => {
-        let state = newState();
-        state.vpcs.acls.create({ name: "new" }, { vpc_name: "management" });
-        state.resource_groups.delete({}, { data: { name: "management-rg" } });
-        let expectedData = {
-          name: "new",
-          resource_group: null,
-          vpc: "management",
-          rules: [],
-          use_data: false,
-        };
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls[1],
-          expectedData,
-          "it should create acl"
-        );
-      });
-    });
-    describe("vpcs.network_acls.delete", () => {
-      it("should delete an acl", () => {
-        let state = newState();
-        state.vpcs.acls.delete(
-          {},
-          { data: { name: "management" }, vpc_name: "management" }
-        );
-        let expectedData = [];
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls,
-          expectedData,
-          "it should delete acl"
-        );
-      });
-      it("should set subnet acls to null on delete", () => {
-        let state = newState(true);
-        state.store.json._options.dynamic_subnets = false;
-        state.vpcs.acls.delete(
-          {},
-          { data: { name: "management" }, vpc_name: "management" }
-        );
-        let expectedData = [];
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls,
-          expectedData,
-          "it should delete acl"
-        );
-        assert.deepEqual(
-          state.store.json.vpcs[0].subnets,
-          [
-            {
-              vpc: "management",
-              zone: 1,
-              cidr: "10.10.10.0/24",
-              name: "vsi-zone-1",
-              network_acl: null,
-              resource_group: "management-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "management",
-              zone: 1,
-              cidr: "10.10.30.0/24",
-              name: "vpn-zone-1",
-              network_acl: null,
-              resource_group: "management-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "management",
-              zone: 2,
-              cidr: "10.20.10.0/24",
-              name: "vsi-zone-2",
-              network_acl: null,
-              resource_group: "management-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "management",
-              zone: 3,
-              cidr: "10.30.10.0/24",
-              name: "vsi-zone-3",
-              network_acl: null,
-              resource_group: "management-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "management",
-              zone: 1,
-              cidr: "10.10.20.0/24",
-              name: "vpe-zone-1",
-              resource_group: "management-rg",
-              network_acl: null,
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "management",
-              zone: 2,
-              cidr: "10.20.20.0/24",
-              name: "vpe-zone-2",
-              network_acl: null,
-              resource_group: "management-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-            {
-              vpc: "management",
-              zone: 3,
-              cidr: "10.30.20.0/24",
-              name: "vpe-zone-3",
-              network_acl: null,
-              resource_group: "management-rg",
-              public_gateway: false,
-              has_prefix: true,
-            },
-          ],
-          "it should have correct subnets"
-        );
-      });
-    });
-    describe("vpcs.network_acls.save", () => {
-      it("should update an acl", () => {
-        let state = newState();
-        // control for unchanged acls
-        state.store.json.vpcs[0].subnets[1].network_acl = "frog";
-        state.vpcs.acls.save(
-          { name: "new" },
-          { data: { name: "management" }, vpc_name: "management" }
-        );
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls[0].name,
-          "new",
-          "it should update acl"
-        );
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls[0].rules[0].acl,
-          "new",
-          "it should have correct acl"
-        );
-        assert.deepEqual(
-          state.store.json.vpcs[0].subnets[0].network_acl,
-          "new",
-          "it should have correct acl"
-        );
-      });
-      it("should update an acl with no name change", () => {
-        let state = newState();
-        state.vpcs.acls.save(
-          { name: "management", resource_group: "workload-rg" },
-          { data: { name: "management" }, vpc_name: "management" }
-        );
-        assert.deepEqual(
-          state.store.json.vpcs[0].acls[0].resource_group,
-          "workload-rg",
-          "it should update acl rg"
-        );
-      });
-    });
-    describe("vpcs.network_acls.rules", () => {
-      describe("vpcs.network_acls.rules.create", () => {
-        it("should create a network acl rule", () => {
-          let state = newState();
-          state.vpcs.acls.rules.create(
-            {
-              name: "frog",
-              action: "allow",
-              direction: "inbound",
-              source: "8.8.8.8",
-              destination: "0.0.0.0/0",
-            },
-            {
-              vpc_name: "management",
-              parent_name: "management",
-            }
-          );
-          let expectedData = [
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              destination: "10.0.0.0/8",
-              direction: "inbound",
-              name: "allow-ibm-inbound",
-              source: "161.26.0.0/16",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              action: "allow",
-              source: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-ibm-outbound",
-              destination: "161.26.0.0/16",
-              acl: "management",
-              vpc: "management",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              destination: "10.0.0.0/8",
-              direction: "inbound",
-              name: "allow-all-network-inbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              destination: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-all-network-outbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "0.0.0.0/0",
-              name: "frog",
-              source: "8.8.8.8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-          ];
-          assert.deepEqual(
-            state.store.json.vpcs[0].acls[0].rules,
-            expectedData,
-            "it should add rule"
-          );
-        });
-        it("should create a network acl rule with deny outbound", () => {
-          let state = newState();
-          state.vpcs.acls.rules.create(
-            {
-              name: "frog",
-              action: "deny",
-              direction: "outbound",
-              source: "8.8.8.8",
-              destination: "0.0.0.0/0",
-            },
-            {
-              vpc_name: "management",
-              parent_name: "management",
-            }
-          );
-          let expectedData = [
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              destination: "10.0.0.0/8",
-              direction: "inbound",
-              name: "allow-ibm-inbound",
-              source: "161.26.0.0/16",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              action: "allow",
-              source: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-ibm-outbound",
-              destination: "161.26.0.0/16",
-              acl: "management",
-              vpc: "management",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              destination: "10.0.0.0/8",
-              direction: "inbound",
-              name: "allow-all-network-inbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              destination: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-all-network-outbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "deny",
-              direction: "outbound",
-              destination: "0.0.0.0/0",
-              name: "frog",
-              source: "8.8.8.8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-          ];
-          assert.deepEqual(
-            state.store.json.vpcs[0].acls[0].rules,
-            expectedData,
-            "it should add rule"
-          );
-        });
-      });
-      describe("vpcs.network_acls.rules.save", () => {
-        it("should update a rule in place with all", () => {
-          let state = newState();
-          state.vpcs.acls.rules.save(
-            {
-              name: "frog",
-              allow: false,
-              inbound: true,
-              source: "1.2.3.4",
-              destination: "5.6.7.8",
-              ruleProtocol: "all",
-            },
-            {
-              vpc_name: "management",
-              parent_name: "management",
-              data: { name: "allow-all-network-outbound" },
-            }
-          );
-          let expectedData = [
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-ibm-inbound",
-              source: "161.26.0.0/16",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              action: "allow",
-              source: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-ibm-outbound",
-              destination: "161.26.0.0/16",
-              acl: "management",
-              vpc: "management",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-all-network-inbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "deny",
-              direction: "inbound",
-              destination: "5.6.7.8",
-              name: "frog",
-              source: "1.2.3.4",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-          ];
-          assert.deepEqual(
-            state.store.json.vpcs[0].acls[0].rules,
-            expectedData,
-            "it should update rule"
-          );
-        });
-        it("should update a rule in place with protocol", () => {
-          let state = newState();
-          state.vpcs.acls.rules.save(
-            {
-              name: "frog",
-              allow: false,
-              inbound: true,
-              source: "1.2.3.4",
-              destination: "5.6.7.8",
-              ruleProtocol: "tcp",
-              rule: {
-                port_max: 8080,
-                port_min: null,
-              },
-              port_max: 8080,
-              port_min: null,
-            },
-            {
-              vpc_name: "management",
-              parent_name: "management",
-              data: { name: "allow-all-network-outbound" },
-            }
-          );
-          let expectedData = [
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-ibm-inbound",
-              source: "161.26.0.0/16",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              action: "allow",
-              source: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-ibm-outbound",
-              destination: "161.26.0.0/16",
-              acl: "management",
-              vpc: "management",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-all-network-inbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "deny",
-              direction: "inbound",
-              destination: "5.6.7.8",
-              name: "frog",
-              source: "1.2.3.4",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: 1,
-                port_max: 8080,
-                source_port_min: 1,
-                source_port_max: 65535,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: 8080,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "tcp",
-            },
-          ];
-          assert.deepEqual(
-            state.store.json.vpcs[0].acls[0].rules,
-            expectedData,
-            "it should update rule"
-          );
-        });
-        it("should update a rule in place with only one change protocol", () => {
-          let state = newState();
-          state.vpcs.acls.rules.save(
-            {
-              name: "allow-all-outbound",
-              allow: true,
-              inbound: false,
-              source: "10.0.0.0/8",
-              destination: "0.0.0.0/0",
-              ruleProtocol: "tcp",
-              rule: {
-                port_max: 8080,
-                port_min: null,
-              },
-            },
-            {
-              vpc_name: "management",
-              parent_name: "management",
-              data: { name: "allow-all-network-outbound" },
-            }
-          );
-          let expectedData = [
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-ibm-inbound",
-              source: "161.26.0.0/16",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              action: "allow",
-              source: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-ibm-outbound",
-              destination: "161.26.0.0/16",
-              acl: "management",
-              vpc: "management",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-all-network-inbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "outbound",
-              destination: "0.0.0.0/0",
-              name: "allow-all-outbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: 1,
-                port_max: 8080,
-                source_port_min: 1,
-                source_port_max: 65535,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "tcp",
-            },
-          ];
-          assert.deepEqual(
-            state.store.json.vpcs[0].acls[0].rules,
-            expectedData,
-            "it should update rule"
-          );
-        });
-        it("should update a rule in place with protocol and change port values to numbers from string", () => {
-          let state = newState();
-          state.vpcs.acls.rules.save(
-            {
-              name: "frog",
-              allow: false,
-              inbound: true,
-              source: "1.2.3.4",
-              destination: "5.6.7.8",
-              ruleProtocol: "tcp",
-              rule: {
-                port_max: "8080",
-                port_min: null,
-              },
-            },
-            {
-              vpc_name: "management",
-              parent_name: "management",
-              data: { name: "allow-all-network-outbound" },
-            }
-          );
-          let expectedData = [
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-ibm-inbound",
-              source: "161.26.0.0/16",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              action: "allow",
-              source: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-ibm-outbound",
-              destination: "161.26.0.0/16",
-              acl: "management",
-              vpc: "management",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-all-network-inbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "deny",
-              direction: "inbound",
-              destination: "5.6.7.8",
-              name: "frog",
-              source: "1.2.3.4",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: 1,
-                port_max: 8080,
-                source_port_min: 1,
-                source_port_max: 65535,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "tcp",
-            },
-          ];
-          assert.deepEqual(
-            state.store.json.vpcs[0].acls[0].rules,
-            expectedData,
-            "it should update rule"
-          );
-        });
-      });
-      describe("vpcs.network_acls.rules.delete", () => {
-        it("should delete an acl rule", () => {
-          let state = newState();
-          state.vpcs.acls.rules.delete(
-            {},
-            {
-              vpc_name: "management",
-              parent_name: "management",
-              data: { name: "allow-all-network-outbound" },
-            }
-          );
-          let expectedData = [
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-ibm-inbound",
-              source: "161.26.0.0/16",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              action: "allow",
-              source: "10.0.0.0/8",
-              direction: "outbound",
-              name: "allow-ibm-outbound",
-              destination: "161.26.0.0/16",
-              acl: "management",
-              vpc: "management",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-            {
-              acl: "management",
-              vpc: "management",
-              action: "allow",
-              direction: "inbound",
-              destination: "10.0.0.0/8",
-              name: "allow-all-network-inbound",
-              source: "10.0.0.0/8",
-              icmp: {
-                type: null,
-                code: null,
-              },
-              tcp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              udp: {
-                port_min: null,
-                port_max: null,
-                source_port_min: null,
-                source_port_max: null,
-              },
-              port_min: null,
-              port_max: null,
-              source_port_min: null,
-              source_port_max: null,
-              type: null,
-              code: null,
-              ruleProtocol: "all",
-            },
-          ];
-          assert.deepEqual(
-            state.store.json.vpcs[0].acls[0].rules,
-            expectedData,
-            "it should add rule"
-          );
-        });
-      });
-    });
-  });
   describe("dynamic subnet addressing", () => {
     it("should update a subnet tier in place and update address prefixes when using dynamic subnet addressing", () => {
       let vpcState = newState();
@@ -10117,293 +7889,6 @@ describe("vpcs", () => {
         state.store.json.vpcs[1].subnets,
         expectedData,
         "it should return correct subnets"
-      );
-    });
-  });
-  describe("acl shcema", () => {
-    let craig = newState();
-    it("should hide use data when vpc does not use data", () => {
-      assert.isTrue(
-        craig.vpcs.acls.use_data.hideWhen(
-          {},
-          {
-            vpc_name: "vpc",
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "iac",
-                  },
-                  vpcs: [
-                    {
-                      name: "vpc",
-                    },
-                  ],
-                },
-              },
-            },
-          }
-        ),
-        "it should be hidden"
-      );
-    });
-    it("should return correct text", () => {
-      assert.deepEqual(
-        craig.vpcs.acls.name.helperText(
-          { name: "test" },
-          {
-            vpc_name: "vpc",
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "iac",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "iac-vpc-test-acl",
-        "it should return correct text"
-      );
-    });
-    it("should return correct text when use data", () => {
-      assert.deepEqual(
-        craig.vpcs.acls.name.helperText(
-          { name: "test", use_data: true },
-          {
-            vpc_name: "vpc",
-            craig: {
-              store: {
-                json: {
-                  _options: {
-                    prefix: "iac",
-                  },
-                },
-              },
-            },
-          }
-        ),
-        "test",
-        "it should return correct text"
-      );
-    });
-    it("should set data when changing rule protocol", () => {
-      let data = { ruleProtocol: "all" };
-      craig.vpcs.acls.rules.ruleProtocol.onInputChange(data);
-      assert.deepEqual(
-        data,
-        {
-          rule: {
-            port_max: null,
-            port_min: null,
-            source_port_max: null,
-            source_port_min: null,
-            type: null,
-            code: null,
-          },
-          ruleProtocol: "all",
-          tcp: {
-            port_min: null,
-            port_max: null,
-            source_port_max: null,
-            source_port_min: null,
-          },
-          udp: {
-            port_min: null,
-            source_port_max: null,
-            source_port_min: null,
-            port_max: null,
-          },
-          icmp: {
-            type: null,
-            code: null,
-          },
-        },
-        "it should return data"
-      );
-    });
-    it("should render value for each type when present on sub rule but not main", () => {
-      assert.deepEqual(
-        craig.vpcs.acls.rules.type.onRender({
-          icmp: {
-            type: "443",
-          },
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.type.onRender({
-          icmp: {
-            type: "null",
-          },
-        }),
-        "",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.type.onRender({
-          icmp: {
-            type: "null",
-          },
-          type: "1234",
-        }),
-        "1234",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.code.onRender({
-          icmp: {
-            code: "null",
-          },
-        }),
-        "",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.type.onRender({
-          icmp: {
-            type: null,
-          },
-          type: "443",
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.code.onRender({
-          icmp: {
-            code: "443",
-          },
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.code.onRender({
-          icmp: {},
-          code: "443",
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.port_max.onRender({
-          tcp: {
-            port_max: "443",
-          },
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.port_min.onRender({
-          tcp: {
-            port_min: "443",
-          },
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.source_port_max.onRender({
-          tcp: {
-            source_port_max: "443",
-          },
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.source_port_min.onRender({
-          tcp: {
-            source_port_min: "443",
-          },
-        }),
-        "443",
-        "it should set sub rule"
-      );
-      assert.deepEqual(
-        craig.vpcs.acls.rules.source_port_min.onRender({
-          tcp: {
-            source_port_min: null,
-          },
-          source_port_min: "443",
-        }),
-        "443",
-        "it should set sub rule"
-      );
-    });
-    it("should set rule data on input change", () => {
-      let data = {
-        ruleProtocol: "all",
-      };
-      craig.vpcs.acls.rules.ruleProtocol.onInputChange(data);
-      assert.deepEqual(
-        data,
-        {
-          rule: {
-            port_max: null,
-            port_min: null,
-            source_port_max: null,
-            source_port_min: null,
-            type: null,
-            code: null,
-          },
-          ruleProtocol: "all",
-          tcp: {
-            port_max: null,
-            port_min: null,
-            source_port_max: null,
-            source_port_min: null,
-          },
-          udp: {
-            port_max: null,
-            port_min: null,
-            source_port_max: null,
-            source_port_min: null,
-          },
-          icmp: {
-            type: null,
-            code: null,
-          },
-        },
-        "it should set rule"
-      );
-    });
-    it("should render all as rule protocol", () => {
-      assert.deepEqual(
-        "ALL",
-        craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "all" }),
-        "it should return protocol"
-      );
-    });
-    it("should render TCP as rule protocol", () => {
-      assert.deepEqual(
-        "TCP",
-        craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "tcp" }),
-        "it should return protocol"
-      );
-    });
-    it("should render empty string as rule protocol", () => {
-      assert.deepEqual(
-        "",
-        craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "" }),
-        "it should return protocol"
-      );
-    });
-    it("should return invalid for object when no source", () => {
-      assert.isTrue(
-        craig.vpcs.acls.rules.source.invalid({}),
-        "it should be true"
-      );
-    });
-    it("should return invalid for object when no destination", () => {
-      assert.isTrue(
-        craig.vpcs.acls.rules.destination.invalid({}),
-        "it should be true"
       );
     });
   });

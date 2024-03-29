@@ -182,7 +182,9 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
           stateData?.networkAcl,
           vpc.resource_group,
           i + 1,
-          contains(vpc.publicGateways, i) ? stateData.addPublicGateway : false,
+          contains(vpc.publicGateways, i + 1)
+            ? stateData.addPublicGateway
+            : false,
           stateData.use_prefix,
           isEdgeVpcTier
         )

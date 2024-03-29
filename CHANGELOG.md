@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.14.0
+
+### Upgrade Notes
+
+
+### Features
+
+- Users can now update existing CRAIG templates and download the updated tar file by using the endpoint POST `/api/craig/template-tar/:template`
+- From the options page, users can now enable Manual Power VSI naming. When this is enabled, the environment prefix will not be prepended to the names of Power VS Virtual Server or FalconStor VTL instances
+- Users can now provision VPC VSI deployments using an existing volume snapshot by using the `Create VSI From Snapshot` toggle. A list of snapshots will be dynamically retrieved using the IBM Cloud API based on the region selected in your project
+- When creating a VSI Deployment, users can select a new toggle `Include Name Variables`. When this value is set to true, VSI names will be populated as variables in Terrafrom. This allows for users to have full control over VSI names without needing to directly modify Terraform scripts
+- Power VS Virtual Server and FalconStor VTL system types are now retrieved dynamically using the Power VS API based on the zone
+- Power Edge Router is now supported for `syd05`
+- CRAIG now supports the Power VS region `osa21`
+- When updating a VPC's Public Gateways, invalid gateways will automatically be removed from subnets where they are enabled
+
+### Fixes
+
+- Fixed an issue causing Power VS API endpoints for Sao Palo availability zones to fail
+- Fixed an issue causing VPC subnets to incorrectly have `public_gateway` set to true when no public gateway is created in the corresponding zone
+- Fixed an issue causing the Resource Group field for Key Management services to not be rendered when using a resource from data
+
 ## 1.13.1
 
 ### Upgrade Notes
@@ -11,6 +33,8 @@ All notable changes to this project will be documented in this file.
 - `.env.example` has been updated to include a warning that included quotation marks in .env values will cause the application to crash
 - When fetching VSI Images, the Craig API has no limit on the number of images that can be retrieved. In addition, only available images are retrieved
 - Power VS Network interface outputs now use the Terraform field `pi_network_name` instead of the depricated field `name`
+- When updating a project's region, VSI images are now reset to ensure that images are available in the selected region
+- When updating a Power VS workspace availability zone, storage tiers and storage pools are now reset for Power VS Instances, Volumes, and FalconStor VTLs
 
 ### Features
 

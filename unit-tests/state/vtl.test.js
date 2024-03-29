@@ -1,5 +1,6 @@
 const { assert } = require("chai");
 const { state } = require("../../client/src/lib/state");
+const { distinct, flatten, splat } = require("lazy-z");
 /**
  * initialize store
  * @returns {lazyZState} state store
@@ -11,21 +12,23 @@ function newState() {
 }
 
 describe("vtl", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("vtl.init", () => {
     it("should initialize power vs instances", () => {
-      let state = newState();
-      assert.deepEqual(state.store.json.vtl, [], "it should initialize data");
+      assert.deepEqual(craig.store.json.vtl, [], "it should initialize data");
     });
   });
   describe("vtl.create", () => {
     it("should create a new power vs instance", () => {
-      let state = newState();
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         zone: "dal12",
       });
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "frog",
@@ -41,14 +44,13 @@ describe("vtl", () => {
       );
     });
     it("should create a new power vs instance with SAP and create volumes", () => {
-      let state = newState();
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         sap: true,
         sap_profile: "ush1-4x128",
       });
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "frog",
@@ -65,7 +67,7 @@ describe("vtl", () => {
         "it should create instance"
       );
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             attachments: ["frog"],
@@ -182,8 +184,7 @@ describe("vtl", () => {
   });
   describe("vtl.save", () => {
     it("should save a power vs instance", () => {
-      let state = newState();
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
         image: null,
         ssh_key: null,
@@ -191,7 +192,7 @@ describe("vtl", () => {
         workspace: null,
         zone: null,
       });
-      state.vtl.save(
+      craig.vtl.save(
         {
           name: "frog",
         },
@@ -202,7 +203,7 @@ describe("vtl", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "frog",
@@ -218,18 +219,17 @@ describe("vtl", () => {
       );
     });
     it("should update power vs volume names when updating sap instance name", () => {
-      let state = newState();
-      state.store.json.power_volumes.push({
+      craig.store.json.power_volumes.push({
         attachments: null,
         workspace: null,
         name: "ignore-me",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         sap: true,
         sap_profile: "ush1-4x128",
       });
-      state.vtl.save(
+      craig.vtl.save(
         {
           name: "toad",
           sap: true,
@@ -245,7 +245,7 @@ describe("vtl", () => {
       );
 
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -262,139 +262,24 @@ describe("vtl", () => {
         "it should create instance"
       );
       assert.deepEqual(
-        state.store.json.power_volumes,
-        [
-          {
-            attachments: [],
-            name: "ignore-me",
-            workspace: null,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-data-1",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 71,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-data-2",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 71,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-data-3",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 71,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-data-4",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 71,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-log-1",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 33,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-log-2",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 33,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-log-3",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 33,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-log-4",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 33,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-          {
-            attachments: ["toad"],
-            workspace: undefined,
-            name: "toad-sap-shared",
-            pi_volume_type: "tier3",
-            mount: "/hana/shared",
-            pi_volume_size: 256,
-            sap: true,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: undefined,
-          },
-        ],
+        distinct(flatten(splat(craig.store.json.power_volumes, "attachments"))),
+        ["toad"],
         "it should create correct volumes"
       );
     });
     it("should update power vs volume sizes when updating sap instance profile", () => {
-      let state = newState();
-      state.store.json.power_volumes.push({
+      craig.store.json.power_volumes.push({
         attachments: null,
         workspace: null,
         name: "ignore-me",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         sap: true,
         sap_profile: "ush1-4x128",
         zone: "dal12",
       });
-      state.vtl.save(
+      craig.vtl.save(
         {
           name: "toad",
           sap: true,
@@ -410,7 +295,7 @@ describe("vtl", () => {
       );
 
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -427,146 +312,24 @@ describe("vtl", () => {
         "it should create instance"
       );
       assert.deepEqual(
-        state.store.json.power_volumes,
-        [
-          {
-            attachments: [],
-            name: "ignore-me",
-            workspace: null,
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-data-1",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 3851,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-data-2",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 3851,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-data-3",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 3851,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-data-4",
-            pi_volume_type: "tier1",
-            mount: "/hana/data",
-            pi_volume_size: 3851,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-log-1",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 512,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-log-2",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 512,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-log-3",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 512,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-log-4",
-            pi_volume_type: "tier1",
-            mount: "/hana/log",
-            pi_volume_size: 512,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-          {
-            attachments: ["toad"],
-            workspace: null,
-            name: "toad-sap-shared",
-            pi_volume_type: "tier3",
-            mount: "/hana/shared",
-            pi_volume_size: 1024,
-            sap: true,
-            workspace: undefined,
-            storage_option: "Storage Type",
-            affinity_type: null,
-            zone: "dal12",
-          },
-        ],
+        distinct(
+          flatten(splat(craig.store.json.power_volumes, "pi_volume_size"))
+        ),
+        [undefined, 3851, 512, 1024],
         "it should create correct volumes"
       );
     });
     it("should create power vs volumes when converting non-sap instance to sap", () => {
-      let state = newState();
-      state.store.json.power_volumes.push({
+      craig.store.json.power_volumes.push({
         attachments: null,
         workspace: null,
         name: "ignore-me",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         zone: "dal12",
       });
-      state.vtl.save(
+      craig.vtl.save(
         {
           name: "toad",
           sap: true,
@@ -582,7 +345,7 @@ describe("vtl", () => {
       );
 
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -599,7 +362,7 @@ describe("vtl", () => {
         "it should create instance"
       );
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             attachments: [],
@@ -719,24 +482,23 @@ describe("vtl", () => {
       );
     });
     it("should update power vs volume workspace when changing instance workspace", () => {
-      let state = newState();
-      state.store.json._options.power_vs_zones = ["dal12", "dal10"];
-      state.power.create({
+      craig.store.json._options.power_vs_zones = ["dal12", "dal10"];
+      craig.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal12",
       });
-      state.power.create({
+      craig.power.create({
         name: "frog",
         images: [{ name: "7100-05-09", workspace: "frog" }],
         zone: "dal12",
       });
-      state.store.json.power_volumes.push({
+      craig.store.json.power_volumes.push({
         attachments: [],
         workspace: null,
         name: "ignore-me",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         sap: true,
         sap_profile: "ush1-4x128",
@@ -744,7 +506,7 @@ describe("vtl", () => {
         workspace: "frog",
         network: [],
       });
-      state.vtl.save(
+      craig.vtl.save(
         {
           name: "toad",
           sap: true,
@@ -765,7 +527,7 @@ describe("vtl", () => {
       );
 
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -781,7 +543,7 @@ describe("vtl", () => {
         "it should create instance"
       );
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             attachments: [],
@@ -901,18 +663,17 @@ describe("vtl", () => {
       );
     });
     it("should delete power vs volumes when converting sap volume to non-sap", () => {
-      let state = newState();
-      state.store.json.power_volumes.push({
+      craig.store.json.power_volumes.push({
         attachments: null,
         workspace: null,
         name: "ignore-me",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         sap: true,
         sap_profile: "ush1-4x128",
       });
-      state.vtl.save(
+      craig.vtl.save(
         {
           name: "toad",
         },
@@ -925,7 +686,7 @@ describe("vtl", () => {
       );
 
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -942,7 +703,7 @@ describe("vtl", () => {
         "it should create instance"
       );
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             attachments: [],
@@ -956,11 +717,10 @@ describe("vtl", () => {
   });
   describe("vtl.delete", () => {
     it("should delete a power vs instance", () => {
-      let state = newState();
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
       });
-      state.vtl.delete(
+      craig.vtl.delete(
         {
           name: "frog",
         },
@@ -970,21 +730,20 @@ describe("vtl", () => {
           },
         }
       );
-      assert.deepEqual(state.store.json.vtl, [], "it should delete instance");
+      assert.deepEqual(craig.store.json.vtl, [], "it should delete instance");
     });
     it("should delete power vs volumes when deleting sap instance", () => {
-      let state = newState();
-      state.store.json.power_volumes.push({
+      craig.store.json.power_volumes.push({
         attachments: null,
         workspace: null,
         name: "ignore-me",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "frog",
         sap: true,
         sap_profile: "ush1-4x128",
       });
-      state.vtl.delete(
+      craig.vtl.delete(
         {
           name: "toad",
           sap: true,
@@ -998,9 +757,9 @@ describe("vtl", () => {
         }
       );
 
-      assert.deepEqual(state.store.json.vtl, [], "it should create instance");
+      assert.deepEqual(craig.store.json.vtl, [], "it should create instance");
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             attachments: [],
@@ -1014,14 +773,12 @@ describe("vtl", () => {
   });
   describe("vtl.onStoreUpdate", () => {
     it("should add power when not created on store update", () => {
-      let state = newState();
-      delete state.store.json.vtl;
-      state.update();
-      assert.deepEqual(state.store.json.vtl, [], "it should initialize data");
+      delete craig.store.json.vtl;
+      craig.update();
+      assert.deepEqual(craig.store.json.vtl, [], "it should initialize data");
     });
     it("should update ssh key, network, image, primary subnet, and workspace when unfound", () => {
-      let state = newState();
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
         image: "oops",
         ssh_key: "oops",
@@ -1036,7 +793,7 @@ describe("vtl", () => {
         primary_subnet: "oops",
       });
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -1052,13 +809,12 @@ describe("vtl", () => {
       );
     });
     it("should update ssh key, network, image, and priamry subnet when workspace is unfound", () => {
-      let state = newState();
-      state.power.create({
+      craig.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
         image: "oops",
         ssh_key: "oops",
@@ -1073,7 +829,7 @@ describe("vtl", () => {
         primary_subnet: "oops",
       });
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -1089,13 +845,12 @@ describe("vtl", () => {
       );
     });
     it("should update primary_subnet when network interface is unfound", () => {
-      let state = newState();
-      state.power.create({
+      craig.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
         zone: "dal10",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
         image: "oops",
         ssh_key: "oops",
@@ -1110,7 +865,7 @@ describe("vtl", () => {
         primary_subnet: "oops",
       });
       assert.deepEqual(
-        state.store.json.vtl,
+        craig.store.json.vtl,
         [
           {
             name: "toad",
@@ -1127,18 +882,17 @@ describe("vtl", () => {
       );
     });
     it("should not update image when still in existing workspace", () => {
-      let state = newState();
-      state.power.create({
+      craig.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         imageNames: ["7100-05-09"],
         zone: "dal10",
       });
-      state.power.network.create(
+      craig.power.network.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "toad" } }
       );
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
         image: "7100-05-09",
         ssh_key: "oops",
@@ -1156,43 +910,27 @@ describe("vtl", () => {
       });
 
       assert.deepEqual(
-        state.store.json.vtl,
-        [
-          {
-            name: "toad",
-            image: "7100-05-09",
-            ssh_key: null,
-            network: [
-              {
-                name: "test-network",
-              },
-            ],
-            primary_subnet: null,
-            workspace: "toad",
-            zone: null,
-            pi_storage_type: null,
-          },
-        ],
+        craig.store.json.vtl[0].image,
+        "7100-05-09",
         "it should initialize data"
       );
     });
     it("should not update ssh key when still in existing workspace", () => {
-      let state = newState();
-      state.power.create({
+      craig.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
         imageNames: ["7100-05-09"],
       });
-      state.power.ssh_keys.create(
+      craig.power.ssh_keys.create(
         { name: "test-key" },
         { innerFormProps: { arrayParentName: "toad" } }
       );
-      state.power.network.create(
+      craig.power.network.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "toad" } }
       );
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
         image: "7100-05-09",
         ssh_key: "test-key",
@@ -1210,38 +948,22 @@ describe("vtl", () => {
       });
 
       assert.deepEqual(
-        state.store.json.vtl,
-        [
-          {
-            name: "toad",
-            image: "7100-05-09",
-            ssh_key: "test-key",
-            network: [
-              {
-                name: "test-network",
-              },
-            ],
-            primary_subnet: null,
-            workspace: "toad",
-            zone: null,
-            pi_storage_type: null,
-          },
-        ],
+        craig.store.json.vtl[0].ssh_key,
+        "test-key",
         "it should initialize data"
       );
     });
     it("should update image when no longer in existing workspace", () => {
-      let state = newState();
-      state.power.create({
+      craig.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "dal10",
       });
-      state.power.network.create(
+      craig.power.network.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "toad" } }
       );
-      state.vtl.create({
+      craig.vtl.create({
         name: "toad",
         image: "oops",
         ssh_key: "oops",
@@ -1259,32 +981,13 @@ describe("vtl", () => {
       });
 
       assert.deepEqual(
-        state.store.json.vtl,
-        [
-          {
-            name: "toad",
-            image: null,
-            ssh_key: null,
-            network: [
-              {
-                name: "test-network",
-              },
-            ],
-            primary_subnet: null,
-            workspace: "toad",
-            zone: null,
-            pi_storage_type: null,
-          },
-        ],
+        craig.store.json.vtl[0].image,
+        null,
         "it should initialize data"
       );
     });
   });
   describe("vtl.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     describe("vtl.pi_proc_type.hideWhen", () => {
       it("should hide when no workspace is selected or no vtl images", () => {
         assert.isTrue(

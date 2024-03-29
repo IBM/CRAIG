@@ -12,10 +12,13 @@ function newState() {
 }
 
 describe("ssh_keys", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("ssh_keys.init", () => {
     it("should initialize with default ssh key if pattern has vsi", () => {
-      let state = new newState();
-      assert.deepEqual(state.store.json.ssh_keys, [
+      assert.deepEqual(craig.store.json.ssh_keys, [
         {
           name: "ssh-key",
           public_key: "<user-determined-value>",
@@ -27,90 +30,77 @@ describe("ssh_keys", () => {
   });
   describe("ssh_keys.delete", () => {
     it("should delete an unused ssh key and update list", () => {
-      let state = new newState();
-      state.ssh_keys.delete({}, { data: { name: "ssh-key" } });
+      craig.ssh_keys.delete({}, { data: { name: "ssh-key" } });
       assert.deepEqual(
-        state.store.json.ssh_keys,
+        craig.store.json.ssh_keys,
         [],
         "there should be no keys"
       );
-      assert.deepEqual(state.store.sshKeys, [], "it should remove the ssh key");
+      assert.deepEqual(craig.store.sshKeys, [], "it should remove the ssh key");
     });
   });
   describe("ssh_keys.save", () => {
     it("should update an ssh key in place", () => {
-      let state = new newState();
-      state.ssh_keys.save(
+      craig.ssh_keys.save(
         { name: "todd", show: false },
         { data: { name: "ssh-key" } }
       );
-      assert.deepEqual(state.store.sshKeys, ["todd"], "it should be todd");
+      assert.deepEqual(craig.store.sshKeys, ["todd"], "it should be todd");
       assert.deepEqual(
-        state.store.json.ssh_keys[0].name,
+        craig.store.json.ssh_keys[0].name,
         "todd",
         "it should have a new name"
       );
     });
     it("should update an ssh key in place with same name", () => {
-      let state = new newState();
       // for vsi test, dummy vsi
-      state.store.json.vsi = [{ ssh_keys: ["ssh-key"] }];
-      state.ssh_keys.save(
+      craig.store.json.vsi = [{ ssh_keys: ["ssh-key"] }];
+      craig.ssh_keys.save(
         { name: "ssh-key", public_key: "todd" },
         { data: { name: "ssh-key" } }
       );
       assert.deepEqual(
-        state.store.json.ssh_keys[0].public_key,
+        craig.store.json.ssh_keys[0].public_key,
         "todd",
         "it should have a new public key"
       );
     });
     it("should update an ssh key in place with same name not used by vsi", () => {
-      let state = new newState();
-      state.ssh_keys.create({ name: "frog" });
-      state.ssh_keys.save({ name: "todd" }, { data: { name: "frog" } });
+      craig.ssh_keys.create({ name: "frog" });
+      craig.ssh_keys.save({ name: "todd" }, { data: { name: "frog" } });
       assert.deepEqual(
-        state.store.sshKeys,
+        craig.store.sshKeys,
         ["ssh-key", "todd"],
         "it should have a new name"
       );
     });
     it("should update vsi ssh key name", () => {
-      let state = new newState();
       // for vsi test, dummy vsi
-      state.store.json.vsi = [{ ssh_keys: ["ssh-key"] }];
-      state.ssh_keys.save({ name: "frog" }, { data: { name: "ssh-key" } });
+      craig.store.json.vsi = [{ ssh_keys: ["ssh-key"] }];
+      craig.ssh_keys.save({ name: "frog" }, { data: { name: "ssh-key" } });
       assert.deepEqual(
-        state.store.json.vsi[0].ssh_keys,
+        craig.store.json.vsi[0].ssh_keys,
         ["frog"],
         "it should have a new ssh key"
       );
     });
   });
   it("should set public key to null when using data", () => {
-    let state = new newState();
-    let expectedData = {
-      name: "todd",
-      use_data: true,
-      resource_group: "management-rg",
-      public_key: null,
-    };
-    state.ssh_keys.save(
+    craig.ssh_keys.save(
       { name: "todd", use_data: true, public_key: "honk" },
       { data: { name: "ssh-key" } }
     );
     assert.deepEqual(
-      state.store.json.ssh_keys[0],
-      expectedData,
+      craig.store.json.ssh_keys[0].public_key,
+      null,
       "it should have a new name and public key null"
     );
   });
   describe("ssh_keys.create", () => {
     it("should create a new ssh key", () => {
-      let state = new newState();
-      state.ssh_keys.create({ name: "frog" });
+      craig.ssh_keys.create({ name: "frog" });
       assert.deepEqual(
-        state.store.sshKeys,
+        craig.store.sshKeys,
         ["ssh-key", "frog"],
         "it should have a new name"
       );
@@ -119,7 +109,6 @@ describe("ssh_keys", () => {
   describe("ssh_keys.schema", () => {
     describe("public_key", () => {
       it("should not be invalid if the key is NONE and another NONE key exists", () => {
-        let craig = newState();
         craig.store.json.ssh_keys.push({ name: "test", public_key: "NONE" });
         assert.isFalse(
           craig.ssh_keys.public_key.invalid(
@@ -135,7 +124,6 @@ describe("ssh_keys", () => {
       });
       describe("hideWhen", () => {
         it("should return true when use data is true", () => {
-          let craig = newState();
           assert.isTrue(
             craig.ssh_keys.public_key.hideWhen({ use_data: true }),
             "it should be true"

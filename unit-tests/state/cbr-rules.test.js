@@ -13,19 +13,18 @@ function newState() {
 }
 
 describe("cbr_rules", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("cbr_rules.init", () => {
     it("should initialize cbr_rules", () => {
-      let state = new newState();
-      assert.deepEqual(state.store.json.cbr_rules, []);
+      assert.deepEqual(craig.store.json.cbr_rules, []);
     });
   });
   describe("cbr_rules crud operations", () => {
-    let state;
-    beforeEach(() => {
-      state = new newState();
-    });
     it("should create a cbr rule", () => {
-      state.cbr_rules.create({
+      craig.cbr_rules.create({
         name: "cbr-rule",
         description: "description",
         enforcement_mode: "enabled",
@@ -45,10 +44,10 @@ describe("cbr_rules", () => {
           tags: [],
         },
       ];
-      assert.deepEqual(state.store.json.cbr_rules, expectedData);
+      assert.deepEqual(craig.store.json.cbr_rules, expectedData);
     });
     it("should save a cbr rule", () => {
-      state.cbr_rules.create({
+      craig.cbr_rules.create({
         name: "cbr-rule",
         description: "description",
         enforcement_mode: "enabled",
@@ -57,7 +56,7 @@ describe("cbr_rules", () => {
         resource_attributes: [],
         tags: [],
       });
-      state.cbr_rules.save(
+      craig.cbr_rules.save(
         {
           api_type_id: "new",
           description: "hi",
@@ -72,7 +71,7 @@ describe("cbr_rules", () => {
       );
     });
     it("should delete a cbr rule", () => {
-      state.cbr_rules.create({
+      craig.cbr_rules.create({
         name: "cbr-rule",
         description: "description",
         enforcement_mode: "enabled",
@@ -81,7 +80,7 @@ describe("cbr_rules", () => {
         resource_attributes: [],
         tags: [],
       });
-      state.cbr_rules.delete(
+      craig.cbr_rules.delete(
         {},
         {
           data: {
@@ -91,10 +90,8 @@ describe("cbr_rules", () => {
       );
     });
     describe("cbr rules contexts crud", () => {
-      let state;
       beforeEach(() => {
-        state = new newState();
-        state.cbr_rules.create({
+        craig.cbr_rules.create({
           name: "cbr-rule",
           description: "description",
           enforcement_mode: "enabled",
@@ -105,47 +102,47 @@ describe("cbr_rules", () => {
         });
       });
       it("should create a context", () => {
-        state.cbr_rules.contexts.create(
+        craig.cbr_rules.contexts.create(
           { name: "context", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].contexts,
+            arrayData: craig.store.json.cbr_rules[0].contexts,
           }
         );
-        assert.deepEqual(state.store.json.cbr_rules[0].contexts[0], {
+        assert.deepEqual(craig.store.json.cbr_rules[0].contexts[0], {
           name: "context",
           value: "blah",
         });
       });
       it("should update a context", () => {
-        state.cbr_rules.contexts.create(
+        craig.cbr_rules.contexts.create(
           { name: "context", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].contexts,
+            arrayData: craig.store.json.cbr_rules[0].contexts,
           }
         );
-        state.cbr_rules.contexts.save(
+        craig.cbr_rules.contexts.save(
           { name: "context-new", value: "hey" },
           {
             arrayParentName: "cbr-rule",
             data: { name: "context" },
           }
         );
-        assert.deepEqual(state.store.json.cbr_rules[0].contexts[0], {
+        assert.deepEqual(craig.store.json.cbr_rules[0].contexts[0], {
           name: "context-new",
           value: "hey",
         });
       });
       it("should delete a context", () => {
-        state.cbr_rules.contexts.create(
+        craig.cbr_rules.contexts.create(
           { name: "context", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].contexts,
+            arrayData: craig.store.json.cbr_rules[0].contexts,
           }
         );
-        state.cbr_rules.contexts.delete(
+        craig.cbr_rules.contexts.delete(
           {},
           { arrayParentName: "cbr-rule", data: { name: "context" } }
         );
@@ -155,7 +152,7 @@ describe("cbr_rules", () => {
       let state;
       beforeEach(() => {
         state = new newState();
-        state.cbr_rules.create({
+        craig.cbr_rules.create({
           name: "cbr-rule",
           description: "description",
           enforcement_mode: "enabled",
@@ -166,47 +163,47 @@ describe("cbr_rules", () => {
         });
       });
       it("should create an attribute", () => {
-        state.cbr_rules.resource_attributes.create(
+        craig.cbr_rules.resource_attributes.create(
           { name: "attribute", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].resource_attributes,
+            arrayData: craig.store.json.cbr_rules[0].resource_attributes,
           }
         );
-        assert.deepEqual(state.store.json.cbr_rules[0].resource_attributes[0], {
+        assert.deepEqual(craig.store.json.cbr_rules[0].resource_attributes[0], {
           name: "attribute",
           value: "blah",
         });
       });
       it("should update an attribute", () => {
-        state.cbr_rules.resource_attributes.create(
+        craig.cbr_rules.resource_attributes.create(
           { name: "attribute", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].resource_attributes,
+            arrayData: craig.store.json.cbr_rules[0].resource_attributes,
           }
         );
-        state.cbr_rules.resource_attributes.save(
+        craig.cbr_rules.resource_attributes.save(
           { name: "attribute-new", value: "hey" },
           {
             arrayParentName: "cbr-rule",
             data: { name: "attribute" },
           }
         );
-        assert.deepEqual(state.store.json.cbr_rules[0].resource_attributes[0], {
+        assert.deepEqual(craig.store.json.cbr_rules[0].resource_attributes[0], {
           name: "attribute-new",
           value: "hey",
         });
       });
       it("should delete an attribute", () => {
-        state.cbr_rules.resource_attributes.create(
+        craig.cbr_rules.resource_attributes.create(
           { name: "attribute", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].resource_attributes,
+            arrayData: craig.store.json.cbr_rules[0].resource_attributes,
           }
         );
-        state.cbr_rules.resource_attributes.delete(
+        craig.cbr_rules.resource_attributes.delete(
           {},
           { arrayParentName: "cbr-rule", data: { name: "attribute" } }
         );
@@ -216,7 +213,7 @@ describe("cbr_rules", () => {
       let state;
       beforeEach(() => {
         state = new newState();
-        state.cbr_rules.create({
+        craig.cbr_rules.create({
           name: "cbr-rule",
           description: "description",
           enforcement_mode: "enabled",
@@ -227,49 +224,49 @@ describe("cbr_rules", () => {
         });
       });
       it("should create an attribute", () => {
-        state.cbr_rules.tags.create(
+        craig.cbr_rules.tags.create(
           { name: "tag", operator: "op", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].tags,
+            arrayData: craig.store.json.cbr_rules[0].tags,
           }
         );
-        assert.deepEqual(state.store.json.cbr_rules[0].tags[0], {
+        assert.deepEqual(craig.store.json.cbr_rules[0].tags[0], {
           name: "tag",
           operator: "op",
           value: "blah",
         });
       });
       it("should update an attribute", () => {
-        state.cbr_rules.tags.create(
+        craig.cbr_rules.tags.create(
           { name: "tag", operator: "op", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].tags,
+            arrayData: craig.store.json.cbr_rules[0].tags,
           }
         );
-        state.cbr_rules.tags.save(
+        craig.cbr_rules.tags.save(
           { name: "tag-new", operator: "op", value: "blah" },
           {
             arrayParentName: "cbr-rule",
             data: { name: "tag" },
           }
         );
-        assert.deepEqual(state.store.json.cbr_rules[0].tags[0], {
+        assert.deepEqual(craig.store.json.cbr_rules[0].tags[0], {
           name: "tag-new",
           operator: "op",
           value: "blah",
         });
       });
       it("should delete an attribute", () => {
-        state.cbr_rules.tags.create(
+        craig.cbr_rules.tags.create(
           { name: "tag", operator: "op", value: "blah" },
           {
             innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: state.store.json.cbr_rules[0].tags,
+            arrayData: craig.store.json.cbr_rules[0].tags,
           }
         );
-        state.cbr_rules.tags.delete(
+        craig.cbr_rules.tags.delete(
           {},
           { arrayParentName: "cbr-rule", data: { name: "tag" } }
         );
@@ -277,147 +274,153 @@ describe("cbr_rules", () => {
     });
     describe("cbr_rules.onStoreUpdate", () => {
       it("should initialize context to empty array", () => {
-        let state = new newState();
-        state.cbr_rules.create({
+        craig.cbr_rules.create({
           name: "cbr-rule",
           description: "description",
           enforcement_mode: "enabled",
           api_type_id: "frog",
         });
-        state.update();
-        assert.deepEqual(state.store.json.cbr_rules[0].tags, []);
+        craig.update();
+        assert.deepEqual(craig.store.json.cbr_rules[0].tags, []);
       });
       it("should make cbr rules empty if undefined", () => {
-        let state = new newState();
-        state.store.json.cbr_rules = undefined;
-        state.update();
-        assert.deepEqual(state.store.json.cbr_rules, []);
+        craig.store.json.cbr_rules = undefined;
+        craig.update();
+        assert.deepEqual(craig.store.json.cbr_rules, []);
       });
     });
   });
   describe("cbr-rules.schema", () => {
     it("should return true when a cbr context with the same name", () => {
-      let actualData = craig.cbr_rules.contexts.name.invalid(
-        {
-          name: "test",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                cbr_rules: [
-                  {
-                    name: "hi",
-                    contexts: [
-                      {
-                        name: "test",
-                      },
-                      {
-                        name: "frog",
-                      },
-                    ],
-                  },
-                ],
+      assert.isTrue(
+        craig.cbr_rules.contexts.name.invalid(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  cbr_rules: [
+                    {
+                      name: "hi",
+                      contexts: [
+                        {
+                          name: "test",
+                        },
+                        {
+                          name: "frog",
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-        }
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
       );
-      assert.isTrue(actualData, "it should be true");
     });
     it("should return true when a cbr rule with the same name", () => {
-      let actualData = craig.cbr_rules.name.invalid(
-        {
-          name: "test",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                cbr_rules: [
-                  {
-                    name: "test",
-                  },
-                  {
-                    name: "frog",
-                  },
-                ],
+      assert.isTrue(
+        craig.cbr_rules.name.invalid(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  cbr_rules: [
+                    {
+                      name: "test",
+                    },
+                    {
+                      name: "frog",
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-        }
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
       );
-      assert.isTrue(actualData, "it should be true");
     });
     it("should return true when a cbr resource attribute with the same name", () => {
-      let actualData = craig.cbr_rules.resource_attributes.name.invalid(
-        {
-          name: "test",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                cbr_rules: [
-                  {
-                    name: "hi",
-                    resource_attributes: [
-                      {
-                        name: "test",
-                      },
-                      {
-                        name: "frog",
-                      },
-                    ],
-                  },
-                ],
+      assert.isTrue(
+        craig.cbr_rules.resource_attributes.name.invalid(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  cbr_rules: [
+                    {
+                      name: "hi",
+                      resource_attributes: [
+                        {
+                          name: "test",
+                        },
+                        {
+                          name: "frog",
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-        }
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
       );
-      assert.isTrue(actualData, "it should be true");
     });
     it("should return true when a cbr tag with the same name", () => {
-      let actualData = craig.cbr_rules.tags.name.invalid(
-        {
-          name: "test",
-        },
-        {
-          craig: {
-            store: {
-              json: {
-                cbr_rules: [
-                  {
-                    name: "hi",
-                    tags: [
-                      {
-                        name: "test",
-                      },
-                      {
-                        name: "frog",
-                      },
-                    ],
-                  },
-                ],
+      assert.isTrue(
+        craig.cbr_rules.tags.name.invalid(
+          {
+            name: "test",
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  cbr_rules: [
+                    {
+                      name: "hi",
+                      tags: [
+                        {
+                          name: "test",
+                        },
+                        {
+                          name: "frog",
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
             },
-          },
-          data: {
-            name: "frog",
-          },
-        }
+            data: {
+              name: "frog",
+            },
+          }
+        ),
+        "it should be true"
       );
-      assert.isTrue(actualData, "it should be true");
     });
     it("should return correct groups for enfocement mode", () => {
       assert.deepEqual(

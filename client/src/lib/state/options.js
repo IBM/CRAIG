@@ -5,6 +5,7 @@ const {
   buildNumberDropdownList,
   titleCase,
   contains,
+  deepEqual,
 } = require("lazy-z");
 const { subnetTierSave } = require("./vpc/vpc");
 const { RegexButWithWords } = require("regex-but-with-words");
@@ -30,6 +31,7 @@ const powerVsZones = [
   "br-sao",
   "jp-tok",
   "ca-tor",
+  "jp-osa",
 ];
 
 const powerHaMap = {
@@ -71,6 +73,14 @@ function optionsInit(config) {
  * @param {object} componentProps props from component form
  */
 function optionsSave(config, stateData, componentProps) {
+  // on region change, set vsi image and image_name to null
+  if (componentProps.data.region !== stateData.region) {
+    config.store.json.vsi.forEach((deployment) => {
+      deployment.image = "";
+      deployment.image_name = "";
+      deployment.snapshot = null;
+    });
+  }
   if (componentProps.data.dynamic_subnets && !stateData.dynamic_subnets) {
     config.store.json.vpcs.forEach((vpc) => {
       vpc.address_prefixes = [];
@@ -376,8 +386,19 @@ function initOptions(store) {
                 "jp-tok": ["tok04"],
                 "br-sao": ["sao01", "sao04"],
                 "ca-tor": ["tor01"],
+                "jp-osa": ["osa21"],
               }[stateData.region];
         },
+      },
+      manual_power_vsi_naming: {
+        type: "toggle",
+        default: false,
+        labelText: "Manual Power VS Server Naming",
+        tooltip: {
+          content:
+            "By default CRAIG resources have the environment prefix prepended to the name of the resource. Toggle this to true to remove the prefix for Power VS Virtual Server and FalconStor VTL instances.",
+        },
+        hideWhen: hideWhenNotPowerVs,
       },
       enable_classic: {
         type: "toggle",

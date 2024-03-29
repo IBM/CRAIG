@@ -1,6 +1,7 @@
 const { assert } = require("chai");
 const {
   dynamicSelectProps,
+  dynamicFetchSelectDataToGroups,
 } = require("../../../client/src/lib/forms/dynamic-form-fields/select");
 
 describe("dynamic select", () => {
@@ -488,6 +489,239 @@ describe("dynamic select", () => {
         actualData,
         expectedData,
         "it should return correctly formatted data"
+      );
+    });
+  });
+  describe("dynamicFetchSelectDataToGroups", () => {
+    it("should return correct list of versions based on kube type of openshift", () => {
+      let expectedData = ["1_openshift"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["1_openshift", "2"],
+        },
+        {
+          field: {
+            apiEndpoint: function () {
+              return "/api/cluster/versions";
+            },
+          },
+          parentProps: {},
+          parentState: {
+            kube_version: "yes",
+            kube_type: "openshift",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct list of versions based on kube type of iks", () => {
+      let expectedData = ["", "2"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["1_openshift", "2"],
+        },
+        {
+          field: {
+            apiEndpoint: function () {
+              return "/api/cluster/versions";
+            },
+          },
+          parentProps: {},
+          parentState: {
+            kube_version: null,
+            kube_type: "iks",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct list of versions based on kube type of iks and modal", () => {
+      let expectedData = ["", "2"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["1_openshift", "2"],
+        },
+        {
+          field: {
+            apiEndpoint: function () {
+              return "/api/cluster/versions";
+            },
+          },
+          parentProps: {
+            isModal: true,
+          },
+          parentState: {
+            kube_version: "none",
+            kube_type: "iks",
+          },
+        }
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct list for other endpoints when mounted and loaded", () => {
+      let expectedData = ["", "frog", "toad"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["frog", "toad"],
+        },
+        {
+          name: "hi",
+          field: {
+            name: "hi",
+            apiEndpoint: function () {
+              return "/api/frog/toad";
+            },
+            disabled: () => {
+              return false;
+            },
+            invalid: () => {
+              return false;
+            },
+            invalidText: () => {
+              return "oops";
+            },
+            groups: [],
+          },
+          parentProps: {},
+          parentState: {
+            hi: "",
+          },
+          handleInputChange: () => {},
+        },
+        true
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct list for other endpoints when mounted and loaded but selected", () => {
+      let expectedData = ["frog", "toad"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["frog", "toad"],
+        },
+        {
+          name: "hi",
+          field: {
+            apiEndpoint: function () {
+              return "/api/frog/toad";
+            },
+            disabled: () => {
+              return false;
+            },
+            invalid: () => {
+              return false;
+            },
+            invalidText: () => {
+              return "oops";
+            },
+            groups: [],
+          },
+          parentProps: {},
+          parentState: {
+            hi: "frog",
+          },
+          handleInputChange: () => {},
+        },
+        true
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct list for other endpoints when mounted and loaded but selected with on render function", () => {
+      let expectedData = ["FROG", "TOAD"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["frog", "toad"],
+        },
+        {
+          name: "hi",
+          field: {
+            apiEndpoint: function () {
+              return "/api/frog/toad";
+            },
+            disabled: () => {
+              return false;
+            },
+            invalid: () => {
+              return false;
+            },
+            invalidText: () => {
+              return "oops";
+            },
+            groups: [],
+            onRender: function (stateData) {
+              return stateData.hi.toUpperCase();
+            },
+          },
+          parentProps: {},
+          parentState: {
+            hi: "frog",
+          },
+          handleInputChange: () => {},
+        },
+        true
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return correct list for other endpoints when mounted and loaded but selected and is vtl", () => {
+      let expectedData = ["", "s922", "e980"];
+      let actualData = dynamicFetchSelectDataToGroups(
+        {
+          data: ["frog", "toad", "s922", "e980"],
+        },
+        {
+          name: "pi_sys_type",
+          field: {
+            apiEndpoint: function () {
+              return "/api/frog/toad";
+            },
+            disabled: () => {
+              return false;
+            },
+            invalid: () => {
+              return false;
+            },
+            invalidText: () => {
+              return "oops";
+            },
+            groups: [],
+          },
+          parentProps: {
+            formName: "VTL",
+          },
+          parentState: {
+            hi: "frog",
+          },
+          handleInputChange: () => {},
+        },
+        true
+      );
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
       );
     });
   });

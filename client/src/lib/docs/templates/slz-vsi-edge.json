@@ -15,7 +15,8 @@
     "no_vpn_secrets_manager_auth": false,
     "enable_classic": false,
     "power_vs_ha_zone_1": null,
-    "power_vs_ha_zone_2": null
+    "power_vs_ha_zone_2": null,
+    "manual_power_vsi_naming": false
   },
   "access_groups": [],
   "appid": [],
@@ -2688,7 +2689,10 @@
       "volumes": [],
       "image_name": null,
       "enable_floating_ip": false,
-      "primary_interface_ip_spoofing": false
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false
     },
     {
       "kms": "kms",
@@ -2709,7 +2713,10 @@
       "volumes": [],
       "subnet": "",
       "enable_floating_ip": false,
-      "primary_interface_ip_spoofing": false
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false
     }
   ]
 }

@@ -241,6 +241,10 @@ function vpcOnStoreUpdate(config) {
       ) {
         subnet.network_acl = null;
       }
+
+      if (!contains(network.publicGateways || [], subnet.zone)) {
+        subnet.public_gateway = false;
+      }
     });
     network.acls.forEach((acl) => {
       if (isNullOrEmptyString(acl.use_data, true)) {

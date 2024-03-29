@@ -16,7 +16,8 @@
     "template": "Power VS SAP Hana",
     "no_vpn_secrets_manager_auth": false,
     "power_vs_ha_zone_1": null,
-    "power_vs_ha_zone_2": null
+    "power_vs_ha_zone_2": null,
+    "manual_power_vsi_naming": false
   },
   "access_groups": [],
   "appid": [
@@ -5539,7 +5540,10 @@
       "subnets": ["vsi-zone-1"],
       "volumes": [],
       "enable_floating_ip": true,
-      "primary_interface_ip_spoofing": false
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false
     },
     {
       "kms": "kms",
@@ -5559,7 +5563,10 @@
       "subnets": ["vsi-zone-1"],
       "volumes": [],
       "enable_floating_ip": false,
-      "primary_interface_ip_spoofing": false
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false
     },
     {
       "kms": "kms",
@@ -5579,7 +5586,10 @@
       "subnets": ["vsi-zone-1"],
       "volumes": [],
       "enable_floating_ip": false,
-      "primary_interface_ip_spoofing": false
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false
     }
   ],
   "vtl": []

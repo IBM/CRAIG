@@ -16,7 +16,8 @@
     "fs_cloud": false,
     "power_vs_ha_zone_1": null,
     "power_vs_ha_zone_2": null,
-    "no_vpn_secrets_manager_auth": false
+    "no_vpn_secrets_manager_auth": false,
+    "manual_power_vsi_naming": false
   },
   "access_groups": [],
   "appid": [],
@@ -1017,7 +1018,10 @@
       "volumes": [],
       "subnet": "",
       "enable_floating_ip": false,
-      "primary_interface_ip_spoofing": false
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false
     }
   ],
   "vtl": []

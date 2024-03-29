@@ -1,0 +1,38 @@
+---
+# To run this in schematics actions, you will need to update the below commented out variables inside of schematics
+# DO NOT ENTER YOUR VARIBLES HERE. THIS FILE SHOULD NEVER BE EDITED
+# Do not alter the other variables.
+
+# tf_var_api_key: <api-key>
+# tf_var_ssh_key: <ssh-key>
+# tf_var_prefix: <unique-prefix>
+# template: <template> must be spelled exactly as in template_map below
+# workspace_name: <workspace-name>
+
+craig_url: https://craig.119gqgw56ti1.us-south.codeengine.appdomain.cloud/api/craig/template-tar
+region: us-south
+resource_group: craig-rg
+variablestore: [
+            {
+              "name": "ibmcloud_api_key", 
+              "secure": true,
+              "use_default": false,
+              "value": "{{tf_var_api_key}}"
+            },
+            {
+              "name": "prefix",
+              "use_default": false,
+              "value": "{{tf_var_prefix}}"
+            }
+          ]
+template_map:
+  from-scratch: []
+  mixed: ["ssh_key_public_key"]
+  vsi: ["slz_ssh_key_public_key"]
+  vsi-edge: ["slz_ssh_key_public_key"]
+  power-vs-sap-hana: ["ssh_key_public_key", "power_secure_powervs_power_ssh_key_key"]
+  oracle-rac: ["power_oracle_template_power_ssh_key"]
+  oracle-si: ["power_oracle_template_power_ssh_key"]
+  power-vs-poc: ["vsi_ssh_key_public_key", "dal10gw_on_prem_connection_preshared_key", "power_dal10_powervs_ssh_key_key"]
+  quick-start-power: ["vsi_ssh_key_public_key"]
+  vpnaas: []

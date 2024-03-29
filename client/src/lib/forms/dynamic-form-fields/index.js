@@ -1,5 +1,8 @@
 const { dynamicMultiSelectProps } = require("./filterable-multiselect");
-const { dynamicSelectProps } = require("./select");
+const {
+  dynamicSelectProps,
+  dynamicFetchSelectDataToGroups,
+} = require("./select");
 const { dynamicToggleProps } = require("./toggle");
 const { dynamicTextInputProps } = require("./text-input");
 const {
@@ -34,4 +37,5 @@ module.exports = {
   dynamicFieldId,
   addClassName,
   dynamicTextInputProps,
+  dynamicFetchSelectDataToGroups,
 };

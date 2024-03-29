@@ -33,5 +33,3 @@ tfxjs.tfvars
 .icse/
 tf-test/
 dev/
-
-vars.yml

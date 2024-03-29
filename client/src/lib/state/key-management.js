@@ -252,7 +252,9 @@ function initKeyManagement(store) {
         },
       },
       name: nameField("key_management"),
-      resource_group: resourceGroupsField(),
+      resource_group: resourceGroupsField(false, {
+        noHideWhen: true,
+      }),
       authorize_vpc_reader_role: {
         type: "toggle",
         default: true,

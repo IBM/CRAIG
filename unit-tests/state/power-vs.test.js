@@ -11,7 +11,7 @@ const {
 function newState() {
   let store = new state(true);
   store.setUpdateCallback(() => {});
-  store.store.json._options.power_vs_zones = ["us-south", "dal10"];
+  store.store.json._options.power_vs_zones = ["us-south", "dal10", "dal12"];
   return store;
 }
 
@@ -195,6 +195,238 @@ describe("power-vs", () => {
           tgw: "transit-gateway",
         },
         "it should return correct data"
+      );
+    });
+    it("should save a workspace and update instances, volumes, and vtl to remove storage pools and storage tiers", () => {
+      let state = new newState();
+      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
+      state.power_instances.create({
+        name: "frog",
+        zone: "dal10",
+        workspace: "toad",
+        network: [],
+        pi_storage_pool: "General-Flash-43",
+        pi_storage_type: "Tier 1",
+      });
+      state.power_volumes.create({
+        name: "foo",
+        zone: "dal10",
+        workspace: "toad",
+        network: [],
+        pi_volume_pool: "General-Flash-43",
+        pi_volume_type: "Tier 3",
+      });
+      state.vtl.create({
+        name: "bar",
+        zone: "dal10",
+        workspace: "toad",
+        network: [],
+        pi_storage_pool: "General-Flash-43",
+        pi_storage_type: "Tier 3",
+      });
+      state.power.save(
+        { name: "toad", zone: "dal12" },
+        { data: { name: "toad", zone: "dal10" } }
+      );
+      let expectedData = {
+        name: "toad",
+        resource_group: null,
+        ssh_keys: [],
+        network: [],
+        cloud_connections: [],
+        images: [],
+        imageNames: [],
+        attachments: [],
+        zone: "dal12",
+      };
+      assert.deepEqual(
+        state.store.json.power[0],
+        expectedData,
+        "it should update zone in place"
+      );
+      assert.deepEqual(
+        state.store.json.power_instances[0].pi_storage_pool,
+        "",
+        "it should update instance storage pool"
+      );
+      assert.isNull(
+        state.store.json.power_instances[0].pi_storage_type,
+        "it should update instance storage type"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[0].pi_volume_pool,
+        "",
+        "it should update volume pool"
+      );
+      assert.isNull(
+        state.store.json.power_volumes[0].pi_volume_type,
+        "it should update volume type"
+      );
+      assert.deepEqual(
+        state.store.json.vtl[0].pi_storage_pool,
+        "",
+        "it should update instance storage pool"
+      );
+      assert.isNull(
+        state.store.json.vtl[0].pi_storage_type,
+        "it should update instance storage type"
+      );
+    });
+    it("should save a workspoace and not remove storage pools and storage tiers if instances, volumes, and vtl are not in workspace", () => {
+      let state = new newState();
+      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
+      state.power.create({ name: "toad2", zone: "dal10", imageNames: [] });
+      state.power_instances.create({
+        name: "frog",
+        zone: "dal10",
+        workspace: "toad2",
+        network: [],
+        pi_storage_pool: "General-Flash-43",
+        pi_storage_type: "Tier 1",
+      });
+      state.power_volumes.create({
+        name: "foo",
+        zone: "dal10",
+        workspace: "toad2",
+        network: [],
+        pi_volume_pool: "General-Flash-43",
+        pi_volume_type: "Tier 3",
+      });
+      state.vtl.create({
+        name: "bar",
+        zone: "dal10",
+        workspace: "toad2",
+        network: [],
+        pi_storage_pool: "General-Flash-43",
+        pi_storage_type: "Tier 3",
+      });
+      state.power.save(
+        { name: "toad", zone: "dal12" },
+        { data: { name: "toad", zone: "dal10" } }
+      );
+      let expectedData = {
+        name: "toad",
+        resource_group: null,
+        ssh_keys: [],
+        network: [],
+        cloud_connections: [],
+        images: [],
+        imageNames: [],
+        attachments: [],
+        zone: "dal12",
+      };
+      assert.deepEqual(
+        state.store.json.power[0],
+        expectedData,
+        "it should update zone in place"
+      );
+      assert.deepEqual(
+        state.store.json.power_instances[0].pi_storage_pool,
+        "General-Flash-43",
+        "it should update instance storage pool"
+      );
+      assert.deepEqual(
+        state.store.json.power_instances[0].pi_storage_type,
+        "Tier 1",
+        "it should update instance storage type"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[0].pi_volume_pool,
+        "General-Flash-43",
+        "it should update volume pool"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[0].pi_volume_type,
+        "Tier 3",
+        "it should update volume type"
+      );
+      assert.deepEqual(
+        state.store.json.vtl[0].pi_storage_pool,
+        "General-Flash-43",
+        "it should update instance storage pool"
+      );
+      assert.deepEqual(
+        state.store.json.vtl[0].pi_storage_type,
+        "Tier 3",
+        "it should update instance storage type"
+      );
+    });
+    it("should save a workspace and not alter any storage pools or storage tiers if zone was not changed", () => {
+      let state = new newState();
+      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
+      state.power_instances.create({
+        name: "frog",
+        zone: "dal10",
+        workspace: "toad",
+        network: [],
+        pi_storage_pool: "General-Flash-43",
+        pi_storage_type: "Tier 1",
+      });
+      state.power_volumes.create({
+        name: "foo",
+        zone: "dal10",
+        workspace: "toad",
+        network: [],
+        pi_volume_pool: "General-Flash-43",
+        pi_volume_type: "Tier 3",
+      });
+      state.vtl.create({
+        name: "bar",
+        zone: "dal10",
+        workspace: "toad",
+        network: [],
+        pi_storage_pool: "General-Flash-43",
+        pi_storage_type: "Tier 3",
+      });
+      state.power.save(
+        { name: "cat", zone: "dal10" },
+        { data: { name: "toad", zone: "dal10" } }
+      );
+      let expectedData = {
+        name: "cat",
+        resource_group: null,
+        ssh_keys: [],
+        network: [],
+        cloud_connections: [],
+        images: [],
+        imageNames: [],
+        attachments: [],
+        zone: "dal10",
+      };
+      assert.deepEqual(
+        state.store.json.power[0],
+        expectedData,
+        "it should update name in place"
+      );
+      assert.deepEqual(
+        state.store.json.power_instances[0].pi_storage_pool,
+        "General-Flash-43",
+        "it should update instance storage pool"
+      );
+      assert.deepEqual(
+        state.store.json.power_instances[0].pi_storage_type,
+        "Tier 1",
+        "it should update instance storage type"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[0].pi_volume_pool,
+        "General-Flash-43",
+        "it should update volume pool"
+      );
+      assert.deepEqual(
+        state.store.json.power_volumes[0].pi_volume_type,
+        "Tier 3",
+        "it should update volume type"
+      );
+      assert.deepEqual(
+        state.store.json.vtl[0].pi_storage_pool,
+        "General-Flash-43",
+        "it should update instance storage pool"
+      );
+      assert.deepEqual(
+        state.store.json.vtl[0].pi_storage_type,
+        "Tier 3",
+        "it should update instance storage type"
       );
     });
   });

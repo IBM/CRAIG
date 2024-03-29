@@ -4,20 +4,11 @@ import { PowerSubnetInnerBox } from "./PowerSubnetInnerBox";
 import { IbmCloudBareMetalServer } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
+import { classicBareMetalFilter } from "../../../lib";
 
 export const ClassicBareMetal = (props) => {
-  let bare_metals = [];
-  props.craig.store.json.classic_bare_metal.forEach((server, serverIndex) => {
-    if (
-      server.private_vlan === props.vlan ||
-      server.public_vlan === props.vlan
-    ) {
-      let copyServer = { ...server };
-      copyServer.index = serverIndex;
-      bare_metals.push(copyServer);
-    }
-  });
-  return bare_metals.length === 0 ? (
+  let bareMetals = classicBareMetalFilter(props);
+  return bareMetals.length === 0 ? (
     ""
   ) : (
     <PowerSubnetInnerBox
@@ -26,7 +17,7 @@ export const ClassicBareMetal = (props) => {
       static={props.static}
       small={props.small}
     >
-      {bare_metals.map((server) => {
+      {bareMetals.map((server) => {
         return (
           <HoverClassNameWrapper
             static={props.static}

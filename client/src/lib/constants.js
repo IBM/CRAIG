@@ -732,6 +732,7 @@ module.exports = {
     "dal12",
     "sao01",
     "tok04",
+    "syd05",
   ],
   cosPlans: [
     "standard",
@@ -839,6 +840,7 @@ module.exports = {
     ],
     tor01: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
     wdc07: ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
+    osa21: [],
   },
   replicationEnabledStoragePoolMap: {
     "us-east": ["Tier1-Flash-8", "General-Flash-185", "General-Flash-182"],
@@ -1120,5 +1122,6 @@ module.exports = {
     "sao01",
     "tor01",
     "wdc07",
+    "osa21",
   ].sort(azsort),
 };

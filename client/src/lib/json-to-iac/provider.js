@@ -39,7 +39,16 @@ function ibmCloudProvider(config) {
         region: zone.match(
           new RegexButWithWords()
             .group((exp) => {
-              exp.literal("lon").or().literal("syd").or().literal("tok");
+              exp
+                .literal("lon")
+                .or()
+                .literal("syd")
+                .or()
+                .literal("tok")
+                .or()
+                .literal("osa")
+                .or()
+                .literal("sao");
             })
             .digit()
             .oneOrMore()

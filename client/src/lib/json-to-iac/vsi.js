@@ -47,11 +47,16 @@ const { varDotPrefix } = require("../constants");
 
 function ibmIsInstance(vsi, config) {
   let zone = vsi.subnet.replace(/[^]+(?=\d$)/g, "");
-  let vsiName = vsi.index
-    ? `${varDotPrefix}-${kebabCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
-        vsi.index
-      }`
-    : vsi.name;
+  let vsiName =
+    vsi.index && vsi.use_variable_names
+      ? `\${var.${snakeCase(
+          `${vsi.vpc} vpc vsi deployment ${vsi.name} ${vsi.subnet} subnet server ${vsi.index} name`
+        )}}`
+      : vsi.index
+      ? `${varDotPrefix}-${kebabCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
+          vsi.index
+        }`
+      : vsi.name;
   let allSgIds = [],
     allSshKeyIds = [],
     networkInterfaces = [];
@@ -62,7 +67,9 @@ function ibmIsInstance(vsi, config) {
   };
   let vsiData = {
     name: vsiName,
-    image: !vsi.image
+    image: vsi.snapshot
+      ? undefined
+      : !vsi.image
       ? "ERROR: Unfound Ref"
       : contains(vsi.image, "local")
       ? vsi.image
@@ -80,9 +87,18 @@ function ibmIsInstance(vsi, config) {
       },
     ],
     boot_volume: [
-      {
-        encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key, "crn"),
-      },
+      vsi.snapshot
+        ? {
+            snapshot: tfRef(
+              "ibm_is_snapshot",
+              "snapshot " + vsi.snapshot,
+              "id",
+              true
+            ),
+          }
+        : {
+            encryption: encryptionKeyRef(vsi.kms, vsi.encryption_key, "crn"),
+          },
     ],
   };
   if (vsi.primary_interface_ip_spoofing) {
@@ -445,12 +461,29 @@ function formatLoadBalancer(deployment, config) {
 function vsiTf(config) {
   let tf = "",
     imageTf = "",
+    snapshotTf = "",
     fipTf = "";
-  let allImagesNames = distinct(splat(config.vsi, "image"));
+
+  let allSnapshotNames = distinct(splat(config.vsi, "snapshot")).filter(
+    (name) => {
+      if (name) return name;
+    }
+  );
+  let allImagesNames = distinct(splat(config.vsi, "image")).filter((name) => {
+    if (name) return name;
+  });
+  allSnapshotNames.forEach((name) => {
+    snapshotTf += jsonToTfPrint("data", "ibm_is_snapshot", "snapshot " + name, {
+      name: name,
+    });
+  });
   allImagesNames.forEach((name) => {
     imageTf += formatVsiImage(name);
   });
-  tf += tfBlock("image data sources", imageTf) + "\n";
+  if (allImagesNames.length > 0)
+    tf += tfBlock("image data sources", imageTf) + "\n";
+  if (allSnapshotNames.length > 0)
+    tf += tfBlock("snapshot sources", snapshotTf) + "\n";
   config.vsi.forEach((deployment) => {
     let blockData = "";
     deployment.subnets.sort(azsort).forEach((subnet) => {

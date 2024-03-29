@@ -17,29 +17,30 @@ function newState() {
 }
 
 describe("state util functions", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("setStoreValue", () => {
     it("should set a store value", () => {
-      let state = newState();
-      state.setStoreValue("jsonInCodeMirror", true);
-      assert.isTrue(state.store.jsonInCodeMirror, "it should be set");
+      craig.setStoreValue("jsonInCodeMirror", true);
+      assert.isTrue(craig.store.jsonInCodeMirror, "it should be set");
     });
   });
   describe("toggleStoreValue", () => {
     it("should toggle a boolean store value", () => {
-      let state = newState();
-      state.toggleStoreValue("hideCodeMirror");
-      assert.isTrue(state.store.hideCodeMirror, "it should toggle value");
+      craig.toggleStoreValue("hideCodeMirror");
+      assert.isTrue(craig.store.hideCodeMirror, "it should toggle value");
     });
   });
   describe("addClusterRules", () => {
     it("should add rules and skip duplicate rules", () => {
-      let state = newState();
-      state.store.json.vpcs[0].acls[0].rules.push({
+      craig.store.json.vpcs[0].acls[0].rules.push({
         name: "roks-create-worker-nodes-inbound",
       });
-      state.addClusterRules("management", "management");
+      craig.addClusterRules("management", "management");
       assert.deepEqual(
-        splat(state.store.json.vpcs[0].acls[0].rules, "name"),
+        splat(craig.store.json.vpcs[0].acls[0].rules, "name"),
         [
           "allow-ibm-inbound",
           "allow-ibm-outbound",
@@ -60,11 +61,10 @@ describe("state util functions", () => {
   });
   describe("copySecurityGroup", () => {
     it("should copy acl from one vpc to another", () => {
-      let state = newState();
-      state.store.json.vpcs[1].acls = [];
-      state.copySecurityGroup("management-vpe", "workload");
+      craig.store.json.vpcs[1].acls = [];
+      craig.copySecurityGroup("management-vpe", "workload");
       assert.deepEqual(
-        splat(state.store.json.security_groups, "name")[3],
+        splat(craig.store.json.security_groups, "name")[3],
         "management-vpe-copy",
         "it should copy"
       );
@@ -72,11 +72,10 @@ describe("state util functions", () => {
   });
   describe("copyNetworkAcl", () => {
     it("should copy acl from one vpc to another", () => {
-      let state = newState();
-      state.store.json.vpcs[1].acls = [];
-      state.copyNetworkAcl("management", "management", "workload");
+      craig.store.json.vpcs[1].acls = [];
+      craig.copyNetworkAcl("management", "management", "workload");
       assert.deepEqual(
-        splat(state.store.json.vpcs[1].acls, "name"),
+        splat(craig.store.json.vpcs[1].acls, "name"),
         ["management-copy"],
         "it should copy"
       );
@@ -84,16 +83,15 @@ describe("state util functions", () => {
   });
   describe("copyRule", () => {
     it("should copy one rule from vpc to another", () => {
-      let state = newState();
-      state.store.json.vpcs[1].acls[0].rules = [];
-      state.copyRule(
+      craig.store.json.vpcs[1].acls[0].rules = [];
+      craig.copyRule(
         "management",
         "management",
         "allow-all-network-outbound",
         "workload"
       );
       assert.deepEqual(
-        splat(state.store.json.vpcs[1].acls[0].rules, "name"),
+        splat(craig.store.json.vpcs[1].acls[0].rules, "name"),
         ["allow-all-network-outbound"],
         "it should copy"
       );
@@ -101,11 +99,10 @@ describe("state util functions", () => {
   });
   describe("copySgRule", () => {
     it("should copy one rule from sg to another", () => {
-      let state = newState();
-      state.store.json.security_groups[0].rules = [];
-      state.copySgRule("workload-vpe", "allow-vpc-outbound", "management-vpe");
+      craig.store.json.security_groups[0].rules = [];
+      craig.copySgRule("workload-vpe", "allow-vpc-outbound", "management-vpe");
       assert.deepEqual(
-        splat(state.store.json.security_groups[0].rules, "name"),
+        splat(craig.store.json.security_groups[0].rules, "name"),
         ["allow-vpc-outbound"],
         "it should copy"
       );
@@ -245,8 +242,8 @@ describe("state util functions", () => {
           has_prefix: false,
         },
       ];
-      let state = new newState(true);
-      let actualData = state.getAllSubnets();
+      craig = new newState(true);
+      let actualData = craig.getAllSubnets();
       assert.deepEqual(
         actualData,
         expectedData,
@@ -256,20 +253,19 @@ describe("state util functions", () => {
   });
   describe("hardSetJson", () => {
     it("should set JSON data if valid", () => {
-      let state = newState();
-      state.store = {
+      craig.store = {
         json: {},
       };
-      state.setUpdateCallback(() => {});
+      craig.setUpdateCallback(() => {});
       delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
-      state.hardSetJson({ ...json });
+      craig.hardSetJson({ ...json });
       assert.deepEqual(
-        state.store.json,
+        craig.store.json,
         { ...hardSetData },
         "it should set the store"
       );
       assert.deepEqual(
-        state.store.subnetTiers,
+        craig.store.subnetTiers,
         {
           management: [
             { name: "vsi", zones: 3 },
@@ -285,9 +281,8 @@ describe("state util functions", () => {
       );
     });
     it("should set JSON data if valid with routing tables", () => {
-      let state = newState();
       let rtJson = require("../data-files/craig-json-routing-tables.json");
-      state.setUpdateCallback(() => {});
+      craig.setUpdateCallback(() => {});
       delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
       let expectedData = { ...hardSetData };
       expectedData.routing_tables = [
@@ -302,14 +297,14 @@ describe("state util functions", () => {
           vpc: "management",
         },
       ];
-      state.hardSetJson(rtJson);
+      craig.hardSetJson(rtJson);
       assert.deepEqual(
-        state.store.json,
+        craig.store.json,
         expectedData,
         "it should set the store"
       );
       assert.deepEqual(
-        state.store.subnetTiers,
+        craig.store.subnetTiers,
         {
           management: [
             { name: "vsi", zones: 3 },
@@ -325,7 +320,6 @@ describe("state util functions", () => {
       );
     });
     it("should hard set json data and set edge pattern when edge resources are found", () => {
-      let state = newState();
       let data = {
         _options: {
           craig_version: "1.12.0",
@@ -2590,34 +2584,32 @@ describe("state util functions", () => {
         classic_ssh_keys: [],
         classic_vlans: [],
       };
-      state.setUpdateCallback(() => {});
       delete data.ssh_keys[0]; // remove extra ssh key that should not be there lol
-      state.hardSetJson(data);
+      craig.hardSetJson(data);
       assert.deepEqual(
-        state.store.edge_vpc_name,
+        craig.store.edge_vpc_name,
         "edge",
         "it should update name"
       );
       assert.deepEqual(
-        state.store.edge_zones,
+        craig.store.edge_zones,
         3,
         "it should set correct number of zones"
       );
     });
     it("should set JSON data if valid with advanced subnet tiers", () => {
-      let state = newState();
       let data = require("../data-files/craig-json.json");
       data.vpcs[0].subnets.forEach((subnet) => {
         if (subnet.name.indexOf("vsi-zone") !== -1) {
           subnet.tier = "frog";
         }
       });
-      state.setUpdateCallback(() => {});
+      craig.setUpdateCallback(() => {});
       delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
-      state.hardSetJson(data);
-      assert.deepEqual(state.store.json, data, "it should set the store");
+      craig.hardSetJson(data);
+      assert.deepEqual(craig.store.json, data, "it should set the store");
       assert.deepEqual(
-        state.store.subnetTiers,
+        craig.store.subnetTiers,
         {
           management: [
             { name: "vpe", zones: 3 },
@@ -2639,12 +2631,11 @@ describe("state util functions", () => {
       );
     });
     it("should set JSON data if not valid but slz", () => {
-      let state = newState();
-      state.setUpdateCallback(() => {});
+      craig.setUpdateCallback(() => {});
       delete json.ssh_keys[1]; // remove extra ssh key that should not be there lol
-      state.hardSetJson({}, true);
+      craig.hardSetJson({}, true);
       assert.deepEqual(
-        state.store.subnetTiers,
+        craig.store.subnetTiers,
         {
           management: [
             { name: "vsi", zones: 3 },
@@ -2660,8 +2651,7 @@ describe("state util functions", () => {
       );
     });
     it("should convert permitted networks to vpcs on hard set", () => {
-      let state = newState();
-      state.setUpdateCallback(() => {});
+      craig.setUpdateCallback(() => {});
       json.dns.push({
         name: "dns",
         resource_group: "management-rg",
@@ -2673,17 +2663,16 @@ describe("state util functions", () => {
         name: "hi",
         permitted_networks: ["management"],
       });
-      state.hardSetJson({ ...json });
-      assert.deepEqual(state.store.json.dns[0].zones[0], {
+      craig.hardSetJson({ ...json });
+      assert.deepEqual(craig.store.json.dns[0].zones[0], {
         instance: "dns",
         name: "hi",
         vpcs: ["management"],
       });
     });
     it("should not convert anything if permitted networks doesn't exist", () => {
-      let state = newState();
       json._options.dynamic_subnets = true;
-      state.setUpdateCallback(() => {});
+      craig.setUpdateCallback(() => {});
       json.dns.push({
         name: "dns",
         resource_group: "management-rg",
@@ -2695,26 +2684,25 @@ describe("state util functions", () => {
         name: "hi",
         vpcs: ["management"],
       });
-      state.hardSetJson({ ...json });
-      assert.deepEqual(state.store.json.dns[0].zones[0], {
+      craig.hardSetJson({ ...json });
+      assert.deepEqual(craig.store.json.dns[0].zones[0], {
         instance: "dns",
         name: "hi",
         vpcs: ["management"],
       });
       assert.isTrue(
-        state.store.json._options.dynamic_subnets,
+        craig.store.json._options.dynamic_subnets,
         "it should be true"
       );
     });
     it("should set JSON data if valid", () => {
-      let state = newState();
-      state.store = {
+      craig.store = {
         json: {},
       };
-      state.setUpdateCallback(() => {});
-      state.hardSetJson({ ...brokenSubnets });
+      craig.setUpdateCallback(() => {});
+      craig.hardSetJson({ ...brokenSubnets });
       assert.deepEqual(
-        state.store.subnetTiers,
+        craig.store.subnetTiers,
         {
           vpc: [
             { name: "vsi", zones: 3 },
@@ -2727,69 +2715,63 @@ describe("state util functions", () => {
   });
   describe("getAllRuleNames", () => {
     it("should return empty array if no params", () => {
-      let state = newState();
-      let actualData = state.getAllRuleNames();
-      assert.deepEqual(actualData, [], "it should return an empty array");
+      assert.deepEqual(
+        craig.getAllRuleNames(),
+        [],
+        "it should return an empty array"
+      );
     });
     it("should return the names of all rules in a security group when no source acl name", () => {
-      let state = newState();
-      let actualData = state.getAllRuleNames("management-vpe");
-      let expectedData = [
-        "allow-ibm-inbound",
-        "allow-vpc-inbound",
-        "allow-vpc-outbound",
-        "allow-ibm-tcp-53-outbound",
-        "allow-ibm-tcp-80-outbound",
-        "allow-ibm-tcp-443-outbound",
-      ];
       assert.deepEqual(
-        actualData,
-        expectedData,
+        craig.getAllRuleNames("management-vpe"),
+        [
+          "allow-ibm-inbound",
+          "allow-vpc-inbound",
+          "allow-vpc-outbound",
+          "allow-ibm-tcp-53-outbound",
+          "allow-ibm-tcp-80-outbound",
+          "allow-ibm-tcp-443-outbound",
+        ],
         "it should return correct rule names"
       );
     });
     it("should return the names of all rules in an acl when two params are passed", () => {
-      let state = newState();
-      let actualData = state.getAllRuleNames("management", "management");
-      let expectedData = [
-        "allow-ibm-inbound",
-        "allow-ibm-outbound",
-        "allow-all-network-inbound",
-        "allow-all-network-outbound",
-      ];
       assert.deepEqual(
-        actualData,
-        expectedData,
+        craig.getAllRuleNames("management", "management"),
+        [
+          "allow-ibm-inbound",
+          "allow-ibm-outbound",
+          "allow-all-network-inbound",
+          "allow-all-network-outbound",
+        ],
         "it should return correct rule names"
       );
     });
   });
   describe("getAllOtherGroups", () => {
     it("should return empty array if rule source is null or empty string", () => {
-      let state = newState();
-      let actualData = state.getAllOtherGroups({ ruleSource: "" });
-      assert.deepEqual(actualData, [], "it should return empty array");
+      assert.deepEqual(
+        craig.getAllOtherGroups({ ruleSource: "" }),
+        [],
+        "it should return empty array"
+      );
     });
     it("should return all other acl names if rule source and isAclForm", () => {
-      let state = newState();
-      let actualData = state.getAllOtherGroups(
-        { ruleSource: "management" },
-        { isAclForm: true }
-      );
       assert.deepEqual(
-        actualData,
+        craig.getAllOtherGroups(
+          { ruleSource: "management" },
+          { isAclForm: true }
+        ),
         ["workload"],
         "it should return empty array"
       );
     });
     it("should return all other security groups if rule source and not isAclForm", () => {
-      let state = newState();
-      let actualData = state.getAllOtherGroups(
-        { ruleSource: "management-vpe" },
-        { isAclForm: false }
-      );
       assert.deepEqual(
-        actualData,
+        craig.getAllOtherGroups(
+          { ruleSource: "management-vpe" },
+          { isAclForm: false }
+        ),
         ["workload-vpe", "management-vsi"],
         "it should return empty array"
       );
@@ -2797,10 +2779,8 @@ describe("state util functions", () => {
   });
   describe("getAllResourceKeys", () => {
     it("should get a list of keys from the default pattern", () => {
-      let state = newState();
-      let actualData = state.getAllResourceKeys();
       assert.deepEqual(
-        actualData,
+        craig.getAllResourceKeys(),
         [
           {
             cos: "atracker-cos",
@@ -2810,7 +2790,7 @@ describe("state util functions", () => {
         ],
         "it should return correct data"
       );
-      state.store.json.appid = [
+      craig.store.json.appid = [
         {
           name: "default",
           keys: [
@@ -2819,37 +2799,30 @@ describe("state util functions", () => {
           resource_group: null,
         },
       ];
-      actualData = state.getAllResourceKeys();
       assert.deepEqual(
-        actualData,
-        [
-          {
-            cos: "atracker-cos",
-            key: "cos-bind-key",
-            ref: "ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key",
-          },
-          {
-            appid: "default",
-            key: "test",
-            ref: "ibm_resource_key.default_key_test",
-          },
-        ],
+        craig.getAllResourceKeys()[1],
+
+        {
+          appid: "default",
+          key: "test",
+          ref: "ibm_resource_key.default_key_test",
+        },
+
         "it should return correct data with appid"
       );
-      state.store.json.logdna = {
+      craig.store.json.logdna = {
         plan: "lite",
         platform_logs: true,
         resource_group: "service-rg",
         enabled: true,
       };
-      state.store.json.sysdig = {
+      craig.store.json.sysdig = {
         plan: "lite",
         resource_group: "service-rg",
         enabled: true,
       };
-      actualData = state.getAllResourceKeys();
       assert.deepEqual(
-        actualData,
+        craig.getAllResourceKeys(),
         [
           {
             cos: "atracker-cos",

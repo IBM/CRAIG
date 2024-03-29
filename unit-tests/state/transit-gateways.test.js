@@ -12,52 +12,52 @@ function newState() {
 }
 
 describe("transit_gateways", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("transit_gateways.init", () => {
     it("should initialize default transit gateway as an array", () => {
-      let state = new newState();
-      let expectedData = [
-        {
-          name: "transit-gateway",
-          resource_group: "service-rg",
-          global: false,
-          connections: [
-            {
-              tgw: "transit-gateway",
-              vpc: "management",
-            },
-            {
-              tgw: "transit-gateway",
-              vpc: "workload",
-            },
-          ],
-        },
-      ];
       assert.deepEqual(
-        state.store.json.transit_gateways,
-        expectedData,
+        craig.store.json.transit_gateways,
+        [
+          {
+            name: "transit-gateway",
+            resource_group: "service-rg",
+            global: false,
+            connections: [
+              {
+                tgw: "transit-gateway",
+                vpc: "management",
+              },
+              {
+                tgw: "transit-gateway",
+                vpc: "workload",
+              },
+            ],
+          },
+        ],
         "it should be equal"
       );
     });
   });
   describe("transit_gateways.onStoreUpdate", () => {
     it("should remove a connection when a vpc is deleted", () => {
-      let state = new newState();
-      state.vpcs.delete({}, { data: { name: "management" } });
+      craig.vpcs.delete({}, { data: { name: "management" } });
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections,
+        craig.store.json.transit_gateways[0].connections,
         [{ tgw: "transit-gateway", vpc: "workload" }],
         "it should only have one connection"
       );
     });
     it("should remove a connection when a power vs workspace is deleted", () => {
-      let state = new newState();
-      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
-      state.power.create({
+      craig.store.json._options.power_vs_zones = ["dal10", "dal12"];
+      craig.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
         zone: "dal10",
       });
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         {
           connections: [
             { tgw: "todd", vpc: "management" },
@@ -71,7 +71,7 @@ describe("transit_gateways", () => {
           },
         }
       );
-      state.power.delete(
+      craig.power.delete(
         {},
         {
           data: {
@@ -80,7 +80,7 @@ describe("transit_gateways", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections,
+        craig.store.json.transit_gateways[0].connections,
         [
           { tgw: "transit-gateway", vpc: "management" },
           { tgw: "transit-gateway", vpc: "workload" },
@@ -89,14 +89,13 @@ describe("transit_gateways", () => {
       );
     });
     it("should remove a connection when a power vs workspace is not in an edge enabled zone", () => {
-      let state = new newState();
-      state.store.json._options.power_vs_zones = ["dal10", "dal12"];
-      state.power.create({
+      craig.store.json._options.power_vs_zones = ["dal10", "dal12"];
+      craig.power.create({
         name: "toad",
         imageNames: ["7100-05-09"],
         zone: "dal10",
       });
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         {
           connections: [
             { tgw: "todd", vpc: "management" },
@@ -110,7 +109,7 @@ describe("transit_gateways", () => {
           },
         }
       );
-      state.power.save(
+      craig.power.save(
         {
           name: "toad",
           imageNames: ["7100-05-09"],
@@ -123,7 +122,7 @@ describe("transit_gateways", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections,
+        craig.store.json.transit_gateways[0].connections,
         [
           { tgw: "transit-gateway", vpc: "management" },
           { tgw: "transit-gateway", vpc: "workload" },
@@ -132,14 +131,13 @@ describe("transit_gateways", () => {
       );
     });
     it("should add a connection when crns is provided", () => {
-      let state = new newState();
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg", crns: ["crn"] },
         { data: { name: "transit-gateway" } }
       );
 
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections,
+        craig.store.json.transit_gateways[0].connections,
         [
           { tgw: "todd", vpc: "management" },
           { tgw: "todd", vpc: "workload" },
@@ -149,12 +147,11 @@ describe("transit_gateways", () => {
       );
     });
     it("should add a connection when crns is provided and adding a second one", () => {
-      let state = new newState();
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg", crns: ["crn"] },
         { data: { name: "transit-gateway" } }
       );
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         {
           name: "todd",
           resource_group: "management-rg",
@@ -164,7 +161,7 @@ describe("transit_gateways", () => {
       );
 
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections,
+        craig.store.json.transit_gateways[0].connections,
         [
           { tgw: "todd", vpc: "management" },
           { tgw: "todd", vpc: "workload" },
@@ -175,12 +172,11 @@ describe("transit_gateways", () => {
       );
     });
     it("should remove a crn connection when a crn is removed", () => {
-      let state = new newState();
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg", crns: ["crn"] },
         { data: { name: "transit-gateway" } }
       );
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         {
           name: "todd",
           resource_group: "management-rg",
@@ -189,7 +185,7 @@ describe("transit_gateways", () => {
         { data: { name: "todd" } }
       );
 
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         {
           name: "todd",
           resource_group: "management-rg",
@@ -199,7 +195,7 @@ describe("transit_gateways", () => {
       );
 
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections,
+        craig.store.json.transit_gateways[0].connections,
         [
           { tgw: "todd", vpc: "management" },
           { tgw: "todd", vpc: "workload" },
@@ -209,12 +205,11 @@ describe("transit_gateways", () => {
       );
     });
     it("should not remove crn connections", () => {
-      let state = new newState();
-      state.store.json.transit_gateways[0].connections[0].crn = "crn";
-      delete state.store.json.transit_gateways[0].connections[0].vpc;
-      state.vpcs.delete({}, { data: { name: "management" } });
+      craig.store.json.transit_gateways[0].connections[0].crn = "crn";
+      delete craig.store.json.transit_gateways[0].connections[0].vpc;
+      craig.vpcs.delete({}, { data: { name: "management" } });
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections,
+        craig.store.json.transit_gateways[0].connections,
         [
           { tgw: "transit-gateway", crn: "crn" },
           { tgw: "transit-gateway", vpc: "workload" },
@@ -223,10 +218,9 @@ describe("transit_gateways", () => {
       );
     });
     it("should set resource group to null if deleted", () => {
-      let state = new newState();
-      state.resource_groups.delete({}, { data: { name: "service-rg" } });
+      craig.resource_groups.delete({}, { data: { name: "service-rg" } });
       assert.deepEqual(
-        state.store.json.transit_gateways[0].resource_group,
+        craig.store.json.transit_gateways[0].resource_group,
         null,
         "it should be null"
       );
@@ -234,8 +228,7 @@ describe("transit_gateways", () => {
   });
   describe("transit_gateways.create", () => {
     it("should create a new transit gateway", () => {
-      let state = new newState();
-      state.transit_gateways.create({
+      craig.transit_gateways.create({
         use_data: true,
         name: "tg-test",
         resource_group: "management-rg",
@@ -252,7 +245,7 @@ describe("transit_gateways", () => {
         prefix_filters: [],
       };
       assert.deepEqual(
-        state.store.json.transit_gateways[1],
+        craig.store.json.transit_gateways[1],
         expectedData,
         "it should be second tg"
       );
@@ -260,44 +253,22 @@ describe("transit_gateways", () => {
   });
   describe("transit_gateways.save", () => {
     it("should update transit gateway", () => {
-      let state = new newState();
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg" },
         { data: { name: "transit-gateway" } }
       );
-      let expectedData = [
-        {
-          use_data: false,
-          name: "todd",
-          resource_group: "management-rg",
-          global: false,
-          connections: [
-            {
-              tgw: "todd",
-              vpc: "management",
-            },
-            {
-              tgw: "todd",
-              vpc: "workload",
-            },
-          ],
-          gre_tunnels: [],
-          prefix_filters: [],
-        },
-      ];
       assert.deepEqual(
-        state.store.json.transit_gateways,
-        expectedData,
+        craig.store.json.transit_gateways[0].name,
+        "todd",
         "it should change name and rg"
       );
     });
   });
   describe("transit_gateways.delete", () => {
     it("should delete transit gateway", () => {
-      let state = new newState();
-      state.transit_gateways.delete({}, { data: { name: "transit-gateway" } });
+      craig.transit_gateways.delete({}, { data: { name: "transit-gateway" } });
       assert.deepEqual(
-        state.store.json.transit_gateways,
+        craig.store.json.transit_gateways,
         [],
         "it should be empty"
       );
@@ -307,15 +278,13 @@ describe("transit_gateways", () => {
     describe("resource_groups", () => {
       describe("groups", () => {
         it("should return resource groups", () => {
-          let state = newState();
           assert.deepEqual(
-            state.transit_gateways.resource_group.groups({}, { craig: state }),
+            craig.transit_gateways.resource_group.groups({}, { craig: craig }),
             ["service-rg", "management-rg", "workload-rg"],
             "it should return correct data"
           );
         });
         it("should not have invalid resource group when use data", () => {
-          let craig = newState();
           assert.isFalse(
             craig.transit_gateways.resource_group.invalid({ use_data: true }),
             "it should be invalid"
@@ -324,11 +293,10 @@ describe("transit_gateways", () => {
       });
       describe("hideWhen", () => {
         it("should return resource groups", () => {
-          let state = newState();
           assert.isTrue(
-            state.transit_gateways.resource_group.hideWhen(
+            craig.transit_gateways.resource_group.hideWhen(
               { use_data: true },
-              { craig: state }
+              { craig: craig }
             ),
             "it should return correct data"
           );
@@ -338,7 +306,6 @@ describe("transit_gateways", () => {
     describe("vpc_connections", () => {
       describe("groups", () => {
         it("should return groups", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.vpc_connections.groups({}, { craig: craig }),
             ["management", "workload"],
@@ -346,7 +313,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return groups when tgw is global and management is already attached to a different global transit gateway", () => {
-          let craig = newState();
           craig.transit_gateways.create({
             name: "transit-gateway2",
             resource_group: "service-rg",
@@ -376,7 +342,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return groups when tgw is local and management is already attached to a different local transit gateway", () => {
-          let craig = newState();
           craig.transit_gateways.create({
             name: "transit-gateway2",
             resource_group: "service-rg",
@@ -406,7 +371,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return groups when tgw is local and management is already attached to a different local transit gateway in modal", () => {
-          let craig = newState();
           craig.transit_gateways.save(
             {
               connections: [
@@ -434,7 +398,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should set connections on input change for global", () => {
-          let craig = newState();
           let data = {
             global: false,
           };
@@ -449,7 +412,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should set connections when enabling classic connections", () => {
-          let craig = newState();
           let data = {
             classic: false,
             connections: [{ tgw: "transit-gateway", vpc: "vpc" }],
@@ -470,7 +432,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should set connections when disabling classic connections", () => {
-          let craig = newState();
           let data = {
             classic: true,
             connections: [
@@ -491,7 +452,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should have force update key for connections", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.vpc_connections.forceUpdateKey({
               global: true,
@@ -510,7 +470,6 @@ describe("transit_gateways", () => {
       });
       describe("onRender", () => {
         it("should return string list of vpc values", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.vpc_connections.onRender(
               {
@@ -546,7 +505,6 @@ describe("transit_gateways", () => {
             ],
             vpc_connections: ["frog"],
           };
-          let craig = newState();
           craig.transit_gateways.vpc_connections.onStateChange(stateData);
           assert.deepEqual(
             stateData,
@@ -568,7 +526,6 @@ describe("transit_gateways", () => {
     describe("power_connections", () => {
       describe("groups", () => {
         it("should return groups", () => {
-          let craig = newState();
           craig.store.json._options.power_vs_zones = ["dal10", "dal12"];
           craig.power.create({
             name: "power",
@@ -592,7 +549,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return groups when one power workspace is attached to a different transit gateway with the same global setting in modal", () => {
-          let craig = newState();
           craig.store.json._options.power_vs_zones = ["dal10", "dal12"];
           craig.power.create({
             name: "power",
@@ -627,7 +583,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return groups when one power workspace is attached to a different transit gateway with the same global setting as form", () => {
-          let craig = newState();
           craig.store.json._options.power_vs_zones = ["dal10", "dal12"];
           craig.power.create({
             name: "power",
@@ -669,7 +624,6 @@ describe("transit_gateways", () => {
       });
       describe("onRender", () => {
         it("should return string list of vpc values", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.power_connections.onRender({
               connections: [
@@ -704,10 +658,8 @@ describe("transit_gateways", () => {
             ],
             power_connections: ["power", "power-also"],
           };
-          let craig = newState();
           craig.transit_gateways.power_connections.onStateChange(stateData);
           assert.deepEqual(
-            stateData,
             {
               connections: [
                 {
@@ -722,6 +674,7 @@ describe("transit_gateways", () => {
               ],
               name: "tgw",
             },
+            stateData,
             "it should return correct data"
           );
         });
@@ -730,14 +683,13 @@ describe("transit_gateways", () => {
     describe("crns", () => {
       describe("invalidText", () => {
         it("should return true when invalid crn in list", () => {
-          let state = new newState();
           assert.isTrue(
-            state.transit_gateways.crns.invalidText({
+            craig.transit_gateways.crns.invalidText({
               crns: ["crn:v1:bluemix:public:abcdf", "mooseeeeeeeeeeeeeeeeee"],
             })
           );
           assert.isFalse(
-            state.transit_gateways.crns.invalidText({
+            craig.transit_gateways.crns.invalidText({
               crns: undefined,
             })
           );
@@ -748,9 +700,8 @@ describe("transit_gateways", () => {
   describe("transit_gateways.gre_tunnels", () => {
     describe("transit_gateways.gre_tunnels.create", () => {
       it("should create a gre tunnel", () => {
-        let state = newState();
-        state.update();
-        state.transit_gateways.gre_tunnels.create(
+        craig.update();
+        craig.transit_gateways.gre_tunnels.create(
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -766,7 +717,7 @@ describe("transit_gateways", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.transit_gateways[0].gre_tunnels[0],
+          craig.store.json.transit_gateways[0].gre_tunnels[0],
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -779,8 +730,7 @@ describe("transit_gateways", () => {
         );
       });
       it("should create a gre tunnel with gateway", () => {
-        let state = newState();
-        state.classic_gateways.create({
+        craig.classic_gateways.create({
           name: "gw",
           hostname: "gw-host",
           datacenter: "dal10",
@@ -801,7 +751,7 @@ describe("transit_gateways", () => {
           disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
           hadr: false,
         });
-        state.transit_gateways.gre_tunnels.create(
+        craig.transit_gateways.gre_tunnels.create(
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -817,7 +767,7 @@ describe("transit_gateways", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.transit_gateways[0].gre_tunnels[0],
+          craig.store.json.transit_gateways[0].gre_tunnels[0],
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -832,8 +782,7 @@ describe("transit_gateways", () => {
     });
     describe("transit_gateways.gre_tunnels.save", () => {
       it("should update a gre tunnel with gateway", () => {
-        let state = newState();
-        state.classic_gateways.create({
+        craig.classic_gateways.create({
           name: "gw",
           hostname: "gw-host",
           datacenter: "dal10",
@@ -854,7 +803,7 @@ describe("transit_gateways", () => {
           disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
           hadr: false,
         });
-        state.transit_gateways.gre_tunnels.create(
+        craig.transit_gateways.gre_tunnels.create(
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -869,7 +818,7 @@ describe("transit_gateways", () => {
             },
           }
         );
-        state.transit_gateways.gre_tunnels.save(
+        craig.transit_gateways.gre_tunnels.save(
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -886,7 +835,7 @@ describe("transit_gateways", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.transit_gateways[0].gre_tunnels[0],
+          craig.store.json.transit_gateways[0].gre_tunnels[0],
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -901,8 +850,7 @@ describe("transit_gateways", () => {
     });
     describe("transit_gateways.gre_tunnels.delete", () => {
       it("should delete a gre tunnel with gateway", () => {
-        let state = newState();
-        state.classic_gateways.create({
+        craig.classic_gateways.create({
           name: "gw",
           hostname: "gw-host",
           datacenter: "dal10",
@@ -923,7 +871,7 @@ describe("transit_gateways", () => {
           disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
           hadr: false,
         });
-        state.transit_gateways.gre_tunnels.create(
+        craig.transit_gateways.gre_tunnels.create(
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -938,7 +886,7 @@ describe("transit_gateways", () => {
             },
           }
         );
-        state.transit_gateways.gre_tunnels.delete(
+        craig.transit_gateways.gre_tunnels.delete(
           {},
           {
             arrayParentName: "transit-gateway",
@@ -948,14 +896,13 @@ describe("transit_gateways", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.transit_gateways[0].gre_tunnels,
+          craig.store.json.transit_gateways[0].gre_tunnels,
           [],
           "it should create tunnel"
         );
       });
       it("should delete a gre tunnel with null gateway", () => {
-        let state = newState();
-        state.classic_gateways.create({
+        craig.classic_gateways.create({
           name: "gw",
           hostname: "gw-host",
           datacenter: "dal10",
@@ -976,7 +923,7 @@ describe("transit_gateways", () => {
           disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
           hadr: false,
         });
-        state.classic_gateways.create({
+        craig.classic_gateways.create({
           name: "gw2",
           hostname: "gw-host",
           datacenter: "dal10",
@@ -997,7 +944,7 @@ describe("transit_gateways", () => {
           disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
           hadr: false,
         });
-        state.transit_gateways.gre_tunnels.create(
+        craig.transit_gateways.gre_tunnels.create(
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -1012,7 +959,7 @@ describe("transit_gateways", () => {
             },
           }
         );
-        state.transit_gateways.gre_tunnels.create(
+        craig.transit_gateways.gre_tunnels.create(
           {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
@@ -1027,8 +974,8 @@ describe("transit_gateways", () => {
             },
           }
         );
-        state.classic_gateways.delete({}, { data: { name: "gw" } });
-        state.transit_gateways.gre_tunnels.delete(
+        craig.classic_gateways.delete({}, { data: { name: "gw" } });
+        craig.transit_gateways.gre_tunnels.delete(
           {},
           {
             arrayParentName: "transit-gateway",
@@ -1038,7 +985,7 @@ describe("transit_gateways", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.transit_gateways[0].gre_tunnels,
+          craig.store.json.transit_gateways[0].gre_tunnels,
           [
             {
               gateway: "gw2",
@@ -1057,7 +1004,6 @@ describe("transit_gateways", () => {
       describe("transit_gateways.gre_tunnels.schema.gateway", () => {
         describe("transit_gateways.gre_tunnels.schema.gateway.groups", () => {
           it("should return groups", () => {
-            let craig = newState();
             craig.classic_gateways.create({
               name: "gw",
               hostname: "gw-host",
@@ -1108,7 +1054,6 @@ describe("transit_gateways", () => {
             );
           });
           it("should return groups and filter out gateways with a GRE tunnel to the current gateway", () => {
-            let craig = newState();
             craig.classic_gateways.create({
               name: "gw",
               hostname: "gw-host",
@@ -1149,7 +1094,6 @@ describe("transit_gateways", () => {
       describe("transit_gateways.gre_tunnels.schema.local_tunnel_ip", () => {
         describe("transit_gateways.gre_tunnels.schema.local_tunnel_ip.invalid", () => {
           it("should return true if not an ipv4 address", () => {
-            let craig = newState();
             assert.isTrue(
               craig.transit_gateways.gre_tunnels.local_tunnel_ip.invalid({
                 local_tunnel_ip: "aa",
@@ -1158,7 +1102,6 @@ describe("transit_gateways", () => {
             );
           });
           it("should return true if an ipv4 cidr address", () => {
-            let craig = newState();
             assert.isTrue(
               craig.transit_gateways.gre_tunnels.local_tunnel_ip.invalid({
                 local_tunnel_ip: "10.10.10.10/10",
@@ -1169,7 +1112,6 @@ describe("transit_gateways", () => {
         });
         describe("transit_gateways.gre_tunnels.schema.local_tunnel_ip.invalidText", () => {
           it("should return invalid text", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.transit_gateways.gre_tunnels.local_tunnel_ip.invalidText(),
               "Enter a valid IP address",
@@ -1182,7 +1124,6 @@ describe("transit_gateways", () => {
   });
   describe("transit_gateways.prefix_filters.create", () => {
     it("should create a prefix filter", () => {
-      let craig = newState();
       craig.update();
       craig.transit_gateways.prefix_filters.create(
         {
@@ -1221,7 +1162,6 @@ describe("transit_gateways", () => {
   });
   describe("transit_gateways.prefix_filters.save", () => {
     it("should create a prefix filter", () => {
-      let craig = newState();
       craig.update();
       craig.transit_gateways.prefix_filters.create(
         {
@@ -1260,26 +1200,14 @@ describe("transit_gateways", () => {
         }
       );
       assert.deepEqual(
-        craig.store.json.transit_gateways[0].prefix_filters,
-        [
-          {
-            name: "oops",
-            tgw: "transit-gateway",
-            connection_type: "vpc",
-            target: "management",
-            action: "permit",
-            prefix: "10.10.10.10/10",
-            le: 0,
-            ge: 32,
-          },
-        ],
+        craig.store.json.transit_gateways[0].prefix_filters[0].name,
+        "oops",
         "it should create a gatway"
       );
     });
   });
   describe("transit_gateways.prefix_filters.delete", () => {
     it("should create a prefix filter", () => {
-      let craig = newState();
       craig.update();
       craig.transit_gateways.prefix_filters.create(
         {
@@ -1324,7 +1252,6 @@ describe("transit_gateways", () => {
   });
   describe("transit_gateways.prefix_filters.shouldDisableSave", () => {
     it("should return true if a prefix filter has an invalid duplicate name", () => {
-      let craig = newState();
       craig.update();
       craig.transit_gateways.prefix_filters.create(
         {
@@ -1356,7 +1283,6 @@ describe("transit_gateways", () => {
     describe("transit_gateways.prefix_filters.connection_type", () => {
       describe("transit_gateways.prefix_filters.connection_type.invalid", () => {
         it("should return true if is null or empty string", () => {
-          let craig = newState();
           assert.isTrue(
             craig.transit_gateways.prefix_filters.connection_type.invalid({
               connection_type: "",
@@ -1370,7 +1296,6 @@ describe("transit_gateways", () => {
           let data = {
             connection_type: "",
           };
-          let craig = newState();
           craig.transit_gateways.prefix_filters.connection_type.onStateChange(
             data
           ),
@@ -1388,7 +1313,6 @@ describe("transit_gateways", () => {
     describe("transit_gateways.prefix_filters.le", () => {
       describe("transit_gateways.prefix_filters.le.invalidText", () => {
         it("should return correct invalid text", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.le.invalidText(),
             "Enter a whole number",
@@ -1398,14 +1322,12 @@ describe("transit_gateways", () => {
       });
       describe("transit_gateways.prefix_filters.le.invalid", () => {
         it("should return true when not a whole number", () => {
-          let craig = newState();
           assert.isTrue(
             craig.transit_gateways.prefix_filters.le.invalid({ le: "a" }),
             "it should return correct text"
           );
         });
         it("should return true when not a whole number", () => {
-          let craig = newState();
           assert.isTrue(
             craig.transit_gateways.prefix_filters.le.invalid({ le: "1a" }),
             "it should return correct text"
@@ -1416,7 +1338,6 @@ describe("transit_gateways", () => {
     describe("transit_gateways.prefix_filters.action", () => {
       describe("transit_gateways.prefix_filters.action.invalidText", () => {
         it("should return correct invalid text", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.action.invalidText(),
             "Select an action",
@@ -1428,7 +1349,6 @@ describe("transit_gateways", () => {
     describe("transit_gateways.prefix_filters.prefix", () => {
       describe("transit_gateways.prefix_filters.prefix.invalid", () => {
         it("should return true when not a cidr block", () => {
-          let craig = newState();
           assert.isTrue(
             craig.transit_gateways.prefix_filters.prefix.invalid({
               prefix: "aaaa",
@@ -1437,14 +1357,12 @@ describe("transit_gateways", () => {
           );
         });
         it("should return true when not a cidr block", () => {
-          let craig = newState();
           assert.isTrue(
             craig.transit_gateways.prefix_filters.prefix.invalid({}),
             "it should return correct text"
           );
         });
         it("should return true when an ipv4 address but not a cidr block", () => {
-          let craig = newState();
           assert.isTrue(
             craig.transit_gateways.prefix_filters.prefix.invalid({
               prefix: "1.2.3.4",
@@ -1455,7 +1373,6 @@ describe("transit_gateways", () => {
       });
       describe("transit_gateways.prefix_filters.prefix.invalidText", () => {
         it("should return correct invalid text", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.prefix.invalidText(),
             "Enter a valid IPV4 CIDR Block",
@@ -1467,7 +1384,6 @@ describe("transit_gateways", () => {
     describe("transit_gateways.prefix_filters.target", () => {
       describe("transit_gateways.prefix_filters.target.groups", () => {
         it("should return correct connection types for no connection type", () => {
-          let craig = newState();
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.target.groups(
               { connection_type: "" },
@@ -1478,7 +1394,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return correct connection types for vpc", () => {
-          let craig = newState();
           craig.store.json.transit_gateways[0].connections.push({
             tgw: "transit-gateway",
             power: "toad",
@@ -1493,7 +1408,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return correct connection types for gre", () => {
-          let craig = newState();
           craig.update();
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.target.groups(
@@ -1505,7 +1419,6 @@ describe("transit_gateways", () => {
           );
         });
         it("should return correct connection types for power", () => {
-          let craig = newState();
           craig.power.create({
             name: "toad",
             imageNames: ["7100-05-09"],

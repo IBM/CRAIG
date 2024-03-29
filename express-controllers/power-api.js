@@ -19,7 +19,8 @@ function getRegionFromZone(zone) {
     ["tor", ["tor01"]],
     ["syd", ["syd04", "syd05"]],
     ["tok", ["tok04"]],
-    ["br-sao", ["sao01", "sao04"]],
+    ["osa", ["osa21"]],
+    ["sao", ["sao01", "sao04"]],
   ]);
 
   regionZoneMap.forEach((values, key) => {
@@ -132,6 +133,8 @@ function powerRoutes(axios, controller) {
               specificEndpoint = `stock-images?sap=true&vtl=true`;
             else if (componentType === "storage-tiers")
               specificEndpoint = `storage-tiers`;
+            else if (componentType === "system-pools")
+              specificEndpoint = `system-pools`;
             else specificEndpoint = `storage-capacity/${componentType}`;
             let requestConfig = {
               method: "get",
@@ -189,6 +192,8 @@ function powerRoutes(axios, controller) {
           }
         } else if (componentType === "storage-tiers") {
           res.send(splat(response.data, "name"));
+        } else if (componentType === "system-pools") {
+          res.send(Object.keys(response.data));
         } else {
           let formattedStoragePools = [];
           response.data.storagePoolsCapacity.forEach((pool) => {

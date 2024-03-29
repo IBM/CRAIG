@@ -254,6 +254,10 @@ describe("automate schema generation", () => {
             power_vs_zones: { type: "Array", default: [] },
             enable_classic: { type: "boolean", default: false },
             tags: { type: "Array", default: ["hello", "world"] },
+            manual_power_vsi_naming: {
+              default: false,
+              type: "boolean",
+            },
             no_vpn_secrets_manager_auth: { type: "boolean", default: false },
           },
         },
@@ -585,6 +589,7 @@ describe("automate schema generation", () => {
                 "eu-de-2",
                 "lon04",
                 "lon06",
+                "osa21",
                 "sao01",
                 "syd04",
                 "syd05",
@@ -630,6 +635,7 @@ describe("automate schema generation", () => {
                 "eu-de-2",
                 "lon04",
                 "lon06",
+                "osa21",
                 "sao01",
                 "syd04",
                 "syd05",
@@ -733,6 +739,7 @@ describe("automate schema generation", () => {
                 "eu-de-2",
                 "lon04",
                 "lon06",
+                "osa21",
                 "sao01",
                 "syd04",
                 "syd05",
@@ -765,6 +772,7 @@ describe("automate schema generation", () => {
                 "eu-de-2",
                 "lon04",
                 "lon06",
+                "osa21",
                 "sao01",
                 "syd04",
                 "syd05",
@@ -1413,7 +1421,6 @@ describe("automate schema generation", () => {
             pi_sys_type: {
               type: "string",
               default: null,
-              groups: ["e880", "e980", "s922", "s1022"],
             },
             pi_proc_type: {
               type: "string",
@@ -1922,6 +1929,9 @@ describe("automate schema generation", () => {
             enable_floating_ip: { type: "boolean", default: false },
             primary_interface_ip_spoofing: { type: "boolean", default: false },
             user_data: { type: "string", default: null },
+            use_variable_names: { type: "boolean", default: false },
+            use_snapshot: { type: "boolean", default: false },
+            snapshot: { type: "string", default: null },
             volumes: {
               Array: {
                 name: { type: "string", default: null },
@@ -2020,7 +2030,6 @@ describe("automate schema generation", () => {
             pi_sys_type: {
               type: "string",
               default: null,
-              groups: ["s922", "e980"],
             },
             pi_proc_type: {
               type: "string",

@@ -4,18 +4,9 @@ import { Replicate } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import { CraigFormGroup, CraigFormHeading, PrimaryButton } from "../utils";
 import { DynamicFormSelect } from "../dynamic-form";
+import { copyRuleFormName } from "../../../lib";
 
 const CopyRuleObject = (props) => {
-  /**
-   * get form name for icse props
-   * @param {string} field name of field
-   * @returns {string} form name string
-   */
-  function getFormName(field) {
-    return `copy-rule-${props.isSecurityGroup ? "sg" : "acl"}-${field}${
-      props.isSecurityGroup ? "" : "-" + props.data.name
-    }`;
-  }
   return (
     <>
       <CraigFormHeading
@@ -34,7 +25,7 @@ const CopyRuleObject = (props) => {
       <CraigFormGroup className="align-row">
         <DynamicFormSelect
           name="source"
-          propsName={getFormName("source")}
+          propsName={copyRuleFormName(props)("source")}
           keyIndex={0}
           value={props.source}
           field={{
@@ -78,7 +69,7 @@ const CopyRuleObject = (props) => {
         />
         <DynamicFormSelect
           name="destinationVpc"
-          propsName={getFormName("destination")}
+          propsName={copyRuleFormName(props)("destination")}
           keyIndex={0}
           value={props.destinationVpc}
           field={{

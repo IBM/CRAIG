@@ -416,6 +416,7 @@ class Wizard extends React.Component {
                       "jp-tok": ["tok04"],
                       "br-sao": ["sao01", "sao04"],
                       "ca-tor": ["tor01"],
+                      "jp-osa": ["osa21"],
                     }[this.state.region]
                   }
                   itemToString={(item) => (item ? item : "")}
@@ -431,6 +432,7 @@ class Wizard extends React.Component {
                         "br-sao",
                         "jp-tok",
                         "ca-tor",
+                        "jp-osa",
                       ],
                       this.state.region
                     ) || isEmpty(this.state.power_vs_zones)
@@ -447,6 +449,7 @@ class Wizard extends React.Component {
                         "br-sao",
                         "jp-tok",
                         "ca-tor",
+                        "jp-osa",
                       ],
                       this.state.region
                     )

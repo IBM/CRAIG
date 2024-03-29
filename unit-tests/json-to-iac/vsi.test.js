@@ -1197,6 +1197,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
     it("should create vsi terraform", () => {
       let nw = {};
       transpose(slzNetwork, nw);
+      nw.vsi[0].use_variable_names = false;
       let actualData = vsiTf(nw);
       let expectedData = `##############################################################################
 # Image Data Sources
@@ -1370,6 +1371,369 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
         "it should return correct data"
       );
     });
+    it("should create vsi terraform with variable names", () => {
+      let nw = {};
+      transpose(slzNetwork, nw);
+      nw.vsi[0].use_variable_names = true;
+      let actualData = vsiTf(nw);
+      let expectedData = `##############################################################################
+# Image Data Sources
+##############################################################################
+
+data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
+  name = "ibm-ubuntu-22-04-1-minimal-amd64-1"
+}
+
+##############################################################################
+
+##############################################################################
+# Management VPC Management Server Deployment
+##############################################################################
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
+  name           = var.management_vpc_vsi_deployment_management_server_vsi_zone_1_subnet_server_1_name
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
+  name           = var.management_vpc_vsi_deployment_management_server_vsi_zone_1_subnet_server_2_name
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
+  name           = var.management_vpc_vsi_deployment_management_server_vsi_zone_2_subnet_server_1_name
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-2"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_2_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
+  name           = var.management_vpc_vsi_deployment_management_server_vsi_zone_2_subnet_server_2_name
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-2"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_2_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
+  name           = var.management_vpc_vsi_deployment_management_server_vsi_zone_3_subnet_server_1_name
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-3"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_3_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
+  name           = var.management_vpc_vsi_deployment_management_server_vsi_zone_3_subnet_server_2_name
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-3"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_3_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+      delete nw.vsi[0].use_variable_names;
+    });
+    it("should create vsi terraform with server deployment from boot volume", () => {
+      let nw = {};
+      transpose(slzNetwork, nw);
+      nw.vsi = [
+        {
+          kms: "slz-kms",
+          encryption_key: "slz-vsi-volume-key",
+          profile: "cx2-4x8",
+          name: "management-server",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          vpc: "management",
+          vsi_per_subnet: 2,
+          resource_group: "slz-management-rg",
+          snapshot: "example-snapshot",
+        },
+      ];
+      let actualData = vsiTf(nw);
+      let expectedData = `##############################################################################
+# Snapshot Sources
+##############################################################################
+
+data "ibm_is_snapshot" "snapshot_example_snapshot" {
+  name = "example-snapshot"
+}
+
+##############################################################################
+
+##############################################################################
+# Management VPC Management Server Deployment
+##############################################################################
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    snapshot = data.ibm_is_snapshot.snapshot_example_snapshot.id
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-2"
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    snapshot = data.ibm_is_snapshot.snapshot_example_snapshot.id
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-2-1"
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-2"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_2_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    snapshot = data.ibm_is_snapshot.snapshot_example_snapshot.id
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-2-2"
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-2"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_2_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    snapshot = data.ibm_is_snapshot.snapshot_example_snapshot.id
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-3-1"
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-3"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_3_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    snapshot = data.ibm_is_snapshot.snapshot_example_snapshot.id
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-3-2"
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-3"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_3_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    snapshot = data.ibm_is_snapshot.snapshot_example_snapshot.id
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should create vsi terraform with reserved ips", () => {
       let nw = {};
       transpose(slzNetwork, nw);
@@ -1520,6 +1884,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
       nw.vsi[0].enable_floating_ip = true;
       nw.vsi[0].subnets = ["vsi-zone-1"];
       nw.vsi[0].vsi_per_subnet = 1;
+      nw.vsi[0].use_variable_names = false;
       let actualData = vsiTf(nw);
       let expectedData = `##############################################################################
 # Image Data Sources

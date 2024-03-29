@@ -2561,6 +2561,47 @@ describe("power_instances", () => {
           );
         });
       });
+      describe("power_instance.name.helperText", () => {
+        it("should return correct helper text", () => {
+          assert.deepEqual(
+            craig.power_instances.name.helperText(
+              { name: "frog" },
+              {
+                craig: {
+                  store: {
+                    json: {
+                      _options: {
+                        prefix: "hi",
+                      },
+                    },
+                  },
+                },
+              }
+            ),
+            "hi-frog",
+            "it should return correct helper text"
+          );
+          assert.deepEqual(
+            craig.power_instances.name.helperText(
+              { name: "frog" },
+              {
+                craig: {
+                  store: {
+                    json: {
+                      _options: {
+                        prefix: "hi",
+                        manual_power_vsi_naming: true,
+                      },
+                    },
+                  },
+                },
+              }
+            ),
+            "frog",
+            "it should return correct helper text"
+          );
+        });
+      });
       describe("power_instance.network.onStateChange", () => {
         it("should return new networks and update primary subnet with first network name value", () => {
           let craig = state();
@@ -3028,6 +3069,32 @@ describe("power_instances", () => {
           );
         });
       });
+    });
+    it("should return correct api endpoint for sys type", () => {
+      let craig = state();
+      assert.deepEqual(
+        craig.power_instances.pi_sys_type.apiEndpoint({
+          zone: "frog",
+        }),
+        "/api/power/frog/system_pools",
+        "it should be equal"
+      );
+    });
+    it("should hide sys type when no workspace", () => {
+      let craig = state();
+      assert.isTrue(
+        craig.power_instances.pi_sys_type.hideWhen({}),
+        "it should be hidden"
+      );
+    });
+    it("should not hide sys type when workspace", () => {
+      let craig = state();
+      assert.isNotTrue(
+        craig.power_instances.pi_sys_type.hideWhen({
+          workspace: "yes",
+        }),
+        "it should be hidden"
+      );
     });
     describe("power_instances.pi_storage_type", () => {
       describe("power_instances.pi_storage_type.onRender", () => {

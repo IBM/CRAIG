@@ -110,4 +110,35 @@ describe("vsi api", () => {
         });
     });
   });
+  describe("vsiSnapShots", () => {
+    let data;
+    beforeEach(() => {
+      data = [{ name: "frog" }, { name: "toad" }];
+    });
+    it("should respond with the correct data", () => {
+      let { axios } = initMockAxios({ snapshots: data });
+      let testController = new controller(axios);
+      testController.getBearerToken = () => {
+        return new Promise((resolve) => resolve("token"));
+      };
+      return testController
+        .vsiSnapShots({ params: { region: "us-south" } }, res)
+        .then(() => {
+          assert.isTrue(res.send.calledOnce);
+          assert.isTrue(
+            res.send.calledOnceWith(["frog", "toad"]),
+            "it should get images"
+          );
+        });
+    });
+    it("should respond with error", () => {
+      let { axios } = initMockAxios(vsiImagesRaw, true);
+      let testController = new controller(axios);
+      return testController
+        .vsiSnapShots({ params: { region: "us-south" } }, res)
+        .then(() => {
+          assert.isTrue(res.send.calledOnce);
+        });
+    });
+  });
 });

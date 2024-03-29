@@ -98,6 +98,8 @@ function Home(props) {
                       enable_power_vs: craig.options.enable_power_vs,
                       power_vs_high_availability:
                         craig.options.power_vs_high_availability,
+                      manual_power_vsi_naming:
+                        craig.options.manual_power_vsi_naming,
                     },
                     {
                       power_vs_ha_zone_1: craig.options.power_vs_ha_zone_1,

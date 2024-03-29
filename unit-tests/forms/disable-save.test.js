@@ -88,12 +88,15 @@ describe("disableSave", () => {
     it("should not force a vpn gateway form open when a connection has a valid peer address", () => {
       assert.isFalse(
         forceShowForm(
-          {},
+          {
+            resource_group: "yes",
+          },
           {
             submissionFieldName: "vpn_gateways",
             innerFormProps: {
               data: {
                 name: "vpn-gw",
+                resource_group: "frog",
                 connections: [
                   {
                     name: "hi",

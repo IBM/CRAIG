@@ -109,6 +109,7 @@ describe("power", () => {
         ],
         imageNames: ["7200-05-05"],
         zone: "dal12",
+        resource_group: "hello",
       },
       {
         arrayParentName: "workspace",

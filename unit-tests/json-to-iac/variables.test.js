@@ -1601,4 +1601,82 @@ variable "transit_vpn_server_test_c2s_client_ca_private_key_pem" {
       "it should return correct variables"
     );
   });
+  it("should return correct variable values for vsi using variable names", () => {
+    let slzNetwork = { ...require("../data-files/slz-network.json") };
+    slzNetwork.clusters[0].opaque_secrets = [];
+    slzNetwork.vsi[0].use_variable_names = true;
+    let actualData = variablesDotTf(slzNetwork, false);
+    let expectedData = `##############################################################################
+# Variables
+##############################################################################
+
+variable "ibmcloud_api_key" {
+  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
+  type        = string
+  sensitive   = true
+}
+
+variable "region" {
+  description = "IBM Cloud Region where resources will be provisioned"
+  type        = string
+  default     = "us-south"
+}
+
+variable "prefix" {
+  description = "Name prefix that will be prepended to named resources"
+  type        = string
+  default     = "slz"
+}
+
+variable "slz_ssh_key_public_key" {
+  description = "Public SSH Key Value for Slz SSH Key"
+  type        = string
+  sensitive   = true
+  default     = "public-key"
+}
+
+variable "management_vpc_vsi_deployment_management_server_vsi_zone_1_subnet_server_1_name" {
+  description = "Override name for management-server server. VPC: management Subnet: vsi-zone-1"
+  type        = string
+  default     = "slz-management-management-server-server-vsi-zone-1-1"
+}
+
+variable "management_vpc_vsi_deployment_management_server_vsi_zone_1_subnet_server_2_name" {
+  description = "Override name for management-server server. VPC: management Subnet: vsi-zone-1"
+  type        = string
+  default     = "slz-management-management-server-server-vsi-zone-1-2"
+}
+
+variable "management_vpc_vsi_deployment_management_server_vsi_zone_2_subnet_server_1_name" {
+  description = "Override name for management-server server. VPC: management Subnet: vsi-zone-2"
+  type        = string
+  default     = "slz-management-management-server-server-vsi-zone-2-1"
+}
+
+variable "management_vpc_vsi_deployment_management_server_vsi_zone_2_subnet_server_2_name" {
+  description = "Override name for management-server server. VPC: management Subnet: vsi-zone-2"
+  type        = string
+  default     = "slz-management-management-server-server-vsi-zone-2-2"
+}
+
+variable "management_vpc_vsi_deployment_management_server_vsi_zone_3_subnet_server_1_name" {
+  description = "Override name for management-server server. VPC: management Subnet: vsi-zone-3"
+  type        = string
+  default     = "slz-management-management-server-server-vsi-zone-3-1"
+}
+
+variable "management_vpc_vsi_deployment_management_server_vsi_zone_3_subnet_server_2_name" {
+  description = "Override name for management-server server. VPC: management Subnet: vsi-zone-3"
+  type        = string
+  default     = "slz-management-management-server-server-vsi-zone-3-2"
+}
+
+##############################################################################
+`;
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should return correct variables"
+    );
+  });
 });

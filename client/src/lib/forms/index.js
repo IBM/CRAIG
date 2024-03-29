@@ -33,9 +33,13 @@ const { leftNavItemClassName } = require("./class-names");
 const { notificationText } = require("./utils");
 const wizard = require("./wizard");
 const {
+  classicGatewaysFilter,
+  classicBareMetalFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
+  powerSubnetFilter,
+  powerMapFilter,
 } = require("./diagrams");
 const {
   dynamicToolTipWrapperProps,
@@ -54,9 +58,11 @@ const {
   addClassName,
   dynamicTextInputProps,
   dynamicPasswordInputProps,
+  dynamicFetchSelectDataToGroups,
 } = require("./dynamic-form-fields");
 
 module.exports = {
+  powerSubnetFilter,
   dynamicPasswordInputProps,
   dynamicToolTipWrapperProps,
   dynamicCraigFormGroupsProps,
@@ -105,4 +111,8 @@ module.exports = {
   invalidCidrBlock,
   invalidProjectNameText,
   invalidCrns,
+  classicGatewaysFilter,
+  classicBareMetalFilter,
+  powerMapFilter,
+  dynamicFetchSelectDataToGroups,
 };

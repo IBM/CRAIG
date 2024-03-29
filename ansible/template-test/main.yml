@@ -16,19 +16,17 @@
     - role: create_schematics_workspace
       vars:
         description: Automated CRAIG Testing Workspace
-        tags: ["craig"]
 
 - name: TODO - convert to roles
   hosts: localhost
   vars_files: ./vars/vars.yml
   tasks: 
     - name: Upload {{template}}.tar to Schematics Workspace
-      command: "curl -s --request PUT \
+      ansible.builtin.shell: "curl -s --request PUT \
                 --url 'https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/template_data/{{ workspace.json.template_data[0].id }}/template_repo_upload' \
                 -H 'Authorization: Bearer {{ token.json.access_token }}' \
                 -H 'Content-Type: multipart/form-data' \
                 --form 'file=@{{playbook_dir}}/{{template}}.tar'"
-      async: 120
     - name: Wait until {{template}}.tar has been successfully uploaded
       uri:
         url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}
@@ -45,13 +43,6 @@
   vars_files: ./vars/vars.yml
   roles:
     - role: update_variablestore
-      vars:
-      # Additional variables can be added to the variablestore by adding elements to the array below.
-      # Each element must be a map of the following key/value pairs: 
-      # {'name': string, 'secure': bool, 'use_default': bool, 'value': variable_value}
-      # Note: If using a variable defined in /vars/vars.yml, specify the map using the following syntax: 
-      # {'name': string, 'secure': bool, 'use_default': bool, 'value': "{{variable}}"}
-        additional_variables: [{'name': ssh_key_public_key, 'secure': true, 'use_default': false, 'value': "{{ssh_key}}"}]
     - role: update_workspace_variables
 - name: Start generate plan action
   hosts: localhost
@@ -60,29 +51,29 @@
     - role: get_iam_token
     - role: action
       vars:
-        action: plan
+        action_type: plan
     - role: get_iam_token
     - role: await_action
       vars:
-        action: plan
+        action_type: plan
         register_name: await_plan
     - role: get_iam_token
     - role: action
       vars:
-        action: apply
+        action_type: apply
     - role: get_iam_token
     - role: await_action
       vars:
-        action: apply
+        action_type: apply
         register_name: await_apply
     - role: get_iam_token
     - role: action
       vars:
-        action: destroy
+        action_type: destroy
     - role: get_iam_token
     - role: await_action
       vars:
-        action: destroy
+        action_type: destroy
         register_name: await_destroy
     - role: get_iam_token
     - role: delete_schematics_workspace

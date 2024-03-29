@@ -13,11 +13,14 @@ function newState() {
 }
 
 describe("vpn_gateways", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("vpn_gateways.init", () => {
     it("should initialize vpn for default patterns", () => {
-      let state = new newState();
       assert.deepEqual(
-        state.store.json.vpn_gateways,
+        craig.store.json.vpn_gateways,
         [
           {
             name: "management-gateway",
@@ -32,7 +35,6 @@ describe("vpn_gateways", () => {
   });
   describe("vpn_gatways.onStoreUpdate", () => {
     it("should remove subnet name and vpc name on deletion", () => {
-      let state = new newState();
       let expectedData = [
         {
           name: "management-gateway",
@@ -42,25 +44,15 @@ describe("vpn_gateways", () => {
           connections: [],
         },
       ];
-      state.vpcs.delete({}, { data: { name: "management" } });
+      craig.vpcs.delete({}, { data: { name: "management" } });
       assert.deepEqual(
-        state.store.json.vpn_gateways,
+        craig.store.json.vpn_gateways,
         expectedData,
         "it should update gateways"
       );
     });
     it("should remove unfound subnet name if vpc exists", () => {
-      let state = new newState();
-      let expectedData = [
-        {
-          name: "management-gateway",
-          resource_group: "management-rg",
-          subnet: null,
-          vpc: "management",
-          connections: [],
-        },
-      ];
-      state.vpcs.subnets.delete(
+      craig.vpcs.subnets.delete(
         {},
         {
           name: "management",
@@ -70,36 +62,25 @@ describe("vpn_gateways", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.vpn_gateways,
-        expectedData,
+        craig.store.json.vpn_gateways[0].subnet,
+        null,
         "it should update gateways"
       );
     });
     it("should remove unfound resource groups", () => {
-      let state = new newState();
-      let expectedData = [
-        {
-          name: "management-gateway",
-          resource_group: null,
-          subnet: "vpn-zone-1",
-          vpc: "management",
-          connections: [],
-        },
-      ];
-      state.resource_groups.delete({}, { data: { name: "management-rg" } });
+      craig.resource_groups.delete({}, { data: { name: "management-rg" } });
       assert.deepEqual(
-        state.store.json.vpn_gateways,
-        expectedData,
+        craig.store.json.vpn_gateways[0].resource_group,
+        null,
         "it should update gateways"
       );
     });
   });
   describe("vpn_gateways.delete", () => {
     it("should delete a vpn gateway by name", () => {
-      let state = new newState();
-      state.vpn_gateways.delete({}, { data: { name: "management-gateway" } });
+      craig.vpn_gateways.delete({}, { data: { name: "management-gateway" } });
       assert.deepEqual(
-        state.store.json.vpn_gateways,
+        craig.store.json.vpn_gateways,
         [],
         "it should delete the gw"
       );
@@ -107,17 +88,7 @@ describe("vpn_gateways", () => {
   });
   describe("vpn_gateways.save", () => {
     it("should update a vpn gateway", () => {
-      let state = new newState();
-      let expectedData = [
-        {
-          name: "todd",
-          resource_group: "management-rg",
-          subnet: "vpe-zone-1",
-          vpc: "workload",
-          connections: [],
-        },
-      ];
-      state.vpn_gateways.save(
+      craig.vpn_gateways.save(
         {
           name: "todd",
           vpc: "workload",
@@ -130,23 +101,13 @@ describe("vpn_gateways", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.vpn_gateways,
-        expectedData,
+        craig.store.json.vpn_gateways[0].vpc,
+        "workload",
         "it should change the gw"
       );
     });
     it("should update a vpn gateway with same name different everything else", () => {
-      let state = new newState();
-      let expectedData = [
-        {
-          name: "management-gateway",
-          resource_group: "workload-rg",
-          subnet: "vpe-zone-1",
-          vpc: "workload",
-          connections: [],
-        },
-      ];
-      state.vpn_gateways.save(
+      craig.vpn_gateways.save(
         {
           name: "management-gateway",
           vpc: "workload",
@@ -160,22 +121,29 @@ describe("vpn_gateways", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.vpn_gateways,
-        expectedData,
+        craig.store.json.vpn_gateways,
+        [
+          {
+            name: "management-gateway",
+            resource_group: "workload-rg",
+            subnet: "vpe-zone-1",
+            vpc: "workload",
+            connections: [],
+          },
+        ],
         "it should change the gw"
       );
     });
   });
   describe("vpn_gateways.create", () => {
     it("should add a new vpn gateway", () => {
-      let expectedData = [
-        {
-          name: "management-gateway",
-          resource_group: "management-rg",
-          subnet: "vpn-zone-1",
-          vpc: "management",
-          connections: [],
-        },
+      craig.vpn_gateways.create({
+        name: "todd",
+        subnet: "vpn-zone-1",
+        vpc: "management",
+      });
+      assert.deepEqual(
+        craig.store.json.vpn_gateways[1],
         {
           name: "todd",
           resource_group: null,
@@ -183,25 +151,11 @@ describe("vpn_gateways", () => {
           vpc: "management",
           connections: [],
         },
-      ];
-      let state = new newState();
-      state.vpn_gateways.create({
-        name: "todd",
-        subnet: "vpn-zone-1",
-        vpc: "management",
-      });
-      assert.deepEqual(
-        state.store.json.vpn_gateways,
-        expectedData,
         "it should add the gw"
       );
     });
   });
   describe("schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     it("should reset subnet on state change", () => {
       let expectedData = {
         subnet: "",

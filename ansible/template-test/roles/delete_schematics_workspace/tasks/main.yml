@@ -8,6 +8,6 @@
       Authorization: Bearer {{token.json.access_token}}
     status_code: 200
   register: delete_response
-  until: delete_response.status == 200
+  until: delete_response.status == 200 or delete_response.status == 404
   retries: 2
   delay: 120
