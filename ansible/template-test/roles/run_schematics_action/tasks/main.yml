@@ -1,0 +1,41 @@
+---
+# tasks file for run_schematics_action
+- name: Get list of actions
+  uri:
+    url: https://us.schematics.cloud.ibm.com/v2/actions
+    method: GET
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+  register: schematics_actions
+
+- name: Get target action ID
+  set_fact:
+    action_id: "{{ item.id }}"
+  loop: "{{ schematics_actions.json.actions }}"
+  when: "{{item.name == action_name}}"
+
+- name: Wait for action status to be ready
+  uri:
+    url: "https://us.schematics.cloud.ibm.com/v2/actions/{{action_id}}"
+    method: GET
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+  register: action_info
+  until: action_info.json.state.status_code == "normal"
+  delay: 10
+  retries: 10
+
+- name: Run schematics action
+  uri:
+    url: https://us.schematics.cloud.ibm.com/v2/jobs
+    method: POST
+    body_format: json
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+      Content-Type: application/json
+    body:
+      command_object: action
+      command_object_id: "{{ action_id }}"
+      command_name: ansible_playbook_run
+      command_parameter: main.yml
+    status_code: 201

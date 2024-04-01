@@ -1,13 +1,15 @@
 ---
-# To run this in schematics actions, you will need to update the below commented out variables inside of schematics
-# DO NOT ENTER YOUR VARIBLES HERE. THIS FILE SHOULD NEVER BE EDITED
-# Do not alter the other variables.
+# To run this playbook , copy this file to `vars.yml` and fill in your data
+# tf_var_preshared_key is only needed for the POC template
 
-# tf_var_api_key: <api-key>
-# tf_var_ssh_key: <ssh-key>
-# tf_var_prefix: <unique-prefix>
-# template: <template> must be spelled exactly as in template_map below
-# workspace_name: <workspace-name>
+tf_var_api_key: "<api-key>"
+tf_var_ssh_key: "<public-ssh-key>"
+tf_var_prefix: "<unique-prefix>"
+tf_var_preshared_key: "<preshared-key>" # 6-128 characters
+
+workspace_name: "<schematics-workspace-name>"
+template: "<template>"
+action_name: "<schematics-action-name>"
 
 craig_url: https://craig.119gqgw56ti1.us-south.codeengine.appdomain.cloud/api/craig/template-tar
 region: us-south

@@ -1,0 +1,112 @@
+override_craig:
+  vpn_gateways:
+    - name: "dal10gw"
+      resource_group: "transit-rg"
+      vpc: "transit"
+      subnet: "vpn-zone-1"
+      policy_mode: true
+      connections:
+        - name: "on-prem-connection"
+          peer_cidrs: 
+            - "10.40.0.0/16"
+          local_cidrs:
+            - "192.168.0.0/24"
+            - "10.10.0.0/26"
+            - "10.10.0.128/29"
+            - "10.10.0.144/28"
+          vpn: "dal10gw"
+          peer_address: "10.0.0.0"
+      additional_prefixes: 
+            - "10.40.0.0/16"
+  atracker: 
+    enabled: false
+    type: "cos"
+    name: "atracker"
+    target_name: "a-tracker"
+    bucket: "a-tracker"
+    add_route: true
+    cos_key: "a-tracker-cos"
+    locations: 
+      - "global"
+      - "us-south"
+    instance: false
+    plan: "lite"
+    resource_group: "service-rg"
+    archive: false
+  transit_gateways:
+    name: transit-gateway
+    resource_group: service-rg
+    global: false,
+    connections: []
+    use_data: false,
+    gre_tunnels: []
+    prefix_filters: []
+    crns: null,
+    classic: false
+  power_instances:
+    - name: "aixtarget"
+      workspace: "dal10"
+      image: "7300-01-01"
+      network: 
+        - name: "pvm"
+          ip_address: ""
+      zone: "dal10"
+      pi_health_status: "OK"
+      pi_proc_type: "shared"
+      pi_storage_type: "tier5k"
+      storage_option: "Storage Type"
+      pi_storage_pool_affinity: false
+      sap: false
+      ssh_key: "powervs-ssh-key"
+      pi_affinity_volume: null
+      pi_anti_affinity_instance: null
+      pi_anti_affinity_volume: null
+      pi_sys_type: "s922"
+      pi_memory: "8"
+      pi_processors: "0.25"
+      sap_profile: null
+      pi_storage_pool: null
+      affinity_type: null
+      pi_affinity_instance: null
+      pi_user_data: null
+      index: 0
+      primary_subnet: "pvm"
+      pi_affinity_policy: null
+      pi_ibmi_css: false
+      pi_ibmi_pha: false
+      pi_ibmi_rds_users: null
+      pi_pin_policy: "none"
+      pi_license_repository_capacity: null
+    - sap: false
+      sap_profile: null
+      name: "ibmitarget"
+      workspace: "dal10"
+      network:
+        - name: "pvm"
+          ip_address: ""
+      ssh_key: "powervs-ssh-key"
+      image: "IBMi-75-01-2924-2"
+      pi_sys_type: "s922"
+      pi_proc_type: "shared"
+      pi_processors: "0.25"
+      pi_memory: "8"
+      pi_storage_pool_affinity: false
+      storage_option: "Storage Type"
+      pi_storage_type: "tier5k"
+      pi_storage_pool: null
+      affinity_type: null
+      pi_affinity_volume: null
+      pi_anti_affinity_volume: null
+      pi_anti_affinity_instance: null
+      pi_affinity_instance: null
+      zone: "dal10"
+      pi_affinity_policy: null
+      pi_user_data: null
+      index: 1
+      primary_subnet: "pvm"
+      pi_ibmi_css: false
+      pi_ibmi_pha: false
+      pi_ibmi_rds_users: null
+      pi_pin_policy: "none"
+      pi_license_repository_capacity: null
+      pi_health_status: "OK"

@@ -1,52 +1,31 @@
 ---
-# To setup this directory to run locally, copy /vars/vars.template.yml to /vars/vars.yml and fill in needed
-# values
 # To run the playbook locally, run `ansible-playbook main.yml` in this directory.
 # This playbook creates a schematics workspace, uploads a craig .tar file for a specific template to 
 # that workspace, generates a plan, applies the plan to create the resources in the template, and destroys 
 # the newly created resources.
 # If any step fails, the playbook will stop and print the error to the terminal.
 
-- name: Upload CRAIG template to schematics workspace
+- name: Create and prepare schematics workspace for CRAIG template deployment
   hosts: localhost
-  vars_files: ./vars/vars.yml
+  vars_files: 
+    - ./vars/vars.template.yml
+    - ./vars/template_override_vars/{{template}}.yml
   roles:
     - role: get_iam_token
     - role: download_tar
     - role: create_schematics_workspace
       vars:
         description: Automated CRAIG Testing Workspace
-
-- name: TODO - convert to roles
+    - role: upload_tar
+- name: Update workspace variables
   hosts: localhost
-  vars_files: ./vars/vars.yml
-  tasks: 
-    - name: Upload {{template}}.tar to Schematics Workspace
-      ansible.builtin.shell: "curl -s --request PUT \
-                --url 'https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/template_data/{{ workspace.json.template_data[0].id }}/template_repo_upload' \
-                -H 'Authorization: Bearer {{ token.json.access_token }}' \
-                -H 'Content-Type: multipart/form-data' \
-                --form 'file=@{{playbook_dir}}/{{template}}.tar'"
-    - name: Wait until {{template}}.tar has been successfully uploaded
-      uri:
-        url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}
-        method: GET
-        body_format: json
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-      register: workspace_status
-      until: workspace_status.json.status == "INACTIVE"
-      delay: 10
-      retries: 50
-- name: Update variablestore
-  hosts: localhost
-  vars_files: ./vars/vars.yml
+  vars_files: ./vars/vars.template.yml
   roles:
     - role: update_variablestore
     - role: update_workspace_variables
-- name: Start generate plan action
+- name: Deploy CRAIG terraform template
   hosts: localhost
-  vars_files: ./vars/vars.yml
+  vars_files: ./vars/vars.template.yml
   roles:
     - role: get_iam_token
     - role: action
@@ -71,6 +50,9 @@
       vars:
         action_type: destroy
     - role: get_iam_token
+  # Note: The destroy action may not succeed for the POC template
+  # If the destroy action fails, wait a few minutes, and manually go to Actions -> Destroy Resources
+  # Inside of the schematics workspace
     - role: await_action
       vars:
         action_type: destroy

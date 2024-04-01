@@ -1,8 +1,11 @@
 ---
 # tasks file for download_tar
-- name: Download {{template}}.tar to current directory
-  get_url:
+- name: Download tar to current directory
+  uri:
     url: "{{craig_url}}/{{template}}"
+    method: POST
+    body_format: json
+    body: "{{ override_craig | default({}) }}"
+    status_code: 200
     dest: "{{playbook_dir}}/{{template}}.tar"
-    timeout: 300
-  retries: 10
+    timeout: 500

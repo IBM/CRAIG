@@ -1,0 +1,38 @@
+# This playbook creates an action in schematics, and runs the action using vars
+# in vars/vars.yml The action then runs the main.yml playbook by fetching it
+# from the CRAIG enterprise github
+
+- name: Run end to end test inside a schematics action
+  hosts: localhost
+  vars_files: ./vars/vars.yml
+  roles:
+    - role: get_iam_token
+    - role: create_schematics_action
+      vars:
+        source:
+          source_type: git_hub_enterprise
+          git:
+            git_repo_url: https://github.ibm.com/platinum-developer-tools/CRAIG.git
+            git_repo_folder: ansible/template-test
+            git_branch: main
+        inputs:
+          - name: template
+            value: "{{ template }}"
+            use_default: false
+          - name: tf_var_api_key
+            value: "{{ tf_var_api_key }}"
+            use_default: false
+            metadata:
+              secure: true
+          - name: tf_var_prefix
+            value: "{{ tf_var_prefix }}"
+            use_default: false  
+          - name: workspace_name
+            value: "{{ workspace_name }}"
+          - name: tf_var_preshared_key
+            value: "{{ tf_var_preshared_key }}"
+            metadata:
+              secure: true
+          - name: tf_var_ssh_key
+            value: "{{ tf_var_ssh_key }}"                                   
+    - role: run_schematics_action
