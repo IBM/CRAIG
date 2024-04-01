@@ -41,6 +41,7 @@ const {
   shouldDisplayService,
   powerSubnetFilter,
   powerMapFilter,
+  aclMapFilter,
 } = require("./diagrams");
 const {
   dynamicToolTipWrapperProps,
@@ -115,6 +116,7 @@ module.exports = {
   classicGatewaysFilter,
   classicBareMetalFilter,
   powerMapFilter,
+  aclMapFilter,
   dynamicFetchSelectDataToGroups,
   classicSubnetsFilter,
 };

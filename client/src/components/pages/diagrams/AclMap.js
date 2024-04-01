@@ -6,29 +6,12 @@ import { SubnetAclRules } from "@carbon/icons-react";
 import "./diagrams.css";
 import PropTypes from "prop-types";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
+import { aclMapFilter } from "../../../lib";
 
 export const AclMap = (props) => {
   let vpc = props.vpc;
   let subnets = vpc.subnets || []; // empty subnets for no vpc
-  // add null as acl
-  let initialAclList = [];
-  if (splatContains(subnets, "use_data", true)) {
-    subnets.forEach((subnet) => {
-      if (!subnet.use_data && !subnet.network_acl)
-        initialAclList = [{ name: null }];
-    });
-  } else
-    initialAclList = splatContains(subnets, "network_acl", null)
-      ? [{ name: null }]
-      : [];
-  // if no acls on vpc, add null
-  let aclList = initialAclList.concat(
-    vpc.acls || [
-      {
-        name: null,
-      },
-    ]
-  );
+  let aclList = aclMapFilter(props);
   return isEmpty(vpc.acls || []) && !props.static ? (
     <CraigEmptyResourceTile name="ACLs" />
   ) : (

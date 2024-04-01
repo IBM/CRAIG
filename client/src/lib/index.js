@@ -47,6 +47,7 @@ const {
   dynamicPasswordInputProps,
   powerSubnetFilter,
   powerMapFilter,
+  aclMapFilter,
   dynamicFetchSelectDataToGroups,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
@@ -290,6 +291,7 @@ module.exports = {
   classicBareMetalFilter,
   powerSubnetFilter,
   powerMapFilter,
+  aclMapFilter,
   dynamicPrimaryButtonProps,
   dynamicSecondaryButtonProps,
   primaryButtonClass,

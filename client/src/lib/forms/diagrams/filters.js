@@ -93,6 +93,23 @@ function powerMapFilter(props) {
 }
 
 /**
+ * get a list of acls to render
+ * @param {*} props component props
+ * @returns {Array<object>} list of acls to render
+ */
+function aclMapFilter(props) {
+  let vpc = props.vpc;
+  let subnets = vpc.subnets || []; // empty subnets for no vpc
+  // if no acls on vpc, add null
+  let hasNullAcls = false;
+  subnets.forEach((subnet) => {
+    // if subnet does not use data and has no acl, add null
+    if (!subnet.use_data && !subnet.network_acl) hasNullAcls = true;
+  });
+  return (hasNullAcls ? [{ name: null }] : []).concat(vpc.acls || []);
+}
+
+/**
  * filter classic subnets
  * @param {*} componentProps
  * @returns {Object} list of filtered classic subnets
@@ -112,5 +129,6 @@ module.exports = {
   classicBareMetalFilter,
   powerSubnetFilter,
   powerMapFilter,
+  aclMapFilter,
   classicSubnetsFilter,
 };

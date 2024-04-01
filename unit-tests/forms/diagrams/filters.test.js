@@ -6,6 +6,7 @@ const {
   state,
   powerSubnetFilter,
   powerMapFilter,
+  aclMapFilter,
 } = require("../../../client/src/lib");
 
 function newState() {
@@ -308,6 +309,80 @@ describe("filter functions", () => {
         [{ name: null }],
         "it should send list of workspaces"
       );
+    });
+  });
+  describe("aclMapFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+      craig.store.json.vpcs[0] = {
+        name: "vpc1",
+        subnets: [
+          {
+            use_data: true,
+            network_acl: {
+              name: "subnet_acl",
+            },
+          },
+          {
+            use_data: false,
+            network_acl: null,
+          },
+        ],
+        acls: [
+          {
+            name: "acl1",
+          },
+        ],
+      };
+      craig.store.json.vpcs[1] = {
+        name: "vpc2",
+        subnets: [
+          {
+            use_data: false,
+            network_acl: null,
+          },
+        ],
+        acls: [
+          {
+            name: "acl1",
+          },
+          {
+            name: "acl2",
+          },
+        ],
+      };
+      craig.store.json.vpcs[2] = {
+        name: "vpc3",
+        subnets: null,
+        acls: null,
+      };
+    });
+    it("should return list of acls when use_data is true", () => {
+      let actualData = aclMapFilter({
+        vpc: craig.store.json.vpcs[0],
+      });
+      assert.deepEqual(
+        actualData,
+        [{ name: null }, { name: "acl1" }],
+        "should be equal"
+      );
+    });
+    it("should return list of acls when use_data is false", () => {
+      let actualData = aclMapFilter({
+        vpc: craig.store.json.vpcs[1],
+      });
+      assert.deepEqual(
+        actualData,
+        [{ name: null }, { name: "acl1" }, { name: "acl2" }],
+        "should be equal"
+      );
+    });
+    it("should return empty array when no subnets or acls", () => {
+      let actualData = aclMapFilter({
+        vpc: craig.store.json.vpcs[2],
+      });
+      assert.deepEqual(actualData, [], "should be equal");
     });
   });
   describe("classicSubnetsFilter", () => {
