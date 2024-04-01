@@ -6,6 +6,7 @@ const {
   state,
   powerSubnetFilter,
   powerMapFilter,
+  classicVsiFilter,
   aclMapFilter,
 } = require("../../../client/src/lib");
 
@@ -308,6 +309,68 @@ describe("filter functions", () => {
         powerMapFilter({ craig: craig }),
         [{ name: null }],
         "it should send list of workspaces"
+      );
+    });
+  });
+  describe("classicVsiFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should return the vsi that contains mathcing public vlan", () => {
+      craig.store.json.classic_vsi = [
+        {
+          name: "classic-vsi",
+          private_vlan: "priv-vlan",
+          public_vlan: "pub-vlan",
+        },
+      ];
+      assert.deepEqual(
+        classicVsiFilter({ craig: craig, vlan: "pub-vlan" }),
+        [
+          {
+            name: "classic-vsi",
+            private_vlan: "priv-vlan",
+            public_vlan: "pub-vlan",
+            index: 0,
+          },
+        ],
+        "it should return filtered vsi"
+      );
+    });
+    it("should return the vsi that contains the matching private vlan", () => {
+      craig.store.json.classic_vsi = [
+        {
+          name: "classic-vsi",
+          private_vlan: "priv-vlan",
+          public_vlan: "pub-vlan",
+        },
+      ];
+      assert.deepEqual(
+        classicVsiFilter({ craig: craig, vlan: "priv-vlan" }),
+        [
+          {
+            name: "classic-vsi",
+            private_vlan: "priv-vlan",
+            public_vlan: "pub-vlan",
+            index: 0,
+          },
+        ],
+        "it should return filtered vsi"
+      );
+    });
+    it("should return empty array if no vlans match", () => {
+      craig.store.json.classic_vsi = [
+        {
+          name: "classic-vsi",
+          private_vlan: "priv-vlan",
+          public_vlan: "pub-vlan",
+        },
+      ];
+      assert.deepEqual(
+        classicVsiFilter({ craig: craig, vlan: "fake-vlan" }),
+        [],
+        "it should return empty array"
       );
     });
   });

@@ -1,6 +1,7 @@
 const {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   powerSubnetFilter,
   powerMapFilter,
   aclMapFilter,
@@ -13,6 +14,7 @@ const { getDisplaySubnetTiers } = require("./subnet-tier-map");
 module.exports = {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   getDisplayTierSubnetList,
   getDisplaySubnetTiers,
   shouldDisplayService,

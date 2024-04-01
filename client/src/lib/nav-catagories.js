@@ -309,6 +309,7 @@ const navCatagories = [
         toTf: (config) => {
           return classicVsiTf(config) || "";
         },
+        jsonField: "classic_vsi",
       },
       {
         title: "Classic Bare Metal",

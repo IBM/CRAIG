@@ -93,6 +93,23 @@ function powerMapFilter(props) {
 }
 
 /**
+ * get a list of classic vsis to render as part of the classic network map
+ * @param {*} props component props
+ * @returns {Array<object>} list of classic vsis to render
+ */
+function classicVsiFilter(props) {
+  let vsis = [];
+  props.craig.store.json.classic_vsi.forEach((vsi, vsiIndex) => {
+    if (vsi.private_vlan === props.vlan || vsi.public_vlan === props.vlan) {
+      let copyVsi = { ...vsi };
+      copyVsi.index = vsiIndex;
+      vsis.push(copyVsi);
+    }
+  });
+  return vsis;
+}
+
+/**
  * get a list of acls to render
  * @param {*} props component props
  * @returns {Array<object>} list of acls to render
@@ -127,6 +144,7 @@ function classicSubnetsFilter(props) {
 module.exports = {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   powerSubnetFilter,
   powerMapFilter,
   aclMapFilter,

@@ -25,6 +25,7 @@ const {
   wizard,
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   classicSubnetsFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
@@ -300,5 +301,6 @@ module.exports = {
   copyRuleFormName,
   dynamicFetchSelectDataToGroups,
   docTextFieldParams,
+  classicVsiFilter,
   classicSubnetsFilter,
 };

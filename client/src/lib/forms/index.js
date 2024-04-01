@@ -35,6 +35,7 @@ const wizard = require("./wizard");
 const {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   classicSubnetsFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
@@ -115,6 +116,7 @@ module.exports = {
   invalidCrns,
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   powerMapFilter,
   aclMapFilter,
   dynamicFetchSelectDataToGroups,
