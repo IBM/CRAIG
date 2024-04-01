@@ -3,6 +3,7 @@ const {
   classicBareMetalFilter,
   powerSubnetFilter,
   powerMapFilter,
+  classicSubnetsFilter,
 } = require("./filters");
 const { getDisplayTierSubnetList } = require("./subnet-row");
 const { shouldDisplayService } = require("./subnet-service-map");
@@ -16,4 +17,5 @@ module.exports = {
   shouldDisplayService,
   powerSubnetFilter,
   powerMapFilter,
+  classicSubnetsFilter,
 };

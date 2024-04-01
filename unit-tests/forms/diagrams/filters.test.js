@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicSubnetsFilter,
   state,
   powerSubnetFilter,
   powerMapFilter,
@@ -306,6 +307,37 @@ describe("filter functions", () => {
         powerMapFilter({ craig: craig }),
         [{ name: null }],
         "it should send list of workspaces"
+      );
+    });
+  });
+  describe("classicSubnetsFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+      craig.store.json.classic_vlans[0] = {
+        name: "classic-priv-vlan",
+        datacenter: "dal10",
+        type: "PRIVATE",
+      };
+    });
+    it("should return no subnets with no vlans exist in datacenter", () => {
+      assert.deepEqual(
+        classicSubnetsFilter({ craig: craig, datacenter: "wdc07" }),
+        [],
+        "it should be empty"
+      );
+    });
+    it("should return subnets when vlans exist in datacenter", () => {
+      assert.deepEqual(
+        classicSubnetsFilter({ craig: craig, datacenter: "dal10" }),
+        [
+          {
+            name: "classic-priv-vlan",
+            datacenter: "dal10",
+            type: "PRIVATE",
+          },
+        ],
+        "it should return one vlan"
       );
     });
   });

@@ -92,9 +92,25 @@ function powerMapFilter(props) {
   );
 }
 
+/**
+ * filter classic subnets
+ * @param {*} componentProps
+ * @returns {Object} list of filtered classic subnets
+ */
+function classicSubnetsFilter(props) {
+  let subnets = [];
+  props.craig.store.json.classic_vlans.forEach((vlan) => {
+    if (vlan.datacenter === props.datacenter) {
+      subnets.push(vlan);
+    }
+  });
+  return subnets;
+}
+
 module.exports = {
   classicGatewaysFilter,
   classicBareMetalFilter,
   powerSubnetFilter,
   powerMapFilter,
+  classicSubnetsFilter,
 };
