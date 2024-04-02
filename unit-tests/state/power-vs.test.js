@@ -16,56 +16,56 @@ function newState() {
 }
 
 describe("power-vs", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("power.init", () => {
     it("should initialize power-vs", () => {
-      let state = new newState();
-      assert.deepEqual(state.store.json.power, []);
+      assert.deepEqual(craig.store.json.power, []);
     });
   });
   describe("power.onStoreUpdate", () => {
-    it("should be able to update power vs when no power vs zones", () => {
-      let state = newState();
-      state.power.create({
-        name: "toad",
-        zone: "us-south",
-      });
-      state.store.json._options.power_vs_zones = undefined;
-      let task = () => state.update();
-      assert.doesNotThrow(task, "it should not throw");
-    });
-    it("should update images to only contain the selected image names", () => {
-      let state = new newState();
-      state.store.json._options.power_vs_zones = ["dal10", "us-south"];
-      state.power.create({
-        name: "toad",
-        zone: "us-south",
-      });
-      state.store.json.power[0].images.push({ name: "imageName" });
-      state.store.json.power[0].imageNames.push("otherImageName");
-      state.update();
-      assert.deepEqual(state.store.json.power[0], {
-        attachments: [],
-        cloud_connections: [],
-        name: "toad",
-        imageNames: ["otherImageName"],
-        images: [],
-        zone: "us-south",
-        network: [],
-        resource_group: null,
-        ssh_keys: [],
-      });
-    });
-    it("should set unfound workspaces to null on change of power vs zones", () => {
-      let state = new newState();
-      state.store.json._options.power_vs_zones = ["dal10", "us-south"];
-      state.power.create({
+    beforeEach(() => {
+      craig.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "us-south",
         imageNames: ["7100-05-09"],
       });
-      state.store.json._options.power_vs_zones = [];
-      state.update();
+    });
+    it("should be able to update power vs when no power vs zones", () => {
+      craig.store.json._options.power_vs_zones = undefined;
+      let task = () => craig.update();
+      assert.doesNotThrow(task, "it should not throw");
+    });
+    it("should update images to only contain the selected image names", () => {
+      craig.store.json.power[0].images.push({ name: "imageName" });
+      craig.store.json.power[0].imageNames.push("otherImageName");
+      craig.update();
+      assert.deepEqual(craig.store.json.power[0], {
+        attachments: [],
+        cloud_connections: [],
+        name: "toad",
+        imageNames: ["7100-05-09", "otherImageName"],
+        images: [
+          {
+            name: "7100-05-09",
+            workspace: "toad",
+            workspace_use_data: false,
+            zone: "us-south",
+          },
+        ],
+        zone: "us-south",
+        network: [],
+        resource_group: null,
+        ssh_keys: [],
+        zone: "us-south",
+      });
+    });
+    it("should set unfound workspaces to null on change of power vs zones", () => {
+      craig.store.json._options.power_vs_zones = [];
+      craig.update();
       let expectedData = {
         name: "toad",
         resource_group: null,
@@ -85,7 +85,7 @@ describe("power-vs", () => {
         zone: null,
       };
       assert.deepEqual(
-        state.store.json.power[0],
+        craig.store.json.power[0],
         expectedData,
         "it should create a new power vs"
       );
@@ -93,8 +93,7 @@ describe("power-vs", () => {
   });
   describe("power.create", () => {
     it("should create a workspace", () => {
-      let state = new newState();
-      state.power.create({
+      craig.power.create({
         name: "toad",
         images: [
           {
@@ -127,29 +126,30 @@ describe("power-vs", () => {
         zone: "us-south",
       };
       assert.deepEqual(
-        state.store.json.power[0],
+        craig.store.json.power[0],
         expectedData,
         "it should create a new power vs"
       );
     });
   });
   describe("power.save", () => {
+    beforeEach(() => {
+      craig.power.create({ name: "toad", zone: "dal10", imageNames: [] });
+    });
     it("should save a workspace and update instances, volumes, and tgw connections with new name", () => {
-      let state = new newState();
-      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
-      state.power_instances.create({
+      craig.power_instances.create({
         name: "frog",
         zone: "dal10",
         workspace: "toad",
         network: [],
       });
-      state.power_instances.create({
+      craig.power_instances.create({
         name: "frog",
         zone: "dal10",
         workspace: "bog",
         network: [],
       });
-      state.transit_gateways.save(
+      craig.transit_gateways.save(
         {
           connections: [
             { tgw: "todd", vpc: "management" },
@@ -163,7 +163,7 @@ describe("power-vs", () => {
           },
         }
       );
-      state.power.save(
+      craig.power.save(
         { name: "frog", zone: "dal10" },
         { data: { name: "toad" } }
       );
@@ -179,17 +179,17 @@ describe("power-vs", () => {
         zone: "dal10",
       };
       assert.deepEqual(
-        state.store.json.power[0],
+        craig.store.json.power[0],
         expectedData,
         "it should update name in place"
       );
       assert.deepEqual(
-        state.store.json.power_instances[0].workspace,
+        craig.store.json.power_instances[0].workspace,
         "frog",
         "it should update name"
       );
       assert.deepEqual(
-        state.store.json.transit_gateways[0].connections[2],
+        craig.store.json.transit_gateways[0].connections[2],
         {
           power: "frog",
           tgw: "transit-gateway",
@@ -198,9 +198,7 @@ describe("power-vs", () => {
       );
     });
     it("should save a workspace and update instances, volumes, and vtl to remove storage pools and storage tiers", () => {
-      let state = new newState();
-      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
-      state.power_instances.create({
+      craig.power_instances.create({
         name: "frog",
         zone: "dal10",
         workspace: "toad",
@@ -208,7 +206,7 @@ describe("power-vs", () => {
         pi_storage_pool: "General-Flash-43",
         pi_storage_type: "Tier 1",
       });
-      state.power_volumes.create({
+      craig.power_volumes.create({
         name: "foo",
         zone: "dal10",
         workspace: "toad",
@@ -216,7 +214,7 @@ describe("power-vs", () => {
         pi_volume_pool: "General-Flash-43",
         pi_volume_type: "Tier 3",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "bar",
         zone: "dal10",
         workspace: "toad",
@@ -224,7 +222,7 @@ describe("power-vs", () => {
         pi_storage_pool: "General-Flash-43",
         pi_storage_type: "Tier 3",
       });
-      state.power.save(
+      craig.power.save(
         { name: "toad", zone: "dal12" },
         { data: { name: "toad", zone: "dal10" } }
       );
@@ -240,43 +238,41 @@ describe("power-vs", () => {
         zone: "dal12",
       };
       assert.deepEqual(
-        state.store.json.power[0],
+        craig.store.json.power[0],
         expectedData,
         "it should update zone in place"
       );
       assert.deepEqual(
-        state.store.json.power_instances[0].pi_storage_pool,
+        craig.store.json.power_instances[0].pi_storage_pool,
         "",
         "it should update instance storage pool"
       );
       assert.isNull(
-        state.store.json.power_instances[0].pi_storage_type,
+        craig.store.json.power_instances[0].pi_storage_type,
         "it should update instance storage type"
       );
       assert.deepEqual(
-        state.store.json.power_volumes[0].pi_volume_pool,
+        craig.store.json.power_volumes[0].pi_volume_pool,
         "",
         "it should update volume pool"
       );
       assert.isNull(
-        state.store.json.power_volumes[0].pi_volume_type,
+        craig.store.json.power_volumes[0].pi_volume_type,
         "it should update volume type"
       );
       assert.deepEqual(
-        state.store.json.vtl[0].pi_storage_pool,
+        craig.store.json.vtl[0].pi_storage_pool,
         "",
         "it should update instance storage pool"
       );
       assert.isNull(
-        state.store.json.vtl[0].pi_storage_type,
+        craig.store.json.vtl[0].pi_storage_type,
         "it should update instance storage type"
       );
     });
     it("should save a workspoace and not remove storage pools and storage tiers if instances, volumes, and vtl are not in workspace", () => {
-      let state = new newState();
-      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
-      state.power.create({ name: "toad2", zone: "dal10", imageNames: [] });
-      state.power_instances.create({
+      craig.power.create({ name: "toad2", zone: "dal10", imageNames: [] });
+      craig.power_instances.create({
         name: "frog",
         zone: "dal10",
         workspace: "toad2",
@@ -284,7 +280,7 @@ describe("power-vs", () => {
         pi_storage_pool: "General-Flash-43",
         pi_storage_type: "Tier 1",
       });
-      state.power_volumes.create({
+      craig.power_volumes.create({
         name: "foo",
         zone: "dal10",
         workspace: "toad2",
@@ -292,7 +288,7 @@ describe("power-vs", () => {
         pi_volume_pool: "General-Flash-43",
         pi_volume_type: "Tier 3",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "bar",
         zone: "dal10",
         workspace: "toad2",
@@ -300,7 +296,7 @@ describe("power-vs", () => {
         pi_storage_pool: "General-Flash-43",
         pi_storage_type: "Tier 3",
       });
-      state.power.save(
+      craig.power.save(
         { name: "toad", zone: "dal12" },
         { data: { name: "toad", zone: "dal10" } }
       );
@@ -316,45 +312,43 @@ describe("power-vs", () => {
         zone: "dal12",
       };
       assert.deepEqual(
-        state.store.json.power[0],
+        craig.store.json.power[0],
         expectedData,
         "it should update zone in place"
       );
       assert.deepEqual(
-        state.store.json.power_instances[0].pi_storage_pool,
+        craig.store.json.power_instances[0].pi_storage_pool,
         "General-Flash-43",
         "it should update instance storage pool"
       );
       assert.deepEqual(
-        state.store.json.power_instances[0].pi_storage_type,
+        craig.store.json.power_instances[0].pi_storage_type,
         "Tier 1",
         "it should update instance storage type"
       );
       assert.deepEqual(
-        state.store.json.power_volumes[0].pi_volume_pool,
+        craig.store.json.power_volumes[0].pi_volume_pool,
         "General-Flash-43",
         "it should update volume pool"
       );
       assert.deepEqual(
-        state.store.json.power_volumes[0].pi_volume_type,
+        craig.store.json.power_volumes[0].pi_volume_type,
         "Tier 3",
         "it should update volume type"
       );
       assert.deepEqual(
-        state.store.json.vtl[0].pi_storage_pool,
+        craig.store.json.vtl[0].pi_storage_pool,
         "General-Flash-43",
         "it should update instance storage pool"
       );
       assert.deepEqual(
-        state.store.json.vtl[0].pi_storage_type,
+        craig.store.json.vtl[0].pi_storage_type,
         "Tier 3",
         "it should update instance storage type"
       );
     });
     it("should save a workspace and not alter any storage pools or storage tiers if zone was not changed", () => {
-      let state = new newState();
-      state.power.create({ name: "toad", zone: "dal10", imageNames: [] });
-      state.power_instances.create({
+      craig.power_instances.create({
         name: "frog",
         zone: "dal10",
         workspace: "toad",
@@ -362,7 +356,7 @@ describe("power-vs", () => {
         pi_storage_pool: "General-Flash-43",
         pi_storage_type: "Tier 1",
       });
-      state.power_volumes.create({
+      craig.power_volumes.create({
         name: "foo",
         zone: "dal10",
         workspace: "toad",
@@ -370,7 +364,7 @@ describe("power-vs", () => {
         pi_volume_pool: "General-Flash-43",
         pi_volume_type: "Tier 3",
       });
-      state.vtl.create({
+      craig.vtl.create({
         name: "bar",
         zone: "dal10",
         workspace: "toad",
@@ -378,7 +372,7 @@ describe("power-vs", () => {
         pi_storage_pool: "General-Flash-43",
         pi_storage_type: "Tier 3",
       });
-      state.power.save(
+      craig.power.save(
         { name: "cat", zone: "dal10" },
         { data: { name: "toad", zone: "dal10" } }
       );
@@ -394,37 +388,37 @@ describe("power-vs", () => {
         zone: "dal10",
       };
       assert.deepEqual(
-        state.store.json.power[0],
+        craig.store.json.power[0],
         expectedData,
         "it should update name in place"
       );
       assert.deepEqual(
-        state.store.json.power_instances[0].pi_storage_pool,
+        craig.store.json.power_instances[0].pi_storage_pool,
         "General-Flash-43",
         "it should update instance storage pool"
       );
       assert.deepEqual(
-        state.store.json.power_instances[0].pi_storage_type,
+        craig.store.json.power_instances[0].pi_storage_type,
         "Tier 1",
         "it should update instance storage type"
       );
       assert.deepEqual(
-        state.store.json.power_volumes[0].pi_volume_pool,
+        craig.store.json.power_volumes[0].pi_volume_pool,
         "General-Flash-43",
         "it should update volume pool"
       );
       assert.deepEqual(
-        state.store.json.power_volumes[0].pi_volume_type,
+        craig.store.json.power_volumes[0].pi_volume_type,
         "Tier 3",
         "it should update volume type"
       );
       assert.deepEqual(
-        state.store.json.vtl[0].pi_storage_pool,
+        craig.store.json.vtl[0].pi_storage_pool,
         "General-Flash-43",
         "it should update instance storage pool"
       );
       assert.deepEqual(
-        state.store.json.vtl[0].pi_storage_type,
+        craig.store.json.vtl[0].pi_storage_type,
         "Tier 3",
         "it should update instance storage type"
       );
@@ -432,34 +426,31 @@ describe("power-vs", () => {
   });
   describe("power.delete", () => {
     it("should delete a workspace", () => {
-      let state = new newState();
-      state.power.create({
+      craig.power.create({
         name: "toad",
         images: [{ name: "7100-05-09", workspace: "toad" }],
         zone: "us-south",
       });
-      state.power.delete({}, { data: { name: "toad" } });
+      craig.power.delete({}, { data: { name: "toad" } });
       assert.deepEqual(
-        state.store.json.power,
+        craig.store.json.power,
         [],
         "it should have no workspaces"
       );
     });
   });
   describe("power.schema", () => {
-    describe("state.power.name.helperText", () => {
+    describe("craig.power.name.helperText", () => {
       it("should return correct helper text for name when use data", () => {
-        let state = newState();
         assert.deepEqual(
-          state.power.name.helperText({ use_data: true, name: "name" }),
+          craig.power.name.helperText({ use_data: true, name: "name" }),
           "name",
           "it should return correct helper text"
         );
       });
       it("should return correct helper text", () => {
-        let state = newState();
         assert.deepEqual(
-          state.power.name.helperText(
+          craig.power.name.helperText(
             { name: "frog" },
             {
               craig: {
@@ -481,7 +472,6 @@ describe("power-vs", () => {
     describe("power.zone", () => {
       describe("power.zone.onStateChange", () => {
         it("should set images when changing zone", () => {
-          let craig = newState();
           let data = {};
           let expectedData = {
             images: [],
@@ -493,7 +483,6 @@ describe("power-vs", () => {
       });
       describe("power.zone.groups", () => {
         it("should return list of zones", () => {
-          let craig = newState();
           craig.store.json._options.power_vs_zones = ["zone"];
           assert.deepEqual(
             craig.power.zone.groups({}, { craig: craig }),
@@ -505,14 +494,12 @@ describe("power-vs", () => {
     });
     describe("power.images", () => {
       it("should not be invalid when using data", () => {
-        let craig = newState();
         assert.isFalse(
           craig.power.imageNames.invalid({ use_data: true }),
           "it should be false"
         );
       });
       it("should return images and zone for updated key", () => {
-        let craig = newState();
         assert.deepEqual(
           craig.power.imageNames.forceUpdateKey({
             images: [{ name: "image" }],
@@ -523,7 +510,6 @@ describe("power-vs", () => {
         );
       });
       it("should return groups when no zone", () => {
-        let craig = newState();
         assert.deepEqual(
           craig.power.imageNames.groups({}),
           [],
@@ -531,7 +517,6 @@ describe("power-vs", () => {
         );
       });
       it("should return correct api endpoint for images", () => {
-        let craig = newState();
         assert.deepEqual(
           craig.power.imageNames.apiEndpoint(
             {
@@ -554,7 +539,6 @@ describe("power-vs", () => {
         );
       });
       it("should return correct api endpoint for images when workspace uses data", () => {
-        let craig = newState();
         assert.deepEqual(
           craig.power.imageNames.apiEndpoint(
             {
@@ -581,10 +565,8 @@ describe("power-vs", () => {
     });
   });
   describe("power.ssh_keys crud", () => {
-    let state;
     beforeEach(() => {
-      state = new newState();
-      state.power.create({
+      craig.power.create({
         name: "power-vs",
         resource_group: "default",
         ssh_keys: [],
@@ -593,14 +575,14 @@ describe("power-vs", () => {
         zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "toad" }],
       });
-    });
-    it("should create a ssh key", () => {
-      state.power.ssh_keys.create(
+      craig.power.ssh_keys.create(
         { name: "test-key" },
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
+    });
+    it("should create a ssh key", () => {
       assert.deepEqual(
-        state.store.json.power[0].ssh_keys,
+        craig.store.json.power[0].ssh_keys,
         [
           {
             name: "test-key",
@@ -613,11 +595,7 @@ describe("power-vs", () => {
       );
     });
     it("should update a ssh key", () => {
-      state.power.ssh_keys.create(
-        { name: "test-key" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.power.ssh_keys.save(
+      craig.power.ssh_keys.save(
         { name: "new-key-name" },
         {
           arrayParentName: "power-vs",
@@ -625,7 +603,7 @@ describe("power-vs", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.power[0].ssh_keys,
+        craig.store.json.power[0].ssh_keys,
         [
           {
             name: "new-key-name",
@@ -638,16 +616,12 @@ describe("power-vs", () => {
       );
     });
     it("should delete a ssh key", () => {
-      state.power.ssh_keys.create(
-        { name: "test-key" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.power.ssh_keys.delete(
+      craig.power.ssh_keys.delete(
         {},
         { arrayParentName: "power-vs", data: { name: "test-key" } }
       );
       assert.deepEqual(
-        state.store.json.power[0].ssh_keys,
+        craig.store.json.power[0].ssh_keys,
         [],
         "it should be empty"
       );
@@ -774,7 +748,7 @@ describe("power-vs", () => {
         describe("invalid", () => {
           it("should return true when key in modal is invalid when no data", () => {
             assert.isTrue(
-              state.power.ssh_keys.public_key.invalid(
+              craig.power.ssh_keys.public_key.invalid(
                 {
                   public_key: "",
                 },
@@ -785,13 +759,13 @@ describe("power-vs", () => {
             );
           });
           it("should return true when key name matches data name", () => {
-            state.power.ssh_keys.create(
+            craig.power.ssh_keys.create(
               { name: "test-key", public_key: "aaa" },
               { innerFormProps: { arrayParentName: "power-vs" } }
             );
-            delete state.store.json.power[0].ssh_keys[0].workspace;
+            delete craig.store.json.power[0].ssh_keys[0].workspace;
             assert.isTrue(
-              state.power.ssh_keys.public_key.invalid(
+              craig.power.ssh_keys.public_key.invalid(
                 {
                   public_key: "aaa",
                   name: "name",
@@ -808,8 +782,7 @@ describe("power-vs", () => {
         });
       });
       beforeEach(() => {
-        state = new newState();
-        state.power.create({
+        craig.power.create({
           name: "power-vs",
           resource_group: "default",
           zone: "us-south",
@@ -819,45 +792,34 @@ describe("power-vs", () => {
     });
   });
   describe("power.network crud", () => {
-    let state;
     beforeEach(() => {
-      state = new newState();
-      state.power.create({
+      craig.power.create({
         name: "power-vs",
         resource_group: "default",
         zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "toad" }],
       });
-    });
-    it("should create a network interface", () => {
-      state = new newState();
-      state.power.create({
-        name: "power-vs",
-        resource_group: "default",
-        zone: "us-south",
-        images: [{ name: "7100-05-09", workspace: "toad" }],
-        use_data: true,
-        pi_network_jumbo: false,
-      });
-      state.power.network.create(
+      craig.power.network.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
+    });
+    it("should create a network interface", () => {
       assert.deepEqual(
-        state.store.json.power[0].network,
+        craig.store.json.power[0].network,
         [
           {
             name: "test-network",
             workspace: "power-vs",
             zone: "us-south",
-            workspace_use_data: true,
+            workspace_use_data: false,
             pi_network_mtu: "",
           },
         ],
         "it should create a network interface"
       );
       assert.deepEqual(
-        state.store.json.power[0].attachments,
+        craig.store.json.power[0].attachments,
         [
           {
             connections: [],
@@ -870,11 +832,7 @@ describe("power-vs", () => {
       );
     });
     it("should update a network interface", () => {
-      state.power.network.create(
-        { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.power.network.save(
+      craig.power.network.save(
         { name: "new-network-name", pi_network_mtu: "2000" },
         {
           arrayParentName: "power-vs",
@@ -882,7 +840,7 @@ describe("power-vs", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.power[0].network,
+        craig.store.json.power[0].network,
         [
           {
             name: "new-network-name",
@@ -895,7 +853,7 @@ describe("power-vs", () => {
         "it should update network name"
       );
       assert.deepEqual(
-        state.store.json.power[0].attachments,
+        craig.store.json.power[0].attachments,
         [
           {
             connections: [],
@@ -909,12 +867,8 @@ describe("power-vs", () => {
       );
     });
     it("should update a network interface", () => {
-      state.power.network.create(
-        { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.store.json.power[0].attachments = [];
-      state.power.network.save(
+      craig.store.json.power[0].attachments = [];
+      craig.power.network.save(
         { name: "new-network-name", pi_network_jumbo: true },
         {
           arrayParentName: "power-vs",
@@ -922,7 +876,7 @@ describe("power-vs", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.power[0].network,
+        craig.store.json.power[0].network,
         [
           {
             name: "new-network-name",
@@ -937,11 +891,7 @@ describe("power-vs", () => {
       );
     });
     it("should update a network interface with same name", () => {
-      state.power.network.create(
-        { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.power.network.save(
+      craig.power.network.save(
         { name: "test-network" },
         {
           arrayParentName: "power-vs",
@@ -949,7 +899,7 @@ describe("power-vs", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.power[0].network,
+        craig.store.json.power[0].network,
         [
           {
             name: "test-network",
@@ -962,7 +912,7 @@ describe("power-vs", () => {
         "it should update network name"
       );
       assert.deepEqual(
-        state.store.json.power[0].attachments,
+        craig.store.json.power[0].attachments,
         [
           {
             connections: [],
@@ -976,26 +926,21 @@ describe("power-vs", () => {
       );
     });
     it("should delete a network interface", () => {
-      state.power.network.create(
-        { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.power.network.delete(
+      craig.power.network.delete(
         {},
         { arrayParentName: "power-vs", data: { name: "test-network" } }
       );
       assert.deepEqual(
-        state.store.json.power[0].network,
+        craig.store.json.power[0].network,
         [],
         "it should delete a network interface"
       );
     });
     describe("power.network.schema", () => {
+      beforeEach(() => {
+        craig = newState();
+      });
       describe("pi_network_mtu", () => {
-        let craig;
-        beforeEach(() => {
-          craig = newState();
-        });
         describe("power.network.pi_cidr.invalidText", () => {
           it("should return correct text if cidr is null", () => {
             assert.deepEqual(
@@ -1108,7 +1053,7 @@ describe("power-vs", () => {
         describe("invalidText", () => {
           it("should return correct invalid text for invalid pi cidr", () => {
             assert.deepEqual(
-              state.power.network.pi_cidr.invalidText(
+              craig.power.network.pi_cidr.invalidText(
                 {
                   pi_cidr: "aaaa",
                 },
@@ -1128,13 +1073,13 @@ describe("power-vs", () => {
         describe("invalid", () => {
           it("should return true if the pi_dns value is string", () => {
             assert.isTrue(
-              state.power.network.pi_dns.invalid({ pi_dns: "" }),
+              craig.power.network.pi_dns.invalid({ pi_dns: "" }),
               "it should be true"
             );
           });
           it("should return true if the pi_dns value is null", () => {
             assert.isTrue(
-              state.power.network.pi_dns.invalid({}),
+              craig.power.network.pi_dns.invalid({}),
               "it should be true"
             );
           });
@@ -1142,7 +1087,7 @@ describe("power-vs", () => {
         describe("invalidText", () => {
           it("should return correct invalid text", () => {
             assert.deepEqual(
-              state.power.network.pi_dns.invalidText(),
+              craig.power.network.pi_dns.invalidText(),
               "Invalid IP Address",
               "it should return correct invalid text"
             );
@@ -1151,44 +1096,38 @@ describe("power-vs", () => {
         describe("helperText", () => {
           it("should be null", () => {
             assert.isNull(
-              state.power.network.pi_dns.helperText(),
+              craig.power.network.pi_dns.helperText(),
               "it should be null"
             );
           });
         });
         describe("onInputChange", () => {
           it("should add target data to array", () => {
-            let craig = newState();
-            let data = {
-              pi_dns: "dns",
-            };
-            data.pi_dns = craig.power.network.pi_dns.onInputChange(data, "dns");
             assert.deepEqual(
-              data,
-              {
-                pi_dns: ["dns"],
-              },
+              craig.power.network.pi_dns.onInputChange(
+                {
+                  pi_dns: "dns",
+                },
+                "dns"
+              ),
+              ["dns"],
               "it should set data"
             );
           });
         });
         describe("onRender", () => {
           it("should return string data", () => {
-            let craig = newState();
-            let data = {
-              pi_dns: ["dns"],
-            };
             assert.deepEqual(
-              craig.power.network.pi_dns.onRender(data),
+              craig.power.network.pi_dns.onRender({
+                pi_dns: ["dns"],
+              }),
               "dns",
               "it should return value"
             );
           });
           it("should return string data", () => {
-            let craig = newState();
-            let data = {};
             assert.deepEqual(
-              craig.power.network.pi_dns.onRender(data),
+              craig.power.network.pi_dns.onRender({}),
               "",
               "it should return value"
             );
@@ -1196,25 +1135,22 @@ describe("power-vs", () => {
         });
       });
       it("should hide subnet use data when not workspace use data", () => {
-        let state = newState();
         assert.isTrue(
-          state.power.network.use_data.hideWhen({}),
+          craig.power.network.use_data.hideWhen({}),
           "it should be hidden"
         );
       });
       it("should not have pi cidr invalid when use data", () => {
-        let state = newState();
         assert.isFalse(
-          state.power.network.pi_cidr.invalid({
+          craig.power.network.pi_cidr.invalid({
             use_data: true,
           }),
           "it should be use data"
         );
       });
       it("should not have pi_dns invalid when use data", () => {
-        let state = newState();
         assert.isFalse(
-          state.power.network.pi_dns.invalid({
+          craig.power.network.pi_dns.invalid({
             use_data: true,
           }),
           "it should be use data"
@@ -1223,23 +1159,21 @@ describe("power-vs", () => {
     });
   });
   describe("power.cloud_connections crud", () => {
-    let state;
     beforeEach(() => {
-      state = new newState();
-      state.power.create({
+      craig.power.create({
         name: "power-vs",
         resource_group: "default",
         zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
-    });
-    it("should create a cloud connection", () => {
-      state.power.cloud_connections.create(
+      craig.power.cloud_connections.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
+    });
+    it("should create a cloud connection", () => {
       assert.deepEqual(
-        state.store.json.power[0].cloud_connections,
+        craig.store.json.power[0].cloud_connections,
         [
           {
             name: "test-network",
@@ -1252,11 +1186,7 @@ describe("power-vs", () => {
       );
     });
     it("should update a cloud connection", () => {
-      state.power.cloud_connections.create(
-        { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.power.cloud_connections.save(
+      craig.power.cloud_connections.save(
         { name: "new-network-name" },
         {
           arrayParentName: "power-vs",
@@ -1264,7 +1194,7 @@ describe("power-vs", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.power[0].cloud_connections,
+        craig.store.json.power[0].cloud_connections,
         [
           {
             name: "new-network-name",
@@ -1277,16 +1207,12 @@ describe("power-vs", () => {
       );
     });
     it("should delete a cloud connection", () => {
-      state.power.cloud_connections.create(
-        { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
-      );
-      state.power.cloud_connections.delete(
+      craig.power.cloud_connections.delete(
         {},
         { arrayParentName: "power-vs", data: { name: "test-network" } }
       );
       assert.deepEqual(
-        state.store.json.power[0].cloud_connections,
+        craig.store.json.power[0].cloud_connections,
         [],
         "it should delete a cloud connection"
       );
@@ -1296,7 +1222,7 @@ describe("power-vs", () => {
         describe("power.cloud_connections.transit_gateways.hideWhen", () => {
           it("should return false if pi_cloud_connection_transit_enabled is true", () => {
             assert.isFalse(
-              state.power.cloud_connections.transit_gateways.hideWhen({
+              craig.power.cloud_connections.transit_gateways.hideWhen({
                 pi_cloud_connection_transit_enabled: true,
               }),
               "it should be shown"
@@ -1306,12 +1232,12 @@ describe("power-vs", () => {
         describe("power.cloud_connections.transit_gateways.groups", () => {
           it("should return false if pi_cloud_connection_transit_enabled is true", () => {
             assert.deepEqual(
-              state.power.cloud_connections.transit_gateways.groups(
+              craig.power.cloud_connections.transit_gateways.groups(
                 {
                   pi_cloud_connection_transit_enabled: true,
                 },
                 {
-                  craig: state,
+                  craig: craig,
                 }
               ),
               ["transit-gateway"],
@@ -1324,22 +1250,21 @@ describe("power-vs", () => {
   });
   describe("attachments", () => {
     it("should save attachment", () => {
-      let state = new newState();
-      state.power.create({
+      craig.power.create({
         name: "power-vs",
         resource_group: "default",
         zone: "us-south",
         images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
-      state.power.network.create(
+      craig.power.network.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
-      state.power.cloud_connections.create(
+      craig.power.cloud_connections.create(
         { name: "test-network" },
         { innerFormProps: { arrayParentName: "power-vs" } }
       );
-      state.power.attachments.save(
+      craig.power.attachments.save(
         {
           network: "test-network",
           connections: ["test-network"],
@@ -1353,7 +1278,7 @@ describe("power-vs", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.power[0].attachments,
+        craig.store.json.power[0].attachments,
         [
           {
             network: "test-network",
@@ -1367,7 +1292,6 @@ describe("power-vs", () => {
       );
     });
     describe("attachments schema", () => {
-      let craig;
       beforeEach(() => {
         craig = newState();
         craig.power.create({

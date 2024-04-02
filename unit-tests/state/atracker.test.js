@@ -161,11 +161,87 @@ describe("atracker", () => {
         "it should return list of resource groups"
       );
     });
+    it("should have an invalid resource group if instance and enabled", () => {
+      assert.isTrue(
+        craig.atracker.resource_group.invalid(
+          {
+            instance: true,
+            enabled: true,
+          },
+          { craig: craig }
+        ),
+        "it should return list of resource groups"
+      );
+    });
+    it("should have an invalid plan if instance and enabled", () => {
+      assert.isTrue(
+        craig.atracker.plan.invalid(
+          {
+            instance: true,
+            enabled: true,
+          },
+          { craig: craig }
+        ),
+        "it should return list of resource groups"
+      );
+    });
     it("should return the correct cos keys", () => {
       assert.deepEqual(
         craig.atracker.cos_key.groups({}, { craig: craig }),
         ["cos-bind-key"],
         "it should return list of cos keys"
+      );
+    });
+    describe("invalidText", () => {
+      it("should return invalid text for resource group", () => {
+        assert.deepEqual(
+          craig.atracker.resource_group.invalidText(),
+          "Select a Resource Group",
+          "it should return text"
+        );
+      });
+      it("should return invalid text for bucket", () => {
+        assert.deepEqual(
+          craig.atracker.bucket.invalidText(),
+          "Select an Object Storage bucket.",
+          "it should return text"
+        );
+      });
+      it("should return invalid text for cos_key", () => {
+        assert.deepEqual(
+          craig.atracker.cos_key.invalidText(),
+          "Select an Object Storage key.",
+          "it should return text"
+        );
+      });
+      it("should return invalid text for locations", () => {
+        assert.deepEqual(
+          craig.atracker.locations.invalidText(),
+          "Select at least one location.",
+          "it should return text"
+        );
+      });
+      it("should return invalid text for plan", () => {
+        assert.deepEqual(
+          craig.atracker.plan.invalidText(),
+          "Select a plan.",
+          "it should return text"
+        );
+      });
+    });
+  });
+  describe("appid.shouldDisableSave", () => {
+    it("should return false if atracker is not enabled", () => {
+      assert.isFalse(
+        craig.atracker.shouldDisableSave(
+          {
+            enabled: false,
+          },
+          {
+            craig: craig,
+          }
+        ),
+        "it should be false"
       );
     });
   });

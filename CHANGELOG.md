@@ -2,10 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.14.0
+## 1.14.1
 
 ### Upgrade Notes
 
+- Removed unused artifacts from JSON-to-IaC code
+
+### Fixes
+
+- Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`
+
+## 1.14.0
 
 ### Features
 
@@ -102,9 +109,6 @@ All notable changes to this project will be documented in this file.
 - Fixed issues causing imported SLZ JSON files to crash the application on import
 
 ## 1.12.1
-
-### Upgrade Notes
-
 
 ### Features
 
@@ -302,9 +306,6 @@ All notable changes to this project will be documented in this file.
 - Power VS Instance health status has been removed as it is not used for infrastructure provisioning
 - When changing a Power VS Workspace name, instances and volumes in that workspace will also be updated with the new name
 
-### Features
-
-
 ### Fixes
 
 - Fixed an issue causing Power VS Instance page to crash when loading map of storage pools
@@ -407,9 +408,6 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing unwanted spacing between multiple VPC Routing Tables
 
 ## 1.4.0
-
-### Upgrade Notes
-
 
 ### Features
 

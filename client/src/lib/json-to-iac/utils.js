@@ -330,14 +330,8 @@ function randomSuffix(cos) {
  * @returns {Object} cdktf object
  */
 function cdktfValues(obj, resource, type, name, values) {
-  let valuesObj = {};
-  transpose(obj, valuesObj);
-  if (!obj[resource]) {
-    obj[resource] = {};
-  }
-  if (!obj[resource][type]) {
-    obj[resource][type] = {};
-  }
+  obj[resource] = {};
+  obj[resource][type] = {};
   obj[resource][type][snakeCase(name)] = values;
   return obj;
 }

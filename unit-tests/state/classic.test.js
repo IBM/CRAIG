@@ -8,10 +8,13 @@ function newState() {
 }
 
 describe("classic", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("classic ssh keys", () => {
     describe("classic_ssh_keys.init", () => {
       it("should initialize classic ssh keys", () => {
-        let craig = newState();
         assert.deepEqual(
           craig.store.json.classic_ssh_keys,
           [],
@@ -19,101 +22,90 @@ describe("classic", () => {
         );
       });
     });
-    describe("classic_ssh_keys.create", () => {
-      it("should create an ssh key", () => {
-        let craig = newState();
+    describe("classic_ssh_key crud", () => {
+      beforeEach(() => {
         craig.classic_ssh_keys.create({
           name: "example-classic",
           public_key: "1234",
           datacenter: "dal10",
         });
-        assert.deepEqual(
-          craig.store.json.classic_ssh_keys,
-          [
-            {
-              name: "example-classic",
-              public_key: "1234",
-              datacenter: "dal10",
-            },
-          ],
-          "it should create key"
-        );
-        assert.isTrue(
-          craig.store.json._options.enable_classic,
-          "it should enable classic"
-        );
       });
-    });
-    describe("classic_ssh_keys.save", () => {
-      it("should update an ssh key", () => {
-        let craig = newState();
-        craig.classic_ssh_keys.create({
-          name: "example-classic",
-          public_key: "1234",
-          datacenter: "dal10",
+      describe("classic_ssh_keys.create", () => {
+        it("should create an ssh key", () => {
+          assert.deepEqual(
+            craig.store.json.classic_ssh_keys,
+            [
+              {
+                name: "example-classic",
+                public_key: "1234",
+                datacenter: "dal10",
+              },
+            ],
+            "it should create key"
+          );
+          assert.isTrue(
+            craig.store.json._options.enable_classic,
+            "it should enable classic"
+          );
         });
-        craig.classic_ssh_keys.save(
-          {
-            name: "update-classic",
-            public_key: "1234",
-            datacenter: "dal10",
-          },
-          {
-            data: {
-              name: "example-classic",
-            },
-          }
-        );
-        assert.deepEqual(
-          craig.store.json.classic_ssh_keys,
-          [
+      });
+      describe("classic_ssh_keys.save", () => {
+        it("should update an ssh key", () => {
+          craig.classic_ssh_keys.save(
             {
               name: "update-classic",
               public_key: "1234",
               datacenter: "dal10",
             },
-          ],
-
-          "it should create key"
-        );
-      });
-    });
-    describe("classic_ssh_keys.delete", () => {
-      it("should update an ssh key", () => {
-        let craig = newState();
-        craig.classic_ssh_keys.create({
-          name: "example-classic",
-          public_key: "1234",
-          datacenter: "dal10",
+            {
+              data: {
+                name: "example-classic",
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.classic_ssh_keys,
+            [
+              {
+                name: "update-classic",
+                public_key: "1234",
+                datacenter: "dal10",
+              },
+            ],
+            "it should create key"
+          );
         });
-        craig.classic_ssh_keys.delete(
-          {
-            name: "update-classic",
-            public_key: "1234",
-            datacenter: "dal10",
-          },
-          {
-            data: {
-              name: "example-classic",
+      });
+      describe("classic_ssh_keys.delete", () => {
+        it("should update an ssh key", () => {
+          craig.classic_ssh_keys.delete(
+            {
+              name: "update-classic",
+              public_key: "1234",
+              datacenter: "dal10",
             },
-          }
-        );
-        assert.deepEqual(
-          craig.store.json.classic_ssh_keys,
-          [],
-          "it should create key"
-        );
-        assert.isFalse(
-          craig.store.json._options.enable_classic,
-          "it should disable classic"
-        );
+            {
+              data: {
+                name: "example-classic",
+              },
+            }
+          );
+          assert.deepEqual(
+            craig.store.json.classic_ssh_keys,
+            [],
+            "it should create key"
+          );
+          assert.isFalse(
+            craig.store.json._options.enable_classic,
+            "it should disable classic"
+          );
+        });
       });
     });
     describe("classic_ssh_keys.schema", () => {
       describe("classic_ssh_keys.public_key", () => {
         describe("classic_ssh_keys.public_key.invalidText", () => {
           it("should return correct invalid text for ssh key with invalid public key", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_ssh_keys.public_key.invalidText(
                 {
@@ -139,7 +131,6 @@ describe("classic", () => {
   describe("classic vlans", () => {
     describe("classic_vlans.init", () => {
       it("should initialize classic ssh keys", () => {
-        let craig = newState();
         assert.deepEqual(
           craig.store.json.classic_vlans,
           [],
@@ -149,7 +140,6 @@ describe("classic", () => {
     });
     describe("classic_vlans.create", () => {
       it("should create a vlan", () => {
-        let craig = newState();
         craig.classic_vlans.create({
           name: "vsrx-public",
           datacenter: "dal10",
@@ -175,7 +165,6 @@ describe("classic", () => {
     });
     describe("classic_vlans.onStoreUpdate", () => {
       it("should remove unfound classic vlans from router hostname", () => {
-        let craig = newState();
         craig.classic_vlans.create({
           name: "vsrx-public",
           datacenter: "dal10",
@@ -196,7 +185,6 @@ describe("classic", () => {
         );
       });
       it("should not remove found classic vlans from router hostname", () => {
-        let craig = newState();
         craig.classic_vlans.create({
           name: "vsrx-public",
           datacenter: "dal10",
@@ -230,7 +218,6 @@ describe("classic", () => {
     });
     describe("classic_vlans.save", () => {
       it("should update a vlan", () => {
-        let craig = newState();
         craig.classic_vlans.create({
           name: "vsrx-public",
           datacenter: "dal10",
@@ -265,7 +252,6 @@ describe("classic", () => {
     });
     describe("classic_vlans.delete", () => {
       it("should update an ssh key", () => {
-        let craig = newState();
         craig.classic_vlans.create({
           name: "vsrx-public",
           datacenter: "dal10",
@@ -293,7 +279,7 @@ describe("classic", () => {
     describe("classic_vlans.schema", () => {
       describe("classic_vlans.name", () => {
         it("should return the correct text when a classic vlan that has a name greater than 20 characters is passed", () => {
-          let actualData = newState().classic_vlans.name.invalidText(
+          let actualData = craig.classic_vlans.name.invalidText(
             {
               name: "sixteencharacters",
             },
@@ -321,7 +307,6 @@ describe("classic", () => {
         });
         describe("classic_vlans.name.helperText", () => {
           it("should return helper text", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.name.helperText(
                 { name: "frog" },
@@ -342,7 +327,6 @@ describe("classic", () => {
             );
           });
           it("should return helper text", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.name.helperText(
                 {},
@@ -363,7 +347,6 @@ describe("classic", () => {
             );
           });
           it("should return helper text", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.name.helperText(
                 { use_data: true },
@@ -388,7 +371,6 @@ describe("classic", () => {
       describe("classic_vlans.type", () => {
         describe("classic_vlans.type.onRender", () => {
           it("should return correct name on render", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.type.onRender({ type: "PUBLIC" }),
               "Public",
@@ -396,7 +378,6 @@ describe("classic", () => {
             );
           });
           it("should return correct name on render when no type", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.type.onRender({ type: undefined }),
               "",
@@ -406,7 +387,6 @@ describe("classic", () => {
         });
         describe("classic_vlans.type.invalidText", () => {
           it("should return invalid text", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.type.invalidText(),
               "Select a type",
@@ -416,7 +396,6 @@ describe("classic", () => {
         });
         describe("classic_vlans.type.onInputChange", () => {
           it("should return correct name on input change", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.type.onInputChange({ type: "Public" }),
               "PUBLIC",
@@ -428,7 +407,6 @@ describe("classic", () => {
       describe("classic_vlans.datacenter", () => {
         describe("classic_vlans.datacenters.invalidText", () => {
           it("should return correct text", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.datacenter.invalidText(),
               "Select a datacenter",
@@ -440,7 +418,6 @@ describe("classic", () => {
       describe("classic_vlans.router_hostname", () => {
         describe("classic_vlans.router_hostname.invalid", () => {
           it("should return false", () => {
-            let craig = newState();
             assert.isFalse(
               craig.classic_vlans.router_hostname.invalid(),
               "It should return correct invalid text"
@@ -449,7 +426,6 @@ describe("classic", () => {
         });
         describe("classic_vlans.router_hostname.groups", () => {
           it("should return groups when modal", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.router_hostname.groups(
                 {
@@ -480,7 +456,6 @@ describe("classic", () => {
             );
           });
           it("should return groups when not modal", () => {
-            let craig = newState();
             assert.deepEqual(
               craig.classic_vlans.router_hostname.groups(
                 {

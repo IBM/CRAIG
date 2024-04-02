@@ -12,26 +12,26 @@ function newState() {
 }
 
 describe("event_streams", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("event_streams.init", () => {
     it("should initialize event_streams", () => {
-      let state = new newState();
-      let expectedData = [];
       assert.deepEqual(
-        state.store.json.event_streams,
-        expectedData,
+        craig.store.json.event_streams,
+        [],
         "it should have event_streams initialized"
       );
     });
   });
   describe("event_streams crud functions", () => {
-    let event_streamsState;
     beforeEach(() => {
-      event_streamsState = new newState();
+      craig.event_streams.create({ name: "default" });
     });
     it("should add an event_streams instance", () => {
-      event_streamsState.event_streams.create({ name: "default" });
       assert.deepEqual(
-        event_streamsState.store.json.event_streams,
+        craig.store.json.event_streams,
         [
           {
             name: "default",
@@ -44,13 +44,12 @@ describe("event_streams", () => {
       );
     });
     it("should save an event_streams instance", () => {
-      event_streamsState.event_streams.create({ name: "default" });
-      event_streamsState.event_streams.save(
+      craig.event_streams.save(
         { resource_group: "service-rg" },
         { data: { name: "default" } }
       );
       assert.deepEqual(
-        event_streamsState.store.json.event_streams,
+        craig.store.json.event_streams,
         [
           {
             name: "default",
@@ -63,13 +62,9 @@ describe("event_streams", () => {
       );
     });
     it("should delete an event_streams instance", () => {
-      event_streamsState.event_streams.create({ name: "default" });
-      event_streamsState.event_streams.delete(
-        {},
-        { data: { name: "default" } }
-      );
+      craig.event_streams.delete({}, { data: { name: "default" } });
       assert.deepEqual(
-        event_streamsState.store.json.event_streams,
+        craig.store.json.event_streams,
         [],
         "it should create event_streams"
       );

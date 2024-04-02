@@ -27,19 +27,21 @@ function newState() {
 }
 
 describe("edge network", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("createEdgeVpc", () => {
     it("should create the default vpn and waf edge vpc and security groups", () => {
-      let state = new newState();
-      state.store.json._options.dynamic_subnets = false;
-      state.setUpdateCallback(() => {});
-      state.createEdgeVpc("vpn-and-waf", false, 3);
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("vpn-and-waf", false, 3);
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         defaultEdgeVpnAndWaf,
         "it should return correct vpc"
       );
       assert.deepEqual(
-        state.store.json.security_groups,
+        craig.store.json.security_groups,
         [
           newF5ManagementSg(),
           newF5ExternalSg(),
@@ -51,17 +53,15 @@ describe("edge network", () => {
       );
     });
     it("should create the default vpn and waf edge vpc and security groups with one zone", () => {
-      let state = new newState();
-      state.store.json._options.dynamic_subnets = false;
-      state.setUpdateCallback(() => {});
-      state.createEdgeVpc("vpn-and-waf", false, 1);
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("vpn-and-waf", false, 1);
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         oneZoneEdgeVpnAndWaf,
         "it should return correct vpc"
       );
       assert.deepEqual(
-        state.store.json.security_groups,
+        craig.store.json.security_groups,
         [
           newF5ManagementSg(),
           newF5ExternalSg(),
@@ -73,18 +73,16 @@ describe("edge network", () => {
       );
     });
     it("should increase from one zone to three zones", () => {
-      let state = new newState();
-      state.store.json._options.dynamic_subnets = false;
-      state.setUpdateCallback(() => {});
-      state.createEdgeVpc("vpn-and-waf", false, 1);
-      state.createEdgeVpc("vpn-and-waf", false, 3);
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("vpn-and-waf", false, 1);
+      craig.createEdgeVpc("vpn-and-waf", false, 3);
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         threeZoneEdgeVpnAndWaf,
         "it should return correct vpc"
       );
       assert.deepEqual(
-        state.store.json.security_groups,
+        craig.store.json.security_groups,
         [
           newF5ManagementSg(),
           newF5ExternalSg(),
@@ -96,18 +94,16 @@ describe("edge network", () => {
       );
     });
     it("should decrease from three zones to one zone", () => {
-      let state = new newState();
-      state.store.json._options.dynamic_subnets = false;
-      state.setUpdateCallback(() => {});
-      state.createEdgeVpc("vpn-and-waf", false, 3);
-      state.createEdgeVpc("vpn-and-waf", false, 1);
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("vpn-and-waf", false, 3);
+      craig.createEdgeVpc("vpn-and-waf", false, 1);
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         oneZoneEdgeVpnAndWaf,
         "it should return correct vpc"
       );
       assert.deepEqual(
-        state.store.json.security_groups,
+        craig.store.json.security_groups,
         [
           newF5ManagementSg(),
           newF5ExternalSg(),
@@ -119,18 +115,16 @@ describe("edge network", () => {
       );
     });
     it("should not create any new resource when create edge network is run when an edge network exists", () => {
-      let state = new newState();
-      state.store.json._options.dynamic_subnets = false;
-      state.setUpdateCallback(() => {});
-      state.createEdgeVpc("vpn-and-waf", false, 3);
-      state.createEdgeVpc("vpn-and-waf", false, 3);
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("vpn-and-waf", false, 3);
+      craig.createEdgeVpc("vpn-and-waf", false, 3);
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         defaultEdgeVpnAndWaf,
         "it should return correct vpc"
       );
       assert.deepEqual(
-        state.store.json.security_groups,
+        craig.store.json.security_groups,
         [
           newF5ManagementSg(),
           newF5ExternalSg(),
@@ -142,17 +136,15 @@ describe("edge network", () => {
       );
     });
     it("should create the default full-tunnel edge vpc and security groups", () => {
-      let state = new newState();
-      state.setUpdateCallback(() => {});
-      state.store.json._options.dynamic_subnets = false;
-      state.createEdgeVpc("full-tunnel", false, 3);
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("full-tunnel", false, 3);
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         defaultEdgeFullTunnel,
         "it should return correct vpc"
       );
       assert.deepEqual(
-        state.store.json.security_groups,
+        craig.store.json.security_groups,
         [
           newF5ManagementSg(),
           newF5ExternalSg(),
@@ -163,18 +155,16 @@ describe("edge network", () => {
       );
     });
     it("should create the default waf edge vpc and security groups", () => {
-      let state = new newState();
-      state.store.json._options.dynamic_subnets = false;
-      state.setUpdateCallback(() => {});
-      state.createEdgeVpc("waf", false, 3);
-      state.update();
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("waf", false, 3);
+      craig.update();
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         defaultEdgeWaf,
         "it should return correct vpc"
       );
       assert.deepEqual(
-        state.store.json.security_groups,
+        craig.store.json.security_groups,
         [
           newF5ManagementSg(),
           newF5ExternalSg(),
@@ -185,12 +175,10 @@ describe("edge network", () => {
       );
     });
     it("should create the default vpn and waf edge vpc on management", () => {
-      let state = new newState();
-      state.store.json._options.dynamic_subnets = false;
-      state.setUpdateCallback(() => {});
-      state.createEdgeVpc("vpn-and-waf", true, 3);
+      craig.store.json._options.dynamic_subnets = false;
+      craig.createEdgeVpc("vpn-and-waf", true, 3);
       assert.deepEqual(
-        state.store.json.vpcs[0],
+        craig.store.json.vpcs[0],
         managementEdgeVpnAndWaf,
         "it should return correct vpc"
       );

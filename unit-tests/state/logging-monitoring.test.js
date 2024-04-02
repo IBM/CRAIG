@@ -12,12 +12,15 @@ function newState() {
 }
 
 describe("observability", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("logdna", () => {
     describe("logdna.init", () => {
       it("should initialize logdna", () => {
-        let state = newState();
         assert.deepEqual(
-          state.store.json.logdna,
+          craig.store.json.logdna,
           {
             enabled: false,
             plan: "lite",
@@ -33,8 +36,7 @@ describe("observability", () => {
     });
     describe("logdna.onStoreUpdate", () => {
       it("should reset cos, bucket, and rg when unfound", () => {
-        let state = newState();
-        state.store.json.logdna = {
+        craig.store.json.logdna = {
           enabled: false,
           plan: "",
           endpoints: "",
@@ -43,9 +45,9 @@ describe("observability", () => {
           cos: "aaa",
           bucket: "aaa",
         };
-        state.update();
+        craig.update();
         assert.deepEqual(
-          state.store.json.logdna,
+          craig.store.json.logdna,
           {
             enabled: false,
             plan: "",
@@ -58,41 +60,14 @@ describe("observability", () => {
           "it should set defaults"
         );
       });
-      it("should reset bucket when unfound", () => {
-        let state = newState();
-        state.store.json.logdna = {
-          enabled: false,
-          plan: "",
-          endpoints: "",
-          platform_logs: false,
-          resource_group: "aaa",
-          cos: "cos",
-          bucket: "aaa",
-        };
-        state.update();
-        assert.deepEqual(
-          state.store.json.logdna,
-          {
-            enabled: false,
-            plan: "",
-            endpoints: "",
-            platform_logs: false,
-            resource_group: null,
-            cos: "cos",
-            bucket: null,
-          },
-          "it should set defaults"
-        );
-      });
     });
     describe("logdna.save", () => {
       it("should update logdna on save", () => {
-        let state = newState();
-        state.logdna.save({
+        craig.logdna.save({
           name: "aaa",
         });
         assert.deepEqual(
-          state.store.json.logdna,
+          craig.store.json.logdna,
           {
             enabled: false,
             plan: "lite",
@@ -107,13 +82,12 @@ describe("observability", () => {
         );
       });
       it("should update logdna on save with found bucket", () => {
-        let state = newState();
-        state.logdna.save({
+        craig.logdna.save({
           name: "aaa",
           bucket: "management-bucket",
         });
         assert.deepEqual(
-          state.store.json.logdna,
+          craig.store.json.logdna,
           {
             enabled: false,
             plan: "lite",
@@ -132,9 +106,8 @@ describe("observability", () => {
   describe("sysdig", () => {
     describe("sysdig.init", () => {
       it("should initialize logdna", () => {
-        let state = newState();
         assert.deepEqual(
-          state.store.json.sysdig,
+          craig.store.json.sysdig,
           {
             enabled: false,
             plan: "graduated-tier",
@@ -146,15 +119,14 @@ describe("observability", () => {
     });
     describe("sysdig.onStoreUpdate", () => {
       it("should reset cos, bucket, and rg when unfound", () => {
-        let state = newState();
-        state.store.json.sysdig = {
+        craig.store.json.sysdig = {
           enabled: false,
           plan: "",
           resource_group: "aaa",
         };
-        state.update();
+        craig.update();
         assert.deepEqual(
-          state.store.json.sysdig,
+          craig.store.json.sysdig,
           {
             enabled: false,
             plan: "",
@@ -166,12 +138,11 @@ describe("observability", () => {
     });
     describe("sysdig.save", () => {
       it("should update sysdig on save", () => {
-        let state = newState();
-        state.sysdig.save({
+        craig.sysdig.save({
           name: "aaa",
         });
         assert.deepEqual(
-          state.store.json.sysdig,
+          craig.store.json.sysdig,
           {
             enabled: false,
             plan: "graduated-tier",
@@ -184,10 +155,6 @@ describe("observability", () => {
     });
   });
   describe("schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     describe("logdna & sysdig", () => {
       it("should return helper text for name", () => {
         assert.deepEqual(

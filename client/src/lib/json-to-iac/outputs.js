@@ -130,7 +130,7 @@ function outputsTf(config) {
       ] = {
         value: `\${${sshKey.use_data ? "data." : ""}ibm_pi_key.${snakeCase(
           `power vs ssh key ${sshKey.name}`
-        )}.name}`,
+        )}.pi_key_name}`,
       };
     });
 

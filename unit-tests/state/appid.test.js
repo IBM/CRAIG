@@ -28,24 +28,30 @@ describe("appid", () => {
     });
   });
   describe("appid crud functions", () => {
+    beforeEach(() => {
+      craig.appid.create({
+        name: "default",
+        kms: "kms",
+        encryption_key: "key",
+      });
+    });
     describe("appid on store update", () => {
       it("should add keys to object when unfound", () => {
-        craig.appid.create({
-          name: "frog",
-        });
         assert.deepEqual(
           craig.store.json.appid,
-          [{ name: "frog", keys: [], resource_group: null }],
+          [
+            {
+              name: "default",
+              kms: "kms",
+              encryption_key: "key",
+              keys: [],
+              resource_group: null,
+            },
+          ],
           "it should set keys"
         );
       });
       it("should set encryption key to null when deleted", () => {
-        craig.appid.create({
-          name: "default",
-          keys: [],
-          kms: "kms",
-          encryption_key: "key",
-        });
         craig.key_management.keys.delete(
           {},
           {
@@ -61,12 +67,6 @@ describe("appid", () => {
         );
       });
       it("should set encryption key and kms to null when kms deleted", () => {
-        craig.appid.create({
-          name: "default",
-          keys: [],
-          kms: "kms",
-          encryption_key: "key",
-        });
         craig.key_management.delete(
           {},
           {
@@ -87,21 +87,21 @@ describe("appid", () => {
       });
     });
     it("should add an appid instance", () => {
-      craig.appid.create({ name: "default", keys: [] });
       assert.deepEqual(
         craig.store.json.appid,
         [
           {
             name: "default",
-            resource_group: null,
+            kms: "kms",
+            encryption_key: "key",
             keys: [],
+            resource_group: null,
           },
         ],
         "it should create appid"
       );
     });
     it("should save an appid instance", () => {
-      craig.appid.create({ name: "default", keys: [] });
       craig.appid.save(
         { resource_group: "service-rg" },
         { data: { name: "default" } }
@@ -113,7 +113,6 @@ describe("appid", () => {
       );
     });
     it("should delete an appid instance", () => {
-      craig.appid.create({ name: "default", keys: [] });
       craig.appid.delete({}, { data: { name: "default" } });
       assert.deepEqual(craig.store.json.appid, [], "it should create appid");
     });
@@ -121,8 +120,6 @@ describe("appid", () => {
   describe("appid key crud functions", () => {
     beforeEach(() => {
       craig.appid.create({ name: "default", keys: [] });
-    });
-    it("should add an appid instance", () => {
       craig.appid.keys.create(
         {
           name: "test",
@@ -133,6 +130,8 @@ describe("appid", () => {
           },
         }
       );
+    });
+    it("should add an appid instance", () => {
       assert.deepEqual(
         craig.store.json.appid,
         [
@@ -151,16 +150,6 @@ describe("appid", () => {
       );
     });
     it("should save an appid instance", () => {
-      craig.appid.keys.create(
-        {
-          name: "test",
-        },
-        {
-          innerFormProps: {
-            arrayParentName: "default",
-          },
-        }
-      );
       craig.appid.keys.save(
         { resource_group: "service-rg" },
         {
@@ -183,16 +172,6 @@ describe("appid", () => {
       );
     });
     it("should delete an appid key", () => {
-      craig.appid.keys.create(
-        {
-          name: "test",
-        },
-        {
-          innerFormProps: {
-            arrayParentName: "default",
-          },
-        }
-      );
       craig.appid.keys.delete(
         {},
         {

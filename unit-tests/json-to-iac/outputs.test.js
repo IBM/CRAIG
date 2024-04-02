@@ -2689,7 +2689,7 @@ output "power_vs_workspace_vsi_location" {
 }
 
 output "power_vs_workspace_vsi_ssh_key_vsi" {
-  value = ibm_pi_key.power_vs_ssh_key_vsi.name
+  value = ibm_pi_key.power_vs_ssh_key_vsi.pi_key_name
 }
 
 output "power_vs_workspace_vsi_network_nw_name" {
@@ -2957,7 +2957,7 @@ output "power_vs_workspace_vsi_location" {
 }
 
 output "power_vs_workspace_vsi_ssh_key_vsi" {
-  value = data.ibm_pi_key.power_vs_ssh_key_vsi.name
+  value = data.ibm_pi_key.power_vs_ssh_key_vsi.pi_key_name
 }
 
 output "power_vs_workspace_vsi_network_nw_name" {

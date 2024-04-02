@@ -336,9 +336,8 @@ function ibmIsLbListener(deployment, poolMemberData, cdktf) {
     },
   };
   poolMemberData.forEach((member) => {
-    let ref = "ibm_is_lb_pool_member." + snakeCase(member.name);
     data.data.depends_on.push(
-      cdktf ? ref : cdktfRef("ibm_is_lb_pool_member." + snakeCase(member.name))
+      cdktfRef("ibm_is_lb_pool_member." + snakeCase(member.name))
     );
   });
   return data;

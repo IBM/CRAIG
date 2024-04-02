@@ -174,11 +174,10 @@ function formatCosToKmsAuth(cos, config) {
  * @param {Object} config._options
  * @param {string} config._options.prefix
  * @param {string} config._options.region
- * @param {boolean=} cdktf cdktf mode
  * @returns {object} data
  */
 
-function ibmCosBucket(bucket, cos, config, cdktf) {
+function ibmCosBucket(bucket, cos, config) {
   let data = {
     name: cos.name + "-object-storage-" + bucket.name + "-bucket",
   };
@@ -248,9 +247,7 @@ function ibmCosBucket(bucket, cos, config, cdktf) {
     cos.name + " cos to " + cos.kms + " kms policy"
   )}`;
   bucketValues.depends_on =
-    cos.kms && bucket.kms_key
-      ? [cdktf ? depends : cdktfRef(depends)]
-      : undefined;
+    cos.kms && bucket.kms_key ? [cdktfRef(depends)] : undefined;
   data.data = bucketValues;
   return data;
 }

@@ -12,9 +12,12 @@ function newState() {
 }
 
 describe("key_management", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("key_management.init", () => {
     it("should initialize key_management as a list", () => {
-      let state = new newState();
       let expectedData = [
         {
           name: "kms",
@@ -63,7 +66,7 @@ describe("key_management", () => {
         },
       ];
       assert.deepEqual(
-        state.store.json.key_management,
+        craig.store.json.key_management,
         expectedData,
         "it should have key_management initialized as a list"
       );
@@ -71,9 +74,8 @@ describe("key_management", () => {
   });
   describe("key_management.onStoreUpdate", () => {
     it("should set parent keys", () => {
-      let state = new newState();
       assert.deepEqual(
-        state.store.encryptionKeys,
+        craig.store.encryptionKeys,
         ["key", "atracker-key", "vsi-volume-key", "roks-key"],
         "it should be set to keys"
       );
@@ -81,12 +83,11 @@ describe("key_management", () => {
   });
   describe("key_management.save", () => {
     it("should change the properties of the key management instance", () => {
-      let state = new newState();
-      state.store.json.key_management.push({
+      craig.store.json.key_management.push({
         name: "frog",
         keys: [],
       });
-      state.key_management.save(
+      craig.key_management.save(
         {
           name: "toad",
           resource_group: null,
@@ -95,7 +96,7 @@ describe("key_management", () => {
         },
         { data: { name: "frog" } }
       );
-      state.store.json.key_management[0].keys = [];
+      craig.store.json.key_management[0].keys = [];
       let expectedData = {
         name: "toad",
         resource_group: null,
@@ -105,42 +106,13 @@ describe("key_management", () => {
         keys: [],
       };
       assert.deepEqual(
-        state.store.json.key_management[1],
-        expectedData,
-        "it should update everything"
-      );
-    });
-    it("should change the properties of the key management instance", () => {
-      let state = new newState();
-      state.key_management.save(
-        {
-          name: "todd",
-          resource_group: null,
-          use_hs_crypto: true,
-          authorize_vpc_reader_role: true,
-        },
-        { data: { name: "kms" } }
-      );
-      state.store.json.key_management[0].keys = [];
-      let expectedData = [
-        {
-          name: "todd",
-          resource_group: null,
-          use_hs_crypto: true,
-          use_data: true,
-          authorize_vpc_reader_role: true,
-          keys: [],
-        },
-      ];
-      assert.deepEqual(
-        state.store.json.key_management,
+        craig.store.json.key_management[1],
         expectedData,
         "it should update everything"
       );
     });
     it("should change the properties of the key management instance with no hs crypto", () => {
-      let state = new newState();
-      state.key_management.save(
+      craig.key_management.save(
         {
           name: "todd",
           resource_group: null,
@@ -148,83 +120,19 @@ describe("key_management", () => {
         },
         { data: { name: "kms" } }
       );
-      state.store.json.key_management[0].keys = [];
-      let expectedData = [
-        {
-          name: "todd",
-          resource_group: null,
-          use_hs_crypto: false,
-          use_data: false,
-          authorize_vpc_reader_role: false,
-          keys: [],
-        },
-      ];
-      assert.deepEqual(
-        state.store.json.key_management,
-        expectedData,
+      assert.isFalse(
+        craig.store.json.key_management[0].use_hs_crypto,
+        "it should update everything"
+      );
+      assert.isFalse(
+        craig.store.json.key_management[0].use_data,
         "it should update everything"
       );
     });
   });
   describe("key_management.create", () => {
     it("should add a new key management system", () => {
-      let state = new newState();
-      let expectedData = [
-        {
-          name: "kms",
-          resource_group: "service-rg",
-          use_hs_crypto: false,
-          authorize_vpc_reader_role: true,
-          use_data: false,
-          keys: [
-            {
-              key_ring: "ring",
-              name: "key",
-              root_key: true,
-              force_delete: true,
-              endpoint: "public",
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-            {
-              key_ring: "ring",
-              name: "atracker-key",
-              root_key: true,
-              force_delete: true,
-              endpoint: "public",
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-            {
-              key_ring: "ring",
-              name: "vsi-volume-key",
-              root_key: true,
-              force_delete: true,
-              endpoint: "public",
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-            {
-              key_ring: "ring",
-              name: "roks-key",
-              root_key: true,
-              force_delete: null,
-              endpoint: null,
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-          ],
-        },
-        {
-          name: "todd",
-          resource_group: null,
-          use_hs_crypto: false,
-          use_data: false,
-          authorize_vpc_reader_role: false,
-          keys: [],
-        },
-      ];
-      state.key_management.create({
+      craig.key_management.create({
         name: "todd",
         resource_group: null,
         use_hs_crypto: false,
@@ -232,56 +140,8 @@ describe("key_management", () => {
         authorize_vpc_reader_role: false,
         keys: [],
       });
-      assert.deepEqual(state.store.json.key_management, expectedData);
-    });
-    it("should add a new key management system with no keys", () => {
-      let state = new newState();
-      let expectedData = [
-        {
-          name: "kms",
-          resource_group: "service-rg",
-          use_hs_crypto: false,
-          authorize_vpc_reader_role: true,
-          use_data: false,
-          keys: [
-            {
-              key_ring: "ring",
-              name: "key",
-              root_key: true,
-              force_delete: true,
-              endpoint: "public",
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-            {
-              key_ring: "ring",
-              name: "atracker-key",
-              root_key: true,
-              force_delete: true,
-              endpoint: "public",
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-            {
-              key_ring: "ring",
-              name: "vsi-volume-key",
-              root_key: true,
-              force_delete: true,
-              endpoint: "public",
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-            {
-              key_ring: "ring",
-              name: "roks-key",
-              root_key: true,
-              force_delete: null,
-              endpoint: null,
-              rotation: 1,
-              dual_auth_delete: false,
-            },
-          ],
-        },
+      assert.deepEqual(
+        craig.store.json.key_management[1],
         {
           name: "todd",
           resource_group: null,
@@ -290,29 +150,31 @@ describe("key_management", () => {
           authorize_vpc_reader_role: false,
           keys: [],
         },
-      ];
-      state.key_management.create({
+        "it should return instance"
+      );
+    });
+    it("should add a new key management system with no keys", () => {
+      craig.key_management.create({
         name: "todd",
         resource_group: null,
         use_hs_crypto: false,
         use_data: false,
         authorize_vpc_reader_role: false,
       });
-      assert.deepEqual(state.store.json.key_management, expectedData);
+      assert.deepEqual(
+        craig.store.json.key_management[1].keys,
+        [],
+        "it should create keys"
+      );
     });
   });
   describe("key_management.delete", () => {
     it("should delete a key_management system", () => {
-      let state = new newState();
-      state.key_management.delete({}, { data: { name: "kms" } });
-      assert.deepEqual(state.store.json.key_management, []);
+      craig.key_management.delete({}, { data: { name: "kms" } });
+      assert.deepEqual(craig.store.json.key_management, []);
     });
   });
   describe("key_management.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = state();
-    });
     it("should return correct name for use hs crypto on render", () => {
       assert.deepEqual(
         craig.key_management.use_hs_crypto.onRender({ use_hs_crypto: true }),
@@ -354,12 +216,11 @@ describe("key_management", () => {
   describe("key_management.keys", () => {
     describe("key_management.keys.create", () => {
       it("should create a new key", () => {
-        let state = new newState();
-        state.store.json.key_management.push({
+        craig.store.json.key_management.push({
           name: "frog",
           keys: [],
         });
-        state.key_management.keys.create(
+        craig.key_management.keys.create(
           {
             name: "all-new-key",
             root_key: true,
@@ -367,7 +228,7 @@ describe("key_management", () => {
           },
           {
             innerFormProps: { arrayParentName: "kms" },
-            arrayData: state.store.json.key_management[0].keys,
+            arrayData: craig.store.json.key_management[0].keys,
           }
         );
         let expectedData = {
@@ -380,7 +241,7 @@ describe("key_management", () => {
           dual_auth_delete: false,
         };
         assert.deepEqual(
-          state.store.json.key_management[0].keys[4],
+          craig.store.json.key_management[0].keys[4],
           expectedData,
           "it should add key"
         );
@@ -388,8 +249,7 @@ describe("key_management", () => {
     });
     describe("key_management.keys.save", () => {
       it("should update an encryption key in place", () => {
-        let state = new newState();
-        state.key_management.keys.save(
+        craig.key_management.keys.save(
           {
             name: "all-new-key",
             root_key: true,
@@ -408,14 +268,13 @@ describe("key_management", () => {
           dual_auth_delete: false,
         };
         assert.deepEqual(
-          state.store.json.key_management[0].keys[3],
+          craig.store.json.key_management[0].keys[3],
           expectedData,
           "it should update key"
         );
       });
       it("should update an encryption key in place with same name", () => {
-        let state = new newState();
-        state.key_management.keys.save(
+        craig.key_management.keys.save(
           {
             name: "key",
             root_key: true,
@@ -434,7 +293,7 @@ describe("key_management", () => {
           dual_auth_delete: false,
         };
         assert.deepEqual(
-          state.store.json.key_management[0].keys[0],
+          craig.store.json.key_management[0].keys[0],
           expectedData,
           "it should update key"
         );
@@ -442,23 +301,18 @@ describe("key_management", () => {
     });
     describe("key_management.keys.delete", () => {
       it("should delete an encryption key", () => {
-        let state = new newState();
-        state.key_management.keys.delete(
+        craig.key_management.keys.delete(
           {},
           { arrayParentName: "kms", data: { name: "key" } }
         );
         assert.deepEqual(
-          state.store.encryptionKeys,
+          craig.store.encryptionKeys,
           ["atracker-key", "vsi-volume-key", "roks-key"],
           "it should update key"
         );
       });
     });
     describe("key management schema", () => {
-      let craig;
-      beforeEach(() => {
-        craig = newState();
-      });
       it("should not be hidden when use data", () => {
         assert.isUndefined(
           craig.key_management.resource_group.hideWhen,

@@ -13,9 +13,12 @@ function newState() {
 }
 
 describe("options", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("options.init", () => {
     it("should initialize options in json", () => {
-      let state = new newState();
       let expectedData = {
         prefix: "iac",
         region: "us-south",
@@ -32,37 +35,29 @@ describe("options", () => {
         no_vpn_secrets_manager_auth: false,
       };
       assert.deepEqual(
-        state.store.json._options,
+        craig.store.json._options,
         expectedData,
         "it should have options initialized"
       );
     });
   });
   describe("options.save", () => {
-    let oState;
-    beforeEach(() => {
-      oState = new newState(true);
-    });
     it("should change the prefix when saved", () => {
-      oState.options.save(
+      craig.options.save(
         { prefix: "test", showModal: false },
         { data: { prefix: "iac" } }
       );
-      assert.deepEqual(oState.store.json._options.prefix, "test");
+      assert.deepEqual(craig.store.json._options.prefix, "test");
     });
     it("should update tags when saved", () => {
-      oState.options.save(
+      craig.options.save(
         { tags: ["new", "tags", "here"] },
         { data: { tags: ["hello", "world"] } }
       );
-      assert.deepEqual(oState.store.json._options.tags, [
-        "new",
-        "tags",
-        "here",
-      ]);
+      assert.deepEqual(craig.store.json._options.tags, ["new", "tags", "here"]);
     });
     it("should update subnetTier zones when saved", () => {
-      oState.options.save({ zones: 2 }, { data: { prefix: "iac" } });
+      craig.options.save({ zones: 2 }, { data: { prefix: "iac" } });
       let expectedData = {
         management: [
           {
@@ -91,13 +86,13 @@ describe("options", () => {
       };
       assert.deepEqual(
         expectedData,
-        oState.store.subnetTiers,
+        craig.store.subnetTiers,
         "all zones should be 2"
       );
     });
     it("should update subnets when saved", () => {
-      oState.store.json._options.dynamic_subnets = false;
-      oState.options.save({ zones: 1 }, { data: { prefix: "iac" } });
+      craig.store.json._options.dynamic_subnets = false;
+      craig.options.save({ zones: 1 }, { data: { prefix: "iac" } });
       let expectedData = [
         {
           vpc: "management",
@@ -130,12 +125,12 @@ describe("options", () => {
           has_prefix: true,
         },
       ];
-      assert.deepEqual(oState.store.json.vpcs[0].subnets, expectedData);
+      assert.deepEqual(craig.store.json.vpcs[0].subnets, expectedData);
     });
     it("should update craig version when saved", () => {
-      oState.options.save(
+      craig.options.save(
         { craig_version: "1.3.0" },
-        { data: oState.store.json._options.craig_version }
+        { data: craig.store.json._options.craig_version }
       );
       let expectedData = {
         prefix: "iac",
@@ -153,27 +148,20 @@ describe("options", () => {
         no_vpn_secrets_manager_auth: false,
       };
       assert.deepEqual(
-        oState.store.json._options,
+        craig.store.json._options,
         expectedData,
         "it should have correct craig version"
       );
     });
     it("should update atracker location when changing region", () => {
-      oState.options.save(
-        { region: "eu-de" },
-        { data: { region: "us-south" } }
-      );
+      craig.options.save({ region: "eu-de" }, { data: { region: "us-south" } });
       assert.deepEqual(
-        oState.store.json.atracker.locations,
+        craig.store.json.atracker.locations,
         ["global", "eu-de"],
         "it should update region"
       );
     });
     describe("options.schema", () => {
-      let craig;
-      beforeEach(() => {
-        craig = newState();
-      });
       it("should return region groups when fs cloud", () => {
         assert.deepEqual(
           craig.options.region.groups({ fs_cloud: true }),

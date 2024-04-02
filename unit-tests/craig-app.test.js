@@ -58,10 +58,15 @@ function mockFetch(shouldReject, data) {
 }
 
 describe("craig app", () => {
+  let craigApp;
+  let craigState;
+  beforeEach(() => {
+    craigApp = newMockCraig();
+    craigState = new state();
+    craigState.setUpdateCallback(() => {});
+  });
   describe("onProjectDeselect", () => {
     it("should set project name and send notification", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       onProjectDeselect(craigApp, craigState);
       assert.deepEqual(
         craigState.store.project_name,
@@ -77,9 +82,6 @@ describe("craig app", () => {
   });
   describe("onProjectSelectCallback", () => {
     it("should update project name, json, projects when unfound, and call save and send notification with correct text", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {}, // projects
         craigApp,
@@ -95,9 +97,6 @@ describe("craig app", () => {
       );
     });
     it("should update project name, json, projects when found, and call save and send notification with correct text", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {
           "project-name": {},
@@ -114,9 +113,6 @@ describe("craig app", () => {
       );
     });
     it("should update project name, json, projects when found with json data, and call save and send notification with correct text", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {
           "project-name": { json: { _options: {} } },
@@ -133,9 +129,6 @@ describe("craig app", () => {
       );
     });
     it("should update project name, json, projects when found with project info, and call save and send notification with correct text", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigState.setUpdateCallback(() => {});
       let callback = onProjectSelectCallback(
         {
           "project-name": {},
@@ -152,9 +145,6 @@ describe("craig app", () => {
       );
     });
     it("should update project name, json, projects when found with project info, and call save and send notification with correct text and call callback", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigState.setUpdateCallback(() => {});
       let called = false;
       let callback = onProjectSelectCallback(
         {
@@ -179,8 +169,6 @@ describe("craig app", () => {
   });
   describe("onProjectDeleteCallback", () => {
     it("should call deselect if deleting currently selected project", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       craigState.store.project_name = "test";
       craigApp.onProjectDeselect = new sinon.spy();
       let callback = onProjectDeleteCallback(craigApp, craigState, "test");
@@ -196,8 +184,6 @@ describe("craig app", () => {
       );
     });
     it("should call deselect if not deleting currently selected project", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       craigApp.onProjectDeselect = new sinon.spy();
       let callback = onProjectDeleteCallback(craigApp, craigState, "test");
       callback();
@@ -258,8 +244,6 @@ describe("craig app", () => {
   });
   describe("saveAndSendNotificationCallback", () => {
     it("should call notify if noProjetSave is true", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       let callback = saveAndSendNotificationCallback(
         craigApp,
         craigState,
@@ -275,8 +259,6 @@ describe("craig app", () => {
       );
     });
     it("should call not notify if footerToggle is true", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       let callback = saveAndSendNotificationCallback(
         craigApp,
         craigState,
@@ -293,8 +275,6 @@ describe("craig app", () => {
       );
     });
     it("should call notify if noProjetSave is false and no projects", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       let callback = saveAndSendNotificationCallback(
         craigApp,
         craigState,
@@ -309,8 +289,6 @@ describe("craig app", () => {
       );
     });
     it("should call notify if noProjetSave is false, projects exist, but no store project key name", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       let callback = saveAndSendNotificationCallback(
         craigApp,
         craigState,
@@ -327,8 +305,6 @@ describe("craig app", () => {
       );
     });
     it("should call notify if noProjetSave is false, projects exist, with store project key name", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
       craigState.store.project_name = "frog";
       let callback = saveAndSendNotificationCallback(
         craigApp,
@@ -352,11 +328,11 @@ describe("craig app", () => {
     });
   });
   describe("saveProjectCallback", () => {
-    it("should call onProjectSelect if setting current project", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
+    beforeEach(() => {
       craigApp.onProjectSelect = new sinon.spy();
       craigState.store.project_name = "frog";
+    });
+    it("should call onProjectSelect if setting current project", () => {
       let callback = saveProjectCallback(
         craigApp,
         craigState,
@@ -378,10 +354,6 @@ describe("craig app", () => {
       );
     });
     it("should call saveAndSendNotification if not setting current project with same project name", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigApp.onProjectSelect = new sinon.spy();
-      craigState.store.project_name = "frog";
       let callback = saveProjectCallback(
         craigApp,
         craigState,
@@ -404,10 +376,6 @@ describe("craig app", () => {
       );
     });
     it("should call saveAndSendNotification if not setting current project with new project", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigApp.onProjectSelect = new sinon.spy();
-      craigState.store.project_name = "frog";
       let callback = saveProjectCallback(
         craigApp,
         craigState,
@@ -430,10 +398,6 @@ describe("craig app", () => {
       );
     });
     it("should call saveAndSendNotification if not setting current project when changing name", () => {
-      let craigApp = newMockCraig();
-      let craigState = new state();
-      craigApp.onProjectSelect = new sinon.spy();
-      craigState.store.project_name = "frog";
       let callback = saveProjectCallback(
         craigApp,
         craigState,
