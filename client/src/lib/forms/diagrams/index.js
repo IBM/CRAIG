@@ -4,6 +4,7 @@ const {
   classicVsiFilter,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
   aclMapFilter,
   classicSubnetsFilter,
 } = require("./filters");
@@ -20,6 +21,7 @@ module.exports = {
   shouldDisplayService,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
   aclMapFilter,
   classicSubnetsFilter,
 };

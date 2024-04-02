@@ -42,6 +42,7 @@ const {
   shouldDisplayService,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
   aclMapFilter,
 } = require("./diagrams");
 const {
@@ -120,5 +121,6 @@ module.exports = {
   powerMapFilter,
   aclMapFilter,
   dynamicFetchSelectDataToGroups,
+  routingTableFilter,
   classicSubnetsFilter,
 };

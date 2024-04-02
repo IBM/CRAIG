@@ -6,13 +6,13 @@ import PropTypes from "prop-types";
 import "./diagrams.css";
 import { CraigFormGroup } from "../../forms";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
+import { routingTableFilter } from "../../../lib";
 
 export const RoutingTables = (props) => {
   let craig = props.craig;
   let vpc = props.vpc;
-  return craig.store.json.routing_tables.filter((rt) => {
-    if (rt.vpc === vpc.name) return rt;
-  }).length === 0 ? (
+  let routingTables = routingTableFilter(props);
+  return routingTables.length === 0 ? (
     ""
   ) : (
     <HoverClassNameWrapper

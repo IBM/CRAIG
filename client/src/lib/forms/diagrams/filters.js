@@ -93,6 +93,21 @@ function powerMapFilter(props) {
 }
 
 /**
+ * filter routing tables
+ * @param {*} props
+ * @returns {Object} list of filtered routing tables
+ */
+function routingTableFilter(props) {
+  let routingTables = [];
+  props.craig.store.json.routing_tables.forEach((rt) => {
+    if (rt.vpc === props.vpc.name) {
+      routingTables.push(rt);
+    }
+  });
+  return routingTables;
+}
+
+/**
  * get a list of classic vsis to render as part of the classic network map
  * @param {*} props component props
  * @returns {Array<object>} list of classic vsis to render
@@ -147,6 +162,7 @@ module.exports = {
   classicVsiFilter,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
   aclMapFilter,
   classicSubnetsFilter,
 };

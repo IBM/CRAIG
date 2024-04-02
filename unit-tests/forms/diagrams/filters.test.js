@@ -6,6 +6,7 @@ const {
   state,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
   classicVsiFilter,
   aclMapFilter,
 } = require("../../../client/src/lib");
@@ -309,6 +310,46 @@ describe("filter functions", () => {
         powerMapFilter({ craig: craig }),
         [{ name: null }],
         "it should send list of workspaces"
+      );
+    });
+  });
+  describe("routingTableFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+      craig.store.json.vpcs[0] = {
+        name: "test-vpc",
+      };
+    });
+    it("should return the routing tables connected to the given vpc", () => {
+      craig.store.json.routing_tables = [
+        {
+          name: "routing-table",
+          vpc: "test-vpc",
+        },
+      ];
+      assert.deepEqual(
+        routingTableFilter({ craig: craig, vpc: { name: "test-vpc" } }),
+        [
+          {
+            name: "routing-table",
+            vpc: "test-vpc",
+          },
+        ],
+        "it should return filtered routing tables"
+      );
+    });
+    it("should return no routing tables if vpc does not match", () => {
+      craig.store.json.routing_tables = [
+        {
+          name: "routing-table",
+          vpc: "test-vpc",
+        },
+      ];
+      assert.deepEqual(
+        routingTableFilter({ craig: craig, vpc: { name: "fake-vpc" } }),
+        [],
+        "it should return empty array"
       );
     });
   });
