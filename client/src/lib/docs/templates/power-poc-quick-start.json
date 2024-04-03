@@ -10,7 +10,7 @@
     "enable_power_vs": true,
     "enable_classic": false,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.13.0",
+    "craig_version": "1.14.1",
     "power_vs_high_availability": false,
     "template": "Power VS POC",
     "fs_cloud": false,
@@ -39,9 +39,12 @@
   "cbr_zones": [],
   "cis": [],
   "cis_glbs": [],
+  "classic_bare_metal": [],
   "classic_gateways": [],
+  "classic_security_groups": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
+  "classic_vsi": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
@@ -218,18 +221,19 @@
           "workspace_use_data": false
         },
         {
-          "creationDate": "2023-04-03T12:09:04.000Z",
+          "creationDate": "2024-03-15T02:12:46.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/d22a080f-d1b3-4e80-898e-5e8d46cb86ca",
-          "imageID": "d22a080f-d1b3-4e80-898e-5e8d46cb86ca",
-          "lastUpdateDate": "2023-04-03T19:24:22.000Z",
-          "name": "IBMi-75-01-2924-2",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/7302c4ef-115c-4089-a395-abda4ecf70eb",
+          "imageID": "7302c4ef-115c-4089-a395-abda4ecf70eb",
+          "lastUpdateDate": "2024-03-15T03:48:44.000Z",
+          "name": "IBMi-75-03-2984-1",
           "specifications": {
             "architecture": "ppc64",
             "containerFormat": "bare",
             "diskFormat": "raw",
             "endianness": "big-endian",
             "hypervisorType": "phyp",
+            "imageType": "stock",
             "operatingSystem": "ibmi"
           },
           "state": "active",
@@ -242,7 +246,7 @@
         }
       ],
       "attachments": [],
-      "imageNames": ["7300-01-01", "IBMi-75-01-2924-2"],
+      "imageNames": ["7300-01-01", "IBMi-75-03-2984-1"],
       "use_data": false
     }
   ],
@@ -297,7 +301,7 @@
         }
       ],
       "ssh_key": "powervs-ssh-key",
-      "image": "IBMi-75-01-2924-2",
+      "image": "IBMi-75-03-2984-1",
       "pi_sys_type": "s922",
       "pi_proc_type": "shared",
       "pi_processors": "1",
