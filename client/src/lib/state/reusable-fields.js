@@ -290,11 +290,6 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "ssh_keys",
       "name"
     );
-  } else if (field === "classic_ssh_keys") {
-    allOtherNames = splat(
-      componentProps.craig.store.json.classic_ssh_keys,
-      "name"
-    );
   } else if (field === "network") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.power,

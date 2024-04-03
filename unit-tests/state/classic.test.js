@@ -278,6 +278,22 @@ describe("classic", () => {
     });
     describe("classic_vlans.schema", () => {
       describe("classic_vlans.name", () => {
+        it("should disable save for vlan with a name with more than twenty characters including the prefix", () => {
+          assert.isTrue(
+            craig.classic_vlans.name.invalid(
+              {
+                name: "sixteencharacters",
+              },
+              {
+                data: {
+                  name: "test",
+                },
+                craig: craig,
+              }
+            ),
+            "it should be disabled"
+          );
+        });
         it("should return the correct text when a classic vlan that has a name greater than 20 characters is passed", () => {
           let actualData = craig.classic_vlans.name.invalidText(
             {

@@ -1062,6 +1062,27 @@ describe("security groups", () => {
           "it should return error text"
         );
       });
+      it("should return false if security group rule does not have invalid name in modal", () => {
+        assert.isFalse(
+          craig.security_groups.rules.name.invalid(
+            {
+              name: "aa",
+              source: "1.2.3.4",
+              ruleProtocol: "udp",
+              rule: {
+                port_min: -1,
+                port_max: null,
+              },
+            },
+            {
+              innerFormProps: { rules: [{ name: "ff" }] },
+              data: { name: "aa" },
+              craig: state(),
+            }
+          ),
+          "it should be invalid"
+        );
+      });
     });
   });
 });

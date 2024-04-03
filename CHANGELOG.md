@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`
+- Fixed an issue causing Classic SSH Key Modal Forms to crash the page when adding a public key
 
 ## 1.14.0
 

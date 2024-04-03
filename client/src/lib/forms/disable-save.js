@@ -106,8 +106,6 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.power[field]
         : isPowerSshKey
         ? componentProps.craig.power.ssh_keys
-        : field === "classic_ssh_keys"
-        ? componentProps.craig.classic_ssh_keys
         : field === "volumes"
         ? componentProps.craig.vsi.volumes
         : field === "acl_rules" &&

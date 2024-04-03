@@ -3,7 +3,8 @@
     "version": "1.14.1",
     "features": [],
     "fixes": [
-      "Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`"
+      "Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`",
+      "Fixed an issue causing Classic SSH Key Modal Forms to crash the page when adding a public key"
     ],
     "upgrade_notes": ["Removed unused artifacts from JSON-to-IaC code"]
   },

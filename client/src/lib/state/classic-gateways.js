@@ -159,9 +159,9 @@ function initClassicGateways(store) {
           let mem = parseFloat(stateData.memory);
           return !isWholeNumber(mem) || !isInRange(mem, 64, 1024);
         },
-        invalidText: function () {
-          return "Memory must be a whole number between 64 and 1024";
-        },
+        invalidText: unconditionalInvalidText(
+          "Memory must be a whole number between 64 and 1024"
+        ),
         size: "small",
       },
       package_key_name: {
