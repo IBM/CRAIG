@@ -1858,6 +1858,7 @@ describe("automate schema generation", () => {
                 peer_address: { type: "string", default: null },
                 peer_cidrs: { type: "Array", default: [] },
                 local_cidrs: { type: "Array", default: [] },
+                admin_state_up: { type: "boolean", default: true },
               },
             },
           },

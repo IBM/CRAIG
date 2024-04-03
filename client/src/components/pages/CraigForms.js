@@ -1495,6 +1495,9 @@ function craigForms(craig) {
               {
                 local_cidrs: craig.vpn_gateways.connections.local_cidrs,
               },
+              {
+                admin_state_up: craig.vpn_gateways.connections.admin_state_up,
+              },
             ],
           },
         },

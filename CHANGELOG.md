@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Removed unused artifacts from JSON-to-IaC code
 
+### Features
+
+- VPN Gateway Connections are now enabled automatically by default. To revert to manual connection, set the `Connection Enabled` toggle on the connection form to `false`
+
 ### Fixes
 
 - Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`

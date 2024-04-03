@@ -995,7 +995,8 @@
             "10.10.0.144/28"
           ],
           "vpn": "dal10gw",
-          "peer_address": ""
+          "peer_address": "",
+          "admin_state_up": true
         }
       ],
       "additional_prefixes": ["10.40.0.0/16"]

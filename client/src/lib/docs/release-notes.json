@@ -1,7 +1,9 @@
 [
   {
     "version": "1.14.1",
-    "features": [],
+    "features": [
+      "VPN Gateway Connections are now enabled automatically by default. To revert to manual connection, set the `Connection Enabled` toggle on the connection form to `false`"
+    ],
     "fixes": [
       "Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`",
       "Fixed an issue causing Classic SSH Key Modal Forms to crash the page when adding a public key"
