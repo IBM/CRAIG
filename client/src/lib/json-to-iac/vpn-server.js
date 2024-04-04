@@ -394,6 +394,7 @@ function vpnServerTf(config) {
               /\.|\//g,
               "-"
             )}`,
+            vpn_server: server,
           },
           config,
           true

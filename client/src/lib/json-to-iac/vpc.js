@@ -129,6 +129,12 @@ function formatAddressPrefix(address, config, isOutsideVpc) {
   } else if (getObjectFromArray(config.vpcs, "name", address.vpc)?.use_data) {
     prefix.data.vpc = prefix.data.vpc.replace(/\{ibm/, "{data.ibm");
   }
+  if (address.vpn_server)
+    prefix.data.depends_on = [
+      `\${ibm_is_vpn_server.${snakeCase(
+        address.vpc + " vpn server " + address.vpn_server.name
+      )}}`,
+    ];
   return jsonToTfPrint(
     "resource",
     "ibm_is_vpc_address_prefix",

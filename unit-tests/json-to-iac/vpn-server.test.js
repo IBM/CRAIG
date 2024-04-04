@@ -1085,6 +1085,9 @@ resource "ibm_is_vpc_address_prefix" "management_vpn_abc_on_prem_127_0_0_1_5_pre
   vpc  = module.management_vpc.id
   zone = "\${var.region}-1"
   cidr = "127.0.0.1/5"
+  depends_on = [
+    ibm_is_vpn_server.management_vpn_server_abc
+  ]
 }
 
 ##############################################################################
@@ -1158,6 +1161,9 @@ resource "ibm_is_vpc_address_prefix" "management_vpn_abc_on_prem_127_0_0_1_5_pre
   vpc  = module.management_vpc.id
   zone = "\${var.region}-1"
   cidr = "127.0.0.1/5"
+  depends_on = [
+    ibm_is_vpn_server.management_vpn_server_abc
+  ]
 }
 
 ##############################################################################
