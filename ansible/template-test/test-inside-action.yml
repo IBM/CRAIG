@@ -14,7 +14,7 @@
           git:
             git_repo_url: https://github.ibm.com/platinum-developer-tools/CRAIG.git
             git_repo_folder: ansible/template-test
-            git_branch: main
+            git_branch: "{{ git_branch }}"
         inputs:
           - name: template
             value: "{{ template }}"

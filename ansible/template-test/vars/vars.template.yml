@@ -10,6 +10,7 @@ tf_var_preshared_key: "<preshared-key>" # 6-128 characters
 workspace_name: "<schematics-workspace-name>"
 template: "<template>"
 action_name: "<schematics-action-name>"
+git_branch: "<branch-of-playbook>"
 
 craig_url: https://craig.119gqgw56ti1.us-south.codeengine.appdomain.cloud/api/craig/template-tar
 region: us-south

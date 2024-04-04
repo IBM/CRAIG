@@ -49,13 +49,33 @@
     - role: action
       vars:
         action_type: destroy
-    - role: get_iam_token
-  # Note: The destroy action may not succeed for the POC template
-  # If the destroy action fails, wait a few minutes, and manually go to Actions -> Destroy Resources
-  # Inside of the schematics workspace
     - role: await_action
       vars:
         action_type: destroy
         register_name: await_destroy
+- name: Retry destroy on failure
+  hosts: localhost
+  vars_files: ./vars/vars.template.yml
+  roles:
+    - role: pause
+      when: job_status == "job_failed"
+      vars:
+        pause_time: 5
+    - role: get_iam_token
+      when: job_status == "job_failed"
+    - role: action
+      when: job_status == "job_failed"
+      vars:
+        action_type: destroy
+    - role: await_action
+      when: job_status == "job_failed"
+      vars:
+        action_type: destroy
+        register_name: await_destroy
+- name: Delete Schematics Workspace
+  hosts: localhost
+  vars_files: ./vars/vars.template.yml
+  roles:
     - role: get_iam_token
     - role: delete_schematics_workspace
+      when: job_status != "job_failed"
