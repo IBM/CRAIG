@@ -8,7 +8,7 @@ The `API_KEY` variable must be set in the `.env`. If CRAIG is deployed in IBM Co
 
 ### Access Policy
 In order to allow Schematics integration, users should make sure they have the following access policy roles for the Schematics service:
->* `Writer` or greater Service access
+>* `Manager` Service access
 >* `Editor` or greater Platform access
 
 These roles allow the integration with Schematics including the Schematics workspace creation and the upload of the project. However, to create and manage the IBM Cloud resources in the template, you must be assigned the IAM platform or service access role for the individual IBM Cloud resources that are in the template. See the IBM Cloud documentation for the various services for specific roles required.

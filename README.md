@@ -29,11 +29,12 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 
 ## Installation
 
-1. [Running CRAIG Application Locally](#running-craig-application-locally)
-2. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
-3. [Building Local CRAIG Container Image](#building-local-container-image)
-4. [Setting Up CRAIG Development Environment](.docs/dev-env-setup.md)
-5. [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md)
+1. [Permission Requirements for CRAIG](.docs/access-policies.md)
+2. [Running CRAIG Application Locally](#running-craig-application-locally)
+3. [Deploying To IBM Code Engine](#deploying-to-ibm-code-engine)
+4. [Building Local CRAIG Container Image](#building-local-container-image)
+5. [Setting Up CRAIG Development Environment](.docs/dev-env-setup.md)
+6. [Power VS Workspace Deployment](.docs/power-vs-workspace-deployment.md)
 
 ---
 
@@ -73,6 +74,8 @@ Congratulations! Your application is now available at localhost:8080!
 IBM Code Engine is a fully managed serverless platform. CRAIG "scales to zero" in Code Engine when not in use, making this a very cost-effective and simple method of running CRAIG. 
 
 Within the root directory is a script `deploy.sh` which deploys CRAIG to IBM Cloud Code Engine. 
+
+_Note: CRAIG has the ability to automate the creation of all the access policies listed below using the `access.sh` script. For more information, refer to our [Access Policy documentation](.docs/access-policies.md)._
 
 Users should make sure they have the following access policy roles for the IBM Code Engine service set within their IBM Cloud Account:
 
@@ -114,7 +117,7 @@ By default the script will securely prompt you for your API key. It may also be 
  
  The deploy script uses a Schematics workspace and Terraform to drive the creation and deletion of the Power Virtual Server workspaces. In order to allow Schematics integration, users should make sure they have the following access policy roles for the Schematics service set within their IBM Cloud Account:
  
->* `Writer` or greater Service access
+>* `Manager` Service access
 >* `Editor` or greater Platform access
  
  Once access policy roles for the Schematics service are properly configured, users can specify the `-z` parameter to automatically create the Power Virtual Server workspaces alongside your CRAIG deployment:

@@ -11,6 +11,7 @@ config_test/
 config_test.tf
 dev.*
 .env
+workspaceids.env
 node_modules/
 frog.*
 terraform.tfvars
