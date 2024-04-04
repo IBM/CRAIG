@@ -335,7 +335,7 @@ const navCatagories = [
         jsonField: "cis",
       },
       {
-        title: "Global Load Balancers",
+        title: "Global Load Balancers (GLB)",
         path: "/form/cisGlbs",
         react_icon: "LoadBalancerPool",
         toTf: (config) => {

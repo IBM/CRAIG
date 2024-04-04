@@ -247,25 +247,13 @@ describe("icd", () => {
     describe("memory", () => {
       it("should return invalid for non-number memory values", () => {
         assert.isTrue(
-          craig.icd.memory.invalid(
-            { memory: "hello" },
-            {
-              memoryMin: 1,
-              memoryMax: 112,
-            }
-          ),
+          craig.icd.memory.invalid({ memory: "hello" }),
           "it should return true"
         );
       });
       it("should return invalidText for memory", () => {
         assert.deepEqual(
-          craig.icd.memory.invalidText(
-            {},
-            {
-              memoryMin: 1,
-              memoryMax: 112,
-            }
-          ),
+          craig.icd.memory.invalidText({}),
           "RAM must be a whole number with minimum of 1GB and a maximum 112GB per member",
           "it should return correct invalidText"
         );
@@ -274,15 +262,46 @@ describe("icd", () => {
     describe("disk", () => {
       it("should return invalidText for disk", () => {
         assert.deepEqual(
-          craig.icd.disk.invalidText(
-            {},
-            {
-              diskMin: 5,
-              diskMax: 4096,
-            }
-          ),
+          craig.icd.disk.invalidText({}),
           "Disk must be a whole number with minimum of 5GB and a maximum 4096GB per member",
           "it should return correct invalidText"
+        );
+      });
+      it("should return invalid for disk when invalid", () => {
+        assert.isTrue(
+          craig.icd.disk.invalid({
+            disk: "9999999",
+          }),
+          "it should be invalid"
+        );
+
+        assert.isTrue(
+          craig.icd.disk.invalid({
+            disk: "fff",
+          }),
+          "it should be invalid"
+        );
+        assert.isTrue(
+          craig.icd.disk.invalid({
+            disk: "1.2",
+          }),
+          "it should be invalid"
+        );
+        assert.isFalse(
+          craig.icd.disk.invalid({
+            disk: "",
+          }),
+          "it should be invalid"
+        );
+      });
+    });
+    describe("cpu", () => {
+      it("should return invalid for disk when invalid", () => {
+        assert.isTrue(
+          craig.icd.cpu.invalid({
+            cpu: "fff",
+          }),
+          "it should be invalid"
         );
       });
     });

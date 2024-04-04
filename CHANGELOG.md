@@ -11,11 +11,14 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - VPN Gateway Connections are now enabled automatically by default. To revert to manual connection, set the `Connection Enabled` toggle on the connection form to `false`
+- Cloud Internet Services Domains now support multiple subdomains and the `-` character
 
 ### Fixes
 
 - Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`
 - Fixed an issue causing Classic SSH Key Modal Forms to crash the page when adding a public key
+- Fixed a bug causing Subnet Tier form to crash when changing to advanced
+- Fixed a bug causing the optional Key Management Encryption Keys `key_ring` to show as invalid when it is not required
 
 ## 1.14.0
 

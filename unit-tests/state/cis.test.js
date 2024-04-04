@@ -609,6 +609,30 @@ describe("cis", () => {
     });
   });
   describe("cis.schema", () => {
+    describe("cis.domains.invalid", () => {
+      it("should be valid with multiple subdomains", () => {
+        assert.isFalse(
+          craig.cis.domains.domain.invalid(
+            { domain: "sub.cis-terraform.com" },
+            {
+              craig: state(),
+            }
+          ),
+          "it should be false"
+        );
+      });
+      it("should be invalid with spaces subdomains", () => {
+        assert.isTrue(
+          craig.cis.domains.domain.invalid(
+            { domain: "sub.cis-  terraform.com" },
+            {
+              craig: state(),
+            }
+          ),
+          "it should be false"
+        );
+      });
+    });
     describe("cis.dns_records.schema", () => {
       describe("cis.dns_records.domains", () => {
         describe("cis.dns_records.domains.groups", () => {

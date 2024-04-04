@@ -162,6 +162,14 @@ describe("options", () => {
       );
     });
     describe("options.schema", () => {
+      it("should return true when tags is invalid", () => {
+        assert.isTrue(
+          craig.options.tags.invalid({
+            tags: ["___@@@J,,,,,", "@@@d,,,,!!!@@@", "222---2-"],
+          }),
+          "it should be invalid"
+        );
+      });
       it("should return region groups when fs cloud", () => {
         assert.deepEqual(
           craig.options.region.groups({ fs_cloud: true }),
