@@ -125,8 +125,8 @@ describe("power api", () => {
           res
         )
         .then(() => {
-          assert.isFalse(
-            res.send.calledOnceWith(usSouthImages),
+          assert.isTrue(
+            res.send.calledOnceWith(usSouthImages.concat(usSouthImages)),
             "it should be true"
           );
         });
