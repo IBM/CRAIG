@@ -1,7 +1,6 @@
 const { assert } = require("chai");
 const {
   disableSave,
-  invalidPort,
   forceShowForm,
   disableSshKeyDelete,
   invalidCidrBlock,
@@ -11,6 +10,259 @@ const {
 describe("disableSave", () => {
   it("should otherwise return false", () => {
     assert.isFalse(disableSave("pretend_field", {}, {}), "it should be false");
+  });
+  describe("security groups", () => {
+    describe("rules", () => {
+      it("should return true if security group rule has invalid name", () => {
+        assert.isTrue(
+          disableSave(
+            "sg_rules",
+            {
+              name: "@@@",
+            },
+            { rules: [], data: { name: "" }, craig: state() }
+          )
+        );
+      });
+    });
+  });
+  describe("object storage", () => {
+    it("should return true if a object storage instance has an invalid resource group", () => {
+      assert.isTrue(
+        disableSave(
+          "object_storage",
+          { name: "aaa", use_data: false, resource_group: null },
+          {
+            craig: state(),
+            data: {
+              name: "test",
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
+    it("should return true if an object storage bucket has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "buckets",
+          { name: "@@@", use_data: false },
+          {
+            craig: state(),
+            data: {
+              name: "test",
+            },
+          }
+        ),
+        "it should be false"
+      );
+    });
+    it("should return true if an object storage key has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "cos_keys",
+          { name: "@@@", use_data: false },
+          {
+            craig: state(),
+            data: {
+              name: "test",
+            },
+            formName: "Service Credentials",
+          }
+        ),
+        "it should be false"
+      );
+    });
+  });
+  describe("f5_vsi_template", () => {
+    const example_template = {
+      app_id: "null",
+      as3_declaration_url: "http://www.test.com/",
+      default_route_gateway_cidr: "10.10.10.10/24",
+      do_declaration_url: "http://www.test.com/",
+      domain: "local",
+      hostname: "f5-ve-01",
+      license_host: "null",
+      license_password: "null",
+      license_pool: "null",
+      license_sku_keyword_1: "null",
+      license_sku_keyword_2: "null",
+      license_type: "none",
+      license_username: "null",
+      phone_home_url: "http://www.test.com/",
+      template_version: "20210201",
+      tgactive_url: "http://www.test.com/",
+      tgrefresh_url: "http://www.test.com/",
+      tgstandby_url: "http://www.test.com/",
+      tmos_admin_password: "1GoodVeryPassword!",
+      ts_declaration_url: "http://www.test.com/",
+      vpc: "edge",
+      zone: 1,
+      template_source: "test",
+    };
+    it("should return true if any fields are empty, based on license_type none", () => {
+      let template = Object.assign({}, example_template);
+      template.template_version = "";
+      template.template_source = "";
+      assert.isTrue(
+        disableSave("f5_vsi_template", template, { craig: state() }),
+        "it should be true"
+      );
+    });
+  });
+  describe("power", () => {
+    describe("cloud_connections", () => {
+      it("should be disabled when invalid duplicate power connection name", () => {
+        let tempCraig = state();
+        tempCraig.store = {
+          json: {
+            power: [
+              {
+                name: "workspace",
+                cloud_connections: [
+                  {
+                    name: "frog",
+                  },
+                  {
+                    name: "horse",
+                  },
+                ],
+              },
+            ],
+          },
+        };
+        let actualData = disableSave(
+          "cloud_connections",
+          {
+            name: "frog",
+          },
+          {
+            arrayParentName: "workspace",
+            data: {
+              name: "toad",
+            },
+            craig: tempCraig,
+          }
+        );
+        assert.isTrue(actualData, "it should be disabled");
+      });
+    });
+  });
+  describe("f5_vsi", () => {
+    it("should return true if ssh keys empty", () => {
+      assert.isTrue(
+        disableSave("f5_vsi", { ssh_keys: [] }, { craig: state() }),
+        "it should be disabled"
+      );
+    });
+    it("should return true if no ssh keys", () => {
+      assert.isTrue(
+        disableSave("f5_vsi", {}, { craig: state() }),
+        "it should be disabled"
+      );
+    });
+  });
+  describe("key management", () => {
+    describe("keys", () => {
+      it("should return true if an encryption key has an invalid name", () => {
+        assert.isTrue(
+          disableSave(
+            "encryption_keys",
+            { name: "@@@", use_data: false },
+            {
+              craig: state(),
+              data: {
+                name: "test",
+              },
+            }
+          ),
+          "it should be false"
+        );
+      });
+    });
+  });
+  describe("tgw", () => {
+    describe("gre tunnels", () => {
+      it("should return true if no gateway", () => {
+        assert.isTrue(
+          disableSave(
+            "gre_tunnels",
+            {
+              gateway: "",
+              remote_tunnel_ip: "",
+              local_tunnel_ip: "",
+              zone: "",
+            },
+            { craig: state() }
+          ),
+          "it should be disabled"
+        );
+      });
+    });
+  });
+  describe("acls", () => {
+    describe("acl rules", () => {
+      it("should return false if a acl rule is valid", () => {
+        assert.isFalse(
+          disableSave(
+            "acl_rules",
+            {
+              name: "aaa",
+              source: "1.2.3.4",
+              destination: "1.2.3.4",
+              ruleProtocol: "udp",
+              rule: {
+                port_min: 80,
+                port_max: 80,
+                source_port_min: 80,
+                source_port_max: 80,
+              },
+            },
+            {
+              innerFormProps: {
+                craig: state(),
+              },
+              data: {
+                name: "frog",
+              },
+              parent_name: "frog",
+            }
+          ),
+          "it should be true"
+        );
+      });
+      it("should return false if a acl rule is valid in modal", () => {
+        assert.isFalse(
+          disableSave(
+            "acl_rules",
+            {
+              name: "aaa",
+              source: "1.2.3.4",
+              destination: "1.2.3.4",
+              ruleProtocol: "udp",
+              rule: {
+                port_min: 80,
+                port_max: 80,
+                source_port_min: 80,
+                source_port_max: 80,
+              },
+            },
+            {
+              innerFormProps: {
+                craig: new state(),
+              },
+              craig: new state(),
+              data: {
+                name: "frog",
+              },
+              parent_name: "frog",
+              isModal: true,
+            }
+          ),
+          "it should be true"
+        );
+      });
+    });
   });
   describe("forceShowForm", () => {
     it("should force forms open if save is disabled and data does not have field of enable", () => {

@@ -4,14 +4,20 @@
     "features": [
       "VPN Gateway Connections are now enabled automatically by default. To revert to manual connection, set the `Connection Enabled` toggle on the connection form to `false`",
       "Cloud Internet Services Domains now support multiple subdomains and the `-` character",
-      "Additional prefixes being created for VPN Servers now depend on the VPN Server for creation to prevent overlap"
+      "Additional prefixes being created for VPN Servers now depend on the VPN Server for creation to prevent overlap",
+      "The `advanced` toggle for Subnet Tiers is now hidden in the modal as intended. To create subnets with custom CIDR blocks, first create a subnet tier, then toggle the `Advanced Configuration` toggle and then click the `Save` icon. We are currently looking for a solution to make this feature easier to use",
+      "Users can now validate images for VPC and Power VS VSI at any time by clicking the new `Validate Images` button in the top navigation bar",
+      "In the `/v2/vpcDeployments` page, an additional `+` button has been added to each VPC to make the creation of additional resources faster and more seamless"
     ],
     "fixes": [
       "Fixed an issue with Power VS SSH Key outputs not having the correct field for `name`",
       "Fixed an issue causing Classic SSH Key Modal Forms to crash the page when adding a public key",
       "Fixed a bug causing Subnet Tier form to crash when changing to advanced",
       "Fixed a bug causing the optional Key Management Encryption Keys `key_ring` to show as invalid when it is not required",
-      "Fixed a bug causing VPN Servers to have additional prefix zone number to unintentionally reset"
+      "Fixed a bug causing VPN Servers to have additional prefix zone number to unintentionally reset",
+      "Fixed an issue causing VPC Virtual Server user data to be templated incorrectly in Terraform output",
+      "Fixed an issue causing JSON-to-IaC for Network ACLs with no rules to fail at time of apply",
+      "Fixed an issue causing ACL Rule names in modals to not show as invalid when the rule name is a duplicate of an existing rule name"
     ],
     "upgrade_notes": [
       "Removed unused artifacts from JSON-to-IaC code",

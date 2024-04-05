@@ -10,7 +10,14 @@ import {
   Modal,
   Theme,
 } from "@carbon/react";
-import { Reset, Download, Debug, Code, CodeHide } from "@carbon/icons-react";
+import {
+  Reset,
+  Download,
+  Debug,
+  Code,
+  CodeHide,
+  SettingsCheck,
+} from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import LeftNav from "./LeftNav";
 import { downloadContent } from "../utils";
@@ -209,6 +216,17 @@ class Navigation extends React.Component {
               isResetState={this.props.isResetState}
               onClick={this.onInvalidClick}
             />
+            {this.props.isResetState === false && (
+              <HeaderGlobalAction
+                aria-label="Validate Images"
+                isActive
+                tooltipAlignment="end"
+                rel="noopener noreferrer"
+                onClick={this.props.onValidationClick}
+              >
+                <SettingsCheck />
+              </HeaderGlobalAction>
+            )}
             {this.props.isResetState === false && (
               <HeaderGlobalAction
                 aria-label="Download Environment Terraform"

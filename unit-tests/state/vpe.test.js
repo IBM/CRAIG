@@ -366,6 +366,14 @@ describe("virtual_private_endpoints", () => {
           "it should be hidden"
         );
       });
+      it("should be invalid if service is secrets manager and no instance", () => {
+        assert.isTrue(
+          craig.virtual_private_endpoints.instance.invalid({
+            service: "secrets-manager",
+          }),
+          "it should be hidden"
+        );
+      });
       it("should return groups", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.instance.groups({}, { craig: craig }),

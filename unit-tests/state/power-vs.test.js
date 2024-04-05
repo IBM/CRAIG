@@ -499,6 +499,15 @@ describe("power-vs", () => {
           "it should be false"
         );
       });
+      it("should not be invalid when no images", () => {
+        assert.isTrue(
+          craig.power.imageNames.invalid({ imageNames: [] }),
+          "it should be false"
+        );
+      });
+      it("should not be invalid when no imageNames field", () => {
+        assert.isTrue(craig.power.imageNames.invalid({}), "it should be false");
+      });
       it("should return images and zone for updated key", () => {
         assert.deepEqual(
           craig.power.imageNames.forceUpdateKey({
@@ -1219,6 +1228,22 @@ describe("power-vs", () => {
     });
     describe("power.cloud_connections.schema", () => {
       describe("power.cloud_connections.transit_gateways", () => {
+        it("should be invalid when enabled and no tgw", () => {
+          assert.isTrue(
+            craig.power.cloud_connections.transit_gateways.invalid({
+              pi_cloud_connection_transit_enabled: true,
+              transit_gateways: [],
+            }),
+            "it should be invalid"
+          );
+          assert.isFalse(
+            craig.power.cloud_connections.transit_gateways.invalid({
+              pi_cloud_connection_transit_enabled: false,
+              transit_gateways: [],
+            }),
+            "it should be valid"
+          );
+        });
         describe("power.cloud_connections.transit_gateways.hideWhen", () => {
           it("should return false if pi_cloud_connection_transit_enabled is true", () => {
             assert.isFalse(

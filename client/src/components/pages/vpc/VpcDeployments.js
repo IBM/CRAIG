@@ -542,6 +542,22 @@ class VpcDeploymentsDiagramPage extends React.Component {
                       parentState={this.state}
                       tabSelected={this.tabSelected}
                       onTabClick={this.onSgTabClick}
+                      buttons={(vpcIndex) => {
+                        return (
+                          <PrimaryButton
+                            type="add"
+                            hoverText="Create a Deployment"
+                            noDeleteButton
+                            onClick={() => {
+                              this.resetSelection();
+                              this.setState({
+                                vpcIndex: vpcIndex,
+                                showModal: true,
+                              });
+                            }}
+                          />
+                        );
+                      }}
                     >
                       <RoutingTables
                         craig={craig}

@@ -200,7 +200,10 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         : componentProps.innerFormProps.craig;
     craigRef.store.json.vpcs.forEach((network) => {
       network.acls.forEach((acl) => {
-        if (acl.name === componentProps.parent_name) {
+        if (
+          acl.name === componentProps.parent_name ||
+          acl.name === componentProps.arrayParentName
+        ) {
           allOtherNames = splat(acl.rules, "name");
         }
       });

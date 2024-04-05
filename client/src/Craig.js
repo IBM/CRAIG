@@ -8,6 +8,7 @@ import {
   distinct,
   splatContains,
   getObjectFromArray,
+  eachKey,
 } from "lazy-z";
 import { useParams } from "react-router-dom";
 import {
@@ -26,7 +27,10 @@ import { ObservabilityForm } from "./components/forms";
 import { JsonDocs } from "./components/pages/JsonDocs";
 import Stats from "./components/pages/Stats";
 import Tutorial from "./components/pages/tutorial/Tutorial";
-import { LoadingModal } from "./components/pages/projects/LoadingModal";
+import {
+  LoadingModal,
+  ValidationModal,
+} from "./components/pages/projects/LoadingModal";
 import {
   getAndUpdateProjects,
   onProjectDeleteCallback,
@@ -115,6 +119,7 @@ class Craig extends React.Component {
     this.projectFetch = this.projectFetch.bind(this);
     this.saveProject = this.saveProject.bind(this);
     this.showAndSnapshot = this.showAndSnapshot.bind(this);
+    this.afterValidation = this.afterValidation.bind(this);
   }
 
   // when react component mounts, set update callback for store
@@ -580,6 +585,34 @@ class Craig extends React.Component {
     });
   }
 
+  /**
+   * on validation modal done
+   * @param {*} invalidItems
+   */
+  afterValidation(invalidItems) {
+    let noItemsInvalid = true;
+    // if any arrays in the map of invalid items have a name contained within
+    // set to false
+    eachKey(invalidItems, (item) => {
+      if (invalidItems[item].length > 0) {
+        noItemsInvalid = false;
+      }
+    });
+    // if no items are invalid, hide modal. otherwise save invalid items to state
+    if (noItemsInvalid)
+      this.setState({
+        showValidationModal: false,
+        loadingModalOpen: false,
+        awaitingValidation: false,
+      });
+    else
+      this.setState({
+        invalidItems,
+        awaitingValidation: false,
+        loadingModalOpen: false,
+      });
+  }
+
   render() {
     window.localStorage.setItem("craigVisited", true);
     return !this.state.visited ? (
@@ -646,7 +679,32 @@ class Craig extends React.Component {
           saveAndSendNotification={this.saveAndSendNotification}
           beta={this.props.params.v2Page}
           showAndSnapshot={this.showAndSnapshot}
+          onValidationClick={() => {
+            this.setState(
+              { loadingModalOpen: true, awaitingValidation: true },
+              () => {
+                this.onProjectSelect(
+                  this.state.projects[this.state.store.project_name]
+                    .project_name,
+                  "",
+                  this.afterValidation
+                );
+              }
+            );
+          }}
         >
+          {this.state.showValidationModal && (
+            <ValidationModal
+              invalidItems={this.state.invalidItems}
+              afterValidation={() => {
+                this.setState({
+                  showValidationModal: false,
+                  invalidItems: {},
+                });
+              }}
+              removeInvalidReferences={this.removeInvalidReferences}
+            />
+          )}
           {this.props.params.doc ? (
             this.props.params.doc === "about" ? (
               <About />
@@ -713,17 +771,17 @@ class Craig extends React.Component {
         {this.state.loadingModalOpen && (
           <LoadingModal
             className="alignItemsCenter"
-            action="create"
             project={this.state.clickedProject}
             workspace={this.state.clickedWorkspace}
             open={this.state.loadingModalOpen}
             completed={this.state.loadingDone}
-            workspace_url={this.state.clickedWorkspaceUrl}
             toggleModal={this.toggleLoadingModal}
-            failed={this.state.schematicsFailed}
             // props for retry
             projects={this.state.projects}
-            retryCallback={this.onProjectSave}
+            retryCallback={() => {}}
+            customHeading={
+              this.state.awaitingValidation ? "Validating Images" : undefined
+            }
           />
         )}
       </>

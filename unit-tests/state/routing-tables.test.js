@@ -254,6 +254,44 @@ describe("routing_tables", () => {
           "it should be disabled"
         );
       });
+      it("should return true if a routing table route has an invalid destination", () => {
+        assert.isTrue(
+          craig.routing_tables.routes.destination.invalid({
+            name: "aaa",
+            destination: "",
+            action: "deliver",
+          }),
+          "it should be true"
+        );
+        assert.isTrue(
+          craig.routing_tables.routes.destination.invalid({
+            name: "aaa",
+            destination: "aaaa",
+            action: "deliver",
+          }),
+          "it should be true"
+        );
+      });
+      it("should return true if a routing table route has an invalid next hop", () => {
+        assert.isTrue(
+          craig.routing_tables.routes.next_hop.invalid({
+            name: "aaa",
+            next_hop: "aaa",
+            action: "deliver",
+          }),
+          "it should be true"
+        );
+      });
+      it("should return true if a routing table route has an invalid next hop as cidr block", () => {
+        assert.isTrue(
+          craig.routing_tables.routes.next_hop.invalid({
+            name: "aaa",
+            next_hop: "1.2.3.4/5",
+            action: "deliver",
+          }),
+          "it should be true"
+        );
+      });
     });
   });
 });

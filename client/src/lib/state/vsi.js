@@ -542,7 +542,7 @@ function initVsiStore(store) {
             placeholder: "100",
             invalid: function (stateData) {
               return (
-                !isNullOrEmptyString(stateData.capacity) &&
+                !isNullOrEmptyString(stateData.capacity, true) &&
                 (stateData.capacity.indexOf(".") !== -1 ||
                   !isInRange(Number(stateData.capacity), 10, 16000))
               );

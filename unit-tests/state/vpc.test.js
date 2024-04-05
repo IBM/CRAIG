@@ -7292,6 +7292,12 @@ describe("vpcs", () => {
       beforeEach(() => {
         craig = newState();
       });
+      it("should hide advaned when modal", () => {
+        assert.isTrue(
+          craig.vpcs.subnetTiers.advanced.hideWhen({}, { isModal: true }),
+          "it should be hidden"
+        );
+      });
       it("should return true when name invalid", () => {
         let actualData = craig.vpcs.subnetTiers.name.invalidText(
           { name: "@@@" },

@@ -24,7 +24,9 @@ export const LoadingModal = (props) => {
       open={props.open}
       passiveModal={!props.completed}
       modalHeading={
-        props.completed === false
+        props.customHeading
+          ? props.customHeading
+          : props.completed === false
           ? `${task} Schematics Workspace: ${props.workspace}`
           : `${task} ` + (isFailed ? "Failed!" : "Completed!")
       }

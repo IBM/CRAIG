@@ -5,6 +5,7 @@ const {
   getObjectFromArray,
   contains,
   revision,
+  isEmpty,
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -280,7 +281,7 @@ function ibmIsNetworkAcl(acl, config, useRules) {
       tags: getTags(config),
     },
   };
-  if (useRules && !acl.use_data) {
+  if (useRules && !acl.use_data && !isEmpty(acl.rules)) {
     aclData.data.rules = [];
     acl.rules.forEach((rule) => {
       let ruleValues = {

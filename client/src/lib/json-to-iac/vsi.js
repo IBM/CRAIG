@@ -143,7 +143,7 @@ function ibmIsInstance(vsi, config) {
   if (vsi.user_data) {
     vsiData.user_data = contains(vsi.user_data, "${data.")
       ? vsi.user_data
-      : `\${<<USER_DATA\n${vsi.user_data}\n  USER_DATA}`;
+      : `<<USER_DATA\n${vsi.user_data}\n  USER_DATA`;
   }
   if (vsi.volumes) {
     vsiData.volumes = [];
@@ -237,7 +237,7 @@ function formatVsi(vsi, config) {
   ibmIsVolume(vsi, config).forEach((volume) => {
     tf += jsonToTfPrint("resource", "ibm_is_volume", volume.name, volume.data);
   });
-  return tf;
+  return tf.replace(/"\<\</g, "<<").replace('USER_DATA"', "USER_DATA");
 }
 
 /**

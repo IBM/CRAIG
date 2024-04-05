@@ -1566,6 +1566,9 @@ function initVpcStore(store) {
               stateData.zones = componentProps.data.zones;
               return !stateData.advanced;
             },
+            hideWhen: function (stateData, componentProps) {
+              return componentProps.isModal;
+            },
           },
           networkAcl: {
             size: "small",
