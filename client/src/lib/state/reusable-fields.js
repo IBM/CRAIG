@@ -631,7 +631,7 @@ function networkingRuleProtocolField(isAcl) {
   return {
     size: "small",
     type: "select",
-    default: "",
+    default: "all",
     groups: ["All", "TCP", "UDP", "ICMP"],
     invalid: fieldIsNullOrEmptyString("ruleProtocol"),
     invalidText: selectInvalidText("protocol"),

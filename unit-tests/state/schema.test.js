@@ -1645,7 +1645,7 @@ describe("automate schema generation", () => {
                 },
                 ruleProtocol: {
                   type: "string",
-                  default: null,
+                  default: "all",
                   groups: ["all", "tcp", "udp", "icmp"],
                 },
                 port_min: { type: "string", default: null },
@@ -1799,7 +1799,7 @@ describe("automate schema generation", () => {
                     },
                     ruleProtocol: {
                       type: "string",
-                      default: null,
+                      default: "all",
                       groups: ["all", "tcp", "udp", "icmp"],
                     },
                     destination: { type: "string", default: null },
