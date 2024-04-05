@@ -185,7 +185,7 @@ function invalidCidrBlock(value) {
  */
 function forceShowForm(stateData, componentProps) {
   let openForm = false;
-  if (componentProps.innerFormProps.data.enable === false) {
+  if (componentProps.innerFormProps?.data.enable === false) {
     return openForm;
   }
 
@@ -206,7 +206,7 @@ function forceShowForm(stateData, componentProps) {
   if (!openForm) {
     openForm = disableSave(
       componentProps.submissionFieldName,
-      componentProps.innerFormProps.data,
+      componentProps.innerFormProps?.data,
       componentProps.innerFormProps
     );
   }

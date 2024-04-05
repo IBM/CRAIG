@@ -626,7 +626,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                     <ScrollFormWrapper>
                       {this.state.editing &&
                       this.state.selectedItem === "f5_vsi" ? (
-                        <div className="rightForm marginTop1Rem">
+                        <div>
                           <CraigFormHeading
                             icon={<F5Icon />}
                             name="Editing F5 Big IP Deployment"
