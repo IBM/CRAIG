@@ -411,13 +411,9 @@ function shouldDisableComponentSave(fields, component, subComponent) {
  * @returns {boolean} true if invalid
  */
 function isIpStringInvalid(value) {
-  if (
-    !isNullOrEmptyString(value) &&
-    value.match(commaSeparatedIpListExp) === null
-  ) {
-    return true;
-  }
-  return false;
+  return (
+    !isNullOrEmptyString(value) && value.match(commaSeparatedIpListExp) === null
+  );
 }
 
 /**
@@ -588,7 +584,7 @@ function sshKeySchema(fieldName) {
         splat(
           // add keys that do not have the name of the current key
           componentProps.craig.store.json[fieldName].filter((sshKey) => {
-            if (sshKey.name !== componentProps.data.name) {
+            if (sshKey.name !== componentProps?.data?.name) {
               return sshKey;
             }
           }),

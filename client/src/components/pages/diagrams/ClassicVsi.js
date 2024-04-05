@@ -4,16 +4,10 @@ import { PowerSubnetInnerBox } from "./PowerSubnetInnerBox";
 import { InstanceClassic } from "@carbon/icons-react";
 import { DeploymentIcon } from "./DeploymentIcon";
 import HoverClassNameWrapper from "./HoverClassNameWrapper";
+import { classicVsiFilter } from "../../../lib";
 
 export const ClassicVsi = (props) => {
-  let vsis = [];
-  props.craig.store.json.classic_vsi.forEach((vsi, vsiIndex) => {
-    if (vsi.private_vlan === props.vlan || vsi.public_vlan === props.vlan) {
-      let copyVsi = { ...vsi };
-      copyVsi.index = vsiIndex;
-      vsis.push(copyVsi);
-    }
-  });
+  let vsis = classicVsiFilter(props);
   return vsis.length === 0 ? (
     ""
   ) : (

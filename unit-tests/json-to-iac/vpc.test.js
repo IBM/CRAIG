@@ -1258,6 +1258,51 @@ resource "ibm_is_network_acl" "management_management_acl" {
         "it should return correct data"
       );
     });
+    it("should format network acl with nested rules and no rules", () => {
+      let actualData = formatAcl(
+        {
+          name: "management",
+          resource_group: "slz-management-rg",
+          vpc: "management",
+          rules: [],
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+            tags: ["hello", "world"],
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-management-rg",
+            },
+          ],
+          vpcs: [
+            {
+              name: "managment",
+            },
+          ],
+        },
+        true
+      );
+      let expectedData = `
+resource "ibm_is_network_acl" "management_management_acl" {
+  name           = "\${var.prefix}-management-management-acl"
+  vpc            = ibm_is_vpc.management_vpc.id
+  resource_group = var.slz_management_rg_id
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("formatAclRule", () => {
     it("should format network acl rule with no protocol", () => {

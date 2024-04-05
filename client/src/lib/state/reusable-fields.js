@@ -200,7 +200,10 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         : componentProps.innerFormProps.craig;
     craigRef.store.json.vpcs.forEach((network) => {
       network.acls.forEach((acl) => {
-        if (acl.name === componentProps.parent_name) {
+        if (
+          acl.name === componentProps.parent_name ||
+          acl.name === componentProps.arrayParentName
+        ) {
           allOtherNames = splat(acl.rules, "name");
         }
       });
@@ -288,11 +291,6 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.power,
       "ssh_keys",
-      "name"
-    );
-  } else if (field === "classic_ssh_keys") {
-    allOtherNames = splat(
-      componentProps.craig.store.json.classic_ssh_keys,
       "name"
     );
   } else if (field === "network") {
@@ -636,7 +634,7 @@ function networkingRuleProtocolField(isAcl) {
   return {
     size: "small",
     type: "select",
-    default: "",
+    default: "all",
     groups: ["All", "TCP", "UDP", "ICMP"],
     invalid: fieldIsNullOrEmptyString("ruleProtocol"),
     invalidText: selectInvalidText("protocol"),

@@ -5,7 +5,7 @@ info:
     Cloud Resources and Infrastructure as Code Generator.
 
     In order to use the CRAIG API, you must set the environment variable `API_KEY` to your IBM Cloud API Key
-  version: 1.14.0
+  version: 1.14.1
 servers:
   - url: http://localhost:8080
 externalDocs:

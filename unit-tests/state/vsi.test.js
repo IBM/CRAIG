@@ -375,9 +375,6 @@ describe("vsi", () => {
     });
   });
   describe("volumes", () => {
-    beforeEach(() => {
-      craig = newState();
-    });
     describe("volumes.create", () => {
       it("should create a new vsi volume", () => {
         craig.vsi.volumes.create(
@@ -485,6 +482,28 @@ describe("vsi", () => {
           [],
           "it should be null"
         );
+      });
+    });
+    describe("volumes.schema", () => {
+      describe("capacity", () => {
+        it("should be false if unfound", () => {
+          assert.isFalse(
+            craig.vsi.volumes.capacity.invalid({ capacity: "" }),
+            "it should be valid"
+          );
+        });
+        it("should be true if decimal", () => {
+          assert.isTrue(
+            craig.vsi.volumes.capacity.invalid({ capacity: "1.2" }),
+            "it should be invalid"
+          );
+        });
+        it("should be true if not in range", () => {
+          assert.isTrue(
+            craig.vsi.volumes.capacity.invalid({ capacity: "-1" }),
+            "it should be invalid"
+          );
+        });
       });
     });
   });

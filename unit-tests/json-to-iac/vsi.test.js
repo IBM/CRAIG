@@ -1944,5 +1944,198 @@ resource "ibm_is_floating_ip" "management_vpc_management_server_vsi_1_1_fip" {
         "it should return correct data"
       );
     });
+    it("should have correct templating for user-data", () => {
+      let nw = {};
+      transpose(slzNetwork, nw);
+      nw.vsi = [
+        {
+          kms: "kms",
+          encryption_key: "encryption-key",
+          image: "ibm-redhat-8-6-minimal-amd64-7",
+          image_name:
+            "Red Hat Enterprise Linux 8.x - Minimal Install (amd64) [ibm-redhat-8-6-minimal-amd64-7]",
+          profile: "bx2-2x8",
+          name: "ase",
+          security_groups: ["customer-vsi-sg"],
+          ssh_keys: ["ssh-key"],
+          vpc: "workload",
+          vsi_per_subnet: "1",
+          resource_group: "customer-rg",
+          override_vsi_name: null,
+          user_data:
+            "  #!/bin/bash\n  echo 'export IBM_CLOUD_API_KEY=${var.ibmcloud_api_key}' >> ~/.bashrc \n  echo 'export SECRETS_MANAGER_INSTANCE_ID=${var.secrets_manager_instance_id}' >> ~/.bashrc\n  echo 'export COS_KV_SECRET_ID=${var.cos_kv_secret_id}' >> ~/.bashrc\n  echo 'export REGION=${var.region}' >> ~/.bashrc\n  source ~/.bashrc",
+          network_interfaces: [],
+          subnets: ["ase-zone-1", "ase-zone-2", "dr-zone-3", "fm-zone-3"],
+          volumes: [],
+          use_variable_names: false,
+          use_snapshot: false,
+          snapshot: null,
+          enable_floating_ip: false,
+          primary_interface_ip_spoofing: false,
+        },
+      ];
+      let actualData = vsiTf(nw);
+      let expectedData = `##############################################################################
+# Image Data Sources
+##############################################################################
+
+data "ibm_is_image" "ibm_redhat_8_6_minimal_amd64_7" {
+  name = "ibm-redhat-8-6-minimal-amd64-7"
+}
+
+##############################################################################
+
+##############################################################################
+# Workload VPC Ase Deployment
+##############################################################################
+
+resource "ibm_is_instance" "workload_vpc_ase_vsi_1_1" {
+  name           = "\${var.prefix}-workload-ase-vsi-zone-1-1"
+  image          = data.ibm_is_image.ibm_redhat_8_6_minimal_amd64_7.id
+  profile        = "bx2-2x8"
+  resource_group = ibm_resource_group.customer_rg.id
+  vpc            = module.workload_vpc.id
+  zone           = "\${var.region}-1"
+  user_data      = <<USER_DATA
+  #!/bin/bash
+  echo 'export IBM_CLOUD_API_KEY=\${var.ibmcloud_api_key}' >> ~/.bashrc 
+  echo 'export SECRETS_MANAGER_INSTANCE_ID=\${var.secrets_manager_instance_id}' >> ~/.bashrc
+  echo 'export COS_KV_SECRET_ID=\${var.cos_kv_secret_id}' >> ~/.bashrc
+  echo 'export REGION=\${var.region}' >> ~/.bashrc
+  source ~/.bashrc
+  USER_DATA
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.workload_vpc.ase_zone_1_id
+    security_groups = [
+      module.workload_vpc.customer_vsi_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.kms_encryption_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.ssh_key.id
+  ]
+  volumes = [
+  ]
+}
+
+resource "ibm_is_instance" "workload_vpc_ase_vsi_2_1" {
+  name           = "\${var.prefix}-workload-ase-vsi-zone-2-1"
+  image          = data.ibm_is_image.ibm_redhat_8_6_minimal_amd64_7.id
+  profile        = "bx2-2x8"
+  resource_group = ibm_resource_group.customer_rg.id
+  vpc            = module.workload_vpc.id
+  zone           = "\${var.region}-2"
+  user_data      = <<USER_DATA
+  #!/bin/bash
+  echo 'export IBM_CLOUD_API_KEY=\${var.ibmcloud_api_key}' >> ~/.bashrc 
+  echo 'export SECRETS_MANAGER_INSTANCE_ID=\${var.secrets_manager_instance_id}' >> ~/.bashrc
+  echo 'export COS_KV_SECRET_ID=\${var.cos_kv_secret_id}' >> ~/.bashrc
+  echo 'export REGION=\${var.region}' >> ~/.bashrc
+  source ~/.bashrc
+  USER_DATA
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.workload_vpc.ase_zone_2_id
+    security_groups = [
+      module.workload_vpc.customer_vsi_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.kms_encryption_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.ssh_key.id
+  ]
+  volumes = [
+  ]
+}
+
+resource "ibm_is_instance" "workload_vpc_ase_vsi_3_1" {
+  name           = "\${var.prefix}-workload-ase-vsi-zone-3-1"
+  image          = data.ibm_is_image.ibm_redhat_8_6_minimal_amd64_7.id
+  profile        = "bx2-2x8"
+  resource_group = ibm_resource_group.customer_rg.id
+  vpc            = module.workload_vpc.id
+  zone           = "\${var.region}-3"
+  user_data      = <<USER_DATA
+  #!/bin/bash
+  echo 'export IBM_CLOUD_API_KEY=\${var.ibmcloud_api_key}' >> ~/.bashrc 
+  echo 'export SECRETS_MANAGER_INSTANCE_ID=\${var.secrets_manager_instance_id}' >> ~/.bashrc
+  echo 'export COS_KV_SECRET_ID=\${var.cos_kv_secret_id}' >> ~/.bashrc
+  echo 'export REGION=\${var.region}' >> ~/.bashrc
+  source ~/.bashrc
+  USER_DATA
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.workload_vpc.dr_zone_3_id
+    security_groups = [
+      module.workload_vpc.customer_vsi_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.kms_encryption_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.ssh_key.id
+  ]
+  volumes = [
+  ]
+}
+
+resource "ibm_is_instance" "workload_vpc_ase_vsi_3_1" {
+  name           = "\${var.prefix}-workload-ase-vsi-zone-3-1"
+  image          = data.ibm_is_image.ibm_redhat_8_6_minimal_amd64_7.id
+  profile        = "bx2-2x8"
+  resource_group = ibm_resource_group.customer_rg.id
+  vpc            = module.workload_vpc.id
+  zone           = "\${var.region}-3"
+  user_data      = <<USER_DATA
+  #!/bin/bash
+  echo 'export IBM_CLOUD_API_KEY=\${var.ibmcloud_api_key}' >> ~/.bashrc 
+  echo 'export SECRETS_MANAGER_INSTANCE_ID=\${var.secrets_manager_instance_id}' >> ~/.bashrc
+  echo 'export COS_KV_SECRET_ID=\${var.cos_kv_secret_id}' >> ~/.bashrc
+  echo 'export REGION=\${var.region}' >> ~/.bashrc
+  source ~/.bashrc
+  USER_DATA
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.workload_vpc.fm_zone_3_id
+    security_groups = [
+      module.workload_vpc.customer_vsi_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.kms_encryption_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.ssh_key.id
+  ]
+  volumes = [
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
 });

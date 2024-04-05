@@ -12,7 +12,7 @@ export const downloadContent = (json, projectName, imageBlob) => {
   try {
     let files = configToFilesJson(json); // get files
     if (imageBlob) {
-      zip.file(`${projectName}.png`, imageBlob);
+      zip.file(`craig.png`, imageBlob);
     }
     eachKey(files, (file) => {
       // add each file's contents to the zip if it is not null or empty string

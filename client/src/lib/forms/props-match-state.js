@@ -35,7 +35,7 @@ function propsMatchState(field, stateData, componentProps) {
   } else if (
     stateData.zone &&
     stateData.zone !== componentProps.data.zone &&
-    !contains(["subnet", "public_gateway", "power"], field)
+    !contains(["subnet", "public_gateway", "power", "vpn_servers"], field)
   ) {
     // prevent open nested power workspace forms from being invalid when open and
     // parent zone is changed

@@ -8,6 +8,7 @@ const {
   contains,
   splat,
   isString,
+  deepEqual,
 } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const {
@@ -82,6 +83,9 @@ function vpnServerOnStoreUpdate(config) {
     }
     if (isString(server.protocol)) {
       server.protocol = server.protocol.toLowerCase();
+    }
+    if (deepEqual(server.additional_prefixes, [""])) {
+      server.additional_prefixes = [];
     }
   });
 }

@@ -1,4 +1,4 @@
-const { nestedSplat, transpose } = require("lazy-z");
+const { nestedSplat, transpose, isNullOrEmptyString } = require("lazy-z");
 const { lazyZstate } = require("lazy-z/lib/store");
 const { newDefaultKms } = require("./defaults");
 const {
@@ -279,10 +279,11 @@ function initKeyManagement(store) {
         schema: {
           name: nameField("encryption_keys"),
           key_ring: {
+            optional: true,
             default: "",
             invalid: function (stateData) {
               return (
-                stateData.key_ring !== "" &&
+                !isNullOrEmptyString(stateData.key_ring, true) &&
                 invalidNewResourceName(stateData.key_ring)
               );
             },

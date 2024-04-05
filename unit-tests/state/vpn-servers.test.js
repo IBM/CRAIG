@@ -38,7 +38,7 @@ describe("vpn_servers", () => {
         security_groups: ["management-vpe"],
         subnets: ["vsi-zone-1"],
         vpc: "blah",
-        additional_prefixes: [],
+        additional_prefixes: [""],
       });
       let expectedData = {
         name: "vpn-server",
@@ -503,6 +503,13 @@ describe("vpn_servers", () => {
           additional_prefixes: "",
         }),
         [""],
+        "it should return string"
+      );
+      assert.deepEqual(
+        craig.vpn_servers.additional_prefixes.onInputChange({
+          additional_prefixes: "1.2.3.4/5,",
+        }),
+        ["1.2.3.4/5", ""],
         "it should return string"
       );
     });

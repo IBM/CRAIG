@@ -254,6 +254,7 @@ const PageTemplate = (props) => {
         formPathNotPresent={formPathNotPresent}
         invalidForms={props.invalidForms}
         showAndSnapshot={props.showAndSnapshot}
+        onValidationClick={props.onValidationClick}
       />
       {!isResetState && (
         <>

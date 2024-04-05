@@ -16,9 +16,11 @@ describe("classic security groups state", () => {
   let craig;
   beforeEach(() => {
     craig = newState();
+    craig.classic_security_groups.create({ name: "test", description: "" });
   });
   describe("classic_security_groups.init", () => {
     it("should initialize classic security groups", () => {
+      craig = newState(); // test for init without creation
       assert.deepEqual(
         craig.store.json.classic_security_groups,
         [],
@@ -28,7 +30,6 @@ describe("classic security groups state", () => {
   });
   describe("classic_security_groups.create", () => {
     it("should create a security group", () => {
-      craig.classic_security_groups.create({ name: "test", description: "" });
       assert.deepEqual(
         craig.store.json.classic_security_groups,
         [
@@ -44,7 +45,6 @@ describe("classic security groups state", () => {
   });
   describe("classic_security_groups.save", () => {
     it("should update a security group", () => {
-      craig.classic_security_groups.create({ name: "test", description: "" });
       craig.classic_security_groups.save(
         { name: "test2", description: "" },
         {
@@ -67,7 +67,6 @@ describe("classic security groups state", () => {
       );
     });
     it("should update a security group and rules", () => {
-      craig.classic_security_groups.create({ name: "test", description: "" });
       craig.classic_security_groups.save(
         {
           name: "test2",
@@ -104,7 +103,6 @@ describe("classic security groups state", () => {
   });
   describe("classic_security_groups.delete", () => {
     it("should delete a security group", () => {
-      craig.classic_security_groups.create({ name: "test", description: "" });
       craig.classic_security_groups.delete(
         {},
         { data: { name: "test", description: "" } }
@@ -127,9 +125,6 @@ describe("classic security groups state", () => {
     });
   });
   describe("classic_security_groups.classic_sg_rules", () => {
-    beforeEach(() => {
-      craig.classic_security_groups.create({ name: "test", description: "" });
-    });
     describe("create", () => {
       it("should create a security group rule", () => {
         craig.classic_security_groups.classic_sg_rules.create(

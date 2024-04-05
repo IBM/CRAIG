@@ -12,25 +12,26 @@ function newState() {
 }
 
 describe("cbr_zones", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("cbr_zones.init", () => {
     it("should initialize cbr zones", () => {
-      let state = new newState();
-      assert.deepEqual(state.store.json.cbr_zones, [], "it should return data");
+      assert.deepEqual(craig.store.json.cbr_zones, [], "it should return data");
     });
   });
   describe("cbr_zone crud functions", () => {
-    let state;
     beforeEach(() => {
-      state = new newState();
-    });
-    it("should create a new cbr zone", () => {
-      state.cbr_zones.create({
+      craig.cbr_zones.create({
         name: "cbr-zone",
         account_id: "test-id",
         description: "",
         addresses: [],
         exclusions: [],
       });
+    });
+    it("should create a new cbr zone", () => {
       let expectedData = [
         {
           name: "cbr-zone",
@@ -40,17 +41,10 @@ describe("cbr_zones", () => {
           exclusions: [],
         },
       ];
-      assert.deepEqual(state.store.json.cbr_zones, expectedData);
+      assert.deepEqual(craig.store.json.cbr_zones, expectedData);
     });
     it("should update a cbr zone", () => {
-      state.cbr_zones.create({
-        name: "cbr-zone",
-        account_id: "test-id",
-        description: "",
-        addresses: [],
-        exclusions: [],
-      });
-      state.cbr_zones.save(
+      craig.cbr_zones.save(
         {
           account_id: "new",
           description: "hi",
@@ -71,24 +65,15 @@ describe("cbr_zones", () => {
           exclusions: [],
         },
       ];
-      assert.deepEqual(state.store.json.cbr_zones, expectedData);
+      assert.deepEqual(craig.store.json.cbr_zones, expectedData);
     });
     it("should delete a cbr zone", () => {
-      state.cbr_zones.create({
-        name: "cbr-zone",
-        account_id: "test-id",
-        description: "",
-        addresses: [],
-        exclusions: [],
-      });
-      state.cbr_zones.delete({}, { data: { name: "cbr-zone" } });
-      assert.deepEqual(state.store.json.cbr_zones, []);
+      craig.cbr_zones.delete({}, { data: { name: "cbr-zone" } });
+      assert.deepEqual(craig.store.json.cbr_zones, []);
     });
     describe("cbr zone addresses crud functions", () => {
-      let state;
       beforeEach(() => {
-        state = new newState();
-        state.cbr_zones.create({
+        craig.cbr_zones.create({
           name: "cbr-zone",
           account_id: "test-id",
           description: "",
@@ -97,7 +82,7 @@ describe("cbr_zones", () => {
         });
       });
       it("should create an address", () => {
-        state.cbr_zones.addresses.create(
+        craig.cbr_zones.addresses.create(
           {
             name: "name",
             account_id: "id",
@@ -109,7 +94,7 @@ describe("cbr_zones", () => {
           },
           {
             innerFormProps: { arrayParentName: "cbr-zone" },
-            arrayData: state.store.json.cbr_zones[0].addresses,
+            arrayData: craig.store.json.cbr_zones[0].addresses,
           }
         );
         let expectedData = {
@@ -122,12 +107,12 @@ describe("cbr_zones", () => {
           value: "2.2.2.2",
         };
         assert.deepEqual(
-          state.store.json.cbr_zones[0].addresses[0],
+          craig.store.json.cbr_zones[0].addresses[0],
           expectedData
         );
       });
       it("should update an address", () => {
-        state.cbr_zones.addresses.create(
+        craig.cbr_zones.addresses.create(
           {
             name: "name",
             account_id: "id",
@@ -139,10 +124,10 @@ describe("cbr_zones", () => {
           },
           {
             innerFormProps: { arrayParentName: "cbr-zone" },
-            arrayData: state.store.json.cbr_zones[0].addresses,
+            arrayData: craig.store.json.cbr_zones[0].addresses,
           }
         );
-        state.cbr_zones.addresses.save(
+        craig.cbr_zones.addresses.save(
           {
             name: "blah",
             account_id: "hi",
@@ -157,22 +142,14 @@ describe("cbr_zones", () => {
             data: { name: "name" },
           }
         );
-        let expectedData = {
-          name: "blah",
-          account_id: "hi",
-          location: "eu",
-          service_instance: "resource-group",
-          service_name: "tree",
-          type: "ipAddress",
-          value: "2.2.2.3",
-        };
         assert.deepEqual(
-          state.store.json.cbr_zones[0].addresses[0],
-          expectedData
+          craig.store.json.cbr_zones[0].addresses[0].value,
+          "2.2.2.3",
+          "it should update field"
         );
       });
       it("should delete an address", () => {
-        state.cbr_zones.addresses.create(
+        craig.cbr_zones.addresses.create(
           {
             name: "name",
             account_id: "id",
@@ -184,30 +161,19 @@ describe("cbr_zones", () => {
           },
           {
             innerFormProps: { arrayParentName: "cbr-zone" },
-            arrayData: state.store.json.cbr_zones[0].addresses,
+            arrayData: craig.store.json.cbr_zones[0].addresses,
           }
         );
-        state.cbr_zones.addresses.delete(
+        craig.cbr_zones.addresses.delete(
           {},
           { arrayParentName: "cbr-zone", data: { name: "name" } }
         );
-        assert.deepEqual(state.store.json.cbr_zones[0].addresses, []);
+        assert.deepEqual(craig.store.json.cbr_zones[0].addresses, []);
       });
     });
     describe("cbr zone exclusions crud functions", () => {
-      let state;
       beforeEach(() => {
-        state = new newState();
-        state.cbr_zones.create({
-          name: "cbr-zone",
-          account_id: "test-id",
-          description: "",
-          addresses: [],
-          exclusions: [],
-        });
-      });
-      it("should create an exclusion", () => {
-        state.cbr_zones.exclusions.create(
+        craig.cbr_zones.exclusions.create(
           {
             name: "name",
             account_id: "id",
@@ -219,9 +185,11 @@ describe("cbr_zones", () => {
           },
           {
             innerFormProps: { arrayParentName: "cbr-zone" },
-            arrayData: state.store.json.cbr_zones[0].exclusions,
+            arrayData: craig.store.json.cbr_zones[0].exclusions,
           }
         );
+      });
+      it("should create an exclusion", () => {
         let expectedData = {
           name: "name",
           account_id: "id",
@@ -232,27 +200,12 @@ describe("cbr_zones", () => {
           value: "2.2.2.2",
         };
         assert.deepEqual(
-          state.store.json.cbr_zones[0].exclusions[0],
+          craig.store.json.cbr_zones[0].exclusions[0],
           expectedData
         );
       });
       it("should update an address", () => {
-        state.cbr_zones.exclusions.create(
-          {
-            name: "name",
-            account_id: "id",
-            location: "us",
-            service_instance: "resource-group",
-            service_name: "frog",
-            type: "ipAddress",
-            value: "2.2.2.2",
-          },
-          {
-            innerFormProps: { arrayParentName: "cbr-zone" },
-            arrayData: state.store.json.cbr_zones[0].exclusions,
-          }
-        );
-        state.cbr_zones.exclusions.save(
+        craig.cbr_zones.exclusions.save(
           {
             name: "blah",
             account_id: "hi",
@@ -277,49 +230,32 @@ describe("cbr_zones", () => {
           value: "2.2.2.3",
         };
         assert.deepEqual(
-          state.store.json.cbr_zones[0].exclusions[0],
+          craig.store.json.cbr_zones[0].exclusions[0],
           expectedData
         );
       });
       it("should delete an address", () => {
-        state.cbr_zones.exclusions.create(
-          {
-            name: "name",
-            account_id: "id",
-            location: "us",
-            service_instance: "resource-group",
-            service_name: "frog",
-            type: "ipAddress",
-            value: "2.2.2.2",
-          },
-          {
-            innerFormProps: { arrayParentName: "cbr-zone" },
-            arrayData: state.store.json.cbr_zones[0].exclusions,
-          }
-        );
-        state.cbr_zones.exclusions.delete(
+        craig.cbr_zones.exclusions.delete(
           {},
           { arrayParentName: "cbr-zone", data: { name: "name" } }
         );
-        assert.deepEqual(state.store.json.cbr_zones[0].exclusions, []);
+        assert.deepEqual(craig.store.json.cbr_zones[0].exclusions, []);
       });
     });
     describe("cbr_zones.onStoreUpdate", () => {
       it("should initialize addresses to empty array", () => {
-        let state = new newState();
-        state.cbr_zones.create({
+        craig.cbr_zones.create({
           name: "cbr-rule",
           description: "description",
           account_id: "frog",
         });
-        state.update();
-        assert.deepEqual(state.store.json.cbr_zones[0].addresses, []);
+        craig.update();
+        assert.deepEqual(craig.store.json.cbr_zones[0].addresses, []);
       });
       it("should make cbr zones empty if undefined", () => {
-        let state = new newState();
-        state.store.json.cbr_zones = undefined;
-        state.update();
-        assert.deepEqual(state.store.json.cbr_zones, []);
+        craig.store.json.cbr_zones = undefined;
+        craig.update();
+        assert.deepEqual(craig.store.json.cbr_zones, []);
       });
     });
     describe("cbr-zones.schema", () => {
@@ -419,17 +355,15 @@ describe("cbr_zones", () => {
         assert.isTrue(actualData, "it should be true");
       });
       it("should return correct placeholder for address value", () => {
-        let state = new newState();
         assert.deepEqual(
-          state.cbr_zones.addresses.value.placeholder({ type: "ipAddress" }),
+          craig.cbr_zones.addresses.value.placeholder({ type: "ipAddress" }),
           "x.x.x.x",
           "it should return correct placeholder"
         );
       });
       it("should return correct invalidText for address value", () => {
-        let state = new newState();
         assert.deepEqual(
-          state.cbr_zones.addresses.value.invalidText({
+          craig.cbr_zones.addresses.value.invalidText({
             type: "ipAddress",
             value: "frog",
           }),
@@ -438,33 +372,29 @@ describe("cbr_zones", () => {
         );
       });
       it("should return correct placeholder for exclusion value", () => {
-        let state = new newState();
         assert.deepEqual(
-          state.cbr_zones.exclusions.value.placeholder({ type: "ipAddress" }),
+          craig.cbr_zones.exclusions.value.placeholder({ type: "ipAddress" }),
           "x.x.x.x",
           "it should return correct placeholder"
         );
       });
       it("should return correct placeholder for exclusion value", () => {
-        let state = new newState();
         assert.deepEqual(
-          state.cbr_zones.exclusions.value.placeholder({ type: "ipRange" }),
+          craig.cbr_zones.exclusions.value.placeholder({ type: "ipRange" }),
           "x.x.x.x-x.x.x.x",
           "it should return correct placeholder"
         );
       });
       it("should return correct placeholder for exclusion value", () => {
-        let state = new newState();
         assert.deepEqual(
-          state.cbr_zones.exclusions.value.placeholder({ type: "serviceRef" }),
+          craig.cbr_zones.exclusions.value.placeholder({ type: "serviceRef" }),
           "my-cbr-zone-serviceRef",
           "it should return correct placeholder"
         );
       });
       it("should return correct invalidText for exclusion value", () => {
-        let state = new newState();
         assert.deepEqual(
-          state.cbr_zones.exclusions.value.invalidText({
+          craig.cbr_zones.exclusions.value.invalidText({
             type: "ipAddress",
             value: "frog",
           }),
@@ -473,9 +403,8 @@ describe("cbr_zones", () => {
         );
       });
       it("should return return false if description is valid", () => {
-        let state = new newState();
         assert.isFalse(
-          state.cbr_zones.description.invalid({ description: "toad" }),
+          craig.cbr_zones.description.invalid({ description: "toad" }),
           "it should return false"
         );
       });

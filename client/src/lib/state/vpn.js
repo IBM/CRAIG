@@ -4,6 +4,7 @@ const {
   splat,
   revision,
   isIpv4CidrOrAddress,
+  isBoolean,
 } = require("lazy-z");
 const {
   setUnfoundResourceGroup,
@@ -215,6 +216,15 @@ function initVpnGatewayStore(store) {
             labelText: "Local CIDRs",
             strict: true,
           }),
+          admin_state_up: {
+            type: "toggle",
+            default: true,
+            labelText: "Connection Enabled",
+            tooltip: {
+              content:
+                "Set this value to false to enable this connection manually",
+            },
+          },
         },
       },
     },

@@ -1,11 +1,16 @@
 ---
-# Copy this file to `vars.yml` and fill in your data
+# To run this playbook , copy this file to `vars.yml` and fill in your data
+# tf_var_preshared_key is only needed for the POC template
 
-api_key: <api-key>
-ssh_key: <ssh-key>
-prefix: <unique-prefix>
-template: <template>
-workspace_name: <workspace-name>
+tf_var_api_key: "<api-key>"
+tf_var_ssh_key: "<public-ssh-key>"
+tf_var_prefix: "<unique-prefix>"
+tf_var_preshared_key: "<preshared-key>" # 6-128 characters
+
+workspace_name: "<schematics-workspace-name>"
+template: "<template>"
+action_name: "<schematics-action-name>"
+git_branch: "<branch-of-playbook>"
 
 craig_url: https://craig.119gqgw56ti1.us-south.codeengine.appdomain.cloud/api/craig/template-tar
 region: us-south
@@ -15,12 +20,12 @@ variablestore: [
               "name": "ibmcloud_api_key", 
               "secure": true,
               "use_default": false,
-              "value": "{{api_key}}"
+              "value": "{{tf_var_api_key}}"
             },
             {
               "name": "prefix",
               "use_default": false,
-              "value": "{{prefix}}"
+              "value": "{{tf_var_prefix}}"
             }
           ]
 template_map:

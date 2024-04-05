@@ -1559,12 +1559,15 @@ function initVpcStore(store) {
             },
             invalid: function (stateData) {
               return (
-                stateData.advanced === true && stateData.zones.length === 0
+                stateData.advanced === true && stateData?.zones?.length === 0
               );
             },
             onInputChange(stateData, targetData, componentProps) {
               stateData.zones = componentProps.data.zones;
               return !stateData.advanced;
+            },
+            hideWhen: function (stateData, componentProps) {
+              return componentProps.isModal;
             },
           },
           networkAcl: {

@@ -45,13 +45,16 @@ function newState() {
 }
 
 describe("clusters", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("clusters.create", () => {
     it("should add a new cluster", () => {
-      let state = new newState();
-      state.store.json.clusters = [];
-      state.clusters.create(newDefaultWorkloadCluster());
+      craig.store.json.clusters = [];
+      craig.clusters.create(newDefaultWorkloadCluster());
       assert.deepEqual(
-        state.store.json.clusters,
+        craig.store.json.clusters,
         [newDefaultWorkloadCluster()],
         "it should create cluster"
       );
@@ -59,19 +62,17 @@ describe("clusters", () => {
   });
   describe("clusters.save", () => {
     it("should update a cluster", () => {
-      let state = new newState();
-      state.clusters.save(defaultManagementCluster, {
+      craig.clusters.save(defaultManagementCluster, {
         data: { name: "workload-cluster" },
       });
       assert.deepEqual(
-        state.store.json.clusters,
+        craig.store.json.clusters,
         [defaultManagementCluster],
         "it should save cluster"
       );
     });
     it("should update cluster worker pools when changing vpc", () => {
-      let state = new newState();
-      state.clusters.create({
+      craig.clusters.create({
         cos: "cos",
         entitlement: "cloud_pak",
         kube_type: "openshift",
@@ -97,7 +98,7 @@ describe("clusters", () => {
         workers_per_subnet: 2,
         private_endpoint: true,
       });
-      state.clusters.save(
+      craig.clusters.save(
         {
           vpc: "management",
           kube_version: "default (Default)",
@@ -121,7 +122,7 @@ describe("clusters", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.clusters[1],
+        craig.store.json.clusters[1],
         {
           cos: "cos",
           entitlement: "cloud_pak",
@@ -155,8 +156,7 @@ describe("clusters", () => {
       );
     });
     it("should not update cluster worker pools when not changing vpc", () => {
-      let state = new newState();
-      state.clusters.create({
+      craig.clusters.create({
         cos: "cos",
         entitlement: "cloud_pak",
         kube_type: "openshift",
@@ -182,7 +182,7 @@ describe("clusters", () => {
         ],
         workers_per_subnet: 2,
       });
-      state.clusters.save(
+      craig.clusters.save(
         {
           vpc: "workload",
           worker_pools: [
@@ -205,7 +205,7 @@ describe("clusters", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.clusters[1],
+        craig.store.json.clusters[1],
         {
           cos: "cos",
           entitlement: "cloud_pak",
@@ -239,19 +239,18 @@ describe("clusters", () => {
       );
     });
     it("should update opaque_secret.cluster when cluster.name is changed", () => {
-      let state = new newState();
-      state.clusters.create(newDefaultWorkloadCluster());
-      state.store.json.clusters[0].opaque_secrets[0] = {
+      craig.clusters.create(newDefaultWorkloadCluster());
+      craig.store.json.clusters[0].opaque_secrets[0] = {
         name: "frog",
         cluster: "frog",
         secrets_manager: "frog",
       };
-      state.clusters.save(
+      craig.clusters.save(
         { name: "new-name" },
         { data: { name: "workload-cluster" } }
       );
       assert.deepEqual(
-        state.store.json.clusters[0].opaque_secrets[0].cluster,
+        craig.store.json.clusters[0].opaque_secrets[0].cluster,
         "new-name",
         "it should update opaque secrets cluster name"
       );
@@ -259,58 +258,53 @@ describe("clusters", () => {
   });
   describe("clusters.delete", () => {
     it("should delete cluster", () => {
-      let state = new newState();
-      state.store.json.clusters = [newDefaultWorkloadCluster()];
-      state.clusters.delete({}, { data: { name: "workload-cluster" } });
+      craig.store.json.clusters = [newDefaultWorkloadCluster()];
+      craig.clusters.delete({}, { data: { name: "workload-cluster" } });
       assert.deepEqual(
-        state.store.json.clusters,
+        craig.store.json.clusters,
         [],
         "it should delete clusters"
       );
     });
   });
   describe("clusters.onStoreUpdate", () => {
+    beforeEach(() => {
+      craig.clusters.create(newDefaultWorkloadCluster());
+    });
     it("should set resource group to null if deleted", () => {
-      let state = new newState();
-      state.clusters.create(newDefaultWorkloadCluster());
-      state.resource_groups.delete({}, { data: { name: "workload-rg" } });
+      craig.resource_groups.delete({}, { data: { name: "workload-rg" } });
       assert.deepEqual(
-        state.store.json.clusters[0].resource_group,
+        craig.store.json.clusters[0].resource_group,
         null,
         "it should be null"
       );
       assert.deepEqual(
-        state.store.json.clusters[0].worker_pools[0].resource_group,
+        craig.store.json.clusters[0].worker_pools[0].resource_group,
         null,
         "it should be null"
       );
     });
     it("should set cos to null if deleted", () => {
-      let state = new newState();
-      state.clusters.create(newDefaultWorkloadCluster());
-      state.object_storage.delete({}, { data: { name: "cos" } });
+      craig.object_storage.delete({}, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.clusters[0].cos,
+        craig.store.json.clusters[0].cos,
         null,
         "it should be null"
       );
     });
     it("should set worker pools if not found", () => {
-      let state = new newState();
       let cluster = newDefaultWorkloadCluster();
       delete cluster.worker_pools;
-      state.clusters.create(cluster);
-      state.object_storage.delete({}, { data: { name: "cos" } });
+      craig.clusters.create(cluster);
+      craig.object_storage.delete({}, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.clusters[1].worker_pools,
+        craig.store.json.clusters[2].worker_pools,
         [],
         "it should be null"
       );
     });
     it("should delete subnet names on tier deletion", () => {
-      let state = new newState();
-      state.clusters.create(newDefaultWorkloadCluster());
-      state.vpcs.subnets.delete(
+      craig.vpcs.subnets.delete(
         {},
         {
           name: "workload",
@@ -319,7 +313,7 @@ describe("clusters", () => {
           },
         }
       );
-      state.vpcs.subnets.delete(
+      craig.vpcs.subnets.delete(
         {},
         {
           name: "workload",
@@ -328,7 +322,7 @@ describe("clusters", () => {
           },
         }
       );
-      state.vpcs.subnets.delete(
+      craig.vpcs.subnets.delete(
         {},
         {
           name: "workload",
@@ -338,55 +332,47 @@ describe("clusters", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.clusters[0].subnets,
+        craig.store.json.clusters[0].subnets,
         [],
         "it should be empty"
       );
     });
     it("should set vpc name to null if deleted", () => {
-      let state = new newState();
-      state.clusters.create(newDefaultWorkloadCluster());
-      state.vpcs.delete({}, { data: { name: "workload" } });
+      craig.vpcs.delete({}, { data: { name: "workload" } });
       assert.deepEqual(
-        state.store.json.clusters[0].vpc,
+        craig.store.json.clusters[0].vpc,
         null,
         "it should be null"
       );
       assert.deepEqual(
-        state.store.json.clusters[0].subnets,
+        craig.store.json.clusters[0].subnets,
         [],
         "it should be empty"
       );
       assert.deepEqual(
-        state.store.json.clusters[0].worker_pools[0].vpc,
+        craig.store.json.clusters[0].worker_pools[0].vpc,
         null,
         "it should be null"
       );
       assert.deepEqual(
-        state.store.json.clusters[0].worker_pools[0].subnets,
+        craig.store.json.clusters[0].worker_pools[0].subnets,
         [],
         "it should be null"
       );
     });
     it("should set encryption key name to null if key deleted", () => {
-      let state = new newState();
-      state.clusters.create(newDefaultWorkloadCluster());
-      state.key_management.keys.delete(
+      craig.key_management.keys.delete(
         {},
         { arrayParentName: "kms", data: { name: "roks-key" } }
       );
       assert.deepEqual(
-        state.store.json.clusters[0].encryption_key,
+        craig.store.json.clusters[0].encryption_key,
         null,
         "it should return null"
       );
     });
   });
   describe("clusters.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     describe("clusters.name.helperText", () => {
       it("should return correct text", () => {
         assert.deepEqual(
@@ -528,11 +514,12 @@ describe("clusters", () => {
     });
   });
   describe("cluster.worker_pools", () => {
+    beforeEach(() => {
+      craig.clusters.create(newDefaultWorkloadCluster());
+    });
     describe("clusters.worker_pools.delete", () => {
       it("should delete a worker pool from a cluster object", () => {
-        let state = new newState();
-        state.clusters.create(newDefaultWorkloadCluster());
-        state.clusters.worker_pools.delete(
+        craig.clusters.worker_pools.delete(
           {},
           {
             data: { name: "logging-worker-pool" },
@@ -540,7 +527,7 @@ describe("clusters", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.clusters[0].worker_pools,
+          craig.store.json.clusters[0].worker_pools,
           [],
           "it should be empty"
         );
@@ -548,9 +535,7 @@ describe("clusters", () => {
     });
     describe("clusters.worker_pools.save", () => {
       it("should update a worker pool in place", () => {
-        let state = new newState();
-        state.clusters.create(newDefaultWorkloadCluster());
-        state.clusters.worker_pools.save(
+        craig.clusters.worker_pools.save(
           {
             cloud_pak: "no",
           },
@@ -560,7 +545,7 @@ describe("clusters", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.clusters[0].worker_pools[0].cloud_pak,
+          craig.store.json.clusters[0].worker_pools[0].cloud_pak,
           "no",
           "it should be no"
         );
@@ -568,9 +553,7 @@ describe("clusters", () => {
     });
     describe("clusters.worker_pools.create", () => {
       it("should create a worker pool", () => {
-        let state = new newState();
-        state.clusters.create(newDefaultWorkloadCluster());
-        state.clusters.worker_pools.create(
+        craig.clusters.worker_pools.create(
           {
             name: "test",
           },
@@ -579,7 +562,7 @@ describe("clusters", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.clusters[0].worker_pools[1],
+          craig.store.json.clusters[0].worker_pools[1],
           {
             cluster: "workload-cluster",
             resource_group: "workload-rg",
@@ -595,7 +578,7 @@ describe("clusters", () => {
     describe("worker pools schema", () => {
       it("should be hidden when parent kube type is not openshift", () => {
         assert.isTrue(
-          newState().clusters.worker_pools.entitlement.hideWhen(
+          craig.clusters.worker_pools.entitlement.hideWhen(
             {},
             {
               parent: {
@@ -611,14 +594,13 @@ describe("clusters", () => {
   describe("cluster.opaque_secrets", () => {
     describe("clusters.opaque_secrets.create", () => {
       it("should create an opaque secret", () => {
-        let state = new newState();
-        state.clusters.create(newDefaultWorkloadCluster());
-        state.store.json.clusters[0].opaque_secrets[0] = {
+        craig.clusters.create(newDefaultWorkloadCluster());
+        craig.store.json.clusters[0].opaque_secrets[0] = {
           name: "frog",
           cluster: "frog",
           secrets_manager: "frog",
         };
-        state.clusters.opaque_secrets.create(
+        craig.clusters.opaque_secrets.create(
           {
             name: "super_secret_password",
           },
@@ -627,7 +609,7 @@ describe("clusters", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.clusters[0].opaque_secrets[1],
+          craig.store.json.clusters[0].opaque_secrets[1],
           {
             cluster: "workload-cluster",
             name: "super_secret_password",
@@ -638,13 +620,12 @@ describe("clusters", () => {
     });
     describe("clusters.opaque_secrets.save", () => {
       it("should update an opaque secret in place", () => {
-        let state = new newState();
-        state.store.json.clusters[0].opaque_secrets[0] = {
+        craig.store.json.clusters[0].opaque_secrets[0] = {
           name: "secret",
           cluster: "frog",
           secrets_manager: "frog",
         };
-        state.clusters.opaque_secrets.save(
+        craig.clusters.opaque_secrets.save(
           {
             name: "password",
           },
@@ -654,7 +635,7 @@ describe("clusters", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.clusters[0].opaque_secrets[0].name,
+          craig.store.json.clusters[0].opaque_secrets[0].name,
           "password",
           "it should update secret name to password"
         );
@@ -662,15 +643,14 @@ describe("clusters", () => {
     });
     describe("clusters.opaque_secrets.delete", () => {
       it("should delete an opauqe secret from a cluster object", () => {
-        let state = new newState();
-        state.clusters.create(newDefaultWorkloadCluster());
-        state.store.json.clusters[0].opaque_secrets[0] = {
+        craig.clusters.create(newDefaultWorkloadCluster());
+        craig.store.json.clusters[0].opaque_secrets[0] = {
           name: "secret",
           cluster: "frog",
           secrets_manager: "frog",
         };
-        state.update();
-        state.clusters.opaque_secrets.delete(
+        craig.update();
+        craig.clusters.opaque_secrets.delete(
           {},
           {
             data: { name: "secret" },
@@ -678,17 +658,13 @@ describe("clusters", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.clusters[0].opaque_secrets,
+          craig.store.json.clusters[0].opaque_secrets,
           [],
           "it should be empty"
         );
       });
     });
     describe("clusters.opaque_secrets.schema", () => {
-      let craig;
-      beforeEach(() => {
-        craig = newState();
-      });
       it("should return true if arbitrary_secret_name has empty string as name", () => {
         let actualData =
           craig.clusters.opaque_secrets.arbitrary_secret_name.invalid(

@@ -1,0 +1,4 @@
+---
+- name: Pause playbook for 5 minutes
+  ansible.builtin.pause:
+    minutes: "{{ pause_time }}"

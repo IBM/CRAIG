@@ -24,6 +24,7 @@ const {
   deleteSubChild,
 } = require("./store.utils");
 const { nameField } = require("./reusable-fields");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * init cis
@@ -120,7 +121,23 @@ function initCis(store) {
             invalid: function (stateData, componentProps) {
               if (
                 isNullOrEmptyString(stateData.domain, true) ||
-                stateData.domain.match(/^(\w+\.)+[a-z]+$/g) === null
+                stateData.domain.match(
+                  new RegexButWithWords()
+                    .stringBegin()
+                    .group((exp) => {
+                      exp
+                        .set((exp) => {
+                          exp.word().literal("-");
+                        })
+                        .anyNumber()
+                        .literal(".");
+                    })
+                    .anyNumber()
+                    .set("a-z")
+                    .oneOrMore()
+                    .stringEnd()
+                    .done("g")
+                ) === null
               ) {
                 return true;
               }

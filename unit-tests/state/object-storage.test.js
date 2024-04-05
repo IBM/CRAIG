@@ -12,9 +12,12 @@ function newState() {
 }
 
 describe("object_storage", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("object_storage.init", () => {
     it("should initialize the object storage instances", () => {
-      let state = new newState();
       let expectedData = [
         {
           buckets: [
@@ -71,7 +74,7 @@ describe("object_storage", () => {
         },
       ];
       assert.deepEqual(
-        state.store.json.object_storage,
+        craig.store.json.object_storage,
         expectedData,
         "it should have cos"
       );
@@ -79,8 +82,7 @@ describe("object_storage", () => {
   });
   describe("object_storage.create", () => {
     it("should create a new cos instance", () => {
-      let state = new newState();
-      state.object_storage.create({
+      craig.object_storage.create({
         name: "todd",
         use_data: false,
         resource_group: "default",
@@ -99,7 +101,7 @@ describe("object_storage", () => {
         kms: "kms",
       };
       assert.deepEqual(
-        state.store.json.object_storage[2],
+        craig.store.json.object_storage[2],
         expectedData,
         "it should create new cos"
       );
@@ -107,41 +109,38 @@ describe("object_storage", () => {
   });
   describe("object_storage.save", () => {
     it("should update a cos instance in place", () => {
-      let state = new newState();
-      state.object_storage.save(
+      craig.object_storage.save(
         { name: "cos", use_data: true },
         { data: { name: "atracker-cos" } }
       );
       assert.deepEqual(
-        state.store.json.object_storage[0].use_data,
+        craig.store.json.object_storage[0].use_data,
         true,
         "it should create new cos"
       );
     });
     it("should update a cos instance in place and update vpc and cluster cos names", () => {
-      let state = new newState();
-      state.object_storage.save({ name: "todd" }, { data: { name: "cos" } });
+      craig.object_storage.save({ name: "todd" }, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.object_storage[1].name,
+        craig.store.json.object_storage[1].name,
         "todd",
         "it should create new cos"
       );
       assert.deepEqual(
-        state.store.json.vpcs[0].cos,
+        craig.store.json.vpcs[0].cos,
         "todd",
         "it should update vpc cos name"
       );
       assert.deepEqual(
-        state.store.json.clusters[0].cos,
+        craig.store.json.clusters[0].cos,
         "todd",
         "it should update cluster cos name"
       );
     });
     it("should update a cos instance in place with same name", () => {
-      let state = new newState();
-      state.object_storage.save({ name: "cos" }, { data: { name: "cos" } });
+      craig.object_storage.save({ name: "cos" }, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.object_storage[1].name,
+        craig.store.json.object_storage[1].name,
         "cos",
         "it should create new cos"
       );
@@ -149,10 +148,9 @@ describe("object_storage", () => {
   });
   describe("object_storage.delete", () => {
     it("should delete a cos instance", () => {
-      let state = new newState();
-      state.object_storage.delete({}, { data: { name: "cos" } });
+      craig.object_storage.delete({}, { data: { name: "cos" } });
       assert.deepEqual(
-        state.store.json.object_storage.length,
+        craig.store.json.object_storage.length,
         1,
         "it should create new cos"
       );
@@ -160,52 +158,47 @@ describe("object_storage", () => {
   });
   describe("object_storage.onStoreUpdate", () => {
     it("should create a list of storage buckets", () => {
-      let state = new newState();
       assert.deepEqual(
-        state.store.cosBuckets,
+        craig.store.cosBuckets,
         ["atracker-bucket", "management-bucket", "workload-bucket"],
         "it should have all the buckets"
       );
     });
     it("should create a list of storage keys", () => {
-      let state = new newState();
       assert.deepEqual(
-        state.store.cosKeys,
+        craig.store.cosKeys,
         ["cos-bind-key"],
         "it should have all the keys"
       );
     });
     it("should remove unfound kms key from buckets after deletion", () => {
-      let state = new newState();
-      state.key_management.keys.delete(
+      craig.key_management.keys.delete(
         {},
         { arrayParentName: "kms", data: { name: "atracker-key" } }
       );
-      state.update();
+      craig.update();
       assert.deepEqual(
-        state.store.json.object_storage[0].buckets[0].kms_key,
+        craig.store.json.object_storage[0].buckets[0].kms_key,
         null,
         "it should have all the keys"
       );
     });
     it("should remove unfound kms instance from cos and buckets after deletion", () => {
-      let state = new newState();
-      state.key_management.delete({}, { data: { name: "kms" } });
-      state.update();
+      craig.key_management.delete({}, { data: { name: "kms" } });
+      craig.update();
       assert.deepEqual(
-        state.store.json.object_storage[0].buckets[0].kms_key,
+        craig.store.json.object_storage[0].buckets[0].kms_key,
         null,
         "it should have all the keys"
       );
       assert.deepEqual(
-        state.store.json.object_storage[0].kms,
+        craig.store.json.object_storage[0].kms,
         null,
         "it should have correct kms"
       );
     });
     it("should default cos plan to `standard` on update if none is specified", () => {
-      let state = new newState();
-      state.object_storage.create({
+      craig.object_storage.create({
         name: "todd",
         use_data: false,
         resource_group: "default",
@@ -213,7 +206,7 @@ describe("object_storage", () => {
         use_random_suffix: true,
         kms: "kms",
       });
-      state.update();
+      craig.update();
       let expectedData = {
         name: "todd",
         use_data: false,
@@ -225,14 +218,13 @@ describe("object_storage", () => {
         kms: "kms",
       };
       assert.deepEqual(
-        state.store.json.object_storage[2],
+        craig.store.json.object_storage[2],
         expectedData,
         "it should create new cos"
       );
     });
     it("should not automatically change existing cos plans to `standard` on update", () => {
-      let state = new newState();
-      state.object_storage.create({
+      craig.object_storage.create({
         name: "todd",
         use_data: false,
         resource_group: "default",
@@ -240,7 +232,7 @@ describe("object_storage", () => {
         use_random_suffix: true,
         kms: "kms",
       });
-      state.update();
+      craig.update();
       let expectedData = {
         name: "todd",
         use_data: false,
@@ -252,7 +244,7 @@ describe("object_storage", () => {
         kms: "kms",
       };
       assert.deepEqual(
-        state.store.json.object_storage[2],
+        craig.store.json.object_storage[2],
         expectedData,
         "it should create new cos"
       );
@@ -262,7 +254,7 @@ describe("object_storage", () => {
     describe("name helper text", () => {
       it("should return text if using data", () => {
         assert.deepEqual(
-          newState().object_storage.name.helperText({
+          craig.object_storage.name.helperText({
             use_data: true,
             name: "test",
           }),
@@ -272,7 +264,7 @@ describe("object_storage", () => {
       });
       it("should return text if not using data and with random suffix", () => {
         assert.deepEqual(
-          newState().object_storage.name.helperText(
+          craig.object_storage.name.helperText(
             { use_data: false, use_random_suffix: true, name: "test" },
             {
               craig: {
@@ -292,7 +284,7 @@ describe("object_storage", () => {
       });
       it("should return text if not using data and without random suffix", () => {
         assert.deepEqual(
-          newState().object_storage.name.helperText(
+          craig.object_storage.name.helperText(
             { use_data: false, use_random_suffix: false, name: "test" },
             {
               craig: {
@@ -314,55 +306,55 @@ describe("object_storage", () => {
     describe("kms", () => {
       it("should return kms groups", () => {
         assert.deepEqual(
-          newState().object_storage.kms.groups({}, { craig: newState() }),
+          craig.object_storage.kms.groups({}, { craig: newState() }),
           ["kms", "NONE (Insecure)"],
           "it should return list of key protect instances"
         );
       });
       it("should be invalid when empty string", () => {
         assert.isTrue(
-          newState().object_storage.kms.invalid({ kms: "" }),
+          craig.object_storage.kms.invalid({ kms: "" }),
           "it should not be valid"
         );
       });
       it("should return correct value on input change", () => {
         assert.deepEqual(
-          newState().object_storage.kms.onInputChange({
+          craig.object_storage.kms.onInputChange({
             kms: "NONE (Insecure)",
           }),
           null,
           "it should return correct data"
         );
         assert.deepEqual(
-          newState().object_storage.kms.onInputChange({ kms: "frog" }),
+          craig.object_storage.kms.onInputChange({ kms: "frog" }),
           "frog",
           "it should return correct data"
         );
       });
       it("should return correct value on render change", () => {
         assert.deepEqual(
-          newState().object_storage.kms.onRender({
+          craig.object_storage.kms.onRender({
             kms: null,
           }),
           "NONE (Insecure)",
           "it should return correct data"
         );
         assert.deepEqual(
-          newState().object_storage.kms.onRender({ kms: "frog" }),
+          craig.object_storage.kms.onRender({ kms: "frog" }),
           "frog",
           "it should return correct data"
         );
       });
       it("should return correct value on input change", () => {
         assert.deepEqual(
-          newState().object_storage.buckets.kms_key.onInputChange({
+          craig.object_storage.buckets.kms_key.onInputChange({
             kms_key: "NONE (Insecure)",
           }),
           null,
           "it should return correct data"
         );
         assert.deepEqual(
-          newState().object_storage.buckets.kms_key.onInputChange({
+          craig.object_storage.buckets.kms_key.onInputChange({
             kms_key: "frog",
           }),
           "frog",
@@ -374,9 +366,7 @@ describe("object_storage", () => {
   describe("object_storage.buckets", () => {
     describe("object_storage.buckets.create", () => {
       it("should create a bucket in a specified instance", () => {
-        let state = new newState();
-
-        state.object_storage.buckets.create(
+        craig.object_storage.buckets.create(
           {
             endpoint: "public",
             force_delete: true,
@@ -387,7 +377,7 @@ describe("object_storage", () => {
           },
           {
             innerFormProps: { arrayParentName: "atracker-cos" },
-            arrayData: state.store.json.object_storage[0].buckets,
+            arrayData: craig.store.json.object_storage[0].buckets,
           }
         );
         let expectedData = {
@@ -399,7 +389,7 @@ describe("object_storage", () => {
           use_random_suffix: true,
         };
         assert.deepEqual(
-          state.store.json.object_storage[0].buckets[1],
+          craig.store.json.object_storage[0].buckets[1],
           expectedData,
           "it should make new bucket"
         );
@@ -408,11 +398,10 @@ describe("object_storage", () => {
 
     describe("object_storage.buckets.save", () => {
       it("should update a bucket in a specified instance", () => {
-        let state = new newState();
-        state.store.json.atracker = {
+        craig.store.json.atracker = {
           collector_bucket_name: "atracker-bucket",
         };
-        state.object_storage.buckets.save(
+        craig.object_storage.buckets.save(
           {
             endpoint: "public",
             force_delete: true,
@@ -434,17 +423,16 @@ describe("object_storage", () => {
           use_random_suffix: true,
         };
         assert.deepEqual(
-          state.store.json.object_storage[1].buckets[0],
+          craig.store.json.object_storage[1].buckets[0],
           expectedData,
           "it should make new bucket"
         );
       });
       it("should update a atracker collector bucket name when bucket changed", () => {
-        let state = new newState();
-        state.store.json.atracker = {
+        craig.store.json.atracker = {
           collector_bucket_name: "atracker-bucket",
         };
-        state.object_storage.buckets.save(
+        craig.object_storage.buckets.save(
           {
             endpoint: "public",
             force_delete: true,
@@ -458,17 +446,16 @@ describe("object_storage", () => {
           }
         );
         assert.deepEqual(
-          state.store.json.atracker.collector_bucket_name,
+          craig.store.json.atracker.collector_bucket_name,
           "todd",
           "it should be todd"
         );
       });
       it("should update a bucket in a specified instance with same name", () => {
-        let state = new newState();
-        state.store.json.atracker = {
+        craig.store.json.atracker = {
           collector_bucket_name: "atracker-key",
         };
-        state.object_storage.buckets.save(
+        craig.object_storage.buckets.save(
           {
             endpoint: "public",
             force_delete: true,
@@ -490,7 +477,7 @@ describe("object_storage", () => {
           use_random_suffix: true,
         };
         assert.deepEqual(
-          state.store.json.object_storage[1].buckets[0],
+          craig.store.json.object_storage[1].buckets[0],
           expectedData,
           "it should make new bucket"
         );
@@ -498,22 +485,19 @@ describe("object_storage", () => {
     });
     describe("object_storage.buckets.delete", () => {
       it("should delete bucket", () => {
-        let state = new newState();
-        state.object_storage.buckets.delete(
+        craig.object_storage.buckets.delete(
           {},
           { arrayParentName: "cos", data: { name: "management-bucket" } }
         );
         assert.deepEqual(
-          state.store.json.object_storage[1].buckets.length,
+          craig.store.json.object_storage[1].buckets.length,
           1,
           "should delete bucket"
         );
       });
     });
     describe("object_storage.buckets.schema", () => {
-      let craig;
       beforeEach(() => {
-        craig = newState();
         craig.store.json = {
           object_storage: [
             { name: "cosName1", kms: "kms1" },
@@ -535,38 +519,39 @@ describe("object_storage", () => {
         };
       });
       it("should return an empty array if kms is falsy", () => {
-        const componentProps = {
-          isModal: false,
-          arrayParentName: "cosName2",
-          craig: craig,
-        };
-        const result = craig.object_storage.buckets.kms_key.groups(
-          {},
-          componentProps
+        assert.deepEqual(
+          craig.object_storage.buckets.kms_key.groups(
+            {},
+            {
+              isModal: false,
+              arrayParentName: "cosName2",
+              craig: craig,
+            }
+          ),
+          ["NONE (Insecure)"],
+          "it should return correct data"
         );
-        assert.deepEqual(result, ["NONE (Insecure)"]);
       });
-
-      it("should return an array of key names for root keys when kms is selected", () => {
-        const componentProps = {
-          isModal: true,
-          arrayParentName: "cosName1",
-          craig: craig,
-        };
-        const result = craig.object_storage.buckets.kms_key.groups(
-          {},
-          componentProps
+      it("should return an empty array if kms is falsy", () => {
+        assert.deepEqual(
+          craig.object_storage.buckets.kms_key.groups(
+            {},
+            {
+              isModal: false,
+              arrayParentName: "cosName1",
+              craig: craig,
+            }
+          ),
+          ["key1", "NONE (Insecure)"],
+          "it should return correct data"
         );
-
-        assert.deepEqual(result, ["key1", "NONE (Insecure)"]);
       });
     });
   });
   describe("object_storage.keys", () => {
     describe("object_storage.keys.create", () => {
       it("should create a new cos key in a specified instance", () => {
-        let state = new newState();
-        state.object_storage.keys.create(
+        craig.object_storage.keys.create(
           {
             name: "todd",
             role: "Writer",
@@ -574,10 +559,10 @@ describe("object_storage", () => {
           },
           {
             innerFormProps: { arrayParentName: "cos" },
-            arrayData: state.store.json.object_storage[1].keys,
+            arrayData: craig.store.json.object_storage[1].keys,
           }
         );
-        assert.deepEqual(state.store.json.object_storage[1].keys, [
+        assert.deepEqual(craig.store.json.object_storage[1].keys, [
           {
             name: "todd",
             role: "Writer",
@@ -590,16 +575,15 @@ describe("object_storage", () => {
 
     describe("object_storage.keys.save", () => {
       it("should update a cos key in a specified instance", () => {
-        let state = new newState();
-        state.store.json.atracker = {
+        craig.store.json.atracker = {
           collector_bucket_name: "atracker-bucket",
         };
-        state.store.json.atracker.cos_key = "cos-bind-key";
-        state.object_storage.keys.save(
+        craig.store.json.atracker.cos_key = "cos-bind-key";
+        craig.object_storage.keys.save(
           { name: "todd" },
           { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" }
         );
-        assert.deepEqual(state.store.json.object_storage[0].keys, [
+        assert.deepEqual(craig.store.json.object_storage[0].keys, [
           {
             name: "todd",
             role: "Writer",
@@ -608,15 +592,13 @@ describe("object_storage", () => {
           },
         ]);
         assert.deepEqual(
-          state.store.json.atracker.cos_key,
+          craig.store.json.atracker.cos_key,
           "todd",
           "it should be todd"
         );
       });
       it("should update a cos key not atracker", () => {
-        let state = new newState();
-
-        state.object_storage.keys.create(
+        craig.object_storage.keys.create(
           {
             name: "boo",
             role: "Writer",
@@ -624,14 +606,14 @@ describe("object_storage", () => {
           },
           {
             innerFormProps: { arrayParentName: "cos" },
-            arrayData: state.store.json.object_storage[1].keys,
+            arrayData: craig.store.json.object_storage[1].keys,
           }
         );
-        state.object_storage.keys.save(
+        craig.object_storage.keys.save(
           { name: "todd" },
           { data: { name: "boo" }, arrayParentName: "cos" }
         );
-        assert.deepEqual(state.store.json.object_storage[1].keys, [
+        assert.deepEqual(craig.store.json.object_storage[1].keys, [
           {
             name: "todd",
             role: "Writer",
@@ -641,15 +623,13 @@ describe("object_storage", () => {
         ]);
       });
       it("should update cos key in a specified instance with same name", () => {
-        let state = new newState();
-
-        state.object_storage.keys.save(
+        craig.object_storage.keys.save(
           {
             name: "cos-bind-key",
           },
           { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" }
         );
-        assert.deepEqual(state.store.json.object_storage[0].keys, [
+        assert.deepEqual(craig.store.json.object_storage[0].keys, [
           {
             name: "cos-bind-key",
             role: "Writer",
@@ -661,24 +641,22 @@ describe("object_storage", () => {
     });
     describe("object_storage.keys.delete", () => {
       it("should delete a cos key in a specified instance", () => {
-        let state = new newState();
-        state.object_storage.keys.delete(
+        craig.object_storage.keys.delete(
           {},
           { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } }
         );
-        assert.deepEqual(state.store.json.object_storage[0].keys, []);
+        assert.deepEqual(craig.store.json.object_storage[0].keys, []);
       });
     });
     describe("bucket shcema", () => {
       it("should return correct values on render", () => {
-        let state = new newState();
         assert.deepEqual(
-          state.object_storage.buckets.kms_key.onRender({ kms_key: null }),
+          craig.object_storage.buckets.kms_key.onRender({ kms_key: null }),
           "NONE (Insecure)",
           "it should return correct value"
         );
         assert.deepEqual(
-          state.object_storage.buckets.kms_key.onRender({ kms_key: "toad" }),
+          craig.object_storage.buckets.kms_key.onRender({ kms_key: "toad" }),
           "toad",
           "it should return correct value"
         );
@@ -686,7 +664,6 @@ describe("object_storage", () => {
     });
   });
   describe("object_storage.shouldDisableSave", () => {
-    const craig = newState();
     it("should return true if a object storage instance has an invalid name", () => {
       assert.isTrue(
         craig.object_storage.shouldDisableSave(
@@ -736,40 +713,8 @@ describe("object_storage", () => {
         "it should be false"
       );
     });
-    // commented out for power poc
-    // it("should return true if a object storage instance has an invalid kms instance", () => {
-    //   assert.isTrue(
-    //     craig.object_storage.shouldDisableSave(
-    //       {
-    //         name: "aaa",
-    //         use_data: false,
-    //         resource_group: "management-rg",
-    //         kms: null,
-    //       },
-    //       {
-    //         craig: {
-    //           store: {
-    //             json: {
-    //               object_storage: [
-    //                 {
-    //                   name: "frog",
-    //                   resource_group: null,
-    //                 },
-    //               ],
-    //             },
-    //           },
-    //         },
-    //         data: {
-    //           name: "test",
-    //         },
-    //       }
-    //     ),
-    //     "it should be false"
-    //   );
-    // });
   });
   describe("object_storage.buckets.shouldDisableSave", () => {
-    const craig = newState();
     it("should return true if an object storage bucket has an invalid name", () => {
       assert.isTrue(
         craig.object_storage.buckets.shouldDisableSave(
@@ -799,36 +744,6 @@ describe("object_storage", () => {
         "it should be false"
       );
     });
-    // commented out to allow for unencrypted cos buckets
-    // it("should return true if an object storage bucket has an invalid encryption key name", () => {
-    //   assert.isTrue(
-    //     craig.object_storage.buckets.shouldDisableSave(
-    //       { name: "key", kms_key: null, use_data: false },
-    //       {
-    //         craig: {
-    //           store: {
-    //             json: {
-    //               object_storage: [
-    //                 {
-    //                   name: "frog",
-    //                   buckets: [
-    //                     {
-    //                       name: "test",
-    //                     },
-    //                   ],
-    //                 },
-    //               ],
-    //             },
-    //           },
-    //         },
-    //         data: {
-    //           name: "test",
-    //         },
-    //       }
-    //     ),
-    //     "it should be false"
-    //   );
-    // });
   });
   describe("object_storage.keys.shouldDisableSave", () => {
     const craig = newState();

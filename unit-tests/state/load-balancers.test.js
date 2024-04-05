@@ -12,21 +12,22 @@ function newState() {
 }
 
 describe("load_balancers", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("load_balancers.init", () => {
     it("should initialize with default load balancers", () => {
-      let state = new newState();
       assert.deepEqual(
-        state.store.json.load_balancers,
+        craig.store.json.load_balancers,
         [],
         "it should return data"
       );
     });
   });
   describe("load_balancers.onStoreUpdate", () => {
-    let state;
     beforeEach(() => {
-      state = newState();
-      state.store.json.load_balancers = [
+      craig.store.json.load_balancers = [
         {
           name: "lb-1",
           vpc: "management",
@@ -76,11 +77,11 @@ describe("load_balancers", () => {
         listener_protocol: "https",
         connection_limit: 2,
       };
-      state.store.json.vpcs.shift();
-      state.store.json.load_balancers[0].proxy_protocol = "";
-      state.update();
+      craig.store.json.vpcs.shift();
+      craig.store.json.load_balancers[0].proxy_protocol = "";
+      craig.update();
       assert.deepEqual(
-        state.store.json.load_balancers[0],
+        craig.store.json.load_balancers[0],
         expectedData,
         "it should return data"
       );
@@ -109,7 +110,7 @@ describe("load_balancers", () => {
         listener_protocol: "https",
         connection_limit: 2,
       };
-      state.vpcs.subnets.delete(
+      craig.vpcs.subnets.delete(
         {},
         {
           name: "management",
@@ -118,7 +119,7 @@ describe("load_balancers", () => {
           },
         }
       );
-      state.vpcs.subnets.delete(
+      craig.vpcs.subnets.delete(
         {},
         {
           name: "management",
@@ -127,9 +128,9 @@ describe("load_balancers", () => {
           },
         }
       );
-      state.update();
+      craig.update();
       assert.deepEqual(
-        state.store.json.load_balancers[0],
+        craig.store.json.load_balancers[0],
         expectedData,
         "it should return data"
       );
@@ -158,11 +159,11 @@ describe("load_balancers", () => {
         listener_protocol: "https",
         connection_limit: 2,
       };
-      state.resource_groups.delete({}, { data: { name: "management-rg" } });
-      state.security_groups.delete({}, { data: { name: "management-vpe" } });
-      state.update();
+      craig.resource_groups.delete({}, { data: { name: "management-rg" } });
+      craig.security_groups.delete({}, { data: { name: "management-vpe" } });
+      craig.update();
       assert.deepEqual(
-        state.store.json.load_balancers[0],
+        craig.store.json.load_balancers[0],
         expectedData,
         "it should return data"
       );
@@ -191,7 +192,7 @@ describe("load_balancers", () => {
         listener_protocol: "https",
         connection_limit: 2,
       };
-      state.vsi.delete(
+      craig.vsi.delete(
         {},
         {
           data: {
@@ -199,19 +200,17 @@ describe("load_balancers", () => {
           },
         }
       );
-      state.update();
+      craig.update();
       assert.deepEqual(
-        state.store.json.load_balancers[0],
+        craig.store.json.load_balancers[0],
         expectedData,
         "it should return data"
       );
     });
   });
   describe("load_balancers.delete", () => {
-    let state;
-    beforeEach(() => {
-      state = newState();
-      state.store.json.load_balancers = [
+    it("should delete a load_balancer", () => {
+      craig.store.json.load_balancers = [
         {
           name: "lb-1",
           vpc: "management",
@@ -236,17 +235,13 @@ describe("load_balancers", () => {
           connection_limit: 2,
         },
       ];
-    });
-    it("should delete a load_balancer", () => {
-      state.load_balancers.delete({}, { data: { name: "lb-1" } });
-      assert.deepEqual(state.store.json.load_balancers, [], "it should delete");
+      craig.load_balancers.delete({}, { data: { name: "lb-1" } });
+      assert.deepEqual(craig.store.json.load_balancers, [], "it should delete");
     });
   });
   describe("load_balancers.save", () => {
-    let state;
     beforeEach(() => {
-      state = newState();
-      state.store.json.load_balancers = [
+      craig.store.json.load_balancers = [
         {
           name: "lb-1",
           vpc: "management",
@@ -298,7 +293,7 @@ describe("load_balancers", () => {
           connection_limit: 2,
         },
       ];
-      state.load_balancers.save(
+      craig.load_balancers.save(
         {
           name: "todd",
         },
@@ -309,7 +304,7 @@ describe("load_balancers", () => {
         }
       );
       assert.deepEqual(
-        state.store.json.load_balancers,
+        craig.store.json.load_balancers,
         expectedData,
         "it should return data"
       );
@@ -317,7 +312,6 @@ describe("load_balancers", () => {
   });
   describe("load_balancers.create", () => {
     it("should create a load balancer", () => {
-      let state = newState();
       let expectedData = {
         name: "lb-1",
         vpc: "management",
@@ -341,7 +335,7 @@ describe("load_balancers", () => {
         listener_protocol: "https",
         connection_limit: 2,
       };
-      state.load_balancers.create({
+      craig.load_balancers.create({
         name: "lb-1",
         vpc: "management",
         type: "public",
@@ -365,17 +359,13 @@ describe("load_balancers", () => {
         connection_limit: 2,
       });
       assert.deepEqual(
-        state.store.json.load_balancers[0],
+        craig.store.json.load_balancers[0],
         expectedData,
         "it should return data"
       );
     });
   });
   describe("load balancer schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     it("should hide persistance cookie name when session_persistence_type is not app_cookie", () => {
       assert.isTrue(
         craig.load_balancers.session_persistence_app_cookie_name.hideWhen({}),

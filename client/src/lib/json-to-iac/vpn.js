@@ -71,6 +71,7 @@ function formatVpnGatewayConnection(connection, gw) {
       )}_preshared_key}`,
       local_cidrs: connection.local_cidrs,
       peer_cidrs: connection.peer_cidrs,
+      admin_state_up: connection.admin_state_up || undefined,
     }
   );
 }

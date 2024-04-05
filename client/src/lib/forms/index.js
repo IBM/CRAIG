@@ -35,11 +35,15 @@ const wizard = require("./wizard");
 const {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
+  classicSubnetsFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
+  aclMapFilter,
 } = require("./diagrams");
 const {
   dynamicToolTipWrapperProps,
@@ -113,6 +117,10 @@ module.exports = {
   invalidCrns,
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   powerMapFilter,
+  aclMapFilter,
   dynamicFetchSelectDataToGroups,
+  routingTableFilter,
+  classicSubnetsFilter,
 };

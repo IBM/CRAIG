@@ -12,34 +12,33 @@ function newState() {
 }
 
 describe("icd", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("icd.init", () => {
     it("should initialize icd", () => {
-      let state = new newState();
-      let expectedData = [];
       assert.deepEqual(
-        state.store.json.icd,
-        expectedData,
+        craig.store.json.icd,
+        [],
         "it should have icd initialized"
       );
     });
   });
   describe("icd.onStoreUpdate", () => {
     it("should set unfound icd to empty array", () => {
-      let state = newState();
-      state.store.json.icd = null;
-      state.update();
-      assert.deepEqual(state.store.json.icd, [], "it should be an empty array");
+      craig.store.json.icd = null;
+      craig.update();
+      assert.deepEqual(craig.store.json.icd, [], "it should be an empty array");
     });
   });
   describe("icd crud functions", () => {
-    let icdState;
     beforeEach(() => {
-      icdState = new newState();
+      craig.icd.create({ name: "default" });
     });
     it("should add an icd instance", () => {
-      icdState.icd.create({ name: "default" });
       assert.deepEqual(
-        icdState.store.json.icd,
+        craig.store.json.icd,
         [
           {
             name: "default",
@@ -52,13 +51,12 @@ describe("icd", () => {
       );
     });
     it("should save an icd instance", () => {
-      icdState.icd.create({ name: "default" });
-      icdState.icd.save(
+      craig.icd.save(
         { resource_group: "service-rg" },
         { data: { name: "default" } }
       );
       assert.deepEqual(
-        icdState.store.json.icd,
+        craig.store.json.icd,
         [
           {
             name: "default",
@@ -71,16 +69,11 @@ describe("icd", () => {
       );
     });
     it("should delete an icd instance", () => {
-      icdState.icd.create({ name: "default" });
-      icdState.icd.delete({}, { data: { name: "default" } });
-      assert.deepEqual(icdState.store.json.icd, [], "it should create icd");
+      craig.icd.delete({}, { data: { name: "default" } });
+      assert.deepEqual(craig.store.json.icd, [], "it should create icd");
     });
   });
   describe("icd.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     describe("name", () => {
       it("should return true for invalid name", () => {
         assert.isTrue(
@@ -166,18 +159,6 @@ describe("icd", () => {
         );
       });
       it("should return correct groups when mongodb", () => {
-        craig.icd.create({
-          cpu: null,
-          disk: null,
-          group_id: "member",
-          memory: null,
-          name: "test",
-          plan: "standard",
-          resource_group: "service-rg",
-          service: "databases-for-mongodb",
-          use_data: false,
-          encryption_key: null,
-        });
         assert.deepEqual(
           craig.icd.plan.groups(
             { service: "databases-for-mongodb" },
@@ -188,18 +169,6 @@ describe("icd", () => {
         );
       });
       it("should return correct groups when not mongodb", () => {
-        craig.icd.create({
-          cpu: null,
-          disk: null,
-          group_id: "member",
-          memory: null,
-          name: "test",
-          plan: "standard",
-          resource_group: "service-rg",
-          service: "databases-for-postgresql",
-          use_data: false,
-          encryption_key: null,
-        });
         assert.deepEqual(
           craig.icd.plan.groups(
             { service: "databases-for-postgresql" },
@@ -210,18 +179,6 @@ describe("icd", () => {
         );
       });
       it("should be disabled when not mongodb", () => {
-        craig.icd.create({
-          cpu: null,
-          disk: null,
-          group_id: "member",
-          memory: null,
-          name: "test",
-          plan: "standard",
-          resource_group: "service-rg",
-          service: "databases-for-postgresql",
-          use_data: false,
-          encryption_key: null,
-        });
         assert.deepEqual(
           craig.icd.plan.disabled(
             { service: "databases-for-postgresql" },
@@ -257,18 +214,6 @@ describe("icd", () => {
         );
       });
       it("should return correct groups when mongodb", () => {
-        craig.icd.create({
-          cpu: null,
-          disk: null,
-          group_id: "member",
-          memory: null,
-          name: "test",
-          plan: "standard",
-          resource_group: "service-rg",
-          service: "databases-for-mongodb",
-          use_data: false,
-          encryption_key: null,
-        });
         assert.deepEqual(
           craig.icd.group_id.groups(
             { service: "databases-for-mongodb" },
@@ -279,18 +224,6 @@ describe("icd", () => {
         );
       });
       it("should return correct groups when not mongodb", () => {
-        craig.icd.create({
-          cpu: null,
-          disk: null,
-          group_id: "member",
-          memory: null,
-          name: "test",
-          plan: "standard",
-          resource_group: "service-rg",
-          service: "databases-for-postgresql",
-          use_data: false,
-          encryption_key: null,
-        });
         assert.deepEqual(
           craig.icd.group_id.groups(
             { service: "databases-for-postgresql" },
@@ -301,18 +234,6 @@ describe("icd", () => {
         );
       });
       it("should be disabled when not mongodb", () => {
-        craig.icd.create({
-          cpu: null,
-          disk: null,
-          group_id: "member",
-          memory: null,
-          name: "test",
-          plan: "standard",
-          resource_group: "service-rg",
-          service: "databases-for-postgresql",
-          use_data: false,
-          encryption_key: null,
-        });
         assert.deepEqual(
           craig.icd.group_id.disabled(
             { service: "databases-for-postgresql" },
@@ -326,25 +247,13 @@ describe("icd", () => {
     describe("memory", () => {
       it("should return invalid for non-number memory values", () => {
         assert.isTrue(
-          craig.icd.memory.invalid(
-            { memory: "hello" },
-            {
-              memoryMin: 1,
-              memoryMax: 112,
-            }
-          ),
+          craig.icd.memory.invalid({ memory: "hello" }),
           "it should return true"
         );
       });
       it("should return invalidText for memory", () => {
         assert.deepEqual(
-          craig.icd.memory.invalidText(
-            {},
-            {
-              memoryMin: 1,
-              memoryMax: 112,
-            }
-          ),
+          craig.icd.memory.invalidText({}),
           "RAM must be a whole number with minimum of 1GB and a maximum 112GB per member",
           "it should return correct invalidText"
         );
@@ -353,15 +262,46 @@ describe("icd", () => {
     describe("disk", () => {
       it("should return invalidText for disk", () => {
         assert.deepEqual(
-          craig.icd.disk.invalidText(
-            {},
-            {
-              diskMin: 5,
-              diskMax: 4096,
-            }
-          ),
+          craig.icd.disk.invalidText({}),
           "Disk must be a whole number with minimum of 5GB and a maximum 4096GB per member",
           "it should return correct invalidText"
+        );
+      });
+      it("should return invalid for disk when invalid", () => {
+        assert.isTrue(
+          craig.icd.disk.invalid({
+            disk: "9999999",
+          }),
+          "it should be invalid"
+        );
+
+        assert.isTrue(
+          craig.icd.disk.invalid({
+            disk: "fff",
+          }),
+          "it should be invalid"
+        );
+        assert.isTrue(
+          craig.icd.disk.invalid({
+            disk: "1.2",
+          }),
+          "it should be invalid"
+        );
+        assert.isFalse(
+          craig.icd.disk.invalid({
+            disk: "",
+          }),
+          "it should be invalid"
+        );
+      });
+    });
+    describe("cpu", () => {
+      it("should return invalid for disk when invalid", () => {
+        assert.isTrue(
+          craig.icd.cpu.invalid({
+            cpu: "fff",
+          }),
+          "it should be invalid"
         );
       });
     });

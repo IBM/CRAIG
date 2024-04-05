@@ -1,4 +1,4 @@
-const { titleCase } = require("lazy-z");
+const { titleCase, isEmpty } = require("lazy-z");
 
 /**
  * convert changelog to markdown
@@ -11,7 +11,7 @@ function changelogToMarkdown(changelogJson) {
   changelogJson.forEach((entry) => {
     mdString += `\n## ${entry.version}`;
     ["upgrade_notes", "features", "fixes"].forEach((field) => {
-      if (entry[field]) {
+      if (entry[field] && !isEmpty(entry[field])) {
         mdString += `\n\n### ${titleCase(field)}\n`;
         entry[field].forEach((item) => {
           mdString += "\n- " + item;

@@ -25,6 +25,9 @@ const {
   wizard,
   classicGatewaysFilter,
   classicBareMetalFilter,
+  routingTableFilter,
+  classicVsiFilter,
+  classicSubnetsFilter,
   getDisplaySubnetTiers,
   getDisplayTierSubnetList,
   shouldDisplayService,
@@ -46,6 +49,7 @@ const {
   dynamicPasswordInputProps,
   powerSubnetFilter,
   powerMapFilter,
+  aclMapFilter,
   dynamicFetchSelectDataToGroups,
 } = require("./forms");
 const { slzToCraig } = require("./slz-to-craig");
@@ -289,6 +293,7 @@ module.exports = {
   classicBareMetalFilter,
   powerSubnetFilter,
   powerMapFilter,
+  aclMapFilter,
   dynamicPrimaryButtonProps,
   dynamicSecondaryButtonProps,
   primaryButtonClass,
@@ -297,4 +302,7 @@ module.exports = {
   copyRuleFormName,
   dynamicFetchSelectDataToGroups,
   docTextFieldParams,
+  routingTableFilter,
+  classicVsiFilter,
+  classicSubnetsFilter,
 };

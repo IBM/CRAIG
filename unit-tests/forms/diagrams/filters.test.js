@@ -2,9 +2,13 @@ const { assert } = require("chai");
 const {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicSubnetsFilter,
   state,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
+  classicVsiFilter,
+  aclMapFilter,
 } = require("../../../client/src/lib");
 
 function newState() {
@@ -306,6 +310,213 @@ describe("filter functions", () => {
         powerMapFilter({ craig: craig }),
         [{ name: null }],
         "it should send list of workspaces"
+      );
+    });
+  });
+  describe("routingTableFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+      craig.store.json.vpcs[0] = {
+        name: "test-vpc",
+      };
+    });
+    it("should return the routing tables connected to the given vpc", () => {
+      craig.store.json.routing_tables = [
+        {
+          name: "routing-table",
+          vpc: "test-vpc",
+        },
+      ];
+      assert.deepEqual(
+        routingTableFilter({ craig: craig, vpc: { name: "test-vpc" } }),
+        [
+          {
+            name: "routing-table",
+            vpc: "test-vpc",
+          },
+        ],
+        "it should return filtered routing tables"
+      );
+    });
+    it("should return no routing tables if vpc does not match", () => {
+      craig.store.json.routing_tables = [
+        {
+          name: "routing-table",
+          vpc: "test-vpc",
+        },
+      ];
+      assert.deepEqual(
+        routingTableFilter({ craig: craig, vpc: { name: "fake-vpc" } }),
+        [],
+        "it should return empty array"
+      );
+    });
+  });
+  describe("classicVsiFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+    });
+    it("should return the vsi that contains mathcing public vlan", () => {
+      craig.store.json.classic_vsi = [
+        {
+          name: "classic-vsi",
+          private_vlan: "priv-vlan",
+          public_vlan: "pub-vlan",
+        },
+      ];
+      assert.deepEqual(
+        classicVsiFilter({ craig: craig, vlan: "pub-vlan" }),
+        [
+          {
+            name: "classic-vsi",
+            private_vlan: "priv-vlan",
+            public_vlan: "pub-vlan",
+            index: 0,
+          },
+        ],
+        "it should return filtered vsi"
+      );
+    });
+    it("should return the vsi that contains the matching private vlan", () => {
+      craig.store.json.classic_vsi = [
+        {
+          name: "classic-vsi",
+          private_vlan: "priv-vlan",
+          public_vlan: "pub-vlan",
+        },
+      ];
+      assert.deepEqual(
+        classicVsiFilter({ craig: craig, vlan: "priv-vlan" }),
+        [
+          {
+            name: "classic-vsi",
+            private_vlan: "priv-vlan",
+            public_vlan: "pub-vlan",
+            index: 0,
+          },
+        ],
+        "it should return filtered vsi"
+      );
+    });
+    it("should return empty array if no vlans match", () => {
+      craig.store.json.classic_vsi = [
+        {
+          name: "classic-vsi",
+          private_vlan: "priv-vlan",
+          public_vlan: "pub-vlan",
+        },
+      ];
+      assert.deepEqual(
+        classicVsiFilter({ craig: craig, vlan: "fake-vlan" }),
+        [],
+        "it should return empty array"
+      );
+    });
+  });
+  describe("aclMapFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+      craig.store.json.vpcs[0] = {
+        name: "vpc1",
+        subnets: [
+          {
+            use_data: true,
+            network_acl: {
+              name: "subnet_acl",
+            },
+          },
+          {
+            use_data: false,
+            network_acl: null,
+          },
+        ],
+        acls: [
+          {
+            name: "acl1",
+          },
+        ],
+      };
+      craig.store.json.vpcs[1] = {
+        name: "vpc2",
+        subnets: [
+          {
+            use_data: false,
+            network_acl: null,
+          },
+        ],
+        acls: [
+          {
+            name: "acl1",
+          },
+          {
+            name: "acl2",
+          },
+        ],
+      };
+      craig.store.json.vpcs[2] = {
+        name: "vpc3",
+        subnets: null,
+        acls: null,
+      };
+    });
+    it("should return list of acls when use_data is true", () => {
+      let actualData = aclMapFilter({
+        vpc: craig.store.json.vpcs[0],
+      });
+      assert.deepEqual(
+        actualData,
+        [{ name: null }, { name: "acl1" }],
+        "should be equal"
+      );
+    });
+    it("should return list of acls when use_data is false", () => {
+      let actualData = aclMapFilter({
+        vpc: craig.store.json.vpcs[1],
+      });
+      assert.deepEqual(
+        actualData,
+        [{ name: null }, { name: "acl1" }, { name: "acl2" }],
+        "should be equal"
+      );
+    });
+    it("should return empty array when no subnets or acls", () => {
+      let actualData = aclMapFilter({
+        vpc: craig.store.json.vpcs[2],
+      });
+      assert.deepEqual(actualData, [], "should be equal");
+    });
+  });
+  describe("classicSubnetsFilter", () => {
+    let craig;
+    beforeEach(() => {
+      craig = newState();
+      craig.store.json.classic_vlans[0] = {
+        name: "classic-priv-vlan",
+        datacenter: "dal10",
+        type: "PRIVATE",
+      };
+    });
+    it("should return no subnets with no vlans exist in datacenter", () => {
+      assert.deepEqual(
+        classicSubnetsFilter({ craig: craig, datacenter: "wdc07" }),
+        [],
+        "it should be empty"
+      );
+    });
+    it("should return subnets when vlans exist in datacenter", () => {
+      assert.deepEqual(
+        classicSubnetsFilter({ craig: craig, datacenter: "dal10" }),
+        [
+          {
+            name: "classic-priv-vlan",
+            datacenter: "dal10",
+            type: "PRIVATE",
+          },
+        ],
+        "it should return one vlan"
       );
     });
   });

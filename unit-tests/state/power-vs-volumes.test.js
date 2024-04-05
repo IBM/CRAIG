@@ -11,41 +11,44 @@ function newState() {
 }
 
 describe("power_volumes", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("power_volumes.init", () => {
     it("should initialize power vs volumes", () => {
-      let state = newState();
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [],
         "it should initialize data"
       );
     });
   });
+  it("should add power when not created on store update", () => {
+    delete craig.store.json.power_volumes;
+    craig.update();
+    assert.deepEqual(
+      craig.store.json.power_volumes,
+      [],
+      "it should initialize data"
+    );
+  });
   describe("power_volumes.onStoreUpdate", () => {
-    it("should add power when not created on store update", () => {
-      let state = newState();
-      delete state.store.json.power_volumes;
-      state.update();
-      assert.deepEqual(
-        state.store.json.power_volumes,
-        [],
-        "it should initialize data"
-      );
-    });
-    it("should not remove found workspaces on store update", () => {
-      let state = newState();
-      state.store.json._options.power_vs_zones = ["dal10"];
-      state.power.create({
+    beforeEach(() => {
+      craig.store.json._options.power_vs_zones = ["dal10"];
+      craig.power.create({
         name: "example",
         imageNames: ["7100-05-09"],
         zone: "dal10",
       });
-      state.power_volumes.create({
+    });
+    it("should not remove found workspaces on store update", () => {
+      craig.power_volumes.create({
         name: "frog",
         workspace: "example",
       });
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             name: "frog",
@@ -59,15 +62,8 @@ describe("power_volumes", () => {
       );
     });
     it("should update workspace zone found workspaces on store update", () => {
-      let state = newState();
-      state.store.json._options.power_vs_zones = ["dal10"];
-      state.power.create({
-        name: "example",
-        imageNames: ["7100-05-09"],
-        zone: "dal10",
-      });
-      state.store.json._options.power_vs_zones = ["eu-de-1"];
-      state.power.save(
+      craig.store.json._options.power_vs_zones = ["eu-de-1"];
+      craig.power.save(
         {
           name: "example",
           zone: "eu-de-1",
@@ -79,12 +75,12 @@ describe("power_volumes", () => {
           craig: state,
         }
       );
-      state.power_volumes.create({
+      craig.power_volumes.create({
         name: "frog",
         workspace: "example",
       });
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             name: "frog",
@@ -98,19 +94,12 @@ describe("power_volumes", () => {
       );
     });
     it("should remove unfound workspaces on store update", () => {
-      let state = newState();
-      state.store.json._options.power_vs_zones = ["dal10"];
-      state.power.create({
-        name: "example",
-        imageNames: ["7100-05-09"],
-        zone: "dal10",
-      });
-      state.power_volumes.create({
+      craig.power_volumes.create({
         name: "frog",
         workspace: "oops",
       });
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             name: "frog",
@@ -122,14 +111,7 @@ describe("power_volumes", () => {
       );
     });
     it("should not remove found instances on store update", () => {
-      let state = newState();
-      state.store.json._options.power_vs_zones = ["dal10"];
-      state.power.create({
-        name: "example",
-        imageNames: ["7100-05-09"],
-        zone: "dal10",
-      });
-      state.power_instances.create({
+      craig.power_instances.create({
         name: "toad",
         image: "oops",
         ssh_key: "oops",
@@ -142,13 +124,13 @@ describe("power_volumes", () => {
         workspace: "oops",
         zone: "oops",
       });
-      state.power_volumes.create({
+      craig.power_volumes.create({
         name: "frog",
         workspace: "example",
         attachments: ["toad"],
       });
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             name: "frog",
@@ -162,14 +144,7 @@ describe("power_volumes", () => {
       );
     });
     it("should remove unfound instances on store update", () => {
-      let state = newState();
-      state.store.json._options.power_vs_zones = ["dal10"];
-      state.power.create({
-        name: "example",
-        imageNames: ["7100-05-09"],
-        zone: "dal10",
-      });
-      state.power_instances.create({
+      craig.power_instances.create({
         name: "toad2",
         image: "oops",
         ssh_key: "oops",
@@ -182,13 +157,13 @@ describe("power_volumes", () => {
         workspace: "example",
         zone: "oops",
       });
-      state.power_volumes.create({
+      craig.power_volumes.create({
         name: "frog",
         workspace: "example",
         attachments: ["toad"],
       });
       assert.deepEqual(
-        state.store.json.power_volumes,
+        craig.store.json.power_volumes,
         [
           {
             name: "frog",
@@ -202,85 +177,74 @@ describe("power_volumes", () => {
       );
     });
   });
-  describe("power_volumes.create", () => {
-    it("should create a new power vs instance", () => {
-      let state = newState();
-      state.power_volumes.create({
+  describe("power volumes crud", () => {
+    beforeEach(() => {
+      craig.power_volumes.create({
         name: "frog",
         workspace: "example",
       });
-      assert.deepEqual(
-        state.store.json.power_volumes,
-        [
-          {
-            name: "frog",
-            workspace: null,
-            attachments: [],
-          },
-        ],
-        "it should create instance"
-      );
     });
-  });
-  describe("power_volumes.save", () => {
-    it("should save a power vs volume", () => {
-      let state = newState();
-      state.power_volumes.create({
-        name: "toad",
-        workspace: null,
+    describe("power_volumes.create", () => {
+      it("should create a new power vs instance", () => {
+        assert.deepEqual(
+          craig.store.json.power_volumes,
+          [
+            {
+              name: "frog",
+              workspace: null,
+              attachments: [],
+            },
+          ],
+          "it should create instance"
+        );
       });
-      state.power_volumes.save(
-        {
-          name: "frog",
-        },
-        {
-          data: {
+    });
+    describe("power_volumes.save", () => {
+      it("should save a power vs volume", () => {
+        craig.power_volumes.save(
+          {
             name: "toad",
           },
-        }
-      );
-      assert.deepEqual(
-        state.store.json.power_volumes,
-        [
           {
-            name: "frog",
-            workspace: null,
-            attachments: [],
-          },
-        ],
-        "it should save instance"
-      );
-    });
-  });
-  describe("power_volumes.delete", () => {
-    it("should delete a power vs volume", () => {
-      let state = newState();
-      state.power_volumes.create({
-        name: "toad",
-        workspace: null,
+            data: {
+              name: "frog",
+            },
+          }
+        );
+        assert.deepEqual(
+          craig.store.json.power_volumes,
+          [
+            {
+              name: "toad",
+              workspace: null,
+              attachments: [],
+            },
+          ],
+          "it should save instance"
+        );
       });
-      state.power_volumes.delete(
-        {
-          name: "frog",
-        },
-        {
-          data: {
+    });
+    describe("power_volumes.delete", () => {
+      it("should delete a power vs volume", () => {
+        craig.power_volumes.delete(
+          {
             name: "toad",
           },
-        }
-      );
-      assert.deepEqual(
-        state.store.json.power_volumes,
-        [],
-        "it should delete instance"
-      );
+          {
+            data: {
+              name: "frog",
+            },
+          }
+        );
+        assert.deepEqual(
+          craig.store.json.power_volumes,
+          [],
+          "it should delete instance"
+        );
+      });
     });
   });
   describe("power_volumes.schema", () => {
-    let craig;
-    beforeEach(() => {
-      craig = newState();
-    });
     it("should return correct invalid text when no workspace", () => {
       assert.deepEqual(
         craig.power_volumes.pi_anti_affinity_instance.invalidText({

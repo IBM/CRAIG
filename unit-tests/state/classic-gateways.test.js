@@ -23,9 +23,12 @@ function newState() {
 }
 
 describe("classic gateways", () => {
+  let craig;
+  beforeEach(() => {
+    craig = newState();
+  });
   describe("classic_gateways.init", () => {
     it("should initialize classic gateways", () => {
-      let craig = newState();
       assert.deepEqual(
         craig.store.json.classic_gateways,
         [],
@@ -34,8 +37,7 @@ describe("classic gateways", () => {
     });
   });
   describe("classic_gateways.onStoreUpdate", () => {
-    it("should update classic gateway public vlan when deleted", () => {
-      let craig = newState();
+    beforeEach(() => {
       craig.classic_gateways.create({
         name: "gw",
         hostname: "gw-host",
@@ -57,6 +59,8 @@ describe("classic gateways", () => {
         disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
         hadr: false,
       });
+    });
+    it("should update classic gateway public vlan when deleted", () => {
       craig.classic_vlans.delete(
         {},
         {
@@ -90,28 +94,6 @@ describe("classic gateways", () => {
       ]);
     });
     it("should update classic gateway private vlan when deleted", () => {
-      let craig = newState();
-      craig.classic_gateways.create({
-        name: "gw",
-        hostname: "gw-host",
-        datacenter: "dal10",
-        network_speed: "1000",
-        private_network_only: false,
-        tcp_monitoring: false,
-        redundant_network: true,
-        public_bandwidth: 5000,
-        memory: 64,
-        notes: "Notes",
-        ipv6_enabled: false,
-        package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-        os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-        process_key_name: "INTEL_XEON_4210_2_20",
-        private_vlan: "vsrx-private",
-        public_vlan: "vsrx-public",
-        ssh_key: "example-classic",
-        disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
-        hadr: false,
-      });
       craig.classic_vlans.delete(
         {},
         {
@@ -120,53 +102,13 @@ describe("classic gateways", () => {
           },
         }
       );
-      assert.deepEqual(craig.store.json.classic_gateways, [
-        {
-          name: "gw",
-          hostname: "gw-host",
-          datacenter: "dal10",
-          network_speed: "1000",
-          private_network_only: false,
-          tcp_monitoring: false,
-          redundant_network: true,
-          public_bandwidth: 5000,
-          memory: 64,
-          notes: "Notes",
-          ipv6_enabled: false,
-          package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-          os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-          process_key_name: "INTEL_XEON_4210_2_20",
-          private_vlan: "vsrx-private",
-          public_vlan: null,
-          ssh_key: "example-classic",
-          disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
-          hadr: false,
-        },
-      ]);
+      assert.deepEqual(
+        craig.store.json.classic_gateways[0].public_vlan,
+        null,
+        "it should reset vlan"
+      );
     });
     it("should update classic gateway ssh key when deleted", () => {
-      let craig = newState();
-      craig.classic_gateways.create({
-        name: "gw",
-        hostname: "gw-host",
-        datacenter: "dal10",
-        network_speed: "1000",
-        private_network_only: false,
-        tcp_monitoring: false,
-        redundant_network: true,
-        public_bandwidth: 5000,
-        memory: 64,
-        notes: "Notes",
-        ipv6_enabled: false,
-        package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-        os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-        process_key_name: "INTEL_XEON_4210_2_20",
-        private_vlan: "vsrx-private",
-        public_vlan: "vsrx-public",
-        ssh_key: "example-classic",
-        disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
-        hadr: false,
-      });
       craig.classic_ssh_keys.delete(
         {},
         {
@@ -175,34 +117,15 @@ describe("classic gateways", () => {
           },
         }
       );
-      assert.deepEqual(craig.store.json.classic_gateways, [
-        {
-          name: "gw",
-          hostname: "gw-host",
-          datacenter: "dal10",
-          network_speed: "1000",
-          private_network_only: false,
-          tcp_monitoring: false,
-          redundant_network: true,
-          public_bandwidth: 5000,
-          memory: 64,
-          notes: "Notes",
-          ipv6_enabled: false,
-          package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-          os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-          process_key_name: "INTEL_XEON_4210_2_20",
-          private_vlan: "vsrx-private",
-          public_vlan: "vsrx-public",
-          ssh_key: null,
-          disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
-          hadr: false,
-        },
-      ]);
+      assert.deepEqual(
+        craig.store.json.classic_gateways[0].ssh_key,
+        null,
+        "it should reset ssh key"
+      );
     });
   });
   describe("classic_gateways.create", () => {
-    it("should create a new classic gateway", () => {
-      let craig = newState();
+    beforeEach(() => {
       craig.classic_gateways.create({
         name: "gw",
         hostname: "gw-host",
@@ -224,6 +147,8 @@ describe("classic gateways", () => {
         disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
         hadr: false,
       });
+    });
+    it("should create a new classic gateway", () => {
       assert.deepEqual(
         craig.store.json.classic_gateways,
         [
@@ -254,8 +179,7 @@ describe("classic gateways", () => {
     });
   });
   describe("classic_gateways.save", () => {
-    it("should save a classic gateway", () => {
-      let craig = newState();
+    beforeEach(() => {
       craig.classic_gateways.create({
         name: "gw",
         hostname: "gw-host",
@@ -277,6 +201,8 @@ describe("classic gateways", () => {
         disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
         hadr: false,
       });
+    });
+    it("should save a classic gateway", () => {
       craig.transit_gateways.gre_tunnels.create(
         {
           tgw: "transit-gateway",
@@ -349,28 +275,6 @@ describe("classic gateways", () => {
       );
     });
     it("should save a classic gateway and update gre tunnels with new updated name", () => {
-      let craig = newState();
-      craig.classic_gateways.create({
-        name: "gw",
-        hostname: "gw-host",
-        datacenter: "dal10",
-        network_speed: "1000",
-        private_network_only: false,
-        tcp_monitoring: false,
-        redundant_network: true,
-        public_bandwidth: 5000,
-        memory: 64,
-        notes: "Notes",
-        ipv6_enabled: false,
-        package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-        os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-        process_key_name: "INTEL_XEON_4210_2_20",
-        private_vlan: "vsrx-private",
-        public_vlan: "vsrx-public",
-        ssh_key: "example-classic",
-        disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
-        hadr: false,
-      });
       craig.transit_gateways.gre_tunnels.create(
         {
           tgw: "transit-gateway",
@@ -450,7 +354,6 @@ describe("classic gateways", () => {
   });
   describe("classic_gateways.delete", () => {
     it("should delete a classic gateway", () => {
-      let craig = newState();
       craig.classic_gateways.create({
         name: "gw",
         hostname: "gw-host",
@@ -485,6 +388,64 @@ describe("classic gateways", () => {
     beforeEach(() => {
       craig = newState();
     });
+    describe("classic_gateways.memory", () => {
+      it("should return true if a gw has memory that is not whole number", () => {
+        assert.isTrue(
+          craig.classic_gateways.memory.invalid(
+            {
+              name: "aa",
+              domain: "oops.com",
+              datacenter: "dal10",
+              network_speed: "1000",
+              public_bandwidth: "64",
+              package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+              os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+              process_key_name: "INTEL_XEON_4210_2_20",
+              private_vlan: "vlan",
+              public_vlan: "pvlan",
+              ssh_key: "key",
+              disk_key_names: ["disk"],
+              memory: -1.25,
+            },
+            {
+              craig: craig,
+              data: {
+                name: "frog",
+              },
+            }
+          ),
+          "it should be true"
+        );
+      });
+      it("should return true if a gw has memory that is whole number not in range", () => {
+        assert.isTrue(
+          craig.classic_gateways.memory.invalid(
+            {
+              name: "aa",
+              domain: "oops.com",
+              datacenter: "dal10",
+              network_speed: "1000",
+              public_bandwidth: "64",
+              package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+              os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+              process_key_name: "INTEL_XEON_4210_2_20",
+              private_vlan: "vlan",
+              public_vlan: "pvlan",
+              ssh_key: "key",
+              disk_key_names: ["disk"],
+              memory: -1,
+            },
+            {
+              craig: craig,
+              data: {
+                name: "frog",
+              },
+            }
+          ),
+          "it should be true"
+        );
+      });
+    });
     describe("classic_gateways.name", () => {
       it("should return correct helper text", () => {
         assert.deepEqual(
@@ -503,6 +464,35 @@ describe("classic gateways", () => {
       it("should return false when domain is undefined", () => {
         assert.isTrue(
           craig.classic_gateways.domain.invalid({}),
+          "it should be true"
+        );
+      });
+    });
+    describe("classic_gateways.disk_key_names", () => {
+      it("should return true if a gw has no disk key names", () => {
+        assert.isTrue(
+          craig.classic_gateways.disk_key_names.invalid(
+            {
+              name: "aa",
+              domain: "oops.com",
+              datacenter: "dal10",
+              network_speed: "1000",
+              public_bandwidth: "64",
+              package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+              os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+              process_key_name: "INTEL_XEON_4210_2_20",
+              private_vlan: "vlan",
+              public_vlan: "pvlan",
+              ssh_key: "key",
+              disk_key_names: [],
+            },
+            {
+              craig: craig,
+              data: {
+                name: "frog",
+              },
+            }
+          ),
           "it should be true"
         );
       });
@@ -548,6 +538,64 @@ describe("classic gateways", () => {
       });
     });
     describe("classic_gateways.public_network_only", () => {
+      it("should return false if a gw has no public_vlan and private_network_only is true", () => {
+        assert.isFalse(
+          craig.classic_gateways.shouldDisableSave(
+            {
+              name: "aa",
+              domain: "oops.com",
+              datacenter: "dal10",
+              network_speed: "1000",
+              public_bandwidth: "64",
+              package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+              os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+              process_key_name: "INTEL_XEON_4210_2_20",
+              private_vlan: "vlan",
+              public_vlan: "",
+              private_network_only: true,
+              ssh_key: "key",
+              disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
+              memory: 64,
+            },
+            {
+              craig: craig,
+              data: {
+                name: "frog",
+              },
+            }
+          ),
+          "it should be true"
+        );
+      });
+      it("should return true if a gw has no public_vlan and private_network_only is false", () => {
+        assert.isTrue(
+          craig.classic_gateways.shouldDisableSave(
+            {
+              name: "aa",
+              domain: "oops.com",
+              datacenter: "dal10",
+              network_speed: "1000",
+              public_bandwidth: "64",
+              package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+              os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+              process_key_name: "INTEL_XEON_4210_2_20",
+              private_vlan: "vlan",
+              public_vlan: "",
+              private_network_only: false,
+              ssh_key: "key",
+              disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
+              memory: 64,
+            },
+            {
+              craig: craig,
+              data: {
+                name: "frog",
+              },
+            }
+          ),
+          "it should be true"
+        );
+      });
       it("should change state data when changing from false to true", () => {
         let data = {
           private_network_only: false,

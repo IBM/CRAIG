@@ -21,10 +21,9 @@ const {
  * @param {Object} config
  * @param {Object} config._options
  * @param {string} config._options.prefix
- * @param {boolean=} cdktf
  * @returns {string} terraform string
  */
-function ibmIsFlowLog(vpc, config, cdktf) {
+function ibmIsFlowLog(vpc, config) {
   let depends = `ibm_iam_authorization_policy.flow_logs_to_${snakeCase(
     vpc.cos
   )}_object_storage_policy`;
@@ -35,7 +34,7 @@ function ibmIsFlowLog(vpc, config, cdktf) {
     storage_bucket: bucketRef(vpc.cos, vpc.bucket),
     resource_group: rgIdRef(vpc.resource_group, config),
     tags: getTags(config),
-    depends_on: [cdktf ? depends : cdktfRef(depends)],
+    depends_on: [cdktfRef(depends)],
   };
   if (!vpc.cos || !vpc.bucket) {
     delete flowLogsData.depends_on;

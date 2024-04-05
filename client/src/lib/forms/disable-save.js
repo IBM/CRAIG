@@ -106,8 +106,6 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.power[field]
         : isPowerSshKey
         ? componentProps.craig.power.ssh_keys
-        : field === "classic_ssh_keys"
-        ? componentProps.craig.classic_ssh_keys
         : field === "volumes"
         ? componentProps.craig.vsi.volumes
         : field === "acl_rules" &&
@@ -187,7 +185,7 @@ function invalidCidrBlock(value) {
  */
 function forceShowForm(stateData, componentProps) {
   let openForm = false;
-  if (componentProps.innerFormProps.data.enable === false) {
+  if (componentProps.innerFormProps?.data.enable === false) {
     return openForm;
   }
 
@@ -208,7 +206,7 @@ function forceShowForm(stateData, componentProps) {
   if (!openForm) {
     openForm = disableSave(
       componentProps.submissionFieldName,
-      componentProps.innerFormProps.data,
+      componentProps.innerFormProps?.data,
       componentProps.innerFormProps
     );
   }

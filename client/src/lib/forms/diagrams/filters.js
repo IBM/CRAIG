@@ -92,9 +92,77 @@ function powerMapFilter(props) {
   );
 }
 
+/**
+ * filter routing tables
+ * @param {*} props
+ * @returns {Object} list of filtered routing tables
+ */
+function routingTableFilter(props) {
+  let routingTables = [];
+  props.craig.store.json.routing_tables.forEach((rt) => {
+    if (rt.vpc === props.vpc.name) {
+      routingTables.push(rt);
+    }
+  });
+  return routingTables;
+}
+
+/**
+ * get a list of classic vsis to render as part of the classic network map
+ * @param {*} props component props
+ * @returns {Array<object>} list of classic vsis to render
+ */
+function classicVsiFilter(props) {
+  let vsis = [];
+  props.craig.store.json.classic_vsi.forEach((vsi, vsiIndex) => {
+    if (vsi.private_vlan === props.vlan || vsi.public_vlan === props.vlan) {
+      let copyVsi = { ...vsi };
+      copyVsi.index = vsiIndex;
+      vsis.push(copyVsi);
+    }
+  });
+  return vsis;
+}
+
+/**
+ * get a list of acls to render
+ * @param {*} props component props
+ * @returns {Array<object>} list of acls to render
+ */
+function aclMapFilter(props) {
+  let vpc = props.vpc;
+  let subnets = vpc.subnets || []; // empty subnets for no vpc
+  // if no acls on vpc, add null
+  let hasNullAcls = false;
+  subnets.forEach((subnet) => {
+    // if subnet does not use data and has no acl, add null
+    if (!subnet.use_data && !subnet.network_acl) hasNullAcls = true;
+  });
+  return (hasNullAcls ? [{ name: null }] : []).concat(vpc.acls || []);
+}
+
+/**
+ * filter classic subnets
+ * @param {*} componentProps
+ * @returns {Object} list of filtered classic subnets
+ */
+function classicSubnetsFilter(props) {
+  let subnets = [];
+  props.craig.store.json.classic_vlans.forEach((vlan) => {
+    if (vlan.datacenter === props.datacenter) {
+      subnets.push(vlan);
+    }
+  });
+  return subnets;
+}
+
 module.exports = {
   classicGatewaysFilter,
   classicBareMetalFilter,
+  classicVsiFilter,
   powerSubnetFilter,
   powerMapFilter,
+  routingTableFilter,
+  aclMapFilter,
+  classicSubnetsFilter,
 };

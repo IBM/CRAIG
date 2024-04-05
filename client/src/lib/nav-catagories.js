@@ -309,6 +309,7 @@ const navCatagories = [
         toTf: (config) => {
           return classicVsiTf(config) || "";
         },
+        jsonField: "classic_vsi",
       },
       {
         title: "Classic Bare Metal",
@@ -334,7 +335,7 @@ const navCatagories = [
         jsonField: "cis",
       },
       {
-        title: "Global Load Balancers",
+        title: "Global Load Balancers (GLB)",
         path: "/form/cisGlbs",
         react_icon: "LoadBalancerPool",
         toTf: (config) => {

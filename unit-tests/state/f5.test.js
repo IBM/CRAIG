@@ -330,6 +330,45 @@ describe("f5.instance", () => {
     });
   });
   describe("f5.instance.schema", () => {
+    it("should have invalid license_host", () => {
+      let craig = state();
+      assert.isTrue(
+        craig.f5.template.license_host.invalid({ license_host: "" }),
+        "it should be invalid"
+      );
+      assert.isTrue(
+        craig.f5.template.license_pool.invalid({ license_pool: "" }),
+        "it should be invalid"
+      );
+      assert.isFalse(
+        craig.f5.template.template_version.invalid({ template_version: "" }),
+        "it should be valid"
+      );
+    });
+    it("should have invalid tmos_admin_password", () => {
+      let craig = state();
+      assert.isTrue(
+        craig.f5.template.tmos_admin_password.invalid({
+          tmos_admin_password: "",
+        }),
+        "it should be invalid when empty"
+      );
+      assert.isTrue(
+        craig.f5.template.tmos_admin_password.invalid({
+          tmos_admin_password: "aaa",
+        }),
+        "it should be invalid when not passing exp"
+      );
+    });
+    it("should have invalid ts_declaration_url when not valid url", () => {
+      let craig = state();
+      assert.isTrue(
+        craig.f5.template.ts_declaration_url.invalid({
+          ts_declaration_url: "oops",
+        }),
+        "it should be invalid"
+      );
+    });
     it("should hide byol license base key when form type is not byol", () => {
       let craig = state();
       assert.isTrue(

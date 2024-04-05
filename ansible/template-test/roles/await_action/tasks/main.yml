@@ -7,9 +7,14 @@
       Authorization: Bearer {{ token.json.access_token }}
   register: dynamic_value
   until: dynamic_value.json.status.workspace_job_status.status_code == "job_finished" or dynamic_value.json.status.workspace_job_status.status_code == "job_failed"
-  failed_when: dynamic_value.json.status.workspace_job_status.status_code == "job_failed"
   delay: 120
   retries: 50
-- name: Set Variable
-  set_fact: 
-    "{{ register_name }}": "{{ dynamic_value }}"
+- name: Register status code
+  set_fact:
+    job_status: "{{dynamic_value.json.status.workspace_job_status.status_code}}"
+- name: Force failure if job fails and is not destroy
+  ansible.builtin.fail:
+    msg: Terraform "{{ action_type }}" failed
+  when:
+    - action_type != "destroy"
+    - job_status == "job_failed"

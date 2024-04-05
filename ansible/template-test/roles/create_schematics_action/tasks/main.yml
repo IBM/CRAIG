@@ -1,0 +1,17 @@
+---
+# tasks file for create_schematics_action
+- name: Create schematics action
+  uri:
+    url: https://us.schematics.cloud.ibm.com/v2/actions
+    method: POST
+    body_format: json
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+      Content-Type: application/json
+    body:
+        name: "{{ action_name }}"
+        description: "CRAIG test for {{template}} template"
+        command_parameter: main.yml
+        source: "{{ source }}"
+        inputs: "{{ inputs }}"
+    status_code: 201

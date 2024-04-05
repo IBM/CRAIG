@@ -69,6 +69,19 @@ function hideWhenNotEnterprise(stateData) {
 }
 
 /**
+ * invalid when enterprise
+ * @param {string} field name
+ * @returns {Function} invalid function
+ */
+function invalidWhenNullOrEmptyStringAndEnterprise(field) {
+  return function (stateData) {
+    if (stateData.plan === "enterprise") {
+      return isNullOrEmptyString(stateData.throughput);
+    } else return false;
+  };
+}
+
+/**
  * intialize appid store
  * @param {*} store
  */
@@ -110,12 +123,7 @@ function initEventStreams(store) {
         size: "small",
         type: "select",
         default: "",
-        invalid: function (stateData) {
-          if (stateData.plan === "enterprise") {
-            return isNullOrEmptyString(stateData.throughput);
-          }
-          return false;
-        },
+        invalid: invalidWhenNullOrEmptyStringAndEnterprise("throughput"),
         invalidText: selectInvalidText("a throughput"),
         groups: ["150MB/s", "300MB/s", "450MB/s"],
         hideWhen: hideWhenNotEnterprise,
@@ -124,12 +132,7 @@ function initEventStreams(store) {
         size: "small",
         type: "select",
         default: "",
-        invalid: function (stateData) {
-          if (stateData.plan === "enterprise") {
-            return isNullOrEmptyString(stateData.storage_size);
-          }
-          return false;
-        },
+        invalid: invalidWhenNullOrEmptyStringAndEnterprise("storage_size"),
         invalidText: selectInvalidText("a throughput"),
         groups: ["2TB", "4TB", "6TB", "8TB", "10TB", "12TB"],
         hideWhen: hideWhenNotEnterprise,
@@ -149,12 +152,7 @@ function initEventStreams(store) {
       },
       endpoints: {
         default: "",
-        invalid: function (stateData) {
-          if (stateData.plan === "enterprise") {
-            return isNullOrEmptyString(stateData.endpoints);
-          }
-          return false;
-        },
+        invalid: invalidWhenNullOrEmptyStringAndEnterprise("endpoints"),
       },
     },
   });

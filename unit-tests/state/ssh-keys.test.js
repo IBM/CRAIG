@@ -107,7 +107,27 @@ describe("ssh_keys", () => {
     });
   });
   describe("ssh_keys.schema", () => {
+    describe("resource_group", () => {
+      it("should not be invalid if use data", () => {
+        assert.isFalse(
+          craig.ssh_keys.resource_group.invalid(
+            { use_data: true },
+            { craig: craig }
+          ),
+          "it should be false"
+        );
+      });
+    });
     describe("public_key", () => {
+      it("should not be invalid if use data", () => {
+        assert.isFalse(
+          craig.ssh_keys.public_key.invalid(
+            { use_data: true },
+            { craig: craig }
+          ),
+          "it should be false"
+        );
+      });
       it("should not be invalid if the key is NONE and another NONE key exists", () => {
         craig.store.json.ssh_keys.push({ name: "test", public_key: "NONE" });
         assert.isFalse(

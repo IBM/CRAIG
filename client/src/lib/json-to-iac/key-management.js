@@ -152,11 +152,10 @@ function formatKeyRing(name, kms, config) {
  * @param {Object} config options
  * @param {Object} config._options
  * @param {string} config._options.prefix
- * @param {boolean} cdktf
  * @returns {object} key terraform code
  */
 
-function ibmKmsKey(key, kms, config, cdktf) {
+function ibmKmsKey(key, kms, config) {
   let keyValues = {
     instance_id: composedKmsId(kms),
     key_name: kebabName([kms.name, key.name]),
@@ -180,7 +179,7 @@ function ibmKmsKey(key, kms, config, cdktf) {
         kms.name
       )}_block_storage_policy`,
     ].forEach((ref) => {
-      keyValues.depends_on.push(cdktf ? ref : cdktfRef(ref));
+      keyValues.depends_on.push(cdktfRef(ref));
     });
   }
   return {

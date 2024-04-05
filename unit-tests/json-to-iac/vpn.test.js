@@ -118,6 +118,7 @@ resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_127_
           name: "connection-1",
           local_cidrs: ["10.10.10.10/24"],
           peer_cidrs: ["10.10.20.10/24"],
+          admin_state_up: true,
         },
       ];
       let actualData = vpnTf(nw);
@@ -139,9 +140,10 @@ resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
 }
 
 resource "ibm_is_vpn_gateway_connection" "management_management_gateway_vpn_gw_connection_connection_1" {
-  name          = "\${var.prefix}-management-gateway-connection-1"
-  vpn_gateway   = ibm_is_vpn_gateway.management_management_gateway_vpn_gw.id
-  preshared_key = var.management_gateway_connection_1_preshared_key
+  name           = "\${var.prefix}-management-gateway-connection-1"
+  vpn_gateway    = ibm_is_vpn_gateway.management_management_gateway_vpn_gw.id
+  preshared_key  = var.management_gateway_connection_1_preshared_key
+  admin_state_up = true
   local_cidrs = [
     "10.10.10.10/24"
   ]
@@ -170,6 +172,7 @@ resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_127_
       let nw = { ...slzNetwork };
       nw.vpn_gateways[0].subnet = null;
       nw.vpn_gateways[0].additional_prefixes = ["1.2.3.4/5"];
+      delete nw.vpn_gateways[0].connections[0].admin_state_up;
       let actualData = vpnTf(nw);
       let expectedData = `##############################################################################
 # VPN Gateways

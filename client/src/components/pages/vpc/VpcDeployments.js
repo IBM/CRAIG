@@ -542,6 +542,22 @@ class VpcDeploymentsDiagramPage extends React.Component {
                       parentState={this.state}
                       tabSelected={this.tabSelected}
                       onTabClick={this.onSgTabClick}
+                      buttons={(vpcIndex) => {
+                        return (
+                          <PrimaryButton
+                            type="add"
+                            hoverText="Create a Deployment"
+                            noDeleteButton
+                            onClick={() => {
+                              this.resetSelection();
+                              this.setState({
+                                vpcIndex: vpcIndex,
+                                showModal: true,
+                              });
+                            }}
+                          />
+                        );
+                      }}
                     >
                       <RoutingTables
                         craig={craig}
@@ -610,7 +626,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                     <ScrollFormWrapper>
                       {this.state.editing &&
                       this.state.selectedItem === "f5_vsi" ? (
-                        <div className="rightForm marginTop1Rem">
+                        <div>
                           <CraigFormHeading
                             icon={<F5Icon />}
                             name="Editing F5 Big IP Deployment"
