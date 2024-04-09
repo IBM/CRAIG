@@ -12,8 +12,14 @@
     - ./vars/template_override_vars/{{template}}.yml
   roles:
     - role: get_iam_token
+    - role: pause
+      vars:
+        pause_time: 1
     - role: download_tar
+    - role: get_workspace_data
+      when: use_existing_workspace == "true"
     - role: create_schematics_workspace
+      when: use_existing_workspace == "false"
       vars:
         description: Automated CRAIG Testing Workspace
     - role: upload_tar
@@ -22,6 +28,9 @@
   vars_files: ./vars/vars.template.yml
   roles:
     - role: update_variablestore
+    - role: pause
+      vars:
+        pause_time: 1
     - role: update_workspace_variables
 - name: Deploy CRAIG terraform template
   hosts: localhost
@@ -78,4 +87,6 @@
   roles:
     - role: get_iam_token
     - role: delete_schematics_workspace
-      when: job_status != "job_failed"
+      when: 
+        - job_status != "job_failed"
+        - use_existing_workspace == "false"

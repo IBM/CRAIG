@@ -17,3 +17,7 @@
       "template_data": [{ "type": "terraform_v1.5"}]
     status_code: 201
   register: workspace
+- name: Store Workspace IDs
+  set_fact:
+    new_workspace_id: "{{ workspace.json.id }}"
+    template_id: "{{ workspace.json.template_data[0].id }}"
