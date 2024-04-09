@@ -370,7 +370,7 @@ const validate = function (json) {
 
   // vpcs
   json.vpcs.forEach((network) => {
-    nullResourceGroupTest("VPCs", network);
+    if (!network.use_data) nullResourceGroupTest("VPCs", network);
 
     // for each address prefix
     network.address_prefixes.forEach((prefix) => {
@@ -387,7 +387,7 @@ const validate = function (json) {
     });
     // for each subnet
     network.subnets.forEach((subnet) => {
-      nullResourceGroupTest("Subnets", subnet);
+      if (!network.use_data) nullResourceGroupTest("Subnets", subnet);
       validationTest("Subnets", subnet, "vpc", "vpc");
       if (!subnet.use_data) {
         validationTest("Subnets", subnet, "network_acl", "network_acl");
@@ -404,7 +404,6 @@ const validate = function (json) {
   // security groups
   json.security_groups.forEach((group) => {
     nullVpcNameTest("Security Groups", group);
-    nullResourceGroupTest("Security Groups", group);
     updateNetworkingRulesForCompatibility(group.rules);
     group.rules.forEach((rule) => {
       validationTest("Security Group Rule", rule, "security group", "sg");

@@ -6,7 +6,8 @@
       "VPC Routing Table routes can now be assigned a Priority value and can advertise to the parent table's sources by using the `Advertise` toggle"
     ],
     "fixes": [
-      "Fixed an issue causing encryption keys with no Key Ring value to populate with a `null` key ring"
+      "Fixed an issue causing encryption keys with no Key Ring value to populate with a `null` key ring",
+      "Fixed an issue preventing Terraform from being created when using an existing VPC"
     ],
     "upgrade_notes": []
   },

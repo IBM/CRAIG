@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue causing encryption keys with no Key Ring value to populate with a `null` key ring
+- Fixed an issue preventing Terraform from being created when using an existing VPC
 
 ## 1.14.1
 
