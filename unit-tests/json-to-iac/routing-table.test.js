@@ -38,6 +38,41 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
         "it should return correct terraform"
       );
     });
+    it("should format a routing table with advertised routes", () => {
+      let actualData = formatRoutingTable(
+        {
+          vpc: "management",
+          name: "routing-table",
+          route_direct_link_ingress: true,
+          transit_gateway_ingress: true,
+          route_vpc_zone_ingress: true,
+          advertise_routes_to: ["vpn_server"],
+        },
+        {
+          _options: {
+            prefix: "iac",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
+  name                          = "\${var.prefix}-management-vpc-routing-table-table"
+  vpc                           = ibm_is_vpc.management_vpc.id
+  route_direct_link_ingress     = true
+  route_transit_gateway_ingress = true
+  route_vpc_zone_ingress        = true
+  advertise_routes_to = [
+    "vpn_server"
+  ]
+}
+`;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct terraform"
+      );
+    });
   });
   describe("formatRoutingTableRoute", () => {
     it("should format routing table route", () => {
@@ -66,6 +101,44 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
   destination   = "1.2.3.4/5"
   action        = "delegate"
   next_hop      = "0.0.0.0"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct terraform"
+      );
+    });
+    it("should format routing table route with advertise and priority", () => {
+      let actualData = formatRoutingTableRoute(
+        {
+          vpc: "management",
+          routing_table: "routing-table",
+          name: "test-route",
+          zone: 1,
+          destination: "1.2.3.4/5",
+          action: "delegate",
+          advertise: true,
+          priority: "0",
+        },
+        {
+          _options: {
+            region: "us-south",
+            prefix: "iac",
+          },
+        }
+      );
+      let expectedData = `
+resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route_route" {
+  vpc           = ibm_is_vpc.management_vpc.id
+  routing_table = ibm_is_vpc_routing_table.management_vpc_routing_table_table.routing_table
+  zone          = "\${var.region}-1"
+  name          = "\${var.prefix}-management-routing-table-test-route-route"
+  destination   = "1.2.3.4/5"
+  action        = "delegate"
+  next_hop      = "0.0.0.0"
+  advertise     = true
+  priority      = "0"
 }
 `;
       assert.deepEqual(

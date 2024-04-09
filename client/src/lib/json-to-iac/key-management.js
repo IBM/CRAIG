@@ -160,11 +160,13 @@ function ibmKmsKey(key, kms, config) {
     instance_id: composedKmsId(kms),
     key_name: kebabName([kms.name, key.name]),
     standard_key: !key.root_key,
-    key_ring_id: tfRef(
-      "ibm_kms_key_rings",
-      `${kms.name} ${key.key_ring} ring`,
-      "key_ring_id"
-    ),
+    key_ring_id: key.key_ring
+      ? tfRef(
+          "ibm_kms_key_rings",
+          `${kms.name} ${key.key_ring} ring`,
+          "key_ring_id"
+        )
+      : undefined,
     force_delete: key.force_delete,
     endpoint_type: key.endpoint ? key.endpoint : config._options.endpoints,
   };
@@ -278,7 +280,7 @@ function kmsInstanceTf(kms, config) {
     instanceTf += formatKmsAuthPolicy(kms) + formatKmsAuthPolicy(kms, true);
   }
   keyRings.forEach((ring) => {
-    instanceTf += formatKeyRing(ring, kms, config);
+    if (ring) instanceTf += formatKeyRing(ring, kms, config);
   });
   kms.keys.forEach((key) => {
     instanceTf +=

@@ -1544,6 +1544,7 @@ describe("automate schema generation", () => {
             transit_gateway_ingress: { type: "boolean", default: false },
             route_vpc_zone_ingress: { type: "boolean", default: false },
             accept_routes_from_resource_type: { type: "Array", default: [] },
+            advertise_routes_to: { type: "Array", default: [] },
             routes: {
               Array: {
                 name: { type: "string", default: null },
@@ -1557,8 +1558,17 @@ describe("automate schema generation", () => {
                   default: null,
                   groups: ["delegate", "deliver", "delegate_vpc", "drop"],
                 },
+                advertise: {
+                  default: false,
+                  type: "boolean",
+                },
                 next_hop: { type: "string", default: null },
                 destination: { type: "string", default: null },
+                priority: {
+                  default: null,
+                  groups: ["0", "1", "2", "3", "4"],
+                  type: "string",
+                },
               },
             },
           },

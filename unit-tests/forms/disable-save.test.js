@@ -11,6 +11,60 @@ describe("disableSave", () => {
   it("should otherwise return false", () => {
     assert.isFalse(disableSave("pretend_field", {}, {}), "it should be false");
   });
+  describe("clusters", () => {
+    it("should return true if a cluster worker pool has an invalid name", () => {
+      assert.isTrue(
+        disableSave(
+          "worker_pools",
+          {
+            name: "a--",
+          },
+          {
+            craig: state(),
+            data: {
+              name: "mm",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+    it("should return true if a secrets group is an invalid duplicate name", () => {
+      let tempCraig = state();
+      tempCraig.store = {
+        json: {
+          clusters: [
+            {
+              name: "frog",
+              opaque_secrets: [
+                {
+                  name: "a",
+                  secrets_group: "duplicate",
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      assert.isTrue(
+        disableSave(
+          "opaque_secrets",
+          {
+            name: "frog",
+            secrets_group: "duplicate",
+          },
+          {
+            craig: tempCraig,
+            data: {
+              name: "mm",
+            },
+          }
+        ),
+        "it should be true"
+      );
+    });
+  });
   describe("security groups", () => {
     describe("rules", () => {
       it("should return true if security group rule has invalid name", () => {

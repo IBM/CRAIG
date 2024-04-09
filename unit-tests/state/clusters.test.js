@@ -433,6 +433,20 @@ describe("clusters", () => {
         "it should return correct data"
       );
     });
+    it("should be not have invalid cos when openshift", () => {
+      assert.isFalse(
+        craig.clusters.cos.invalid({}),
+        "it should not be invalid"
+      );
+    });
+    it("should be have invalid cos when openshift and not selected", () => {
+      assert.isFalse(
+        craig.clusters.cos.invalid({
+          kube_type: "openshift",
+        }),
+        "it should not be invalid"
+      );
+    });
     it("should return correct groups for cos", () => {
       assert.deepEqual(
         craig.clusters.cos.groups({}, { craig: craig }),
@@ -665,6 +679,42 @@ describe("clusters", () => {
       });
     });
     describe("clusters.opaque_secrets.schema", () => {
+      it("should have invalid expiration date", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.expiration_date.invalid({}),
+          "it should be invalid"
+        );
+      });
+      it("should have invalid username_password_secret_description", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.username_password_secret_description.invalid(
+            {
+              username_password_secret_description: "@@@",
+            }
+          ),
+          "it should be invalid"
+        );
+      });
+      it("should have invalid arbitrary_secret_description", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.arbitrary_secret_description.invalid({
+            arbitrary_secret_description: "@@@",
+          }),
+          "it should be invalid"
+        );
+      });
+      it("should have correct invalid values", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.labels.invalid({}),
+          "it should be invalid"
+        );
+        assert.isTrue(
+          craig.clusters.opaque_secrets.labels.invalid({
+            labels: ["@!@@"],
+          }),
+          "it should be invalid"
+        );
+      });
       it("should return true if arbitrary_secret_name has empty string as name", () => {
         let actualData =
           craig.clusters.opaque_secrets.arbitrary_secret_name.invalid(

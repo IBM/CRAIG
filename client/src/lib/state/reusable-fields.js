@@ -914,4 +914,5 @@ module.exports = {
   classicPrivateVlan,
   classicPublicVlan,
   classicPrivateNetworkOnly,
+  invalidNewResourceName,
 };

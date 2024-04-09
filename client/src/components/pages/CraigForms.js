@@ -1197,6 +1197,7 @@ function craigForms(craig) {
         {
           accept_routes_from_resource_type:
             craig.routing_tables.accept_routes_from_resource_type,
+          advertise_routes_to: craig.routing_tables.advertise_routes_to,
         },
       ],
       subForms: [
@@ -1214,6 +1215,10 @@ function craigForms(craig) {
               {
                 action: craig.routing_tables.routes.action,
                 next_hop: craig.routing_tables.routes.next_hop,
+                priority: craig.routing_tables.routes.priority,
+              },
+              {
+                advertise: craig.routing_tables.routes.advertise,
               },
             ],
           },

@@ -382,6 +382,14 @@ describe("power_volumes", () => {
         "it should update attachments"
       );
     });
+    it("should have invalid pi_volume_size when out of range", () => {
+      assert.isTrue(
+        craig.power_volumes.pi_volume_size.invalid({
+          pi_volume_size: -1,
+        }),
+        "it should be invalid"
+      );
+    });
     it("should not disable volume size when sap and storage log", () => {
       assert.isFalse(
         craig.power_volumes.pi_volume_size.disabled({

@@ -40,6 +40,9 @@ function ibmIsVpcRoutingTable(table) {
  */
 function formatRoutingTable(table, config) {
   let data = ibmIsVpcRoutingTable(table, config);
+  if (table.advertise_routes_to) {
+    data.data.advertise_routes_to = table.advertise_routes_to;
+  }
   return jsonToTfPrint(
     "resource",
     "ibm_is_vpc_routing_table",
@@ -99,6 +102,11 @@ function ibmIsVpcRoutingTableRoute(route, config) {
  */
 function formatRoutingTableRoute(route, config) {
   let data = ibmIsVpcRoutingTableRoute(route, config);
+  ["advertise", "priority"].forEach((item) => {
+    if (route[item]) {
+      data.data[item] = route[item];
+    }
+  });
   return jsonToTfPrint(
     "resource",
     "ibm_is_vpc_routing_table_route",

@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.0
+
+### Features
+
+- VPC Routing Tables can now be advertised to Transit Gateway, and Direct Link
+- VPC Routing Table routes can now be assigned a Priority value and can advertise to the parent table's sources by using the `Advertise` toggle
+
+### Fixes
+
+- Fixed an issue causing encryption keys with no Key Ring value to populate with a `null` key ring
+
 ## 1.14.1
 
 ### Upgrade Notes

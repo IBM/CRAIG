@@ -151,7 +151,8 @@
       "direct_link_ingress": false,
       "accept_routes_from_resource_type": ["vpn_gateway", "vpn_server"],
       "route_direct_link_ingress": false,
-      "route_vpc_zone_ingress": false
+      "route_vpc_zone_ingress": false,
+      "advertise_routes_to": []
     },
     {
       "routes": [],
@@ -163,7 +164,8 @@
       "direct_link_ingress": false,
       "accept_routes_from_resource_type": ["vpn_server"],
       "route_direct_link_ingress": false,
-      "route_vpc_zone_ingress": false
+      "route_vpc_zone_ingress": false,
+      "advertise_routes_to": []
     }
   ],
   "scc": {
