@@ -1158,6 +1158,64 @@ describe("vpcs", () => {
           "it should be frog"
         );
       });
+      it("should update vpc address prefixes when advanced subnet is created with no matching prefix", () => {
+        let state = new newState(true);
+        state.store.json._options.dynamic_subnets = false;
+        state.vpcs.subnetTiers.save(
+          {
+            advanced: true,
+            select_zones: [1],
+            name: "vpn",
+          },
+          {
+            vpc_name: "management",
+            data: {
+              name: "vpn",
+              craig: {
+                store: state.store.json.vpcs[0],
+              },
+            },
+          }
+        );
+        state.store.subnetTiers.management[2].subnets.push("lol");
+        state.store.json.vpcs[0].address_prefixes = [];
+        state.vpcs.subnets.save(
+          {
+            name: "frog",
+            acl_name: "",
+            tier: "vpn",
+            cidr: "1.2.3.4/5",
+            zone: "vpn-zone-1",
+            vpc: "management",
+          },
+          {
+            vpc_name: "management",
+            data: { name: "vpn-zone-1" },
+          }
+        );
+        assert.deepEqual(
+          state.store.json.vpcs[0].subnets[1].name,
+          "frog",
+          "it should be null"
+        );
+        assert.deepEqual(
+          state.store.subnetTiers.management[2].subnets,
+          ["frog", "lol"],
+          "it should update subnets"
+        );
+        assert.deepEqual(
+          state.store.json.vpcs[0].address_prefixes,
+          [
+            {
+              name: "frog",
+              cidr: "1.2.3.4/5",
+              zone: "vpn-zone-1",
+              vpc: "management",
+            },
+          ],
+          "it should update address prefixes"
+        );
+      });
       describe("vpcs.subnets.save (from tier JSON)", () => {
         let craig;
         beforeEach(() => {

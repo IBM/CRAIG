@@ -451,6 +451,13 @@ function subnetSave(config, stateData, componentProps) {
         if (prefix) {
           prefix.name = stateData.name;
           prefix.cidr = stateData.cidr;
+        } else {
+          data.address_prefixes.push({
+            name: stateData.name,
+            cidr: stateData.cidr,
+            zone: stateData.zone,
+            vpc: stateData.vpc,
+          });
         }
       }
     })
