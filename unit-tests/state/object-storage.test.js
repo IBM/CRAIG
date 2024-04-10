@@ -518,6 +518,150 @@ describe("object_storage", () => {
           ],
         };
       });
+      it("should hide activity_tracking_crn", () => {
+        assert.isTrue(
+          craig.object_storage.buckets.activity_tracking_crn.hideWhen({}),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.object_storage.buckets.activity_tracking_crn.hideWhen(
+            {
+              activity_tracking: true,
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    atracker: {
+                      instance: true,
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "it should be hidden when creating atracker instance"
+        );
+      });
+      it("should have invalid activity_tracking_crn", () => {
+        assert.isFalse(
+          craig.object_storage.buckets.activity_tracking_crn.invalid({}),
+          "it should not be invalid"
+        );
+        assert.isFalse(
+          craig.object_storage.buckets.activity_tracking_crn.invalid(
+            {
+              activity_tracking: true,
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    atracker: {
+                      instance: true,
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "it should not be invalid when creating atracker instance"
+        );
+        assert.isTrue(
+          craig.object_storage.buckets.activity_tracking_crn.invalid(
+            {
+              activity_tracking: true,
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    atracker: {
+                      instance: false,
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "it should be invalid when not creating instance"
+        );
+      });
+      it("should hide metrics_monitoring_crn", () => {
+        assert.isTrue(
+          craig.object_storage.buckets.metrics_monitoring_crn.hideWhen({}),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.object_storage.buckets.metrics_monitoring_crn.hideWhen(
+            {
+              metrics_monitoring: true,
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    sysdig: {
+                      enabled: true,
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "it should be hidden when creating atracker instance"
+        );
+      });
+      it("should have invalid metrics_monitoring_crn", () => {
+        assert.isFalse(
+          craig.object_storage.buckets.metrics_monitoring_crn.invalid({}),
+          "it should not be invalid"
+        );
+        assert.isFalse(
+          craig.object_storage.buckets.metrics_monitoring_crn.invalid(
+            {
+              metrics_monitoring: true,
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    sysdig: {
+                      enabled: true,
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "it should not be invalid when creating atracker instance"
+        );
+        assert.isTrue(
+          craig.object_storage.buckets.metrics_monitoring_crn.invalid(
+            {
+              metrics_monitoring: true,
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    sysdig: {
+                      enabled: false,
+                    },
+                  },
+                },
+              },
+            }
+          ),
+          "it should be invalid when not creating instance"
+        );
+      });
+      it("should hide read data events when activity tracking is not enabled", () => {
+        assert.isTrue(
+          craig.object_storage.buckets.read_data_events.hideWhen({}),
+          "it should be hidden"
+        );
+      });
       it("should return an empty array if kms is falsy", () => {
         assert.deepEqual(
           craig.object_storage.buckets.kms_key.groups(

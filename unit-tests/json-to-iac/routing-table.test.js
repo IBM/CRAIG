@@ -38,6 +38,46 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
         "it should return correct terraform"
       );
     });
+    it("should format a routing table with vpc from data", () => {
+      let actualData = formatRoutingTable(
+        {
+          vpc: "management",
+          name: "routing-table",
+          route_direct_link_ingress: true,
+          transit_gateway_ingress: true,
+          route_vpc_zone_ingress: true,
+        },
+        {
+          _options: {
+            prefix: "iac",
+          },
+          vpcs: [
+            {
+              name: "workload",
+            },
+            {
+              name: "management",
+              use_data: true,
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
+  name                          = "\${var.prefix}-management-vpc-routing-table-table"
+  vpc                           = data.ibm_is_vpc.management_vpc.id
+  route_direct_link_ingress     = true
+  route_transit_gateway_ingress = true
+  route_vpc_zone_ingress        = true
+}
+`;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct terraform"
+      );
+    });
     it("should format a routing table with advertised routes", () => {
       let actualData = formatRoutingTable(
         {

@@ -1,4 +1,4 @@
-const { eachKey } = require("lazy-z");
+const { eachKey, containsKeys, contains } = require("lazy-z");
 
 /**
  * create dynamic props for form group
@@ -38,7 +38,19 @@ function dynamicCraigFormGroupsProps(componentProps, index, stateData) {
         componentProps
       ),
   };
-  if (componentProps.formName === "subnet") {
+
+  if (
+    containsKeys(componentProps.form.groups[index], "className") &&
+    !allGroupItemsHidden(
+      componentProps.form.groups[index],
+      stateData,
+      componentProps
+    )
+  ) {
+    formGroupData.className =
+      componentProps.form.groups[index].className +
+      (allNextGroupsHidden || isLast ? " marginBottomNone" : "");
+  } else if (componentProps.formName === "subnet") {
     // add margin for subnet subform groups
     formGroupData.className = "marginBottomSmall";
   }
@@ -57,7 +69,7 @@ function allGroupItemsHidden(group, stateData, componentProps) {
   let areAllHidden = true;
   eachKey(group, (key) => {
     if (
-      key !== "hideWhen" &&
+      !contains(["hideWhen", "heading", "className"], key) &&
       (!group[key].hideWhen || !group[key].hideWhen(stateData, componentProps))
     ) {
       areAllHidden = false;

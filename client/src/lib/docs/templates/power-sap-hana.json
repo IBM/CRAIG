@@ -132,7 +132,15 @@
           "kms_key": "atracker-key",
           "name": "atracker-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": [
@@ -158,7 +166,15 @@
           "kms_key": "key",
           "name": "management-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         },
         {
           "endpoint": "public",
@@ -166,7 +182,15 @@
           "kms_key": "key",
           "name": "workload-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         },
         {
           "name": "transit-bucket",
@@ -174,7 +198,15 @@
           "kms_key": "key",
           "force_delete": true,
           "use_random_suffix": true,
-          "endpoint": null
+          "endpoint": null,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "use_random_suffix": true,
@@ -194,7 +226,7 @@
       "ssh_keys": [
         {
           "name": "power-ssh-key",
-          "public_key": "",
+          "public_key": null,
           "use_data": false,
           "resource_group": "powervs-rg",
           "workspace": "secure-powervs",
@@ -4368,7 +4400,10 @@
         },
         {
           "name": "vpn",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",

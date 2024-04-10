@@ -300,7 +300,8 @@ class DynamicForm extends React.Component {
                   : field.type;
                 return (field.hideWhen &&
                   field.hideWhen(this.state, this.props)) ||
-                  key === "hideWhen" ? (
+                  key === "hideWhen" ||
+                  key === "className" ? (
                   ""
                 ) : (
                   <DynamicToolTipWrapper

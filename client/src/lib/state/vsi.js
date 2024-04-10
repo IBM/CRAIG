@@ -29,7 +29,7 @@ const {
   encryptionKeyGroups,
   vpcSshKeyMultiselect,
 } = require("./utils");
-const { nameField } = require("./reusable-fields");
+const { nameField, hideWhenFieldFalse } = require("./reusable-fields");
 
 /**
  * initialize vsi
@@ -435,9 +435,7 @@ function initVsiStore(store) {
         apiEndpoint: function (stateData, componentProps) {
           return `/api/vsi/${componentProps.craig.store.json._options.region}/snapshots`;
         },
-        hideWhen: function (stateData) {
-          return stateData.use_snapshot !== true;
-        },
+        hideWhen: hideWhenFieldFalse("use_snapshot"),
       },
       profile: {
         size: "small",

@@ -120,7 +120,15 @@
           "kms_key": "slz-atracker-key",
           "name": "atracker-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": [
@@ -146,7 +154,15 @@
           "kms_key": "key",
           "name": "management-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         },
         {
           "endpoint": "public",
@@ -154,7 +170,15 @@
           "kms_key": "key",
           "name": "workload-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": []
@@ -1099,15 +1123,24 @@
       "subnetTiers": [
         {
           "name": "vsi",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpn",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false
@@ -1333,11 +1366,17 @@
       "subnetTiers": [
         {
           "name": "vsi",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false

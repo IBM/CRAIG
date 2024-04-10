@@ -12,12 +12,20 @@ const { kebabName, vpcRef, jsonToTfPrint, tfRef, tfBlock } = require("./utils");
  * @param {*} config
  * @returns {object} terraform
  */
-function ibmIsVpcRoutingTable(table) {
+function ibmIsVpcRoutingTable(table, config) {
+  let vpcIdRef = vpcRef(table.vpc);
+  if (config?.vpcs) {
+    config.vpcs.forEach((vpc) => {
+      if (vpc.use_data && table.vpc === vpc.name) {
+        vpcIdRef = vpcIdRef.replace("ibm_is_vpc", "data.ibm_is_vpc");
+      }
+    });
+  }
   return {
     name: `${table.vpc}-vpc-${table.name}-table`,
     data: {
       name: kebabName([table.vpc, "vpc", table.name, "table"]),
-      vpc: vpcRef(table.vpc),
+      vpc: vpcIdRef,
       route_direct_link_ingress: table.route_direct_link_ingress,
       route_transit_gateway_ingress: table.transit_gateway_ingress,
       route_vpc_zone_ingress: table.route_vpc_zone_ingress,

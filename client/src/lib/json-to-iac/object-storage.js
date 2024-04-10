@@ -1,4 +1,10 @@
-const { snakeCase, splat, eachKey, containsKeys } = require("lazy-z");
+const {
+  snakeCase,
+  splat,
+  eachKey,
+  containsKeys,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const {
   rgIdRef,
   getCosId,
@@ -199,19 +205,29 @@ function ibmCosBucket(bucket, cos, config) {
       '"'
     );
   }
-  if (bucket.atracker) {
+  if (bucket.activity_tracking) {
     bucketValues.activity_tracking = [
       {
         read_data_events: bucket.read_data_events,
         write_data_events: bucket.write_data_events,
-        activity_tracker_crn: bucket.atracker, // need logic to implement atracker, probably from data?
+        activity_tracker_crn: !isNullOrEmptyString(
+          bucket.activity_tracking_crn,
+          true
+        )
+          ? bucket.activity_tracking_crn
+          : "${ibm_resource_instance.atracker.crn}",
       },
     ];
   }
   if (bucket.metrics_monitoring) {
     bucketValues.metrics_monitoring = [
       {
-        metrics_monitoring_crn: bucket.metrics_monitoring, // need logic to implement crn ref
+        metrics_monitoring_crn: !isNullOrEmptyString(
+          bucket.metrics_monitoring_crn,
+          true
+        )
+          ? bucket.metrics_monitoring_crn
+          : "${ibm_resource_instance.sysdig.crn}",
         usage_metrics_enabled: bucket.usage_metrics_enabled,
         request_metrics_enabled: bucket.request_metrics_enabled,
       },

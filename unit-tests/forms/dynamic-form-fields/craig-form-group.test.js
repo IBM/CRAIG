@@ -347,4 +347,291 @@ describe("dynamicCraigFormGroupsProps", () => {
       "it should return correct props"
     );
   });
+  it("should return for cos when no activity_tracking", () => {
+    let actualData = dynamicCraigFormGroupsProps(
+      {
+        form: {
+          groups: [
+            {
+              name: craig.object_storage.buckets.name,
+              storage_class: craig.object_storage.buckets.storage_class,
+              kms_key: craig.object_storage.buckets.kms_key,
+            },
+            {
+              force_delete: craig.object_storage.buckets.force_delete,
+            },
+            {
+              activity_tracking: craig.object_storage.buckets.activity_tracking,
+              metrics_monitoring:
+                craig.object_storage.buckets.metrics_monitoring,
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Activity Tracking",
+                className: "marginBottomSmall",
+              },
+              hideWhen: craig.object_storage.buckets.read_data_events.hideWhen,
+            },
+            {
+              read_data_events: craig.object_storage.buckets.read_data_events,
+              write_data_events: craig.object_storage.buckets.write_data_events,
+              activity_tracking_crn:
+                craig.object_storage.buckets.activity_tracking_crn,
+              className: "subForm",
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Metrics Monitoring",
+                className: "marginBottomSmall",
+              },
+              hideWhen:
+                craig.object_storage.buckets.request_metrics_enabled.hideWhen,
+            },
+            {
+              request_metrics_enabled:
+                craig.object_storage.buckets.request_metrics_enabled,
+              usage_metrics_enabled:
+                craig.object_storage.buckets.usage_metrics_enabled,
+              metrics_monitoring_crn:
+                craig.object_storage.buckets.metrics_monitoring_crn,
+              className: "subForm",
+            },
+          ],
+        },
+        data: {
+          name: "frog",
+        },
+      },
+      4,
+      {}
+    );
+    assert.deepEqual(
+      actualData,
+      { key: "frog-group-4", noMarginBottom: true },
+      "it should have correct data"
+    );
+  });
+  it("should return for cos when activity_tracking", () => {
+    let actualData = dynamicCraigFormGroupsProps(
+      {
+        form: {
+          groups: [
+            {
+              name: craig.object_storage.buckets.name,
+              storage_class: craig.object_storage.buckets.storage_class,
+              kms_key: craig.object_storage.buckets.kms_key,
+            },
+            {
+              force_delete: craig.object_storage.buckets.force_delete,
+            },
+            {
+              activity_tracking: craig.object_storage.buckets.activity_tracking,
+              metrics_monitoring:
+                craig.object_storage.buckets.metrics_monitoring,
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Activity Tracking",
+                className: "marginBottomSmall",
+              },
+              hideWhen: craig.object_storage.buckets.read_data_events.hideWhen,
+            },
+            {
+              read_data_events: craig.object_storage.buckets.read_data_events,
+              write_data_events: craig.object_storage.buckets.write_data_events,
+              activity_tracking_crn:
+                craig.object_storage.buckets.activity_tracking_crn,
+              className: "subForm",
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Metrics Monitoring",
+                className: "marginBottomSmall",
+              },
+              hideWhen:
+                craig.object_storage.buckets.request_metrics_enabled.hideWhen,
+            },
+            {
+              request_metrics_enabled:
+                craig.object_storage.buckets.request_metrics_enabled,
+              usage_metrics_enabled:
+                craig.object_storage.buckets.usage_metrics_enabled,
+              metrics_monitoring_crn:
+                craig.object_storage.buckets.metrics_monitoring_crn,
+              className: "subForm",
+            },
+          ],
+        },
+        data: {
+          name: "frog",
+        },
+        craig: craig,
+      },
+      4,
+      {
+        activity_tracking: true,
+      }
+    );
+    assert.deepEqual(
+      actualData,
+      {
+        key: "frog-group-4",
+        noMarginBottom: true,
+        className: "subForm marginBottomNone",
+      },
+      "it should have correct data"
+    );
+  });
+  it("should return for cos when activity_tracking and metrics monitoring for metrics", () => {
+    let actualData = dynamicCraigFormGroupsProps(
+      {
+        form: {
+          groups: [
+            {
+              name: craig.object_storage.buckets.name,
+              storage_class: craig.object_storage.buckets.storage_class,
+              kms_key: craig.object_storage.buckets.kms_key,
+            },
+            {
+              force_delete: craig.object_storage.buckets.force_delete,
+            },
+            {
+              activity_tracking: craig.object_storage.buckets.activity_tracking,
+              metrics_monitoring:
+                craig.object_storage.buckets.metrics_monitoring,
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Activity Tracking",
+                className: "marginBottomSmall",
+              },
+              hideWhen: craig.object_storage.buckets.read_data_events.hideWhen,
+            },
+            {
+              read_data_events: craig.object_storage.buckets.read_data_events,
+              write_data_events: craig.object_storage.buckets.write_data_events,
+              activity_tracking_crn:
+                craig.object_storage.buckets.activity_tracking_crn,
+              className: "subForm",
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Metrics Monitoring",
+                className: "marginBottomSmall",
+              },
+              hideWhen:
+                craig.object_storage.buckets.request_metrics_enabled.hideWhen,
+            },
+            {
+              request_metrics_enabled:
+                craig.object_storage.buckets.request_metrics_enabled,
+              usage_metrics_enabled:
+                craig.object_storage.buckets.usage_metrics_enabled,
+              metrics_monitoring_crn:
+                craig.object_storage.buckets.metrics_monitoring_crn,
+              className: "subForm",
+            },
+          ],
+        },
+        data: {
+          name: "frog",
+        },
+        craig: craig,
+      },
+      6,
+      {
+        activity_tracking: true,
+        metrics_monitoring: true,
+      }
+    );
+    assert.deepEqual(
+      actualData,
+      {
+        key: "frog-group-6",
+        noMarginBottom: true,
+        className: "subForm marginBottomNone",
+      },
+      "it should have correct data"
+    );
+  });
+  it("should return for cos when activity_tracking and metrics monitoring for activity tracking", () => {
+    let actualData = dynamicCraigFormGroupsProps(
+      {
+        form: {
+          groups: [
+            {
+              name: craig.object_storage.buckets.name,
+              storage_class: craig.object_storage.buckets.storage_class,
+              kms_key: craig.object_storage.buckets.kms_key,
+            },
+            {
+              force_delete: craig.object_storage.buckets.force_delete,
+            },
+            {
+              activity_tracking: craig.object_storage.buckets.activity_tracking,
+              metrics_monitoring:
+                craig.object_storage.buckets.metrics_monitoring,
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Activity Tracking",
+                className: "marginBottomSmall",
+              },
+              hideWhen: craig.object_storage.buckets.read_data_events.hideWhen,
+            },
+            {
+              read_data_events: craig.object_storage.buckets.read_data_events,
+              write_data_events: craig.object_storage.buckets.write_data_events,
+              activity_tracking_crn:
+                craig.object_storage.buckets.activity_tracking_crn,
+              className: "subForm",
+            },
+            {
+              heading: {
+                type: "subHeading",
+                name: "Metrics Monitoring",
+                className: "marginBottomSmall",
+              },
+              hideWhen:
+                craig.object_storage.buckets.request_metrics_enabled.hideWhen,
+            },
+            {
+              request_metrics_enabled:
+                craig.object_storage.buckets.request_metrics_enabled,
+              usage_metrics_enabled:
+                craig.object_storage.buckets.usage_metrics_enabled,
+              metrics_monitoring_crn:
+                craig.object_storage.buckets.metrics_monitoring_crn,
+              className: "subForm",
+            },
+          ],
+        },
+        data: {
+          name: "frog",
+        },
+        craig: craig,
+      },
+      4,
+      {
+        activity_tracking: true,
+        metrics_monitoring: true,
+      }
+    );
+    assert.deepEqual(
+      actualData,
+      {
+        key: "frog-group-4",
+        noMarginBottom: false,
+        className: "subForm",
+      },
+      "it should have correct data"
+    );
+  });
 });

@@ -863,9 +863,7 @@ function classicPublicVlan() {
     invalidText: selectInvalidText("public VLAN"),
     groups: classicVlanFilter("PUBLIC"),
     size: "small",
-    hideWhen: function (stateData) {
-      return stateData.private_network_only;
-    },
+    hideWhen: hideWhenFieldFalse("private_network_only", true),
   };
 }
 
@@ -885,6 +883,18 @@ function classicPrivateNetworkOnly() {
       } else stateData.private_network_only = false;
     },
     size: "small",
+  };
+}
+
+/**
+ * shortcut for hide when field false
+ * @param {*} field
+ * @param {boolean=} hideWhenTrue
+ * @returns {Function} hide when function
+ */
+function hideWhenFieldFalse(field, hideWhenTrue) {
+  return function (stateData) {
+    return hideWhenTrue ? stateData[field] : !stateData[field];
   };
 }
 
@@ -915,4 +925,5 @@ module.exports = {
   classicPublicVlan,
   classicPrivateNetworkOnly,
   invalidNewResourceName,
+  hideWhenFieldFalse,
 };

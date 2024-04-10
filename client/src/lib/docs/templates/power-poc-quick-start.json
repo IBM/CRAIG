@@ -119,7 +119,15 @@
           "storage_class": "smart",
           "kms_key": null,
           "endpoint": "public",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         },
         {
           "force_delete": false,
@@ -127,7 +135,15 @@
           "storage_class": "smart",
           "kms_key": null,
           "endpoint": "public",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": [
@@ -153,7 +169,15 @@
           "kms_key": "atracker-key",
           "force_delete": false,
           "use_random_suffix": false,
-          "endpoint": null
+          "endpoint": null,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": [
@@ -174,7 +198,7 @@
       "ssh_keys": [
         {
           "name": "powervs-ssh-key",
-          "public_key": "",
+          "public_key": null,
           "use_data": false,
           "resource_group": "power-rg",
           "workspace": "dal10",
@@ -192,7 +216,8 @@
           "zone": "dal10",
           "workspace_use_data": false,
           "use_data": false,
-          "pi_network_mtu": "9000"
+          "pi_network_mtu": "9000",
+          "pi_network_jumbo": false
         }
       ],
       "cloud_connections": [],
@@ -964,15 +989,24 @@
       "subnetTiers": [
         {
           "name": "vsi",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpn",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false
@@ -996,7 +1030,7 @@
             "10.10.0.144/28"
           ],
           "vpn": "dal10gw",
-          "peer_address": "",
+          "peer_address": null,
           "admin_state_up": true
         }
       ],

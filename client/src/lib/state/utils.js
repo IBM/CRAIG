@@ -22,7 +22,7 @@ const {
 } = require("lazy-z");
 const { commaSeparatedIpListExp, newResourceNameExp } = require("../constants");
 const { validSshKey } = require("../forms/invalid-callbacks");
-const { nameField } = require("./reusable-fields");
+const { nameField, hideWhenFieldFalse } = require("./reusable-fields");
 const {
   unconditionalInvalidText,
   fieldIsNullOrEmptyString,
@@ -616,9 +616,7 @@ function sshKeySchema(fieldName) {
           ? "SSH Public Key in use"
           : "";
       },
-      hideWhen: function (stateData) {
-        return stateData.use_data;
-      },
+      hideWhen: hideWhenFieldFalse("use_data", true),
     },
   };
   if (fieldName === "ssh_keys" || fieldName === "power_vs_ssh_keys") {

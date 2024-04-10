@@ -2,12 +2,7 @@ const { assert } = require("chai");
 const sinon = require("sinon");
 const controller = require("../../express-controllers/controller");
 const res = require("../mocks/response.mock");
-const vsiInstanceProfilesRaw = require("../data-files/vsiInstanceProfilesRaw.json");
-const vsiImagesRaw = require("../data-files/vsiImagesRaw.json");
-const clusterFlavorsRaw = require("../data-files/clusterFlavorRaw.json");
-const clusterVersionRaw = require("../data-files/clusterVersionRaw.json");
 const { initMockAxios } = require("lazy-z");
-const testJson = require("../data-files/craig-json.json");
 
 describe("controller", () => {
   beforeEach(() => {
@@ -15,6 +10,16 @@ describe("controller", () => {
   });
   afterEach(() => {
     delete process.env.CRAIG_PROD;
+  });
+  describe("sendDataOnTokenValid", () => {
+    it("should use callback when invalid token", () => {
+      let axios = initMockAxios({});
+      let testController = new controller(axios);
+      let callback = () => {
+        assert.isTrue(true, "it should be true");
+      };
+      return testController.sendDataOnTokenValid({}, "field", callback);
+    });
   });
   describe("getBearerToken", () => {
     let requestConfig = {

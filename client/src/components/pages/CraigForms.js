@@ -945,10 +945,51 @@ function craigForms(craig) {
               {
                 name: craig.object_storage.buckets.name,
                 storage_class: craig.object_storage.buckets.storage_class,
+                kms_key: craig.object_storage.buckets.kms_key,
               },
               {
-                kms_key: craig.object_storage.buckets.kms_key,
                 force_delete: craig.object_storage.buckets.force_delete,
+              },
+              {
+                activity_tracking:
+                  craig.object_storage.buckets.activity_tracking,
+                metrics_monitoring:
+                  craig.object_storage.buckets.metrics_monitoring,
+              },
+              {
+                heading: {
+                  type: "subHeading",
+                  name: "Activity Tracking",
+                  className: "marginBottomSmall",
+                },
+                hideWhen:
+                  craig.object_storage.buckets.read_data_events.hideWhen,
+              },
+              {
+                read_data_events: craig.object_storage.buckets.read_data_events,
+                write_data_events:
+                  craig.object_storage.buckets.write_data_events,
+                activity_tracking_crn:
+                  craig.object_storage.buckets.activity_tracking_crn,
+                className: "subForm",
+              },
+              {
+                heading: {
+                  type: "subHeading",
+                  name: "Metrics Monitoring",
+                  className: "marginBottomSmall",
+                },
+                hideWhen:
+                  craig.object_storage.buckets.request_metrics_enabled.hideWhen,
+              },
+              {
+                request_metrics_enabled:
+                  craig.object_storage.buckets.request_metrics_enabled,
+                usage_metrics_enabled:
+                  craig.object_storage.buckets.usage_metrics_enabled,
+                metrics_monitoring_crn:
+                  craig.object_storage.buckets.metrics_monitoring_crn,
+                className: "subForm",
               },
             ],
           },

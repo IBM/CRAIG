@@ -8,12 +8,14 @@ All notable changes to this project will be documented in this file.
 
 - VPC Routing Tables can now be advertised to Transit Gateway, and Direct Link
 - VPC Routing Table routes can now be assigned a Priority value and can advertise to the parent table's sources by using the `Advertise` toggle
+- Cloud Object Storage buckets now support Metrics Monitoring and Activity Tracking
 - Local CIDRs and Peer CIDRs are no longer required when creating a connection for a route-based VPN Gateway
 
 ### Fixes
 
 - Fixed an issue causing encryption keys with no Key Ring value to populate with a `null` key ring
 - Fixed an issue preventing Terraform from being created when using an existing VPC
+- Fixed an issue causing Routing Tables to not have correct reference to an imported VPC
 
 ## 1.14.1
 
