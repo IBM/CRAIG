@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - VPC Routing Tables can now be advertised to Transit Gateway, and Direct Link
 - VPC Routing Table routes can now be assigned a Priority value and can advertise to the parent table's sources by using the `Advertise` toggle
+- Local CIDRs and Peer CIDRs are no longer required when creating a connection for a route-based VPN Gateway
 
 ### Fixes
 

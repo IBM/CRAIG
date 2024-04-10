@@ -199,7 +199,7 @@ function initVpnGatewayStore(store) {
           name: nameField("connections"),
           peer_address: {
             default: "",
-            invalid: function (stateData) {
+            invalid: function (stateData, componentProps) {
               return (
                 isIpv4CidrOrAddress(stateData.peer_address || "") === false ||
                 contains(stateData.peer_address, "/")

@@ -18,6 +18,7 @@ const {
   isArray,
   capitalize,
   containsKeys,
+  getObjectFromArray,
 } = require("lazy-z");
 const { commaSeparatedIpListExp, newResourceNameExp } = require("../constants");
 const { validSshKey } = require("../forms/invalid-callbacks");
@@ -790,7 +791,19 @@ function ipCidrListTextArea(field, options) {
     type: "textArea",
     labelText: options.labelText || "Additional Address Prefixes",
     placeholder: "X.X.X.X/X, X.X.X.X/X, ...",
-    invalid: function (stateData) {
+    invalid: function (stateData, componentProps) {
+      if (componentProps?.arrayParentName) {
+        if (
+          getObjectFromArray(
+            componentProps.craig.store.json.vpn_gateways,
+            "name",
+            componentProps.arrayParentName
+          ).policy_mode !== true
+        ) {
+          return false;
+        }
+      }
+
       return isNullOrEmptyString(stateData[field], true) && !options.strict
         ? false
         : // prevent empty array from passing regex
@@ -815,6 +828,20 @@ function ipCidrListTextArea(field, options) {
       return isNullOrEmptyString(stateData[field], true)
         ? []
         : stateData[field].split(/,\s?/g);
+    },
+    hideWhen: function (stateData, componentProps) {
+      if (componentProps?.arrayParentName) {
+        if (
+          getObjectFromArray(
+            componentProps.craig.store.json.vpn_gateways,
+            "name",
+            componentProps.arrayParentName
+          ).policy_mode !== true
+        ) {
+          return true;
+        }
+      }
+      return false;
     },
   };
 }
