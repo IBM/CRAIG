@@ -303,7 +303,7 @@
         },
         {
           "name": "vpn-server-zone-1",
-          "cidr": "10.10.0.32/29",
+          "cidr": "10.134.0.0/28",
           "zone": 1,
           "vpc": "vpc"
         }

@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where VPC address prefixes were not being updated when advanced subnets were created with Manual Address Management enabled
 - Fixed an issue preventing Terraform from being created when using an existing VPC
 - Fixed an issue causing Routing Tables to not have correct reference to an imported VPC
+- Fixed an issue where the VPN as a service template had an incorrect VPC address prefix
 
 ## 1.14.1
 
