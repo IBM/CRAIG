@@ -1632,12 +1632,23 @@ function craigForms(craig) {
           profile: craig.vsi.profile,
         },
         {
+          user_data: craig.vsi.user_data,
+        },
+        {
+          heading: {
+            type: "subHeading",
+            name: "Address Options",
+            className: "marginBottomSmall",
+          },
+        },
+        {
           enable_floating_ip: craig.vsi.enable_floating_ip,
           primary_interface_ip_spoofing:
             craig.vsi.primary_interface_ip_spoofing,
+          enable_static_ips: craig.vsi.enable_static_ips,
         },
         {
-          user_data: craig.vsi.user_data,
+          vsi_static_ips: true,
         },
       ],
       subForms: [

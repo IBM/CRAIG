@@ -47,6 +47,7 @@ describe("vsi", () => {
           user_data: null,
           network_interfaces: [],
           volumes: [],
+          reserved_ips: [],
         },
         "it should return correct server"
       );
@@ -86,6 +87,7 @@ describe("vsi", () => {
           user_data: null,
           network_interfaces: [],
           volumes: [],
+          reserved_ips: [],
         },
         "it should return correct server"
       );
@@ -97,6 +99,21 @@ describe("vsi", () => {
     });
   });
   describe("vsi.save", () => {
+    it("should update vsi with reserved ips", () => {
+      craig.vsi.save(
+        { reserved_ips: [[], ["", "frog"]] },
+        { data: { name: "management-server" } }
+      );
+      assert.deepEqual(
+        craig.store.json.vsi[0].reserved_ips,
+        [
+          ["", ""],
+          ["", "frog"],
+          ["", ""],
+        ],
+        "it should have updated vsi"
+      );
+    });
     it("should update in place with new name", () => {
       craig.vsi.create(
         { name: "todd", vpc: "management" },
@@ -371,6 +388,193 @@ describe("vsi", () => {
         craig.vsi.ssh_keys.groups({}, { craig: craig }),
         ["ssh-key"],
         "it should return ssh keys"
+      );
+    });
+    it("should not have invalid reserved ips when not found", () => {
+      assert.isFalse(
+        craig.vsi.reserved_ips.invalid({}, { subnet: 0 }),
+        "it should be valid when not found on object"
+      );
+    });
+    it("should not have invalid reserved ip when empty string", () => {
+      assert.isFalse(
+        craig.vsi.reserved_ips.invalid(
+          { reserved_ips: [[""]] },
+          { subnet: 0, vsi: 0 }
+        ),
+        "it should be valid when item is empty string"
+      );
+    });
+    it("should have invalid reserved ip when not ipv4 address", () => {
+      assert.isTrue(
+        craig.vsi.reserved_ips.invalid(
+          { reserved_ips: [["AAA"]] },
+          { subnet: 0, vsi: 0 }
+        ),
+        "it should be invalid"
+      );
+      assert.isTrue(
+        craig.vsi.reserved_ips.invalid(
+          { reserved_ips: [["1.2.3.4/5"]] },
+          { subnet: 0, vsi: 0 }
+        ),
+        "it should be invalid"
+      );
+    });
+    it("should have a valid reserved ip when an ip address", () => {
+      assert.isFalse(
+        craig.vsi.reserved_ips.invalid(
+          { reserved_ips: [["1.2.3.4"]] },
+          { subnet: 0, vsi: 0 }
+        ),
+        "it should be invalid"
+      );
+    });
+    it("should render reserved ips", () => {
+      assert.deepEqual(
+        craig.vsi.reserved_ips.onRender({}),
+        "",
+        "it should return empty string"
+      );
+      assert.deepEqual(
+        craig.vsi.reserved_ips.onRender(
+          { reserved_ips: [[""]] },
+          { subnet: 0, vsi: 0 }
+        ),
+        "",
+        "it should return empty string"
+      );
+    });
+    it("should update reserved ips when invalid vsi per subnet", () => {
+      let nextState = {
+        vsi_per_subnet: "aaa",
+        subnets: [1, 2],
+        reserved_ips: [
+          ["", ""],
+          ["", ""],
+        ],
+      };
+      craig.vsi.vsi_per_subnet.onInputChange(nextState);
+      assert.deepEqual(
+        nextState.reserved_ips,
+        [],
+        "it should add additional subnets"
+      );
+    });
+    it("should update reserved ips when changing vsi per subnet and adding additional vsi", () => {
+      let nextState = {
+        vsi_per_subnet: "3",
+        subnets: [1, 2],
+        reserved_ips: [
+          ["", ""],
+          ["", ""],
+        ],
+      };
+      craig.vsi.vsi_per_subnet.onInputChange(nextState);
+      assert.deepEqual(
+        nextState.reserved_ips,
+        [
+          ["", "", ""],
+          ["", "", ""],
+        ],
+        "it should add additional vsi"
+      );
+    });
+    it("should update reserved ips when changing vsi per subnet and adding vsi with existing ips", () => {
+      let nextState = {
+        vsi_per_subnet: "3",
+        subnets: [1, 2],
+        reserved_ips: [
+          ["", "1.2.3.4"],
+          ["", ""],
+        ],
+      };
+      craig.vsi.vsi_per_subnet.onInputChange(nextState);
+      assert.deepEqual(
+        nextState.reserved_ips,
+        [
+          ["", "1.2.3.4", ""],
+          ["", "", ""],
+        ],
+        "it should maintain items in place"
+      );
+    });
+    it("should update reserved ips when reducing vsi per subnet and adding vsi with existing ips", () => {
+      let nextState = {
+        vsi_per_subnet: "1",
+        subnets: [1, 2],
+        reserved_ips: [
+          ["1.2.3.4", ""],
+          ["", ""],
+        ],
+      };
+      craig.vsi.vsi_per_subnet.onInputChange(nextState);
+      assert.deepEqual(
+        nextState.reserved_ips,
+        [["1.2.3.4"], [""]],
+        "it should maintain items in place"
+      );
+    });
+    it("should update reserved ips when reducing subnets and adding vsi with existing ips", () => {
+      let nextState = {
+        vsi_per_subnet: "2",
+        subnets: [1],
+        reserved_ips: [
+          ["1.2.3.4", ""],
+          ["", ""],
+        ],
+      };
+      craig.vsi.subnets.onInputChange(nextState);
+      assert.deepEqual(
+        nextState.reserved_ips,
+        [["1.2.3.4", ""]],
+        "it should maintain items in place"
+      );
+    });
+    it("should update reserved ips when changing subnets and adding vsi with existing ips", () => {
+      let nextState = {
+        vsi_per_subnet: "2",
+        subnets: [1, 2, 3],
+        reserved_ips: [
+          ["", "1.2.3.4"],
+          ["", ""],
+        ],
+      };
+      craig.vsi.subnets.onInputChange(nextState);
+      assert.deepEqual(
+        nextState.reserved_ips,
+        [
+          ["", "1.2.3.4"],
+          ["", ""],
+          ["", ""],
+        ],
+        "it should maintain items in place"
+      );
+    });
+  });
+  describe("vsi.shouldDisableSave", () => {
+    it("should disable save when reserved ip is invalid", () => {
+      craig.store.json.vsi[0].reserved_ips = [["", "1.2"], ["1.2.3.4/6"]];
+      assert.isTrue(
+        craig.vsi.shouldDisableSave(craig.store.json.vsi[0], {
+          craig: craig,
+          data: {
+            name: "management-server",
+          },
+        }),
+        "it should disable save"
+      );
+    });
+    it("should not disable save when reserved ip is valid", () => {
+      craig.store.json.vsi[0].reserved_ips = [["", ""], ["1.2.3.4"]];
+      assert.isFalse(
+        craig.vsi.shouldDisableSave(craig.store.json.vsi[0], {
+          craig: craig,
+          data: {
+            name: "management-server",
+          },
+        }),
+        "it should disable save"
       );
     });
   });

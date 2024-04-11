@@ -1738,7 +1738,13 @@
       "primary_interface_ip_spoofing": false,
       "use_variable_names": false,
       "snapshot": null,
-      "use_snapshot": false
+      "use_snapshot": false,
+      "reserved_ips": [
+        ["", ""],
+        ["", ""],
+        ["", ""]
+      ],
+      "enable_static_ips": false
     },
     {
       "kms": "kms",
@@ -1762,7 +1768,9 @@
       "primary_interface_ip_spoofing": false,
       "use_variable_names": false,
       "snapshot": null,
-      "use_snapshot": false
+      "use_snapshot": false,
+      "reserved_ips": [[""], [""], [""]],
+      "enable_static_ips": false
     }
   ]
 }

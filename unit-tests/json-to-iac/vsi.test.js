@@ -1561,10 +1561,12 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
           security_groups: ["management-vpe-sg"],
           ssh_keys: ["slz-ssh-key"],
           subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          reserved_ips: [[""], [""], [""]],
           vpc: "management",
           vsi_per_subnet: 2,
           resource_group: "slz-management-rg",
           snapshot: "example-snapshot",
+          enable_static_ips: true,
         },
       ];
       let actualData = vsiTf(nw);
@@ -1751,6 +1753,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
           vsi_per_subnet: 1,
           resource_group: "slz-management-rg",
           reserved_ips: [["1.2.3.4"], ["5.6.7.8"], ["9.10.11.12"]],
+          enable_static_ips: true,
         },
       ];
       let actualData = vsiTf(nw);
@@ -1861,6 +1864,123 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
     primary_ip {
       reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_management_server_vsi_3_1_reserved_ip.reserved_ip
     }
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should not render reserved ips when not enabled", () => {
+      let nw = {};
+      transpose(slzNetwork, nw);
+      nw.vsi = [
+        {
+          kms: "slz-kms",
+          encryption_key: "slz-vsi-volume-key",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
+          profile: "cx2-4x8",
+          name: "management-server",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          vpc: "management",
+          vsi_per_subnet: 1,
+          resource_group: "slz-management-rg",
+          reserved_ips: [["1.2.3.4"], ["5.6.7.8"], ["9.10.11.12"]],
+        },
+      ];
+      let actualData = vsiTf(nw);
+      let expectedData = `##############################################################################
+# Image Data Sources
+##############################################################################
+
+data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
+  name = "ibm-ubuntu-22-04-1-minimal-amd64-1"
+}
+
+##############################################################################
+
+##############################################################################
+# Management VPC Management Server Deployment
+##############################################################################
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-2-1"
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-2"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_2_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-3-1"
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-3"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.vsi_zone_3_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
   }
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn

@@ -905,7 +905,8 @@
       ],
       "vpc": "management",
       "vsi_per_subnet": 2,
-      "resource_group": "slz-management-rg"
+      "resource_group": "slz-management-rg",
+      "reserved_ips": [["",""],["",""],["",""]]
     }
   ],
   "appid": [],

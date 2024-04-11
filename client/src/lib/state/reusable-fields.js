@@ -795,11 +795,12 @@ function domainField() {
         (stateData.domain || "").match(
           new RegexButWithWords()
             .stringBegin()
-            .set("a-z")
+            .set("A-z")
             .oneOrMore()
             .literal(".")
-            .set("a-z")
+            .set("A-z-")
             .oneOrMore()
+            .set("a-z")
             .stringEnd()
             .done("g")
         ) === null

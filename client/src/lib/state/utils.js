@@ -676,6 +676,7 @@ function subnetMultiSelect(options) {
         (isFunction(options?.invalid) && options.invalid(stateData))
       );
     },
+    onInputChange: options?.onInputChange,
     invalidText: unconditionalInvalidText(
       options?.invalidText ? options.invalidText : "Select at least one subnet"
     ),

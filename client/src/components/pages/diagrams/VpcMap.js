@@ -41,7 +41,9 @@ export const VpcMap = (props) => {
       nullVpcResources = true;
     }
   });
-  return craig.store.json.vpcs.length === 0 && !props.static ? (
+  return craig.store.json.vpcs.length === 0 &&
+    !nullVpcResources &&
+    !props.static ? (
     <CraigEmptyResourceTile
       name="VPCs"
       className="width580 marginTopHalfRem"

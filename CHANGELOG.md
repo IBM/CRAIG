@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 - VPC Routing Table routes can now be assigned a Priority value and can advertise to the parent table's sources by using the `Advertise` toggle
 - Cloud Object Storage buckets now support Metrics Monitoring and Activity Tracking
 - Local CIDRs and Peer CIDRs are no longer required when creating a connection for a route-based VPN Gateway
+- Users can now reserve specific IPs for VPC VSI Deployments by toggling the `Configure VSI IP Addresses` toggle
+- Domain Fields for Classic Gateways can now have `-` characters
+- Invalid VPC deployments are now shown in `/v2/vpcDeployments` even when there are no VPCs in the current configuration
 - F5 Templates with an invalid TMOS Admin Password are now shown as invalid from `/v2/vpcDeployments`
 
 ### Fixes

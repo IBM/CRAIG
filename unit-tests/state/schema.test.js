@@ -1941,6 +1941,14 @@ describe("automate schema generation", () => {
               default: null,
               groups: "<calculated>",
             },
+            reserved_ips: {
+              default: [],
+              type: "Array",
+            },
+            enable_static_ips: {
+              type: "boolean",
+              default: false,
+            },
             vpc: { type: "string", default: null, groups: "<calculated>" },
             subnets: { type: "Array", default: [] },
             image_name: { type: "string", default: null },
