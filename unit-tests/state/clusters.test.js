@@ -373,6 +373,52 @@ describe("clusters", () => {
     });
   });
   describe("clusters.schema", () => {
+    describe("clusters.name.invalid", () => {
+      it("should be invalid when cluster name length is greater than 32", () => {
+        assert.isTrue(
+          craig.clusters.name.invalid(
+            { name: "a-super-long-name-yes" },
+            {
+              vpc_name: "vpc",
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "iac",
+                    },
+                    clusters: [],
+                  },
+                },
+              },
+            }
+          ),
+          "should be invalid"
+        );
+      });
+    });
+    describe("clusters.name.invalidText", () => {
+      it("should return correct text when name is longer than 32 characters", () => {
+        assert.deepEqual(
+          craig.clusters.name.invalidText(
+            { name: "a-super-long-name-yes" },
+            {
+              vpc_name: "vpc",
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "iac",
+                    },
+                    clusters: [],
+                  },
+                },
+              },
+            }
+          ),
+          "Cluster names must be 32 or fewer characters including the environment prefix and suffix"
+        );
+      });
+    });
     describe("clusters.name.helperText", () => {
       it("should return correct text", () => {
         assert.deepEqual(

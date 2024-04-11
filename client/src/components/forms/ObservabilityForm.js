@@ -24,7 +24,7 @@ const ObservabilityForm = (props) => {
               name="LogDNA"
               submissionFieldName="logdna"
               hideName
-              wrapperClassName="marginBottomNone"
+              wrapperClassName="marginBottomXs"
               noDeleteButton
               useAddButton={craig.store.json.logdna.enabled === false}
               onShowToggle={none}

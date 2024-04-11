@@ -365,6 +365,13 @@ function invalidName(field, craig) {
             1 +
             componentProps.craig.store.json._options.prefix.length >
             20) ||
+        // prevent clusters with names that include prefix and "-cluster" longer than 32 characters
+        (field === "clusters" &&
+          stateData.name &&
+          stateData.name.length +
+            9 +
+            componentProps.craig.store.json._options.prefix.length >
+            32) ||
         stateData[stateField] === "" ||
         (!stateData.use_data && invalidNewResourceName(stateData[stateField]))
       );
@@ -445,6 +452,15 @@ function invalidNameText(field, craig) {
         20
     ) {
       return "Classic VLAN names must be 20 or fewer characters including the environment prefix";
+    } else if (
+      field === "clusters" &&
+      stateData.name &&
+      stateData.name.length +
+        9 +
+        componentProps.craig.store.json._options.prefix.length >
+        32
+    ) {
+      return "Cluster names must be 32 or fewer characters including the environment prefix and suffix";
     } else return genericNameCallback();
   }
   if (field === "vpcs") {
