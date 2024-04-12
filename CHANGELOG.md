@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Domain Fields for Classic Gateways can now have `-` characters
 - Invalid VPC deployments are now shown in `/v2/vpcDeployments` even when there are no VPCs in the current configuration
 - F5 Templates with an invalid TMOS Admin Password are now shown as invalid from `/v2/vpcDeployments`
+- Image validation is now performed before a CRAIG configuration can be uploaded to Schematics
 
 ### Fixes
 

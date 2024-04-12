@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@carbon/react";
 import { ProjectFormModal } from "./ProjectFormModal";
 import { JSONModal } from "./JSONModal";
-import { azsort, contains, eachKey, splatContains } from "lazy-z";
+import { azsort, contains, eachKey, isEmpty, splatContains } from "lazy-z";
 import {
   Add,
   DocumentImport,
@@ -264,8 +264,9 @@ class Projects extends React.Component {
   /**
    * on validation modal done
    * @param {*} invalidItems
+   * @param {*} callback
    */
-  afterValidation(invalidItems) {
+  afterValidation(invalidItems, callback) {
     let noItemsInvalid = true;
     // if any arrays in the map of invalid items have a name contained within
     // set to false
@@ -277,7 +278,9 @@ class Projects extends React.Component {
     // if no items are invalid, hide modal. otherwise save invalid items to state
     if (noItemsInvalid)
       setTimeout(() => {
-        this.setState({ showValidationModal: false });
+        this.setState({ showValidationModal: false }, () => {
+          if (callback) callback();
+        });
       }, 1000);
     else this.setState({ invalidItems });
   }
@@ -333,68 +336,89 @@ class Projects extends React.Component {
    */
   onSchematicsUploadClick(keyName) {
     return () => {
-      this.setState(
-        {
-          clickedProject: this.props.projects[keyName].name,
-          clickedWorkspace: this.props.projects[keyName].workspace_name,
-          // fix data before retry
-          loadingModalOpen: false,
-          loadingDone: false,
-          schematicsFailed: false,
-        },
-        () => {
-          this.toggleLoadingModal();
-          let notification = {
-            title: "Success",
-            kind: "success",
-            text: `Starting upload to ${this.props.projects[keyName].workspace_name}`,
-            timeout: 3000,
-          };
-          this.props.notify(notification);
-
-          return fetch(
-            `/api/schematics/tar/${this.props.projects[keyName].workspace_name}/${this.props.projects[keyName].workspace_region}`,
-            {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(this.props.projects[keyName].json),
-            }
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.error) {
-                throw data.error;
-              } else {
-                let notification = {
-                  title: "Success",
-                  kind: "success",
-                  text: `Successfully uploaded to Schematics`,
-                  timeout: 3000,
-                };
-                this.setState({
-                  loadingDone: true,
-                  clickedWorkspaceUrl:
-                    this.props.projects[keyName].workspace_url,
-                });
-                this.props.notify(notification);
-              }
-            })
-            .catch((err) => {
-              console.error(err);
-              let notification = {
-                title: "Error",
-                kind: "error",
-                text: "Upload failed with error: " + err || err.message,
-                timeout: 3000,
-              };
-              this.setState({
-                loadingDone: true,
-                schematicsFailed: true,
-              });
-              this.props.notify(notification);
+      this.setState({ loadingModalOpen: true }, () => {
+        this.props.onProjectSelect(
+          this.props.projects[keyName].project_name,
+          "",
+          (invalidItems) => {
+            let hasInvalidItems = false;
+            eachKey(invalidItems, (key) => {
+              if (!isEmpty(invalidItems[key])) hasInvalidItems = true;
             });
-        }
-      );
+
+            if (hasInvalidItems) {
+              this.setState({
+                showValidationModal: true,
+                invalidItems: invalidItems,
+                loadingModalOpen: false,
+              });
+            } else {
+              this.setState(
+                {
+                  clickedProject: this.props.projects[keyName].name,
+                  clickedWorkspace: this.props.projects[keyName].workspace_name,
+                  // fix data before retry
+                  loadingModalOpen: false,
+                  loadingDone: false,
+                  schematicsFailed: false,
+                },
+                () => {
+                  this.toggleLoadingModal();
+                  let notification = {
+                    title: "Success",
+                    kind: "success",
+                    text: `Starting upload to ${this.props.projects[keyName].workspace_name}`,
+                    timeout: 3000,
+                  };
+                  this.props.notify(notification);
+
+                  return fetch(
+                    `/api/schematics/tar/${this.props.projects[keyName].workspace_name}/${this.props.projects[keyName].workspace_region}`,
+                    {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(this.props.projects[keyName].json),
+                    }
+                  )
+                    .then((res) => res.json())
+                    .then((data) => {
+                      if (data.error) {
+                        throw data.error;
+                      } else {
+                        let notification = {
+                          title: "Success",
+                          kind: "success",
+                          text: `Successfully uploaded to Schematics`,
+                          timeout: 3000,
+                        };
+                        this.setState({
+                          loadingDone: true,
+                          clickedWorkspaceUrl:
+                            this.props.projects[keyName].workspace_url,
+                        });
+                        this.props.notify(notification);
+                      }
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                      let notification = {
+                        title: "Error",
+                        kind: "error",
+                        text: "Upload failed with error: " + err || err.message,
+                        timeout: 3000,
+                      };
+                      this.setState({
+                        loadingDone: true,
+                        schematicsFailed: true,
+                      });
+                      this.props.notify(notification);
+                    });
+                }
+              );
+            }
+          }
+        );
+      });
     };
   }
 
