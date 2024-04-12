@@ -131,7 +131,11 @@ function initRoutingTable(store) {
       "routing_tables"
     ),
     schema: {
-      name: nameField("routing_tables"),
+      name: nameField("routing_tables", {
+        helperText: function (stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-${stateData.vpc}-vpc-${stateData.name}-table`;
+        },
+      }),
       vpc: {
         type: "select",
         default: "",

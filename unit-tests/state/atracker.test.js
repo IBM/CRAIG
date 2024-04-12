@@ -135,7 +135,7 @@ describe("atracker", () => {
             craig: craig,
           }
         ),
-        "iac-atracker",
+        "iac-us-south-atracker",
         "it should return correct text"
       );
     });

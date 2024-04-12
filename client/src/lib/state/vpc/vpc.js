@@ -66,6 +66,7 @@ const {
   genericNameCallback,
   nameHelperText,
 } = require("../reusable-fields");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * read only when
@@ -1424,7 +1425,16 @@ function initVpcStore(store) {
             helperText: function (stateData, componentProps) {
               if (stateData.use_data) {
                 return "";
-              } else return nameHelperText(stateData, componentProps);
+              } else
+                return nameHelperText(stateData, componentProps).replace(
+                  new RegexButWithWords()
+                    .stringBegin()
+                    .literal(
+                      componentProps.craig.store.json._options.prefix + "-"
+                    )
+                    .done("s"),
+                  `${componentProps.craig.store.json._options.prefix}-${componentProps.vpc_name}-`
+                );
             },
             size: "small",
             invalid: function (stateData, componentProps) {

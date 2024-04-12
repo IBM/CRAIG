@@ -12,7 +12,8 @@
       "Domain Fields for Classic Gateways can now have `-` characters",
       "Invalid VPC deployments are now shown in `/v2/vpcDeployments` even when there are no VPCs in the current configuration",
       "F5 Templates with an invalid TMOS Admin Password are now shown as invalid from `/v2/vpcDeployments`",
-      "When updating to the latest CRAIG version in a project using Manual VPC Address Management, VPC Subnet Address Prefixes will automatically be updated to match custom subnet CIDRs"
+      "When updating to the latest CRAIG version in a project using Manual VPC Address Management, VPC Subnet Address Prefixes will automatically be updated to match custom subnet CIDRs",
+      "Updated resource helper text fields to more accurately display resource names at time of provision"
     ],
     "fixes": [
       "Fixed an issue causing encryption keys with no Key Ring value to populate with a `null` key ring",

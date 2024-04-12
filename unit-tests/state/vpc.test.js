@@ -1474,9 +1474,9 @@ describe("vpcs", () => {
         assert.deepEqual(
           craig.vpcs.subnets.name.helperText(
             { name: "iac-subnet" },
-            { craig: craig }
+            { craig: craig, vpc_name: "hi" }
           ),
-          "iac-iac-subnet",
+          "iac-hi-iac-subnet",
           "it should return correct helper text"
         );
       });

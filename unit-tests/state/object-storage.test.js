@@ -258,7 +258,7 @@ describe("object_storage", () => {
             use_data: true,
             name: "test",
           }),
-          "test",
+          "test-object-storage",
           "it should display data"
         );
       });
@@ -278,7 +278,7 @@ describe("object_storage", () => {
               },
             }
           ),
-          "test-test-<random-suffix>",
+          "test-test-object-storage-<random-suffix>",
           "it should display data"
         );
       });
@@ -298,7 +298,7 @@ describe("object_storage", () => {
               },
             }
           ),
-          "test-test",
+          "test-test-object-storage",
           "it should display data"
         );
       });
@@ -518,6 +518,54 @@ describe("object_storage", () => {
           ],
         };
       });
+      it("should return correct name helper text", () => {
+        assert.deepEqual(
+          craig.object_storage.buckets.name.helperText(
+            {
+              name: "yes",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "test",
+                    },
+                  },
+                },
+              },
+              arrayParentName: "test",
+              parent: {},
+            }
+          ),
+          "test-test-yes",
+          "it should have correct helper text"
+        );
+        assert.deepEqual(
+          craig.object_storage.buckets.name.helperText(
+            {
+              name: "yes",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "test",
+                    },
+                  },
+                },
+              },
+              arrayParentName: "test",
+              parent: {
+                use_random_suffix: true,
+              },
+            }
+          ),
+          "test-test-yes-<random-suffix>",
+          "it should have correct helper text with random suffix"
+        );
+      });
       it("should hide activity_tracking_crn", () => {
         assert.isTrue(
           craig.object_storage.buckets.activity_tracking_crn.hideWhen({}),
@@ -693,6 +741,32 @@ describe("object_storage", () => {
     });
   });
   describe("object_storage.keys", () => {
+    describe("schema", () => {
+      it("should return correct name helper text", () => {
+        assert.deepEqual(
+          craig.object_storage.keys.name.helperText(
+            {
+              name: "yes",
+            },
+            {
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "test",
+                    },
+                  },
+                },
+              },
+              arrayParentName: "test",
+              parent: {},
+            }
+          ),
+          "test-test-key-yes",
+          "it should have correct helper text"
+        );
+      });
+    });
     describe("object_storage.keys.create", () => {
       it("should create a new cos key in a specified instance", () => {
         craig.object_storage.keys.create(

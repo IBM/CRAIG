@@ -260,6 +260,27 @@ function cosKeyDelete(config, stateData, componentProps) {
 }
 
 /**
+ * create cos helper text function
+ * @param {*} isKey
+ * @returns {Function} helpertext function
+ */
+function cosChildHelperText(isKey) {
+  /**
+   * helper text for object storage child form names
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @returns {string} helper text
+   */
+  return function (stateData, componentProps) {
+    return `${componentProps.craig.store.json._options.prefix}-${
+      componentProps.arrayParentName
+    }-${isKey ? "key-" : ""}${stateData.name}${
+      componentProps.parent.use_random_suffix ? "-<random-suffix>" : ""
+    }`;
+  };
+}
+
+/**
  * initialize object storage store
  * @param {*} store
  */
@@ -310,7 +331,7 @@ function initObjectStorageStore(store) {
             stateData.use_data
               ? ""
               : componentProps.craig.store.json._options.prefix + "-"
-          }${stateData.name}${
+          }${stateData.name}-object-storage${
             stateData.use_random_suffix ? "-<random-suffix>" : ""
           }`;
         },
@@ -369,7 +390,9 @@ function initObjectStorageStore(store) {
           "buckets"
         ),
         schema: {
-          name: nameField("buckets"),
+          name: nameField("buckets", {
+            helperText: cosChildHelperText(),
+          }),
           storage_class: {
             size: "small",
             default: "",
@@ -523,7 +546,9 @@ function initObjectStorageStore(store) {
           "keys"
         ),
         schema: {
-          name: nameField("cos_keys"),
+          name: nameField("cos_keys", {
+            helperText: cosChildHelperText(true),
+          }),
           role: {
             type: "select",
             default: "",

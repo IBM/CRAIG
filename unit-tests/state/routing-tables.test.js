@@ -173,6 +173,26 @@ describe("routing_tables", () => {
         "it should return groups"
       );
     });
+    it("should have the correct name helper text", () => {
+      assert.deepEqual(
+        craig.routing_tables.name.helperText(
+          {},
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "hi",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "hi-undefined-vpc-undefined-table",
+        "it should have correct helper text"
+      );
+    });
   });
   describe("routing_tables.routes", () => {
     beforeEach(() => {
