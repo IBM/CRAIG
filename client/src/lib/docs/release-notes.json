@@ -22,7 +22,9 @@
       "Clusters with names longer than 32 characters are now correctly shown as invalid",
       "Fixed an issue where the VPN as a service template had an incorrect VPC address prefix"
     ],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "Updated to the latest version of `lazy-z` to fix an issue with some CIDR ranges and IP addresses being incorrectly flagged as invalid"
+    ]
   },
   {
     "version": "1.14.1",

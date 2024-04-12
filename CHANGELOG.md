@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.15.0
 
+### Upgrade Notes
+
+- Updated to the latest version of `lazy-z` to fix an issue with some CIDR ranges and IP addresses being incorrectly flagged as invalid
+
 ### Features
 
 - VPC Routing Tables can now be advertised to Transit Gateway, and Direct Link
